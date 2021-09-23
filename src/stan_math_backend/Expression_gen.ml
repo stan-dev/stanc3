@@ -169,7 +169,6 @@ let constraint_to_string = function
   | Lower _ -> Some "lb"
   | Upper _ -> Some "ub"
   | LowerUpper _ -> Some "lub"
-  | Offset _ | Multiplier _ | OffsetMultiplier _ -> Some "offset_multiplier"
   | Identity -> None
 
 let check_to_string = function
@@ -178,18 +177,18 @@ let check_to_string = function
   | CholeskyCov -> Some "cholesky_factor"
   | LowerUpper _ ->
       raise_s [%message "LowerUpper is really two other checks tied together"]
-  | Offset _ | Multiplier _ | OffsetMultiplier _ -> None
   | t -> constraint_to_string t
 
 let default_multiplier = 1
 let default_offset = 0
 
-let transform_args = function
-  | Transformation.Offset offset ->
-      [offset; Expr.Helpers.int default_multiplier]
+let transform_args transform =
+  Transformation.fold (fun args arg -> args @ [arg]) [] transform
+
+let scale_args = function
+  | Scale.Offset offset -> [offset; Expr.Helpers.int default_multiplier]
   | Multiplier multiplier -> [Expr.Helpers.int default_offset; multiplier]
-  | transform ->
-      Transformation.fold (fun args arg -> args @ [arg]) [] transform
+  | scale -> Scale.fold (fun args arg -> args @ [arg]) [] scale
 
 let rec pp_index ppf = function
   | Index.All -> pf ppf "index_omni()"
@@ -476,7 +475,7 @@ and pp_compiler_internal_fn ad ut f ppf es =
   | FnReadDataSerializer ->
       pf ppf "@[<hov 2>in__.read<%a>(@,)@]" pp_unsizedtype_local
         (UnsizedType.AutoDiffable, UnsizedType.UReal)
-  | FnReadParam {constrain; dims; _} -> (
+  | FnReadParam {constrain; (* TR TODO scale; *) dims; _} -> (
       let constrain_opt = constraint_to_string constrain in
       match constrain_opt with
       | None ->

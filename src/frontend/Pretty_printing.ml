@@ -333,11 +333,6 @@ let pp_transformation ppf = function
   | Upper e -> Fmt.pf ppf "<@[upper=%a@]>" pp_expression e
   | LowerUpper (e1, e2) ->
       Fmt.pf ppf "<@[lower=%a,@ upper=%a@]>" pp_expression e1 pp_expression e2
-  | Offset e -> Fmt.pf ppf "<@[offset=%a@]>" pp_expression e
-  | Multiplier e -> Fmt.pf ppf "<@[multiplier=%a@]>" pp_expression e
-  | OffsetMultiplier (e1, e2) ->
-      Fmt.pf ppf "<@[offset=%a,@ multiplier=%a@]>" pp_expression e1
-        pp_expression e2
   | Ordered -> Fmt.pf ppf ""
   | PositiveOrdered -> Fmt.pf ppf ""
   | Simplex -> Fmt.pf ppf ""
@@ -346,6 +341,14 @@ let pp_transformation ppf = function
   | CholeskyCov -> Fmt.pf ppf ""
   | Correlation -> Fmt.pf ppf ""
   | Covariance -> Fmt.pf ppf ""
+
+let pp_scale ppf = function
+  | Middle.Scale.Native -> Fmt.pf ppf ""
+  | Offset e -> Fmt.pf ppf "<@[offset=%a@]>" pp_expression e
+  | Multiplier e -> Fmt.pf ppf "<@[multiplier=%a@]>" pp_expression e
+  | OffsetMultiplier (e1, e2) ->
+      Fmt.pf ppf "<@[offset=%a,@ multiplier=%a@]>" pp_expression e1
+        pp_expression e2
 
 let pp_transformed_type ppf (pst, trans) =
   let rec discard_arrays pst =
@@ -391,8 +394,7 @@ let pp_transformed_type ppf (pst, trans) =
   match trans with
   | Middle.Transformation.Identity ->
       Fmt.pf ppf "%a%a" unsizedtype_fmt () sizes_fmt ()
-  | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
-   |OffsetMultiplier _ ->
+  | Lower _ | Upper _ | LowerUpper _ ->
       Fmt.pf ppf "%a%a%a" unsizedtype_fmt () pp_transformation trans sizes_fmt
         ()
   | Ordered -> Fmt.pf ppf "ordered%a" sizes_fmt ()
@@ -508,6 +510,7 @@ and pp_statement ppf
       Fmt.pf ppf "}"
   | VarDecl
       { decl_type= pst
+      ; scale
       ; transformation= trans
       ; identifier= id
       ; initial_value= init
@@ -523,8 +526,8 @@ and pp_statement ppf
         | Unsized _ -> []
       in
       with_hbox ppf (fun () ->
-          Fmt.pf ppf "%a%a %a%a;" pp_array_dims es pp_transformed_type
-            (pst, trans) pp_identifier id pp_init init )
+          Fmt.pf ppf "%a%a%a %a%a;" pp_array_dims es pp_transformed_type
+            (pst, trans) pp_scale scale pp_identifier id pp_init init )
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
       Fmt.pf ppf "%a %a(" pp_returntype rt pp_identifier id ;
       let loc_of (_, _, id) = id.id_loc in

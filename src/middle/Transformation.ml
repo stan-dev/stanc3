@@ -4,9 +4,6 @@ type 'e t =
   | Lower of 'e
   | Upper of 'e
   | LowerUpper of 'e * 'e
-  | Offset of 'e
-  | Multiplier of 'e
-  | OffsetMultiplier of 'e * 'e
   | Ordered
   | PositiveOrdered
   | Simplex
@@ -18,5 +15,5 @@ type 'e t =
 [@@deriving sexp, compare, map, hash, fold]
 
 let has_check = function
-  | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ -> false
+  | Identity  -> false
   | _ -> true

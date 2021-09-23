@@ -195,7 +195,9 @@ let data_serializer_read loc out_constrained_st =
         Typed.Meta.{emeta with type_= ut}))
 
 let param_read smeta
-    (decl_id, Program.({out_constrained_st= cst; out_block; out_trans; _})) =
+    ( decl_id
+    , Program.({out_constrained_st= cst; out_block; out_trans; out_scale; _}) )
+    =
   if not (out_block = Parameters) then []
   else
     let ut = SizedType.to_unsized cst in
@@ -208,7 +210,8 @@ let param_read smeta
         Helpers.(
           internal_funapp
             (FnReadParam
-               { constrain= out_trans
+               { scale= out_scale
+               ; constrain= out_trans
                ; dims
                ; mem_pattern= SizedType.get_mem_pattern cst })
             []
@@ -308,7 +311,7 @@ let add_reads vars mkread stmts =
   List.concat_map ~f:add_read_to_decl stmts
 
 let gen_write ?(unconstrain = false)
-    (decl_id, Program.({out_constrained_st; out_trans; _})) =
+    (decl_id, Program.({out_constrained_st; out_trans; out_scale; _})) =
   let decl_var =
     { Expr.Fixed.pattern= Var decl_id
     ; meta=
@@ -319,7 +322,10 @@ let gen_write ?(unconstrain = false)
   in
   Stmt.Helpers.internal_nrfunapp
     (FnWriteParam
-       {unconstrain_opt= Option.some_if unconstrain out_trans; var= decl_var})
+       { scale= (if unconstrain then out_scale else Scale.Native)
+       ; unconstrain=
+           (if unconstrain then out_trans else Transformation.Identity)
+       ; var= decl_var })
     [] Location_span.empty
 
 (**
@@ -332,7 +338,8 @@ let gen_unconstrained_write (decl_id, Program.({out_constrained_st; _})) =
   if SizedType.is_recursive_container out_constrained_st then
     let bodyfn var =
       Stmt.Helpers.internal_nrfunapp
-        (FnWriteParam {unconstrain_opt= None; var})
+        (FnWriteParam
+           {unconstrain= Transformation.Identity; scale= Scale.Native; var})
         [var] Location_span.empty
     in
     let meta =
@@ -352,7 +359,10 @@ let gen_unconstrained_write (decl_id, Program.({out_constrained_st; _})) =
             ; adlevel= DataOnly } }
     in
     Stmt.Helpers.internal_nrfunapp
-      (FnWriteParam {unconstrain_opt= None; var= decl_var})
+      (FnWriteParam
+         { unconstrain= Transformation.Identity
+         ; scale= Scale.Native
+         ; var= decl_var })
       [] Location_span.empty
 
 (* Statements to read, unconstrain and assign a parameter then write it back *)

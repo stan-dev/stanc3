@@ -151,6 +151,7 @@ type ('e, 's, 'l, 'f) statement =
   | Block of 's list
   | VarDecl of
       { decl_type: 'e Middle.Type.t
+      ; scale: 'e Scale.t
       ; transformation: 'e Transformation.t
       ; identifier: identifier
       ; initial_value: 'e option
@@ -314,14 +315,14 @@ let get_loc_dt (t : untyped_expression Type.t) =
 
 let get_loc_tf (t : untyped_expression Transformation.t) =
   match t with
-  | Lower e
-   |Upper e
-   |LowerUpper (e, _)
-   |Offset e
-   |Multiplier e
-   |OffsetMultiplier (e, _) ->
-      Some e.emeta.loc.begin_loc
+  | Lower e | Upper e | LowerUpper (e, _) -> Some e.emeta.loc.begin_loc
   | _ -> None
+
+let get_loc_scale (s : untyped_expression Scale.t) =
+  match s with
+  | Offset e | Multiplier e | OffsetMultiplier (e, _) ->
+      Some e.emeta.loc.begin_loc
+  | Native -> None
 
 let get_first_loc (s : untyped_statement) =
   match s.stmt with
@@ -341,10 +342,13 @@ let get_first_loc (s : untyped_statement) =
   | Tilde {arg; _} -> get_loc_expr arg
   | Break | Continue | ReturnVoid | Print _ | Reject _ | Skip ->
       s.smeta.loc.end_loc
-  | VarDecl {decl_type; transformation; identifier; _} -> (
+  | VarDecl {decl_type; scale; transformation; identifier; _} -> (
     match get_loc_dt decl_type with
     | Some loc -> loc
     | None -> (
       match get_loc_tf transformation with
       | Some loc -> loc
-      | None -> identifier.id_loc.begin_loc ) )
+      | None -> (
+        match get_loc_scale scale with
+        | Some loc -> loc
+        | None -> identifier.id_loc.begin_loc ) ) )

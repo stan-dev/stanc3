@@ -283,15 +283,16 @@ decl(type_rule, rhs):
    *)
   | ty=type_rule id=decl_identifier dims=dims rhs_opt=optional_assignment(rhs)
       SEMICOLON
-    { (fun ~is_global ->
+    { let typ, trans, scale = ty in
+      (fun ~is_global ->
       [{ stmt=
-          VarDecl {
-              decl_type= Sized (reducearray (fst ty, dims))
-            ; transformation= snd ty
-            ; identifier= id
-            ; initial_value= rhs_opt
-            ; is_global
-            }
+          VarDecl { decl_type= Sized (reducearray (typ, dims))
+                  ; scale
+                  ; transformation= trans
+                  ; identifier= id
+                  ; initial_value= rhs_opt
+                  ; is_global
+                  }
       ; smeta= {
           loc= Location_span.of_positions_exn $loc
         }
@@ -310,7 +311,8 @@ decl(type_rule, rhs):
      keyword. *)
   | dims_opt=ioption(lhs) ty=type_rule
      vs=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs)) SEMICOLON
-    { (fun ~is_global ->
+    { let typ, trans, scale = ty in
+      (fun ~is_global ->
       let int_ix ix = match ix with
         | Single e -> Some e
         | _ -> None
@@ -338,13 +340,13 @@ decl(type_rule, rhs):
       in
       List.map vs ~f:(fun (id, rhs_opt) ->
           { stmt=
-              VarDecl {
-                  decl_type= Sized (reducearray (fst ty, dims))
-                ; transformation= snd ty
-                ; identifier= id
-                ; initial_value= rhs_opt
-                ; is_global
-                }
+              VarDecl { decl_type= Sized (reducearray (typ, dims))
+                      ; scale
+                      ; transformation= trans
+                      ; identifier= id
+                      ; initial_value= rhs_opt
+                      ; is_global
+                      }
           ; smeta= {
               loc=
                 (* From the docs:
@@ -391,66 +393,86 @@ top_var_decl_no_assign:
 
 sized_basic_type:
   | INT
-    { grammar_logger "INT_var_type" ; (SizedType.SInt, Identity) }
+    { grammar_logger "INT_var_type" ; (SizedType.SInt, Identity, Scale.Native) }
   | REAL
-    { grammar_logger "REAL_var_type" ; (SizedType.SReal, Identity) }
+    { grammar_logger "REAL_var_type" ; (SizedType.SReal, Identity, Scale.Native) }
   | COMPLEX
-    { grammar_logger "COMPLEX_var_type" ; (SizedType.SComplex, Identity) }
+    { grammar_logger "COMPLEX_var_type" ; (SizedType.SComplex, Identity, Scale.Native) }
   | VECTOR LBRACK e=expression RBRACK
-    { grammar_logger "VECTOR_var_type" ; (SizedType.SVector (Common.Helpers.AoS, e), Identity) }
+    { grammar_logger "VECTOR_var_type" ; 
+      (SizedType.SVector (Common.Helpers.AoS, e), Identity, Scale.Native) 
+    }
   | ROWVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "ROWVECTOR_var_type" ; (SizedType.SRowVector (AoS, e) , Identity) }
+    { grammar_logger "ROWVECTOR_var_type" ;
+      (SizedType.SRowVector (AoS, e) , Identity, Scale.Native)
+    }
   | MATRIX LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (AoS, e1, e2), Identity) }
+    { grammar_logger "MATRIX_var_type" ;
+      (SizedType.SMatrix (AoS, e1, e2), Identity, Scale.Native)
+    }
 
 top_var_type:
-  | INT r=range_constraint
-    { grammar_logger "INT_top_var_type" ; (SInt, r) }
-  | REAL c=type_constraint
-    { grammar_logger "REAL_top_var_type" ; (SReal, c) }
-  | COMPLEX c=type_constraint
-    { grammar_logger "COMPLEX_var_type" ; (SComplex, c) }
-  | VECTOR c=type_constraint LBRACK e=expression RBRACK
-    { grammar_logger "VECTOR_top_var_type" ; (SVector (AoS, e), c) }
-  | ROWVECTOR c=type_constraint LBRACK e=expression RBRACK
-    { grammar_logger "ROWVECTOR_top_var_type" ; (SRowVector (AoS, e), c) }
-  | MATRIX c=type_constraint LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "MATRIX_top_var_type" ; (SMatrix (AoS, e1, e2), c) }
-  | ORDERED LBRACK e=expression RBRACK
-    { grammar_logger "ORDERED_top_var_type" ; (SVector (AoS, e), Ordered) }
+  | INT r=type_constraint
+    { grammar_logger "INT_top_var_type" ; (SInt, r, Scale.Native) }
+  | REAL cs=type_constraint_and_scale
+    { grammar_logger "REAL_top_var_type" ; (SReal, fst cs, snd cs) }
+  | COMPLEX cs=type_constraint_and_scale
+    { grammar_logger "COMPLEX_var_type" ; (SComplex, fst cs, snd cs) }
+  | VECTOR cs=type_constraint_and_scale LBRACK e=expression RBRACK
+    { grammar_logger "VECTOR_top_var_type" ; (SVector (AoS, e), fst cs, snd cs) }
+  | ROWVECTOR cs=type_constraint_and_scale LBRACK e=expression RBRACK
+    { grammar_logger "ROWVECTOR_top_var_type" ; (SRowVector (AoS, e), fst cs, snd cs) }
+  | MATRIX cs=type_constraint_and_scale LBRACK e1=expression COMMA e2=expression RBRACK
+    { grammar_logger "MATRIX_top_var_type" ; (SMatrix (AoS, e1, e2), fst cs, snd cs) }
+  | ORDERED s=type_scale LBRACK e=expression RBRACK
+    { grammar_logger "ORDERED_top_var_type" ; (SVector (AoS, e), Ordered, s) }
+  (* TR TODO arbitrarily deciding the rest of these can't get a scale *)
   | POSITIVEORDERED LBRACK e=expression RBRACK
     {
       grammar_logger "POSITIVEORDERED_top_var_type" ;
-      (SVector (AoS, e), PositiveOrdered)
+      (SVector (AoS, e), PositiveOrdered, Scale.Native)
     }
   | SIMPLEX LBRACK e=expression RBRACK
-    { grammar_logger "SIMPLEX_top_var_type" ; (SVector (AoS, e), Simplex) }
+    { grammar_logger "SIMPLEX_top_var_type" ; (SVector (AoS, e), Simplex, Scale.Native) }
   | UNITVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "UNITVECTOR_top_var_type" ; (SVector (AoS, e), UnitVector) }
+    { grammar_logger "UNITVECTOR_top_var_type" ; (SVector (AoS, e), UnitVector, Scale.Native) }
   | CHOLESKYFACTORCORR LBRACK e=expression RBRACK
     {
       grammar_logger "CHOLESKYFACTORCORR_top_var_type" ;
-      (SMatrix (AoS, e, e), CholeskyCorr)
+      (SMatrix (AoS, e, e), CholeskyCorr, Scale.Native)
     }
   | CHOLESKYFACTORCOV LBRACK e1=expression oe2=option(pair(COMMA, expression))
     RBRACK
     {
       grammar_logger "CHOLESKYFACTORCOV_top_var_type" ;
-      match oe2 with Some (_,e2) -> ( SMatrix (AoS, e1, e2), CholeskyCov)
-                   | _           ->  (SMatrix (AoS, e1, e1),  CholeskyCov)
+      match oe2 with Some (_,e2) -> ( SMatrix (AoS, e1, e2), CholeskyCov, Scale.Native)
+                   | _           ->  (SMatrix (AoS, e1, e1),  CholeskyCov, Scale.Native)
     }
   | CORRMATRIX LBRACK e=expression RBRACK
-    { grammar_logger "CORRMATRIX_top_var_type" ; (SMatrix (AoS, e, e), Correlation) }
+    { grammar_logger "CORRMATRIX_top_var_type" ; (SMatrix (AoS, e, e), Correlation, Scale.Native) }
   | COVMATRIX LBRACK e=expression RBRACK
-    { grammar_logger "COVMATRIX_top_var_type" ; (SMatrix (AoS, e, e), Covariance) }
+    { grammar_logger "COVMATRIX_top_var_type" ; (SMatrix (AoS, e, e), Covariance, Scale.Native) }
 
-type_constraint:
-  | r=range_constraint
-    {  grammar_logger "type_constraint_range" ; r }
+type_constraint_and_scale:
+  | (* nothing *)
+    { grammar_logger "no_constraint_or_scale" ; 
+    Transformation.Identity, Scale.Native 
+    }
+  | LABRACK l=offset_mult RABRACK
+    {  grammar_logger "only_scale" ; Transformation.Identity, l }
+  | LABRACK r=range RABRACK
+    {  grammar_logger "only_range" ; r, Scale.Native }
+
+  | LABRACK r=range RABRACK LABRACK l=offset_mult RABRACK
+    {  grammar_logger "range_constraint" ; r,l  }
+
+type_scale:
+  | (* nothing *)
+    { grammar_logger "no_scale" ; Scale.Native }
   | LABRACK l=offset_mult RABRACK
     {  grammar_logger "type_constraint_offset_mult" ; l }
 
-range_constraint:
+type_constraint:
   | (* nothing *)
     { grammar_logger "empty_constraint" ; Transformation.Identity }
   | LABRACK r=range RABRACK
@@ -468,7 +490,7 @@ range:
 offset_mult:
   | OFFSET ASSIGN e1=constr_expression COMMA MULTIPLIER ASSIGN e2=constr_expression
   | MULTIPLIER ASSIGN e2=constr_expression COMMA OFFSET ASSIGN e1=constr_expression
-    { grammar_logger "offset_mult" ; Transformation.OffsetMultiplier (e1, e2) }
+    { grammar_logger "offset_mult" ; Scale.OffsetMultiplier (e1, e2) }
   | OFFSET ASSIGN e=constr_expression
     { grammar_logger "offset" ; Offset e }
   | MULTIPLIER ASSIGN e=constr_expression

@@ -894,20 +894,6 @@ let semantic_check_transformation cf ut = function
       Validate.liftA2
         (fun ue1 ue2 -> Transformation.LowerUpper (ue1, ue2))
         ue1 ue2
-  | Offset e ->
-      semantic_check_expression_of_scalar_or_type cf ut e "Offset"
-      |> Validate.map ~f:(fun ue -> Transformation.Offset ue)
-  | Multiplier e ->
-      semantic_check_expression_of_scalar_or_type cf ut e "Multiplier"
-      |> Validate.map ~f:(fun ue -> Transformation.Multiplier ue)
-  | OffsetMultiplier (e1, e2) ->
-      let ue1 = semantic_check_expression_of_scalar_or_type cf ut e1 "Offset"
-      and ue2 =
-        semantic_check_expression_of_scalar_or_type cf ut e2 "Multiplier"
-      in
-      Validate.liftA2
-        (fun ue1 ue2 -> Transformation.OffsetMultiplier (ue1, ue2))
-        ue1 ue2
   | Ordered -> Validate.ok Transformation.Ordered
   | PositiveOrdered -> Validate.ok Transformation.PositiveOrdered
   | Simplex -> Validate.ok Transformation.Simplex
@@ -916,6 +902,23 @@ let semantic_check_transformation cf ut = function
   | CholeskyCov -> Validate.ok Transformation.CholeskyCov
   | Correlation -> Validate.ok Transformation.Correlation
   | Covariance -> Validate.ok Transformation.Covariance
+
+let semantic_check_scale cf ut = function
+  | Scale.Native -> Validate.ok Scale.Native
+  | Offset e ->
+      semantic_check_expression_of_scalar_or_type cf ut e "Offset"
+      |> Validate.map ~f:(fun ue -> Scale.Offset ue)
+  | Multiplier e ->
+      semantic_check_expression_of_scalar_or_type cf ut e "Multiplier"
+      |> Validate.map ~f:(fun ue -> Scale.Multiplier ue)
+  | OffsetMultiplier (e1, e2) ->
+      let ue1 = semantic_check_expression_of_scalar_or_type cf ut e1 "Offset"
+      and ue2 =
+        semantic_check_expression_of_scalar_or_type cf ut e2 "Multiplier"
+      in
+      Validate.liftA2
+        (fun ue1 ue2 -> Scale.OffsetMultiplier (ue1, ue2))
+        ue1 ue2
 
 (* -- Printables ------------------------------------------------------------ *)
 
@@ -1534,6 +1537,9 @@ and semantic_check_profile ~loc ~cf name stmts =
 
 (* -- Variable Declarations ------------------------------------------------- *)
 and semantic_check_var_decl_bounds ~loc is_global sized_ty trans =
+  (* TR TODO for scale - only need complex check 
+      also rename probably?
+  *)
   let is_real {emeta; _} = emeta.type_ = UReal in
   let is_real_transformation =
     match trans with
@@ -1584,7 +1590,7 @@ and semantic_check_var_decl_initial_value ~loc ~cf id init_val_opt =
                     in
                     fatal_error ~msg () ) )
 
-and semantic_check_var_decl ~loc ~cf sized_ty trans id init is_global =
+and semantic_check_var_decl ~loc ~cf sized_ty trans scale id init is_global =
   let checked_stmt =
     semantic_check_sizedtype {cf with in_toplevel_decl= is_global} sized_ty
   in
@@ -1594,10 +1600,14 @@ and semantic_check_var_decl ~loc ~cf sized_ty trans id init is_global =
       >>= fun ust ->
       semantic_check_transformation cf (SizedType.to_unsized ust) trans
     in
-    liftA2 tuple2 checked_stmt checked_trans
+    let checked_scale =
+      checked_stmt
+      >>= fun ust -> semantic_check_scale cf (SizedType.to_unsized ust) scale
+    in
+    liftA3 tuple3 checked_stmt checked_trans checked_scale
     |> apply_const (semantic_check_identifier id)
     |> apply_const (check_fresh_variable id false)
-    >>= fun (ust, utrans) ->
+    >>= fun (ust, utrans, uscale) ->
     let ut = SizedType.to_unsized ust in
     Symbol_table.enter vm id.name (cf.current_block, ut) ;
     semantic_check_var_decl_initial_value ~loc ~cf id init
@@ -1607,6 +1617,7 @@ and semantic_check_var_decl ~loc ~cf sized_ty trans id init is_global =
            let stmt =
              VarDecl
                { decl_type= Sized ust
+               ; scale= uscale
                ; transformation= utrans
                ; identifier= id
                ; initial_value= uinit
@@ -1825,11 +1836,12 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
       raise_s [%message "Don't support unsized declarations yet."]
   | VarDecl
       { decl_type= Sized st
+      ; scale
       ; transformation
       ; identifier
       ; initial_value
       ; is_global } ->
-      semantic_check_var_decl ~loc ~cf st transformation identifier
+      semantic_check_var_decl ~loc ~cf st transformation scale identifier
         initial_value is_global
   | FunDef {returntype; funname; arguments; body} ->
       semantic_check_fundef ~loc ~cf returntype funname arguments body

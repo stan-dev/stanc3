@@ -10,10 +10,14 @@ type 'expr t =
   | FnReadDataSerializer
   (* XXX move these to a backend specific file?*)
   | FnReadParam of
-      { constrain: 'expr Transformation.t
+      { scale: 'expr Scale.t
+      ; constrain: 'expr Transformation.t
       ; dims: 'expr list
       ; mem_pattern: Common.Helpers.mem_pattern }
-  | FnWriteParam of {unconstrain_opt: 'expr Transformation.t option; var: 'expr}
+  | FnWriteParam of
+      { scale: 'expr Scale.t
+      ; unconstrain: 'expr Transformation.t
+      ; var: 'expr }
   | FnValidateSize
   | FnValidateSizeSimplex
   | FnValidateSizeUnitVector

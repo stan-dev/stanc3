@@ -149,12 +149,14 @@ let rec parens_stmt {stmt; smeta} =
     match stmt with
     | VarDecl
         { decl_type= d
+        ; scale= s
         ; transformation= t
         ; identifier
         ; initial_value= init
         ; is_global } ->
         VarDecl
           { decl_type= Middle.Type.map no_parens d
+          ; scale= Middle.Scale.map keep_parens s
           ; transformation= Middle.Transformation.map keep_parens t
           ; identifier
           ; initial_value= Option.map ~f:no_parens init

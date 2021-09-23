@@ -198,8 +198,7 @@ type decl_context =
   {transform_action: transform_action; dadlevel: UnsizedType.autodifftype}
 
 let constraint_forl = function
-  | Transformation.Identity | Offset _ | Multiplier _ | OffsetMultiplier _
-   |Lower _ | Upper _ | LowerUpper _ ->
+  | Transformation.Identity | Lower _ | Upper _ | LowerUpper _ ->
       Stmt.Helpers.for_scalar
   | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
    |CholeskyCov | Correlation | Covariance ->
@@ -217,19 +216,22 @@ let same_shape decl_id decl_var id var meta =
         ; meta } ]
 
 let check_transform_shape decl_id decl_var meta = function
-  | Transformation.Offset e -> same_shape decl_id decl_var "offset" e meta
-  | Multiplier e -> same_shape decl_id decl_var "multiplier" e meta
-  | Lower e -> same_shape decl_id decl_var "lower" e meta
+  | Transformation.Lower e -> same_shape decl_id decl_var "lower" e meta
   | Upper e -> same_shape decl_id decl_var "upper" e meta
-  | OffsetMultiplier (e1, e2) ->
-      same_shape decl_id decl_var "offset" e1 meta
-      @ same_shape decl_id decl_var "multiplier" e2 meta
   | LowerUpper (e1, e2) ->
       same_shape decl_id decl_var "lower" e1 meta
       @ same_shape decl_id decl_var "upper" e2 meta
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
    |PositiveOrdered | Simplex | UnitVector | Identity ->
       []
+
+let check_scale_shape decl_id decl_var meta = function
+  | Scale.Native -> []
+  | Offset e -> same_shape decl_id decl_var "offset" e meta
+  | Multiplier e -> same_shape decl_id decl_var "multiplier" e meta
+  | OffsetMultiplier (e1, e2) ->
+      same_shape decl_id decl_var "offset" e1 meta
+      @ same_shape decl_id decl_var "multiplier" e2 meta
 
 let copy_indices indexed (var : Expr.Typed.t) =
   if UnsizedType.is_scalar_type var.meta.type_ then var
@@ -247,14 +249,18 @@ let copy_indices indexed (var : Expr.Typed.t) =
 
 let extract_transform_args var = function
   | Transformation.Lower a | Upper a -> [copy_indices var a]
-  | Offset a ->
-      [copy_indices var a; {a with Expr.Fixed.pattern= Lit (Int, "1")}]
-  | Multiplier a -> [{a with pattern= Lit (Int, "0")}; copy_indices var a]
-  | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) ->
-      [copy_indices var a1; copy_indices var a2]
+  | LowerUpper (a1, a2) -> [copy_indices var a1; copy_indices var a2]
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
    |PositiveOrdered | Simplex | UnitVector | Identity ->
       []
+
+(* 
+let extract_scale_args var = function
+  | Scale.Native -> []
+  | Offset a ->
+      [copy_indices var a; {a with Expr.Fixed.pattern= Lit (Int, "1")}]
+  | Multiplier a -> [{a with pattern= Lit (Int, "0")}; copy_indices var a]
+  | OffsetMultiplier (a1, a2) -> [copy_indices var a1; copy_indices var a2] *)
 
 let param_size transform sizedtype =
   let rec shrink_eigen f st =
@@ -281,8 +287,6 @@ let param_size transform sizedtype =
   match transform with
   | Transformation.Identity | Lower _ | Upper _
    |LowerUpper (_, _)
-   |Offset _ | Multiplier _
-   |OffsetMultiplier (_, _)
    |Ordered | PositiveOrdered | UnitVector ->
       sizedtype
   | Simplex ->
@@ -362,7 +366,7 @@ let check_sizedtype name =
       (ll, Type.Sized st)
   | Unsized ut -> ([], Unsized ut)
 
-let trans_decl {transform_action; dadlevel} smeta decl_type transform
+let trans_decl {transform_action; dadlevel} smeta decl_type transform scale
     identifier initial_value =
   let decl_id = identifier.Ast.name in
   let rhs = Option.map ~f:trans_expr initial_value in
@@ -398,6 +402,7 @@ let trans_decl {transform_action; dadlevel} smeta decl_type transform
           raise_s [%message "This should never happen."]
       | Check ->
           check_transform_shape decl_id decl_var smeta transform
+          @ check_scale_shape decl_id decl_var smeta scale
           @ check_decl decl_var dt decl_id transform smeta dadlevel
       | IgnoreTransform -> []
     in
@@ -557,9 +562,15 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
         [%message
           "Found function definition statement outside of function block"]
   | Ast.VarDecl
-      {decl_type; transformation; identifier; initial_value; is_global= _} ->
+      { decl_type
+      ; scale
+      ; transformation
+      ; identifier
+      ; initial_value
+      ; is_global= _ } ->
       trans_decl declc smeta decl_type
         (Transformation.map trans_expr transformation)
+        (Scale.map trans_expr scale)
         identifier initial_value
   | Ast.Block stmts -> Block (List.concat_map ~f:trans_stmt stmts) |> swrap
   | Ast.Profile (name, stmts) ->
@@ -683,11 +694,13 @@ let trans_block ud_dists declc block prog =
           VarDecl
             { decl_type= Sized type_
             ; identifier
+            ; scale
             ; transformation
             ; initial_value
             ; is_global= true }
       ; smeta } ->
         let decl_id = identifier.Ast.name in
+        let scale = Scale.map trans_expr scale in
         let transform = Transformation.map trans_expr transformation in
         let rhs = Option.map ~f:trans_expr initial_value in
         let size, type_ =
@@ -727,6 +740,7 @@ let trans_block ud_dists declc block prog =
               { out_constrained_st= type_
               ; out_unconstrained_st= param_size transform type_
               ; out_block= block
+              ; out_scale= scale
               ; out_trans= transform } )
         in
         let stmts =
@@ -735,8 +749,10 @@ let trans_block ud_dists declc block prog =
               match declc.transform_action with
               | Constrain | Unconstrain ->
                   check_transform_shape decl_id decl_var smeta.loc transform
+                  @ check_scale_shape decl_id decl_var smeta.loc scale
               | Check ->
                   check_transform_shape decl_id decl_var smeta.loc transform
+                  @ check_scale_shape decl_id decl_var smeta.loc scale
                   @ check_decl decl_var (Sized type_) decl_id transform
                       smeta.loc declc.dadlevel
               | IgnoreTransform -> []

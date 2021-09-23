@@ -331,15 +331,17 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
           pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
             (list ~sep:comma pp_expr)
             (function_arg :: Expr.Helpers.str var_name :: var :: args) )
-  | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; var}), _) -> (
-    match
-      (unconstrain_opt, Option.bind ~f:constraint_to_string unconstrain_opt)
-    with
+  | NRFunApp
+      ( CompilerInternal
+          (FnWriteParam {unconstrain; var (* TR TODO scale *); _})
+      , _ ) -> (
+    match (unconstrain, constraint_to_string unconstrain) with
     (* When the current block or this transformation doesn't require unconstraining,
        use vanilla write *)
-    | None, _ | _, None -> pf ppf "@[<hov 2>out__.write(@,%a);@]" pp_expr var
+    | Transformation.Identity, _ | _, None ->
+        pf ppf "@[<hov 2>out__.write(@,%a);@]" pp_expr var
     (* Otherwise, use stan::io::serializer's write_free functions *)
-    | Some trans, Some unconstrain_string ->
+    | trans, Some unconstrain_string ->
         let unconstrain_args = transform_args trans in
         pf ppf "@[<hov 2>out__.write_free_%s(@,%a);@]" unconstrain_string
           (list ~sep:comma pp_expr)
