@@ -254,14 +254,6 @@ let extract_transform_args var = function
    |PositiveOrdered | Simplex | UnitVector | Identity ->
       []
 
-(* 
-let extract_scale_args var = function
-  | Scale.Native -> []
-  | Offset a ->
-      [copy_indices var a; {a with Expr.Fixed.pattern= Lit (Int, "1")}]
-  | Multiplier a -> [{a with pattern= Lit (Int, "0")}; copy_indices var a]
-  | OffsetMultiplier (a1, a2) -> [copy_indices var a1; copy_indices var a2] *)
-
 let param_size transform sizedtype =
   let rec shrink_eigen f st =
     match st with

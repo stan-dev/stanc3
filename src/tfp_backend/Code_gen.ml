@@ -218,7 +218,8 @@ let pp_bijector ppf trans =
     | Upper ub ->
         [("Exp", []); ("Scale", [Expr.Helpers.float (-1.)]); ("Shift", [ub])]
     | LowerUpper (lb, ub) -> [("Sigmoid", [lb; ub])]
-    (* | Offset o -> [("Shift", [o])]
+    (* TODO 
+    | Offset o -> [("Shift", [o])]
     | Multiplier m -> [("Scale", [m])]
     | OffsetMultiplier (o, m) -> [("Scale", [m]); ("Shift", [o])] *)
     | CholeskyCorr -> [("CorrelationCholesky", [])]
