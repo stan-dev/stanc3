@@ -163,7 +163,7 @@ let constraint_to_string = function
   | Simplex -> Some "simplex"
   | UnitVector -> Some "unit_vector"
   | CholeskyCorr -> Some "cholesky_factor_corr"
-  | CholeskyCov -> Some "cholesky_factor_cov"
+  | CholeskyCov -> Some "cholesky_factor"
   | Correlation -> Some "corr_matrix"
   | Covariance -> Some "cov_matrix"
   | Lower _ -> Some "lb"
@@ -175,6 +175,7 @@ let check_to_string = function
   | Transformation.Lower _ -> Some "greater_or_equal"
   | Upper _ -> Some "less_or_equal"
   | CholeskyCov -> Some "cholesky_factor"
+  | CholeskyCorr -> Some "cholesky_factor_corr"
   | LowerUpper _ ->
       raise_s [%message "LowerUpper is really two other checks tied together"]
   | t -> constraint_to_string t
