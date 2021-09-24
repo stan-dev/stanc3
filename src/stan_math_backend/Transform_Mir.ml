@@ -165,26 +165,6 @@ let data_read smeta (decl_id, st) =
           ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta ]
         |> swrap ]
 
-(*
-  Get the dimension expressions that are expected by constrain/unconstrain
-  functions for a sized type.
-
-  For constrains that return square / lower triangular matrices the C++
-  only wants one of the matrix dimensions.
-*)
-let read_constrain_dims constrain_transform st =
-  let rec constrain_get_dims st =
-    match st with
-    | SizedType.SInt | SReal | SComplex -> []
-    | SVector (_, d) | SRowVector (_, d) -> [d]
-    | SMatrix (_, _, dim2) -> [dim2]
-    | SArray (t, dim) -> dim :: constrain_get_dims t
-  in
-  match constrain_transform with
-  | Transformation.CholeskyCorr | Correlation | Covariance ->
-      constrain_get_dims st
-  | _ -> SizedType.get_dims st
-
 let data_serializer_read loc out_constrained_st =
   let ut = SizedType.to_unsized out_constrained_st in
   let dims = SizedType.get_dims_io out_constrained_st in
@@ -204,7 +184,8 @@ let param_read smeta
     let emeta =
       Expr.Typed.Meta.create ~loc:smeta ~type_:ut ~adlevel:AutoDiffable ()
     in
-    let dims = read_constrain_dims out_trans cst in
+    let outer_dims = SizedType.outer_dims cst in
+    let dims = SizedType.dims_of cst in
     let read =
       Expr.(
         Helpers.(
@@ -212,6 +193,7 @@ let param_read smeta
             (FnReadParam
                { scale= out_scale
                ; constrain= out_trans
+               ; outer_dims
                ; dims
                ; mem_pattern= SizedType.get_mem_pattern cst })
             []

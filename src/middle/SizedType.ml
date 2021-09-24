@@ -89,6 +89,9 @@ let rec get_dims st =
   | SMatrix (_, dim1, dim2) -> [dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t
 
+let rec outer_dims st =
+  match st with SArray (t, d) -> d :: outer_dims t | _ -> []
+
 (**
  * Check whether a SizedType holds indexable SizedTypes.
  *)

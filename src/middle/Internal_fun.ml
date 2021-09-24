@@ -12,7 +12,15 @@ type 'expr t =
   | FnReadParam of
       { scale: 'expr Scale.t
       ; constrain: 'expr Transformation.t
-      ; dims: 'expr list
+      ; outer_dims:
+          'expr list
+          (* dimensions of the container type. [] unless reading an array *)
+      ; dims:
+          'expr list
+          (* the dimensions of the actual internal type, like `matrix`
+           * currently, all special arguments or shape concerns depend only on this
+           * so we use it in expression generation
+           *)
       ; mem_pattern: Common.Helpers.mem_pattern }
   | FnWriteParam of
       { scale: 'expr Scale.t

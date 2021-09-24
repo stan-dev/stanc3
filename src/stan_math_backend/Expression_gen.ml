@@ -182,8 +182,55 @@ let check_to_string = function
 let default_multiplier = 1
 let default_offset = 0
 
+(*
+  Get the dimension expressions that are expected by constrain/unconstrain
+  functions for a sized type.
+  Simplex and the matrix constraints expect different sizes. This is similar to
+  Ast_to_Mir.param_size
+*)
+let read_constrain_dims transform unc_dims =
+  let k_choose_2 k =
+    Expr.Helpers.(binop (binop k Times (binop k Minus (int 1))) Divide (int 2))
+  in
+  let constrain_dim dims trans =
+    match (trans, dims) with
+    | (Transformation.CholeskyCorr | Correlation), [_; dim2] ->
+        (* kc2 *)
+        [k_choose_2 dim2]
+    | CholeskyCov, [m; n] ->
+        (* (N * (N + 1)) / 2 + (M - N) * N *)
+        [ Expr.Helpers.(
+            binop
+              (binop (k_choose_2 n) Plus n)
+              Plus
+              (binop (binop m Minus n) Times n)) ]
+    | Covariance, [_; dim2] ->
+        (* k + kc2 *)
+        [Expr.Helpers.(binop dim2 Plus (k_choose_2 dim2))]
+    | Simplex, [dim] -> (* k - 1 *)
+                        [Expr.Helpers.(binop dim Minus (int 1))]
+    | ( ( Identity | Lower _ | Upper _ | LowerUpper _ | Ordered
+        | PositiveOrdered | UnitVector )
+      , _ ) ->
+        dims
+    | _, _ ->
+        raise_s
+          [%message
+            "Error in constraint dimensions "
+              (trans : Expr.Typed.t Transformation.t)
+              (dims : Expr.Typed.t list)]
+  in
+  constrain_dim unc_dims transform
+
 let transform_args transform =
   Transformation.fold (fun args arg -> args @ [arg]) [] transform
+
+let extra_constraint_args dims = function
+  | Transformation.Identity | Lower _ | Upper _ | LowerUpper _ | Ordered
+   |PositiveOrdered | Simplex | UnitVector ->
+      []
+  | Covariance | Correlation | CholeskyCorr -> [List.hd_exn dims]
+  | CholeskyCov -> dims
 
 let scale_args = function
   | Scale.Offset offset -> [offset; Expr.Helpers.int default_multiplier]
@@ -475,24 +522,8 @@ and pp_compiler_internal_fn ad ut f ppf es =
   | FnReadDataSerializer ->
       pf ppf "@[<hov 2>in__.read<%a>(@,)@]" pp_unsizedtype_local
         (UnsizedType.AutoDiffable, UnsizedType.UReal)
-  | FnReadParam {constrain; (* TR TODO scale; *) dims; _} -> (
-      let constrain_opt = constraint_to_string constrain in
-      match constrain_opt with
-      | None ->
-          pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
-            (UnsizedType.AutoDiffable, ut)
-            (list ~sep:comma pp_expr) dims
-      | Some constraint_string ->
-          let constraint_args = transform_args constrain in
-          let lp =
-            Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty}
-          in
-          let args = constraint_args @ [lp] @ dims in
-          pf ppf
-            "@[<hov 2>in__.template read_constrain_%s<%a, jacobian__>(@,%a)@]"
-            constraint_string pp_unsizedtype_local
-            (UnsizedType.AutoDiffable, ut)
-            (list ~sep:comma pp_expr) args )
+  | FnReadParam {constrain; scale; dims; outer_dims; _} ->
+      pp_readparam ppf (ut, outer_dims, dims, constrain, scale)
   | FnDeepCopy -> gen_fun_app FnPlain ppf "stan::model::deep_copy" es AoS
   | _ -> gen_fun_app FnPlain ppf (Internal_fun.to_string f) es AoS
 
@@ -581,6 +612,42 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
       ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
+
+and pp_readparam ppf (ut, outer_dims, dims, constrain, scale) =
+  let pp_read ppf () =
+    let dims = outer_dims @ read_constrain_dims constrain dims in
+    pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
+      (UnsizedType.AutoDiffable, input_type ut dims)
+      (list ~sep:comma pp_expr) dims
+  in
+  let lp = Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty} in
+  let pp_scale ppf () =
+    match scale with
+    | Scale.Native -> pf ppf "%a" pp_read ()
+    | _ ->
+        pf ppf "@[<hov 2>%s<jacobian__>(@,%a,@ %a)@]"
+          "stan::math::offset_multiplier_constrain" pp_read ()
+          (list ~sep:comma pp_expr)
+          (scale_args scale @ [lp])
+  in
+  let constrain_opt = constraint_to_string constrain in
+  match constrain_opt with
+  | None -> pp_scale ppf ()
+  | Some constraint_string ->
+      let constraint_args = transform_args constrain in
+      let extra_args = extra_constraint_args dims constrain in
+      let args = constraint_args @ extra_args @ [lp] in
+      pf ppf "@[<hov 2>stan::math::%s_constrain<jacobian__>(@,%a, @,%a)@]"
+        constraint_string pp_scale () (list ~sep:comma pp_expr) args
+
+(* This handles the special cases of things like cholesky_corr,
+ * which read in a vector and then produce a matrix 
+ *)
+and input_type (ut : UnsizedType.t) dims : UnsizedType.t =
+  match (ut, dims) with
+  | UMatrix, [_] -> UVector
+  | UArray t, _ :: dims -> UArray (input_type t dims)
+  | _ -> ut
 
 (* these functions are just for testing *)
 let dummy_locate pattern =

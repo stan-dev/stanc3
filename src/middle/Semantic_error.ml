@@ -371,7 +371,7 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
         Fmt.pf ppf
           "Bounds of integer variable must be of type int. Found type real."
     | ComplexTransform ->
-        Fmt.pf ppf "Complex types do not support transformations."
+        Fmt.pf ppf "Complex types do not support bounds or scales."
     | TransformedParamsInt ->
         Fmt.pf ppf "(Transformed) Parameters cannot be integers."
     | MismatchFunDefDecl (name, Some ut) ->

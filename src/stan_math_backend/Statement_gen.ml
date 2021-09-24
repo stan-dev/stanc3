@@ -331,21 +331,8 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
           pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
             (list ~sep:comma pp_expr)
             (function_arg :: Expr.Helpers.str var_name :: var :: args) )
-  | NRFunApp
-      ( CompilerInternal
-          (FnWriteParam {unconstrain; var (* TR TODO scale *); _})
-      , _ ) -> (
-    match (unconstrain, constraint_to_string unconstrain) with
-    (* When the current block or this transformation doesn't require unconstraining,
-       use vanilla write *)
-    | Transformation.Identity, _ | _, None ->
-        pf ppf "@[<hov 2>out__.write(@,%a);@]" pp_expr var
-    (* Otherwise, use stan::io::serializer's write_free functions *)
-    | trans, Some unconstrain_string ->
-        let unconstrain_args = transform_args trans in
-        pf ppf "@[<hov 2>out__.write_free_%s(@,%a);@]" unconstrain_string
-          (list ~sep:comma pp_expr)
-          (unconstrain_args @ [var]) )
+  | NRFunApp (CompilerInternal (FnWriteParam {unconstrain; var; scale}), _) ->
+      pp_writeparam ppf (var, unconstrain, scale)
   | NRFunApp (CompilerInternal f, args) ->
       let fname, extra_args = trans_math_fn f in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
@@ -379,6 +366,24 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   | SList ls -> pp_stmt_list ppf ls
   | Decl {decl_adtype; decl_id; decl_type; initialize; _} ->
       pp_decl ppf (decl_id, decl_type, decl_adtype, initialize)
+
+and pp_writeparam ppf (var, unconstrain, scale) =
+  let pp_unconstrain ppf () =
+    match constraint_to_string unconstrain with
+    | None -> pp_expr ppf var
+    | Some unconstrain_string ->
+        let unconstrain_args = transform_args unconstrain in
+        pf ppf "@[<hov 2>stan::math::%s_free(@,%a)@]" unconstrain_string
+          (list ~sep:comma pp_expr) (var :: unconstrain_args)
+  in
+  let pp_scale ppf () =
+    match scale with
+    | Scale.Native -> pf ppf "%a" pp_unconstrain ()
+    | _ ->
+        pf ppf "@[<hov 2>stan::math::offset_multiplier_free(@,%a,@ %a)@]"
+          pp_unconstrain () (list ~sep:comma pp_expr) (scale_args scale)
+  in
+  pf ppf "@[<hov 2>out__.write(@,%a);@]" pp_scale ()
 
 and pp_block_s ppf body =
   match body.pattern with

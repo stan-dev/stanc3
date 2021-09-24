@@ -132,7 +132,7 @@ Semantic error in 'bad_bounds2.stan', line 2, column 2 to column 31:
      4:  parameters {
    -------------------------------------------------
 
-Complex types do not support transformations.
+Complex types do not support bounds or scales.
   $ ../../../../../install/default/bin/stanc bad_bounds3.stan
 Semantic error in 'bad_bounds3.stan', line 2, column 1 to column 21:
    -------------------------------------------------
@@ -143,7 +143,7 @@ Semantic error in 'bad_bounds3.stan', line 2, column 1 to column 21:
      4:  parameters {
    -------------------------------------------------
 
-Complex types do not support transformations.
+Complex types do not support bounds or scales.
   $ ../../../../../install/default/bin/stanc bad_bounds4.stan
 Semantic error in 'bad_bounds4.stan', line 2, column 2 to column 30:
    -------------------------------------------------
@@ -154,7 +154,7 @@ Semantic error in 'bad_bounds4.stan', line 2, column 2 to column 30:
      4:  parameters {
    -------------------------------------------------
 
-Complex types do not support transformations.
+Complex types do not support bounds or scales.
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_rvec_data.stan
 Semantic error in 'bad_cov_exp_quad_arr_rvec_data.stan', line 13, column 41 to column 48:
    -------------------------------------------------

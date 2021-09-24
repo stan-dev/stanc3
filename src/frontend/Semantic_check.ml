@@ -1536,10 +1536,7 @@ and semantic_check_profile ~loc ~cf name stmts =
         mk_typed_statement ~stmt:(Profile (name, xs)) ~return_type ~loc ))
 
 (* -- Variable Declarations ------------------------------------------------- *)
-and semantic_check_var_decl_bounds ~loc is_global sized_ty trans =
-  (* TR TODO for scale - only need complex check 
-      also rename probably?
-  *)
+and semantic_check_transformation_types ~loc is_global sized_ty trans scale =
   let is_real {emeta; _} = emeta.type_ = UReal in
   let is_real_transformation =
     match trans with
@@ -1548,16 +1545,17 @@ and semantic_check_var_decl_bounds ~loc is_global sized_ty trans =
     | LowerUpper (e1, e2) -> is_real e1 || is_real e2
     | _ -> false
   in
-  let is_transformation =
+  let is_transformed =
     match trans with Transformation.Identity -> false | _ -> true
   in
+  let is_scaled = match scale with Scale.Native -> false | _ -> true in
   Validate.(
     if is_global && sized_ty = SizedType.SInt && is_real_transformation then
       Semantic_error.non_int_bounds loc |> error
     else if
       is_global
       && SizedType.(inner_type sized_ty = SComplex)
-      && is_transformation
+      && (is_transformed || is_scaled)
     then Semantic_error.complex_transform loc |> error
     else ok ())
 
@@ -1611,7 +1609,8 @@ and semantic_check_var_decl ~loc ~cf sized_ty trans scale id init is_global =
     let ut = SizedType.to_unsized ust in
     Symbol_table.enter vm id.name (cf.current_block, ut) ;
     semantic_check_var_decl_initial_value ~loc ~cf id init
-    |> apply_const (semantic_check_var_decl_bounds ~loc is_global ust utrans)
+    |> apply_const
+         (semantic_check_transformation_types ~loc is_global ust utrans uscale)
     |> apply_const (semantic_check_transformed_param_ty ~loc ~cf is_global ut)
     |> map ~f:(fun uinit ->
            let stmt =

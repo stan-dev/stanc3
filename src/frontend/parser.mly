@@ -426,16 +426,16 @@ top_var_type:
     { grammar_logger "MATRIX_top_var_type" ; (SMatrix (AoS, e1, e2), fst cs, snd cs) }
   | ORDERED s=type_scale LBRACK e=expression RBRACK
     { grammar_logger "ORDERED_top_var_type" ; (SVector (AoS, e), Ordered, s) }
-  (* TR TODO arbitrarily deciding the rest of these can't get a scale *)
-  | POSITIVEORDERED LBRACK e=expression RBRACK
+  | POSITIVEORDERED s=type_scale LBRACK e=expression RBRACK
     {
       grammar_logger "POSITIVEORDERED_top_var_type" ;
-      (SVector (AoS, e), PositiveOrdered, Scale.Native)
+      (SVector (AoS, e), PositiveOrdered, s)
     }
-  | SIMPLEX LBRACK e=expression RBRACK
-    { grammar_logger "SIMPLEX_top_var_type" ; (SVector (AoS, e), Simplex, Scale.Native) }
-  | UNITVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "UNITVECTOR_top_var_type" ; (SVector (AoS, e), UnitVector, Scale.Native) }
+  | SIMPLEX s=type_scale LBRACK e=expression RBRACK
+    { grammar_logger "SIMPLEX_top_var_type" ; (SVector (AoS, e), Simplex, s) }
+  | UNITVECTOR s=type_scale LBRACK e=expression RBRACK
+    { grammar_logger "UNITVECTOR_top_var_type" ; (SVector (AoS, e), UnitVector, s) }
+  (* arbitrarily decided the remainder don't get a scale *)
   | CHOLESKYFACTORCORR LBRACK e=expression RBRACK
     {
       grammar_logger "CHOLESKYFACTORCORR_top_var_type" ;

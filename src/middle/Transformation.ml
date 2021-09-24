@@ -14,6 +14,4 @@ type 'e t =
   | Covariance
 [@@deriving sexp, compare, map, hash, fold]
 
-let has_check = function
-  | Identity  -> false
-  | _ -> true
+let has_check = function Identity -> false | _ -> true

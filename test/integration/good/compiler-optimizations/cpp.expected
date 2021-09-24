@@ -266,20 +266,20 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       int lcm_sym17__;
       local_scalar_t__ beta;
       current_statement__ = 1;
-      beta = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
-               lp__);
+      beta = stan::math::lb_constrain<jacobian__>(
+               in__.template read<local_scalar_t__>(), 0, lp__);
       local_scalar_t__ gamma;
       current_statement__ = 2;
-      gamma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                0, lp__);
+      gamma = stan::math::lb_constrain<jacobian__>(
+                in__.template read<local_scalar_t__>(), 0, lp__);
       local_scalar_t__ xi;
       current_statement__ = 3;
-      xi = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
-             lp__);
+      xi = stan::math::lb_constrain<jacobian__>(
+             in__.template read<local_scalar_t__>(), 0, lp__);
       local_scalar_t__ delta;
       current_statement__ = 4;
-      delta = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                0, lp__);
+      delta = stan::math::lb_constrain<jacobian__>(
+                in__.template read<local_scalar_t__>(), 0, lp__);
       std::vector<std::vector<local_scalar_t__>> y;
       {
         std::vector<double> theta;
@@ -435,20 +435,20 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       int lcm_sym5__;
       double beta;
       current_statement__ = 1;
-      beta = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
-               lp__);
+      beta = stan::math::lb_constrain<jacobian__>(
+               in__.template read<local_scalar_t__>(), 0, lp__);
       double gamma;
       current_statement__ = 2;
-      gamma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                0, lp__);
+      gamma = stan::math::lb_constrain<jacobian__>(
+                in__.template read<local_scalar_t__>(), 0, lp__);
       double xi;
       current_statement__ = 3;
-      xi = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
-             lp__);
+      xi = stan::math::lb_constrain<jacobian__>(
+             in__.template read<local_scalar_t__>(), 0, lp__);
       double delta;
       current_statement__ = 4;
-      delta = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                0, lp__);
+      delta = stan::math::lb_constrain<jacobian__>(
+                in__.template read<local_scalar_t__>(), 0, lp__);
       std::vector<std::vector<double>> y;
       y = std::vector<std::vector<double>>(N_t, std::vector<double>(4, std::numeric_limits<double>::quiet_NaN()));
       
@@ -595,16 +595,16 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       pos__ = 1;
       local_scalar_t__ beta;
       beta = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, beta);
+      out__.write(stan::math::lb_free(beta, 0));
       local_scalar_t__ gamma;
       gamma = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, gamma);
+      out__.write(stan::math::lb_free(gamma, 0));
       local_scalar_t__ xi;
       xi = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, xi);
+      out__.write(stan::math::lb_free(xi, 0));
       local_scalar_t__ delta;
       delta = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, delta);
+      out__.write(stan::math::lb_free(delta, 0));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -1734,12 +1734,13 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       int lcm_sym84__;
       local_scalar_t__ mean_p;
       current_statement__ = 1;
-      mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                 0, 1, lp__);
+      mean_p = stan::math::lub_constrain<jacobian__>(
+                 in__.template read<local_scalar_t__>(), 0, 1, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       current_statement__ = 2;
-      beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-               0, 1, lp__, max_age);
+      beta = stan::math::lub_constrain<jacobian__>(
+               in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                 max_age), 0, 1, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
@@ -2243,12 +2244,13 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       int lcm_sym47__;
       double mean_p;
       current_statement__ = 1;
-      mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                 0, 1, lp__);
+      mean_p = stan::math::lub_constrain<jacobian__>(
+                 in__.template read<local_scalar_t__>(), 0, 1, lp__);
       Eigen::Matrix<double, -1, 1> beta;
       current_statement__ = 2;
-      beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-               0, 1, lp__, max_age);
+      beta = stan::math::lub_constrain<jacobian__>(
+               in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                 max_age), 0, 1, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
@@ -2643,7 +2645,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       pos__ = 1;
       local_scalar_t__ mean_p;
       mean_p = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 1, mean_p);
+      out__.write(stan::math::lub_free(mean_p, 0, 1));
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(max_age);
       stan::math::fill(beta, DUMMY_VAR__);
@@ -2656,7 +2658,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
             "assigning variable beta", index_uni(sym1__));
         }
       } 
-      out__.write_free_lub(0, 1, beta);
+      out__.write(stan::math::lub_free(beta, 0, 1));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -3429,28 +3431,28 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       int lcm_sym7__;
       local_scalar_t__ sigma;
       current_statement__ = 1;
-      sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                0, lp__);
+      sigma = stan::math::lb_constrain<jacobian__>(
+                in__.template read<local_scalar_t__>(), 0, lp__);
       local_scalar_t__ sigma_age;
       current_statement__ = 2;
-      sigma_age = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                    0, lp__);
+      sigma_age = stan::math::lb_constrain<jacobian__>(
+                    in__.template read<local_scalar_t__>(), 0, lp__);
       local_scalar_t__ sigma_edu;
       current_statement__ = 3;
-      sigma_edu = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                    0, lp__);
+      sigma_edu = stan::math::lb_constrain<jacobian__>(
+                    in__.template read<local_scalar_t__>(), 0, lp__);
       local_scalar_t__ sigma_state;
       current_statement__ = 4;
-      sigma_state = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                      0, lp__);
+      sigma_state = stan::math::lb_constrain<jacobian__>(
+                      in__.template read<local_scalar_t__>(), 0, lp__);
       local_scalar_t__ sigma_region;
       current_statement__ = 5;
-      sigma_region = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                       0, lp__);
+      sigma_region = stan::math::lb_constrain<jacobian__>(
+                       in__.template read<local_scalar_t__>(), 0, lp__);
       local_scalar_t__ sigma_age_edu;
       current_statement__ = 6;
-      sigma_age_edu = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                        0, lp__);
+      sigma_age_edu = stan::math::lb_constrain<jacobian__>(
+                        in__.template read<local_scalar_t__>(), 0, lp__);
       local_scalar_t__ b_0;
       current_statement__ = 7;
       b_0 = in__.template read<local_scalar_t__>();
@@ -3661,28 +3663,28 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       int lcm_sym5__;
       double sigma;
       current_statement__ = 1;
-      sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                0, lp__);
+      sigma = stan::math::lb_constrain<jacobian__>(
+                in__.template read<local_scalar_t__>(), 0, lp__);
       double sigma_age;
       current_statement__ = 2;
-      sigma_age = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                    0, lp__);
+      sigma_age = stan::math::lb_constrain<jacobian__>(
+                    in__.template read<local_scalar_t__>(), 0, lp__);
       double sigma_edu;
       current_statement__ = 3;
-      sigma_edu = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                    0, lp__);
+      sigma_edu = stan::math::lb_constrain<jacobian__>(
+                    in__.template read<local_scalar_t__>(), 0, lp__);
       double sigma_state;
       current_statement__ = 4;
-      sigma_state = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                      0, lp__);
+      sigma_state = stan::math::lb_constrain<jacobian__>(
+                      in__.template read<local_scalar_t__>(), 0, lp__);
       double sigma_region;
       current_statement__ = 5;
-      sigma_region = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                       0, lp__);
+      sigma_region = stan::math::lb_constrain<jacobian__>(
+                       in__.template read<local_scalar_t__>(), 0, lp__);
       double sigma_age_edu;
       current_statement__ = 6;
-      sigma_age_edu = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                        0, lp__);
+      sigma_age_edu = stan::math::lb_constrain<jacobian__>(
+                        in__.template read<local_scalar_t__>(), 0, lp__);
       double b_0;
       current_statement__ = 7;
       b_0 = in__.template read<local_scalar_t__>();
@@ -3767,22 +3769,22 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       pos__ = 1;
       local_scalar_t__ sigma;
       sigma = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, sigma);
+      out__.write(stan::math::lb_free(sigma, 0));
       local_scalar_t__ sigma_age;
       sigma_age = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, sigma_age);
+      out__.write(stan::math::lb_free(sigma_age, 0));
       local_scalar_t__ sigma_edu;
       sigma_edu = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, sigma_edu);
+      out__.write(stan::math::lb_free(sigma_edu, 0));
       local_scalar_t__ sigma_state;
       sigma_state = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, sigma_state);
+      out__.write(stan::math::lb_free(sigma_state, 0));
       local_scalar_t__ sigma_region;
       sigma_region = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, sigma_region);
+      out__.write(stan::math::lb_free(sigma_region, 0));
       local_scalar_t__ sigma_age_edu;
       sigma_age_edu = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, sigma_age_edu);
+      out__.write(stan::math::lb_free(sigma_age_edu, 0));
       local_scalar_t__ b_0;
       b_0 = in__.read<local_scalar_t__>();
       out__.write(b_0);
@@ -4993,16 +4995,18 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       int lcm_sym3__;
       Eigen::Matrix<local_scalar_t__, -1, 1> mu;
       current_statement__ = 1;
-      mu = in__.template read_constrain_ordered<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-             lp__, 2);
+      mu = stan::math::ordered_constrain<jacobian__>(
+             in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2), 
+             lp__);
       std::vector<local_scalar_t__> sigma;
       current_statement__ = 2;
-      sigma = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
-                0, lp__, 2);
+      sigma = stan::math::lb_constrain<jacobian__>(
+                in__.template read<std::vector<local_scalar_t__>>(2), 0,
+                lp__);
       local_scalar_t__ theta;
       current_statement__ = 3;
-      theta = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                0, 1, lp__);
+      theta = stan::math::lub_constrain<jacobian__>(
+                in__.template read<local_scalar_t__>(), 0, 1, lp__);
       {
         current_statement__ = 4;
         lp_accum__.add(normal_lpdf<propto__>(sigma, 0, 2));
@@ -5070,16 +5074,18 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       int lcm_sym1__;
       Eigen::Matrix<double, -1, 1> mu;
       current_statement__ = 1;
-      mu = in__.template read_constrain_ordered<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-             lp__, 2);
+      mu = stan::math::ordered_constrain<jacobian__>(
+             in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2), 
+             lp__);
       std::vector<double> sigma;
       current_statement__ = 2;
-      sigma = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
-                0, lp__, 2);
+      sigma = stan::math::lb_constrain<jacobian__>(
+                in__.template read<std::vector<local_scalar_t__>>(2), 0,
+                lp__);
       double theta;
       current_statement__ = 3;
-      theta = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                0, 1, lp__);
+      theta = stan::math::lub_constrain<jacobian__>(
+                in__.template read<local_scalar_t__>(), 0, 1, lp__);
       out__.write(mu);
       out__.write(sigma);
       out__.write(theta);
@@ -5122,7 +5128,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
             "assigning variable mu", index_uni(2));
         }
       }
-      out__.write_free_ordered(mu);
+      out__.write(stan::math::ordered_free(mu));
       std::vector<local_scalar_t__> sigma;
       sigma = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
@@ -5132,10 +5138,10 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
           sigma[(2 - 1)] = in__.read<local_scalar_t__>();
         }
       }
-      out__.write_free_lb(0, sigma);
+      out__.write(stan::math::lb_free(sigma, 0));
       local_scalar_t__ theta;
       theta = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 1, theta);
+      out__.write(stan::math::lub_free(theta, 0, 1));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -5481,8 +5487,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
       local_scalar_t__ tau;
       current_statement__ = 3;
-      tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
-              lp__);
+      tau = stan::math::lb_constrain<jacobian__>(
+              in__.template read<local_scalar_t__>(), 0, lp__);
       {
         current_statement__ = 4;
         lp_accum__.add(normal_lpdf<propto__>(theta, mu, tau));
@@ -5531,8 +5537,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
       double tau;
       current_statement__ = 3;
-      tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
-              lp__);
+      tau = stan::math::lb_constrain<jacobian__>(
+              in__.template read<local_scalar_t__>(), 0, lp__);
       out__.write(mu);
       out__.write(theta);
       out__.write(tau);
@@ -5579,7 +5585,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       out__.write(theta);
       local_scalar_t__ tau;
       tau = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, tau);
+      out__.write(stan::math::lb_free(tau, 0));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -6385,24 +6391,24 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(5);
       local_scalar_t__ sigma_a;
       current_statement__ = 7;
-      sigma_a = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                  0, 100, lp__);
+      sigma_a = stan::math::lub_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, 100, lp__);
       local_scalar_t__ sigma_b;
       current_statement__ = 8;
-      sigma_b = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                  0, 100, lp__);
+      sigma_b = stan::math::lub_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, 100, lp__);
       local_scalar_t__ sigma_c;
       current_statement__ = 9;
-      sigma_c = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                  0, 100, lp__);
+      sigma_c = stan::math::lub_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, 100, lp__);
       local_scalar_t__ sigma_d;
       current_statement__ = 10;
-      sigma_d = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                  0, 100, lp__);
+      sigma_d = stan::math::lub_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, 100, lp__);
       local_scalar_t__ sigma_e;
       current_statement__ = 11;
-      sigma_e = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                  0, 100, lp__);
+      sigma_e = stan::math::lub_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, 100, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat;
       y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(y_hat, DUMMY_VAR__);
@@ -6534,24 +6540,24 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(5);
       double sigma_a;
       current_statement__ = 7;
-      sigma_a = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                  0, 100, lp__);
+      sigma_a = stan::math::lub_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, 100, lp__);
       double sigma_b;
       current_statement__ = 8;
-      sigma_b = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                  0, 100, lp__);
+      sigma_b = stan::math::lub_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, 100, lp__);
       double sigma_c;
       current_statement__ = 9;
-      sigma_c = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                  0, 100, lp__);
+      sigma_c = stan::math::lub_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, 100, lp__);
       double sigma_d;
       current_statement__ = 10;
-      sigma_d = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                  0, 100, lp__);
+      sigma_d = stan::math::lub_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, 100, lp__);
       double sigma_e;
       current_statement__ = 11;
-      sigma_e = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                  0, 100, lp__);
+      sigma_e = stan::math::lub_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, 100, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat;
       y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(y_hat, DUMMY_VAR__);
@@ -6746,19 +6752,19 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       out__.write(beta);
       local_scalar_t__ sigma_a;
       sigma_a = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 100, sigma_a);
+      out__.write(stan::math::lub_free(sigma_a, 0, 100));
       local_scalar_t__ sigma_b;
       sigma_b = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 100, sigma_b);
+      out__.write(stan::math::lub_free(sigma_b, 0, 100));
       local_scalar_t__ sigma_c;
       sigma_c = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 100, sigma_c);
+      out__.write(stan::math::lub_free(sigma_c, 0, 100));
       local_scalar_t__ sigma_d;
       sigma_d = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 100, sigma_d);
+      out__.write(stan::math::lub_free(sigma_d, 0, 100));
       local_scalar_t__ sigma_e;
       sigma_e = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 100, sigma_e);
+      out__.write(stan::math::lub_free(sigma_e, 0, 100));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -7329,8 +7335,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       int lcm_sym22__;
       local_scalar_t__ tau_phi;
       current_statement__ = 1;
-      tau_phi = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                  0, lp__);
+      tau_phi = stan::math::lb_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> phi_std_raw;
       lcm_sym22__ = (N - 1);
       phi_std_raw = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
@@ -7407,8 +7413,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       int lcm_sym4__;
       double tau_phi;
       current_statement__ = 1;
-      tau_phi = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                  0, lp__);
+      tau_phi = stan::math::lb_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, lp__);
       Eigen::Matrix<double, -1, 1> phi_std_raw;
       lcm_sym15__ = (N - 1);
       phi_std_raw = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
@@ -7557,7 +7563,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       pos__ = 1;
       local_scalar_t__ tau_phi;
       tau_phi = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, tau_phi);
+      out__.write(stan::math::lb_free(tau_phi, 0));
       Eigen::Matrix<local_scalar_t__, -1, 1> phi_std_raw;
       phi_std_raw = Eigen::Matrix<local_scalar_t__, -1, 1>((N - 1));
       stan::math::fill(phi_std_raw, DUMMY_VAR__);
@@ -8614,20 +8620,20 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       int lcm_sym84__;
       local_scalar_t__ mean_phi;
       current_statement__ = 1;
-      mean_phi = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                   0, 1, lp__);
+      mean_phi = stan::math::lub_constrain<jacobian__>(
+                   in__.template read<local_scalar_t__>(), 0, 1, lp__);
       local_scalar_t__ mean_p;
       current_statement__ = 2;
-      mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                 0, 1, lp__);
+      mean_p = stan::math::lub_constrain<jacobian__>(
+                 in__.template read<local_scalar_t__>(), 0, 1, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
       current_statement__ = 3;
       epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                   nind);
       local_scalar_t__ sigma;
       current_statement__ = 4;
-      sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                0, 5, lp__);
+      sigma = stan::math::lub_constrain<jacobian__>(
+                in__.template read<local_scalar_t__>(), 0, 5, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
@@ -9131,20 +9137,20 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       int lcm_sym47__;
       double mean_phi;
       current_statement__ = 1;
-      mean_phi = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                   0, 1, lp__);
+      mean_phi = stan::math::lub_constrain<jacobian__>(
+                   in__.template read<local_scalar_t__>(), 0, 1, lp__);
       double mean_p;
       current_statement__ = 2;
-      mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                 0, 1, lp__);
+      mean_p = stan::math::lub_constrain<jacobian__>(
+                 in__.template read<local_scalar_t__>(), 0, 1, lp__);
       Eigen::Matrix<double, -1, 1> epsilon;
       current_statement__ = 3;
       epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                   nind);
       double sigma;
       current_statement__ = 4;
-      sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                0, 5, lp__);
+      sigma = stan::math::lub_constrain<jacobian__>(
+                in__.template read<local_scalar_t__>(), 0, 5, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
@@ -9548,10 +9554,10 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       pos__ = 1;
       local_scalar_t__ mean_phi;
       mean_phi = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 1, mean_phi);
+      out__.write(stan::math::lub_free(mean_phi, 0, 1));
       local_scalar_t__ mean_p;
       mean_p = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 1, mean_p);
+      out__.write(stan::math::lub_free(mean_p, 0, 1));
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
       epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>(nind);
       stan::math::fill(epsilon, DUMMY_VAR__);
@@ -9567,7 +9573,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       out__.write(epsilon);
       local_scalar_t__ sigma;
       sigma = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 5, sigma);
+      out__.write(stan::math::lub_free(sigma, 0, 5));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -11209,27 +11215,28 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym194__;
       local_scalar_t__ mean_phi;
       current_statement__ = 1;
-      mean_phi = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                   0, 1, lp__);
+      mean_phi = stan::math::lub_constrain<jacobian__>(
+                   in__.template read<local_scalar_t__>(), 0, 1, lp__);
       local_scalar_t__ mean_p;
       current_statement__ = 2;
-      mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                 0, 1, lp__);
+      mean_p = stan::math::lub_constrain<jacobian__>(
+                 in__.template read<local_scalar_t__>(), 0, 1, lp__);
       local_scalar_t__ psi;
       current_statement__ = 3;
-      psi = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
-              1, lp__);
+      psi = stan::math::lub_constrain<jacobian__>(
+              in__.template read<local_scalar_t__>(), 0, 1, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       current_statement__ = 4;
-      beta = in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-               0, lp__, n_occasions);
+      beta = stan::math::lb_constrain<jacobian__>(
+               in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                 n_occasions), 0, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
       current_statement__ = 5;
       epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(M);
       local_scalar_t__ sigma;
       current_statement__ = 6;
-      sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                0, 5, lp__);
+      sigma = stan::math::lub_constrain<jacobian__>(
+                in__.template read<local_scalar_t__>(), 0, 5, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
@@ -12122,27 +12129,28 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       Eigen::Matrix<double, -1, 1> lcm_sym118__;
       double mean_phi;
       current_statement__ = 1;
-      mean_phi = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                   0, 1, lp__);
+      mean_phi = stan::math::lub_constrain<jacobian__>(
+                   in__.template read<local_scalar_t__>(), 0, 1, lp__);
       double mean_p;
       current_statement__ = 2;
-      mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                 0, 1, lp__);
+      mean_p = stan::math::lub_constrain<jacobian__>(
+                 in__.template read<local_scalar_t__>(), 0, 1, lp__);
       double psi;
       current_statement__ = 3;
-      psi = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
-              1, lp__);
+      psi = stan::math::lub_constrain<jacobian__>(
+              in__.template read<local_scalar_t__>(), 0, 1, lp__);
       Eigen::Matrix<double, -1, 1> beta;
       current_statement__ = 4;
-      beta = in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-               0, lp__, n_occasions);
+      beta = stan::math::lb_constrain<jacobian__>(
+               in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                 n_occasions), 0, lp__);
       Eigen::Matrix<double, -1, 1> epsilon;
       current_statement__ = 5;
       epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(M);
       double sigma;
       current_statement__ = 6;
-      sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                0, 5, lp__);
+      sigma = stan::math::lub_constrain<jacobian__>(
+                in__.template read<local_scalar_t__>(), 0, 5, lp__);
       Eigen::Matrix<double, -1, -1> phi;
       phi = Eigen::Matrix<double, -1, -1>(M, (n_occasions - 1));
       stan::math::fill(phi, std::numeric_limits<double>::quiet_NaN());
@@ -12873,13 +12881,13 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       pos__ = 1;
       local_scalar_t__ mean_phi;
       mean_phi = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 1, mean_phi);
+      out__.write(stan::math::lub_free(mean_phi, 0, 1));
       local_scalar_t__ mean_p;
       mean_p = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 1, mean_p);
+      out__.write(stan::math::lub_free(mean_p, 0, 1));
       local_scalar_t__ psi;
       psi = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 1, psi);
+      out__.write(stan::math::lub_free(psi, 0, 1));
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
       stan::math::fill(beta, DUMMY_VAR__);
@@ -12892,7 +12900,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             "assigning variable beta", index_uni(sym1__));
         }
       } 
-      out__.write_free_lb(0, beta);
+      out__.write(stan::math::lb_free(beta, 0));
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
       epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>(M);
       stan::math::fill(epsilon, DUMMY_VAR__);
@@ -12908,7 +12916,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       out__.write(epsilon);
       local_scalar_t__ sigma;
       sigma = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 5, sigma);
+      out__.write(stan::math::lub_free(sigma, 0, 5));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -13713,12 +13721,14 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       int lcm_sym26__;
       Eigen::Matrix<local_scalar_t__, -1, 1> pi;
       current_statement__ = 1;
-      pi = in__.template read_constrain_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-             lp__, K);
+      pi = stan::math::simplex_constrain<jacobian__>(
+             in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+               (K - 1)), lp__);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> theta;
       current_statement__ = 2;
-      theta = in__.template read_constrain_simplex<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
-                lp__, J, K, K);
+      theta = stan::math::simplex_constrain<jacobian__>(
+                in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
+                  J, K, (K - 1)), lp__);
       {
         current_statement__ = 10;
         lp_accum__.add(dirichlet_lpdf<propto__>(pi, alpha));
@@ -13884,12 +13894,14 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       int lcm_sym3__;
       Eigen::Matrix<double, -1, 1> pi;
       current_statement__ = 1;
-      pi = in__.template read_constrain_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-             lp__, K);
+      pi = stan::math::simplex_constrain<jacobian__>(
+             in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+               (K - 1)), lp__);
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> theta;
       current_statement__ = 2;
-      theta = in__.template read_constrain_simplex<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
-                lp__, J, K, K);
+      theta = stan::math::simplex_constrain<jacobian__>(
+                in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
+                  J, K, (K - 1)), lp__);
       out__.write(pi);
       lcm_sym5__ = logical_gte(K, 1);
       if (lcm_sym5__) {
@@ -14079,7 +14091,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
             "assigning variable pi", index_uni(sym1__));
         }
       } 
-      out__.write_free_simplex(pi);
+      out__.write(stan::math::simplex_free(pi));
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> theta;
       theta = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(J, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(K)));
       stan::math::fill(theta, DUMMY_VAR__);
@@ -14142,7 +14154,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           } 
         }
       } 
-      out__.write_free_simplex(theta);
+      out__.write(stan::math::simplex_free(theta));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -14648,12 +14660,12 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       beta1 = in__.template read<local_scalar_t__>();
       local_scalar_t__ tau_theta;
       current_statement__ = 3;
-      tau_theta = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                    0, lp__);
+      tau_theta = stan::math::lb_constrain<jacobian__>(
+                    in__.template read<local_scalar_t__>(), 0, lp__);
       local_scalar_t__ tau_phi;
       current_statement__ = 4;
-      tau_phi = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                  0, lp__);
+      tau_phi = stan::math::lb_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_std;
       current_statement__ = 5;
       theta_std = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
@@ -14724,12 +14736,12 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       beta1 = in__.template read<local_scalar_t__>();
       double tau_theta;
       current_statement__ = 3;
-      tau_theta = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                    0, lp__);
+      tau_theta = stan::math::lb_constrain<jacobian__>(
+                    in__.template read<local_scalar_t__>(), 0, lp__);
       double tau_phi;
       current_statement__ = 4;
-      tau_phi = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                  0, lp__);
+      tau_phi = stan::math::lb_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, lp__);
       Eigen::Matrix<double, -1, 1> theta_std;
       current_statement__ = 5;
       theta_std = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
@@ -14800,10 +14812,10 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       out__.write(beta1);
       local_scalar_t__ tau_theta;
       tau_theta = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, tau_theta);
+      out__.write(stan::math::lb_free(tau_theta, 0));
       local_scalar_t__ tau_phi;
       tau_phi = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, tau_phi);
+      out__.write(stan::math::lb_free(tau_phi, 0));
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_std;
       theta_std = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(theta_std, DUMMY_VAR__);
@@ -15976,12 +15988,13 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       int lcm_sym84__;
       local_scalar_t__ mean_p;
       current_statement__ = 1;
-      mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                 0, 1, lp__);
+      mean_p = stan::math::lub_constrain<jacobian__>(
+                 in__.template read<local_scalar_t__>(), 0, 1, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       current_statement__ = 2;
-      beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-               0, 1, lp__, max_age);
+      beta = stan::math::lub_constrain<jacobian__>(
+               in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                 max_age), 0, 1, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
@@ -16485,12 +16498,13 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       int lcm_sym47__;
       double mean_p;
       current_statement__ = 1;
-      mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                 0, 1, lp__);
+      mean_p = stan::math::lub_constrain<jacobian__>(
+                 in__.template read<local_scalar_t__>(), 0, 1, lp__);
       Eigen::Matrix<double, -1, 1> beta;
       current_statement__ = 2;
-      beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-               0, 1, lp__, max_age);
+      beta = stan::math::lub_constrain<jacobian__>(
+               in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                 max_age), 0, 1, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
@@ -16885,7 +16899,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       pos__ = 1;
       local_scalar_t__ mean_p;
       mean_p = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 1, mean_p);
+      out__.write(stan::math::lub_free(mean_p, 0, 1));
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(max_age);
       stan::math::fill(beta, DUMMY_VAR__);
@@ -16898,7 +16912,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
             "assigning variable beta", index_uni(sym1__));
         }
       } 
-      out__.write_free_lub(0, 1, beta);
+      out__.write(stan::math::lub_free(beta, 0, 1));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -18574,24 +18588,25 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       int lcm_sym207__;
       local_scalar_t__ mean_phi;
       current_statement__ = 1;
-      mean_phi = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                   0, 1, lp__);
+      mean_phi = stan::math::lub_constrain<jacobian__>(
+                   in__.template read<local_scalar_t__>(), 0, 1, lp__);
       local_scalar_t__ mean_p;
       current_statement__ = 2;
-      mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                 0, 1, lp__);
+      mean_p = stan::math::lub_constrain<jacobian__>(
+                 in__.template read<local_scalar_t__>(), 0, 1, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> gamma;
       current_statement__ = 3;
-      gamma = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-                0, 1, lp__, n_occasions);
+      gamma = stan::math::lub_constrain<jacobian__>(
+                in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                  n_occasions), 0, 1, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
       lcm_sym268__ = (n_occasions - 1);
       epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                   lcm_sym268__);
       local_scalar_t__ sigma;
       current_statement__ = 5;
-      sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                0, 5, lp__);
+      sigma = stan::math::lub_constrain<jacobian__>(
+                in__.template read<local_scalar_t__>(), 0, 5, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, lcm_sym268__);
       stan::math::fill(phi, DUMMY_VAR__);
@@ -19444,24 +19459,25 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym133__;
       double mean_phi;
       current_statement__ = 1;
-      mean_phi = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                   0, 1, lp__);
+      mean_phi = stan::math::lub_constrain<jacobian__>(
+                   in__.template read<local_scalar_t__>(), 0, 1, lp__);
       double mean_p;
       current_statement__ = 2;
-      mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                 0, 1, lp__);
+      mean_p = stan::math::lub_constrain<jacobian__>(
+                 in__.template read<local_scalar_t__>(), 0, 1, lp__);
       Eigen::Matrix<double, -1, 1> gamma;
       current_statement__ = 3;
-      gamma = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-                0, 1, lp__, n_occasions);
+      gamma = stan::math::lub_constrain<jacobian__>(
+                in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                  n_occasions), 0, 1, lp__);
       Eigen::Matrix<double, -1, 1> epsilon;
       lcm_sym188__ = (n_occasions - 1);
       epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                   lcm_sym188__);
       double sigma;
       current_statement__ = 5;
-      sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                0, 5, lp__);
+      sigma = stan::math::lub_constrain<jacobian__>(
+                in__.template read<local_scalar_t__>(), 0, 5, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, lcm_sym188__);
       stan::math::fill(phi, DUMMY_VAR__);
@@ -20117,10 +20133,10 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       pos__ = 1;
       local_scalar_t__ mean_phi;
       mean_phi = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 1, mean_phi);
+      out__.write(stan::math::lub_free(mean_phi, 0, 1));
       local_scalar_t__ mean_p;
       mean_p = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 1, mean_p);
+      out__.write(stan::math::lub_free(mean_p, 0, 1));
       Eigen::Matrix<local_scalar_t__, -1, 1> gamma;
       gamma = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
       stan::math::fill(gamma, DUMMY_VAR__);
@@ -20133,7 +20149,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             "assigning variable gamma", index_uni(sym1__));
         }
       } 
-      out__.write_free_lub(0, 1, gamma);
+      out__.write(stan::math::lub_free(gamma, 0, 1));
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
       epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>((n_occasions - 1));
       stan::math::fill(epsilon, DUMMY_VAR__);
@@ -20150,7 +20166,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       out__.write(epsilon);
       local_scalar_t__ sigma;
       sigma = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 5, sigma);
+      out__.write(stan::math::lub_free(sigma, 0, 5));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -22316,12 +22332,12 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       int lcm_sym79__;
       local_scalar_t__ mean_phi;
       current_statement__ = 1;
-      mean_phi = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                   0, 1, lp__);
+      mean_phi = stan::math::lub_constrain<jacobian__>(
+                   in__.template read<local_scalar_t__>(), 0, 1, lp__);
       local_scalar_t__ mean_p;
       current_statement__ = 2;
-      mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                 0, 1, lp__);
+      mean_p = stan::math::lub_constrain<jacobian__>(
+                 in__.template read<local_scalar_t__>(), 0, 1, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
@@ -22811,12 +22827,12 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       int lcm_sym46__;
       double mean_phi;
       current_statement__ = 1;
-      mean_phi = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                   0, 1, lp__);
+      mean_phi = stan::math::lub_constrain<jacobian__>(
+                   in__.template read<local_scalar_t__>(), 0, 1, lp__);
       double mean_p;
       current_statement__ = 2;
-      mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                 0, 1, lp__);
+      mean_p = stan::math::lub_constrain<jacobian__>(
+                 in__.template read<local_scalar_t__>(), 0, 1, lp__);
       Eigen::Matrix<double, -1, -1> phi;
       phi = Eigen::Matrix<double, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, std::numeric_limits<double>::quiet_NaN());
@@ -23201,10 +23217,10 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       pos__ = 1;
       local_scalar_t__ mean_phi;
       mean_phi = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 1, mean_phi);
+      out__.write(stan::math::lub_free(mean_phi, 0, 1));
       local_scalar_t__ mean_p;
       mean_p = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 1, mean_p);
+      out__.write(stan::math::lub_free(mean_p, 0, 1));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -25204,16 +25220,16 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       mu_a2 = in__.template read<local_scalar_t__>();
       local_scalar_t__ sigma_a1;
       current_statement__ = 6;
-      sigma_a1 = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                   0, 100, lp__);
+      sigma_a1 = stan::math::lub_constrain<jacobian__>(
+                   in__.template read<local_scalar_t__>(), 0, 100, lp__);
       local_scalar_t__ sigma_a2;
       current_statement__ = 7;
-      sigma_a2 = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                   0, 100, lp__);
+      sigma_a2 = stan::math::lub_constrain<jacobian__>(
+                   in__.template read<local_scalar_t__>(), 0, 100, lp__);
       local_scalar_t__ sigma_y;
       current_statement__ = 8;
-      sigma_y = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                  0, 100, lp__);
+      sigma_y = stan::math::lub_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, 100, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> a1;
       a1 = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(a1, DUMMY_VAR__);
@@ -25331,16 +25347,16 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       mu_a2 = in__.template read<local_scalar_t__>();
       double sigma_a1;
       current_statement__ = 6;
-      sigma_a1 = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                   0, 100, lp__);
+      sigma_a1 = stan::math::lub_constrain<jacobian__>(
+                   in__.template read<local_scalar_t__>(), 0, 100, lp__);
       double sigma_a2;
       current_statement__ = 7;
-      sigma_a2 = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                   0, 100, lp__);
+      sigma_a2 = stan::math::lub_constrain<jacobian__>(
+                   in__.template read<local_scalar_t__>(), 0, 100, lp__);
       double sigma_y;
       current_statement__ = 8;
-      sigma_y = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                  0, 100, lp__);
+      sigma_y = stan::math::lub_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, 100, lp__);
       Eigen::Matrix<double, -1, 1> a1;
       a1 = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(a1, std::numeric_limits<double>::quiet_NaN());
@@ -25467,13 +25483,13 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       out__.write(mu_a2);
       local_scalar_t__ sigma_a1;
       sigma_a1 = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 100, sigma_a1);
+      out__.write(stan::math::lub_free(sigma_a1, 0, 100));
       local_scalar_t__ sigma_a2;
       sigma_a2 = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 100, sigma_a2);
+      out__.write(stan::math::lub_free(sigma_a2, 0, 100));
       local_scalar_t__ sigma_y;
       sigma_y = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 100, sigma_y);
+      out__.write(stan::math::lub_free(sigma_y, 0, 100));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -26009,8 +26025,9 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                    2);
       Eigen::Matrix<local_scalar_t__, -1, -1> x_cov;
       current_statement__ = 5;
-      x_cov = in__.template read_constrain_cov_matrix<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
-                lp__, 2);
+      x_cov = stan::math::cov_matrix_constrain<jacobian__>(
+                in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                  (2 + ((2 * (2 - 1)) / 2))), 2, lp__);
       {
         double x;
         x = std::numeric_limits<double>::quiet_NaN();
@@ -26576,8 +26593,9 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                    2);
       Eigen::Matrix<double, -1, -1> x_cov;
       current_statement__ = 5;
-      x_cov = in__.template read_constrain_cov_matrix<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
-                lp__, 2);
+      x_cov = stan::math::cov_matrix_constrain<jacobian__>(
+                in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                  (2 + ((2 * (2 - 1)) / 2))), 2, lp__);
       out__.write(theta);
       out__.write(phi);
       out__.write(x_matrix);
@@ -26686,7 +26704,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           }
         }
       }
-      out__.write_free_cov_matrix(x_cov);
+      out__.write(stan::math::cov_matrix_free(x_cov));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -27230,12 +27248,12 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       mu_a = in__.template read<local_scalar_t__>();
       local_scalar_t__ sigma_a;
       current_statement__ = 4;
-      sigma_a = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                  0, 100, lp__);
+      sigma_a = stan::math::lub_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, 100, lp__);
       local_scalar_t__ sigma_y;
       current_statement__ = 5;
-      sigma_y = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                  0, 100, lp__);
+      sigma_y = stan::math::lub_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, 100, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat;
       y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(y_hat, DUMMY_VAR__);
@@ -27319,12 +27337,12 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       mu_a = in__.template read<local_scalar_t__>();
       double sigma_a;
       current_statement__ = 4;
-      sigma_a = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                  0, 100, lp__);
+      sigma_a = stan::math::lub_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, 100, lp__);
       double sigma_y;
       current_statement__ = 5;
-      sigma_y = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
-                  0, 100, lp__);
+      sigma_y = stan::math::lub_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, 100, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat;
       y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(y_hat, DUMMY_VAR__);
@@ -27417,10 +27435,10 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       out__.write(mu_a);
       local_scalar_t__ sigma_a;
       sigma_a = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 100, sigma_a);
+      out__.write(stan::math::lub_free(sigma_a, 0, 100));
       local_scalar_t__ sigma_y;
       sigma_y = in__.read<local_scalar_t__>();
-      out__.write_free_lub(0, 100, sigma_y);
+      out__.write(stan::math::lub_free(sigma_y, 0, 100));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -27923,8 +27941,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       alpha12 = in__.template read<local_scalar_t__>();
       local_scalar_t__ tau;
       current_statement__ = 5;
-      tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
-              lp__);
+      tau = stan::math::lb_constrain<jacobian__>(
+              in__.template read<local_scalar_t__>(), 0, lp__);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> b;
       current_statement__ = 6;
       b = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
@@ -28031,8 +28049,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       alpha12 = in__.template read<local_scalar_t__>();
       double tau;
       current_statement__ = 5;
-      tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
-              lp__);
+      tau = stan::math::lb_constrain<jacobian__>(
+              in__.template read<local_scalar_t__>(), 0, lp__);
       std::vector<Eigen::Matrix<double, -1, 1>> b;
       current_statement__ = 6;
       b = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
@@ -28157,7 +28175,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       out__.write(alpha12);
       local_scalar_t__ tau;
       tau = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, tau);
+      out__.write(stan::math::lb_free(tau, 0));
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> b;
       b = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(I, Eigen::Matrix<local_scalar_t__, -1, 1>(8));
       stan::math::fill(b, DUMMY_VAR__);

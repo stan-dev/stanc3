@@ -3467,10 +3467,15 @@ let%expect_test "Mapping acts recursively" =
   let unpattern p = {Stmt.Fixed.pattern= p; meta= Location_span.empty} in
   let s =
     Stmt.Fixed.Pattern.NRFunApp
-      ( CompilerInternal (FnWriteParam {var= from; unconstrain_opt= None})
+      ( CompilerInternal
+          (FnWriteParam
+             { var= from
+             ; unconstrain= Transformation.Identity
+             ; scale= Scale.Native })
       , [from] )
   in
   let m = Expr.Typed.Map.of_alist_exn [(from, into)] in
   let s' = expr_subst_stmt_base m s in
   Fmt.strf "@[<v>%a@]" Stmt.Located.pp (unpattern s') |> print_endline ;
-  [%expect {| (FnWriteParam(unconstrain_opt())(var y))__(y); |}]
+  [%expect
+    {| (FnWriteParam(scale Native)(unconstrain Identity)(var y))__(y); |}]

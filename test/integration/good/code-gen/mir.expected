@@ -13359,17 +13359,17 @@
  (output_vars
   ((p_real
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_scale Native) (out_trans Identity)))
    (p_upper
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block Parameters)
+     (out_block Parameters) (out_scale Native)
      (out_trans
       (Lower
        ((pattern (Var p_real))
         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
    (p_lower
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block Parameters)
+     (out_block Parameters) (out_scale Native)
      (out_trans
       (Upper
        ((pattern (Var p_upper))
@@ -13384,12 +13384,13 @@
        ((pattern (Lit Int 5))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters)
-     (out_trans
+     (out_scale
       (OffsetMultiplier
        ((pattern (Lit Int 1))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 2))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_trans Identity)))
    (no_offset_multiplier
     ((out_unconstrained_st
       (SArray SReal
@@ -13400,10 +13401,11 @@
        ((pattern (Lit Int 5))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters)
-     (out_trans
+     (out_scale
       (Multiplier
        ((pattern (Lit Int 2))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_trans Identity)))
    (offset_no_multiplier
     ((out_unconstrained_st
       (SArray SReal
@@ -13414,10 +13416,11 @@
        ((pattern (Lit Int 5))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters)
-     (out_trans
+     (out_scale
       (Offset
        ((pattern (Lit Int 3))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_trans Identity)))
    (p_real_1d_ar
     ((out_unconstrained_st
       (SArray SReal
@@ -13427,7 +13430,7 @@
       (SArray SReal
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters)
+     (out_block Parameters) (out_scale Native)
      (out_trans
       (Lower
        ((pattern (Lit Int 0))
@@ -13453,7 +13456,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters)
+     (out_block Parameters) (out_scale Native)
      (out_trans
       (Lower
        ((pattern (Lit Int 0))
@@ -13467,7 +13470,7 @@
       (SVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters)
+     (out_block Parameters) (out_scale Native)
      (out_trans
       (Lower
        ((pattern (Lit Int 0))
@@ -13487,7 +13490,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_scale Native) (out_trans Identity)))
    (p_3d_vec
     ((out_unconstrained_st
       (SArray
@@ -13515,7 +13518,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_scale Native) (out_trans Identity)))
    (p_row_vec
     ((out_unconstrained_st
       (SRowVector AoS
@@ -13525,7 +13528,7 @@
       (SRowVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_scale Native) (out_trans Identity)))
    (p_1d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -13541,7 +13544,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_scale Native) (out_trans Identity)))
    (p_3d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -13569,7 +13572,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_scale Native) (out_trans Identity)))
    (p_mat
     ((out_unconstrained_st
       (SMatrix AoS
@@ -13583,7 +13586,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 4))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_scale Native) (out_trans Identity)))
    (p_ar_mat
     ((out_unconstrained_st
       (SArray
@@ -13609,7 +13612,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 4))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters)
+     (out_block Parameters) (out_scale Native)
      (out_trans
       (LowerUpper
        ((pattern (Lit Int 0))
@@ -13630,7 +13633,7 @@
       (SVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Simplex)))
+     (out_block Parameters) (out_scale Native) (out_trans Simplex)))
    (p_1d_simplex
     ((out_unconstrained_st
       (SArray
@@ -13651,7 +13654,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Simplex)))
+     (out_block Parameters) (out_scale Native) (out_trans Simplex)))
    (p_3d_simplex
     ((out_unconstrained_st
       (SArray
@@ -13684,7 +13687,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Simplex)))
+     (out_block Parameters) (out_scale Native) (out_trans Simplex)))
    (p_cfcov_54
     ((out_unconstrained_st
       (SVector AoS
@@ -13735,7 +13738,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 4))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans CholeskyCov)))
+     (out_block Parameters) (out_scale Native) (out_trans CholeskyCov)))
    (p_cfcov_33
     ((out_unconstrained_st
       (SVector AoS
@@ -13786,7 +13789,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans CholeskyCov)))
+     (out_block Parameters) (out_scale Native) (out_trans CholeskyCov)))
    (p_cfcov_33_ar
     ((out_unconstrained_st
       (SArray
@@ -13845,7 +13848,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var K))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans CholeskyCov)))
+     (out_block Parameters) (out_scale Native) (out_trans CholeskyCov)))
    (x_p
     ((out_unconstrained_st
       (SVector AoS
@@ -13855,7 +13858,7 @@
       (SVector AoS
        ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_scale Native) (out_trans Identity)))
    (y_p
     ((out_unconstrained_st
       (SVector AoS
@@ -13865,7 +13868,7 @@
       (SVector AoS
        ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_scale Native) (out_trans Identity)))
    (tp_real_1d_ar
     ((out_unconstrained_st
       (SArray SReal
@@ -13875,7 +13878,7 @@
       (SArray SReal
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters)
+     (out_block TransformedParameters) (out_scale Native)
      (out_trans
       (Lower
        ((pattern (Lit Int 0))
@@ -13901,7 +13904,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters)
+     (out_block TransformedParameters) (out_scale Native)
      (out_trans
       (Lower
        ((pattern (Lit Int 0))
@@ -13915,7 +13918,7 @@
       (SVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters)
+     (out_block TransformedParameters) (out_scale Native)
      (out_trans
       (Upper
        ((pattern (Lit Int 0))
@@ -13935,7 +13938,8 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_scale Native)
+     (out_trans Identity)))
    (tp_3d_vec
     ((out_unconstrained_st
       (SArray
@@ -13963,7 +13967,8 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_scale Native)
+     (out_trans Identity)))
    (tp_row_vec
     ((out_unconstrained_st
       (SRowVector AoS
@@ -13973,7 +13978,8 @@
       (SRowVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_scale Native)
+     (out_trans Identity)))
    (tp_1d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -13989,7 +13995,8 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_scale Native)
+     (out_trans Identity)))
    (tp_3d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -14017,7 +14024,8 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_scale Native)
+     (out_trans Identity)))
    (tp_mat
     ((out_unconstrained_st
       (SMatrix AoS
@@ -14031,7 +14039,8 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 4))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_scale Native)
+     (out_trans Identity)))
    (tp_ar_mat
     ((out_unconstrained_st
       (SArray
@@ -14057,7 +14066,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 4))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters)
+     (out_block TransformedParameters) (out_scale Native)
      (out_trans
       (LowerUpper
        ((pattern (Lit Int 0))
@@ -14078,7 +14087,8 @@
       (SVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Simplex)))
+     (out_block TransformedParameters) (out_scale Native)
+     (out_trans Simplex)))
    (tp_1d_simplex
     ((out_unconstrained_st
       (SArray
@@ -14099,7 +14109,8 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Simplex)))
+     (out_block TransformedParameters) (out_scale Native)
+     (out_trans Simplex)))
    (tp_3d_simplex
     ((out_unconstrained_st
       (SArray
@@ -14132,7 +14143,8 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Simplex)))
+     (out_block TransformedParameters) (out_scale Native)
+     (out_trans Simplex)))
    (tp_cfcov_54
     ((out_unconstrained_st
       (SVector AoS
@@ -14183,7 +14195,8 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 4))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans CholeskyCov)))
+     (out_block TransformedParameters) (out_scale Native)
+     (out_trans CholeskyCov)))
    (tp_cfcov_33
     ((out_unconstrained_st
       (SVector AoS
@@ -14234,7 +14247,8 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans CholeskyCov)))
+     (out_block TransformedParameters) (out_scale Native)
+     (out_trans CholeskyCov)))
    (tp_cfcov_33_ar
     ((out_unconstrained_st
       (SArray
@@ -14293,7 +14307,8 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var K))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans CholeskyCov)))
+     (out_block TransformedParameters) (out_scale Native)
+     (out_trans CholeskyCov)))
    (theta_p
     ((out_unconstrained_st
       (SVector AoS
@@ -14303,16 +14318,18 @@
       (SVector AoS
        ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_scale Native)
+     (out_trans Identity)))
    (tp_real
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_scale Native)
+     (out_trans Identity)))
    (gq_r1
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Identity)))
    (gq_r2
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Identity)))
    (gq_real_1d_ar
     ((out_unconstrained_st
       (SArray SReal
@@ -14322,7 +14339,7 @@
       (SArray SReal
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities)
+     (out_block GeneratedQuantities) (out_scale Native)
      (out_trans
       (Lower
        ((pattern (Lit Int 0))
@@ -14348,7 +14365,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities)
+     (out_block GeneratedQuantities) (out_scale Native)
      (out_trans
       (Lower
        ((pattern (Lit Int 0))
@@ -14362,7 +14379,7 @@
       (SVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities)
+     (out_block GeneratedQuantities) (out_scale Native)
      (out_trans
       (Upper
        ((pattern (Lit Int 1))
@@ -14382,7 +14399,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Identity)))
    (gq_3d_vec
     ((out_unconstrained_st
       (SArray
@@ -14410,7 +14427,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Identity)))
    (gq_row_vec
     ((out_unconstrained_st
       (SRowVector AoS
@@ -14420,7 +14437,7 @@
       (SRowVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Identity)))
    (gq_1d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -14436,7 +14453,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Identity)))
    (gq_3d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -14464,7 +14481,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Identity)))
    (gq_ar_mat
     ((out_unconstrained_st
       (SArray
@@ -14490,7 +14507,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 4))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities)
+     (out_block GeneratedQuantities) (out_scale Native)
      (out_trans
       (LowerUpper
        ((pattern (Lit Int 0))
@@ -14511,7 +14528,7 @@
       (SVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Simplex)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Simplex)))
    (gq_1d_simplex
     ((out_unconstrained_st
       (SArray
@@ -14532,7 +14549,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Simplex)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Simplex)))
    (gq_3d_simplex
     ((out_unconstrained_st
       (SArray
@@ -14565,7 +14582,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Simplex)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Simplex)))
    (gq_cfcov_54
     ((out_unconstrained_st
       (SVector AoS
@@ -14616,7 +14633,8 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 4))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans CholeskyCov)))
+     (out_block GeneratedQuantities) (out_scale Native)
+     (out_trans CholeskyCov)))
    (gq_cfcov_33
     ((out_unconstrained_st
       (SVector AoS
@@ -14667,7 +14685,8 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans CholeskyCov)))
+     (out_block GeneratedQuantities) (out_scale Native)
+     (out_trans CholeskyCov)))
    (gq_cfcov_33_ar
     ((out_unconstrained_st
       (SArray
@@ -14726,7 +14745,8 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var K))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans CholeskyCov)))
+     (out_block GeneratedQuantities) (out_scale Native)
+     (out_trans CholeskyCov)))
    (indices
     ((out_unconstrained_st
       (SArray SInt
@@ -14736,7 +14756,7 @@
       (SArray SInt
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Identity)))
    (indexing_mat
     ((out_unconstrained_st
       (SArray
@@ -14756,7 +14776,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 5))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Identity)))
    (idx_res1
     ((out_unconstrained_st
       (SArray
@@ -14776,7 +14796,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Identity)))
    (idx_res2
     ((out_unconstrained_st
       (SArray
@@ -14796,7 +14816,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 5))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Identity)))
    (idx_res3
     ((out_unconstrained_st
       (SArray
@@ -14816,7 +14836,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Identity)))
    (idx_res11
     ((out_unconstrained_st
       (SArray
@@ -14836,7 +14856,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Identity)))
    (idx_res21
     ((out_unconstrained_st
       (SArray
@@ -14856,7 +14876,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 5))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Identity)))
    (idx_res31
     ((out_unconstrained_st
       (SArray
@@ -14876,7 +14896,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Identity)))
    (idx_res4
     ((out_unconstrained_st
       (SArray
@@ -14892,7 +14912,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Identity)))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Identity)))
    (idx_res5
     ((out_unconstrained_st
       (SArray
@@ -14908,7 +14928,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans Identity)))))
+     (out_block GeneratedQuantities) (out_scale Native) (out_trans Identity)))))
  (prog_name mother_model) (prog_path mother.stan))
 Warning in 'mother.stan', line 63, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 Warning in 'mother.stan', line 187, column 15: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.

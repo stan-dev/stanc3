@@ -350,7 +350,7 @@ let pp_scale ppf = function
       Fmt.pf ppf "<@[offset=%a,@ multiplier=%a@]>" pp_expression e1
         pp_expression e2
 
-let pp_transformed_type ppf (pst, trans) =
+let pp_transformed_type ppf (pst, trans, scale) =
   let rec discard_arrays pst =
     match pst with
     | Middle.Type.Sized st ->
@@ -393,14 +393,15 @@ let pp_transformed_type ppf (pst, trans) =
   in
   match trans with
   | Middle.Transformation.Identity ->
-      Fmt.pf ppf "%a%a" unsizedtype_fmt () sizes_fmt ()
+      Fmt.pf ppf "%a%a%a" unsizedtype_fmt () pp_scale scale sizes_fmt ()
   | Lower _ | Upper _ | LowerUpper _ ->
-      Fmt.pf ppf "%a%a%a" unsizedtype_fmt () pp_transformation trans sizes_fmt
-        ()
-  | Ordered -> Fmt.pf ppf "ordered%a" sizes_fmt ()
-  | PositiveOrdered -> Fmt.pf ppf "positive_ordered%a" sizes_fmt ()
-  | Simplex -> Fmt.pf ppf "simplex%a" sizes_fmt ()
-  | UnitVector -> Fmt.pf ppf "unit_vector%a" sizes_fmt ()
+      Fmt.pf ppf "%a%a%a%a" unsizedtype_fmt () pp_transformation trans pp_scale
+        scale sizes_fmt ()
+  | Ordered -> Fmt.pf ppf "ordered%a%a" pp_scale scale sizes_fmt ()
+  | PositiveOrdered ->
+      Fmt.pf ppf "positive_ordered%a%a" pp_scale scale sizes_fmt ()
+  | Simplex -> Fmt.pf ppf "simplex%a%a" pp_scale scale sizes_fmt ()
+  | UnitVector -> Fmt.pf ppf "unit_vector%a%a" pp_scale scale sizes_fmt ()
   | CholeskyCorr -> Fmt.pf ppf "cholesky_factor_corr%a" cov_sizes_fmt ()
   | CholeskyCov -> Fmt.pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
   | Correlation -> Fmt.pf ppf "corr_matrix%a" cov_sizes_fmt ()
@@ -526,8 +527,8 @@ and pp_statement ppf
         | Unsized _ -> []
       in
       with_hbox ppf (fun () ->
-          Fmt.pf ppf "%a%a%a %a%a;" pp_array_dims es pp_transformed_type
-            (pst, trans) pp_scale scale pp_identifier id pp_init init )
+          Fmt.pf ppf "%a%a %a%a;" pp_array_dims es pp_transformed_type
+            (pst, trans, scale) pp_identifier id pp_init init )
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
       Fmt.pf ppf "%a %a(" pp_returntype rt pp_identifier id ;
       let loc_of (_, _, id) = id.id_loc in
