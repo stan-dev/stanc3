@@ -21022,7 +21022,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     try {
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> L_Omega;
       current_statement__ = 1;
-      L_Omega = stan::math::cholesky_factor_corr_constrain<jacobian__>(
+      L_Omega = stan::math::cholesky_corr_constrain<jacobian__>(
                   in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                     nt, ((2 * (2 - 1)) / 2)), 2, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> z1;
@@ -21065,7 +21065,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     try {
       std::vector<Eigen::Matrix<double, -1, -1>> L_Omega;
       current_statement__ = 1;
-      L_Omega = stan::math::cholesky_factor_corr_constrain<jacobian__>(
+      L_Omega = stan::math::cholesky_corr_constrain<jacobian__>(
                   in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                     nt, ((2 * (2 - 1)) / 2)), 2, lp__);
       Eigen::Matrix<double, -1, 1> z1;
@@ -21125,7 +21125,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
           }
         }
       }
-      out__.write(stan::math::cholesky_factor_corr_free(L_Omega));
+      out__.write(stan::math::cholesky_corr_free(L_Omega));
       Eigen::Matrix<local_scalar_t__, -1, 1> z1;
       z1 = Eigen::Matrix<local_scalar_t__, -1, 1>(NS);
       stan::math::fill(z1, DUMMY_VAR__);
