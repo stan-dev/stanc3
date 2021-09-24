@@ -21,7 +21,7 @@ LABEL distro_style="apk"
 #Install os dependencies
 RUN apk update && apk add build-base bzip2 git tar curl ca-certificates openssl m4 bash
 
-# Add a recent version of the Skopeo package, which is used for looking up the correct multiarch dockerfile
+# Add a recent version of the Skopeo package, which is used for looking up the correct multiarch docker image
 RUN curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/containers-common-0.38.11-r0.apk -o cont.apk && \
     curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/skopeo-1.3.1-r1.apk -o skopeo.apk && \
     apk add cont.apk && \

@@ -277,8 +277,8 @@ pipeline {
                 }
                 stage("Build stanc.js") {
                     agent {
-                        dockerfile {
-                            filename 'docker/debian/Dockerfile'
+                        docker {
+                            image 'andrjohns/stanc3-building:static'
                             //Forces image to ignore entrypoint
                             args "-u root --entrypoint=\'\'"
                         }
@@ -298,8 +298,8 @@ pipeline {
                 }
                 stage("Build & test a static Linux binary") {
                     agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
+                        docker {
+                            image 'andrjohns/stanc3-building:static'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\'"
                         }
@@ -322,8 +322,8 @@ pipeline {
                 stage("Build & test a static Linux mips64el binary") {
                     when { anyOf { buildingTag(); branch 'master' } }
                     agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
+                        docker {
+                            image 'andrjohns/stanc3-building:static'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
@@ -347,8 +347,8 @@ pipeline {
                 stage("Build & test a static Linux ppc64el binary") {
                     when { anyOf { buildingTag(); branch 'master' } }
                     agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
+                        docker {
+                            image 'andrjohns/stanc3-building:static'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
@@ -372,8 +372,8 @@ pipeline {
                 stage("Build & test a static Linux s390x binary") {
                     when { anyOf { buildingTag(); branch 'master' } }
                     agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
+                        docker {
+                            image 'andrjohns/stanc3-building:static'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
@@ -396,8 +396,8 @@ pipeline {
 
                 stage("Build & test a static Linux arm64 binary") {
                     agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
+                        docker {
+                            image 'andrjohns/stanc3-building:static'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
@@ -421,8 +421,8 @@ pipeline {
                 stage("Build & test a static Linux armhf binary") {
                     when { anyOf { buildingTag(); branch 'master' } }
                     agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
+                        docker {
+                            image 'andrjohns/stanc3-building:static'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
@@ -446,8 +446,8 @@ pipeline {
                 stage("Build & test a static Linux armel binary") {
                     when { anyOf { buildingTag(); branch 'master' } }
                     agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
+                        docker {
+                            image 'andrjohns/stanc3-building:static'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
