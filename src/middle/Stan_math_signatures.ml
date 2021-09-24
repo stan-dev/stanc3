@@ -252,7 +252,10 @@ let distributions =
   ; (full_lpdf, "rayleigh", [DVReal; DVReal], AoS)
   ; (full_lpdf, "scaled_inv_chi_square", [DVReal; DVReal; DVReal], AoS)
   ; (full_lpdf, "skew_normal", [DVReal; DVReal; DVReal; DVReal], AoS)
-  ; (full_lpdf, "skew_double_exponential", [DVReal; DVReal; DVReal; DVReal], AoS)
+  ; ( full_lpdf
+    , "skew_double_exponential"
+    , [DVReal; DVReal; DVReal; DVReal]
+    , AoS )
   ; (full_lpdf, "student_t", [DVReal; DVReal; DVReal; DVReal], AoS)
   ; (full_lpdf, "std_normal", [DVReal], AoS)
   ; (full_lpdf, "uniform", [DVReal; DVReal; DVReal], AoS)
