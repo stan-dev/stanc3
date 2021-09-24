@@ -277,8 +277,8 @@ pipeline {
                 }
                 stage("Build stanc.js") {
                     agent {
-                        docker {
-                            image 'andrjohns/stanc3-building:static'
+                        dockerfile {
+                            filename 'docker/debian/Dockerfile'
                             //Forces image to ignore entrypoint
                             args "-u root --entrypoint=\'\'"
                         }
