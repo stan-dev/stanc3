@@ -42,7 +42,7 @@ let gen_num_int m t =
   let def_low, diff = (2, 4) in
   let low, up =
     match t with
-    | Program.Lower e -> (unwrap_int_exn m e, unwrap_int_exn m e + diff)
+    | Transformation.Lower e -> (unwrap_int_exn m e, unwrap_int_exn m e + diff)
     | Upper e -> (unwrap_int_exn m e - diff, unwrap_int_exn m e)
     | LowerUpper (e1, e2) -> (unwrap_int_exn m e1, unwrap_int_exn m e2)
     | _ -> (def_low, def_low + diff)
@@ -54,7 +54,7 @@ let gen_num_real m t =
   let def_low, diff = (2., 5.) in
   let low, up =
     match t with
-    | Program.Lower e -> (unwrap_num_exn m e, unwrap_num_exn m e +. diff)
+    | Transformation.Lower e -> (unwrap_num_exn m e, unwrap_num_exn m e +. diff)
     | Upper e -> (unwrap_num_exn m e -. diff, unwrap_num_exn m e)
     | LowerUpper (e1, e2) -> (unwrap_num_exn m e1, unwrap_num_exn m e2)
     | _ -> (def_low, def_low +. diff)
@@ -108,7 +108,7 @@ let gen_row_vector m n t =
     let create_bounds l u =
       wrap_row_vector
         (List.map2_exn
-           ~f:(fun x y -> gen_real m (Program.LowerUpper (x, y)))
+           ~f:(fun x y -> gen_real m (Transformation.LowerUpper (x, y)))
            l u)
     in
     match (e1, e2) with
@@ -143,14 +143,14 @@ let gen_row_vector m n t =
               (e2 : (typed_expr_meta, fun_kind) expr_with)]
   in
   match t with
-  | Program.Lower ({emeta= {type_= UVector | URowVector; _}; _} as e) ->
-      gen_bounded (fun x -> Program.Lower x) (extract_var e)
-  | Program.Upper ({emeta= {type_= UVector | URowVector; _}; _} as e) ->
-      gen_bounded (fun x -> Program.Upper x) (extract_var e)
-  | Program.LowerUpper
+  | Transformation.Lower ({emeta= {type_= UVector | URowVector; _}; _} as e) ->
+      gen_bounded (fun x -> Transformation.Lower x) (extract_var e)
+  | Transformation.Upper ({emeta= {type_= UVector | URowVector; _}; _} as e) ->
+      gen_bounded (fun x -> Transformation.Upper x) (extract_var e)
+  | Transformation.LowerUpper
       ( ({emeta= {type_= UVector | URowVector | UReal | UInt; _}; _} as e1)
       , ({emeta= {type_= UVector | URowVector; _}; _} as e2) )
-   |Program.LowerUpper
+   |Transformation.LowerUpper
       ( ({emeta= {type_= UVector | URowVector; _}; _} as e1)
       , ({emeta= {type_= UReal | UInt; _}; _} as e2) ) ->
       gen_ul_bounded (extract_var e1) (extract_var e2)
@@ -169,7 +169,7 @@ let gen_vector m n t =
     l
   in
   match t with
-  | Program.Simplex ->
+  | Transformation.Simplex ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
       let sum = List.fold l ~init:0. ~f:(fun accum elt -> accum +. elt) in
       let l = List.map l ~f:(fun x -> x /. sum) in
@@ -261,9 +261,8 @@ let gen_corr_matrix n =
   wrap_real_mat (matprod corr_chol (transpose corr_chol))
 
 let gen_matrix mm m n t =
-  let open Program in
   match t with
-  | Covariance -> gen_cov_matrix m
+  | Transformation.Covariance -> gen_cov_matrix m
   | Correlation -> gen_corr_matrix m
   | CholeskyCov -> gen_cov_cholesky m n
   | CholeskyCorr -> gen_corr_cholesky m
@@ -279,9 +278,12 @@ let rec generate_value m st t =
   match st with
   | SizedType.SInt -> gen_int m t
   | SReal -> gen_real m t
-  | SVector e -> gen_vector m (unwrap_int_exn m e) t
-  | SRowVector e -> gen_row_vector m (unwrap_int_exn m e) t
-  | SMatrix (e1, e2) ->
+  | SComplex ->
+      (* when serialzied, a complex number looks just like a 2-array of reals *)
+      generate_value m (SArray (SReal, wrap_int 2)) t
+  | SVector (_, e) -> gen_vector m (unwrap_int_exn m e) t
+  | SRowVector (_, e) -> gen_row_vector m (unwrap_int_exn m e) t
+  | SMatrix (_, e1, e2) ->
       gen_matrix m (unwrap_int_exn m e1) (unwrap_int_exn m e2) t
   | SArray (st, e) ->
       let element () = generate_value m st t in
@@ -307,7 +309,7 @@ let var_decl_gen_val m d =
   | _ -> failwith "This should never happen."
 
 let print_data_prog s =
-  let data = Option.value ~default:[] s.datablock in
+  let data = Ast.get_stmts s.datablock in
   let l, _ =
     List.fold data ~init:([], Map.Poly.empty) ~f:(fun (l, m) decl ->
         let value = var_decl_gen_val m decl in

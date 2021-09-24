@@ -19,8 +19,8 @@ let%expect_test "udf" =
         (Some
            ( w
            @@ FunApp
-                (StanLib ("add", FnPlain), [w @@ Var "x"; w @@ Lit (Int, "1")])
-           ))
+                ( StanLib ("add", FnPlain, AoS)
+                , [w @@ Var "x"; w @@ Lit (Int, "1")] ) ))
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }
@@ -44,8 +44,6 @@ let%expect_test "udf" =
         return add(x, 1);
       } catch (const std::exception& e) {
         stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-          // Next line prevents compiler griping about no return
-          throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
       }
 
     }
@@ -78,8 +76,8 @@ let%expect_test "udf-expressions" =
         (Some
            ( w
            @@ FunApp
-                (StanLib ("add", FnPlain), [w @@ Var "x"; w @@ Lit (Int, "1")])
-           ))
+                ( StanLib ("add", FnPlain, AoS)
+                , [w @@ Var "x"; w @@ Lit (Int, "1")] ) ))
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }
@@ -110,8 +108,6 @@ let%expect_test "udf-expressions" =
         return add(x, 1);
       } catch (const std::exception& e) {
         stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-          // Next line prevents compiler griping about no return
-          throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
       }
 
     }

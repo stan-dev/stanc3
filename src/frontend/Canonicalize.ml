@@ -114,7 +114,8 @@ let rec replace_deprecated_stmt
 let rec no_parens {expr; emeta} =
   match expr with
   | Paren e -> no_parens e
-  | Variable _ | IntNumeral _ | RealNumeral _ | GetLP | GetTarget ->
+  | Variable _ | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetLP
+   |GetTarget ->
       {expr; emeta}
   | TernaryIf _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
       {expr= map_expression keep_parens ident expr; emeta}
@@ -154,7 +155,7 @@ let rec parens_stmt {stmt; smeta} =
         ; is_global } ->
         VarDecl
           { decl_type= Middle.Type.map no_parens d
-          ; transformation= Middle.Program.map_transformation keep_parens t
+          ; transformation= Middle.Transformation.map keep_parens t
           ; identifier
           ; initial_value= Option.map ~f:no_parens init
           ; is_global }

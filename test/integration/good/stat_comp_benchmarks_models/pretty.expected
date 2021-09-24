@@ -13,39 +13,47 @@ model {
   alpha ~ normal(0, 10);
   beta ~ normal(0, 10);
   sigma ~ cauchy(0, 2.5);
+  
   for (t in (K + 1) : T) {
     real mu;
     mu = alpha;
+    
     for (k in 1 : K) 
       mu = mu + beta[k] * y[t - k];
+    
     y[t] ~ normal(mu, sigma);
   }
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format arma.stan
+// ARMA(1, 1)
+
 data {
-  int<lower=1> T;
-  array[T] real y;
+  int<lower=1> T; // number of observations
+  array[T] real y; // observed outputs
 }
 parameters {
-  real mu;
-  real phi;
-  real theta;
-  real<lower=0> sigma;
+  real mu; // mean coefficient
+  real phi; // autoregression coefficient
+  real theta; // moving average coefficient
+  real<lower=0> sigma; // noise scale
 }
 model {
-  vector[T] nu;
-  vector[T] err;
+  vector[T] nu; // prediction for time t
+  vector[T] err; // error for time t
+  
   mu ~ normal(0, 10);
   phi ~ normal(0, 2);
   theta ~ normal(0, 2);
   sigma ~ cauchy(0, 2.5);
-  nu[1] = mu + phi * mu;
+  
+  nu[1] = mu + phi * mu; // assume err[0] == 0
   err[1] = y[1] - nu[1];
   for (t in 2 : T) {
     nu[t] = mu + phi * y[t - 1] + theta * err[t - 1];
     err[t] = y[t] - nu[t];
   }
+  
   err ~ normal(0, sigma);
 }
 
@@ -90,6 +98,7 @@ model {
   for (t in 2 : T) 
     sigma[t] = sqrt(alpha0 + alpha1 * square(y[t - 1] - mu)
                     + beta1 * square(sigma[t - 1]));
+  
   y ~ normal(mu, sigma);
 }
 
@@ -100,10 +109,10 @@ transformed data {
   real sigma = 2;
 }
 parameters {
-
+  
 }
 model {
-
+  
 }
 generated quantities {
   int<lower=1> N = 11;
@@ -115,6 +124,7 @@ generated quantities {
                        + diag_matrix(rep_vector(1e-10, N));
     matrix[N, N] L_cov = cholesky_decompose(cov);
     vector[N] f = multi_normal_cholesky_rng(rep_vector(0, N), L_cov);
+    
     for (n in 1 : N) {
       y[n] = normal_rng(f[n], sigma);
       k[n] = poisson_rng(exp(f[n]));
@@ -147,6 +157,7 @@ model {
   rho ~ gamma(25, 4);
   alpha ~ normal(0, 2);
   f_tilde ~ normal(0, 1);
+  
   k ~ poisson_log(f);
 }
 
@@ -166,9 +177,11 @@ model {
   matrix[N, N] cov = cov_exp_quad(x, alpha, rho)
                      + diag_matrix(rep_vector(sigma, N));
   matrix[N, N] L_cov = cholesky_decompose(cov);
+  
   rho ~ gamma(25, 4);
   alpha ~ normal(0, 2);
   sigma ~ normal(0, 1);
+  
   y ~ multi_normal_cholesky(rep_vector(0, N), L_cov);
 }
 
@@ -182,8 +195,10 @@ data {
 parameters {
   real<lower=0> sigma_theta;
   vector[J] theta;
+  
   real<lower=0> sigma_a;
   vector<lower=0>[I] a;
+  
   real mu_b;
   real<lower=0> sigma_b;
   vector[I] b;
@@ -191,11 +206,14 @@ parameters {
 model {
   sigma_theta ~ cauchy(0, 2);
   theta ~ normal(0, sigma_theta);
+  
   sigma_a ~ cauchy(0, 2);
   a ~ lognormal(0, sigma_a);
+  
   mu_b ~ normal(0, 5);
   sigma_b ~ cauchy(0, 2);
   b ~ normal(mu_b, sigma_b);
+  
   for (i in 1 : I) 
     y[i] ~ bernoulli_logit(a[i] * (theta - b[i]));
 }
@@ -206,12 +224,16 @@ transformed data {
   real sigma1;
   real sigma2;
   real rho;
+  
   matrix[2, 2] Sigma;
+  
   mu[1] = 0.0;
   mu[2] = 3.0;
+  
   rho = 0.5;
   sigma1 = 1.0;
   sigma2 = 2.0;
+  
   Sigma[1][1] = sigma1 * sigma1;
   Sigma[1][2] = rho * sigma1 * sigma2;
   Sigma[2][1] = rho * sigma1 * sigma2;
@@ -224,9 +246,14 @@ model {
   z ~ multi_normal(mu, Sigma);
 }
 generated quantities {
+  // The means of these quantities will give the difference between 
+  // estimated marginal variances and correlation and their true values.
+  // If everything is going correctly then these values should be with
+  // the respective MCMC-SE of zero.
   real delta_var1;
   real delta_var2;
   real delta_corr;
+  
   delta_var1 = square(z[1] - mu[1]) - sigma1 * sigma1;
   delta_var2 = square(z[2] - mu[2]) - sigma2 * sigma2;
   delta_corr = (z[1] - mu[1]) * (z[2] - mu[2]) / (sigma1 * sigma2) - rho;
@@ -247,8 +274,8 @@ model {
   mu ~ normal(0, 2);
   theta ~ beta(5, 5);
   for (n in 1 : N) 
-    target += log_mix(theta, normal_lpdf(y[n]| mu[1], sigma[1]),
-                      normal_lpdf(y[n]| mu[2], sigma[2]));
+    target += log_mix(theta, normal_lpdf(y[n] | mu[1], sigma[1]),
+                      normal_lpdf(y[n] | mu[2], sigma[2]));
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format low_dim_gauss_mix_collapse.stan
@@ -266,8 +293,8 @@ model {
   mu ~ normal(0, 2);
   theta ~ beta(5, 5);
   for (n in 1 : N) 
-    target += log_mix(theta, normal_lpdf(y[n]| mu[1], sigma[1]),
-                      normal_lpdf(y[n]| mu[2], sigma[2]));
+    target += log_mix(theta, normal_lpdf(y[n] | mu[1], sigma[1]),
+                      normal_lpdf(y[n] | mu[2], sigma[2]));
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format one_comp_mm_elim_abs.stan
@@ -276,26 +303,33 @@ functions {
                                     array[] real theta, array[] real x_r,
                                     array[] int x_i) {
     array[1] real dydt;
-    real k_a = theta[1];
-    real K_m = theta[2];
-    real V_m = theta[3];
+    real k_a = theta[1]; // Dosing rate in 1/day
+    real K_m = theta[2]; // Michaelis-Menten constant in mg/L
+    real V_m = theta[3]; // Maximum elimination rate in 1/day
     real D = x_r[1];
     real V = x_r[2];
     real dose = 0;
     real elim = (V_m / V) * y[1] / (K_m + y[1]);
+    
     if (t > 0) 
       dose = exp(-k_a * t) * D * k_a / V;
+    
     dydt[1] = dose - elim;
+    
     return dydt;
   }
 }
 data {
-  real t0;
-  array[1] real C0;
-  real D;
-  real V;
+  real t0; // Initial time in days;
+  array[1] real C0; // Initial concentration at t0 in mg/L
+  
+  real D; // Total dosage in mg
+  real V; // Compartment volume in L
+  
   int<lower=1> N_t;
-  array[N_t] real times;
+  array[N_t] real times; // Measurement times in days
+  
+  // Measured concentrations in effect compartment in mg/L
   array[N_t] real C_hat;
 }
 transformed data {
@@ -303,9 +337,9 @@ transformed data {
   array[0] int x_i;
 }
 parameters {
-  real<lower=0> k_a;
-  real<lower=0> K_m;
-  real<lower=0> V_m;
+  real<lower=0> k_a; // Dosing rate in 1/day
+  real<lower=0> K_m; // Michaelis-Menten constant in mg/L
+  real<lower=0> V_m; // Maximum elimination rate in 1/day
   real<lower=0> sigma;
 }
 transformed parameters {
@@ -317,10 +351,13 @@ transformed parameters {
   }
 }
 model {
+  // Priors
   k_a ~ cauchy(0, 1);
   K_m ~ cauchy(0, 1);
   V_m ~ cauchy(0, 1);
   sigma ~ cauchy(0, 1);
+  
+  // Likelihood
   for (n in 1 : N_t) 
     C_hat[n] ~ lognormal(log(C[n, 1]), sigma);
 }
@@ -339,16 +376,19 @@ functions {
                                     array[] real theta, array[] real x_r,
                                     array[] int x_i) {
     array[1] real dydt;
-    real k_a = theta[1];
-    real K_m = theta[2];
-    real V_m = theta[3];
+    real k_a = theta[1]; // Dosing rate in 1/day
+    real K_m = theta[2]; // Michaelis-Menten constant in mg/L
+    real V_m = theta[3]; // Maximum elimination rate in 1/day
     real D = x_r[1];
     real V = x_r[2];
     real dose = 0;
     real elim = (V_m / V) * y[1] / (K_m + y[1]);
+    
     if (t > 0) 
       dose = exp(-k_a * t) * D * k_a / V;
+    
     dydt[1] = dose - elim;
+    
     return dydt;
   }
 }
@@ -357,27 +397,36 @@ transformed data {
   array[N_t] real times;
   real t0 = 0;
   array[1] real C0 = {0.0};
+  // Dosing rate in 1/day
+  // Michaelis-Menten constant in mg/L
+  // Maximum elimination rate in 1/day
   array[3] real theta = {0.75, 0.25, 1};
   real sigma = 0.1;
-  array[2] real x_r = {30.0, 2.0};
+  array[2] real x_r = {30.0, 2.0}; // Total dosage in mg, Comparment volume in L
   array[0] int x_i;
+  
   for (n in 1 : N_t) 
     times[n] = 0.5 * n;
 }
 model {
-
+  
 }
 generated quantities {
   real t_init = t0;
   array[1] real C_init = {C0[1]};
+  
   real D = x_r[1];
   real V = x_r[2];
   array[N_t] real ts;
+  
   array[N_t, 1] real C;
   array[N_t] real C_hat;
+  
   for (n in 1 : N_t) 
     ts[n] = times[n];
+  
   C = integrate_ode_bdf(one_comp_mm_elim_abs, C0, t0, times, theta, x_r, x_i);
+  
   for (n in 1 : N_t) 
     C_hat[n] = lognormal_rng(log(C[n, 1]), sigma);
 }
@@ -386,14 +435,24 @@ Warning in 'sim_one_comp_mm_elim_abs.stan', line 58, column 6: integrate_ode_bdf
 The new interface is slightly different, see: 
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../../install/default/bin/stanc --auto-format sir.stan
+// Simple SIR model inspired by the presentation in
+// http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3380087/pdf/nihms372789.pdf
+
 functions {
+  // theta[1] = beta, water contact rate
+  // theta[2] = kappa, C_{50}
+  // theta[3] = gamma, recovery rate
+  // theta[4] = xi, bacteria production rate
+  // theta[5] = delta, bacteria removal rate
   array[] real simple_SIR(real t, array[] real y, array[] real theta,
                           array[] real x_r, array[] int x_i) {
     array[4] real dydt;
+    
     dydt[1] = -theta[1] * y[4] / (y[4] + theta[2]) * y[1];
     dydt[2] = theta[1] * y[4] / (y[4] + theta[2]) * y[1] - theta[3] * y[2];
     dydt[3] = theta[3] * y[2];
     dydt[4] = theta[4] * y[2] - theta[5] * y[4];
+    
     return dydt;
   }
 }
@@ -407,6 +466,7 @@ data {
 transformed data {
   real t0 = 0;
   real<lower=0> kappa = 1000000;
+  
   array[0] real x_r;
   array[0] int x_i;
 }
@@ -428,9 +488,11 @@ model {
   gamma ~ cauchy(0, 1);
   xi ~ cauchy(0, 25);
   delta ~ cauchy(0, 1);
+  
   stoi_hat[1] ~ poisson(y0[1] - y[1, 1]);
   for (n in 2 : N_t) 
     stoi_hat[n] ~ poisson(y[n - 1, 1] - y[n, 1]);
+  
   B_hat ~ lognormal(log(col(to_matrix(y), 4)), 0.15);
 }
 

@@ -10,7 +10,7 @@ module Fixed = struct
     type ('a, 'b) t =
       | Assignment of 'a lvalue * 'a
       | TargetPE of 'a
-      | NRFunApp of Fun_kind.t * 'a list
+      | NRFunApp of 'a Fun_kind.t * 'a list
       | Break
       | Continue
       | Return of 'a option
@@ -24,7 +24,8 @@ module Fixed = struct
       | Decl of
           { decl_adtype: UnsizedType.autodifftype
           ; decl_id: string
-          ; decl_type: 'a Type.t }
+          ; decl_type: 'a Type.t
+          ; initialize: bool }
     [@@deriving sexp, hash, map, fold, compare]
 
     and 'a lvalue = string * UnsizedType.t * 'a Index.t list
@@ -37,7 +38,7 @@ module Fixed = struct
       | TargetPE expr ->
           Fmt.pf ppf {|@[<h>%a +=@ %a;@]|} pp_keyword "target" pp_e expr
       | NRFunApp (kind, args) ->
-          Fmt.pf ppf {|@[%a%a;@]|} Fun_kind.pp kind
+          Fmt.pf ppf {|@[%a%a;@]|} (Fun_kind.pp pp_e) kind
             Fmt.(list pp_e ~sep:comma |> parens)
             args
       | Break -> pp_keyword ppf "break;"
@@ -66,7 +67,7 @@ module Fixed = struct
             Fmt.(list pp_s ~sep:Fmt.cut)
             stmts
       | SList stmts -> Fmt.(list pp_s ~sep:Fmt.cut |> vbox) ppf stmts
-      | Decl {decl_adtype; decl_id; decl_type} ->
+      | Decl {decl_adtype; decl_id; decl_type; _} ->
           Fmt.pf ppf {|%a%a %s;|} UnsizedType.pp_autodifftype decl_adtype
             (Type.pp pp_e) decl_type decl_id
 
@@ -239,7 +240,8 @@ module Helpers = struct
               Decl
                 { decl_adtype= Expr.Typed.adlevel_of expr
                 ; decl_id= symbol
-                ; decl_type= Unsized (Expr.Typed.type_of expr) } }
+                ; decl_type= Unsized (Expr.Typed.type_of expr)
+                ; initialize= true } }
         in
         let assign =
           { body with
@@ -252,26 +254,43 @@ module Helpers = struct
   let internal_nrfunapp fn args meta =
     {Fixed.pattern= NRFunApp (CompilerInternal fn, args); meta}
 
-  (** [mkfor] returns a MIR For statement that iterates over the given expression
-    [iteratee]. *)
-  let mkfor upper bodyfn iteratee meta =
-    let idx s =
-      let meta =
-        Expr.Typed.Meta.create ~type_:UInt ~loc:meta ~adlevel:DataOnly ()
-      in
-      let expr = Expr.Fixed.{meta; pattern= Var s} in
-      Index.Single expr
-    in
+  (** [mk_for] returns a MIR For statement from 0 to `upper` that calls the `bodyfn` with the loop
+      variable inside the loop. *)
+  let mk_for upper bodyfn meta =
     let loopvar, reset = Gensym.enter () in
-    let lower = Expr.Helpers.loop_bottom in
-    let stmt =
-      Fixed.Pattern.Block
-        [bodyfn (Expr.Helpers.add_int_index iteratee (idx loopvar))]
+    let loopvar_expr =
+      Expr.Fixed.
+        { meta=
+            Expr.Typed.Meta.create ~type_:UInt ~loc:meta ~adlevel:DataOnly ()
+        ; pattern= Var loopvar }
     in
+    let lower = Expr.Helpers.loop_bottom in
+    let body = Fixed.{meta; pattern= Pattern.Block [bodyfn loopvar_expr]} in
     reset () ;
-    let body = Fixed.{meta; pattern= stmt} in
     let pattern = Fixed.Pattern.For {loopvar; lower; upper; body} in
     Fixed.{meta; pattern}
+
+  (** [mk_nested_for] returns nested MIR For statements with ranges from 0 to each element of
+      `uppers`, and calls the `bodyfn` in the innermost loop with the list of loop variables. *)
+  let rec mk_nested_for uppers bodyfn meta =
+    match uppers with
+    | [] -> bodyfn []
+    | upper :: uppers' ->
+        mk_for upper
+          (fun loopvar ->
+            mk_nested_for uppers'
+              (fun loopvars -> bodyfn (loopvar :: loopvars))
+              meta )
+          meta
+
+  (** [mk_for_iteratee] returns a MIR For statement that iterates over the given expression
+    [iteratee]. *)
+  let mk_for_iteratee upper iteratee_bodyfn iteratee meta =
+    let bodyfn loopvar =
+      iteratee_bodyfn
+        (Expr.Helpers.add_int_index iteratee (Index.Single loopvar))
+    in
+    mk_for upper bodyfn meta
 
   let rec for_each bodyfn iteratee smeta =
     let len (e : Expr.Typed.t) =
@@ -280,18 +299,19 @@ module Helpers = struct
       Expr.Helpers.internal_funapp FnLength [e] emeta'
     in
     match Expr.Typed.type_of iteratee with
-    | UInt | UReal -> bodyfn iteratee
-    | UVector | URowVector -> mkfor (len iteratee) bodyfn iteratee smeta
+    | UInt | UReal | UComplex -> bodyfn iteratee
+    | UVector | URowVector ->
+        mk_for_iteratee (len iteratee) bodyfn iteratee smeta
     | UMatrix ->
         let emeta = iteratee.meta in
         let emeta' = {emeta with Expr.Typed.Meta.type_= UInt} in
         let rows =
           Expr.Fixed.
             { meta= emeta'
-            ; pattern= FunApp (StanLib ("rows", FnPlain), [iteratee]) }
+            ; pattern= FunApp (StanLib ("rows", FnPlain, AoS), [iteratee]) }
         in
-        mkfor rows (fun e -> for_each bodyfn e smeta) iteratee smeta
-    | UArray _ -> mkfor (len iteratee) bodyfn iteratee smeta
+        mk_for_iteratee rows (fun e -> for_each bodyfn e smeta) iteratee smeta
+    | UArray _ -> mk_for_iteratee (len iteratee) bodyfn iteratee smeta
     | UMathLibraryFunction | UFun _ ->
         raise_s [%message "can't iterate over " (iteratee : Expr.Typed.t)]
 
@@ -312,33 +332,38 @@ module Helpers = struct
     overarrays and running bodyfn on any eign types found within.
 
     We can call [bodyfn] directly on scalars and Eigen types;
-    for Arrays we call mkfor but insert a
+    for Arrays we call mk_for_iteratee but insert a
     recursive call into the [bodyfn] that will operate on the nested
     type. In this way we recursively create for loops that loop over
     the outermost layers first.
 *)
   let rec for_eigen st bodyfn var smeta =
     match st with
-    | SizedType.SInt | SReal | SVector _ | SRowVector _ | SMatrix _ ->
+    | SizedType.SInt | SReal | SComplex | SVector _ | SRowVector _ | SMatrix _
+      ->
         bodyfn var
-    | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
+    | SArray (t, d) ->
+        mk_for_iteratee d (fun e -> for_eigen t bodyfn e smeta) var smeta
 
   (** [for_scalar unsizedtype...] generates a For statement that loops
     over the scalars in the underlying [unsizedtype].
 
     We can call [bodyfn] directly on scalars, make a direct For loop
-    around Eigen types, or for Arrays we call mkfor but inserting a
+    around Eigen types, or for Arrays we call mk_for_iteratee but inserting a
     recursive call into the [bodyfn] that will operate on the nested
     type. In this way we recursively create for loops that loop over
     the outermost layers first.
 *)
   let rec for_scalar st bodyfn var smeta =
     match st with
-    | SizedType.SInt | SReal -> bodyfn var
-    | SVector d | SRowVector d -> mkfor d bodyfn var smeta
-    | SMatrix (d1, d2) ->
-        mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
-    | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
+    | SizedType.SInt | SReal | SComplex -> bodyfn var
+    | SVector (_, d) | SRowVector (_, d) -> mk_for_iteratee d bodyfn var smeta
+    | SMatrix (mem_pattern, d1, d2) ->
+        mk_for_iteratee d1
+          (fun e -> for_scalar (SRowVector (mem_pattern, d2)) bodyfn e smeta)
+          var smeta
+    | SArray (t, d) ->
+        mk_for_iteratee d (fun e -> for_scalar t bodyfn e smeta) var smeta
 
   (** Exactly like for_scalar, but iterating through array dimensions in the
   inverted order.*)
@@ -353,11 +378,11 @@ module Helpers = struct
     let rec go st bodyfn var smeta =
       match st with
       | SizedType.SArray (t, d) ->
-          let bodyfn' var = mkfor d bodyfn var smeta in
+          let bodyfn' var = mk_for_iteratee d bodyfn var smeta in
           go t bodyfn' var smeta
-      | SMatrix (d1, d2) ->
-          let bodyfn' var = mkfor d1 bodyfn var smeta in
-          go (SRowVector d2) bodyfn' var smeta
+      | SMatrix (mem_pattern, d1, d2) ->
+          let bodyfn' var = mk_for_iteratee d1 bodyfn var smeta in
+          go (SRowVector (mem_pattern, d2)) bodyfn' var smeta
       | _ -> for_scalar st bodyfn var smeta
     in
     go st (Fn.compose bodyfn invert_index_order) var smeta

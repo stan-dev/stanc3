@@ -7,7 +7,7 @@ module Fixed : sig
     type ('a, 'b) t =
       | Assignment of 'a lvalue * 'a
       | TargetPE of 'a
-      | NRFunApp of Fun_kind.t * 'a list
+      | NRFunApp of 'a Fun_kind.t * 'a list
       | Break
       | Continue
       | Return of 'a option
@@ -21,7 +21,8 @@ module Fixed : sig
       | Decl of
           { decl_adtype: UnsizedType.autodifftype
           ; decl_id: string
-          ; decl_type: 'a Type.t }
+          ; decl_type: 'a Type.t
+          ; initialize: bool }
     [@@deriving sexp, hash, compare]
 
     and 'a lvalue = string * UnsizedType.t * 'a Index.t list
@@ -120,12 +121,27 @@ module Helpers : sig
     (Expr.Typed.t -> 'a -> Located.t) -> Expr.Typed.t -> 'a -> Located.t
 
   val internal_nrfunapp :
-    Internal_fun.t -> 'a Fixed.First.t list -> 'b -> ('a, 'b) Fixed.t
+       'a Fixed.First.t Internal_fun.t
+    -> 'a Fixed.First.t list
+    -> 'b
+    -> ('a, 'b) Fixed.t
 
   val contains_fn_kind :
-    (Fun_kind.t -> bool) -> ?init:bool -> ('a, 'b) Fixed.t -> bool
+       ('a Fixed.First.t Fun_kind.t -> bool)
+    -> ?init:bool
+    -> ('a, 'b) Fixed.t
+    -> bool
 
-  val mkfor :
+  val mk_for :
+    Expr.Typed.t -> (Expr.Typed.t -> Located.t) -> Location_span.t -> Located.t
+
+  val mk_nested_for :
+       Expr.Typed.t list
+    -> (Expr.Typed.t list -> Located.t)
+    -> Location_span.t
+    -> Located.t
+
+  val mk_for_iteratee :
        Expr.Typed.t
     -> (Expr.Typed.t -> Located.t)
     -> Expr.Typed.t

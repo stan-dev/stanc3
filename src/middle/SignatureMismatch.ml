@@ -14,7 +14,7 @@ let get ctx key =
 let pp_unsized_type ctx ppf =
   let rec pp ppf ty =
     match ty with
-    | UnsizedType.UInt | UReal | UVector | URowVector | UMatrix
+    | UnsizedType.UInt | UReal | UVector | URowVector | UMatrix | UComplex
      |UMathLibraryFunction ->
         UnsizedType.pp ppf ty
     | UArray ut ->
@@ -36,7 +36,7 @@ let pp_fundef ctx ppf =
     | AutoDiffable -> pp_unsized_type ctx ppf ty
   in
   function
-  | UnsizedType.UFun (args, rt, _) ->
+  | UnsizedType.UFun (args, rt, _, _) ->
       Fmt.pf ppf "@[<hov>(@[<hov>%a@]) => %a@]"
         Fmt.(list ~sep:comma pp_fun_arg)
         args pp_returntype rt
@@ -119,14 +119,14 @@ let rec check_same_type depth t1 t2 =
   match (t1, t2) with
   | t1, t2 when t1 = t2 -> None
   | UnsizedType.(UReal, UInt) when depth < 1 -> None
-  | UFun (_, _, s1), UFun (_, _, s2)
+  | UFun (_, _, s1, _), UFun (_, _, s2, _)
     when Fun_kind.without_propto s1 <> Fun_kind.without_propto s2 ->
       Some
         (SuffixMismatch (Fun_kind.without_propto s1, Fun_kind.without_propto s2))
       |> wrap_func
-  | UFun (_, rt1, _), UFun (_, rt2, _) when rt1 <> rt2 ->
+  | UFun (_, rt1, _, _), UFun (_, rt2, _, _) when rt1 <> rt2 ->
       Some (ReturnTypeMismatch (rt1, rt2)) |> wrap_func
-  | UFun (l1, _, _), UFun (l2, _, _) ->
+  | UFun (l1, _, _, _), UFun (l2, _, _, _) ->
       check_compatible_arguments (depth + 1) l2 l1
       |> Option.map ~f:(fun e -> InputMismatch e)
       |> wrap_func
@@ -152,11 +152,11 @@ let stan_math_returntype name args =
   (* NB: Variadic arguments are special-cased in Semantic_check and not handled here *)
   let name = Utils.stdlib_distribution_name name in
   Hashtbl.find_multi Stan_math_signatures.stan_math_signatures name
-  |> List.sort ~compare:(fun (x, _) (y, _) ->
+  |> List.sort ~compare:(fun (x, _, _) (y, _, _) ->
          UnsizedType.compare_returntype x y )
   (* Check the least return type first in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
   |> List.fold_until ~init:[]
-       ~f:(fun errors (rt, tys) ->
+       ~f:(fun errors (rt, tys, _) ->
          match check_compatible_arguments 0 tys args with
          | None -> Stop (Ok rt)
          | Some e -> Continue (((rt, tys), e) :: errors) )
@@ -171,7 +171,8 @@ let stan_math_returntype name args =
 let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
     fun_return args =
   let minimal_func_type =
-    UnsizedType.UFun (mandatory_fun_arg_tys, ReturnType fun_return, FnPlain)
+    UnsizedType.UFun
+      (mandatory_fun_arg_tys, ReturnType fun_return, FnPlain, AoS)
   in
   let minimal_args =
     (UnsizedType.AutoDiffable, minimal_func_type) :: mandatory_arg_tys
@@ -179,8 +180,8 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
   let wrap_err x = Some (minimal_args, ArgError (1, x)) in
   match args with
   | ( _
-    , (UnsizedType.UFun (fun_args, ReturnType return_type, suffix) as func_type)
-    )
+    , ( UnsizedType.UFun (fun_args, ReturnType return_type, suffix, _) as
+      func_type ) )
     :: _ ->
       let mandatory, variadic_arg_tys =
         List.split_n fun_args (List.length mandatory_fun_arg_tys)
@@ -294,7 +295,7 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
         pf ppf "(@[<hov>%a@])" (list ~sep:comma (pp_unsized_type ctx)) )
   in
   let pp_signature ppf ((rt, args), err) =
-    let fun_ty = UnsizedType.UFun (args, rt, FnPlain) in
+    let fun_ty = UnsizedType.UFun (args, rt, FnPlain, AoS) in
     Fmt.pf ppf "%a@ @[<hov 2>  %a@]"
       (pp_with_where ctx (pp_fundef ctx))
       fun_ty pp_explain err

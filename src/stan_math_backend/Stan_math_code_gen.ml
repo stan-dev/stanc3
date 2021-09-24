@@ -51,9 +51,7 @@ let pp_function__ ppf (prog_name, fname) =
 (** Print the body of exception handling for functions *)
 let pp_located ppf _ =
   pf ppf
-    {|stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); |}
+    {|stan::lang::rethrow_located(e, locations_array__[current_statement__]);|}
 
 (** Detect if argument requires C++ template *)
 let arg_needs_template = function
@@ -365,7 +363,7 @@ let pp_validate_data ppf (name, st) =
     pf ppf "@[<hov 4>context__.validate_dims(@,%S,@,%S,@,%S,@,%a);@]@ "
       "data initialization" name
       (stantype_prim_str (SizedType.to_unsized st))
-      pp_stdvector (SizedType.get_dims st)
+      pp_stdvector (SizedType.get_dims_io st)
 
 (** Print the constructor of the model class.
  Read in data steps:
@@ -414,7 +412,7 @@ let pp_ctor ppf p =
         cut ppf () ;
         let get_param_st = function
           | _, {Program.out_block= Parameters; out_unconstrained_st= st; _} -> (
-            match SizedType.get_dims st with
+            match SizedType.get_dims_io st with
             | [] -> Some [Expr.Helpers.loop_bottom]
             | ls -> Some ls )
           | _ -> None
@@ -507,7 +505,7 @@ let pp_get_dims ppf {Program.output_vars; _} =
       map ~f:(fun (_, {Program.out_constrained_st= st; _}) -> st) output_vars)
   in
   let pp_output_var ppf dims =
-    (list ~sep:comma pp_add_pack) ppf List.(map ~f:SizedType.get_dims dims)
+    (list ~sep:comma pp_add_pack) ppf List.(map ~f:SizedType.get_dims_io dims)
   in
   pp_method ppf "void" "get_dims"
     ["std::vector<std::vector<size_t>>& dimss__"]
@@ -539,8 +537,9 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
   in
   let intro ppf () =
     pf ppf "%a@ %a@ %a" (list ~sep:cut string)
-      [ "using local_scalar_t__ = double;"; "vars__.resize(0);"
+      [ "using local_scalar_t__ = double;"
       ; "stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);"
+      ; "stan::io::serializer<local_scalar_t__> out__(vars__);"
       ; "static constexpr bool propto__ = true;"; "(void) propto__;"
       ; "double lp__ = 0.0;"
       ; "(void) lp__;  // dummy to suppress unused var warning"
@@ -578,6 +577,21 @@ let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body) =
           pf ppf "@[%a @]" pp_block
             (pp_for_loop_iteratee ~index_ids:idcs, (i, dims, pp_body)) )
 
+let emit_name ppf (name, idcs) =
+  let to_string = fmt "std::to_string(%s)" in
+  pf ppf "param_names__.emplace_back(std::string() + %a);"
+    (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
+    (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
+
+let emit_complex_name ppf (name, idcs) =
+  let to_string = fmt "std::to_string(%s)" in
+  pf ppf "@[param_names__.emplace_back(std::string() + %a);@]@,"
+    (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
+    ((strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs) @ ["\"real\""]) ;
+  pf ppf "param_names__.emplace_back(std::string() + %a);"
+    (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
+    ((strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs) @ ["\"imag\""])
+
 (** Print the `constrained_param_names` method of the model class. *)
 let pp_constrained_param_names ppf {Program.output_vars; _} =
   let params =
@@ -596,15 +610,12 @@ let pp_constrained_param_names ppf {Program.output_vars; _} =
             `Trd (id, st))
       output_vars
   in
-  let emit_name ppf (name, idcs) =
-    let to_string = fmt "std::to_string(%s)" in
-    pf ppf "param_names__.emplace_back(std::string() + %a);"
-      (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
-      (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
-  in
   let pp_param_names ppf (decl_id, st) =
+    let gen_name =
+      if SizedType.contains_complex st then emit_complex_name else emit_name
+    in
     let dims = List.rev (SizedType.get_dims st) in
-    pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
+    pp_for_loop_iteratee ppf (decl_id, dims, gen_name)
   in
   pp_method ppf "void" "constrained_param_names" params nop
     (fun ppf ->
@@ -650,15 +661,12 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
             `Trd (id, st))
       output_vars
   in
-  let emit_name ppf (name, idcs) =
-    let to_string = fmt "std::to_string(%s)" in
-    pf ppf "param_names__.emplace_back(std::string() + %a);"
-      (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
-      (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
-  in
   let pp_param_names ppf (decl_id, st) =
-    let dims = List.rev (SizedType.get_dims st) in
-    pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
+    let pp_names =
+      if SizedType.contains_complex st then emit_complex_name else emit_name
+    in
+    pp_for_loop_iteratee ppf
+      (decl_id, List.rev (SizedType.get_dims st), pp_names)
   in
   let cv_attr = ["const"; "final"] in
   pp_method ppf "void" "unconstrained_param_names" params nop
@@ -671,20 +679,23 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
     ~cv_attr
 
 (** Print the `transform_inits` method of the model class *)
-let pp_transform_inits ppf {Program.transform_inits; _} =
+let pp_transform_inits_impl ppf {Program.transform_inits; _} =
   pf ppf
     "template <typename VecVar, typename VecI, @ \
      stan::require_std_vector_t<VecVar>* = nullptr, @ \
      stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> @ " ;
   let params =
-    [ "const stan::io::var_context& context__"; "VecI& params_i__"
-    ; "VecVar& vars__"; "std::ostream* pstream__ = nullptr" ]
+    [ "VecVar& params_r__"; "VecI& params_i__"; "VecVar& vars__"
+    ; "std::ostream* pstream__ = nullptr" ]
   in
   let intro ppf () =
-    pf ppf
-      "using local_scalar_t__ = \
-       double;@,vars__.clear();@,vars__.reserve(num_params_r__);@ int \
-       current_statement__ = 0; "
+    pf ppf "%a" (list ~sep:cut string)
+      [ "using local_scalar_t__ = double;"
+      ; "stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);"
+      ; "stan::io::serializer<local_scalar_t__> out__(vars__);"
+      ; "int current_statement__ = 0;"
+      ; "local_scalar_t__ \
+         DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ]
   in
   let cv_attr = ["const"] in
   pp_method_b ppf "void" "transform_inits_impl" params intro transform_inits
@@ -746,7 +757,25 @@ let pp_constrained_types ppf {Program.output_vars; _} =
   pp_outvar_metadata ppf ("get_constrained_sizedtypes", outvars)
 
 (** Print the generic method overloads needed in the model class. *)
-let pp_overloads ppf () =
+let pp_overloads ppf {Program.output_vars; _} =
+  (* An expression for the number of individual parameters in a list of output variables *)
+  let num_outvars (outvars : Expr.Typed.t Program.outvar list) =
+    Expr.Helpers.binop_list
+      (List.map
+         ~f:(fun outvar ->
+           SizedType.num_elems_expr outvar.Program.out_constrained_st )
+         outvars)
+      Operator.Plus ~default:(Expr.Helpers.int 0)
+  in
+  (* The list of output variables that came from a particular block *)
+  let block_outvars (block : Program.io_block) =
+    List.filter_map output_vars
+      ~f:(fun ((_ : string), (outvar : Expr.Typed.t Program.outvar)) ->
+        if outvar.out_block = block then Some outvar else None )
+  in
+  let num_gen_quantities = num_outvars (block_outvars GeneratedQuantities) in
+  let num_params = num_outvars (block_outvars Parameters) in
+  let num_transformed = num_outvars (block_outvars TransformedParameters) in
   pf ppf
     {|
     // Begin method overload boilerplate
@@ -757,8 +786,12 @@ let pp_overloads ppf () =
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec;
-      vars_vec.reserve(vars.size());
+      const size_t num_params__ = %a;
+      const size_t num_transformed = %a;
+      const size_t num_gen_quantities = %a;
+      std::vector<double> vars_vec(num_params__
+       + (emit_transformed_parameters * num_transformed)
+       + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -773,8 +806,13 @@ let pp_overloads ppf () =
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      write_array_impl(base_rng, params_r, params_i, vars,
-       emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_params__ = %a;
+      const size_t num_transformed = %a;
+      const size_t num_gen_quantities = %a;
+      vars.resize(num_params__
+        + (emit_transformed_parameters * num_transformed)
+        + (emit_generated_quantities * num_gen_quantities));
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -795,27 +833,54 @@ let pp_overloads ppf () =
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec;
-      params_r_vec.reserve(params_r.size());
+      std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
         params_r_vec.data(), params_r_vec.size());
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 |}
+    pp_expr num_params pp_expr num_transformed pp_expr num_gen_quantities
+    pp_expr num_params pp_expr num_transformed pp_expr num_gen_quantities
+
+(** Print the `get_constrained_sizedtypes` method of the model class *)
+let pp_transform_inits ppf {Program.output_vars; _} =
+  let params =
+    [ "const stan::io::var_context& context"; "std::vector<int>& params_i"
+    ; "std::vector<double>& vars"; "std::ostream* pstream__ = nullptr" ]
+  in
+  let list_len = List.length output_vars in
+  let get_names ppf () =
+    let add_param = fmt "%S" in
+    pf ppf
+      "@[<hov 2>const std::array<std::string, %i> names__ = \
+       std::array<std::string, %i>{%a};@]@,"
+      list_len list_len
+      (list ~sep:comma add_param)
+      (List.map ~f:fst output_vars)
+  in
+  let pp_body ppf =
+    pf ppf "%a" (list ~sep:cut string)
+      [ " std::vector<double> params_r_flat__;"
+      ; " for (auto&& param_name__ : names__) {"
+      ; "   const auto param_vec__ = context.vals_r(param_name__);"
+      ; "   params_r_flat__.reserve(params_r_flat__.size() + \
+         param_vec__.size());"; "   for (auto&& param_val__ : param_vec__) {"
+      ; "     params_r_flat__.push_back(param_val__);"; "   }"; " }"
+      ; "vars.resize(params_r_flat__.size());"
+      ; "transform_inits_impl(params_r_flat__, params_i, vars, pstream__);" ]
+  in
+  let cv_attr = ["const"] in
+  pp_method ppf "void" "transform_inits" params get_names
+    (fun ppf -> pp_body ppf)
+    ~cv_attr
 
 (** Print the public parts of the model class *)
 let pp_model_public ppf p =
   pf ppf "@ %a" pp_ctor p ;
   pf ppf "@ %a" pp_log_prob p ;
   pf ppf "@ %a" pp_write_array p ;
-  pf ppf "@ %a" pp_transform_inits p ;
+  pf ppf "@ %a" pp_transform_inits_impl p ;
   (* Begin metadata methods *)
   pf ppf "@ %a" pp_get_param_names p ;
   (* Post-data metadata methods *)
@@ -825,7 +890,8 @@ let pp_model_public ppf p =
   pf ppf "@ %a" pp_constrained_types p ;
   pf ppf "@ %a" pp_unconstrained_types p ;
   (* Boilerplate *)
-  pf ppf "@ %a" pp_overloads ()
+  pf ppf "@ %a" pp_overloads p ;
+  pf ppf "@ %a" pp_transform_inits p
 
 let model_prefix = "model_"
 
@@ -878,7 +944,7 @@ let is_fun_used_with_variadic_fn variadic_fn_test p =
   let rec find_functors_expr accum Expr.Fixed.({pattern; _}) =
     String.Set.union accum
       ( match pattern with
-      | FunApp (StanLib (x, FnPlain), {pattern= Var f; _} :: _)
+      | FunApp (StanLib (x, FnPlain, _), {pattern= Var f; _} :: _)
         when variadic_fn_test x ->
           String.Set.of_list [Utils.stdlib_distribution_name f]
       | x -> Expr.Fixed.Pattern.fold find_functors_expr accum x )
