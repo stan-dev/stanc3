@@ -1054,7 +1054,7 @@ let () =
     ( "csr_matrix_times_vector"
     , ReturnType UVector
     , [UInt; UInt; UVector; UArray UInt; UArray UInt; UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "csr_to_dense_matrix"
     , ReturnType UMatrix
