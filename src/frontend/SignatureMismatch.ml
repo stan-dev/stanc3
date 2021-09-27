@@ -1,4 +1,5 @@
 open Core_kernel
+open Middle
 module TypeMap = Core_kernel.Map.Make_using_comparator (UnsizedType)
 
 let set ctx key data = ctx := TypeMap.set !ctx ~key ~data
@@ -148,17 +149,27 @@ and check_compatible_arguments depth args1 args2 =
 let check_compatible_arguments_mod_conv = check_compatible_arguments 0
 let max_n_errors = 5
 
-let stan_math_returntype name args =
+let extract_function_types f =
+  let open Environment in
+  match f with
+  | {type_= UFun (args, return, _, mem); kind= `StanMath} ->
+      Some (return, args, (fun x -> Ast.StanLib x), mem)
+  | {type_= UFun (args, return, _, mem); _} ->
+      Some (return, args, (fun x -> UserDefined x), mem)
+  | _ -> None
+
+let returntype env name args =
   (* NB: Variadic arguments are special-cased in Semantic_check and not handled here *)
   let name = Utils.stdlib_distribution_name name in
-  Hashtbl.find_multi Stan_math_signatures.stan_math_signatures name
-  |> List.sort ~compare:(fun (x, _, _) (y, _, _) ->
+  Environment.find env name
+  |> List.filter_map ~f:extract_function_types
+  |> List.sort ~compare:(fun (x, _, _, _) (y, _, _, _) ->
          UnsizedType.compare_returntype x y )
   (* Check the least return type first in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
   |> List.fold_until ~init:[]
-       ~f:(fun errors (rt, tys, _) ->
+       ~f:(fun errors (rt, tys, funkind_constructor, _) ->
          match check_compatible_arguments 0 tys args with
-         | None -> Stop (Ok rt)
+         | None -> Stop (Ok (rt, funkind_constructor))
          | Some e -> Continue (((rt, tys), e) :: errors) )
        ~finish:(fun errors ->
          let errors =

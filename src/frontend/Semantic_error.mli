@@ -1,3 +1,5 @@
+open Middle
+
 type t
 
 val pp : Format.formatter -> t -> unit
@@ -64,19 +66,10 @@ val nonreturning_fn_expected_nonfn_found : Location_span.t -> string -> t
 val nonreturning_fn_expected_undeclaredident_found :
   Location_span.t -> string -> t
 
-val illtyped_stanlib_fn_app :
+val illtyped_fn_app :
      Location_span.t
   -> string
   -> SignatureMismatch.signature_error list * bool
-  -> UnsizedType.t list
-  -> t
-
-val illtyped_userdefined_fn_app :
-     Location_span.t
-  -> string
-  -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> UnsizedType.returntype
-  -> SignatureMismatch.function_mismatch
   -> UnsizedType.t list
   -> t
 

@@ -41,11 +41,3 @@ val add :
 val add_all_raw : t -> string -> info list -> t
 val mem : t -> string -> bool
 val iter : t -> (info list -> unit) -> unit
-
-val returntype :
-     t
-  -> string
-  -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> ( UnsizedType.returntype * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
-     , SignatureMismatch.signature_error list * bool )
-     result

@@ -411,7 +411,7 @@ let check_fn ~is_cond_dist loc tenv id es =
       Semantic_error.returning_fn_expected_undeclaredident_found loc id.name
       |> error
   | _ (* a function *) -> (
-    match Env.returntype tenv id.name (get_arg_types es) with
+    match SignatureMismatch.returntype tenv id.name (get_arg_types es) with
     | Ok (Void, _) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
         |> error
@@ -424,7 +424,7 @@ let check_fn ~is_cond_dist loc tenv id es =
     | Error x ->
         es
         |> List.map ~f:(fun e -> e.emeta.type_)
-        |> Semantic_error.illtyped_stanlib_fn_app loc id.name x
+        |> Semantic_error.illtyped_fn_app loc id.name x
         |> error )
 
 let check_reduce_sum ~is_cond_dist loc id es =
@@ -687,7 +687,7 @@ let check_nrfn loc tenv id es =
       Semantic_error.nonreturning_fn_expected_undeclaredident_found loc id.name
       |> error
   | _ (* a function *) -> (
-    match Env.returntype tenv id.name (get_arg_types es) with
+    match SignatureMismatch.returntype tenv id.name (get_arg_types es) with
     | Ok (Void, fnk) ->
         mk_typed_statement
           ~stmt:(NRFunApp (fnk (Fun_kind.suffix_from_name id.name), id, es))
@@ -698,8 +698,7 @@ let check_nrfn loc tenv id es =
     | Error x ->
         es
         |> List.map ~f:type_of_expr_typed
-        (* todo rename this to just illtyped_fn_app *)
-        |> Semantic_error.illtyped_stanlib_fn_app loc id.name x
+        |> Semantic_error.illtyped_fn_app loc id.name x
         |> error )
 
 let check_nr_fn_app loc cf tenv id es =

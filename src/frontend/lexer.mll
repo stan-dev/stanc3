@@ -2,7 +2,6 @@
 
 {
   module Stack = Core_kernel.Stack
-  module Errors = Middle.Errors
   open Lexing
   open Debugging
   open Preprocessor

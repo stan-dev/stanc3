@@ -1,4 +1,5 @@
 open Core_kernel
+open Middle
 
 (** Type errors that may arise during semantic check *)
 module TypeError = struct
@@ -36,16 +37,10 @@ module TypeError = struct
     | NonReturningFnExpectedReturningFound of string
     | NonReturningFnExpectedNonFnFound of string
     | NonReturningFnExpectedUndeclaredIdentFound of string
-    | IllTypedStanLibFunctionApp of
+    | IllTypedFunctionApp of
         string
         * UnsizedType.t list
         * (SignatureMismatch.signature_error list * bool)
-    | IllTypedUserDefinedFunctionApp of
-        string
-        * (UnsizedType.autodifftype * UnsizedType.t) list
-        * UnsizedType.returntype
-        * UnsizedType.t list
-        * SignatureMismatch.function_mismatch
     | IllTypedBinaryOperator of Operator.t * UnsizedType.t * UnsizedType.t
     | IllTypedPrefixOperator of Operator.t * UnsizedType.t
     | IllTypedPostfixOperator of Operator.t * UnsizedType.t
@@ -173,12 +168,8 @@ module TypeError = struct
           "A non-returning function was expected but an undeclared identifier \
            '%s' was supplied."
           fn_name
-    | IllTypedStanLibFunctionApp (name, arg_tys, errors) ->
+    | IllTypedFunctionApp (name, arg_tys, errors) ->
         SignatureMismatch.pp_signature_mismatch ppf (name, arg_tys, errors)
-    | IllTypedUserDefinedFunctionApp
-        (name, listed_tys, return_ty, arg_tys, error) ->
-        SignatureMismatch.pp_signature_mismatch ppf
-          (name, arg_tys, ([((return_ty, listed_tys), error)], false))
     | IllTypedBinaryOperator (op, lt, rt) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to infix operator %a. Available \
@@ -505,15 +496,8 @@ let nonreturning_fn_expected_nonfn_found loc name =
 let nonreturning_fn_expected_undeclaredident_found loc name =
   TypeError (loc, TypeError.NonReturningFnExpectedUndeclaredIdentFound name)
 
-let illtyped_stanlib_fn_app loc name errors arg_tys =
-  TypeError (loc, TypeError.IllTypedStanLibFunctionApp (name, arg_tys, errors))
-
-let illtyped_userdefined_fn_app loc name decl_arg_tys decl_return_ty error
-    arg_tys =
-  TypeError
-    ( loc
-    , TypeError.IllTypedUserDefinedFunctionApp
-        (name, decl_arg_tys, decl_return_ty, arg_tys, error) )
+let illtyped_fn_app loc name errors arg_tys =
+  TypeError (loc, TypeError.IllTypedFunctionApp (name, arg_tys, errors))
 
 let illtyped_binary_op loc op lt rt =
   TypeError (loc, TypeError.IllTypedBinaryOperator (op, lt, rt))

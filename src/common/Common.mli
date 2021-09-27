@@ -2,7 +2,6 @@
 module Foldable : module type of Foldable
 
 (* Other signatures *)
-module Validation : module type of Validation
 module Pretty : module type of Pretty
 
 (* 'Two-level type' signatures and functors *)

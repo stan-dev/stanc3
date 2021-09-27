@@ -15,13 +15,43 @@ The entrypoint for the compiler is in `src/stanc/stanc.ml` which sequences the v
 ### Distinct stanc Phases
 
 The phases of stanc are summarized in the following information flowchart and list.
+<!---
+digraph G {
+    rankdir=TB;
+    ranksep=.25;
+    bgcolor=white;
+    node [shape="box"];
+    
+    origin[style=invis];
+    stanc[label="stanc/stanc.ml"];
+    lexer[label="frontend/lexer.mll"];
+    parser[label="frontend/parser.mly"];
+    type[label="frontend/Typechecker.ml"];
+    lower[label="frontend/Ast_to_Mir.ml"];
+    transform[label="*_backend/Transform_Mir.ml"];
+    optimize[label="analysis_and_optimization/Optimize.ml"];
+    codegen[label="*_backend/*_code_gen.ml"];
+    output[shape="oval" label=".hpp file"]
+    
 
+    origin -> stanc[label=" .stan file path"];  
+    stanc -> lexer[label=" string"];
+    lexer -> parser[label=" tokens"];
+    parser -> type[label=" untyped AST"];
+    type -> lower[label=" typed AST"];
+    lower -> transform[label=" MIR"];
+    transform -> optimize[label=" transformed MIR"];
+    transform -> codegen[label="                                  "];
+    optimize -> codegen[headlabel="optimized MIR      "];
+    codegen -> output[label=" C++ code"];
+    
+} 
+--->
 ![stanc3 information flow](docs/img/information-flow.png)
 
 1. [Lex](src/frontend/lexer.mll) the Stan language into tokens.
 1. [Parse](src/frontend/parser.mly) Stan language into AST that represents the syntax quite closely and aides in development of pretty-printers and linters. `stanc --debug-ast` to print this out.
-1. Typecheck & add type information [Semantic_check.ml](src/frontend/Semantic_check.ml).  `stanc --debug-decorated-ast`
-1. [Desugaring phase](src/frontend/Desugar.ml) (AST -> AST). `stanc --debug-desugared`
+1. Typecheck & add type information [Typechecker.ml](src/frontend/Typechecker.ml).  `stanc --debug-decorated-ast`
 1. [Lower](src/frontend/Ast_to_Mir.ml) into [Middle Intermediate Representation](src/middle/Mir.ml) (AST -> MIR) `stanc --debug-mir` (or `--debug-mir-pretty`)
 1. Analyze & optimize (MIR -> MIR)
 1. Backend MIR transform (MIR -> MIR) [Transform_Mir.ml](src/stan_math_backend/Transform_Mir.ml)  `stanc --debug-transformed-mir`
