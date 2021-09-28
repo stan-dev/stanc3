@@ -68,9 +68,10 @@ let maybe_templated_arg_types (args : Program.fun_arg_decl) =
   List.mapi args ~f:(fun i (adtype, _, ut) ->
       match ut with
       | UMatrix | UVector | URowVector -> Some [sprintf "T%d__" i]
-      | UReal when adtype = AutoDiffable -> Some [sprintf "T%d__" i]
+      | (UReal | UComplex) when adtype = AutoDiffable ->
+          Some [sprintf "T%d__" i]
       | UArray _ -> Some [sprintf "T%d__" i; sprintf "Alloc%d__" i]
-      | UInt | UReal | UMathLibraryFunction | UFun _ -> None )
+      | UInt | UReal | UComplex | UMathLibraryFunction | UFun _ -> None )
 
 let return_arg_types (args : Program.fun_arg_decl) =
   List.mapi args ~f:(fun i ((_, _, ut) as a) ->
@@ -142,7 +143,7 @@ let pp_located_error ppf (pp_body_block, body) =
  *)
 let pp_arg_types ppf (scalar, ut) =
   match ut with
-  | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector ->
+  | UnsizedType.UInt | UReal | UComplex | UMatrix | URowVector | UVector ->
       string ppf scalar
   | UArray _ ->
       (* Expressions are not accepted for arrays of Eigen::Matrix *)

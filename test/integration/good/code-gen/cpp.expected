@@ -1226,7 +1226,7 @@ static constexpr std::array<const char*, 427> locations_array__ =
  " (in 'complex_scalar.stan', line 32, column 34 to line 34, column 5)"};
 
 
-std::complex<double>
+inline std::complex<double>
 foo(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
@@ -1244,7 +1244,7 @@ foo(std::ostream* pstream__) {
 }
 
 struct foo_functor__ {
-std::complex<double>
+inline std::complex<double>
 operator()(std::ostream* pstream__)  const 
 {
 return foo(pstream__);
@@ -1252,9 +1252,9 @@ return foo(pstream__);
 };
 
 template <typename T0__>
-stan::promote_args_t<T0__>
-foo1(const std::complex<T0__>& z, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+inline stan::return_type_t<T0__>
+foo1(const T0__& z, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -1271,17 +1271,17 @@ foo1(const std::complex<T0__>& z, std::ostream* pstream__) {
 
 struct foo1_functor__ {
 template <typename T0__>
-stan::promote_args_t<T0__>
-operator()(const std::complex<T0__>& z, std::ostream* pstream__)  const 
+inline stan::return_type_t<T0__>
+operator()(const T0__& z, std::ostream* pstream__)  const 
 {
 return foo1(z, pstream__);
 }
 };
 
 template <typename T0__>
-std::complex<stan::promote_args_t<T0__>>
+inline std::complex<stan::return_type_t<T0__>>
 foo2(const T0__& r, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+  using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -1298,7 +1298,7 @@ foo2(const T0__& r, std::ostream* pstream__) {
 
 struct foo2_functor__ {
 template <typename T0__>
-std::complex<stan::promote_args_t<T0__>>
+inline std::complex<stan::return_type_t<T0__>>
 operator()(const T0__& r, std::ostream* pstream__)  const 
 {
 return foo2(r, pstream__);
@@ -1306,9 +1306,9 @@ return foo2(r, pstream__);
 };
 
 template <typename T0__>
-std::complex<stan::promote_args_t<T0__>>
-foo3(const std::complex<T0__>& z, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+inline std::complex<stan::return_type_t<T0__>>
+foo3(const T0__& z, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -1325,14 +1325,14 @@ foo3(const std::complex<T0__>& z, std::ostream* pstream__) {
 
 struct foo3_functor__ {
 template <typename T0__>
-std::complex<stan::promote_args_t<T0__>>
-operator()(const std::complex<T0__>& z, std::ostream* pstream__)  const 
+inline std::complex<stan::return_type_t<T0__>>
+operator()(const T0__& z, std::ostream* pstream__)  const 
 {
 return foo3(z, pstream__);
 }
 };
 
-std::vector<std::complex<double>>
+inline std::vector<std::complex<double>>
 foo4(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
@@ -1350,17 +1350,17 @@ foo4(std::ostream* pstream__) {
 }
 
 struct foo4_functor__ {
-std::vector<std::complex<double>>
+inline std::vector<std::complex<double>>
 operator()(std::ostream* pstream__)  const 
 {
 return foo4(pstream__);
 }
 };
 
-template <typename T0__>
-stan::promote_args_t<T0__>
-foo5(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+template <typename T0__, typename Alloc0__>
+inline stan::return_type_t<T0__>
+foo5(const std::vector<T0__, Alloc0__>& z, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -1376,18 +1376,18 @@ foo5(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
 }
 
 struct foo5_functor__ {
-template <typename T0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__)  const 
+template <typename T0__, typename Alloc0__>
+inline stan::return_type_t<T0__>
+operator()(const std::vector<T0__, Alloc0__>& z, std::ostream* pstream__)  const 
 {
 return foo5(z, pstream__);
 }
 };
 
 template <typename T0__>
-std::vector<std::complex<stan::promote_args_t<T0__>>>
+inline std::vector<std::complex<stan::return_type_t<T0__>>>
 foo6(const T0__& r, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+  using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -1405,17 +1405,17 @@ foo6(const T0__& r, std::ostream* pstream__) {
 
 struct foo6_functor__ {
 template <typename T0__>
-std::vector<std::complex<stan::promote_args_t<T0__>>>
+inline std::vector<std::complex<stan::return_type_t<T0__>>>
 operator()(const T0__& r, std::ostream* pstream__)  const 
 {
 return foo6(r, pstream__);
 }
 };
 
-template <typename T0__>
-std::vector<std::complex<stan::promote_args_t<T0__>>>
-foo7(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+template <typename T0__, typename Alloc0__>
+inline std::vector<std::complex<stan::return_type_t<T0__>>>
+foo7(const std::vector<T0__, Alloc0__>& z, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -1431,19 +1431,18 @@ foo7(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
 }
 
 struct foo7_functor__ {
-template <typename T0__>
-std::vector<std::complex<stan::promote_args_t<T0__>>>
-operator()(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__)  const 
+template <typename T0__, typename Alloc0__>
+inline std::vector<std::complex<stan::return_type_t<T0__>>>
+operator()(const std::vector<T0__, Alloc0__>& z, std::ostream* pstream__)  const 
 {
 return foo7(z, pstream__);
 }
 };
 
-template <typename T0__>
-stan::promote_args_t<T0__>
-foo8(const std::vector<std::vector<std::complex<T0__>>>& z,
-     std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+template <typename T0__, typename Alloc0__>
+inline stan::return_type_t<T0__>
+foo8(const std::vector<T0__, Alloc0__>& z, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -1459,19 +1458,18 @@ foo8(const std::vector<std::vector<std::complex<T0__>>>& z,
 }
 
 struct foo8_functor__ {
-template <typename T0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<std::vector<std::complex<T0__>>>& z,
-           std::ostream* pstream__)  const 
+template <typename T0__, typename Alloc0__>
+inline stan::return_type_t<T0__>
+operator()(const std::vector<T0__, Alloc0__>& z, std::ostream* pstream__)  const 
 {
 return foo8(z, pstream__);
 }
 };
 
 template <typename T0__>
-std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
+inline std::vector<std::vector<std::complex<stan::return_type_t<T0__>>>>
 foo9(const T0__& r, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+  using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -1492,18 +1490,17 @@ foo9(const T0__& r, std::ostream* pstream__) {
 
 struct foo9_functor__ {
 template <typename T0__>
-std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
+inline std::vector<std::vector<std::complex<stan::return_type_t<T0__>>>>
 operator()(const T0__& r, std::ostream* pstream__)  const 
 {
 return foo9(r, pstream__);
 }
 };
 
-template <typename T0__>
-std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
-foo10(const std::vector<std::vector<std::complex<T0__>>>& z,
-      std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+template <typename T0__, typename Alloc0__>
+inline std::vector<std::vector<std::complex<stan::return_type_t<T0__>>>>
+foo10(const std::vector<T0__, Alloc0__>& z, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -1519,10 +1516,9 @@ foo10(const std::vector<std::vector<std::complex<T0__>>>& z,
 }
 
 struct foo10_functor__ {
-template <typename T0__>
-std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
-operator()(const std::vector<std::vector<std::complex<T0__>>>& z,
-           std::ostream* pstream__)  const 
+template <typename T0__, typename Alloc0__>
+inline std::vector<std::vector<std::complex<stan::return_type_t<T0__>>>>
+operator()(const std::vector<T0__, Alloc0__>& z, std::ostream* pstream__)  const 
 {
 return foo10(z, pstream__);
 }
