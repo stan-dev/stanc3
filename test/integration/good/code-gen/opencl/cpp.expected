@@ -6250,9 +6250,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 7> names__ = std::array<std::string, 7>{"p_real",
-      "p_real_array", "p_matrix", "p_vector", "p_row_vector", "y_p",
-      "transformed_param_real"};
+    const std::array<std::string, 6> names__ = std::array<std::string, 6>{"p_real",
+      "p_real_array", "p_matrix", "p_vector", "p_row_vector", "y_p"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -6936,9 +6935,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 7> names__ = std::array<std::string, 7>{"p_real",
-      "p_real_array", "p_matrix", "p_vector", "p_row_vector", "y_p",
-      "transformed_param_real"};
+    const std::array<std::string, 6> names__ = std::array<std::string, 6>{"p_real",
+      "p_real_array", "p_matrix", "p_vector", "p_row_vector", "y_p"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {

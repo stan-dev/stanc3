@@ -849,7 +849,12 @@ let pp_transform_inits ppf {Program.output_vars; _} =
     [ "const stan::io::var_context& context"; "std::vector<int>& params_i"
     ; "std::vector<double>& vars"; "std::ostream* pstream__ = nullptr" ]
   in
-  let list_len = List.length output_vars in
+  let list_names
+      ((stri : string), (Program.({out_block; _}) : 'a Program.outvar)) =
+    match out_block with Parameters -> Some stri | _ -> None
+  in
+  let param_names = List.filter_map ~f:list_names output_vars in
+  let list_len = List.length param_names in
   let get_names ppf () =
     let add_param = fmt "%S" in
     pf ppf
@@ -857,7 +862,7 @@ let pp_transform_inits ppf {Program.output_vars; _} =
        std::array<std::string, %i>{%a};@]@,"
       list_len list_len
       (list ~sep:comma add_param)
-      (List.map ~f:fst output_vars)
+      param_names
   in
   let pp_body ppf =
     pf ppf "%a" (list ~sep:cut string)

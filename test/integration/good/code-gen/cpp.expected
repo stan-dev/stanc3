@@ -411,8 +411,8 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 4> names__ = std::array<std::string, 4>{"mu",
-      "tau", "theta_tilde", "theta"};
+    const std::array<std::string, 3> names__ = std::array<std::string, 3>{"mu",
+      "tau", "theta_tilde"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -3356,11 +3356,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 20> names__ = std::array<std::string, 20>{"p_r",
-      "p_complex", "p_complex_array", "p_complex_array_2d", "tp_r",
-      "tp_complex", "tp_complex_array", "tp_complex_array_2d", "gq_i",
-      "gq_r", "gq_complex", "gq_complex_array", "gq_complex_array_2d", "z",
-      "y", "i_arr", "i_arr_1", "zi", "yi", "x"};
+    const std::array<std::string, 4> names__ = std::array<std::string, 4>{"p_r",
+      "p_complex", "p_complex_array", "p_complex_array_2d"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -3750,8 +3747,8 @@ class conditional_expression_types_model final : public model_base_crtp<conditio
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 3> names__ = std::array<std::string, 3>{"a",
-      "b", "c"};
+    const std::array<std::string, 2> names__ = std::array<std::string, 2>{"a",
+      "b"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -4202,8 +4199,8 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 4> names__ = std::array<std::string, 4>{"mu",
-      "tau", "theta_tilde", "theta"};
+    const std::array<std::string, 3> names__ = std::array<std::string, 3>{"mu",
+      "tau", "theta_tilde"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -4672,8 +4669,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 4> names__ = std::array<std::string, 4>{"xx",
-      "y", "w", "td_arr33"};
+    const std::array<std::string, 1> names__ = std::array<std::string, 1>{"xx"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -13107,22 +13103,12 @@ class mother_model final : public model_base_crtp<mother_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 69> names__ = std::array<std::string, 69>{"p_real",
+    const std::array<std::string, 24> names__ = std::array<std::string, 24>{"p_real",
       "p_upper", "p_lower", "offset_multiplier", "no_offset_multiplier",
       "offset_no_multiplier", "p_real_1d_ar", "p_real_3d_ar", "p_vec",
       "p_1d_vec", "p_3d_vec", "p_row_vec", "p_1d_row_vec", "p_3d_row_vec",
       "p_mat", "p_ar_mat", "p_simplex", "p_1d_simplex", "p_3d_simplex",
-      "p_cfcov_54", "p_cfcov_33", "p_cfcov_33_ar", "x_p", "y_p",
-      "tp_real_1d_ar", "tp_real_3d_ar", "tp_vec", "tp_1d_vec", "tp_3d_vec",
-      "tp_row_vec", "tp_1d_row_vec", "tp_3d_row_vec", "tp_mat", "tp_ar_mat",
-      "tp_simplex", "tp_1d_simplex", "tp_3d_simplex", "tp_cfcov_54",
-      "tp_cfcov_33", "tp_cfcov_33_ar", "theta_p", "tp_real", "gq_r1",
-      "gq_r2", "gq_real_1d_ar", "gq_real_3d_ar", "gq_vec", "gq_1d_vec",
-      "gq_3d_vec", "gq_row_vec", "gq_1d_row_vec", "gq_3d_row_vec",
-      "gq_ar_mat", "gq_simplex", "gq_1d_simplex", "gq_3d_simplex",
-      "gq_cfcov_54", "gq_cfcov_33", "gq_cfcov_33_ar", "indices",
-      "indexing_mat", "idx_res1", "idx_res2", "idx_res3", "idx_res11",
-      "idx_res21", "idx_res31", "idx_res4", "idx_res5"};
+      "p_cfcov_54", "p_cfcov_33", "p_cfcov_33_ar", "x_p", "y_p"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -14901,11 +14887,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 25> names__ = std::array<std::string, 25>{"y0_p",
-      "theta_p", "x_p", "x_p_v", "shared_params_p", "job_params_p", "x_r",
-      "abc1_p", "abc2_p", "abc3_p", "y_hat_tp1", "y_hat_tp2", "y_hat_tp3",
-      "theta_p_as", "x_v", "y_v", "y_p", "y_hat", "y_1d", "z_1d", "abc1_gq",
-      "abc2_gq", "y_hat_gq", "yy_hat_gq", "theta_dbl"};
+    const std::array<std::string, 7> names__ = std::array<std::string, 7>{"y0_p",
+      "theta_p", "x_p", "x_p_v", "shared_params_p", "job_params_p", "x_r"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -19038,8 +19021,8 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 5> names__ = std::array<std::string, 5>{"r",
-      "ra", "v", "z", "zg"};
+    const std::array<std::string, 3> names__ = std::array<std::string, 3>{"r",
+      "ra", "v"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -19688,8 +19671,8 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 7> names__ = std::array<std::string, 7>{"alpha",
-      "beta", "gamma", "delta", "z_init", "sigma", "z"};
+    const std::array<std::string, 6> names__ = std::array<std::string, 6>{"alpha",
+      "beta", "gamma", "delta", "z_init", "sigma"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -28543,11 +28526,9 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 39> names__ = std::array<std::string, 39>{"y1",
+    const std::array<std::string, 13> names__ = std::array<std::string, 13>{"y1",
       "y2", "y3", "y4", "y5", "y6", "y7", "y8", "y9", "y10", "y11", "y12",
-      "y17", "t1", "t1a", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9",
-      "t10", "t11", "t12", "tg1", "tg2", "tg3", "tg4", "tg5", "tg6", "tg7",
-      "tg8", "tg9", "tg10", "tg11", "tg12", "tgs"};
+      "y17"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -31992,12 +31973,9 @@ class transform_model final : public model_base_crtp<transform_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 36> names__ = std::array<std::string, 36>{"p_1",
+    const std::array<std::string, 18> names__ = std::array<std::string, 18>{"p_1",
       "p_2", "p_3", "p_4", "p_5", "p_6", "p_7", "p_8", "p_9", "p_10", "pv_1",
-      "pv_2", "pv_3", "pr_1", "pr_2", "pr_3", "pm_1", "pm_2", "tp_1", "tp_2",
-      "tp_3", "tp_4", "tp_5", "tp_6", "tp_7", "tp_8", "tp_9", "tp_10",
-      "tpv_1", "tpv_2", "tpv_3", "tpr_1", "tpr_2", "tpr_3", "tpm_1",
-      "tpm_2"};
+      "pv_2", "pv_3", "pr_1", "pr_2", "pr_3", "pm_1", "pm_2"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {

@@ -762,8 +762,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 5> names__ = std::array<std::string, 5>{"beta",
-      "gamma", "xi", "delta", "y"};
+    const std::array<std::string, 4> names__ = std::array<std::string, 4>{"beta",
+      "gamma", "xi", "delta"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -2866,8 +2866,8 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 5> names__ = std::array<std::string, 5>{"mean_p",
-      "beta", "phi", "p", "chi"};
+    const std::array<std::string, 2> names__ = std::array<std::string, 2>{"mean_p",
+      "beta"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -6979,9 +6979,9 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 12> names__ = std::array<std::string, 12>{"a",
+    const std::array<std::string, 11> names__ = std::array<std::string, 11>{"a",
       "b", "c", "d", "e", "beta", "sigma_a", "sigma_b", "sigma_c", "sigma_d",
-      "sigma_e", "y_hat"};
+      "sigma_e"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -7781,9 +7781,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 12> names__ = std::array<std::string, 12>{"tau_phi",
-      "phi_std_raw", "sigma_phi", "phi", "beta0", "beta1", "tau_theta",
-      "sigma_theta", "theta", "theta_std", "x", "y"};
+    const std::array<std::string, 2> names__ = std::array<std::string, 2>{"tau_phi",
+      "phi_std_raw"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -9794,8 +9793,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 9> names__ = std::array<std::string, 9>{"mean_phi",
-      "mean_p", "epsilon", "sigma", "phi", "p", "chi", "mu", "sigma2"};
+    const std::array<std::string, 4> names__ = std::array<std::string, 4>{"mean_phi",
+      "mean_p", "epsilon", "sigma"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -13214,9 +13213,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 16> names__ = std::array<std::string, 16>{"mean_phi",
-      "mean_p", "psi", "beta", "epsilon", "sigma", "phi", "p", "b", "nu",
-      "chi", "sigma2", "Nsuper", "N", "B", "z"};
+    const std::array<std::string, 6> names__ = std::array<std::string, 6>{"mean_phi",
+      "mean_p", "psi", "beta", "epsilon", "sigma"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -14332,8 +14330,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 3> names__ = std::array<std::string, 3>{"pi",
-      "theta", "log_Pr_z"};
+    const std::array<std::string, 2> names__ = std::array<std::string, 2>{"pi",
+      "theta"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -15006,9 +15004,8 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 8> names__ = std::array<std::string, 8>{"beta0",
-      "beta1", "tau_theta", "tau_phi", "theta_std", "phi_std_raw",
-      "sigma_phi", "phi"};
+    const std::array<std::string, 6> names__ = std::array<std::string, 6>{"beta0",
+      "beta1", "tau_theta", "tau_phi", "theta_std", "phi_std_raw"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -17108,8 +17105,8 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 5> names__ = std::array<std::string, 5>{"mean_p",
-      "beta", "phi", "p", "chi"};
+    const std::array<std::string, 2> names__ = std::array<std::string, 2>{"mean_p",
+      "beta"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -20436,9 +20433,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 15> names__ = std::array<std::string, 15>{"mean_phi",
-      "mean_p", "gamma", "epsilon", "sigma", "phi", "p", "chi", "sigma2",
-      "psi", "b", "Nsuper", "N", "B", "z"};
+    const std::array<std::string, 5> names__ = std::array<std::string, 5>{"mean_phi",
+      "mean_p", "gamma", "epsilon", "sigma"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -23403,8 +23399,8 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 5> names__ = std::array<std::string, 5>{"mean_phi",
-      "mean_p", "phi", "p", "chi"};
+    const std::array<std::string, 2> names__ = std::array<std::string, 2>{"mean_phi",
+      "mean_p"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -23922,8 +23918,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 4> names__ = std::array<std::string, 4>{"mu",
-      "tp", "lbaz", "lbar"};
+    const std::array<std::string, 1> names__ = std::array<std::string, 1>{"mu"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -24844,9 +24839,8 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 9> names__ = std::array<std::string, 9>{"alpha_occ",
-      "beta_occ", "alpha_p", "beta_p", "logit_psi", "logit_p", "occ_fs",
-      "psi_con", "z"};
+    const std::array<std::string, 4> names__ = std::array<std::string, 4>{"alpha_occ",
+      "beta_occ", "alpha_p", "beta_p"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -25673,9 +25667,8 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 11> names__ = std::array<std::string, 11>{"beta",
-      "eta1", "eta2", "mu_a1", "mu_a2", "sigma_a1", "sigma_a2", "sigma_y",
-      "a1", "a2", "y_hat"};
+    const std::array<std::string, 8> names__ = std::array<std::string, 8>{"beta",
+      "eta1", "eta2", "mu_a1", "mu_a2", "sigma_a1", "sigma_a2", "sigma_y"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -27591,8 +27584,8 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 6> names__ = std::array<std::string, 6>{"a",
-      "beta", "mu_a", "sigma_a", "sigma_y", "y_hat"};
+    const std::array<std::string, 5> names__ = std::array<std::string, 5>{"a",
+      "beta", "mu_a", "sigma_a", "sigma_y"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -28407,8 +28400,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 7> names__ = std::array<std::string, 7>{"alpha0",
-      "alpha1", "alpha2", "alpha12", "tau", "b", "sigma"};
+    const std::array<std::string, 6> names__ = std::array<std::string, 6>{"alpha0",
+      "alpha1", "alpha2", "alpha12", "tau", "b"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -29020,7 +29013,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 1> names__ = std::array<std::string, 1>{"x"};
+    const std::array<std::string, 0> names__ = std::array<std::string, 0>{};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
