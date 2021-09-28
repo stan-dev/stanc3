@@ -33,6 +33,8 @@ let check_of_compatible_return_type rt1 srt2 =
      |Void, AnyReturnType ->
         true
     | ReturnType UReal, Complete (ReturnType UInt) -> true
+    | ReturnType UComplex, Complete (ReturnType UReal) -> true
+    | ReturnType UComplex, Complete (ReturnType UInt) -> true
     | ReturnType rt1, Complete (ReturnType rt2) -> rt1 = rt2
     | ReturnType _, AnyReturnType -> true
     | _ -> false)
@@ -195,8 +197,8 @@ let reserved_keywords =
   ; "try"; "typedef"; "typeid"; "typename"; "union"; "unsigned"; "using"
   ; "virtual"; "void"; "volatile"; "wchar_t"; "while"; "xor"; "xor_eq"
   ; "functions"; "data"; "parameters"; "model"; "return"; "if"; "else"; "while"
-  ; "for"; "in"; "break"; "continue"; "void"; "int"; "real"; "vector"
-  ; "row_vector"; "matrix"; "ordered"; "positive_ordered"; "simplex"
+  ; "for"; "in"; "break"; "continue"; "void"; "int"; "real"; "complex"
+  ; "vector"; "row_vector"; "matrix"; "ordered"; "positive_ordered"; "simplex"
   ; "unit_vector"; "cholesky_factor_corr"; "cholesky_factor_cov"; "corr_matrix"
   ; "cov_matrix"; "print"; "reject"; "target"; "get_lp"; "profile" ]
 
@@ -624,7 +626,7 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
     | UMatrix, [`Multi; `Single] -> Validate.ok UnsizedType.UVector
     | UMatrix, _ :: _ :: _ :: _
      |(UVector | URowVector), _ :: _ :: _
-     |(UInt | UReal | UFun _ | UMathLibraryFunction), _ :: _ ->
+     |(UInt | UReal | UComplex | UFun _ | UMathLibraryFunction), _ :: _ ->
         Semantic_error.not_indexable loc ut (List.length indices)
         |> Validate.error
   in
@@ -702,12 +704,15 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
             let hint ppf () =
               match (x.expr, y.expr) with
               | IntNumeral x, _ ->
-                  Fmt.pf ppf "%s.0 / %a" x Pretty_printing.pp_expression y
+                  Fmt.pf ppf "%s.0 / %a" x Pretty_printing.pp_typed_expression
+                    y
               | _, Ast.IntNumeral y ->
-                  Fmt.pf ppf "%a / %s.0" Pretty_printing.pp_expression x y
+                  Fmt.pf ppf "%a / %s.0" Pretty_printing.pp_typed_expression x
+                    y
               | _ ->
-                  Fmt.pf ppf "%a * 1.0 / %a" Pretty_printing.pp_expression x
-                    Pretty_printing.pp_expression y
+                  Fmt.pf ppf "%a * 1.0 / %a"
+                    Pretty_printing.pp_typed_expression x
+                    Pretty_printing.pp_typed_expression y
             in
             let s =
               Fmt.strf
@@ -750,6 +755,10 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
   | RealNumeral s ->
       mk_typed_expression ~expr:(RealNumeral s) ~ad_level:DataOnly ~type_:UReal
         ~loc:emeta.loc
+      |> Validate.ok
+  | ImagNumeral s ->
+      mk_typed_expression ~expr:(ImagNumeral s) ~ad_level:DataOnly
+        ~type_:UComplex ~loc:emeta.loc
       |> Validate.ok
   | FunApp ((), id, es) ->
       semantic_check_funapp ~is_cond_dist:false id es cf emeta
@@ -849,6 +858,7 @@ let semantic_check_expression_of_scalar_or_type cf t e name =
 let rec semantic_check_sizedtype cf = function
   | SizedType.SInt -> Validate.ok SizedType.SInt
   | SReal -> Validate.ok SizedType.SReal
+  | SComplex -> Validate.ok SizedType.SComplex
   | SVector (mem_pattern, e) ->
       semantic_check_expression_of_int_type cf e "Vector sizes"
       |> Validate.map ~f:(fun ue -> SizedType.SVector (mem_pattern, ue))
@@ -1525,16 +1535,24 @@ and semantic_check_profile ~loc ~cf name stmts =
 (* -- Variable Declarations ------------------------------------------------- *)
 and semantic_check_var_decl_bounds ~loc is_global sized_ty trans =
   let is_real {emeta; _} = emeta.type_ = UReal in
-  let is_valid_transformation =
+  let is_real_transformation =
     match trans with
     | Transformation.Lower e -> is_real e
     | Upper e -> is_real e
     | LowerUpper (e1, e2) -> is_real e1 || is_real e2
     | _ -> false
   in
+  let is_transformation =
+    match trans with Transformation.Identity -> false | _ -> true
+  in
   Validate.(
-    if is_global && sized_ty = SizedType.SInt && is_valid_transformation then
+    if is_global && sized_ty = SizedType.SInt && is_real_transformation then
       Semantic_error.non_int_bounds loc |> error
+    else if
+      is_global
+      && SizedType.(inner_type sized_ty = SComplex)
+      && is_transformation
+    then Semantic_error.complex_transform loc |> error
     else ok ())
 
 and semantic_check_transformed_param_ty ~loc ~cf is_global unsized_ty =
@@ -1820,14 +1838,15 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
 
 let semantic_check_ostatements_in_block ~cf block stmts_opt =
   let cf' = {cf with current_block= block} in
-  Option.value_map stmts_opt ~default:(Validate.ok None) ~f:(fun stmts ->
+  Option.value_map stmts_opt ~default:(Validate.ok None)
+    ~f:(fun {stmts; xloc} ->
       (* I'm folding since I'm not sure if map is guaranteed to
          respect the ordering of the list *)
       List.fold ~init:[] stmts ~f:(fun accu stmt ->
           let s = semantic_check_statement cf' stmt in
           s :: accu )
       |> List.rev |> Validate.sequence
-      |> Validate.map ~f:Option.some )
+      |> Validate.map ~f:(fun stmts -> Some {stmts; xloc}) )
 
 let check_fun_def_body_in_block = function
   | {stmt= FunDef {body= {stmt= Block _; _}; _}; _}
@@ -1844,17 +1863,18 @@ let semantic_check_functions_have_defn function_block_stmts_opt =
       && !check_that_all_functions_have_definition
     then
       match function_block_stmts_opt with
-      | Some ({smeta; _} :: _) ->
+      | Some {stmts= {smeta; _} :: _; _} ->
           (* TODO: insert better location in the error *)
           error @@ Semantic_error.fn_decl_without_def smeta.loc
-      | _ -> fatal_error ~msg:"semantic_check_functions_have_defn" ()
+      | Some {stmts= []; _} | None ->
+          fatal_error ~msg:"semantic_check_functions_have_defn" ()
     else
       match function_block_stmts_opt with
-      | Some [] | None -> ok ()
-      | Some ls ->
+      | Some {stmts= []; _} | None -> ok ()
+      | Some {stmts= ls; _} ->
           List.map ~f:check_fun_def_body_in_block ls
           |> sequence
-          |> map ~f:(fun _ -> ()))
+          |> map ~f:(List.iter ~f:Fn.id))
 
 (* The actual semantic checks for all AST nodes! *)
 let semantic_check_program
@@ -1864,7 +1884,8 @@ let semantic_check_program
     ; parametersblock= pb
     ; transformedparametersblock= tpb
     ; modelblock= mb
-    ; generatedquantitiesblock= gb } =
+    ; generatedquantitiesblock= gb
+    ; comments } =
   (* NB: We always want to make sure we start with an empty symbol table, in
      case we are processing multiple files in one run. *)
   unsafe_clear_symbol_table vm ;
@@ -1882,7 +1903,7 @@ let semantic_check_program
     Validate.(
       semantic_check_ostatements_in_block ~cf Functions fb
       >>= fun xs ->
-      semantic_check_functions_have_defn xs |> map ~f:(fun _ -> xs))
+      semantic_check_functions_have_defn xs |> map ~f:(fun () -> xs))
   in
   let udb = semantic_check_ostatements_in_block ~cf Data db in
   let utdb = semantic_check_ostatements_in_block ~cf TData tdb in
@@ -1900,7 +1921,8 @@ let semantic_check_program
     ; parametersblock= upb
     ; transformedparametersblock= utpb
     ; modelblock= umb
-    ; generatedquantitiesblock= ugb }
+    ; generatedquantitiesblock= ugb
+    ; comments }
   in
   let apply_to x f = Validate.apply ~f x in
   let check_correctness_invariant (decorated_ast : typed_program) :
@@ -1913,7 +1935,8 @@ let semantic_check_program
         ; parametersblock= pb
         ; transformedparametersblock= tpb
         ; modelblock= mb
-        ; generatedquantitiesblock= gb }
+        ; generatedquantitiesblock= gb
+        ; comments }
         (untyped_program_of_typed_program decorated_ast)
       = 0
     then decorated_ast

@@ -72,6 +72,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
   | Variable {name; _} -> Var name |> ewrap
   | IntNumeral x -> Lit (Int, format_number x) |> ewrap
   | RealNumeral x -> Lit (Real, format_number x) |> ewrap
+  | ImagNumeral x -> Lit (Imaginary, format_number x) |> ewrap
   | FunApp (fn_kind, {name; _}, args) | CondDistApp (fn_kind, {name; _}, args)
     ->
       FunApp (trans_fn_kind fn_kind name, trans_exprs args) |> ewrap
@@ -261,7 +262,7 @@ let param_size transform sizedtype =
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen f t, d)
     | SVector (mem_pattern, d) | SMatrix (mem_pattern, d, _) ->
         SVector (mem_pattern, f d)
-    | SInt | SReal | SRowVector _ ->
+    | SInt | SReal | SComplex | SRowVector _ ->
         raise_s
           [%message
             "Expecting SVector or SMatrix, got " (st : Expr.Typed.t SizedType.t)]
@@ -270,7 +271,7 @@ let param_size transform sizedtype =
     match st with
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen_mat f t, d)
     | SMatrix (mem_pattern, d1, d2) -> SVector (mem_pattern, f d1 d2)
-    | SInt | SReal | SRowVector _ | SVector _ ->
+    | SInt | SReal | SComplex | SRowVector _ | SVector _ ->
         raise_s
           [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
   in
@@ -333,11 +334,13 @@ let check_sizedtype name =
     | n ->
         [ Stmt.Helpers.internal_nrfunapp FnValidateSize
             Expr.Helpers.
-              [str name; str (Fmt.strf "%a" Pretty_printing.pp_expression x); n]
+              [ str name
+              ; str (Fmt.strf "%a" Pretty_printing.pp_typed_expression x)
+              ; n ]
             n.meta.loc ]
   in
   let rec sizedtype = function
-    | SizedType.(SInt | SReal) as t -> ([], t)
+    | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
     | SVector (mem_pattern, s) ->
         let e = trans_expr s in
         (check s e, SizedType.SVector (mem_pattern, e))
@@ -597,7 +600,7 @@ let trans_sizedtype_decl declc tr name =
   let check fn x n =
     Stmt.Helpers.internal_nrfunapp fn
       Expr.Helpers.
-        [str name; str (Fmt.strf "%a" Pretty_printing.pp_expression x); n]
+        [str name; str (Fmt.strf "%a" Pretty_printing.pp_typed_expression x); n]
       n.meta.loc
   in
   let grab_size fn n = function
@@ -634,7 +637,7 @@ let trans_sizedtype_decl declc tr name =
         ([decl; assign; check fn s var], var)
   in
   let rec go n = function
-    | SizedType.(SInt | SReal) as t -> ([], t)
+    | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
     | SVector (mem_pattern, s) ->
         let fn =
           match (declc.transform_action, tr) with
@@ -744,8 +747,7 @@ let trans_block ud_dists declc block prog =
         (outvar :: accum1, size @ accum2, stmts @ accum3)
     | stmt -> (accum1, accum2, trans_stmt ud_dists declc stmt @ accum3)
   in
-  Option.value ~default:[] (get_block block prog)
-  |> List.fold_right ~f ~init:([], [], [])
+  Ast.get_stmts (get_block block prog) |> List.fold_right ~f ~init:([], [], [])
 
 let stmt_contains_check stmt =
   let is_check = function
@@ -763,7 +765,9 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
     p
   in
   let map f list_op =
-    Option.value_map ~default:[] ~f:(List.concat_map ~f) list_op
+    Option.value_map ~default:[]
+      ~f:(fun {Ast.stmts; _} -> List.concat_map ~f stmts)
+      list_op
   in
   let grab_fundef_names_and_types = function
     | {Ast.stmt= Ast.FunDef {funname; arguments= (_, type_, _) :: _; _}; _} ->
