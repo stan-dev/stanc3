@@ -12,11 +12,13 @@ type t =
   | UFun of
       (autodifftype * t) list
       * returntype
-      * bool Fun_kind.suffix
+      * (bool Fun_kind.suffix * bool)
       * Common.Helpers.mem_pattern
   | UMathLibraryFunction
 
 and autodifftype = DataOnly | AutoDiffable
+
+and capturetype = Ref | Copy
 
 and returntype = Void | ReturnType of t [@@deriving compare, hash, sexp]
 
@@ -43,6 +45,14 @@ let count_dims unsized_ty =
 let rec unwind_array_type = function
   | UArray ut -> ( match unwind_array_type ut with ut2, d -> (ut2, d + 1) )
   | ut -> (ut, 0)
+
+let make_suffix s args =
+  match s with
+  | Fun_kind.FnPlain -> ""
+  | FnRng -> "_rng"
+  | FnTarget -> "_lp"
+  | FnLpdf _ -> (
+    match args with (_, (UInt | UArray UInt)) :: _ -> "_lpmf" | _ -> "_lpdf" )
 
 let rec pp ppf = function
   | UInt -> pp_keyword ppf "int"
@@ -85,11 +95,11 @@ let check_of_same_type_mod_conv name t1 t2 =
   if String.is_prefix name ~prefix:"assign_" then t1 = t2
   else
     match (t1, t2) with
-    | UReal, UInt -> true
-    | UComplex, UInt -> true
-    | UComplex, UReal -> true
-    | UFun (l1, rt1, s1, _), UFun (l2, rt2, s2, _) -> (
-        s1 = s2 && rt1 = rt2
+    | UReal, UInt | UComplex, UInt | UComplex, UReal -> true
+    | UFun (_, _, (_, false), _), UFun (_, _, (_, true), _) -> false
+    | UFun (l1, rt1, (s1, _), _), UFun (l2, rt2, (s2, _), _) -> (
+        (match (s1, s2) with FnLpdf _, FnLpdf _ -> true | _ -> s1 = s2)
+        && rt1 = rt2
         &&
         match
           List.for_all2

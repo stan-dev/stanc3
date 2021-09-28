@@ -2,6 +2,7 @@ open Core_kernel
 
 type 'expr t =
   | FnLength
+  | FnMakeClosure
   | FnMakeArray
   | FnMakeRowVec
   | FnNegInf
@@ -53,8 +54,8 @@ let can_side_effect = function
    |FnValidateSize | FnValidateSizeSimplex | FnValidateSizeUnitVector
    |FnReadWriteEventsOpenCL _ ->
       true
-  | FnLength | FnMakeArray | FnMakeRowVec | FnNegInf | FnPrint | FnReject
-   |FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _ ->
+  | FnLength | FnMakeArray | FnMakeClosure | FnMakeRowVec | FnNegInf
+   |FnPrint | FnReject | FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _ ->
       false
 
 let collect_exprs fn = fold (fun accum e -> e :: accum) [] fn

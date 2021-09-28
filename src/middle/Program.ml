@@ -2,6 +2,11 @@ open Core_kernel
 open Common
 open Helpers
 
+type capture_decl =
+  (UnsizedType.capturetype * UnsizedType.autodifftype * string * UnsizedType.t)
+  list
+[@@deriving sexp, hash, map]
+
 type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
 [@@deriving sexp, hash, map]
 
@@ -9,10 +14,18 @@ type 'a fun_def =
   { fdrt: UnsizedType.t option
   ; fdname: string
   ; fdsuffix: unit Fun_kind.suffix
-  ; fdargs:
-      (UnsizedType.autodifftype * string * UnsizedType.t) list
+  ; fdcaptures:
+      ( UnsizedType.capturetype
+      * UnsizedType.autodifftype
+      * string
+      * UnsizedType.t )
+      list
+      option
+      (* If fdcaptures is not None, this is a closure. *)
+  ; fdargs: (UnsizedType.autodifftype * string * UnsizedType.t) list
+  ; fdbody:
+      'a option
       (* If fdbody is None, this is a function declaration without body. *)
-  ; fdbody: 'a option
   ; fdloc: Location_span.t sexp_opaque [@compare.ignore] }
 [@@deriving compare, hash, map, sexp, map, fold]
 
@@ -37,6 +50,9 @@ type ('a, 'b) t =
   ; prog_name: string
   ; prog_path: string }
 [@@deriving sexp, map, fold]
+
+let captures_to_args : capture_decl -> fun_arg_decl =
+  List.map ~f:(fun (_, ad, id, ty) -> (ad, id, ty))
 
 let map_stmts f p =
   { p with

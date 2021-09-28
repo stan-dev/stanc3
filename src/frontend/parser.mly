@@ -21,13 +21,24 @@ let rec iterate_n f x = function
   | n -> iterate_n f (f x) (n - 1)
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
+
+let fix_argtypes =
+  let open UnsizedType in
+  let suffix = Fun_kind.suffix_from_name in
+  let f (ad, ut, id) =
+    match ut with
+    | UFun (a, r, (FnPlain, true), _) ->
+        (ad, UFun (a, r, (suffix id.name, true), Common.Helpers.AoS), id)
+    | ut -> (ad, ut, id)
+  in
+  List.map ~f
 %}
 
 %token FUNCTIONBLOCK DATABLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK
        TRANSFORMEDPARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK
 %token LBRACE RBRACE LPAREN RPAREN LBRACK RBRACK LABRACK RABRACK COMMA SEMICOLON
        BAR
-%token RETURN IF ELSE WHILE FOR IN BREAK CONTINUE PROFILE
+%token RETURN IF ELSE WHILE FOR IN BREAK CONTINUE PROFILE FUNCTION
 %token VOID INT REAL COMPLEX VECTOR ROWVECTOR ARRAY MATRIX ORDERED POSITIVEORDERED SIMPLEX
        UNITVECTOR CHOLESKYFACTORCORR CHOLESKYFACTORCOV CORRMATRIX COVMATRIX
 %token LOWER UPPER OFFSET MULTIPLIER
@@ -159,6 +170,7 @@ decl_identifier:
   (* Keywords cannot be identifiers but
      semantic check produces a better error message. *)
   | FUNCTIONBLOCK { build_id "functions" $loc }
+  | FUNCTION { build_id "function" $loc }
   | DATABLOCK { build_id "data" $loc }
   | PARAMETERSBLOCK { build_id "parameters" $loc }
   | MODELBLOCK { build_id "model" $loc }
@@ -197,7 +209,18 @@ function_def:
     {
       grammar_logger "function_def" ;
       {stmt=FunDef {returntype = rt; funname = name;
-                           arguments = args; body=b;};
+                    captures = None; arguments = fix_argtypes args; body=b;};
+       smeta={loc=Location_span.of_positions_exn $loc}
+      }
+    }
+
+closure_def:
+  | FUNCTION rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)
+    RPAREN b=statement
+    {
+      grammar_logger "function_def" ;
+      {stmt=FunDef {returntype = rt; funname = name;
+                    captures = Some (); arguments = fix_argtypes args; body=b;};
        smeta={loc=Location_span.of_positions_exn $loc}
       }
     }
@@ -209,9 +232,19 @@ return_type:
     {  grammar_logger "return_type unsized_type" ; ReturnType ut }
 
 arg_decl:
-  | od=option(DATABLOCK) ut=unsized_type id=decl_identifier
+  | tp=arg_type id=decl_identifier
     {  grammar_logger "arg_decl" ;
-       match od with None -> (UnsizedType.AutoDiffable, ut, id) | _ -> (DataOnly, ut, id)  }
+       match tp with (ad, ut) -> (ad, ut, id)  }
+
+arg_type:
+  | od=option(DATABLOCK) ut=unsized_type
+    { match od with None -> (UnsizedType.AutoDiffable, ut) | _ -> (DataOnly, ut) }
+  | od=option(DATABLOCK) ut=function_type
+    { match od with None -> (UnsizedType.AutoDiffable, ut) | _ -> (DataOnly, ut) }
+
+function_type:
+  | rt=return_type LPAREN args=separated_list(COMMA, arg_type) RPAREN
+    { grammar_logger "function_type" ; UnsizedType.UFun (args, rt, (Fun_kind.FnPlain, true), Common.Helpers.AoS) }
 
 always(x):
   | x=x
@@ -782,9 +815,13 @@ vardecl_or_statement:
     { grammar_logger "vardecl_or_statement_statement" ; [s] }
   | v=var_decl
     { grammar_logger "vardecl_or_statement_vardecl" ; v }
+  | f=closure_def
+    { grammar_logger "vardecl_or_statement_closuredef" ; [f] }
 
 top_vardecl_or_statement:
   | s=statement
     { grammar_logger "top_vardecl_or_statement_statement" ; [s] }
   | v=top_var_decl
     { grammar_logger "top_vardecl_or_statement_top_vardecl" ; v }
+  | f=closure_def
+    { grammar_logger "top_vardecl_or_statement_closuredef" ; [f] }

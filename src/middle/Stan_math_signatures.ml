@@ -441,6 +441,9 @@ let get_sigs name =
   let name = Utils.stdlib_distribution_name name in
   Hashtbl.find_multi stan_math_signatures name |> List.sort ~compare
 
+let plain_func = (Fun_kind.FnPlain, false)
+let pure_closure = (Fun_kind.FnPlain, true)
+
 let make_assigmentoperator_stan_math_signatures assop =
   ( match assop with
   | Operator.Divide -> ["divide"]
@@ -459,10 +462,25 @@ let make_assigmentoperator_stan_math_signatures assop =
        | _ -> [] )
 
 let pp_math_sig ppf (rt, args, mem_pattern) =
-  UnsizedType.pp ppf (UFun (args, rt, FnPlain, mem_pattern))
+  UnsizedType.pp ppf (UFun (args, rt, (FnPlain, true), mem_pattern))
 
 let pp_math_sigs ppf name =
-  (Fmt.list ~sep:Fmt.cut pp_math_sig) ppf (get_sigs name)
+  Fmt.pf ppf "@[<v>%a@]" (Fmt.list ~sep:Fmt.cut pp_math_sig) (get_sigs name)
+
+let pp_math_lib_operator_sigs ppf op =
+  if op = Operator.IntDivide then
+    Fmt.pf ppf "@[<v>%a@]" pp_math_sig int_divide_type
+  else
+    Fmt.pf ppf "@[<v>%a@]" (Fmt.list pp_math_sigs)
+      (operator_to_stan_math_fns op)
+
+let pp_math_lib_assignmentoperator_sigs ppf op =
+  match op with
+  | Operator.Plus | Minus | Times | Divide | EltTimes | EltDivide ->
+      Fmt.pf ppf "@[<v>%a@]"
+        (Fmt.list ~sep:Fmt.cut pp_math_sig)
+        (make_assigmentoperator_stan_math_signatures op)
+  | _ -> ()
 
 let pretty_print_math_sigs = Fmt.strf "@[<v>@,%a@]" pp_math_sigs
 
@@ -867,7 +885,7 @@ let () =
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType UVector
-            , FnPlain
+            , plain_func
             , AoS ) )
       ; (AutoDiffable, UVector); (AutoDiffable, UVector)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
@@ -880,8 +898,8 @@ let () =
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType UVector
-            , FnPlain
-            , Common.Helpers.AoS ) )
+            , plain_func
+            , AoS ) )
       ; (AutoDiffable, UVector); (AutoDiffable, UVector)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
       ; (DataOnly, UReal); (DataOnly, UReal) ]
@@ -894,8 +912,8 @@ let () =
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType UVector
-            , FnPlain
-            , Common.Helpers.AoS ) )
+            , plain_func
+            , AoS ) )
       ; (AutoDiffable, UVector); (AutoDiffable, UVector)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
     , AoS ) ;
@@ -907,8 +925,8 @@ let () =
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType UVector
-            , FnPlain
-            , Common.Helpers.AoS ) )
+            , plain_func
+            , AoS ) )
       ; (AutoDiffable, UVector); (AutoDiffable, UVector)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
       ; (DataOnly, UReal); (DataOnly, UReal) ]
@@ -1365,8 +1383,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType UReal
-            , FnPlain
-            , Common.Helpers.AoS ) )
+            , pure_closure
+            , AoS ) )
       ; (AutoDiffable, UReal); (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
@@ -1380,8 +1398,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType UReal
-            , FnPlain
-            , Common.Helpers.AoS ) )
+            , pure_closure
+            , AoS ) )
       ; (AutoDiffable, UReal); (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal) ]
@@ -1396,8 +1414,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal)
-            , FnPlain
-            , Common.Helpers.AoS ) )
+            , pure_closure
+            , AoS ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1414,8 +1432,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal)
-            , FnPlain
-            , Common.Helpers.AoS ) )
+            , pure_closure
+            , AoS ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1432,8 +1450,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal)
-            , FnPlain
-            , Common.Helpers.AoS ) )
+            , pure_closure
+            , AoS ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1451,8 +1469,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal)
-            , FnPlain
-            , Common.Helpers.AoS ) )
+            , pure_closure
+            , AoS ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1469,8 +1487,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal)
-            , FnPlain
-            , Common.Helpers.AoS ) )
+            , pure_closure
+            , AoS ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1488,8 +1506,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal)
-            , FnPlain
-            , Common.Helpers.AoS ) )
+            , pure_closure
+            , AoS ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1506,8 +1524,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal)
-            , FnPlain
-            , Common.Helpers.AoS ) )
+            , pure_closure
+            , AoS ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1614,8 +1632,8 @@ let () =
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType UVector
-            , FnPlain
-            , Common.Helpers.AoS ) )
+            , plain_func
+            , AoS ) )
       ; (AutoDiffable, UVector)
       ; (AutoDiffable, UArray UVector)
       ; (DataOnly, UArray (UArray UReal))

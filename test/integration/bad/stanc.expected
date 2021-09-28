@@ -967,11 +967,11 @@ Semantic error in 'fun-return-type2.stan', line 2, column 2 to column 72:
 
 Function bodies must contain a return statement of correct type in every branch.
   $ ../../../../install/default/bin/stanc functions-bad0.stan
-Syntax error in 'functions-bad0.stan', line 2, column 11 to column 15, parsing error:
+Syntax error in 'functions-bad0.stan', line 2, column 16 to column 17, parsing error:
    -------------------------------------------------
      1:  functions {
      2:    real foo(void x) {
-                    ^
+                         ^
      3:      return 1.0;
      4:    }
    -------------------------------------------------
@@ -1024,7 +1024,7 @@ Semantic error in 'functions-bad13.stan', line 3, column 4 to column 10:
      5:    }
    -------------------------------------------------
 
-Cannot assign to function argument or loop identifier 'x'.
+Cannot assign to function argument, captured variable or loop identifier 'x'.
   $ ../../../../install/default/bin/stanc functions-bad14.stan
 Semantic error in 'functions-bad14.stan', line 5, column 6 to column 9:
    -------------------------------------------------
@@ -1473,7 +1473,6 @@ Semantic error in 'op_divide_bad.stan', line 7, column 6 to column 11:
 Ill-typed arguments supplied to infix operator /. Available signatures: 
 (row_vector, matrix) => row_vector
 (matrix, matrix) => matrix
-
 (int, int) => int
 (real, real) => real
 (vector, real) => vector
@@ -1495,7 +1494,6 @@ Semantic error in 'op_divide_right_bad.stan', line 7, column 6 to column 11:
 Ill-typed arguments supplied to infix operator /. Available signatures: 
 (row_vector, matrix) => row_vector
 (matrix, matrix) => matrix
-
 (int, int) => int
 (real, real) => real
 (vector, real) => vector

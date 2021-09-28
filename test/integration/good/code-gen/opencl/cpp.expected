@@ -823,6 +823,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                       unsigned int random_seed__ = 0,
                       std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -6380,6 +6382,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                    unsigned int random_seed__ = 0,
                    std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);

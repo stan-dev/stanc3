@@ -14,7 +14,9 @@ let rec repair_syntax_stmt user_dists {stmt; smeta} =
       ; smeta }
   | _ ->
       { stmt=
-          map_statement ident (repair_syntax_stmt user_dists) ident ident stmt
+          map_statement Fn.id
+            (repair_syntax_stmt user_dists)
+            Fn.id Fn.id Fn.id stmt
       ; smeta }
 
 let rec replace_deprecated_expr
@@ -91,7 +93,8 @@ let rec replace_deprecated_stmt
           { assign_lhs= replace_deprecated_lval deprecated_userdefined l
           ; assign_op= Assign
           ; assign_rhs= (replace_deprecated_expr deprecated_userdefined) e }
-    | FunDef {returntype; funname= {name; id_loc}; arguments; body} ->
+    | FunDef {returntype; funname= {name; id_loc}; captures; arguments; body}
+      ->
         let newname =
           match String.Map.find deprecated_userdefined name with
           | Some type_ -> update_suffix name type_
@@ -100,6 +103,7 @@ let rec replace_deprecated_stmt
         FunDef
           { returntype
           ; funname= {name= newname; id_loc}
+          ; captures
           ; arguments
           ; body= replace_deprecated_stmt deprecated_userdefined body }
     | _ ->
@@ -107,7 +111,7 @@ let rec replace_deprecated_stmt
           (replace_deprecated_expr deprecated_userdefined)
           (replace_deprecated_stmt deprecated_userdefined)
           (replace_deprecated_lval deprecated_userdefined)
-          ident stmt
+          Fn.id Fn.id stmt
   in
   {stmt; smeta}
 
@@ -165,7 +169,7 @@ let rec parens_stmt {stmt; smeta} =
           ; lower_bound= keep_parens lower_bound
           ; upper_bound= keep_parens upper_bound
           ; loop_body= parens_stmt loop_body }
-    | _ -> map_statement no_parens parens_stmt parens_lval ident stmt
+    | _ -> map_statement no_parens parens_stmt parens_lval Fn.id Fn.id stmt
   in
   {stmt; smeta}
 

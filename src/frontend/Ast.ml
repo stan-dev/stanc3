@@ -21,6 +21,16 @@ type 'e index =
 type fun_kind =
   | StanLib of bool Fun_kind.suffix
   | UserDefined of bool Fun_kind.suffix
+  | Closure of bool Fun_kind.suffix
+[@@deriving compare, sexp, hash]
+
+type capture_info =
+  string
+  * ( Middle.UnsizedType.capturetype
+    * Middle.UnsizedType.autodifftype
+    * Middle.UnsizedType.t
+    * string )
+    list
 [@@deriving compare, sexp, hash]
 
 (** Expression shapes (used for both typed and untyped expressions, where we
@@ -118,7 +128,7 @@ type typed_lval = (typed_expression, typed_expr_meta) lval_with
 (** Statement shapes, where we substitute untyped_expression and untyped_statement
     for 'e and 's respectively to get untyped_statement and typed_expression and
     typed_statement to get typed_statement    *)
-type ('e, 's, 'l, 'f) statement =
+type ('e, 's, 'l, 'f, 'c) statement =
   | Assignment of
       { assign_lhs: 'l
       ; assign_op: assignmentoperator
@@ -158,6 +168,7 @@ type ('e, 's, 'l, 'f) statement =
   | FunDef of
       { returntype: Middle.UnsizedType.returntype
       ; funname: identifier
+      ; captures: 'c option
       ; arguments:
           (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * identifier)
           list
@@ -179,13 +190,14 @@ type statement_returntype =
   | AnyReturnType
 [@@deriving sexp, hash, compare]
 
-type ('e, 'm, 'l, 'f) statement_with =
-  {stmt: ('e, ('e, 'm, 'l, 'f) statement_with, 'l, 'f) statement; smeta: 'm}
+type ('e, 'm, 'l, 'f, 'c) statement_with =
+  { stmt: ('e, ('e, 'm, 'l, 'f, 'c) statement_with, 'l, 'f, 'c) statement
+  ; smeta: 'm }
 [@@deriving sexp, compare, map, hash, fold]
 
 (** Untyped statements, which have location_spans as meta-data *)
 type untyped_statement =
-  (untyped_expression, located_meta, untyped_lval, unit) statement_with
+  (untyped_expression, located_meta, untyped_lval, unit, unit) statement_with
 [@@deriving sexp, compare, map, hash]
 
 let mk_untyped_statement ~stmt ~loc : untyped_statement = {stmt; smeta= {loc}}
@@ -201,7 +213,8 @@ type typed_statement =
   ( typed_expression
   , stmt_typed_located_meta
   , typed_lval
-  , fun_kind )
+  , fun_kind
+  , capture_info )
   statement_with
 [@@deriving sexp, compare, map, hash]
 
@@ -254,12 +267,13 @@ let rec untyped_lvalue_of_typed_lvalue ({lval; lmeta} : typed_lval) :
   ; lmeta= {loc= lmeta.loc} }
 
 (** Forgetful function from typed to untyped statements *)
-let rec untyped_statement_of_typed_statement {stmt; smeta} =
+let rec untyped_statement_of_typed_statement ({stmt; smeta} : typed_statement)
+    =
   { stmt=
       map_statement untyped_expression_of_typed_expression
         untyped_statement_of_typed_statement untyped_lvalue_of_typed_lvalue
-        (fun _ -> ())
-        stmt
+        (function StanLib _ | UserDefined _ | Closure _ -> ())
+        Fn.ignore stmt
   ; smeta= {loc= smeta.loc} }
 
 (** Forgetful function from typed to untyped programs *)

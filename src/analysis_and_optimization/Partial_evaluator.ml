@@ -87,7 +87,7 @@ let rec eval_expr (e : Expr.Typed.t) =
       | FunApp (kind, l) -> (
           let l = List.map ~f:eval_expr l in
           match kind with
-          | UserDefined _ | CompilerInternal _ -> FunApp (kind, l)
+          | UserDefined _ | CompilerInternal _ | Closure _ -> FunApp (kind, l)
           | StanLib (f, suffix, mem_type) ->
               let get_fun_or_op_rt_opt name l' =
                 let argument_types =

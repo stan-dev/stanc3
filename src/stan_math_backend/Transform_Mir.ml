@@ -593,16 +593,25 @@ let trans_prog (p : Program.Typed.t) =
                     ; meta= Expr.Typed.Meta.empty } )
           ; meta= Location_span.empty } ] )
   in
+  let recreate_closures =
+    (* closures cannot be model class members like other transformed data
+       recreate them at the start of every block. *)
+    List.filter p.prepare_data ~f:(function
+      | Stmt.Fixed.({pattern= Decl {decl_type= Unsized ut; _}; _})
+       |{pattern= Assignment ((_, ut, _), _); _} ->
+          UnsizedType.is_fun_type ut
+      | _ -> false )
+  in
   let p =
     { p with
-      log_prob= log_prob @ maybe_add_opencl_events_clear
+      log_prob= recreate_closures @ log_prob @ maybe_add_opencl_events_clear
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
         init_pos
         @ (p.prepare_data |> add_reads p.input_vars data_read)
         @ to_matrix_cl_stmts
     ; transform_inits=
-        init_pos
+        recreate_closures @ init_pos
         @ List.concat_map
             ~f:(data_unconstrain_transform Location_span.empty)
             (List.filter

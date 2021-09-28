@@ -155,20 +155,17 @@ let with_indented_box ppf indentation offset f =
 
 let pp_unsizedtype = Middle.UnsizedType.pp
 let pp_autodifftype = Middle.UnsizedType.pp_autodifftype
+let pp_returntype = Middle.UnsizedType.pp_returntype
 
 let rec unwind_sized_array_type = function
   | Middle.SizedType.SArray (st, e) -> (
     match unwind_sized_array_type st with st2, es -> (st2, es @ [e]) )
   | st -> (st, [])
 
-let pp_unsizedtypes ppf l = Fmt.(list ~sep:comma_no_break pp_unsizedtype) ppf l
-
-let pp_argtype ppf = function
-  | at, ut -> Fmt.pair ~sep:Fmt.nop pp_autodifftype pp_unsizedtype ppf (at, ut)
-
-let pp_returntype ppf = function
-  | Middle.UnsizedType.ReturnType x -> pp_unsizedtype ppf x
-  | Void -> Fmt.pf ppf "void"
+let rec unwind_array_type = function
+  | Middle.UnsizedType.UArray ut -> (
+    match unwind_array_type ut with ut2, d -> (ut2, d + 1) )
+  | ut -> (ut, 0)
 
 let pp_identifier ppf id = Fmt.pf ppf "%s" id.name
 
@@ -525,7 +522,8 @@ and pp_statement ppf
       with_hbox ppf (fun () ->
           Fmt.pf ppf "%a%a %a%a;" pp_array_dims es pp_transformed_type
             (pst, trans) pp_identifier id pp_init init )
-  | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
+  | FunDef {returntype= rt; funname= id; captures; arguments= args; body= b} -> (
+      if is_some captures then Fmt.pf ppf "function" ;
       Fmt.pf ppf "%a %a(" pp_returntype rt pp_identifier id ;
       let loc_of (_, _, id) = id.id_loc in
       with_box ppf 0 (fun () ->

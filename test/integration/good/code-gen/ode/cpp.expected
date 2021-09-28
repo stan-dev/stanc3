@@ -56,6 +56,53 @@ static constexpr std::array<const char*, 36> locations_array__ =
  " (in 'ode_adjoint_test_model.stan', line 9, column 4 to column 13)",
  " (in 'ode_adjoint_test_model.stan', line 8, column 50 to line 10, column 3)"};
 
+template <typename T0__, typename T1__>
+Eigen::Matrix<stan::promote_args_t<T0__,
+stan::value_type_t<T1__>>, -1, 1>
+f_0_arg(const T0__& t, const T1__& z, std::ostream* pstream__) ;
+
+struct f_0_arg_functor__ {
+template <typename T0__, typename T1__>
+Eigen::Matrix<stan::promote_args_t<T0__,
+stan::value_type_t<T1__>>, -1, 1>
+operator()(const T0__& t, const T1__& z, std::ostream* pstream__)  const 
+{
+return f_0_arg(t, z, pstream__);
+}
+};
+
+template <typename T0__, typename T1__, typename T2__>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
+T2__>, -1, 1>
+f_1_arg(const T0__& t, const T1__& z, const T2__& a, std::ostream* pstream__) ;
+
+struct f_1_arg_functor__ {
+template <typename T0__, typename T1__, typename T2__>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
+T2__>, -1, 1>
+operator()(const T0__& t, const T1__& z, const T2__& a,
+           std::ostream* pstream__)  const 
+{
+return f_1_arg(t, z, a, pstream__);
+}
+};
+
+template <typename T0__, typename T1__, typename T3__>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
+T3__>, -1, 1>
+f_2_arg(const T0__& t, const T1__& z, const int& b, const T3__& a,
+        std::ostream* pstream__) ;
+
+struct f_2_arg_functor__ {
+template <typename T0__, typename T1__, typename T3__>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
+T3__>, -1, 1>
+operator()(const T0__& t, const T1__& z, const int& b, const T3__& a,
+           std::ostream* pstream__)  const 
+{
+return f_2_arg(t, z, b, a, pstream__);
+}
+};
 
 template <typename T0__, typename T1__>
 Eigen::Matrix<stan::promote_args_t<T0__,
@@ -77,28 +124,6 @@ f_0_arg(const T0__& t, const T1__& z_arg__, std::ostream* pstream__) {
   }
   
 }
-
-struct f_0_arg_functor__ {
-template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<T0__,
-stan::value_type_t<T1__>>, -1, 1>
-operator()(const T0__& t, const T1__& z, std::ostream* pstream__)  const 
-{
-return f_0_arg(t, z, pstream__);
-}
-};
-
-
-struct f_0_arg_odefunctor__ {
-template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<T0__,
-stan::value_type_t<T1__>>, -1, 1>
-operator()(const T0__& t, const T1__& z, std::ostream* pstream__)  const 
-{
-return f_0_arg(t, z, pstream__);
-}
-};
-
 template <typename T0__, typename T1__, typename T2__>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
 T2__>, -1, 1>
@@ -121,30 +146,6 @@ f_1_arg(const T0__& t, const T1__& z_arg__, const T2__& a,
   }
   
 }
-
-struct f_1_arg_functor__ {
-template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
-T2__>, -1, 1>
-operator()(const T0__& t, const T1__& z, const T2__& a,
-           std::ostream* pstream__)  const 
-{
-return f_1_arg(t, z, a, pstream__);
-}
-};
-
-
-struct f_1_arg_odefunctor__ {
-template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
-T2__>, -1, 1>
-operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
-           const T2__& a)  const 
-{
-return f_1_arg(t, z, a, pstream__);
-}
-};
-
 template <typename T0__, typename T1__, typename T3__>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
 T3__>, -1, 1>
@@ -167,30 +168,6 @@ f_2_arg(const T0__& t, const T1__& z_arg__, const int& b, const T3__& a,
   }
   
 }
-
-struct f_2_arg_functor__ {
-template <typename T0__, typename T1__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
-T3__>, -1, 1>
-operator()(const T0__& t, const T1__& z, const int& b, const T3__& a,
-           std::ostream* pstream__)  const 
-{
-return f_2_arg(t, z, b, a, pstream__);
-}
-};
-
-
-struct f_2_arg_odefunctor__ {
-template <typename T0__, typename T1__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
-T3__>, -1, 1>
-operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
-           const int& b, const T3__& a)  const 
-{
-return f_2_arg(t, z, b, a, pstream__);
-}
-};
-
 class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_test_model_model> {
 
  private:
@@ -225,6 +202,8 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
                                unsigned int random_seed__ = 0,
                                std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -346,22 +325,25 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> z;
       current_statement__ = 6;
       assign(z,
-        ode_adjoint_tol_ctl(f_0_arg_odefunctor__(), y0, t0, times, rel_tol_f,
-          abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q, abs_tol_q,
+        ode_adjoint_tol_ctl(stan::math::ode_closure_adapter(), y0, t0, times,
+          rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q, abs_tol_q,
           max_num_steps, num_checkpoints, interpolation_polynomial, solver_f,
-          solver_b, pstream__), "assigning variable z");
+          solver_b, pstream__, from_lambda(f_0_arg_functor__())),
+        "assigning variable z");
       current_statement__ = 7;
       assign(z,
-        ode_adjoint_tol_ctl(f_1_arg_odefunctor__(), y0, t0, times, rel_tol_f,
-          abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q, abs_tol_q,
+        ode_adjoint_tol_ctl(stan::math::ode_closure_adapter(), y0, t0, times,
+          rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q, abs_tol_q,
           max_num_steps, num_checkpoints, interpolation_polynomial, solver_f,
-          solver_b, pstream__, y), "assigning variable z");
+          solver_b, pstream__, from_lambda(f_1_arg_functor__()), y),
+        "assigning variable z");
       current_statement__ = 8;
       assign(z,
-        ode_adjoint_tol_ctl(f_2_arg_odefunctor__(), y0, t0, times, rel_tol_f,
-          abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q, abs_tol_q,
+        ode_adjoint_tol_ctl(stan::math::ode_closure_adapter(), y0, t0, times,
+          rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q, abs_tol_q,
           max_num_steps, num_checkpoints, interpolation_polynomial, solver_f,
-          solver_b, pstream__, i, y), "assigning variable z");
+          solver_b, pstream__, from_lambda(f_2_arg_functor__()), i, y),
+        "assigning variable z");
       {
         current_statement__ = 9;
         lp_accum__.add(normal_lpdf<propto__>(y, 0, 1));
@@ -424,22 +406,25 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       } 
       current_statement__ = 6;
       assign(z,
-        ode_adjoint_tol_ctl(f_0_arg_odefunctor__(), y0, t0, times, rel_tol_f,
-          abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q, abs_tol_q,
+        ode_adjoint_tol_ctl(stan::math::ode_closure_adapter(), y0, t0, times,
+          rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q, abs_tol_q,
           max_num_steps, num_checkpoints, interpolation_polynomial, solver_f,
-          solver_b, pstream__), "assigning variable z");
+          solver_b, pstream__, from_lambda(f_0_arg_functor__())),
+        "assigning variable z");
       current_statement__ = 7;
       assign(z,
-        ode_adjoint_tol_ctl(f_1_arg_odefunctor__(), y0, t0, times, rel_tol_f,
-          abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q, abs_tol_q,
+        ode_adjoint_tol_ctl(stan::math::ode_closure_adapter(), y0, t0, times,
+          rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q, abs_tol_q,
           max_num_steps, num_checkpoints, interpolation_polynomial, solver_f,
-          solver_b, pstream__, y), "assigning variable z");
+          solver_b, pstream__, from_lambda(f_1_arg_functor__()), y),
+        "assigning variable z");
       current_statement__ = 8;
       assign(z,
-        ode_adjoint_tol_ctl(f_2_arg_odefunctor__(), y0, t0, times, rel_tol_f,
-          abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q, abs_tol_q,
+        ode_adjoint_tol_ctl(stan::math::ode_closure_adapter(), y0, t0, times,
+          rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q, abs_tol_q,
           max_num_steps, num_checkpoints, interpolation_polynomial, solver_f,
-          solver_b, pstream__, i, y), "assigning variable z");
+          solver_b, pstream__, from_lambda(f_2_arg_functor__()), i, y),
+        "assigning variable z");
       if (emit_transformed_parameters__) {
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= M; ++sym2__) {

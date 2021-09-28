@@ -285,6 +285,13 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       ((vident, _, []), ({meta= Expr.Typed.Meta.({type_= UInt; _}); _} as rhs))
    |Assignment ((vident, _, []), ({meta= {type_= UReal; _}; _} as rhs)) ->
       pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
+  | Assignment
+      ( (vident, UFun _, [])
+      , ({meta= {type_= UFun (_, _, (FnLpdf _, true), _); _}; _} as rhs) ) ->
+      pf ppf "@[<hov 4>auto %s = %a;@]" vident pp_expr rhs
+  | Assignment ((vident, UFun _, []), ({meta= {type_= UFun _; _}; _} as rhs))
+    ->
+      pf ppf "@[<hov 4>auto %s = %a;@]" vident pp_expr rhs
   | Assignment ((assignee, UInt, idcs), rhs)
    |Assignment ((assignee, UReal, idcs), rhs)
     when List.for_all ~f:is_single_index idcs ->
@@ -352,6 +359,8 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
   | NRFunApp (UserDefined (fname, suffix), args) ->
       pf ppf "%a;" pp_user_defined_fun (fname, suffix, args)
+  | NRFunApp (Closure (fname, suffix), args) ->
+      pf ppf "%a;" pp_closure (fname, suffix, args)
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
   | Return e -> pf ppf "@[<hov 4>return %a;@]" (option pp_expr) e
@@ -375,6 +384,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   | Profile (name, ls) -> pp_profile ppf (pp_stmt_list, name, ls)
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
+  | Decl {decl_type= Unsized (UFun _); _} -> ()
   | Decl {decl_adtype; decl_id; decl_type; initialize; _} ->
       pp_decl ppf (decl_id, decl_type, decl_adtype, initialize)
 

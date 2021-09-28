@@ -182,29 +182,23 @@ module TypeError = struct
     | IllTypedBinaryOperator (op, lt, rt) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to infix operator %a. Available \
-           signatures: %s@[<h>Instead supplied arguments of incompatible \
+           signatures: @,%a@,@[<h>Instead supplied arguments of incompatible \
            type: %a, %a.@]"
-          Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
+          Operator.pp op Stan_math_signatures.pp_math_lib_operator_sigs op
           UnsizedType.pp lt UnsizedType.pp rt
     | IllTypedPrefixOperator (op, ut) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to prefix operator %a. Available \
-           signatures: %s@[<h>Instead supplied argument of incompatible type: \
-           %a.@]"
-          Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
+           signatures: @,%a@,@[<h>Instead supplied argument of incompatible \
+           type: %a.@]"
+          Operator.pp op Stan_math_signatures.pp_math_lib_operator_sigs op
           UnsizedType.pp ut
     | IllTypedPostfixOperator (op, ut) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to postfix operator %a. Available \
-           signatures: %s\n\
-           Instead supplied argument of incompatible type: %a."
-          Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
+           signatures: @,%a@,Instead supplied argument of incompatible type: \
+           %a."
+          Operator.pp op Stan_math_signatures.pp_math_lib_operator_sigs op
           UnsizedType.pp ut
 end
 
@@ -311,6 +305,8 @@ module StatementError = struct
     | MismatchFunDefDecl of string * UnsizedType.t option
     | FunDeclExists of string
     | FunDeclNoDefn
+    | ClosureNoDefn
+    | RecursiveClosure
     | FunDeclNeedsBlock
     | NonRealProbFunDef
     | ProbDensityNonRealVariate of UnsizedType.t option
@@ -321,7 +317,9 @@ module StatementError = struct
   let pp ppf = function
     | CannotAssignToReadOnly name ->
         Fmt.pf ppf
-          "Cannot assign to function argument or loop identifier '%s'." name
+          "Cannot assign to function argument, captured variable or loop \
+           identifier '%s'."
+          name
     | CannotAssignToGlobal name ->
         Fmt.pf ppf
           "Cannot assign to global variable '%s' declared in previous blocks."
@@ -388,6 +386,10 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
           name
     | FunDeclNoDefn ->
         Fmt.pf ppf "Some function is declared without specifying a definition."
+    | ClosureNoDefn ->
+        Fmt.pf ppf
+          "Local function is declared without specifying a definition."
+    | RecursiveClosure -> Fmt.pf ppf "Local function cannot be recursive."
     | FunDeclNeedsBlock ->
         Fmt.pf ppf "Function definitions must be wrapped in curly braces."
     | NonRealProbFunDef ->
@@ -623,12 +625,16 @@ let fn_decl_exists loc name =
   StatementError (loc, StatementError.FunDeclExists name)
 
 let fn_decl_without_def loc = StatementError (loc, StatementError.FunDeclNoDefn)
+let closure_without_def loc = StatementError (loc, StatementError.ClosureNoDefn)
 
 let fn_decl_needs_block loc =
   StatementError (loc, StatementError.FunDeclNeedsBlock)
 
 let non_real_prob_fn_def loc =
   StatementError (loc, StatementError.NonRealProbFunDef)
+
+let recursive_closure loc =
+  StatementError (loc, StatementError.RecursiveClosure)
 
 let prob_density_non_real_variate loc ut_opt =
   StatementError (loc, StatementError.ProbDensityNonRealVariate ut_opt)

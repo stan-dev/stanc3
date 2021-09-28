@@ -70,6 +70,7 @@ type type_mismatch =
   | TypeMismatch of UnsizedType.t * UnsizedType.t * details option
 
 and details =
+  | ClosureError
   | SuffixMismatch of unit Fun_kind.suffix * unit Fun_kind.suffix
   | ReturnTypeMismatch of UnsizedType.returntype * UnsizedType.returntype
   | InputMismatch of function_mismatch
@@ -108,22 +109,28 @@ let rec compare_errors e1 e2 =
     | TypeMismatch (_, _, None), TypeMismatch (_, _, Some _) -> -1
     | TypeMismatch (_, _, Some e1), TypeMismatch (_, _, Some e2) -> (
       match (e1, e2) with
-      | SuffixMismatch _, SuffixMismatch _ -> 0
-      | ReturnTypeMismatch _, ReturnTypeMismatch _ -> 0
+      | SuffixMismatch _, SuffixMismatch _
+       |ClosureError, ClosureError
+       |ReturnTypeMismatch _, ReturnTypeMismatch _ ->
+          0
       | InputMismatch e1, InputMismatch e2 -> compare_errors e1 e2
       | SuffixMismatch _, _ | _, InputMismatch _ -> -1
-      | InputMismatch _, _ | _, SuffixMismatch _ -> 1 ) )
+      | InputMismatch _, _ | _, SuffixMismatch _ -> 1
+      | ReturnTypeMismatch _, ClosureError -> -1
+      | ClosureError, ReturnTypeMismatch _ -> 1 ) )
 
 let rec check_same_type depth t1 t2 =
   let wrap_func = Option.map ~f:(fun e -> TypeMismatch (t1, t2, Some e)) in
   match (t1, t2) with
   | t1, t2 when t1 = t2 -> None
   | UnsizedType.(UReal, UInt) when depth < 1 -> None
-  | UFun (_, _, s1, _), UFun (_, _, s2, _)
+  | UFun (_, _, (s1, _), _), UFun (_, _, (s2, _), _)
     when Fun_kind.without_propto s1 <> Fun_kind.without_propto s2 ->
       Some
         (SuffixMismatch (Fun_kind.without_propto s1, Fun_kind.without_propto s2))
       |> wrap_func
+  | UFun (_, _, (_, false), _), UFun (_, _, (_, true), _) ->
+      Some ClosureError |> wrap_func
   | UFun (_, rt1, _, _), UFun (_, rt2, _, _) when rt1 <> rt2 ->
       Some (ReturnTypeMismatch (rt1, rt2)) |> wrap_func
   | UFun (l1, _, _, _), UFun (l2, _, _, _) ->
@@ -172,7 +179,7 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
     fun_return args =
   let minimal_func_type =
     UnsizedType.UFun
-      (mandatory_fun_arg_tys, ReturnType fun_return, FnPlain, AoS)
+      (mandatory_fun_arg_tys, ReturnType fun_return, (FnPlain, true), AoS)
   in
   let minimal_args =
     (UnsizedType.AutoDiffable, minimal_func_type) :: mandatory_arg_tys
@@ -180,7 +187,7 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
   let wrap_err x = Some (minimal_args, ArgError (1, x)) in
   match args with
   | ( _
-    , ( UnsizedType.UFun (fun_args, ReturnType return_type, suffix, _) as
+    , ( UnsizedType.UFun (fun_args, ReturnType return_type, (suffix, _), _) as
       func_type ) )
     :: _ ->
       let mandatory, variadic_arg_tys =
@@ -242,6 +249,8 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
           "@[<v>The %s argument is %s but the other is %s. These function \
            types are not compatible.@]"
           (index_str n) (suffix_str expected) (suffix_str found)
+    | ArgError (n, TypeMismatch (_, _, Some ClosureError)) ->
+        pf ppf "@[<v>The %s argument cannot be a closure.@]" (index_str n)
     | ArgError (n, TypeMismatch (expected, found, Some (InputMismatch err))) ->
         pf ppf
           "@[<v>The types for the %s argument are incompatible: one is@, %a@ \
@@ -275,6 +284,8 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
           "@[<v>The %s argument must be %s but got %s. These function types \
            are not compatible.@]"
           (index_str n) (suffix_str expected) (suffix_str found)
+    | ArgError (n, TypeMismatch (_, _, Some ClosureError)) ->
+        pf ppf "@[<v>The %s argument cannot be a closure.@]" (index_str n)
     | ArgError (n, TypeMismatch (expected, found, Some (InputMismatch err))) ->
         pf ppf
           "@[<v>The %s argument must be@, %a@ but got@, %a@ @[<v 2>These are \
@@ -295,7 +306,7 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
         pf ppf "(@[<hov>%a@])" (list ~sep:comma (pp_unsized_type ctx)) )
   in
   let pp_signature ppf ((rt, args), err) =
-    let fun_ty = UnsizedType.UFun (args, rt, FnPlain, AoS) in
+    let fun_ty = UnsizedType.UFun (args, rt, (FnPlain, false), AoS) in
     Fmt.pf ppf "%a@ @[<hov 2>  %a@]"
       (pp_with_where ctx (pp_fundef ctx))
       fun_ty pp_explain err

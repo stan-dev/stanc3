@@ -188,6 +188,7 @@ let rec collect_deprecated_stmt deprecated_userdefined
         (collect_deprecated_stmt deprecated_userdefined)
         (collect_deprecated_lval deprecated_userdefined)
         (fun l _ -> l)
+        (fun l _ -> l)
         acc stmt
 
 let collect_userdef_distributions program =
