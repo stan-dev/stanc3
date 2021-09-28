@@ -209,25 +209,29 @@ let pp_shapes ppf p =
   in
   pp_method ppf "parameter_shapes" ["self"; "nchains__"] [] ppbody
 
-let pp_bijector ppf trans =
+let pp_bijector ppf (trans, scale) =
   let pp_call_expr ppf (name, args) = pp_call ppf (name, pp_expr, args) in
-  let components =
+  let constrain =
     match trans with
     | Transformation.Identity -> []
     | Lower lb -> [("Exp", []); ("Shift", [lb])]
     | Upper ub ->
         [("Exp", []); ("Scale", [Expr.Helpers.float (-1.)]); ("Shift", [ub])]
     | LowerUpper (lb, ub) -> [("Sigmoid", [lb; ub])]
-    (* TODO 
-    | Offset o -> [("Shift", [o])]
-    | Multiplier m -> [("Scale", [m])]
-    | OffsetMultiplier (o, m) -> [("Scale", [m]); ("Shift", [o])] *)
     | CholeskyCorr -> [("CorrelationCholesky", [])]
     | Correlation -> [("CorrelationCholesky", []); ("CholeskyOuterProduct", [])]
     | _ ->
         raise_s
           [%message "Unsupported " (trans : Expr.Typed.t Transformation.t)]
   in
+  let scaling =
+    match scale with
+    | Scale.Native -> []
+    | Offset o -> [("Shift", [o])]
+    | Multiplier m -> [("Scale", [m])]
+    | OffsetMultiplier (o, m) -> [("Scale", [m]); ("Shift", [o])]
+  in
+  let components = scaling @ constrain in
   match components with
   | [] -> pf ppf "tfb__.Identity()"
   | ls ->
@@ -240,7 +244,9 @@ let pp_bijectors ppf p =
     pf ppf "%a@ " pp_extract_data p ;
     pf ppf "return [@[<hov>%a@]]"
       (list ~sep:comma pp_bijector)
-      (List.map ~f:(fun (_, {out_trans; _}) -> out_trans) (get_params p))
+      (List.map
+         ~f:(fun (_, {out_trans; out_scale; _}) -> (out_trans, out_scale))
+         (get_params p))
   in
   pp_method ppf "parameter_bijectors" ["self"] [] ppbody
 
