@@ -70,6 +70,8 @@ let nest_unsized_array basic_type n =
 %nonassoc below_ELSE
 %nonassoc ELSE
 
+(* error handling *)
+%on_error_reduce type_constraint_and_scale type_scale
 (* Top level rule *)
 
 %start <Ast.untyped_program> program
@@ -460,10 +462,12 @@ type_constraint_and_scale:
     }
   | LABRACK l=offset_mult RABRACK
     {  grammar_logger "only_scale" ; Transformation.Identity, l }
+
   | LABRACK r=range RABRACK
     {  grammar_logger "only_range" ; r, Scale.Native }
 
   | LABRACK r=range RABRACK LABRACK l=offset_mult RABRACK
+  | LABRACK l=offset_mult RABRACK LABRACK r=range UNREACHABLE (* error state *)
     {  grammar_logger "range_constraint" ; r,l  }
 
 type_scale:

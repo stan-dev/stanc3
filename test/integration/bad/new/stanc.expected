@@ -3433,7 +3433,7 @@ Syntax error in 'type-size-bad37.stan', line 1, column 19 to column 24, parsing 
                             ^
    -------------------------------------------------
 
-Expected "[" expression "]" for size declaration of simplex.
+Expected "[" expression "]" for size of simplex.
   $ ../../../../../install/default/bin/stanc type-size-bad38.stan
 Syntax error in 'type-size-bad38.stan', line 1, column 17 to column 18, parsing error:
    -------------------------------------------------
@@ -3441,7 +3441,7 @@ Syntax error in 'type-size-bad38.stan', line 1, column 17 to column 18, parsing 
                           ^
    -------------------------------------------------
 
-Expected "[" expression "]" for size declaration of simplex.
+Expected "[" expression "]" for size of simplex.
   $ ../../../../../install/default/bin/stanc type-size-bad39.stan
 Syntax error in 'type-size-bad39.stan', line 1, column 15 to column 20, parsing error:
    -------------------------------------------------
@@ -3449,7 +3449,7 @@ Syntax error in 'type-size-bad39.stan', line 1, column 15 to column 20, parsing 
                         ^
    -------------------------------------------------
 
-Expected "[" expression "]" for size declaration of simplex.
+Expected "[" expression "]" for size of simplex.
   $ ../../../../../install/default/bin/stanc type-size-bad4.stan
 Syntax error in 'type-size-bad4.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -3466,7 +3466,7 @@ Syntax error in 'type-size-bad40.stan', line 1, column 24 to column 29, parsing 
                                  ^
    -------------------------------------------------
 
-Expected "[" expression "]" for size declaration of unit_vector.
+Expected "[" expression "]" for size of unit_vector.
   $ ../../../../../install/default/bin/stanc type-size-bad41.stan
 Syntax error in 'type-size-bad41.stan', line 1, column 21 to column 22, parsing error:
    -------------------------------------------------
@@ -3474,7 +3474,7 @@ Syntax error in 'type-size-bad41.stan', line 1, column 21 to column 22, parsing 
                               ^
    -------------------------------------------------
 
-Expected "[" expression "]" for size declaration of unit_vector.
+Expected "[" expression "]" for size of unit_vector.
   $ ../../../../../install/default/bin/stanc type-size-bad42.stan
 Syntax error in 'type-size-bad42.stan', line 1, column 20 to column 25, parsing error:
    -------------------------------------------------
@@ -3482,7 +3482,7 @@ Syntax error in 'type-size-bad42.stan', line 1, column 20 to column 25, parsing 
                              ^
    -------------------------------------------------
 
-Expected "[" expression "]" for size declaration of unit_vector.
+Expected "[" expression "]" for size of unit_vector.
   $ ../../../../../install/default/bin/stanc type-size-bad43.stan
 Syntax error in 'type-size-bad43.stan', line 1, column 19 to column 24, parsing error:
    -------------------------------------------------
@@ -3490,7 +3490,7 @@ Syntax error in 'type-size-bad43.stan', line 1, column 19 to column 24, parsing 
                             ^
    -------------------------------------------------
 
-Expected "[" expression "]" for size declaration of unit_vector.
+Expected "[" expression "]" for size of unit_vector.
   $ ../../../../../install/default/bin/stanc type-size-bad44.stan
 Syntax error in 'type-size-bad44.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -3498,7 +3498,7 @@ Syntax error in 'type-size-bad44.stan', line 1, column 30 to column 35, parsing 
                                        ^
    -------------------------------------------------
 
-Expected "[" expression "]" for vector size.
+Expected (optional) constraint followed by "[" expression "]" for vector size.
   $ ../../../../../install/default/bin/stanc type-size-bad45.stan
 Syntax error in 'type-size-bad45.stan', line 1, column 15 to column 16, parsing error:
    -------------------------------------------------
@@ -3680,6 +3680,14 @@ Syntax error in 'type-size-bad9.stan', line 1, column 21 to column 22, parsing e
    -------------------------------------------------
 
 Expected "[" expression "]" for size of corr_matrix.
+  $ ../../../../../install/default/bin/stanc variable-decl-bad-8.stan
+Syntax error in 'variable-decl-bad-8.stan', line 1, column 41 to column 42, parsing error:
+   -------------------------------------------------
+     1:  data { row_vector<multiplier=x>[10] print(0);}
+                                                  ^
+   -------------------------------------------------
+
+";" is expected after a top-level variable declaration.
   $ ../../../../../install/default/bin/stanc variable-decl-bad1.stan
 Syntax error in 'variable-decl-bad1.stan', line 1, column 10 to column 11, parsing error:
    -------------------------------------------------
@@ -3697,7 +3705,7 @@ Syntax error in 'variable-decl-bad2.stan', line 1, column 27 to column 28, parsi
      2:  }
    -------------------------------------------------
 
-Expected "[" expression "," expression "]" for matrix sizes as part of top-level variable declaration.
+Expected (optional) constraints followed by "[" expression "," expression "]" for matrix size.
   $ ../../../../../install/default/bin/stanc variable-decl-bad3.stan
 Syntax error in 'variable-decl-bad3.stan', line 1, column 17 to column 22, parsing error:
    -------------------------------------------------
@@ -3713,7 +3721,7 @@ Syntax error in 'variable-decl-bad4.stan', line 1, column 32 to column 37, parsi
                                          ^
    -------------------------------------------------
 
-Expected identifier as part of top-level variable declaration.
+Expected "[" expression "]" for size declaration of row_vector.
   $ ../../../../../install/default/bin/stanc variable-decl-bad5.stan
 Syntax error in 'variable-decl-bad5.stan', line 1, column 18 to column 23, parsing error:
    -------------------------------------------------
@@ -3729,7 +3737,7 @@ Syntax error in 'variable-decl-bad6.stan', line 1, column 15 to column 20, parsi
                         ^
    -------------------------------------------------
 
-Expected "[" expression "]" for size declaration of simplex.
+Expected "[" expression "]" for size of simplex.
   $ ../../../../../install/default/bin/stanc variable-decl-bad7.stan
 Syntax error in 'variable-decl-bad7.stan', line 1, column 28 to column 29, parsing error:
    -------------------------------------------------

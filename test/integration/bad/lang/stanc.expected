@@ -43,7 +43,7 @@ Syntax error in 'bad3.stan', line 1, column 21 to column 22, parsing error:
                               ^
    -------------------------------------------------
 
-Expected "[" expression "," expression "]" for sizes of matrix.
+Expected (optional) constraints followed by "[" expression "," expression "]" for matrix size.
   $ ../../../../../install/default/bin/stanc bad4.stan
 Semantic error in 'bad4.stan', line 1, column 38 to column 42:
    -------------------------------------------------
@@ -155,6 +155,46 @@ Semantic error in 'bad_bounds4.stan', line 2, column 2 to column 30:
    -------------------------------------------------
 
 Complex types do not support bounds or scales.
+  $ ../../../../../install/default/bin/stanc bad_bounds5.stan
+Syntax error in 'bad_bounds5.stan', line 2, column 25 to column 26, parsing error:
+   -------------------------------------------------
+     1:  parameters {
+     2:     real<offset=1><lower=0>
+                                  ^
+     3:  }
+   -------------------------------------------------
+
+Lower or upper bounds must come before scaling in a type constraint.
+  $ ../../../../../install/default/bin/stanc bad_bounds6.stan
+Syntax error in 'bad_bounds6.stan', line 3, column 0 to column 1, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:     ordered<
+     3:  }
+         ^
+   -------------------------------------------------
+
+Expected "offset = " expression or "multiplier = " expression for constrained type scale.
+  $ ../../../../../install/default/bin/stanc bad_bounds7.stan
+Syntax error in 'bad_bounds7.stan', line 2, column 18 to column 19, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:   ordered<offset=0><lower=0> x;
+                           ^
+     3:  }
+   -------------------------------------------------
+
+Expected "[" expression "]" for size of ordered.
+  $ ../../../../../install/default/bin/stanc bad_bounds8.stan
+Syntax error in 'bad_bounds8.stan', line 3, column 0 to column 1, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    vector<offset=0>
+     3:  }
+         ^
+   -------------------------------------------------
+
+Expected (optional) constraint followed by "[" expression "]" for vector size.
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_rvec_data.stan
 Semantic error in 'bad_cov_exp_quad_arr_rvec_data.stan', line 13, column 41 to column 48:
    -------------------------------------------------

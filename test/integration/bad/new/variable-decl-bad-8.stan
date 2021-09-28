@@ -1,0 +1,1 @@
+data { row_vector<multiplier=x>[10] print(0);}
