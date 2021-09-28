@@ -567,7 +567,10 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
           Expr.Typed.(local_scalar (type_of t) (adlevel_of t))
           pp_expr e
       in
-      let tform ppf = pf ppf "(@[<hov 2>@,%a@ ?@ %a@ :@ %a@])" in
+      let tform ppf =
+        pf ppf
+          "(@[<hov 2>@,%a@ ?@ stan::math::eval(%a)@ :@ stan::math::eval(%a)@])"
+      in
       if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef
       else tform ppf pp_expr ec promoted (e, et) promoted (e, ef)
   | Indexed (e, []) -> pp_expr ppf e
@@ -637,7 +640,7 @@ let%expect_test "pp_expr9" =
           ( dummy_locate (Lit (Int, "1"))
           , dummy_locate (Lit (Real, "1.2"))
           , dummy_locate (Lit (Real, "2.3")) ))) ;
-  [%expect {| (1 ? 1.2 : 2.3) |}]
+  [%expect {| (1 ? stan::math::eval(1.2) : stan::math::eval(2.3)) |}]
 
 let%expect_test "pp_expr10" =
   printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All]))) ;
