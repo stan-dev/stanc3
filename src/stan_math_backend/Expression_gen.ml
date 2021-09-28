@@ -567,12 +567,14 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
           Expr.Typed.(local_scalar (type_of t) (adlevel_of t))
           pp_expr e
       in
-      let tform ppf =
-        pf ppf
-          "(@[<hov 2>@,%a@ ?@ stan::math::eval(%a)@ :@ stan::math::eval(%a)@])"
+      let tform ppf = pf ppf "(@[<hov 2>@,%a@ ?@ %a@ :@ %a@])" in
+      let eval_pp ppf a =
+        if UnsizedType.is_eigen_type meta.type_ then
+          pf ppf "stan::math::eval(%a)" pp_expr a
+        else pf ppf "%a" pp_expr a
       in
-      if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef
-      else tform ppf pp_expr ec promoted (e, et) promoted (e, ef)
+      if types_match et ef then tform ppf pp_expr ec eval_pp et eval_pp ef
+      else tform ppf eval_pp ec promoted (e, et) promoted (e, ef)
   | Indexed (e, []) -> pp_expr ppf e
   | Indexed (e, idx) -> (
     match e.pattern with
@@ -640,7 +642,7 @@ let%expect_test "pp_expr9" =
           ( dummy_locate (Lit (Int, "1"))
           , dummy_locate (Lit (Real, "1.2"))
           , dummy_locate (Lit (Real, "2.3")) ))) ;
-  [%expect {| (1 ? stan::math::eval(1.2) : stan::math::eval(2.3)) |}]
+  [%expect {| (1 ? 1.2 : 2.3) |}]
 
 let%expect_test "pp_expr10" =
   printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All]))) ;

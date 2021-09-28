@@ -2617,15 +2617,12 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       current_statement__ = 191;
       gq_complex = -p_r;
       current_statement__ = 192;
-      assign(gq_complex, (gq_i ? stan::math::eval(z) : stan::math::eval(y)),
-        "assigning variable gq_complex");
+      assign(gq_complex, (gq_i ? z : y), "assigning variable gq_complex");
       current_statement__ = 193;
-      assign(gq_complex,
-        (gq_i ? stan::math::eval(p_complex) : stan::math::eval(z)),
+      assign(gq_complex, (gq_i ? p_complex : z),
         "assigning variable gq_complex");
       current_statement__ = 194;
-      assign(gq_complex,
-        (gq_i ? stan::math::eval(d_complex) : stan::math::eval(z)),
+      assign(gq_complex, (gq_i ? d_complex : z),
         "assigning variable gq_complex");
       current_statement__ = 195;
       gq_i = logical_eq(z, z);
