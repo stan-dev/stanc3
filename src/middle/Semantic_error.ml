@@ -328,8 +328,9 @@ module StatementError = struct
           name
     | TargetPlusEqualsOutsideModelOrLogProb ->
         Fmt.pf ppf
-          "Target can only be accessed in the model block or in definitions \
-           of functions with the suffix _lp."
+          "Target can only be accessed in the model block, transformed \
+           paramters block, or in definitions of functions with the suffix \
+           _lp."
     | InvalidSamplingPDForPMF ->
         Fmt.pf ppf
           {|
@@ -584,7 +585,7 @@ let invalid_sampling_cdf_or_ccdf loc name =
 let invalid_sampling_no_such_dist loc name =
   StatementError (loc, StatementError.InvalidSamplingNoSuchDistribution name)
 
-let target_plusequals_outisde_model_or_logprob loc =
+let target_plusequals_invalid_location loc =
   StatementError (loc, StatementError.TargetPlusEqualsOutsideModelOrLogProb)
 
 let invalid_truncation_cdf_or_ccdf loc =

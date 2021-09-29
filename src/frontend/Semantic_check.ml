@@ -242,7 +242,7 @@ let semantic_check_fn_target_plus_equals cf ~loc id =
       && not
            ( cf.in_lp_fun_def || cf.current_block = Model
            || cf.current_block = TParam )
-    then Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
+    then Semantic_error.target_plusequals_invalid_location loc |> error
     else ok ())
 
 (** Rng functions cannot be used in Tp or Model and only
@@ -771,7 +771,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
           ( cf.in_lp_fun_def || cf.current_block = Model
           || cf.current_block = TParam )
       then
-        Semantic_error.target_plusequals_outisde_model_or_logprob emeta.loc
+        Semantic_error.target_plusequals_invalid_location emeta.loc
         |> Validate.error
       else
         mk_typed_expression ~expr:GetLP
@@ -785,7 +785,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
           ( cf.in_lp_fun_def || cf.current_block = Model
           || cf.current_block = TParam )
       then
-        Semantic_error.target_plusequals_outisde_model_or_logprob emeta.loc
+        Semantic_error.target_plusequals_invalid_location emeta.loc
         |> Validate.error
       else
         mk_typed_expression ~expr:GetTarget
@@ -960,7 +960,7 @@ let semantic_check_nrfn_target ~loc ~cf id =
       && not
            ( cf.in_lp_fun_def || cf.current_block = Model
            || cf.current_block = TParam )
-    then Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
+    then Semantic_error.target_plusequals_invalid_location loc |> error
     else ok ())
 
 let semantic_check_nrfn_normal ~loc id es =
@@ -1110,10 +1110,9 @@ let semantic_check_target_pe_expr_type ~loc e =
   | _ -> Validate.ok ()
 
 let semantic_check_target_pe_usage ~loc ~cf =
-  if cf.in_lp_fun_def || cf.current_block = Model then Validate.ok ()
-  else
-    Semantic_error.target_plusequals_outisde_model_or_logprob loc
-    |> Validate.error
+  if cf.in_lp_fun_def || cf.current_block = Model || cf.current_block = TParam
+  then Validate.ok ()
+  else Semantic_error.target_plusequals_invalid_location loc |> Validate.error
 
 let semantic_check_target_pe ~loc ~cf e =
   Validate.(
@@ -1159,8 +1158,11 @@ let semantic_check_sampling_cdf_ccdf ~loc id =
 (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
 let semantic_check_valid_sampling_pos ~loc ~cf =
   Validate.(
-    if not (cf.in_lp_fun_def || cf.current_block = Model) then
-      error @@ Semantic_error.target_plusequals_outisde_model_or_logprob loc
+    if
+      not
+        ( cf.in_lp_fun_def || cf.current_block = Model
+        || cf.current_block = TParam )
+    then error @@ Semantic_error.target_plusequals_invalid_location loc
     else ok ())
 
 let semantic_check_sampling_distribution ~loc id arguments =

@@ -738,10 +738,10 @@ Warning in 'err-incr-log-prob-scope.stan', line 4, column 2: increment_log_prob(
      4:    increment_log_prob(x);
            ^
      5:  }
-     6:  model {
+     6:  
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block, transformed paramters block, or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc err-integrate-ode-comma.stan
 Syntax error in 'err-integrate-ode-comma.stan', line 9, column 46 to column 51, parsing error:
    -------------------------------------------------
@@ -1000,7 +1000,7 @@ Semantic error in 'functions-bad11.stan', line 3, column 4 to column 20:
      5:    }
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block, transformed paramters block, or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc functions-bad12.stan
 Warning in 'functions-bad12.stan', line 3, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.Semantic error in 'functions-bad12.stan', line 3, column 4 to column 42:
    -------------------------------------------------
@@ -1012,7 +1012,7 @@ Warning in 'functions-bad12.stan', line 3, column 4: increment_log_prob(...); is
      5:    }
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block, transformed paramters block, or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc functions-bad13.stan
 Semantic error in 'functions-bad13.stan', line 3, column 4 to column 10:
    -------------------------------------------------
@@ -1254,7 +1254,7 @@ Semantic error in 'functions-bad6.stan', line 8, column 6 to column 17:
     10:  parameters {
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block, transformed paramters block, or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc functions-bad7.stan
 Semantic error in 'functions-bad7.stan', line 14, column 6 to column 20:
    -------------------------------------------------
@@ -1265,7 +1265,7 @@ Semantic error in 'functions-bad7.stan', line 14, column 6 to column 20:
     15:  }
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block, transformed paramters block, or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc get-lp-target-data.stan
 Semantic error in 'get-lp-target-data.stan', line 2, column 19 to column 27:
    -------------------------------------------------
@@ -1276,7 +1276,7 @@ Semantic error in 'get-lp-target-data.stan', line 2, column 19 to column 27:
      4:  parameters {
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block, transformed paramters block, or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc get_lp_bad_scope1.stan
 Warning in 'get_lp_bad_scope1.stan', line 3, column 6: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.Semantic error in 'get_lp_bad_scope1.stan', line 3, column 6 to column 14:
    -------------------------------------------------
@@ -1288,7 +1288,7 @@ Warning in 'get_lp_bad_scope1.stan', line 3, column 6: get_lp() function is depr
      5:  parameters {
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block, transformed paramters block, or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc get_lp_bad_scope2.stan
 Warning in 'get_lp_bad_scope2.stan', line 3, column 15: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.Semantic error in 'get_lp_bad_scope2.stan', line 3, column 15 to column 23:
    -------------------------------------------------
@@ -1300,7 +1300,7 @@ Warning in 'get_lp_bad_scope2.stan', line 3, column 15: get_lp() function is dep
      5:  }
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block, transformed paramters block, or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc local_var_constraint.stan
 Syntax error in 'local_var_constraint.stan', line 5, column 12 to column 13, parsing error:
    -------------------------------------------------
@@ -2242,21 +2242,9 @@ Semantic error in 'validate_allow_sample_bad1.stan', line 3, column 2 to column 
      5:  parameters {
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block, transformed paramters block, or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc validate_allow_sample_bad2.stan
-Semantic error in 'validate_allow_sample_bad2.stan', line 6, column 2 to column 18:
-   -------------------------------------------------
-     4:  transformed parameters {
-     5:    real z;
-     6:    z ~ normal(0,1);
-           ^
-     7:  }
-     8:  model {
-   -------------------------------------------------
-
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
-  $ ../../../../install/default/bin/stanc validate_allow_sample_bad3.stan
-Semantic error in 'validate_allow_sample_bad3.stan', line 9, column 2 to column 18:
+Semantic error in 'validate_allow_sample_bad2.stan', line 9, column 2 to column 18:
    -------------------------------------------------
      7:  generated quantities {
      8:    real z;
@@ -2265,7 +2253,7 @@ Semantic error in 'validate_allow_sample_bad3.stan', line 9, column 2 to column 
     10:  }
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block, transformed paramters block, or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc validate_array_expr_bad1.stan
 Semantic error in 'validate_array_expr_bad1.stan', line 6, column 2 to column 41:
    -------------------------------------------------
