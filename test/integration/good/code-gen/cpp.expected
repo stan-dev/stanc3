@@ -3547,10 +3547,9 @@ class conditional_expression_types_model final : public model_base_crtp<conditio
       Eigen::Matrix<double, -1, 1> b;
       current_statement__ = 2;
       b = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
-      Eigen::Matrix<double, -1, 1> c;
-      c = Eigen::Matrix<double, -1, 1>(2);
-      stan::math::fill(c, std::numeric_limits<double>::quiet_NaN());
-      
+      Eigen::Matrix<double, -1, 1> c =
+         Eigen::Matrix<double, -1, 1>::Constant(2,
+           std::numeric_limits<double>::quiet_NaN());
       out__.write(a);
       out__.write(b);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
@@ -3587,19 +3586,15 @@ class conditional_expression_types_model final : public model_base_crtp<conditio
     try {
       int pos__;
       pos__ = 1;
-      Eigen::Matrix<local_scalar_t__, -1, 1> a;
-      a = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
-      stan::math::fill(a, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> a =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         assign(a, in__.read<local_scalar_t__>(),
           "assigning variable a", index_uni(sym1__));
       }
       out__.write(a);
-      Eigen::Matrix<local_scalar_t__, -1, 1> b;
-      b = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
-      stan::math::fill(b, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> b =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         assign(b, in__.read<local_scalar_t__>(),
           "assigning variable b", index_uni(sym1__));
