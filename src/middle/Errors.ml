@@ -60,7 +60,8 @@ let pp_syntax_error ?printed_filename ppf = function
         pp_context_with_message (message, loc)
 
 let pp ?printed_filename ppf = function
-  | FileNotFound f -> Fmt.pf ppf "Cannot not open file %s@." f
+  | FileNotFound f ->
+      Fmt.pf ppf "Error: file '%s' not found or cannot be opened@." f
   | Syntax_error e -> pp_syntax_error ?printed_filename ppf e
   | Semantic_error e -> pp_semantic_error ?printed_filename ppf e
 
