@@ -410,19 +410,23 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 4> names__ = std::array<std::string, 4>{"mu",
-      "tau", "theta_tilde", "theta"};
+     constexpr std::array<const char*, 3> names__{"mu", "tau",
+   "theta_tilde"};  const std::array<Eigen::Index, 3> num_params__{1, 
+   1, J};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -738,18 +742,22 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 1> names__ = std::array<std::string, 1>{"bar"};
+     constexpr std::array<const char*, 1> names__{"bar"};
+     const std::array<Eigen::Index, 1> num_params__{1};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -3373,22 +3381,24 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 20> names__ = std::array<std::string, 20>{"p_r",
-      "p_complex", "p_complex_array", "p_complex_array_2d", "tp_r",
-      "tp_complex", "tp_complex_array", "tp_complex_array_2d", "gq_i",
-      "gq_r", "gq_complex", "gq_complex_array", "gq_complex_array_2d", "z",
-      "y", "i_arr", "i_arr_1", "zi", "yi", "x"};
+     constexpr std::array<const char*, 4> names__{"p_r", "p_complex",
+   "p_complex_array", "p_complex_array_2d"};
+     const std::array<Eigen::Index, 4> num_params__{1, 2, (2 * 2),
+   (2 * 3 * 2)};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -3762,19 +3772,22 @@ class conditional_expression_types_model final : public model_base_crtp<conditio
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 3> names__ = std::array<std::string, 3>{"a",
-      "b", "c"};
+     constexpr std::array<const char*, 2> names__{"a", "b"};
+     const std::array<Eigen::Index, 2> num_params__{2, 2};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -4213,19 +4226,23 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 4> names__ = std::array<std::string, 4>{"mu",
-      "tau", "theta_tilde", "theta"};
+     constexpr std::array<const char*, 3> names__{"mu", "tau",
+   "theta_tilde"};  const std::array<Eigen::Index, 3> num_params__{1, 
+   1, J};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -4680,19 +4697,22 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 4> names__ = std::array<std::string, 4>{"xx",
-      "y", "w", "td_arr33"};
+     constexpr std::array<const char*, 1> names__{"xx"};
+     const std::array<Eigen::Index, 1> num_params__{3};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -13091,33 +13111,32 @@ class mother_model final : public model_base_crtp<mother_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 69> names__ = std::array<std::string, 69>{"p_real",
-      "p_upper", "p_lower", "offset_multiplier", "no_offset_multiplier",
-      "offset_no_multiplier", "p_real_1d_ar", "p_real_3d_ar", "p_vec",
-      "p_1d_vec", "p_3d_vec", "p_row_vec", "p_1d_row_vec", "p_3d_row_vec",
-      "p_mat", "p_ar_mat", "p_simplex", "p_1d_simplex", "p_3d_simplex",
-      "p_cfcov_54", "p_cfcov_33", "p_cfcov_33_ar", "x_p", "y_p",
-      "tp_real_1d_ar", "tp_real_3d_ar", "tp_vec", "tp_1d_vec", "tp_3d_vec",
-      "tp_row_vec", "tp_1d_row_vec", "tp_3d_row_vec", "tp_mat", "tp_ar_mat",
-      "tp_simplex", "tp_1d_simplex", "tp_3d_simplex", "tp_cfcov_54",
-      "tp_cfcov_33", "tp_cfcov_33_ar", "theta_p", "tp_real", "gq_r1",
-      "gq_r2", "gq_real_1d_ar", "gq_real_3d_ar", "gq_vec", "gq_1d_vec",
-      "gq_3d_vec", "gq_row_vec", "gq_1d_row_vec", "gq_3d_row_vec",
-      "gq_ar_mat", "gq_simplex", "gq_1d_simplex", "gq_3d_simplex",
-      "gq_cfcov_54", "gq_cfcov_33", "gq_cfcov_33_ar", "indices",
-      "indexing_mat", "idx_res1", "idx_res2", "idx_res3", "idx_res11",
-      "idx_res21", "idx_res31", "idx_res4", "idx_res5"};
+     constexpr std::array<const char*, 24> names__{"p_real", "p_upper",
+   "p_lower", "offset_multiplier", "no_offset_multiplier",
+   "offset_no_multiplier", "p_real_1d_ar", "p_real_3d_ar", "p_vec",
+   "p_1d_vec", "p_3d_vec", "p_row_vec", "p_1d_row_vec", "p_3d_row_vec",
+   "p_mat", "p_ar_mat", "p_simplex", "p_1d_simplex", "p_3d_simplex",
+   "p_cfcov_54", "p_cfcov_33", "p_cfcov_33_ar", "x_p", "y_p"};
+     const std::array<Eigen::Index, 24> num_params__{1, 1, 1, 5, 5, 5, 
+   N, (N * M * K), N, (N * N), (N * M * K * N), N, (N * N), (N * M * K * N),
+   (5 * 4), (4 * 5 * 2 * 3), (N - 1), (N * (N - 1)), (N * M * K * (N - 1)),
+   ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)),
+   ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)),
+   (K * ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))), 2, 2};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -14874,22 +14893,24 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 25> names__ = std::array<std::string, 25>{"y0_p",
-      "theta_p", "x_p", "x_p_v", "shared_params_p", "job_params_p", "x_r",
-      "abc1_p", "abc2_p", "abc3_p", "y_hat_tp1", "y_hat_tp2", "y_hat_tp3",
-      "theta_p_as", "x_v", "y_v", "y_p", "y_hat", "y_1d", "z_1d", "abc1_gq",
-      "abc2_gq", "y_hat_gq", "yy_hat_gq", "theta_dbl"};
+     constexpr std::array<const char*, 7> names__{"y0_p", "theta_p", "x_p",
+   "x_p_v", "shared_params_p", "job_params_p", "x_r"};
+     const std::array<Eigen::Index, 7> num_params__{2, 1, 1, 2, 3, (3 * 3), 
+   1};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -19017,19 +19038,22 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 5> names__ = std::array<std::string, 5>{"r",
-      "ra", "v", "z", "zg"};
+     constexpr std::array<const char*, 3> names__{"r", "ra", "v"};
+     const std::array<Eigen::Index, 3> num_params__{1, N, N};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -19662,19 +19686,23 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 7> names__ = std::array<std::string, 7>{"alpha",
-      "beta", "gamma", "delta", "z_init", "sigma", "z"};
+     constexpr std::array<const char*, 6> names__{"alpha", "beta", "gamma",
+   "delta", "z_init", "sigma"};
+     const std::array<Eigen::Index, 6> num_params__{1, 1, 1, 1, 2, 2};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -21218,19 +21246,24 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 9> names__ = std::array<std::string, 9>{"alpha_v",
-      "beta", "cuts", "sigma", "alpha", "phi", "X_p", "beta_m", "X_rv_p"};
+     constexpr std::array<const char*, 9> names__{"alpha_v", "beta", "cuts",
+   "sigma", "alpha", "phi", "X_p", "beta_m", "X_rv_p"};
+     const std::array<Eigen::Index, 9> num_params__{k, k, k, 1, 1, 1, 
+   (n * k), (n * k), n};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -21654,19 +21687,23 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 2> names__ = std::array<std::string, 2>{"L_Omega",
-      "z1"};
+     constexpr std::array<const char*, 2> names__{"L_Omega", "z1"};
+     const std::array<Eigen::Index, 2> num_params__{(nt * ((2 * (2 - 1)) / 2))
+   , NS};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -21975,18 +22012,22 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 0> names__ = std::array<std::string, 0>{};
+     constexpr std::array<const char*, 0> names__{};
+     const std::array<Eigen::Index, 0> num_params__{};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -22543,19 +22584,22 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 3> names__ = std::array<std::string, 3>{"y1",
-      "y2", "y3"};
+     constexpr std::array<const char*, 3> names__{"y1", "y2", "y3"};
+     const std::array<Eigen::Index, 3> num_params__{N, N, N};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -24853,20 +24897,26 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 16> names__ = std::array<std::string, 16>{"a8",
-      "a7", "a6", "a5", "a4", "a3", "a2", "a1", "y8", "y7", "y6", "y5", "y4",
-      "y3", "y2", "y1"};
+     constexpr std::array<const char*, 16> names__{"a8", "a7", "a6", "a5",
+   "a4", "a3", "a2", "a1", "y8", "y7", "y6", "y5", "y4", "y3", "y2", "y1"};
+     const std::array<Eigen::Index, 16> num_params__{(N * N * N * N),
+   (N * N * N), (N * N * N), (N * N), (N * N * N), (N * N), (N * N), 
+   N, (N * N * N * N), (N * N * N), (N * N * N), (N * N), (N * N * N),
+   (N * N), (N * N), N};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -28591,22 +28641,25 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 39> names__ = std::array<std::string, 39>{"y1",
-      "y2", "y3", "y4", "y5", "y6", "y7", "y8", "y9", "y10", "y11", "y12",
-      "y17", "t1", "t1a", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9",
-      "t10", "t11", "t12", "tg1", "tg2", "tg3", "tg4", "tg5", "tg6", "tg7",
-      "tg8", "tg9", "tg10", "tg11", "tg12", "tgs"};
+     constexpr std::array<const char*, 13> names__{"y1", "y2", "y3", "y4",
+   "y5", "y6", "y7", "y8", "y9", "y10", "y11", "y12", "y17"};
+     const std::array<Eigen::Index, 13> num_params__{N, (N * N), (N * N),
+   (N * N * N), (N * N), (N * N * N), (N * N * N), (N * N * N * N), 1, 
+   N, N, (N * N), (N * N * N)};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -29070,18 +29123,22 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 0> names__ = std::array<std::string, 0>{};
+     constexpr std::array<const char*, 0> names__{};
+     const std::array<Eigen::Index, 0> num_params__{};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -29431,18 +29488,22 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 1> names__ = std::array<std::string, 1>{"x"};
+     constexpr std::array<const char*, 1> names__{"x"};
+     const std::array<Eigen::Index, 1> num_params__{1};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -31800,23 +31861,26 @@ class transform_model final : public model_base_crtp<transform_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 36> names__ = std::array<std::string, 36>{"p_1",
-      "p_2", "p_3", "p_4", "p_5", "p_6", "p_7", "p_8", "p_9", "p_10", "pv_1",
-      "pv_2", "pv_3", "pr_1", "pr_2", "pr_3", "pm_1", "pm_2", "tp_1", "tp_2",
-      "tp_3", "tp_4", "tp_5", "tp_6", "tp_7", "tp_8", "tp_9", "tp_10",
-      "tpv_1", "tpv_2", "tpv_3", "tpr_1", "tpr_2", "tpr_3", "tpm_1",
-      "tpm_2"};
+     constexpr std::array<const char*, 18> names__{"p_1", "p_2", "p_3",
+   "p_4", "p_5", "p_6", "p_7", "p_8", "p_9", "p_10", "pv_1", "pv_2", "pv_3",
+   "pr_1", "pr_2", "pr_3", "pm_1", "pm_2"};
+     const std::array<Eigen::Index, 18> num_params__{k, k, k, k, k, k, 
+   k, k, (m * k), (n * m * k), k, (m * k), (n * m * k), k, (m * k),
+   (n * m * k), (m * k), (n * m * k)};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -32258,19 +32322,22 @@ class truncate_model final : public model_base_crtp<truncate_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 2> names__ = std::array<std::string, 2>{"m",
-      "y"};
+     constexpr std::array<const char*, 2> names__{"m", "y"};
+     const std::array<Eigen::Index, 2> num_params__{1, 1};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -32610,18 +32677,22 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 1> names__ = std::array<std::string, 1>{"x"};
+     constexpr std::array<const char*, 1> names__{"x"};
+     const std::array<Eigen::Index, 1> num_params__{1};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -32966,18 +33037,22 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 1> names__ = std::array<std::string, 1>{"x"};
+     constexpr std::array<const char*, 1> names__{"x"};
+     const std::array<Eigen::Index, 1> num_params__{1};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };

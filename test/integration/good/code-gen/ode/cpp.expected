@@ -678,19 +678,22 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 5> names__ = std::array<std::string, 5>{"y",
-      "y0", "t0", "times", "z"};
+     constexpr std::array<const char*, 4> names__{"y", "y0", "t0", "times"};
+     const std::array<Eigen::Index, 4> num_params__{1, N, 1, N};
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_params_r__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(params_r_flat__.size());
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
