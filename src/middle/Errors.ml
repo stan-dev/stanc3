@@ -49,13 +49,13 @@ let pp_syntax_error ?printed_filename ppf = function
         pp_context_with_message
         (message, loc_span.begin_loc)
   | Lexing (_, loc) ->
-      Fmt.pf ppf "Syntax error in %s, lexing error:@,%a"
+      Fmt.pf ppf "Syntax error in %s, lexing error:@,%a@."
         (Location.to_string ?printed_filename
            {loc with col_num= loc.col_num - 1})
         pp_context_with_message
         ("Invalid character found.", loc)
   | Include (message, loc) ->
-      Fmt.pf ppf "Syntax error in %s, include error:@,%a"
+      Fmt.pf ppf "Syntax error in %s, include error:@,%a@."
         (Location.to_string loc ?printed_filename)
         pp_context_with_message (message, loc)
 
