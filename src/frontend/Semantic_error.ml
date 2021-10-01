@@ -33,10 +33,10 @@ module TypeError = struct
         * SignatureMismatch.function_mismatch
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
-    | ReturningFnExpectedUndeclaredIdentFound of string
+    | ReturningFnExpectedUndeclaredIdentFound of string * string option
     | NonReturningFnExpectedReturningFound of string
     | NonReturningFnExpectedNonFnFound of string
-    | NonReturningFnExpectedUndeclaredIdentFound of string
+    | NonReturningFnExpectedUndeclaredIdentFound of string * string option
     | IllTypedFunctionApp of
         string
         * UnsizedType.t list
@@ -158,16 +158,30 @@ module TypeError = struct
           "A non-returning function was expected but a non-function value \
            '%s' was supplied."
           fn_name
-    | ReturningFnExpectedUndeclaredIdentFound fn_name ->
-        Fmt.pf ppf
-          "A returning function was expected but an undeclared identifier \
-           '%s' was supplied."
-          fn_name
-    | NonReturningFnExpectedUndeclaredIdentFound fn_name ->
-        Fmt.pf ppf
-          "A non-returning function was expected but an undeclared identifier \
-           '%s' was supplied."
-          fn_name
+    | ReturningFnExpectedUndeclaredIdentFound (fn_name, sug) -> (
+      match sug with
+      | None ->
+          Fmt.pf ppf
+            "A returning function was expected but an undeclared identifier \
+             '%s' was supplied."
+            fn_name
+      | Some s ->
+          Fmt.pf ppf
+            "A returning function was expected but an undeclared identifier \
+             '%s' was supplied.@ A nearby known identifier is '%s'"
+            fn_name s )
+    | NonReturningFnExpectedUndeclaredIdentFound (fn_name, sug) -> (
+      match sug with
+      | None ->
+          Fmt.pf ppf
+            "A non-returning function was expected but an undeclared \
+             identifier '%s' was supplied."
+            fn_name
+      | Some s ->
+          Fmt.pf ppf
+            "A non-returning function was expected but an undeclared \
+             identifier '%s' was supplied.@ A nearby known identifier is '%s'"
+            fn_name s )
     | IllTypedFunctionApp (name, arg_tys, errors) ->
         SignatureMismatch.pp_signature_mismatch ppf (name, arg_tys, errors)
     | IllTypedBinaryOperator (op, lt, rt) ->
@@ -205,7 +219,7 @@ module IdentifierError = struct
     | IsModelName of string
     | IsStanMathName of string
     | InUse of string
-    | NotInScope of string
+    | NotInScope of string * string option
     | UnnormalizedSuffix of string
 
   let pp ppf = function
@@ -217,7 +231,12 @@ module IdentifierError = struct
         Fmt.pf ppf "Identifier '%s' clashes with model name." name
     | IsKeyword name ->
         Fmt.pf ppf "Identifier '%s' clashes with reserved keyword." name
-    | NotInScope name -> Fmt.pf ppf "Identifier '%s' not in scope." name
+    | NotInScope (name, sug) -> (
+      match sug with
+      | None -> Fmt.pf ppf "Identifier '%s' not in scope." name
+      | Some s ->
+          Fmt.pf ppf "Identifier '%s' not in scope. Did you mean '%s'?" name s
+      )
     | UnnormalizedSuffix name ->
         Fmt.pf ppf
           "Identifier '%s' has a _lupdf/_lupmf suffix, which is only allowed \
@@ -484,8 +503,8 @@ let illtyped_variadic_ode loc name arg_tys args error =
 let returning_fn_expected_nonfn_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonFnFound name)
 
-let returning_fn_expected_undeclaredident_found loc name =
-  TypeError (loc, TypeError.ReturningFnExpectedUndeclaredIdentFound name)
+let returning_fn_expected_undeclaredident_found loc name sug =
+  TypeError (loc, TypeError.ReturningFnExpectedUndeclaredIdentFound (name, sug))
 
 let nonreturning_fn_expected_returning_found loc name =
   TypeError (loc, TypeError.NonReturningFnExpectedReturningFound name)
@@ -493,8 +512,9 @@ let nonreturning_fn_expected_returning_found loc name =
 let nonreturning_fn_expected_nonfn_found loc name =
   TypeError (loc, TypeError.NonReturningFnExpectedNonFnFound name)
 
-let nonreturning_fn_expected_undeclaredident_found loc name =
-  TypeError (loc, TypeError.NonReturningFnExpectedUndeclaredIdentFound name)
+let nonreturning_fn_expected_undeclaredident_found loc name sug =
+  TypeError
+    (loc, TypeError.NonReturningFnExpectedUndeclaredIdentFound (name, sug))
 
 let illtyped_fn_app loc name errors arg_tys =
   TypeError (loc, TypeError.IllTypedFunctionApp (name, arg_tys, errors))
@@ -522,8 +542,8 @@ let ident_is_stanmath_name loc name =
 
 let ident_in_use loc name = IdentifierError (loc, IdentifierError.InUse name)
 
-let ident_not_in_scope loc name =
-  IdentifierError (loc, IdentifierError.NotInScope name)
+let ident_not_in_scope loc name sug =
+  IdentifierError (loc, IdentifierError.NotInScope (name, sug))
 
 let ident_has_unnormalized_suffix loc name =
   IdentifierError (loc, IdentifierError.UnnormalizedSuffix name)

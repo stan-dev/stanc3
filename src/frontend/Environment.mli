@@ -41,3 +41,4 @@ val add :
 val add_all_raw : t -> string -> info list -> t
 val mem : t -> string -> bool
 val iter : t -> (info list -> unit) -> unit
+val nearest_ident : t -> string -> string option
