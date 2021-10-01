@@ -23560,7 +23560,7 @@ static constexpr std::array<const char*, 13> locations_array__ =
 
 
 template <bool propto__, typename T0__, typename T1__>
-inline stan::return_type_t<T0__, T1__>
+inline auto
 foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T1__>;
   int current_statement__ = 0; 
@@ -23578,7 +23578,7 @@ foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
 
 struct foo_lpdf_functor__ {
 template <bool propto__, typename T0__, typename T1__>
-inline stan::return_type_t<T0__, T1__>
+inline auto
 operator()(const T0__& x, const T1__& mu, std::ostream* pstream__)  const 
 {
 return foo_lpdf<propto__>(x, mu, pstream__);
@@ -23586,7 +23586,7 @@ return foo_lpdf<propto__>(x, mu, pstream__);
 };
 
 template <bool propto__, typename T1__>
-inline stan::return_type_t<T1__>
+inline auto
 bar_lpmf(const int& n, const T1__& mu, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T1__>;
   int current_statement__ = 0; 
@@ -23604,7 +23604,7 @@ bar_lpmf(const int& n, const T1__& mu, std::ostream* pstream__) {
 
 struct bar_lpmf_functor__ {
 template <bool propto__, typename T1__>
-inline stan::return_type_t<T1__>
+inline auto
 operator()(const int& n, const T1__& mu, std::ostream* pstream__)  const 
 {
 return bar_lpmf<propto__>(n, mu, pstream__);
@@ -23612,7 +23612,7 @@ return bar_lpmf<propto__>(n, mu, pstream__);
 };
 
 template <bool propto__, typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 baz_lpdf(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
@@ -23630,7 +23630,7 @@ baz_lpdf(const T0__& x, std::ostream* pstream__) {
 
 struct baz_lpdf_functor__ {
 template <bool propto__, typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return baz_lpdf<propto__>(x, pstream__);

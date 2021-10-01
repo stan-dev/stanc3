@@ -43,7 +43,7 @@ static constexpr std::array<const char*, 21> locations_array__ =
 
 
 template <typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 my_log1p_exp(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
@@ -62,7 +62,7 @@ my_log1p_exp(const T0__& x, std::ostream* pstream__) {
 
 struct my_log1p_exp_functor__ {
 template <typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return my_log1p_exp(x, pstream__);
@@ -70,7 +70,7 @@ return my_log1p_exp(x, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 array_fun(const std::vector<T0__, Alloc0__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
@@ -89,7 +89,7 @@ array_fun(const std::vector<T0__, Alloc0__>& a, std::ostream* pstream__) {
 
 struct array_fun_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& a, std::ostream* pstream__)  const 
 {
 return array_fun(a, pstream__);
@@ -97,7 +97,7 @@ return array_fun(a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 int_array_fun(const std::vector<T0__, Alloc0__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
@@ -116,7 +116,7 @@ int_array_fun(const std::vector<T0__, Alloc0__>& a, std::ostream* pstream__) {
 
 struct int_array_fun_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& a, std::ostream* pstream__)  const 
 {
 return int_array_fun(a, pstream__);
@@ -182,7 +182,7 @@ return int_only_multiplication(a, b, pstream__);
 };
 
 template <typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 test_lgamma(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
@@ -201,7 +201,7 @@ test_lgamma(const T0__& x, std::ostream* pstream__) {
 
 struct test_lgamma_functor__ {
 template <typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return test_lgamma(x, pstream__);
@@ -238,7 +238,7 @@ return test_lp<propto__>(a, lp__, lp_accum__, pstream__);
 };
 
 template <typename T0__, typename RNG>
-inline stan::return_type_t<T0__>
+inline auto
 test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
@@ -257,7 +257,7 @@ test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
 
 struct test_rng_functor__ {
 template <typename T0__, typename RNG>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const T0__& a, RNG& base_rng__, std::ostream* pstream__)  const 
 {
 return test_rng(a, base_rng__, pstream__);
@@ -265,7 +265,7 @@ return test_rng(a, base_rng__, pstream__);
 };
 
 template <bool propto__, typename T0__, typename T1__>
-inline stan::return_type_t<T0__, T1__>
+inline auto
 test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T1__>;
   int current_statement__ = 0; 
@@ -282,7 +282,7 @@ test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
 
 struct test_lpdf_functor__ {
 template <bool propto__, typename T0__, typename T1__>
-inline stan::return_type_t<T0__, T1__>
+inline auto
 operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const 
 {
 return test_lpdf<propto__>(a, b, pstream__);
@@ -471,7 +471,7 @@ return integrand_ode(r, f, theta, x_r, x_i, pstream__);
 }
 };
 
-inline double
+inline auto
 ode_integrate(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
@@ -497,7 +497,7 @@ ode_integrate(std::ostream* pstream__) {
 }
 
 struct ode_integrate_functor__ {
-inline double
+inline auto
 operator()(std::ostream* pstream__)  const 
 {
 return ode_integrate(pstream__);

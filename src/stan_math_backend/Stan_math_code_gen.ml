@@ -109,6 +109,7 @@ let pp_returntype ppf arg_types rt =
   match rt with
   | Some ut when UnsizedType.contains_int ut ->
       pf ppf "inline %a@," pp_unsizedtype_custom_scalar ("int", ut)
+  | Some ut when UnsizedType.is_scalar_type ut -> pf ppf "inline auto@,"
   | Some ut -> pf ppf "inline %a@," pp_unsizedtype_custom_scalar (scalar, ut)
   | None -> pf ppf "inline void@,"
 

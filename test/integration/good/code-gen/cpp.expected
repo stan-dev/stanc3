@@ -1260,7 +1260,7 @@ return foo(pstream__);
 };
 
 template <typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 foo1(const T0__& z, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
@@ -1279,7 +1279,7 @@ foo1(const T0__& z, std::ostream* pstream__) {
 
 struct foo1_functor__ {
 template <typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const T0__& z, std::ostream* pstream__)  const 
 {
 return foo1(z, pstream__);
@@ -1366,7 +1366,7 @@ return foo4(pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 foo5(const std::vector<T0__, Alloc0__>& z, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
@@ -1385,7 +1385,7 @@ foo5(const std::vector<T0__, Alloc0__>& z, std::ostream* pstream__) {
 
 struct foo5_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& z, std::ostream* pstream__)  const 
 {
 return foo5(z, pstream__);
@@ -1448,7 +1448,7 @@ return foo7(z, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 foo8(const std::vector<T0__, Alloc0__>& z, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
@@ -1467,7 +1467,7 @@ foo8(const std::vector<T0__, Alloc0__>& z, std::ostream* pstream__) {
 
 struct foo8_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& z, std::ostream* pstream__)  const 
 {
 return foo8(z, pstream__);
@@ -5616,7 +5616,7 @@ return sho(t, y, theta, x, x_int, pstream__);
 }
 };
 
-inline double
+inline auto
 foo_bar0(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
@@ -5634,7 +5634,7 @@ foo_bar0(std::ostream* pstream__) {
 }
 
 struct foo_bar0_functor__ {
-inline double
+inline auto
 operator()(std::ostream* pstream__)  const 
 {
 return foo_bar0(pstream__);
@@ -5642,7 +5642,7 @@ return foo_bar0(pstream__);
 };
 
 template <typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 foo_bar1(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
@@ -5661,7 +5661,7 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
 
 struct foo_bar1_functor__ {
 template <typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return foo_bar1(x, pstream__);
@@ -5669,7 +5669,7 @@ return foo_bar1(x, pstream__);
 };
 
 template <typename T0__, typename T1__>
-inline stan::return_type_t<T0__, T1__>
+inline auto
 foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T1__>;
   int current_statement__ = 0; 
@@ -5688,7 +5688,7 @@ foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
 
 struct foo_bar2_functor__ {
 template <typename T0__, typename T1__>
-inline stan::return_type_t<T0__, T1__>
+inline auto
 operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const 
 {
 return foo_bar2(x, y, pstream__);
@@ -5696,7 +5696,7 @@ return foo_bar2(x, y, pstream__);
 };
 
 template <bool propto__, typename T1__>
-inline stan::return_type_t<T1__>
+inline auto
 foo_lpmf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T1__>;
   int current_statement__ = 0; 
@@ -5713,7 +5713,7 @@ foo_lpmf(const int& y, const T1__& lambda, std::ostream* pstream__) {
 
 struct foo_lpmf_functor__ {
 template <bool propto__, typename T1__>
-inline stan::return_type_t<T1__>
+inline auto
 operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
 return foo_lpmf<propto__>(y, lambda, pstream__);
@@ -5721,7 +5721,7 @@ return foo_lpmf<propto__>(y, lambda, pstream__);
 };
 
 template <typename T1__>
-inline stan::return_type_t<T1__>
+inline auto
 foo_lcdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T1__>;
   int current_statement__ = 0; 
@@ -5740,7 +5740,7 @@ foo_lcdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
 
 struct foo_lcdf_functor__ {
 template <typename T1__>
-inline stan::return_type_t<T1__>
+inline auto
 operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
 return foo_lcdf(y, lambda, pstream__);
@@ -5748,7 +5748,7 @@ return foo_lcdf(y, lambda, pstream__);
 };
 
 template <typename T1__>
-inline stan::return_type_t<T1__>
+inline auto
 foo_lccdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T1__>;
   int current_statement__ = 0; 
@@ -5767,7 +5767,7 @@ foo_lccdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
 
 struct foo_lccdf_functor__ {
 template <typename T1__>
-inline stan::return_type_t<T1__>
+inline auto
 operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
 return foo_lccdf(y, lambda, pstream__);
@@ -5775,7 +5775,7 @@ return foo_lccdf(y, lambda, pstream__);
 };
 
 template <typename T0__, typename T1__, typename RNG>
-inline stan::return_type_t<T0__, T1__>
+inline auto
 foo_rng(const T0__& mu, const T1__& sigma, RNG& base_rng__,
         std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T1__>;
@@ -5795,7 +5795,7 @@ foo_rng(const T0__& mu, const T1__& sigma, RNG& base_rng__,
 
 struct foo_rng_functor__ {
 template <typename T0__, typename T1__, typename RNG>
-inline stan::return_type_t<T0__, T1__>
+inline auto
 operator()(const T0__& mu, const T1__& sigma, RNG& base_rng__,
            std::ostream* pstream__)  const 
 {
@@ -6141,7 +6141,7 @@ return foo_3(t, n, pstream__);
 
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-inline stan::return_type_t<T0__>
+inline auto
 foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
        std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -6160,7 +6160,7 @@ foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
 struct foo_lp_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__)  const 
 {
@@ -6199,7 +6199,7 @@ return foo_4(x, pstream__);
 };
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-inline stan::return_type_t<T0__, T1__, T2__, T3__>
+inline auto
 relative_diff(const T0__& x, const T1__& y, const T2__& max_,
               const T3__& min_, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T1__, T2__, T3__>;
@@ -6253,7 +6253,7 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
 
 struct relative_diff_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-inline stan::return_type_t<T0__, T1__, T2__, T3__>
+inline auto
 operator()(const T0__& x, const T1__& y, const T2__& max_, const T3__& min_,
            std::ostream* pstream__)  const 
 {
@@ -6298,7 +6298,7 @@ return foo_5(shared_params, job_params, data_r, data_i, pstream__);
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
-inline stan::return_type_t<T0__, T1__, T2__, T3__, T4__>
+inline auto
 foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
               const T4__& x5, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T1__, T2__, T3__, T4__>;
@@ -6319,7 +6319,7 @@ foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
 struct foo_five_args_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
-inline stan::return_type_t<T0__, T1__, T2__, T3__, T4__>
+inline auto
 operator()(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
            const T4__& x5, std::ostream* pstream__)  const 
 {
@@ -6330,7 +6330,7 @@ return foo_five_args(x1, x2, x3, x4, x5, pstream__);
 template <bool propto__, typename T0__, typename T1__, typename T2__,
 typename T3__, typename T4__, typename T5__, typename T_lp__,
 typename T_lp_accum__>
-inline stan::return_type_t<T0__, T1__, T2__, T3__, T4__, T5__>
+inline auto
 foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
                  const T3__& x4, const T4__& x5, const T5__& x6,
                  T_lp__& lp__, T_lp_accum__& lp_accum__,
@@ -6352,7 +6352,7 @@ struct foo_five_args_lp_functor__ {
 template <bool propto__, typename T0__, typename T1__, typename T2__,
 typename T3__, typename T4__, typename T5__, typename T_lp__,
 typename T_lp_accum__>
-inline stan::return_type_t<T0__, T1__, T2__, T3__, T4__, T5__>
+inline auto
 operator()(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
            const T4__& x5, const T5__& x6, T_lp__& lp__,
            T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
@@ -6616,7 +6616,7 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-inline stan::return_type_t<T1__, T2__, T3__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__>
+inline auto
 f4(const int& a1, const std::vector<T1__, Alloc1__>& a2,
    const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
    const std::vector<T4__, Alloc4__>& a5,
@@ -6648,7 +6648,7 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-inline stan::return_type_t<T1__, T2__, T3__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__>
+inline auto
 operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
            const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
            const std::vector<T4__, Alloc4__>& a5,
@@ -13308,7 +13308,7 @@ return sho(t, y, theta, x, x_int, pstream__);
 
 template <typename T0__, typename T1__, typename T2__, typename Alloc2__,
 typename T3__, typename Alloc3__, typename T4__, typename Alloc4__>
-inline stan::return_type_t<T0__, T1__, T2__, T3__, T4__>
+inline auto
 integrand(const T0__& x, const T1__& xc,
           const std::vector<T2__, Alloc2__>& theta,
           const std::vector<T3__, Alloc3__>& x_r,
@@ -13331,7 +13331,7 @@ integrand(const T0__& x, const T1__& xc,
 struct integrand_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename Alloc2__,
 typename T3__, typename Alloc3__, typename T4__, typename Alloc4__>
-inline stan::return_type_t<T0__, T1__, T2__, T3__, T4__>
+inline auto
 operator()(const T0__& x, const T1__& xc,
            const std::vector<T2__, Alloc2__>& theta,
            const std::vector<T3__, Alloc3__>& x_r,
@@ -13412,7 +13412,7 @@ return goo(shared_params, job_params, data_r, data_i, pstream__);
 };
 
 template <typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 map_rectfake(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
@@ -13431,7 +13431,7 @@ map_rectfake(const T0__& x, std::ostream* pstream__) {
 
 struct map_rectfake_functor__ {
 template <typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return map_rectfake(x, pstream__);
@@ -22003,7 +22003,7 @@ struct h_rsfunctor__;
 template <bool propto__>
 struct foo_lpdf_rsfunctor__;
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 g(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
   const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -22029,7 +22029,7 @@ g(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -22040,7 +22040,7 @@ return g(y_slice, start, end, pstream__);
 
 struct g_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -22049,7 +22049,7 @@ return g(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 h(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
   const int& end, const std::vector<T3__, Alloc3__>& a,
   std::ostream* pstream__) {
@@ -22077,7 +22077,7 @@ h(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct h_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, const std::vector<T3__, Alloc3__>& a,
            std::ostream* pstream__)  const 
@@ -22089,7 +22089,7 @@ return h(y_slice, start, end, a, pstream__);
 
 struct h_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__,
            const std::vector<T3__, Alloc3__>& a)  const 
@@ -22099,7 +22099,7 @@ return h(y_slice, start + 1, end + 1, a, pstream__);
 };
 
 template <bool propto__, typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 foo_lpdf(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
          const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -22117,7 +22117,7 @@ foo_lpdf(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct foo_lpdf_functor__ {
 template <bool propto__, typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -22129,7 +22129,7 @@ return foo_lpdf<propto__>(y_slice, start, end, pstream__);
 template <bool propto__>
 struct foo_lpdf_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -22741,7 +22741,7 @@ struct h6_rsfunctor__;
 struct h7_rsfunctor__;
 struct h8_rsfunctor__;
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 g1(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -22761,7 +22761,7 @@ g1(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g1_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -22772,7 +22772,7 @@ return g1(y_slice, start, end, pstream__);
 
 struct g1_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -22781,7 +22781,7 @@ return g1(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 g2(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -22811,7 +22811,7 @@ g2(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g2_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -22822,7 +22822,7 @@ return g2(y_slice, start, end, pstream__);
 
 struct g2_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -22831,7 +22831,7 @@ return g2(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 g3(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -22861,7 +22861,7 @@ g3(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g3_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -22872,7 +22872,7 @@ return g3(y_slice, start, end, pstream__);
 
 struct g3_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -22881,7 +22881,7 @@ return g3(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 g4(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -22912,7 +22912,7 @@ g4(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g4_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -22923,7 +22923,7 @@ return g4(y_slice, start, end, pstream__);
 
 struct g4_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -22932,7 +22932,7 @@ return g4(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 g5(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -22967,7 +22967,7 @@ g5(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g5_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -22978,7 +22978,7 @@ return g5(y_slice, start, end, pstream__);
 
 struct g5_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -22987,7 +22987,7 @@ return g5(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 g6(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -23023,7 +23023,7 @@ g6(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g6_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -23034,7 +23034,7 @@ return g6(y_slice, start, end, pstream__);
 
 struct g6_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -23043,7 +23043,7 @@ return g6(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 g7(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -23079,7 +23079,7 @@ g7(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g7_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -23090,7 +23090,7 @@ return g7(y_slice, start, end, pstream__);
 
 struct g7_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -23099,7 +23099,7 @@ return g7(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 g8(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -23135,7 +23135,7 @@ g8(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g8_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -23146,7 +23146,7 @@ return g8(y_slice, start, end, pstream__);
 
 struct g8_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -23155,7 +23155,7 @@ return g8(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 h1(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
    const std::vector<T3__, Alloc3__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T3__>;
@@ -23176,7 +23176,7 @@ h1(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
 
 struct h1_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
            const int& end, const std::vector<T3__, Alloc3__>& a,
            std::ostream* pstream__)  const 
@@ -23188,7 +23188,7 @@ return h1(y, start, end, a, pstream__);
 
 struct h1_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
            const int& end, std::ostream* pstream__,
            const std::vector<T3__, Alloc3__>& a)  const 
@@ -23198,7 +23198,7 @@ return h1(y, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 h2(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
    const std::vector<T3__, Alloc3__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T3__>;
@@ -23227,7 +23227,7 @@ h2(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
 
 struct h2_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
            const int& end, const std::vector<T3__, Alloc3__>& a,
            std::ostream* pstream__)  const 
@@ -23239,7 +23239,7 @@ return h2(y, start, end, a, pstream__);
 
 struct h2_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
            const int& end, std::ostream* pstream__,
            const std::vector<T3__, Alloc3__>& a)  const 
@@ -23249,7 +23249,7 @@ return h2(y, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 h3(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
    const std::vector<T3__, Alloc3__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T3__>;
@@ -23278,7 +23278,7 @@ h3(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
 
 struct h3_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
            const int& end, const std::vector<T3__, Alloc3__>& a,
            std::ostream* pstream__)  const 
@@ -23290,7 +23290,7 @@ return h3(y, start, end, a, pstream__);
 
 struct h3_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
            const int& end, std::ostream* pstream__,
            const std::vector<T3__, Alloc3__>& a)  const 
@@ -23300,7 +23300,7 @@ return h3(y, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 h4(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
    const std::vector<T3__, Alloc3__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T3__>;
@@ -23330,7 +23330,7 @@ h4(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
 
 struct h4_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
            const int& end, const std::vector<T3__, Alloc3__>& a,
            std::ostream* pstream__)  const 
@@ -23342,7 +23342,7 @@ return h4(y, start, end, a, pstream__);
 
 struct h4_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
            const int& end, std::ostream* pstream__,
            const std::vector<T3__, Alloc3__>& a)  const 
@@ -23352,7 +23352,7 @@ return h4(y, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 h5(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
    const std::vector<T3__, Alloc3__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T3__>;
@@ -23385,7 +23385,7 @@ h5(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
 
 struct h5_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
            const int& end, const std::vector<T3__, Alloc3__>& a,
            std::ostream* pstream__)  const 
@@ -23397,7 +23397,7 @@ return h5(y, start, end, a, pstream__);
 
 struct h5_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
            const int& end, std::ostream* pstream__,
            const std::vector<T3__, Alloc3__>& a)  const 
@@ -23407,7 +23407,7 @@ return h5(y, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 h6(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
    const std::vector<T3__, Alloc3__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T3__>;
@@ -23441,7 +23441,7 @@ h6(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
 
 struct h6_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
            const int& end, const std::vector<T3__, Alloc3__>& a,
            std::ostream* pstream__)  const 
@@ -23453,7 +23453,7 @@ return h6(y, start, end, a, pstream__);
 
 struct h6_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
            const int& end, std::ostream* pstream__,
            const std::vector<T3__, Alloc3__>& a)  const 
@@ -23463,7 +23463,7 @@ return h6(y, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 h7(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
    const std::vector<T3__, Alloc3__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T3__>;
@@ -23497,7 +23497,7 @@ h7(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
 
 struct h7_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
            const int& end, const std::vector<T3__, Alloc3__>& a,
            std::ostream* pstream__)  const 
@@ -23509,7 +23509,7 @@ return h7(y, start, end, a, pstream__);
 
 struct h7_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
            const int& end, std::ostream* pstream__,
            const std::vector<T3__, Alloc3__>& a)  const 
@@ -23519,7 +23519,7 @@ return h7(y, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 h8(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
    const std::vector<T3__, Alloc3__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T3__>;
@@ -23553,7 +23553,7 @@ h8(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
 
 struct h8_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
            const int& end, const std::vector<T3__, Alloc3__>& a,
            std::ostream* pstream__)  const 
@@ -23565,7 +23565,7 @@ return h8(y, start, end, a, pstream__);
 
 struct h8_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
            const int& end, std::ostream* pstream__,
            const std::vector<T3__, Alloc3__>& a)  const 
@@ -25195,7 +25195,7 @@ struct g8_rsfunctor__;
 struct g9_rsfunctor__;
 struct s_rsfunctor__;
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 f1(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -25215,7 +25215,7 @@ f1(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f1_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25226,7 +25226,7 @@ return f1(y_slice, start, end, pstream__);
 
 struct f1_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25235,7 +25235,7 @@ return f1(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 f1a(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
     const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -25255,7 +25255,7 @@ f1a(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f1a_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25266,7 +25266,7 @@ return f1a(y_slice, start, end, pstream__);
 
 struct f1a_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25275,7 +25275,7 @@ return f1a(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 f2(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -25295,7 +25295,7 @@ f2(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f2_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25306,7 +25306,7 @@ return f2(y_slice, start, end, pstream__);
 
 struct f2_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25315,7 +25315,7 @@ return f2(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 f3(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -25335,7 +25335,7 @@ f3(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f3_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25346,7 +25346,7 @@ return f3(y_slice, start, end, pstream__);
 
 struct f3_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25355,7 +25355,7 @@ return f3(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 f4(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -25375,7 +25375,7 @@ f4(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f4_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25386,7 +25386,7 @@ return f4(y_slice, start, end, pstream__);
 
 struct f4_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25395,7 +25395,7 @@ return f4(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 f5(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -25415,7 +25415,7 @@ f5(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f5_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25426,7 +25426,7 @@ return f5(y_slice, start, end, pstream__);
 
 struct f5_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25435,7 +25435,7 @@ return f5(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 f6(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -25455,7 +25455,7 @@ f6(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f6_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25466,7 +25466,7 @@ return f6(y_slice, start, end, pstream__);
 
 struct f6_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25475,7 +25475,7 @@ return f6(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 f7(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -25495,7 +25495,7 @@ f7(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f7_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25506,7 +25506,7 @@ return f7(y_slice, start, end, pstream__);
 
 struct f7_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25515,7 +25515,7 @@ return f7(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 f8(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -25535,7 +25535,7 @@ f8(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f8_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25546,7 +25546,7 @@ return f8(y_slice, start, end, pstream__);
 
 struct f8_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25555,7 +25555,7 @@ return f8(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 f9(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -25575,7 +25575,7 @@ f9(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f9_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25586,7 +25586,7 @@ return f9(y_slice, start, end, pstream__);
 
 struct f9_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25595,7 +25595,7 @@ return f9(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 f10(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
     const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -25615,7 +25615,7 @@ f10(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f10_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25626,7 +25626,7 @@ return f10(y_slice, start, end, pstream__);
 
 struct f10_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25635,7 +25635,7 @@ return f10(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 f11(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
     const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -25655,7 +25655,7 @@ f11(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f11_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25666,7 +25666,7 @@ return f11(y_slice, start, end, pstream__);
 
 struct f11_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25675,7 +25675,7 @@ return f11(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 f12(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
     const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -25695,7 +25695,7 @@ f12(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f12_functor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25706,7 +25706,7 @@ return f12(y_slice, start, end, pstream__);
 
 struct f12_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
@@ -25715,7 +25715,7 @@ return f12(y_slice, start + 1, end + 1, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 g1(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, const T3__& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T3__>;
@@ -25735,7 +25735,7 @@ g1(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g1_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, const T3__& a, std::ostream* pstream__)  const 
 {
@@ -25746,7 +25746,7 @@ return g1(y_slice, start, end, a, pstream__);
 
 struct g1_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__, const T3__& a)  const 
 {
@@ -25755,7 +25755,7 @@ return g1(y_slice, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 g2(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, const T3__& a_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T3__>;
@@ -25776,7 +25776,7 @@ g2(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g2_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, const T3__& a, std::ostream* pstream__)  const 
 {
@@ -25787,7 +25787,7 @@ return g2(y_slice, start, end, a, pstream__);
 
 struct g2_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__, const T3__& a)  const 
 {
@@ -25796,7 +25796,7 @@ return g2(y_slice, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 g3(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, const T3__& a_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T3__>;
@@ -25817,7 +25817,7 @@ g3(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g3_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, const T3__& a, std::ostream* pstream__)  const 
 {
@@ -25828,7 +25828,7 @@ return g3(y_slice, start, end, a, pstream__);
 
 struct g3_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__, const T3__& a)  const 
 {
@@ -25837,7 +25837,7 @@ return g3(y_slice, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 g4(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, const T3__& a_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T3__>;
@@ -25858,7 +25858,7 @@ g4(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g4_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, const T3__& a, std::ostream* pstream__)  const 
 {
@@ -25869,7 +25869,7 @@ return g4(y_slice, start, end, a, pstream__);
 
 struct g4_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__, const T3__& a)  const 
 {
@@ -25878,7 +25878,7 @@ return g4(y_slice, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 g5(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, const std::vector<T3__, Alloc3__>& a,
    std::ostream* pstream__) {
@@ -25899,7 +25899,7 @@ g5(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g5_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, const std::vector<T3__, Alloc3__>& a,
            std::ostream* pstream__)  const 
@@ -25911,7 +25911,7 @@ return g5(y_slice, start, end, a, pstream__);
 
 struct g5_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__,
            const std::vector<T3__, Alloc3__>& a)  const 
@@ -25921,7 +25921,7 @@ return g5(y_slice, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 g6(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, const std::vector<T3__, Alloc3__>& a,
    std::ostream* pstream__) {
@@ -25942,7 +25942,7 @@ g6(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g6_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, const std::vector<T3__, Alloc3__>& a,
            std::ostream* pstream__)  const 
@@ -25954,7 +25954,7 @@ return g6(y_slice, start, end, a, pstream__);
 
 struct g6_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__,
            const std::vector<T3__, Alloc3__>& a)  const 
@@ -25964,7 +25964,7 @@ return g6(y_slice, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 g7(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, const std::vector<T3__, Alloc3__>& a,
    std::ostream* pstream__) {
@@ -25985,7 +25985,7 @@ g7(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g7_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, const std::vector<T3__, Alloc3__>& a,
            std::ostream* pstream__)  const 
@@ -25997,7 +25997,7 @@ return g7(y_slice, start, end, a, pstream__);
 
 struct g7_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__,
            const std::vector<T3__, Alloc3__>& a)  const 
@@ -26007,7 +26007,7 @@ return g7(y_slice, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 g8(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, const std::vector<T3__, Alloc3__>& a,
    std::ostream* pstream__) {
@@ -26028,7 +26028,7 @@ g8(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g8_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, const std::vector<T3__, Alloc3__>& a,
            std::ostream* pstream__)  const 
@@ -26040,7 +26040,7 @@ return g8(y_slice, start, end, a, pstream__);
 
 struct g8_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__,
            const std::vector<T3__, Alloc3__>& a)  const 
@@ -26050,7 +26050,7 @@ return g8(y_slice, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 g9(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
    const int& end, const std::vector<T3__, Alloc3__>& a,
    std::ostream* pstream__) {
@@ -26071,7 +26071,7 @@ g9(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g9_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, const std::vector<T3__, Alloc3__>& a,
            std::ostream* pstream__)  const 
@@ -26083,7 +26083,7 @@ return g9(y_slice, start, end, a, pstream__);
 
 struct g9_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__,
            const std::vector<T3__, Alloc3__>& a)  const 
@@ -26093,7 +26093,7 @@ return g9(y_slice, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 g10(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
     const int& end, const std::vector<T3__, Alloc3__>& a,
     std::ostream* pstream__) {
@@ -26114,7 +26114,7 @@ g10(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g10_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, const std::vector<T3__, Alloc3__>& a,
            std::ostream* pstream__)  const 
@@ -26126,7 +26126,7 @@ return g10(y_slice, start, end, a, pstream__);
 
 struct g10_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__,
            const std::vector<T3__, Alloc3__>& a)  const 
@@ -26136,7 +26136,7 @@ return g10(y_slice, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 g11(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
     const int& end, const std::vector<T3__, Alloc3__>& a,
     std::ostream* pstream__) {
@@ -26157,7 +26157,7 @@ g11(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g11_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, const std::vector<T3__, Alloc3__>& a,
            std::ostream* pstream__)  const 
@@ -26169,7 +26169,7 @@ return g11(y_slice, start, end, a, pstream__);
 
 struct g11_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__,
            const std::vector<T3__, Alloc3__>& a)  const 
@@ -26179,7 +26179,7 @@ return g11(y_slice, start + 1, end + 1, a, pstream__);
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 g12(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
     const int& end, const std::vector<T3__, Alloc3__>& a,
     std::ostream* pstream__) {
@@ -26200,7 +26200,7 @@ g12(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g12_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, const std::vector<T3__, Alloc3__>& a,
            std::ostream* pstream__)  const 
@@ -26212,7 +26212,7 @@ return g12(y_slice, start, end, a, pstream__);
 
 struct g12_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-inline stan::return_type_t<T0__, T3__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__,
            const std::vector<T3__, Alloc3__>& a)  const 
@@ -26229,7 +26229,7 @@ typename T13__, typename Alloc13__, typename T14__, typename Alloc14__,
 typename T15__, typename Alloc15__, typename T16__, typename Alloc16__,
 typename T17__, typename Alloc17__, typename T18__, typename Alloc18__,
 typename T19__, typename Alloc19__>
-inline stan::return_type_t<T0__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__, T12__, T13__, T14__, T15__, T16__, T17__, T18__, T19__>
+inline auto
 s(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
   const int& end, const int& a, const T4__& b, const T5__& c_arg__,
   const T6__& d_arg__, const T7__& e_arg__,
@@ -26272,7 +26272,7 @@ typename T13__, typename Alloc13__, typename T14__, typename Alloc14__,
 typename T15__, typename Alloc15__, typename T16__, typename Alloc16__,
 typename T17__, typename Alloc17__, typename T18__, typename Alloc18__,
 typename T19__, typename Alloc19__>
-inline stan::return_type_t<T0__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__, T12__, T13__, T14__, T15__, T16__, T17__, T18__, T19__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, const int& a, const T4__& b, const T5__& c,
            const T6__& d, const T7__& e,
@@ -26304,7 +26304,7 @@ typename T13__, typename Alloc13__, typename T14__, typename Alloc14__,
 typename T15__, typename Alloc15__, typename T16__, typename Alloc16__,
 typename T17__, typename Alloc17__, typename T18__, typename Alloc18__,
 typename T19__, typename Alloc19__>
-inline stan::return_type_t<T0__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__, T12__, T13__, T14__, T15__, T16__, T17__, T18__, T19__>
+inline auto
 operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__, const int& a,
            const T4__& b, const T5__& c, const T6__& d, const T7__& e,
@@ -26326,7 +26326,7 @@ return s(y_slice, start + 1, end + 1, a, b, c, d, e, f, g, h, i, j, k, l, m,
 }
 };
 
-inline double
+inline auto
 r(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
@@ -26661,7 +26661,7 @@ r(std::ostream* pstream__) {
 }
 
 struct r_functor__ {
-inline double
+inline auto
 operator()(std::ostream* pstream__)  const 
 {
 return r(pstream__);
@@ -28507,7 +28507,7 @@ static constexpr std::array<const char*, 13> locations_array__ =
 
 
 template <bool propto__>
-inline stan::return_type_t<>
+inline auto
 foo0_log(const int& y, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<>;
   int current_statement__ = 0; 
@@ -28524,7 +28524,7 @@ foo0_log(const int& y, std::ostream* pstream__) {
 
 struct foo0_log_functor__ {
 template <bool propto__>
-inline stan::return_type_t<>
+inline auto
 operator()(const int& y, std::ostream* pstream__)  const 
 {
 return foo0_log<propto__>(y, pstream__);
@@ -28532,7 +28532,7 @@ return foo0_log<propto__>(y, pstream__);
 };
 
 template <bool propto__>
-inline stan::return_type_t<>
+inline auto
 foo1_lpmf(const int& y, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<>;
   int current_statement__ = 0; 
@@ -28549,7 +28549,7 @@ foo1_lpmf(const int& y, std::ostream* pstream__) {
 
 struct foo1_lpmf_functor__ {
 template <bool propto__>
-inline stan::return_type_t<>
+inline auto
 operator()(const int& y, std::ostream* pstream__)  const 
 {
 return foo1_lpmf<propto__>(y, pstream__);
@@ -28557,7 +28557,7 @@ return foo1_lpmf<propto__>(y, pstream__);
 };
 
 template <bool propto__, typename T_lp__, typename T_lp_accum__>
-inline stan::return_type_t<>
+inline auto
 foo4_lp(const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
         std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<>;
@@ -28575,7 +28575,7 @@ foo4_lp(const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
 
 struct foo4_lp_functor__ {
 template <bool propto__, typename T_lp__, typename T_lp_accum__>
-inline stan::return_type_t<>
+inline auto
 operator()(const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__)  const 
 {
@@ -28584,7 +28584,7 @@ return foo4_lp<propto__>(y, lp__, lp_accum__, pstream__);
 };
 
 template <bool propto__, typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 foo2_log(const T0__& y, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
@@ -28601,7 +28601,7 @@ foo2_log(const T0__& y, std::ostream* pstream__) {
 
 struct foo2_log_functor__ {
 template <bool propto__, typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const T0__& y, std::ostream* pstream__)  const 
 {
 return foo2_log<propto__>(y, pstream__);
@@ -28609,7 +28609,7 @@ return foo2_log<propto__>(y, pstream__);
 };
 
 template <bool propto__, typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 foo3_lpdf(const T0__& y, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
@@ -28626,7 +28626,7 @@ foo3_lpdf(const T0__& y, std::ostream* pstream__) {
 
 struct foo3_lpdf_functor__ {
 template <bool propto__, typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const T0__& y, std::ostream* pstream__)  const 
 {
 return foo3_lpdf<propto__>(y, pstream__);
@@ -28635,7 +28635,7 @@ return foo3_lpdf<propto__>(y, pstream__);
 
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-inline stan::return_type_t<T0__>
+inline auto
 foo5_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
         std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -28654,7 +28654,7 @@ foo5_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
 struct foo5_lp_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__)  const 
 {
@@ -32415,7 +32415,7 @@ static constexpr std::array<const char*, 5> locations_array__ =
 
 
 template <typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 normal(const T0__& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
@@ -32434,7 +32434,7 @@ normal(const T0__& a, std::ostream* pstream__) {
 
 struct normal_functor__ {
 template <typename T0__>
-inline stan::return_type_t<T0__>
+inline auto
 operator()(const T0__& a, std::ostream* pstream__)  const 
 {
 return normal(a, pstream__);
@@ -32771,7 +32771,7 @@ static constexpr std::array<const char*, 5> locations_array__ =
 
 
 template <typename T0__, typename T1__>
-inline stan::return_type_t<T0__, T1__>
+inline auto
 lb_constrain(const T0__& x, const T1__& y, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T1__>;
   int current_statement__ = 0; 
@@ -32790,7 +32790,7 @@ lb_constrain(const T0__& x, const T1__& y, std::ostream* pstream__) {
 
 struct lb_constrain_functor__ {
 template <typename T0__, typename T1__>
-inline stan::return_type_t<T0__, T1__>
+inline auto
 operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const 
 {
 return lb_constrain(x, y, pstream__);
