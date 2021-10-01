@@ -332,10 +332,10 @@ module StatementError = struct
            of functions with the suffix _lp."
     | InvalidSamplingPDForPMF ->
         Fmt.pf ppf
-          {|
-~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
-For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
-|}
+          "~ statement should refer to a distribution without its \
+           \"_lpdf/_lupdf\" or \"_lpmf/_lupmf\" suffix.\n\
+           For example, \"target += normal_lpdf(y, 0, 1)\" should become \"y \
+           ~ normal(0, 1).\""
     | InvalidSamplingCDForCCDF name ->
         Fmt.pf ppf
           "CDF and CCDF functions may not be used with sampling notation. Use \
