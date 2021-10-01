@@ -61,7 +61,7 @@ generated quantities {
   } else {
     for (n in 1 : N) {
       y_rep[n] = poisson_log_rng(eta[n]);
-      log_lik[n] = poisson_log_lpmf(y[n]| eta[n]);
+      log_lik[n] = poisson_log_lpmf(y[n] | eta[n]);
     }
   }
 }

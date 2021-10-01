@@ -39,7 +39,7 @@ let pp_semantic_error ?printed_filename ppf err =
   Fmt.pf ppf "Semantic error in %s:@;%a"
     (Middle.Location_span.to_string ?printed_filename loc_span)
     pp_context_with_message
-    (Fmt.strf "%a" Semantic_error.pp err, loc_span.begin_loc)
+    (Fmt.strf "%a@." Semantic_error.pp err, loc_span.begin_loc)
 
 (** A syntax error message used when handling a SyntaxError *)
 let pp_syntax_error ?printed_filename ppf = function
@@ -60,7 +60,8 @@ let pp_syntax_error ?printed_filename ppf = function
         pp_context_with_message (message, loc)
 
 let pp ?printed_filename ppf = function
-  | FileNotFound f -> Fmt.pf ppf "Cannot not open file %s@." f
+  | FileNotFound f ->
+      Fmt.pf ppf "Error: file '%s' not found or cannot be opened@." f
   | Syntax_error e -> pp_syntax_error ?printed_filename ppf e
   | Semantic_error e -> pp_semantic_error ?printed_filename ppf e
 

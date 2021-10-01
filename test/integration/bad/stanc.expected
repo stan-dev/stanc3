@@ -2162,7 +2162,6 @@ Semantic error in 'tilde-bad.stan', line 8, column 8 to column 19:
      9:  }
    -------------------------------------------------
 
-
 ~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
 For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
   $ ../../../../install/default/bin/stanc too-many-indices.stan

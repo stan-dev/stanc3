@@ -10,7 +10,7 @@ Stanc3 has 3 main src packages: `frontend`, `middle`, and `stan_math_backend`.
 ![top-level stanc3 architecture](docs/img/architecture.png)
 
 The Middle contains the MIR and currently any types or functions used by the two ends.
-The entrypoint for the compiler is in `src/stanc/stanc.ml` which sequences the various components together.  
+The entrypoint for the compiler is in `src/stanc/stanc.ml` which sequences the various components together.
 
 ### Distinct stanc Phases
 
@@ -116,7 +116,7 @@ To drop into a sandboxed development shell with all of the dependencies of Stanc
 
     nix-shell
 
-To drop into a [UTop REPL](https://opam.ocaml.org/blog/about-utop/) with the Stanc3 modules available, run: 
+To drop into a [UTop REPL](https://opam.ocaml.org/blog/about-utop/) with the Stanc3 modules available, run:
 
     nix-shell --command "dune utop"
 
@@ -126,18 +126,14 @@ It's only downside seems to be that it builds Ubuntu, rather than Windows binari
 If Windows binaries are preferred, [OCaml for Windows](https://fdopen.github.io/opam-repository-mingw/) can be used.
 
 ### Editor advice
-For working on this project, we recommend using either VSCode or Emacs as an editor, due to their good OCaml support through Merlin: syntax highlighting, auto-completion, type inference, automatic case splitting, and more.
+For working on this project, we recommend using either VSCode or Emacs as an editor, due to their good OCaml support through [Merlin](https://github.com/ocaml/merlin): syntax highlighting, auto-completion, type inference, automatic case splitting, and more.
 For people who prefer a GUI and have not memorized all Emacs or Vim keystrokes, VSCode might have the less steep learning curve.
 Anything with Merlin support and keyboard shortcuts should be okay.
 
 #### Setting up VSCode
 Install instructions for VSCode can be found [here](https://code.visualstudio.com/docs/setup/setup-overview).
 
-For Windows users: please note that we advise to follow the Linux install instructions through WSL.
-Seeing that VSCode is a GUI application, you will need to install an XServer and add `export DISPLAY=:0.0` to `~/.bashrc`.
-We recommend [Mobaxterm](https://mobaxterm.mobatek.net/).
-In case you are using a high-res display, it may be worth overriding the high DPI setting of Mobaxterm (right click Mobaxterm binary > properties > Compatibility > Change high DPI settings > Override high DPI scaling behaviour > Application) and adding `export GDK_SCALE=3` or `export GDK_SCALE=2` to `~/.bashrc`.
-We also advise setting `"window.titleBarStyle": "native"` in VSCode under settings to be able to have proper control over the window.
+For Windows users: We recommend using [Remote - WSL](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl) to program within WSL from a native Windows installation of VSCode. This extension allows you to connect to the WSL instance as if it is a remote machine, removing the need for an X11 server or other method of running a Linux GUI app directly.
 
 Once in VSCode (on any platform), simply install the [OCaml extension](https://github.com/reasonml-editor/vscode-reasonml) and you should be ready to go.
 
