@@ -1,5 +1,4 @@
 open Core_kernel
-module Warnings = Middle.Warnings
 
 let untyped_ast_of_string s =
   let res, warnings = Parse.parse_string Parser.Incremental.program s in

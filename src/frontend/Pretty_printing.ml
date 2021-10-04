@@ -598,7 +598,7 @@ let pp_program ppf
   pp_block_list ppf blocks
 
 let check_correctness prog pretty =
-  let result_ast, (_ : Middle.Warnings.t list) =
+  let result_ast, (_ : Warnings.t list) =
     Parse.parse_string Parser.Incremental.program pretty
   in
   if
