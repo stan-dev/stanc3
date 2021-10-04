@@ -77,6 +77,7 @@ generated quantities {
                                                  x_r, x_i);
   array[3, 2] real y_hat_adams = integrate_ode_adams(sho, y0, 0.0, ts, theta,
                                                      x_r, x_i);
+  matrix[2, 2] B = [[1, 2], [3, 4]] ^ 4;
 }
 
 Warning in 'deprecated.stan', line 14, column 11: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.

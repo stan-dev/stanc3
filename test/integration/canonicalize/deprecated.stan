@@ -73,4 +73,5 @@ generated quantities {
   real y_hat_45[3,2] = integrate_ode_rk45(sho, y0, 0.0, ts, theta, x_r, x_i );
   real y_hat_bdf[3,2] = integrate_ode_bdf(sho, y0, 0.0, ts, theta, x_r, x_i );
   real y_hat_adams[3,2] = integrate_ode_adams(sho, y0, 0.0, ts, theta, x_r, x_i );
+  matrix[2,2] B = [[1,2],[3,4]] .^ 4;
 }

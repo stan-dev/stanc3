@@ -581,7 +581,7 @@ Warning in 'good_all.stan', line 4, column 0: Comments beginning with # are depr
 
 Cannot assign to global variable 'm' declared in previous blocks.
   $ ../../../../../install/default/bin/stanc incomplete.stan
-Syntax error in 'incomplete.stan', line 2, column 18 to column 19, parsing error:
+Warning in 'incomplete.stan', line 2, column 15: The use of .^ for pow is deprecated. Please use ^ instead for the same result.Syntax error in 'incomplete.stan', line 2, column 18 to column 19, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    real x = 2.0 .^ ;
@@ -591,7 +591,7 @@ Syntax error in 'incomplete.stan', line 2, column 18 to column 19, parsing error
 
 Found an incomplete binary expression - are you missing the right hand side?
   $ ../../../../../install/default/bin/stanc incomplete2.stan
-Syntax error in 'incomplete2.stan', line 2, column 17 to column 22, parsing error:
+Warning in 'incomplete2.stan', line 2, column 6: The use of .^ for pow is deprecated. Please use ^ instead for the same result.Syntax error in 'incomplete2.stan', line 2, column 17 to column 22, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    1.0 .^ upper[] while
