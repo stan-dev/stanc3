@@ -166,8 +166,8 @@ functions {
                 vector shape, int t, array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
-    target += normal_lpdf(z_b| 0, 1);
-    target += normal_lpdf(z_T| 0, 1);
+    target += normal_lpdf(z_b | 0, 1);
+    target += normal_lpdf(z_T | 0, 1);
     for (i in 1 : t) 
       if (p[i] > 1) {
         vector[p[i] - 1] shape1;
@@ -181,11 +181,11 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
         pos_rho += p[i] - 1;
       }
-    target += gamma_lpdf(zeta| delta, 1);
-    target += gamma_lpdf(tau| shape, 1);
+    target += gamma_lpdf(zeta | delta, 1);
+    target += gamma_lpdf(tau | shape, 1);
     return target();
   }
   
@@ -371,16 +371,16 @@ functions {
   real ll_bern_lp(vector eta0, vector eta1, int link, array[] int N) {
     if (link == 1) {
       // logit
-      target += logistic_lccdf(eta0| 0, 1);
-      target += logistic_lcdf(eta1| 0, 1);
+      target += logistic_lccdf(eta0 | 0, 1);
+      target += logistic_lcdf(eta1 | 0, 1);
     } else if (link == 2) {
       // probit
-      target += normal_lccdf(eta0| 0, 1);
-      target += normal_lcdf(eta1| 0, 1);
+      target += normal_lccdf(eta0 | 0, 1);
+      target += normal_lcdf(eta1 | 0, 1);
     } else if (link == 3) {
       // cauchit
-      target += cauchy_lccdf(eta0| 0, 1);
-      target += cauchy_lcdf(eta1| 0, 1);
+      target += cauchy_lccdf(eta0 | 0, 1);
+      target += cauchy_lcdf(eta1 | 0, 1);
     } else if (link == 4) {
       // log
       target += log1m_exp(eta0);
@@ -409,12 +409,12 @@ functions {
     if (link == 1) {
       // logit
       for (n in 1 : N) 
-        ll[n] = bernoulli_logit_lpmf(y| eta[n]);
+        ll[n] = bernoulli_logit_lpmf(y | eta[n]);
     } else if (link <= 5) {
       // link = probit, cauchit, log, or cloglog 
       vector[N] pi = linkinv_bern(eta, link); // may not be stable
       for (n in 1 : N) 
-        ll[n] = bernoulli_lpmf(y| pi[n]);
+        ll[n] = bernoulli_lpmf(y | pi[n]);
     } else 
       reject("Invalid link");
     return ll;
@@ -804,67 +804,67 @@ model {
   
   // Log-priors for coefficients
   if (prior_dist == 1) 
-    target += normal_lpdf(z_beta| 0, 1);
+    target += normal_lpdf(z_beta | 0, 1);
   else if (prior_dist == 2) 
-    target += normal_lpdf(z_beta| 0, 1); // Student t via Cornish-Fisher expansion
+    target += normal_lpdf(z_beta | 0, 1); // Student t via Cornish-Fisher expansion
   else if (prior_dist == 3) {
     // hs
     real log_half = -0.693147180559945286;
-    target += normal_lpdf(z_beta| 0, 1);
-    target += normal_lpdf(local[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(local[2]| 0.5 * prior_df, 0.5 * prior_df);
-    target += normal_lpdf(global[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2]| 0.5 * global_prior_df, 0.5
-                                                               * global_prior_df);
-    target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
+    target += normal_lpdf(z_beta | 0, 1);
+    target += normal_lpdf(local[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
+    target += normal_lpdf(global[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
+                                                                * global_prior_df);
+    target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 4) {
     // hs+
     real log_half = -0.693147180559945286;
-    target += normal_lpdf(z_beta| 0, 1);
-    target += normal_lpdf(local[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(local[2]| 0.5 * prior_df, 0.5 * prior_df);
-    target += normal_lpdf(local[3]| 0, 1) - log_half;
+    target += normal_lpdf(z_beta | 0, 1);
+    target += normal_lpdf(local[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
+    target += normal_lpdf(local[3] | 0, 1) - log_half;
     // unorthodox useage of prior_scale as another df hyperparameter
-    target += inv_gamma_lpdf(local[4]| 0.5 * prior_scale, 0.5 * prior_scale);
-    target += normal_lpdf(global[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2]| 0.5 * global_prior_df, 0.5
-                                                               * global_prior_df);
-    target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
+    target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5 * prior_scale);
+    target += normal_lpdf(global[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
+                                                                * global_prior_df);
+    target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 5) {
     // laplace
-    target += normal_lpdf(z_beta| 0, 1);
-    target += exponential_lpdf(mix[1]| 1);
+    target += normal_lpdf(z_beta | 0, 1);
+    target += exponential_lpdf(mix[1] | 1);
   } else if (prior_dist == 6) {
     // lasso
-    target += normal_lpdf(z_beta| 0, 1);
-    target += exponential_lpdf(mix[1]| 1);
-    target += chi_square_lpdf(one_over_lambda[1]| prior_df[1]);
+    target += normal_lpdf(z_beta | 0, 1);
+    target += exponential_lpdf(mix[1] | 1);
+    target += chi_square_lpdf(one_over_lambda[1] | prior_df[1]);
   } else if (prior_dist == 7) {
     // product_normal
-    target += normal_lpdf(z_beta| 0, 1);
+    target += normal_lpdf(z_beta | 0, 1);
   }
   /* else prior_dist is 0 and nothing is added */
   
   // Log-prior for intercept  
   if (has_intercept == 1) {
     if (prior_dist_for_intercept == 1)  // normal
-      target += normal_lpdf(gamma| prior_mean_for_intercept, prior_scale_for_intercept);
+      target += normal_lpdf(gamma | prior_mean_for_intercept, prior_scale_for_intercept);
     else if (prior_dist_for_intercept == 2)  // student_t
-      target += student_t_lpdf(gamma| prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
+      target += student_t_lpdf(gamma | prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
     /* else prior_dist is 0 and nothing is added */
   }
   
   if (K_smooth) {
-    target += normal_lpdf(z_beta_smooth| 0, 1);
+    target += normal_lpdf(z_beta_smooth | 0, 1);
     if (prior_dist_for_smooth > 0) {
       real log_half = -0.693147180559945286;
       if (prior_dist_for_smooth == 1) 
-        target += normal_lpdf(smooth_sd_raw| 0, 1) - log_half;
+        target += normal_lpdf(smooth_sd_raw | 0, 1) - log_half;
       else if (prior_dist_for_smooth == 2) 
-        target += student_t_lpdf(smooth_sd_raw| prior_df_for_smooth, 0, 1)
+        target += student_t_lpdf(smooth_sd_raw | prior_df_for_smooth, 0, 1)
                   - log_half;
       else if (prior_dist_for_smooth == 3) 
-        target += exponential_lpdf(smooth_sd_raw| 1);
+        target += exponential_lpdf(smooth_sd_raw | 1);
     }
   }
   
@@ -1124,8 +1124,8 @@ functions {
                 vector shape, int t, array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
-    target += normal_lpdf(z_b| 0, 1);
-    target += normal_lpdf(z_T| 0, 1);
+    target += normal_lpdf(z_b | 0, 1);
+    target += normal_lpdf(z_T | 0, 1);
     for (i in 1 : t) 
       if (p[i] > 1) {
         vector[p[i] - 1] shape1;
@@ -1139,11 +1139,11 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
         pos_rho += p[i] - 1;
       }
-    target += gamma_lpdf(zeta| delta, 1);
-    target += gamma_lpdf(tau| shape, 1);
+    target += gamma_lpdf(zeta | delta, 1);
+    target += gamma_lpdf(tau | shape, 1);
     return target();
   }
   
@@ -1326,9 +1326,9 @@ functions {
   */
   real ll_binom_lp(array[] int y, array[] int trials, vector eta, int link) {
     if (link == 1) 
-      target += binomial_logit_lpmf(y| trials, eta);
+      target += binomial_logit_lpmf(y | trials, eta);
     else if (link < 4) 
-      target += binomial_lpmf(y| trials, linkinv_binom(eta, link));
+      target += binomial_lpmf(y | trials, linkinv_binom(eta, link));
     else if (link == 4) {
       // log
       for (n in 1 : num_elements(y)) {
@@ -1362,12 +1362,12 @@ functions {
     if (link == 1) {
       // logit
       for (n in 1 : N) 
-        ll[n] = binomial_logit_lpmf(y[n]| trials[n], eta[n]);
+        ll[n] = binomial_logit_lpmf(y[n] | trials[n], eta[n]);
     } else if (link <= 5) {
       // link = probit, cauchit, log, or cloglog
       vector[N] pi = linkinv_binom(eta, link); // may be unstable
       for (n in 1 : N) 
-        ll[n] = binomial_lpmf(y[n]| trials[n], pi[n]);
+        ll[n] = binomial_lpmf(y[n] | trials[n], pi[n]);
     } else 
       reject("Invalid link");
     return ll;
@@ -1650,67 +1650,67 @@ model {
   
   // Log-priors for coefficients
   if (prior_dist == 1) 
-    target += normal_lpdf(z_beta| 0, 1);
+    target += normal_lpdf(z_beta | 0, 1);
   else if (prior_dist == 2) 
-    target += normal_lpdf(z_beta| 0, 1); // Student t via Cornish-Fisher expansion
+    target += normal_lpdf(z_beta | 0, 1); // Student t via Cornish-Fisher expansion
   else if (prior_dist == 3) {
     // hs
     real log_half = -0.693147180559945286;
-    target += normal_lpdf(z_beta| 0, 1);
-    target += normal_lpdf(local[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(local[2]| 0.5 * prior_df, 0.5 * prior_df);
-    target += normal_lpdf(global[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2]| 0.5 * global_prior_df, 0.5
-                                                               * global_prior_df);
-    target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
+    target += normal_lpdf(z_beta | 0, 1);
+    target += normal_lpdf(local[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
+    target += normal_lpdf(global[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
+                                                                * global_prior_df);
+    target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 4) {
     // hs+
     real log_half = -0.693147180559945286;
-    target += normal_lpdf(z_beta| 0, 1);
-    target += normal_lpdf(local[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(local[2]| 0.5 * prior_df, 0.5 * prior_df);
-    target += normal_lpdf(local[3]| 0, 1) - log_half;
+    target += normal_lpdf(z_beta | 0, 1);
+    target += normal_lpdf(local[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
+    target += normal_lpdf(local[3] | 0, 1) - log_half;
     // unorthodox useage of prior_scale as another df hyperparameter
-    target += inv_gamma_lpdf(local[4]| 0.5 * prior_scale, 0.5 * prior_scale);
-    target += normal_lpdf(global[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2]| 0.5 * global_prior_df, 0.5
-                                                               * global_prior_df);
-    target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
+    target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5 * prior_scale);
+    target += normal_lpdf(global[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
+                                                                * global_prior_df);
+    target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 5) {
     // laplace
-    target += normal_lpdf(z_beta| 0, 1);
-    target += exponential_lpdf(mix[1]| 1);
+    target += normal_lpdf(z_beta | 0, 1);
+    target += exponential_lpdf(mix[1] | 1);
   } else if (prior_dist == 6) {
     // lasso
-    target += normal_lpdf(z_beta| 0, 1);
-    target += exponential_lpdf(mix[1]| 1);
-    target += chi_square_lpdf(one_over_lambda[1]| prior_df[1]);
+    target += normal_lpdf(z_beta | 0, 1);
+    target += exponential_lpdf(mix[1] | 1);
+    target += chi_square_lpdf(one_over_lambda[1] | prior_df[1]);
   } else if (prior_dist == 7) {
     // product_normal
-    target += normal_lpdf(z_beta| 0, 1);
+    target += normal_lpdf(z_beta | 0, 1);
   }
   /* else prior_dist is 0 and nothing is added */
   
   // Log-prior for intercept  
   if (has_intercept == 1) {
     if (prior_dist_for_intercept == 1)  // normal
-      target += normal_lpdf(gamma| prior_mean_for_intercept, prior_scale_for_intercept);
+      target += normal_lpdf(gamma | prior_mean_for_intercept, prior_scale_for_intercept);
     else if (prior_dist_for_intercept == 2)  // student_t
-      target += student_t_lpdf(gamma| prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
+      target += student_t_lpdf(gamma | prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
     /* else prior_dist is 0 and nothing is added */
   }
   
   if (K_smooth) {
-    target += normal_lpdf(z_beta_smooth| 0, 1);
+    target += normal_lpdf(z_beta_smooth | 0, 1);
     if (prior_dist_for_smooth > 0) {
       real log_half = -0.693147180559945286;
       if (prior_dist_for_smooth == 1) 
-        target += normal_lpdf(smooth_sd_raw| 0, 1) - log_half;
+        target += normal_lpdf(smooth_sd_raw | 0, 1) - log_half;
       else if (prior_dist_for_smooth == 2) 
-        target += student_t_lpdf(smooth_sd_raw| prior_df_for_smooth, 0, 1)
+        target += student_t_lpdf(smooth_sd_raw | prior_df_for_smooth, 0, 1)
                   - log_half;
       else if (prior_dist_for_smooth == 3) 
-        target += exponential_lpdf(smooth_sd_raw| 1);
+        target += exponential_lpdf(smooth_sd_raw | 1);
     }
   }
   
@@ -1944,8 +1944,8 @@ functions {
                 vector shape, int t, array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
-    target += normal_lpdf(z_b| 0, 1);
-    target += normal_lpdf(z_T| 0, 1);
+    target += normal_lpdf(z_b | 0, 1);
+    target += normal_lpdf(z_T | 0, 1);
     for (i in 1 : t) 
       if (p[i] > 1) {
         vector[p[i] - 1] shape1;
@@ -1959,11 +1959,11 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
         pos_rho += p[i] - 1;
       }
-    target += gamma_lpdf(zeta| delta, 1);
-    target += gamma_lpdf(tau| shape, 1);
+    target += gamma_lpdf(zeta | delta, 1);
+    target += gamma_lpdf(tau | shape, 1);
     return target();
   }
   
@@ -2201,17 +2201,17 @@ functions {
     if (link == 3) {
       // link = inverse
       for (n in 1 : N) {
-        ll[n] = gamma_lpdf(y[n]| shape, shape * eta[n]);
+        ll[n] = gamma_lpdf(y[n] | shape, shape * eta[n]);
       }
     } else if (link == 2) {
       // link = log
       for (n in 1 : N) {
-        ll[n] = gamma_lpdf(y[n]| shape, shape / exp(eta[n]));
+        ll[n] = gamma_lpdf(y[n] | shape, shape / exp(eta[n]));
       }
     } else if (link == 1) {
       // link = identity
       for (n in 1 : N) {
-        ll[n] = gamma_lpdf(y[n]| shape, shape / eta[n]);
+        ll[n] = gamma_lpdf(y[n] | shape, shape / eta[n]);
       }
     } else 
       reject("Invalid link");
@@ -2353,7 +2353,7 @@ functions {
     vector[rows(y)] ll;
     vector[rows(y)] mu = linkinv_beta(eta, link); // link checked
     for (n in 1 : rows(y)) {
-      ll[n] = beta_lpdf(y[n]| mu[n] * dispersion, (1 - mu[n]) * dispersion);
+      ll[n] = beta_lpdf(y[n] | mu[n] * dispersion, (1 - mu[n]) * dispersion);
     }
     return ll;
   }
@@ -2373,7 +2373,7 @@ functions {
     vector[rows(y)] mu = linkinv_beta(eta, link); // link checked
     vector[rows(y)] mu_z = linkinv_beta_z(eta_z, link_phi); // link checked
     for (n in 1 : rows(y)) {
-      ll[n] = beta_lpdf(y[n]| mu[n] * mu_z[n], (1 - mu[n]) * mu_z[n]);
+      ll[n] = beta_lpdf(y[n] | mu[n] * mu_z[n], (1 - mu[n]) * mu_z[n]);
     }
     return ll;
   }
@@ -2745,8 +2745,8 @@ transformed data {
   }
 }
 parameters {
-  array[has_intercept] real<lower=make_lower(family, link), upper=make_upper(family,
-                                                                    link)> gamma;
+  array[has_intercept] real<lower=make_lower(family, link),
+                            upper=make_upper(family, link)> gamma;
   // declares z_beta, global, local, z_b, z_T, rho, zeta, tau
   
   vector[prior_dist == 7 ? sum(num_normals) : K] z_beta;
@@ -2942,33 +2942,33 @@ model {
     if (SSfun < 5) {
       if (SSfun <= 2) {
         if (SSfun == 1) 
-          target += normal_lpdf(y| SS_asymp(input, P), aux);
+          target += normal_lpdf(y | SS_asymp(input, P), aux);
         else 
-          target += normal_lpdf(y| SS_asympOff(input, P), aux);
+          target += normal_lpdf(y | SS_asympOff(input, P), aux);
       } else if (SSfun == 3) 
-        target += normal_lpdf(y| SS_asympOrig(input, P), aux);
+        target += normal_lpdf(y | SS_asympOrig(input, P), aux);
       else {
         for (i in 1 : len_y) 
           P[i, 1] += exp(P[i, 3]); // ordering constraint
-        target += normal_lpdf(y| SS_biexp(input, P), aux);
+        target += normal_lpdf(y | SS_biexp(input, P), aux);
       }
     }
     else {
       if (SSfun <= 7) {
         if (SSfun == 5) 
-          target += normal_lpdf(y| SS_fol(Dose, input, P), aux);
+          target += normal_lpdf(y | SS_fol(Dose, input, P), aux);
         else if (SSfun == 6) 
-          target += normal_lpdf(y| SS_fpl(input, P), aux);
+          target += normal_lpdf(y | SS_fpl(input, P), aux);
         else 
-          target += normal_lpdf(y| SS_gompertz(input, P), aux);
+          target += normal_lpdf(y | SS_gompertz(input, P), aux);
       }
       else {
         if (SSfun == 8) 
-          target += normal_lpdf(y| SS_logis(input, P), aux);
+          target += normal_lpdf(y | SS_logis(input, P), aux);
         else if (SSfun == 9) 
-          target += normal_lpdf(y| SS_micmen(input, P), aux);
+          target += normal_lpdf(y | SS_micmen(input, P), aux);
         else 
-          target += normal_lpdf(y| SS_weibull(input, P), aux);
+          target += normal_lpdf(y | SS_weibull(input, P), aux);
       }
     }
   } else if (has_weights == 0 && prior_PD == 0) {
@@ -3002,11 +3002,11 @@ model {
     
     if (family == 1) {
       if (link == 1) 
-        target += normal_lpdf(y| eta, aux);
+        target += normal_lpdf(y | eta, aux);
       else if (link == 2) 
-        target += normal_lpdf(y| exp(eta), aux);
+        target += normal_lpdf(y | exp(eta), aux);
       else 
-        target += normal_lpdf(y| inv(eta), aux);
+        target += normal_lpdf(y | inv(eta), aux);
     } else if (family == 2) {
       target += GammaReg(y, eta, aux, link, sum_log_y);
     } else if (family == 3) {
@@ -3015,13 +3015,13 @@ model {
     } else if (family == 4 && link_phi == 0) {
       vector[N] mu;
       mu = linkinv_beta(eta, link);
-      target += beta_lpdf(y| mu * aux, (1 - mu) * aux);
+      target += beta_lpdf(y | mu * aux, (1 - mu) * aux);
     } else if (family == 4 && link_phi > 0) {
       vector[N] mu;
       vector[N] mu_z;
       mu = linkinv_beta(eta, link);
       mu_z = linkinv_beta_z(eta_z, link_phi);
-      target += beta_lpdf(y| rows_dot_product(mu, mu_z), rows_dot_product((
+      target += beta_lpdf(y | rows_dot_product(mu, mu_z), rows_dot_product((
                                                                     1 - mu),
                                                                     mu_z));
     }
@@ -3045,129 +3045,129 @@ model {
   if (prior_dist_for_aux > 0 && prior_scale_for_aux > 0) {
     real log_half = -0.693147180559945286;
     if (prior_dist_for_aux == 1) 
-      target += normal_lpdf(aux_unscaled| 0, 1) - log_half;
+      target += normal_lpdf(aux_unscaled | 0, 1) - log_half;
     else if (prior_dist_for_aux == 2) 
-      target += student_t_lpdf(aux_unscaled| prior_df_for_aux, 0, 1)
+      target += student_t_lpdf(aux_unscaled | prior_df_for_aux, 0, 1)
                 - log_half;
     else 
-      target += exponential_lpdf(aux_unscaled| 1);
+      target += exponential_lpdf(aux_unscaled | 1);
   }
   
   // Log-priors for coefficients
   if (prior_dist == 1) 
-    target += normal_lpdf(z_beta| 0, 1);
+    target += normal_lpdf(z_beta | 0, 1);
   else if (prior_dist == 2) 
-    target += normal_lpdf(z_beta| 0, 1); // Student t via Cornish-Fisher expansion
+    target += normal_lpdf(z_beta | 0, 1); // Student t via Cornish-Fisher expansion
   else if (prior_dist == 3) {
     // hs
     real log_half = -0.693147180559945286;
-    target += normal_lpdf(z_beta| 0, 1);
-    target += normal_lpdf(local[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(local[2]| 0.5 * prior_df, 0.5 * prior_df);
-    target += normal_lpdf(global[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2]| 0.5 * global_prior_df, 0.5
-                                                               * global_prior_df);
-    target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
+    target += normal_lpdf(z_beta | 0, 1);
+    target += normal_lpdf(local[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
+    target += normal_lpdf(global[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
+                                                                * global_prior_df);
+    target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 4) {
     // hs+
     real log_half = -0.693147180559945286;
-    target += normal_lpdf(z_beta| 0, 1);
-    target += normal_lpdf(local[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(local[2]| 0.5 * prior_df, 0.5 * prior_df);
-    target += normal_lpdf(local[3]| 0, 1) - log_half;
+    target += normal_lpdf(z_beta | 0, 1);
+    target += normal_lpdf(local[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
+    target += normal_lpdf(local[3] | 0, 1) - log_half;
     // unorthodox useage of prior_scale as another df hyperparameter
-    target += inv_gamma_lpdf(local[4]| 0.5 * prior_scale, 0.5 * prior_scale);
-    target += normal_lpdf(global[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2]| 0.5 * global_prior_df, 0.5
-                                                               * global_prior_df);
-    target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
+    target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5 * prior_scale);
+    target += normal_lpdf(global[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
+                                                                * global_prior_df);
+    target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 5) {
     // laplace
-    target += normal_lpdf(z_beta| 0, 1);
-    target += exponential_lpdf(mix[1]| 1);
+    target += normal_lpdf(z_beta | 0, 1);
+    target += exponential_lpdf(mix[1] | 1);
   } else if (prior_dist == 6) {
     // lasso
-    target += normal_lpdf(z_beta| 0, 1);
-    target += exponential_lpdf(mix[1]| 1);
-    target += chi_square_lpdf(one_over_lambda[1]| prior_df[1]);
+    target += normal_lpdf(z_beta | 0, 1);
+    target += exponential_lpdf(mix[1] | 1);
+    target += chi_square_lpdf(one_over_lambda[1] | prior_df[1]);
   } else if (prior_dist == 7) {
     // product_normal
-    target += normal_lpdf(z_beta| 0, 1);
+    target += normal_lpdf(z_beta | 0, 1);
   }
   /* else prior_dist is 0 and nothing is added */
   
   // Log-prior for intercept  
   if (has_intercept == 1) {
     if (prior_dist_for_intercept == 1)  // normal
-      target += normal_lpdf(gamma| prior_mean_for_intercept, prior_scale_for_intercept);
+      target += normal_lpdf(gamma | prior_mean_for_intercept, prior_scale_for_intercept);
     else if (prior_dist_for_intercept == 2)  // student_t
-      target += student_t_lpdf(gamma| prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
+      target += student_t_lpdf(gamma | prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
     /* else prior_dist is 0 and nothing is added */
   }
   
   if (K_smooth) {
-    target += normal_lpdf(z_beta_smooth| 0, 1);
+    target += normal_lpdf(z_beta_smooth | 0, 1);
     if (prior_dist_for_smooth > 0) {
       real log_half = -0.693147180559945286;
       if (prior_dist_for_smooth == 1) 
-        target += normal_lpdf(smooth_sd_raw| 0, 1) - log_half;
+        target += normal_lpdf(smooth_sd_raw | 0, 1) - log_half;
       else if (prior_dist_for_smooth == 2) 
-        target += student_t_lpdf(smooth_sd_raw| prior_df_for_smooth, 0, 1)
+        target += student_t_lpdf(smooth_sd_raw | prior_df_for_smooth, 0, 1)
                   - log_half;
       else if (prior_dist_for_smooth == 3) 
-        target += exponential_lpdf(smooth_sd_raw| 1);
+        target += exponential_lpdf(smooth_sd_raw | 1);
     }
   }
   
   // Log-priors for coefficients
   if (prior_dist_z == 1) 
-    target += normal_lpdf(z_omega| 0, 1);
+    target += normal_lpdf(z_omega | 0, 1);
   else if (prior_dist_z == 2) 
-    target += normal_lpdf(z_omega| 0, 1);
+    target += normal_lpdf(z_omega | 0, 1);
   else if (prior_dist_z == 3) {
     // hs
     real log_half = -0.693147180559945286;
-    target += normal_lpdf(z_omega| 0, 1);
-    target += normal_lpdf(local_z[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(local_z[2]| 0.5 * prior_df_z, 0.5 * prior_df_z);
-    target += normal_lpdf(global_z[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(global_z[2]| 0.5 * global_prior_df_z, 0.5
-                                                                   * global_prior_df_z);
-    target += inv_gamma_lpdf(caux_z| 0.5 * slab_df_z, 0.5 * slab_df_z);
+    target += normal_lpdf(z_omega | 0, 1);
+    target += normal_lpdf(local_z[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(local_z[2] | 0.5 * prior_df_z, 0.5 * prior_df_z);
+    target += normal_lpdf(global_z[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(global_z[2] | 0.5 * global_prior_df_z, 0.5
+                                                                    * global_prior_df_z);
+    target += inv_gamma_lpdf(caux_z | 0.5 * slab_df_z, 0.5 * slab_df_z);
   } else if (prior_dist_z == 4) {
     // hs+
     real log_half = -0.693147180559945286;
-    target += normal_lpdf(z_omega| 0, 1);
-    target += normal_lpdf(local_z[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(local_z[2]| 0.5 * prior_df_z, 0.5 * prior_df_z);
-    target += normal_lpdf(local_z[3]| 0, 1) - log_half;
+    target += normal_lpdf(z_omega | 0, 1);
+    target += normal_lpdf(local_z[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(local_z[2] | 0.5 * prior_df_z, 0.5 * prior_df_z);
+    target += normal_lpdf(local_z[3] | 0, 1) - log_half;
     // unorthodox useage of prior_scale as another df hyperparameter
-    target += inv_gamma_lpdf(local_z[4]| 0.5 * prior_scale_z, 0.5
-                                                              * prior_scale_z);
-    target += normal_lpdf(global_z[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(global_z[2]| 0.5, 0.5);
-    target += inv_gamma_lpdf(caux_z| 0.5 * slab_df_z, 0.5 * slab_df_z);
+    target += inv_gamma_lpdf(local_z[4] | 0.5 * prior_scale_z, 0.5
+                                                               * prior_scale_z);
+    target += normal_lpdf(global_z[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(global_z[2] | 0.5, 0.5);
+    target += inv_gamma_lpdf(caux_z | 0.5 * slab_df_z, 0.5 * slab_df_z);
   } else if (prior_dist_z == 5) {
     // laplace
-    target += normal_lpdf(z_omega| 0, 1);
-    target += exponential_lpdf(S_z[1]| 1);
+    target += normal_lpdf(z_omega | 0, 1);
+    target += exponential_lpdf(S_z[1] | 1);
   } else if (prior_dist_z == 6) {
     // lasso
-    target += normal_lpdf(z_omega| 0, 1);
-    target += exponential_lpdf(S_z[1]| 1);
-    target += chi_square_lpdf(one_over_lambda_z[1]| prior_df_z[1]);
+    target += normal_lpdf(z_omega | 0, 1);
+    target += exponential_lpdf(S_z[1] | 1);
+    target += chi_square_lpdf(one_over_lambda_z[1] | prior_df_z[1]);
   } else if (prior_dist_z == 7) {
     // product_normal
-    target += normal_lpdf(z_omega| 0, 1);
+    target += normal_lpdf(z_omega | 0, 1);
   }
   /* else prior_dist is 0 and nothing is added */
   
   // Log-prior for intercept  
   if (has_intercept_z == 1) {
     if (prior_dist_for_intercept_z == 1)  // normal
-      target += normal_lpdf(gamma_z| prior_mean_for_intercept_z, prior_scale_for_intercept_z);
+      target += normal_lpdf(gamma_z | prior_mean_for_intercept_z, prior_scale_for_intercept_z);
     else if (prior_dist_for_intercept_z == 2)  // student_t
-      target += student_t_lpdf(gamma_z| prior_df_for_intercept_z, prior_mean_for_intercept_z, prior_scale_for_intercept_z);
+      target += student_t_lpdf(gamma_z | prior_df_for_intercept_z, prior_mean_for_intercept_z, prior_scale_for_intercept_z);
     /* else prior_dist is 0 and nothing is added */
   }
   
@@ -3508,8 +3508,8 @@ functions {
                 vector shape, int t, array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
-    target += normal_lpdf(z_b| 0, 1);
-    target += normal_lpdf(z_T| 0, 1);
+    target += normal_lpdf(z_b | 0, 1);
+    target += normal_lpdf(z_T | 0, 1);
     for (i in 1 : t) 
       if (p[i] > 1) {
         vector[p[i] - 1] shape1;
@@ -3523,11 +3523,11 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
         pos_rho += p[i] - 1;
       }
-    target += gamma_lpdf(zeta| delta, 1);
-    target += gamma_lpdf(tau| shape, 1);
+    target += gamma_lpdf(zeta | delta, 1);
+    target += gamma_lpdf(tau | shape, 1);
     return target();
   }
   
@@ -3710,12 +3710,12 @@ functions {
     vector[N] ll;
     if (link == 1)  // log
       for (n in 1 : N) 
-        ll[n] = poisson_log_lpmf(y[n]| eta[n]);
+        ll[n] = poisson_log_lpmf(y[n] | eta[n]);
     else if (link <= 3) {
       // link = identity or sqrt
       vector[N] phi = linkinv_count(eta, link);
       for (n in 1 : N) 
-        ll[n] = poisson_lpmf(y[n]| phi[n]);
+        ll[n] = poisson_lpmf(y[n] | phi[n]);
     } else 
       reject("Invalid link");
     return ll;
@@ -3735,7 +3735,7 @@ functions {
     vector[N] rho = linkinv_count(eta, link); // link checked
     vector[N] ll;
     for (n in 1 : N) 
-      ll[n] = neg_binomial_2_lpmf(y[n]| rho[n], theta);
+      ll[n] = neg_binomial_2_lpmf(y[n] | rho[n], theta);
     return ll;
   }
 }
@@ -4038,15 +4038,15 @@ model {
     // unweighted log-likelihoods
     if (family != 7) {
       if (link == 1) 
-        target += poisson_log_lpmf(y| eta);
+        target += poisson_log_lpmf(y | eta);
       else 
-        target += poisson_lpmf(y| linkinv_count(eta, link));
+        target += poisson_lpmf(y | linkinv_count(eta, link));
     }
     else {
       if (link == 1) 
-        target += neg_binomial_2_log_lpmf(y| eta, aux);
+        target += neg_binomial_2_log_lpmf(y | eta, aux);
       else 
-        target += neg_binomial_2_lpmf(y| linkinv_count(eta, link), aux);
+        target += neg_binomial_2_lpmf(y | linkinv_count(eta, link), aux);
     }
   } else if (family != 7 && prior_PD == 0) 
     target += dot_product(weights, pw_pois(y, eta, link));
@@ -4057,83 +4057,83 @@ model {
   if (family > 6 && prior_dist_for_aux > 0 && prior_scale_for_aux > 0) {
     real log_half = -0.693147180559945286;
     if (prior_dist_for_aux == 1) 
-      target += normal_lpdf(aux_unscaled| 0, 1) - log_half;
+      target += normal_lpdf(aux_unscaled | 0, 1) - log_half;
     else if (prior_dist_for_aux == 2) 
-      target += student_t_lpdf(aux_unscaled| prior_df_for_aux, 0, 1)
+      target += student_t_lpdf(aux_unscaled | prior_df_for_aux, 0, 1)
                 - log_half;
     else 
-      target += exponential_lpdf(aux_unscaled| 1);
+      target += exponential_lpdf(aux_unscaled | 1);
   }
   
   // Log-priors for coefficients
   if (prior_dist == 1) 
-    target += normal_lpdf(z_beta| 0, 1);
+    target += normal_lpdf(z_beta | 0, 1);
   else if (prior_dist == 2) 
-    target += normal_lpdf(z_beta| 0, 1); // Student t via Cornish-Fisher expansion
+    target += normal_lpdf(z_beta | 0, 1); // Student t via Cornish-Fisher expansion
   else if (prior_dist == 3) {
     // hs
     real log_half = -0.693147180559945286;
-    target += normal_lpdf(z_beta| 0, 1);
-    target += normal_lpdf(local[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(local[2]| 0.5 * prior_df, 0.5 * prior_df);
-    target += normal_lpdf(global[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2]| 0.5 * global_prior_df, 0.5
-                                                               * global_prior_df);
-    target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
+    target += normal_lpdf(z_beta | 0, 1);
+    target += normal_lpdf(local[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
+    target += normal_lpdf(global[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
+                                                                * global_prior_df);
+    target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 4) {
     // hs+
     real log_half = -0.693147180559945286;
-    target += normal_lpdf(z_beta| 0, 1);
-    target += normal_lpdf(local[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(local[2]| 0.5 * prior_df, 0.5 * prior_df);
-    target += normal_lpdf(local[3]| 0, 1) - log_half;
+    target += normal_lpdf(z_beta | 0, 1);
+    target += normal_lpdf(local[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
+    target += normal_lpdf(local[3] | 0, 1) - log_half;
     // unorthodox useage of prior_scale as another df hyperparameter
-    target += inv_gamma_lpdf(local[4]| 0.5 * prior_scale, 0.5 * prior_scale);
-    target += normal_lpdf(global[1]| 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2]| 0.5 * global_prior_df, 0.5
-                                                               * global_prior_df);
-    target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
+    target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5 * prior_scale);
+    target += normal_lpdf(global[1] | 0, 1) - log_half;
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
+                                                                * global_prior_df);
+    target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 5) {
     // laplace
-    target += normal_lpdf(z_beta| 0, 1);
-    target += exponential_lpdf(mix[1]| 1);
+    target += normal_lpdf(z_beta | 0, 1);
+    target += exponential_lpdf(mix[1] | 1);
   } else if (prior_dist == 6) {
     // lasso
-    target += normal_lpdf(z_beta| 0, 1);
-    target += exponential_lpdf(mix[1]| 1);
-    target += chi_square_lpdf(one_over_lambda[1]| prior_df[1]);
+    target += normal_lpdf(z_beta | 0, 1);
+    target += exponential_lpdf(mix[1] | 1);
+    target += chi_square_lpdf(one_over_lambda[1] | prior_df[1]);
   } else if (prior_dist == 7) {
     // product_normal
-    target += normal_lpdf(z_beta| 0, 1);
+    target += normal_lpdf(z_beta | 0, 1);
   }
   /* else prior_dist is 0 and nothing is added */
   
   // Log-prior for intercept  
   if (has_intercept == 1) {
     if (prior_dist_for_intercept == 1)  // normal
-      target += normal_lpdf(gamma| prior_mean_for_intercept, prior_scale_for_intercept);
+      target += normal_lpdf(gamma | prior_mean_for_intercept, prior_scale_for_intercept);
     else if (prior_dist_for_intercept == 2)  // student_t
-      target += student_t_lpdf(gamma| prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
+      target += student_t_lpdf(gamma | prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
     /* else prior_dist is 0 and nothing is added */
   }
   
   if (K_smooth) {
-    target += normal_lpdf(z_beta_smooth| 0, 1);
+    target += normal_lpdf(z_beta_smooth | 0, 1);
     if (prior_dist_for_smooth > 0) {
       real log_half = -0.693147180559945286;
       if (prior_dist_for_smooth == 1) 
-        target += normal_lpdf(smooth_sd_raw| 0, 1) - log_half;
+        target += normal_lpdf(smooth_sd_raw | 0, 1) - log_half;
       else if (prior_dist_for_smooth == 2) 
-        target += student_t_lpdf(smooth_sd_raw| prior_df_for_smooth, 0, 1)
+        target += student_t_lpdf(smooth_sd_raw | prior_df_for_smooth, 0, 1)
                   - log_half;
       else if (prior_dist_for_smooth == 3) 
-        target += exponential_lpdf(smooth_sd_raw| 1);
+        target += exponential_lpdf(smooth_sd_raw | 1);
     }
   }
   
   // Log-prior for noise
   if (family == 8) 
-    target += gamma_lpdf(noise[1]| aux, 1);
+    target += gamma_lpdf(noise[1] | aux, 1);
   
   if (t > 0) {
     real dummy = decov_lp(z_b, z_T, rho, zeta, tau, regularization, delta,
@@ -4393,8 +4393,8 @@ functions {
                 vector shape, int t, array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
-    target += normal_lpdf(z_b| 0, 1);
-    target += normal_lpdf(z_T| 0, 1);
+    target += normal_lpdf(z_b | 0, 1);
+    target += normal_lpdf(z_T | 0, 1);
     for (i in 1 : t) 
       if (p[i] > 1) {
         vector[p[i] - 1] shape1;
@@ -4408,11 +4408,11 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
         pos_rho += p[i] - 1;
       }
-    target += gamma_lpdf(zeta| delta, 1);
-    target += gamma_lpdf(tau| shape, 1);
+    target += gamma_lpdf(zeta | delta, 1);
+    target += gamma_lpdf(tau | shape, 1);
     return target();
   }
   
@@ -4598,16 +4598,16 @@ functions {
   real ll_bern_lp(vector eta0, vector eta1, int link, array[] int N) {
     if (link == 1) {
       // logit
-      target += logistic_lccdf(eta0| 0, 1);
-      target += logistic_lcdf(eta1| 0, 1);
+      target += logistic_lccdf(eta0 | 0, 1);
+      target += logistic_lcdf(eta1 | 0, 1);
     } else if (link == 2) {
       // probit
-      target += normal_lccdf(eta0| 0, 1);
-      target += normal_lcdf(eta1| 0, 1);
+      target += normal_lccdf(eta0 | 0, 1);
+      target += normal_lcdf(eta1 | 0, 1);
     } else if (link == 3) {
       // cauchit
-      target += cauchy_lccdf(eta0| 0, 1);
-      target += cauchy_lcdf(eta1| 0, 1);
+      target += cauchy_lccdf(eta0 | 0, 1);
+      target += cauchy_lcdf(eta1 | 0, 1);
     } else if (link == 4) {
       // log
       target += log1m_exp(eta0);
@@ -4636,12 +4636,12 @@ functions {
     if (link == 1) {
       // logit
       for (n in 1 : N) 
-        ll[n] = bernoulli_logit_lpmf(y| eta[n]);
+        ll[n] = bernoulli_logit_lpmf(y | eta[n]);
     } else if (link <= 5) {
       // link = probit, cauchit, log, or cloglog 
       vector[N] pi = linkinv_bern(eta, link); // may not be stable
       for (n in 1 : N) 
-        ll[n] = bernoulli_lpmf(y| pi[n]);
+        ll[n] = bernoulli_lpmf(y | pi[n]);
     } else 
       reject("Invalid link");
     return ll;
@@ -4736,9 +4736,9 @@ functions {
   */
   real ll_binom_lp(array[] int y, array[] int trials, vector eta, int link) {
     if (link == 1) 
-      target += binomial_logit_lpmf(y| trials, eta);
+      target += binomial_logit_lpmf(y | trials, eta);
     else if (link < 4) 
-      target += binomial_lpmf(y| trials, linkinv_binom(eta, link));
+      target += binomial_lpmf(y | trials, linkinv_binom(eta, link));
     else if (link == 4) {
       // log
       for (n in 1 : num_elements(y)) {
@@ -4772,12 +4772,12 @@ functions {
     if (link == 1) {
       // logit
       for (n in 1 : N) 
-        ll[n] = binomial_logit_lpmf(y[n]| trials[n], eta[n]);
+        ll[n] = binomial_logit_lpmf(y[n] | trials[n], eta[n]);
     } else if (link <= 5) {
       // link = probit, cauchit, log, or cloglog
       vector[N] pi = linkinv_binom(eta, link); // may be unstable
       for (n in 1 : N) 
-        ll[n] = binomial_lpmf(y[n]| trials[n], pi[n]);
+        ll[n] = binomial_lpmf(y[n] | trials[n], pi[n]);
     } else 
       reject("Invalid link");
     return ll;
@@ -4871,17 +4871,17 @@ functions {
     if (link == 3) {
       // link = inverse
       for (n in 1 : N) {
-        ll[n] = gamma_lpdf(y[n]| shape, shape * eta[n]);
+        ll[n] = gamma_lpdf(y[n] | shape, shape * eta[n]);
       }
     } else if (link == 2) {
       // link = log
       for (n in 1 : N) {
-        ll[n] = gamma_lpdf(y[n]| shape, shape / exp(eta[n]));
+        ll[n] = gamma_lpdf(y[n] | shape, shape / exp(eta[n]));
       }
     } else if (link == 1) {
       // link = identity
       for (n in 1 : N) {
-        ll[n] = gamma_lpdf(y[n]| shape, shape / eta[n]);
+        ll[n] = gamma_lpdf(y[n] | shape, shape / eta[n]);
       }
     } else 
       reject("Invalid link");
@@ -5023,7 +5023,7 @@ functions {
     vector[rows(y)] ll;
     vector[rows(y)] mu = linkinv_beta(eta, link); // link checked
     for (n in 1 : rows(y)) {
-      ll[n] = beta_lpdf(y[n]| mu[n] * dispersion, (1 - mu[n]) * dispersion);
+      ll[n] = beta_lpdf(y[n] | mu[n] * dispersion, (1 - mu[n]) * dispersion);
     }
     return ll;
   }
@@ -5043,7 +5043,7 @@ functions {
     vector[rows(y)] mu = linkinv_beta(eta, link); // link checked
     vector[rows(y)] mu_z = linkinv_beta_z(eta_z, link_phi); // link checked
     for (n in 1 : rows(y)) {
-      ll[n] = beta_lpdf(y[n]| mu[n] * mu_z[n], (1 - mu[n]) * mu_z[n]);
+      ll[n] = beta_lpdf(y[n] | mu[n] * mu_z[n], (1 - mu[n]) * mu_z[n]);
     }
     return ll;
   }
@@ -5081,12 +5081,12 @@ functions {
     vector[N] ll;
     if (link == 1)  // log
       for (n in 1 : N) 
-        ll[n] = poisson_log_lpmf(y[n]| eta[n]);
+        ll[n] = poisson_log_lpmf(y[n] | eta[n]);
     else if (link <= 3) {
       // link = identity or sqrt
       vector[N] phi = linkinv_count(eta, link);
       for (n in 1 : N) 
-        ll[n] = poisson_lpmf(y[n]| phi[n]);
+        ll[n] = poisson_lpmf(y[n] | phi[n]);
     } else 
       reject("Invalid link");
     return ll;
@@ -5106,7 +5106,7 @@ functions {
     vector[N] rho = linkinv_count(eta, link); // link checked
     vector[N] ll;
     for (n in 1 : N) 
-      ll[n] = neg_binomial_2_lpmf(y[n]| rho[n], theta);
+      ll[n] = neg_binomial_2_lpmf(y[n] | rho[n], theta);
     return ll;
   }
   
@@ -5384,11 +5384,11 @@ functions {
     if (family == 1) {
       // gaussian
       if (link == 1) 
-        target += normal_lpdf(y_real| eta, aux[1]);
+        target += normal_lpdf(y_real | eta, aux[1]);
       else if (link == 2) 
-        target += lognormal_lpdf(y_real| eta, aux[1]);
+        target += lognormal_lpdf(y_real | eta, aux[1]);
       else 
-        target += normal_lpdf(y_real| inv(eta), aux[1]);
+        target += normal_lpdf(y_real | inv(eta), aux[1]);
     } else if (family == 2) {
       // gamma
       target += GammaReg(y_real, eta, aux[1], link, sum_log_y);
@@ -5399,24 +5399,24 @@ functions {
     } else if (family == 4) {
       // bernoulli
       if (link == 1) 
-        target += bernoulli_logit_lpmf(y_integer| eta);
+        target += bernoulli_logit_lpmf(y_integer | eta);
       else 
-        target += bernoulli_lpmf(y_integer| linkinv_bern(eta, link));
+        target += bernoulli_lpmf(y_integer | linkinv_bern(eta, link));
     } else if (family == 5) {
       // binomial
       reject("Binomial with >1 trials not allowed.");
     } else if (family == 6 || family == 8) {
       // poisson or poisson-gamma
       if (link == 1) 
-        target += poisson_log_lpmf(y_integer| eta);
+        target += poisson_log_lpmf(y_integer | eta);
       else 
-        target += poisson_lpmf(y_integer| linkinv_count(eta, link));
+        target += poisson_lpmf(y_integer | linkinv_count(eta, link));
     } else if (family == 7) {
       // negative binomial
       if (link == 1) 
-        target += neg_binomial_2_log_lpmf(y_integer| eta, aux[1]);
+        target += neg_binomial_2_log_lpmf(y_integer | eta, aux[1]);
       else 
-        target += neg_binomial_2_lpmf(y_integer| linkinv_count(eta, link), aux[1]);
+        target += neg_binomial_2_lpmf(y_integer | linkinv_count(eta, link), aux[1]);
     } else 
       reject("Invalid family.");
   }
@@ -5440,42 +5440,43 @@ functions {
                array[] real global, array[] vector mix,
                array[] real one_over_lambda, real slab_df, array[] real caux) {
     if (prior_dist == 1) 
-      target += normal_lpdf(z_beta| 0, 1);
+      target += normal_lpdf(z_beta | 0, 1);
     else if (prior_dist == 2) 
-      target += normal_lpdf(z_beta| 0, 1); // Student t
+      target += normal_lpdf(z_beta | 0, 1); // Student t
     else if (prior_dist == 3) {
       // hs
-      target += normal_lpdf(z_beta| 0, 1);
-      target += normal_lpdf(local[1]| 0, 1);
-      target += inv_gamma_lpdf(local[2]| 0.5 * prior_df, 0.5 * prior_df);
-      target += normal_lpdf(global[1]| 0, 1);
-      target += inv_gamma_lpdf(global[2]| 0.5 * global_prior_df, 0.5
-                                                                 * global_prior_df);
-      target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
+      target += normal_lpdf(z_beta | 0, 1);
+      target += normal_lpdf(local[1] | 0, 1);
+      target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
+      target += normal_lpdf(global[1] | 0, 1);
+      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
+                                                                  * global_prior_df);
+      target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
     } else if (prior_dist == 4) {
       // hs+
-      target += normal_lpdf(z_beta| 0, 1);
-      target += normal_lpdf(local[1]| 0, 1);
-      target += inv_gamma_lpdf(local[2]| 0.5 * prior_df, 0.5 * prior_df);
-      target += normal_lpdf(local[3]| 0, 1);
+      target += normal_lpdf(z_beta | 0, 1);
+      target += normal_lpdf(local[1] | 0, 1);
+      target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
+      target += normal_lpdf(local[3] | 0, 1);
       // unorthodox useage of prior_scale as another df hyperparameter
-      target += inv_gamma_lpdf(local[4]| 0.5 * prior_scale, 0.5 * prior_scale);
-      target += normal_lpdf(global[1]| 0, 1);
-      target += inv_gamma_lpdf(global[2]| 0.5 * global_prior_df, 0.5
-                                                                 * global_prior_df);
-      target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
+      target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5
+                                                             * prior_scale);
+      target += normal_lpdf(global[1] | 0, 1);
+      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
+                                                                  * global_prior_df);
+      target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
     } else if (prior_dist == 5) {
       // laplace
-      target += normal_lpdf(z_beta| 0, 1);
-      target += exponential_lpdf(mix[1]| 1);
+      target += normal_lpdf(z_beta | 0, 1);
+      target += exponential_lpdf(mix[1] | 1);
     } else if (prior_dist == 6) {
       // lasso
-      target += normal_lpdf(z_beta| 0, 1);
-      target += exponential_lpdf(mix[1]| 1);
-      target += chi_square_lpdf(one_over_lambda[1]| prior_df[1]);
+      target += normal_lpdf(z_beta | 0, 1);
+      target += exponential_lpdf(mix[1] | 1);
+      target += chi_square_lpdf(one_over_lambda[1] | prior_df[1]);
     } else if (prior_dist == 7) {
       // product_normal
-      target += normal_lpdf(z_beta| 0, 1);
+      target += normal_lpdf(z_beta | 0, 1);
     }
     /* else prior_dist is 0 and nothing is added */
   }
@@ -5492,9 +5493,9 @@ functions {
   */
   void gamma_lp(real gamma, int dist, real mean_, real scale, real df) {
     if (dist == 1)  // normal
-      target += normal_lpdf(gamma| mean_, scale);
+      target += normal_lpdf(gamma | mean_, scale);
     else if (dist == 2)  // student_t
-      target += student_t_lpdf(gamma| df, mean_, scale);
+      target += student_t_lpdf(gamma | df, mean_, scale);
     /* else dist is 0 and nothing is added */
   }
   
@@ -5511,11 +5512,11 @@ functions {
   void aux_lp(real aux_unscaled, int dist, real scale, real df) {
     if (dist > 0 && scale > 0) {
       if (dist == 1) 
-        target += normal_lpdf(aux_unscaled| 0, 1);
+        target += normal_lpdf(aux_unscaled | 0, 1);
       else if (dist == 2) 
-        target += student_t_lpdf(aux_unscaled| df, 0, 1);
+        target += student_t_lpdf(aux_unscaled | df, 0, 1);
       else 
-        target += exponential_lpdf(aux_unscaled| 1);
+        target += exponential_lpdf(aux_unscaled | 1);
     }
   }
   
@@ -5614,11 +5615,11 @@ functions {
   void basehaz_lp(vector aux_unscaled, int dist, vector scale, vector df) {
     if (dist > 0) {
       if (dist == 1) 
-        target += normal_lpdf(aux_unscaled| 0, 1);
+        target += normal_lpdf(aux_unscaled | 0, 1);
       else if (dist == 2) 
-        target += student_t_lpdf(aux_unscaled| df, 0, 1);
+        target += student_t_lpdf(aux_unscaled | df, 0, 1);
       else 
-        target += exponential_lpdf(aux_unscaled| 1);
+        target += exponential_lpdf(aux_unscaled | 1);
     }
   }
   
@@ -6319,11 +6320,14 @@ parameters {
   
   // intercepts
   
-  array[intercept_type[1] > 0] real<lower=lb(intercept_type[1]), upper=ub(intercept_type[1])> yGamma1;
+  array[intercept_type[1] > 0] real<lower=lb(intercept_type[1]),
+                                    upper=ub(intercept_type[1])> yGamma1;
   
-  array[intercept_type[2] > 0] real<lower=lb(intercept_type[2]), upper=ub(intercept_type[2])> yGamma2;
+  array[intercept_type[2] > 0] real<lower=lb(intercept_type[2]),
+                                    upper=ub(intercept_type[2])> yGamma2;
   
-  array[intercept_type[3] > 0] real<lower=lb(intercept_type[3]), upper=ub(intercept_type[3])> yGamma3;
+  array[intercept_type[3] > 0] real<lower=lb(intercept_type[3]),
+                                    upper=ub(intercept_type[3])> yGamma3;
   
   // population level primitive params
   vector[yK[1]] z_yBeta1;
@@ -7145,21 +7149,21 @@ model {
     // lkj
     if (bK1 > 0) {
       // sds for group factor 1
-      target += student_t_lpdf(bSd1| b1_prior_df, 0, b1_prior_scale);
+      target += student_t_lpdf(bSd1 | b1_prior_df, 0, b1_prior_scale);
       // primitive coefs for group factor 1
-      target += normal_lpdf(to_vector(z_bMat1)| 0, 1);
+      target += normal_lpdf(to_vector(z_bMat1) | 0, 1);
       // corr matrix for group factor 1
       if (bK1 > 1) 
-        target += lkj_corr_cholesky_lpdf(bCholesky1| b1_prior_regularization);
+        target += lkj_corr_cholesky_lpdf(bCholesky1 | b1_prior_regularization);
     }
     if (bK2 > 0) {
       // sds for group factor 2
-      target += student_t_lpdf(bSd2| b2_prior_df, 0, b2_prior_scale);
+      target += student_t_lpdf(bSd2 | b2_prior_df, 0, b2_prior_scale);
       // primitive coefs for group factor 2
-      target += normal_lpdf(to_vector(z_bMat2)| 0, 1);
+      target += normal_lpdf(to_vector(z_bMat2) | 0, 1);
       // corr matrix for group factor 2
       if (bK2 > 1) 
-        target += lkj_corr_cholesky_lpdf(bCholesky2| b2_prior_regularization);
+        target += lkj_corr_cholesky_lpdf(bCholesky2 | b2_prior_regularization);
     }
   }
   beta_lp(e_z_beta, e_prior_dist, e_prior_scale, e_prior_df,
@@ -7393,12 +7397,12 @@ model {
     // implicit: u[j] is uniform on the surface of a hypersphere
   }
   if (has_intercept == 1 && prior_dist_for_intercept > 0) 
-    target += normal_lpdf(z_alpha| 0, 1);
+    target += normal_lpdf(z_alpha | 0, 1);
   if (prior_dist == 1) {
     if (K > 1) 
-      target += beta_lpdf(R2| half_K, eta);
+      target += beta_lpdf(R2 | half_K, eta);
     else 
-      target += beta_lpdf(square(R2)| half_K, eta) + sum(log(fabs(R2)));
+      target += beta_lpdf(square(R2) | half_K, eta) + sum(log(fabs(R2)));
   }
   // implicit: log_omega is uniform over the real line for all j
 }
@@ -7584,8 +7588,8 @@ functions {
                 vector shape, int t, array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
-    target += normal_lpdf(z_b| 0, 1);
-    target += normal_lpdf(z_T| 0, 1);
+    target += normal_lpdf(z_b | 0, 1);
+    target += normal_lpdf(z_T | 0, 1);
     for (i in 1 : t) 
       if (p[i] > 1) {
         vector[p[i] - 1] shape1;
@@ -7599,11 +7603,11 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
         pos_rho += p[i] - 1;
       }
-    target += gamma_lpdf(zeta| delta, 1);
-    target += gamma_lpdf(tau| shape, 1);
+    target += gamma_lpdf(zeta | delta, 1);
+    target += gamma_lpdf(tau | shape, 1);
     return target();
   }
   
@@ -7789,16 +7793,16 @@ functions {
   real ll_bern_lp(vector eta0, vector eta1, int link, array[] int N) {
     if (link == 1) {
       // logit
-      target += logistic_lccdf(eta0| 0, 1);
-      target += logistic_lcdf(eta1| 0, 1);
+      target += logistic_lccdf(eta0 | 0, 1);
+      target += logistic_lcdf(eta1 | 0, 1);
     } else if (link == 2) {
       // probit
-      target += normal_lccdf(eta0| 0, 1);
-      target += normal_lcdf(eta1| 0, 1);
+      target += normal_lccdf(eta0 | 0, 1);
+      target += normal_lcdf(eta1 | 0, 1);
     } else if (link == 3) {
       // cauchit
-      target += cauchy_lccdf(eta0| 0, 1);
-      target += cauchy_lcdf(eta1| 0, 1);
+      target += cauchy_lccdf(eta0 | 0, 1);
+      target += cauchy_lcdf(eta1 | 0, 1);
     } else if (link == 4) {
       // log
       target += log1m_exp(eta0);
@@ -7827,12 +7831,12 @@ functions {
     if (link == 1) {
       // logit
       for (n in 1 : N) 
-        ll[n] = bernoulli_logit_lpmf(y| eta[n]);
+        ll[n] = bernoulli_logit_lpmf(y | eta[n]);
     } else if (link <= 5) {
       // link = probit, cauchit, log, or cloglog 
       vector[N] pi = linkinv_bern(eta, link); // may not be stable
       for (n in 1 : N) 
-        ll[n] = bernoulli_lpmf(y| pi[n]);
+        ll[n] = bernoulli_lpmf(y | pi[n]);
     } else 
       reject("Invalid link");
     return ll;
@@ -7927,9 +7931,9 @@ functions {
   */
   real ll_binom_lp(array[] int y, array[] int trials, vector eta, int link) {
     if (link == 1) 
-      target += binomial_logit_lpmf(y| trials, eta);
+      target += binomial_logit_lpmf(y | trials, eta);
     else if (link < 4) 
-      target += binomial_lpmf(y| trials, linkinv_binom(eta, link));
+      target += binomial_lpmf(y | trials, linkinv_binom(eta, link));
     else if (link == 4) {
       // log
       for (n in 1 : num_elements(y)) {
@@ -7963,12 +7967,12 @@ functions {
     if (link == 1) {
       // logit
       for (n in 1 : N) 
-        ll[n] = binomial_logit_lpmf(y[n]| trials[n], eta[n]);
+        ll[n] = binomial_logit_lpmf(y[n] | trials[n], eta[n]);
     } else if (link <= 5) {
       // link = probit, cauchit, log, or cloglog
       vector[N] pi = linkinv_binom(eta, link); // may be unstable
       for (n in 1 : N) 
-        ll[n] = binomial_lpmf(y[n]| trials[n], pi[n]);
+        ll[n] = binomial_lpmf(y[n] | trials[n], pi[n]);
     } else 
       reject("Invalid link");
     return ll;
@@ -8062,17 +8066,17 @@ functions {
     if (link == 3) {
       // link = inverse
       for (n in 1 : N) {
-        ll[n] = gamma_lpdf(y[n]| shape, shape * eta[n]);
+        ll[n] = gamma_lpdf(y[n] | shape, shape * eta[n]);
       }
     } else if (link == 2) {
       // link = log
       for (n in 1 : N) {
-        ll[n] = gamma_lpdf(y[n]| shape, shape / exp(eta[n]));
+        ll[n] = gamma_lpdf(y[n] | shape, shape / exp(eta[n]));
       }
     } else if (link == 1) {
       // link = identity
       for (n in 1 : N) {
-        ll[n] = gamma_lpdf(y[n]| shape, shape / eta[n]);
+        ll[n] = gamma_lpdf(y[n] | shape, shape / eta[n]);
       }
     } else 
       reject("Invalid link");
@@ -8214,7 +8218,7 @@ functions {
     vector[rows(y)] ll;
     vector[rows(y)] mu = linkinv_beta(eta, link); // link checked
     for (n in 1 : rows(y)) {
-      ll[n] = beta_lpdf(y[n]| mu[n] * dispersion, (1 - mu[n]) * dispersion);
+      ll[n] = beta_lpdf(y[n] | mu[n] * dispersion, (1 - mu[n]) * dispersion);
     }
     return ll;
   }
@@ -8234,7 +8238,7 @@ functions {
     vector[rows(y)] mu = linkinv_beta(eta, link); // link checked
     vector[rows(y)] mu_z = linkinv_beta_z(eta_z, link_phi); // link checked
     for (n in 1 : rows(y)) {
-      ll[n] = beta_lpdf(y[n]| mu[n] * mu_z[n], (1 - mu[n]) * mu_z[n]);
+      ll[n] = beta_lpdf(y[n] | mu[n] * mu_z[n], (1 - mu[n]) * mu_z[n]);
     }
     return ll;
   }
@@ -8272,12 +8276,12 @@ functions {
     vector[N] ll;
     if (link == 1)  // log
       for (n in 1 : N) 
-        ll[n] = poisson_log_lpmf(y[n]| eta[n]);
+        ll[n] = poisson_log_lpmf(y[n] | eta[n]);
     else if (link <= 3) {
       // link = identity or sqrt
       vector[N] phi = linkinv_count(eta, link);
       for (n in 1 : N) 
-        ll[n] = poisson_lpmf(y[n]| phi[n]);
+        ll[n] = poisson_lpmf(y[n] | phi[n]);
     } else 
       reject("Invalid link");
     return ll;
@@ -8297,7 +8301,7 @@ functions {
     vector[N] rho = linkinv_count(eta, link); // link checked
     vector[N] ll;
     for (n in 1 : N) 
-      ll[n] = neg_binomial_2_lpmf(y[n]| rho[n], theta);
+      ll[n] = neg_binomial_2_lpmf(y[n] | rho[n], theta);
     return ll;
   }
   
@@ -8575,11 +8579,11 @@ functions {
     if (family == 1) {
       // gaussian
       if (link == 1) 
-        target += normal_lpdf(y_real| eta, aux[1]);
+        target += normal_lpdf(y_real | eta, aux[1]);
       else if (link == 2) 
-        target += lognormal_lpdf(y_real| eta, aux[1]);
+        target += lognormal_lpdf(y_real | eta, aux[1]);
       else 
-        target += normal_lpdf(y_real| inv(eta), aux[1]);
+        target += normal_lpdf(y_real | inv(eta), aux[1]);
     } else if (family == 2) {
       // gamma
       target += GammaReg(y_real, eta, aux[1], link, sum_log_y);
@@ -8590,24 +8594,24 @@ functions {
     } else if (family == 4) {
       // bernoulli
       if (link == 1) 
-        target += bernoulli_logit_lpmf(y_integer| eta);
+        target += bernoulli_logit_lpmf(y_integer | eta);
       else 
-        target += bernoulli_lpmf(y_integer| linkinv_bern(eta, link));
+        target += bernoulli_lpmf(y_integer | linkinv_bern(eta, link));
     } else if (family == 5) {
       // binomial
       reject("Binomial with >1 trials not allowed.");
     } else if (family == 6 || family == 8) {
       // poisson or poisson-gamma
       if (link == 1) 
-        target += poisson_log_lpmf(y_integer| eta);
+        target += poisson_log_lpmf(y_integer | eta);
       else 
-        target += poisson_lpmf(y_integer| linkinv_count(eta, link));
+        target += poisson_lpmf(y_integer | linkinv_count(eta, link));
     } else if (family == 7) {
       // negative binomial
       if (link == 1) 
-        target += neg_binomial_2_log_lpmf(y_integer| eta, aux[1]);
+        target += neg_binomial_2_log_lpmf(y_integer | eta, aux[1]);
       else 
-        target += neg_binomial_2_lpmf(y_integer| linkinv_count(eta, link), aux[1]);
+        target += neg_binomial_2_lpmf(y_integer | linkinv_count(eta, link), aux[1]);
     } else 
       reject("Invalid family.");
   }
@@ -8631,42 +8635,43 @@ functions {
                array[] real global, array[] vector mix,
                array[] real one_over_lambda, real slab_df, array[] real caux) {
     if (prior_dist == 1) 
-      target += normal_lpdf(z_beta| 0, 1);
+      target += normal_lpdf(z_beta | 0, 1);
     else if (prior_dist == 2) 
-      target += normal_lpdf(z_beta| 0, 1); // Student t
+      target += normal_lpdf(z_beta | 0, 1); // Student t
     else if (prior_dist == 3) {
       // hs
-      target += normal_lpdf(z_beta| 0, 1);
-      target += normal_lpdf(local[1]| 0, 1);
-      target += inv_gamma_lpdf(local[2]| 0.5 * prior_df, 0.5 * prior_df);
-      target += normal_lpdf(global[1]| 0, 1);
-      target += inv_gamma_lpdf(global[2]| 0.5 * global_prior_df, 0.5
-                                                                 * global_prior_df);
-      target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
+      target += normal_lpdf(z_beta | 0, 1);
+      target += normal_lpdf(local[1] | 0, 1);
+      target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
+      target += normal_lpdf(global[1] | 0, 1);
+      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
+                                                                  * global_prior_df);
+      target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
     } else if (prior_dist == 4) {
       // hs+
-      target += normal_lpdf(z_beta| 0, 1);
-      target += normal_lpdf(local[1]| 0, 1);
-      target += inv_gamma_lpdf(local[2]| 0.5 * prior_df, 0.5 * prior_df);
-      target += normal_lpdf(local[3]| 0, 1);
+      target += normal_lpdf(z_beta | 0, 1);
+      target += normal_lpdf(local[1] | 0, 1);
+      target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
+      target += normal_lpdf(local[3] | 0, 1);
       // unorthodox useage of prior_scale as another df hyperparameter
-      target += inv_gamma_lpdf(local[4]| 0.5 * prior_scale, 0.5 * prior_scale);
-      target += normal_lpdf(global[1]| 0, 1);
-      target += inv_gamma_lpdf(global[2]| 0.5 * global_prior_df, 0.5
-                                                                 * global_prior_df);
-      target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
+      target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5
+                                                             * prior_scale);
+      target += normal_lpdf(global[1] | 0, 1);
+      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
+                                                                  * global_prior_df);
+      target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
     } else if (prior_dist == 5) {
       // laplace
-      target += normal_lpdf(z_beta| 0, 1);
-      target += exponential_lpdf(mix[1]| 1);
+      target += normal_lpdf(z_beta | 0, 1);
+      target += exponential_lpdf(mix[1] | 1);
     } else if (prior_dist == 6) {
       // lasso
-      target += normal_lpdf(z_beta| 0, 1);
-      target += exponential_lpdf(mix[1]| 1);
-      target += chi_square_lpdf(one_over_lambda[1]| prior_df[1]);
+      target += normal_lpdf(z_beta | 0, 1);
+      target += exponential_lpdf(mix[1] | 1);
+      target += chi_square_lpdf(one_over_lambda[1] | prior_df[1]);
     } else if (prior_dist == 7) {
       // product_normal
-      target += normal_lpdf(z_beta| 0, 1);
+      target += normal_lpdf(z_beta | 0, 1);
     }
     /* else prior_dist is 0 and nothing is added */
   }
@@ -8683,9 +8688,9 @@ functions {
   */
   void gamma_lp(real gamma, int dist, real mean_, real scale, real df) {
     if (dist == 1)  // normal
-      target += normal_lpdf(gamma| mean_, scale);
+      target += normal_lpdf(gamma | mean_, scale);
     else if (dist == 2)  // student_t
-      target += student_t_lpdf(gamma| df, mean_, scale);
+      target += student_t_lpdf(gamma | df, mean_, scale);
     /* else dist is 0 and nothing is added */
   }
   
@@ -8702,11 +8707,11 @@ functions {
   void aux_lp(real aux_unscaled, int dist, real scale, real df) {
     if (dist > 0 && scale > 0) {
       if (dist == 1) 
-        target += normal_lpdf(aux_unscaled| 0, 1);
+        target += normal_lpdf(aux_unscaled | 0, 1);
       else if (dist == 2) 
-        target += student_t_lpdf(aux_unscaled| df, 0, 1);
+        target += student_t_lpdf(aux_unscaled | df, 0, 1);
       else 
-        target += exponential_lpdf(aux_unscaled| 1);
+        target += exponential_lpdf(aux_unscaled | 1);
     }
   }
   
@@ -8989,11 +8994,14 @@ parameters {
   
   // intercepts
   
-  array[intercept_type[1] > 0] real<lower=lb(intercept_type[1]), upper=ub(intercept_type[1])> yGamma1;
+  array[intercept_type[1] > 0] real<lower=lb(intercept_type[1]),
+                                    upper=ub(intercept_type[1])> yGamma1;
   
-  array[intercept_type[2] > 0] real<lower=lb(intercept_type[2]), upper=ub(intercept_type[2])> yGamma2;
+  array[intercept_type[2] > 0] real<lower=lb(intercept_type[2]),
+                                    upper=ub(intercept_type[2])> yGamma2;
   
-  array[intercept_type[3] > 0] real<lower=lb(intercept_type[3]), upper=ub(intercept_type[3])> yGamma3;
+  array[intercept_type[3] > 0] real<lower=lb(intercept_type[3]),
+                                    upper=ub(intercept_type[3])> yGamma3;
   
   // population level primitive params
   vector[yK[1]] z_yBeta1;
@@ -9228,21 +9236,21 @@ model {
     // lkj
     if (bK1 > 0) {
       // sds for group factor 1
-      target += student_t_lpdf(bSd1| b1_prior_df, 0, b1_prior_scale);
+      target += student_t_lpdf(bSd1 | b1_prior_df, 0, b1_prior_scale);
       // primitive coefs for group factor 1
-      target += normal_lpdf(to_vector(z_bMat1)| 0, 1);
+      target += normal_lpdf(to_vector(z_bMat1) | 0, 1);
       // corr matrix for group factor 1
       if (bK1 > 1) 
-        target += lkj_corr_cholesky_lpdf(bCholesky1| b1_prior_regularization);
+        target += lkj_corr_cholesky_lpdf(bCholesky1 | b1_prior_regularization);
     }
     if (bK2 > 0) {
       // sds for group factor 2
-      target += student_t_lpdf(bSd2| b2_prior_df, 0, b2_prior_scale);
+      target += student_t_lpdf(bSd2 | b2_prior_df, 0, b2_prior_scale);
       // primitive coefs for group factor 2
-      target += normal_lpdf(to_vector(z_bMat2)| 0, 1);
+      target += normal_lpdf(to_vector(z_bMat2) | 0, 1);
       // corr matrix for group factor 2
       if (bK2 > 1) 
-        target += lkj_corr_cholesky_lpdf(bCholesky2| b2_prior_regularization);
+        target += lkj_corr_cholesky_lpdf(bCholesky2 | b2_prior_regularization);
     }
   }
 }
@@ -9638,16 +9646,17 @@ model {
   }
   
   if (is_constant == 0) 
-    target += dirichlet_lpdf(pi| prior_counts);
+    target += dirichlet_lpdf(pi | prior_counts);
   // implicit: u is uniform on the surface of a hypersphere
   if (prior_dist == 1) {
     if (K > 1) 
-      target += beta_lpdf(R2| half_K, regularization);
+      target += beta_lpdf(R2 | half_K, regularization);
     else 
-      target += beta_lpdf(square(R2)| half_K, regularization) + log(fabs(R2));
+      target += beta_lpdf(square(R2) | half_K, regularization)
+                + log(fabs(R2));
   }
   if (is_skewed == 1) 
-    target += gamma_lpdf(alpha| shape, rate);
+    target += gamma_lpdf(alpha | shape, rate);
 }
 generated quantities {
   vector[J > 2 ? J : 1] mean_PPD = rep_vector(0, J > 2 ? J : 1);

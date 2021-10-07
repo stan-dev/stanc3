@@ -9,7 +9,7 @@ let untyped_ast_of_string s =
   res
 
 let emit_warnings_and_return_ast (ast, warnings) =
-  if List.length warnings > 0 then Warnings.pp_warnings Fmt.stderr warnings ;
+  Warnings.pp_warnings Fmt.stderr warnings ;
   ast
 
 let typed_ast_of_string_exn s =
@@ -28,9 +28,7 @@ let typed_ast_of_string_exn s =
 let get_ast_or_exit ?printed_filename ?(print_warnings = true) filename =
   let res, warnings = Parse.parse_file Parser.Incremental.program filename in
   if print_warnings then
-    Fmt.epr "%a"
-      (Fmt.list ~sep:Fmt.nop (Warnings.pp ?printed_filename))
-      warnings ;
+    (Warnings.pp_warnings ?printed_filename) Fmt.stderr warnings ;
   match res with
   | Result.Ok ast -> ast
   | Result.Error err -> Errors.pp Fmt.stderr err ; exit 1
