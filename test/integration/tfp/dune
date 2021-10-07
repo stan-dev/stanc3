@@ -36,7 +36,8 @@
  (deps (package stanc) (:stanfiles ./stan_models/python_kwrds.stan))
  (action
   (with-stdout-to %{targets}
-   (run %{bin:stan2tfp} %{stanfiles}))))
+   (with-stderr-to stdout
+      (run %{bin:stan2tfp} %{stanfiles})))))
 
 (alias
  (name runtest)

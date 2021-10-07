@@ -12,10 +12,4 @@ let pp ?printed_filename ppf (span, message) =
 
 let pp_warnings ?printed_filename ppf warnings =
   if List.length warnings > 0 then
-    Fmt.(
-      pf ppf "@[<v>%a@]%a"
-        (list ~sep:cut (pp ?printed_filename))
-        warnings cut ())
-
-let pp_warning ?printed_filename ppf warning =
-  Fmt.(pf ppf "@[<v>%a@]" (pp ?printed_filename) warning)
+    Fmt.(pf ppf "@[<v>%a@]@." (list ~sep:cut (pp ?printed_filename)) warnings)

@@ -17,9 +17,7 @@ let typed_ast_of_string_exn s =
 let get_ast_or_exit ?printed_filename ?(print_warnings = true) filename =
   let res, warnings = Parse.parse_file Parser.Incremental.program filename in
   if print_warnings then
-    Fmt.epr "%a"
-      (Fmt.list ~sep:Fmt.nop (Warnings.pp ?printed_filename))
-      warnings ;
+    (Warnings.pp_warnings ?printed_filename) Fmt.stderr warnings ;
   match res with
   | Result.Ok ast -> ast
   | Result.Error err -> Errors.pp Fmt.stderr err ; exit 1

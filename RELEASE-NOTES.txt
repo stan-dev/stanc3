@@ -1,6 +1,34 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v2.28.0 (5 October 2021)
+======================================================================
+
+- Int division is now handled by the Warnings module to print this to stderr and to avoid printing to stderr directly (a problem for stanc.js). (#869)
+- Correct canonicalizing/auto-formatting of commented Stan programs; comments no longer discarded. (#894)
+- Improved error messages when argument types don't match the function signature. (#907)
+- A warning is now produced if an empty file is compiled. (#919)
+- Stancjs now has `--info` and `--debug-generate-data` options.(#920)
+- Added support for `skew_double_exponential` distribution.(#921)
+- Reorganized warning system internally.(#922)
+- Removed initialization of NA values from objects that are immediately assigned to(#930)
+- Added `to_matrix(array[] row_vector) => matrix`. (#931)
+- Added build process for arm64, armhf, armel, mips64el, ppc64el and s390x linux architectures. (#936)
+- Implemented complex type functionality. (#940)
+- Added types used for deducing memory patterns. (#944)
+- Removes dune runtest from binary build stage. (#950)
+- Provide rough support for non-ASCII characters in string literals. (#952)
+- Clean up internal exception handling. (#957)
+- Added the ability to write imaginary numbers as literals, such as "3.1i". (#963)
+- Added a list of included files to the information provided by `--info`. (#965)
+- Tweaked pretty-printing of conditional distribution applications. (#967)
+- Better pretty-printing for long constraints. (#970)
+- Fix automated builds of non-x86 architectures. (#972)
+- Fixed a bug with the conditional operator `?` and the use of vector or matrix expressions. (#977)
+- Fixed a typo in the error message displayed when a file cannot be found. (#981)
+- Error messages should now always have a trailing newline. (#982)
+- Miscellaneous README.md improvements. (#914, #943, #984)
+
 v2.27.0 (2 June 2021)
 ======================================================================
 

@@ -583,10 +583,9 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                  desired you can write the division as"
                 hint () Fmt.text
                 "If rounding is intended please use the integer division \
-                 operator %/%."
+                 operator %/%.\n"
             in
-            Warnings.pp_warning Fmt.stderr (x.emeta.loc, s) ;
-            ()
+            Warnings.pp Fmt.stderr (x.emeta.loc, s)
         | _ -> ()
       in
       verify_operator op ; warn_int_division le re ; check_binop loc op le re
