@@ -1855,7 +1855,7 @@ Semantic error in 'redefine-ccdf1.stan', line 2, column 7 to column 23:
      4:    }
    -------------------------------------------------
 
-Identifier 'poisson_ccdf_log' clashes with Stan Math library function.
+Identifier 'poisson_lccdf' clashes with Stan Math library function.
   $ ../../../../install/default/bin/stanc redefine-ccdf2.stan
 Semantic error in 'redefine-ccdf2.stan', line 2, column 7 to column 20:
    -------------------------------------------------
@@ -1889,7 +1889,7 @@ Semantic error in 'redefine-cdf1.stan', line 2, column 7 to column 22:
      4:    }
    -------------------------------------------------
 
-Identifier 'poisson_cdf_log' clashes with Stan Math library function.
+Identifier 'poisson_lcdf' clashes with Stan Math library function.
   $ ../../../../install/default/bin/stanc redefine-cdf2.stan
 Semantic error in 'redefine-cdf2.stan', line 2, column 7 to column 19:
    -------------------------------------------------

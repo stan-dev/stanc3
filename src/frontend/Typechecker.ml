@@ -97,25 +97,19 @@ let distribution_name_variants id =
   let name = id.name in
   let names =
     if name = "multiply_log" || name = "binomial_coefficient_log" then [name]
-    else if is_suffix ~suffix:"_lpmf" name then
-      [name; drop_suffix name 5 ^ "_lpdf"; drop_suffix name 5 ^ "_log"]
-    else if is_suffix ~suffix:"_lpdf" name then
-      [name; drop_suffix name 5 ^ "_lpmf"; drop_suffix name 5 ^ "_log"]
-    else if is_suffix ~suffix:"_lcdf" name then
-      [name; drop_suffix name 5 ^ "_cdf_log"]
-    else if is_suffix ~suffix:"_lccdf" name then
-      [name; drop_suffix name 6 ^ "_ccdf_log"]
-    else if is_suffix ~suffix:"_cdf_log" name then
-      [name; drop_suffix name 8 ^ "_lcdf"]
-    else if is_suffix ~suffix:"_ccdf_log" name then
-      [name; drop_suffix name 9 ^ "_lccdf"]
-    else if is_suffix ~suffix:"_log" name then
-      [name; drop_suffix name 4 ^ "_lpmf"; drop_suffix name 4 ^ "_lpdf"]
-    else [name]
+    else
+      match Utils.split_distribution_suffix name with
+      | Some (stem, "lpmf") | Some (stem, "lpdf") | Some (stem, "log") ->
+          [stem ^ "_lpmf"; stem ^ "_lpdf"; stem ^ "_log"]
+      | Some (stem, "lcdf") | Some (stem, "cdf_log") ->
+          [stem ^ "_lcdf"; stem ^ "_cdf_log"]
+      | Some (stem, "lccdf") | Some (stem, "ccdf_log") ->
+          [stem ^ "_lccdf"; stem ^ "_ccdf_log"]
+      | _ -> [name]
   in
   List.map ~f:(fun n -> {id with name= n}) names
 
-(* verify that the variable being declared is previous unused. 
+(* verify that the variable being declared is previous unused.
    allowed to shadow StanLib *)
 let verify_name_fresh_var tenv id =
   if Utils.is_unnormalized_distribution id.name then
@@ -126,7 +120,7 @@ let verify_name_fresh_var tenv id =
   then Semantic_error.ident_in_use id.id_loc id.name |> error
   else ()
 
-(* verify that the variable being declared is previous unused. 
+(* verify that the variable being declared is previous unused.
    not allowed shadowing/overloading (yet)*)
 let verify_name_fresh_udf tenv id =
   if
@@ -1022,7 +1016,7 @@ let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
   | Complete rt, AnyReturnType | AnyReturnType, Complete rt -> Complete rt
   | AnyReturnType, AnyReturnType -> AnyReturnType
 
-(* statements which contain statements, and therefore need to be mutually recursive 
+(* statements which contain statements, and therefore need to be mutually recursive
    with check_statement
 *)
 let rec check_if_then_else loc cf tenv pred_e s_true s_false_opt =
@@ -1096,9 +1090,9 @@ and check_foreach loc cf tenv loop_var foreach_e loop_body =
 
 and check_loop_body cf tenv loop_var loop_var_ty loop_body =
   verify_name_fresh tenv loop_var ~is_udf:false ;
-  (* Add to type environment as readonly. 
+  (* Add to type environment as readonly.
     Check that function args and loop identifiers are not modified in
-    function. (passed by const ref) 
+    function. (passed by const ref)
   *)
   let tenv =
     Env.add tenv loop_var.name loop_var_ty
@@ -1327,7 +1321,7 @@ and verify_fundef_return_tys loc return_type body =
   else Semantic_error.incompatible_return_types loc |> error
 
 and add_function tenv name type_ defined =
-  (* if we're providing a definition, we remove prior declarations 
+  (* if we're providing a definition, we remove prior declarations
     to simplify the environment *)
   if defined = `UserDefined then
     let existing_defns = Env.find tenv name in
@@ -1377,7 +1371,7 @@ and check_fundef loc cf tenv return_ty id args body =
     List.fold2_exn arg_names arg_types_internal ~init:tenv
       ~f:(fun env name (origin, typ) ->
         Env.add env name typ
-          (* readonly so that function args and loop identifiers 
+          (* readonly so that function args and loop identifiers
           are not modified in function. (passed by const ref) *)
           (`Variable {origin; readonly= true; global= false}) )
   in
