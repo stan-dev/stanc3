@@ -45,8 +45,8 @@ let context block =
   ; in_udf_dist_def= false
   ; loop_depth= 0 }
 
-let calculate_autodifftype cf at ut =
-  match at with
+let calculate_autodifftype cf origin ut =
+  match origin with
   | Env.(Param | TParam | Model | Functions)
     when not (UnsizedType.contains_int ut || cf.current_block = GQuant) ->
       UnsizedType.AutoDiffable
@@ -60,28 +60,6 @@ let has_int_array_type ue = ue.emeta.type_ = UArray UInt
 
 let has_int_or_real_type ue =
   match ue.emeta.type_ with UInt | UReal -> true | _ -> false
-
-let probability_distribution_name_variants id =
-  let name = id.name in
-  let open String in
-  List.map
-    ~f:(fun n -> {name= n; id_loc= id.id_loc})
-    ( if name = "multiply_log" || name = "binomial_coefficient_log" then [name]
-    else if is_suffix ~suffix:"_lpmf" name then
-      [name; drop_suffix name 5 ^ "_lpdf"; drop_suffix name 5 ^ "_log"]
-    else if is_suffix ~suffix:"_lpdf" name then
-      [name; drop_suffix name 5 ^ "_lpmf"; drop_suffix name 5 ^ "_log"]
-    else if is_suffix ~suffix:"_lcdf" name then
-      [name; drop_suffix name 5 ^ "_cdf_log"]
-    else if is_suffix ~suffix:"_lccdf" name then
-      [name; drop_suffix name 6 ^ "_ccdf_log"]
-    else if is_suffix ~suffix:"_cdf_log" name then
-      [name; drop_suffix name 8 ^ "_lcdf"]
-    else if is_suffix ~suffix:"_ccdf_log" name then
-      [name; drop_suffix name 9 ^ "_lccdf"]
-    else if is_suffix ~suffix:"_log" name then
-      [name; drop_suffix name 4 ^ "_lpmf"; drop_suffix name 4 ^ "_lpdf"]
-    else [name] )
 
 (* -- General checks ---------------------------------------------- *)
 let reserved_keywords =
@@ -114,6 +92,31 @@ let verify_identifier id : unit =
   then Semantic_error.ident_is_keyword id.id_loc id.name |> error
   else ()
 
+let distribution_name_variants id =
+  let open String in
+  let name = id.name in
+  let names =
+    if name = "multiply_log" || name = "binomial_coefficient_log" then [name]
+    else if is_suffix ~suffix:"_lpmf" name then
+      [name; drop_suffix name 5 ^ "_lpdf"; drop_suffix name 5 ^ "_log"]
+    else if is_suffix ~suffix:"_lpdf" name then
+      [name; drop_suffix name 5 ^ "_lpmf"; drop_suffix name 5 ^ "_log"]
+    else if is_suffix ~suffix:"_lcdf" name then
+      [name; drop_suffix name 5 ^ "_cdf_log"]
+    else if is_suffix ~suffix:"_lccdf" name then
+      [name; drop_suffix name 6 ^ "_ccdf_log"]
+    else if is_suffix ~suffix:"_cdf_log" name then
+      [name; drop_suffix name 8 ^ "_lcdf"]
+    else if is_suffix ~suffix:"_ccdf_log" name then
+      [name; drop_suffix name 9 ^ "_lccdf"]
+    else if is_suffix ~suffix:"_log" name then
+      [name; drop_suffix name 4 ^ "_lpmf"; drop_suffix name 4 ^ "_lpdf"]
+    else [name]
+  in
+  List.map ~f:(fun n -> {id with name= n}) names
+
+(* verify that the variable being declared is previous unused. 
+   allowed to shadow StanLib *)
 let verify_name_fresh_var tenv id =
   if Utils.is_unnormalized_distribution id.name then
     Semantic_error.ident_has_unnormalized_suffix id.id_loc id.name |> error
@@ -123,6 +126,8 @@ let verify_name_fresh_var tenv id =
   then Semantic_error.ident_in_use id.id_loc id.name |> error
   else ()
 
+(* verify that the variable being declared is previous unused. 
+   not allowed shadowing/overloading (yet)*)
 let verify_name_fresh_udf tenv id =
   if
     Stan_math_signatures.is_stan_math_function_name id.name
@@ -145,7 +150,7 @@ let verify_name_fresh tenv id ~is_udf =
   let f =
     if is_udf then verify_name_fresh_udf tenv else verify_name_fresh_var tenv
   in
-  List.iter ~f (probability_distribution_name_variants id)
+  List.iter ~f (distribution_name_variants id)
 
 let is_of_compatible_return_type rt1 srt2 =
   UnsizedType.(
@@ -176,8 +181,6 @@ let check_ternary_if loc pe te fe =
       Semantic_error.illtyped_ternary_if loc pe.emeta.type_ te.emeta.type_
         fe.emeta.type_
       |> error
-
-let verify_operator _ = ()
 
 let check_binop loc op le re =
   let rt =
@@ -588,13 +591,9 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
             Warnings.pp Fmt.stderr (x.emeta.loc, s)
         | _ -> ()
       in
-      verify_operator op ; warn_int_division le re ; check_binop loc op le re
-  | PrefixOp (op, e) ->
-      verify_operator op ;
-      ce e |> check_prefixop loc op
-  | PostfixOp (e, op) ->
-      verify_operator op ;
-      ce e |> check_postfixop loc op
+      warn_int_division le re ; check_binop loc op le re
+  | PrefixOp (op, e) -> ce e |> check_prefixop loc op
+  | PostfixOp (e, op) -> ce e |> check_postfixop loc op
   | Variable id ->
       verify_identifier id ;
       check_variable cf loc tenv id
@@ -1327,23 +1326,6 @@ and verify_fundef_return_tys loc return_type body =
   then ()
   else Semantic_error.incompatible_return_types loc |> error
 
-(* Probably nothing to do here *)
-and verify_autodifftype _ = ()
-
-(* also does absolutely nothing right now *)
-and verify_unsizedtype = function
-  | UnsizedType.UFun (l, rt, _, _) ->
-      verify_returntype rt ;
-      List.iter
-        ~f:(fun (at, ut) -> verify_autodifftype at ; verify_unsizedtype ut)
-        l
-  | UArray ut -> verify_unsizedtype ut
-  | _ -> ()
-
-and verify_returntype = function
-  | Void -> ()
-  | ReturnType ut -> verify_unsizedtype ut
-
 and add_function tenv name type_ defined =
   (* if we're providing a definition, we remove prior declarations 
     to simplify the environment *)
@@ -1362,13 +1344,8 @@ and add_function tenv name type_ defined =
   else Env.add tenv name type_ defined
 
 and check_fundef loc cf tenv return_ty id args body =
-  let () =
-    List.iter args ~f:(fun (at, ut, id) ->
-        verify_autodifftype at ; verify_unsizedtype ut ; verify_identifier id
-    )
-  in
+  let () = List.iter args ~f:(fun (_, _, id) -> verify_identifier id) in
   verify_identifier id ;
-  verify_returntype return_ty ;
   let arg_types = List.map ~f:(fun (w, y, _) -> (w, y)) args in
   let arg_identifiers = List.map ~f:(fun (_, _, z) -> z) args in
   let arg_names = List.map ~f:(fun x -> x.name) arg_identifiers in
