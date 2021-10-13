@@ -66,7 +66,7 @@ transformed data {
     td_complex_array = d_complex_array;
     td_complex_array = {td_complex, 1, to_complex(2,3)};
     td_complex_array[1] = to_complex(5.1,6);
-    
+
     td_complex_array_2d = d_complex_array_2d;
     td_complex_array_2d = {{1, td_complex, 3}, {to_complex(), to_complex(1.1), to_complex(1,2.1)}};
     td_complex_array_2d[1,1] = to_complex(1,2);
@@ -77,11 +77,11 @@ transformed data {
     for (td_j in 1:2) {
         for (td_k in 1:3) {
             td_complex_array_2d[td_j, td_k] = to_complex(1, 2.2);}}
-    
+
     for (td_j in td_complex_array_2d){
         for (td_k in td_j){
             td_complex = td_k;}}
-    
+
     td_r = get_real(td_complex);
     td_r = get_imag(td_complex);
     td_r = get_real(td_complex_array[1]);
@@ -112,7 +112,7 @@ transformed parameters {
     complex tp_complex;
     complex tp_complex_array[2];
     complex tp_complex_array_2d[2, 3];
-    
+
     tp_complex = tp_r;
     tp_complex = d_i;
     tp_complex = d_r;
@@ -135,7 +135,7 @@ transformed parameters {
     tp_complex_array = p_complex_array;
     tp_complex_array = {tp_complex, 1, to_complex(2,3)};
     tp_complex_array[1] = to_complex(5.1,6);
-    
+
     tp_complex_array_2d = d_complex_array_2d;
     tp_complex_array_2d = p_complex_array_2d;
     tp_complex_array_2d = {{1, tp_complex, 3}, {to_complex(), to_complex(1.1), to_complex(1,2.1)}};
@@ -151,7 +151,7 @@ transformed parameters {
     for (tp_j in tp_complex_array_2d){
         for (tp_k in tp_j){
             tp_complex = tp_k;}}
-    
+
     tp_r = get_real(tp_complex);
     tp_r = get_imag(tp_complex);
     tp_r = get_real(tp_complex_array[1]);
@@ -208,7 +208,7 @@ generated quantities {
     gq_complex_array = p_complex_array;
     gq_complex_array = {gq_complex, 1, to_complex(2,3)};
     gq_complex_array[1] = to_complex(5.1,6);
-    
+
     gq_complex_array_2d = d_complex_array_2d;
     gq_complex_array_2d = p_complex_array_2d;
     gq_complex_array_2d = {{1, gq_complex, 3}, {to_complex(), to_complex(1.1), to_complex(1,2.1)}};
@@ -224,7 +224,7 @@ generated quantities {
     for (gq_j in gq_complex_array_2d){
         for (gq_k in gq_j){
             gq_complex = gq_k;}}
-    
+
     gq_r = get_real(gq_complex);
     gq_r = get_imag(gq_complex);
     gq_r = get_real(gq_complex_array[1]);
@@ -247,7 +247,7 @@ generated quantities {
     complex z = to_complex(1,2);
     complex y = to_complex(3,4);
     int i_arr[0];
-    int i_arr_1[1]; 
+    int i_arr_1[1];
 
     gq_complex = z+y;
     gq_complex = z+gq_r;
@@ -347,7 +347,7 @@ generated quantities {
     gq_i = (d_complex != d_r);
     gq_i = (p_r != d_complex);
     gq_i = (p_complex != d_r);
-    
+
     gq_r = abs(z);
     gq_r = abs(p_complex);
     gq_r = abs(d_complex);
@@ -402,7 +402,7 @@ generated quantities {
     gq_r = get_imag(z);
     gq_r = get_imag(p_complex);
     gq_r = get_imag(d_complex);
-    
+
     gq_r = get_real(z);
     gq_r = get_real(p_complex);
     gq_r = get_real(d_complex);
@@ -499,6 +499,15 @@ generated quantities {
     gq_complex = to_complex(d_r, gq_r);
     gq_complex = to_complex(p_r);
     gq_complex = to_complex(d_r);
+
+    gq_complex += 1;
+    gq_complex += 3.1;
+    gq_complex += 4i;
+    print(gq_complex);
+    gq_complex = add(1,3i);
+    gq_complex = add(3i,1);
+    gq_complex = add(3i,0.5);
+    gq_complex = add(0.5,3i);
 
     // test imaginary literal
     complex zi = 1+3.14i;

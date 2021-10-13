@@ -1456,7 +1456,6 @@ Ill-typed arguments supplied to infix operator +. Available signatures:
 (real, vector) => vector
 (vector, real) => vector
 (vector, vector) => vector
-(complex, real) => complex
 (complex, complex) => complex
 (real, row_vector) => row_vector
 (row_vector, real) => row_vector

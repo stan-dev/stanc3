@@ -168,7 +168,6 @@ add(real, real) => real
 add(real, vector) => vector
 add(vector, real) => vector
 add(vector, vector) => vector
-add(complex, real) => complex
 add(complex, complex) => complex
 add(real, row_vector) => row_vector
 add(row_vector, real) => row_vector
