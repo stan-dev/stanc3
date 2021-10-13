@@ -2,9 +2,11 @@ functions {
     complex foo(){
         return to_complex();
     }
+
     real foo1(complex z){
         return 1.0;
     }
+
     complex foo2(real r){
         return to_complex(r);
     }
@@ -20,6 +22,7 @@ functions {
     complex[] foo6(real r){
         return {to_complex(r), to_complex(r,r)};
     }
+
     complex[] foo7(complex[] z){
         return z;
     }
@@ -90,6 +93,8 @@ transformed data {
     td_r = get_imag(td_complex_array_2d[1,1]);
 
     td_complex = foo();
+    td_r = foo1(1);
+    td_r = foo1(2.5);
     td_r = foo1(td_complex);
     td_complex = foo2(td_r);
     td_complex = foo3(td_complex);

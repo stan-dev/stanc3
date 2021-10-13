@@ -923,6 +923,7 @@ let () =
             , AoS ) )
         bare_types )
     (List.range 1 8) ;
+  add_unqualified ("arg", ReturnType UReal, [UComplex], AoS) ;
   add_unqualified ("asin", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("asinh", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("atan", ReturnType UComplex, [UComplex], AoS) ;
@@ -1795,7 +1796,6 @@ let () =
     , [UArray UInt; URowVector; UVector; UVector; UReal]
     , AoS ) ;
   add_nullary "negative_infinity" ;
-  add_unqualified ("norm", ReturnType UReal, [UReal], AoS) ;
   add_unqualified ("norm", ReturnType UReal, [UComplex], AoS) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
