@@ -876,11 +876,10 @@ let pp_transform_inits ppf {Program.output_vars; _} =
   in
   let get_names ppf () =
     let add_param = fmt "%S" in
-    let extract_name var = Mangle.remove_prefix (fst var) in
     pf ppf "@[<hov 2> constexpr std::array<const char*, %i> names__{%a};@]@,"
       list_len
       (list ~sep:comma add_param)
-      (List.map ~f:extract_name output_vars)
+      (List.map ~f:Mangle.remove_prefix param_names)
   in
   let get_constrain_param_size_arr ppf () =
     match constrained_params with
