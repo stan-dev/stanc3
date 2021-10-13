@@ -115,6 +115,8 @@ let rec check_same_type depth t1 t2 =
   match (t1, t2) with
   | t1, t2 when t1 = t2 -> None
   | UnsizedType.(UReal, UInt) when depth < 1 -> None
+  | UnsizedType.(UComplex, UInt) when depth < 1 -> None
+  | UnsizedType.(UComplex, UReal) when depth < 1 -> None
   | UFun (_, _, s1, _), UFun (_, _, s2, _)
     when Fun_kind.without_propto s1 <> Fun_kind.without_propto s2 ->
       Some
