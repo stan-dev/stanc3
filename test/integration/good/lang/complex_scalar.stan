@@ -1,28 +1,31 @@
 functions {
-  complex foo() {
-    return to_complex();
-  }
-  real foo1(complex z) {
-    return 1.0;
-  }
-  complex foo2(real r) {
-    return to_complex(r);
-  }
-  complex foo3(complex z) {
-    return z;
-  }
-  array[] complex foo4() {
-    return {to_complex(), to_complex()};
-  }
-  real foo5(array[] complex z) {
-    return 1.0;
-  }
-  array[] complex foo6(real r) {
-    return {to_complex(r), to_complex(r, r)};
-  }
-  array[] complex foo7(array[] complex z) {
-    return z;
-  }
+    complex foo(){
+        return to_complex();
+    }
+    real foo1(complex z){
+        return 1.0;
+    }
+    complex foo2(real r){
+        return to_complex(r);
+    }
+    complex foo_two(complex z, complex z2){
+      return add(z,z2);
+    }
+    complex foo3(complex z){
+        return z;
+    }
+    complex[] foo4(){
+        return {to_complex(), to_complex()};
+    }
+    real foo5(complex[] z){
+        return 1.0;
+    }
+    complex[] foo6(real r){
+        return {to_complex(r), to_complex(r,r)};
+    }
+    complex[] foo7(complex[] z){
+        return z;
+    }
 }
 data {
   int<lower=0> N;
@@ -107,6 +110,7 @@ generated quantities {
     gq_complex = add(3i,1);
     gq_complex = add(3i,0.5);
     gq_complex = add(0.5,3i);
+    gq_complex = foo_two(1, 3.0);
 
     // test imaginary literal
     complex zi = 1+3.14i;
