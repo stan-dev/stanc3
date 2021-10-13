@@ -1,38 +1,40 @@
 functions {
-  complex foo() {
-    return to_complex();
-  }
-  real foo1(complex z) {
-    return 1.0;
-  }
-  complex foo2(real r) {
-    return to_complex(r);
-  }
-  complex foo3(complex z) {
-    return z;
-  }
-  array[] complex foo4() {
-    return {to_complex(), to_complex()};
-  }
-  real foo5(array[] complex z) {
-    return 1.0;
-  }
-  array[] complex foo6(real r) {
-    return {to_complex(r), to_complex(r, r)};
-  }
-  array[] complex foo7(array[] complex z) {
-    return z;
-  }
-  real foo8(array[,] complex z) {
-    return 1.0;
-  }
-  array[,] complex foo9(real r) {
-    return {{to_complex(r), to_complex(r), to_complex(r)},
-            {to_complex(r), to_complex(r), to_complex(r)}};
-  }
-  array[,] complex foo10(array[,] complex z) {
-    return z;
-  }
+    complex foo(){
+        return to_complex();
+    }
+
+    real foo1(complex z){
+        return 1.0;
+    }
+
+    complex foo2(real r){
+        return to_complex(r);
+    }
+    complex foo3(complex z){
+        return z;
+    }
+    complex[] foo4(){
+        return {to_complex(), to_complex()};
+    }
+    real foo5(complex[] z){
+        return 1.0;
+    }
+    complex[] foo6(real r){
+        return {to_complex(r), to_complex(r,r)};
+    }
+
+    complex[] foo7(complex[] z){
+        return z;
+    }
+    real foo8(complex[,] z){
+        return 1.0;
+    }
+    complex[,] foo9(real r){
+        return {{to_complex(r), to_complex(r), to_complex(r)}, {to_complex(r), to_complex(r), to_complex(r)}};
+    }
+    complex[,] foo10(complex[,] z){
+        return z;
+    }
 }
 data {
   int d_i;
@@ -91,6 +93,8 @@ transformed data {
     td_r = get_imag(td_complex_array_2d[1,1]);
 
     td_complex = foo();
+    td_r = foo1(1);
+    td_r = foo1(2.5);
     td_r = foo1(td_complex);
     td_complex = foo2(td_r);
     td_complex = foo3(td_complex);

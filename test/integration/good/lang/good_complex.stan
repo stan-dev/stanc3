@@ -1,31 +1,7 @@
 functions {
-    complex foo(){
-        return to_complex();
-    }
-    real foo1(complex z){
-        return 1.0;
-    }
-    complex foo2(real r){
-        return to_complex(r);
-    }
-    complex foo_two(complex z, complex z2){
-      return add(z,z2);
-    }
-    complex foo3(complex z){
-        return z;
-    }
-    complex[] foo4(){
-        return {to_complex(), to_complex()};
-    }
-    real foo5(complex[] z){
-        return 1.0;
-    }
-    complex[] foo6(real r){
-        return {to_complex(r), to_complex(r,r)};
-    }
-    complex[] foo7(complex[] z){
-        return z;
-    }
+   complex foo(complex x){
+       return x;
+   }
 }
 data {
   int<lower=0> N;
@@ -78,29 +54,12 @@ model {
   abs(p_complex) ~ normal(0, 1);
 }
 generated quantities {
-  complex gq_complex;
-  array[2] complex gq_complex_array;
-  array[2, 3] complex gq_complex_array_2d = {{1, 2, 3},
-                                             {to_complex(), to_complex(
-                                              1.1), to_complex(1, 2.1)}};
-  array[2, 3, 4] complex gq_complex_array_3d;
-  gq_complex = 3;
-  gq_complex_array[1] = to_complex(5.1, 6);
-  gq_complex = foo();
-  real gq_r = foo1(gq_complex);
-  gq_complex = foo2(gq_r);
-  gq_complex = foo3(gq_complex);
-  gq_complex_array = foo4();
-  gq_r = foo5(gq_complex_array);
-  gq_complex_array = foo6(gq_r);
-  gq_complex_array = foo7(gq_complex_array);
-
-  // test imaginary literal
-  complex zi = 1 + 3.14i;
-  zi = zi * 0i;
-  complex yi = to_complex(0, 1.1) + to_complex(0.0, 2.2) + to_complex();
-  real x = get_real(3i - 40e-3i);
-}
+    complex gq_complex;
+    complex gq_complex_array[2];
+    complex gq_complex_array_2d[2, 3] = {{1, 2, 3}, {to_complex(), to_complex(1.1), to_complex(1,2.1)}};
+    complex gq_complex_array_3d[2, 3, 4];
+    gq_complex = 3;
+    gq_complex_array[1] = to_complex(5.1,6);
 
     gq_complex += 1;
     gq_complex += 3.1;
@@ -110,7 +69,10 @@ generated quantities {
     gq_complex = add(3i,1);
     gq_complex = add(3i,0.5);
     gq_complex = add(0.5,3i);
-    gq_complex = foo_two(1, 3.0);
+
+    gq_complex = foo(gq_complex);
+    gq_complex = foo(1);
+    gq_complex = foo(1.6);
 
     // test imaginary literal
     complex zi = 1+3.14i;
