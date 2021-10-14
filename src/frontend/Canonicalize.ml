@@ -170,7 +170,11 @@ let rec parens_stmt ({stmt; smeta} : typed_statement) : typed_statement =
     | While (e, s) -> While (e, parens_stmt (stmt_to_block s))
     | IfThenElse (e, s1, s2) -> (
       match s2 with
-      | Some x -> IfThenElse (e, parens_stmt (stmt_to_block s1), Some (parens_stmt (stmt_to_block x)))
+      | Some x ->
+          IfThenElse
+            ( e
+            , parens_stmt (stmt_to_block s1)
+            , Some (parens_stmt (stmt_to_block x)) )
       | None -> IfThenElse (e, parens_stmt (stmt_to_block s1), None) )
     | For {loop_variable; lower_bound; upper_bound; loop_body} ->
         For
