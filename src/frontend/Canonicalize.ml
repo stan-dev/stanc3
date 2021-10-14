@@ -153,6 +153,7 @@ let stmt_to_block ({stmt; smeta} : typed_statement) : typed_statement =
         ~return_type:smeta.return_type ~loc:smeta.loc
 
 let rec parens_stmt ({stmt; smeta} : typed_statement) : typed_statement =
+  let parens_block s = parens_stmt (stmt_to_block s) in
   let stmt =
     match stmt with
     | VarDecl
@@ -167,21 +168,15 @@ let rec parens_stmt ({stmt; smeta} : typed_statement) : typed_statement =
           ; identifier
           ; initial_value= Option.map ~f:no_parens init
           ; is_global }
-    | While (e, s) -> While (e, parens_stmt (stmt_to_block s))
-    | IfThenElse (e, s1, s2) -> (
-      match s2 with
-      | Some x ->
-          IfThenElse
-            ( e
-            , parens_stmt (stmt_to_block s1)
-            , Some (parens_stmt (stmt_to_block x)) )
-      | None -> IfThenElse (e, parens_stmt (stmt_to_block s1), None) )
+    | While (e, s) -> While (no_parens e, parens_block s)
+    | IfThenElse (e, s1, s2) ->
+        IfThenElse (no_parens e, parens_block s1, Option.map ~f:parens_block s2)
     | For {loop_variable; lower_bound; upper_bound; loop_body} ->
         For
           { loop_variable
           ; lower_bound= keep_parens lower_bound
           ; upper_bound= keep_parens upper_bound
-          ; loop_body= parens_stmt (stmt_to_block loop_body) }
+          ; loop_body= parens_block loop_body }
     | _ -> map_statement no_parens parens_stmt parens_lval ident stmt
   in
   {stmt; smeta}
