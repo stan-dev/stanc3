@@ -70,6 +70,8 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 9;
       context__.validate_dims("data initialization","J","int",
@@ -135,17 +137,27 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     
     try {
       local_scalar_t__ mu;
+      mu = DUMMY_VAR__;
+      
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
       local_scalar_t__ tau;
+      tau = DUMMY_VAR__;
+      
       current_statement__ = 2;
       tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_tilde;
+      theta_tilde = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
+      stan::math::fill(theta_tilde, DUMMY_VAR__);
+      
       current_statement__ = 3;
       theta_tilde = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                       J);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta;
+      theta = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
+      stan::math::fill(theta, DUMMY_VAR__);
+      
       current_statement__ = 4;
       assign(theta, add(mu, multiply(tau, theta_tilde)),
         "assigning variable theta");
@@ -192,13 +204,20 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     
     try {
       double mu;
+      mu = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
       double tau;
+      tau = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 2;
       tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
       Eigen::Matrix<double, -1, 1> theta_tilde;
+      theta_tilde = Eigen::Matrix<double, -1, 1>(J);
+      stan::math::fill(theta_tilde, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 3;
       theta_tilde = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                       J);
@@ -241,11 +260,17 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ mu;
+      mu = DUMMY_VAR__;
+      
       mu = in__.read<local_scalar_t__>();
       out__.write(mu);
       local_scalar_t__ tau;
+      tau = DUMMY_VAR__;
+      
       tau = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, tau);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_tilde;
@@ -512,6 +537,8 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 2;
       context__.validate_dims("data initialization","good_model","int",
@@ -546,6 +573,8 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     
     try {
       local_scalar_t__ bar;
+      bar = DUMMY_VAR__;
+      
       current_statement__ = 1;
       bar = in__.template read<local_scalar_t__>();
     } catch (const std::exception& e) {
@@ -581,6 +610,8 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     
     try {
       double bar;
+      bar = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
       bar = in__.template read<local_scalar_t__>();
       out__.write(bar);
@@ -610,8 +641,12 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ bar;
+      bar = DUMMY_VAR__;
+      
       bar = in__.read<local_scalar_t__>();
       out__.write(bar);
     } catch (const std::exception& e) {
@@ -1579,6 +1614,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 344;
       context__.validate_dims("data initialization","d_i","int",
@@ -1849,20 +1886,32 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     
     try {
       local_scalar_t__ p_r;
+      p_r = DUMMY_VAR__;
+      
       current_statement__ = 1;
       p_r = in__.template read<local_scalar_t__>();
       std::complex<local_scalar_t__> p_complex;
+      p_complex = std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      
       current_statement__ = 2;
       p_complex = in__.template read<std::complex<local_scalar_t__>>();
       std::vector<std::complex<local_scalar_t__>> p_complex_array;
+      p_complex_array = std::vector<std::complex<local_scalar_t__>>(2, std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      
+      
       current_statement__ = 3;
       p_complex_array = in__.template read<std::vector<std::complex<local_scalar_t__>>>(
                           2);
       std::vector<std::vector<std::complex<local_scalar_t__>>> p_complex_array_2d;
+      p_complex_array_2d = std::vector<std::vector<std::complex<local_scalar_t__>>>(2, std::vector<std::complex<local_scalar_t__>>(3, std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
+      
+      
       current_statement__ = 4;
       p_complex_array_2d = in__.template read<std::vector<std::vector<std::complex<local_scalar_t__>>>>(
                              2, 3);
       local_scalar_t__ tp_r;
+      tp_r = DUMMY_VAR__;
+      
       current_statement__ = 5;
       tp_r = 1.1;
       std::complex<local_scalar_t__> tp_complex;
@@ -2083,16 +2132,27 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     
     try {
       double p_r;
+      p_r = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
       p_r = in__.template read<local_scalar_t__>();
       std::complex<double> p_complex;
+      p_complex = std::complex<double>(std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 2;
       p_complex = in__.template read<std::complex<local_scalar_t__>>();
       std::vector<std::complex<double>> p_complex_array;
+      p_complex_array = std::vector<std::complex<double>>(2, std::complex<double>(std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()));
+      
+      
       current_statement__ = 3;
       p_complex_array = in__.template read<std::vector<std::complex<local_scalar_t__>>>(
                           2);
       std::vector<std::vector<std::complex<double>>> p_complex_array_2d;
+      p_complex_array_2d = std::vector<std::vector<std::complex<double>>>(2, std::vector<std::complex<double>>(3, std::complex<double>(std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN())));
+      
+      
       current_statement__ = 4;
       p_complex_array_2d = in__.template read<std::vector<std::vector<std::complex<local_scalar_t__>>>>(
                              2, 3);
@@ -2301,9 +2361,13 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         return ;
       } 
       int gq_i;
+      gq_i = std::numeric_limits<int>::min();
+      
       current_statement__ = 62;
       gq_i = 1;
       double gq_r;
+      gq_r = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 63;
       gq_r = 1.1;
       std::complex<double> gq_complex;
@@ -2476,9 +2540,15 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         foo10(stan::model::deep_copy(gq_complex_array_2d), pstream__),
         "assigning variable gq_complex_array_2d");
       std::complex<double> z;
+      z = std::complex<double>(std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 121;
       assign(z, to_complex(1, 2), "assigning variable z");
       std::complex<double> y;
+      y = std::complex<double>(std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 122;
       assign(y, to_complex(3, 4), "assigning variable y");
       std::vector<int> i_arr;
@@ -2980,17 +3050,25 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       current_statement__ = 335;
       assign(gq_complex, to_complex(d_r), "assigning variable gq_complex");
       std::complex<double> zi;
+      zi = std::complex<double>(std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 336;
       assign(zi, (1 + to_complex(0, 3.14)), "assigning variable zi");
       current_statement__ = 337;
       assign(zi, (stan::model::deep_copy(zi) * to_complex(0, 0)),
         "assigning variable zi");
       std::complex<double> yi;
+      yi = std::complex<double>(std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 338;
       assign(yi,
         ((to_complex(0, 1.1) + to_complex(0.0, 2.2)) + to_complex()),
         "assigning variable yi");
       double x;
+      x = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 339;
       x = get_real((to_complex(0, 3) - to_complex(0, 40e-3)));
       out__.write(gq_i);
@@ -3030,11 +3108,17 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ p_r;
+      p_r = DUMMY_VAR__;
+      
       p_r = in__.read<local_scalar_t__>();
       out__.write(p_r);
       std::complex<local_scalar_t__> p_complex;
+      p_complex = std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      
       assign(p_complex, in__.read<local_scalar_t__>(),
         "assigning variable p_complex");
       out__.write(p_complex);
@@ -3471,6 +3555,8 @@ class conditional_expression_types_model final : public model_base_crtp<conditio
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3498,12 +3584,21 @@ class conditional_expression_types_model final : public model_base_crtp<conditio
     
     try {
       Eigen::Matrix<local_scalar_t__, -1, 1> a;
+      a = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(a, DUMMY_VAR__);
+      
       current_statement__ = 1;
       a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
       Eigen::Matrix<local_scalar_t__, -1, 1> b;
+      b = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(b, DUMMY_VAR__);
+      
       current_statement__ = 2;
       b = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
       Eigen::Matrix<local_scalar_t__, -1, 1> c;
+      c = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(c, DUMMY_VAR__);
+      
       current_statement__ = 3;
       assign(c,
         (logical_gt(sum(a), 1) ? stan::math::eval(add(multiply(2, a), b)) :
@@ -3541,9 +3636,15 @@ class conditional_expression_types_model final : public model_base_crtp<conditio
     
     try {
       Eigen::Matrix<double, -1, 1> a;
+      a = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(a, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 1;
       a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
       Eigen::Matrix<double, -1, 1> b;
+      b = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(b, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 2;
       b = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
       Eigen::Matrix<double, -1, 1> c;
@@ -3585,6 +3686,8 @@ class conditional_expression_types_model final : public model_base_crtp<conditio
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__, -1, 1> a;
       a = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
@@ -3882,6 +3985,8 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 9;
       context__.validate_dims("data initialization","J","int",
@@ -3947,17 +4052,27 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     
     try {
       local_scalar_t__ mu;
+      mu = DUMMY_VAR__;
+      
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
       local_scalar_t__ tau;
+      tau = DUMMY_VAR__;
+      
       current_statement__ = 2;
       tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_tilde;
+      theta_tilde = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
+      stan::math::fill(theta_tilde, DUMMY_VAR__);
+      
       current_statement__ = 3;
       theta_tilde = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                       J);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta;
+      theta = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
+      stan::math::fill(theta, DUMMY_VAR__);
+      
       current_statement__ = 4;
       assign(theta, add(mu, multiply(tau, theta_tilde)),
         "assigning variable theta");
@@ -4004,13 +4119,20 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     
     try {
       double mu;
+      mu = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
       double tau;
+      tau = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 2;
       tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
       Eigen::Matrix<double, -1, 1> theta_tilde;
+      theta_tilde = Eigen::Matrix<double, -1, 1>(J);
+      stan::math::fill(theta_tilde, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 3;
       theta_tilde = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                       J);
@@ -4053,11 +4175,17 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ mu;
+      mu = DUMMY_VAR__;
+      
       mu = in__.read<local_scalar_t__>();
       out__.write(mu);
       local_scalar_t__ tau;
+      tau = DUMMY_VAR__;
+      
       tau = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, tau);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_tilde;
@@ -4328,6 +4456,8 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 5;
       x = std::vector<double>(3, std::numeric_limits<double>::quiet_NaN());
@@ -4358,14 +4488,22 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
     
     try {
       std::vector<local_scalar_t__> xx;
+      xx = std::vector<local_scalar_t__>(3, DUMMY_VAR__);
+      
       current_statement__ = 1;
       xx = in__.template read<std::vector<local_scalar_t__>>(3);
       std::vector<std::vector<local_scalar_t__>> y;
+      y = std::vector<std::vector<local_scalar_t__>>(3, std::vector<local_scalar_t__>(3, DUMMY_VAR__));
+      
+      
       current_statement__ = 2;
       assign(y, std::vector<std::vector<local_scalar_t__>>{
         stan::math::promote_scalar<local_scalar_t__>(x), xx, xx},
         "assigning variable y");
       std::vector<std::vector<local_scalar_t__>> w;
+      w = std::vector<std::vector<local_scalar_t__>>(3, std::vector<local_scalar_t__>(3, DUMMY_VAR__));
+      
+      
       current_statement__ = 3;
       assign(w, std::vector<std::vector<local_scalar_t__>>{
         std::vector<local_scalar_t__>{
@@ -4374,6 +4512,9 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
         stan::math::promote_scalar<local_scalar_t__>(3)}, xx, xx},
         "assigning variable w");
       std::vector<std::vector<local_scalar_t__>> td_arr33;
+      td_arr33 = std::vector<std::vector<local_scalar_t__>>(3, std::vector<local_scalar_t__>(3, DUMMY_VAR__));
+      
+      
       current_statement__ = 4;
       assign(td_arr33, std::vector<std::vector<double>>{std::vector<double>{
         stan::math::promote_scalar<double>(1),
@@ -4416,6 +4557,8 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
     
     try {
       std::vector<double> xx;
+      xx = std::vector<double>(3, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 1;
       xx = in__.template read<std::vector<local_scalar_t__>>(3);
       std::vector<std::vector<double>> y;
@@ -4494,6 +4637,8 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       std::vector<local_scalar_t__> xx;
       xx = std::vector<local_scalar_t__>(3, DUMMY_VAR__);
@@ -4763,7 +4908,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 776> locations_array__ = 
+static constexpr std::array<const char*, 787> locations_array__ = 
 {" (found before start of program)",
  " (in 'mother.stan', line 555, column 2 to column 14)",
  " (in 'mother.stan', line 556, column 2 to column 29)",
@@ -5383,7 +5528,9 @@ static constexpr std::array<const char*, 776> locations_array__ =
  " (in 'mother.stan', line 64, column 4 to column 26)",
  " (in 'mother.stan', line 62, column 30 to line 65, column 3)",
  " (in 'mother.stan', line 69, column 14 to column 20)",
+ " (in 'mother.stan', line 69, column 4 to column 20)",
  " (in 'mother.stan', line 70, column 14 to column 23)",
+ " (in 'mother.stan', line 70, column 4 to column 23)",
  " (in 'mother.stan', line 73, column 20 to column 26)",
  " (in 'mother.stan', line 73, column 4 to column 26)",
  " (in 'mother.stan', line 74, column 20 to column 29)",
@@ -5392,17 +5539,21 @@ static constexpr std::array<const char*, 776> locations_array__ =
  " (in 'mother.stan', line 79, column 6 to column 12)",
  " (in 'mother.stan', line 80, column 6 to column 12)",
  " (in 'mother.stan', line 77, column 14 to line 81, column 5)",
+ " (in 'mother.stan', line 77, column 4 to line 81, column 5)",
  " (in 'mother.stan', line 87, column 11 to column 17)",
  " (in 'mother.stan', line 86, column 18 to column 24)",
  " (in 'mother.stan', line 86, column 11 to line 87, column 17)",
  " (in 'mother.stan', line 85, column 13 to column 19)",
  " (in 'mother.stan', line 85, column 6 to line 87, column 17)",
  " (in 'mother.stan', line 84, column 14 to line 88, column 5)",
+ " (in 'mother.stan', line 84, column 4 to line 88, column 5)",
  " (in 'mother.stan', line 91, column 24 to column 30)",
  " (in 'mother.stan', line 91, column 14 to column 30)",
+ " (in 'mother.stan', line 91, column 4 to column 30)",
  " (in 'mother.stan', line 95, column 22 to column 28)",
  " (in 'mother.stan', line 95, column 6 to column 28)",
  " (in 'mother.stan', line 94, column 14 to line 96, column 5)",
+ " (in 'mother.stan', line 94, column 4 to line 96, column 5)",
  " (in 'mother.stan', line 100, column 6 to column 19)",
  " (in 'mother.stan', line 101, column 6 to column 12)",
  " (in 'mother.stan', line 102, column 6 to line 105, column 7)",
@@ -5417,6 +5568,7 @@ static constexpr std::array<const char*, 776> locations_array__ =
  " (in 'mother.stan', line 113, column 10 to column 16)",
  " (in 'mother.stan', line 115, column 8 to column 14)",
  " (in 'mother.stan', line 99, column 14 to line 117, column 5)",
+ " (in 'mother.stan', line 99, column 4 to line 117, column 5)",
  " (in 'mother.stan', line 121, column 6 to column 13)",
  " (in 'mother.stan', line 122, column 6 to column 21)",
  " (in 'mother.stan', line 123, column 6 to line 126, column 7)",
@@ -5426,6 +5578,7 @@ static constexpr std::array<const char*, 776> locations_array__ =
  " (in 'mother.stan', line 128, column 8 to column 16)",
  " (in 'mother.stan', line 129, column 8 to column 17)",
  " (in 'mother.stan', line 120, column 14 to line 131, column 5)",
+ " (in 'mother.stan', line 120, column 4 to line 131, column 5)",
  " (in 'mother.stan', line 135, column 6 to column 13)",
  " (in 'mother.stan', line 136, column 6 to column 19)",
  " (in 'mother.stan', line 137, column 6 to line 140, column 7)",
@@ -5435,6 +5588,7 @@ static constexpr std::array<const char*, 776> locations_array__ =
  " (in 'mother.stan', line 142, column 8 to column 16)",
  " (in 'mother.stan', line 143, column 8 to column 17)",
  " (in 'mother.stan', line 134, column 14 to line 145, column 5)",
+ " (in 'mother.stan', line 134, column 4 to line 145, column 5)",
  " (in 'mother.stan', line 149, column 6 to column 13)",
  " (in 'mother.stan', line 150, column 6 to column 23)",
  " (in 'mother.stan', line 151, column 6 to line 154, column 7)",
@@ -5444,6 +5598,7 @@ static constexpr std::array<const char*, 776> locations_array__ =
  " (in 'mother.stan', line 156, column 8 to column 16)",
  " (in 'mother.stan', line 157, column 8 to column 17)",
  " (in 'mother.stan', line 148, column 14 to line 159, column 5)",
+ " (in 'mother.stan', line 148, column 4 to line 159, column 5)",
  " (in 'mother.stan', line 163, column 6 to column 12)",
  " (in 'mother.stan', line 164, column 6 to column 12)",
  " (in 'mother.stan', line 166, column 8 to column 14)",
@@ -5451,6 +5606,7 @@ static constexpr std::array<const char*, 776> locations_array__ =
  " (in 'mother.stan', line 168, column 8 to column 14)",
  " (in 'mother.stan', line 165, column 6 to line 169, column 7)",
  " (in 'mother.stan', line 162, column 14 to line 170, column 5)",
+ " (in 'mother.stan', line 162, column 4 to line 170, column 5)",
  " (in 'mother.stan', line 172, column 4 to column 13)",
  " (in 'mother.stan', line 67, column 19 to line 173, column 3)",
  " (in 'mother.stan', line 176, column 4 to column 14)",
@@ -5857,32 +6013,34 @@ foo_1(const int& a, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 618;
+    current_statement__ = 619;
     while (1) {
       break;
     }
-    current_statement__ = 619;
+    current_statement__ = 621;
     while (0) {
       continue;
     }
-    current_statement__ = 621;
-    for (int i = 1; i <= 10; ++i) { break;}
     current_statement__ = 623;
+    for (int i = 1; i <= 10; ++i) { break;}
+    current_statement__ = 625;
     for (int i = 1; i <= 10; ++i) { continue;}
-    current_statement__ = 627;
+    current_statement__ = 630;
     while (1) {
       int b;
-      current_statement__ = 625;
+      b = std::numeric_limits<int>::min();
+      
+      current_statement__ = 627;
       b = 5;
       break;
     }
-    current_statement__ = 633;
+    current_statement__ = 637;
     while (1) {
-      current_statement__ = 632;
+      current_statement__ = 635;
       if (0) {
         break;
       } else {
-        current_statement__ = 630;
+        current_statement__ = 633;
         if (1) {
           break;
         } else {
@@ -5890,47 +6048,27 @@ foo_1(const int& a, std::ostream* pstream__) {
         }
       }
     }
-    current_statement__ = 635;
+    current_statement__ = 640;
     while (1) {
-      current_statement__ = 634;
+      current_statement__ = 639;
       while (0) {
         break;
       }
     }
-    current_statement__ = 638;
+    current_statement__ = 644;
     while (1) {
-      current_statement__ = 637;
+      current_statement__ = 642;
       for (int i = 1; i <= 10; ++i) { break;}
     }
-    current_statement__ = 652;
+    current_statement__ = 659;
     while (1) {
       std::vector<std::vector<int>> vs;
       vs = std::vector<std::vector<int>>(2, std::vector<int>(3, std::numeric_limits<int>::min()));
       
       
       int z;
-      current_statement__ = 641;
-      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
-        {
-          std::vector<int> v;
-          current_statement__ = 641;
-          assign(v, vs[(sym1__ - 1)], "assigning variable v");
-          current_statement__ = 642;
-          z = 0;
-          break;
-        }
-      }
-      current_statement__ = 644;
-      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
-        {
-          std::vector<int> v;
-          current_statement__ = 644;
-          assign(v, vs[(sym1__ - 1)], "assigning variable v");
-          current_statement__ = 645;
-          z = 0;
-          continue;
-        }
-      }
+      z = std::numeric_limits<int>::min();
+      
       current_statement__ = 647;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
@@ -5938,22 +6076,44 @@ foo_1(const int& a, std::ostream* pstream__) {
           current_statement__ = 647;
           assign(v, vs[(sym1__ - 1)], "assigning variable v");
           current_statement__ = 648;
+          z = 0;
+          break;
+        }
+      }
+      current_statement__ = 650;
+      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
+        {
+          std::vector<int> v;
+          current_statement__ = 650;
+          assign(v, vs[(sym1__ - 1)], "assigning variable v");
+          current_statement__ = 651;
+          z = 0;
+          continue;
+        }
+      }
+      current_statement__ = 653;
+      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
+        {
+          std::vector<int> v;
+          current_statement__ = 653;
+          assign(v, vs[(sym1__ - 1)], "assigning variable v");
+          current_statement__ = 654;
           for (int sym1__ = 1; sym1__ <= stan::math::size(v); ++sym1__) {
             {
               int vv;
-              current_statement__ = 648;
+              current_statement__ = 654;
               vv = v[(sym1__ - 1)];
-              current_statement__ = 649;
+              current_statement__ = 655;
               z = 0;
               break;
             }
           }
-          current_statement__ = 651;
+          current_statement__ = 657;
           z = 1;
         }
       }
     }
-    current_statement__ = 661;
+    current_statement__ = 669;
     while (1) {
       local_scalar_t__ z;
       z = DUMMY_VAR__;
@@ -5962,68 +6122,36 @@ foo_1(const int& a, std::ostream* pstream__) {
       vs = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3);
       stan::math::fill(vs, DUMMY_VAR__);
       
-      current_statement__ = 655;
+      current_statement__ = 662;
       for (int sym1__ = 1; sym1__ <= rows(vs); ++sym1__) {
-        current_statement__ = 655;
+        current_statement__ = 662;
         for (int sym2__ = 1;
              sym2__ <= stan::math::size(rvalue(vs, "vs", index_uni(sym1__)));
              ++sym2__) {
           {
             local_scalar_t__ v;
-            current_statement__ = 655;
+            current_statement__ = 662;
             v = rvalue(vs, "vs", index_uni(sym1__), index_uni(sym2__));
-            current_statement__ = 656;
+            current_statement__ = 663;
             z = 0;
             break;
           }
         }
       }
-      current_statement__ = 658;
+      current_statement__ = 665;
       for (int sym1__ = 1; sym1__ <= rows(vs); ++sym1__) {
-        current_statement__ = 658;
+        current_statement__ = 665;
         for (int sym2__ = 1;
              sym2__ <= stan::math::size(rvalue(vs, "vs", index_uni(sym1__)));
              ++sym2__) {
           {
             local_scalar_t__ v;
-            current_statement__ = 658;
+            current_statement__ = 665;
             v = rvalue(vs, "vs", index_uni(sym1__), index_uni(sym2__));
-            current_statement__ = 659;
+            current_statement__ = 666;
             z = 3.1;
             continue;
           }
-        }
-      }
-    }
-    current_statement__ = 670;
-    while (1) {
-      local_scalar_t__ z;
-      z = DUMMY_VAR__;
-      
-      Eigen::Matrix<local_scalar_t__, -1, 1> vs;
-      vs = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
-      stan::math::fill(vs, DUMMY_VAR__);
-      
-      current_statement__ = 664;
-      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
-        {
-          local_scalar_t__ v;
-          current_statement__ = 664;
-          v = vs[(sym1__ - 1)];
-          current_statement__ = 665;
-          z = 0;
-          break;
-        }
-      }
-      current_statement__ = 667;
-      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
-        {
-          local_scalar_t__ v;
-          current_statement__ = 667;
-          v = vs[(sym1__ - 1)];
-          current_statement__ = 668;
-          z = 3.2;
-          continue;
         }
       }
     }
@@ -6032,46 +6160,82 @@ foo_1(const int& a, std::ostream* pstream__) {
       local_scalar_t__ z;
       z = DUMMY_VAR__;
       
-      Eigen::Matrix<local_scalar_t__, 1, -1> vs;
-      vs = Eigen::Matrix<local_scalar_t__, 1, -1>(2);
+      Eigen::Matrix<local_scalar_t__, -1, 1> vs;
+      vs = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(vs, DUMMY_VAR__);
       
-      current_statement__ = 673;
+      current_statement__ = 672;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 673;
+          current_statement__ = 672;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 674;
+          current_statement__ = 673;
           z = 0;
           break;
         }
       }
-      current_statement__ = 676;
+      current_statement__ = 675;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 676;
+          current_statement__ = 675;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 677;
+          current_statement__ = 676;
+          z = 3.2;
+          continue;
+        }
+      }
+    }
+    current_statement__ = 689;
+    while (1) {
+      local_scalar_t__ z;
+      z = DUMMY_VAR__;
+      
+      Eigen::Matrix<local_scalar_t__, 1, -1> vs;
+      vs = Eigen::Matrix<local_scalar_t__, 1, -1>(2);
+      stan::math::fill(vs, DUMMY_VAR__);
+      
+      current_statement__ = 682;
+      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
+        {
+          local_scalar_t__ v;
+          current_statement__ = 682;
+          v = vs[(sym1__ - 1)];
+          current_statement__ = 683;
+          z = 0;
+          break;
+        }
+      }
+      current_statement__ = 685;
+      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
+        {
+          local_scalar_t__ v;
+          current_statement__ = 685;
+          v = vs[(sym1__ - 1)];
+          current_statement__ = 686;
           z = 3.3;
           continue;
         }
       }
     }
-    current_statement__ = 686;
+    current_statement__ = 697;
     while (1) {
       int b;
-      current_statement__ = 681;
+      b = std::numeric_limits<int>::min();
+      
+      current_statement__ = 691;
       b = 5;
       {
         int c;
-        current_statement__ = 683;
+        c = std::numeric_limits<int>::min();
+        
+        current_statement__ = 693;
         c = 6;
         break;
       }
     }
-    current_statement__ = 687;
+    current_statement__ = 698;
     return 0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6100,17 +6264,19 @@ foo_2(const int& a, std::ostream* pstream__) {
     vs = std::vector<int>(2, std::numeric_limits<int>::min());
     
     int y;
-    current_statement__ = 691;
+    y = std::numeric_limits<int>::min();
+    
+    current_statement__ = 702;
     for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
       {
         int v;
-        current_statement__ = 691;
+        current_statement__ = 702;
         v = vs[(sym1__ - 1)];
-        current_statement__ = 692;
+        current_statement__ = 703;
         y = v;
       }
     }
-    current_statement__ = 693;
+    current_statement__ = 704;
     return 0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6136,7 +6302,7 @@ foo_3(const T0__& t, const int& n, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 695;
+    current_statement__ = 706;
     return rep_array(t, n);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6163,7 +6329,7 @@ foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 697;
+    current_statement__ = 708;
     return (x + get_lp(lp__, lp_accum__));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6192,7 +6358,7 @@ foo_4(const T0__& x, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 699;
+    current_statement__ = 710;
     std::stringstream errmsg_stream__;
     errmsg_stream__ << "user-specified rejection";
     errmsg_stream__ << x;
@@ -6230,13 +6396,13 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
     local_scalar_t__ avg_scale;
     avg_scale = DUMMY_VAR__;
     
-    current_statement__ = 703;
+    current_statement__ = 714;
     abs_diff = stan::math::fabs((x - y));
-    current_statement__ = 704;
+    current_statement__ = 715;
     avg_scale = ((stan::math::fabs(x) + stan::math::fabs(y)) / 2);
-    current_statement__ = 706;
+    current_statement__ = 717;
     if (logical_gt((abs_diff / avg_scale), max_)) {
-      current_statement__ = 705;
+      current_statement__ = 716;
       std::stringstream errmsg_stream__;
       errmsg_stream__ << "user-specified rejection, difference above ";
       errmsg_stream__ << max_;
@@ -6246,9 +6412,9 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
       errmsg_stream__ << y;
       throw std::domain_error(errmsg_stream__.str());
     } 
-    current_statement__ = 708;
+    current_statement__ = 719;
     if (logical_lt((abs_diff / avg_scale), min_)) {
-      current_statement__ = 707;
+      current_statement__ = 718;
       std::stringstream errmsg_stream__;
       errmsg_stream__ << "user-specified rejection, difference below ";
       errmsg_stream__ << min_;
@@ -6258,7 +6424,7 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
       errmsg_stream__ << y;
       throw std::domain_error(errmsg_stream__.str());
     } 
-    current_statement__ = 709;
+    current_statement__ = 720;
     return (abs_diff / avg_scale);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6293,7 +6459,7 @@ foo_5(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 711;
+    current_statement__ = 722;
     return (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished();
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6330,7 +6496,7 @@ foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 713;
+    current_statement__ = 724;
     return x1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6368,7 +6534,7 @@ foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 715;
+    current_statement__ = 726;
     return x1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6403,20 +6569,23 @@ covsqrt2corsqrt(const T0__& mat_arg__, const int& invert,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 717;
+    current_statement__ = 728;
     validate_non_negative_index("o", "rows(mat)", rows(mat));
-    current_statement__ = 718;
+    current_statement__ = 729;
     validate_non_negative_index("o", "cols(mat)", cols(mat));
     Eigen::Matrix<local_scalar_t__, -1, -1> o;
-    current_statement__ = 720;
+    o = Eigen::Matrix<local_scalar_t__, -1, -1>(rows(mat), cols(mat));
+    stan::math::fill(o, DUMMY_VAR__);
+    
+    current_statement__ = 731;
     assign(o, mat, "assigning variable o");
-    current_statement__ = 721;
+    current_statement__ = 732;
     assign(o, stan::model::deep_copy(rvalue(o, "o", index_uni(2))),
       "assigning variable o", index_uni(1));
-    current_statement__ = 722;
+    current_statement__ = 733;
     assign(o, stan::model::deep_copy(rvalue(o, "o", index_min_max(1, 2))),
       "assigning variable o", index_min_max(3, 4));
-    current_statement__ = 723;
+    current_statement__ = 734;
     return o;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6461,7 +6630,7 @@ f0(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 725;
+    current_statement__ = 736;
     if (pstream__) {
       stan_print(pstream__, "hi");
       stan_print(pstream__, "\n");
@@ -6519,7 +6688,7 @@ f1(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 727;
+    current_statement__ = 738;
     return a1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6574,7 +6743,7 @@ f2(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 729;
+    current_statement__ = 740;
     return a2;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6629,7 +6798,7 @@ f3(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 731;
+    current_statement__ = 742;
     return a3;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6686,7 +6855,7 @@ f4(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 733;
+    current_statement__ = 744;
     return a4;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6745,7 +6914,7 @@ f5(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 735;
+    current_statement__ = 746;
     return a5;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6804,7 +6973,7 @@ f6(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 737;
+    current_statement__ = 748;
     return a6;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6863,7 +7032,7 @@ f7(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 739;
+    current_statement__ = 750;
     return a7;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6922,7 +7091,7 @@ f8(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 741;
+    current_statement__ = 752;
     return a8;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6981,7 +7150,7 @@ f9(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 743;
+    current_statement__ = 754;
     return a9;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7040,7 +7209,7 @@ f10(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 745;
+    current_statement__ = 756;
     return a10;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7099,7 +7268,7 @@ f11(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 747;
+    current_statement__ = 758;
     return a11;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7158,7 +7327,7 @@ f12(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 749;
+    current_statement__ = 760;
     return a12;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7210,7 +7379,7 @@ foo_6(std::ostream* pstream__) {
     ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(60, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(70, Eigen::Matrix<local_scalar_t__, -1, -1>(40, 50)));
     stan::math::fill(ar_mat, DUMMY_VAR__);
     
-    current_statement__ = 755;
+    current_statement__ = 766;
     assign(ar_mat, b,
       "assigning variable ar_mat", index_uni(1), index_uni(1), index_uni(1),
                                      index_uni(1));
@@ -7237,7 +7406,7 @@ matfoo(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 757;
+    current_statement__ = 768;
     return stan::math::to_matrix(std::vector<Eigen::Matrix<double, 1, -1>>{
         (Eigen::Matrix<double,1,-1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9,
         10).finished(), (Eigen::Matrix<double,1,-1>(10) << 1, 2, 3, 4, 5, 6,
@@ -7266,7 +7435,7 @@ vecfoo(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 759;
+    current_statement__ = 770;
     return (Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9,
         10).finished();
   } catch (const std::exception& e) {
@@ -7294,9 +7463,12 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     Eigen::Matrix<local_scalar_t__, -1, 1> l;
-    current_statement__ = 761;
+    l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
+    stan::math::fill(l, DUMMY_VAR__);
+    
+    current_statement__ = 772;
     assign(l, multiply(mu, vecfoo(pstream__)), "assigning variable l");
-    current_statement__ = 762;
+    current_statement__ = 773;
     return l;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7324,11 +7496,14 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     Eigen::Matrix<local_scalar_t__, -1, 1> l;
-    current_statement__ = 764;
+    l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
+    stan::math::fill(l, DUMMY_VAR__);
+    
+    current_statement__ = 775;
     assign(l,
       multiply(mu, (Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5, 6, 7, 8,
         9, 10).finished()), "assigning variable l");
-    current_statement__ = 765;
+    current_statement__ = 776;
     return rvalue(l, "l", index_multi(std::vector<int>{1, 2, 3, 4, 5}));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7366,15 +7541,15 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
     stan::math::fill(f_x, DUMMY_VAR__);
     
-    current_statement__ = 768;
+    current_statement__ = 779;
     assign(f_x,
       (rvalue(x, "x", index_uni(1)) - rvalue(y, "y", index_uni(1))),
       "assigning variable f_x", index_uni(1));
-    current_statement__ = 769;
+    current_statement__ = 780;
     assign(f_x,
       (rvalue(x, "x", index_uni(2)) - rvalue(y, "y", index_uni(2))),
       "assigning variable f_x", index_uni(2));
-    current_statement__ = 770;
+    current_statement__ = 781;
     return f_x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7413,9 +7588,9 @@ binomialf(const T0__& phi_arg__, const T1__& theta_arg__,
     lpmf = Eigen::Matrix<local_scalar_t__, -1, 1>(1);
     stan::math::fill(lpmf, DUMMY_VAR__);
     
-    current_statement__ = 773;
+    current_statement__ = 784;
     assign(lpmf, 0.0, "assigning variable lpmf", index_uni(1));
-    current_statement__ = 774;
+    current_statement__ = 785;
     return lpmf;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7556,6 +7731,8 @@ class mother_model final : public model_base_crtp<mother_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 190;
       context__.validate_dims("data initialization","N","int",
@@ -8913,6 +9090,9 @@ class mother_model final : public model_base_crtp<mother_model> {
         current_statement__ = 344;
         for (int j = 1; j <= 5; ++j) {
           Eigen::Matrix<double, -1, -1> l_mat;
+          l_mat = Eigen::Matrix<double, -1, -1>(2, 3);
+          stan::math::fill(l_mat, std::numeric_limits<double>::quiet_NaN());
+          
           current_statement__ = 341;
           assign(l_mat,
             rvalue(d_ar_mat, "d_ar_mat", index_uni(i), index_uni(j)),
@@ -8956,6 +9136,8 @@ class mother_model final : public model_base_crtp<mother_model> {
           }
         }
         std::vector<int> indices;
+        indices = std::vector<int>(4, std::numeric_limits<int>::min());
+        
         current_statement__ = 353;
         assign(indices, std::vector<int>{1, 2, 3, 4},
           "assigning variable indices");
@@ -9771,96 +9953,161 @@ class mother_model final : public model_base_crtp<mother_model> {
     
     try {
       local_scalar_t__ p_real;
+      p_real = DUMMY_VAR__;
+      
       current_statement__ = 1;
       p_real = in__.template read<local_scalar_t__>();
       local_scalar_t__ p_upper;
+      p_upper = DUMMY_VAR__;
+      
       current_statement__ = 2;
       p_upper = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                   p_real, lp__);
       local_scalar_t__ p_lower;
+      p_lower = DUMMY_VAR__;
+      
       current_statement__ = 3;
       p_lower = in__.template read_constrain_ub<local_scalar_t__, jacobian__>(
                   p_upper, lp__);
       std::vector<local_scalar_t__> offset_multiplier;
+      offset_multiplier = std::vector<local_scalar_t__>(5, DUMMY_VAR__);
+      
       current_statement__ = 4;
       offset_multiplier = in__.template read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
                             1, 2, lp__, 5);
       std::vector<local_scalar_t__> no_offset_multiplier;
+      no_offset_multiplier = std::vector<local_scalar_t__>(5, DUMMY_VAR__);
+      
       current_statement__ = 5;
       no_offset_multiplier = in__.template read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
                                0, 2, lp__, 5);
       std::vector<local_scalar_t__> offset_no_multiplier;
+      offset_no_multiplier = std::vector<local_scalar_t__>(5, DUMMY_VAR__);
+      
       current_statement__ = 6;
       offset_no_multiplier = in__.template read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
                                3, 1, lp__, 5);
       std::vector<local_scalar_t__> p_real_1d_ar;
+      p_real_1d_ar = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
       current_statement__ = 7;
       p_real_1d_ar = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
                        0, lp__, N);
       std::vector<std::vector<std::vector<local_scalar_t__>>> p_real_3d_ar;
+      p_real_3d_ar = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(M, std::vector<local_scalar_t__>(K, DUMMY_VAR__)));
+      
+      
       current_statement__ = 8;
       p_real_3d_ar = in__.template read_constrain_lb<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
                        0, lp__, N, M, K);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_vec;
+      p_vec = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      stan::math::fill(p_vec, DUMMY_VAR__);
+      
       current_statement__ = 9;
       p_vec = in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                 0, lp__, N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_vec;
+      p_1d_vec = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      stan::math::fill(p_1d_vec, DUMMY_VAR__);
+      
       current_statement__ = 10;
       p_1d_vec = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                    N, N);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_vec;
+      p_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
+      stan::math::fill(p_3d_vec, DUMMY_VAR__);
+      
       current_statement__ = 11;
       p_3d_vec = in__.template read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(
                    N, M, K, N);
       Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vec;
+      p_row_vec = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
+      stan::math::fill(p_row_vec, DUMMY_VAR__);
+      
       current_statement__ = 12;
       p_row_vec = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
                     N);
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> p_1d_row_vec;
+      p_1d_row_vec = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
+      stan::math::fill(p_1d_row_vec, DUMMY_VAR__);
+      
       current_statement__ = 13;
       p_1d_row_vec = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
                        N, N);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> p_3d_row_vec;
+      p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(K, Eigen::Matrix<local_scalar_t__, 1, -1>(N))));
+      stan::math::fill(p_3d_row_vec, DUMMY_VAR__);
+      
       current_statement__ = 14;
       p_3d_row_vec = in__.template read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>>(
                        N, M, K, N);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_mat;
+      p_mat = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
+      stan::math::fill(p_mat, DUMMY_VAR__);
+      
       current_statement__ = 15;
       p_mat = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(5,
                 4);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> p_ar_mat;
+      p_ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(4, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(5, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3)));
+      stan::math::fill(p_ar_mat, DUMMY_VAR__);
+      
       current_statement__ = 16;
       p_ar_mat = in__.template read_constrain_lub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
                    0, 1, lp__, 4, 5, 2, 3);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_simplex;
+      p_simplex = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      stan::math::fill(p_simplex, DUMMY_VAR__);
+      
       current_statement__ = 17;
       p_simplex = in__.template read_constrain_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                     lp__, N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_simplex;
+      p_1d_simplex = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      stan::math::fill(p_1d_simplex, DUMMY_VAR__);
+      
       current_statement__ = 18;
       p_1d_simplex = in__.template read_constrain_simplex<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                        lp__, N, N);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_simplex;
+      p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
+      stan::math::fill(p_3d_simplex, DUMMY_VAR__);
+      
       current_statement__ = 19;
       p_3d_simplex = in__.template read_constrain_simplex<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>, jacobian__>(
                        lp__, N, M, K, N);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_54;
+      p_cfcov_54 = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
+      stan::math::fill(p_cfcov_54, DUMMY_VAR__);
+      
       current_statement__ = 20;
       p_cfcov_54 = in__.template read_constrain_cholesky_factor_cov<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
                      lp__, 5, 4);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_33;
+      p_cfcov_33 = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3);
+      stan::math::fill(p_cfcov_33, DUMMY_VAR__);
+      
       current_statement__ = 21;
       p_cfcov_33 = in__.template read_constrain_cholesky_factor_cov<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
                      lp__, 3, 3);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_33_ar;
+      p_cfcov_33_ar = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3));
+      stan::math::fill(p_cfcov_33_ar, DUMMY_VAR__);
+      
       current_statement__ = 22;
       p_cfcov_33_ar = in__.template read_constrain_cholesky_factor_cov<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
                         lp__, K, 3, 3);
       Eigen::Matrix<local_scalar_t__, -1, 1> x_p;
+      x_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(x_p, DUMMY_VAR__);
+      
       current_statement__ = 23;
       x_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_p;
+      y_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(y_p, DUMMY_VAR__);
+      
       current_statement__ = 24;
       y_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
       std::vector<local_scalar_t__> tp_real_1d_ar;
@@ -10128,9 +10375,13 @@ class mother_model final : public model_base_crtp<mother_model> {
         stan::math::fill(tmp2, DUMMY_VAR__);
         
         local_scalar_t__ r1;
+        r1 = DUMMY_VAR__;
+        
         current_statement__ = 156;
         r1 = foo_bar1(p_real, pstream__);
         local_scalar_t__ r2;
+        r2 = DUMMY_VAR__;
+        
         current_statement__ = 157;
         r2 = foo_bar1(J, pstream__);
         current_statement__ = 158;
@@ -10264,96 +10515,170 @@ class mother_model final : public model_base_crtp<mother_model> {
     
     try {
       double p_real;
+      p_real = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
       p_real = in__.template read<local_scalar_t__>();
       double p_upper;
+      p_upper = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 2;
       p_upper = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                   p_real, lp__);
       double p_lower;
+      p_lower = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 3;
       p_lower = in__.template read_constrain_ub<local_scalar_t__, jacobian__>(
                   p_upper, lp__);
       std::vector<double> offset_multiplier;
+      offset_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 4;
       offset_multiplier = in__.template read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
                             1, 2, lp__, 5);
       std::vector<double> no_offset_multiplier;
+      no_offset_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 5;
       no_offset_multiplier = in__.template read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
                                0, 2, lp__, 5);
       std::vector<double> offset_no_multiplier;
+      offset_no_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 6;
       offset_no_multiplier = in__.template read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
                                3, 1, lp__, 5);
       std::vector<double> p_real_1d_ar;
+      p_real_1d_ar = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 7;
       p_real_1d_ar = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
                        0, lp__, N);
       std::vector<std::vector<std::vector<double>>> p_real_3d_ar;
+      p_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, std::numeric_limits<double>::quiet_NaN())));
+      
+      
       current_statement__ = 8;
       p_real_3d_ar = in__.template read_constrain_lb<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
                        0, lp__, N, M, K);
       Eigen::Matrix<double, -1, 1> p_vec;
+      p_vec = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(p_vec, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 9;
       p_vec = in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                 0, lp__, N);
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_vec;
+      p_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(p_1d_vec, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 10;
       p_1d_vec = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                    N, N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_vec;
+      p_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      stan::math::fill(p_3d_vec, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 11;
       p_3d_vec = in__.template read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(
                    N, M, K, N);
       Eigen::Matrix<double, 1, -1> p_row_vec;
+      p_row_vec = Eigen::Matrix<double, 1, -1>(N);
+      stan::math::fill(p_row_vec, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 12;
       p_row_vec = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
                     N);
       std::vector<Eigen::Matrix<double, 1, -1>> p_1d_row_vec;
+      p_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
+      stan::math::fill(p_1d_row_vec, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 13;
       p_1d_row_vec = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
                        N, N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> p_3d_row_vec;
+      p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
+      stan::math::fill(p_3d_row_vec, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 14;
       p_3d_row_vec = in__.template read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>>(
                        N, M, K, N);
       Eigen::Matrix<double, -1, -1> p_mat;
+      p_mat = Eigen::Matrix<double, -1, -1>(5, 4);
+      stan::math::fill(p_mat, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 15;
       p_mat = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(5,
                 4);
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> p_ar_mat;
+      p_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
+      stan::math::fill(p_ar_mat, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 16;
       p_ar_mat = in__.template read_constrain_lub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
                    0, 1, lp__, 4, 5, 2, 3);
       Eigen::Matrix<double, -1, 1> p_simplex;
+      p_simplex = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(p_simplex, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 17;
       p_simplex = in__.template read_constrain_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                     lp__, N);
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_simplex;
+      p_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(p_1d_simplex, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 18;
       p_1d_simplex = in__.template read_constrain_simplex<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                        lp__, N, N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_simplex;
+      p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      stan::math::fill(p_3d_simplex, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 19;
       p_3d_simplex = in__.template read_constrain_simplex<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>, jacobian__>(
                        lp__, N, M, K, N);
       Eigen::Matrix<double, -1, -1> p_cfcov_54;
+      p_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
+      stan::math::fill(p_cfcov_54, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 20;
       p_cfcov_54 = in__.template read_constrain_cholesky_factor_cov<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
                      lp__, 5, 4);
       Eigen::Matrix<double, -1, -1> p_cfcov_33;
+      p_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
+      stan::math::fill(p_cfcov_33, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 21;
       p_cfcov_33 = in__.template read_constrain_cholesky_factor_cov<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
                      lp__, 3, 3);
       std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;
+      p_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
+      stan::math::fill(p_cfcov_33_ar, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 22;
       p_cfcov_33_ar = in__.template read_constrain_cholesky_factor_cov<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
                         lp__, K, 3, 3);
       Eigen::Matrix<double, -1, 1> x_p;
+      x_p = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(x_p, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 23;
       x_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
       Eigen::Matrix<double, -1, 1> y_p;
+      y_p = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(y_p, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 24;
       y_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
       std::vector<double> tp_real_1d_ar;
@@ -10805,9 +11130,13 @@ class mother_model final : public model_base_crtp<mother_model> {
         return ;
       } 
       double gq_r1;
+      gq_r1 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 78;
       gq_r1 = foo_bar1(p_real, pstream__);
       double gq_r2;
+      gq_r2 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 79;
       gq_r2 = foo_bar1(J, pstream__);
       std::vector<double> gq_real_1d_ar;
@@ -10876,6 +11205,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       
       std::vector<int> indices;
+      indices = std::vector<int>(3, std::numeric_limits<int>::min());
+      
       current_statement__ = 95;
       assign(indices, std::vector<int>{2, 3, 1}, "assigning variable indices");
       std::vector<Eigen::Matrix<double, -1, -1>> indexing_mat;
@@ -11361,14 +11692,22 @@ class mother_model final : public model_base_crtp<mother_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ p_real;
+      p_real = DUMMY_VAR__;
+      
       p_real = in__.read<local_scalar_t__>();
       out__.write(p_real);
       local_scalar_t__ p_upper;
+      p_upper = DUMMY_VAR__;
+      
       p_upper = in__.read<local_scalar_t__>();
       out__.write_free_lb(p_real, p_upper);
       local_scalar_t__ p_lower;
+      p_lower = DUMMY_VAR__;
+      
       p_lower = in__.read<local_scalar_t__>();
       out__.write_free_ub(p_upper, p_lower);
       std::vector<local_scalar_t__> offset_multiplier;
@@ -13643,6 +13982,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 123;
       context__.validate_dims("data initialization","T","int",
@@ -13845,48 +14186,80 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     
     try {
       std::vector<local_scalar_t__> y0_p;
+      y0_p = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
+      
       current_statement__ = 1;
       y0_p = in__.template read<std::vector<local_scalar_t__>>(2);
       std::vector<local_scalar_t__> theta_p;
+      theta_p = std::vector<local_scalar_t__>(1, DUMMY_VAR__);
+      
       current_statement__ = 2;
       theta_p = in__.template read<std::vector<local_scalar_t__>>(1);
       std::vector<local_scalar_t__> x_p;
+      x_p = std::vector<local_scalar_t__>(1, DUMMY_VAR__);
+      
       current_statement__ = 3;
       x_p = in__.template read<std::vector<local_scalar_t__>>(1);
       Eigen::Matrix<local_scalar_t__, -1, 1> x_p_v;
+      x_p_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(x_p_v, DUMMY_VAR__);
+      
       current_statement__ = 4;
       x_p_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
       Eigen::Matrix<local_scalar_t__, -1, 1> shared_params_p;
+      shared_params_p = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
+      stan::math::fill(shared_params_p, DUMMY_VAR__);
+      
       current_statement__ = 5;
       shared_params_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                           3);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> job_params_p;
+      job_params_p = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(3, Eigen::Matrix<local_scalar_t__, -1, 1>(3));
+      stan::math::fill(job_params_p, DUMMY_VAR__);
+      
       current_statement__ = 6;
       job_params_p = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                        3, 3);
       local_scalar_t__ x_r;
+      x_r = DUMMY_VAR__;
+      
       current_statement__ = 7;
       x_r = in__.template read<local_scalar_t__>();
       local_scalar_t__ abc1_p;
+      abc1_p = DUMMY_VAR__;
+      
       current_statement__ = 8;
       abc1_p = 3;
       local_scalar_t__ abc2_p;
+      abc2_p = DUMMY_VAR__;
+      
       current_statement__ = 9;
       abc2_p = map_rectfake(abc1_p, pstream__);
       local_scalar_t__ abc3_p;
+      abc3_p = DUMMY_VAR__;
+      
       current_statement__ = 10;
       abc3_p = map_rectfake(12, pstream__);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp1;
+      y_hat_tp1 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
+      stan::math::fill(y_hat_tp1, DUMMY_VAR__);
+      
       current_statement__ = 11;
       assign(y_hat_tp1,
         map_rect<1, foo_functor__>(shared_params_p, job_params_d, data_r,
           data_i, pstream__), "assigning variable y_hat_tp1");
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp2;
+      y_hat_tp2 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
+      stan::math::fill(y_hat_tp2, DUMMY_VAR__);
+      
       current_statement__ = 12;
       assign(y_hat_tp2,
         map_rect<2, foo_functor__>(shared_params_d, job_params_p, data_r,
           data_i, pstream__), "assigning variable y_hat_tp2");
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp3;
+      y_hat_tp3 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
+      stan::math::fill(y_hat_tp3, DUMMY_VAR__);
+      
       current_statement__ = 13;
       assign(y_hat_tp3,
         map_rect<3, foo_functor__>(shared_params_p, job_params_d, data_r,
@@ -13967,6 +14340,9 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         current_statement__ = 80;
         validate_non_negative_index("y_hat", "T", T);
         std::vector<std::vector<local_scalar_t__>> y_hat;
+        y_hat = std::vector<std::vector<local_scalar_t__>>(T, std::vector<local_scalar_t__>(2, DUMMY_VAR__));
+        
+        
         current_statement__ = 82;
         assign(y_hat,
           integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x,
@@ -14040,6 +14416,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
           integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_p, x,
             x_int, pstream__), "assigning variable y_hat");
         local_scalar_t__ y_1d;
+        y_1d = DUMMY_VAR__;
+        
         current_statement__ = 100;
         y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                  pstream__);
@@ -14074,6 +14452,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         y_1d = integrate_1d(integrand_functor__(), x_r, x_r, x_d_r, x_d_r,
                  x_d_i, pstream__);
         local_scalar_t__ z_1d;
+        z_1d = DUMMY_VAR__;
+        
         current_statement__ = 111;
         z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
@@ -14108,6 +14488,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         z_1d = integrate_1d(integrand_functor__(), x_r, x_r, x_d_r, x_d_r,
                  x_d_i, pstream__, 1e-8);
         local_scalar_t__ abc_m;
+        abc_m = DUMMY_VAR__;
+        
         current_statement__ = 122;
         abc_m = map_rectfake(abc1_p, pstream__);
       }
@@ -14144,26 +14526,46 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     
     try {
       std::vector<double> y0_p;
+      y0_p = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 1;
       y0_p = in__.template read<std::vector<local_scalar_t__>>(2);
       std::vector<double> theta_p;
+      theta_p = std::vector<double>(1, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 2;
       theta_p = in__.template read<std::vector<local_scalar_t__>>(1);
       std::vector<double> x_p;
+      x_p = std::vector<double>(1, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 3;
       x_p = in__.template read<std::vector<local_scalar_t__>>(1);
       Eigen::Matrix<double, -1, 1> x_p_v;
+      x_p_v = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(x_p_v, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 4;
       x_p_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
       Eigen::Matrix<double, -1, 1> shared_params_p;
+      shared_params_p = Eigen::Matrix<double, -1, 1>(3);
+      stan::math::fill(shared_params_p, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 5;
       shared_params_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                           3);
       std::vector<Eigen::Matrix<double, -1, 1>> job_params_p;
+      job_params_p = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
+      stan::math::fill(job_params_p, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 6;
       job_params_p = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                        3, 3);
       double x_r;
+      x_r = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 7;
       x_r = in__.template read<local_scalar_t__>();
       double abc1_p;
@@ -14308,6 +14710,9 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         return ;
       } 
       std::vector<std::vector<double>> y_hat;
+      y_hat = std::vector<std::vector<double>>(T, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
+      
+      
       current_statement__ = 33;
       assign(y_hat,
         integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
@@ -14389,6 +14794,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
           pstream__), "assigning variable y_hat");
       double y_1d;
+      y_1d = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 53;
       y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                pstream__);
@@ -14402,6 +14809,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       y_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
                pstream__);
       double z_1d;
+      z_1d = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 57;
       z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                pstream__, 1e-8);
@@ -14415,12 +14824,19 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       z_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
                pstream__, 1e-8);
       double abc1_gq;
+      abc1_gq = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 61;
       abc1_gq = map_rectfake(12, pstream__);
       double abc2_gq;
+      abc2_gq = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 62;
       abc2_gq = map_rectfake(abc1_p, pstream__);
       Eigen::Matrix<double, -1, 1> y_hat_gq;
+      y_hat_gq = Eigen::Matrix<double, -1, 1>(3);
+      stan::math::fill(y_hat_gq, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 63;
       assign(y_hat_gq,
         add(
@@ -14429,11 +14845,17 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
           map_rect<8, goo_functor__>(shared_params_d, job_params_d, data_r,
             data_i, pstream__)), "assigning variable y_hat_gq");
       Eigen::Matrix<double, -1, 1> yy_hat_gq;
+      yy_hat_gq = Eigen::Matrix<double, -1, 1>(3);
+      stan::math::fill(yy_hat_gq, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 64;
       assign(yy_hat_gq,
         map_rect<9, goo_functor__>(shared_params_d, job_params_d, data_r,
           data_i, pstream__), "assigning variable yy_hat_gq");
       Eigen::Matrix<double, -1, 1> theta_dbl;
+      theta_dbl = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(theta_dbl, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 66;
       assign(theta_dbl,
         algebra_solver(algebra_system_functor__(), x_v, y_v, x_d_r, x_d_i,
@@ -14521,6 +14943,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       std::vector<local_scalar_t__> y0_p;
       y0_p = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
@@ -14574,6 +14998,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       }
       out__.write(job_params_p);
       local_scalar_t__ x_r;
+      x_r = DUMMY_VAR__;
+      
       x_r = in__.read<local_scalar_t__>();
       out__.write(x_r);
     } catch (const std::exception& e) {
@@ -15835,6 +16261,8 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 601;
       context__.validate_dims("data initialization","N","int",
@@ -15977,15 +16405,25 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     
     try {
       local_scalar_t__ r;
+      r = DUMMY_VAR__;
+      
       current_statement__ = 1;
       r = in__.template read<local_scalar_t__>();
       std::vector<local_scalar_t__> ra;
+      ra = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
       current_statement__ = 2;
       ra = in__.template read<std::vector<local_scalar_t__>>(N);
       Eigen::Matrix<local_scalar_t__, -1, 1> v;
+      v = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      stan::math::fill(v, DUMMY_VAR__);
+      
       current_statement__ = 3;
       v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> z;
+      z = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      stan::math::fill(z, DUMMY_VAR__);
+      
       current_statement__ = 4;
       assign(z,
         ode_bdf_tol(f_odefunctor__(), vd, id, rad, 1e-6, 1e-6, 100,
@@ -16685,6 +17123,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
         current_statement__ = 401;
         validate_non_negative_index("zm", "N", N);
         std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> zm;
+        zm = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+        stan::math::fill(zm, DUMMY_VAR__);
+        
         current_statement__ = 402;
         assign(zm,
           ode_bdf_tol(f_odefunctor__(), vd, id, rad, 1e-6, 1e-6, 100,
@@ -17423,12 +17864,19 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     
     try {
       double r;
+      r = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
       r = in__.template read<local_scalar_t__>();
       std::vector<double> ra;
+      ra = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 2;
       ra = in__.template read<std::vector<local_scalar_t__>>(N);
       Eigen::Matrix<double, -1, 1> v;
+      v = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(v, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 3;
       v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
       std::vector<Eigen::Matrix<double, -1, 1>> z;
@@ -18146,6 +18594,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
         return ;
       } 
       std::vector<Eigen::Matrix<double, -1, 1>> zg;
+      zg = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(zg, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 202;
       assign(zg,
         ode_bdf_tol(f_odefunctor__(), vd, id, rad, 1e-6, 1e-6, 100,
@@ -18863,8 +19314,12 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ r;
+      r = DUMMY_VAR__;
+      
       r = in__.read<local_scalar_t__>();
       out__.write(r);
       std::vector<local_scalar_t__> ra;
@@ -19189,27 +19644,43 @@ dz_dt(const T0__& t, const std::vector<T1__>& z,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ u;
+    u = DUMMY_VAR__;
+    
     current_statement__ = 25;
     u = rvalue(z, "z", index_uni(1));
     local_scalar_t__ v;
+    v = DUMMY_VAR__;
+    
     current_statement__ = 26;
     v = rvalue(z, "z", index_uni(2));
     local_scalar_t__ alpha;
+    alpha = DUMMY_VAR__;
+    
     current_statement__ = 27;
     alpha = rvalue(theta, "theta", index_uni(1));
     local_scalar_t__ beta;
+    beta = DUMMY_VAR__;
+    
     current_statement__ = 28;
     beta = rvalue(theta, "theta", index_uni(2));
     local_scalar_t__ gamma;
+    gamma = DUMMY_VAR__;
+    
     current_statement__ = 29;
     gamma = rvalue(theta, "theta", index_uni(3));
     local_scalar_t__ delta;
+    delta = DUMMY_VAR__;
+    
     current_statement__ = 30;
     delta = rvalue(theta, "theta", index_uni(4));
     local_scalar_t__ du_dt;
+    du_dt = DUMMY_VAR__;
+    
     current_statement__ = 31;
     du_dt = ((alpha - (beta * v)) * u);
     local_scalar_t__ dv_dt;
+    dv_dt = DUMMY_VAR__;
+    
     current_statement__ = 32;
     dv_dt = ((-gamma + (delta * u)) * v);
     current_statement__ = 33;
@@ -19265,6 +19736,8 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 18;
       context__.validate_dims("data initialization","N","int",
@@ -19356,30 +19829,45 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     
     try {
       local_scalar_t__ alpha;
+      alpha = DUMMY_VAR__;
+      
       current_statement__ = 1;
       alpha = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       local_scalar_t__ beta;
+      beta = DUMMY_VAR__;
+      
       current_statement__ = 2;
       beta = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
                lp__);
       local_scalar_t__ gamma;
+      gamma = DUMMY_VAR__;
+      
       current_statement__ = 3;
       gamma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       local_scalar_t__ delta;
+      delta = DUMMY_VAR__;
+      
       current_statement__ = 4;
       delta = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       std::vector<local_scalar_t__> z_init;
+      z_init = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
+      
       current_statement__ = 5;
       z_init = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
                  0, lp__, 2);
       std::vector<local_scalar_t__> sigma;
+      sigma = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
+      
       current_statement__ = 6;
       sigma = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
                 0, lp__, 2);
       std::vector<std::vector<local_scalar_t__>> z;
+      z = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(2, DUMMY_VAR__));
+      
+      
       current_statement__ = 7;
       assign(z,
         integrate_ode_bdf(dz_dt_functor__(), z_init, 0, ts,
@@ -19448,26 +19936,40 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     
     try {
       double alpha;
+      alpha = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
       alpha = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       double beta;
+      beta = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 2;
       beta = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
                lp__);
       double gamma;
+      gamma = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 3;
       gamma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       double delta;
+      delta = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 4;
       delta = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       std::vector<double> z_init;
+      z_init = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 5;
       z_init = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
                  0, lp__, 2);
       std::vector<double> sigma;
+      sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 6;
       sigma = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
                 0, lp__, 2);
@@ -19520,17 +20022,27 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ alpha;
+      alpha = DUMMY_VAR__;
+      
       alpha = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, alpha);
       local_scalar_t__ beta;
+      beta = DUMMY_VAR__;
+      
       beta = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, beta);
       local_scalar_t__ gamma;
+      gamma = DUMMY_VAR__;
+      
       gamma = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, gamma);
       local_scalar_t__ delta;
+      delta = DUMMY_VAR__;
+      
       delta = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, delta);
       std::vector<local_scalar_t__> z_init;
@@ -20071,6 +20583,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 176;
       context__.validate_dims("data initialization","k","int",
@@ -20325,32 +20839,56 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     
     try {
       Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
+      alpha_v = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      stan::math::fill(alpha_v, DUMMY_VAR__);
+      
       current_statement__ = 1;
       alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
+      beta = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      stan::math::fill(beta, DUMMY_VAR__);
+      
       current_statement__ = 2;
       beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       Eigen::Matrix<local_scalar_t__, -1, 1> cuts;
+      cuts = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      stan::math::fill(cuts, DUMMY_VAR__);
+      
       current_statement__ = 3;
       cuts = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       local_scalar_t__ sigma;
+      sigma = DUMMY_VAR__;
+      
       current_statement__ = 4;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       local_scalar_t__ alpha;
+      alpha = DUMMY_VAR__;
+      
       current_statement__ = 5;
       alpha = in__.template read<local_scalar_t__>();
       local_scalar_t__ phi;
+      phi = DUMMY_VAR__;
+      
       current_statement__ = 6;
       phi = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
+      X_p = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
+      stan::math::fill(X_p, DUMMY_VAR__);
+      
       current_statement__ = 7;
       X_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k);
       Eigen::Matrix<local_scalar_t__, -1, -1> beta_m;
+      beta_m = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
+      stan::math::fill(beta_m, DUMMY_VAR__);
+      
       current_statement__ = 8;
       beta_m = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n,
                  k);
       Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p;
+      X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>(n);
+      stan::math::fill(X_rv_p, DUMMY_VAR__);
+      
       current_statement__ = 9;
       X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
       {
@@ -20924,32 +21462,56 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     
     try {
       Eigen::Matrix<double, -1, 1> alpha_v;
+      alpha_v = Eigen::Matrix<double, -1, 1>(k);
+      stan::math::fill(alpha_v, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 1;
       alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       Eigen::Matrix<double, -1, 1> beta;
+      beta = Eigen::Matrix<double, -1, 1>(k);
+      stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 2;
       beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       Eigen::Matrix<double, -1, 1> cuts;
+      cuts = Eigen::Matrix<double, -1, 1>(k);
+      stan::math::fill(cuts, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 3;
       cuts = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       double sigma;
+      sigma = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 4;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       double alpha;
+      alpha = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 5;
       alpha = in__.template read<local_scalar_t__>();
       double phi;
+      phi = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 6;
       phi = in__.template read<local_scalar_t__>();
       Eigen::Matrix<double, -1, -1> X_p;
+      X_p = Eigen::Matrix<double, -1, -1>(n, k);
+      stan::math::fill(X_p, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 7;
       X_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k);
       Eigen::Matrix<double, -1, -1> beta_m;
+      beta_m = Eigen::Matrix<double, -1, -1>(n, k);
+      stan::math::fill(beta_m, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 8;
       beta_m = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n,
                  k);
       Eigen::Matrix<double, 1, -1> X_rv_p;
+      X_rv_p = Eigen::Matrix<double, 1, -1>(n);
+      stan::math::fill(X_rv_p, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 9;
       X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
       out__.write(alpha_v);
@@ -20987,6 +21549,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
       alpha_v = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
@@ -21016,12 +21580,18 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       }
       out__.write(cuts);
       local_scalar_t__ sigma;
+      sigma = DUMMY_VAR__;
+      
       sigma = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, sigma);
       local_scalar_t__ alpha;
+      alpha = DUMMY_VAR__;
+      
       alpha = in__.read<local_scalar_t__>();
       out__.write(alpha);
       local_scalar_t__ phi;
+      phi = DUMMY_VAR__;
+      
       phi = in__.read<local_scalar_t__>();
       out__.write(phi);
       Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
@@ -21383,6 +21953,8 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 3;
       context__.validate_dims("data initialization","nt","int",
@@ -21428,10 +22000,16 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     
     try {
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> L_Omega;
+      L_Omega = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(nt, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 2));
+      stan::math::fill(L_Omega, DUMMY_VAR__);
+      
       current_statement__ = 1;
       L_Omega = in__.template read_constrain_cholesky_factor_corr<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
                   lp__, nt, 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> z1;
+      z1 = Eigen::Matrix<local_scalar_t__, -1, 1>(NS);
+      stan::math::fill(z1, DUMMY_VAR__);
+      
       current_statement__ = 2;
       z1 = in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
              rvalue(L_Omega, "L_Omega",
@@ -21469,10 +22047,16 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     
     try {
       std::vector<Eigen::Matrix<double, -1, -1>> L_Omega;
+      L_Omega = std::vector<Eigen::Matrix<double, -1, -1>>(nt, Eigen::Matrix<double, -1, -1>(2, 2));
+      stan::math::fill(L_Omega, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 1;
       L_Omega = in__.template read_constrain_cholesky_factor_corr<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
                   lp__, nt, 2);
       Eigen::Matrix<double, -1, 1> z1;
+      z1 = Eigen::Matrix<double, -1, 1>(NS);
+      stan::math::fill(z1, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 2;
       z1 = in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
              rvalue(L_Omega, "L_Omega",
@@ -21513,6 +22097,8 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> L_Omega;
       L_Omega = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(nt, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 2));
@@ -21810,6 +22396,8 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 1;
       if (pstream__) {
@@ -21905,6 +22493,8 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -22298,6 +22888,8 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 8;
       N = std::numeric_limits<int>::min();
@@ -22336,12 +22928,18 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     
     try {
       std::vector<local_scalar_t__> y1;
+      y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
       current_statement__ = 1;
       y1 = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<local_scalar_t__> y2;
+      y2 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
       current_statement__ = 2;
       y2 = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<local_scalar_t__> y3;
+      y3 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
       current_statement__ = 3;
       y3 = in__.template read<std::vector<local_scalar_t__>>(N);
       {
@@ -22389,12 +22987,18 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     
     try {
       std::vector<double> y1;
+      y1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 1;
       y1 = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<double> y2;
+      y2 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 2;
       y2 = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<double> y3;
+      y3 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 3;
       y3 = in__.template read<std::vector<local_scalar_t__>>(N);
       out__.write(y1);
@@ -22426,6 +23030,8 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       std::vector<local_scalar_t__> y1;
       y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
@@ -22925,6 +23531,8 @@ g2(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice, const int& start,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 78;
     sum_lpdf = 0.0;
     current_statement__ = 81;
@@ -22975,6 +23583,8 @@ g3(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice, const int& start,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 84;
     sum_lpdf = 0.0;
     current_statement__ = 87;
@@ -23025,6 +23635,8 @@ g4(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice, const int& start,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 90;
     sum_lpdf = 0.0;
     current_statement__ = 93;
@@ -23076,6 +23688,8 @@ g5(const std::vector<std::vector<T0__>>& y_slice, const int& start,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 96;
     sum_lpdf = 0.0;
     current_statement__ = 101;
@@ -23131,6 +23745,8 @@ g6(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 104;
     sum_lpdf = 0.0;
     current_statement__ = 109;
@@ -23187,6 +23803,8 @@ g7(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 112;
     sum_lpdf = 0.0;
     current_statement__ = 117;
@@ -23243,6 +23861,8 @@ g8(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 120;
     sum_lpdf = 0.0;
     current_statement__ = 125;
@@ -23344,6 +23964,8 @@ h2(const std::vector<T0__>& y, const int& start, const int& end,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 130;
     sum_lpdf = 0.0;
     current_statement__ = 133;
@@ -23398,6 +24020,8 @@ h3(const std::vector<T0__>& y, const int& start, const int& end,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 136;
     sum_lpdf = 0.0;
     current_statement__ = 139;
@@ -23452,6 +24076,8 @@ h4(const std::vector<T0__>& y, const int& start, const int& end,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 142;
     sum_lpdf = 0.0;
     current_statement__ = 145;
@@ -23507,6 +24133,8 @@ h5(const std::vector<T0__>& y, const int& start, const int& end,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 148;
     sum_lpdf = 0.0;
     current_statement__ = 153;
@@ -23564,6 +24192,8 @@ h6(const std::vector<T0__>& y, const int& start, const int& end,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 156;
     sum_lpdf = 0.0;
     current_statement__ = 161;
@@ -23624,6 +24254,8 @@ h7(const std::vector<T0__>& y, const int& start, const int& end,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 164;
     sum_lpdf = 0.0;
     current_statement__ = 169;
@@ -23684,6 +24316,8 @@ h8(const std::vector<T0__>& y, const int& start, const int& end,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 172;
     sum_lpdf = 0.0;
     current_statement__ = 177;
@@ -23761,6 +24395,8 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 33;
       N = std::numeric_limits<int>::min();
@@ -23880,65 +24516,111 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     
     try {
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> a8;
+      a8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
+      stan::math::fill(a8, DUMMY_VAR__);
+      
       current_statement__ = 1;
       a8 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
              N, N, N, N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> a7;
+      a7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
+      stan::math::fill(a7, DUMMY_VAR__);
+      
       current_statement__ = 2;
       a7 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
              N, N, N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> a6;
+      a6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
+      stan::math::fill(a6, DUMMY_VAR__);
+      
       current_statement__ = 3;
       a6 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
              N, N, N);
       std::vector<std::vector<local_scalar_t__>> a5;
+      a5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
+      
+      
       current_statement__ = 4;
       a5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
              N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> a4;
+      a4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
+      stan::math::fill(a4, DUMMY_VAR__);
+      
       current_statement__ = 5;
       a4 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
              N, N, N);
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> a3;
+      a3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
+      stan::math::fill(a3, DUMMY_VAR__);
+      
       current_statement__ = 6;
       a3 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
              N, N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> a2;
+      a2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      stan::math::fill(a2, DUMMY_VAR__);
+      
       current_statement__ = 7;
       a2 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
              N, N);
       std::vector<local_scalar_t__> a1;
+      a1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
       current_statement__ = 8;
       a1 = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y8;
+      y8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
+      stan::math::fill(y8, DUMMY_VAR__);
+      
       current_statement__ = 9;
       y8 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
              N, N, N, N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> y7;
+      y7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
+      stan::math::fill(y7, DUMMY_VAR__);
+      
       current_statement__ = 10;
       y7 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
              N, N, N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> y6;
+      y6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
+      stan::math::fill(y6, DUMMY_VAR__);
+      
       current_statement__ = 11;
       y6 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
              N, N, N);
       std::vector<std::vector<local_scalar_t__>> y5;
+      y5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
+      
+      
       current_statement__ = 12;
       y5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
              N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> y4;
+      y4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
+      stan::math::fill(y4, DUMMY_VAR__);
+      
       current_statement__ = 13;
       y4 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
              N, N, N);
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> y3;
+      y3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
+      stan::math::fill(y3, DUMMY_VAR__);
+      
       current_statement__ = 14;
       y3 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
              N, N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> y2;
+      y2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      stan::math::fill(y2, DUMMY_VAR__);
+      
       current_statement__ = 15;
       y2 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
              N, N);
       std::vector<local_scalar_t__> y1;
+      y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
       current_statement__ = 16;
       y1 = in__.template read<std::vector<local_scalar_t__>>(N);
       {
@@ -24008,65 +24690,111 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     
     try {
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> a8;
+      a8 = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(N, std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N)));
+      stan::math::fill(a8, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 1;
       a8 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
              N, N, N, N);
       std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> a7;
+      a7 = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(N, std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N)));
+      stan::math::fill(a7, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 2;
       a7 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
              N, N, N);
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> a6;
+      a6 = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(N, std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N)));
+      stan::math::fill(a6, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 3;
       a6 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
              N, N, N);
       std::vector<std::vector<double>> a5;
+      a5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
+      
+      
       current_statement__ = 4;
       a5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
              N);
       std::vector<Eigen::Matrix<double, -1, -1>> a4;
+      a4 = std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N));
+      stan::math::fill(a4, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 5;
       a4 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
              N, N, N);
       std::vector<Eigen::Matrix<double, 1, -1>> a3;
+      a3 = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
+      stan::math::fill(a3, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 6;
       a3 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
              N, N);
       std::vector<Eigen::Matrix<double, -1, 1>> a2;
+      a2 = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(a2, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 7;
       a2 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
              N, N);
       std::vector<double> a1;
+      a1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 8;
       a1 = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> y8;
+      y8 = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(N, std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N)));
+      stan::math::fill(y8, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 9;
       y8 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
              N, N, N, N);
       std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> y7;
+      y7 = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(N, std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N)));
+      stan::math::fill(y7, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 10;
       y7 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
              N, N, N);
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> y6;
+      y6 = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(N, std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N)));
+      stan::math::fill(y6, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 11;
       y6 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
              N, N, N);
       std::vector<std::vector<double>> y5;
+      y5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
+      
+      
       current_statement__ = 12;
       y5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
              N);
       std::vector<Eigen::Matrix<double, -1, -1>> y4;
+      y4 = std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N));
+      stan::math::fill(y4, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 13;
       y4 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
              N, N, N);
       std::vector<Eigen::Matrix<double, 1, -1>> y3;
+      y3 = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
+      stan::math::fill(y3, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 14;
       y3 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
              N, N);
       std::vector<Eigen::Matrix<double, -1, 1>> y2;
+      y2 = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(y2, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 15;
       y2 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
              N, N);
       std::vector<double> y1;
+      y1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 16;
       y1 = in__.template read<std::vector<local_scalar_t__>>(N);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -24197,6 +24925,8 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> a8;
       a8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
@@ -26770,82 +27500,134 @@ r(std::ostream* pstream__) {
     
     
     local_scalar_t__ t1;
+    t1 = DUMMY_VAR__;
+    
     current_statement__ = 314;
     t1 = reduce_sum<f1_rsfunctor__>(y1, 1, pstream__);
     local_scalar_t__ t1a;
+    t1a = DUMMY_VAR__;
+    
     current_statement__ = 315;
     t1a = (reduce_sum<f1_rsfunctor__>(y1, 1, pstream__) +
             reduce_sum<f1a_rsfunctor__>(y1, 1, pstream__));
     local_scalar_t__ t2;
+    t2 = DUMMY_VAR__;
+    
     current_statement__ = 316;
     t2 = reduce_sum<f2_rsfunctor__>(y2, 1, pstream__);
     local_scalar_t__ t3;
+    t3 = DUMMY_VAR__;
+    
     current_statement__ = 317;
     t3 = reduce_sum<f3_rsfunctor__>(y3, 1, pstream__);
     local_scalar_t__ t4;
+    t4 = DUMMY_VAR__;
+    
     current_statement__ = 318;
     t4 = reduce_sum<f4_rsfunctor__>(y4, 1, pstream__);
     local_scalar_t__ t5;
+    t5 = DUMMY_VAR__;
+    
     current_statement__ = 319;
     t5 = reduce_sum<f5_rsfunctor__>(y5, 1, pstream__);
     local_scalar_t__ t6;
+    t6 = DUMMY_VAR__;
+    
     current_statement__ = 320;
     t6 = reduce_sum<f6_rsfunctor__>(y6, 1, pstream__);
     local_scalar_t__ t7;
+    t7 = DUMMY_VAR__;
+    
     current_statement__ = 321;
     t7 = reduce_sum<f7_rsfunctor__>(y7, 1, pstream__);
     local_scalar_t__ t8;
+    t8 = DUMMY_VAR__;
+    
     current_statement__ = 322;
     t8 = reduce_sum<f8_rsfunctor__>(y8, 1, pstream__);
     local_scalar_t__ t9;
+    t9 = DUMMY_VAR__;
+    
     current_statement__ = 323;
     t9 = reduce_sum<f9_rsfunctor__>(y14d, 1, pstream__);
     local_scalar_t__ t10;
+    t10 = DUMMY_VAR__;
+    
     current_statement__ = 324;
     t10 = reduce_sum<f10_rsfunctor__>(y15d, 1, pstream__);
     local_scalar_t__ t11;
+    t11 = DUMMY_VAR__;
+    
     current_statement__ = 325;
     t11 = reduce_sum<f11_rsfunctor__>(y16d, 1, pstream__);
     local_scalar_t__ t12;
+    t12 = DUMMY_VAR__;
+    
     current_statement__ = 326;
     t12 = reduce_sum<f12_rsfunctor__>(y17, 1, pstream__);
     local_scalar_t__ tg1;
+    tg1 = DUMMY_VAR__;
+    
     current_statement__ = 327;
     tg1 = reduce_sum<g1_rsfunctor__>(y1, 1, pstream__, y9);
     local_scalar_t__ tg2;
+    tg2 = DUMMY_VAR__;
+    
     current_statement__ = 328;
     tg2 = reduce_sum<g2_rsfunctor__>(y1, 1, pstream__, y10);
     local_scalar_t__ tg3;
+    tg3 = DUMMY_VAR__;
+    
     current_statement__ = 329;
     tg3 = reduce_sum<g3_rsfunctor__>(y1, 1, pstream__, y11);
     local_scalar_t__ tg4;
+    tg4 = DUMMY_VAR__;
+    
     current_statement__ = 330;
     tg4 = reduce_sum<g4_rsfunctor__>(y1, 1, pstream__, y12);
     local_scalar_t__ tg5;
+    tg5 = DUMMY_VAR__;
+    
     current_statement__ = 331;
     tg5 = reduce_sum<g5_rsfunctor__>(y1, 1, pstream__, y1);
     local_scalar_t__ tg6;
+    tg6 = DUMMY_VAR__;
+    
     current_statement__ = 332;
     tg6 = reduce_sum<g6_rsfunctor__>(y1, 1, pstream__, y2);
     local_scalar_t__ tg7;
+    tg7 = DUMMY_VAR__;
+    
     current_statement__ = 333;
     tg7 = reduce_sum<g7_rsfunctor__>(y1, 1, pstream__, y3);
     local_scalar_t__ tg8;
+    tg8 = DUMMY_VAR__;
+    
     current_statement__ = 334;
     tg8 = reduce_sum<g8_rsfunctor__>(y1, 1, pstream__, y4);
     local_scalar_t__ tg9;
+    tg9 = DUMMY_VAR__;
+    
     current_statement__ = 335;
     tg9 = reduce_sum<g9_rsfunctor__>(y1, 1, pstream__, y5);
     local_scalar_t__ tg10;
+    tg10 = DUMMY_VAR__;
+    
     current_statement__ = 336;
     tg10 = reduce_sum<g10_rsfunctor__>(y1, 1, pstream__, y6);
     local_scalar_t__ tg11;
+    tg11 = DUMMY_VAR__;
+    
     current_statement__ = 337;
     tg11 = reduce_sum<g11_rsfunctor__>(y1, 1, pstream__, y7);
     local_scalar_t__ tg12;
+    tg12 = DUMMY_VAR__;
+    
     current_statement__ = 338;
     tg12 = reduce_sum<g12_rsfunctor__>(y1, 1, pstream__, y8);
     local_scalar_t__ ts;
+    ts = DUMMY_VAR__;
+    
     current_statement__ = 339;
     ts = reduce_sum<s_rsfunctor__>(y1d, 1, pstream__, y13d, y9, y10, y11,
            y12, y14d, y1, y2, y3, y4, y15d, y5, y6, y7, y8, y16d, y17);
@@ -26940,6 +27722,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 67;
       context__.validate_dims("data initialization","N","int",
@@ -27610,134 +28394,225 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     
     try {
       std::vector<local_scalar_t__> y1;
+      y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
       current_statement__ = 1;
       y1 = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> y2;
+      y2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      stan::math::fill(y2, DUMMY_VAR__);
+      
       current_statement__ = 2;
       y2 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
              N, N);
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> y3;
+      y3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
+      stan::math::fill(y3, DUMMY_VAR__);
+      
       current_statement__ = 3;
       y3 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
              N, N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> y4;
+      y4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
+      stan::math::fill(y4, DUMMY_VAR__);
+      
       current_statement__ = 4;
       y4 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
              N, N, N);
       std::vector<std::vector<local_scalar_t__>> y5;
+      y5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
+      
+      
       current_statement__ = 5;
       y5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
              N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> y6;
+      y6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
+      stan::math::fill(y6, DUMMY_VAR__);
+      
       current_statement__ = 6;
       y6 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
              N, N, N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> y7;
+      y7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
+      stan::math::fill(y7, DUMMY_VAR__);
+      
       current_statement__ = 7;
       y7 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
              N, N, N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y8;
+      y8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
+      stan::math::fill(y8, DUMMY_VAR__);
+      
       current_statement__ = 8;
       y8 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
              N, N, N, N);
       local_scalar_t__ y9;
+      y9 = DUMMY_VAR__;
+      
       current_statement__ = 9;
       y9 = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__, -1, 1> y10;
+      y10 = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      stan::math::fill(y10, DUMMY_VAR__);
+      
       current_statement__ = 10;
       y10 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
       Eigen::Matrix<local_scalar_t__, 1, -1> y11;
+      y11 = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
+      stan::math::fill(y11, DUMMY_VAR__);
+      
       current_statement__ = 11;
       y11 = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N);
       Eigen::Matrix<local_scalar_t__, -1, -1> y12;
+      y12 = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
+      stan::math::fill(y12, DUMMY_VAR__);
+      
       current_statement__ = 12;
       y12 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, N);
       std::vector<std::vector<std::vector<local_scalar_t__>>> y17;
+      y17 = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__)));
+      
+      
       current_statement__ = 13;
       y17 = in__.template read<std::vector<std::vector<std::vector<local_scalar_t__>>>>(
               N, N, N);
       {
         local_scalar_t__ t1;
+        t1 = DUMMY_VAR__;
+        
         current_statement__ = 40;
         t1 = reduce_sum<f1_rsfunctor__>(y1, 1, pstream__);
         local_scalar_t__ t1a;
+        t1a = DUMMY_VAR__;
+        
         current_statement__ = 41;
         t1a = (reduce_sum<f1_rsfunctor__>(y1, 1, pstream__) +
                 reduce_sum<f1a_rsfunctor__>(y1, 1, pstream__));
         local_scalar_t__ t2;
+        t2 = DUMMY_VAR__;
+        
         current_statement__ = 42;
         t2 = reduce_sum<f2_rsfunctor__>(y2, 1, pstream__);
         local_scalar_t__ t3;
+        t3 = DUMMY_VAR__;
+        
         current_statement__ = 43;
         t3 = reduce_sum<f3_rsfunctor__>(y3, 1, pstream__);
         local_scalar_t__ t4;
+        t4 = DUMMY_VAR__;
+        
         current_statement__ = 44;
         t4 = reduce_sum<f4_rsfunctor__>(y4, 1, pstream__);
         local_scalar_t__ t5;
+        t5 = DUMMY_VAR__;
+        
         current_statement__ = 45;
         t5 = reduce_sum<f5_rsfunctor__>(y5, 1, pstream__);
         local_scalar_t__ t6;
+        t6 = DUMMY_VAR__;
+        
         current_statement__ = 46;
         t6 = reduce_sum<f6_rsfunctor__>(y6, 1, pstream__);
         local_scalar_t__ t7;
+        t7 = DUMMY_VAR__;
+        
         current_statement__ = 47;
         t7 = reduce_sum<f7_rsfunctor__>(y7, 1, pstream__);
         local_scalar_t__ t8;
+        t8 = DUMMY_VAR__;
+        
         current_statement__ = 48;
         t8 = reduce_sum<f8_rsfunctor__>(y8, 1, pstream__);
         local_scalar_t__ t9;
+        t9 = DUMMY_VAR__;
+        
         current_statement__ = 49;
         t9 = reduce_sum<f9_rsfunctor__>(y14d, 1, pstream__);
         local_scalar_t__ t10;
+        t10 = DUMMY_VAR__;
+        
         current_statement__ = 50;
         t10 = reduce_sum<f10_rsfunctor__>(y15d, 1, pstream__);
         local_scalar_t__ t11;
+        t11 = DUMMY_VAR__;
+        
         current_statement__ = 51;
         t11 = reduce_sum<f11_rsfunctor__>(y16d, 1, pstream__);
         local_scalar_t__ t12;
+        t12 = DUMMY_VAR__;
+        
         current_statement__ = 52;
         t12 = reduce_sum<f12_rsfunctor__>(y17, 1, pstream__);
         local_scalar_t__ tg1;
+        tg1 = DUMMY_VAR__;
+        
         current_statement__ = 53;
         tg1 = reduce_sum<g1_rsfunctor__>(y1, 1, pstream__, y9);
         local_scalar_t__ tg2;
+        tg2 = DUMMY_VAR__;
+        
         current_statement__ = 54;
         tg2 = reduce_sum<g2_rsfunctor__>(y1, 1, pstream__, y10);
         local_scalar_t__ tg3;
+        tg3 = DUMMY_VAR__;
+        
         current_statement__ = 55;
         tg3 = reduce_sum<g3_rsfunctor__>(y1, 1, pstream__, y11);
         local_scalar_t__ tg4;
+        tg4 = DUMMY_VAR__;
+        
         current_statement__ = 56;
         tg4 = reduce_sum<g4_rsfunctor__>(y1, 1, pstream__, y12);
         local_scalar_t__ tg5;
+        tg5 = DUMMY_VAR__;
+        
         current_statement__ = 57;
         tg5 = reduce_sum<g5_rsfunctor__>(y1, 1, pstream__, y1);
         local_scalar_t__ tg6;
+        tg6 = DUMMY_VAR__;
+        
         current_statement__ = 58;
         tg6 = reduce_sum<g6_rsfunctor__>(y1, 1, pstream__, y2);
         local_scalar_t__ tg7;
+        tg7 = DUMMY_VAR__;
+        
         current_statement__ = 59;
         tg7 = reduce_sum<g7_rsfunctor__>(y1, 1, pstream__, y3);
         local_scalar_t__ tg8;
+        tg8 = DUMMY_VAR__;
+        
         current_statement__ = 60;
         tg8 = reduce_sum<g8_rsfunctor__>(y1, 1, pstream__, y4);
         local_scalar_t__ tg9;
+        tg9 = DUMMY_VAR__;
+        
         current_statement__ = 61;
         tg9 = reduce_sum<g9_rsfunctor__>(y1, 1, pstream__, y5);
         local_scalar_t__ tg10;
+        tg10 = DUMMY_VAR__;
+        
         current_statement__ = 62;
         tg10 = reduce_sum<g10_rsfunctor__>(y1, 1, pstream__, y6);
         local_scalar_t__ tg11;
+        tg11 = DUMMY_VAR__;
+        
         current_statement__ = 63;
         tg11 = reduce_sum<g11_rsfunctor__>(y1, 1, pstream__, y7);
         local_scalar_t__ tg12;
+        tg12 = DUMMY_VAR__;
+        
         current_statement__ = 64;
         tg12 = reduce_sum<g12_rsfunctor__>(y1, 1, pstream__, y8);
         local_scalar_t__ ts;
+        ts = DUMMY_VAR__;
+        
         current_statement__ = 65;
         ts = reduce_sum<s_rsfunctor__>(y1d, 1, pstream__, y13d, y9, y10, y11,
                y12, y14d, y1, y2, y3, y4, y15d, y5, y6, y7, y8, y16d, y17);
         local_scalar_t__ tt;
+        tt = DUMMY_VAR__;
+        
         current_statement__ = 66;
         tt = r(pstream__);
       }
@@ -27774,49 +28649,86 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     
     try {
       std::vector<double> y1;
+      y1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 1;
       y1 = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<Eigen::Matrix<double, -1, 1>> y2;
+      y2 = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(y2, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 2;
       y2 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
              N, N);
       std::vector<Eigen::Matrix<double, 1, -1>> y3;
+      y3 = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
+      stan::math::fill(y3, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 3;
       y3 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
              N, N);
       std::vector<Eigen::Matrix<double, -1, -1>> y4;
+      y4 = std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N));
+      stan::math::fill(y4, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 4;
       y4 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
              N, N, N);
       std::vector<std::vector<double>> y5;
+      y5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
+      
+      
       current_statement__ = 5;
       y5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
              N);
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> y6;
+      y6 = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(N, std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N)));
+      stan::math::fill(y6, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 6;
       y6 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
              N, N, N);
       std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> y7;
+      y7 = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(N, std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N)));
+      stan::math::fill(y7, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 7;
       y7 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
              N, N, N);
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> y8;
+      y8 = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(N, std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N)));
+      stan::math::fill(y8, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 8;
       y8 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
              N, N, N, N);
       double y9;
+      y9 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 9;
       y9 = in__.template read<local_scalar_t__>();
       Eigen::Matrix<double, -1, 1> y10;
+      y10 = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(y10, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 10;
       y10 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
       Eigen::Matrix<double, 1, -1> y11;
+      y11 = Eigen::Matrix<double, 1, -1>(N);
+      stan::math::fill(y11, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 11;
       y11 = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N);
       Eigen::Matrix<double, -1, -1> y12;
+      y12 = Eigen::Matrix<double, -1, -1>(N, N);
+      stan::math::fill(y12, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 12;
       y12 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, N);
       std::vector<std::vector<std::vector<double>>> y17;
+      y17 = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN())));
+      
+      
       current_statement__ = 13;
       y17 = in__.template read<std::vector<std::vector<std::vector<local_scalar_t__>>>>(
               N, N, N);
@@ -27890,82 +28802,134 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
         return ;
       } 
       double t1;
+      t1 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 14;
       t1 = reduce_sum<f1_rsfunctor__>(y1, 1, pstream__);
       double t1a;
+      t1a = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 15;
       t1a = (reduce_sum<f1_rsfunctor__>(y1, 1, pstream__) +
               reduce_sum<f1a_rsfunctor__>(y1, 1, pstream__));
       double t2;
+      t2 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 16;
       t2 = reduce_sum<f2_rsfunctor__>(y2, 1, pstream__);
       double t3;
+      t3 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 17;
       t3 = reduce_sum<f3_rsfunctor__>(y3, 1, pstream__);
       double t4;
+      t4 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 18;
       t4 = reduce_sum<f4_rsfunctor__>(y4, 1, pstream__);
       double t5;
+      t5 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 19;
       t5 = reduce_sum<f5_rsfunctor__>(y5, 1, pstream__);
       double t6;
+      t6 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 20;
       t6 = reduce_sum<f6_rsfunctor__>(y6, 1, pstream__);
       double t7;
+      t7 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 21;
       t7 = reduce_sum<f7_rsfunctor__>(y7, 1, pstream__);
       double t8;
+      t8 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 22;
       t8 = reduce_sum<f8_rsfunctor__>(y8, 1, pstream__);
       double t9;
+      t9 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 23;
       t9 = reduce_sum<f9_rsfunctor__>(y14d, 1, pstream__);
       double t10;
+      t10 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 24;
       t10 = reduce_sum<f10_rsfunctor__>(y15d, 1, pstream__);
       double t11;
+      t11 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 25;
       t11 = reduce_sum<f11_rsfunctor__>(y16d, 1, pstream__);
       double t12;
+      t12 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 26;
       t12 = reduce_sum<f12_rsfunctor__>(y17, 1, pstream__);
       double tg1;
+      tg1 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 27;
       tg1 = reduce_sum<g1_rsfunctor__>(y1, 1, pstream__, y9);
       double tg2;
+      tg2 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 28;
       tg2 = reduce_sum<g2_rsfunctor__>(y1, 1, pstream__, y10);
       double tg3;
+      tg3 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 29;
       tg3 = reduce_sum<g3_rsfunctor__>(y1, 1, pstream__, y11);
       double tg4;
+      tg4 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 30;
       tg4 = reduce_sum<g4_rsfunctor__>(y1, 1, pstream__, y12);
       double tg5;
+      tg5 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 31;
       tg5 = reduce_sum<g5_rsfunctor__>(y1, 1, pstream__, y1);
       double tg6;
+      tg6 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 32;
       tg6 = reduce_sum<g6_rsfunctor__>(y1, 1, pstream__, y2);
       double tg7;
+      tg7 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 33;
       tg7 = reduce_sum<g7_rsfunctor__>(y1, 1, pstream__, y3);
       double tg8;
+      tg8 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 34;
       tg8 = reduce_sum<g8_rsfunctor__>(y1, 1, pstream__, y4);
       double tg9;
+      tg9 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 35;
       tg9 = reduce_sum<g9_rsfunctor__>(y1, 1, pstream__, y5);
       double tg10;
+      tg10 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 36;
       tg10 = reduce_sum<g10_rsfunctor__>(y1, 1, pstream__, y6);
       double tg11;
+      tg11 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 37;
       tg11 = reduce_sum<g11_rsfunctor__>(y1, 1, pstream__, y7);
       double tg12;
+      tg12 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 38;
       tg12 = reduce_sum<g12_rsfunctor__>(y1, 1, pstream__, y8);
       double tgs;
+      tgs = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 39;
       tgs = reduce_sum<s_rsfunctor__>(y1d, 1, pstream__, y13d, y9d, y10d,
               y11d, y12d, y14d, y1d, y2d, y3d, y4d, y15d, y5d, y6d, y7d, y8d,
@@ -28015,6 +28979,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       std::vector<local_scalar_t__> y1;
       y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
@@ -28116,6 +29082,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       }
       out__.write(y8);
       local_scalar_t__ y9;
+      y9 = DUMMY_VAR__;
+      
       y9 = in__.read<local_scalar_t__>();
       out__.write(y9);
       Eigen::Matrix<local_scalar_t__, -1, 1> y10;
@@ -28891,6 +29859,8 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -28976,6 +29946,8 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -29213,6 +30185,8 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 7;
       context__.validate_dims("data initialization","t","int",
@@ -29247,6 +30221,8 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     
     try {
       local_scalar_t__ x;
+      x = DUMMY_VAR__;
+      
       current_statement__ = 1;
       x = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
             lp__);
@@ -29309,6 +30285,8 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     
     try {
       double x;
+      x = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
       x = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
             lp__);
@@ -29339,8 +30317,12 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ x;
+      x = DUMMY_VAR__;
+      
       x = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, x);
     } catch (const std::exception& e) {
@@ -29692,6 +30674,8 @@ class transform_model final : public model_base_crtp<transform_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 37;
       context__.validate_dims("data initialization","n","int",
@@ -30012,6 +30996,8 @@ class transform_model final : public model_base_crtp<transform_model> {
     
     try {
       std::vector<local_scalar_t__> p_1;
+      p_1 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
       current_statement__ = 1;
       p_1 = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
               rvalue(ds, "ds", index_uni(1), index_uni(1)), lp__, k);
@@ -30019,6 +31005,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_1", p_1, "lower",
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<local_scalar_t__> p_2;
+      p_2 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
       current_statement__ = 2;
       p_2 = in__.template read_constrain_ub<std::vector<local_scalar_t__>, jacobian__>(
               rvalue(ds, "ds", index_uni(1), index_uni(1)), lp__, k);
@@ -30026,6 +31014,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_2", p_2, "upper",
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<local_scalar_t__> p_3;
+      p_3 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
       current_statement__ = 3;
       p_3 = in__.template read_constrain_lub<std::vector<local_scalar_t__>, jacobian__>(
               rvalue(ds, "ds", index_uni(1), index_uni(1)),
@@ -30037,6 +31027,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_3", p_3, "upper",
                           rvalue(ds, "ds", index_uni(1), index_uni(2)));
       std::vector<local_scalar_t__> p_4;
+      p_4 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
       current_statement__ = 4;
       p_4 = in__.template read_constrain_lub<std::vector<local_scalar_t__>, jacobian__>(
               0, rvalue(ds, "ds", index_uni(1), index_uni(2)), lp__, k);
@@ -30044,6 +31036,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_4", p_4, "upper",
                           rvalue(ds, "ds", index_uni(1), index_uni(2)));
       std::vector<local_scalar_t__> p_5;
+      p_5 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
       current_statement__ = 5;
       p_5 = in__.template read_constrain_lub<std::vector<local_scalar_t__>, jacobian__>(
               rvalue(ds, "ds", index_uni(1), index_uni(1)), 1, lp__, k);
@@ -30051,6 +31045,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_5", p_5, "lower",
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<local_scalar_t__> p_6;
+      p_6 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
       current_statement__ = 6;
       p_6 = in__.template read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
               rvalue(ds, "ds", index_uni(1), index_uni(1)), 1, lp__, k);
@@ -30058,6 +31054,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_6", p_6, "offset",
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<local_scalar_t__> p_7;
+      p_7 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
       current_statement__ = 7;
       p_7 = in__.template read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
               0, rvalue(ds, "ds", index_uni(1), index_uni(1)), lp__, k);
@@ -30065,6 +31063,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_7", p_7, "multiplier",
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<local_scalar_t__> p_8;
+      p_8 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
       current_statement__ = 8;
       p_8 = in__.template read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
               rvalue(ds, "ds", index_uni(1), index_uni(1)),
@@ -30076,6 +31076,9 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_8", p_8, "multiplier",
                           rvalue(ds, "ds", index_uni(1), index_uni(2)));
       std::vector<std::vector<local_scalar_t__>> p_9;
+      p_9 = std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__));
+      
+      
       current_statement__ = 9;
       p_9 = in__.template read_constrain_lub<std::vector<std::vector<local_scalar_t__>>, jacobian__>(
               rvalue(ds, "ds", index_uni(1)), 1, lp__, m, k);
@@ -30083,12 +31086,18 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_9", p_9, "lower",
                           rvalue(ds, "ds", index_uni(1)));
       std::vector<std::vector<std::vector<local_scalar_t__>>> p_10;
+      p_10 = std::vector<std::vector<std::vector<local_scalar_t__>>>(n, std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__)));
+      
+      
       current_statement__ = 10;
       p_10 = in__.template read_constrain_lub<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
                0, ds, lp__, n, m, k);
       current_statement__ = 10;
       check_matching_dims("constraint", "p_10", p_10, "upper", ds);
       Eigen::Matrix<local_scalar_t__, -1, 1> pv_1;
+      pv_1 = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      stan::math::fill(pv_1, DUMMY_VAR__);
+      
       current_statement__ = 11;
       pv_1 = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                rvalue(dv, "dv", index_uni(1), index_uni(1)),
@@ -30100,6 +31109,9 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "pv_1", pv_1, "upper",
                           rvalue(dv, "dv", index_uni(1), index_uni(2)));
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> pv_2;
+      pv_2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k));
+      stan::math::fill(pv_2, DUMMY_VAR__);
+      
       current_statement__ = 12;
       pv_2 = in__.template read_constrain_lb<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                rvalue(dv, "dv", index_uni(1)), lp__, m, k);
@@ -30107,12 +31119,18 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "pv_2", pv_2, "lower",
                           rvalue(dv, "dv", index_uni(1)));
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> pv_3;
+      pv_3 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k)));
+      stan::math::fill(pv_3, DUMMY_VAR__);
+      
       current_statement__ = 13;
       pv_3 = in__.template read_constrain_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
                dv, lp__, n, m, k);
       current_statement__ = 13;
       check_matching_dims("constraint", "pv_3", pv_3, "upper", dv);
       Eigen::Matrix<local_scalar_t__, 1, -1> pr_1;
+      pr_1 = Eigen::Matrix<local_scalar_t__, 1, -1>(k);
+      stan::math::fill(pr_1, DUMMY_VAR__);
+      
       current_statement__ = 14;
       pr_1 = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, 1, -1>, jacobian__>(
                rvalue(dr, "dr", index_uni(1), index_uni(1)),
@@ -30124,6 +31142,9 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "pr_1", pr_1, "upper",
                           rvalue(dr, "dr", index_uni(1), index_uni(2)));
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> pr_2;
+      pr_2 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k));
+      stan::math::fill(pr_2, DUMMY_VAR__);
+      
       current_statement__ = 15;
       pr_2 = in__.template read_constrain_lb<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
                rvalue(dr, "dr", index_uni(1)), lp__, m, k);
@@ -30131,12 +31152,18 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "pr_2", pr_2, "lower",
                           rvalue(dr, "dr", index_uni(1)));
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> pr_3;
+      pr_3 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k)));
+      stan::math::fill(pr_3, DUMMY_VAR__);
+      
       current_statement__ = 16;
       pr_3 = in__.template read_constrain_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>, jacobian__>(
                dr, lp__, n, m, k);
       current_statement__ = 16;
       check_matching_dims("constraint", "pr_3", pr_3, "upper", dr);
       Eigen::Matrix<local_scalar_t__, -1, -1> pm_1;
+      pm_1 = Eigen::Matrix<local_scalar_t__, -1, -1>(m, k);
+      stan::math::fill(pm_1, DUMMY_VAR__);
+      
       current_statement__ = 17;
       pm_1 = in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
                rvalue(dm, "dm", index_uni(1)), lp__, m, k);
@@ -30144,24 +31171,33 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "pm_1", pm_1, "lower",
                           rvalue(dm, "dm", index_uni(1)));
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> pm_2;
+      pm_2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, Eigen::Matrix<local_scalar_t__, -1, -1>(m, k));
+      stan::math::fill(pm_2, DUMMY_VAR__);
+      
       current_statement__ = 18;
       pm_2 = in__.template read_constrain_ub<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
                dm, lp__, n, m, k);
       current_statement__ = 18;
       check_matching_dims("constraint", "pm_2", pm_2, "upper", dm);
       std::vector<local_scalar_t__> tp_1;
+      tp_1 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
       current_statement__ = 19;
       assign(tp_1, p_1, "assigning variable tp_1");
       current_statement__ = 19;
       check_matching_dims("constraint", "tp_1", tp_1, "lower",
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<local_scalar_t__> tp_2;
+      tp_2 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
       current_statement__ = 20;
       assign(tp_2, p_2, "assigning variable tp_2");
       current_statement__ = 20;
       check_matching_dims("constraint", "tp_2", tp_2, "upper",
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<local_scalar_t__> tp_3;
+      tp_3 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
       current_statement__ = 21;
       assign(tp_3, p_3, "assigning variable tp_3");
       current_statement__ = 21;
@@ -30171,30 +31207,40 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "tp_3", tp_3, "upper",
                           rvalue(ds, "ds", index_uni(1), index_uni(2)));
       std::vector<local_scalar_t__> tp_4;
+      tp_4 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
       current_statement__ = 22;
       assign(tp_4, p_4, "assigning variable tp_4");
       current_statement__ = 22;
       check_matching_dims("constraint", "tp_4", tp_4, "upper",
                           rvalue(ds, "ds", index_uni(1), index_uni(2)));
       std::vector<local_scalar_t__> tp_5;
+      tp_5 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
       current_statement__ = 23;
       assign(tp_5, p_5, "assigning variable tp_5");
       current_statement__ = 23;
       check_matching_dims("constraint", "tp_5", tp_5, "lower",
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<local_scalar_t__> tp_6;
+      tp_6 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
       current_statement__ = 24;
       assign(tp_6, p_6, "assigning variable tp_6");
       current_statement__ = 24;
       check_matching_dims("constraint", "tp_6", tp_6, "offset",
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<local_scalar_t__> tp_7;
+      tp_7 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
       current_statement__ = 25;
       assign(tp_7, p_7, "assigning variable tp_7");
       current_statement__ = 25;
       check_matching_dims("constraint", "tp_7", tp_7, "multiplier",
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<local_scalar_t__> tp_8;
+      tp_8 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
       current_statement__ = 26;
       assign(tp_8, p_8, "assigning variable tp_8");
       current_statement__ = 26;
@@ -30204,17 +31250,26 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "tp_8", tp_8, "multiplier",
                           rvalue(ds, "ds", index_uni(1), index_uni(2)));
       std::vector<std::vector<local_scalar_t__>> tp_9;
+      tp_9 = std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__));
+      
+      
       current_statement__ = 27;
       assign(tp_9, p_9, "assigning variable tp_9");
       current_statement__ = 27;
       check_matching_dims("constraint", "tp_9", tp_9, "lower",
                           rvalue(ds, "ds", index_uni(1)));
       std::vector<std::vector<std::vector<local_scalar_t__>>> tp_10;
+      tp_10 = std::vector<std::vector<std::vector<local_scalar_t__>>>(n, std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__)));
+      
+      
       current_statement__ = 28;
       assign(tp_10, p_10, "assigning variable tp_10");
       current_statement__ = 28;
       check_matching_dims("constraint", "tp_10", tp_10, "upper", ds);
       Eigen::Matrix<local_scalar_t__, -1, 1> tpv_1;
+      tpv_1 = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      stan::math::fill(tpv_1, DUMMY_VAR__);
+      
       current_statement__ = 29;
       assign(tpv_1, pv_1, "assigning variable tpv_1");
       current_statement__ = 29;
@@ -30224,17 +31279,26 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "tpv_1", tpv_1, "upper",
                           rvalue(dv, "dv", index_uni(1), index_uni(2)));
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tpv_2;
+      tpv_2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k));
+      stan::math::fill(tpv_2, DUMMY_VAR__);
+      
       current_statement__ = 30;
       assign(tpv_2, pv_2, "assigning variable tpv_2");
       current_statement__ = 30;
       check_matching_dims("constraint", "tpv_2", tpv_2, "lower",
                           rvalue(dv, "dv", index_uni(1)));
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> tpv_3;
+      tpv_3 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k)));
+      stan::math::fill(tpv_3, DUMMY_VAR__);
+      
       current_statement__ = 31;
       assign(tpv_3, pv_3, "assigning variable tpv_3");
       current_statement__ = 31;
       check_matching_dims("constraint", "tpv_3", tpv_3, "upper", dv);
       Eigen::Matrix<local_scalar_t__, 1, -1> tpr_1;
+      tpr_1 = Eigen::Matrix<local_scalar_t__, 1, -1>(k);
+      stan::math::fill(tpr_1, DUMMY_VAR__);
+      
       current_statement__ = 32;
       assign(tpr_1, pr_1, "assigning variable tpr_1");
       current_statement__ = 32;
@@ -30244,23 +31308,35 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "tpr_1", tpr_1, "upper",
                           rvalue(dr, "dr", index_uni(1), index_uni(2)));
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> tpr_2;
+      tpr_2 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k));
+      stan::math::fill(tpr_2, DUMMY_VAR__);
+      
       current_statement__ = 33;
       assign(tpr_2, pr_2, "assigning variable tpr_2");
       current_statement__ = 33;
       check_matching_dims("constraint", "tpr_2", tpr_2, "lower",
                           rvalue(dr, "dr", index_uni(1)));
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> tpr_3;
+      tpr_3 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k)));
+      stan::math::fill(tpr_3, DUMMY_VAR__);
+      
       current_statement__ = 34;
       assign(tpr_3, pr_3, "assigning variable tpr_3");
       current_statement__ = 34;
       check_matching_dims("constraint", "tpr_3", tpr_3, "upper", dr);
       Eigen::Matrix<local_scalar_t__, -1, -1> tpm_1;
+      tpm_1 = Eigen::Matrix<local_scalar_t__, -1, -1>(m, k);
+      stan::math::fill(tpm_1, DUMMY_VAR__);
+      
       current_statement__ = 35;
       assign(tpm_1, pm_1, "assigning variable tpm_1");
       current_statement__ = 35;
       check_matching_dims("constraint", "tpm_1", tpm_1, "lower",
                           rvalue(dm, "dm", index_uni(1)));
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> tpm_2;
+      tpm_2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, Eigen::Matrix<local_scalar_t__, -1, -1>(m, k));
+      stan::math::fill(tpm_2, DUMMY_VAR__);
+      
       current_statement__ = 36;
       assign(tpm_2, pm_2, "assigning variable tpm_2");
       current_statement__ = 36;
@@ -30512,6 +31588,8 @@ class transform_model final : public model_base_crtp<transform_model> {
     
     try {
       std::vector<double> p_1;
+      p_1 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 1;
       p_1 = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
               rvalue(ds, "ds", index_uni(1), index_uni(1)), lp__, k);
@@ -30519,6 +31597,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_1", p_1, "lower",
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<double> p_2;
+      p_2 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 2;
       p_2 = in__.template read_constrain_ub<std::vector<local_scalar_t__>, jacobian__>(
               rvalue(ds, "ds", index_uni(1), index_uni(1)), lp__, k);
@@ -30526,6 +31606,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_2", p_2, "upper",
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<double> p_3;
+      p_3 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 3;
       p_3 = in__.template read_constrain_lub<std::vector<local_scalar_t__>, jacobian__>(
               rvalue(ds, "ds", index_uni(1), index_uni(1)),
@@ -30537,6 +31619,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_3", p_3, "upper",
                           rvalue(ds, "ds", index_uni(1), index_uni(2)));
       std::vector<double> p_4;
+      p_4 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 4;
       p_4 = in__.template read_constrain_lub<std::vector<local_scalar_t__>, jacobian__>(
               0, rvalue(ds, "ds", index_uni(1), index_uni(2)), lp__, k);
@@ -30544,6 +31628,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_4", p_4, "upper",
                           rvalue(ds, "ds", index_uni(1), index_uni(2)));
       std::vector<double> p_5;
+      p_5 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 5;
       p_5 = in__.template read_constrain_lub<std::vector<local_scalar_t__>, jacobian__>(
               rvalue(ds, "ds", index_uni(1), index_uni(1)), 1, lp__, k);
@@ -30551,6 +31637,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_5", p_5, "lower",
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<double> p_6;
+      p_6 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 6;
       p_6 = in__.template read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
               rvalue(ds, "ds", index_uni(1), index_uni(1)), 1, lp__, k);
@@ -30558,6 +31646,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_6", p_6, "offset",
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<double> p_7;
+      p_7 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 7;
       p_7 = in__.template read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
               0, rvalue(ds, "ds", index_uni(1), index_uni(1)), lp__, k);
@@ -30565,6 +31655,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_7", p_7, "multiplier",
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<double> p_8;
+      p_8 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 8;
       p_8 = in__.template read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
               rvalue(ds, "ds", index_uni(1), index_uni(1)),
@@ -30576,6 +31668,9 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_8", p_8, "multiplier",
                           rvalue(ds, "ds", index_uni(1), index_uni(2)));
       std::vector<std::vector<double>> p_9;
+      p_9 = std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN()));
+      
+      
       current_statement__ = 9;
       p_9 = in__.template read_constrain_lub<std::vector<std::vector<local_scalar_t__>>, jacobian__>(
               rvalue(ds, "ds", index_uni(1)), 1, lp__, m, k);
@@ -30583,12 +31678,18 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_9", p_9, "lower",
                           rvalue(ds, "ds", index_uni(1)));
       std::vector<std::vector<std::vector<double>>> p_10;
+      p_10 = std::vector<std::vector<std::vector<double>>>(n, std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN())));
+      
+      
       current_statement__ = 10;
       p_10 = in__.template read_constrain_lub<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
                0, ds, lp__, n, m, k);
       current_statement__ = 10;
       check_matching_dims("constraint", "p_10", p_10, "upper", ds);
       Eigen::Matrix<double, -1, 1> pv_1;
+      pv_1 = Eigen::Matrix<double, -1, 1>(k);
+      stan::math::fill(pv_1, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 11;
       pv_1 = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                rvalue(dv, "dv", index_uni(1), index_uni(1)),
@@ -30600,6 +31701,9 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "pv_1", pv_1, "upper",
                           rvalue(dv, "dv", index_uni(1), index_uni(2)));
       std::vector<Eigen::Matrix<double, -1, 1>> pv_2;
+      pv_2 = std::vector<Eigen::Matrix<double, -1, 1>>(m, Eigen::Matrix<double, -1, 1>(k));
+      stan::math::fill(pv_2, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 12;
       pv_2 = in__.template read_constrain_lb<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                rvalue(dv, "dv", index_uni(1)), lp__, m, k);
@@ -30607,12 +31711,18 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "pv_2", pv_2, "lower",
                           rvalue(dv, "dv", index_uni(1)));
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> pv_3;
+      pv_3 = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(n, std::vector<Eigen::Matrix<double, -1, 1>>(m, Eigen::Matrix<double, -1, 1>(k)));
+      stan::math::fill(pv_3, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 13;
       pv_3 = in__.template read_constrain_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
                dv, lp__, n, m, k);
       current_statement__ = 13;
       check_matching_dims("constraint", "pv_3", pv_3, "upper", dv);
       Eigen::Matrix<double, 1, -1> pr_1;
+      pr_1 = Eigen::Matrix<double, 1, -1>(k);
+      stan::math::fill(pr_1, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 14;
       pr_1 = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, 1, -1>, jacobian__>(
                rvalue(dr, "dr", index_uni(1), index_uni(1)),
@@ -30624,6 +31734,9 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "pr_1", pr_1, "upper",
                           rvalue(dr, "dr", index_uni(1), index_uni(2)));
       std::vector<Eigen::Matrix<double, 1, -1>> pr_2;
+      pr_2 = std::vector<Eigen::Matrix<double, 1, -1>>(m, Eigen::Matrix<double, 1, -1>(k));
+      stan::math::fill(pr_2, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 15;
       pr_2 = in__.template read_constrain_lb<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
                rvalue(dr, "dr", index_uni(1)), lp__, m, k);
@@ -30631,12 +31744,18 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "pr_2", pr_2, "lower",
                           rvalue(dr, "dr", index_uni(1)));
       std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> pr_3;
+      pr_3 = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(n, std::vector<Eigen::Matrix<double, 1, -1>>(m, Eigen::Matrix<double, 1, -1>(k)));
+      stan::math::fill(pr_3, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 16;
       pr_3 = in__.template read_constrain_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>, jacobian__>(
                dr, lp__, n, m, k);
       current_statement__ = 16;
       check_matching_dims("constraint", "pr_3", pr_3, "upper", dr);
       Eigen::Matrix<double, -1, -1> pm_1;
+      pm_1 = Eigen::Matrix<double, -1, -1>(m, k);
+      stan::math::fill(pm_1, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 17;
       pm_1 = in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
                rvalue(dm, "dm", index_uni(1)), lp__, m, k);
@@ -30644,6 +31763,9 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "pm_1", pm_1, "lower",
                           rvalue(dm, "dm", index_uni(1)));
       std::vector<Eigen::Matrix<double, -1, -1>> pm_2;
+      pm_2 = std::vector<Eigen::Matrix<double, -1, -1>>(n, Eigen::Matrix<double, -1, -1>(m, k));
+      stan::math::fill(pm_2, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 18;
       pm_2 = in__.template read_constrain_ub<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
                dm, lp__, n, m, k);
@@ -31165,6 +32287,8 @@ class transform_model final : public model_base_crtp<transform_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       std::vector<local_scalar_t__> p_1;
       p_1 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
@@ -32212,6 +33336,8 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 19;
       context__.validate_dims("data initialization","n","int",
@@ -32253,9 +33379,13 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     
     try {
       local_scalar_t__ m;
+      m = DUMMY_VAR__;
+      
       current_statement__ = 1;
       m = in__.template read<local_scalar_t__>();
       local_scalar_t__ y;
+      y = DUMMY_VAR__;
+      
       current_statement__ = 2;
       y = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
             lp__);
@@ -32374,9 +33504,13 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     
     try {
       double m;
+      m = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
       m = in__.template read<local_scalar_t__>();
       double y;
+      y = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 2;
       y = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
             lp__);
@@ -32408,11 +33542,17 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ m;
+      m = DUMMY_VAR__;
+      
       m = in__.read<local_scalar_t__>();
       out__.write(m);
       local_scalar_t__ y;
+      y = DUMMY_VAR__;
+      
       y = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, y);
     } catch (const std::exception& e) {
@@ -32678,6 +33818,8 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -32705,6 +33847,8 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     
     try {
       local_scalar_t__ x;
+      x = DUMMY_VAR__;
+      
       current_statement__ = 1;
       x = in__.template read<local_scalar_t__>();
       {
@@ -32744,6 +33888,8 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     
     try {
       double x;
+      x = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
       x = in__.template read<local_scalar_t__>();
       out__.write(x);
@@ -32773,8 +33919,12 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ x;
+      x = DUMMY_VAR__;
+      
       x = in__.read<local_scalar_t__>();
       out__.write(x);
     } catch (const std::exception& e) {
@@ -33038,6 +34188,8 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -33065,6 +34217,8 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     
     try {
       local_scalar_t__ x;
+      x = DUMMY_VAR__;
+      
       current_statement__ = 1;
       x = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
             lp__);
@@ -33105,6 +34259,8 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     
     try {
       double x;
+      x = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
       x = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
             lp__);
@@ -33135,8 +34291,12 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ x;
+      x = DUMMY_VAR__;
+      
       x = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, x);
     } catch (const std::exception& e) {
