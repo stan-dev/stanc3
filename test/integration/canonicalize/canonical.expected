@@ -1,3 +1,35 @@
+  $ ../../../../install/default/bin/stanc --print-canonical blocks.stan
+data {
+  int N;
+  vector[N] y;
+}
+parameters {
+  real mu;
+  real<lower=0> sigma;
+}
+model {
+  int j = 0;
+  
+  if (N > 5) {
+    y ~ normal(mu, sigma);
+  }
+  else {
+    y ~ student_t(5, mu, sigma);
+  }
+  
+  if (N > 5) {
+    y ~ normal(mu, sigma);
+  }
+  
+  for (i in 1 : N) {
+    target += i;
+  }
+  
+  while (j < N) {
+    j = j + 1;
+  }
+}
+
   $ ../../../../install/default/bin/stanc --print-canonical deprecated.stan
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
@@ -123,8 +155,9 @@ model {
   for (i in 1 : (N - 3)) {
     n[i] = m[i : (i + 3), i]';
   }
-  if ((b < x) && (x < 1)) 
+  if (((b < x) && (x < 1))) {
     x + 4 ~ normal(0, 1 + 1) T[0, 8];
+  }
 }
 
 Warning in 'parenthesize.stan', line 6, column 13: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
