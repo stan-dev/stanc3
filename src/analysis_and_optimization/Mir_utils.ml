@@ -243,6 +243,7 @@ let rec expr_var_set Expr.Fixed.{pattern; meta} =
   | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
   | Indexed (expr, ix) ->
       Set.Poly.union_list (expr_var_set expr :: List.map ix ~f:index_var_set)
+  | Promotion (expr, _) -> expr_var_set expr
   | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
 
 and index_var_set ix =
@@ -361,6 +362,11 @@ let rec expr_depth Expr.Fixed.{pattern; _} =
       + max (expr_depth e)
           (Option.value ~default:0
              (List.max_elt ~compare:compare_int (List.map ~f:idx_depth l)) )
+  | Promotion (expr, _) ->
+      (*FIXME: No need for a list here*)
+      1
+      + Option.value ~default:0
+          (List.max_elt ~compare:compare_int (List.map ~f:expr_depth [expr]))
   | EAnd (e1, e2) | EOr (e1, e2) ->
       1
       + Option.value ~default:0
@@ -405,6 +411,10 @@ let rec update_expr_ad_levels autodiffable_variables
       let e1 = update_expr_ad_levels autodiffable_variables e1 in
       let e2 = update_expr_ad_levels autodiffable_variables e2 in
       {pattern= EOr (e1, e2); meta= {e.meta with adlevel= ad_level_sup [e1; e2]}}
+  | Promotion (expr, ut) ->
+      let expr' = update_expr_ad_levels autodiffable_variables expr in
+      { pattern= Promotion (expr', ut)
+      ; meta= {e.meta with adlevel= ad_level_sup [expr']} }
   | Indexed (ixed, i_list) ->
       let ixed = update_expr_ad_levels autodiffable_variables ixed in
       let i_list =

@@ -224,6 +224,9 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
   match pattern with
   | Var _ -> ([], [], e)
   | Lit (_, _) -> ([], [], e)
+  | Promotion (expr, _) ->
+  let d, sl, expr' = inline_function_expression propto adt fim expr in
+  (d, sl, {e with pattern= expr'})
   | FunApp (kind, es) -> (
       let d_list, s_list, es =
         inline_list (inline_function_expression propto adt fim) es in

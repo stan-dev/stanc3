@@ -24,6 +24,7 @@ let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t)
 let rec free_vars_expr (e : Expr.Typed.t) =
   match e.pattern with
   | Var x -> Set.Poly.singleton x
+  | Promotion (expr, _) -> free_vars_expr expr
   | Lit (_, _) -> Set.Poly.empty
   | FunApp (kind, l) -> free_vars_fnapp kind l
   | TernaryIf (e1, e2, e3) ->
@@ -544,6 +545,7 @@ let rec used_subexpressions_expr (e : Expr.Typed.t) =
     (Expr.Typed.Set.singleton e)
     ( match e.pattern with
     | Var _ | Lit (_, _) -> Expr.Typed.Set.empty
+    | Promotion (expr, _) -> used_subexpressions_expr expr
     | FunApp (k, l) ->
         Expr.Typed.Set.union_list
           (List.map ~f:used_subexpressions_expr (l @ Fun_kind.collect_exprs k))
