@@ -1109,7 +1109,7 @@ let lazy_expressions_mfp
   let used_not_latest_expressions_mfp = Mf4.mfp () in
   (latest_expr, used_not_latest_expressions_mfp)
 
-let rec minimal_variables_mfp allow_kill
+let rec minimal_variables_mfp
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
@@ -1124,14 +1124,14 @@ let rec minimal_variables_mfp allow_kill
   let (module Lattice1) = minimal_variables_lattice initial_variables in
   let (module Lattice2) = minimal_variables_lattice Set.Poly.empty in
   let (module Transfer1) =
-    minimal_variables_fwd1_transfer allow_kill gen_variable flowgraph_to_mir
+    minimal_variables_fwd1_transfer true gen_variable flowgraph_to_mir
   in
   let (module Mf1) =
     monotone_framework (module Flowgraph) (module Lattice1) (module Transfer1)
   in
   let fwd1_min_vars_mfp = Mf1.mfp () in
   let (module Transfer2) =
-    minimal_variables_rev_transfer allow_kill flowgraph_to_mir
+    minimal_variables_rev_transfer false flowgraph_to_mir
       (Map.map ~f:(fun x -> x.exit) fwd1_min_vars_mfp)
   in
   let (module Mf2) =
@@ -1142,7 +1142,7 @@ let rec minimal_variables_mfp allow_kill
   in
   let rev_min_vars_mfp = Mf2.mfp () in
   let (module Transfer3) =
-    minimal_variables_fwd2_transfer allow_kill flowgraph_to_mir
+    minimal_variables_fwd2_transfer false flowgraph_to_mir
       (Map.map ~f:(fun x -> x.entry) rev_min_vars_mfp)
   in
   let (module Mf3) =
@@ -1157,7 +1157,7 @@ let rec minimal_variables_mfp allow_kill
     Map.fold ~init:Set.Poly.empty ~f:get_names fwd2_min_vars_mfp
   in
   if Set.Poly.length initial_variables <> Set.Poly.length variable_set then
-    minimal_variables_mfp allow_kill
+    minimal_variables_mfp
       (module Flowgraph)
       (module Rev_Flowgraph)
       flowgraph_to_mir variable_set gen_variable

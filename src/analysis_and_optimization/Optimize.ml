@@ -1142,7 +1142,7 @@ let block_fixing mir =
  * @param initial_variables: the initial known members of the set of variables
  * @param stmt the MIR statement to optimize.
 *)
-let optimize_minimal_variables allow_kill
+let optimize_minimal_variables
     ~(gen_variables :
           (int, Stmt.Located.Non_recursive.t) Map.Poly.t
        -> int
@@ -1165,15 +1165,15 @@ let optimize_minimal_variables allow_kill
   let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
   let (module Rev_Flowgraph) = rev_flowgraph in
   let (module Fwd_Flowgraph) = fwd_flowgraph in
-  let ad_levels =
-    Monotone_framework.minimal_variables_mfp allow_kill
+  let mfp_variables =
+    Monotone_framework.minimal_variables_mfp
       (module Fwd_Flowgraph)
       (module Rev_Flowgraph)
       flowgraph_to_mir initial_variables gen_variables
   in
   let optimize_min_vars_stmt_base i stmt_pattern =
     let variable_set =
-      let exits = (Map.find_exn ad_levels i).exit in
+      let exits = (Map.find_exn mfp_variables i).exit in
       Set.Poly.union exits (union_map exits ~f:extra_variables)
     in
     let stmt_val =
@@ -1226,7 +1226,7 @@ let optimize_ad_levels (mir : Program.Typed.t) =
     | s -> s
   in
   let transform fundef_opt stmt =
-    optimize_minimal_variables true ~gen_variables:gen_ad_variables
+    optimize_minimal_variables ~gen_variables:gen_ad_variables
       ~update_expr:update_expr_ad_levels ~update_stmt ~extra_variables
       ~initial_variables:(initial_ad_variables fundef_opt stmt)
       stmt
@@ -1243,7 +1243,7 @@ let optimize_ad_levels (mir : Program.Typed.t) =
   * This first does a simple iter over
   * the log_prob portion of the MIR, finding the names of all matrices
   * (and arrays of matrices) where either the Stan math function
-  * does not support SoA or is the object is single cell accesed within a 
+  * does not support SoA or the object is single cell accesed within a 
   * For or While loop. These are the initial variables
   * given to the monotone framework. Then log_prob has all matrix like objects
   * and the functions that use them to SoA. After that the 
@@ -1275,7 +1275,7 @@ let optimize_soa (mir : Program.Typed.t) =
     Mem_pattern.modify_stmt_pattern stmt_pattern variable_set
   in
   let transform stmt =
-    optimize_minimal_variables false ~gen_variables:gen_aos_variables
+    optimize_minimal_variables ~gen_variables:gen_aos_variables
       ~update_expr:mod_exprs ~update_stmt:modify_stmt_patt ~initial_variables
       stmt ~extra_variables:(fun _ -> Set.Poly.empty )
   in
@@ -1331,7 +1331,7 @@ let no_optimizations : optimization_settings = settings_const false
 
 let settings_default : optimization_settings =
   let xx = settings_const false in
-  {xx with allow_uninitialized_decls= true; optimize_soa= true}
+  {xx with allow_uninitialized_decls= false; optimize_soa= true}
 
 let optimization_suite ?(settings = all_optimizations) mir =
   let maybe_optimizations =
