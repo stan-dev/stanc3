@@ -43,7 +43,8 @@ module Fixed = struct
             indices
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
       | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
-      | Promotion (from, ut) -> Fmt.pf ppf "%a -> %a" pp_e from UnsizedType.pp ut
+      | Promotion (from, ut) ->
+          Fmt.pf ppf "%a -> %a" pp_e from UnsizedType.pp ut
 
     include Foldable.Make (struct
       type nonrec 'a t = 'a t
