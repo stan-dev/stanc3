@@ -438,6 +438,29 @@ let pp_validate_data ppf (name, st) =
       (stantype_prim_str (SizedType.to_unsized st))
       pp_stdvector (SizedType.get_dims_io st)
 
+let pp_mul ppf () = pf ppf " * "
+
+let get_unconstrained_param_st lst =
+  match lst with
+  | _, {Program.out_block= Parameters; out_unconstrained_st= st; _} -> (
+    match SizedType.get_dims_io st with
+    | [] -> Some [Expr.Helpers.loop_bottom]
+    | ls -> Some ls )
+  | _ -> None
+
+let get_constrained_param_st lst =
+  match lst with
+  | _, {Program.out_block= Parameters; out_constrained_st= st; _} -> (
+    match SizedType.get_dims_io st with
+    | [] -> Some [Expr.Helpers.loop_bottom]
+    | ls -> Some ls )
+  | _ -> None
+
+let pp_num_param ppf (dims : Expr.Typed.t list) =
+  match dims with
+  | [a] -> pf ppf "@[%a@]@," (list ~sep:pp_mul pp_expr) [a]
+  | _ -> pf ppf "@[(%a)@]@," (list ~sep:pp_mul pp_expr) dims
+
 (** Print the constructor of the model class.
  Read in data steps:
    1. context__.validate_dims() to verify the dimensions are correct at runtime.
@@ -485,19 +508,8 @@ let pp_ctor ppf p =
         pp_located_error ppf
           (pp_block, (list ~sep:cut pp_stmt_topdecl_size_only, prepare_data)) ;
         cut ppf () ;
-        let get_param_st = function
-          | _, {Program.out_block= Parameters; out_unconstrained_st= st; _} -> (
-            match SizedType.get_dims_io st with
-            | [] -> Some [Expr.Helpers.loop_bottom]
-            | ls -> Some ls )
-          | _ -> None
-        in
-        let output_params = List.filter_map ~f:get_param_st output_vars in
-        let pp_mul ppf () = pf ppf " * " in
-        let pp_num_param ppf (dims : Expr.Typed.t list) =
-          match dims with
-          | [a] -> pf ppf "@[%a@]@," (list ~sep:pp_mul pp_expr) [a]
-          | _ -> pf ppf "@[(%a)@]@," (list ~sep:pp_mul pp_expr) dims
+        let output_params =
+          List.filter_map ~f:get_unconstrained_param_st output_vars
         in
         let pp_plus ppf () = pf ppf " + " in
         let pp_set_params ppf pars =
@@ -925,29 +937,60 @@ let pp_transform_inits ppf {Program.output_vars; _} =
     [ "const stan::io::var_context& context"; "std::vector<int>& params_i"
     ; "std::vector<double>& vars"; "std::ostream* pstream__ = nullptr" ]
   in
-  let list_len = List.length output_vars in
+  let list_names
+      ((stri : string), (Program.({out_block; _}) : 'a Program.outvar)) =
+    match out_block with Parameters -> Some stri | _ -> None
+  in
+  let param_names = List.filter_map ~f:list_names output_vars in
+  let list_len = List.length param_names in
+  let constrained_params =
+    List.filter_map ~f:get_constrained_param_st output_vars
+  in
   let get_names ppf () =
-    let add_param = fmt "%S" in
-    pf ppf
-      "@[<hov 2>const std::array<std::string, %i> names__ = \
-       std::array<std::string, %i>{%a};@]@,"
-      list_len list_len
+    let add_param = fmt "%S@," in
+    pf ppf "@[<hov 2> constexpr std::array<const char*, %i> names__{%a};@]@,"
+      list_len
       (list ~sep:comma add_param)
-      (List.map ~f:fst output_vars)
+      param_names
+  in
+  let get_constrain_param_size_arr ppf () =
+    match constrained_params with
+    | [] ->
+        pf ppf
+          "@[<hov 2> const std::array<Eigen::Index, 0> \
+           constrain_param_sizes__{};@]@,"
+    | _ ->
+        let pp_set_params ppf pars = (list ~sep:comma pp_num_param) ppf pars in
+        pf ppf
+          "@[<hov 2> const std::array<Eigen::Index, %i> \
+           constrain_param_sizes__{%a};@]@,"
+          list_len pp_set_params constrained_params
+  in
+  let get_constrained_param_size ppf () =
+    pf ppf
+      "@[<hov 2> const auto num_constrained_params__ = std::accumulate(@, \
+       constrain_param_sizes__.begin(),@,@ constrain_param_sizes__.end(), \
+       0);@]@,"
   in
   let pp_body ppf =
     pf ppf "%a" (list ~sep:cut string)
-      [ " std::vector<double> params_r_flat__;"
+      [ " std::vector<double> params_r_flat__(num_constrained_params__);"
+      ; " Eigen::Index size_iter__ = 0;"; " Eigen::Index flat_iter__ = 0;"
       ; " for (auto&& param_name__ : names__) {"
       ; "   const auto param_vec__ = context.vals_r(param_name__);"
-      ; "   params_r_flat__.reserve(params_r_flat__.size() + \
-         param_vec__.size());"; "   for (auto&& param_val__ : param_vec__) {"
-      ; "     params_r_flat__.push_back(param_val__);"; "   }"; " }"
-      ; "vars.resize(params_r_flat__.size());"
-      ; "transform_inits_impl(params_r_flat__, params_i, vars, pstream__);" ]
+      ; "   for (Eigen::Index i = 0; i < \
+         constrain_param_sizes__[size_iter__]; ++i) {"
+      ; "     params_r_flat__[flat_iter__] = param_vec__[i];"
+      ; "     ++flat_iter__;"; "   }"; "   ++size_iter__;"; " }"
+      ; " vars.resize(num_params_r__);"
+      ; " transform_inits_impl(params_r_flat__, params_i, vars, pstream__);" ]
   in
   let cv_attr = ["const"] in
-  pp_method ppf "void" "transform_inits" params get_names
+  let intro ppf =
+    pf ppf "%a %a %a" get_names () get_constrain_param_size_arr ()
+      get_constrained_param_size
+  in
+  pp_method ppf "void" "transform_inits" params intro
     (fun ppf -> pp_body ppf)
     ~cv_attr
 

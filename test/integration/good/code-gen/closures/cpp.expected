@@ -86,12 +86,18 @@ capture_data_L9C9_impl__(const T0__& v_arg__, const double& x,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ rs;
+    rs = DUMMY_VAR__;
+    
     current_statement__ = 18;
     rs = sum(r);
     local_scalar_t__ ys;
+    ys = DUMMY_VAR__;
+    
     current_statement__ = 19;
     ys = sum(y);
     local_scalar_t__ vs;
+    vs = DUMMY_VAR__;
+    
     current_statement__ = 20;
     vs = sum(v);
     current_statement__ = 21;
@@ -128,18 +134,28 @@ capture_data_and_params_L23C9_impl__(const T0__& p,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ rs;
+    rs = DUMMY_VAR__;
+    
     current_statement__ = 23;
     rs = sum(r);
     local_scalar_t__ ys;
+    ys = DUMMY_VAR__;
+    
     current_statement__ = 24;
     ys = sum(y);
     local_scalar_t__ vs;
+    vs = DUMMY_VAR__;
+    
     current_statement__ = 25;
     vs = sum(v);
     local_scalar_t__ pas;
+    pas = DUMMY_VAR__;
+    
     current_statement__ = 26;
     pas = sum(pa);
     local_scalar_t__ pvs;
+    pvs = DUMMY_VAR__;
+    
     current_statement__ = 27;
     pvs = sum(pv);
     current_statement__ = 28;
@@ -184,6 +200,8 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 10;
       context__.validate_dims("data initialization","N","int",
@@ -269,12 +287,19 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
       auto capture_data = from_lambda([](const auto&... s) { return capture_data_L9C9_impl__(s...); },
                             v, x, y);
       local_scalar_t__ p;
+      p = DUMMY_VAR__;
+      
       current_statement__ = 2;
       p = in__.template read<local_scalar_t__>();
       std::vector<local_scalar_t__> pa;
+      pa = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
       current_statement__ = 3;
       pa = in__.template read<std::vector<local_scalar_t__>>(N);
       Eigen::Matrix<local_scalar_t__, -1, 1> pv;
+      pv = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      stan::math::fill(pv, DUMMY_VAR__);
+      
       current_statement__ = 4;
       pv = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
       {
@@ -332,12 +357,19 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
     
     try {
       double p;
+      p = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 2;
       p = in__.template read<local_scalar_t__>();
       std::vector<double> pa;
+      pa = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 3;
       pa = in__.template read<std::vector<local_scalar_t__>>(N);
       Eigen::Matrix<double, -1, 1> pv;
+      pv = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(pv, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 4;
       pv = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
       out__.write(p);
@@ -373,8 +405,12 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
       auto capture_data = from_lambda([](const auto&... s) { return capture_data_L9C9_impl__(s...); },
                             v, x, y);
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ p;
+      p = DUMMY_VAR__;
+      
       p = in__.read<local_scalar_t__>();
       out__.write(p);
       std::vector<local_scalar_t__> pa;
@@ -547,19 +583,24 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 3> names__ = std::array<std::string, 3>{"p",
-      "pa", "pv"};
+     constexpr std::array<const char*, 3> names__{"p", "pa", "pv"};
+      const std::array<Eigen::Index, 3> constrain_param_sizes__{1, N, N};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -773,6 +814,8 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       
       current_statement__ = 1;
@@ -816,6 +859,8 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
       auto capture_dataonly_closure = from_lambda([](const auto&... s) { return capture_dataonly_closure_L7C9_impl__(s...); },
                                         foo);
       local_scalar_t__ alpha;
+      alpha = DUMMY_VAR__;
+      
       current_statement__ = 3;
       alpha = in__.template read<local_scalar_t__>();
       
@@ -827,12 +872,18 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
       auto closure_in_closure = from_lambda([](const auto&... s) { return closure_in_closure_L20C9_impl__(s...); }
                                   );
       local_scalar_t__ s1;
+      s1 = DUMMY_VAR__;
+      
       current_statement__ = 6;
       s1 = capture_dataonly_closure(pstream__, 1.0);
       local_scalar_t__ s2;
+      s2 = DUMMY_VAR__;
+      
       current_statement__ = 7;
       s2 = capture_closure(pstream__, 1.0);
       local_scalar_t__ s3;
+      s3 = DUMMY_VAR__;
+      
       current_statement__ = 8;
       s3 = closure_in_closure(pstream__, 1.0);
     } catch (const std::exception& e) {
@@ -868,6 +919,8 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
     
     try {
       double alpha;
+      alpha = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 3;
       alpha = in__.template read<local_scalar_t__>();
       
@@ -933,8 +986,12 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
       auto capture_dataonly_closure = from_lambda([](const auto&... s) { return capture_dataonly_closure_L7C9_impl__(s...); },
                                         foo);
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ alpha;
+      alpha = DUMMY_VAR__;
+      
       alpha = in__.read<local_scalar_t__>();
       out__.write(alpha);
     } catch (const std::exception& e) {
@@ -1075,19 +1132,24 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 4> names__ = std::array<std::string, 4>{"alpha",
-      "s1", "s2", "s3"};
+     constexpr std::array<const char*, 1> names__{"alpha"};
+      const std::array<Eigen::Index, 1> constrain_param_sizes__{1};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -1324,6 +1386,8 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 5;
       x = std::numeric_limits<double>::quiet_NaN();
@@ -1369,6 +1433,8 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
       auto data_closure = from_lambda([](const auto&... s) { return data_closure_L16C9_impl__(s...); },
                             x);
       local_scalar_t__ p;
+      p = DUMMY_VAR__;
+      
       current_statement__ = 2;
       p = in__.template read<local_scalar_t__>();
       
@@ -1376,6 +1442,8 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
       auto closure = from_lambda([](const auto&... s) { return closure_L26C9_impl__(s...); },
                        p);
       local_scalar_t__ w;
+      w = DUMMY_VAR__;
+      
       current_statement__ = 4;
       w = higher_order_func(closure, 1.0, pstream__);
     } catch (const std::exception& e) {
@@ -1411,6 +1479,8 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
     
     try {
       double p;
+      p = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 2;
       p = in__.template read<local_scalar_t__>();
       
@@ -1456,8 +1526,12 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
       auto data_closure = from_lambda([](const auto&... s) { return data_closure_L16C9_impl__(s...); },
                             x);
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ p;
+      p = DUMMY_VAR__;
+      
       p = in__.read<local_scalar_t__>();
       out__.write(p);
     } catch (const std::exception& e) {
@@ -1591,19 +1665,24 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 2> names__ = std::array<std::string, 2>{"p",
-      "w"};
+     constexpr std::array<const char*, 1> names__{"p"};
+      const std::array<Eigen::Index, 1> constrain_param_sizes__{1};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -1831,6 +1910,8 @@ ff_lpdf(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ s;
+    s = DUMMY_VAR__;
+    
     current_statement__ = 17;
     s = std_normal_lpdf<propto__>(0);
     current_statement__ = 18;
@@ -1851,6 +1932,8 @@ ff_rng(const T0__& x, RNG& base_rng__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ s;
+    s = DUMMY_VAR__;
+    
     current_statement__ = 20;
     s = std_normal_rng(base_rng__);
     current_statement__ = 21;
@@ -1871,6 +1954,8 @@ ff_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ s;
+    s = DUMMY_VAR__;
+    
     current_statement__ = 23;
     s = get_lp(lp__, lp_accum__);
     current_statement__ = 24;
@@ -2087,6 +2172,8 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       
       current_statement__ = 1;
@@ -2203,6 +2290,8 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
       current_statement__ = 10;
       auto f5_lp = lp_from_lambda<propto__>(f5_lp_L56C9_pfunctor__());
       local_scalar_t__ s;
+      s = DUMMY_VAR__;
+      
       current_statement__ = 11;
       s = foo_lp.template operator()<propto__>(lp__, lp_accum__, pstream__, 
             f5_lp);
@@ -2323,6 +2412,8 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
       current_statement__ = 10;
       auto f5_lp = lp_from_lambda<propto__>(f5_lp_L56C9_pfunctor__());
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2454,18 +2545,24 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 1> names__ = std::array<std::string, 1>{"s"};
+     constexpr std::array<const char*, 0> names__{};
+      const std::array<Eigen::Index, 0> constrain_param_sizes__{};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -2631,6 +2728,8 @@ class ode_rk45_model final : public model_base_crtp<ode_rk45_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 4;
       context__.validate_dims("data initialization","ts","double",
@@ -2667,13 +2766,22 @@ class ode_rk45_model final : public model_base_crtp<ode_rk45_model> {
     
     try {
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> k;
+      k = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(1, Eigen::Matrix<local_scalar_t__, -1, 1>(2));
+      stan::math::fill(k, DUMMY_VAR__);
+      
       current_statement__ = 1;
       k = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
             1, 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> init;
+      init = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(init, DUMMY_VAR__);
+      
       current_statement__ = 2;
       init = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> y;
+      y = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(5, Eigen::Matrix<local_scalar_t__, -1, 1>(2));
+      stan::math::fill(y, DUMMY_VAR__);
+      
       current_statement__ = 3;
       assign(y, integrate(k, init, ts, pstream__), "assigning variable y");
     } catch (const std::exception& e) {
@@ -2709,10 +2817,16 @@ class ode_rk45_model final : public model_base_crtp<ode_rk45_model> {
     
     try {
       std::vector<Eigen::Matrix<double, -1, 1>> k;
+      k = std::vector<Eigen::Matrix<double, -1, 1>>(1, Eigen::Matrix<double, -1, 1>(2));
+      stan::math::fill(k, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 1;
       k = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
             1, 2);
       Eigen::Matrix<double, -1, 1> init;
+      init = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(init, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 2;
       init = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
       std::vector<Eigen::Matrix<double, -1, 1>> y;
@@ -2760,6 +2874,8 @@ class ode_rk45_model final : public model_base_crtp<ode_rk45_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> k;
       k = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(1, Eigen::Matrix<local_scalar_t__, -1, 1>(2));
@@ -2961,19 +3077,24 @@ class ode_rk45_model final : public model_base_crtp<ode_rk45_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 3> names__ = std::array<std::string, 3>{"k",
-      "init", "y"};
+     constexpr std::array<const char*, 2> names__{"k", "init"};
+      const std::array<Eigen::Index, 2> constrain_param_sizes__{(1 * 2), 2};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -3133,6 +3254,8 @@ class reduce_sum_model final : public model_base_crtp<reduce_sum_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 8;
       context__.validate_dims("data initialization","N","int",
@@ -3169,9 +3292,13 @@ class reduce_sum_model final : public model_base_crtp<reduce_sum_model> {
     
     try {
       local_scalar_t__ mu;
+      mu = DUMMY_VAR__;
+      
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
       std::vector<local_scalar_t__> x;
+      x = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
       current_statement__ = 2;
       x = in__.template read<std::vector<local_scalar_t__>>(N);
       {
@@ -3229,9 +3356,13 @@ class reduce_sum_model final : public model_base_crtp<reduce_sum_model> {
     
     try {
       double mu;
+      mu = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
       std::vector<double> x;
+      x = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 2;
       x = in__.template read<std::vector<local_scalar_t__>>(N);
       out__.write(mu);
@@ -3262,8 +3393,12 @@ class reduce_sum_model final : public model_base_crtp<reduce_sum_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ mu;
+      mu = DUMMY_VAR__;
+      
       mu = in__.read<local_scalar_t__>();
       out__.write(mu);
       std::vector<local_scalar_t__> x;
@@ -3416,19 +3551,24 @@ class reduce_sum_model final : public model_base_crtp<reduce_sum_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 2> names__ = std::array<std::string, 2>{"mu",
-      "x"};
+     constexpr std::array<const char*, 2> names__{"mu", "x"};
+      const std::array<Eigen::Index, 2> constrain_param_sizes__{1, N};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -3572,6 +3712,8 @@ class rng_and_lpdf_model final : public model_base_crtp<rng_and_lpdf_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3599,9 +3741,13 @@ class rng_and_lpdf_model final : public model_base_crtp<rng_and_lpdf_model> {
     
     try {
       local_scalar_t__ s;
+      s = DUMMY_VAR__;
+      
       current_statement__ = 1;
       s = in__.template read<local_scalar_t__>();
       local_scalar_t__ k;
+      k = DUMMY_VAR__;
+      
       current_statement__ = 2;
       k = in__.template read<local_scalar_t__>();
       
@@ -3654,9 +3800,13 @@ class rng_and_lpdf_model final : public model_base_crtp<rng_and_lpdf_model> {
     
     try {
       double s;
+      s = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
       s = in__.template read<local_scalar_t__>();
       double k;
+      k = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 2;
       k = in__.template read<local_scalar_t__>();
       
@@ -3678,6 +3828,8 @@ class rng_and_lpdf_model final : public model_base_crtp<rng_and_lpdf_model> {
         return ;
       } 
       double m;
+      m = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 5;
       m = closure_dist_rng(base_rng__, pstream__, k);
       out__.write(m);
@@ -3700,11 +3852,17 @@ class rng_and_lpdf_model final : public model_base_crtp<rng_and_lpdf_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ s;
+      s = DUMMY_VAR__;
+      
       s = in__.read<local_scalar_t__>();
       out__.write(s);
       local_scalar_t__ k;
+      k = DUMMY_VAR__;
+      
       k = in__.read<local_scalar_t__>();
       out__.write(k);
     } catch (const std::exception& e) {
@@ -3842,19 +4000,24 @@ class rng_and_lpdf_model final : public model_base_crtp<rng_and_lpdf_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 3> names__ = std::array<std::string, 3>{"s",
-      "k", "m"};
+     constexpr std::array<const char*, 2> names__{"s", "k"};
+      const std::array<Eigen::Index, 2> constrain_param_sizes__{1, 1};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };

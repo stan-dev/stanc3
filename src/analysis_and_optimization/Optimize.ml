@@ -1218,7 +1218,7 @@ let no_optimizations : optimization_settings = settings_const false
 
 let settings_default : optimization_settings =
   let xx = settings_const false in
-  {xx with allow_uninitialized_decls= true}
+  {xx with allow_uninitialized_decls= false}
 
 let optimization_suite ?(settings = all_optimizations) mir =
   let maybe_optimizations =

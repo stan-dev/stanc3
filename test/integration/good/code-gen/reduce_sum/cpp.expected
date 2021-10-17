@@ -108,6 +108,8 @@ class arg_type_convert_model final : public model_base_crtp<arg_type_convert_mod
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 3;
       context__.validate_dims("data initialization","b","int",
@@ -142,6 +144,8 @@ class arg_type_convert_model final : public model_base_crtp<arg_type_convert_mod
     
     try {
       std::vector<local_scalar_t__> a;
+      a = std::vector<local_scalar_t__>(5, DUMMY_VAR__);
+      
       current_statement__ = 1;
       a = in__.template read<std::vector<local_scalar_t__>>(5);
       {
@@ -182,6 +186,8 @@ class arg_type_convert_model final : public model_base_crtp<arg_type_convert_mod
     
     try {
       std::vector<double> a;
+      a = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 1;
       a = in__.template read<std::vector<local_scalar_t__>>(5);
       out__.write(a);
@@ -211,6 +217,8 @@ class arg_type_convert_model final : public model_base_crtp<arg_type_convert_mod
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       std::vector<local_scalar_t__> a;
       a = std::vector<local_scalar_t__>(5, DUMMY_VAR__);
@@ -359,18 +367,24 @@ class arg_type_convert_model final : public model_base_crtp<arg_type_convert_mod
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 1> names__ = std::array<std::string, 1>{"a"};
+     constexpr std::array<const char*, 1> names__{"a"};
+      const std::array<Eigen::Index, 1> constrain_param_sizes__{5};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -629,6 +643,8 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 8;
       N = std::numeric_limits<int>::min();
@@ -667,12 +683,18 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     
     try {
       std::vector<local_scalar_t__> y1;
+      y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
       current_statement__ = 1;
       y1 = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<local_scalar_t__> y2;
+      y2 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
       current_statement__ = 2;
       y2 = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<local_scalar_t__> y3;
+      y3 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
       current_statement__ = 3;
       y3 = in__.template read<std::vector<local_scalar_t__>>(N);
       {
@@ -720,12 +742,18 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     
     try {
       std::vector<double> y1;
+      y1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 1;
       y1 = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<double> y2;
+      y2 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 2;
       y2 = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<double> y3;
+      y3 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 3;
       y3 = in__.template read<std::vector<local_scalar_t__>>(N);
       out__.write(y1);
@@ -757,6 +785,8 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       std::vector<local_scalar_t__> y1;
       y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
@@ -943,19 +973,24 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 3> names__ = std::array<std::string, 3>{"y1",
-      "y2", "y3"};
+     constexpr std::array<const char*, 3> names__{"y1", "y2", "y3"};
+      const std::array<Eigen::Index, 3> constrain_param_sizes__{N, N, N};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -1683,6 +1718,8 @@ g2(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice, const int& start,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 78;
     sum_lpdf = 0.0;
     current_statement__ = 81;
@@ -1711,6 +1748,8 @@ g3(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice, const int& start,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 84;
     sum_lpdf = 0.0;
     current_statement__ = 87;
@@ -1739,6 +1778,8 @@ g4(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice, const int& start,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 90;
     sum_lpdf = 0.0;
     current_statement__ = 93;
@@ -1768,6 +1809,8 @@ g5(const std::vector<std::vector<T0__>>& y_slice, const int& start,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 96;
     sum_lpdf = 0.0;
     current_statement__ = 101;
@@ -1801,6 +1844,8 @@ g6(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 104;
     sum_lpdf = 0.0;
     current_statement__ = 109;
@@ -1835,6 +1880,8 @@ g7(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 112;
     sum_lpdf = 0.0;
     current_statement__ = 117;
@@ -1869,6 +1916,8 @@ g8(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 120;
     sum_lpdf = 0.0;
     current_statement__ = 125;
@@ -1924,6 +1973,8 @@ h2(const std::vector<T0__>& y, const int& start, const int& end,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 130;
     sum_lpdf = 0.0;
     current_statement__ = 133;
@@ -1952,6 +2003,8 @@ h3(const std::vector<T0__>& y, const int& start, const int& end,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 136;
     sum_lpdf = 0.0;
     current_statement__ = 139;
@@ -1980,6 +2033,8 @@ h4(const std::vector<T0__>& y, const int& start, const int& end,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 142;
     sum_lpdf = 0.0;
     current_statement__ = 145;
@@ -2009,6 +2064,8 @@ h5(const std::vector<T0__>& y, const int& start, const int& end,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 148;
     sum_lpdf = 0.0;
     current_statement__ = 153;
@@ -2042,6 +2099,8 @@ h6(const std::vector<T0__>& y, const int& start, const int& end,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 156;
     sum_lpdf = 0.0;
     current_statement__ = 161;
@@ -2076,6 +2135,8 @@ h7(const std::vector<T0__>& y, const int& start, const int& end,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 164;
     sum_lpdf = 0.0;
     current_statement__ = 169;
@@ -2110,6 +2171,8 @@ h8(const std::vector<T0__>& y, const int& start, const int& end,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ sum_lpdf;
+    sum_lpdf = DUMMY_VAR__;
+    
     current_statement__ = 172;
     sum_lpdf = 0.0;
     current_statement__ = 177;
@@ -2163,6 +2226,8 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 33;
       N = std::numeric_limits<int>::min();
@@ -2282,65 +2347,111 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     
     try {
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> a8;
+      a8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
+      stan::math::fill(a8, DUMMY_VAR__);
+      
       current_statement__ = 1;
       a8 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
              N, N, N, N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> a7;
+      a7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
+      stan::math::fill(a7, DUMMY_VAR__);
+      
       current_statement__ = 2;
       a7 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
              N, N, N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> a6;
+      a6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
+      stan::math::fill(a6, DUMMY_VAR__);
+      
       current_statement__ = 3;
       a6 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
              N, N, N);
       std::vector<std::vector<local_scalar_t__>> a5;
+      a5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
+      
+      
       current_statement__ = 4;
       a5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
              N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> a4;
+      a4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
+      stan::math::fill(a4, DUMMY_VAR__);
+      
       current_statement__ = 5;
       a4 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
              N, N, N);
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> a3;
+      a3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
+      stan::math::fill(a3, DUMMY_VAR__);
+      
       current_statement__ = 6;
       a3 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
              N, N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> a2;
+      a2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      stan::math::fill(a2, DUMMY_VAR__);
+      
       current_statement__ = 7;
       a2 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
              N, N);
       std::vector<local_scalar_t__> a1;
+      a1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
       current_statement__ = 8;
       a1 = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y8;
+      y8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
+      stan::math::fill(y8, DUMMY_VAR__);
+      
       current_statement__ = 9;
       y8 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
              N, N, N, N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> y7;
+      y7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
+      stan::math::fill(y7, DUMMY_VAR__);
+      
       current_statement__ = 10;
       y7 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
              N, N, N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> y6;
+      y6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
+      stan::math::fill(y6, DUMMY_VAR__);
+      
       current_statement__ = 11;
       y6 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
              N, N, N);
       std::vector<std::vector<local_scalar_t__>> y5;
+      y5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
+      
+      
       current_statement__ = 12;
       y5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
              N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> y4;
+      y4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
+      stan::math::fill(y4, DUMMY_VAR__);
+      
       current_statement__ = 13;
       y4 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
              N, N, N);
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> y3;
+      y3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
+      stan::math::fill(y3, DUMMY_VAR__);
+      
       current_statement__ = 14;
       y3 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
              N, N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> y2;
+      y2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      stan::math::fill(y2, DUMMY_VAR__);
+      
       current_statement__ = 15;
       y2 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
              N, N);
       std::vector<local_scalar_t__> y1;
+      y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
       current_statement__ = 16;
       y1 = in__.template read<std::vector<local_scalar_t__>>(N);
       {
@@ -2410,65 +2521,111 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     
     try {
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> a8;
+      a8 = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(N, std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N)));
+      stan::math::fill(a8, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 1;
       a8 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
              N, N, N, N);
       std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> a7;
+      a7 = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(N, std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N)));
+      stan::math::fill(a7, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 2;
       a7 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
              N, N, N);
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> a6;
+      a6 = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(N, std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N)));
+      stan::math::fill(a6, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 3;
       a6 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
              N, N, N);
       std::vector<std::vector<double>> a5;
+      a5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
+      
+      
       current_statement__ = 4;
       a5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
              N);
       std::vector<Eigen::Matrix<double, -1, -1>> a4;
+      a4 = std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N));
+      stan::math::fill(a4, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 5;
       a4 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
              N, N, N);
       std::vector<Eigen::Matrix<double, 1, -1>> a3;
+      a3 = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
+      stan::math::fill(a3, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 6;
       a3 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
              N, N);
       std::vector<Eigen::Matrix<double, -1, 1>> a2;
+      a2 = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(a2, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 7;
       a2 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
              N, N);
       std::vector<double> a1;
+      a1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 8;
       a1 = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> y8;
+      y8 = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(N, std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N)));
+      stan::math::fill(y8, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 9;
       y8 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
              N, N, N, N);
       std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> y7;
+      y7 = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(N, std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N)));
+      stan::math::fill(y7, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 10;
       y7 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
              N, N, N);
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> y6;
+      y6 = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(N, std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N)));
+      stan::math::fill(y6, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 11;
       y6 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
              N, N, N);
       std::vector<std::vector<double>> y5;
+      y5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
+      
+      
       current_statement__ = 12;
       y5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
              N);
       std::vector<Eigen::Matrix<double, -1, -1>> y4;
+      y4 = std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N));
+      stan::math::fill(y4, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 13;
       y4 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
              N, N, N);
       std::vector<Eigen::Matrix<double, 1, -1>> y3;
+      y3 = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
+      stan::math::fill(y3, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 14;
       y3 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
              N, N);
       std::vector<Eigen::Matrix<double, -1, 1>> y2;
+      y2 = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(y2, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 15;
       y2 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
              N, N);
       std::vector<double> y1;
+      y1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 16;
       y1 = in__.template read<std::vector<local_scalar_t__>>(N);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -2599,6 +2756,8 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> a8;
       a8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
@@ -3317,20 +3476,29 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 16> names__ = std::array<std::string, 16>{"a8",
-      "a7", "a6", "a5", "a4", "a3", "a2", "a1", "y8", "y7", "y6", "y5", "y4",
-      "y3", "y2", "y1"};
+     constexpr std::array<const char*, 16> names__{"a8", "a7", "a6", "a5",
+      "a4", "a3", "a2", "a1", "y8", "y7", "y6", "y5", "y4", "y3", "y2", "y1"
+      };
+      const std::array<Eigen::Index, 16> constrain_param_sizes__{(N * N * N * N)
+       , (N * N * N), (N * N * N), (N * N), (N * N * N), (N * N), (N * N), 
+       N, (N * N * N * N), (N * N * N), (N * N * N), (N * N), (N * N * N),
+       (N * N), (N * N), N};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
@@ -5308,82 +5476,134 @@ r(std::ostream* pstream__) {
     
     
     local_scalar_t__ t1;
+    t1 = DUMMY_VAR__;
+    
     current_statement__ = 314;
     t1 = reduce_sum<f1_rsfunctor__>(y1, 1, pstream__);
     local_scalar_t__ t1a;
+    t1a = DUMMY_VAR__;
+    
     current_statement__ = 315;
     t1a = (reduce_sum<f1_rsfunctor__>(y1, 1, pstream__) +
             reduce_sum<f1a_rsfunctor__>(y1, 1, pstream__));
     local_scalar_t__ t2;
+    t2 = DUMMY_VAR__;
+    
     current_statement__ = 316;
     t2 = reduce_sum<f2_rsfunctor__>(y2, 1, pstream__);
     local_scalar_t__ t3;
+    t3 = DUMMY_VAR__;
+    
     current_statement__ = 317;
     t3 = reduce_sum<f3_rsfunctor__>(y3, 1, pstream__);
     local_scalar_t__ t4;
+    t4 = DUMMY_VAR__;
+    
     current_statement__ = 318;
     t4 = reduce_sum<f4_rsfunctor__>(y4, 1, pstream__);
     local_scalar_t__ t5;
+    t5 = DUMMY_VAR__;
+    
     current_statement__ = 319;
     t5 = reduce_sum<f5_rsfunctor__>(y5, 1, pstream__);
     local_scalar_t__ t6;
+    t6 = DUMMY_VAR__;
+    
     current_statement__ = 320;
     t6 = reduce_sum<f6_rsfunctor__>(y6, 1, pstream__);
     local_scalar_t__ t7;
+    t7 = DUMMY_VAR__;
+    
     current_statement__ = 321;
     t7 = reduce_sum<f7_rsfunctor__>(y7, 1, pstream__);
     local_scalar_t__ t8;
+    t8 = DUMMY_VAR__;
+    
     current_statement__ = 322;
     t8 = reduce_sum<f8_rsfunctor__>(y8, 1, pstream__);
     local_scalar_t__ t9;
+    t9 = DUMMY_VAR__;
+    
     current_statement__ = 323;
     t9 = reduce_sum<f9_rsfunctor__>(y14d, 1, pstream__);
     local_scalar_t__ t10;
+    t10 = DUMMY_VAR__;
+    
     current_statement__ = 324;
     t10 = reduce_sum<f10_rsfunctor__>(y15d, 1, pstream__);
     local_scalar_t__ t11;
+    t11 = DUMMY_VAR__;
+    
     current_statement__ = 325;
     t11 = reduce_sum<f11_rsfunctor__>(y16d, 1, pstream__);
     local_scalar_t__ t12;
+    t12 = DUMMY_VAR__;
+    
     current_statement__ = 326;
     t12 = reduce_sum<f12_rsfunctor__>(y17, 1, pstream__);
     local_scalar_t__ tg1;
+    tg1 = DUMMY_VAR__;
+    
     current_statement__ = 327;
     tg1 = reduce_sum<g1_rsfunctor__>(y1, 1, pstream__, y9);
     local_scalar_t__ tg2;
+    tg2 = DUMMY_VAR__;
+    
     current_statement__ = 328;
     tg2 = reduce_sum<g2_rsfunctor__>(y1, 1, pstream__, y10);
     local_scalar_t__ tg3;
+    tg3 = DUMMY_VAR__;
+    
     current_statement__ = 329;
     tg3 = reduce_sum<g3_rsfunctor__>(y1, 1, pstream__, y11);
     local_scalar_t__ tg4;
+    tg4 = DUMMY_VAR__;
+    
     current_statement__ = 330;
     tg4 = reduce_sum<g4_rsfunctor__>(y1, 1, pstream__, y12);
     local_scalar_t__ tg5;
+    tg5 = DUMMY_VAR__;
+    
     current_statement__ = 331;
     tg5 = reduce_sum<g5_rsfunctor__>(y1, 1, pstream__, y1);
     local_scalar_t__ tg6;
+    tg6 = DUMMY_VAR__;
+    
     current_statement__ = 332;
     tg6 = reduce_sum<g6_rsfunctor__>(y1, 1, pstream__, y2);
     local_scalar_t__ tg7;
+    tg7 = DUMMY_VAR__;
+    
     current_statement__ = 333;
     tg7 = reduce_sum<g7_rsfunctor__>(y1, 1, pstream__, y3);
     local_scalar_t__ tg8;
+    tg8 = DUMMY_VAR__;
+    
     current_statement__ = 334;
     tg8 = reduce_sum<g8_rsfunctor__>(y1, 1, pstream__, y4);
     local_scalar_t__ tg9;
+    tg9 = DUMMY_VAR__;
+    
     current_statement__ = 335;
     tg9 = reduce_sum<g9_rsfunctor__>(y1, 1, pstream__, y5);
     local_scalar_t__ tg10;
+    tg10 = DUMMY_VAR__;
+    
     current_statement__ = 336;
     tg10 = reduce_sum<g10_rsfunctor__>(y1, 1, pstream__, y6);
     local_scalar_t__ tg11;
+    tg11 = DUMMY_VAR__;
+    
     current_statement__ = 337;
     tg11 = reduce_sum<g11_rsfunctor__>(y1, 1, pstream__, y7);
     local_scalar_t__ tg12;
+    tg12 = DUMMY_VAR__;
+    
     current_statement__ = 338;
     tg12 = reduce_sum<g12_rsfunctor__>(y1, 1, pstream__, y8);
     local_scalar_t__ ts;
+    ts = DUMMY_VAR__;
+    
     current_statement__ = 339;
     ts = reduce_sum<s_rsfunctor__>(y1d, 1, pstream__, y13d, y9, y10, y11,
            y12, y14d, y1, y2, y3, y4, y15d, y5, y6, y7, y8, y16d, y17);
@@ -5471,6 +5691,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 67;
       context__.validate_dims("data initialization","N","int",
@@ -6141,134 +6363,225 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     
     try {
       std::vector<local_scalar_t__> y1;
+      y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
       current_statement__ = 1;
       y1 = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> y2;
+      y2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      stan::math::fill(y2, DUMMY_VAR__);
+      
       current_statement__ = 2;
       y2 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
              N, N);
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> y3;
+      y3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
+      stan::math::fill(y3, DUMMY_VAR__);
+      
       current_statement__ = 3;
       y3 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
              N, N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> y4;
+      y4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
+      stan::math::fill(y4, DUMMY_VAR__);
+      
       current_statement__ = 4;
       y4 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
              N, N, N);
       std::vector<std::vector<local_scalar_t__>> y5;
+      y5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
+      
+      
       current_statement__ = 5;
       y5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
              N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> y6;
+      y6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
+      stan::math::fill(y6, DUMMY_VAR__);
+      
       current_statement__ = 6;
       y6 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
              N, N, N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> y7;
+      y7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
+      stan::math::fill(y7, DUMMY_VAR__);
+      
       current_statement__ = 7;
       y7 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
              N, N, N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y8;
+      y8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
+      stan::math::fill(y8, DUMMY_VAR__);
+      
       current_statement__ = 8;
       y8 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
              N, N, N, N);
       local_scalar_t__ y9;
+      y9 = DUMMY_VAR__;
+      
       current_statement__ = 9;
       y9 = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__, -1, 1> y10;
+      y10 = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      stan::math::fill(y10, DUMMY_VAR__);
+      
       current_statement__ = 10;
       y10 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
       Eigen::Matrix<local_scalar_t__, 1, -1> y11;
+      y11 = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
+      stan::math::fill(y11, DUMMY_VAR__);
+      
       current_statement__ = 11;
       y11 = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N);
       Eigen::Matrix<local_scalar_t__, -1, -1> y12;
+      y12 = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
+      stan::math::fill(y12, DUMMY_VAR__);
+      
       current_statement__ = 12;
       y12 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, N);
       std::vector<std::vector<std::vector<local_scalar_t__>>> y17;
+      y17 = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__)));
+      
+      
       current_statement__ = 13;
       y17 = in__.template read<std::vector<std::vector<std::vector<local_scalar_t__>>>>(
               N, N, N);
       {
         local_scalar_t__ t1;
+        t1 = DUMMY_VAR__;
+        
         current_statement__ = 40;
         t1 = reduce_sum<f1_rsfunctor__>(y1, 1, pstream__);
         local_scalar_t__ t1a;
+        t1a = DUMMY_VAR__;
+        
         current_statement__ = 41;
         t1a = (reduce_sum<f1_rsfunctor__>(y1, 1, pstream__) +
                 reduce_sum<f1a_rsfunctor__>(y1, 1, pstream__));
         local_scalar_t__ t2;
+        t2 = DUMMY_VAR__;
+        
         current_statement__ = 42;
         t2 = reduce_sum<f2_rsfunctor__>(y2, 1, pstream__);
         local_scalar_t__ t3;
+        t3 = DUMMY_VAR__;
+        
         current_statement__ = 43;
         t3 = reduce_sum<f3_rsfunctor__>(y3, 1, pstream__);
         local_scalar_t__ t4;
+        t4 = DUMMY_VAR__;
+        
         current_statement__ = 44;
         t4 = reduce_sum<f4_rsfunctor__>(y4, 1, pstream__);
         local_scalar_t__ t5;
+        t5 = DUMMY_VAR__;
+        
         current_statement__ = 45;
         t5 = reduce_sum<f5_rsfunctor__>(y5, 1, pstream__);
         local_scalar_t__ t6;
+        t6 = DUMMY_VAR__;
+        
         current_statement__ = 46;
         t6 = reduce_sum<f6_rsfunctor__>(y6, 1, pstream__);
         local_scalar_t__ t7;
+        t7 = DUMMY_VAR__;
+        
         current_statement__ = 47;
         t7 = reduce_sum<f7_rsfunctor__>(y7, 1, pstream__);
         local_scalar_t__ t8;
+        t8 = DUMMY_VAR__;
+        
         current_statement__ = 48;
         t8 = reduce_sum<f8_rsfunctor__>(y8, 1, pstream__);
         local_scalar_t__ t9;
+        t9 = DUMMY_VAR__;
+        
         current_statement__ = 49;
         t9 = reduce_sum<f9_rsfunctor__>(y14d, 1, pstream__);
         local_scalar_t__ t10;
+        t10 = DUMMY_VAR__;
+        
         current_statement__ = 50;
         t10 = reduce_sum<f10_rsfunctor__>(y15d, 1, pstream__);
         local_scalar_t__ t11;
+        t11 = DUMMY_VAR__;
+        
         current_statement__ = 51;
         t11 = reduce_sum<f11_rsfunctor__>(y16d, 1, pstream__);
         local_scalar_t__ t12;
+        t12 = DUMMY_VAR__;
+        
         current_statement__ = 52;
         t12 = reduce_sum<f12_rsfunctor__>(y17, 1, pstream__);
         local_scalar_t__ tg1;
+        tg1 = DUMMY_VAR__;
+        
         current_statement__ = 53;
         tg1 = reduce_sum<g1_rsfunctor__>(y1, 1, pstream__, y9);
         local_scalar_t__ tg2;
+        tg2 = DUMMY_VAR__;
+        
         current_statement__ = 54;
         tg2 = reduce_sum<g2_rsfunctor__>(y1, 1, pstream__, y10);
         local_scalar_t__ tg3;
+        tg3 = DUMMY_VAR__;
+        
         current_statement__ = 55;
         tg3 = reduce_sum<g3_rsfunctor__>(y1, 1, pstream__, y11);
         local_scalar_t__ tg4;
+        tg4 = DUMMY_VAR__;
+        
         current_statement__ = 56;
         tg4 = reduce_sum<g4_rsfunctor__>(y1, 1, pstream__, y12);
         local_scalar_t__ tg5;
+        tg5 = DUMMY_VAR__;
+        
         current_statement__ = 57;
         tg5 = reduce_sum<g5_rsfunctor__>(y1, 1, pstream__, y1);
         local_scalar_t__ tg6;
+        tg6 = DUMMY_VAR__;
+        
         current_statement__ = 58;
         tg6 = reduce_sum<g6_rsfunctor__>(y1, 1, pstream__, y2);
         local_scalar_t__ tg7;
+        tg7 = DUMMY_VAR__;
+        
         current_statement__ = 59;
         tg7 = reduce_sum<g7_rsfunctor__>(y1, 1, pstream__, y3);
         local_scalar_t__ tg8;
+        tg8 = DUMMY_VAR__;
+        
         current_statement__ = 60;
         tg8 = reduce_sum<g8_rsfunctor__>(y1, 1, pstream__, y4);
         local_scalar_t__ tg9;
+        tg9 = DUMMY_VAR__;
+        
         current_statement__ = 61;
         tg9 = reduce_sum<g9_rsfunctor__>(y1, 1, pstream__, y5);
         local_scalar_t__ tg10;
+        tg10 = DUMMY_VAR__;
+        
         current_statement__ = 62;
         tg10 = reduce_sum<g10_rsfunctor__>(y1, 1, pstream__, y6);
         local_scalar_t__ tg11;
+        tg11 = DUMMY_VAR__;
+        
         current_statement__ = 63;
         tg11 = reduce_sum<g11_rsfunctor__>(y1, 1, pstream__, y7);
         local_scalar_t__ tg12;
+        tg12 = DUMMY_VAR__;
+        
         current_statement__ = 64;
         tg12 = reduce_sum<g12_rsfunctor__>(y1, 1, pstream__, y8);
         local_scalar_t__ ts;
+        ts = DUMMY_VAR__;
+        
         current_statement__ = 65;
         ts = reduce_sum<s_rsfunctor__>(y1d, 1, pstream__, y13d, y9, y10, y11,
                y12, y14d, y1, y2, y3, y4, y15d, y5, y6, y7, y8, y16d, y17);
         local_scalar_t__ tt;
+        tt = DUMMY_VAR__;
+        
         current_statement__ = 66;
         tt = r(pstream__);
       }
@@ -6305,49 +6618,86 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     
     try {
       std::vector<double> y1;
+      y1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 1;
       y1 = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<Eigen::Matrix<double, -1, 1>> y2;
+      y2 = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(y2, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 2;
       y2 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
              N, N);
       std::vector<Eigen::Matrix<double, 1, -1>> y3;
+      y3 = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
+      stan::math::fill(y3, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 3;
       y3 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
              N, N);
       std::vector<Eigen::Matrix<double, -1, -1>> y4;
+      y4 = std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N));
+      stan::math::fill(y4, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 4;
       y4 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
              N, N, N);
       std::vector<std::vector<double>> y5;
+      y5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
+      
+      
       current_statement__ = 5;
       y5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
              N);
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> y6;
+      y6 = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(N, std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N)));
+      stan::math::fill(y6, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 6;
       y6 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
              N, N, N);
       std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> y7;
+      y7 = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(N, std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N)));
+      stan::math::fill(y7, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 7;
       y7 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
              N, N, N);
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> y8;
+      y8 = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(N, std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N)));
+      stan::math::fill(y8, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 8;
       y8 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
              N, N, N, N);
       double y9;
+      y9 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 9;
       y9 = in__.template read<local_scalar_t__>();
       Eigen::Matrix<double, -1, 1> y10;
+      y10 = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(y10, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 10;
       y10 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
       Eigen::Matrix<double, 1, -1> y11;
+      y11 = Eigen::Matrix<double, 1, -1>(N);
+      stan::math::fill(y11, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 11;
       y11 = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N);
       Eigen::Matrix<double, -1, -1> y12;
+      y12 = Eigen::Matrix<double, -1, -1>(N, N);
+      stan::math::fill(y12, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 12;
       y12 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, N);
       std::vector<std::vector<std::vector<double>>> y17;
+      y17 = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN())));
+      
+      
       current_statement__ = 13;
       y17 = in__.template read<std::vector<std::vector<std::vector<local_scalar_t__>>>>(
               N, N, N);
@@ -6421,82 +6771,134 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
         return ;
       } 
       double t1;
+      t1 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 14;
       t1 = reduce_sum<f1_rsfunctor__>(y1, 1, pstream__);
       double t1a;
+      t1a = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 15;
       t1a = (reduce_sum<f1_rsfunctor__>(y1, 1, pstream__) +
               reduce_sum<f1a_rsfunctor__>(y1, 1, pstream__));
       double t2;
+      t2 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 16;
       t2 = reduce_sum<f2_rsfunctor__>(y2, 1, pstream__);
       double t3;
+      t3 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 17;
       t3 = reduce_sum<f3_rsfunctor__>(y3, 1, pstream__);
       double t4;
+      t4 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 18;
       t4 = reduce_sum<f4_rsfunctor__>(y4, 1, pstream__);
       double t5;
+      t5 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 19;
       t5 = reduce_sum<f5_rsfunctor__>(y5, 1, pstream__);
       double t6;
+      t6 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 20;
       t6 = reduce_sum<f6_rsfunctor__>(y6, 1, pstream__);
       double t7;
+      t7 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 21;
       t7 = reduce_sum<f7_rsfunctor__>(y7, 1, pstream__);
       double t8;
+      t8 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 22;
       t8 = reduce_sum<f8_rsfunctor__>(y8, 1, pstream__);
       double t9;
+      t9 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 23;
       t9 = reduce_sum<f9_rsfunctor__>(y14d, 1, pstream__);
       double t10;
+      t10 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 24;
       t10 = reduce_sum<f10_rsfunctor__>(y15d, 1, pstream__);
       double t11;
+      t11 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 25;
       t11 = reduce_sum<f11_rsfunctor__>(y16d, 1, pstream__);
       double t12;
+      t12 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 26;
       t12 = reduce_sum<f12_rsfunctor__>(y17, 1, pstream__);
       double tg1;
+      tg1 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 27;
       tg1 = reduce_sum<g1_rsfunctor__>(y1, 1, pstream__, y9);
       double tg2;
+      tg2 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 28;
       tg2 = reduce_sum<g2_rsfunctor__>(y1, 1, pstream__, y10);
       double tg3;
+      tg3 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 29;
       tg3 = reduce_sum<g3_rsfunctor__>(y1, 1, pstream__, y11);
       double tg4;
+      tg4 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 30;
       tg4 = reduce_sum<g4_rsfunctor__>(y1, 1, pstream__, y12);
       double tg5;
+      tg5 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 31;
       tg5 = reduce_sum<g5_rsfunctor__>(y1, 1, pstream__, y1);
       double tg6;
+      tg6 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 32;
       tg6 = reduce_sum<g6_rsfunctor__>(y1, 1, pstream__, y2);
       double tg7;
+      tg7 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 33;
       tg7 = reduce_sum<g7_rsfunctor__>(y1, 1, pstream__, y3);
       double tg8;
+      tg8 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 34;
       tg8 = reduce_sum<g8_rsfunctor__>(y1, 1, pstream__, y4);
       double tg9;
+      tg9 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 35;
       tg9 = reduce_sum<g9_rsfunctor__>(y1, 1, pstream__, y5);
       double tg10;
+      tg10 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 36;
       tg10 = reduce_sum<g10_rsfunctor__>(y1, 1, pstream__, y6);
       double tg11;
+      tg11 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 37;
       tg11 = reduce_sum<g11_rsfunctor__>(y1, 1, pstream__, y7);
       double tg12;
+      tg12 = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 38;
       tg12 = reduce_sum<g12_rsfunctor__>(y1, 1, pstream__, y8);
       double tgs;
+      tgs = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 39;
       tgs = reduce_sum<s_rsfunctor__>(y1d, 1, pstream__, y13d, y9d, y10d,
               y11d, y12d, y14d, y1d, y2d, y3d, y4d, y15d, y5d, y6d, y7d, y8d,
@@ -6546,6 +6948,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       std::vector<local_scalar_t__> y1;
       y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
@@ -6647,6 +7051,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       }
       out__.write(y8);
       local_scalar_t__ y9;
+      y9 = DUMMY_VAR__;
+      
       y9 = in__.read<local_scalar_t__>();
       out__.write(y9);
       Eigen::Matrix<local_scalar_t__, -1, 1> y10;
@@ -7154,22 +7560,27 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 39> names__ = std::array<std::string, 39>{"y1",
-      "y2", "y3", "y4", "y5", "y6", "y7", "y8", "y9", "y10", "y11", "y12",
-      "y17", "t1", "t1a", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9",
-      "t10", "t11", "t12", "tg1", "tg2", "tg3", "tg4", "tg5", "tg6", "tg7",
-      "tg8", "tg9", "tg10", "tg11", "tg12", "tgs"};
+     constexpr std::array<const char*, 13> names__{"y1", "y2", "y3", "y4",
+      "y5", "y6", "y7", "y8", "y9", "y10", "y11", "y12", "y17"};
+      const std::array<Eigen::Index, 13> constrain_param_sizes__{N, (N * N),
+       (N * N), (N * N * N), (N * N), (N * N * N), (N * N * N),
+       (N * N * N * N), 1, N, N, (N * N), (N * N * N)};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
