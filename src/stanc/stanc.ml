@@ -185,8 +185,7 @@ let print_or_write data =
   if !output_file <> "" then Out_channel.write_all !output_file ~data
   else print_endline data
 
-(** ad directives from the given file. *)
-let use_stan_file filename =
+let use_file filename =
   let ast =
     Frontend_utils.get_ast_or_exit filename
       ~print_warnings:(not !canonicalize_program)
@@ -268,7 +267,7 @@ let main () =
     Stan_math_signatures.pretty_print_all_math_sigs Format.std_formatter () ;
     exit 0 ) ;
   if !model_file = "" then model_file_err () ;
-  (* if we only have functions, just auto-format *)
+  (* if we only have functions, always compile as standalone *)
   if String.is_suffix !model_file ~suffix:".stanfunctions" then (
     Stan_math_code_gen.standalone_functions := true ;
     bare_functions := true ) ;
@@ -279,6 +278,6 @@ let main () =
         (remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/'))))
       ^ "_model"
   else Semantic_check.model_name := mangle !Semantic_check.model_name ;
-  use_stan_file !model_file
+  use_file !model_file
 
 let () = main ()

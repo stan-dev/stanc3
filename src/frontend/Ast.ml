@@ -211,7 +211,6 @@ let mk_typed_statement ~stmt ~loc ~return_type =
 (** Program shapes, where we obtain types of programs if we substitute typed or untyped
     statements for 's *)
 type 's block = {stmts: 's list; xloc: Middle.Location_span.t [@ignore]}
-[@@deriving map, fold, sexp, hash, compare]
 
 and comment_type =
   | LineComment of string * Middle.Location_span.t

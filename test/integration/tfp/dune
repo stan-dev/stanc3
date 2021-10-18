@@ -35,7 +35,7 @@
  (targets python_kwrds.py.output)
  (deps (package stanc) (:stanfiles ./stan_models/python_kwrds.stan))
  (action
-  (with-stdout-to %{targets}
+  (with-outputs-to %{targets}
    (run %{bin:stan2tfp} %{stanfiles}))))
 
 (alias
@@ -50,5 +50,5 @@
    (run %{bin:stan2tfp} %{stanfiles}))))
 
 (alias
- (name runtest) 
+ (name runtest)
  (action (diff ./tfp_models/transformed_data.py transformed_data.py.output)))

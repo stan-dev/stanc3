@@ -8,9 +8,6 @@ val find_udf_log_suffix :
 
 val update_suffix : string -> Middle.UnsizedType.t -> string
 
-val userdef_distributions_map :
-  typed_statement block option -> Middle.UnsizedType.t String.Map.t
-
 val collect_userdef_distributions :
   typed_program -> Middle.UnsizedType.t String.Map.t
 

@@ -190,14 +190,11 @@ let rec collect_deprecated_stmt deprecated_userdefined
         (fun l _ -> l)
         acc stmt
 
-let userdef_distributions_map funcs =
-  funcs |> Ast.get_stmts
+let collect_userdef_distributions program =
+  program.functionblock |> Ast.get_stmts
   |> List.filter_map ~f:find_udf_log_suffix
   |> List.dedup_and_sort ~compare:(fun (x, _) (y, _) -> String.compare x y)
   |> String.Map.of_alist_exn
-
-let collect_userdef_distributions program =
-  program.functionblock |> userdef_distributions_map
 
 let collect_warnings (program : typed_program) =
   fold_program
