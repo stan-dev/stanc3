@@ -560,6 +560,13 @@ and pp_list_of_statements ppf (l, xloc) =
   in
   with_vbox ppf 0 (fun () -> pp_head ppf l)
 
+let pp_bare_block ppf {stmts; xloc} =
+  pp_spacing None (Some xloc.begin_loc) ppf (get_comments xloc.begin_loc) ;
+  with_indented_box ppf 0 0 (fun () ->
+      Format.pp_print_cut ppf () ;
+      pp_list_of_statements ppf (stmts, xloc) ;
+      Format.pp_print_cut ppf () )
+
 let pp_block block_name ppf {stmts; xloc} =
   Fmt.pf ppf "%s {" block_name ;
   Format.pp_print_cut ppf () ;
@@ -583,8 +590,8 @@ let pp_program ppf
     ; transformedparametersblock= btp
     ; modelblock= bm
     ; generatedquantitiesblock= bgq
-    ; comments } =
-  set_comments comments ;
+    ; comments= _ } =
+  (* set_comments comments ; *)
   Format.pp_open_vbox ppf 0 ;
   let blocks =
     List.filter_map
@@ -597,13 +604,14 @@ let pp_program ppf
   in
   pp_block_list ppf blocks
 
-let check_correctness prog pretty =
-  let result_ast, (_ : Middle.Warnings.t list) =
+let check_correctness prog pretty = ignore (prog, pretty)
+
+(* let result_ast, (_ : Middle.Warnings.t list) =
     Parse.parse_string Parser.Incremental.program pretty
   in
   if
     compare_untyped_program prog (Option.value_exn (Result.ok result_ast)) <> 0
-  then failwith "Pretty printing failed. Please file a bug."
+  then failwith "Pretty printing failed. Please file a bug." *)
 
 let pp_typed_expression ppf e =
   pp_expression ppf (untyped_expression_of_typed_expression e)
