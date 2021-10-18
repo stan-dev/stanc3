@@ -71,9 +71,7 @@ let nest_unsized_array basic_type n =
 %nonassoc ELSE
 
 (* Top level rule *)
-%type <Ast.untyped_program> program
-%type <Ast.untyped_statement Ast.block> functions_only
-%start program, functions_only
+%start <Ast.untyped_program> program functions_only
 %%
 
 
@@ -111,9 +109,14 @@ program:
 functions_only:
   | fd = list(function_def) EOF
     { grammar_logger "functions_only";
-      { stmts= fd
-      ; xloc= Location_span.of_positions_exn $loc
-      }
+      { functionblock= Some {stmts= fd; xloc= Location_span.of_positions_exn $loc}
+      ; datablock= None
+      ; transformeddatablock= None
+      ; parametersblock= None
+      ; transformedparametersblock= None
+      ; modelblock= None
+      ; generatedquantitiesblock= None
+      ; comments= [] }
     }
 
 (* blocks *)

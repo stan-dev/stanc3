@@ -82,11 +82,11 @@ generated quantities {
   $ ../../../../install/default/bin/stanc --print-canonical funs.stanfunctions
 // comment test comment
 void test(int x, int y) {
-  print(x, ((y)));
+  print(x, y);
 }
 
 real deprecated_lp() {
-  return get_lp();
+  return target();
 }
   $ ../../../../install/default/bin/stanc --print-canonical parenthesize.stan
 transformed data {

@@ -2967,6 +2967,7 @@ program: FUNCTIONBLOCK LBRACE VECTOR LBRACE
 
 Either a number of unsized dimensions is expected as part of a function return type or an identifier is expected as a function name.
 
+program: FUNCTIONBLOCK LBRACE VOID WHILE LPAREN RPAREN SEMICOLON EOF
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN SEMICOLON WHILE
 ##
 ## Ends in an error in state: 506.
@@ -9540,7 +9541,7 @@ functions_only: WHILE
 ##
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
+Function definitions/declarations expected in '.stanfunctions' file
 
 functions_only: VOID ARRAY LPAREN RPAREN SEMICOLON RBRACE
 ##
@@ -9555,27 +9556,8 @@ functions_only: VOID ARRAY LPAREN RPAREN SEMICOLON RBRACE
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 506, spurious reduction of production list(function_def) -> 
-## In state 507, spurious reduction of production list(function_def) -> function_def list(function_def) 
+## In state 506, spurious reduction of production list(function_def) ->
+## In state 507, spurious reduction of production list(function_def) -> function_def list(function_def)
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
-
-program: FUNCTIONBLOCK LBRACE VOID WHILE LPAREN RPAREN SEMICOLON EOF
-##
-## Ends in an error in state: 511.
-##
-## function_block -> FUNCTIONBLOCK LBRACE list(function_def) . RBRACE [ TRANSFORMEDPARAMETERSBLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF DATABLOCK ]
-##
-## The known suffix of the stack is as follows:
-## FUNCTIONBLOCK LBRACE list(function_def)
-##
-## WARNING: This example involves spurious reductions.
-## This implies that, although the LR(1) items shown above provide an
-## accurate view of the past (what has been recognized so far), they
-## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 506, spurious reduction of production list(function_def) -> 
-## In state 507, spurious reduction of production list(function_def) -> function_def list(function_def) 
-##
-
-TODO: PARSER MESSAGE NEEDED HERE.
+Only function definitions/declarations are expected in '.stanfunctions' file

@@ -32,6 +32,7 @@ let output_file = ref ""
 let generate_data = ref false
 let warn_uninitialized = ref false
 let warn_pedantic = ref false
+let bare_functions = ref false
 
 (** Some example command-line options here *)
 let options =
@@ -165,6 +166,10 @@ let model_file_err () =
 let add_file filename =
   if !model_file = "" then model_file := filename else model_file_err ()
 
+let remove_dotstan s =
+  if String.is_suffix ~suffix:".stanfunctions" s then String.drop_suffix s 14
+  else String.drop_suffix s 5
+
 (*
       I am not using Fmt to print to stderr here because there was a pretty awful
       bug where it would unpredictably fail to flush. It would flush when using
@@ -176,18 +181,24 @@ let add_file filename =
 let pp_stderr formatter formatee =
   Fmt.strf "%a" formatter formatee |> Out_channel.(output_string stderr)
 
+let print_or_write data =
+  if !output_file <> "" then Out_channel.write_all !output_file ~data
+  else print_endline data
+
 (** ad directives from the given file. *)
 let use_stan_file filename =
   let ast =
     Frontend_utils.get_ast_or_exit filename
       ~print_warnings:(not !canonicalize_program)
+      ~bare_functions:!bare_functions
   in
   let ast =
     if !canonicalize_program then Canonicalize.repair_syntax ast else ast
   in
   Debugging.ast_logger ast ;
-  if !pretty_print_program then
-    print_endline (Pretty_printing.pretty_print_program ast) ;
+  if !pretty_print_program && not !canonicalize_program then
+    print_or_write
+      (Pretty_printing.pretty_print_program ~bare_functions:!bare_functions ast) ;
   let typed_ast = Frontend_utils.type_ast_or_exit ast in
   if !print_info_json then (
     print_endline (Info.info typed_ast) ;
@@ -199,8 +210,9 @@ let use_stan_file filename =
     Warnings.pp_warnings Fmt.stderr ?printed_filename
       (Deprecation_analysis.collect_warnings typed_ast) ;
   if !canonicalize_program then
-    print_endline
+    print_or_write
       (Pretty_printing.pretty_print_typed_program
+         ~bare_functions:!bare_functions
          (Canonicalize.canonicalize_program typed_ast)) ;
   if !generate_data then
     print_endline (Debug_data_generation.print_data_prog typed_ast) ;
@@ -234,46 +246,11 @@ let use_stan_file filename =
         opt )
       else tx_mir
     in
+    if !output_file = "" then
+      output_file := remove_dotstan !model_file ^ ".hpp" ;
     let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
-
-let use_stanfunctions_file filename =
-  if not (!pretty_print_program || !canonicalize_program) then (
-    Arg.usage options
-      (".stanfunctions only supports pretty-printing!\n\n" ^ usage) ;
-    exit 127 ) ;
-  let functions =
-    let printed_filename =
-      match !filename_for_msg with "" -> None | s -> Some s
-    in
-    let res, warnings =
-      Parse.parse_file Parser.Incremental.functions_only filename
-    in
-    if not !canonicalize_program then
-      (Warnings.pp_warnings ?printed_filename) Fmt.stderr warnings ;
-    match res with
-    | Result.Ok ast -> ast
-    | Result.Error err -> Errors.pp Fmt.stderr err ; exit 1
-  in
-  let typed_functions = (* TODO *) functions in
-  let functions =
-    (* if !canonicalize_program then
-      Ast.map_block
-        Canonicalize.(
-          replace_deprecated_stmt
-            (Deprecation_analysis.userdef_distributions_map
-               (Some typed_functions)))
-        typed_functions
-    else *)
-    typed_functions
-  in
-  let fmt = Fmt.strf "%a" Pretty_printing.pp_bare_block functions in
-  if !output_file <> "" then Out_channel.write_all !output_file ~data:fmt
-  else print_endline fmt ;
-  exit 0
-
-let remove_dotstan s = String.drop_suffix s 5
 
 let mangle =
   String.concat_map ~f:(fun c ->
@@ -292,8 +269,9 @@ let main () =
     exit 0 ) ;
   if !model_file = "" then model_file_err () ;
   (* if we only have functions, just auto-format *)
-  if String.is_suffix !model_file ~suffix:".stanfunctions" then
-    use_stanfunctions_file !model_file ;
+  if String.is_suffix !model_file ~suffix:".stanfunctions" then (
+    Stan_math_code_gen.standalone_functions := true ;
+    bare_functions := true ) ;
   (* Just translate a stan program *)
   if !Semantic_check.model_name = "" then
     Semantic_check.model_name :=
@@ -301,7 +279,6 @@ let main () =
         (remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/'))))
       ^ "_model"
   else Semantic_check.model_name := mangle !Semantic_check.model_name ;
-  if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
   use_stan_file !model_file
 
 let () = main ()

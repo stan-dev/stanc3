@@ -17,8 +17,7 @@ let parse parse_fun lexbuf =
       ()
   in
   let success prog =
-    Pretty_printing.set_comments @@ List.rev !Lexer.comments ;
-    Result.Ok prog
+    Result.Ok {prog with Ast.comments= List.rev !Lexer.comments}
   in
   let failure error_state =
     let env =
