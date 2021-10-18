@@ -849,7 +849,6 @@ let () =
   List.iter
     ~f:(fun x -> add_unqualified ("add", ReturnType x, [x; x], AoS))
     bare_types ;
-  (* add_unqualified ("add", ReturnType UComplex, [UComplex; UReal], AoS) ; *)
   add_unqualified ("add", ReturnType UVector, [UVector; UReal], AoS) ;
   add_unqualified ("add", ReturnType URowVector, [URowVector; UReal], AoS) ;
   add_unqualified ("add", ReturnType UMatrix, [UMatrix; UReal], AoS) ;
