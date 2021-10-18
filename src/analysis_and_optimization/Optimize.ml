@@ -1268,6 +1268,11 @@ let optimize_soa (mir : Program.Typed.t) =
          ~f:(Mem_pattern.query_initial_demotable_stmt false)
          mir.log_prob)
   in
+  (*
+  let print_set s = 
+    Set.Poly.iter ~f:print_endline s in
+  let () = print_set initial_variables in
+  *)
   let mod_exprs aos_exits mod_expr =
     Mir_utils.map_rec_expr (Mem_pattern.modify_expr_pattern aos_exits) mod_expr
   in
@@ -1277,7 +1282,7 @@ let optimize_soa (mir : Program.Typed.t) =
   let transform stmt =
     optimize_minimal_variables ~gen_variables:gen_aos_variables
       ~update_expr:mod_exprs ~update_stmt:modify_stmt_patt ~initial_variables
-      stmt ~extra_variables:(fun _ -> Set.Poly.empty )
+      stmt ~extra_variables:(fun _ -> initial_variables )
   in
   let transform' s =
     match transform {pattern= SList s; meta= Location_span.empty} with

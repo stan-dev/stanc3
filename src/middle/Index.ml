@@ -34,7 +34,7 @@ let bounds = function
  * @param op a functor to run with inputs of inner exprs
  * @param ind the Index.t to
  *)
-let apply ~default ~merge op ind =
+let apply ~default ~merge op (ind : 'a t) =
   match ind with
   | All -> default
   | Single ind_expr -> op ind_expr

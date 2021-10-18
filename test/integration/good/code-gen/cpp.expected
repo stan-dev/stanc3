@@ -3548,10 +3548,16 @@ class conditional_expression_types_model final : public model_base_crtp<conditio
     (void) function__;  // suppress unused var warning
     
     try {
-      Eigen::Matrix<local_scalar_t__, -1, 1> a =
-         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> a =
+         stan::conditional_var_value_t<local_scalar_t__, 
+           Eigen::Matrix<local_scalar_t__, -1, 1>>(
+           Eigen::Matrix<double, -1, 1>::Constant(2,
+             std::numeric_limits<double>::quiet_NaN()));
       current_statement__ = 1;
-      a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
+      a = in__.template read<
+            stan::conditional_var_value_t<local_scalar_t__, 
+              Eigen::Matrix<local_scalar_t__, -1, 1>>>(2);
       Eigen::Matrix<local_scalar_t__, -1, 1> b =
          Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
       current_statement__ = 2;

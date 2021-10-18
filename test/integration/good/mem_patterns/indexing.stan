@@ -25,6 +25,8 @@ parameters {
   vector[N] p_soa_rhs_loop_mul;
   vector[N] p_soa_used_with_aos_in_excluded_fun;
   vector[N] p_soa_rep_matrix_vec;
+  matrix[N, M] p_soa_mat_pass_func_outer_single_indexed1;
+  matrix[N, M] p_soa_mat_pass_func_outer_single_indexed2;
   // Should not be SoA
     // because of failed function
   vector[M] p_aos_vec_v_assign_to_aos;
@@ -39,9 +41,11 @@ parameters {
   // Because used in sub-function that supports 
   // SoA but outer function does not
   matrix[N, M] p_aos_mat;
+
   // Because used in single cell index from function
-  matrix[N, M] p_aos_mat_fail_func_uni_uni_idx1;
-  matrix[N, M] p_aos_mat_fail_func_uni_uni_idx2;
+  matrix[N, M] p_aos_mat_fail_uni_uni_idx1;
+  matrix[N, M] p_aos_mat_fail_uni_uni_idx2;
+
 }
 
 transformed parameters {
@@ -92,6 +96,14 @@ model {
     y ~ normal(multiply(dat_x, p_soa_loop_mat_uni_col_idx[1:N, 1]), 1.0);
     y ~ normal(multiply(dat_x, p_soa_loop_mat_uni_col_idx[i]'), 1.0);
     y ~ normal(multiply(dat_x, p_soa_loop_mat_multi_uni_uni_idx[idx_tester[i],]'), 1.0);
+    y ~ normal(multiply(dat_x[,i], transpose(multiply(p_soa_mat_pass_func_outer_single_indexed1,
+     p_soa_mat_pass_func_outer_single_indexed2))[mask_fun(i), mask_fun(i)]), 1.0);
+     /*
+     Note: Make test showing this passes
+         y ~ normal(multiply(dat_x[,i], p_aos_mat_fail_uni_uni_idx1[i, i] *
+     p_aos_mat_fail_uni_uni_idx2[i, i]), 1.0);
+
+*/
   }
 
   // SHOULD NOT BE SOA
@@ -104,8 +116,9 @@ model {
     // single indexing failures
     y ~ normal(multiply(dat_x[,i], p_aos_loop_vec_v_uni_idx[i]), 1.0);
     y ~ normal(multiply(dat_x[,i], p_aos_loop_mat_uni_uni_idx[i, i]), 1.0);
-    y ~ normal(multiply(dat_x[,i], transpose(multiply(p_aos_mat_fail_func_uni_uni_idx1,
-     p_aos_mat_fail_func_uni_uni_idx2))[mask_fun(i), mask_fun(i)]), 1.0);
+    y ~ normal(dat_x[,i], p_aos_mat_fail_uni_uni_idx1[i, i] *
+     p_aos_mat_fail_uni_uni_idx2[i, i]);
+
   }
 
 }

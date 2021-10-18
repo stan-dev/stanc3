@@ -1131,7 +1131,7 @@ let rec minimal_variables_mfp
   in
   let fwd1_min_vars_mfp = Mf1.mfp () in
   let (module Transfer2) =
-    minimal_variables_rev_transfer false flowgraph_to_mir
+    minimal_variables_rev_transfer true flowgraph_to_mir
       (Map.map ~f:(fun x -> x.exit) fwd1_min_vars_mfp)
   in
   let (module Mf2) =

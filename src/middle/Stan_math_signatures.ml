@@ -1593,18 +1593,18 @@ let () =
   in
   List.iter
     ~f:(fun t1 ->
-      add_unqualified ("logical_negation", ReturnType UInt, [t1], AoS) ;
+      add_unqualified ("logical_negation", ReturnType UInt, [t1], SoA) ;
       List.iter
         ~f:(fun t2 ->
           List.iter
-            ~f:(fun o -> add_unqualified (o, ReturnType UInt, [t1; t2], AoS))
+            ~f:(fun o -> add_unqualified (o, ReturnType UInt, [t1; t2], SoA))
             logical_binops )
         primitive_types )
     primitive_types ;
-  add_unqualified ("logical_eq", ReturnType UInt, [UComplex; UReal], AoS) ;
-  add_unqualified ("logical_eq", ReturnType UInt, [UComplex; UComplex], AoS) ;
-  add_unqualified ("logical_neq", ReturnType UInt, [UComplex; UReal], AoS) ;
-  add_unqualified ("logical_neq", ReturnType UInt, [UComplex; UComplex], AoS) ;
+  add_unqualified ("logical_eq", ReturnType UInt, [UComplex; UReal], SoA) ;
+  add_unqualified ("logical_eq", ReturnType UInt, [UComplex; UComplex], SoA) ;
+  add_unqualified ("logical_neq", ReturnType UInt, [UComplex; UReal], SoA) ;
+  add_unqualified ("logical_neq", ReturnType UInt, [UComplex; UComplex], SoA) ;
   add_nullary "machine_precision" ;
   add_qualified
     ( "map_rect"
