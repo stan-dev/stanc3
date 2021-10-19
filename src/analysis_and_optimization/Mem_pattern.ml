@@ -59,7 +59,7 @@ let query_var_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) :
   Set.Poly.filter_map ~f:get_expr_eigen_names (matrix_set expr)
 
 (**
- * Check an expression to count how many times we see a single index.
+ * Check an expression to count how many times we see a single index. 
  * @param acc An accumulator from previous folds of multiple expressions.
  * @param pattern The expression patterns to match against
  *)
