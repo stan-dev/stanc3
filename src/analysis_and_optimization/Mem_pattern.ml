@@ -171,25 +171,9 @@ let rec query_initial_demotable_expr (in_loop : bool) Expr.Fixed.({pattern; _})
   | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
       Set.Poly.empty
   | TernaryIf (predicate, texpr, fexpr) ->
-      let true_fails = query_expr texpr in
-      let false_fails = query_expr fexpr in
-      let is_eigen_return =
-        UnsizedType.contains_eigen_type fexpr.meta.type_
-        || UnsizedType.contains_eigen_type texpr.meta.type_
-      in
-      let does_either_side_fail =
-        is_eigen_return
-        && (Set.Poly.length true_fails > 0 || Set.Poly.length false_fails > 0)
-      in
-      (*If either side fails we need to force both sides to match*)
-      if does_either_side_fail then
-        Set.Poly.union
-          (Set.Poly.union (query_expr predicate) (query_eigen_names texpr))
-          (query_eigen_names fexpr)
-      else
-        Set.Poly.union
-          (Set.Poly.union (query_expr predicate) true_fails)
-          false_fails
+      Set.Poly.union
+        (Set.Poly.union (query_expr predicate) (query_var_eigen_names texpr))
+        (query_var_eigen_names fexpr)
   | EAnd (lhs, rhs) | EOr (lhs, rhs) ->
       Set.Poly.union (query_expr lhs) (query_expr rhs)
 
