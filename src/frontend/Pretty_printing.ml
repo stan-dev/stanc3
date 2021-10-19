@@ -440,11 +440,7 @@ and pp_recursive_ifthenelse ppf (s, loc) =
         (s1, e.emeta.loc.end_loc) ;
       let newline = match s1.stmt with Block _ -> false | _ -> true in
       let loc2 = s2.smeta.loc.begin_loc in
-      let loc2 =
-        match s2.stmt with
-        | Block _ -> loc2
-        | _ -> {loc2 with line_num= loc2.line_num - 1}
-      in
+      let loc2 = {loc2 with line_num= loc2.line_num - 1} in
       pp_spacing ~newline (Some s1.smeta.loc.end_loc) (Some loc2) ppf
         (get_comments s2.smeta.loc.begin_loc) ;
       let loc = s1.smeta.loc.end_loc in

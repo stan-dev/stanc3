@@ -54,8 +54,7 @@ functions {
         theta_L[theta_L_mark] = tau[i] * scale[i] * dispersion;
         // unlike lme4, theta[theta_L_mark] includes the dispersion term in it
         theta_L_mark += 1;
-      }
-      else {
+      } else {
         // block is lower-triangular               
         matrix[nc, nc] T_i;
         real std_dev;
@@ -123,8 +122,7 @@ functions {
           b[s] = theta_L_start * z_b[s];
         b_mark += l[i];
         theta_L_mark += 1;
-      }
-      else {
+      } else {
         matrix[nc, nc] T_i = rep_matrix(0, nc, nc);
         for (c in 1 : nc) {
           T_i[c, c] = theta_L[theta_L_mark];
@@ -438,8 +436,7 @@ functions {
       if (D_j == 1) 
         return eta_j[N_j];
       return sum(segment(eta_j, N_j - 1, 2));
-    }
-    else {
+    } else {
       int N_jm1 = N_j - 1;
       return log_sum_exp(log_clogit_denom(N_jm1, D_j, eta_j),
                          log_clogit_denom(N_jm1, D_j - 1, eta_j) + eta_j[N_j]);
@@ -731,8 +728,7 @@ transformed parameters {
           b[start : end] = theta_L[i] * z_b[start : end];
           start = end + 1;
         }
-    }
-    else {
+    } else {
       theta_L = make_theta_L(len_theta_L, p, 1.0, tau, scale, zeta, rho, z_T);
       b = make_b(z_b, theta_L, p, l);
     }
@@ -747,13 +743,11 @@ model {
     if (dense_X) {
       eta0 = X0[1] * beta;
       eta1 = X1[1] * beta;
-    }
-    else {
+    } else {
       eta0 = csr_matrix_times_vector2(N[1], K, w_X0, v_X0, u_X0, beta);
       eta1 = csr_matrix_times_vector2(N[2], K, w_X1, v_X1, u_X1, beta);
     }
-  }
-  else {
+  } else {
     eta0 = rep_vector(0.0, N[1]);
     eta1 = rep_vector(0.0, N[2]);
   }
@@ -784,8 +778,7 @@ model {
     if (link != 4) {
       eta0 += gamma[1];
       eta1 += gamma[1];
-    }
-    else {
+    } else {
       real shift = fmax(max(eta0), max(eta1));
       eta0 += gamma[1] - shift;
       eta1 += gamma[1] - shift;
@@ -895,13 +888,11 @@ generated quantities {
       if (dense_X) {
         eta0 = X0[1] * beta;
         eta1 = X1[1] * beta;
-      }
-      else {
+      } else {
         eta0 = csr_matrix_times_vector2(N[1], K, w_X0, v_X0, u_X0, beta);
         eta1 = csr_matrix_times_vector2(N[2], K, w_X1, v_X1, u_X1, beta);
       }
-    }
-    else {
+    } else {
       eta0 = rep_vector(0.0, N[1]);
       eta1 = rep_vector(0.0, N[2]);
     }
@@ -932,8 +923,7 @@ generated quantities {
       if (link != 4) {
         eta0 += gamma[1];
         eta1 += gamma[1];
-      }
-      else {
+      } else {
         real shift;
         shift = fmax(max(eta0), max(eta1));
         eta0 += gamma[1] - shift;
@@ -1012,8 +1002,7 @@ functions {
         theta_L[theta_L_mark] = tau[i] * scale[i] * dispersion;
         // unlike lme4, theta[theta_L_mark] includes the dispersion term in it
         theta_L_mark += 1;
-      }
-      else {
+      } else {
         // block is lower-triangular               
         matrix[nc, nc] T_i;
         real std_dev;
@@ -1081,8 +1070,7 @@ functions {
           b[s] = theta_L_start * z_b[s];
         b_mark += l[i];
         theta_L_mark += 1;
-      }
-      else {
+      } else {
         matrix[nc, nc] T_i = rep_matrix(0, nc, nc);
         for (c in 1 : nc) {
           T_i[c, c] = theta_L[theta_L_mark];
@@ -1600,8 +1588,7 @@ transformed parameters {
           b[start : end] = theta_L[i] * z_b[start : end];
           start = end + 1;
         }
-    }
-    else {
+    } else {
       theta_L = make_theta_L(len_theta_L, p, 1.0, tau, scale, zeta, rho, z_T);
       b = make_b(z_b, theta_L, p, l);
     }
@@ -1634,8 +1621,7 @@ model {
       eta += gamma[1];
     else 
       eta += gamma[1] - max(eta);
-  }
-  else {
+  } else {
     // correction to eta if model has no intercept (because X is centered)
     
     eta += dot_product(xbar, beta);
@@ -1762,8 +1748,7 @@ generated quantities {
         eta += gamma[1] - shift;
         alpha[1] -= shift;
       }
-    }
-    else {
+    } else {
       // correction to eta if model has no intercept (because X is centered)
       
       eta += dot_product(xbar, beta);
@@ -1832,8 +1817,7 @@ functions {
         theta_L[theta_L_mark] = tau[i] * scale[i] * dispersion;
         // unlike lme4, theta[theta_L_mark] includes the dispersion term in it
         theta_L_mark += 1;
-      }
-      else {
+      } else {
         // block is lower-triangular               
         matrix[nc, nc] T_i;
         real std_dev;
@@ -1901,8 +1885,7 @@ functions {
           b[s] = theta_L_start * z_b[s];
         b_mark += l[i];
         theta_L_mark += 1;
-      }
-      else {
+      } else {
         matrix[nc, nc] T_i = rep_matrix(0, nc, nc);
         for (c in 1 : nc) {
           T_i[c, c] = theta_L[theta_L_mark];
@@ -2400,8 +2383,7 @@ functions {
     if (rows(Phi_) > 1) {
       vector[rows(Phi_)] Asym = Phi_[ : , 1];
       return Asym + (Phi_[ : , 2] - Asym) .* exp(-exp(Phi_[ : , 3]) .* input);
-    }
-    else {
+    } else {
       real Asym = Phi_[1, 1];
       return Asym + (Phi_[1, 2] - Asym) * exp(-exp(Phi_[1, 3]) * input);
     }
@@ -2445,8 +2427,7 @@ functions {
       return Dose .* exp(lKe + lKa - Phi_[ : , 3])
              .* (exp(-exp_lKe .* input) - exp(-exp_lKa .* input))
              ./ (exp_lKa - exp_lKe);
-    }
-    else {
+    } else {
       real lKe = Phi_[1, 1];
       real lKa = Phi_[1, 2];
       real exp_lKe = exp(lKe);
@@ -2465,8 +2446,7 @@ functions {
       return A
              + (Phi_[ : , 2] - A)
                ./ (1 + exp((Phi_[ : , 3] - input) ./ exp(Phi_[ : , 4])));
-    }
-    else {
+    } else {
       real A = Phi_[1, 1];
       return A
              + rep_vector(Phi_[1, 2] - A, rows(input))
@@ -2891,8 +2871,7 @@ transformed parameters {
           b[start : end] = theta_L[i] * z_b[start : end];
           start = end + 1;
         }
-    }
-    else {
+    } else {
       theta_L = make_theta_L(len_theta_L, p, aux, tau, scale, zeta, rho, z_T);
       b = make_b(z_b, theta_L, p, l);
     }
@@ -2929,8 +2908,7 @@ model {
       eta += gamma[1] - max(eta);
     else 
       eta += gamma[1] - min(eta);
-  }
-  else {
+  } else {
     // correction to eta if model has no intercept (because X is centered)
     
     eta += dot_product(xbar, beta);
@@ -2952,8 +2930,7 @@ model {
           P[i, 1] += exp(P[i, 3]); // ordering constraint
         target += normal_lpdf(y | SS_biexp(input, P), aux);
       }
-    }
-    else {
+    } else {
       if (SSfun <= 7) {
         if (SSfun == 5) 
           target += normal_lpdf(y | SS_fol(Dose, input, P), aux);
@@ -2961,8 +2938,7 @@ model {
           target += normal_lpdf(y | SS_fpl(input, P), aux);
         else 
           target += normal_lpdf(y | SS_gompertz(input, P), aux);
-      }
-      else {
+      } else {
         if (SSfun == 8) 
           target += normal_lpdf(y | SS_logis(input, P), aux);
         else if (SSfun == 9) 
@@ -2984,18 +2960,15 @@ model {
     if (has_intercept_z == 1) {
       if (link_phi > 1) {
         eta_z += gamma_z[1] - min(eta_z);
-      }
-      else {
+      } else {
         eta_z += gamma_z[1];
       }
-    }
-    else {
+    } else {
       // has_intercept_z == 0
       
       if (link_phi > 1) {
         eta_z += dot_product(zbar, omega) - min(eta_z);
-      }
-      else {
+      } else {
         eta_z += dot_product(zbar, omega);
       }
     }
@@ -3223,14 +3196,12 @@ generated quantities {
         real max_eta = max(eta);
         alpha[1] -= max_eta;
         eta += gamma[1] - max_eta;
-      }
-      else {
+      } else {
         real min_eta = min(eta);
         alpha[1] -= min_eta;
         eta += gamma[1] - min_eta;
       }
-    }
-    else {
+    } else {
       // correction to eta if model has no intercept (because X is centered)
       
       eta += dot_product(xbar, beta);
@@ -3247,18 +3218,15 @@ generated quantities {
       if (link_phi > 1) {
         omega_int[1] -= min(eta_z);
         eta_z += gamma_z[1] - min(eta_z);
-      }
-      else {
+      } else {
         eta_z += gamma_z[1];
       }
-    }
-    else {
+    } else {
       // has_intercept_z == 0
       
       if (link_phi > 1) {
         eta_z += dot_product(zbar, omega) - min(eta_z);
-      }
-      else {
+      } else {
         eta_z += dot_product(zbar, omega);
       }
     }
@@ -3278,8 +3246,7 @@ generated quantities {
           eta_nlmer = SS_asympOrig(input, P);
         else 
           eta_nlmer = SS_biexp(input, P);
-      }
-      else {
+      } else {
         if (SSfun <= 7) {
           if (SSfun == 5) 
             eta_nlmer = SS_fol(Dose, input, P);
@@ -3287,8 +3254,7 @@ generated quantities {
             eta_nlmer = SS_fpl(input, P);
           else 
             eta_nlmer = SS_gompertz(input, P);
-        }
-        else {
+        } else {
           if (SSfun == 8) 
             eta_nlmer = SS_logis(input, P);
           else if (SSfun == 9) 
@@ -3396,8 +3362,7 @@ functions {
         theta_L[theta_L_mark] = tau[i] * scale[i] * dispersion;
         // unlike lme4, theta[theta_L_mark] includes the dispersion term in it
         theta_L_mark += 1;
-      }
-      else {
+      } else {
         // block is lower-triangular               
         matrix[nc, nc] T_i;
         real std_dev;
@@ -3465,8 +3430,7 @@ functions {
           b[s] = theta_L_start * z_b[s];
         b_mark += l[i];
         theta_L_mark += 1;
-      }
-      else {
+      } else {
         matrix[nc, nc] T_i = rep_matrix(0, nc, nc);
         for (c in 1 : nc) {
           T_i[c, c] = theta_L[theta_L_mark];
@@ -3977,8 +3941,7 @@ transformed parameters {
           b[start : end] = theta_L[i] * z_b[start : end];
           start = end + 1;
         }
-    }
-    else {
+    } else {
       if (family == 6) 
         theta_L = make_theta_L(len_theta_L, p, 1.0, tau, scale, zeta, rho,
                                z_T);
@@ -4016,8 +3979,7 @@ model {
       eta += gamma[1];
     else 
       eta += gamma[1] - min(eta);
-  }
-  else {
+  } else {
     // correction to eta if model has no intercept (because X is centered)
     
     eta += dot_product(xbar, beta);
@@ -4041,8 +4003,7 @@ model {
         target += poisson_log_lpmf(y | eta);
       else 
         target += poisson_lpmf(y | linkinv_count(eta, link));
-    }
-    else {
+    } else {
       if (link == 1) 
         target += neg_binomial_2_log_lpmf(y | eta, aux);
       else 
@@ -4183,8 +4144,7 @@ generated quantities {
         eta += gamma[1] - shift;
         alpha[1] -= shift;
       }
-    }
-    else {
+    } else {
       // correction to eta if model has no intercept (because X is centered)
       
       eta += dot_product(xbar, beta);
@@ -4281,8 +4241,7 @@ functions {
         theta_L[theta_L_mark] = tau[i] * scale[i] * dispersion;
         // unlike lme4, theta[theta_L_mark] includes the dispersion term in it
         theta_L_mark += 1;
-      }
-      else {
+      } else {
         // block is lower-triangular               
         matrix[nc, nc] T_i;
         real std_dev;
@@ -4350,8 +4309,7 @@ functions {
           b[s] = theta_L_start * z_b[s];
         b_mark += l[i];
         theta_L_mark += 1;
-      }
-      else {
+      } else {
         matrix[nc, nc] T_i = rep_matrix(0, nc, nc);
         for (c in 1 : nc) {
           T_i[c, c] = theta_L[theta_L_mark];
@@ -4665,8 +4623,7 @@ functions {
       if (D_j == 1) 
         return eta_j[N_j];
       return sum(segment(eta_j, N_j - 1, 2));
-    }
-    else {
+    } else {
       int N_jm1 = N_j - 1;
       return log_sum_exp(log_clogit_denom(N_jm1, D_j, eta_j),
                          log_clogit_denom(N_jm1, D_j - 1, eta_j) + eta_j[N_j]);
@@ -5264,8 +5221,7 @@ functions {
       real theta_L_start = theta_L[theta_L_mark];
       for (s in b_mark : (b_mark + l[i] - 1)) 
         b_matrix[nc, s] = theta_L_start * z_b[s];
-    }
-    else {
+    } else {
       matrix[nc, nc] T_i = rep_matrix(0, nc, nc);
       for (c in 1 : nc) {
         T_i[c, c] = theta_L[theta_L_mark];
@@ -5716,8 +5672,7 @@ functions {
           if (m == 1) {
             shift = 0;
             j_shift = 0;
-          }
-          else {
+          } else {
             shift = sum(pmat[t_i, 1 : (m - 1)]);
             j_shift = sum(size_which_b[1 : (m - 1)]);
           }
@@ -5819,8 +5774,7 @@ functions {
             shift_lb = 0;
             shift_ub = 0;
             shift_beta = 0;
-          }
-          else {
+          } else {
             j_shift = sum(size_which_coef[1 : (m - 1)]);
             m_shift = sum(pmat[t_i, 1 : (m - 1)]);
             shift_nb = sum(has_intercept_nob[1 : (m - 1)]);
@@ -6628,8 +6582,7 @@ model {
             if (has_grp[m] == 0) {
               // no grouping factor clustered within patients
               val = eta_tmp;
-            }
-            else {
+            } else {
               // submodel has a grouping factor clustered within patients
               val = collapse_within_groups(eta_tmp, grp_idx, grp_assoc);
             }
@@ -6646,8 +6599,7 @@ model {
               int sel = j_shift + j;
               if (has_grp[m] == 0) {
                 val = eta_tmp .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel];
-              }
-              else {
+              } else {
                 val = collapse_within_groups(eta_tmp
                                              .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
                                              grp_idx, grp_assoc);
@@ -6738,8 +6690,7 @@ model {
               e_eta_q += a_beta[mark] * (val - a_xbar[mark]);
             }
           }
-        }
-        else {
+        } else {
           mark3 += 2;
         }
         
@@ -6778,8 +6729,7 @@ model {
             vector[nrow_e_Xq] val;
             if (has_grp[m] == 0) {
               val = dydt_eta_q;
-            }
-            else {
+            } else {
               val = collapse_within_groups(dydt_eta_q, grp_idx, grp_assoc);
             }
             mark += 1;
@@ -6794,8 +6744,7 @@ model {
               int sel = j_shift + j;
               if (has_grp[m] == 0) {
                 val = dydt_eta_q .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel];
-              }
-              else {
+              } else {
                 val = collapse_within_groups(dydt_eta_q
                                              .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
                                              grp_idx, grp_assoc);
@@ -6891,8 +6840,7 @@ model {
             vector[nrow_e_Xq] val;
             if (has_grp[m] == 0) {
               val = mu_tmp;
-            }
-            else {
+            } else {
               val = collapse_within_groups(mu_tmp, grp_idx, grp_assoc);
             }
             mark += 1;
@@ -6907,8 +6855,7 @@ model {
               int sel = j_shift + j;
               if (has_grp[m] == 0) {
                 val = mu_tmp .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel];
-              }
-              else {
+              } else {
                 val = collapse_within_groups(mu_tmp
                                              .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
                                              grp_idx, grp_assoc);
@@ -6999,8 +6946,7 @@ model {
               e_eta_q += a_beta[mark] * (val - a_xbar[mark]);
             }
           }
-        }
-        else {
+        } else {
           mark3 += 2;
         }
         
@@ -7476,8 +7422,7 @@ functions {
         theta_L[theta_L_mark] = tau[i] * scale[i] * dispersion;
         // unlike lme4, theta[theta_L_mark] includes the dispersion term in it
         theta_L_mark += 1;
-      }
-      else {
+      } else {
         // block is lower-triangular               
         matrix[nc, nc] T_i;
         real std_dev;
@@ -7545,8 +7490,7 @@ functions {
           b[s] = theta_L_start * z_b[s];
         b_mark += l[i];
         theta_L_mark += 1;
-      }
-      else {
+      } else {
         matrix[nc, nc] T_i = rep_matrix(0, nc, nc);
         for (c in 1 : nc) {
           T_i[c, c] = theta_L[theta_L_mark];
@@ -7860,8 +7804,7 @@ functions {
       if (D_j == 1) 
         return eta_j[N_j];
       return sum(segment(eta_j, N_j - 1, 2));
-    }
-    else {
+    } else {
       int N_jm1 = N_j - 1;
       return log_sum_exp(log_clogit_denom(N_jm1, D_j, eta_j),
                          log_clogit_denom(N_jm1, D_j - 1, eta_j) + eta_j[N_j]);
@@ -8459,8 +8402,7 @@ functions {
       real theta_L_start = theta_L[theta_L_mark];
       for (s in b_mark : (b_mark + l[i] - 1)) 
         b_matrix[nc, s] = theta_L_start * z_b[s];
-    }
-    else {
+    } else {
       matrix[nc, nc] T_i = rep_matrix(0, nc, nc);
       for (c in 1 : nc) {
         T_i[c, c] = theta_L[theta_L_mark];
@@ -9608,8 +9550,7 @@ transformed parameters {
     if (K > 1) {
       Delta_y = inv_sqrt(1 - R2);
       beta = u[1] * sqrt(R2) * Delta_y * sqrt_Nm1;
-    }
-    else {
+    } else {
       Delta_y = inv_sqrt(1 - square(R2));
       beta[1] = R2 * Delta_y * sqrt_Nm1;
     }
@@ -9707,8 +9648,7 @@ generated quantities {
         // do nothing
       } else if (J == 2) {
         mean_PPD[1] += bernoulli_rng(theta[J]);
-      }
-      else {
+      } else {
         y_tilde = categorical_rng(theta);
         mean_PPD[y_tilde] += 1;
       }
