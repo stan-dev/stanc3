@@ -1131,7 +1131,7 @@ let rec minimal_variables_mfp
   in
   let fwd1_min_vars_mfp = Mf1.mfp () in
   let (module Transfer2) =
-    minimal_variables_rev_transfer true flowgraph_to_mir
+    minimal_variables_rev_transfer false flowgraph_to_mir
       (Map.map ~f:(fun x -> x.exit) fwd1_min_vars_mfp)
   in
   let (module Mf2) =
@@ -1141,18 +1141,21 @@ let rec minimal_variables_mfp
       (module Transfer2)
   in
   let rev_min_vars_mfp = Mf2.mfp () in
+  let get_names ~key ~data acc =
+    match key with _ -> Set.Poly.union acc data.exit
+  in
+  let (module Lattice3) =
+    minimal_variables_lattice
+      (Map.fold ~init:Set.Poly.empty ~f:get_names rev_min_vars_mfp)
+  in
   let (module Transfer3) =
     minimal_variables_fwd2_transfer false flowgraph_to_mir
       (Map.map ~f:(fun x -> x.entry) rev_min_vars_mfp)
   in
   let (module Mf3) =
-    monotone_framework (module Flowgraph) (module Lattice2) (module Transfer3)
+    monotone_framework (module Flowgraph) (module Lattice3) (module Transfer3)
   in
   let fwd2_min_vars_mfp = Mf3.mfp () in
-  let get_names ~key ~(data : Lattice2.properties entry_exit) acc :
-      Lattice2.properties =
-    match key with _ -> Set.Poly.union acc data.exit
-  in
   let variable_set =
     Map.fold ~init:Set.Poly.empty ~f:get_names fwd2_min_vars_mfp
   in

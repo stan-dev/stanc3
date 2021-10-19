@@ -19,12 +19,18 @@ let rec expr_set Expr.Fixed.({pattern; meta}) =
       Set.Poly.union_list (expr_set expr :: List.map ix ~f:apply_idx)
   | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
 
-let rec var_set Expr.Fixed.({pattern; meta}) =
-  let union_recur exprs = Set.Poly.union_list (List.map exprs ~f:var_set) in
-  match pattern with
-  | Var s -> Set.Poly.singleton (Dataflow_types.VVar s, meta)
-  | TernaryIf (_, expr2, expr3) -> union_recur [expr2; expr3]
-  | _ -> Set.Poly.empty
+let rec matrix_set
+    Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({type_; _}) as meta}) =
+  let union_recur exprs = Set.Poly.union_list (List.map exprs ~f:matrix_set) in
+  if UnsizedType.contains_eigen_type type_ then
+    match pattern with
+    | Var s -> Set.Poly.singleton (Dataflow_types.VVar s, meta)
+    | Lit _ -> Set.Poly.empty
+    | FunApp (_, exprs) -> union_recur exprs
+    | TernaryIf (_, expr2, expr3) -> union_recur [expr2; expr3]
+    | Indexed (expr, _) -> matrix_set expr
+    | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
+  else Set.Poly.empty
 
 (**
  * Return a set of all types containing Eigen matrices in an expression.
@@ -50,7 +56,7 @@ let query_var_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) :
     then Some s
     else None
   in
-  Set.Poly.filter_map ~f:get_expr_eigen_names (var_set expr)
+  Set.Poly.filter_map ~f:get_expr_eigen_names (matrix_set expr)
 
 (**
  * Check an expression to count how many times we see a single index.
@@ -432,7 +438,7 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
         , (_ : UnsizedType.t)
         , (_ : Expr.Typed.t Index.t list) )
       , rhs ) ->
-      let all_rhs_eigen_names = query_eigen_names rhs in
+      let all_rhs_eigen_names = query_var_eigen_names rhs in
       let rhs_set =
         match Set.Poly.mem aos_exits assign_name with
         | true -> all_rhs_eigen_names
