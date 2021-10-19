@@ -453,9 +453,9 @@ let make_assigmentoperator_stan_math_signatures assop =
                    ( (assop = Operator.EltTimes || assop = Operator.EltDivide)
                    && UnsizedType.is_scalar_type rtype ) ->
            if rhs = UReal then
-             [ (UnsizedType.Void, [(ad1, lhs); (ad2, UInt)], Common.Helpers.AoS)
-             ; (Void, [(ad1, lhs); (ad2, UReal)], AoS) ]
-           else [(Void, [(ad1, lhs); (ad2, rhs)], AoS)]
+             [ (UnsizedType.Void, [(ad1, lhs); (ad2, UInt)], Common.Helpers.SoA)
+             ; (Void, [(ad1, lhs); (ad2, UReal)], SoA) ]
+           else [(Void, [(ad1, lhs); (ad2, rhs)], SoA)]
        | _ -> [] )
 
 let pp_math_sig ppf (rt, args, mem_pattern) =

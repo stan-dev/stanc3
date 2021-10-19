@@ -3558,12 +3558,22 @@ class conditional_expression_types_model final : public model_base_crtp<conditio
       a = in__.template read<
             stan::conditional_var_value_t<local_scalar_t__, 
               Eigen::Matrix<local_scalar_t__, -1, 1>>>(2);
-      Eigen::Matrix<local_scalar_t__, -1, 1> b =
-         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> b =
+         stan::conditional_var_value_t<local_scalar_t__, 
+           Eigen::Matrix<local_scalar_t__, -1, 1>>(
+           Eigen::Matrix<double, -1, 1>::Constant(2,
+             std::numeric_limits<double>::quiet_NaN()));
       current_statement__ = 2;
-      b = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
-      Eigen::Matrix<local_scalar_t__, -1, 1> c =
-         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
+      b = in__.template read<
+            stan::conditional_var_value_t<local_scalar_t__, 
+              Eigen::Matrix<local_scalar_t__, -1, 1>>>(2);
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> c =
+         stan::conditional_var_value_t<local_scalar_t__, 
+           Eigen::Matrix<local_scalar_t__, -1, 1>>(
+           Eigen::Matrix<double, -1, 1>::Constant(2,
+             std::numeric_limits<double>::quiet_NaN()));
       current_statement__ = 3;
       assign(c,
         (logical_gt(sum(a), 1) ? stan::math::eval(add(multiply(2, a), b)) :

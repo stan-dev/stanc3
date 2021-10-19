@@ -241,7 +241,7 @@ let rec query_soa_supported_assign_expr
     | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string))
       ->
         true
-    | TernaryIf _ -> false
+    | TernaryIf (_, texpr, fexpr) -> query_expr texpr || query_expr fexpr
     (*I think we can just return true for this?*)
     | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_expr lhs && query_expr rhs
 

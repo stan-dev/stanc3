@@ -10343,7 +10343,19 @@
  (prog_name indexing2_model) (prog_path indexing2.stan))
   $ ../../../../../install/default/bin/stanc --debug-transformed-mir reductions_allowed.stan
 ((functions_block
-  (((fdrt (UMatrix)) (fdname okay_reduction) (fdsuffix FnPlain)
+  (((fdrt (UMatrix)) (fdname nono_func) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable x UMatrix)))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (Return
+             (((pattern (Var x))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))
+   ((fdrt (UMatrix)) (fdname okay_reduction) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable sum_x UReal) (AutoDiffable y UMatrix)))
     (fdbody
      (((pattern
@@ -10445,36 +10457,10 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id should_not_be_but_is_aos_x)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 5))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (should_not_be_but_is_aos_x UMatrix ())
-      ((pattern
-        (FunApp
-         (CompilerInternal
-          (FnReadParam (constrain Identity)
-           (dims
-            (((pattern (Lit Int 5))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             ((pattern (Lit Int 10))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (mem_pattern AoS)))
-         ()))
-       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
-    (meta <opaque>))
-   ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id aos_y)
       (decl_type
        (Sized
-        (SMatrix AoS
+        (SMatrix SoA
          ((pattern (Lit Int 5))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10))
@@ -10492,7 +10478,7 @@
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 10))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (mem_pattern AoS)))
+           (mem_pattern SoA)))
          ()))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -10524,7 +10510,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_matrix_aos_from_mix)
       (decl_type
        (Sized
-        (SMatrix AoS
+        (SMatrix SoA
          ((pattern (Lit Int 5))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10))
@@ -10536,17 +10522,27 @@
       ((pattern
         (TernaryIf
          ((pattern
-           (FunApp (StanLib Greater__ FnPlain AoS)
+           (FunApp (StanLib Greater__ FnPlain SoA)
             (((pattern
-               (FunApp (StanLib sum FnPlain AoS)
-                (((pattern (Var should_not_be_but_is_aos_x))
+               (FunApp (StanLib sum FnPlain SoA)
+                (((pattern (Var soa_x))
                   (meta
                    ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
              ((pattern (Lit Int 0))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable))))
-         ((pattern (Var aos_x))
+         ((pattern
+           (FunApp (UserDefined nono_func FnPlain)
+            (((pattern
+               (FunApp (StanLib Plus__ FnPlain AoS)
+                (((pattern (Var aos_x))
+                  (meta
+                   ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
+                 ((pattern (Var aos_y))
+                  (meta
+                   ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+              (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
          ((pattern (Var aos_y))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -10617,32 +10613,6 @@
     (meta <opaque>))
    ((pattern
      (Assignment (aos_x UMatrix ())
-      ((pattern
-        (FunApp
-         (CompilerInternal
-          (FnReadParam (constrain Identity)
-           (dims
-            (((pattern (Lit Int 5))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             ((pattern (Lit Int 10))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (mem_pattern AoS)))
-         ()))
-       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
-    (meta <opaque>))
-   ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id should_not_be_but_is_aos_x)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 5))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (should_not_be_but_is_aos_x UMatrix ())
       ((pattern
         (FunApp
          (CompilerInternal
@@ -10731,15 +10701,6 @@
       (CompilerInternal
        (FnWriteParam (unconstrain_opt ())
         (var
-         ((pattern (Var should_not_be_but_is_aos_x))
-          (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
-      ()))
-    (meta <opaque>))
-   ((pattern
-     (NRFunApp
-      (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
-        (var
          ((pattern (Var aos_y))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
       ()))
@@ -10788,14 +10749,24 @@
            (FunApp (StanLib Greater__ FnPlain AoS)
             (((pattern
                (FunApp (StanLib sum FnPlain AoS)
-                (((pattern (Var should_not_be_but_is_aos_x))
+                (((pattern (Var soa_x))
                   (meta
                    ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
              ((pattern (Lit Int 0))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable))))
-         ((pattern (Var aos_x))
+         ((pattern
+           (FunApp (UserDefined nono_func FnPlain)
+            (((pattern
+               (FunApp (StanLib Plus__ FnPlain AoS)
+                (((pattern (Var aos_x))
+                  (meta
+                   ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
+                 ((pattern (Var aos_y))
+                  (meta
+                   ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+              (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
          ((pattern (Var aos_y))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -11010,75 +10981,6 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id should_not_be_but_is_aos_x)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 5))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 10))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (For (loopvar sym1__)
-      (lower
-       ((pattern (Lit Int 1))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-      (upper
-       ((pattern (Lit Int 10))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-      (body
-       ((pattern
-         (Block
-          (((pattern
-             (For (loopvar sym2__)
-              (lower
-               ((pattern (Lit Int 1))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (upper
-               ((pattern (Lit Int 5))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (body
-               ((pattern
-                 (Block
-                  (((pattern
-                     (Assignment
-                      (should_not_be_but_is_aos_x UMatrix
-                       ((Single
-                         ((pattern (Var sym2__))
-                          (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                        (Single
-                         ((pattern (Var sym1__))
-                          (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                      ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Lit Int 5))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                       (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
-                    (meta <opaque>)))))
-                (meta <opaque>)))))
-            (meta <opaque>)))))
-        (meta <opaque>)))))
-    (meta <opaque>))
-   ((pattern
-     (NRFunApp
-      (CompilerInternal
-       (FnWriteParam (unconstrain_opt (Identity))
-        (var
-         ((pattern (Var should_not_be_but_is_aos_x))
-          (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
-      ()))
-    (meta <opaque>))
-   ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id aos_y)
       (decl_type
        (Sized
@@ -11163,20 +11065,6 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (aos_x
-    ((out_unconstrained_st
-      (SMatrix AoS
-       ((pattern (Lit Int 5))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       ((pattern (Lit Int 10))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_constrained_st
-      (SMatrix AoS
-       ((pattern (Lit Int 5))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       ((pattern (Lit Int 10))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
-   (should_not_be_but_is_aos_x
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 5))
