@@ -110,7 +110,8 @@ let options =
     ; ( "--o"
       , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
-         \"$name.hpp\")" )
+         \"$name.hpp\") or auto-formatting output (default: no file/print to \
+         stdout)" )
     ; ( "--print-cpp"
       , Arg.Set print_model_cpp
       , " If set, output the generated C++ Stan model class to stdout." )
