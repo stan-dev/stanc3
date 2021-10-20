@@ -99,7 +99,7 @@ let is_recursive_container st =
       false
   | SArray _ -> true
 
-(* Return a type's array dimensions and the type inside the (possibly nested) array *)
+(** Return a type's array dimensions and the type inside the (possibly nested) array *)
 let rec get_array_dims st =
   match st with
   | SInt | SReal | SComplex -> (st, [])

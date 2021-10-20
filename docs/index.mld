@@ -20,24 +20,28 @@ Analysis_and_optimization
 Stan_math_backend
 }
 
+These are related in the following architecture diagram
+
+{%html: <img src="https://github.com/stan-dev/stanc3/raw/master/docs/img/architecture.png"/> %}
+
 {1 Getting Started}
 
 {2 Resources}
 Here are some resources (internal and external) which may be useful
 to a new developer.
 
+- {{:https://github.com/stan-dev/stanc3/wiki/Format---Fmt-code-generation-quickstart}
+  Wiki on using [Format]/[Fmt] module}
+- {{:https://github.com/stan-dev/stanc3/wiki/How-to-change-or-add-a-new-custom-parser-error-message}
+  Wiki on modifying the parser's error messages}
+- {{:https://github.com/stan-dev/stanc3/wiki/Software-Engineering-best-practices}
+  Wiki on generic software best practices}
+
 {2 Getting Involved}
 
-{ul
-
-{- Here are {{:https://github.com/stan-dev/stanc3/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22}
-some good issues to tackle} - make sure to comment on them first to see if
-they are still relevant.
-}
-
-{- We also always appreciated more documentation - either this documentation, which uses
-{{:https://ocaml.github.io/odoc/index.html}odoc}, or the Stan user-facing documentation
-at {{:https://github.com/stan-dev/docs}stan-dev/docs}.
-}
-
-}
+- Here are {{:https://github.com/stan-dev/stanc3/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22}
+  some good issues to tackle} - make sure to comment on them first to see if
+  they are still relevant.
+- We also always appreciated more documentation - either this documentation, which uses
+  {{:https://ocaml.github.io/odoc/index.html}odoc}, or the Stan user-facing documentation
+  at {{:https://github.com/stan-dev/docs}stan-dev/docs}.

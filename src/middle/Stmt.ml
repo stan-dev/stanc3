@@ -109,13 +109,13 @@ module Located = struct
 
   let loc_of Fixed.({meta; _}) = meta
 
-  (** This module acts as a temporary replace for the `stmt_loc_num` type that
-  is currently used within `analysis_and_optimization`.
+  (** This module acts as a temporary replace for the [stmt_loc_num] type that
+  is currently used within [analysis_and_optimization].
 
   The original intent of the type was to provide explicit sharing of subterms.
   My feeling is that ultimately we either want to:
   - use the recursive type directly and rely on OCaml for sharing
-  - provide the same interface as other `Specialized` modules so that
+  - provide the same interface as other [Specialized] modules so that
     the analysis code isn't aware of the particular representation we are using.
   *)
   module Non_recursive = struct
@@ -254,7 +254,7 @@ module Helpers = struct
   let internal_nrfunapp fn args meta =
     {Fixed.pattern= NRFunApp (CompilerInternal fn, args); meta}
 
-  (** [mk_for] returns a MIR For statement from 0 to `upper` that calls the `bodyfn` with the loop
+  (** [mk_for] returns a MIR For statement from 0 to [upper] that calls the [bodyfn] with the loop
       variable inside the loop. *)
   let mk_for upper bodyfn meta =
     let loopvar, reset = Gensym.enter () in
@@ -271,7 +271,7 @@ module Helpers = struct
     Fixed.{meta; pattern}
 
   (** [mk_nested_for] returns nested MIR For statements with ranges from 0 to each element of
-      `uppers`, and calls the `bodyfn` in the innermost loop with the list of loop variables. *)
+      [uppers], and calls the [bodyfn] in the innermost loop with the list of loop variables. *)
   let rec mk_nested_for uppers bodyfn meta =
     match uppers with
     | [] -> bodyfn []
