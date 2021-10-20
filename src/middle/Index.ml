@@ -27,12 +27,12 @@ let bounds = function
   | Between (e1, e2) -> [e1; e2]
 
 (**
- * Apply an op over the `Index` types inner expressions.
- * @param default Value to return for `All`
- * @param merge Function taking in lhs and rhs of `Between` and
- *  merging their result.
- * @param op a functor to run with inputs of inner exprs
- * @param ind the Index.t to
+ Apply an op over the `Index` types inner expressions.
+ @param default Value to return for `All`
+ @param merge Function taking in lhs and rhs of `Between` and
+ merging their result.
+ @param op a functor to run with inputs of inner exprs
+ @param ind the Index.t to
  *)
 let apply ~default ~merge op ind =
   match ind with

@@ -69,10 +69,10 @@ let rec dims_of st =
   | SRowVector (_, dim) | SVector (_, dim) -> [dim]
   | SInt | SReal | SComplex -> []
 
-(** 
- * Get the dimensions with respect to sizes needed for IO.
- * @Note: The main difference from get_dims is complex,
- *  where this function treats the complex type as a dual number.
+(**
+ Get the dimensions with respect to sizes needed for IO.
+ {b Note}: The main difference from get_dims is complex,
+ where this function treats the complex type as a dual number.
  *)
 let rec get_dims_io st =
   match st with

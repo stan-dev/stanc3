@@ -1,5 +1,6 @@
 (library
   (name middle)
+  (public_name stanc.middle)
   (libraries core_kernel str fmt common re)
   (inline_tests)
   (preprocess (pps ppx_jane ppx_deriving.map ppx_deriving.fold ppx_deriving.create)))
