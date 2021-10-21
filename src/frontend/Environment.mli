@@ -1,5 +1,6 @@
 open Middle
 
+(** Origin blocks, to keep track of where variables are declared *)
 type originblock =
   | MathLibrary
   | Functions
@@ -11,6 +12,7 @@ type originblock =
   | GQuant
 [@@deriving sexp]
 
+(** Information available for each variable *)
 type varinfo = {origin: originblock; global: bool; readonly: bool}
 [@@deriving sexp]
 
@@ -26,6 +28,9 @@ type info =
 type t
 
 val create : unit -> t
+(** Return a new type environment which contains the Stan math library functions
+*)
+
 val find : t -> string -> info list
 
 val add :
@@ -37,7 +42,10 @@ val add :
      | `UserDefined
      | `Variable of varinfo ]
   -> t
+(** Add a new item to the type environment. Does not overwrite existing, but shadows *)
 
-val add_all_raw : t -> string -> info list -> t
+val set_raw : t -> string -> info list -> t
+(** Overwrite the existing items bound to a name *)
+
 val mem : t -> string -> bool
 val iter : t -> (info list -> unit) -> unit

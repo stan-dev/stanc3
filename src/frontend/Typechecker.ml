@@ -90,51 +90,43 @@ let verify_identifier id : unit =
     String.is_suffix id.name ~suffix:"__"
     || List.mem reserved_keywords id.name ~equal:String.equal
   then Semantic_error.ident_is_keyword id.id_loc id.name |> error
-  else ()
 
-let distribution_name_variants id =
-  let open String in
-  let name = id.name in
-  let names =
-    if name = "multiply_log" || name = "binomial_coefficient_log" then [name]
-    else
-      match Utils.split_distribution_suffix name with
-      | Some (stem, "lpmf") | Some (stem, "lpdf") | Some (stem, "log") ->
-          [stem ^ "_lpmf"; stem ^ "_lpdf"; stem ^ "_log"]
-      | Some (stem, "lcdf") | Some (stem, "cdf_log") ->
-          [stem ^ "_lcdf"; stem ^ "_cdf_log"]
-      | Some (stem, "lccdf") | Some (stem, "ccdf_log") ->
-          [stem ^ "_lccdf"; stem ^ "_ccdf_log"]
-      | _ -> [name]
-  in
-  List.map ~f:(fun n -> {id with name= n}) names
+let distribution_name_variants name =
+  if name = "multiply_log" || name = "binomial_coefficient_log" then [name]
+  else
+    match Utils.split_distribution_suffix name with
+    | Some (stem, "lpmf") | Some (stem, "lpdf") | Some (stem, "log") ->
+        [stem ^ "_lpmf"; stem ^ "_lpdf"; stem ^ "_log"]
+    | Some (stem, "lcdf") | Some (stem, "cdf_log") ->
+        [stem ^ "_lcdf"; stem ^ "_cdf_log"]
+    | Some (stem, "lccdf") | Some (stem, "ccdf_log") ->
+        [stem ^ "_lccdf"; stem ^ "_ccdf_log"]
+    | _ -> [name]
 
-(* verify that the variable being declared is previous unused.
+(** verify that the variable being declared is previous unused.
    allowed to shadow StanLib *)
-let verify_name_fresh_var tenv id =
-  if Utils.is_unnormalized_distribution id.name then
-    Semantic_error.ident_has_unnormalized_suffix id.id_loc id.name |> error
+let verify_name_fresh_var loc tenv name =
+  if Utils.is_unnormalized_distribution name then
+    Semantic_error.ident_has_unnormalized_suffix loc name |> error
   else if
-    Env.mem tenv id.name
-    && not (Stan_math_signatures.is_stan_math_function_name id.name)
-  then Semantic_error.ident_in_use id.id_loc id.name |> error
-  else ()
+    Env.mem tenv name
+    && not (Stan_math_signatures.is_stan_math_function_name name)
+  then Semantic_error.ident_in_use loc name |> error
 
-(* verify that the variable being declared is previous unused.
+(** verify that the variable being declared is previous unused.
    not allowed shadowing/overloading (yet)*)
-let verify_name_fresh_udf tenv id =
+let verify_name_fresh_udf loc tenv name =
   if
-    Stan_math_signatures.is_stan_math_function_name id.name
+    Stan_math_signatures.is_stan_math_function_name name
     (* variadic functions are currently not in math sigs *)
-    || Stan_math_signatures.is_reduce_sum_fn id.name
-    || Stan_math_signatures.is_variadic_ode_fn id.name
-  then Semantic_error.ident_is_stanmath_name id.id_loc id.name |> error
-  else if Utils.is_unnormalized_distribution id.name then
-    Semantic_error.udf_is_unnormalized_fn id.id_loc id.name |> error
-  else if Env.mem tenv id.name then
+    || Stan_math_signatures.is_reduce_sum_fn name
+    || Stan_math_signatures.is_variadic_ode_fn name
+  then Semantic_error.ident_is_stanmath_name loc name |> error
+  else if Utils.is_unnormalized_distribution name then
+    Semantic_error.udf_is_unnormalized_fn loc name |> error
+  else if Env.mem tenv name then
     (* adapt for overloading later *)
-    Semantic_error.ident_in_use id.id_loc id.name |> error
-  else ()
+    Semantic_error.ident_in_use loc name |> error
 
 (** Checks that a variable/function name:
   - a function/identifier does not have the _lupdf/_lupmf suffix
@@ -142,9 +134,10 @@ let verify_name_fresh_udf tenv id =
 *)
 let verify_name_fresh tenv id ~is_udf =
   let f =
-    if is_udf then verify_name_fresh_udf tenv else verify_name_fresh_var tenv
+    if is_udf then verify_name_fresh_udf id.id_loc tenv
+    else verify_name_fresh_var id.id_loc tenv
   in
-  List.iter ~f (distribution_name_variants id)
+  List.iter ~f (distribution_name_variants id.name)
 
 let is_of_compatible_return_type rt1 srt2 =
   UnsizedType.(
@@ -356,7 +349,6 @@ let verify_fn_conditioning loc id =
       Utils.conditioning_suffices
     && not (String.is_suffix id.name ~suffix:"_cdf")
   then Semantic_error.conditioning_required loc |> error
-  else ()
 
 (** `Target+=` can only be used in model and functions
     with right suffix (same for tilde etc)
@@ -368,7 +360,6 @@ let verify_fn_target_plus_equals cf loc id =
          ( cf.in_lp_fun_def || cf.current_block = Model
          || cf.current_block = TParam )
   then Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
-  else ()
 
 (** Rng functions cannot be used in Tp or Model and only
     in function defs with the right suffix
@@ -381,7 +372,6 @@ let verify_fn_rng cf loc id =
     && ( (cf.in_fun_def && not cf.in_rng_fun_def)
        || cf.current_block = TParam || cf.current_block = Model )
   then Semantic_error.invalid_rng_fn loc |> error
-  else ()
 
 (** unnormalized _lpdf/_lpmf functions can only be used in _lpdf/_lpmf/_lp udfs
     or the model block
@@ -391,7 +381,6 @@ let verify_unnormalized cf loc id =
     Utils.is_unnormalized_distribution id.name
     && not ((cf.in_fun_def && cf.in_udf_dist_def) || cf.current_block = Model)
   then Semantic_error.invalid_unnormalized_fn loc |> error
-  else ()
 
 let mk_fun_app ~is_cond_dist (x, y, z) =
   if is_cond_dist then CondDistApp (x, y, z) else FunApp (x, y, z)
@@ -667,7 +656,6 @@ let verify_nrfn_target loc cf id =
          ( cf.in_lp_fun_def || cf.current_block = Model
          || cf.current_block = TParam )
   then Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
-  else ()
 
 let check_nrfn loc tenv id es =
   match Env.find tenv id.name with
@@ -703,7 +691,6 @@ let check_nr_fn_app loc cf tenv id es =
 let verify_assignment_read_only loc is_readonly id =
   if is_readonly then
     Semantic_error.cannot_assign_to_read_only loc id.name |> error
-  else ()
 
 (* Variables from previous blocks are read-only.
      In particular, data and parameters never assigned to
@@ -758,10 +745,8 @@ let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
 (* target plus-equals / increment log-prob *)
 
 let verify_target_pe_expr_type loc e =
-  match e.emeta.type_ with
-  | UFun _ | UMathLibraryFunction ->
-      Semantic_error.int_or_real_container_expected loc e.emeta.type_ |> error
-  | _ -> ()
+  if UnsizedType.is_fun_type e.emeta.type_ then
+    Semantic_error.int_or_real_container_expected loc e.emeta.type_ |> error
 
 let verify_target_pe_usage loc cf =
   if cf.in_lp_fun_def || cf.current_block = Model then ()
@@ -788,14 +773,12 @@ let verify_sampling_pdf_pmf id =
       || is_suffix id.name ~suffix:"_lupdf"
       || is_suffix id.name ~suffix:"_lupmf")
   then Semantic_error.invalid_sampling_pdf_or_pmf id.id_loc |> error
-  else ()
 
 let verify_sampling_cdf_ccdf loc id =
   if
     String.(
       is_suffix id.name ~suffix:"_cdf" || is_suffix id.name ~suffix:"_ccdf")
   then Semantic_error.invalid_sampling_cdf_or_ccdf loc id.name |> error
-  else ()
 
 (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
 let verify_valid_sampling_pos loc cf =
@@ -820,8 +803,7 @@ let verify_sampling_distribution loc tenv id arguments =
     && name <> "multiply"
   in
   let is_name_w_suffix_udf_sampling_dist suffix =
-    let f v =
-      match v with
+    let f = function
       | Env.({ kind= `UserDefined | `UserDeclared _
              ; type_= UFun (listedtypes, ReturnType UReal, FnLpdf _, _) })
         when UnsizedType.check_compatible_arguments_mod_conv name listedtypes
@@ -849,8 +831,7 @@ let is_cumulative_density_defined tenv id arguments =
     Stan_math_signatures.stan_math_returntype (name ^ suffix) argumenttypes
     |> Option.value_map ~default:false ~f:is_real_rt
   and valid_arg_types_for_suffix suffix =
-    let f v =
-      match v with
+    let f = function
       | Env.({ kind= `UserDefined | `UserDeclared _
              ; type_= UFun (listedtypes, ReturnType UReal, FnPlain, _) })
         when UnsizedType.check_compatible_arguments_mod_conv name listedtypes
@@ -1137,8 +1118,7 @@ and verify_valid_transformation_for_type loc is_global sized_ty trans =
     | _ -> false
   in
   if is_global && sized_ty = SizedType.SInt && is_real_transformation then
-    Semantic_error.non_int_bounds loc |> error
-  else () ;
+    Semantic_error.non_int_bounds loc |> error ;
   let is_transformation =
     match trans with Transformation.Identity -> false | _ -> true
   in
@@ -1147,7 +1127,6 @@ and verify_valid_transformation_for_type loc is_global sized_ty trans =
     && SizedType.(inner_type sized_ty = SComplex)
     && is_transformation
   then Semantic_error.complex_transform loc |> error
-  else ()
 
 and verify_transformed_param_ty loc cf is_global unsized_ty =
   if
@@ -1155,7 +1134,6 @@ and verify_transformed_param_ty loc cf is_global unsized_ty =
     && (cf.current_block = Param || cf.current_block = TParam)
     && UnsizedType.contains_int unsized_ty
   then Semantic_error.transformed_params_int loc |> error
-  else ()
 
 and check_sizedtype cf tenv sizedty =
   let check e msg = check_expression_of_int_type cf tenv e msg in
@@ -1247,8 +1225,7 @@ and check_var_decl loc cf tenv sized_ty trans id init is_global =
 
 (* function definitions *)
 and exists_matching_fn_declared tenv id arg_tys rt =
-  let f v =
-    match v with
+  let f = function
     | Env.({kind= `UserDeclared _; type_= UFun (listedtypes, rt', _, _)})
       when arg_tys = listedtypes && rt = rt' ->
         true
@@ -1288,7 +1265,6 @@ and verify_fundef_dist_rt loc id return_ty =
     match return_ty with
     | UnsizedType.ReturnType UReal -> ()
     | _ -> Semantic_error.non_real_prob_fn_def loc |> error
-  else ()
 
 and verify_pdf_fundef_first_arg_ty loc id arg_tys =
   if String.is_suffix id.name ~suffix:"_lpdf" then
@@ -1306,12 +1282,9 @@ and verify_pmf_fundef_first_arg_ty loc id arg_tys =
 
 and verify_fundef_distinct_arg_ids loc arg_names =
   let dup_exists l =
-    match List.find_a_dup ~compare:String.compare l with
-    | Some _ -> true
-    | None -> false
+    List.find_a_dup ~compare:String.compare l |> Option.is_some
   in
   if dup_exists arg_names then Semantic_error.duplicate_arg_names loc |> error
-  else ()
 
 and verify_fundef_return_tys loc return_type body =
   if
@@ -1334,11 +1307,11 @@ and add_function tenv name type_ defined =
         existing_defns
     in
     let new_fn = Env.{kind= `UserDefined; type_} in
-    Env.add_all_raw tenv name (new_fn :: defns)
+    Env.set_raw tenv name (new_fn :: defns)
   else Env.add tenv name type_ defined
 
 and check_fundef loc cf tenv return_ty id args body =
-  let () = List.iter args ~f:(fun (_, _, id) -> verify_identifier id) in
+  List.iter args ~f:(fun (_, _, id) -> verify_identifier id) ;
   verify_identifier id ;
   let arg_types = List.map ~f:(fun (w, y, _) -> (w, y)) args in
   let arg_identifiers = List.map ~f:(fun (_, _, z) -> z) args in

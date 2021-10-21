@@ -150,16 +150,15 @@ let check_compatible_arguments_mod_conv = check_compatible_arguments 0
 let max_n_errors = 5
 
 let extract_function_types f =
-  let open Environment in
   match f with
-  | {type_= UFun (args, return, _, mem); kind= `StanMath} ->
+  | Environment.({type_= UFun (args, return, _, mem); kind= `StanMath}) ->
       Some (return, args, (fun x -> Ast.StanLib x), mem)
   | {type_= UFun (args, return, _, mem); _} ->
       Some (return, args, (fun x -> UserDefined x), mem)
   | _ -> None
 
 let returntype env name args =
-  (* NB: Variadic arguments are special-cased in Semantic_check and not handled here *)
+  (* NB: Variadic arguments are special-cased in the typechecker and not handled here *)
   let name = Utils.stdlib_distribution_name name in
   Environment.find env name
   |> List.filter_map ~f:extract_function_types

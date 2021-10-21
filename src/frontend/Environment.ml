@@ -1,7 +1,6 @@
 open Core_kernel
 open Middle
 
-(** Origin blocks, to keep track of where variables are declared *)
 type originblock =
   | MathLibrary
   | Functions
@@ -32,23 +31,18 @@ let create () =
     Hashtbl.to_alist Stan_math_signatures.stan_math_signatures
     |> List.map ~f:(fun (key, values) ->
            ( key
-           , List.map
-               ~f:(fun (rt, args, mem) ->
+           , List.map values ~f:(fun (rt, args, mem) ->
                  let type_ =
-                   UnsizedType.UFun (args, rt, Fun_kind.FnPlain, mem)
+                   UnsizedType.UFun
+                     (args, rt, Fun_kind.suffix_from_name key, mem)
                  in
-                 {type_; kind= `StanMath} )
-               values ) )
+                 {type_; kind= `StanMath} ) ) )
     |> String.Map.of_alist_exn
   in
   functions
 
 let add env key type_ kind = Map.add_multi env ~key ~data:{type_; kind}
-
-let add_all_raw env key data =
-  let env = Map.remove env key in
-  List.fold ~init:env ~f:(fun env data -> Map.add_multi env ~key ~data) data
-
+let set_raw env key data = Map.set env ~key ~data
 let find env key = Map.find_multi env key
 let mem env key = Map.mem env key
 let iter env f = Map.iter env ~f
