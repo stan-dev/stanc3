@@ -94,13 +94,14 @@ let verify_identifier id : unit =
 let distribution_name_variants name =
   if name = "multiply_log" || name = "binomial_coefficient_log" then [name]
   else
+    (* this will have some duplicates, but preserves order better *)
     match Utils.split_distribution_suffix name with
     | Some (stem, "lpmf") | Some (stem, "lpdf") | Some (stem, "log") ->
-        [stem ^ "_lpmf"; stem ^ "_lpdf"; stem ^ "_log"]
+        [name; stem ^ "_lpmf"; stem ^ "_lpdf"; stem ^ "_log"]
     | Some (stem, "lcdf") | Some (stem, "cdf_log") ->
-        [stem ^ "_lcdf"; stem ^ "_cdf_log"]
+        [name; stem ^ "_lcdf"; stem ^ "_cdf_log"]
     | Some (stem, "lccdf") | Some (stem, "ccdf_log") ->
-        [stem ^ "_lccdf"; stem ^ "_ccdf_log"]
+        [name; stem ^ "_lccdf"; stem ^ "_ccdf_log"]
     | _ -> [name]
 
 (** verify that the variable being declared is previous unused.
