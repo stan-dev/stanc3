@@ -1,8 +1,14 @@
 # A New Stan-to-C++ Compiler, stanc3
 This repo contains a new compiler for Stan, stanc3, written in OCaml. To read more about why we built this, see this [introductory blog post](https://statmodeling.stat.columbia.edu/2019/03/13/stanc3-rewriting-the-stan-compiler/). For some discussion as to how we chose OCaml, see [this accidental flamewar](https://discourse.mc-stan.org/t/choosing-the-new-stan-compilers-implementation-language/6203).
-We're testing [these models](https://jenkins.mc-stan.org/job/stanc3/job/master/)(listed under Test Results) on every pull request and think we are currently up to par and mostly backwards compatible with the previous Stan compiler (see [this wiki](https://github.com/stan-dev/stanc3/wiki/changes-from-stanc2) for a list of minor differences).
+We're testing [these models](https://jenkins.mc-stan.org/job/stanc3/job/master/)(listed under Test Results) on every pull request. Since version 2.26, this has been the default compiler for Stan. See [this wiki](https://github.com/stan-dev/stanc3/wiki/changes-from-stanc2) for a list of minor differences between this compiler and the previous Stan compiler.
 
 [![Build Status](http://d1m1s1b1.stat.columbia.edu:8080/job/stanc3/job/master/badge/icon)](http://d1m1s1b1.stat.columbia.edu:8080/job/stanc3/job/master/)
+
+## Documentation
+
+Documentation for users of stanc3 is in the Stan Users' Guide [here](https://mc-stan.org/docs/stan-users-guide/using-the-stan-compiler.html)
+
+The Stanc3 Developer documentation is available here: https://mc-stan.org/stanc3/stanc
 
 ## High-level concepts, invariants, and 30,000-ft view
 Stanc3 has 3 main src packages: `frontend`, `middle`, and `stan_math_backend`.
