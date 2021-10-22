@@ -439,11 +439,9 @@ and pp_recursive_ifthenelse ppf (s, loc) =
       Fmt.pf ppf "if (%a) %a" pp_expression e pp_indent_unless_block
         (s1, e.emeta.loc.end_loc) ;
       let newline = match s1.stmt with Block _ -> false | _ -> true in
-      let loc2 = s2.smeta.loc.begin_loc in
-      let loc2 = {loc2 with line_num= s1.smeta.loc.end_loc.line_num} in
-      pp_spacing ~newline (Some s1.smeta.loc.end_loc) (Some loc2) ppf
-        (get_comments s2.smeta.loc.begin_loc) ;
       let loc = s1.smeta.loc.end_loc in
+      pp_spacing ~newline (Some loc) (Some loc) ppf
+        (get_comments s2.smeta.loc.begin_loc) ;
       Fmt.pf ppf "else %a" pp_recursive_ifthenelse
         (s2, {loc with line_num= loc.line_num + 1})
   | _ -> pp_indent_unless_block ppf (s, loc)
