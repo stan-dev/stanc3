@@ -13,13 +13,14 @@
 
 open Ast
 
-val check_program_exn : untyped_program -> typed_program
+val check_program_exn : untyped_program -> typed_program * Warnings.t list
 (**
     Type check a full Stan program.
     Can raise [Errors.SemanticError]
 *)
 
-val check_program : untyped_program -> (typed_program, Semantic_error.t) result
+val check_program :
+  untyped_program -> (typed_program * Warnings.t list, Semantic_error.t) result
 (**
     The safe version of [check_program_exn]. This catches
     all [Errors.SemanticError] exceptions and converts them

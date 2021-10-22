@@ -19,6 +19,14 @@ module Env = Environment
 (* we only allow errors raised by this function *)
 let error e = raise (Errors.SemanticError e)
 
+(* warnings are built up in a list *)
+let warnings : Warnings.t list ref = ref []
+
+let add_warning (span : Location_span.t) (message : string) =
+  warnings := (span, message) :: !warnings
+
+let attach_warnings x = (x, List.rev !warnings)
+
 (* model name - don't love this here *)
 let model_name = ref ""
 let check_that_all_functions_have_definition = ref true
@@ -570,9 +578,9 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                  desired you can write the division as"
                 hint () Fmt.text
                 "If rounding is intended please use the integer division \
-                 operator %/%.\n"
+                 operator %/%."
             in
-            Warnings.pp Fmt.stderr (x.emeta.loc, s)
+            add_warning x.emeta.loc s
         | _ -> ()
       in
       warn_int_division le re ; check_binop loc op le re
@@ -1465,7 +1473,7 @@ let check_program_exn
       ; transformedparametersblock= tpb
       ; modelblock= mb
       ; generatedquantitiesblock= gqb
-      ; comments } as ast ) : typed_program =
+      ; comments } as ast ) =
   (* create a new type environment which has only stan-math functions *)
   let tenv = Env.create () in
   let tenv, typed_fb = check_toplevel_block Functions tenv fb in
@@ -1487,7 +1495,7 @@ let check_program_exn
     ; comments }
   in
   verify_correctness_invariant ast prog ;
-  prog
+  attach_warnings prog
 
 let check_program ast =
   try Result.Ok (check_program_exn ast) with Errors.SemanticError err ->

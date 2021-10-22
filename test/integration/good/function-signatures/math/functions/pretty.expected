@@ -2467,7 +2467,6 @@ Values will be rounded towards zero. If rounding is not desired you can write
 the division as
   d_int * 1.0 / d_int
 If rounding is intended please use the integer division operator %/%.
-
 Warning in 'operators_int.stan', line 26, column 27: Found int division:
   d_int / d_int
 Values will be rounded towards zero. If rounding is not desired you can write
@@ -2569,7 +2568,6 @@ Values will be rounded towards zero. If rounding is not desired you can write
 the division as
   d_int * 1.0 / d_int
 If rounding is intended please use the integer division operator %/%.
-
 Warning in 'operators_real.stan', line 69, column 27: Found int division:
   d_int / d_int
 Values will be rounded towards zero. If rounding is not desired you can write

@@ -12,7 +12,7 @@ let typed_ast_of_string_exn s =
     Typechecker.check_program ast
     |> map_error ~f:(fun e -> Errors.Semantic_error e))
   |> Result.map_error ~f:Errors.to_string
-  |> Result.ok_or_failwith
+  |> Result.ok_or_failwith |> fst
 
 let get_ast_or_exit ?printed_filename ?(print_warnings = true) filename =
   let res, warnings = Parse.parse_file Parser.Incremental.program filename in
@@ -24,7 +24,9 @@ let get_ast_or_exit ?printed_filename ?(print_warnings = true) filename =
 
 let type_ast_or_exit ast =
   match Typechecker.check_program ast with
-  | Result.Ok p -> p
+  | Result.Ok (p, warns) ->
+      Warnings.pp_warnings Fmt.stderr warns ;
+      p
   | Result.Error error ->
       Errors.pp_semantic_error Fmt.stderr error ;
       exit 1
