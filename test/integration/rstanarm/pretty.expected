@@ -5804,8 +5804,7 @@ functions {
               // collect fixed effect whilst recognising intercept term
               // isn't in beta and correcting for that in the indexing
               coef += beta[(beta_collect - 1)];
-            }
-            else 
+            } else 
               coef += beta[beta_collect];
             
             temp[i, mark] = coef;
