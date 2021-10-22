@@ -3872,6 +3872,12 @@ generated quantities {
     x = 1; /* test */
   else 
     x = 2;
+  
+  if (1) {
+    // something
+  } else {
+    // something else
+  }
 }
 
   $ ../../../../install/default/bin/stanc --auto-format illegal_generated_quantities.stan

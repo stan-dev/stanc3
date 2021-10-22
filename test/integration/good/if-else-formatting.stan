@@ -26,4 +26,13 @@ generated quantities {
 
   int x;
   if (0) x = 1; /* test */ else x=2;
+
+  if (1) {
+    // something
+  }
+
+
+  else {
+    // something else
+  }
 }
