@@ -5411,15 +5411,6 @@ generated quantities {
   real sd_y = sd(y);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format shadow.stan
-parameters {
-  real pow;
-}
-transformed parameters {
-  print(pow(1, 1));
-  print(pow);
-}
-
   $ ../../../../install/default/bin/stanc --auto-format single-arg-conddist.stan
 functions {
   real foo_lpdf(real x) {
