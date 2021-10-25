@@ -20,8 +20,9 @@ digraph G {
     rankdir=TB;
     ranksep=.25;
     bgcolor=white;
+    size=5;
     node [shape="box"];
-    
+
     origin[style=invis];
     stanc[label="stanc/stanc.ml"];
     lexer[label="frontend/lexer.mll"];
@@ -32,9 +33,9 @@ digraph G {
     optimize[label="analysis_and_optimization/Optimize.ml"];
     codegen[label="*_backend/*_code_gen.ml"];
     output[shape="oval" label=".hpp file"]
-    
 
-    origin -> stanc[label=" .stan file path"];  
+
+    origin -> stanc[label=" .stan file path"];
     stanc -> lexer[label=" string"];
     lexer -> parser[label=" tokens"];
     parser -> type[label=" untyped AST"];
@@ -44,8 +45,8 @@ digraph G {
     transform -> codegen[label="                                  "];
     optimize -> codegen[headlabel="optimized MIR      "];
     codegen -> output[label=" C++ code"];
-    
-} 
+
+}
 --->
 ![stanc3 information flow](docs/img/information-flow.png)
 
