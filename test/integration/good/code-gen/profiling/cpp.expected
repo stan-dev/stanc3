@@ -136,7 +136,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         profile<local_scalar_t__> profile__("sum", const_cast<profile_map&>(profiles__));
         
         current_statement__ = 27;
-        sum_y = sum(y);
+        sum_y = stan::math::sum(y);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -204,15 +204,17 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           
           current_statement__ = 10;
           assign(cov,
-            add(gp_exp_quad_cov(x, alpha, rho),
-              diag_matrix(rep_vector(sigma, N))), "assigning variable cov");
+            add(stan::math::gp_exp_quad_cov(x, alpha, rho),
+              stan::math::diag_matrix(stan::math::rep_vector(sigma, N))),
+            "assigning variable cov");
         }
         current_statement__ = 13;
         {
           profile<local_scalar_t__> profile__("cholesky_decompose", const_cast<profile_map&>(profiles__));
           
           current_statement__ = 12;
-          assign(L_cov, cholesky_decompose(cov), "assigning variable L_cov");
+          assign(L_cov, stan::math::cholesky_decompose(cov),
+            "assigning variable L_cov");
         }
         current_statement__ = 20;
         {
@@ -223,11 +225,11 @@ class simple_function_model final : public model_base_crtp<simple_function_model
             profile<local_scalar_t__> profile__("priors", const_cast<profile_map&>(profiles__));
             
             current_statement__ = 14;
-            lp_accum__.add(gamma_lpdf<propto__>(rho, 25, 4));
+            lp_accum__.add(stan::math::gamma_lpdf<propto__>(rho, 25, 4));
             current_statement__ = 15;
-            lp_accum__.add(normal_lpdf<propto__>(alpha, 0, 2));
+            lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha, 0, 2));
             current_statement__ = 16;
-            lp_accum__.add(normal_lpdf<propto__>(sigma, 0, 1));
+            lp_accum__.add(stan::math::normal_lpdf<propto__>(sigma, 0, 1));
           }
           current_statement__ = 19;
           {
@@ -235,8 +237,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
             
             current_statement__ = 18;
             lp_accum__.add(
-              multi_normal_cholesky_lpdf<propto__>(y, rep_vector(0, N),
-                L_cov));
+              stan::math::multi_normal_cholesky_lpdf<propto__>(y,
+                stan::math::rep_vector(0, N), L_cov));
           }
         }
       }

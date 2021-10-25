@@ -41,7 +41,7 @@ let%expect_test "udf" =
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
       try {
-        return add(x, 1);
+        return stan::math::add(x, 1);
       } catch (const std::exception& e) {
         stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       }
@@ -105,7 +105,7 @@ let%expect_test "udf-expressions" =
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
       try {
-        return add(x, 1);
+        return stan::math::add(x, 1);
       } catch (const std::exception& e) {
         stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       }

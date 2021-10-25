@@ -53,7 +53,7 @@ my_log1p_exp(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 1;
-    return log1p_exp(x);
+    return stan::math::log1p_exp(x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -80,7 +80,7 @@ array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 3;
-    return sum(a);
+    return stan::math::sum(a);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -106,7 +106,7 @@ int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 5;
-    return sum(a);
+    return stan::math::sum(a);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -133,9 +133,11 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 7;
-    validate_non_negative_index("result", "num_elements(x)", num_elements(x));
+    validate_non_negative_index("result", "num_elements(x)",
+                                stan::math::num_elements(x));
     Eigen::Matrix<local_scalar_t__, -1, 1> result;
-    result = Eigen::Matrix<local_scalar_t__, -1, 1>(num_elements(x));
+    result = Eigen::Matrix<local_scalar_t__, -1, 1>(stan::math::num_elements(
+                                                      x));
     stan::math::fill(result, DUMMY_VAR__);
     
     current_statement__ = 8;
@@ -220,7 +222,7 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 15;
-    lp_accum__.add(normal_lpdf<propto__>(a, 0, 1));
+    lp_accum__.add(stan::math::normal_lpdf<propto__>(a, 0, 1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -249,7 +251,7 @@ test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 17;
-    return normal_rng(a, 1, base_rng__);
+    return stan::math::normal_rng(a, 1, base_rng__);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -275,7 +277,7 @@ test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 19;
-    return normal_lpdf<false>(a, b, 1);
+    return stan::math::normal_lpdf<false>(a, b, 1);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -412,7 +414,7 @@ integrand(const T0__& x_arg__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 1;
-    return stan::math::exp(minus(square(x)));
+    return stan::math::exp(minus(stan::math::square(x)));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -448,9 +450,10 @@ integrand_ode(const T0__& r, const std::vector<T1__>& f,
     x = DUMMY_VAR__;
     
     current_statement__ = 4;
-    x = logit(r);
+    x = stan::math::logit(r);
     current_statement__ = 5;
-    assign(df_dx, ((stan::math::exp(-square(x)) * 1) / (r * (1 - r))),
+    assign(df_dx,
+      ((stan::math::exp(-stan::math::square(x)) * 1) / (r * (1 - r))),
       "assigning variable df_dx", index_uni(1));
     current_statement__ = 6;
     return df_dx;
@@ -486,9 +489,10 @@ ode_integrate(std::ostream* pstream__) {
     
     current_statement__ = 9;
     return rvalue(
-             integrate_ode_bdf(integrand_ode_functor__(), rep_array(0.0, 1), 1E-5,
-  rep_array((1.0 - 1E-5), 1), rep_array(0.0, 0), rep_array(0.0, 0), x_i,
-  pstream__),
+             stan::math::integrate_ode_bdf(integrand_ode_functor__(),
+  stan::math::rep_array(0.0, 1), 1E-5,
+  stan::math::rep_array((1.0 - 1E-5), 1), stan::math::rep_array(0.0, 0),
+  stan::math::rep_array(0.0, 0), x_i, pstream__),
              "integrate_ode_bdf(integrand_ode, rep_array(0.0, 1), 1E-5,\nrep_array((1.0 - 1E-5), 1), rep_array(0.0, 0), rep_array(0.0, 0),\nx_i)",
              index_uni(1), index_uni(1));
   } catch (const std::exception& e) {

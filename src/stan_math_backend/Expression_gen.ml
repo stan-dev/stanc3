@@ -5,17 +5,9 @@ open Fmt
 let ends_with suffix s = String.is_suffix ~suffix s
 let starts_with prefix s = String.is_prefix ~prefix s
 
-let functions_requiring_namespace =
-  String.Set.of_list
-    [ "e"; "pi"; "log2"; "log10"; "sqrt2"; "not_a_number"; "positive_infinity"
-    ; "negative_infinity"; "machine_precision"; "abs"; "acos"; "acosh"; "asin"
-    ; "asinh"; "atan"; "atanh"; "cbrt"; "ceil"; "cos"; "cosh"; "erf"; "erfc"
-    ; "exp"; "exp2"; "expm1"; "fabs"; "floor"; "lgamma"; "log"; "log1p"; "log2"
-    ; "log10"; "round"; "sin"; "sinh"; "sqrt"; "tan"; "tanh"; "tgamma"; "trunc"
-    ; "fdim"; "fmax"; "fmin"; "hypot"; "fma" ]
-
 let stan_namespace_qualify f =
-  if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
+  if String.is_suffix ~suffix:"functor__" f || String.contains f ':' then f
+  else "stan::math::" ^ f
 
 (* return true if the types of the two expression are the same *)
 let types_match e1 e2 =
@@ -141,7 +133,7 @@ let fn_renames =
     ~f:(fun (k, v) -> (Internal_fun.to_string k, v))
     [ (Internal_fun.FnLength, "stan::math::size")
     ; (FnNegInf, "stan::math::negative_infinity")
-    ; (FnResizeToMatch, "resize_to_match")
+    ; (FnResizeToMatch, "stan::math::resize_to_match")
     ; (FnNaN, "std::numeric_limits<double>::quiet_NaN") ]
   |> String.Map.of_alist_exn
 
@@ -270,16 +262,22 @@ and gen_operator_app = function
 and gen_misc_special_math_app f =
   match f with
   | "lmultiply" ->
-      Some (fun ppf es -> pp_binary ppf "multiply_log(@,%a,@ %a)" es)
+      Some
+        (fun ppf es -> pp_binary ppf "stan::math::multiply_log(@,%a,@ %a)" es)
   | "lchoose" ->
       Some
-        (fun ppf es -> pp_binary ppf "binomial_coefficient_log(@,%a,@ %a)" es)
-  | "target" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
-  | "get_lp" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
+        (fun ppf es ->
+          pp_binary ppf "stan::math::binomial_coefficient_log(@,%a,@ %a)" es )
+  | "target" ->
+      Some (fun ppf _ -> pf ppf "stan::math::get_lp(lp__, lp_accum__)")
+  | "get_lp" ->
+      Some (fun ppf _ -> pf ppf "stan::math::get_lp(lp__, lp_accum__)")
   | "max" | "min" ->
       Some
         (fun ppf es ->
-          let f = match es with [_; _] -> "std::" ^ f | _ -> f in
+          let f =
+            match es with [_; _] -> "std::" ^ f | _ -> "stan::math::" ^ f
+          in
           pp_call ppf (f, pp_expr, es) )
   | "ceil" ->
       let std_prefix_data_scalar f = function
@@ -287,7 +285,22 @@ and gen_misc_special_math_app f =
                       Typed.Meta.({adlevel= DataOnly; type_= UInt | UReal; _}); _
                   }) ] ->
             "std::" ^ f
-        | _ -> f
+        | _ -> "stan::math::" ^ f
+      in
+      Some
+        (fun ppf es ->
+          let f = std_prefix_data_scalar f es in
+          pp_call ppf (f, pp_expr, es) )
+  | "pow" ->
+      let std_prefix_data_scalar f = function
+        | [ Expr.({ Fixed.meta=
+                      Typed.Meta.({adlevel= DataOnly; type_= UInt | UReal; _}); _
+                  })
+          ; Expr.({ Fixed.meta=
+                      Typed.Meta.({adlevel= DataOnly; type_= UInt | UReal; _}); _
+                  }) ] ->
+            "std::" ^ f
+        | _ -> "stan::math::" ^ f
       in
       Some
         (fun ppf es ->
@@ -556,7 +569,6 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
       gen_fun_app suffix ppf f es mem_pattern
   | FunApp (CompilerInternal f, es) ->
       pp_compiler_internal_fn meta.adlevel meta.type_ f ppf es
-      (* stan_namespace_qualify?  *)
   | FunApp (UserDefined (f, suffix), es) ->
       pp_user_defined_fun ppf (f, suffix, es)
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2

@@ -24,6 +24,11 @@ parameters {
   real pow;
   real add;
   real sub;
+  real binomial_coefficient_log;
+
+  // try to break internal functions
+  real<lower=0> read_constrain_lb;
+  real read;
 
   //more
   real bernoulli_logit_glm_lpmf;
@@ -43,6 +48,8 @@ transformed parameters {
   mu += pow * pow(3,2);
 
   mu = add + add - sub;
+
+  mu += binomial_coefficient_log * lchoose(3,4) * binomial_coefficient_log(3,4);
 
   array[1] vector[4] called = ode_bdf(rhs, segment, 1.0, {3.0}, 3.5);
 }
