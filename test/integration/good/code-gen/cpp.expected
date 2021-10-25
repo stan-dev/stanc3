@@ -4369,6 +4369,8 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 50;
       context__.validate_dims("data initialization","class","double",
@@ -4481,48 +4483,78 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     
     try {
       local_scalar_t__ _stan_explicit;
+      _stan_explicit = DUMMY_VAR__;
+      
       current_statement__ = 1;
       _stan_explicit = in__.template read<local_scalar_t__>();
       local_scalar_t__ _stan_float;
+      _stan_float = DUMMY_VAR__;
+      
       current_statement__ = 2;
       _stan_float = in__.template read<local_scalar_t__>();
       local_scalar_t__ _stan_friend;
+      _stan_friend = DUMMY_VAR__;
+      
       current_statement__ = 3;
       _stan_friend = in__.template read<local_scalar_t__>();
       local_scalar_t__ _stan_goto;
+      _stan_goto = DUMMY_VAR__;
+      
       current_statement__ = 4;
       _stan_goto = in__.template read<local_scalar_t__>();
       local_scalar_t__ _stan_inline;
+      _stan_inline = DUMMY_VAR__;
+      
       current_statement__ = 5;
       _stan_inline = in__.template read<local_scalar_t__>();
       local_scalar_t__ _stan_long;
+      _stan_long = DUMMY_VAR__;
+      
       current_statement__ = 6;
       _stan_long = in__.template read<local_scalar_t__>();
       local_scalar_t__ _stan_mutable;
+      _stan_mutable = DUMMY_VAR__;
+      
       current_statement__ = 7;
       _stan_mutable = in__.template read<local_scalar_t__>();
       local_scalar_t__ _stan_namespace;
+      _stan_namespace = DUMMY_VAR__;
+      
       current_statement__ = 8;
       _stan_namespace = in__.template read<local_scalar_t__>();
       local_scalar_t__ _stan_new;
+      _stan_new = DUMMY_VAR__;
+      
       current_statement__ = 9;
       _stan_new = in__.template read<local_scalar_t__>();
       local_scalar_t__ _stan_noexcept;
+      _stan_noexcept = DUMMY_VAR__;
+      
       current_statement__ = 10;
       _stan_noexcept = in__.template read<local_scalar_t__>();
       local_scalar_t__ _stan_not;
+      _stan_not = DUMMY_VAR__;
+      
       current_statement__ = 11;
       _stan_not = in__.template read<local_scalar_t__>();
       local_scalar_t__ _stan_not_eq;
+      _stan_not_eq = DUMMY_VAR__;
+      
       current_statement__ = 12;
       _stan_not_eq = in__.template read<local_scalar_t__>();
       local_scalar_t__ _stan_nullptr;
+      _stan_nullptr = DUMMY_VAR__;
+      
       current_statement__ = 13;
       _stan_nullptr = in__.template read<local_scalar_t__>();
       local_scalar_t__ _stan_operator;
+      _stan_operator = DUMMY_VAR__;
+      
       current_statement__ = 14;
       _stan_operator = in__.template read<local_scalar_t__>();
       local_scalar_t__ _stan_or;
+      _stan_or = DUMMY_VAR__;
+      
       current_statement__ = 15;
       _stan_or = in__.template read<local_scalar_t__>();
       {
@@ -4605,48 +4637,78 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     
     try {
       double _stan_explicit;
+      _stan_explicit = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
       _stan_explicit = in__.template read<local_scalar_t__>();
       double _stan_float;
+      _stan_float = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 2;
       _stan_float = in__.template read<local_scalar_t__>();
       double _stan_friend;
+      _stan_friend = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 3;
       _stan_friend = in__.template read<local_scalar_t__>();
       double _stan_goto;
+      _stan_goto = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 4;
       _stan_goto = in__.template read<local_scalar_t__>();
       double _stan_inline;
+      _stan_inline = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 5;
       _stan_inline = in__.template read<local_scalar_t__>();
       double _stan_long;
+      _stan_long = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 6;
       _stan_long = in__.template read<local_scalar_t__>();
       double _stan_mutable;
+      _stan_mutable = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 7;
       _stan_mutable = in__.template read<local_scalar_t__>();
       double _stan_namespace;
+      _stan_namespace = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 8;
       _stan_namespace = in__.template read<local_scalar_t__>();
       double _stan_new;
+      _stan_new = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 9;
       _stan_new = in__.template read<local_scalar_t__>();
       double _stan_noexcept;
+      _stan_noexcept = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 10;
       _stan_noexcept = in__.template read<local_scalar_t__>();
       double _stan_not;
+      _stan_not = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 11;
       _stan_not = in__.template read<local_scalar_t__>();
       double _stan_not_eq;
+      _stan_not_eq = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 12;
       _stan_not_eq = in__.template read<local_scalar_t__>();
       double _stan_nullptr;
+      _stan_nullptr = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 13;
       _stan_nullptr = in__.template read<local_scalar_t__>();
       double _stan_operator;
+      _stan_operator = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 14;
       _stan_operator = in__.template read<local_scalar_t__>();
       double _stan_or;
+      _stan_or = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 15;
       _stan_or = in__.template read<local_scalar_t__>();
       out__.write(_stan_explicit);
@@ -4766,50 +4828,82 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ _stan_explicit;
+      _stan_explicit = DUMMY_VAR__;
+      
       _stan_explicit = in__.read<local_scalar_t__>();
       out__.write(_stan_explicit);
       local_scalar_t__ _stan_float;
+      _stan_float = DUMMY_VAR__;
+      
       _stan_float = in__.read<local_scalar_t__>();
       out__.write(_stan_float);
       local_scalar_t__ _stan_friend;
+      _stan_friend = DUMMY_VAR__;
+      
       _stan_friend = in__.read<local_scalar_t__>();
       out__.write(_stan_friend);
       local_scalar_t__ _stan_goto;
+      _stan_goto = DUMMY_VAR__;
+      
       _stan_goto = in__.read<local_scalar_t__>();
       out__.write(_stan_goto);
       local_scalar_t__ _stan_inline;
+      _stan_inline = DUMMY_VAR__;
+      
       _stan_inline = in__.read<local_scalar_t__>();
       out__.write(_stan_inline);
       local_scalar_t__ _stan_long;
+      _stan_long = DUMMY_VAR__;
+      
       _stan_long = in__.read<local_scalar_t__>();
       out__.write(_stan_long);
       local_scalar_t__ _stan_mutable;
+      _stan_mutable = DUMMY_VAR__;
+      
       _stan_mutable = in__.read<local_scalar_t__>();
       out__.write(_stan_mutable);
       local_scalar_t__ _stan_namespace;
+      _stan_namespace = DUMMY_VAR__;
+      
       _stan_namespace = in__.read<local_scalar_t__>();
       out__.write(_stan_namespace);
       local_scalar_t__ _stan_new;
+      _stan_new = DUMMY_VAR__;
+      
       _stan_new = in__.read<local_scalar_t__>();
       out__.write(_stan_new);
       local_scalar_t__ _stan_noexcept;
+      _stan_noexcept = DUMMY_VAR__;
+      
       _stan_noexcept = in__.read<local_scalar_t__>();
       out__.write(_stan_noexcept);
       local_scalar_t__ _stan_not;
+      _stan_not = DUMMY_VAR__;
+      
       _stan_not = in__.read<local_scalar_t__>();
       out__.write(_stan_not);
       local_scalar_t__ _stan_not_eq;
+      _stan_not_eq = DUMMY_VAR__;
+      
       _stan_not_eq = in__.read<local_scalar_t__>();
       out__.write(_stan_not_eq);
       local_scalar_t__ _stan_nullptr;
+      _stan_nullptr = DUMMY_VAR__;
+      
       _stan_nullptr = in__.read<local_scalar_t__>();
       out__.write(_stan_nullptr);
       local_scalar_t__ _stan_operator;
+      _stan_operator = DUMMY_VAR__;
+      
       _stan_operator = in__.read<local_scalar_t__>();
       out__.write(_stan_operator);
       local_scalar_t__ _stan_or;
+      _stan_or = DUMMY_VAR__;
+      
       _stan_or = in__.read<local_scalar_t__>();
       out__.write(_stan_or);
     } catch (const std::exception& e) {
