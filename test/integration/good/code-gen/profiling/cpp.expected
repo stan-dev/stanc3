@@ -84,6 +84,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 21;
       context__.validate_dims("data initialization","N","int",
@@ -162,14 +164,20 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     
     try {
       local_scalar_t__ rho;
+      rho = DUMMY_VAR__;
+      
       current_statement__ = 1;
       rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
       local_scalar_t__ alpha;
+      alpha = DUMMY_VAR__;
+      
       current_statement__ = 2;
       alpha = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       local_scalar_t__ sigma;
+      sigma = DUMMY_VAR__;
+      
       current_statement__ = 3;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
@@ -265,14 +273,20 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     
     try {
       double rho;
+      rho = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
       rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
       double alpha;
+      alpha = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 2;
       alpha = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       double sigma;
+      sigma = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 3;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
@@ -305,14 +319,22 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ rho;
+      rho = DUMMY_VAR__;
+      
       rho = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, rho);
       local_scalar_t__ alpha;
+      alpha = DUMMY_VAR__;
+      
       alpha = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, alpha);
       local_scalar_t__ sigma;
+      sigma = DUMMY_VAR__;
+      
       sigma = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, sigma);
     } catch (const std::exception& e) {
