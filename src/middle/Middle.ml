@@ -1,3 +1,7 @@
+(** Modules which define the 'middle intermediate representation'
+  (MIR) of Stan
+*)
+
 module Location = Location
 module Location_span = Location_span
 module Operator = Operator

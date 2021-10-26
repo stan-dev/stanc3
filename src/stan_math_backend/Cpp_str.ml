@@ -1,10 +1,5 @@
 open Bytes
 
-(* A version of stdlib Bytes.escaped but 
-  uses octal output, rather than default decimal,
-  for escapes like \123
-  This allows cpp to read them as literals
-*)
 let escaped_b s =
   let n = ref 0 in
   for i = 0 to length s - 1 do

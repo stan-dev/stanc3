@@ -2,10 +2,10 @@ open Core_kernel
 
 let option_or_else ~if_none x = Option.first_some x if_none
 
-(* Name mangling helper functions for distributions *)
+(** Name mangling helper functions for distributions *)
 let unnormalized_suffices = ["_lupdf"; "_lupmf"]
 
-(* _log is listed last so that it only gets picked up if no other implementation exists *)
+(** _log is listed last so that it only gets picked up if no other implementation exists *)
 let distribution_suffices = ["_lpmf"; "_lpdf"; "_log"]
 
 let conditioning_suffices =
