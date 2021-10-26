@@ -272,40 +272,6 @@ and gen_misc_special_math_app f =
       Some (fun ppf _ -> pf ppf "stan::math::get_lp(lp__, lp_accum__)")
   | "get_lp" ->
       Some (fun ppf _ -> pf ppf "stan::math::get_lp(lp__, lp_accum__)")
-  | "max" | "min" ->
-      Some
-        (fun ppf es ->
-          let f =
-            match es with [_; _] -> "std::" ^ f | _ -> "stan::math::" ^ f
-          in
-          pp_call ppf (f, pp_expr, es) )
-  | "ceil" ->
-      let std_prefix_data_scalar f = function
-        | [ Expr.({ Fixed.meta=
-                      Typed.Meta.({adlevel= DataOnly; type_= UInt | UReal; _}); _
-                  }) ] ->
-            "std::" ^ f
-        | _ -> "stan::math::" ^ f
-      in
-      Some
-        (fun ppf es ->
-          let f = std_prefix_data_scalar f es in
-          pp_call ppf (f, pp_expr, es) )
-  | "pow" ->
-      let std_prefix_data_scalar f = function
-        | [ Expr.({ Fixed.meta=
-                      Typed.Meta.({adlevel= DataOnly; type_= UInt | UReal; _}); _
-                  })
-          ; Expr.({ Fixed.meta=
-                      Typed.Meta.({adlevel= DataOnly; type_= UInt | UReal; _}); _
-                  }) ] ->
-            "std::" ^ f
-        | _ -> "stan::math::" ^ f
-      in
-      Some
-        (fun ppf es ->
-          let f = std_prefix_data_scalar f es in
-          pp_call ppf (f, pp_expr, es) )
   | f when Map.mem fn_renames f ->
       Some (fun ppf es -> pp_call ppf (Map.find_exn fn_renames f, pp_expr, es))
   | _ -> None

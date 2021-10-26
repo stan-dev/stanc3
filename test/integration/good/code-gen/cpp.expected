@@ -30605,7 +30605,7 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
              ((inv_logit * stan::math::inv_logit(0.5)) +
                (logit * stan::math::logit(10))));
       current_statement__ = 28;
-      mu = (mu + (pow * std::pow(3, 2)));
+      mu = (mu + (pow * stan::math::pow(3, 2)));
       current_statement__ = 29;
       mu = ((add + add) - sub);
       current_statement__ = 30;
@@ -30813,7 +30813,7 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
              ((inv_logit * stan::math::inv_logit(0.5)) +
                (logit * stan::math::logit(10))));
       current_statement__ = 28;
-      mu = (mu + (pow * std::pow(3, 2)));
+      mu = (mu + (pow * stan::math::pow(3, 2)));
       current_statement__ = 29;
       mu = ((add + add) - sub);
       current_statement__ = 30;
