@@ -598,10 +598,10 @@ pipeline {
             }
         }
         stage('Upload odoc') {
-            // when {
-            //     beforeAgent true
-            //     anyOf { buildingTag(); branch 'master' }
-            // }
+            when {
+                beforeAgent true
+                anyOf { buildingTag(); branch 'master' }
+            }
             options { skipDefaultCheckout(true) }
             agent {
                 docker {
