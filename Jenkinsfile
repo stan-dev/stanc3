@@ -282,16 +282,16 @@ pipeline {
             }
         }
         stage("Build and test static release binaries") {
+            when {
+                beforeAgent true
+                expression {
+                    !skipRemainingStages
+                }
+            }
             failFast true
             parallel {
 
                 stage("Build & test Mac OS X binary") {
-                    when {
-                        beforeAgent true
-                        expression {
-                            !skipRemainingStages
-                        }
-                    }
                     agent { label "osx && ocaml" }
                     steps {
                         runShell("""
@@ -310,12 +310,6 @@ pipeline {
                     post { always { runShell("rm -rf ./*") }}
                 }
                 stage("Build stanc.js") {
-                    when {
-                        beforeAgent true
-                        expression {
-                            !skipRemainingStages
-                        }
-                    }
                     agent {
                         dockerfile {
                             filename 'docker/debian/Dockerfile'
@@ -337,12 +331,6 @@ pipeline {
                     post {always { runShell("rm -rf ./*")}}
                 }
                 stage("Build & test a static Linux binary") {
-                    when {
-                        beforeAgent true
-                        expression {
-                            !skipRemainingStages
-                        }
-                    }
                     agent {
                         docker {
                             image 'andrjohns/stanc3-building:static'
@@ -452,9 +440,7 @@ pipeline {
                 stage("Build & test a static Linux arm64 binary") {
                     when {
                         beforeAgent true
-                        expression {
-                            !skipRemainingStages
-                        }
+                        anyOf { buildingTag(); branch 'master' }
                     }
                     agent {
                         docker {
@@ -540,12 +526,6 @@ pipeline {
 
                 // Cross compiling for windows on debian
                 stage("Build & test static Windows binary") {
-                    when {
-                        beforeAgent true
-                        expression {
-                            !skipRemainingStages
-                        }
-                    }
                     agent {
                         dockerfile {
                             filename 'docker/debian-windows/Dockerfile'
@@ -576,6 +556,10 @@ pipeline {
             when {
                 beforeAgent true
                 anyOf { buildingTag(); branch 'master' }
+                expression {
+                    !skipRemainingStages
+                }
+
             }
             agent { label 'linux' }
             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
