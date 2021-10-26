@@ -628,8 +628,8 @@ pipeline {
 
                 // Checkout gh-pages as a test so we build docs from this branch
                 runShell("""
+                    git checkout --track  origin/gh-pages
                     git checkout master
-                    git checkout gh-pages
                 """)
 
                 // Build docs
