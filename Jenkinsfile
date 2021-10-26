@@ -3,6 +3,7 @@ import org.stan.Utils
 
 def utils = new org.stan.Utils()
 def skipExpressionTests = false
+def skipRemainingStages = false
 def buildingAgentARM = "linux"
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
@@ -45,7 +46,10 @@ pipeline {
 
                     def stanMathSigs = ['test/integration/signatures/stan_math_sigs.expected'].join(" ")
                     skipExpressionTests = utils.verifyChanges(stanMathSigs)
-                    
+
+                    def sourceCodePaths = ['src','test'].join(" ")
+                    skipRemainingStages = utils.verifyChanges(sourceCodePaths)
+
                     if (buildingTag()) {
                         buildingAgentARM = "arm-ec2"
                     }
@@ -53,6 +57,12 @@ pipeline {
             }
         }
         stage("Build") {
+            when {
+                beforeAgent true
+                expression {
+                    !skipRemainingStages
+                }
+            }
             agent {
                 dockerfile {
                     filename 'docker/debian/Dockerfile'
@@ -66,13 +76,19 @@ pipeline {
                     eval \$(opam env)
                     dune build @install
                 """)
-                
+
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
             post { always { runShell("rm -rf ./*") }}
         }
         stage("Code formatting") {
+            when {
+                beforeAgent true
+                expression {
+                    !skipRemainingStages
+                }
+            }
             agent {
                 dockerfile {
                     filename 'docker/debian/Dockerfile'
@@ -97,6 +113,12 @@ pipeline {
             post { always { runShell("rm -rf ./*") }}
         }
         stage("OCaml tests") {
+            when {
+                beforeAgent true
+                expression {
+                    !skipRemainingStages
+                }
+            }
             parallel {
                 stage("Dune tests") {
                     agent {
@@ -148,6 +170,12 @@ pipeline {
             }
         }
         stage("CmdStan & Math tests") {
+            when {
+                beforeAgent true
+                expression {
+                    !skipRemainingStages
+                }
+            }
             parallel {
                 stage("Compile tests") {
                     agent { label 'linux' }
@@ -164,7 +192,7 @@ pipeline {
                                 cd performance-tests-cmdstan
                                 mkdir cmdstan/bin
                                 cp ../bin/stanc cmdstan/bin/linux-stanc
-                                cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..                                
+                                cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../test/integration/good
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
                                 """
@@ -258,6 +286,12 @@ pipeline {
             parallel {
 
                 stage("Build & test Mac OS X binary") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipRemainingStages
+                        }
+                    }
                     agent { label "osx && ocaml" }
                     steps {
                         runShell("""
@@ -276,6 +310,12 @@ pipeline {
                     post { always { runShell("rm -rf ./*") }}
                 }
                 stage("Build stanc.js") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipRemainingStages
+                        }
+                    }
                     agent {
                         dockerfile {
                             filename 'docker/debian/Dockerfile'
@@ -297,6 +337,12 @@ pipeline {
                     post {always { runShell("rm -rf ./*")}}
                 }
                 stage("Build & test a static Linux binary") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipRemainingStages
+                        }
+                    }
                     agent {
                         docker {
                             image 'andrjohns/stanc3-building:static'
@@ -320,7 +366,10 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux mips64el binary") {
-                    when { anyOf { buildingTag(); branch 'master' } }
+                    when {
+                        beforeAgent true
+                        anyOf { buildingTag(); branch 'master' }
+                    }
                     agent {
                         docker {
                             image 'andrjohns/stanc3-building:static'
@@ -345,7 +394,10 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux ppc64el binary") {
-                    when { anyOf { buildingTag(); branch 'master' } }
+                    when {
+                        beforeAgent true
+                        anyOf { buildingTag(); branch 'master' }
+                    }
                     agent {
                         docker {
                             image 'andrjohns/stanc3-building:static'
@@ -370,7 +422,10 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux s390x binary") {
-                    when { anyOf { buildingTag(); branch 'master' } }
+                    when {
+                        beforeAgent true
+                        anyOf { buildingTag(); branch 'master' }
+                    }
                     agent {
                         docker {
                             image 'andrjohns/stanc3-building:static'
@@ -395,10 +450,17 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux arm64 binary") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipRemainingStages
+                        }
+                    }
                     agent {
                         docker {
                             image 'andrjohns/stanc3-building:static'
                             //Forces image to ignore entrypoint
+                            label 'linux-ec2'
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
                     }
@@ -419,11 +481,15 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux armhf binary") {
-                    when { anyOf { buildingTag(); branch 'master' } }
+                    when {
+                        beforeAgent true
+                        anyOf { buildingTag(); branch 'master' }
+                    }
                     agent {
                         docker {
                             image 'andrjohns/stanc3-building:static'
                             //Forces image to ignore entrypoint
+                            label 'linux-ec2'
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
                     }
@@ -444,11 +510,15 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux armel binary") {
-                    when { anyOf { buildingTag(); branch 'master' } }
+                    when {
+                        beforeAgent true
+                        anyOf { buildingTag(); branch 'master' }
+                    }
                     agent {
                         docker {
                             image 'andrjohns/stanc3-building:static'
                             //Forces image to ignore entrypoint
+                            label 'linux-ec2'
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
                     }
@@ -470,6 +540,12 @@ pipeline {
 
                 // Cross compiling for windows on debian
                 stage("Build & test static Windows binary") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipRemainingStages
+                        }
+                    }
                     agent {
                         dockerfile {
                             filename 'docker/debian-windows/Dockerfile'
@@ -497,7 +573,10 @@ pipeline {
 
         }
         stage("Release tag and publish binaries") {
-            when { anyOf { buildingTag(); branch 'master' } }
+            when {
+                beforeAgent true
+                anyOf { buildingTag(); branch 'master' }
+            }
             agent { label 'linux' }
             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
             steps {
@@ -517,6 +596,74 @@ pipeline {
                     ./ghr_v0.12.1_linux_amd64/ghr -recreate ${tagName()} bin/
                 """)
             }
+        }
+        stage('Upload odoc') {
+            when {
+                beforeAgent true
+                anyOf { buildingTag(); branch 'master' }
+            }
+            options { skipDefaultCheckout(true) }
+            agent {
+                docker {
+                    image 'andrjohns/stanc3-building:static'
+                    label 'linux-ec2'
+                    //Forces image to ignore entrypoint
+                    args "-u 1000 --entrypoint=\'\'"
+                }
+            }
+            steps {
+                retry(3) {
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: '*/gh-pages']],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[url: "https://github.com/stan-dev/stanc3.git", credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b']]]
+                    )
+                }
+
+                // Install odoc and git-subtree
+                runShell("opam install odoc -y")
+                runShell("sudo apk update && sudo apk add git-subtree")
+
+                // Checkout gh-pages as a test so we build docs from this branch
+                runShell("""
+                    git checkout master
+                """)
+
+                // Build docs
+                runShell("""
+                     eval \$(opam env)
+                     dune build @doc
+                """)
+
+                // Copy static assets to doc
+                runShell("""
+                    mkdir -p doc
+                    cp -r ./_build/default/_doc/_html/* doc/
+                """)
+
+                // Commit changes to the repository gh-pages branch
+                withCredentials([usernamePassword(credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                    sh """#!/bin/bash
+                        set -e
+
+                        git config --global user.email "mc.stanislaw@gmail.com"
+                        git config --global user.name "Stan Jenkins"
+
+                        git checkout --detach
+                        git branch -D gh-pages
+                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git :gh-pages
+
+                        git checkout --orphan gh-pages
+                        git add -f doc
+                        git commit -m "auto generated docs from Jenkins"
+                        git subtree push --prefix doc/ https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git gh-pages
+                    """
+                }
+
+            }
+            post { always { deleteDir() } }
         }
     }
     post {

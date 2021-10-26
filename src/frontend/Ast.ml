@@ -1,6 +1,14 @@
-(** Abstract syntax tree *)
-open Core_kernel
+(** Abstract syntax tree for Stan. Defined with the
+  'two-level types' pattern, where the variant types are not
+  directly recursive, but rather parametric in some other type.
 
+  This type ends up being substituted for the fixpoint of the recursive
+  type itself including metadata. So instead of recursively referencing
+  [expression] you would instead reference type parameter ['e], which will
+  later be filled in with something like [type expr_with_meta = metadata expression]
+*)
+
+open Core_kernel
 open Middle
 
 (** Our type for identifiers, on which we record a location *)

@@ -3,11 +3,12 @@
 open Core_kernel
 open Ast
 
-(* To avoid cluttering the AST, comments are not associated with any particular AST node but instead come in a separate list.
+(** To avoid cluttering the AST, comments are not associated with any particular AST node but instead come in a separate list.
    The pretty printer uses the AST nodes' location metadata to insert whitespace and comments.
    The comment list is stored in a global state that is accessed by set_comments, get_comments, and skip_comments.
  *)
 let comments : comment_type list ref = ref []
+
 let skipped = ref []
 let set_comments ls = comments := ls
 
@@ -426,9 +427,9 @@ let rec pp_indent_unless_block ppf ((s : untyped_statement), loc) =
         (get_comments s.smeta.loc.begin_loc) ;
       with_indented_box ppf 2 0 (fun () -> Fmt.pf ppf "%a" pp_statement s)
 
-(* This function helps write chained if-then-else-if-... blocks
- * correctly. Without it, each IfThenElse would trigger a new
- * vbox in front of the if, adding spaces for each level of IfThenElse.
+(** This function helps write chained if-then-else-if-... blocks
+ correctly. Without it, each IfThenElse would trigger a new
+ vbox in front of the if, adding spaces for each level of IfThenElse.
  *)
 and pp_recursive_ifthenelse ppf (s, loc) =
   match s.stmt with
