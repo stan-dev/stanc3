@@ -1,5 +1,5 @@
 data {
-  real using;
+  real data;
 }
 model {
 }

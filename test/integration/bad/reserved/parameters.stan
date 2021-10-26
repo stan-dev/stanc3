@@ -1,5 +1,5 @@
 data {
-  real alignas;
+  real parameters;
 }
 model {
 }

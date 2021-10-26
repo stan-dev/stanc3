@@ -1,5 +1,5 @@
 data {
-  real fvar;
+  real quantities;
 }
 model {
 }
