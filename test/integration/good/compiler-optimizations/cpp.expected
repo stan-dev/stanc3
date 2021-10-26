@@ -13371,8 +13371,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-     constexpr std::array<const char*, 6> names__{"mean_phi", "mean_p", "psi"
-      , "beta", "epsilon", "sigma"};
+     constexpr std::array<const char*, 6> names__{"mean_phi", "mean_p",
+      "psi", "beta", "epsilon", "sigma"};
       const std::array<Eigen::Index, 6> constrain_param_sizes__{1, 1, 
        1, n_occasions, M, 1};
       const auto num_constrained_params__ = std::accumulate(
