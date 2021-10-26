@@ -361,7 +361,8 @@ let pp_validate_data ppf (name, st) =
         args
     in
     pf ppf "@[<hov 4>context__.validate_dims(@,%S,@,%S,@,%S,@,%a);@]@ "
-      "data initialization" name
+      "data initialization"
+      (Mangle.remove_prefix name)
       (stantype_prim_str (SizedType.to_unsized st))
       pp_stdvector (SizedType.get_dims_io st)
 
@@ -493,13 +494,14 @@ let pp_method ppf rt name params intro ?(outro = nop)
  *)
 let pp_get_param_names ppf {Program.output_vars; _} =
   let add_param = fmt "%S" in
+  let extract_name var = Mangle.remove_prefix (fst var) in
   pp_method ppf "void" "get_param_names"
     ["std::vector<std::string>& names__"]
     nop
     (fun ppf ->
       pf ppf "@[<hov 2>names__ = std::vector<std::string>{%a};@]@,"
         (list ~sep:comma add_param)
-        (List.map ~f:fst output_vars) )
+        (List.map ~f:extract_name output_vars) )
     ~cv_attr:["const"]
 
 (** Print the `get_dims` method of the model class. *)
@@ -590,12 +592,14 @@ let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body) =
             (pp_for_loop_iteratee ~index_ids:idcs, (i, dims, pp_body)) )
 
 let emit_name ppf (name, idcs) =
+  let name = Mangle.remove_prefix name in
   let to_string = fmt "std::to_string(%s)" in
   pf ppf "param_names__.emplace_back(std::string() + %a);"
     (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
     (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
 
 let emit_complex_name ppf (name, idcs) =
+  let name = Mangle.remove_prefix name in
   let to_string = fmt "std::to_string(%s)" in
   pf ppf "@[param_names__.emplace_back(std::string() + %a);@]@,"
     (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
@@ -871,11 +875,11 @@ let pp_transform_inits ppf {Program.output_vars; _} =
     List.filter_map ~f:get_constrained_param_st output_vars
   in
   let get_names ppf () =
-    let add_param = fmt "%S@," in
+    let add_param = fmt "%S" in
     pf ppf "@[<hov 2> constexpr std::array<const char*, %i> names__{%a};@]@,"
       list_len
       (list ~sep:comma add_param)
-      param_names
+      (List.map ~f:Mangle.remove_prefix param_names)
   in
   let get_constrain_param_size_arr ppf () =
     match constrained_params with

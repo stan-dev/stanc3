@@ -8,6 +8,9 @@ functions {
     matrix foo3(vector a, matrix b) {
        return b;
     }
+    matrix add_udf(matrix a, matrix b) {
+       return add(a, b);
+    }
 }
 data {
     int N;

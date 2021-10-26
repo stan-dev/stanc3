@@ -1,7 +1,35 @@
 open Core_kernel
 open Middle
+open Mangle
 
 let use_opencl = ref false
+
+let translate_funapps_and_kwrds e =
+  let open Expr.Fixed in
+  let f ({pattern; _} as expr) =
+    match pattern with
+    | FunApp (UserDefined (fname, suffix), args) ->
+        { expr with
+          pattern=
+            FunApp (UserDefined (add_prefix_to_kwrds fname, suffix), args) }
+    | Var s -> {expr with pattern= Var (add_prefix_to_kwrds s)}
+    | _ -> expr
+  in
+  rewrite_bottom_up ~f e
+
+let rec change_kwrds_stmts s =
+  let open Stmt.Fixed.Pattern in
+  let pattern =
+    match s.Stmt.Fixed.pattern with
+    | Decl e -> Decl {e with decl_id= add_prefix_to_kwrds e.decl_id}
+    | NRFunApp (UserDefined (s, sfx), e) ->
+        NRFunApp (UserDefined (add_prefix_to_kwrds s, sfx), e)
+    | Assignment ((s, t, e1), e2) ->
+        Assignment ((add_prefix_to_kwrds s, t, e1), e2)
+    | For e -> For {e with loopvar= add_prefix_to_kwrds e.loopvar}
+    | x -> map Fn.id change_kwrds_stmts x
+  in
+  {s with pattern}
 
 let opencl_trigger_restrictions =
   String.Map.of_alist_exn
@@ -110,7 +138,7 @@ let data_read smeta (decl_id, st) =
   let pos_var = {Expr.Fixed.pattern= Var pos; meta= Expr.Typed.Meta.empty} in
   let readfnapp var =
     Expr.Helpers.internal_funapp FnReadData
-      [{var with pattern= Lit (Str, decl_id)}]
+      [{var with pattern= Lit (Str, remove_prefix decl_id)}]
       Expr.Typed.Meta.{var.meta with type_= flat_type}
   in
   match unsized with
@@ -466,6 +494,28 @@ let map_prog_stmt_lists f (p : ('a, 'b) Program.t) =
   ; transform_inits= f p.transform_inits }
 
 let trans_prog (p : Program.Typed.t) =
+  (* name mangling of c++ keywords*)
+  let rec map_stmt {Stmt.Fixed.pattern; meta} =
+    { Stmt.Fixed.pattern=
+        Stmt.Fixed.Pattern.map translate_funapps_and_kwrds map_stmt pattern
+    ; meta }
+  in
+  let rename_kwrds (s, e) = (add_prefix_to_kwrds s, e) in
+  let rename_fdarg (e1, s, e2) = (e1, add_prefix_to_kwrds s, e2) in
+  let rename_func (s : 'a Program.fun_def) =
+    { s with
+      fdname= add_prefix_to_kwrds s.fdname
+    ; fdargs= List.map ~f:rename_fdarg s.fdargs }
+  in
+  let p =
+    Program.(
+      { p with
+        output_vars= List.map ~f:rename_kwrds p.output_vars
+      ; input_vars= List.map ~f:rename_kwrds p.input_vars
+      ; functions_block= List.map ~f:rename_func p.functions_block }
+      |> map translate_funapps_and_kwrds map_stmt
+      |> map Fn.id change_kwrds_stmts)
+  in
   let p = Program.map Fn.id map_fn_names p in
   let init_pos =
     [ Stmt.Fixed.Pattern.Decl

@@ -1525,7 +1525,7 @@ let () =
   add_unqualified ("is_inf", ReturnType UInt, [UReal], AoS) ;
   add_unqualified ("is_nan", ReturnType UInt, [UReal], AoS) ;
   add_binary_vec "lbeta" AoS ;
-  add_binary "lchoose" AoS ;
+  add_binary_vec "lchoose" AoS ;
   add_binary_vec_real_int "ldexp" AoS ;
   add_qualified
     ( "linspaced_int_array"

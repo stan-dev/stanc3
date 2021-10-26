@@ -36,33 +36,31 @@ model {
   // test if-else - with / without parens
   if (N > 5) {
     y ~ std_normal();
-  }
-  
-  else {
+  } else {
     y ~ std_normal();
   }
   
   if (N > 5) {
     y ~ std_normal();
-  }
-  
-  else {
+  } else {
     y ~ std_normal();
   }
   
   if (N > 5) {
     y ~ std_normal();
-  }
-  
-  else {
+  } else {
     y ~ std_normal();
   }
   
   if (N > 5) {
     y ~ std_normal();
+  } else {
+    y ~ std_normal();
   }
   
-  else {
+  if (N > 5) {
+    y ~ std_normal();
+  } else {
     y ~ std_normal();
   }
   
@@ -71,8 +69,7 @@ model {
   ///////////////////////////////
   if (N > 5) {
     y ~ std_normal();
-  }
-  else {
+  } else {
     if (N > 5) {
       y ~ std_normal();
     }
@@ -80,8 +77,7 @@ model {
   
   if (N > 5) {
     y ~ std_normal();
-  }
-  else {
+  } else {
     if (N > 5) {
       y ~ std_normal();
     }
@@ -90,8 +86,7 @@ model {
   if (N > 5) {
     if (N > 5) {
       y ~ std_normal();
-    }
-    else {
+    } else {
       y ~ std_normal();
     }
   }
@@ -100,19 +95,16 @@ model {
     if (N > 5) {
       y ~ std_normal();
     }
-  }
-  else {
+  } else {
     y ~ std_normal();
   }
   
   if (N > 5) {
     y ~ std_normal();
-  }
-  else {
+  } else {
     if (N > 5) {
       y ~ std_normal();
-    }
-    else {
+    } else {
       if (N > 5) {
         y ~ std_normal();
       }
@@ -121,12 +113,10 @@ model {
   
   if (N > 5) {
     y ~ std_normal();
-  }
-  else {
+  } else {
     if (N > 5) {
       y ~ std_normal();
-    }
-    else {
+    } else {
       if (N > 5) {
         y ~ std_normal();
       }
@@ -135,24 +125,21 @@ model {
   
   if (N > 5) {
     y ~ std_normal();
-  }
-  else {
+  } else {
     if (N > 5) {
       y ~ std_normal();
-    }
-    else {
+    } else {
       if (N > 5) {
         y ~ std_normal();
       }
     }
   }
   
-  // test comments in various places wrt IfThenElse    
+  // test comments in various places wrt IfThenElse
   if (N > 5) {
     //comment before then branch
     y ~ std_normal();
-  }
-  else {
+  } else {
     y ~ std_normal();
   }
   
@@ -173,9 +160,7 @@ model {
   
   if (N > 5) {
     y ~ std_normal();
-  }
-  
-  else {
+  } else {
     y ~ std_normal();
   } //comment after else branch
 }
