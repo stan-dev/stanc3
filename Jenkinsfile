@@ -43,8 +43,6 @@ pipeline {
             agent { label 'linux' }
             steps {
                 script {
-                    scmSkip(deleteBuild: false, skipPattern:'.*\\[ci skip\\].*')
-
                     retry(3) { checkout scm }
                     sh 'git clean -xffd'
 
