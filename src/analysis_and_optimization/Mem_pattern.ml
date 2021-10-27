@@ -19,6 +19,10 @@ let rec expr_set Expr.Fixed.({pattern; meta}) =
       Set.Poly.union_list (expr_set expr :: List.map ix ~f:apply_idx)
   | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
 
+(**
+ * Return a Var expression of the name for each type
+ *  containing an eigen matrix
+ *)
 let rec matrix_set
     Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({type_; _}) as meta}) =
   let union_recur exprs = Set.Poly.union_list (List.map exprs ~f:matrix_set) in
@@ -33,7 +37,8 @@ let rec matrix_set
   else Set.Poly.empty
 
 (**
- * Return a set of all types containing Eigen matrices in an expression.
+ * Return a set of all types containing autodiffable Eigen matrices
+ *  in an expression.
  *)
 let query_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
   let get_expr_eigen_names
@@ -46,7 +51,11 @@ let query_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
   in
   Set.Poly.filter_map ~f:get_expr_eigen_names (expr_set expr)
 
-let query_var_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) :
+(**
+ * Return a set of all types containing autodiffable Eigen matrices
+ *  in an expression.
+ *)
+ let query_var_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) :
     string Set.Poly.t =
   let get_expr_eigen_names
       (Dataflow_types.VVar s, Expr.Typed.Meta.({adlevel; type_; _})) =
@@ -63,23 +72,23 @@ let query_var_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) :
  * @param acc An accumulator from previous folds of multiple expressions.
  * @param pattern The expression patterns to match against
  *)
-let rec check_for_single_idx_expr (acc : int) Expr.Fixed.({pattern; _}) : int =
+let rec count_single_idx_exprs (acc : int) Expr.Fixed.({pattern; _}) : int =
   match pattern with
   | Expr.Fixed.Pattern.FunApp (_, (exprs : Typed.Meta.t Expr.Fixed.t list)) ->
-      List.fold_left ~init:acc ~f:check_for_single_idx_expr exprs
+      List.fold_left ~init:acc ~f:count_single_idx_exprs exprs
   | TernaryIf (predicate, texpr, fexpr) ->
       acc
-      + check_for_single_idx_expr 0 predicate
-      + check_for_single_idx_expr 0 texpr
-      + check_for_single_idx_expr 0 fexpr
+      + count_single_idx_exprs 0 predicate
+      + count_single_idx_exprs 0 texpr
+      + count_single_idx_exprs 0 fexpr
   | Indexed (idx_expr, indexed) ->
       acc
-      + check_for_single_idx_expr 0 idx_expr
+      + count_single_idx_exprs 0 idx_expr
       + List.fold_left ~init:0 ~f:count_single_idx indexed
   | EAnd (lhs, rhs) ->
-      acc + check_for_single_idx_expr 0 lhs + check_for_single_idx_expr 0 rhs
+      acc + count_single_idx_exprs 0 lhs + count_single_idx_exprs 0 rhs
   | EOr (lhs, rhs) ->
-      acc + check_for_single_idx_expr 0 lhs + check_for_single_idx_expr 0 rhs
+      acc + count_single_idx_exprs 0 lhs + count_single_idx_exprs 0 rhs
   | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
       acc
 
@@ -100,8 +109,8 @@ and count_single_idx (acc : int) (idx : Expr.Typed.Meta.t Expr.Fixed.t Index.t)
       , (_ : Expr.Typed.Meta.t Expr.Fixed.t) ) ->
       acc
   | Single _ -> acc + 1
-  | Upfrom up -> check_for_single_idx_expr acc up
-  | MultiIndex multi -> check_for_single_idx_expr acc multi
+  | Upfrom up -> count_single_idx_exprs acc up
+  | MultiIndex multi -> count_single_idx_exprs acc multi
 
 (**
  * Find indices on Matrix and Vector types that perform single 
