@@ -101,6 +101,15 @@ new error states to the [parser.messages] file. These will say
 
 See {{!page-parser_messages}adding or changing the syntax error messages} for more information.
 
+{2:cmdstan Developing with stanc3 and CmdStan}
+
+In order to use the locally built development version of stanc3 with CmdStan,
+you need to set the [STANC3] makefile variable in the make/local file in CmdStan. Example:
+
+[STANC3=relative/or/absolute/path/to/the/cloned/stanc3/folder]
+
+This will automatically rebuild the stanc3 binary used in CmdStan if a change was made to the stanc3 source files.
+
 {2:editors Editor advice}
 For working on this project, we recommend using either VSCode or Emacs as an editor, due to their good OCaml support through
 {{:https://github.com/ocaml/merlin}Merlin}: syntax highlighting, auto-completion, type inference, automatic case splitting, and more.
