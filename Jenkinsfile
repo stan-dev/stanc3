@@ -2,9 +2,12 @@
 import org.stan.Utils
 
 def utils = new org.stan.Utils()
+
 def skipExpressionTests = false
 def skipRemainingStages = false
+def skipCompileTests = false
 def buildingAgentARM = "linux"
+
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
     def output = sh (returnStdout: true, script: "${command}").trim()
@@ -47,8 +50,11 @@ pipeline {
                     def stanMathSigs = ['test/integration/signatures/stan_math_sigs.expected'].join(" ")
                     skipExpressionTests = utils.verifyChanges(stanMathSigs)
 
-                    def sourceCodePaths = ['src','test'].join(" ")
+                    def sourceCodePaths = ['src'].join(" ")
                     skipRemainingStages = utils.verifyChanges(sourceCodePaths)
+
+                    def compileTests = ['test/integration/good'].join(" ")
+                    skipCompileTests = utils.verifyChanges(compileTests)
 
                     if (buildingTag()) {
                         buildingAgentARM = "arm-ec2"
@@ -170,14 +176,14 @@ pipeline {
             }
         }
         stage("CmdStan & Math tests") {
-            when {
-                beforeAgent true
-                expression {
-                    !skipRemainingStages
-                }
-            }
             parallel {
                 stage("Compile tests") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipCompileTests
+                        }
+                    }
                     agent { label 'linux' }
                     steps {
                         script {
@@ -209,6 +215,12 @@ pipeline {
                     post { always { runShell("rm -rf ./*") }}
                 }
                 stage("Model end-to-end tests") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipCompileTests
+                        }
+                    }
                     agent { label 'linux' }
                     steps {
                         unstash 'ubuntu-exe'
@@ -250,6 +262,7 @@ pipeline {
                 }
                 stage('Math functions expressions test') {
                     when {
+                        beforeAgent true
                         expression {
                             !skipExpressionTests
                         }
@@ -282,16 +295,15 @@ pipeline {
             }
         }
         stage("Build and test static release binaries") {
-            when {
-                beforeAgent true
-                expression {
-                    !skipRemainingStages
-                }
-            }
             failFast true
             parallel {
-
                 stage("Build & test Mac OS X binary") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipRemainingStages
+                        }
+                    }
                     agent { label "osx && ocaml" }
                     steps {
                         runShell("""
@@ -310,6 +322,12 @@ pipeline {
                     post { always { runShell("rm -rf ./*") }}
                 }
                 stage("Build stanc.js") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipRemainingStages
+                        }
+                    }
                     agent {
                         dockerfile {
                             filename 'docker/debian/Dockerfile'
@@ -331,6 +349,12 @@ pipeline {
                     post {always { runShell("rm -rf ./*")}}
                 }
                 stage("Build & test a static Linux binary") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipRemainingStages
+                        }
+                    }
                     agent {
                         docker {
                             image 'andrjohns/stanc3-building:static'
@@ -356,7 +380,10 @@ pipeline {
                 stage("Build & test a static Linux mips64el binary") {
                     when {
                         beforeAgent true
-                        anyOf { buildingTag(); branch 'master' }
+                        allOf {
+                            expression { !skipRemainingStages }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
                     }
                     agent {
                         docker {
@@ -384,7 +411,10 @@ pipeline {
                 stage("Build & test a static Linux ppc64el binary") {
                     when {
                         beforeAgent true
-                        anyOf { buildingTag(); branch 'master' }
+                        allOf {
+                            expression { !skipRemainingStages }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
                     }
                     agent {
                         docker {
@@ -412,7 +442,10 @@ pipeline {
                 stage("Build & test a static Linux s390x binary") {
                     when {
                         beforeAgent true
-                        anyOf { buildingTag(); branch 'master' }
+                        allOf {
+                            expression { !skipRemainingStages }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
                     }
                     agent {
                         docker {
@@ -440,7 +473,10 @@ pipeline {
                 stage("Build & test a static Linux arm64 binary") {
                     when {
                         beforeAgent true
-                        anyOf { buildingTag(); branch 'master' }
+                        allOf {
+                            expression { !skipRemainingStages }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
                     }
                     agent {
                         docker {
@@ -469,7 +505,10 @@ pipeline {
                 stage("Build & test a static Linux armhf binary") {
                     when {
                         beforeAgent true
-                        anyOf { buildingTag(); branch 'master' }
+                        allOf {
+                            expression { !skipRemainingStages }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
                     }
                     agent {
                         docker {
@@ -498,7 +537,10 @@ pipeline {
                 stage("Build & test a static Linux armel binary") {
                     when {
                         beforeAgent true
-                        anyOf { buildingTag(); branch 'master' }
+                        allOf {
+                            expression { !skipRemainingStages }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
                     }
                     agent {
                         docker {
@@ -526,6 +568,12 @@ pipeline {
 
                 // Cross compiling for windows on debian
                 stage("Build & test static Windows binary") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipRemainingStages
+                        }
+                    }
                     agent {
                         dockerfile {
                             filename 'docker/debian-windows/Dockerfile'
@@ -555,11 +603,10 @@ pipeline {
         stage("Release tag and publish binaries") {
             when {
                 beforeAgent true
-                anyOf { buildingTag(); branch 'master' }
-                expression {
-                    !skipRemainingStages
+                allOf {
+                    expression { !skipRemainingStages }
+                    anyOf { buildingTag(); branch 'master' }
                 }
-
             }
             agent { label 'linux' }
             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
