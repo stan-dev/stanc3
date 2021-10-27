@@ -20,13 +20,13 @@ elif [ $1 = "s390x" ]; then
 fi
 
 # Lookup the sha256 hash for the specified architecture and variant (e.g., v7 for armhf) and strip the enclosing quotations
-SHA=$(skopeo inspect --raw docker://andrjohns/stanc3-building:multiarch | jq '.manifests | .[] | select(.platform.architecture==env.DOCK_ARCH and .platform.variant==(if env.DOCK_VARIANT == "" then null else env.DOCK_VARIANT end)).digest' | tr -d '"')
+SHA=$(skopeo inspect --raw docker://stanorg/stanc3:multiarch | jq '.manifests | .[] | select(.platform.architecture==env.DOCK_ARCH and .platform.variant==(if env.DOCK_VARIANT == "" then null else env.DOCK_VARIANT end)).digest' | tr -d '"')
 
 # Register QEMU translation binaries
 docker run --rm --privileged multiarch/qemu-user-static --reset
 
 # Run docker, inheriting mounted volumes from sibling container (including stanc3 directory), and build stanc3
-docker run --volumes-from=$(docker ps -q):rw andrjohns/stanc3-building:multiarch@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static"
+docker run --volumes-from=$(docker ps -q):rw stanorg/stanc3:multiarch@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static"
 
 # Update ownership of build folders
 chown -R opam: _build

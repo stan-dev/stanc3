@@ -333,7 +333,7 @@ pipeline {
                 stage("Build & test a static Linux binary") {
                     agent {
                         docker {
-                            image 'andrjohns/stanc3-building:static'
+                            image 'stanorg/stanc3:static'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\'"
                         }
@@ -360,7 +360,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'andrjohns/stanc3-building:static'
+                            image 'stanorg/stanc3:static'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
@@ -388,7 +388,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'andrjohns/stanc3-building:static'
+                            image 'stanorg/stanc3:static'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
@@ -416,7 +416,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'andrjohns/stanc3-building:static'
+                            image 'stanorg/stanc3:static'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
@@ -444,7 +444,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'andrjohns/stanc3-building:static'
+                            image 'stanorg/stanc3:static'
                             //Forces image to ignore entrypoint
                             label 'linux-ec2'
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
@@ -473,7 +473,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'andrjohns/stanc3-building:static'
+                            image 'stanorg/stanc3:static'
                             //Forces image to ignore entrypoint
                             label 'linux-ec2'
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
@@ -502,7 +502,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'andrjohns/stanc3-building:static'
+                            image 'stanorg/stanc3:static'
                             //Forces image to ignore entrypoint
                             label 'linux-ec2'
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
@@ -589,7 +589,7 @@ pipeline {
             options { skipDefaultCheckout(true) }
             agent {
                 docker {
-                    image 'andrjohns/stanc3-building:static'
+                    image 'stanorg/stanc3:static'
                     label 'linux-ec2'
                     //Forces image to ignore entrypoint
                     args "-u 1000 --entrypoint=\'\'"
