@@ -10,6 +10,7 @@
    - [type]: the base type of the variable (["int"] or ["real"]).
    - [dimensions]: the number of dimensions ([0] for a scalar, [1] for
      a vector or row vector, etc.).
+     
    The JSON object also have the fields [stanlib_calls] and [distributions]
    containing the name of the standard library functions called and
    distributions used.

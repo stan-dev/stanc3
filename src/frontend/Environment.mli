@@ -1,3 +1,5 @@
+(** Type environments used during typechecking. Maps from strings to function or variable information *)
+
 open Middle
 
 (** Origin blocks, to keep track of where variables are declared *)
