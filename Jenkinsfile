@@ -69,8 +69,8 @@ pipeline {
                 }
             }
             agent {
-                dockerfile {
-                    filename 'docker/debian/Dockerfile'
+                docker {
+                    image 'stanorg/stanc3:debian'
                     //Forces image to ignore entrypoint
                     args "-u root --entrypoint=\'\'"
                 }
@@ -95,8 +95,8 @@ pipeline {
                 }
             }
             agent {
-                dockerfile {
-                    filename 'docker/debian/Dockerfile'
+                docker {
+                    image 'stanorg/stanc3:debian'
                     //Forces image to ignore entrypoint
                     args "-u root --entrypoint=\'\'"
                 }
@@ -127,8 +127,8 @@ pipeline {
             parallel {
                 stage("Dune tests") {
                     agent {
-                        dockerfile {
-                            filename 'docker/debian/Dockerfile'
+                        docker {
+                            image 'stanorg/stanc3:debian'
                             //Forces image to ignore entrypoint
                             args "-u root --entrypoint=\'\'"
                         }
@@ -157,8 +157,8 @@ pipeline {
                 }
                 stage("stancjs tests") {
                     agent {
-                        dockerfile {
-                            filename 'docker/debian/Dockerfile'
+                        docker {
+                            image 'stanorg/stanc3:debian'
                             //Forces image to ignore entrypoint
                             args "-u root --entrypoint=\'\'"
                         }
@@ -328,8 +328,8 @@ pipeline {
                         }
                     }
                     agent {
-                        dockerfile {
-                            filename 'docker/debian/Dockerfile'
+                        docker {
+                            image 'stanorg/stanc3:debian'
                             //Forces image to ignore entrypoint
                             args "-u root --entrypoint=\'\'"
                         }
@@ -574,8 +574,8 @@ pipeline {
                         }
                     }
                     agent {
-                        dockerfile {
-                            filename 'docker/debian-windows/Dockerfile'
+                        docker {
+                            image 'stanorg/stanc3:debian-windows'
                             label 'linux-ec2'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\'"
