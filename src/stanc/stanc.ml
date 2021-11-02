@@ -266,5 +266,3 @@ let main () =
   use_file !model_file
 
 let () = main ()
-
-(** This is just a comment, I can be removed later. *)
