@@ -34,6 +34,7 @@ module TypeError = struct
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string
     | ReturningFnExpectedUndeclaredDistSuffixFound of string * string
+    | ReturningFnExpectedWrongDistSuffixFound of string * string
     | NonReturningFnExpectedReturningFound of string
     | NonReturningFnExpectedNonFnFound of string
     | NonReturningFnExpectedUndeclaredIdentFound of string
@@ -170,12 +171,21 @@ module TypeError = struct
            '%s' was supplied."
           fn_name
     | ReturningFnExpectedUndeclaredDistSuffixFound (prefix, suffix) ->
+        Fmt.pf ppf "Function '%s_%s' is not implemented for distribution '%s'."
+          prefix suffix prefix
+    | ReturningFnExpectedWrongDistSuffixFound (prefix, suffix) ->
+        let newsuffix =
+          match suffix with
+          | "lpdf" -> "lpmf"
+          | "lupdf" -> "lupmf"
+          | "lpmf" -> "lpdf"
+          | "lupmf" -> "lupdf"
+          | _ -> raise_s [%message "This should never happen."]
+        in
         Fmt.pf ppf
-          "A function was expected but an unknown identifier %s was recieved. \
-           This appears to be part of the %s family of distributions, for \
-           which the %s suffix in not implemented."
-          (String.concat ~sep:"_" [prefix; suffix])
-          prefix suffix
+          "Function '%s_%s' is not implemented for distribution '%s', use \
+           '%s_%s' instead."
+          prefix suffix prefix prefix newsuffix
     | NonReturningFnExpectedUndeclaredIdentFound fn_name ->
         Fmt.pf ppf
           "A non-returning function was expected but an undeclared identifier \
@@ -509,6 +519,10 @@ let returning_fn_expected_undeclared_dist_suffix_found loc (prefix, suffix) =
     ( loc
     , TypeError.ReturningFnExpectedUndeclaredDistSuffixFound (prefix, suffix)
     )
+
+let returning_fn_expected_wrong_dist_suffix_found loc (prefix, suffix) =
+  TypeError
+    (loc, TypeError.ReturningFnExpectedWrongDistSuffixFound (prefix, suffix))
 
 let nonreturning_fn_expected_returning_found loc name =
   TypeError (loc, TypeError.NonReturningFnExpectedReturningFound name)

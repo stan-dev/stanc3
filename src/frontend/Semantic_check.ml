@@ -291,31 +291,44 @@ let semantic_check_fn_normal ~is_cond_dist ~loc id es =
         (* Check that Funaps are actually functions *)
         Semantic_error.returning_fn_expected_nonfn_found loc id.name |> error
     | None -> (
-      match List.rev (String.split id.name ~on:'_') with
-      | suffix :: tl
-        when List.mem Utils.cumulative_distribution_suffices_w_rng suffix
-               ~equal:String.equal ->
-          let prefix = String.concat ~sep:"_" (List.rev tl) in
-          let known_families =
-            List.map
-              ~f:(fun (_, y, _, _) -> y)
-              Stan_math_signatures.distributions
-          in
-          let is_known_family s =
-            List.mem known_families s ~equal:String.equal
-          in
-          if is_known_family prefix then
-            Semantic_error.returning_fn_expected_undeclared_dist_suffix_found
-              loc (prefix, suffix)
+        let gen_prefix l = String.concat ~sep:"_" (List.rev l) in
+        match List.rev (String.split id.name ~on:'_') with
+        | (("lpmf" | "lupmf") as suffix) :: tl
+          when Utils.is_distribution_name
+                 (String.concat ~sep:"_" (List.rev tl @ ["lpdf"])) ->
+            Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
+              (gen_prefix tl, suffix)
             |> error
-          else
+        | (("lpdf" | "lupdf") as suffix) :: tl
+          when Utils.is_distribution_name
+                 (String.concat ~sep:"_" (List.rev tl @ ["lpmf"])) ->
+            Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
+              (gen_prefix tl, suffix)
+            |> error
+        | suffix :: tl
+          when List.mem Utils.cumulative_distribution_suffices_w_rng suffix
+                 ~equal:String.equal ->
+            let prefix = gen_prefix tl in
+            let known_families =
+              List.map
+                ~f:(fun (_, y, _, _) -> y)
+                Stan_math_signatures.distributions
+            in
+            let is_known_family s =
+              List.mem known_families s ~equal:String.equal
+            in
+            if is_known_family prefix then
+              Semantic_error.returning_fn_expected_undeclared_dist_suffix_found
+                loc (prefix, suffix)
+              |> error
+            else
+              Semantic_error.returning_fn_expected_undeclaredident_found loc
+                id.name
+              |> error
+        | _ ->
             Semantic_error.returning_fn_expected_undeclaredident_found loc
               id.name
-            |> error
-      | _ ->
-          Semantic_error.returning_fn_expected_undeclaredident_found loc
-            id.name
-          |> error ))
+            |> error ))
 
 (* Stan-Math function application *)
 let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
