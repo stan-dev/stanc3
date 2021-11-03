@@ -1,3 +1,5 @@
+(** Types which have dimensionalities but not sizes, e.g. [array\[,,\]] *)
+
 open Core_kernel
 open Common.Helpers
 

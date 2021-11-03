@@ -7,6 +7,7 @@ This specialization is useful since we end up with a concrete type of kind [*]
 the analysis and optimization code, we work with map's and sets of our IR types
 a lot and this approach makes the types much nicer to work with.
 *)
+
 open Core_kernel
 
 (** Signature of all meta data used to annotate IRs *)

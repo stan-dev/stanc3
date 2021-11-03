@@ -1,3 +1,5 @@
+(** MIR types and modules corresponding to the expressions of the language *)
+
 open Core_kernel
 open Common
 

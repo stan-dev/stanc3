@@ -1,3 +1,5 @@
+(** Types of indexing operations *)
+
 open Core_kernel
 
 type 'a t =
