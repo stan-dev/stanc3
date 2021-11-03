@@ -292,7 +292,9 @@ let semantic_check_fn_normal ~is_cond_dist ~loc id es =
         Semantic_error.returning_fn_expected_nonfn_found loc id.name |> error
     | None -> (
       match List.rev (String.split id.name ~on:'_') with
-      | (("lupdf" | "cdf" | "lcdf" | "lccdf" | "rng") as suffix) :: tl ->
+      | suffix :: tl
+        when List.mem Utils.cumulative_distribution_suffices_w_rng suffix
+               ~equal:String.equal ->
           let prefix = String.concat ~sep:"_" (List.rev tl) in
           let known_families =
             List.map
