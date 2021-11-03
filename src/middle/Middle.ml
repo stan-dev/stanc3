@@ -2,7 +2,6 @@
   (MIR) of Stan
 *)
 
-module Errors = Errors
 module Location = Location
 module Location_span = Location_span
 module Operator = Operator
@@ -14,11 +13,8 @@ module Expr = Expr
 module UnsizedType = UnsizedType
 module SizedType = SizedType
 module Type = Type
-module Semantic_error = Semantic_error
-module SignatureMismatch = SignatureMismatch
 module Stmt = Stmt
 module Program = Program
 module Stan_math_signatures = Stan_math_signatures
 module Utils = Utils
-module Warnings = Warnings
 module Transformation = Transformation

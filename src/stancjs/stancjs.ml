@@ -20,8 +20,8 @@ let warn_uninitialized_msgs
   Set.Poly.(to_list (map filtered_uninit_vars ~f:show_var_info))
 
 let stan2cpp model_name model_string is_flag_set =
-  Semantic_check.model_name := model_name ;
-  Semantic_check.check_that_all_functions_have_definition :=
+  Typechecker.model_name := model_name ;
+  Typechecker.check_that_all_functions_have_definition :=
     not (is_flag_set "allow_undefined" || is_flag_set "allow-undefined") ;
   Transform_Mir.use_opencl := is_flag_set "use-opencl" ;
   Stan_math_code_gen.standalone_functions := is_flag_set "standalone-functions" ;
@@ -40,15 +40,13 @@ let stan2cpp model_name model_string is_flag_set =
       let result =
         ast
         >>= fun ast ->
-        let typed_ast_and_warnings =
-          Semantic_check.semantic_check_program ast
-          |> Result.map_error ~f:(fun errs ->
-                 Errors.Semantic_error (List.hd_exn errs) )
+        let typed_ast =
+          Typechecker.check_program ast
+          |> Result.map_error ~f:(fun e -> Errors.Semantic_error e)
         in
-        typed_ast_and_warnings
-        >>| fun typed_ast_and_warnings ->
-        let typed_ast, semantic_warnings = typed_ast_and_warnings in
-        let warnings = parser_warnings @ semantic_warnings in
+        typed_ast
+        >>| fun (typed_ast, type_warnings) ->
+        let warnings = parser_warnings @ type_warnings in
         if is_flag_set "info" then
           r.return (Result.Ok (Info.info typed_ast), warnings, []) ;
         if is_flag_set "print-canonical" then

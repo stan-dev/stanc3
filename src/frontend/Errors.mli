@@ -2,9 +2,9 @@
 
 (** Our type of syntax error information *)
 type syntax_error =
-  | Lexing of string * Location.t
-  | Include of string * Location.t
-  | Parsing of string * Location_span.t
+  | Lexing of string * Middle.Location.t
+  | Include of string * Middle.Location.t
+  | Parsing of string * Middle.Location_span.t
 
 (** Exception for Syntax Errors *)
 exception SyntaxError of syntax_error
