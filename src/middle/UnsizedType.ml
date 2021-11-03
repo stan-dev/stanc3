@@ -1,3 +1,5 @@
+(** Types which have dimensionalities but not sizes, e.g. [array\[,,\]] *)
+
 open Core_kernel
 open Common.Helpers
 
@@ -149,7 +151,7 @@ let is_int_type = function UInt | UArray UInt -> true | _ -> false
 let is_eigen_type ut =
   match ut with UVector | URowVector | UMatrix -> true | _ -> false
 
-let is_fun_type = function UFun _ -> true | _ -> false
+let is_fun_type = function UFun _ | UMathLibraryFunction -> true | _ -> false
 
 (** Detect if type contains an integer *)
 let rec contains_int ut =

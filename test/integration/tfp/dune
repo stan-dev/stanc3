@@ -37,11 +37,12 @@
  (action
   (with-stdout-to %{targets}
    (with-stderr-to "tfp.output"
-    (run %{bin:stan2tfp} %{stanfiles})))))
+   (run %{bin:stan2tfp} %{stanfiles})))))
 
 (alias
  (name runtest)
  (action (diff ./tfp_models/python_kwrds.py python_kwrds.py.output)))
+
 
 (alias
  (name runtest)
