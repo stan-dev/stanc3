@@ -1,3 +1,25 @@
+  $ ../../../../../install/default/bin/stanc lpmf_lpdf_replacement1.stan
+Semantic error in 'lpmf_lpdf_replacement1.stan', line 5, column 14 to column 34:
+   -------------------------------------------------
+     3:  model {  
+     4:      // known family, known suffix, not implemented  
+     5:      target += binomial_lpdf(1|0,1);
+                       ^
+     6:  }
+   -------------------------------------------------
+
+Function 'binomial_lpdf' is not implemented for distribution 'binomial', use 'binomial_lpmf' instead.
+  $ ../../../../../install/default/bin/stanc lpmf_lpdf_replacement2.stan
+Semantic error in 'lpmf_lpdf_replacement2.stan', line 5, column 14 to column 32:
+   -------------------------------------------------
+     3:  model {  
+     4:      // known family, known suffix, not implemented  
+     5:      target += normal_lpmf(1|0,1);
+                       ^
+     6:  }
+   -------------------------------------------------
+
+Function 'normal_lpmf' is not implemented for distribution 'normal', use 'normal_lpdf' instead.
   $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix1.stan
 Semantic error in 'non_existing_distribution_suffix1.stan', line 4, column 14 to column 34:
    -------------------------------------------------
@@ -8,7 +30,7 @@ Semantic error in 'non_existing_distribution_suffix1.stan', line 4, column 14 to
      5:  }
    -------------------------------------------------
 
-A function was expected but an unknown identifier von_mises_cdf was recieved. This appears to be part of the von_mises family of distributions, for which the cdf suffix in not implemented.
+Function 'von_mises_cdf' is not implemented for distribution 'von_mises'.
   $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix2.stan
 Semantic error in 'non_existing_distribution_suffix2.stan', line 4, column 14 to column 35:
    -------------------------------------------------
@@ -19,7 +41,7 @@ Semantic error in 'non_existing_distribution_suffix2.stan', line 4, column 14 to
      5:  }
    -------------------------------------------------
 
-A function was expected but an unknown identifier von_mises_lcdf was recieved. This appears to be part of the von_mises family of distributions, for which the lcdf suffix in not implemented.
+Function 'von_mises_lcdf' is not implemented for distribution 'von_mises'.
   $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix3.stan
 Semantic error in 'non_existing_distribution_suffix3.stan', line 4, column 14 to column 36:
    -------------------------------------------------
@@ -30,7 +52,7 @@ Semantic error in 'non_existing_distribution_suffix3.stan', line 4, column 14 to
      5:  }
    -------------------------------------------------
 
-A function was expected but an unknown identifier von_mises_lccdf was recieved. This appears to be part of the von_mises family of distributions, for which the lccdf suffix in not implemented.
+Function 'von_mises_lccdf' is not implemented for distribution 'von_mises'.
   $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix4.stan
 Semantic error in 'non_existing_distribution_suffix4.stan', line 4, column 14 to column 41:
    -------------------------------------------------
