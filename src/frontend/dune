@@ -1,5 +1,6 @@
 (library
   (name frontend)
+  (public_name stanc.frontend)
   (libraries core_kernel re menhirLib fmt middle analysis_and_optimization)
   (inline_tests)
   (preprocess (pps ppx_jane ppx_deriving.fold ppx_deriving.map)))

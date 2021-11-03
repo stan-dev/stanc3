@@ -1,0 +1,100 @@
+{0 Adding or changing the syntax error messages}
+
+
+
+{1 Background}
+
+Stanc3 uses Menhir's Incremental API to provide custom error messages for when the parser detects an error.
+Menhir and the Incremental API are documented in the {{:http://gallium.inria.fr/~fpottier/menhir/}reference manual}.
+We write the custom error messages in src/frontend/parser.messages file, which follows Menhir's messages format
+(documented {{:http://gallium.inria.fr/~fpottier/menhir/manual.html#sec68}here}.
+Those messages are automatically integrated into the parser by the build rules defined in [src/frontend/dune].
+
+This process is less obvious than it seems and has some important to understand caveats. Please read the above
+section of the Menhir manual before making changes to the parser or syntax errors.
+
+Each rule in parser.messages indicates the error state it corresponds to by specifying {e any} stack of tokens which result in that error state.
+
+{b There may be many such stacks of tokens which could correspond to the same error}.
+Menhir will point out if there are two rules defined for the same error, but it will only
+show you one of them.
+
+{1 Modifying an existing message }
+
+{ol
+ {- Find the existing error message for the parser error in question by either:
+- Searching the message file for the current error message test,
+- Compiling a stan program which throws the error message with the `--debug-parse` flag, then search for the error state number
+- OR a new rule to parser.messages corresponding to *any* stack of tokens which could trigger the error you're interested in,
+     then let Menhir tell you the line number of the existing rule the new rule collides with}
+{- Update the message of the existing rule}
+}
+
+
+{2 Example}
+
+Suppose I want to change the error message for when the program is missing a [{] after the [model] keyword.
+
+I write an example Stan program that has the error:
+{[
+    parameters {
+      real x;
+    }
+    model
+      x ~ normal(0, 1);
+    }
+]}
+
+
+Now I compile this program with stanc3 using the [--debug-parse] option. The result:
+{[
+    ...
+    Expected "{" after "model".
+    (Parse error state 685)
+]}
+The parse error state I'm looking for is 685. I search the parser.messages file for "685" (perhaps with the command `grep -n 685 src/frontend/parser.messages`), and I find:
+{[
+    program: MODELBLOCK WHILE
+    ##
+    ## Ends in an error in state: 685.
+    ##
+    ## model_block -> MODELBLOCK . LBRACE list(vardecl_or_statement) RBRACE [ GENERATEDQUANTITIESBLOCK EOF ]
+    ##
+    ## The known suffix of the stack is as follows:
+    ## MODELBLOCK
+    ##
+
+    Expected "{" after "model".
+]}
+
+I can now replace this message with my new version
+
+{1 Adding new messages after the parser has been changed}
+
+Often a new language feature will need new syntax messages. The command
+[dune build @update_messages] will add dummy error messages to [parser.messages]
+that you can replace.
+
+It is crucial to understand that the example programs Menhir provides in this file
+may not represent all possible programs leading to this state. See
+{{:http://gallium.inria.fr/~fpottier/menhir/manual.html#sec%3Aerrors%3Adiagnostics}this section of the Menhir manual}
+for specific advice.
+
+{1 Adding new parser states}
+
+Sometimes it is desirable to give a more specific error message than is possible with the default
+construction of the parser. One way around this is to add an additional state to the parser which matches
+the desired structure, followed by a token which cannot ever be reached. We define [UNREACHABLE] for this
+purpose.
+
+Suppose I actually wanted to add a new message that would only show when a more specific error is made; maybe I want a special message
+for when [model] followed by a declaration.
+To do this I need to change the parser grammar in [src/frontent/parser.mly] to split off a new error state for the situation I want to catch.
+It is important to make sure not to change the behavior of the parser, so I should guarantee that he new rule will never successfully be built by terminating it with a token that can never occur.
+For example, I could change [model = MODELBLOCK LBRACE ...] to [model = MODELBLOCK LBRACE ... | MODELBLOCK REAL UNREACHABLE].
+
+This is enough to create a new parser state with a different error message.
+
+Much like after a change to the parser for a new feature, after creating a new parser state,
+you should run [dune build @update_messsages] to check the new entry and generate a error template
+in [parser.messages].

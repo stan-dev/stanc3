@@ -180,27 +180,16 @@ and semantic_check_returntype : UnsizedType.returntype -> unit Validate.t =
   | Void -> Validate.ok ()
   | ReturnType ut -> semantic_check_unsizedtype ut
 
-(* -- Indentifiers ---------------------------------------------------------- *)
+(* -- Identifiers ---------------------------------------------------------- *)
 let reserved_keywords =
-  [ "true"; "false"; "repeat"; "until"; "then"; "var"; "fvar"; "STAN_MAJOR"
-  ; "STAN_MINOR"; "STAN_PATCH"; "STAN_MATH_MAJOR"; "STAN_MATH_MINOR"
-  ; "STAN_MATH_PATCH"; "alignas"; "alignof"; "and"; "and_eq"; "asm"; "auto"
-  ; "bitand"; "bitor"; "bool"; "break"; "case"; "catch"; "char"; "char16_t"
-  ; "char32_t"; "class"; "compl"; "const"; "constexpr"; "const_cast"
-  ; "continue"; "decltype"; "default"; "delete"; "do"; "double"; "dynamic_cast"
-  ; "else"; "enum"; "explicit"; "export"; "extern"; "false"; "float"; "for"
-  ; "friend"; "goto"; "if"; "inline"; "int"; "long"; "mutable"; "namespace"
-  ; "new"; "noexcept"; "not"; "not_eq"; "nullptr"; "operator"; "or"; "or_eq"
-  ; "private"; "protected"; "public"; "register"; "reinterpret_cast"; "return"
-  ; "short"; "signed"; "sizeof"; "static"; "static_assert"; "static_cast"
-  ; "struct"; "switch"; "template"; "this"; "thread_local"; "throw"; "true"
-  ; "try"; "typedef"; "typeid"; "typename"; "union"; "unsigned"; "using"
-  ; "virtual"; "void"; "volatile"; "wchar_t"; "while"; "xor"; "xor_eq"
-  ; "functions"; "data"; "parameters"; "model"; "return"; "if"; "else"; "while"
-  ; "for"; "in"; "break"; "continue"; "void"; "int"; "real"; "complex"
-  ; "vector"; "row_vector"; "matrix"; "ordered"; "positive_ordered"; "simplex"
-  ; "unit_vector"; "cholesky_factor_corr"; "cholesky_factor_cov"; "corr_matrix"
-  ; "cov_matrix"; "print"; "reject"; "target"; "get_lp"; "profile" ]
+  [ "for"; "in"; "while"; "repeat"; "until"; "if"; "then"; "else"; "true"
+  ; "false"; "target"; "int"; "real"; "complex"; "void"; "vector"; "simplex"
+  ; "unit_vector"; "ordered"; "positive_ordered"; "row_vector"; "matrix"
+  ; "cholesky_factor_corr"; "cholesky_factor_cov"; "corr_matrix"; "cov_matrix"
+  ; "functions"; "model"; "data"; "parameters"; "quantities"; "transformed"
+  ; "generated"; "profile"; "return"; "break"; "continue"; "increment_log_prob"
+  ; "get_lp"; "print"; "reject"; "typedef"; "struct"; "var"; "export"; "extern"
+  ; "static"; "auto" ]
 
 let semantic_check_identifier id =
   Validate.(

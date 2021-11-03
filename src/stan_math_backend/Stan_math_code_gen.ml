@@ -60,7 +60,7 @@ let arg_needs_template = function
   | _ -> true
 
 (** Print template arguments for C++ functions that need templates
-  @param args A pack of `Program.fun_arg_decl` containing functions to detect templates.
+  @param args A pack of [Program.fun_arg_decl] containing functions to detect templates.
   @return A list of arguments with template parameter names added.
  *)
 let maybe_templated_arg_types (args : Program.fun_arg_decl) =
@@ -302,7 +302,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdsuffix; fdargs; fdbody; _})
         as the third and not last argument *)
         pp_functor ppf ([], fdargs, `VariadicODE)
 
-(* Creates functions outside the model namespaces which only call the ones
+(** Creates functions outside the model namespaces which only call the ones
    inside the namespaces *)
 let pp_standalone_fun_def namespace_fun ppf
     Program.({fdname; fdsuffix; fdargs; fdbody; fdrt; _}) =
@@ -361,7 +361,8 @@ let pp_validate_data ppf (name, st) =
         args
     in
     pf ppf "@[<hov 4>context__.validate_dims(@,%S,@,%S,@,%S,@,%a);@]@ "
-      "data initialization" name
+      "data initialization"
+      (Mangle.remove_prefix name)
       (stantype_prim_str (SizedType.to_unsized st))
       pp_stdvector (SizedType.get_dims_io st)
 
@@ -488,21 +489,22 @@ let pp_method ppf rt name params intro ?(outro = nop)
   outro ppf () ;
   pf ppf "@,} // %s() @,@]" name
 
-(** Print the `get_param_names` method of the model class
+(** Print the [get_param_names] method of the model class
   @param ppf A pretty printer.
  *)
 let pp_get_param_names ppf {Program.output_vars; _} =
   let add_param = fmt "%S" in
+  let extract_name var = Mangle.remove_prefix (fst var) in
   pp_method ppf "void" "get_param_names"
     ["std::vector<std::string>& names__"]
     nop
     (fun ppf ->
       pf ppf "@[<hov 2>names__ = std::vector<std::string>{%a};@]@,"
         (list ~sep:comma add_param)
-        (List.map ~f:fst output_vars) )
+        (List.map ~f:extract_name output_vars) )
     ~cv_attr:["const"]
 
-(** Print the `get_dims` method of the model class. *)
+(** Print the [get_dims] method of the model class. *)
 let pp_get_dims ppf {Program.output_vars; _} =
   let pp_cast ppf cast_dims =
     pf ppf "@[<hov 2>static_cast<size_t>(%a)@]@," pp_expr cast_dims
@@ -564,8 +566,8 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
   in
   pp_method_b ppf "void" "write_array_impl" params intro generate_quantities
 
-(** Prints the for loop for `constrained_param_names`
-    and `unconstrained_param_names`
+(** Prints the for loop for [constrained_param_names]
+    and [unconstrained_param_names]
   @param index_ids Optional named parameter of a SizedType's dimensions
   @param ppf A pretty printer
   @param dims A list of the dimensions of a SizedType
@@ -590,12 +592,14 @@ let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body) =
             (pp_for_loop_iteratee ~index_ids:idcs, (i, dims, pp_body)) )
 
 let emit_name ppf (name, idcs) =
+  let name = Mangle.remove_prefix name in
   let to_string = fmt "std::to_string(%s)" in
   pf ppf "param_names__.emplace_back(std::string() + %a);"
     (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
     (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
 
 let emit_complex_name ppf (name, idcs) =
+  let name = Mangle.remove_prefix name in
   let to_string = fmt "std::to_string(%s)" in
   pf ppf "@[param_names__.emplace_back(std::string() + %a);@]@,"
     (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
@@ -604,7 +608,7 @@ let emit_complex_name ppf (name, idcs) =
     (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
     ((strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs) @ ["\"imag\""])
 
-(** Print the `constrained_param_names` method of the model class. *)
+(** Print the [constrained_param_names] method of the model class. *)
 let pp_constrained_param_names ppf {Program.output_vars; _} =
   let params =
     [ "std::vector<std::string>& param_names__"
@@ -638,7 +642,7 @@ let pp_constrained_param_names ppf {Program.output_vars; _} =
         (list ~sep:cut pp_param_names, gqvars) )
     ~cv_attr:["const"; "final"]
 
-(* Print the `unconstrained_param_names` method of the model class.
+(** Print the [unconstrained_param_names] method of the model class.
   This is just a copy of constrained, I need to figure out which one is wrong
    and fix it eventually. From Bob,
 
@@ -690,7 +694,7 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
         (list ~sep:cut pp_param_names, gqvars) )
     ~cv_attr
 
-(** Print the `transform_inits` method of the model class *)
+(** Print the [transform_inits] method of the model class *)
 let pp_transform_inits_impl ppf {Program.transform_inits; _} =
   pf ppf
     "template <typename VecVar, typename VecI, @ \
@@ -713,7 +717,7 @@ let pp_transform_inits_impl ppf {Program.transform_inits; _} =
   pp_method_b ppf "void" "transform_inits_impl" params intro transform_inits
     ~cv_attr
 
-(** Print the `log_prob` method of the model class *)
+(** Print the [log_prob] method of the model class *)
 let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
   pf ppf
     "@ template <bool propto__, bool jacobian__ , typename VecR, typename \
@@ -752,7 +756,7 @@ let pp_outvar_metadata ppf (method_name, outvars) =
   let ppbody ppf = pf ppf "@[<hov 2>return std::string(%s);@]@," json_str in
   pp_method ppf "std::string" method_name [] nop ppbody ~cv_attr:["const"]
 
-(** Print the `get_unconstrained_sizedtypes` method of the model class *)
+(** Print the [get_unconstrained_sizedtypes] method of the model class *)
 let pp_unconstrained_types ppf {Program.output_vars; _} =
   let grab_unconstrained (name, {Program.out_unconstrained_st; out_block; _}) =
     (name, out_unconstrained_st, out_block)
@@ -760,7 +764,7 @@ let pp_unconstrained_types ppf {Program.output_vars; _} =
   let outvars = List.map ~f:grab_unconstrained output_vars in
   pp_outvar_metadata ppf ("get_unconstrained_sizedtypes", outvars)
 
-(** Print the `get_constrained_sizedtypes` method of the model class *)
+(** Print the [get_constrained_sizedtypes] method of the model class *)
 let pp_constrained_types ppf {Program.output_vars; _} =
   let grab_constrained (name, {Program.out_constrained_st; out_block; _}) =
     (name, out_constrained_st, out_block)
@@ -855,7 +859,7 @@ let pp_overloads ppf {Program.output_vars; _} =
     pp_expr num_params pp_expr num_transformed pp_expr num_gen_quantities
     pp_expr num_params pp_expr num_transformed pp_expr num_gen_quantities
 
-(** Print the `get_constrained_sizedtypes` method of the model class *)
+(** Print the [get_constrained_sizedtypes] method of the model class *)
 let pp_transform_inits ppf {Program.output_vars; _} =
   let params =
     [ "const stan::io::var_context& context"; "std::vector<int>& params_i"
@@ -871,11 +875,11 @@ let pp_transform_inits ppf {Program.output_vars; _} =
     List.filter_map ~f:get_constrained_param_st output_vars
   in
   let get_names ppf () =
-    let add_param = fmt "%S@," in
+    let add_param = fmt "%S" in
     pf ppf "@[<hov 2> constexpr std::array<const char*, %i> names__{%a};@]@,"
       list_len
       (list ~sep:comma add_param)
-      param_names
+      (List.map ~f:Mangle.remove_prefix param_names)
   in
   let get_constrain_param_size_arr ppf () =
     match constrained_params with

@@ -400,6 +400,13 @@ top_var_decl_no_assign:
     { grammar_logger "top_var_decl_no_assign" ;
       d_fn ~is_global:true
     }
+  | SEMICOLON
+    { grammar_logger "top_var_decl_no_assign_skip"; 
+      [ { stmt= Skip
+        ; smeta= { loc= Location_span.of_positions_exn $loc
+        }
+      }] 
+    }
 
 sized_basic_type:
   | INT

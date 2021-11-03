@@ -1,5 +1,6 @@
 (library
   (name analysis_and_optimization)
+  (public_name stanc.analysis)
   (libraries core_kernel str fmt common middle)
   (inline_tests)
   ;; TODO: Not sure what's going on but it's throwing an error that this module has no implementation
