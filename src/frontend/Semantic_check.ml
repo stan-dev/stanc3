@@ -290,18 +290,30 @@ let semantic_check_fn_normal ~is_cond_dist ~loc id es =
     | Some _ ->
         (* Check that Funaps are actually functions *)
         Semantic_error.returning_fn_expected_nonfn_found loc id.name |> error
-    | None ->
-        (match List.rev (String.split id.name ~on:'_') with
-        | [_] -> Semantic_error.returning_fn_expected_undeclaredident_found loc id.name |> error
-        | ("lupdf" | "cdf" | "lcdf" | "lccdf" | "rng") :: tl ->
-          (* let known_families = List.map ~f:(fun (_,y,_,_) -> y) Stan_math_signatures.distributions in  *)
-          let known_families = ["normal"; "binomial"] in
-          let is_known_family s = List.mem known_families s ~equal:String.equal in 
-          if (is_known_family (String.concat ~sep:"_" (List.rev tl))) then
-            Semantic_error.returning_fn_expected_undeclaredident_found loc id.name |> error
-          else 
-            Semantic_error.returning_fn_expected_undeclaredident_found loc id.name |> error
-        | _ -> Semantic_error.returning_fn_expected_undeclaredident_found loc id.name |> error))
+    | None -> (
+      match List.rev (String.split id.name ~on:'_') with
+      | (("lupdf" | "cdf" | "lcdf" | "lccdf" | "rng") as suffix) :: tl ->
+          let prefix = String.concat ~sep:"_" (List.rev tl) in
+          let known_families =
+            List.map
+              ~f:(fun (_, y, _, _) -> y)
+              Stan_math_signatures.distributions
+          in
+          let is_known_family s =
+            List.mem known_families s ~equal:String.equal
+          in
+          if is_known_family prefix then
+            Semantic_error.returning_fn_expected_undeclared_dist_suffix_found
+              loc (prefix, suffix)
+            |> error
+          else
+            Semantic_error.returning_fn_expected_undeclaredident_found loc
+              id.name
+            |> error
+      | _ ->
+          Semantic_error.returning_fn_expected_undeclaredident_found loc
+            id.name
+          |> error ))
 
 (* Stan-Math function application *)
 let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =

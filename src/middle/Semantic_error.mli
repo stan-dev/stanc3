@@ -34,6 +34,9 @@ val returning_fn_expected_nonfn_found : Location_span.t -> string -> t
 val returning_fn_expected_undeclaredident_found :
   Location_span.t -> string -> t
 
+val returning_fn_expected_undeclared_dist_suffix_found :
+  Location_span.t -> string * string -> t
+
 val illtyped_reduce_sum :
      Location_span.t
   -> string

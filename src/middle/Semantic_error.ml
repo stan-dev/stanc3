@@ -33,6 +33,7 @@ module TypeError = struct
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string
+    | ReturningFnExpectedUndeclaredDistSuffixFound of string * string
     | NonReturningFnExpectedReturningFound of string
     | NonReturningFnExpectedNonFnFound of string
     | NonReturningFnExpectedUndeclaredIdentFound of string
@@ -168,6 +169,13 @@ module TypeError = struct
           "A returning function was expected but an undeclared identifier \
            '%s' was supplied."
           fn_name
+    | ReturningFnExpectedUndeclaredDistSuffixFound (prefix, suffix) ->
+        Fmt.pf ppf
+          "A function was expected but an unknown identifier %s was recieved. \
+           This appears to be part of the %s family of distributions, for \
+           which the %s suffix in not implemented."
+          (String.concat ~sep:"_" [prefix; suffix])
+          prefix suffix
     | NonReturningFnExpectedUndeclaredIdentFound fn_name ->
         Fmt.pf ppf
           "A non-returning function was expected but an undeclared identifier \
@@ -495,6 +503,12 @@ let returning_fn_expected_nonfn_found loc name =
 
 let returning_fn_expected_undeclaredident_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedUndeclaredIdentFound name)
+
+let returning_fn_expected_undeclared_dist_suffix_found loc (prefix, suffix) =
+  TypeError
+    ( loc
+    , TypeError.ReturningFnExpectedUndeclaredDistSuffixFound (prefix, suffix)
+    )
 
 let nonreturning_fn_expected_returning_found loc name =
   TypeError (loc, TypeError.NonReturningFnExpectedReturningFound name)
