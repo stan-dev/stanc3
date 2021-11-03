@@ -2,7 +2,8 @@
 
 (** Our type of syntax error information *)
 type syntax_error =
-  | Lexing of string * Location.t
+  | Lexing of Location.t
+  | UnexpectedEOF of Location.t
   | Include of string * Location.t
   | Parsing of string * Location_span.t
 

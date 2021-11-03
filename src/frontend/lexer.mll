@@ -224,17 +224,19 @@ rule token = parse
                                       token old_lexbuf }
 
   | _                         { raise (Errors.SyntaxError
-                                (Errors.Lexing (lexeme (Stack.top_exn include_stack),
-                                        Middle.Location.of_position_exn
-                                        (lexeme_start_p
-                                          (Stack.top_exn include_stack))))) }
+                                        (Errors.Lexing
+                                          (Middle.Location.of_position_exn
+                                            (lexeme_start_p
+                                              (Stack.top_exn include_stack))))) }
 
 (* Multi-line comment terminated by "*/" *)
 and multiline_comment state = parse
   | "*/"     { let ((pos, lines), buffer) = state in
                let lines = (Buffer.contents buffer) :: lines in
                add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p }
-  | eof      { failwith "unterminated comment" }
+  | eof      { raise (Errors.SyntaxError
+                      (Errors.UnexpectedEOF
+                        (Middle.Location.of_position_exn lexbuf.lex_curr_p))) }
   | newline  { incr_linenum lexbuf;
                let ((pos, lines), buffer) = state in
                let lines = (Buffer.contents buffer) :: lines in
