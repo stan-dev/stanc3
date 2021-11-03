@@ -1,3 +1,6 @@
+module Location_span = Middle.Location_span
+module Location = Middle.Location
+
 type t = Location_span.t * string
 
 let pp ?printed_filename ppf (span, message) =

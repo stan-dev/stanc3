@@ -13,4 +13,8 @@
 *)
 
 val remove_prefix : string -> string
+(** Used in code generation so that this
+   mangling is opaque to the interfaces (e.g. cmdstan)
+*)
+
 val add_prefix_to_kwrds : string -> string

@@ -21,6 +21,14 @@ let unnormalized_suffix = function
   | "_lpmf" -> "_lupmf"
   | x -> x
 
+(** A wrapper around String.rsplit2 which handles _cdf_log and _ccdf_log *)
+let split_distribution_suffix (name : string) : (string * string) option =
+  let open String in
+  if is_suffix ~suffix:"_cdf_log" name then Some (drop_suffix name 8, "cdf_log")
+  else if is_suffix ~suffix:"_ccdf_log" name then
+    Some (drop_suffix name 9, "ccdf_log")
+  else rsplit2 ~on:'_' name
+
 let is_distribution_name s =
   (not
      ( String.is_suffix s ~suffix:"_cdf_log"

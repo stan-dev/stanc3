@@ -17,9 +17,6 @@ open Core_kernel
 let kwrds_prefix = "_stan_"
 let prefix_len = String.length kwrds_prefix
 
-(* Used in code generation so that this
-   mangling is opaque to the interfaces (e.g. cmdstan)
-*)
 let remove_prefix s =
   if
     String.length s >= prefix_len + 1
