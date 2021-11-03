@@ -16,12 +16,12 @@ let get_comments end_loc =
   let rec go ls =
     match ls with
     | LineComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
-      when Middle.Location.compare_loc begin_loc end_loc < 0 ->
+      when Middle.Location.compare begin_loc end_loc < 0 ->
         (false, [s], loc) :: go tl
     | BlockComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
-      when Middle.Location.compare_loc begin_loc end_loc < 0 ->
+      when Middle.Location.compare begin_loc end_loc < 0 ->
         (true, s, loc) :: go tl
-    | Comma loc :: tl when Middle.Location.compare_loc loc end_loc < 0 -> go tl
+    | Comma loc :: tl when Middle.Location.compare loc end_loc < 0 -> go tl
     | _ ->
         comments := ls ;
         []
@@ -32,10 +32,10 @@ let get_comments_until_comma end_loc =
   let rec go ls =
     match ls with
     | LineComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
-      when Middle.Location.compare_loc begin_loc end_loc < 0 ->
+      when Middle.Location.compare begin_loc end_loc < 0 ->
         (false, [s], loc) :: go tl
     | BlockComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
-      when Middle.Location.compare_loc begin_loc end_loc < 0 ->
+      when Middle.Location.compare begin_loc end_loc < 0 ->
         (true, s, loc) :: go tl
     | _ ->
         comments := ls ;
