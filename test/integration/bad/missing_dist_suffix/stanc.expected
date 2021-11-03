@@ -1,0 +1,44 @@
+  $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix1.stan
+Semantic error in 'non_existing_distribution_suffix1.stan', line 4, column 14 to column 34:
+   -------------------------------------------------
+     2:  }
+     3:  model {  
+     4:      target += von_mises_cdf(1|0,1);
+                       ^
+     5:  }
+   -------------------------------------------------
+
+A function was expected but an unknown identifier von_mises_cdf was recieved. This appears to be part of the von_mises family of distributions, for which the cdf suffix in not implemented.
+  $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix2.stan
+Semantic error in 'non_existing_distribution_suffix2.stan', line 4, column 14 to column 35:
+   -------------------------------------------------
+     2:  }
+     3:  model {  
+     4:      target += von_mises_lcdf(1|0,1);
+                       ^
+     5:  }
+   -------------------------------------------------
+
+A function was expected but an unknown identifier von_mises_lcdf was recieved. This appears to be part of the von_mises family of distributions, for which the lcdf suffix in not implemented.
+  $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix3.stan
+Semantic error in 'non_existing_distribution_suffix3.stan', line 4, column 14 to column 36:
+   -------------------------------------------------
+     2:  }
+     3:  model {  
+     4:      target += von_mises_lccdf(1|0,1);
+                       ^
+     5:  }
+   -------------------------------------------------
+
+A function was expected but an unknown identifier von_mises_lccdf was recieved. This appears to be part of the von_mises family of distributions, for which the lccdf suffix in not implemented.
+  $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix4.stan
+Semantic error in 'non_existing_distribution_suffix4.stan', line 4, column 14 to column 41:
+   -------------------------------------------------
+     2:  }
+     3:  model {  
+     4:      target += von_mises_notasuffix(1|0,1);
+                       ^
+     5:  }
+   -------------------------------------------------
+
+Only functions with names ending in _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, _lccdf can make use of conditional notation.
