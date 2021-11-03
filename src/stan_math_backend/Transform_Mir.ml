@@ -250,8 +250,9 @@ let escape_name str =
   |> String.substr_replace_all ~pattern:"." ~with_:"_"
   |> String.substr_replace_all ~pattern:"-" ~with_:"_"
 
-(* Make sure that all if-while-and-for bodies are safely wrapped in a block in such a way that we can insert a location update before.
-   The blocks make sure that the program with the inserted location update is still well-formed C++ though.
+(** Make sure that all if-while-and-for bodies are safely wrapped in a block in
+  such a way that we can insert a location update before. The blocks make sure
+  that the program with the inserted location update is still well-formed C++ though.
 *)
 let rec ensure_body_in_block (Stmt.Fixed.({pattern; _}) as stmt) =
   let in_block stmt =
@@ -351,7 +352,7 @@ let gen_write ?(unconstrain = false)
     [] Location_span.empty
 
 (**
- * Generate write instructions for unconstrained types. For scalars,
+  Generate write instructions for unconstrained types. For scalars,
  *  matrices, vectors, and arrays with one dimension we can write
  *  these directly, but for arrays of arrays/vectors/matrices we
  *  need to use for_scalar_inv to write them in "column major order"
@@ -383,7 +384,7 @@ let gen_unconstrained_write (decl_id, Program.({out_constrained_st; _})) =
       (FnWriteParam {unconstrain_opt= None; var= decl_var})
       [] Location_span.empty
 
-(* Statements to read, unconstrain and assign a parameter then write it back *)
+(** Statements to read, unconstrain and assign a parameter then write it back *)
 let data_unconstrain_transform smeta (decl_id, outvar) =
   [ Stmt.Fixed.
       { pattern=

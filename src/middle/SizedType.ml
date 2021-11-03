@@ -1,3 +1,5 @@
+(** Types which have a concrete size associated, e.g. [vector\[n\]] *)
+
 open Core_kernel
 open Common
 
@@ -69,10 +71,10 @@ let rec dims_of st =
   | SRowVector (_, dim) | SVector (_, dim) -> [dim]
   | SInt | SReal | SComplex -> []
 
-(** 
- * Get the dimensions with respect to sizes needed for IO.
- * @Note: The main difference from get_dims is complex,
- *  where this function treats the complex type as a dual number.
+(**
+ Get the dimensions with respect to sizes needed for IO.
+ {b Note}: The main difference from get_dims is complex,
+ where this function treats the complex type as a dual number.
  *)
 let rec get_dims_io st =
   match st with
@@ -99,7 +101,7 @@ let is_recursive_container st =
       false
   | SArray _ -> true
 
-(* Return a type's array dimensions and the type inside the (possibly nested) array *)
+(** Return a type's array dimensions and the type inside the (possibly nested) array *)
 let rec get_array_dims st =
   match st with
   | SInt | SReal | SComplex -> (st, [])

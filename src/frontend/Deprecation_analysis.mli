@@ -1,7 +1,7 @@
 open Core_kernel
 open Ast
 
-type t = Middle.Warnings.t
+type t = Warnings.t
 
 val find_udf_log_suffix :
   typed_statement -> (string * Middle.UnsizedType.t) option

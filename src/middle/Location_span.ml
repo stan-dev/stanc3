@@ -1,6 +1,6 @@
-open Core_kernel
+(** Delimited locations in source code *)
 
-(** Delimited locations *)
+open Core_kernel
 
 type t = {begin_loc: Location.t; end_loc: Location.t}
 [@@deriving sexp, hash, compare]

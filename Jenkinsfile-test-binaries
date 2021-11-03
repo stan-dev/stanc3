@@ -55,8 +55,8 @@ pipeline {
     stages {
         stage("Build") {
             agent {
-                dockerfile {
-                    filename 'docker/debian/Dockerfile'
+                docker {
+                    image 'stanorg/stanc3:debian'
                     args "-u root --entrypoint=\'\'"
                     label 'linux-ec2'
                 }
@@ -108,8 +108,8 @@ pipeline {
                 }
                 stage("Build stanc.js") {
                     agent {
-                        dockerfile {
-                            filename 'docker/debian/Dockerfile'
+                        docker {
+                            image 'stanorg/stanc3:debian'
                             //Forces image to ignore entrypoint
                             args "-u root --entrypoint=\'\'"
                             label 'linux-ec2'
@@ -134,8 +134,8 @@ pipeline {
                 }
                 stage("Build & test a static Linux binary") {
                     agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
+                        docker {
+                            image 'stanorg/stanc3:static'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\'"
                             label 'linux-ec2'
@@ -167,8 +167,8 @@ pipeline {
                 // Cross compiling for windows on debian
                 stage("Build & test static Windows binary") {
                     agent {
-                        dockerfile {
-                            filename 'docker/debian-windows/Dockerfile'
+                        docker {
+                            image 'stanorg/stanc3:debian-windows'
                             label 'linux-ec2'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\'"
@@ -178,7 +178,7 @@ pipeline {
 
                         script {
                             checkoutRepository("sh")
-                        }                        
+                        }
                         runShell("""
                             eval \$(opam env)
                             dune subst

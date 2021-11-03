@@ -1,4 +1,10 @@
 functions {
+  int foobar(int x);
+
+  int foobar(int x){
+    return 1;
+  }
+  
   real barfoo(real x);
   // error not defining barfoo
 }

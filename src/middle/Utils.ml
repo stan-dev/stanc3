@@ -1,11 +1,13 @@
+(** Utilities, primarily surrounding distribution names and suffixes *)
+
 open Core_kernel
 
 let option_or_else ~if_none x = Option.first_some x if_none
 
-(* Name mangling helper functions for distributions *)
+(** Name mangling helper functions for distributions *)
 let unnormalized_suffices = ["_lupdf"; "_lupmf"]
 
-(* _log is listed last so that it only gets picked up if no other implementation exists *)
+(** _log is listed last so that it only gets picked up if no other implementation exists *)
 let distribution_suffices = ["_lpmf"; "_lpdf"; "_log"]
 
 let conditioning_suffices =
@@ -18,6 +20,14 @@ let unnormalized_suffix = function
   | "_lpdf" -> "_lupdf"
   | "_lpmf" -> "_lupmf"
   | x -> x
+
+(** A wrapper around String.rsplit2 which handles _cdf_log and _ccdf_log *)
+let split_distribution_suffix (name : string) : (string * string) option =
+  let open String in
+  if is_suffix ~suffix:"_cdf_log" name then Some (drop_suffix name 8, "cdf_log")
+  else if is_suffix ~suffix:"_ccdf_log" name then
+    Some (drop_suffix name 9, "ccdf_log")
+  else rsplit2 ~on:'_' name
 
 let is_distribution_name s =
   (not
