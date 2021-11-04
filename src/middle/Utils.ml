@@ -14,6 +14,13 @@ let conditioning_suffices =
   ["_lpdf"; "_lupdf"; "_lupmf"; "_lpmf"; "_cdf"; "_lcdf"; "_lccdf"]
 
 let conditioning_suffices_w_log = conditioning_suffices @ ["_log"]
+
+let cumulative_distribution_suffices =
+  ["cdf"; "lcdf"; "lccdf"; "cdf_log"; "ccdf_log"]
+
+let cumulative_distribution_suffices_w_rng =
+  cumulative_distribution_suffices @ ["rng"]
+
 let is_user_ident = Fn.non (String.is_suffix ~suffix:"__")
 
 let unnormalized_suffix = function

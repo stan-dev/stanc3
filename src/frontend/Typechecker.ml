@@ -394,7 +394,38 @@ let check_fn ~is_cond_dist loc tenv id es =
               (Utils.normalized_name id.name)) ->
       Semantic_error.returning_fn_expected_nonfn_found loc id.name |> error
   | [] ->
-      Semantic_error.returning_fn_expected_undeclaredident_found loc id.name
+      ( match Utils.split_distribution_suffix id.name with
+      | Some (prefix, suffix) -> (
+          let known_families =
+            List.map
+              ~f:(fun (_, y, _, _) -> y)
+              Stan_math_signatures.distributions
+          in
+          let is_known_family s =
+            List.mem known_families s ~equal:String.equal
+          in
+          match suffix with
+          | ("lpmf" | "lumpf") when Env.mem tenv (prefix ^ "_lpdf") ->
+              Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
+                (prefix, suffix)
+          | ("lpdf" | "lumdf") when Env.mem tenv (prefix ^ "_lpmf") ->
+              Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
+                (prefix, suffix)
+          | _ ->
+              if
+                is_known_family prefix
+                && List.mem ~equal:String.equal
+                     Utils.cumulative_distribution_suffices_w_rng suffix
+              then
+                Semantic_error
+                .returning_fn_expected_undeclared_dist_suffix_found loc
+                  (prefix, suffix)
+              else
+                Semantic_error.returning_fn_expected_undeclaredident_found loc
+                  id.name )
+      | None ->
+          Semantic_error.returning_fn_expected_undeclaredident_found loc
+            id.name )
       |> error
   | _ (* a function *) -> (
     match SignatureMismatch.returntype tenv id.name (get_arg_types es) with
