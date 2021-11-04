@@ -575,7 +575,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
   | BinOp (e1, op, e2) ->
       let le = ce e1 in
       let re = ce e2 in
-      let warn_int_division x y =
+      let binop_type_warnings x y =
         match (x.emeta.type_, y.emeta.type_, op) with
         | UInt, UInt, Divide ->
             let hint ppf () =
@@ -603,9 +603,23 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                  operator %/%."
             in
             add_warning x.emeta.loc s
+        | UMatrix, (UInt | UReal), Pow ->
+            let s =
+              Fmt.strf
+                "@[<v>@[<hov 0>Found matrix^scalar:@]@   @[<hov \
+                 2>%a@]@,@[<hov>%a@]@ @[<hov>%a@]@]"
+                Pretty_printing.pp_expression {expr; emeta} Fmt.text
+                "matrix ^ number is interpreted as element-wise \
+                 exponentiation. If this is intended, you can silence this \
+                 warning by using elementwise operator .^"
+                Fmt.text
+                "If you intended matrix exponentiation, use the function \
+                 matrix_power() instead."
+            in
+            add_warning x.emeta.loc s
         | _ -> ()
       in
-      warn_int_division le re ; check_binop loc op le re
+      binop_type_warnings le re ; check_binop loc op le re
   | PrefixOp (op, e) -> ce e |> check_prefixop loc op
   | PostfixOp (e, op) -> ce e |> check_postfixop loc op
   | Variable id ->
