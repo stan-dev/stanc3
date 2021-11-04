@@ -1,4 +1,5 @@
 open Core_kernel
+open Middle
 
 type type_mismatch =
   | DataOnlyError
@@ -23,10 +24,13 @@ val check_compatible_arguments_mod_conv :
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> function_mismatch option
 
-val stan_math_returntype :
-     string
+val returntype :
+     Environment.t
+  -> string
   -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> (UnsizedType.returntype, signature_error list * bool) result
+  -> ( UnsizedType.returntype * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
+     , signature_error list * bool )
+     result
 
 val check_variadic_args :
      bool
@@ -47,3 +51,5 @@ val pp_signature_mismatch :
          list
        * bool )
   -> unit
+
+val compare_errors : function_mismatch -> function_mismatch -> int

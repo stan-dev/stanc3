@@ -1,3 +1,5 @@
+(** MIR types and modules corresponding to the statements of the language *)
+
 open Core_kernel
 open Common
 open Label
