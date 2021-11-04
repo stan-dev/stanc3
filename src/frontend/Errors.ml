@@ -25,7 +25,7 @@ type t =
   | Syntax_error of syntax_error
   | Semantic_error of Semantic_error.t
 
-(* A fatal error reported by the toplevel *)
+(** A fatal error reported by the toplevel *)
 let fatal_error ?(msg = "") _ =
   raise (FatalError ("This should never happen. Please file a bug. " ^ msg))
 

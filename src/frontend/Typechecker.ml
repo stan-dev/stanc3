@@ -3,6 +3,8 @@
   Functions which begin with "check_" return a typed version of their input
   Functions which begin with "verify_" return unit if a check succeeds, or else
     throw an Errors.SemanticError exception.
+  Other functions which begin with "infer"/"calculate" vary. Usually they return
+    a value, but a few do have error conditions.
 
   All Error.SemanticError excpetions are caught by check_program
   which turns the ast or exception into a Result.t for external usage
@@ -18,6 +20,14 @@ module Env = Environment
 
 (* we only allow errors raised by this function *)
 let error e = raise (Errors.SemanticError e)
+
+(* warnings are built up in a list *)
+let warnings : Warnings.t list ref = ref []
+
+let add_warning (span : Location_span.t) (message : string) =
+  warnings := (span, message) :: !warnings
+
+let attach_warnings x = (x, List.rev !warnings)
 
 (* model name - don't love this here *)
 let model_name = ref ""
@@ -45,8 +55,8 @@ let context block =
   ; in_udf_dist_def= false
   ; loop_depth= 0 }
 
-let calculate_autodifftype cf at ut =
-  match at with
+let calculate_autodifftype cf origin ut =
+  match origin with
   | Env.(Param | TParam | Model | Functions)
     when not (UnsizedType.contains_int ut || cf.current_block = GQuant) ->
       UnsizedType.AutoDiffable
@@ -61,49 +71,16 @@ let has_int_array_type ue = ue.emeta.type_ = UArray UInt
 let has_int_or_real_type ue =
   match ue.emeta.type_ with UInt | UReal -> true | _ -> false
 
-let probability_distribution_name_variants id =
-  let name = id.name in
-  let open String in
-  List.map
-    ~f:(fun n -> {name= n; id_loc= id.id_loc})
-    ( if name = "multiply_log" || name = "binomial_coefficient_log" then [name]
-    else if is_suffix ~suffix:"_lpmf" name then
-      [name; drop_suffix name 5 ^ "_lpdf"; drop_suffix name 5 ^ "_log"]
-    else if is_suffix ~suffix:"_lpdf" name then
-      [name; drop_suffix name 5 ^ "_lpmf"; drop_suffix name 5 ^ "_log"]
-    else if is_suffix ~suffix:"_lcdf" name then
-      [name; drop_suffix name 5 ^ "_cdf_log"]
-    else if is_suffix ~suffix:"_lccdf" name then
-      [name; drop_suffix name 6 ^ "_ccdf_log"]
-    else if is_suffix ~suffix:"_cdf_log" name then
-      [name; drop_suffix name 8 ^ "_lcdf"]
-    else if is_suffix ~suffix:"_ccdf_log" name then
-      [name; drop_suffix name 9 ^ "_lccdf"]
-    else if is_suffix ~suffix:"_log" name then
-      [name; drop_suffix name 4 ^ "_lpmf"; drop_suffix name 4 ^ "_lpdf"]
-    else [name] )
-
 (* -- General checks ---------------------------------------------- *)
 let reserved_keywords =
-  [ "true"; "false"; "repeat"; "until"; "then"; "var"; "fvar"; "STAN_MAJOR"
-  ; "STAN_MINOR"; "STAN_PATCH"; "STAN_MATH_MAJOR"; "STAN_MATH_MINOR"
-  ; "STAN_MATH_PATCH"; "alignas"; "alignof"; "and"; "and_eq"; "asm"; "auto"
-  ; "bitand"; "bitor"; "bool"; "break"; "case"; "catch"; "char"; "char16_t"
-  ; "char32_t"; "class"; "compl"; "const"; "constexpr"; "const_cast"
-  ; "continue"; "decltype"; "default"; "delete"; "do"; "double"; "dynamic_cast"
-  ; "else"; "enum"; "explicit"; "export"; "extern"; "false"; "float"; "for"
-  ; "friend"; "goto"; "if"; "inline"; "int"; "long"; "mutable"; "namespace"
-  ; "new"; "noexcept"; "not"; "not_eq"; "nullptr"; "operator"; "or"; "or_eq"
-  ; "private"; "protected"; "public"; "register"; "reinterpret_cast"; "return"
-  ; "short"; "signed"; "sizeof"; "static"; "static_assert"; "static_cast"
-  ; "struct"; "switch"; "template"; "this"; "thread_local"; "throw"; "true"
-  ; "try"; "typedef"; "typeid"; "typename"; "union"; "unsigned"; "using"
-  ; "virtual"; "void"; "volatile"; "wchar_t"; "while"; "xor"; "xor_eq"
-  ; "functions"; "data"; "parameters"; "model"; "return"; "if"; "else"; "while"
-  ; "for"; "in"; "break"; "continue"; "void"; "int"; "real"; "complex"
-  ; "vector"; "row_vector"; "matrix"; "ordered"; "positive_ordered"; "simplex"
-  ; "unit_vector"; "cholesky_factor_corr"; "cholesky_factor_cov"; "corr_matrix"
-  ; "cov_matrix"; "print"; "reject"; "target"; "get_lp"; "profile" ]
+  [ "for"; "in"; "while"; "repeat"; "until"; "if"; "then"; "else"; "true"
+  ; "false"; "target"; "int"; "real"; "complex"; "void"; "vector"; "simplex"
+  ; "unit_vector"; "ordered"; "positive_ordered"; "row_vector"; "matrix"
+  ; "cholesky_factor_corr"; "cholesky_factor_cov"; "corr_matrix"; "cov_matrix"
+  ; "functions"; "model"; "data"; "parameters"; "quantities"; "transformed"
+  ; "generated"; "profile"; "return"; "break"; "continue"; "increment_log_prob"
+  ; "get_lp"; "print"; "reject"; "typedef"; "struct"; "var"; "export"; "extern"
+  ; "static"; "auto" ]
 
 let verify_identifier id : unit =
   if id.name = !model_name then
@@ -112,30 +89,44 @@ let verify_identifier id : unit =
     String.is_suffix id.name ~suffix:"__"
     || List.mem reserved_keywords id.name ~equal:String.equal
   then Semantic_error.ident_is_keyword id.id_loc id.name |> error
-  else ()
 
-let verify_name_fresh_var tenv id =
-  if Utils.is_unnormalized_distribution id.name then
-    Semantic_error.ident_has_unnormalized_suffix id.id_loc id.name |> error
+let distribution_name_variants name =
+  if name = "multiply_log" || name = "binomial_coefficient_log" then [name]
+  else
+    (* this will have some duplicates, but preserves order better *)
+    match Utils.split_distribution_suffix name with
+    | Some (stem, "lpmf") | Some (stem, "lpdf") | Some (stem, "log") ->
+        [name; stem ^ "_lpmf"; stem ^ "_lpdf"; stem ^ "_log"]
+    | Some (stem, "lcdf") | Some (stem, "cdf_log") ->
+        [name; stem ^ "_lcdf"; stem ^ "_cdf_log"]
+    | Some (stem, "lccdf") | Some (stem, "ccdf_log") ->
+        [name; stem ^ "_lccdf"; stem ^ "_ccdf_log"]
+    | _ -> [name]
+
+(** verify that the variable being declared is previous unused.
+   allowed to shadow StanLib *)
+let verify_name_fresh_var loc tenv name =
+  if Utils.is_unnormalized_distribution name then
+    Semantic_error.ident_has_unnormalized_suffix loc name |> error
   else if
-    Env.mem tenv id.name
-    && not (Stan_math_signatures.is_stan_math_function_name id.name)
-  then Semantic_error.ident_in_use id.id_loc id.name |> error
-  else ()
+    Env.mem tenv name
+    && not (Stan_math_signatures.is_stan_math_function_name name)
+  then Semantic_error.ident_in_use loc name |> error
 
-let verify_name_fresh_udf tenv id =
+(** verify that the variable being declared is previous unused.
+   not allowed shadowing/overloading (yet)*)
+let verify_name_fresh_udf loc tenv name =
   if
-    Stan_math_signatures.is_stan_math_function_name id.name
+    Stan_math_signatures.is_stan_math_function_name name
     (* variadic functions are currently not in math sigs *)
-    || Stan_math_signatures.is_reduce_sum_fn id.name
-    || Stan_math_signatures.is_variadic_ode_fn id.name
-  then Semantic_error.ident_is_stanmath_name id.id_loc id.name |> error
-  else if Utils.is_unnormalized_distribution id.name then
-    Semantic_error.udf_is_unnormalized_fn id.id_loc id.name |> error
-  else if Env.mem tenv id.name then
+    || Stan_math_signatures.is_reduce_sum_fn name
+    || Stan_math_signatures.is_variadic_ode_fn name
+  then Semantic_error.ident_is_stanmath_name loc name |> error
+  else if Utils.is_unnormalized_distribution name then
+    Semantic_error.udf_is_unnormalized_fn loc name |> error
+  else if Env.mem tenv name then
     (* adapt for overloading later *)
-    Semantic_error.ident_in_use id.id_loc id.name |> error
-  else ()
+    Semantic_error.ident_in_use loc name |> error
 
 (** Checks that a variable/function name:
   - a function/identifier does not have the _lupdf/_lupmf suffix
@@ -143,9 +134,10 @@ let verify_name_fresh_udf tenv id =
 *)
 let verify_name_fresh tenv id ~is_udf =
   let f =
-    if is_udf then verify_name_fresh_udf tenv else verify_name_fresh_var tenv
+    if is_udf then verify_name_fresh_udf id.id_loc tenv
+    else verify_name_fresh_var id.id_loc tenv
   in
-  List.iter ~f (probability_distribution_name_variants id)
+  List.iter ~f (distribution_name_variants id.name)
 
 let is_of_compatible_return_type rt1 srt2 =
   UnsizedType.(
@@ -176,8 +168,6 @@ let check_ternary_if loc pe te fe =
       Semantic_error.illtyped_ternary_if loc pe.emeta.type_ te.emeta.type_
         fe.emeta.type_
       |> error
-
-let verify_operator _ = ()
 
 let check_binop loc op le re =
   let rt =
@@ -361,7 +351,6 @@ let verify_fn_conditioning loc id =
       Utils.conditioning_suffices
     && not (String.is_suffix id.name ~suffix:"_cdf")
   then Semantic_error.conditioning_required loc |> error
-  else ()
 
 (** `Target+=` can only be used in model and functions
     with right suffix (same for tilde etc)
@@ -373,7 +362,6 @@ let verify_fn_target_plus_equals cf loc id =
          ( cf.in_lp_fun_def || cf.current_block = Model
          || cf.current_block = TParam )
   then Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
-  else ()
 
 (** Rng functions cannot be used in Tp or Model and only
     in function defs with the right suffix
@@ -386,7 +374,6 @@ let verify_fn_rng cf loc id =
     && ( (cf.in_fun_def && not cf.in_rng_fun_def)
        || cf.current_block = TParam || cf.current_block = Model )
   then Semantic_error.invalid_rng_fn loc |> error
-  else ()
 
 (** unnormalized _lpdf/_lpmf functions can only be used in _lpdf/_lpmf/_lp udfs
     or the model block
@@ -396,7 +383,6 @@ let verify_unnormalized cf loc id =
     Utils.is_unnormalized_distribution id.name
     && not ((cf.in_fun_def && cf.in_udf_dist_def) || cf.current_block = Model)
   then Semantic_error.invalid_unnormalized_fn loc |> error
-  else ()
 
 let mk_fun_app ~is_cond_dist (x, y, z) =
   if is_cond_dist then CondDistApp (x, y, z) else FunApp (x, y, z)
@@ -410,8 +396,40 @@ let check_fn ~is_cond_dist loc tenv id es =
               (Utils.normalized_name id.name)) ->
       Semantic_error.returning_fn_expected_nonfn_found loc id.name |> error
   | [] ->
-      Semantic_error.returning_fn_expected_undeclaredident_found loc id.name
-        (Env.nearest_ident tenv id.name)
+      ( match Utils.split_distribution_suffix id.name with
+      | Some (prefix, suffix) -> (
+          let known_families =
+            List.map
+              ~f:(fun (_, y, _, _) -> y)
+              Stan_math_signatures.distributions
+          in
+          let is_known_family s =
+            List.mem known_families s ~equal:String.equal
+          in
+          match suffix with
+          | ("lpmf" | "lumpf") when Env.mem tenv (prefix ^ "_lpdf") ->
+              Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
+                (prefix, suffix)
+          | ("lpdf" | "lumdf") when Env.mem tenv (prefix ^ "_lpmf") ->
+              Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
+                (prefix, suffix)
+          | _ ->
+              if
+                is_known_family prefix
+                && List.mem ~equal:String.equal
+                     Utils.cumulative_distribution_suffices_w_rng suffix
+              then
+                Semantic_error
+                .returning_fn_expected_undeclared_dist_suffix_found loc
+                  (prefix, suffix)
+              else
+                Semantic_error.returning_fn_expected_undeclaredident_found loc
+                  id.name
+                  (Env.nearest_ident tenv id.name) )
+      | None ->
+          Semantic_error.returning_fn_expected_undeclaredident_found loc
+            id.name
+            (Env.nearest_ident tenv id.name) )
       |> error
   | _ (* a function *) -> (
     match SignatureMismatch.returntype tenv id.name (get_arg_types es) with
@@ -588,17 +606,12 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                 "If rounding is intended please use the integer division \
                  operator %/%."
             in
-            Warnings.pp_warning Fmt.stderr (x.emeta.loc, s) ;
-            ()
+            add_warning x.emeta.loc s
         | _ -> ()
       in
-      verify_operator op ; warn_int_division le re ; check_binop loc op le re
-  | PrefixOp (op, e) ->
-      verify_operator op ;
-      ce e |> check_prefixop loc op
-  | PostfixOp (e, op) ->
-      verify_operator op ;
-      ce e |> check_postfixop loc op
+      warn_int_division le re ; check_binop loc op le re
+  | PrefixOp (op, e) -> ce e |> check_prefixop loc op
+  | PostfixOp (e, op) -> ce e |> check_postfixop loc op
   | Variable id ->
       verify_identifier id ;
       check_variable cf loc tenv id
@@ -678,7 +691,6 @@ let verify_nrfn_target loc cf id =
          ( cf.in_lp_fun_def || cf.current_block = Model
          || cf.current_block = TParam )
   then Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
-  else ()
 
 let check_nrfn loc tenv id es =
   match Env.find tenv id.name with
@@ -715,7 +727,6 @@ let check_nr_fn_app loc cf tenv id es =
 let verify_assignment_read_only loc is_readonly id =
   if is_readonly then
     Semantic_error.cannot_assign_to_read_only loc id.name |> error
-  else ()
 
 (* Variables from previous blocks are read-only.
      In particular, data and parameters never assigned to
@@ -773,10 +784,8 @@ let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
 (* target plus-equals / increment log-prob *)
 
 let verify_target_pe_expr_type loc e =
-  match e.emeta.type_ with
-  | UFun _ | UMathLibraryFunction ->
-      Semantic_error.int_or_real_container_expected loc e.emeta.type_ |> error
-  | _ -> ()
+  if UnsizedType.is_fun_type e.emeta.type_ then
+    Semantic_error.int_or_real_container_expected loc e.emeta.type_ |> error
 
 let verify_target_pe_usage loc cf =
   if cf.in_lp_fun_def || cf.current_block = Model then ()
@@ -803,14 +812,12 @@ let verify_sampling_pdf_pmf id =
       || is_suffix id.name ~suffix:"_lupdf"
       || is_suffix id.name ~suffix:"_lupmf")
   then Semantic_error.invalid_sampling_pdf_or_pmf id.id_loc |> error
-  else ()
 
 let verify_sampling_cdf_ccdf loc id =
   if
     String.(
       is_suffix id.name ~suffix:"_cdf" || is_suffix id.name ~suffix:"_ccdf")
   then Semantic_error.invalid_sampling_cdf_or_ccdf loc id.name |> error
-  else ()
 
 (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
 let verify_valid_sampling_pos loc cf =
@@ -835,8 +842,7 @@ let verify_sampling_distribution loc tenv id arguments =
     && name <> "multiply"
   in
   let is_name_w_suffix_udf_sampling_dist suffix =
-    let f v =
-      match v with
+    let f = function
       | Env.({ kind= `UserDefined | `UserDeclared _
              ; type_= UFun (listedtypes, ReturnType UReal, FnLpdf _, _) })
         when UnsizedType.check_compatible_arguments_mod_conv name listedtypes
@@ -864,8 +870,7 @@ let is_cumulative_density_defined tenv id arguments =
     Stan_math_signatures.stan_math_returntype (name ^ suffix) argumenttypes
     |> Option.value_map ~default:false ~f:is_real_rt
   and valid_arg_types_for_suffix suffix =
-    let f v =
-      match v with
+    let f = function
       | Env.({ kind= `UserDefined | `UserDeclared _
              ; type_= UFun (listedtypes, ReturnType UReal, FnPlain, _) })
         when UnsizedType.check_compatible_arguments_mod_conv name listedtypes
@@ -1031,7 +1036,7 @@ let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
   | Complete rt, AnyReturnType | AnyReturnType, Complete rt -> Complete rt
   | AnyReturnType, AnyReturnType -> AnyReturnType
 
-(* statements which contain statements, and therefore need to be mutually recursive 
+(* statements which contain statements, and therefore need to be mutually recursive
    with check_statement
 *)
 let rec check_if_then_else loc cf tenv pred_e s_true s_false_opt =
@@ -1105,9 +1110,9 @@ and check_foreach loc cf tenv loop_var foreach_e loop_body =
 
 and check_loop_body cf tenv loop_var loop_var_ty loop_body =
   verify_name_fresh tenv loop_var ~is_udf:false ;
-  (* Add to type environment as readonly. 
+  (* Add to type environment as readonly.
     Check that function args and loop identifiers are not modified in
-    function. (passed by const ref) 
+    function. (passed by const ref)
   *)
   let tenv =
     Env.add tenv loop_var.name loop_var_ty
@@ -1152,8 +1157,7 @@ and verify_valid_transformation_for_type loc is_global sized_ty trans =
     | _ -> false
   in
   if is_global && sized_ty = SizedType.SInt && is_real_transformation then
-    Semantic_error.non_int_bounds loc |> error
-  else () ;
+    Semantic_error.non_int_bounds loc |> error ;
   let is_transformation =
     match trans with Transformation.Identity -> false | _ -> true
   in
@@ -1162,7 +1166,6 @@ and verify_valid_transformation_for_type loc is_global sized_ty trans =
     && SizedType.(inner_type sized_ty = SComplex)
     && is_transformation
   then Semantic_error.complex_transform loc |> error
-  else ()
 
 and verify_transformed_param_ty loc cf is_global unsized_ty =
   if
@@ -1170,7 +1173,6 @@ and verify_transformed_param_ty loc cf is_global unsized_ty =
     && (cf.current_block = Param || cf.current_block = TParam)
     && UnsizedType.contains_int unsized_ty
   then Semantic_error.transformed_params_int loc |> error
-  else ()
 
 and check_sizedtype cf tenv sizedty =
   let check e msg = check_expression_of_int_type cf tenv e msg in
@@ -1262,8 +1264,7 @@ and check_var_decl loc cf tenv sized_ty trans id init is_global =
 
 (* function definitions *)
 and exists_matching_fn_declared tenv id arg_tys rt =
-  let f v =
-    match v with
+  let f = function
     | Env.({kind= `UserDeclared _; type_= UFun (listedtypes, rt', _, _)})
       when arg_tys = listedtypes && rt = rt' ->
         true
@@ -1303,7 +1304,6 @@ and verify_fundef_dist_rt loc id return_ty =
     match return_ty with
     | UnsizedType.ReturnType UReal -> ()
     | _ -> Semantic_error.non_real_prob_fn_def loc |> error
-  else ()
 
 and verify_pdf_fundef_first_arg_ty loc id arg_tys =
   if String.is_suffix id.name ~suffix:"_lpdf" then
@@ -1321,12 +1321,9 @@ and verify_pmf_fundef_first_arg_ty loc id arg_tys =
 
 and verify_fundef_distinct_arg_ids loc arg_names =
   let dup_exists l =
-    match List.find_a_dup ~compare:String.compare l with
-    | Some _ -> true
-    | None -> false
+    List.find_a_dup ~compare:String.compare l |> Option.is_some
   in
   if dup_exists arg_names then Semantic_error.duplicate_arg_names loc |> error
-  else ()
 
 and verify_fundef_return_tys loc return_type body =
   if
@@ -1335,25 +1332,8 @@ and verify_fundef_return_tys loc return_type body =
   then ()
   else Semantic_error.incompatible_return_types loc |> error
 
-(* Probably nothing to do here *)
-and verify_autodifftype _ = ()
-
-(* also does absolutely nothing right now *)
-and verify_unsizedtype = function
-  | UnsizedType.UFun (l, rt, _, _) ->
-      verify_returntype rt ;
-      List.iter
-        ~f:(fun (at, ut) -> verify_autodifftype at ; verify_unsizedtype ut)
-        l
-  | UArray ut -> verify_unsizedtype ut
-  | _ -> ()
-
-and verify_returntype = function
-  | Void -> ()
-  | ReturnType ut -> verify_unsizedtype ut
-
 and add_function tenv name type_ defined =
-  (* if we're providing a definition, we remove prior declarations 
+  (* if we're providing a definition, we remove prior declarations
     to simplify the environment *)
   if defined = `UserDefined then
     let existing_defns = Env.find tenv name in
@@ -1366,17 +1346,12 @@ and add_function tenv name type_ defined =
         existing_defns
     in
     let new_fn = Env.{kind= `UserDefined; type_} in
-    Env.add_all_raw tenv name (new_fn :: defns)
+    Env.set_raw tenv name (new_fn :: defns)
   else Env.add tenv name type_ defined
 
 and check_fundef loc cf tenv return_ty id args body =
-  let () =
-    List.iter args ~f:(fun (at, ut, id) ->
-        verify_autodifftype at ; verify_unsizedtype ut ; verify_identifier id
-    )
-  in
+  List.iter args ~f:(fun (_, _, id) -> verify_identifier id) ;
   verify_identifier id ;
-  verify_returntype return_ty ;
   let arg_types = List.map ~f:(fun (w, y, _) -> (w, y)) args in
   let arg_identifiers = List.map ~f:(fun (_, _, z) -> z) args in
   let arg_names = List.map ~f:(fun x -> x.name) arg_identifiers in
@@ -1408,7 +1383,7 @@ and check_fundef loc cf tenv return_ty id args body =
     List.fold2_exn arg_names arg_types_internal ~init:tenv
       ~f:(fun env name (origin, typ) ->
         Env.add env name typ
-          (* readonly so that function args and loop identifiers 
+          (* readonly so that function args and loop identifiers
           are not modified in function. (passed by const ref) *)
           (`Variable {origin; readonly= true; global= false}) )
   in
@@ -1528,7 +1503,7 @@ let check_program_exn
       ; transformedparametersblock= tpb
       ; modelblock= mb
       ; generatedquantitiesblock= gqb
-      ; comments } as ast ) : typed_program =
+      ; comments } as ast ) =
   (* create a new type environment which has only stan-math functions *)
   let tenv = Env.create () in
   let tenv, typed_fb = check_toplevel_block Functions tenv fb in
@@ -1550,7 +1525,7 @@ let check_program_exn
     ; comments }
   in
   verify_correctness_invariant ast prog ;
-  prog
+  attach_warnings prog
 
 let check_program ast =
   try Result.Ok (check_program_exn ast) with Errors.SemanticError err ->

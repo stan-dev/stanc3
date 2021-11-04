@@ -1,3 +1,5 @@
+(** Defines the core of the MIR *)
+
 open Core_kernel
 open Common
 open Helpers
@@ -124,7 +126,7 @@ let pp pp_e pp_s ppf prog =
   pp_output_vars pp_e ppf prog ;
   Format.close_box ()
 
-(* Programs with typed expressions and locations *)
+(** Programs with typed expressions and locations *)
 module Typed = struct
   type nonrec t = (Expr.Typed.t, Stmt.Located.t) t
 
@@ -133,7 +135,7 @@ module Typed = struct
   let t_of_sexp = t_of_sexp Expr.Typed.t_of_sexp Stmt.Located.t_of_sexp
 end
 
-(* Programs with labelled expressions and statements *)
+(** Programs with labelled expressions and statements *)
 module Labelled = struct
   type nonrec t = (Expr.Labelled.t, Stmt.Labelled.t) t
 

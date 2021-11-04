@@ -569,7 +569,8 @@ Invalid character found.
 Warning in 'good_all.stan', line 1, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
 Warning in 'good_all.stan', line 2, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
 Warning in 'good_all.stan', line 3, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
-Warning in 'good_all.stan', line 4, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.Semantic error in 'good_all.stan', line 25, column 2 to column 8:
+Warning in 'good_all.stan', line 4, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Semantic error in 'good_all.stan', line 25, column 2 to column 8:
    -------------------------------------------------
     23:  
     24:  model {

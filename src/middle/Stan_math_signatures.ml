@@ -1,7 +1,7 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 open Core_kernel
 
-(* The "dimensionality" (bad name?) is supposed to help us represent the
+(** The "dimensionality" (bad name?) is supposed to help us represent the
     vectorized nature of many Stan functions. It allows us to represent when
     a function argument can be just a real or matrix, or some common forms of
     vectorization over reals. This captures the most commonly used forms in our
@@ -849,7 +849,6 @@ let () =
   List.iter
     ~f:(fun x -> add_unqualified ("add", ReturnType x, [x; x], AoS))
     bare_types ;
-  add_unqualified ("add", ReturnType UComplex, [UComplex; UReal], AoS) ;
   add_unqualified ("add", ReturnType UVector, [UVector; UReal], AoS) ;
   add_unqualified ("add", ReturnType URowVector, [URowVector; UReal], AoS) ;
   add_unqualified ("add", ReturnType UMatrix, [UMatrix; UReal], AoS) ;
@@ -924,6 +923,7 @@ let () =
             , AoS ) )
         bare_types )
     (List.range 1 8) ;
+  add_unqualified ("arg", ReturnType UReal, [UComplex], AoS) ;
   add_unqualified ("asin", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("asinh", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("atan", ReturnType UComplex, [UComplex], AoS) ;
@@ -1525,7 +1525,7 @@ let () =
   add_unqualified ("is_inf", ReturnType UInt, [UReal], AoS) ;
   add_unqualified ("is_nan", ReturnType UInt, [UReal], AoS) ;
   add_binary_vec "lbeta" AoS ;
-  add_binary "lchoose" AoS ;
+  add_binary_vec "lchoose" AoS ;
   add_binary_vec_real_int "ldexp" AoS ;
   add_qualified
     ( "linspaced_int_array"
@@ -1796,7 +1796,6 @@ let () =
     , [UArray UInt; URowVector; UVector; UVector; UReal]
     , AoS ) ;
   add_nullary "negative_infinity" ;
-  add_unqualified ("norm", ReturnType UReal, [UReal], AoS) ;
   add_unqualified ("norm", ReturnType UReal, [UComplex], AoS) ;
   add_unqualified
     ( "normal_id_glm_lpdf"

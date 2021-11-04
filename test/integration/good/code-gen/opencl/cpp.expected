@@ -833,6 +833,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 756;
       context__.validate_dims("data initialization","d_int","int",
@@ -959,27 +961,44 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     
     try {
       local_scalar_t__ p_real;
+      p_real = DUMMY_VAR__;
+      
       current_statement__ = 1;
       p_real = in__.template read<local_scalar_t__>();
       std::vector<local_scalar_t__> p_real_array;
+      p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
+      
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
+      p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
+      stan::math::fill(p_matrix, DUMMY_VAR__);
+      
       current_statement__ = 3;
       p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                    d_int, d_int);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
+      p_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(d_int);
+      stan::math::fill(p_vector, DUMMY_VAR__);
+      
       current_statement__ = 4;
       p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    d_int);
       Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
+      p_row_vector = Eigen::Matrix<local_scalar_t__, 1, -1>(d_int);
+      stan::math::fill(p_row_vector, DUMMY_VAR__);
+      
       current_statement__ = 5;
       p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
                        d_int);
       local_scalar_t__ y_p;
+      y_p = DUMMY_VAR__;
+      
       current_statement__ = 6;
       y_p = in__.template read<local_scalar_t__>();
       local_scalar_t__ transformed_param_real;
+      transformed_param_real = DUMMY_VAR__;
+      
       current_statement__ = 8;
       transformed_param_real = bernoulli_logit_lpmf<false>(d_int, d_int);
       current_statement__ = 9;
@@ -3490,24 +3509,41 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     
     try {
       double p_real;
+      p_real = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
       p_real = in__.template read<local_scalar_t__>();
       std::vector<double> p_real_array;
+      p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<double, -1, -1> p_matrix;
+      p_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
+      stan::math::fill(p_matrix, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 3;
       p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                    d_int, d_int);
       Eigen::Matrix<double, -1, 1> p_vector;
+      p_vector = Eigen::Matrix<double, -1, 1>(d_int);
+      stan::math::fill(p_vector, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 4;
       p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    d_int);
       Eigen::Matrix<double, 1, -1> p_row_vector;
+      p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
+      stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 5;
       p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
                        d_int);
       double y_p;
+      y_p = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 6;
       y_p = in__.template read<local_scalar_t__>();
       double transformed_param_real;
@@ -6017,8 +6053,12 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ p_real;
+      p_real = DUMMY_VAR__;
+      
       p_real = in__.read<local_scalar_t__>();
       out__.write(p_real);
       std::vector<local_scalar_t__> p_real_array;
@@ -6059,6 +6099,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       }
       out__.write(p_row_vector);
       local_scalar_t__ y_p;
+      y_p = DUMMY_VAR__;
+      
       y_p = in__.read<local_scalar_t__>();
       out__.write(y_p);
     } catch (const std::exception& e) {
@@ -6251,22 +6293,24 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 6> names__{"p_real", "p_real_array",
-   "p_matrix", "p_vector", "p_row_vector", "y_p"};
-     const std::array<Eigen::Index, 6> num_params__{1, d_int, (d_int * d_int)
-   , d_int, d_int, 1};
+      "p_matrix", "p_vector", "p_row_vector", "y_p"};
+      const std::array<Eigen::Index, 6> constrain_param_sizes__{1, d_int,
+       (d_int * d_int), d_int, d_int, 1};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
-     std::vector<double> params_r_flat__(num_params_r__);
+     std::vector<double> params_r_flat__(num_constrained_params__);
      Eigen::Index size_iter__ = 0;
      Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
          params_r_flat__[flat_iter__] = param_vec__[i];
          ++flat_iter__;
        }
        ++size_iter__;
      }
-     vars.resize(params_r_flat__.size());
+     vars.resize(num_params_r__);
      transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -6394,6 +6438,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 25;
       context__.validate_dims("data initialization","d_int","int",
@@ -6514,27 +6560,44 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     
     try {
       local_scalar_t__ p_real;
+      p_real = DUMMY_VAR__;
+      
       current_statement__ = 1;
       p_real = in__.template read<local_scalar_t__>();
       std::vector<local_scalar_t__> p_real_array;
+      p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
+      
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
+      p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
+      stan::math::fill(p_matrix, DUMMY_VAR__);
+      
       current_statement__ = 3;
       p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                    d_int, d_int);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
+      p_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(d_int);
+      stan::math::fill(p_vector, DUMMY_VAR__);
+      
       current_statement__ = 4;
       p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    d_int);
       Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
+      p_row_vector = Eigen::Matrix<local_scalar_t__, 1, -1>(d_int);
+      stan::math::fill(p_row_vector, DUMMY_VAR__);
+      
       current_statement__ = 5;
       p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
                        d_int);
       local_scalar_t__ y_p;
+      y_p = DUMMY_VAR__;
+      
       current_statement__ = 6;
       y_p = in__.template read<local_scalar_t__>();
       local_scalar_t__ transformed_param_real;
+      transformed_param_real = DUMMY_VAR__;
+      
       current_statement__ = 8;
       transformed_param_real = bernoulli_lpmf<false>(d_int_array, d_real);
       current_statement__ = 9;
@@ -6611,24 +6674,41 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     
     try {
       double p_real;
+      p_real = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
       p_real = in__.template read<local_scalar_t__>();
       std::vector<double> p_real_array;
+      p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<double, -1, -1> p_matrix;
+      p_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
+      stan::math::fill(p_matrix, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 3;
       p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                    d_int, d_int);
       Eigen::Matrix<double, -1, 1> p_vector;
+      p_vector = Eigen::Matrix<double, -1, 1>(d_int);
+      stan::math::fill(p_vector, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 4;
       p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    d_int);
       Eigen::Matrix<double, 1, -1> p_row_vector;
+      p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
+      stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
+      
+      
       current_statement__ = 5;
       p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
                        d_int);
       double y_p;
+      y_p = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 6;
       y_p = in__.template read<local_scalar_t__>();
       double transformed_param_real;
@@ -6707,8 +6787,12 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       local_scalar_t__ p_real;
+      p_real = DUMMY_VAR__;
+      
       p_real = in__.read<local_scalar_t__>();
       out__.write(p_real);
       std::vector<local_scalar_t__> p_real_array;
@@ -6749,6 +6833,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       }
       out__.write(p_row_vector);
       local_scalar_t__ y_p;
+      y_p = DUMMY_VAR__;
+      
       y_p = in__.read<local_scalar_t__>();
       out__.write(y_p);
     } catch (const std::exception& e) {
@@ -6941,22 +7027,24 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 6> names__{"p_real", "p_real_array",
-   "p_matrix", "p_vector", "p_row_vector", "y_p"};
-     const std::array<Eigen::Index, 6> num_params__{1, d_int, (d_int * d_int)
-   , d_int, d_int, 1};
+      "p_matrix", "p_vector", "p_row_vector", "y_p"};
+      const std::array<Eigen::Index, 6> constrain_param_sizes__{1, d_int,
+       (d_int * d_int), d_int, d_int, 1};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
-     std::vector<double> params_r_flat__(num_params_r__);
+     std::vector<double> params_r_flat__(num_constrained_params__);
      Eigen::Index size_iter__ = 0;
      Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       for (Eigen::Index i = 0; i < num_params__[size_iter__]; ++i) {
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
          params_r_flat__[flat_iter__] = param_vec__[i];
          ++flat_iter__;
        }
        ++size_iter__;
      }
-     vars.resize(params_r_flat__.size());
+     vars.resize(num_params_r__);
      transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     

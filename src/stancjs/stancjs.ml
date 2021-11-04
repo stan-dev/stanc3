@@ -45,8 +45,8 @@ let stan2cpp model_name model_string is_flag_set =
           |> Result.map_error ~f:(fun e -> Errors.Semantic_error e)
         in
         typed_ast
-        >>| fun typed_ast ->
-        let warnings = parser_warnings in
+        >>| fun (typed_ast, type_warnings) ->
+        let warnings = parser_warnings @ type_warnings in
         if is_flag_set "info" then
           r.return (Result.Ok (Info.info typed_ast), warnings, []) ;
         if is_flag_set "print-canonical" then

@@ -3,11 +3,12 @@
 open Core_kernel
 open Ast
 
-(* To avoid cluttering the AST, comments are not associated with any particular AST node but instead come in a separate list.
+(** To avoid cluttering the AST, comments are not associated with any particular AST node but instead come in a separate list.
    The pretty printer uses the AST nodes' location metadata to insert whitespace and comments.
    The comment list is stored in a global state that is accessed by set_comments, get_comments, and skip_comments.
  *)
 let comments : comment_type list ref = ref []
+
 let skipped = ref []
 let set_comments ls = comments := ls
 
@@ -15,12 +16,12 @@ let get_comments end_loc =
   let rec go ls =
     match ls with
     | LineComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
-      when Middle.Location.compare_loc begin_loc end_loc < 0 ->
+      when Middle.Location.compare begin_loc end_loc < 0 ->
         (false, [s], loc) :: go tl
     | BlockComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
-      when Middle.Location.compare_loc begin_loc end_loc < 0 ->
+      when Middle.Location.compare begin_loc end_loc < 0 ->
         (true, s, loc) :: go tl
-    | Comma loc :: tl when Middle.Location.compare_loc loc end_loc < 0 -> go tl
+    | Comma loc :: tl when Middle.Location.compare loc end_loc < 0 -> go tl
     | _ ->
         comments := ls ;
         []
@@ -31,10 +32,10 @@ let get_comments_until_comma end_loc =
   let rec go ls =
     match ls with
     | LineComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
-      when Middle.Location.compare_loc begin_loc end_loc < 0 ->
+      when Middle.Location.compare begin_loc end_loc < 0 ->
         (false, [s], loc) :: go tl
     | BlockComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
-      when Middle.Location.compare_loc begin_loc end_loc < 0 ->
+      when Middle.Location.compare begin_loc end_loc < 0 ->
         (true, s, loc) :: go tl
     | _ ->
         comments := ls ;
@@ -426,9 +427,9 @@ let rec pp_indent_unless_block ppf ((s : untyped_statement), loc) =
         (get_comments s.smeta.loc.begin_loc) ;
       with_indented_box ppf 2 0 (fun () -> Fmt.pf ppf "%a" pp_statement s)
 
-(* This function helps write chained if-then-else-if-... blocks
- * correctly. Without it, each IfThenElse would trigger a new
- * vbox in front of the if, adding spaces for each level of IfThenElse.
+(** This function helps write chained if-then-else-if-... blocks
+ correctly. Without it, each IfThenElse would trigger a new
+ vbox in front of the if, adding spaces for each level of IfThenElse.
  *)
 and pp_recursive_ifthenelse ppf (s, loc) =
   match s.stmt with
@@ -439,15 +440,9 @@ and pp_recursive_ifthenelse ppf (s, loc) =
       Fmt.pf ppf "if (%a) %a" pp_expression e pp_indent_unless_block
         (s1, e.emeta.loc.end_loc) ;
       let newline = match s1.stmt with Block _ -> false | _ -> true in
-      let loc2 = s2.smeta.loc.begin_loc in
-      let loc2 =
-        match s2.stmt with
-        | Block _ -> loc2
-        | _ -> {loc2 with line_num= loc2.line_num - 1}
-      in
-      pp_spacing ~newline (Some s1.smeta.loc.end_loc) (Some loc2) ppf
-        (get_comments s2.smeta.loc.begin_loc) ;
       let loc = s1.smeta.loc.end_loc in
+      pp_spacing ~newline (Some loc) (Some loc) ppf
+        (get_comments s2.smeta.loc.begin_loc) ;
       Fmt.pf ppf "else %a" pp_recursive_ifthenelse
         (s2, {loc with line_num= loc.line_num + 1})
   | _ -> pp_indent_unless_block ppf (s, loc)
@@ -598,7 +593,7 @@ let pp_program ppf
   pp_block_list ppf blocks
 
 let check_correctness prog pretty =
-  let result_ast, (_ : Middle.Warnings.t list) =
+  let result_ast, (_ : Warnings.t list) =
     Parse.parse_string Parser.Incremental.program pretty
   in
   if
