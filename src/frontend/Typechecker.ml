@@ -113,20 +113,25 @@ let verify_name_fresh_var loc tenv name =
     && not (Stan_math_signatures.is_stan_math_function_name name)
   then Semantic_error.ident_in_use loc name |> error
 
-(** verify that the variable being declared is previous unused.
-   not allowed shadowing/overloading (yet)*)
+(** verify that the variable being declared is previous unused. *)
 let verify_name_fresh_udf loc tenv name =
-  if
+  (* TODO if
     Stan_math_signatures.is_stan_math_function_name name
     (* variadic functions are currently not in math sigs *)
     || Stan_math_signatures.is_reduce_sum_fn name
     || Stan_math_signatures.is_variadic_ode_fn name
   then Semantic_error.ident_is_stanmath_name loc name |> error
-  else if Utils.is_unnormalized_distribution name then
+  else *)
+  if Utils.is_unnormalized_distribution name then
     Semantic_error.udf_is_unnormalized_fn loc name |> error
-  else if Env.mem tenv name then
-    (* adapt for overloading later *)
-    Semantic_error.ident_in_use loc name |> error
+  else if
+    (* if a variable is already defined with this name
+      - not really possible as all functions are defined before data,
+        but future-proofing is good *)
+    List.exists
+      ~f:(function {kind= `Variable _; _} -> true | _ -> false)
+      (Env.find tenv name)
+  then Semantic_error.ident_in_use loc name |> error
 
 (** Checks that a variable/function name:
   - a function/identifier does not have the _lupdf/_lupmf suffix
@@ -1233,19 +1238,30 @@ and exists_matching_fn_declared tenv id arg_tys rt =
   in
   List.exists (Env.find tenv id.name) ~f
 
+and verify_unique_signature tenv loc id arg_tys rt =
+  (* TODO does this need to be UserDefined only? *)
+  let existing = Env.find tenv id.name in
+  let same_args = function
+    | Env.({type_= UFun (listedtypes, _, _, _); _})
+      when List.map ~f:snd arg_tys = List.map ~f:snd listedtypes ->
+        true
+    | _ -> false
+  in
+  match List.filter existing ~f:same_args with
+  | [] -> ()
+  | {type_= UFun (_, rt', _, _); _} :: _ when rt <> rt' ->
+      Semantic_error.fn_overload_rt_only loc id.name rt rt' |> error
+  | _ ->
+      Semantic_error.fn_decl_redefined loc id.name
+        (UnsizedType.UFun (arg_tys, rt, Fun_kind.suffix_from_name id.name, AoS))
+      |> error
+
 and verify_fundef_overloaded loc tenv id arg_tys rt =
   (* User defined functions cannot be overloaded at the moment
    *)
   if exists_matching_fn_declared tenv id arg_tys rt then ()
-  else
-    let f = function Env.({kind= `UserDeclared _; _}) -> true | _ -> false in
-    if List.exists ~f (Env.find tenv id.name) then
-      (* a function of the same name but different signature *)
-      Env.find tenv id.name |> List.hd
-      |> Option.map ~f:(fun x -> x.type_)
-      |> Semantic_error.mismatched_fn_def_decl loc id.name
-      |> error
-    else verify_name_fresh tenv id ~is_udf:true
+  else verify_unique_signature tenv loc id arg_tys rt ;
+  verify_name_fresh tenv id ~is_udf:true
 
 and get_fn_decl_or_defn loc tenv id arg_tys rt body =
   match body with

@@ -1,0 +1,44 @@
+  $ ../../../../../../install/default/bin/stanc --auto-format is_real.stan
+functions {
+  int is_real(real x) {
+    return 1;
+  }
+  
+  int is_real(int x) {
+    return 0;
+  }
+}
+transformed data {
+  if (is_real(1.5)) {
+    print(is_real(0));
+  }
+}
+
+  $ ../../../../../../install/default/bin/stanc --auto-format num_args.stan
+functions {
+  real foo(real one) {
+    return 1.0;
+  }
+  
+  real foo(real one, real two) {
+    return 2.0;
+  }
+}
+
+  $ ../../../../../../install/default/bin/stanc --auto-format stan_math.stan
+functions {
+  vector to_vector(real one, real two, real three) {
+    vector[3] r = [one, two, three]';
+    return r;
+  }
+  
+  void to_vector(int x) {
+    return;
+  }
+}
+transformed data {
+  vector[3] v1 = to_vector(1, 2, 3);
+  vector[3] v2 = to_vector({1, 2, 3});
+  to_vector(3);
+}
+

@@ -299,7 +299,9 @@ module StatementError = struct
     | NonIntBounds
     | ComplexTransform
     | TransformedParamsInt
-    | MismatchFunDefDecl of string * UnsizedType.t option
+    | FuncOverloadRtOnly of
+        string * UnsizedType.returntype * UnsizedType.returntype
+    | FuncDeclRedefined of string * UnsizedType.t
     | FunDeclExists of string
     | FunDeclNoDefn
     | FunDeclNeedsBlock
@@ -365,14 +367,15 @@ module StatementError = struct
         Fmt.pf ppf "Complex types do not support transformations."
     | TransformedParamsInt ->
         Fmt.pf ppf "(Transformed) Parameters cannot be integers."
-    | MismatchFunDefDecl (name, Some ut) ->
-        Fmt.pf ppf "Function '%s' has already been declared to have type %a"
-          name UnsizedType.pp ut
-    | MismatchFunDefDecl (name, None) ->
+    | FuncOverloadRtOnly (name, _, rt') ->
         Fmt.pf ppf
-          "Function '%s' has already been declared but type cannot be \
-           determined."
-          name
+          "Function '%s' cannot be overloaded by return type only. Previously \
+           used return type %a"
+          name UnsizedType.pp_returntype rt'
+    | FuncDeclRedefined (name, ut) ->
+        Fmt.pf ppf
+          "Function '%s' has already been declared to for signature %a" name
+          UnsizedType.pp ut
     | FunDeclExists name ->
         Fmt.pf ppf
           "Function '%s' has already been declared. A definition is expected."
@@ -600,8 +603,11 @@ let complex_transform loc =
 let transformed_params_int loc =
   StatementError (loc, StatementError.TransformedParamsInt)
 
-let mismatched_fn_def_decl loc name ut_opt =
-  StatementError (loc, StatementError.MismatchFunDefDecl (name, ut_opt))
+let fn_overload_rt_only loc name rt1 rt2 =
+  StatementError (loc, StatementError.FuncOverloadRtOnly (name, rt1, rt2))
+
+let fn_decl_redefined loc name ut =
+  StatementError (loc, StatementError.FuncDeclRedefined (name, ut))
 
 let fn_decl_exists loc name =
   StatementError (loc, StatementError.FunDeclExists name)

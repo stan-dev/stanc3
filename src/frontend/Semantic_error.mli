@@ -112,9 +112,14 @@ val non_int_bounds : Location_span.t -> t
 val complex_transform : Location_span.t -> t
 val transformed_params_int : Location_span.t -> t
 
-val mismatched_fn_def_decl :
-  Location_span.t -> string -> UnsizedType.t option -> t
+val fn_overload_rt_only :
+     Location_span.t
+  -> string
+  -> UnsizedType.returntype
+  -> UnsizedType.returntype
+  -> t
 
+val fn_decl_redefined : Location_span.t -> string -> UnsizedType.t -> t
 val fn_decl_exists : Location_span.t -> string -> t
 val fn_decl_without_def : Location_span.t -> t
 val fn_decl_needs_block : Location_span.t -> t

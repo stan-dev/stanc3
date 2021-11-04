@@ -1,0 +1,24 @@
+  $ ../../../../../../install/default/bin/stanc redefinition.stan
+Semantic error in 'redefinition.stan', line 6, column 3 to line 8, column 4:
+   -------------------------------------------------
+     4:     }
+     5:  
+     6:     int foo(real x){
+            ^
+     7:       return 2;
+     8:     }
+   -------------------------------------------------
+
+Function 'foo' has already been declared to for signature (real) => int
+  $ ../../../../../../install/default/bin/stanc returntype_issues.stan
+Semantic error in 'returntype_issues.stan', line 6, column 3 to line 8, column 4:
+   -------------------------------------------------
+     4:     }
+     5:  
+     6:     int foo(int x){
+            ^
+     7:       return 1;
+     8:     }
+   -------------------------------------------------
+
+Function 'foo' cannot be overloaded by return type only. Previously used return type real
