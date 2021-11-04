@@ -1,4 +1,5 @@
 open Core_kernel
+open Middle
 
 (** Type errors that may arise during semantic check *)
 module TypeError = struct
@@ -33,19 +34,15 @@ module TypeError = struct
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string
+    | ReturningFnExpectedUndeclaredDistSuffixFound of string * string
+    | ReturningFnExpectedWrongDistSuffixFound of string * string
     | NonReturningFnExpectedReturningFound of string
     | NonReturningFnExpectedNonFnFound of string
     | NonReturningFnExpectedUndeclaredIdentFound of string
-    | IllTypedStanLibFunctionApp of
+    | IllTypedFunctionApp of
         string
         * UnsizedType.t list
         * (SignatureMismatch.signature_error list * bool)
-    | IllTypedUserDefinedFunctionApp of
-        string
-        * (UnsizedType.autodifftype * UnsizedType.t) list
-        * UnsizedType.returntype
-        * UnsizedType.t list
-        * SignatureMismatch.function_mismatch
     | IllTypedBinaryOperator of Operator.t * UnsizedType.t * UnsizedType.t
     | IllTypedPrefixOperator of Operator.t * UnsizedType.t
     | IllTypedPostfixOperator of Operator.t * UnsizedType.t
@@ -168,17 +165,29 @@ module TypeError = struct
           "A returning function was expected but an undeclared identifier \
            '%s' was supplied."
           fn_name
+    | ReturningFnExpectedUndeclaredDistSuffixFound (prefix, suffix) ->
+        Fmt.pf ppf "Function '%s_%s' is not implemented for distribution '%s'."
+          prefix suffix prefix
+    | ReturningFnExpectedWrongDistSuffixFound (prefix, suffix) ->
+        let newsuffix =
+          match suffix with
+          | "lpdf" -> "lpmf"
+          | "lupdf" -> "lupmf"
+          | "lpmf" -> "lpdf"
+          | "lupmf" -> "lupdf"
+          | _ -> raise_s [%message "This should never happen."]
+        in
+        Fmt.pf ppf
+          "Function '%s_%s' is not implemented for distribution '%s', use \
+           '%s_%s' instead."
+          prefix suffix prefix prefix newsuffix
     | NonReturningFnExpectedUndeclaredIdentFound fn_name ->
         Fmt.pf ppf
           "A non-returning function was expected but an undeclared identifier \
            '%s' was supplied."
           fn_name
-    | IllTypedStanLibFunctionApp (name, arg_tys, errors) ->
+    | IllTypedFunctionApp (name, arg_tys, errors) ->
         SignatureMismatch.pp_signature_mismatch ppf (name, arg_tys, errors)
-    | IllTypedUserDefinedFunctionApp
-        (name, listed_tys, return_ty, arg_tys, error) ->
-        SignatureMismatch.pp_signature_mismatch ppf
-          (name, arg_tys, ([((return_ty, listed_tys), error)], false))
     | IllTypedBinaryOperator (op, lt, rt) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to infix operator %a. Available \
@@ -387,7 +396,7 @@ module StatementError = struct
           "Function '%s' has already been declared. A definition is expected."
           name
     | FunDeclNoDefn ->
-        Fmt.pf ppf "Some function is declared without specifying a definition."
+        Fmt.pf ppf "Function is declared without specifying a definition."
     | FunDeclNeedsBlock ->
         Fmt.pf ppf "Function definitions must be wrapped in curly braces."
     | NonRealProbFunDef ->
@@ -496,6 +505,16 @@ let returning_fn_expected_nonfn_found loc name =
 let returning_fn_expected_undeclaredident_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedUndeclaredIdentFound name)
 
+let returning_fn_expected_undeclared_dist_suffix_found loc (prefix, suffix) =
+  TypeError
+    ( loc
+    , TypeError.ReturningFnExpectedUndeclaredDistSuffixFound (prefix, suffix)
+    )
+
+let returning_fn_expected_wrong_dist_suffix_found loc (prefix, suffix) =
+  TypeError
+    (loc, TypeError.ReturningFnExpectedWrongDistSuffixFound (prefix, suffix))
+
 let nonreturning_fn_expected_returning_found loc name =
   TypeError (loc, TypeError.NonReturningFnExpectedReturningFound name)
 
@@ -505,15 +524,8 @@ let nonreturning_fn_expected_nonfn_found loc name =
 let nonreturning_fn_expected_undeclaredident_found loc name =
   TypeError (loc, TypeError.NonReturningFnExpectedUndeclaredIdentFound name)
 
-let illtyped_stanlib_fn_app loc name errors arg_tys =
-  TypeError (loc, TypeError.IllTypedStanLibFunctionApp (name, arg_tys, errors))
-
-let illtyped_userdefined_fn_app loc name decl_arg_tys decl_return_ty error
-    arg_tys =
-  TypeError
-    ( loc
-    , TypeError.IllTypedUserDefinedFunctionApp
-        (name, decl_arg_tys, decl_return_ty, arg_tys, error) )
+let illtyped_fn_app loc name errors arg_tys =
+  TypeError (loc, TypeError.IllTypedFunctionApp (name, arg_tys, errors))
 
 let illtyped_binary_op loc op lt rt =
   TypeError (loc, TypeError.IllTypedBinaryOperator (op, lt, rt))

@@ -1,6 +1,7 @@
 (** This module defines the signatures and [Make] functors for the 'fixed point'
     (or two-level) type we use for our intermediate representations
 *)
+
 open Core_kernel
 
 (** The fixed-point of [Pattern.t] annotated with some meta-data *)

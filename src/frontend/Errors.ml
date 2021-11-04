@@ -5,10 +5,10 @@ module Str = Re.Str
 
 (** Our type of syntax error information *)
 type syntax_error =
-  | Lexing of Location.t
-  | UnexpectedEOF of Location.t
-  | Include of string * Location.t
-  | Parsing of string * Location_span.t
+  | Lexing of Middle.Location.t
+  | UnexpectedEOF of Middle.Location.t
+  | Include of string * Middle.Location.t
+  | Parsing of string * Middle.Location_span.t
 
 (** Exception for Syntax Errors *)
 exception SyntaxError of syntax_error
@@ -32,13 +32,13 @@ let fatal_error ?(msg = "") _ =
 
 let pp_context_with_message ppf (msg, loc) =
   Fmt.pf ppf "%a@,%s" (Fmt.option Fmt.string)
-    (Location.context_to_string loc)
+    (Middle.Location.context_to_string loc)
     msg
 
 let pp_semantic_error ?printed_filename ppf err =
   let loc_span = Semantic_error.location err in
   Fmt.pf ppf "Semantic error in %s:@;%a"
-    (Location_span.to_string ?printed_filename loc_span)
+    (Middle.Location_span.to_string ?printed_filename loc_span)
     pp_context_with_message
     (Fmt.strf "%a@." Semantic_error.pp err, loc_span.begin_loc)
 
@@ -46,24 +46,24 @@ let pp_semantic_error ?printed_filename ppf err =
 let pp_syntax_error ?printed_filename ppf = function
   | Parsing (message, loc_span) ->
       Fmt.pf ppf "Syntax error in %s, parsing error:@,%a"
-        (Location_span.to_string ?printed_filename loc_span)
+        (Middle.Location_span.to_string ?printed_filename loc_span)
         pp_context_with_message
         (message, loc_span.begin_loc)
   | Lexing loc ->
       Fmt.pf ppf "Syntax error in %s, lexing error:@,%a@."
-        (Location.to_string ?printed_filename
+        (Middle.Location.to_string ?printed_filename
            {loc with col_num= loc.col_num - 1})
         pp_context_with_message
         ("Invalid character found.", loc)
   | UnexpectedEOF loc ->
       Fmt.pf ppf "Syntax error in %s, lexing error:@,%a@."
-        (Location.to_string ?printed_filename
+        (Middle.Location.to_string ?printed_filename
            {loc with col_num= loc.col_num - 1})
         pp_context_with_message
         ("Unexpected end of input", loc)
   | Include (message, loc) ->
       Fmt.pf ppf "Syntax error in %s, include error:@,%a@."
-        (Location.to_string loc ?printed_filename)
+        (Middle.Location.to_string loc ?printed_filename)
         pp_context_with_message (message, loc)
 
 let pp ?printed_filename ppf = function

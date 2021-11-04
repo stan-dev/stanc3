@@ -1,3 +1,6 @@
+(** Create messages used in the C++ for providing locations in the Stan
+code when an error occurs *)
+
 open Middle
 
 type state_t

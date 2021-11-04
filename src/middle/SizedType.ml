@@ -1,3 +1,5 @@
+(** Types which have a concrete size associated, e.g. [vector\[n\]] *)
+
 open Core_kernel
 open Common
 

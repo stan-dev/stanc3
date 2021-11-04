@@ -100,7 +100,7 @@ let options =
             exit 0 )
       , " Display stanc version number" )
     ; ( "--name"
-      , Arg.Set_string Semantic_check.model_name
+      , Arg.Set_string Typechecker.model_name
       , " Take a string to set the model name (default = \
          \"$model_filename_model\")" )
     ; ( "--O"
@@ -114,10 +114,10 @@ let options =
       , Arg.Set print_model_cpp
       , " If set, output the generated C++ Stan model class to stdout." )
     ; ( "--allow-undefined"
-      , Arg.Clear Semantic_check.check_that_all_functions_have_definition
+      , Arg.Clear Typechecker.check_that_all_functions_have_definition
       , " Do not fail if a function is declared but not defined" )
     ; ( "--allow_undefined"
-      , Arg.Clear Semantic_check.check_that_all_functions_have_definition
+      , Arg.Clear Typechecker.check_that_all_functions_have_definition
       , " Deprecated. Same as --allow-undefined." )
     ; ( "--include-paths"
       , Arg.String
@@ -256,12 +256,12 @@ let main () =
     exit 0 ) ;
   (* Just translate a stan program *)
   if !model_file = "" then model_file_err () ;
-  if !Semantic_check.model_name = "" then
-    Semantic_check.model_name :=
+  if !Typechecker.model_name = "" then
+    Typechecker.model_name :=
       mangle
         (remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/'))))
       ^ "_model"
-  else Semantic_check.model_name := mangle !Semantic_check.model_name ;
+  else Typechecker.model_name := mangle !Typechecker.model_name ;
   if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
   use_file !model_file
 

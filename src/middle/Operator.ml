@@ -1,3 +1,5 @@
+(** Utilities for Stan's built in operators *)
+
 open Core_kernel
 
 type t =

@@ -878,5 +878,5 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   ; generate_quantities
   ; transform_inits
   ; output_vars
-  ; prog_name= normalize_prog_name !Semantic_check.model_name
+  ; prog_name= normalize_prog_name !Typechecker.model_name
   ; prog_path= filename }
