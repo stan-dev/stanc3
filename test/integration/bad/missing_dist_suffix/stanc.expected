@@ -8,7 +8,7 @@ Semantic error in 'deprecated_suffix.stan', line 4, column 14 to column 40:
      5:  }
    -------------------------------------------------
 
-A returning function was expected but an undeclared identifier 'von_mises_ccdf_log' was supplied.
+Function 'von_mises_ccdf_log' is not implemented for distribution 'von_mises'.
   $ ../../../../../install/default/bin/stanc lpmf_lpdf_replacement1.stan
 Semantic error in 'lpmf_lpdf_replacement1.stan', line 5, column 14 to column 34:
    -------------------------------------------------
