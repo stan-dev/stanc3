@@ -405,12 +405,10 @@ let check_fn ~is_cond_dist loc tenv id es =
             List.mem known_families s ~equal:String.equal
           in
           match suffix with
-          | ("lpmf" | "lumpf")
-            when Utils.is_distribution_name (prefix ^ "_lpdf") ->
+          | ("lpmf" | "lumpf") when Env.mem tenv (prefix ^ "_lpdf") ->
               Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
                 (prefix, suffix)
-          | ("lpdf" | "lumdf")
-            when Utils.is_distribution_name (prefix ^ "_lpmf") ->
+          | ("lpdf" | "lumdf") when Env.mem tenv (prefix ^ "_lpmf") ->
               Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
                 (prefix, suffix)
           | _ ->
