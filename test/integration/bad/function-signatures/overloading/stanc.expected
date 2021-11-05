@@ -1,3 +1,60 @@
+  $ ../../../../../../install/default/bin/stanc redefine-ccdf-same.stan
+Semantic error in 'redefine-ccdf-same.stan', line 2, column 2 to line 4, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real poisson_ccdf_log(int n, real x) {
+           ^
+     3:      return -x^2;
+     4:    }
+   -------------------------------------------------
+
+Function 'poisson_ccdf_log' has already been declared to for signature 
+(int, real) => real
+  $ ../../../../../../install/default/bin/stanc redefine-ccdf-same2.stan
+Semantic error in 'redefine-ccdf-same2.stan', line 2, column 2 to line 4, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real poisson_lccdf(int n, real x) {
+           ^
+     3:      return -x^2;
+     4:    }
+   -------------------------------------------------
+
+Function 'poisson_lccdf' has already been declared to for signature (int, real) => real
+  $ ../../../../../../install/default/bin/stanc redefine-cdf-same.stan
+Semantic error in 'redefine-cdf-same.stan', line 2, column 2 to line 4, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real poisson_lcdf(int n, real x) {
+           ^
+     3:      return -x^2;
+     4:    }
+   -------------------------------------------------
+
+Function 'poisson_lcdf' has already been declared to for signature (int, real) => real
+  $ ../../../../../../install/default/bin/stanc redefine-cdf-same2.stan
+Semantic error in 'redefine-cdf-same2.stan', line 2, column 2 to line 4, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real poisson_cdf_log(int n, real x) {
+           ^
+     3:      return -x^2;
+     4:    }
+   -------------------------------------------------
+
+Function 'poisson_cdf_log' has already been declared to for signature 
+(int, real) => real
+  $ ../../../../../../install/default/bin/stanc redefine-prob-same.stan
+Semantic error in 'redefine-prob-same.stan', line 2, column 2 to line 4, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real poisson_lpmf(int n, real x) {
+           ^
+     3:      return -x^2;
+     4:    }
+   -------------------------------------------------
+
+Function 'poisson_lpmf' has already been declared to for signature (int, real) => real
   $ ../../../../../../install/default/bin/stanc redefinition.stan
 Semantic error in 'redefinition.stan', line 6, column 3 to line 8, column 4:
    -------------------------------------------------

@@ -14,6 +14,22 @@ transformed data {
   }
 }
 
+  $ ../../../../../../install/default/bin/stanc --auto-format multi_fun.stan
+functions {
+  int foo(int a) {
+    return a;
+  }
+  real foo(real b) {
+    return b;
+  }
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
   $ ../../../../../../install/default/bin/stanc --auto-format num_args.stan
 functions {
   real foo(real one) {
@@ -23,6 +39,67 @@ functions {
   real foo(real one, real two) {
     return 2.0;
   }
+}
+
+  $ ../../../../../../install/default/bin/stanc --auto-format redefine-ccdf3.stan
+functions {
+  real foo_lccdf(int n, real x) {
+    return -x ^ 2;
+  }
+  real foo_ccdf_log(int n, real x) {
+    return -x ^ 2;
+  }
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../../../install/default/bin/stanc --auto-format redefine-cdf3.stan
+functions {
+  real foo_lcdf(int n, real x) {
+    return -x ^ 2;
+  }
+  real foo_cdf_log(int n, real x) {
+    return -x ^ 2;
+  }
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../../../install/default/bin/stanc --auto-format redefine-prob1.stan
+functions {
+  real poisson_lpdf(real n, real x) {
+    return -x ^ 2;
+  }
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../../../install/default/bin/stanc --auto-format redefine-prob3.stan
+functions {
+  real foo_log(int y) {
+    return -y ^ 2;
+  }
+  real foo_lpmf(int y) {
+    return y ^ 2 / 2;
+  }
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format stan_math.stan

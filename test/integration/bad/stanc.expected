@@ -979,17 +979,17 @@ Syntax error in 'functions-bad0.stan', line 2, column 11 to column 15, parsing e
 
 (Non-void) type expected in function argument declaration.
   $ ../../../../install/default/bin/stanc functions-bad1.stan
-Semantic error in 'functions-bad1.stan', line 6, column 7 to column 11:
+Semantic error in 'functions-bad1.stan', line 6, column 2 to column 20:
    -------------------------------------------------
      4:      return x;
      5:    }
      6:    real flib(real x); // error redeclaring function
-                ^
+           ^
      7:  }
      8:  parameters {
    -------------------------------------------------
 
-Identifier 'flib' is already in use.
+Function 'flib' has already been declared to for signature (real) => real
   $ ../../../../install/default/bin/stanc functions-bad11.stan
 Semantic error in 'functions-bad11.stan', line 3, column 4 to column 20:
    -------------------------------------------------
@@ -1028,17 +1028,17 @@ Semantic error in 'functions-bad13.stan', line 3, column 4 to column 10:
 
 Cannot assign to function argument or loop identifier 'x'.
   $ ../../../../install/default/bin/stanc functions-bad14.stan
-Semantic error in 'functions-bad14.stan', line 5, column 6 to column 9:
+Semantic error in 'functions-bad14.stan', line 5, column 2 to line 7, column 3:
    -------------------------------------------------
      3:      return x;
      4:    }
      5:    int abc(real x) {  // illegal redeclaration with same args
-               ^
+           ^
      6:      return 1;
      7:    }
    -------------------------------------------------
 
-Identifier 'abc' is already in use.
+Function 'abc' cannot be overloaded by return type only. Previously used return type real
   $ ../../../../install/default/bin/stanc functions-bad15.stan
 Warning in 'functions-bad15.stan', line 3, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 Warning in 'functions-bad15.stan', line 10, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
@@ -1053,16 +1053,16 @@ Semantic error in 'functions-bad15.stan', line 10, column 21 to column 38:
 
 A returning function was expected but a non-returning function 'unit_normal_lp' was supplied.
   $ ../../../../install/default/bin/stanc functions-bad16.stan
-Semantic error in 'functions-bad16.stan', line 2, column 7 to column 13:
+Semantic error in 'functions-bad16.stan', line 2, column 2 to line 4, column 3:
    -------------------------------------------------
      1:  functions {
      2:    real square(real x) {
-                ^
+           ^
      3:      return x * x;
      4:    }
    -------------------------------------------------
 
-Identifier 'square' clashes with Stan Math library function.
+Function 'square' has already been declared to for signature (real) => real
   $ ../../../../install/default/bin/stanc functions-bad17.stan
 Semantic error in 'functions-bad17.stan', line 2, column 2 to line 4, column 3:
    -------------------------------------------------
@@ -1097,7 +1097,7 @@ Semantic error in 'functions-bad19.stan', line 4, column 2 to line 6, column 3:
      6:    }
    -------------------------------------------------
 
-Function 'my_fun3' has already been declared to have type (data real) => real
+Function 'my_fun3' has already been declared to for signature (real) => real
   $ ../../../../install/default/bin/stanc functions-bad2.stan
 Semantic error in 'functions-bad2.stan', line 8, column 7 to column 13:
    -------------------------------------------------
@@ -1121,7 +1121,7 @@ Semantic error in 'functions-bad20.stan', line 4, column 2 to line 6, column 3:
      6:    }
    -------------------------------------------------
 
-Function 'my_fun3' has already been declared to have type (real) => real
+Function 'my_fun3' has already been declared to for signature (data real) => real
   $ ../../../../install/default/bin/stanc functions-bad21.stan
 Semantic error in 'functions-bad21.stan', line 13, column 11 to column 21:
    -------------------------------------------------
@@ -1410,18 +1410,6 @@ Syntax error in 'matrix_expr_bad4.stan', line 2, column 44 to column 45, parsing
    -------------------------------------------------
 
 Ill-formed phrase. Found an expression. This can be followed by a ",", a "}", a ")", a "]", a "[" or an infix or postfix operator.
-  $ ../../../../install/default/bin/stanc multi_fun.stan
-Semantic error in 'multi_fun.stan', line 5, column 7 to column 10:
-   -------------------------------------------------
-     3:      return a;
-     4:    }
-     5:    real foo(real b) {
-                ^
-     6:      return b;
-     7:    }
-   -------------------------------------------------
-
-Identifier 'foo' is already in use.
   $ ../../../../install/default/bin/stanc multiply_sample.stan
 Semantic error in 'multiply_sample.stan', line 5, column 2 to column 18:
    -------------------------------------------------
@@ -1844,108 +1832,6 @@ Semantic error in 'real_idx.stan', line 3, column 4 to column 7:
    -------------------------------------------------
 
 Index must be of type int or int[] or must be a range. Instead found type real.
-  $ ../../../../install/default/bin/stanc redefine-ccdf1.stan
-Semantic error in 'redefine-ccdf1.stan', line 2, column 7 to column 23:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_ccdf_log(int n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_ccdf_log' clashes with Stan Math library function.
-  $ ../../../../install/default/bin/stanc redefine-ccdf2.stan
-Semantic error in 'redefine-ccdf2.stan', line 2, column 7 to column 20:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_lccdf(int n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_lccdf' clashes with Stan Math library function.
-  $ ../../../../install/default/bin/stanc redefine-ccdf3.stan
-Semantic error in 'redefine-ccdf3.stan', line 5, column 7 to column 19:
-   -------------------------------------------------
-     3:      return -x^2;
-     4:    }
-     5:    real foo_ccdf_log(int n, real x) {
-                ^
-     6:      return -x^2;
-     7:    }
-   -------------------------------------------------
-
-Identifier 'foo_lccdf' is already in use.
-  $ ../../../../install/default/bin/stanc redefine-cdf1.stan
-Semantic error in 'redefine-cdf1.stan', line 2, column 7 to column 22:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_cdf_log(int n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_cdf_log' clashes with Stan Math library function.
-  $ ../../../../install/default/bin/stanc redefine-cdf2.stan
-Semantic error in 'redefine-cdf2.stan', line 2, column 7 to column 19:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_lcdf(int n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_lcdf' clashes with Stan Math library function.
-  $ ../../../../install/default/bin/stanc redefine-cdf3.stan
-Semantic error in 'redefine-cdf3.stan', line 5, column 7 to column 18:
-   -------------------------------------------------
-     3:      return -x^2;
-     4:    }
-     5:    real foo_cdf_log(int n, real x) {
-                ^
-     6:      return -x^2;
-     7:    }
-   -------------------------------------------------
-
-Identifier 'foo_lcdf' is already in use.
-  $ ../../../../install/default/bin/stanc redefine-prob1.stan
-Semantic error in 'redefine-prob1.stan', line 2, column 7 to column 19:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_lpdf(real n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_lpmf' clashes with Stan Math library function.
-  $ ../../../../install/default/bin/stanc redefine-prob2.stan
-Semantic error in 'redefine-prob2.stan', line 2, column 7 to column 19:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_lpmf(int n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_lpmf' clashes with Stan Math library function.
-  $ ../../../../install/default/bin/stanc redefine-prob3.stan
-Semantic error in 'redefine-prob3.stan', line 5, column 7 to column 15:
-   -------------------------------------------------
-     3:      return -y^2;
-     4:    }
-     5:    real foo_lpmf(int y) {
-                ^
-     6:      return y^2 / 2;
-     7:    }
-   -------------------------------------------------
-
-Identifier 'foo_log' is already in use.
   $ ../../../../install/default/bin/stanc rng_loc1.stan
 Semantic error in 'rng_loc1.stan', line 3, column 11 to column 29:
    -------------------------------------------------
@@ -2043,16 +1929,16 @@ Semantic error in 'row_vector_expr_bad2.stan', line 5, column 25 to column 26:
 
 Row_vector expression must have all int or real entries. Found type row_vector.
   $ ../../../../install/default/bin/stanc shadow.stan
-Semantic error in 'shadow.stan', line 2, column 7 to column 12:
+Semantic error in 'shadow.stan', line 2, column 3 to line 4, column 4:
    -------------------------------------------------
      1:  functions {
      2:     int log10(int x) {
-                ^
+            ^
      3:      return 1;
      4:     }
    -------------------------------------------------
 
-Identifier 'log10' clashes with Stan Math library function.
+Function 'log10' cannot be overloaded by return type only. Previously used return type real
   $ ../../../../install/default/bin/stanc signature_function_known.stan
 Warning in 'signature_function_known.stan', line 8, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 Semantic error in 'signature_function_known.stan', line 8, column 21 to column 50:

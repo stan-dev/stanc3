@@ -115,14 +115,14 @@ let verify_name_fresh_var loc tenv name =
 
 (** verify that the variable being declared is previous unused. *)
 let verify_name_fresh_udf loc tenv name =
-  (* TODO if
-    Stan_math_signatures.is_stan_math_function_name name
+  if
+    (* Stan_math_signatures.is_stan_math_function_name name
+    || *)
     (* variadic functions are currently not in math sigs *)
-    || Stan_math_signatures.is_reduce_sum_fn name
+    Stan_math_signatures.is_reduce_sum_fn name
     || Stan_math_signatures.is_variadic_ode_fn name
   then Semantic_error.ident_is_stanmath_name loc name |> error
-  else *)
-  if Utils.is_unnormalized_distribution name then
+  else if Utils.is_unnormalized_distribution name then
     Semantic_error.udf_is_unnormalized_fn loc name |> error
   else if
     (* if a variable is already defined with this name
@@ -238,7 +238,9 @@ let check_variable cf loc tenv id =
         ~ad_level:(calculate_autodifftype cf origin type_)
         ~type_ ~loc
   (* TODO - When it's time for overloading, will this need
-    some kind of filter/match on arg types? *)
+    some kind of filter/match on arg types?
+    Yes, if we want to allow overloading of ode inputs etc
+    *)
   | { kind= `UserDefined | `UserDeclared _
     ; type_= UFun (args, rt, FnLpdf _, mem_pattern) }
     :: _ ->
