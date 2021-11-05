@@ -603,7 +603,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                  operator %/%."
             in
             add_warning x.emeta.loc s
-        | UMatrix, (UInt | UReal), Pow ->
+        | (UArray UMatrix | UMatrix), (UInt | UReal), Pow ->
             let s =
               Fmt.strf
                 "@[<v>@[<hov 0>Found matrix^scalar:@]@   @[<hov \
@@ -614,7 +614,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                  warning by using elementwise operator .^"
                 Fmt.text
                 "If you intended matrix exponentiation, use the function \
-                 matrix_power() instead."
+                 matrix_power(matrix,int) instead."
             in
             add_warning x.emeta.loc s
         | _ -> ()
