@@ -401,7 +401,38 @@ let check_fn ~is_cond_dist loc tenv id es =
               (Utils.normalized_name id.name)) ->
       Semantic_error.returning_fn_expected_nonfn_found loc id.name |> error
   | [] ->
-      Semantic_error.returning_fn_expected_undeclaredident_found loc id.name
+      ( match Utils.split_distribution_suffix id.name with
+      | Some (prefix, suffix) -> (
+          let known_families =
+            List.map
+              ~f:(fun (_, y, _, _) -> y)
+              Stan_math_signatures.distributions
+          in
+          let is_known_family s =
+            List.mem known_families s ~equal:String.equal
+          in
+          match suffix with
+          | ("lpmf" | "lumpf") when Env.mem tenv (prefix ^ "_lpdf") ->
+              Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
+                (prefix, suffix)
+          | ("lpdf" | "lumdf") when Env.mem tenv (prefix ^ "_lpmf") ->
+              Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
+                (prefix, suffix)
+          | _ ->
+              if
+                is_known_family prefix
+                && List.mem ~equal:String.equal
+                     Utils.cumulative_distribution_suffices_w_rng suffix
+              then
+                Semantic_error
+                .returning_fn_expected_undeclared_dist_suffix_found loc
+                  (prefix, suffix)
+              else
+                Semantic_error.returning_fn_expected_undeclaredident_found loc
+                  id.name )
+      | None ->
+          Semantic_error.returning_fn_expected_undeclaredident_found loc
+            id.name )
       |> error
   | _ (* a function *) -> (
     match SignatureMismatch.returntype tenv id.name (get_arg_types es) with
@@ -551,7 +582,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
   | BinOp (e1, op, e2) ->
       let le = ce e1 in
       let re = ce e2 in
-      let warn_int_division x y =
+      let binop_type_warnings x y =
         match (x.emeta.type_, y.emeta.type_, op) with
         | UInt, UInt, Divide ->
             let hint ppf () =
@@ -579,9 +610,23 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                  operator %/%."
             in
             add_warning x.emeta.loc s
+        | (UArray UMatrix | UMatrix), (UInt | UReal), Pow ->
+            let s =
+              Fmt.strf
+                "@[<v>@[<hov 0>Found matrix^scalar:@]@   @[<hov \
+                 2>%a@]@,@[<hov>%a@]@ @[<hov>%a@]@]"
+                Pretty_printing.pp_expression {expr; emeta} Fmt.text
+                "matrix ^ number is interpreted as element-wise \
+                 exponentiation. If this is intended, you can silence this \
+                 warning by using elementwise operator .^"
+                Fmt.text
+                "If you intended matrix exponentiation, use the function \
+                 matrix_power(matrix,int) instead."
+            in
+            add_warning x.emeta.loc s
         | _ -> ()
       in
-      warn_int_division le re ; check_binop loc op le re
+      binop_type_warnings le re ; check_binop loc op le re
   | PrefixOp (op, e) -> ce e |> check_prefixop loc op
   | PostfixOp (e, op) -> ce e |> check_postfixop loc op
   | Variable id ->
