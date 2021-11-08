@@ -1,32 +1,26 @@
 open Core_kernel
-module Warnings = Middle.Warnings
-module Errors = Middle.Errors
-module Semantic_error = Middle.Semantic_error
 
 let untyped_ast_of_string s =
   let res, warnings = Parse.parse_string Parser.Incremental.program s in
   Fmt.epr "%a" (Fmt.list ~sep:Fmt.nop Warnings.pp) warnings ;
   res
 
-let emit_warnings_and_return_ast (ast, warnings) =
-  Warnings.pp_warnings Fmt.stderr warnings ;
-  ast
-
 let typed_ast_of_string_exn s =
   Result.(
     untyped_ast_of_string s
     >>= fun ast ->
-    Semantic_check.semantic_check_program ast
-    |> map_error ~f:(function
-         | err :: _ -> Errors.Semantic_error err
-         | [] ->
-             failwith
-               "Internal compiler error: no message from Semantic_check." ))
+    Typechecker.check_program ast
+    |> map_error ~f:(fun e -> Errors.Semantic_error e))
   |> Result.map_error ~f:Errors.to_string
-  |> Result.ok_or_failwith |> emit_warnings_and_return_ast
+  |> Result.ok_or_failwith |> fst
 
-let get_ast_or_exit ?printed_filename ?(print_warnings = true) filename =
-  let res, warnings = Parse.parse_file Parser.Incremental.program filename in
+let get_ast_or_exit ?printed_filename ?(print_warnings = true)
+    ?(bare_functions = false) filename =
+  let res, warnings =
+    if bare_functions then
+      Parse.parse_file Parser.Incremental.functions_only filename
+    else Parse.parse_file Parser.Incremental.program filename
+  in
   if print_warnings then
     (Warnings.pp_warnings ?printed_filename) Fmt.stderr warnings ;
   match res with
@@ -34,17 +28,10 @@ let get_ast_or_exit ?printed_filename ?(print_warnings = true) filename =
   | Result.Error err -> Errors.pp Fmt.stderr err ; exit 1
 
 let type_ast_or_exit ast =
-  try
-    match Semantic_check.semantic_check_program ast with
-    | Result.Ok p -> emit_warnings_and_return_ast p
-    | Result.Error (error :: _) ->
-        Errors.pp_semantic_error Fmt.stderr error ;
-        exit 1
-    | Result.Error [] ->
-        Printf.eprintf
-          "Semantic check failed but reported no errors. This should never \
-           happen." ;
-        exit 1
-  with Errors.SemanticError err ->
-    Errors.pp_semantic_error Fmt.stderr err ;
-    exit 1
+  match Typechecker.check_program ast with
+  | Result.Ok (p, warns) ->
+      Warnings.pp_warnings Fmt.stderr warns ;
+      p
+  | Result.Error error ->
+      Errors.pp_semantic_error Fmt.stderr error ;
+      exit 1

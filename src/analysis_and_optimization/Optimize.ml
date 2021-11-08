@@ -1,4 +1,5 @@
-(* Code for optimization passes on the MIR *)
+(** Code for optimization passes on the MIR *)
+
 open Core_kernel
 open Common
 open Middle
@@ -845,7 +846,7 @@ let rec find_assignment_idx (name : string) Stmt.Fixed.({pattern; _}) =
 
 (**
  * Given a list of Stmts, find Decls whose objects are fully assigned to
- *  in their first assignment and mark them as not needing to be 
+ *  in their first assignment and mark them as not needing to be
  *  initialized.
  *)
 and unenforce_initialize
@@ -894,10 +895,10 @@ and unenforce_initialize
   | None -> lst
 
 (**
- * Take the Mir and perform a transform that requires searching 
+ * Take the Mir and perform a transform that requires searching
  *  across the list inside of each piece of the Mir.
  *  @param mir The mir
- *  @param transformer a function that takes in and returns a list of 
+ *  @param transformer a function that takes in and returns a list of
  *    Stmts.
  *)
 let transform_mir_blocks (mir : (Expr.Typed.t, Stmt.Located.t) Program.t)

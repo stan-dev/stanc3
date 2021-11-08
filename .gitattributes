@@ -2,3 +2,7 @@
 # This makes sure all text files are automatically converted to lf line endings.
 * text eol=lf
 *.png binary
+
+# this sets where github can look for language stats
+*.ml linguist-language=OCaml
+test/integration/** linguist-vendored

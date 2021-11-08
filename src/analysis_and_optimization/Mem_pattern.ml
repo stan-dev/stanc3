@@ -55,7 +55,7 @@ let query_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
  * Return a set of all types containing autodiffable Eigen matrices
  *  in an expression.
  *)
- let query_var_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) :
+let query_var_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) :
     string Set.Poly.t =
   let get_expr_eigen_names
       (Dataflow_types.VVar s, Expr.Typed.Meta.({adlevel; type_; _})) =

@@ -3,11 +3,12 @@
 open Core_kernel
 open Ast
 
-(* To avoid cluttering the AST, comments are not associated with any particular AST node but instead come in a separate list.
+(** To avoid cluttering the AST, comments are not associated with any particular AST node but instead come in a separate list.
    The pretty printer uses the AST nodes' location metadata to insert whitespace and comments.
    The comment list is stored in a global state that is accessed by set_comments, get_comments, and skip_comments.
  *)
 let comments : comment_type list ref = ref []
+
 let skipped = ref []
 let set_comments ls = comments := ls
 
@@ -15,12 +16,12 @@ let get_comments end_loc =
   let rec go ls =
     match ls with
     | LineComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
-      when Middle.Location.compare_loc begin_loc end_loc < 0 ->
+      when Middle.Location.compare begin_loc end_loc < 0 ->
         (false, [s], loc) :: go tl
     | BlockComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
-      when Middle.Location.compare_loc begin_loc end_loc < 0 ->
+      when Middle.Location.compare begin_loc end_loc < 0 ->
         (true, s, loc) :: go tl
-    | Comma loc :: tl when Middle.Location.compare_loc loc end_loc < 0 -> go tl
+    | Comma loc :: tl when Middle.Location.compare loc end_loc < 0 -> go tl
     | _ ->
         comments := ls ;
         []
@@ -31,10 +32,10 @@ let get_comments_until_comma end_loc =
   let rec go ls =
     match ls with
     | LineComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
-      when Middle.Location.compare_loc begin_loc end_loc < 0 ->
+      when Middle.Location.compare begin_loc end_loc < 0 ->
         (false, [s], loc) :: go tl
     | BlockComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
-      when Middle.Location.compare_loc begin_loc end_loc < 0 ->
+      when Middle.Location.compare begin_loc end_loc < 0 ->
         (true, s, loc) :: go tl
     | _ ->
         comments := ls ;
@@ -267,7 +268,7 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
       )
   | CondDistApp (_, id, es) -> (
     match es with
-    | [] -> Middle.Errors.fatal_error ()
+    | [] -> Errors.fatal_error ()
     | e :: es' ->
         with_hbox ppf (fun () ->
             Fmt.pf ppf "%a(%a | %a)" pp_identifier id pp_expression e
@@ -325,7 +326,7 @@ let pp_sizedtype ppf = function
   | SRowVector (_, e) -> Fmt.pf ppf "row_vector[%a]" pp_expression e
   | SMatrix (_, e1, e2) ->
       Fmt.pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
-  | SArray _ -> raise (Middle.Errors.FatalError "This should never happen.")
+  | SArray _ -> raise (Errors.FatalError "This should never happen.")
 
 let pp_transformation ppf = function
   | Middle.Transformation.Identity -> Fmt.pf ppf ""
@@ -426,9 +427,9 @@ let rec pp_indent_unless_block ppf ((s : untyped_statement), loc) =
         (get_comments s.smeta.loc.begin_loc) ;
       with_indented_box ppf 2 0 (fun () -> Fmt.pf ppf "%a" pp_statement s)
 
-(* This function helps write chained if-then-else-if-... blocks
- * correctly. Without it, each IfThenElse would trigger a new
- * vbox in front of the if, adding spaces for each level of IfThenElse.
+(** This function helps write chained if-then-else-if-... blocks
+ correctly. Without it, each IfThenElse would trigger a new
+ vbox in front of the if, adding spaces for each level of IfThenElse.
  *)
 and pp_recursive_ifthenelse ppf (s, loc) =
   match s.stmt with
@@ -439,15 +440,9 @@ and pp_recursive_ifthenelse ppf (s, loc) =
       Fmt.pf ppf "if (%a) %a" pp_expression e pp_indent_unless_block
         (s1, e.emeta.loc.end_loc) ;
       let newline = match s1.stmt with Block _ -> false | _ -> true in
-      let loc2 = s2.smeta.loc.begin_loc in
-      let loc2 =
-        match s2.stmt with
-        | Block _ -> loc2
-        | _ -> {loc2 with line_num= loc2.line_num - 1}
-      in
-      pp_spacing ~newline (Some s1.smeta.loc.end_loc) (Some loc2) ppf
-        (get_comments s2.smeta.loc.begin_loc) ;
       let loc = s1.smeta.loc.end_loc in
+      pp_spacing ~newline (Some loc) (Some loc) ppf
+        (get_comments s2.smeta.loc.begin_loc) ;
       Fmt.pf ppf "else %a" pp_recursive_ifthenelse
         (s2, {loc with line_num= loc.line_num + 1})
   | _ -> pp_indent_unless_block ppf (s, loc)
@@ -560,6 +555,13 @@ and pp_list_of_statements ppf (l, xloc) =
   in
   with_vbox ppf 0 (fun () -> pp_head ppf l)
 
+let pp_bare_block ppf {stmts; xloc} =
+  pp_spacing None (Some xloc.begin_loc) ppf (get_comments xloc.begin_loc) ;
+  with_indented_box ppf 0 0 (fun () ->
+      Format.pp_print_cut ppf () ;
+      pp_list_of_statements ppf (stmts, xloc) ;
+      Format.pp_print_cut ppf () )
+
 let pp_block block_name ppf {stmts; xloc} =
   Fmt.pf ppf "%s {" block_name ;
   Format.pp_print_cut ppf () ;
@@ -575,7 +577,7 @@ let rec pp_block_list ppf = function
       pp_block_list ppf tl
   | [] -> pp_spacing None None ppf (remaining_comments ())
 
-let pp_program ppf
+let pp_program ?(bare_functions = false) ppf
     { functionblock= bf
     ; datablock= bd
     ; transformeddatablock= btd
@@ -586,20 +588,25 @@ let pp_program ppf
     ; comments } =
   set_comments comments ;
   Format.pp_open_vbox ppf 0 ;
-  let blocks =
-    List.filter_map
-      ~f:(fun (name, block_opt) -> Option.map ~f:(fun b -> (name, b)) block_opt)
-      [ ("functions", bf); ("data", bd); ("transformed data", btd)
-      ; ("parameters", bp)
-      ; ("transformed parameters", btp)
-      ; ("model", bm)
-      ; ("generated quantities", bgq) ]
-  in
-  pp_block_list ppf blocks
+  if bare_functions then pp_bare_block ppf @@ Option.value_exn bf
+  else
+    let blocks =
+      List.filter_map
+        ~f:(fun (name, block_opt) ->
+          Option.map ~f:(fun b -> (name, b)) block_opt )
+        [ ("functions", bf); ("data", bd); ("transformed data", btd)
+        ; ("parameters", bp)
+        ; ("transformed parameters", btp)
+        ; ("model", bm)
+        ; ("generated quantities", bgq) ]
+    in
+    pp_block_list ppf blocks
 
-let check_correctness prog pretty =
-  let result_ast, (_ : Middle.Warnings.t list) =
-    Parse.parse_string Parser.Incremental.program pretty
+let check_correctness ?(bare_functions = false) prog pretty =
+  let result_ast, (_ : Warnings.t list) =
+    if bare_functions then
+      Parse.parse_string Parser.Incremental.functions_only pretty
+    else Parse.parse_string Parser.Incremental.program pretty
   in
   if
     compare_untyped_program prog (Option.value_exn (Result.ok result_ast)) <> 0
@@ -608,11 +615,13 @@ let check_correctness prog pretty =
 let pp_typed_expression ppf e =
   pp_expression ppf (untyped_expression_of_typed_expression e)
 
-let pretty_print_program p =
-  let result = wrap_fmt pp_program p in
-  check_correctness p result ; result
+let pretty_print_program ?(bare_functions = false) p =
+  let result = wrap_fmt (pp_program ~bare_functions) p in
+  check_correctness ~bare_functions p result ;
+  result
 
-let pretty_print_typed_program p =
+let pretty_print_typed_program ?(bare_functions = false) p =
   let p = untyped_program_of_typed_program p in
-  let result = wrap_fmt pp_program p in
-  check_correctness p result ; result
+  let result = wrap_fmt (pp_program ~bare_functions) p in
+  check_correctness ~bare_functions p result ;
+  result

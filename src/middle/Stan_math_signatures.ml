@@ -1,7 +1,7 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 open Core_kernel
 
-(* The "dimensionality" (bad name?) is supposed to help us represent the
+(** The "dimensionality" (bad name?) is supposed to help us represent the
     vectorized nature of many Stan functions. It allows us to represent when
     a function argument can be just a real or matrix, or some common forms of
     vectorization over reals. This captures the most commonly used forms in our
@@ -1525,7 +1525,7 @@ let () =
   add_unqualified ("is_inf", ReturnType UInt, [UReal], SoA) ;
   add_unqualified ("is_nan", ReturnType UInt, [UReal], SoA) ;
   add_binary_vec "lbeta" AoS ;
-  add_binary "lchoose" AoS ;
+  add_binary_vec "lchoose" AoS ;
   add_binary_vec_real_int "ldexp" AoS ;
   add_qualified
     ( "linspaced_int_array"

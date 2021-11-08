@@ -189,7 +189,7 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
       | Ast.PExpr e -> trans_expr e)
     ps
 
-(* These types signal the context for a declaration during statement translation.
+(** These types signal the context for a declaration during statement translation.
    They are only interpreted by trans_decl.*)
 type transform_action = Check | Constrain | Unconstrain | IgnoreTransform
 [@@deriving sexp]
@@ -861,5 +861,5 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   ; generate_quantities
   ; transform_inits
   ; output_vars
-  ; prog_name= normalize_prog_name !Semantic_check.model_name
+  ; prog_name= normalize_prog_name !Typechecker.model_name
   ; prog_path= filename }

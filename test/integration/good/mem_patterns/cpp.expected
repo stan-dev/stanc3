@@ -3658,9 +3658,10 @@ class indexing_model final : public model_base_crtp<indexing_model> {
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 22> names__{"alpha", "p_soa_vec_v",
       "p_soa_mat", "p_soa_arr_vec_v", "p_soa_mat_uni_col_idx",
-      "p_soa_vec_uni_idx", "p_soa_loop_mat_uni_col_idx", "p_soa_lhs_loop_mul"
-      , "p_soa_rhs_loop_mul", "p_soa_used_with_aos_in_excluded_fun",
-      "p_soa_rep_matrix_vec", "p_soa_mat_pass_func_outer_single_indexed1",
+      "p_soa_vec_uni_idx", "p_soa_loop_mat_uni_col_idx",
+      "p_soa_lhs_loop_mul", "p_soa_rhs_loop_mul",
+      "p_soa_used_with_aos_in_excluded_fun", "p_soa_rep_matrix_vec",
+      "p_soa_mat_pass_func_outer_single_indexed1",
       "p_soa_mat_pass_func_outer_single_indexed2",
       "p_aos_vec_v_assign_to_aos", "p_aos_vec_v_tp_fails_func",
       "p_aos_loop_vec_v_uni_idx", "p_aos_fail_assign_from_top_idx",
@@ -5210,8 +5211,8 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-     constexpr std::array<const char*, 2> names__{"first_pass_soa_x", "aos_x"
-      };
+     constexpr std::array<const char*, 2> names__{"first_pass_soa_x",
+      "aos_x"};
       const std::array<Eigen::Index, 2> constrain_param_sizes__{(5 * 10),
        (5 * 10)};
       const auto num_constrained_params__ = std::accumulate(

@@ -1,6 +1,16 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v2.28.1 (21 October 2021)
+======================================================================
+
+- Expose missing arg() function
+- Turned off default of allow_uninitialized_decls
+- Fixed transform_inits input and output sizes
+
+Note: There are known issues during compilation when calling functions that expect complex arguments with variables of type `int` or `real`.
+If this is required, please wrap the arguments with a call to `to_complex()`. This will be addressed in the next release.
+
 v2.28.0 (5 October 2021)
 ======================================================================
 

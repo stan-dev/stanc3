@@ -25,7 +25,7 @@ let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
 
 let out_var_json (name, st, block) : Yojson.Basic.t =
   `Assoc
-    [ ("name", `String name)
+    [ ("name", `String (Mangle.remove_prefix name))
     ; ("type", sizedtype_to_json st)
     ; ("block", `String (Fmt.strf "%a" Program.pp_io_block block)) ]
 

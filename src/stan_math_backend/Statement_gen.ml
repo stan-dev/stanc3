@@ -21,7 +21,7 @@ let rec contains_eigen (ut : UnsizedType.t) : bool =
   | UMatrix | URowVector | UVector -> true
   | UInt | UReal | UComplex | UMathLibraryFunction | UFun _ -> false
 
-(*Fill only needs to happen for containers 
+(*Fill only needs to happen for containers
   * Note: This should probably be moved into its own function as data
   * does not need to be filled as we are promised user input data has the correct
   * dimensions. Transformed data must be filled as incorrect slices could lead
@@ -125,14 +125,16 @@ let%expect_test "set size mat array" =
         Eigen::Matrix<double, -1, -1>::Constant(2, 3,
           std::numeric_limits<double>::quiet_NaN()))) |}]
 
-(* Initialize Data and Transformed Data 
- * This function is used in the model's constructor to
- * 1. Initialize memory for the data and transformed data
- * 2. If an Eigen type, place that memory into the class's Map
- * 3. Set the initial values of that data to NaN.
- * @param ppf A pretty printer
- * @param decl_id The name of the model class member
- * @param st The type of the class member
+(** Initialize Data and Transformed Data
+  This function is used in the model's constructor to
+  {ol
+  {- Initialize memory for the data and transformed data}
+  {- If an Eigen type, place that memory into the class's Map}
+  {- Set the initial values of that data to NaN}
+  }
+  @param ppf A pretty printer
+  @param decl_id The name of the model class member
+  @param st The type of the class member
  *)
 let pp_assign_data ppf
     ((decl_id, st, _) : string * Expr.Typed.t SizedType.t * bool) =
@@ -208,11 +210,12 @@ let rec integer_el_type = function
   | SArray (st, _) -> integer_el_type st
   | _ -> false
 
-(* Print the private members of the model class
- *   Accounting for types that can be moved to OpenCL.
- * @param ppf A formatter
- * @param vident name of the private member.
- * @param ut The unsized type to print.
+(** Print the private members of the model class
+
+  Accounting for types that can be moved to OpenCL.
+  @param ppf A formatter
+  @param vident name of the private member.
+  @param ut The unsized type to print.
  *)
 let pp_data_decl ppf (vident, ut) =
   let opencl_check = (Transform_Mir.is_opencl_var vident, ut) in
@@ -230,7 +233,7 @@ let pp_data_decl ppf (vident, ut) =
     | _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident )
   | (true, _), _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident
 
-(* Create string representations for vars__.emplace_back *)
+(** Create string representations for [vars__.emplace_back] *)
 let pp_emplace_var ppf var =
   match Expr.Typed.type_of var with
   | UnsizedType.UComplex ->
@@ -238,7 +241,7 @@ let pp_emplace_var ppf var =
       pf ppf "@[<hov 2>vars__.emplace_back(%a.imag());@]" pp_expr var
   | _ -> pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
 
-(*Create strings representing maps of Eigen types*)
+(** Create strings representing maps of Eigen types*)
 let pp_map_decl ppf (vident, ut) =
   let scalar = local_scalar ut DataOnly in
   match ut with

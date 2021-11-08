@@ -61,7 +61,7 @@ let factor_var_dependencies statement_map blockers (label, factor) =
   let dep_vars = union_map dep_labels ~f:label_vars in
   Set.Poly.union dep_vars rhs
 
-(* Helper function to generate the factor graph adjacency map representation
+(** Helper function to generate the factor graph adjacency map representation
    from a factor-adjacency list *)
 let build_adjacency_maps (factors : (label * factor * vexpr Set.Poly.t) List.t)
     : factor_graph =
@@ -105,7 +105,7 @@ let remove_touching vars fg =
   in
   without_facs
 
-(* Build a factor graph from prog.log_prob using dependency analysis *)
+(** Build a factor graph from prog.log_prob using dependency analysis *)
 let prog_factor_graph ?(exclude_data_facs : bool = false) prog : factor_graph =
   let statement_map = log_prob_build_dep_info_map prog in
   let factors = extract_factors statement_map 1 in
@@ -128,7 +128,7 @@ let prog_factor_graph ?(exclude_data_facs : bool = false) prog : factor_graph =
     remove_touching (Set.Poly.map ~f:(fun v -> VVar v) data_vars) fg
   else fg
 
-(* BFS on 'fg' with initial frontier 'starts' and terminating at any
+(** BFS on 'fg' with initial frontier 'starts' and terminating at any
    element of 'goals' *)
 let fg_reaches (starts : vexpr Set.Poly.t) (goals : vexpr Set.Poly.t)
     (fg : factor_graph) : bool =
@@ -162,7 +162,7 @@ let fg_factor_is_prior (var : vexpr) (fac : factor * label)
   (* Check if the data is now unreachable *)
   not (fg_factor_reaches fac data fg')
 
-(* Priors of V are neighbors of V which have no connection to any data except though V
+(** Priors of V are neighbors of V which have no connection to any data except though V
    So for graph G and each parameter V:
      G' = G\V;
      For each neighbor F:
@@ -203,7 +203,7 @@ let string_of_factor (factor : factor) : string =
 
 let string_of_vexpr (vexpr : vexpr) : string = match vexpr with VVar s -> s
 
-(* Utility to print a factor graph to the Graphviz dot language for
+(** Utility to print a factor graph to the Graphviz dot language for
    visualization *)
 let factor_graph_to_dot (fg : factor_graph) : string =
   let factors = Map.Poly.to_alist ~key_order:`Decreasing fg.factor_map in

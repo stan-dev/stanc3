@@ -1,3 +1,5 @@
+(** Utilities for Stan's built in operators *)
+
 open Core_kernel
 
 type t =
@@ -65,7 +67,7 @@ let stan_math_name = function
   | Minus -> "subtract"
   | PMinus -> "minus"
   | Times -> "multiply"
-  (* TODO: this was taken from `Mir_utils.string_of_operators`
+  (* TODO: this was taken from [Mir_utils.string_of_operators]
     what was the intended behaviour here?
     *)
   | Divide -> "mdivide_right"

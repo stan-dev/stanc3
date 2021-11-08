@@ -251,14 +251,14 @@ let dual_partial_function_lattice (type dv cv)
   : LATTICE_NO_BOT
     with type properties = (dv, cv) Map.Poly.t )
 
-(* The lattice of partial functions, where we add a fresh bottom element,
+(** The lattice of partial functions, where we add a fresh bottom element,
    to represent an inconsistent combination of functions *)
 let dual_partial_function_lattice_with_bot (type dv cv)
     (module Dom : TOTALTYPE with type vals = dv)
     (module Codom : TYPE with type vals = cv) =
   new_bot (dual_partial_function_lattice (module Dom) (module Codom))
 
-(* A dual powerset lattice, where we set the initial set to be empty *)
+(** A dual powerset lattice, where we set the initial set to be empty *)
 let dual_powerset_lattice_empty_initial (type v)
     (module T : TOTALTYPE with type vals = v) =
   dual_powerset_lattice
@@ -269,7 +269,7 @@ let dual_powerset_lattice_empty_initial (type v)
       let total = T.total
     end )
 
-(* A powerset lattice, where we set the initial set to be empty *)
+(** A powerset lattice, where we set the initial set to be empty *)
 let powerset_lattice_empty_initial (type v)
     (module T : TYPE with type vals = v) =
   powerset_lattice
@@ -277,7 +277,7 @@ let powerset_lattice_empty_initial (type v)
 
                    let initial = Set.Poly.empty end)
 
-(* The specific powerset lattice we use for reaching definitions analysis *)
+(** The specific powerset lattice we use for reaching definitions analysis *)
 let reaching_definitions_lattice (type v l)
     (module Variables : INITIALTYPE with type vals = v)
     (module Labels : TYPE with type vals = l) =
@@ -295,7 +295,7 @@ let minimal_variables_lattice initial_variables =
 
                    let initial = initial_variables end)
 
-(* The transfer function for a constant propagation analysis *)
+(** The transfer function for a constant propagation analysis *)
 let constant_propagation_transfer
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   ( module struct

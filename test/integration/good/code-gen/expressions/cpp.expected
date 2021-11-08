@@ -18,18 +18,20 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 11> locations_array__ = 
+static constexpr std::array<const char*, 13> locations_array__ = 
 {" (found before start of program)",
- " (in 'simple_function.stan', line 13, column 4 to column 10)",
- " (in 'simple_function.stan', line 14, column 11 to column 12)",
- " (in 'simple_function.stan', line 14, column 13 to column 14)",
- " (in 'simple_function.stan', line 14, column 4 to column 18)",
+ " (in 'simple_function.stan', line 16, column 4 to column 10)",
+ " (in 'simple_function.stan', line 17, column 11 to column 12)",
+ " (in 'simple_function.stan', line 17, column 13 to column 14)",
+ " (in 'simple_function.stan', line 17, column 4 to column 18)",
  " (in 'simple_function.stan', line 3, column 7 to column 18)",
  " (in 'simple_function.stan', line 2, column 73 to line 4, column 5)",
  " (in 'simple_function.stan', line 6, column 7 to column 16)",
  " (in 'simple_function.stan', line 5, column 54 to line 7, column 5)",
  " (in 'simple_function.stan', line 9, column 7 to column 16)",
- " (in 'simple_function.stan', line 8, column 36 to line 10, column 5)"};
+ " (in 'simple_function.stan', line 8, column 36 to line 10, column 5)",
+ " (in 'simple_function.stan', line 12, column 7 to column 24)",
+ " (in 'simple_function.stan', line 11, column 39 to line 13, column 5)"};
 
 
 template <typename T0__, typename T2__, typename T3__, typename T4__,
@@ -141,6 +143,38 @@ stan::value_type_t<T1__>>, -1, -1>
 operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const 
 {
 return foo3(a, b, pstream__);
+}
+};
+
+template <typename T0__, typename T1__>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
+stan::value_type_t<T1__>>, -1, -1>
+add_udf(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
+          stan::value_type_t<T1__>>;
+  int current_statement__ = 0; 
+  const auto& a = to_ref(a_arg__);
+  const auto& b = to_ref(b_arg__);
+  static constexpr bool propto__ = true;
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
+  try {
+    current_statement__ = 11;
+    return add(a, b);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+  }
+  
+}
+
+struct add_udf_functor__ {
+template <typename T0__, typename T1__>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
+stan::value_type_t<T1__>>, -1, -1>
+operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const 
+{
+return add_udf(a, b, pstream__);
 }
 };
 
