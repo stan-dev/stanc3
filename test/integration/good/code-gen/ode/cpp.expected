@@ -77,28 +77,6 @@ f_0_arg(const T0__& t, const T1__& z_arg__, std::ostream* pstream__) {
   }
   
 }
-
-struct f_0_arg_functor__ {
-template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<T0__,
-stan::value_type_t<T1__>>, -1, 1>
-operator()(const T0__& t, const T1__& z, std::ostream* pstream__)  const 
-{
-return f_0_arg(t, z, pstream__);
-}
-};
-
-
-struct f_0_arg_odefunctor__ {
-template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<T0__,
-stan::value_type_t<T1__>>, -1, 1>
-operator()(const T0__& t, const T1__& z, std::ostream* pstream__)  const 
-{
-return f_0_arg(t, z, pstream__);
-}
-};
-
 template <typename T0__, typename T1__, typename T2__>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
 T2__>, -1, 1>
@@ -121,30 +99,6 @@ f_1_arg(const T0__& t, const T1__& z_arg__, const T2__& a,
   }
   
 }
-
-struct f_1_arg_functor__ {
-template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
-T2__>, -1, 1>
-operator()(const T0__& t, const T1__& z, const T2__& a,
-           std::ostream* pstream__)  const 
-{
-return f_1_arg(t, z, a, pstream__);
-}
-};
-
-
-struct f_1_arg_odefunctor__ {
-template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
-T2__>, -1, 1>
-operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
-           const T2__& a)  const 
-{
-return f_1_arg(t, z, a, pstream__);
-}
-};
-
 template <typename T0__, typename T1__, typename T3__>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
 T3__>, -1, 1>
@@ -167,28 +121,75 @@ f_2_arg(const T0__& t, const T1__& z_arg__, const int& b, const T3__& a,
   }
   
 }
-
-struct f_2_arg_functor__ {
-template <typename T0__, typename T1__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
-T3__>, -1, 1>
-operator()(const T0__& t, const T1__& z, const int& b, const T3__& a,
-           std::ostream* pstream__)  const 
-{
-return f_2_arg(t, z, b, a, pstream__);
-}
+struct f_0_arg_functor__ {
+template <typename T0__, typename
+  T1__>
+  Eigen::Matrix<stan::promote_args_t<T0__,
+  stan::value_type_t<T1__>>, -1, 1>
+  operator()(const T0__& t, const T1__& z, std::ostream* pstream__)  const
+  {
+    return f_0_arg(t, z, pstream__);
+  }
+  
 };
-
-
+struct f_1_arg_functor__ {
+template <typename T0__, typename T1__, typename
+  T2__>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
+  T2__>, -1, 1>
+  operator()(const T0__& t, const T1__& z, const T2__& a,
+             std::ostream* pstream__)  const
+  {
+    return f_1_arg(t, z, a, pstream__);
+  }
+  
+};
+struct f_0_arg_odefunctor__ {
+template <typename T0__, typename
+  T1__>
+  Eigen::Matrix<stan::promote_args_t<T0__,
+  stan::value_type_t<T1__>>, -1, 1>
+  operator()(const T0__& t, const T1__& z, std::ostream* pstream__)  const
+  {
+    return f_0_arg(t, z, pstream__);
+  }
+  
+};
 struct f_2_arg_odefunctor__ {
-template <typename T0__, typename T1__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
-T3__>, -1, 1>
-operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
-           const int& b, const T3__& a)  const 
-{
-return f_2_arg(t, z, b, a, pstream__);
-}
+template <typename T0__, typename T1__, typename
+  T3__>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
+  T3__>, -1, 1>
+  operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
+             const int& b, const T3__& a)  const
+  {
+    return f_2_arg(t, z, b, a, pstream__);
+  }
+  
+};
+struct f_2_arg_functor__ {
+template <typename T0__, typename T1__, typename
+  T3__>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
+  T3__>, -1, 1>
+  operator()(const T0__& t, const T1__& z, const int& b, const T3__& a,
+             std::ostream* pstream__)  const
+  {
+    return f_2_arg(t, z, b, a, pstream__);
+  }
+  
+};
+struct f_1_arg_odefunctor__ {
+template <typename T0__, typename T1__, typename
+  T2__>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
+  T2__>, -1, 1>
+  operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
+             const T2__& a)  const
+  {
+    return f_1_arg(t, z, a, pstream__);
+  }
+  
 };
 
 class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_test_model_model> {
@@ -714,10 +715,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
      vars.resize(num_params_r__);
      transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
-    
-};
-}
-
+     }; } 
 using stan_model = ode_adjoint_test_model_model_namespace::ode_adjoint_test_model_model;
 
 #ifndef USING_R

@@ -24,6 +24,9 @@ open Statement_gen
 
 let standalone_functions = ref false
 
+let (functors : (string, (string * string) list) Hashtbl.t) =
+  String.Table.create ()
+
 let stanc_args_to_print =
   let sans_model_and_hpp_paths x =
     not
@@ -109,7 +112,7 @@ let pp_returntype ppf arg_types rt =
   let scalar = strf "%a" pp_promoted_scalar arg_types in
   match rt with
   | Some ut when UnsizedType.contains_int ut ->
-      pf ppf "%a@," pp_unsizedtype_custom_scalar ("int", ut)
+      pf ppf "%a@ " pp_unsizedtype_custom_scalar ("int", ut)
   | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
   | None -> pf ppf "void@,"
 
@@ -262,36 +265,39 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdsuffix; fdargs; fdbody; _})
   | None -> pf ppf ";@ "
   | Some fdbody ->
       pp_block ppf (pp_body, fdbody) ;
-      let pp_functor ppf (str_args, args, variadic) =
+      let register_functor (str_args, args, variadic) =
         let suffix =
           match variadic with
           | `None -> functor_suffix
           | `ReduceSum -> reduce_sum_functor_suffix
           | `VariadicODE -> variadic_ode_functor_suffix
         in
-        let pp_template_propto ppf () =
+        let template_propto =
           match (fdsuffix, variadic) with
-          | FnLpdf _, `ReduceSum -> pf ppf "template <bool propto__>@ "
-          | _ -> pf ppf ""
+          | FnLpdf _, `ReduceSum -> "template <bool propto__>"
+          | _ -> ""
         in
-        pf ppf "@,@,%astruct %s%s {@,%a const @,{@,return %a;@,}@,};@,"
-          pp_template_propto () fdname suffix pp_sig
-          ("operator()", false, variadic)
-          pp_call_str
-          ( ( match fdsuffix with
-            | FnLpdf _ | FnTarget -> fdname ^ "<propto__>"
-            | _ -> fdname )
-          , str_args
-            @ List.map ~f:(fun (_, name, _) -> name) args
-            @ extra @ ["pstream__"] )
+        let defn =
+          strf "%a@ const@,{@.  return %a;@.}@." pp_sig
+            ("operator()", false, variadic)
+            pp_call_str
+            ( ( match fdsuffix with
+              | FnLpdf _ | FnTarget -> fdname ^ "<propto__>"
+              | _ -> fdname )
+            , str_args
+              @ List.map ~f:(fun (_, name, _) -> name) args
+              @ extra @ ["pstream__"] )
+        in
+        Hashtbl.add_multi functors ~key:(fdname ^ suffix)
+          ~data:(template_propto, defn)
       in
-      pp_functor ppf ([], fdargs, `None) ;
+      register_functor ([], fdargs, `None) ;
       if String.Set.mem funs_used_in_reduce_sum fdname then
         (* Produces the reduce_sum functors that has the pstream argument
         as the third and not last argument *)
         match fdargs with
         | (_, slice, _) :: (_, start, _) :: (_, end_, _) :: rest ->
-            pp_functor ppf
+            register_functor
               ([slice; start ^ " + 1"; end_ ^ " + 1"], rest, `ReduceSum)
         | _ ->
             raise_s
@@ -300,7 +306,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdsuffix; fdargs; fdbody; _})
       else if String.Set.mem funs_used_in_variadic_ode fdname then
         (* Produces the variadic ode functors that has the pstream argument
         as the third and not last argument *)
-        pp_functor ppf ([], fdargs, `VariadicODE)
+        register_functor ([], fdargs, `VariadicODE)
 
 (** Creates functions outside the model namespaces which only call the ones
    inside the namespaces *)
@@ -1011,6 +1017,13 @@ let pp_prog ppf (p : Program.Typed.t) =
       (is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p)
       (is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_ode_fn p)
   in
+  let pp_registered_functors ppf () =
+    Hashtbl.iteri functors ~f:(fun ~key ~data ->
+        pf ppf "%astruct %s {@,@[<hov 2>%a@]@.};@."
+          (Fmt.option (fun ppf o -> pf ppf "%s" o))
+          (Option.map ~f:fst (List.hd data))
+          key (list ~sep:cut text) (List.map ~f:snd data) )
+  in
   let reduce_sum_struct_decls =
     String.Set.map
       ~f:(fun x ->
@@ -1021,11 +1034,13 @@ let pp_prog ppf (p : Program.Typed.t) =
       (is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p)
     |> Set.elements |> String.concat ~sep:"\n"
   in
-  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
+  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %a@ %s@ %a@ %a@ %a@ }@ @]" version
     includes (namespace p) usings Locations.pp_globals s
     reduce_sum_struct_decls
     (list ~sep:cut pp_fun_def_with_variadic_fn_list)
     p.functions_block
+    (if !standalone_functions then fun _ _ -> () else pp_registered_functors)
+    ()
     (if !standalone_functions then fun _ _ -> () else pp_model)
     p ;
   if !standalone_functions then

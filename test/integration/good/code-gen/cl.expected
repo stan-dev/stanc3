@@ -239,6 +239,7 @@ static constexpr std::array<const char*, 217> locations_array__ =
 
 
 
+
 class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
 
  private:

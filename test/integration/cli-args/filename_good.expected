@@ -25,6 +25,7 @@ static constexpr std::array<const char*, 3> locations_array__ =
 
 
 
+
 class filename_good_model final : public model_base_crtp<filename_good_model> {
 
  private:

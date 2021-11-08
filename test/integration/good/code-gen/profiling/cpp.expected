@@ -51,6 +51,7 @@ static constexpr std::array<const char*, 29> locations_array__ =
 
 
 
+
 class simple_function_model final : public model_base_crtp<simple_function_model> {
 
  private:

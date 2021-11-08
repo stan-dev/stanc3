@@ -46,16 +46,7 @@ let%expect_test "udf" =
         stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       }
 
-    }
-
-    struct sars_functor__ {
-    template <typename T0__, typename T1__>
-    void
-    operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const
-    {
-    return sars(x, y, pstream__);
-    }
-    }; |}]
+    } |}]
 
 let%expect_test "udf-expressions" =
   let with_no_loc stmt =
@@ -110,17 +101,4 @@ let%expect_test "udf-expressions" =
         stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       }
 
-    }
-
-    struct sars_functor__ {
-    template <typename T0__, typename T1__, typename T2__, typename T3__>
-    Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-    stan::value_type_t<T2__>,
-    T3__>, -1, -1>
-    operator()(const T0__& x, const T1__& y, const T2__& z,
-               const std::vector<Eigen::Matrix<T3__, -1, -1>>& w,
-               std::ostream* pstream__)  const
-    {
-    return sars(x, y, z, w, pstream__);
-    }
-    }; |}]
+    } |}]
