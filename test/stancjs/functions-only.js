@@ -45,7 +45,6 @@ real test_lpdf(real a, real b) {
 `
 
 let basic = stanc.stanc("functions_only", functions_only, ["functions-only"]);
-utils.print_result(basic)
 utils.print_error(basic)
 
 let basic_fmt = stanc.stanc("functions_only", functions_only, ["functions-only", "auto-format"]);
