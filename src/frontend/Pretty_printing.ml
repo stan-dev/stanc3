@@ -555,6 +555,13 @@ and pp_list_of_statements ppf (l, xloc) =
   in
   with_vbox ppf 0 (fun () -> pp_head ppf l)
 
+let pp_bare_block ppf {stmts; xloc} =
+  pp_spacing None (Some xloc.begin_loc) ppf (get_comments xloc.begin_loc) ;
+  with_indented_box ppf 0 0 (fun () ->
+      Format.pp_print_cut ppf () ;
+      pp_list_of_statements ppf (stmts, xloc) ;
+      Format.pp_print_cut ppf () )
+
 let pp_block block_name ppf {stmts; xloc} =
   Fmt.pf ppf "%s {" block_name ;
   Format.pp_print_cut ppf () ;
@@ -570,7 +577,7 @@ let rec pp_block_list ppf = function
       pp_block_list ppf tl
   | [] -> pp_spacing None None ppf (remaining_comments ())
 
-let pp_program ppf
+let pp_program ?(bare_functions = false) ppf
     { functionblock= bf
     ; datablock= bd
     ; transformeddatablock= btd
@@ -581,20 +588,25 @@ let pp_program ppf
     ; comments } =
   set_comments comments ;
   Format.pp_open_vbox ppf 0 ;
-  let blocks =
-    List.filter_map
-      ~f:(fun (name, block_opt) -> Option.map ~f:(fun b -> (name, b)) block_opt)
-      [ ("functions", bf); ("data", bd); ("transformed data", btd)
-      ; ("parameters", bp)
-      ; ("transformed parameters", btp)
-      ; ("model", bm)
-      ; ("generated quantities", bgq) ]
-  in
-  pp_block_list ppf blocks
+  if bare_functions then pp_bare_block ppf @@ Option.value_exn bf
+  else
+    let blocks =
+      List.filter_map
+        ~f:(fun (name, block_opt) ->
+          Option.map ~f:(fun b -> (name, b)) block_opt )
+        [ ("functions", bf); ("data", bd); ("transformed data", btd)
+        ; ("parameters", bp)
+        ; ("transformed parameters", btp)
+        ; ("model", bm)
+        ; ("generated quantities", bgq) ]
+    in
+    pp_block_list ppf blocks
 
-let check_correctness prog pretty =
+let check_correctness ?(bare_functions = false) prog pretty =
   let result_ast, (_ : Warnings.t list) =
-    Parse.parse_string Parser.Incremental.program pretty
+    if bare_functions then
+      Parse.parse_string Parser.Incremental.functions_only pretty
+    else Parse.parse_string Parser.Incremental.program pretty
   in
   if
     compare_untyped_program prog (Option.value_exn (Result.ok result_ast)) <> 0
@@ -603,11 +615,13 @@ let check_correctness prog pretty =
 let pp_typed_expression ppf e =
   pp_expression ppf (untyped_expression_of_typed_expression e)
 
-let pretty_print_program p =
-  let result = wrap_fmt pp_program p in
-  check_correctness p result ; result
+let pretty_print_program ?(bare_functions = false) p =
+  let result = wrap_fmt (pp_program ~bare_functions) p in
+  check_correctness ~bare_functions p result ;
+  result
 
-let pretty_print_typed_program p =
+let pretty_print_typed_program ?(bare_functions = false) p =
   let p = untyped_program_of_typed_program p in
-  let result = wrap_fmt pp_program p in
-  check_correctness p result ; result
+  let result = wrap_fmt (pp_program ~bare_functions) p in
+  check_correctness ~bare_functions p result ;
+  result

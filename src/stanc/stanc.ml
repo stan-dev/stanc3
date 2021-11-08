@@ -12,7 +12,7 @@ let version = "%%NAME%%3 %%VERSION%%"
 let name = "%%NAME%%"
 
 (** The usage message. *)
-let usage = "Usage: " ^ name ^ " [option] ... <model_file.stan>"
+let usage = "Usage: " ^ name ^ " [option] ... <model_file.stan[functions]>"
 
 let model_file = ref ""
 let pretty_print_program = ref false
@@ -32,6 +32,7 @@ let output_file = ref ""
 let generate_data = ref false
 let warn_uninitialized = ref false
 let warn_pedantic = ref false
+let bare_functions = ref false
 
 (** Some example command-line options here *)
 let options =
@@ -109,7 +110,8 @@ let options =
     ; ( "--o"
       , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
-         \"$name.hpp\")" )
+         \"$name.hpp\") or auto-formatting output (default: no file/print to \
+         stdout)" )
     ; ( "--print-cpp"
       , Arg.Set print_model_cpp
       , " If set, output the generated C++ Stan model class to stdout." )
@@ -165,6 +167,10 @@ let model_file_err () =
 let add_file filename =
   if !model_file = "" then model_file := filename else model_file_err ()
 
+let remove_dotstan s =
+  if String.is_suffix ~suffix:".stanfunctions" s then String.drop_suffix s 14
+  else String.drop_suffix s 5
+
 (*
       I am not using Fmt to print to stderr here because there was a pretty awful
       bug where it would unpredictably fail to flush. It would flush when using
@@ -176,18 +182,23 @@ let add_file filename =
 let pp_stderr formatter formatee =
   Fmt.strf "%a" formatter formatee |> Out_channel.(output_string stderr)
 
-(** ad directives from the given file. *)
+let print_or_write data =
+  if !output_file <> "" then Out_channel.write_all !output_file ~data
+  else print_endline data
+
 let use_file filename =
   let ast =
     Frontend_utils.get_ast_or_exit filename
       ~print_warnings:(not !canonicalize_program)
+      ~bare_functions:!bare_functions
   in
   let ast =
     if !canonicalize_program then Canonicalize.repair_syntax ast else ast
   in
   Debugging.ast_logger ast ;
-  if !pretty_print_program then
-    print_endline (Pretty_printing.pretty_print_program ast) ;
+  if !pretty_print_program && not !canonicalize_program then
+    print_or_write
+      (Pretty_printing.pretty_print_program ~bare_functions:!bare_functions ast) ;
   let typed_ast = Frontend_utils.type_ast_or_exit ast in
   if !print_info_json then (
     print_endline (Info.info typed_ast) ;
@@ -195,11 +206,13 @@ let use_file filename =
   let printed_filename =
     match !filename_for_msg with "" -> None | s -> Some s
   in
-  Warnings.pp_warnings Fmt.stderr ?printed_filename
-    (Deprecation_analysis.collect_warnings typed_ast) ;
+  if not !canonicalize_program then
+    Warnings.pp_warnings Fmt.stderr ?printed_filename
+      (Deprecation_analysis.collect_warnings typed_ast) ;
   if !canonicalize_program then
-    print_endline
+    print_or_write
       (Pretty_printing.pretty_print_typed_program
+         ~bare_functions:!bare_functions
          (Canonicalize.canonicalize_program typed_ast)) ;
   if !generate_data then
     print_endline (Debug_data_generation.print_data_prog typed_ast) ;
@@ -233,11 +246,11 @@ let use_file filename =
         opt )
       else tx_mir
     in
+    if !output_file = "" then
+      output_file := remove_dotstan !model_file ^ ".hpp" ;
     let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
-
-let remove_dotstan s = String.drop_suffix s 5
 
 let mangle =
   String.concat_map ~f:(fun c ->
@@ -254,15 +267,18 @@ let main () =
   if !dump_stan_math_sigs then (
     Stan_math_signatures.pretty_print_all_math_sigs Format.std_formatter () ;
     exit 0 ) ;
-  (* Just translate a stan program *)
   if !model_file = "" then model_file_err () ;
+  (* if we only have functions, always compile as standalone *)
+  if String.is_suffix !model_file ~suffix:".stanfunctions" then (
+    Stan_math_code_gen.standalone_functions := true ;
+    bare_functions := true ) ;
+  (* Just translate a stan program *)
   if !Typechecker.model_name = "" then
     Typechecker.model_name :=
       mangle
         (remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/'))))
       ^ "_model"
   else Typechecker.model_name := mangle !Typechecker.model_name ;
-  if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
   use_file !model_file
 
 let () = main ()

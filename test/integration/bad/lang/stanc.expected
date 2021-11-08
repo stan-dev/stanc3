@@ -6,6 +6,14 @@ Syntax error in 'bad1.stan', line 1, column 8 to column 8, parsing error:
    -------------------------------------------------
 
 Variable declaration, statement or "}" expected.
+  $ ../../../../../install/default/bin/stanc bad1.stanfunctions
+Syntax error in 'bad1.stanfunctions', line 1, column 5 to column 6, parsing error:
+   -------------------------------------------------
+     1:  int x;
+              ^
+   -------------------------------------------------
+
+"(" expected after function name.
   $ ../../../../../install/default/bin/stanc bad10.stan
 Semantic error in 'bad10.stan', line 2, column 8 to column 11:
    -------------------------------------------------
@@ -36,6 +44,16 @@ Semantic error in 'bad2.stan', line 1, column 28 to column 36:
    -------------------------------------------------
 
 Cannot assign to global variable 'a' declared in previous blocks.
+  $ ../../../../../install/default/bin/stanc bad2.stanfunctions
+Syntax error in 'bad2.stanfunctions', line 5, column 0 to column 1, parsing error:
+   -------------------------------------------------
+     3:  }
+     4:  
+     5:  }
+         ^
+   -------------------------------------------------
+
+Only function definitions/declarations are expected in '.stanfunctions' file
   $ ../../../../../install/default/bin/stanc bad3.stan
 Syntax error in 'bad3.stan', line 1, column 21 to column 22, parsing error:
    -------------------------------------------------
@@ -44,6 +62,14 @@ Syntax error in 'bad3.stan', line 1, column 21 to column 22, parsing error:
    -------------------------------------------------
 
 Expected "[" expression "," expression "]" for sizes of matrix.
+  $ ../../../../../install/default/bin/stanc bad3.stanfunctions
+Syntax error in 'bad3.stanfunctions', line 1, column 0 to column 5, parsing error:
+   -------------------------------------------------
+     1:  while;
+         ^
+   -------------------------------------------------
+
+Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
   $ ../../../../../install/default/bin/stanc bad4.stan
 Semantic error in 'bad4.stan', line 1, column 38 to column 42:
    -------------------------------------------------

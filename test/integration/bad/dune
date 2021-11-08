@@ -1,6 +1,6 @@
 (rule
  (targets stanc.output)
- (deps (package stanc) (:stanfiles (glob_files *.stan)))
+ (deps (package stanc) (:stanfiles (glob_files *.stan*)))
  (action
   (with-stdout-to %{targets}
    (run %{bin:run_bin_on_args} %{bin:stanc} %{stanfiles}))))
