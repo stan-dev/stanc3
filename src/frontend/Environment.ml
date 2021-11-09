@@ -96,8 +96,11 @@ module Distance = struct
             if edist < cmin then loop lst (candidate, edist)
             else loop lst (celt, cmin)
     in
-    let suggestion, distance = loop lst (name, String.length name) in
-    if distance < limit && name <> suggestion then Some suggestion else None
+    let suggestion, _ = loop lst (name, limit) in
+    (* if [name = suggestion], that implies that nothing was found which had an
+      edit distance less than the limit (because name is the inital thing given
+      to [loop]), so we return None *)
+    if name <> suggestion then Some suggestion else None
 end
 
 let max_distance = 3
