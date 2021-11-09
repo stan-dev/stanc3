@@ -5,7 +5,8 @@ module Str = Re.Str
 
 (** Our type of syntax error information *)
 type syntax_error =
-  | Lexing of string * Middle.Location.t
+  | Lexing of Middle.Location.t
+  | UnexpectedEOF of Middle.Location.t
   | Include of string * Middle.Location.t
   | Parsing of string * Middle.Location_span.t
 
@@ -48,12 +49,18 @@ let pp_syntax_error ?printed_filename ppf = function
         (Middle.Location_span.to_string ?printed_filename loc_span)
         pp_context_with_message
         (message, loc_span.begin_loc)
-  | Lexing (_, loc) ->
+  | Lexing loc ->
       Fmt.pf ppf "Syntax error in %s, lexing error:@,%a@."
         (Middle.Location.to_string ?printed_filename
            {loc with col_num= loc.col_num - 1})
         pp_context_with_message
         ("Invalid character found.", loc)
+  | UnexpectedEOF loc ->
+      Fmt.pf ppf "Syntax error in %s, lexing error:@,%a@."
+        (Middle.Location.to_string ?printed_filename
+           {loc with col_num= loc.col_num - 1})
+        pp_context_with_message
+        ("Unexpected end of input", loc)
   | Include (message, loc) ->
       Fmt.pf ppf "Syntax error in %s, include error:@,%a@."
         (Middle.Location.to_string loc ?printed_filename)

@@ -24,17 +24,24 @@ let stan2cpp model_name model_string is_flag_set =
   Typechecker.check_that_all_functions_have_definition :=
     not (is_flag_set "allow_undefined" || is_flag_set "allow-undefined") ;
   Transform_Mir.use_opencl := is_flag_set "use-opencl" ;
-  Stan_math_code_gen.standalone_functions := is_flag_set "standalone-functions" ;
+  Stan_math_code_gen.standalone_functions :=
+    is_flag_set "standalone-functions" || is_flag_set "functions-only" ;
   With_return.with_return (fun r ->
       if is_flag_set "version" then
         r.return (Result.Ok (Fmt.strf "%s" version), [], []) ;
       let ast, parser_warnings =
-        Parse.parse_string Parser.Incremental.program model_string
+        if is_flag_set "functions-only" then
+          Parse.parse_string Parser.Incremental.functions_only model_string
+        else Parse.parse_string Parser.Incremental.program model_string
       in
       let open Result.Monad_infix in
       if is_flag_set "auto-format" then
         r.return
-          ( (ast >>| fun ast -> Pretty_printing.pretty_print_program ast)
+          ( ( ast
+            >>| fun ast ->
+            Pretty_printing.pretty_print_program
+              ~bare_functions:(is_flag_set "functions-only")
+              ast )
           , parser_warnings
           , [] ) ;
       let result =
@@ -53,6 +60,7 @@ let stan2cpp model_name model_string is_flag_set =
           r.return
             ( Result.Ok
                 (Pretty_printing.pretty_print_typed_program
+                   ~bare_functions:(is_flag_set "functions-only")
                    (Canonicalize.canonicalize_program typed_ast))
             , warnings
             , [] ) ;
