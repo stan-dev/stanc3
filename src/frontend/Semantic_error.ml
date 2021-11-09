@@ -175,7 +175,9 @@ module TypeError = struct
           | "lupdf" -> "lupmf"
           | "lpmf" -> "lpdf"
           | "lupmf" -> "lupdf"
-          | _ -> raise_s [%message "This should never happen."]
+          | _ ->
+              Common.FatalError.fatal_error_msg
+                [%message "Bad suffix:" (suffix : string)]
         in
         Fmt.pf ppf
           "Function '%s_%s' is not implemented for distribution '%s', use \

@@ -1216,9 +1216,8 @@ and check_var_decl_initial_value loc cf tenv id init_val_opt =
       match (ts.stmt, ts.smeta.return_type) with
       | Assignment {assign_rhs= ue; _}, NoReturnType -> Some ue
       | _ ->
-          raise_s
-            [%message "Internal error: check_var_decl: `Assignment` expected."]
-      )
+          Common.FatalError.fatal_error_msg
+            [%message " check_var_decl: `Assignment` expected."] )
   | None -> None
 
 and check_transformation cf tenv ut trans =
@@ -1445,7 +1444,8 @@ and check_statement (cf : context_flags_record) (tenv : Env.t)
   | Profile (name, vdsl) -> (tenv, check_profile loc cf tenv name vdsl)
   | VarDecl {decl_type= Unsized _; _} ->
       (* currently unallowed by parser *)
-      raise_s [%message "Don't support unsized declarations yet."]
+      Common.FatalError.fatal_error_msg
+        [%message "Don't support unsized declarations yet."]
   (* these two are special in that they're allowed to change the type environment *)
   | VarDecl
       { decl_type= Sized st
@@ -1495,9 +1495,9 @@ let verify_correctness_invariant (ast : untyped_program)
   let detyped = untyped_program_of_typed_program decorated_ast in
   if compare_untyped_program ast detyped = 0 then ()
   else
-    raise_s
+    Common.FatalError.fatal_error_msg
       [%message
-        "Type checked AST does not match original AST. Please file a bug!"
+        "Type checked AST does not match original AST. "
           (detyped : untyped_program)
           (ast : untyped_program)]
 

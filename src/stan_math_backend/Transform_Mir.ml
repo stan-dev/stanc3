@@ -152,7 +152,8 @@ let data_read smeta (decl_id, st) =
   | UArray UInt | UArray UReal ->
       [Assignment ((decl_id, flat_type, []), readfnapp decl_var) |> swrap]
   | UFun _ | UMathLibraryFunction ->
-      raise_s [%message "Cannot read a function type."]
+      Common.FatalError.fatal_error_msg
+        [%message "Cannot read a function type."]
   | UVector | URowVector | UMatrix | UArray _ ->
       let decl, assign, flat_var =
         let decl_id = decl_id ^ "_flat__" in

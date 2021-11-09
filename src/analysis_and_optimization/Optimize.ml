@@ -148,13 +148,13 @@ let handle_early_returns opt_var b =
                 ; meta= Location_span.empty }
             ; {pattern= Break; meta= Location_span.empty} ]
       | Some _, None ->
-          raise_s
+          Common.FatalError.fatal_error_msg
             [%message
               ( "Function should return a value but found an empty return \
                  statement."
                 : string )]
       | None, Some _ ->
-          raise_s
+          Common.FatalError.fatal_error_msg
             [%message
               ( "Expected a void function but found a non-empty return \
                  statement."
@@ -364,7 +364,8 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.({pattern; meta}) =
               | Var x -> (x, [])
               | Indexed ({pattern= Var x; _}, l) -> (x, l)
               | _ as w ->
-                  raise_s [%sexp (w : Expr.Typed.t Expr.Fixed.Pattern.t)]
+                  Common.FatalError.fatal_error_msg
+                    [%sexp (w : Expr.Typed.t Expr.Fixed.Pattern.t)]
             in
             slist_concat_no_loc
               (dl2 @ dl1 @ sl2 @ sl1)

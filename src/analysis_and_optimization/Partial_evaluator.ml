@@ -22,7 +22,7 @@ let apply_prefix_operator_int (op : string) i =
         | "PPlus__" -> i
         | "PMinus__" -> -i
         | "PNot__" -> if i = 0 then 1 else 0
-        | s -> raise_s [%sexp (s : string)] ) )
+        | s -> Common.FatalError.fatal_error_msg [%message s] ) )
 
 let apply_prefix_operator_real (op : string) i =
   Expr.Fixed.Pattern.Lit
@@ -31,7 +31,7 @@ let apply_prefix_operator_real (op : string) i =
         ( match op with
         | "PPlus__" -> i
         | "PMinus__" -> -.i
-        | s -> raise_s [%sexp (s : string)] ) )
+        | s -> Common.FatalError.fatal_error_msg [%message s] ) )
 
 let apply_operator_int (op : string) i1 i2 =
   Expr.Fixed.Pattern.Lit
@@ -49,7 +49,7 @@ let apply_operator_int (op : string) i1 i2 =
         | "Leq__" -> Bool.to_int (i1 <= i2)
         | "Greater__" -> Bool.to_int (i1 > i2)
         | "Geq__" -> Bool.to_int (i1 >= i2)
-        | s -> raise_s [%sexp (s : string)] ) )
+        | s -> Common.FatalError.fatal_error_msg [%message s] ) )
 
 let apply_arithmetic_operator_real (op : string) r1 r2 =
   Expr.Fixed.Pattern.Lit
@@ -60,7 +60,7 @@ let apply_arithmetic_operator_real (op : string) r1 r2 =
         | "Minus__" -> r1 -. r2
         | "Times__" -> r1 *. r2
         | "Divide__" -> r1 /. r2
-        | s -> raise_s [%sexp (s : string)] ) )
+        | s -> Common.FatalError.fatal_error_msg [%message s] ) )
 
 let apply_logical_operator_real (op : string) r1 r2 =
   Expr.Fixed.Pattern.Lit
@@ -73,7 +73,7 @@ let apply_logical_operator_real (op : string) r1 r2 =
         | "Leq__" -> Bool.to_int (r1 <= r2)
         | "Greater__" -> Bool.to_int (r1 > r2)
         | "Geq__" -> Bool.to_int (r1 >= r2)
-        | s -> raise_s [%sexp (s : string)] ) )
+        | s -> Common.FatalError.fatal_error_msg [%message s] ) )
 
 let is_multi_index = function
   | Index.MultiIndex _ | Upfrom _ | Between _ | All -> true
@@ -1021,9 +1021,9 @@ let rec simplify_index_expr pattern =
                  ; meta }
                , outer_tl ))
       | inner_singles, (([] | Single _ :: _) as multis) ->
-          raise_s
+          Common.FatalError.fatal_error_msg
             [%message
-              "Impossible! There must be a multi-index."
+              " There must be a multi-index."
                 (inner_singles : Expr.Typed.t Index.t list)
                 (multis : Expr.Typed.t Index.t list)] )
     | e -> e)

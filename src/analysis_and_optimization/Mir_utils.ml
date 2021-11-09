@@ -241,7 +241,9 @@ let fwd_traverse_statement stmt ~init ~f =
 let vexpr_of_expr_exn Expr.Fixed.({pattern; _}) =
   match pattern with
   | Var s -> VVar s
-  | _ -> raise (Failure "Non-var expression found, but var expected")
+  | _ ->
+      Common.FatalError.fatal_error_msg
+        [%message "FNon-var expression found, but var expected"]
 
 (** See interface file *)
 let rec expr_var_set Expr.Fixed.({pattern; meta}) =
@@ -291,7 +293,9 @@ let expr_assigned_var Expr.Fixed.({pattern; _}) =
   match pattern with
   | Var s -> VVar s
   | Indexed ({pattern= Var s; _}, _) -> VVar s
-  | _ -> raise (Failure "Unimplemented: analysis of assigning to non-var")
+  | _ ->
+      Common.FatalError.fatal_error_msg
+        [%message "Unimplemented: analysis of assigning to non-var"]
 
 (** See interface file *)
 let rec summation_terms (Expr.Fixed.({pattern; _}) as rhs) =

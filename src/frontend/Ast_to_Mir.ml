@@ -5,7 +5,7 @@ open Middle
 let unwrap_return_exn = function
   | Some (UnsizedType.ReturnType ut) -> ut
   | x ->
-      raise_s
+      Common.FatalError.fatal_error_msg
         [%message
           "Unexpected return type " (x : UnsizedType.returntype option)]
 
@@ -95,7 +95,7 @@ and trans_idx = function
     | UInt -> Single (trans_expr e)
     | UArray _ -> MultiIndex (trans_expr e)
     | _ ->
-        raise_s
+        Common.FatalError.fatal_error_msg
           [%message "Expecting int or array" (e.emeta.type_ : UnsizedType.t)] )
 
 and trans_exprs exprs = List.map ~f:trans_expr exprs
@@ -263,7 +263,7 @@ let param_size transform sizedtype =
     | SVector (mem_pattern, d) | SMatrix (mem_pattern, d, _) ->
         SVector (mem_pattern, f d)
     | SInt | SReal | SComplex | SRowVector _ ->
-        raise_s
+        Common.FatalError.fatal_error_msg
           [%message
             "Expecting SVector or SMatrix, got " (st : Expr.Typed.t SizedType.t)]
   in
@@ -272,7 +272,7 @@ let param_size transform sizedtype =
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen_mat f t, d)
     | SMatrix (mem_pattern, d1, d2) -> SVector (mem_pattern, f d1 d2)
     | SInt | SReal | SComplex | SRowVector _ | SVector _ ->
-        raise_s
+        Common.FatalError.fatal_error_msg
           [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
   in
   let k_choose_2 k =
@@ -307,7 +307,7 @@ let remove_possibly_exn pst action loc =
   match pst with
   | Type.Sized st -> st
   | Unsized _ ->
-      raise_s
+      Common.FatalError.fatal_error_msg
         [%message
           "Error extracting sizedtype" ~action ~loc:(loc : Location_span.t)]
 
@@ -394,8 +394,7 @@ let trans_decl {transform_action; dadlevel} smeta decl_type transform
   if Utils.is_user_ident decl_id then
     let constrain_checks =
       match transform_action with
-      | Constrain | Unconstrain ->
-          raise_s [%message "This should never happen."]
+      | Constrain | Unconstrain -> Common.FatalError.fatal_error ()
       | Check ->
           check_transform_shape decl_id decl_var smeta transform
           @ check_decl decl_var dt decl_id transform smeta dadlevel
@@ -408,7 +407,7 @@ let unwrap_block_or_skip = function
   | [({Stmt.Fixed.pattern= Block _; _} as b)] -> Some b
   | [{pattern= Skip; _}] -> None
   | x ->
-      raise_s
+      Common.FatalError.fatal_error_msg
         [%message "Expecting a block or skip, not" (x : Stmt.Located.t list)]
 
 let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
@@ -553,7 +552,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       in
       Stmt.Helpers.[ensure_var (for_each bodyfn) iteratee' smeta]
   | Ast.FunDef _ ->
-      raise_s
+      Common.FatalError.fatal_error_msg
         [%message
           "Found function definition statement outside of function block"]
   | Ast.VarDecl
@@ -587,7 +586,7 @@ let trans_fun_def ud_dists (ts : Ast.typed_statement) =
               |> unwrap_block_or_skip
           ; fdloc= ts.smeta.loc } ]
   | _ ->
-      raise_s
+      Common.FatalError.fatal_error_msg
         [%message "Found non-function definition statement in function block"]
 
 let get_block block prog =

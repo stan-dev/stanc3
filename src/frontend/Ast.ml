@@ -81,7 +81,9 @@ let mk_typed_expression ~expr ~loc ~type_ ~ad_level =
 
 let expr_loc_lub exprs =
   match List.map ~f:(fun e -> e.emeta.loc) exprs with
-  | [] -> raise_s [%message "Can't find location lub for empty list"]
+  | [] ->
+      Common.FatalError.fatal_error_msg
+        [%message "Can't find location lub for empty list"]
   | [hd] -> hd
   | x1 :: tl -> List.fold ~init:x1 ~f:Location_span.merge tl
 
@@ -286,7 +288,9 @@ let rec lvalue_of_expr {expr; emeta} =
       ( match expr with
       | Variable s -> LVariable s
       | Indexed (l, i) -> LIndexed (lvalue_of_expr l, i)
-      | _ -> failwith "Trying to convert illegal expression to lval." )
+      | _ ->
+          Common.FatalError.fatal_error_msg
+            [%message "Trying to convert illegal expression to lval."] )
   ; lmeta= emeta }
 
 let rec id_of_lvalue {lval; _} =

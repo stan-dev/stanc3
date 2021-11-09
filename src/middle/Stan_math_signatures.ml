@@ -378,7 +378,9 @@ let dist_name_suffix udf_names name =
     |> List.hd
   with
   | Some hd -> hd
-  | None -> raise_s [%message "Couldn't find distribution " name]
+  | None ->
+      Common.FatalError.fatal_error_msg
+        [%message "Couldn't find distribution " name]
 
 let operator_to_stan_math_fns op =
   match op with

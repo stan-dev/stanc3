@@ -105,7 +105,9 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
   | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
-  | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
+  | x ->
+      Common.FatalError.fatal_error_msg
+        [%message (x : UnsizedType.t) "not implemented"]
 
 let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   match ut with
@@ -115,7 +117,9 @@ let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   | UArray t ->
       (* Expressions are not accepted for arrays of Eigen::Matrix *)
       pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
-  | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
+  | x ->
+      Common.FatalError.fatal_error_msg
+        [%message (x : UnsizedType.t) "not implemented"]
 
 let pp_unsizedtype_local ppf (adtype, ut) =
   let s = local_scalar ut adtype in
@@ -177,7 +181,8 @@ let check_to_string = function
   | Upper _ -> Some "less_or_equal"
   | CholeskyCov -> Some "cholesky_factor"
   | LowerUpper _ ->
-      raise_s [%message "LowerUpper is really two other checks tied together"]
+      Common.FatalError.fatal_error_msg
+        [%message "LowerUpper is really two other checks tied together"]
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> None
   | t -> constraint_to_string t
 
@@ -251,7 +256,8 @@ and gen_operator_app = function
   | Modulo -> fun ppf es -> pp_binary_f ppf "modulus" es
   | LDivide -> fun ppf es -> pp_binary_f ppf "mdivide_left" es
   | And | Or ->
-      raise_s [%message "And/Or should have been converted to an expression"]
+      Common.FatalError.fatal_error_msg
+        [%message "And/Or should have been converted to an expression"]
   | EltTimes ->
       fun ppf es ->
         pp_scalar_binary ppf "(%a@ *@ %a)" "elt_multiply(@,%a,@ %a)" es
@@ -305,7 +311,8 @@ and read_data ut ppf es =
     | UArray UComplex -> "c"
     | UInt | UReal | UComplex | UVector | URowVector | UMatrix | UArray _
      |UFun _ | UMathLibraryFunction ->
-        raise_s [%message "Can't ReadData of " (ut : UnsizedType.t)]
+        Common.FatalError.fatal_error_msg
+          [%message "Can't ReadData of " (ut : UnsizedType.t)]
   in
   pf ppf "context__.vals_%s(%a)" i_or_r_or_c pp_expr (List.hd_exn es)
 
@@ -434,7 +441,9 @@ and pp_constrain_funapp constrain_or_un_str constraint_flavor ppf = function
   | var :: args ->
       pf ppf "@[<hov 2>stan::math::%s_%s(@,%a@])" constraint_flavor
         constrain_or_un_str (list ~sep:comma pp_expr) (var :: args)
-  | es -> raise_s [%message "Bad constraint " (es : Expr.Typed.t list)]
+  | es ->
+      Common.FatalError.fatal_error_msg
+        [%message "Bad constraint " (es : Expr.Typed.t list)]
 
 and pp_user_defined_fun ppf (f, suffix, es) =
   let extra_args = suffix_args suffix @ ["pstream__"] in
@@ -455,7 +464,9 @@ and pp_compiler_internal_fn ad ut f ppf es =
       let ut =
         match ut with
         | UnsizedType.UArray ut -> ut
-        | _ -> raise_s [%message "Array literal must have array type"]
+        | _ ->
+            Common.FatalError.fatal_error_msg
+              [%message "Array literal must have array type"]
       in
       pp_array_literal ut ppf es
   | FnMakeRowVec -> (
@@ -469,7 +480,7 @@ and pp_compiler_internal_fn ad ut f ppf es =
     | UMatrix ->
         pf ppf "stan::math::to_matrix(@,%a)" (pp_array_literal URowVector) es
     | _ ->
-        raise_s
+        Common.FatalError.fatal_error_msg
           [%message
             "Unexpected type for row vector literal" (ut : UnsizedType.t)] )
   | FnReadData -> read_data ut ppf es
@@ -518,13 +529,13 @@ and pp_indexed_simple ppf (obj, idcs) =
   let idx_minus_one = function
     | Index.Single e -> minus_one e
     | MultiIndex e | Between (e, _) | Upfrom e ->
-        raise_s
+        Common.FatalError.fatal_error_msg
           [%message
             "No non-Single indices allowed" ~obj
               (idcs : Expr.Typed.t Index.t list)
               (Expr.Typed.loc_of e : Location_span.t)]
     | All ->
-        raise_s
+        Common.FatalError.fatal_error_msg
           [%message
             "No non-Single indices allowed" ~obj
               (idcs : Expr.Typed.t Index.t list)]
