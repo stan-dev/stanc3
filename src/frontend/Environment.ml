@@ -96,11 +96,14 @@ module Distance = struct
             if edist < cmin then loop lst (candidate, edist)
             else loop lst (celt, cmin)
     in
-    let suggestion, _ = loop lst (name, limit) in
-    (* if [name = suggestion], that implies that nothing was found which had an
+    (* don't provide suggestions for length-1 names. Always ends up suggesting 'e' *)
+    if n = 1 then None
+    else
+      let suggestion, _ = loop lst (name, limit) in
+      (* if [name = suggestion], that implies that nothing was found which had an
       edit distance less than the limit (because name is the inital thing given
       to [loop]), so we return None *)
-    if name <> suggestion then Some suggestion else None
+      if name <> suggestion then Some suggestion else None
 end
 
 let max_distance = 3
