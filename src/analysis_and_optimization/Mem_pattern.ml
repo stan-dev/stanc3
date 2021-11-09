@@ -3,23 +3,6 @@ open Middle
 open Middle.Expr
 
 (**
- * Return a set of name and meta pairs for all variables in an expression.
- *)
-let rec expr_set Expr.Fixed.({pattern; meta}) =
-  let union_recur exprs = Set.Poly.union_list (List.map exprs ~f:expr_set) in
-  match pattern with
-  | Var s -> Set.Poly.singleton (Dataflow_types.VVar s, meta)
-  | Lit _ -> Set.Poly.empty
-  | FunApp (_, exprs) -> union_recur exprs
-  | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
-  | Indexed (expr, ix) ->
-      let apply_idx =
-        Index.apply ~default:Set.Poly.empty ~merge:Set.Poly.union expr_set
-      in
-      Set.Poly.union_list (expr_set expr :: List.map ix ~f:apply_idx)
-  | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
-
-(**
  * Return a Var expression of the name for each type
  *  containing an eigen matrix
  *)
@@ -35,21 +18,6 @@ let rec matrix_set
     | Indexed (expr, _) -> matrix_set expr
     | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
   else Set.Poly.empty
-
-(**
- * Return a set of all types containing autodiffable Eigen matrices
- *  in an expression.
- *)
-let query_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
-  let get_expr_eigen_names
-      (Dataflow_types.VVar s, Expr.Typed.Meta.({adlevel; type_; _})) =
-    if
-      UnsizedType.contains_eigen_type type_
-      && adlevel = UnsizedType.AutoDiffable
-    then Some s
-    else None
-  in
-  Set.Poly.filter_map ~f:get_expr_eigen_names (expr_set expr)
 
 (**
  * Return a set of all types containing autodiffable Eigen matrices
@@ -190,7 +158,9 @@ let rec query_initial_demotable_expr (in_loop : bool) Expr.Fixed.({pattern; _})
  * Query a function to detect if it or any of its used 
  *  expression's objects or expressions should be demoted to AoS.
  *
- * The logic here demotes the expressions in a function to AoS if:
+ * The logic here demotes the expressions in a function to AoS if
+ * the function's inner expression returns has a meta type containing a matrix 
+ * and either of :
  * (1) The function is user defined.
  * (2) The Stan math function cannot support AoS
  * @param in_loop A boolean to specify the logic of indexing expressions. See
@@ -225,16 +195,17 @@ and query_initial_demotable_funs (in_loop : bool) (kind : 'a Fun_kind.t)
       Set.Poly.union demoted_eigen_names top_level_eigen_names
 
 (**
- * Check whether right hand side
+ * Check whether any functions in the right hand side expression of an assignment
+ * support SoA. If so then return true, otherwise return false.
  *)
-let rec query_soa_supported_assign_expr
+let rec is_any_soa_supported_expr
     Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({adlevel; _})}) : bool =
   if adlevel = UnsizedType.DataOnly then true
   else
-    let query_expr = query_soa_supported_assign_expr in
+    let query_expr = is_any_soa_supported_expr in
     match pattern with
     | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
-        query_soa_supported_assign_fun kind exprs
+        is_any_soa_supported_fun_expr kind exprs
     | Indexed (expr, (_ : Typed.Meta.t Fixed.t Index.t sexp_list)) ->
         query_expr expr
     | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string))
@@ -247,7 +218,7 @@ let rec query_soa_supported_assign_expr
 (**
  * Return false if all of an assignments rhs expressions do not support SoA.
  *)
-and query_soa_supported_assign_fun (kind : 'a Fun_kind.t)
+and is_any_soa_supported_fun_expr (kind : 'a Fun_kind.t)
     (exprs : Typed.Meta.t Expr.Fixed.t list) : bool =
   match kind with
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) -> false
@@ -258,35 +229,35 @@ and query_soa_supported_assign_fun (kind : 'a Fun_kind.t)
     | "check_matching_dims" -> true
     | _ ->
         is_fun_soa_supported name exprs
-        && List.exists ~f:query_soa_supported_assign_expr exprs )
+        && List.exists ~f:is_any_soa_supported_expr exprs )
 
 (**
  * Return true if the rhs expression of an assignment contains only
  *  combinations of AutoDiffable Reals and Data Matrices
  *)
-let rec query_ad_real_data_matrix_assign
+let rec is_any_ad_real_data_matrix_expr
     Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({adlevel; _})}) : bool =
   if adlevel = UnsizedType.DataOnly then false
   else
     match pattern with
     | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
-        query_ad_real_data_matrix_assign_fun kind exprs
-    | Indexed (expr, _) -> query_ad_real_data_matrix_assign expr
+        is_any_ad_real_data_matrix_expr_fun kind exprs
+    | Indexed (expr, _) -> is_any_ad_real_data_matrix_expr expr
     | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string))
       ->
         false
     | TernaryIf (_, texpr, fexpr) ->
-        query_ad_real_data_matrix_assign texpr
-        || query_ad_real_data_matrix_assign fexpr
+        is_any_ad_real_data_matrix_expr texpr
+        || is_any_ad_real_data_matrix_expr fexpr
     | EAnd (lhs, rhs) | EOr (lhs, rhs) ->
-        query_ad_real_data_matrix_assign lhs
-        && query_ad_real_data_matrix_assign rhs
+        is_any_ad_real_data_matrix_expr lhs
+        && is_any_ad_real_data_matrix_expr rhs
 
 (**
  * Return true if the expressions in a function call are all
  *  combinations of AutoDiffable Reals and Data Matrices
  *)
-and query_ad_real_data_matrix_assign_fun (kind : 'a Fun_kind.t)
+and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
     (exprs : Typed.Meta.t Expr.Fixed.t list) : bool =
   match kind with
   | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
@@ -321,7 +292,7 @@ and query_ad_real_data_matrix_assign_fun (kind : 'a Fun_kind.t)
         in
         match is_args_autodiff_real_data_matrix with
         | true -> true
-        | false -> List.exists ~f:query_ad_real_data_matrix_assign exprs ) )
+        | false -> List.exists ~f:is_any_ad_real_data_matrix_expr exprs ) )
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) -> true
   | CompilerInternal (_ : 'a Internal_fun.t) -> false
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> false
@@ -378,14 +349,16 @@ let rec query_initial_demotable_stmt (in_loop : bool)
       let check_bad_assign =
         match (UnsizedType.contains_eigen_type type_, adlevel) with
         | true, UnsizedType.AutoDiffable ->
-            query_ad_real_data_matrix_assign rhs
-            || not (query_soa_supported_assign_expr rhs)
+            is_any_ad_real_data_matrix_expr rhs
+            || not (is_any_soa_supported_expr rhs)
         | _ -> false
       in
       (* RHS (1)*)
       let is_all_rhs_aos =
-        Set.Poly.length rhs_demotable = Set.Poly.length (query_eigen_names rhs)
+        let all_eigen_names = query_var_eigen_names rhs in
+        Set.Poly.is_subset rhs_demotable ~of_:all_eigen_names
         && Set.Poly.length rhs_demotable <> 0
+        && Set.Poly.length all_eigen_names <> 0
       in
       if is_all_rhs_aos || check_bad_assign then
         let base_set = Set.Poly.union idx_demotable rhs_demotable in
@@ -417,9 +390,15 @@ let rec query_initial_demotable_stmt (in_loop : bool)
         (query_initial_demotable_stmt true body)
   | Skip | Break | Continue | Decl _ -> Set.Poly.empty
 
-(* Look through a statement to see whether it needs modified from
- * SoA to AoS. Returns the set of object names that need demoted
+(** Look through a statement to see whether the objects used in it need to be
+ *  modified from SoA to AoS. Returns the set of object names that need demoted
  * in a statement, if any.
+ * This function looks at Assignment statements, and returns back the 
+ *  set of top level object names given:
+ * 1. If the name of the lhs assignee is in the `aos_exits`, all the names 
+ *  of the expressions with a type containing a matrix are returned.
+ * 2. If the names of the rhs objects containing matrix types are in the subset of 
+ *  aos_exits.
  * @param aos_exits A set of variables that can be demoted.
  * @param pattern The Stmt pattern to query.
  *)
@@ -430,23 +409,18 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
       ( ( (assign_name : string)
         , (_ : UnsizedType.t)
         , (_ : Expr.Typed.t Index.t list) )
-      , rhs ) ->
+      , (rhs : Expr.Typed.t) ) -> (
       let all_rhs_eigen_names = query_var_eigen_names rhs in
-      let rhs_set =
-        match Set.Poly.mem aos_exits assign_name with
-        | true -> all_rhs_eigen_names
-        | false -> Set.Poly.empty
-      in
-      let lhs_set =
+      if Set.Poly.mem aos_exits assign_name then
+        Set.Poly.add all_rhs_eigen_names assign_name
+      else
         match
           Set.Poly.is_subset ~of_:aos_exits all_rhs_eigen_names
           && (not (Set.Poly.is_empty aos_exits))
           && not (Set.Poly.is_empty all_rhs_eigen_names)
         with
-        | true -> Set.Poly.singleton assign_name
-        | false -> Set.Poly.empty
-      in
-      Set.Poly.union rhs_set lhs_set
+        | true -> Set.Poly.add all_rhs_eigen_names assign_name
+        | false -> Set.Poly.empty )
   (* All other statements do not need logic here*)
   | _ -> Set.Poly.empty
 
@@ -456,16 +430,21 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
  **)
 let query_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
   let get_expr_names (Dataflow_types.VVar s, _) = Some s in
-  Set.Poly.filter_map ~f:get_expr_names (expr_set expr)
+  Set.Poly.filter_map ~f:get_expr_names (matrix_set expr)
 
 (**
  * Modify a function and it's subexpressions from SoA <-> AoS and vice versa.
- * @param modifiable_set The set of eigen names that are either demotable 
+ * This performs demotion for sub expressions recursively. The top level 
+ *  expression and it's sub expressions are demoted to SoA if 
+ *  1. The names of the variables in the subexpressions returning 
+ *   objects holding matrices are all in the modifiable set.
+ *  2. The function does not support SoA
+ *  3. The `force` argument is `true`
+ * @param force_demotion If true, forces an expression and it's sub-expressions 
+ *  to be AoS.
+ * @param modifiable_set The set of names that are either demotable 
  *  to AoS or promotable to SoA.
- * @param mem_pattern If AoS, checks if all names in the functions
- *  expressions are in the modifiable set and demotes the function to SoA.
- *  Else if SoA, checks if any of the names in the modifiable set
- *   and if so then promotes the function to SoA.
+ * @param kind A `Fun_kind.t`
  * @param exprs A list of expressions going into the function.
  **)
 let rec modify_kind ?force_demotion:(force = false)
@@ -491,26 +470,26 @@ let rec modify_kind ?force_demotion:(force = false)
         , List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs
         )
   | UserDefined _ as udf ->
-      (udf, List.map ~f:(modify_expr ~force_demotion:true modifiable_set) exprs)
+      ( udf
+      , List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs )
   | (_ : 'a Fun_kind.t) ->
       ( kind
       , List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs )
 
 (** 
-* Modify the expressions to demote/promote from AoS <-> SoA and vice versa
-* The only real path in the below is on the functions.
-*
-* For AoS, we check that *all* of the matrix and vector names
-*  in the list of expressions are in the `modifiable_set` and if so
-*  make the function AoS. 
-* For SoA, we check that *any* of the matrix and vector names
-*  in the list of expressions are in the `modifiable_set` and if so
-*  make the function SoA. 
-* @param mem_pattern The memory pattern to change functions to.
-* @param modifiable_set The name of the variables whose
-*  associated expressions we want to modify.
-* @param pattern The expression to modify.
-*)
+ * Modify an expression and it's subexpressions from SoA <-> AoS
+ *  and vice versa. The only real paths in the below is on the
+ *  functions and ternary expressions.
+ *
+ * The logic for functions is defined in `modify_kind`.
+ * `TernaryIf` is forcefully demoted to AoS if the type of the expression
+ *  contains a matrix.
+ * @param force_demotion If true, forces an expression and it's sub-expressions 
+ *  to be AoS.
+ * @param modifiable_set The name of the variables whose
+ *  associated expressions we want to modify.
+ * @param pattern The expression to modify.
+ *)
 and modify_expr_pattern ?force_demotion:(force = false)
     (modifiable_set : string Set.Poly.t)
     (pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t) =
@@ -530,7 +509,6 @@ and modify_expr_pattern ?force_demotion:(force = false)
         || UnsizedType.contains_eigen_type texpr.meta.type_
       in
       if is_eigen_return then
-        (*If either side fails we need to force both sides to match*)
         TernaryIf
           ( mod_expr ~force_demotion:force predicate
           , mod_expr ~force_demotion:true texpr
@@ -563,9 +541,10 @@ and modify_expr ?force_demotion:(force = false)
 
 (**
 * Modify statement patterns in the MIR from AoS <-> SoA and vice versa 
-* @param mem_pattern A mem_pattern to modify expressions to. For the 
-*  given memory pattern, this modifies 
-*  statement patterns and expressions to it.
+* For `Decl` and `Assignment`'s reading in parameters, we demote to AoS
+*  if the `decl_id` (or assign name) is in the modifiable set and
+* otherwise promote the statement to `SoA`.
+* 
 * @param pattern The statement pattern to modify 
 * @param modifiable_set The name of the variable we are searching for.
 *)
@@ -574,7 +553,7 @@ let rec modify_stmt_pattern
       ( Expr.Typed.Meta.t Expr.Fixed.t
       , (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t )
       Stmt.Fixed.Pattern.t) (modifiable_set : string Core_kernel.Set.Poly.t) =
-  let mod_expr = Mir_utils.map_rec_expr (modify_expr_pattern modifiable_set) in
+  let mod_expr force = modify_expr ~force_demotion:force modifiable_set in
   let mod_stmt stmt = modify_stmt stmt modifiable_set in
   match pattern with
   | Stmt.Fixed.Pattern.Decl
@@ -598,38 +577,35 @@ let rec modify_stmt_pattern
         as assigner ) ) ->
       if Set.Poly.mem modifiable_set name then
         Assignment
-          ( (name, ut, List.map ~f:(Index.map mod_expr) lhs)
+          ( (name, ut, List.map ~f:(Index.map (mod_expr false)) lhs)
           , { assigner with
               pattern=
                 FunApp
                   ( CompilerInternal
                       (FnReadParam {read_param with mem_pattern= AoS})
-                  , List.map ~f:mod_expr args ) } )
+                  , List.map ~f:(mod_expr true) args ) } )
       else
         Assignment
-          ( (name, ut, List.map ~f:(Index.map mod_expr) lhs)
+          ( (name, ut, List.map ~f:(Index.map (mod_expr false)) lhs)
           , { assigner with
               pattern=
                 FunApp
                   ( CompilerInternal
                       (FnReadParam {read_param with mem_pattern= SoA})
-                  , List.map ~f:mod_expr args ) } )
+                  , List.map ~f:(mod_expr false) args ) } )
   | Assignment (((name : string), (ut : UnsizedType.t), idx), rhs) ->
       if Set.Poly.mem modifiable_set name then
         (*If assignee is in bad set, force demotion of rhs functions*)
-        let all_expr_var_names = query_names rhs in
-        let mod_assign_expr =
-          Mir_utils.map_rec_expr (modify_expr_pattern all_expr_var_names)
-        in
         Assignment
-          ( (name, ut, List.map ~f:(Index.map mod_assign_expr) idx)
-          , mod_assign_expr rhs )
+          ( (name, ut, List.map ~f:(Index.map (mod_expr false)) idx)
+          , mod_expr true rhs )
       else
         Assignment
-          ((name, ut, List.map ~f:(Index.map mod_expr) idx), mod_expr rhs)
+          ( (name, ut, List.map ~f:(Index.map (mod_expr false)) idx)
+          , (mod_expr false) rhs )
   | IfElse (predicate, true_stmt, op_false_stmt) ->
       IfElse
-        ( mod_expr predicate
+        ( (mod_expr false) predicate
         , mod_stmt true_stmt
         , Option.map ~f:mod_stmt op_false_stmt )
   | Block stmts -> Block (List.map ~f:mod_stmt stmts)
@@ -637,12 +613,15 @@ let rec modify_stmt_pattern
   | For ({lower; upper; body; _} as loop) ->
       Stmt.Fixed.Pattern.For
         { loop with
-          lower= mod_expr lower; upper= mod_expr upper; body= mod_stmt body }
-  | TargetPE expr -> TargetPE (mod_expr expr)
-  | Return optional_expr -> Return (Option.map ~f:mod_expr optional_expr)
+          lower= mod_expr false lower
+        ; upper= mod_expr false upper
+        ; body= mod_stmt body }
+  | TargetPE expr -> TargetPE ((mod_expr false) expr)
+  | Return optional_expr ->
+      Return (Option.map ~f:(mod_expr false) optional_expr)
   | Profile ((p_name : string), stmt) ->
       Profile (p_name, List.map ~f:mod_stmt stmt)
-  | While (predicate, body) -> While (mod_expr predicate, mod_stmt body)
+  | While (predicate, body) -> While ((mod_expr false) predicate, mod_stmt body)
   | Skip | Break | Continue | Decl _ -> pattern
 
 (**
