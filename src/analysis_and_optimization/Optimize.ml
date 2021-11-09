@@ -892,8 +892,10 @@ let transform_mir_blocks (mir : (Expr.Typed.t, Stmt.Located.t) Program.t)
     List.map mir.functions_block ~f:(fun fs ->
         let new_body =
           match fs.fdbody with
-          | Some (Stmt.Fixed.({pattern= SList lst | Block lst; _}) as stmt) ->
+          | Some (Stmt.Fixed.({pattern= SList lst; _}) as stmt) ->
               Some {stmt with pattern= SList (transformer lst)}
+          | Some (Stmt.Fixed.({pattern= Block lst; _}) as stmt) ->
+              Some {stmt with pattern= Block (transformer lst)}
           | alt -> alt
         in
         {fs with fdbody= new_body} )
@@ -1240,8 +1242,6 @@ let optimization_suite ?(settings = all_optimizations) mir =
     ; (constant_propagation, settings.constant_propagation)
       (* Book: Loop simplification *)
     ; (static_loop_unrolling, settings.static_loop_unrolling)
-      (*Remove decls immediately assigned to*)
-    ; (allow_uninitialized_decls, settings.allow_uninitialized_decls)
       (* Book: Dead-code elimination *)
       (* Matthijs: Everything < Dead-code elimination *)
     ; (dead_code_elimination, settings.dead_code_elimination)
@@ -1249,6 +1249,8 @@ let optimization_suite ?(settings = all_optimizations) mir =
     ; (list_collapsing, settings.list_collapsing)
       (* Book: Machine idioms and instruction combining *)
     ; (optimize_ad_levels, settings.optimize_ad_levels)
+      (*Remove decls immediately assigned to*)
+    ; (allow_uninitialized_decls, settings.allow_uninitialized_decls)
       (* Book: Machine idioms and instruction combining *)
       (* Matthijs: Everything < block_fixing *)
     ; (block_fixing, settings.block_fixing) ]

@@ -6,7 +6,7 @@
     (fdargs ((AutoDiffable n UInt)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (IfElse
              ((pattern
@@ -62,7 +62,7 @@
       (DataOnly x_int (UArray UInt))))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Decl (decl_adtype AutoDiffable) (decl_id dydt)
              (decl_type
@@ -155,7 +155,7 @@
    ((fdrt (UReal)) (fdname foo_bar0) (fdsuffix FnPlain) (fdargs ())
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Lit Real 0.0))
@@ -167,7 +167,7 @@
     (fdargs ((AutoDiffable x UReal)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Lit Real 1.0))
@@ -179,7 +179,7 @@
     (fdargs ((AutoDiffable x UReal) (AutoDiffable y UReal)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Lit Real 2.0))
@@ -191,7 +191,7 @@
     (fdargs ((AutoDiffable y UInt) (AutoDiffable lambda UReal)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Lit Real 1.0))
@@ -203,7 +203,7 @@
     (fdargs ((AutoDiffable y UInt) (AutoDiffable lambda UReal)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Lit Real 1.0))
@@ -215,7 +215,7 @@
     (fdargs ((AutoDiffable y UInt) (AutoDiffable lambda UReal)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Lit Real 1.0))
@@ -227,7 +227,7 @@
     (fdargs ((AutoDiffable mu UReal) (AutoDiffable sigma UReal)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern
@@ -246,7 +246,7 @@
     (fdargs ((AutoDiffable u UReal)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (TargetPE
              ((pattern
@@ -282,7 +282,7 @@
     (fdargs ((AutoDiffable a UInt)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (While
              ((pattern (Lit Int 1))
@@ -1140,7 +1140,7 @@
     (fdargs ((AutoDiffable a UInt)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Decl (decl_adtype AutoDiffable) (decl_id vs)
              (decl_type
@@ -1211,7 +1211,7 @@
     (fdargs ((AutoDiffable t UReal) (AutoDiffable n UInt)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern
@@ -1231,7 +1231,7 @@
     (fdargs ((AutoDiffable x UReal)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern
@@ -1250,7 +1250,7 @@
     (fdargs ((AutoDiffable x UReal)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (NRFunApp (CompilerInternal FnReject)
              (((pattern (Lit Str "user-specified rejection"))
@@ -1266,7 +1266,7 @@
       (AutoDiffable min_ UReal)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Decl (decl_adtype AutoDiffable) (decl_id abs_diff)
              (decl_type (Sized SReal)) (initialize true)))
@@ -1431,7 +1431,7 @@
       (DataOnly data_r (UArray UReal)) (DataOnly data_i (UArray UInt))))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern
@@ -1459,7 +1459,7 @@
       (AutoDiffable x4 UReal) (AutoDiffable x5 UReal)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Var x1))
@@ -1474,7 +1474,7 @@
       (AutoDiffable x6 UReal)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Var x1))
@@ -1486,7 +1486,7 @@
     (fdargs ((AutoDiffable mat UMatrix) (AutoDiffable invert UInt)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (NRFunApp (CompilerInternal FnValidateSize)
              (((pattern (Lit Str o))
@@ -1593,7 +1593,7 @@
       (AutoDiffable a12 (UArray (UArray UMatrix)))))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (NRFunApp (CompilerInternal FnPrint)
              (((pattern (Lit Str hi))
@@ -1613,7 +1613,7 @@
       (AutoDiffable a12 (UArray (UArray UMatrix)))))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Var a1))
@@ -1633,7 +1633,7 @@
       (AutoDiffable a12 (UArray (UArray UMatrix)))))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Var a2))
@@ -1654,7 +1654,7 @@
       (AutoDiffable a12 (UArray (UArray UMatrix)))))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Var a3))
@@ -1676,7 +1676,7 @@
       (AutoDiffable a12 (UArray (UArray UMatrix)))))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Var a4))
@@ -1696,7 +1696,7 @@
       (AutoDiffable a12 (UArray (UArray UMatrix)))))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Var a5))
@@ -1718,7 +1718,7 @@
       (AutoDiffable a12 (UArray (UArray UMatrix)))))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Var a6))
@@ -1740,7 +1740,7 @@
       (AutoDiffable a12 (UArray (UArray UMatrix)))))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Var a7))
@@ -1760,7 +1760,7 @@
       (AutoDiffable a12 (UArray (UArray UMatrix)))))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Var a8))
@@ -1782,7 +1782,7 @@
       (AutoDiffable a12 (UArray (UArray UMatrix)))))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Var a9))
@@ -1804,7 +1804,7 @@
       (AutoDiffable a12 (UArray (UArray UMatrix)))))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Var a10))
@@ -1824,7 +1824,7 @@
       (AutoDiffable a12 (UArray (UArray UMatrix)))))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Var a11))
@@ -1846,7 +1846,7 @@
       (AutoDiffable a12 (UArray (UArray UMatrix)))))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern (Var a12))
@@ -1859,7 +1859,7 @@
    ((fdrt ()) (fdname foo_6) (fdsuffix FnPlain) (fdargs ())
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Decl (decl_adtype AutoDiffable) (decl_id a)
              (decl_type (Sized SInt)) (initialize true)))
@@ -1920,7 +1920,7 @@
    ((fdrt (UMatrix)) (fdname matfoo) (fdsuffix FnPlain) (fdargs ())
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern
@@ -2034,7 +2034,7 @@
    ((fdrt (UVector)) (fdname vecfoo) (fdsuffix FnPlain) (fdargs ())
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Return
              (((pattern
@@ -2081,7 +2081,7 @@
     (fdargs ((AutoDiffable mu UReal)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Decl (decl_adtype AutoDiffable) (decl_id l)
              (decl_type
@@ -2113,7 +2113,7 @@
     (fdargs ((AutoDiffable mu UReal)))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Decl (decl_adtype AutoDiffable) (decl_id l)
              (decl_type
@@ -2207,7 +2207,7 @@
       (AutoDiffable dat (UArray UReal)) (AutoDiffable dat_int (UArray UInt))))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Decl (decl_adtype AutoDiffable) (decl_id f_x)
              (decl_type
@@ -2294,7 +2294,7 @@
       (DataOnly x_r (UArray UReal)) (DataOnly x_i (UArray UInt))))
     (fdbody
      (((pattern
-        (SList
+        (Block
          (((pattern
             (Decl (decl_adtype AutoDiffable) (decl_id lpmf)
              (decl_type
