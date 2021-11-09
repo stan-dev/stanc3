@@ -10,7 +10,7 @@ data {
    vector[4] x;
 }
 parameters {
-  // nyllary
+  // nullary
   real e;
   real pi;
   real log2;
@@ -39,6 +39,7 @@ parameters {
   real length;
   simplex[5] validate_positive_index;
   real assign;
+  real stan_print;
 
   //more
   real bernoulli_logit_glm_lpmf;
@@ -67,4 +68,5 @@ transformed parameters {
   vector[num_elements(x)] result = x * 5.0;
 }
 model {
+  print("hello world");
 }

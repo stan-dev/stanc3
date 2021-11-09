@@ -313,13 +313,16 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
         | _ -> recurse e
       in
       let rhs = maybe_deep_copy rhs in
-      pf ppf "@[<hov 2>assign(@,%s,@ %a,@ %S%s%a@]);" assignee pp_expr rhs
+      pf ppf "@[<hov 2>stan::model::assign(@,%s,@ %a,@ %S%s%a@]);" assignee
+        pp_expr rhs
         (strf "assigning variable %s" assignee)
         (if List.length idcs = 0 then "" else ", ")
         pp_indexes idcs
   | TargetPE e -> pf ppf "@[<hov 2>lp_accum__.add(@,%a@]);" pp_expr e
   | NRFunApp (CompilerInternal FnPrint, args) ->
-      let pp_arg ppf a = pf ppf "stan_print(pstream__, %a);" pp_expr a in
+      let pp_arg ppf a =
+        pf ppf "stan::math::stan_print(pstream__, %a);" pp_expr a
+      in
       let args = args @ [Expr.Helpers.str "\n"] in
       pf ppf "if (pstream__) %a" pp_block (list ~sep:cut pp_arg, args)
   | NRFunApp (CompilerInternal FnReject, args) ->
