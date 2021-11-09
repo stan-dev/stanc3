@@ -1,8 +1,8 @@
-(** A `Pattern` defines the signature of modules that may be fixed with 
-`Fixed.Make` and `Fixed.Make2`.
+(** A [Pattern] defines the signature of modules that may be fixed with
+[Fixed.Make] and [Fixed.Make2].
 
 These signatures ensure that all the operations we want to support on our
-top level intermediate representations can be defined by the `Fixed.Make` 
+top level intermediate representations can be defined by the [Fixed.Make]
 functors.
 *)
 

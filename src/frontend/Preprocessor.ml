@@ -17,10 +17,10 @@ let rec try_open_in paths fname pos =
   match paths with
   | [] ->
       raise
-        (Middle.Errors.SyntaxError
+        (Errors.SyntaxError
            (Include
               ( "Could not find include file " ^ fname
-                ^ " in specified include paths.\n"
+                ^ " in specified include paths."
               , Middle.Location.of_position_exn
                   (lexeme_start_p (Stack.top_exn include_stack)) )))
   | path :: rest_of_paths -> (
@@ -50,9 +50,9 @@ let try_get_new_lexbuf fname pos =
   new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p ;
   if dup_exists (Str.split (Str.regexp ", included from\n") path) then
     raise
-      (Middle.Errors.SyntaxError
+      (Errors.SyntaxError
          (Include
-            ( Printf.sprintf "File %s recursively included itself.\n" fname
+            ( Printf.sprintf "File %s recursively included itself." fname
             , Middle.Location.of_position_exn
                 (lexeme_start_p (Stack.top_exn include_stack)) ))) ;
   Stack.push include_stack new_lexbuf ;

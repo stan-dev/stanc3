@@ -1,4 +1,7 @@
 (** Transformations (constraints) for global variable declarations *)
+
+(** Types of transformations. Polymorphic type is filled
+in with an expression fixed-point, e.g. {!type:Frontend.Ast.typed_expression} *)
 type 'e t =
   | Identity
   | Lower of 'e

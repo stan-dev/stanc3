@@ -73,8 +73,7 @@ let nest_unsized_array basic_type n =
 (* error handling *)
 %on_error_reduce type_constraint_and_scale type_scale
 (* Top level rule *)
-
-%start <Ast.untyped_program> program
+%start <Ast.untyped_program> program functions_only
 %%
 
 
@@ -106,6 +105,19 @@ program:
       ; transformedparametersblock= otpb
       ; modelblock= omb
       ; generatedquantitiesblock= ogb
+      ; comments= [] }
+    }
+
+functions_only:
+  | fd = list(function_def) EOF
+    { grammar_logger "functions_only";
+      { functionblock= Some {stmts= fd; xloc= Location_span.of_positions_exn $loc}
+      ; datablock= None
+      ; transformeddatablock= None
+      ; parametersblock= None
+      ; transformedparametersblock= None
+      ; modelblock= None
+      ; generatedquantitiesblock= None
       ; comments= [] }
     }
 
@@ -391,6 +403,13 @@ top_var_decl_no_assign:
   | d_fn=decl(top_var_type, no_assign)
     { grammar_logger "top_var_decl_no_assign" ;
       d_fn ~is_global:true
+    }
+  | SEMICOLON
+    { grammar_logger "top_var_decl_no_assign_skip"; 
+      [ { stmt= Skip
+        ; smeta= { loc= Location_span.of_positions_exn $loc
+        }
+      }] 
     }
 
 sized_basic_type:
