@@ -229,4 +229,4 @@ Semantic error in 'stanc_helper_with_good_include_err_after_incl.stan', line 9, 
     10:  }
    -------------------------------------------------
 
-Identifier 'ww' not in scope.
+Identifier 'ww' not in scope. Did you mean 'w'?

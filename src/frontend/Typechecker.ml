@@ -214,7 +214,9 @@ let check_variable cf loc tenv id =
       (* OCaml in these situations suggests similar names
          We could too, if we did a fuzzy search on the keys in tenv
       *)
-      Semantic_error.ident_not_in_scope loc id.name |> error
+      Semantic_error.ident_not_in_scope loc id.name
+        (Env.nearest_ident tenv id.name)
+      |> error
   | {kind= `StanMath; _} :: _ ->
       mk_typed_expression ~expr:(Variable id)
         ~ad_level:(calculate_autodifftype cf MathLibrary UMathLibraryFunction)
@@ -422,10 +424,12 @@ let check_fn ~is_cond_dist loc tenv id es =
                   (prefix, suffix)
               else
                 Semantic_error.returning_fn_expected_undeclaredident_found loc
-                  id.name )
+                  id.name
+                  (Env.nearest_ident tenv id.name) )
       | None ->
           Semantic_error.returning_fn_expected_undeclaredident_found loc
-            id.name )
+            id.name
+            (Env.nearest_ident tenv id.name) )
       |> error
   | _ (* a function *) -> (
     match SignatureMismatch.returntype tenv id.name (get_arg_types es) with
@@ -710,6 +714,7 @@ let check_nrfn loc tenv id es =
       Semantic_error.nonreturning_fn_expected_nonfn_found loc id.name |> error
   | [] ->
       Semantic_error.nonreturning_fn_expected_undeclaredident_found loc id.name
+        (Env.nearest_ident tenv id.name)
       |> error
   | _ (* a function *) -> (
     match SignatureMismatch.returntype tenv id.name (get_arg_types es) with
@@ -781,7 +786,10 @@ let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
         (origin, global, readonly)
     | {kind= `StanMath; _} :: _ -> (MathLibrary, true, false)
     | {kind= `UserDefined | `UserDeclared _; _} :: _ -> (Functions, true, false)
-    | _ -> Semantic_error.ident_not_in_scope loc assign_id.name |> error
+    | _ ->
+        Semantic_error.ident_not_in_scope loc assign_id.name
+          (Env.nearest_ident tenv assign_id.name)
+        |> error
   in
   verify_assignment_global loc cf block global assign_id ;
   verify_assignment_read_only loc readonly assign_id ;
