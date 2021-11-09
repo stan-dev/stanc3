@@ -36,6 +36,14 @@ let query_var_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) :
   Set.Poly.filter_map ~f:get_expr_eigen_names (matrix_set expr)
 
 (**
+ * Check whether one set is a nonzero subset of another set.
+ *)
+let is_nonzero_subset ~set ~subset =
+  Set.Poly.is_subset subset ~of_:set
+  && (not (Set.Poly.is_empty set))
+  && not (Set.Poly.is_empty subset)
+
+(**
  * Check an expression to count how many times we see a single index. 
  * @param acc An accumulator from previous folds of multiple expressions.
  * @param pattern The expression patterns to match against
@@ -71,14 +79,8 @@ let rec count_single_idx_exprs (acc : int) Expr.Fixed.({pattern; _}) : int =
 and count_single_idx (acc : int) (idx : Expr.Typed.Meta.t Expr.Fixed.t Index.t)
     =
   match idx with
-  | Index.All -> acc
-  | Between
-      ( (_ : Expr.Typed.Meta.t Expr.Fixed.t)
-      , (_ : Expr.Typed.Meta.t Expr.Fixed.t) ) ->
-      acc
+  | Index.All | Between _ | Upfrom _ | MultiIndex _ -> acc
   | Single _ -> acc + 1
-  | Upfrom up -> count_single_idx_exprs acc up
-  | MultiIndex multi -> count_single_idx_exprs acc multi
 
 (**
  * Find indices on Matrix and Vector types that perform single 
@@ -105,13 +107,8 @@ let rec is_uni_eigen_loop_indexing in_loop (ut : UnsizedType.t)
       | (UArray t | UFun (_, ReturnType t, _, _)), index -> (
         match List.tl index with
         | Some cut_list -> is_uni_eigen_loop_indexing in_loop t cut_list
-        | None -> is_uni_eigen_loop_indexing in_loop t [Index.All] )
-      (* None of the below contain single cell access*)
-      | ( ( UReal | UComplex | UInt | UMathLibraryFunction
-          | UFun (_, Void, _, _) )
-        , _ ) ->
-          false
-      | (UVector | URowVector | UMatrix), _ -> false )
+        | None -> false )
+      | _ -> false )
 
 (*Validate whether a function can support SoA matrices*)
 let is_fun_soa_supported name exprs =
@@ -121,7 +118,8 @@ let is_fun_soa_supported name exprs =
 (**
  * Query to find the initial set of objects that cannot be SoA.
  *  This is mostly recursing over expressions, with the exceptions
- *  being functions and indexing expressions.
+ *  being functions and indexing expressions. For the logic on functions
+ *  see the docs for `query_initial_demotable_funs`.
  * @param in_loop a boolean to signify if the expression exists inside
  *  of a loop. If so, the names of matrix and vector like objects
  *   will be returned if the matrix or vector is accessed by single 
@@ -161,7 +159,7 @@ let rec query_initial_demotable_expr (in_loop : bool) Expr.Fixed.({pattern; _})
  * The logic here demotes the expressions in a function to AoS if
  * the function's inner expression returns has a meta type containing a matrix 
  * and either of :
- * (1) The function is user defined.
+ * (1) The function is user defined and the UDFs inputs are matrices.
  * (2) The Stan math function cannot support AoS
  * @param in_loop A boolean to specify the logic of indexing expressions. See
  *  `query_initial_demotable_expr` for an explanation of the logic.
@@ -199,24 +197,28 @@ and query_initial_demotable_funs (in_loop : bool) (kind : 'a Fun_kind.t)
  * support SoA. If so then return true, otherwise return false.
  *)
 let rec is_any_soa_supported_expr
-    Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({adlevel; _})}) : bool =
-  if adlevel = UnsizedType.DataOnly then true
+    Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({adlevel; type_; _})}) : bool
+    =
+  if
+    adlevel = UnsizedType.DataOnly
+    || not (UnsizedType.contains_eigen_type type_)
+  then true
   else
-    let query_expr = is_any_soa_supported_expr in
     match pattern with
     | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
         is_any_soa_supported_fun_expr kind exprs
     | Indexed (expr, (_ : Typed.Meta.t Fixed.t Index.t sexp_list)) ->
-        query_expr expr
+        is_any_soa_supported_expr expr
     | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string))
       ->
         true
-    | TernaryIf (_, texpr, fexpr) -> query_expr texpr || query_expr fexpr
-    (*I think we can just return true for this?*)
-    | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_expr lhs && query_expr rhs
+    | TernaryIf (_, texpr, fexpr) ->
+        is_any_soa_supported_expr texpr && is_any_soa_supported_expr fexpr
+    | EAnd (lhs, rhs) | EOr (lhs, rhs) ->
+        is_any_soa_supported_expr lhs && is_any_soa_supported_expr rhs
 
 (**
- * Return false if all of an assignments rhs expressions do not support SoA.
+ * Return false if the `Fun_kind.t` does not support `SoA`
  *)
 and is_any_soa_supported_fun_expr (kind : 'a Fun_kind.t)
     (exprs : Typed.Meta.t Expr.Fixed.t list) : bool =
@@ -356,25 +358,23 @@ let rec query_initial_demotable_stmt (in_loop : bool)
       (* RHS (1)*)
       let is_all_rhs_aos =
         let all_eigen_names = query_var_eigen_names rhs in
-        Set.Poly.is_subset rhs_demotable ~of_:all_eigen_names
-        && Set.Poly.length rhs_demotable <> 0
-        && Set.Poly.length all_eigen_names <> 0
+        is_nonzero_subset ~set:all_eigen_names ~subset:rhs_demotable
       in
       if is_all_rhs_aos || check_bad_assign then
         let base_set = Set.Poly.union idx_demotable rhs_demotable in
         Set.Poly.add (Set.Poly.union base_set (query_var_eigen_names rhs)) name
       else Set.Poly.union idx_demotable rhs_demotable
   | NRFunApp (kind, exprs) -> query_initial_demotable_funs in_loop kind exprs
-  | IfElse (predicate, lhs, rhs) ->
-      let query_rhs =
+  | IfElse (predicate, true_stmt, op_false_stmt) ->
+      let demotable_rhs =
         Option.value_map
           ~f:(query_initial_demotable_stmt in_loop)
-          ~default:Set.Poly.empty rhs
+          ~default:Set.Poly.empty op_false_stmt
       in
       Set.Poly.union_list
         [ query_expr predicate
-        ; query_initial_demotable_stmt in_loop lhs
-        ; query_rhs ]
+        ; query_initial_demotable_stmt in_loop true_stmt
+        ; demotable_rhs ]
   | Return optional_expr ->
       Option.value_map ~f:query_expr ~default:Set.Poly.empty optional_expr
   | SList lst | Profile (_, lst) | Block lst ->
@@ -414,11 +414,7 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
       if Set.Poly.mem aos_exits assign_name then
         Set.Poly.add all_rhs_eigen_names assign_name
       else
-        match
-          Set.Poly.is_subset ~of_:aos_exits all_rhs_eigen_names
-          && (not (Set.Poly.is_empty aos_exits))
-          && not (Set.Poly.is_empty all_rhs_eigen_names)
-        with
+        match is_nonzero_subset ~set:aos_exits ~subset:all_rhs_eigen_names with
         | true -> Set.Poly.add all_rhs_eigen_names assign_name
         | false -> Set.Poly.empty )
   (* All other statements do not need logic here*)
@@ -428,7 +424,7 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
  * Search through an expression for the names of all types that hold matrices 
  *  and vectors.
  **)
-let query_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
+let query_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
   let get_expr_names (Dataflow_types.VVar s, _) = Some s in
   Set.Poly.filter_map ~f:get_expr_names (matrix_set expr)
 
@@ -450,11 +446,9 @@ let query_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
 let rec modify_kind ?force_demotion:(force = false)
     (modifiable_set : string Set.Poly.t) (kind : 'a Fun_kind.t)
     (exprs : Expr.Typed.Meta.t Expr.Fixed.t list) =
-  let expr_names = Set.Poly.union_list (List.map ~f:query_names exprs) in
+  let expr_names = Set.Poly.union_list (List.map ~f:query_eigen_names exprs) in
   let is_all_in_list =
-    Set.Poly.is_subset ~of_:modifiable_set expr_names
-    && (not (Set.Poly.is_empty modifiable_set))
-    && not (Set.Poly.is_empty expr_names)
+    is_nonzero_subset ~set:modifiable_set ~subset:expr_names
   in
   match kind with
   | Fun_kind.StanLib (name, sfx, (_ : Common.Helpers.mem_pattern)) ->
@@ -519,7 +513,9 @@ and modify_expr_pattern ?force_demotion:(force = false)
           , mod_expr ~force_demotion:force texpr
           , mod_expr ~force_demotion:force fexpr )
   | Indexed (idx_expr, indexed) ->
-      Indexed (mod_expr idx_expr, List.map ~f:(Index.map mod_expr) indexed)
+      Indexed
+        ( mod_expr idx_expr
+        , List.map ~f:(Index.map (mod_expr ~force_demotion:force)) indexed )
   | EAnd (lhs, rhs) -> EAnd (mod_expr lhs, mod_expr rhs)
   | EOr (lhs, rhs) -> EOr (mod_expr lhs, mod_expr rhs)
   | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
@@ -544,6 +540,9 @@ and modify_expr ?force_demotion:(force = false)
 * For `Decl` and `Assignment`'s reading in parameters, we demote to AoS
 *  if the `decl_id` (or assign name) is in the modifiable set and
 * otherwise promote the statement to `SoA`.
+* For general `Assignment` statements, we check if the assignee is in
+* the demotable set. If so, we force demotion of all of the rhs expressions.
+* All other statements recurse over their statements and expressions.
 * 
 * @param pattern The statement pattern to modify 
 * @param modifiable_set The name of the variable we are searching for.

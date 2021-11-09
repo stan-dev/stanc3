@@ -28,6 +28,7 @@ let dump_opt_mir = ref false
 let dump_opt_mir_pretty = ref false
 let dump_stan_math_sigs = ref false
 let optimize = ref false
+let no_soa = ref false
 let output_file = ref ""
 let generate_data = ref false
 let warn_uninitialized = ref false
@@ -107,6 +108,9 @@ let options =
     ; ( "--O"
       , Arg.Set optimize
       , " Allow the compiler to apply all optimizations to the Stan code." )
+    ; ( "-fno-soa"
+      , Arg.Set no_soa
+      , " Turn off the Struct of Arrays memory optimization." )
     ; ( "--o"
       , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
@@ -229,7 +233,11 @@ let use_file filename =
       Pedantic_analysis.warn_uninitialized mir
       |> pp_stderr (Warnings.pp_warnings ?printed_filename) ;
     let tx_mir =
-      Optimize.optimization_suite ~settings:Optimize.settings_default
+      let optim_set =
+        if !no_soa then {Optimize.settings_default with optimize_soa= false}
+        else Optimize.settings_default
+      in
+      Optimize.optimization_suite ~settings:optim_set
         (Transform_Mir.trans_prog mir)
     in
     if !dump_tx_mir then
