@@ -26,7 +26,8 @@
    stalled1-failure.stan
    expr-prop-fail.stan
    ad-level-failing.stan
-   lupdf-inlining.stan))
+   lupdf-inlining.stan
+   unenforce-initialize.stan))
  (action
   (with-stdout-to %{targets}
    (run %{bin:run_bin_on_args} "%{bin:stanc} --O --print-cpp" %{stanfiles}))))

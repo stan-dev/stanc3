@@ -264,7 +264,7 @@ let rec inline_function_expression propto adt fim
                       { decl_adtype= adt
                       ; decl_id= x
                       ; decl_type= Option.value_exn rt
-                      ; initialize= false } ]
+                      ; initialize= true } ]
                   (* We should minimize the code that's having its variables
                    replaced to avoid conflict with the (two) new dummy
                    variables introduced by inlining *)
@@ -820,23 +820,11 @@ let partial_evaluation = Partial_evaluator.eval_prog
 let rec find_assignment_idx (name : string) Stmt.Fixed.({pattern; _}) =
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
-      ((assign_name, (_ : UnsizedType.t), idx_lst), (_ : 'a Expr.Fixed.t))
-    when name = assign_name ->
+      ((assign_name, (_ : UnsizedType.t), idx_lst), (rhs : 'a Expr.Fixed.t))
+    when name = assign_name
+         && not (Set.Poly.mem (expr_var_names_set rhs) assign_name) ->
       Some idx_lst
-  | Assignment _ | Decl _ | TargetPE _ | NRFunApp _ | Break | Continue
-   |Return _ | Skip ->
-      None
-  | IfElse ((_ : 'a Expr.Fixed.t), true_stmt, op_false_stmt) -> (
-    match find_assignment_idx name true_stmt with
-    | Some _ as ret -> ret
-    | None -> (
-      match op_false_stmt with
-      | Some false_stmt -> find_assignment_idx name false_stmt
-      | None -> None ) )
-  | While ((_ : 'a Expr.Fixed.t), stmt) -> find_assignment_idx name stmt
-  | For {body; _} -> find_assignment_idx name body
-  | Profile ((_ : string), stmts) | Block stmts | SList stmts ->
-      List.find_map ~f:(find_assignment_idx name) stmts
+  | _ -> None
 
 (**
  * Given a list of Stmts, find Decls whose objects are fully assigned to
@@ -848,13 +836,14 @@ and unenforce_initialize
   let rec unenforce_initialize_patt (Stmt.Fixed.({pattern; _}) as stmt) sub_lst
       =
     match pattern with
-    | Stmt.Fixed.Pattern.Decl ({decl_id; _} as patt) -> (
+    | Stmt.Fixed.Pattern.Decl ({decl_id; _} as decl_pat) -> (
       match List.hd sub_lst with
       | Some next_stmt -> (
         match find_assignment_idx decl_id next_stmt with
         | Some [] | Some [Index.All] | Some [Index.All; Index.All] ->
             { stmt with
-              pattern= Stmt.Fixed.Pattern.Decl {patt with initialize= false} }
+              pattern= Stmt.Fixed.Pattern.Decl {decl_pat with initialize= false}
+            }
         | None | Some _ -> stmt )
       | None -> stmt )
     | Block block_lst ->
@@ -1219,7 +1208,7 @@ let no_optimizations : optimization_settings = settings_const false
 
 let settings_default : optimization_settings =
   let xx = settings_const false in
-  {xx with allow_uninitialized_decls= false}
+  {xx with allow_uninitialized_decls= true}
 
 let optimization_suite ?(settings = all_optimizations) mir =
   let maybe_optimizations =

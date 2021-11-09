@@ -2,9 +2,12 @@ parameters {
   real y;
 }
 transformed parameters {
-  real p;
-  real r = y * 5.0;
-  real t = p * 5.0;
-  r = 6.0;
-  p = 6.0;
+  real no_init;
+  real init_from_param = y * 5.0;
+  real dependent_no_init = no_init * y;
+  real used_on_lhs = used_on_lhs;
+  real no_init_if;
+  if (1 == 1) {
+    no_init_if = 1.0;
+  }
 }
