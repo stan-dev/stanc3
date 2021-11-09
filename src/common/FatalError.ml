@@ -2,7 +2,7 @@
 
 open Core_kernel
 
-(** Equivalent to [Common.FatalError.fatal_error_msg] but prepends a stanc specific
+(** Equivalent to [raise_s] but prepends a stanc specific
   message asking users to report a bug *)
 let fatal_error_msg message =
   let augmented =
