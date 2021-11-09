@@ -170,7 +170,7 @@ module TypeError = struct
       | Some s ->
           Fmt.pf ppf
             "A returning function was expected but an undeclared identifier \
-             '%s' was supplied.@ A nearby known identifier is '%s'"
+             '%s' was supplied.@ A similar known identifier is '%s'"
             fn_name s )
     | NonReturningFnExpectedUndeclaredIdentFound (fn_name, sug) -> (
       match sug with

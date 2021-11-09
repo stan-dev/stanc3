@@ -48,50 +48,62 @@ let mem env key = Map.mem env key
 let iter env f = Map.iter env ~f
 
 module Distance = struct
-  (*  Wagner–Fischer algorithm for edit distance
-  Adapted from psuedocode on Wikipedia 
-  https://en.wikipedia.org/wiki/Levenshtein_distance
+  (**  Wagner–Fischer algorithm for edit distance
+  Adapted from psuedocode on
+  {{:https://en.wikipedia.org/wiki/Levenshtein_distance}Wikipedia}
   Some horribly, horribly iterative code, but it's quick
-  and only for error messaging 
+  and only for error messaging
   *)
   let dist s t =
     let m = String.length s in
     let n = String.length t in
-    let v0 = ref @@ Array.init (n + 1) ~f:Fn.id in
-    let v1 = ref @@ Array.create ~len:(n + 1) 0 in
+    let previous_row = ref @@ Array.init (n + 1) ~f:Fn.id in
+    let current_row = ref @@ Array.create ~len:(n + 1) 0 in
     for i = 0 to m - 1 do
-      !v1.(0) <- i + 1 ;
+      !current_row.(0) <- i + 1 ;
       for j = 0 to n - 1 do
-        let deletion_cost = !v0.(j + 1) + 1 in
-        let insertion_cost = !v1.(j) + 1 in
+        let deletion_cost = !previous_row.(j + 1) + 1 in
+        let insertion_cost = !current_row.(j) + 1 in
         let substitution_cost =
-          if s.[i] = t.[j] then !v0.(j) else !v0.(j) + 1
+          if s.[i] = t.[j] then !previous_row.(j) else !previous_row.(j) + 1
         in
-        !v1.(j + 1)
+        !current_row.(j + 1)
         <- Int.min deletion_cost (Int.min insertion_cost substitution_cost)
       done ;
       (* swap *)
-      let temp = !v1 in
-      v1 := !v0 ;
-      v0 := temp
+      let temp = !current_row in
+      current_row := !previous_row ;
+      previous_row := temp
     done ;
-    !v0.(n)
+    !previous_row.(n)
 
-  let find_min lst name =
+  (** Find the closest entry to [name] in [lst] with
+    edit distance less than [?max].
+    Does a rather naive pairwise search, but only checks
+    if [|len a - len b| < max].
+  *)
+  let find_min ?max:(limit = 3) lst name =
+    let n = String.length name in
     let rec loop lst (celt, cmin) =
       match lst with
       | [] -> (celt, cmin)
       | candidate :: lst ->
-          let edist = dist name candidate in
-          if edist < cmin then loop lst (candidate, edist)
-          else loop lst (celt, cmin)
+          let m = String.length candidate in
+          (* skip if the lengths make it impossible for edit distance to satisfy maximum *)
+          if m - n > limit || n - m > limit then loop lst (celt, cmin)
+          else
+            let edist = dist name candidate in
+            if edist < cmin then loop lst (candidate, edist)
+            else loop lst (celt, cmin)
     in
-    loop lst (name, String.length name)
+    let suggestion, distance = loop lst (name, String.length name) in
+    if distance < limit && name <> suggestion then Some suggestion else None
 end
+
+let max_distance = 3
 
 let nearest_ident env name =
   try
     (* catch any errors in distance and just ignore them, no big deal *)
-    let suggestion, distance = Distance.find_min (Map.keys env) name in
-    if distance < 3 && name <> suggestion then Some suggestion else None
+    Distance.find_min ~max:max_distance (Map.keys env) name
   with _ -> None
