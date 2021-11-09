@@ -977,7 +977,7 @@ Syntax error in 'functions-bad0.stan', line 2, column 11 to column 15, parsing e
      4:    }
    -------------------------------------------------
 
-(Non-void) type expected in function argument declaration.
+An argument declaration (unsized and unconstrained type followed by identifier) is expected.
   $ ../../../../install/default/bin/stanc functions-bad1.stan
 Semantic error in 'functions-bad1.stan', line 6, column 7 to column 11:
    -------------------------------------------------
