@@ -1,0 +1,142 @@
+  $ ../../../../../install/default/bin/stanc completely_undefined1.stan
+Semantic error in 'completely_undefined1.stan', line 2, column 12 to column 23:
+   -------------------------------------------------
+     1:  model {
+     2:    target += foo_lpdf(1);
+                     ^
+     3:  }
+   -------------------------------------------------
+
+A returning function was expected but an undeclared identifier 'foo_lpdf' was supplied.
+  $ ../../../../../install/default/bin/stanc completely_undefined2.stan
+Semantic error in 'completely_undefined2.stan', line 5, column 12 to column 23:
+   -------------------------------------------------
+     3:  }
+     4:  model {
+     5:    target += foo_lpdf(1);
+                     ^
+     6:  }
+   -------------------------------------------------
+
+Function 'foo_lpdf' is not implemented for distribution 'foo', use 'foo_lpmf' instead.
+  $ ../../../../../install/default/bin/stanc deprecated_suffix.stan
+Semantic error in 'deprecated_suffix.stan', line 4, column 14 to column 40:
+   -------------------------------------------------
+     2:  }
+     3:  model {
+     4:      target += von_mises_ccdf_log(1, 0,1);
+                       ^
+     5:  }
+   -------------------------------------------------
+
+Function 'von_mises_ccdf_log' is not implemented for distribution 'von_mises'.
+  $ ../../../../../install/default/bin/stanc lpmf_lpdf_replacement1.stan
+Semantic error in 'lpmf_lpdf_replacement1.stan', line 5, column 14 to column 34:
+   -------------------------------------------------
+     3:  model {  
+     4:      // known family, known suffix, not implemented  
+     5:      target += binomial_lpdf(1|0,1);
+                       ^
+     6:  }
+   -------------------------------------------------
+
+Function 'binomial_lpdf' is not implemented for distribution 'binomial', use 'binomial_lpmf' instead.
+  $ ../../../../../install/default/bin/stanc lpmf_lpdf_replacement2.stan
+Semantic error in 'lpmf_lpdf_replacement2.stan', line 5, column 14 to column 32:
+   -------------------------------------------------
+     3:  model {  
+     4:      // known family, known suffix, not implemented  
+     5:      target += normal_lpmf(1|0,1);
+                       ^
+     6:  }
+   -------------------------------------------------
+
+Function 'normal_lpmf' is not implemented for distribution 'normal', use 'normal_lpdf' instead.
+  $ ../../../../../install/default/bin/stanc no_rng_suffix.stan
+Semantic error in 'no_rng_suffix.stan', line 2, column 12 to column 55:
+   -------------------------------------------------
+     1:  generated quantities {
+     2:     real x = multi_gp_cholesky_rng([[0,0],[0,0]], [1,0]);
+                     ^
+     3:  }
+   -------------------------------------------------
+
+Function 'multi_gp_cholesky_rng' is not implemented for distribution 'multi_gp_cholesky'.
+  $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix1.stan
+Semantic error in 'non_existing_distribution_suffix1.stan', line 4, column 14 to column 34:
+   -------------------------------------------------
+     2:  }
+     3:  model {  
+     4:      target += von_mises_cdf(1|0,1);
+                       ^
+     5:  }
+   -------------------------------------------------
+
+Function 'von_mises_cdf' is not implemented for distribution 'von_mises'.
+  $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix2.stan
+Semantic error in 'non_existing_distribution_suffix2.stan', line 4, column 14 to column 35:
+   -------------------------------------------------
+     2:  }
+     3:  model {  
+     4:      target += von_mises_lcdf(1|0,1);
+                       ^
+     5:  }
+   -------------------------------------------------
+
+Function 'von_mises_lcdf' is not implemented for distribution 'von_mises'.
+  $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix3.stan
+Semantic error in 'non_existing_distribution_suffix3.stan', line 4, column 14 to column 36:
+   -------------------------------------------------
+     2:  }
+     3:  model {  
+     4:      target += von_mises_lccdf(1|0,1);
+                       ^
+     5:  }
+   -------------------------------------------------
+
+Function 'von_mises_lccdf' is not implemented for distribution 'von_mises'.
+  $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix4.stan
+Semantic error in 'non_existing_distribution_suffix4.stan', line 4, column 14 to column 41:
+   -------------------------------------------------
+     2:  }
+     3:  model {  
+     4:      target += von_mises_notasuffix(1,0,1);
+                       ^
+     5:  }
+   -------------------------------------------------
+
+A returning function was expected but an undeclared identifier 'von_mises_notasuffix' was supplied.
+  $ ../../../../../install/default/bin/stanc user_defined.stan
+Semantic error in 'user_defined.stan', line 7, column 13 to column 27:
+   -------------------------------------------------
+     5:  }
+     6:  model {
+     7:     target += bar_lpmf(19.2);
+                      ^
+     8:  }
+   -------------------------------------------------
+
+Function 'bar_lpmf' is not implemented for distribution 'bar', use 'bar_lpdf' instead.
+  $ ../../../../../install/default/bin/stanc user_defined_no_cdf.stan
+Semantic error in 'user_defined_no_cdf.stan', line 7, column 14 to column 29:
+   -------------------------------------------------
+     5:  }
+     6:  model {
+     7:      target += bar_lcdf(1|0,1);
+                       ^
+     8:  }
+   -------------------------------------------------
+
+A returning function was expected but an undeclared identifier 'bar_lcdf' was supplied.
+A similar known identifier is 'bar_lpdf'
+  $ ../../../../../install/default/bin/stanc user_defined_no_rng.stan
+Semantic error in 'user_defined_no_rng.stan', line 7, column 12 to column 23:
+   -------------------------------------------------
+     5:  }
+     6:  generated quantities {
+     7:     real x = bar_rng(10);
+                     ^
+     8:  }
+   -------------------------------------------------
+
+A returning function was expected but an undeclared identifier 'bar_rng' was supplied.

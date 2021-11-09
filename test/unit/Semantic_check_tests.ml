@@ -11,7 +11,7 @@ transformed data {
 }
 |}
   |> typed_ast_of_string_exn |> Ast.untyped_program_of_typed_program
-  |> Fmt.strf "@[<v>%a@]" Pretty_printing.pp_program
+  |> Fmt.strf "@[<v>%a@]" (Pretty_printing.pp_program ~bare_functions:false)
   |> print_endline ;
   [%expect
     {|

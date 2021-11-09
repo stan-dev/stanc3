@@ -4897,6 +4897,29 @@ model {
   z ~ normal(0, 1);
 }
 
+  $ ../../../../install/default/bin/stanc --auto-format matrix_pow_warning.stan
+data {
+  int<lower=0> N;
+  matrix[N, N] A;
+  int power;
+}
+transformed data {
+  matrix[N, N] A_pow = A ^ power;
+  matrix[N, N] A_pow_r = A ^ 3.5;
+}
+
+Warning in 'matrix_pow_warning.stan', line 8, column 23: Found matrix^scalar:
+  A ^ power
+matrix ^ number is interpreted as element-wise exponentiation. If this is
+intended, you can silence this warning by using elementwise operator .^
+If you intended matrix exponentiation, use the function
+matrix_power(matrix,int) instead.
+Warning in 'matrix_pow_warning.stan', line 9, column 25: Found matrix^scalar:
+  A ^ 3.5
+matrix ^ number is interpreted as element-wise exponentiation. If this is
+intended, you can silence this warning by using elementwise operator .^
+If you intended matrix exponentiation, use the function
+matrix_power(matrix,int) instead.
   $ ../../../../install/default/bin/stanc --auto-format min-max-types.stan
 parameters {
   matrix[max(1, 3), min(2, 5)] a;

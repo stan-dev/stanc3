@@ -2213,6 +2213,17 @@ Semantic error in 'truncation-bad-type4.stan', line 1, column 8 to column 36:
    -------------------------------------------------
 
 Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+  $ ../../../../install/default/bin/stanc typo.stan
+Semantic error in 'typo.stan', line 2, column 17 to column 34:
+   -------------------------------------------------
+     1:  transformed data {
+     2:     vector[3] x = to_vetor({1,2,3});
+                          ^
+     3:  }
+   -------------------------------------------------
+
+A returning function was expected but an undeclared identifier 'to_vetor' was supplied.
+A similar known identifier is 'to_vector'
   $ ../../../../install/default/bin/stanc validate_add_expression_dimss_bad.stan
 Semantic error in 'validate_add_expression_dimss_bad.stan', line 4, column 6 to column 13:
    -------------------------------------------------
