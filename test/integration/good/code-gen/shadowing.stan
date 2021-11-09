@@ -6,6 +6,9 @@ functions {
   }
 }
 
+data {
+   vector[4] x;
+}
 parameters {
   // nyllary
   real e;
@@ -20,15 +23,22 @@ parameters {
   // unary
   real inv_logit;
   real logit;
+  real num_elements;
+
   //binary
   real pow;
   real add;
   real sub;
+  real multiply;
   real binomial_coefficient_log;
 
   // try to break internal functions
   real<lower=0> read_constrain_lb;
   real read;
+  real validate_non_negative_index;
+  real length;
+  simplex[5] validate_positive_index;
+  real assign;
 
   //more
   real bernoulli_logit_glm_lpmf;
@@ -52,6 +62,9 @@ transformed parameters {
   mu += binomial_coefficient_log * lchoose(3,4) * binomial_coefficient_log(3,4);
 
   array[1] vector[4] called = ode_bdf(rhs, segment, 1.0, {3.0}, 3.5);
+
+
+  vector[num_elements(x)] result = x * 5.0;
 }
 model {
 }
