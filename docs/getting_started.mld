@@ -1,0 +1,160 @@
+{0 Getting development on stanc3 up and running locally}
+
+{1 Setup}
+{2 Using Opam and Dune}
+
+The recommended way to develop stanc3 is using [opam]
+and [dune] on a Unix-like system (MacOS or Linux).
+See {!windows} for tips on developing on Windows.
+
+This requires you have [make], [git], [curl], and [m4]
+installed via apt, homebrew, or your system's package manager.
+
+{ol
+ {- Download the repository (or your fork of it) from Github}
+ {- Install the necessary {!page-dependencies} by running
+
+[bash -x scripts/setup_dev_env.sh].
+
+   If you already have opam installed, you can instead run
+
+[opam install --deps-only --with-test .]
+
+   If you wish to {e install} stanc on your system, you can run the above
+[opam] command without [--deps-only].}
+
+ {- You can now build a stanc binary by running [make]. If this succeeds, you have the required software.}
+}
+
+
+{2:windows Windows development}
+We recommend using {{:https://docs.microsoft.com/en-us/windows/wsl/install}
+Windows Subsystem for Linux (WSL)} for development on Windows. While this
+will not produce native-Windows binaries by default (though they can be
+{{!page-dependencies.xcomp}cross-compiled}), it is far easier to use and set up than the other options
+for Windows development.
+
+Once you have installed and configured WSL, you can proceed through the steps above
+through the WSL shell.
+
+
+{2:nix Alternative: Using Nix}
+
+{{:https://nixos.org/nix/}Nix} is a declarative package manager with a focus on reproducible builds.
+We provide the ability to use Nix to build, test and run Stanc3. We recommend trying the [opam] instructions
+first if you are not an existing Nix user, with these as a backup.
+
+If you have nix installed, you can build Stanc3 by running the following command in the [stanc3] directory:
+
+[nix-build]
+
+The binary will be in [result/bin/stanc]. It may take a minute the first time you run it.
+Alternatively, the following is sometimes a faster way to build:
+
+[nix-shell --command "dune build"]
+
+To run the test suite, run:
+
+[nix-shell --command "dune build --profile release @runtest"]
+
+To install Stanc3 to your system, run:
+
+[nix-env -i -f default.nix]
+
+To drop into a sandboxed development shell with all of the build dependencies
+of Stanc3 plus packages for an OCaml development environment
+([dune], [ocp-indent], [ocamlformat], [merlin] and [utop]), run:
+
+[nix-shell]
+
+
+{1 Development}
+{2 Useful commands}
+
+{3 Testing}
+Once you have the necessary software, you can make your edits to the source files in [src/] and
+tests in [test/]. Running the command [dune runtest] will show any test output which is different
+from the expected output. In our continuous integration, this results in test failures. If you
+are knowingly changing the output, and the differences highlighted by [dune runtest] look correct,
+you can run [dune promote] to change the expected output to match your current tests.
+
+{3 Code formatting}
+We recommend setting up your editor to use OCamlformat automatically. This will
+differ by editor, but is possible in most popular editors such as Emacs, VSCode, etc.
+See {!editors} for more specific tips.
+
+If you would like to manually run the auto-formatter on all OCaml code in the repository,
+run [make format]. Similar to the above, you will need to run [dune promote] to accept these
+changes into the code.
+
+If you would like to run the formatter before each commit (recommended), run
+
+[scripts/hooks/install_hooks.sh]
+
+Note: [ocamlformat] does not support [.mly] or [.mll] files used in the frontend.
+
+{3 Updating the parser error messages}
+If the parser has been edited, the command [dune build @update_messages] will add any
+new error states to the [parser.messages] file. These will say
+
+[TODO: PARSER MESSAGE NEEDED HERE.]
+
+See {{!page-parser_messages}adding or changing the syntax error messages} for more information.
+
+{2:cmdstan Developing with stanc3 and CmdStan}
+
+In order to use the locally built development version of stanc3 with CmdStan,
+you need to set the [STANC3] makefile variable in the make/local file in CmdStan. Example:
+
+[STANC3=relative/or/absolute/path/to/the/cloned/stanc3/folder]
+
+This will automatically rebuild the stanc3 binary used in CmdStan if a change was made to the stanc3 source files.
+
+{2:editors Editor advice}
+For working on this project, we recommend using either VSCode or Emacs as an editor, due to their good OCaml support through
+{{:https://github.com/ocaml/merlin}Merlin}: syntax highlighting, auto-completion, type inference, automatic case splitting, and more.
+For people who prefer a GUI and have not memorized all Emacs or Vim keystrokes, VSCode might have the less steep learning curve.
+Anything with Merlin support is fine.
+
+{3 Setting up VSCode}
+Install instructions for VSCode can be found {{:https://code.visualstudio.com/docs/setup/setup-overview}here}.
+
+{b For Windows users}: We recommend using {{:https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl}Remote - WSL}
+to program within WSL from a native Windows installation of VSCode. This extension allows you to connect to the WSL instance as if it is a remote machine,
+removing the need for an X11 server or other method of running a Linux GUI app directly.
+
+Once in VSCode (on any platform), simply install the {{:https://github.com/reasonml-editor/vscode-reasonml}OCaml extension} and you should be ready to go.
+
+{3 Setting up Emacs}
+The best way to edit OCaml in Emacs is through {{:https://github.com/ocaml/tuareg}Tuareg mode}.
+
+To get full Merlin support, you will need to run [opam user-setup install] after installing
+Merlin in our {{!page-dependencies.dev}dev dependencies}.
+
+If you use {{:https://github.com/jwiegley/use-package}[use-package.el]}, this snippet should set up Tuareg+Merlin+OCamlformat
+
+{[
+(use-package tuareg
+  :config
+  (electric-indent-mode 0)
+  (face-spec-set
+   'tuareg-font-lock-constructor-face
+   '((((class color) (background light)) (:foreground "SaddleBrown"))
+     (((class color) (background dark)) (:foreground "burlywood1"))))
+  (add-hook 'tuareg-mode-hook
+            (lambda ()
+              (prettify-symbols-mode 0))))
+(use-package merlin
+  :config
+  (add-hook 'tuareg-mode-hook 'merlin-mode t)
+  (with-eval-after-load 'company
+    (add-to-list 'company-backends 'merlin-company-backend)))
+
+(require 'ocamlformat)
+(add-hook 'tuareg-mode-hook
+          (lambda ()
+            (define-key tuareg-mode-map (kbd "C-M-<tab>") #'ocamlformat)
+            (add-hook 'before-save-hook #'ocamlformat-before-save)))
+]}
+
+

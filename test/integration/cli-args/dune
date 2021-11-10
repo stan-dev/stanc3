@@ -22,10 +22,10 @@
 
 (rule
  (targets info.output)
- (deps (package stanc) info.stan)
+ (deps (package stanc) info.stan included.stan includes/recursive.stan includes/another_include.stan)
  (action
   (with-stdout-to %{targets}
-   (run %{bin:run_bin_on_args} "%{bin:stanc} --info " info.stan))))
+   (run %{bin:run_bin_on_args} "%{bin:stanc} --include-paths=.,includes --info " info.stan))))
 
 (alias
  (name runtest)

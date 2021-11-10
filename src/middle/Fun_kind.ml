@@ -1,3 +1,7 @@
+(** Types for function kinds, e.g. [StanLib] or [UserDefined], and
+  function suffix types, e.g. [foo_ldfp], [bar_lp]
+*)
+
 open Core_kernel
 
 type 'propto suffix = FnPlain | FnRng | FnLpdf of 'propto | FnTarget
@@ -5,11 +9,11 @@ type 'propto suffix = FnPlain | FnRng | FnLpdf of 'propto | FnTarget
 
 let without_propto = map_suffix (function true | false -> ())
 
-type t =
-  | StanLib of string * bool suffix
-  | CompilerInternal of Internal_fun.t
+type 'e t =
+  | StanLib of string * bool suffix * Common.Helpers.mem_pattern
+  | CompilerInternal of 'e Internal_fun.t
   | UserDefined of string * bool suffix
-[@@deriving compare, sexp, hash]
+[@@deriving compare, sexp, hash, map, fold]
 
 let suffix_from_name fname =
   let is_suffix suffix = Core_kernel.String.is_suffix ~suffix fname in
@@ -26,9 +30,11 @@ let suffix_from_name fname =
   then FnLpdf false
   else FnPlain
 
-let pp ppf = function
-  | StanLib (s, FnLpdf true) | UserDefined (s, FnLpdf true) ->
+let pp pp_expr ppf = function
+  | StanLib (s, FnLpdf true, _) | UserDefined (s, FnLpdf true) ->
       Fmt.string ppf
         (Utils.with_unnormalized_suffix s |> Option.value ~default:s)
-  | StanLib (s, _) | UserDefined (s, _) -> Fmt.string ppf s
-  | CompilerInternal internal -> Internal_fun.pp ppf internal
+  | StanLib (s, _, _) | UserDefined (s, _) -> Fmt.string ppf s
+  | CompilerInternal internal -> Internal_fun.pp pp_expr ppf internal
+
+let collect_exprs fn = fold (fun accum e -> e :: accum) [] fn

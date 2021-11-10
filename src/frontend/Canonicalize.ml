@@ -114,7 +114,8 @@ let rec replace_deprecated_stmt
 let rec no_parens {expr; emeta} =
   match expr with
   | Paren e -> no_parens e
-  | Variable _ | IntNumeral _ | RealNumeral _ | GetLP | GetTarget ->
+  | Variable _ | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetLP
+   |GetTarget ->
       {expr; emeta}
   | TernaryIf _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
       {expr= map_expression keep_parens ident expr; emeta}
@@ -143,7 +144,16 @@ and keep_parens {expr; emeta} =
 
 let parens_lval = map_lval_with no_parens ident
 
-let rec parens_stmt {stmt; smeta} =
+let stmt_to_block ({stmt; smeta} : typed_statement) : typed_statement =
+  match stmt with
+  | Block _ -> {stmt; smeta}
+  | _ ->
+      mk_typed_statement
+        ~stmt:(Block [{stmt; smeta}])
+        ~return_type:smeta.return_type ~loc:smeta.loc
+
+let rec parens_stmt ({stmt; smeta} : typed_statement) : typed_statement =
+  let parens_block s = parens_stmt (stmt_to_block s) in
   let stmt =
     match stmt with
     | VarDecl
@@ -154,16 +164,19 @@ let rec parens_stmt {stmt; smeta} =
         ; is_global } ->
         VarDecl
           { decl_type= Middle.Type.map no_parens d
-          ; transformation= Middle.Program.map_transformation keep_parens t
+          ; transformation= Middle.Transformation.map keep_parens t
           ; identifier
           ; initial_value= Option.map ~f:no_parens init
           ; is_global }
+    | While (e, s) -> While (no_parens e, parens_block s)
+    | IfThenElse (e, s1, s2) ->
+        IfThenElse (no_parens e, parens_block s1, Option.map ~f:parens_block s2)
     | For {loop_variable; lower_bound; upper_bound; loop_body} ->
         For
           { loop_variable
           ; lower_bound= keep_parens lower_bound
           ; upper_bound= keep_parens upper_bound
-          ; loop_body= parens_stmt loop_body }
+          ; loop_body= parens_block loop_body }
     | _ -> map_statement no_parens parens_stmt parens_lval ident stmt
   in
   {stmt; smeta}

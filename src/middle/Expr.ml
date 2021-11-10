@@ -5,12 +5,13 @@ open Helpers
 (** Pattern and fixed-point of MIR expressions *)
 module Fixed = struct
   module Pattern = struct
-    type litType = Int | Real | Str [@@deriving sexp, hash, compare]
+    type litType = Int | Real | Imaginary | Str
+    [@@deriving sexp, hash, compare]
 
     type 'a t =
       | Var of string
       | Lit of litType * string
-      | FunApp of Fun_kind.t * 'a list
+      | FunApp of 'a Fun_kind.t * 'a list
       | TernaryIf of 'a * 'a * 'a
       | EAnd of 'a * 'a
       | EOr of 'a * 'a
@@ -21,13 +22,13 @@ module Fixed = struct
       | Var varname -> Fmt.string ppf varname
       | Lit (Str, str) -> Fmt.pf ppf "%S" str
       | Lit (_, str) -> Fmt.string ppf str
-      | FunApp (StanLib (name, FnPlain), [lhs; rhs])
+      | FunApp (StanLib (name, FnPlain, _), [lhs; rhs])
         when Option.is_some (Operator.of_string_opt name) ->
           Fmt.pf ppf "(%a %a %a)" pp_e lhs Operator.pp
             (Option.value_exn (Operator.of_string_opt name))
             pp_e rhs
       | FunApp (fun_kind, args) ->
-          Fmt.pf ppf "%a(%a)" Fun_kind.pp fun_kind
+          Fmt.pf ppf "%a(%a)" (Fun_kind.pp pp_e) fun_kind
             Fmt.(list pp_e ~sep:Fmt.comma)
             args
       | TernaryIf (pred, texpr, fexpr) ->
@@ -159,12 +160,20 @@ module Helpers = struct
     {Fixed.meta= Typed.Meta.empty; pattern= Lit (Real, string_of_float i)}
 
   let str i = {Fixed.meta= Typed.Meta.empty; pattern= Lit (Str, i)}
+  let variable v = {Fixed.meta= Typed.Meta.empty; pattern= Var v}
   let zero = int 0
   let one = int 1
 
   let binop e1 op e2 =
     { Fixed.meta= Typed.Meta.empty
-    ; pattern= FunApp (StanLib (Operator.to_string op, FnPlain), [e1; e2]) }
+    ; pattern= FunApp (StanLib (Operator.to_string op, FnPlain, AoS), [e1; e2])
+    }
+
+  let binop_list es op ~default =
+    match es with
+    | [] -> default
+    | head :: rest ->
+        List.fold ~init:head ~f:(fun accum next -> binop accum op next) rest
 
   let loop_bottom = one
 

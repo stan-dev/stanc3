@@ -2,7 +2,6 @@
 
 {
   module Stack = Core_kernel.Stack
-  module Errors = Middle.Errors
   open Lexing
   open Debugging
   open Preprocessor
@@ -14,11 +13,24 @@
       pos_lnum = pos.pos_lnum + 1;
       pos_bol = pos.pos_cnum;
     }
+
+let comments : Ast.comment_type list ref = ref []
+
+(* Store comments *)
+  let add_comment (begin_pos, buffer) end_pos =
+    comments :=
+        LineComment ( Buffer.contents buffer
+                , Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
+      :: !comments
+  let add_multi_comment begin_pos lines end_pos =
+    comments :=
+        BlockComment ( lines, Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
+      :: !comments
 }
 
 (* Some auxiliary definition for variables and constants *)
 let string_literal = '"' [^ '"' '\r' '\n']* '"'
-let identifier = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*   (* TODO: We should probably expand the alphabet *)
+let identifier = ['a'-'z' 'A'-'Z'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*   (* TODO: We should probably expand the alphabet *)
 
 let integer_constant =  ['0'-'9']+ ('_' ['0'-'9']+)*
 
@@ -27,6 +39,7 @@ let real_constant1 = integer_constant '.' integer_constant? exp_literal?
 let real_constant2 = '.' integer_constant exp_literal?
 let real_constant3 = integer_constant exp_literal
 let real_constant = real_constant1 | real_constant2 | real_constant3
+let imag_constant = (integer_constant | real_constant) 'i'
 let space = ' ' | '\t' | '\012'
 let newline = '\r' | '\n' | '\r'*'\n'
 let non_space_or_newline =  [^ ' ' '\t' '\012' '\r' '\n' ]
@@ -37,9 +50,10 @@ rule token = parse
                                 incr_linenum lexbuf ; token lexbuf }
   | space                     { lexer_logger "space" ; token lexbuf }
   | "/*"                      { lexer_logger "multicomment" ;
-                                multiline_comment lexbuf ; token lexbuf }
+                                multiline_comment ((lexbuf.lex_curr_p, []), Buffer.create 16) lexbuf ; token lexbuf }
   | "//"                      { lexer_logger "single comment" ;
-                                singleline_comment lexbuf ; token lexbuf }
+                                singleline_comment (lexbuf.lex_curr_p, Buffer.create 16) lexbuf ;
+                                token lexbuf }
   | "#include"
     ( ( space | newline)+)
     ( '"' ([^ '"' '\r' '\n']* as fname) '"'
@@ -56,7 +70,8 @@ rule token = parse
                                                        Please use // in place \
                                                        of # for line \
                                                        comments.") ;
-                                singleline_comment lexbuf; token lexbuf } (* deprecated *)
+                                singleline_comment (lexbuf.lex_curr_p, Buffer.create 16) lexbuf;
+                                token lexbuf } (* deprecated *)
 (* Program blocks *)
   | "functions"               { lexer_logger "functions" ;
                                 Parser.FUNCTIONBLOCK }
@@ -85,7 +100,11 @@ rule token = parse
   | ']'                       { lexer_logger "]" ; Parser.RBRACK }
   | '<'                       { lexer_logger "<" ; Parser.LABRACK }
   | '>'                       { lexer_logger ">" ; Parser.RABRACK }
-  | ','                       { lexer_logger "," ; Parser.COMMA }
+  | ','                       { lexer_logger "," ;
+                                comments :=
+                                  Comma (Middle.Location.of_position_exn lexbuf.lex_curr_p)
+                                  :: !comments ;
+                                Parser.COMMA }
   | ';'                       { lexer_logger ";" ; Parser.SEMICOLON }
   | '|'                       { lexer_logger "|" ; Parser.BAR }
 (* Control flow keywords *)
@@ -102,6 +121,7 @@ rule token = parse
   | "void"                    { lexer_logger "void" ; Parser.VOID }
   | "int"                     { lexer_logger "int" ; Parser.INT }
   | "real"                    { lexer_logger "real" ; Parser.REAL }
+  | "complex"                 { lexer_logger "complex" ; Parser.COMPLEX }
   | "vector"                  { lexer_logger "vector" ; Parser.VECTOR }
   | "row_vector"              { lexer_logger "row_vector" ; Parser.ROWVECTOR }
   | "array"                   { lexer_logger "array" ; Parser.ARRAY }
@@ -177,6 +197,8 @@ rule token = parse
                                 Parser.INTNUMERAL (lexeme lexbuf) }
   | real_constant as r        { lexer_logger ("real_constant " ^ r) ;
                                 Parser.REALNUMERAL (lexeme lexbuf) }
+  | imag_constant as z        { lexer_logger ("imag_constant " ^ z) ;
+                                Parser.IMAGNUMERAL (lexeme lexbuf) }
   | "target"                  { lexer_logger "target" ; Parser.TARGET } (* NB: the stanc2 parser allows variables to be named target. I think it's a bad idea and have disallowed it. *)
   | "get_lp"                  { lexer_logger "get_lp" ;
                                 Input_warnings.deprecated "get_lp"
@@ -201,23 +223,31 @@ rule token = parse
                                       token old_lexbuf }
 
   | _                         { raise (Errors.SyntaxError
-                                (Errors.Lexing (lexeme (Stack.top_exn include_stack),
-                                        Middle.Location.of_position_exn
-                                        (lexeme_start_p
-                                          (Stack.top_exn include_stack))))) }
+                                        (Errors.Lexing
+                                          (Middle.Location.of_position_exn
+                                            (lexeme_start_p
+                                              (Stack.top_exn include_stack))))) }
 
 (* Multi-line comment terminated by "*/" *)
-and multiline_comment = parse
-  | "*/"   { () }
-  | eof    { failwith "unterminated comment" }
-  | '\n'   { incr_linenum lexbuf; multiline_comment lexbuf }
-  | _      { multiline_comment lexbuf }
+and multiline_comment state = parse
+  | "*/"     { let ((pos, lines), buffer) = state in
+               let lines = (Buffer.contents buffer) :: lines in
+               add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p }
+  | eof      { raise (Errors.SyntaxError
+                      (Errors.UnexpectedEOF
+                        (Middle.Location.of_position_exn lexbuf.lex_curr_p))) }
+  | newline  { incr_linenum lexbuf;
+               let ((pos, lines), buffer) = state in
+               let lines = (Buffer.contents buffer) :: lines in
+               let newbuf = Buffer.create 16 in
+               multiline_comment ((pos, lines), newbuf) lexbuf }
+  | _        { Buffer.add_string (snd state) (lexeme lexbuf) ; multiline_comment state lexbuf }
 
 (* Single-line comment terminated by a newline *)
-and singleline_comment = parse
-  | newline   { incr_linenum lexbuf }
-  | eof    { () }
-  | _      { singleline_comment lexbuf }
+and singleline_comment state = parse
+  | newline  { add_comment state lexbuf.lex_curr_p ; incr_linenum lexbuf }
+  | eof      { add_comment state lexbuf.lex_curr_p }
+  | _        { Buffer.add_string (snd state) (lexeme lexbuf) ; singleline_comment state lexbuf }
 
 {
 }

@@ -1,3 +1,9 @@
+#### Submission Checklist
+
+- [ ] Run unit tests
+- Documentation
+    - [ ] If a user-facing facing change was made, the documentation PR is here: <LINK>
+    - [ ] OR, no user-facing changes were made
 
 ## Release notes
 

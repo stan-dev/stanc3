@@ -1,0 +1,26 @@
+Warning in 'stan_models/python_kwrds.stan', line 13, column 12: Found int division:
+  lambda / 3
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  lambda / 3.0
+If rounding is intended please use the integer division operator %/%.
+Identifier finally is a reserved word in python, renamed to finally__
+Identifier assert is a reserved word in python, renamed to assert__
+Identifier lambda is a reserved word in python, renamed to lambda__
+Identifier yield is a reserved word in python, renamed to yield__
+Identifier await is a reserved word in python, renamed to await__
+Identifier finally is a reserved word in python, renamed to finally__
+Identifier finally is a reserved word in python, renamed to finally__
+Identifier assert is a reserved word in python, renamed to assert__
+Identifier yield is a reserved word in python, renamed to yield__
+Identifier lambda is a reserved word in python, renamed to lambda__
+Identifier finally is a reserved word in python, renamed to finally__
+Identifier lambda is a reserved word in python, renamed to lambda__
+Identifier await is a reserved word in python, renamed to await__
+Identifier finally is a reserved word in python, renamed to finally__
+Identifier assert is a reserved word in python, renamed to assert__
+Identifier assert is a reserved word in python, renamed to assert__
+Identifier finally is a reserved word in python, renamed to finally__
+Identifier assert is a reserved word in python, renamed to assert__
+Identifier assert is a reserved word in python, renamed to assert__
+Identifier lambda is a reserved word in python, renamed to lambda__

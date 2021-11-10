@@ -1,11 +1,37 @@
+(** Storing locations in the original source *)
+
 open Core_kernel
+
+(**/**)
+
 module Str = Re.Str
+
+(**/**)
 
 (** Source code locations *)
 type t =
   {filename: string; line_num: int; col_num: int; included_from: t option}
-[@@deriving sexp, hash, compare]
+[@@deriving sexp, hash]
 
+let compare loc1 loc2 =
+  let rec unfold = function
+    | {included_from= None; _} as loc -> [loc]
+    | {included_from= Some loc1; _} as loc2 -> loc2 :: unfold loc1
+  in
+  let rec go = function
+    | [], [] -> 0
+    | [], _ -> -1
+    | _, [] -> 1
+    | hd1 :: tl1, hd2 :: tl2 ->
+        let x = Int.compare hd1.line_num hd2.line_num in
+        if x <> 0 then x
+        else
+          let x = Int.compare hd1.col_num hd2.col_num in
+          if x <> 0 then x else go (tl1, tl2)
+  in
+  go (List.rev (unfold loc1), List.rev (unfold loc2))
+
+(** Will attempt to {b open} the file and*)
 let pp_context_exn ppf {filename; line_num; col_num; _} =
   let open In_channel in
   let input = create filename in
@@ -36,7 +62,7 @@ let context_to_string file =
 
 let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 
-(* If printed_filename is passed, it will replace the filename printed for
+(** If printed_filename is passed, it will replace the filename printed for
    this Location.t and all recursively included ones.
 *)
 let rec to_string ?printed_filename ?(print_file = true) ?(print_line = true)

@@ -1,0 +1,52 @@
+{0 stanc3 Developer Documentation}
+
+This document provides the documentation for the internals of the stanc3
+compiler {b intended for developers}.
+
+If you are looking for the user-facing documentation, see
+{{:https://mc-stan.org/docs/stan-users-guide/using-the-stan-compiler.html}
+this section} of the Stan User's Guide.
+
+{1 Getting Started}
+
+See {{!page-getting_started}the Getting Started page} for information on setting up a stanc3 development environment.
+
+{2 Resources}
+Here are some resources (internal and external) which may be useful
+to a new developer.
+
+- {{:https://github.com/stan-dev/stanc3/wiki/Format---Fmt-code-generation-quickstart}
+  Wiki on using [Format]/[Fmt] module}
+- {{!page-parser_messages}
+  Page on modifying the parser's error messages}
+- {{:https://github.com/stan-dev/stanc3/wiki/Software-Engineering-best-practices}
+  Wiki on generic software best practices}
+
+{2 Getting Involved}
+
+- Here are {{:https://github.com/stan-dev/stanc3/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22}
+  some good issues to tackle} - make sure to comment on them first to see if
+  they are still relevant.
+- We also always appreciated more documentation - either this documentation, which uses
+  {{:https://ocaml.github.io/odoc/index.html}odoc}, or the Stan user-facing documentation
+  at {{:https://github.com/stan-dev/docs}stan-dev/docs}.
+
+
+{1 Modules}
+The major code sections of the compiler are as follows (these are links):
+
+{!modules:
+
+Frontend
+Middle
+Common
+Analysis_and_optimization
+Stan_math_backend
+}
+
+These are related in the following architecture diagram
+
+{%html: <img src="https://github.com/stan-dev/stanc3/raw/master/docs/img/architecture.png"/> %}
+
+We additionally use several {{!page-dependencies} outside dependencies}.
+

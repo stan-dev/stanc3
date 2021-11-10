@@ -43,7 +43,9 @@ and free_vars_idx (i : Expr.Typed.t Index.t) =
   | Between (e1, e2) -> Set.Poly.union (free_vars_expr e1) (free_vars_expr e2)
 
 and free_vars_fnapp kind l =
-  let arg_vars = List.map ~f:free_vars_expr l in
+  let arg_vars =
+    List.map ~f:free_vars_expr (l @ Fun_kind.collect_exprs kind)
+  in
   match kind with
   | Fun_kind.UserDefined (f, _) ->
       Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
@@ -247,14 +249,14 @@ let dual_partial_function_lattice (type dv cv)
   : LATTICE_NO_BOT
     with type properties = (dv, cv) Map.Poly.t )
 
-(* The lattice of partial functions, where we add a fresh bottom element,
+(** The lattice of partial functions, where we add a fresh bottom element,
    to represent an inconsistent combination of functions *)
 let dual_partial_function_lattice_with_bot (type dv cv)
     (module Dom : TOTALTYPE with type vals = dv)
     (module Codom : TYPE with type vals = cv) =
   new_bot (dual_partial_function_lattice (module Dom) (module Codom))
 
-(* A dual powerset lattice, where we set the initial set to be empty *)
+(** A dual powerset lattice, where we set the initial set to be empty *)
 let dual_powerset_lattice_empty_initial (type v)
     (module T : TOTALTYPE with type vals = v) =
   dual_powerset_lattice
@@ -265,7 +267,7 @@ let dual_powerset_lattice_empty_initial (type v)
       let total = T.total
     end )
 
-(* A powerset lattice, where we set the initial set to be empty *)
+(** A powerset lattice, where we set the initial set to be empty *)
 let powerset_lattice_empty_initial (type v)
     (module T : TYPE with type vals = v) =
   powerset_lattice
@@ -273,7 +275,7 @@ let powerset_lattice_empty_initial (type v)
 
                    let initial = Set.Poly.empty end)
 
-(* The specific powerset lattice we use for reaching definitions analysis *)
+(** The specific powerset lattice we use for reaching definitions analysis *)
 let reaching_definitions_lattice (type v l)
     (module Variables : INITIALTYPE with type vals = v)
     (module Labels : TYPE with type vals = l) =
@@ -284,7 +286,7 @@ let reaching_definitions_lattice (type v l)
       let initial = Set.Poly.map ~f:(fun x -> (x, None)) Variables.initial
     end )
 
-(* Autodiff-level lattice *)
+(** Autodiff-level lattice *)
 let autodiff_level_lattice autodiff_variables =
   powerset_lattice
     (module struct type vals = string
@@ -438,7 +440,7 @@ let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t) =
   match s with
   | Assignment ((x, _, _), _) -> Set.Poly.singleton x
   | TargetPE _ -> Set.Poly.singleton "target"
-  | NRFunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget)), _) ->
+  | NRFunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _) ->
       Set.Poly.singleton "target"
   | For {loopvar= x; _} -> Set.Poly.singleton x
   | Decl {decl_id= _; _}
@@ -481,7 +483,8 @@ let reaching_definitions_transfer
          |For {loopvar= x; _} ->
             Set.filter p ~f:(fun (y, _) -> y = x)
         | TargetPE _ -> Set.filter p ~f:(fun (y, _) -> y = "target")
-        | NRFunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget)), _) ->
+        | NRFunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _)
+          ->
             Set.filter p ~f:(fun (y, _) -> y = "target")
         | NRFunApp (_, _)
          |Break | Continue | Return _ | Skip
@@ -545,8 +548,9 @@ let rec used_subexpressions_expr (e : Expr.Typed.t) =
     (Expr.Typed.Set.singleton e)
     ( match e.pattern with
     | Var _ | Lit (_, _) -> Expr.Typed.Set.empty
-    | FunApp (_, l) ->
-        Expr.Typed.Set.union_list (List.map ~f:used_subexpressions_expr l)
+    | FunApp (k, l) ->
+        Expr.Typed.Set.union_list
+          (List.map ~f:used_subexpressions_expr (l @ Fun_kind.collect_exprs k))
     | TernaryIf (e1, e2, e3) ->
         Expr.Typed.Set.union_list
           [ used_subexpressions_expr e1
@@ -583,7 +587,8 @@ let rec used_expressions_stmt_help f
         [ f e
         ; used_expressions_stmt_help f b1.pattern
         ; used_expressions_stmt_help f b2.pattern ]
-  | NRFunApp (_, l) -> Expr.Typed.Set.union_list (List.map ~f l)
+  | NRFunApp (k, l) ->
+      Expr.Typed.Set.union_list (List.map ~f (l @ Fun_kind.collect_exprs k))
   | Decl _ | Return None | Break | Continue | Skip -> Expr.Typed.Set.empty
   | IfElse (e, b, None) | While (e, b) ->
       Expr.Typed.Set.union (f e) (used_expressions_stmt_help f b.pattern)
@@ -617,7 +622,8 @@ let top_used_expressions_stmt_help f
         (Expr.Typed.Set.union_list
            (List.map ~f:(used_expressions_idx_help f) l))
   | While (e, _) | IfElse (e, _, _) -> f e
-  | NRFunApp (_, l) -> Expr.Typed.Set.union_list (List.map ~f l)
+  | NRFunApp (k, l) ->
+      Expr.Typed.Set.union_list (List.map ~f (l @ Fun_kind.collect_exprs k))
   | Profile _ | Block _ | SList _ | Decl _
    |Return None
    |Break | Continue | Skip ->

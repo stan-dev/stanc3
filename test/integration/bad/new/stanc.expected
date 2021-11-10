@@ -7,7 +7,7 @@ Syntax error in 'arg-decl-bad1.stan', line 2, column 16 to column 21, parsing er
      3:  }
    -------------------------------------------------
 
-An argument declaration (unsized type followed by identifier) is expected.
+An argument declaration (unsized and unconstrained type followed by identifier) is expected.
   $ ../../../../../install/default/bin/stanc blocks-bad1.stan
 Syntax error in 'blocks-bad1.stan', line 1, column 5 to column 10, parsing error:
    -------------------------------------------------
@@ -105,7 +105,8 @@ Syntax error in 'blocks-bad9.stan', line 1, column 19 to column 23, parsing erro
 
 Expect a statement or top-level variable declaration.
   $ ../../../../../install/default/bin/stanc compound-assign-decl-bad1.stan
-Warning in 'compound-assign-decl-bad1.stan', line 1, column 18: assignment operator <- is deprecated in the Stan language; use = instead.Syntax error in 'compound-assign-decl-bad1.stan', line 1, column 18 to column 20, parsing error:
+Warning in 'compound-assign-decl-bad1.stan', line 1, column 18: assignment operator <- is deprecated in the Stan language; use = instead.
+Syntax error in 'compound-assign-decl-bad1.stan', line 1, column 18 to column 20, parsing error:
    -------------------------------------------------
      1:  model { real T[1] <- {5.0};}
                            ^
@@ -113,7 +114,8 @@ Warning in 'compound-assign-decl-bad1.stan', line 1, column 18: assignment opera
 
 Expected  ";" or assignment.
   $ ../../../../../install/default/bin/stanc compound-assign-decl-bad2.stan
-Warning in 'compound-assign-decl-bad2.stan', line 1, column 29: assignment operator <- is deprecated in the Stan language; use = instead.Syntax error in 'compound-assign-decl-bad2.stan', line 1, column 29 to column 31, parsing error:
+Warning in 'compound-assign-decl-bad2.stan', line 1, column 29: assignment operator <- is deprecated in the Stan language; use = instead.
+Syntax error in 'compound-assign-decl-bad2.stan', line 1, column 29 to column 31, parsing error:
    -------------------------------------------------
      1:  transformed data { real T[1] <- {1.1};}
                                       ^
@@ -200,6 +202,17 @@ Syntax error in 'fundef-bad1.stan', line 1, column 20 to column 25, parsing erro
    -------------------------------------------------
 
 List of commas expected.
+  $ ../../../../../install/default/bin/stanc fundef-bad10.stan
+Syntax error in 'fundef-bad10.stan', line 2, column 12 to column 23, parsing error:
+   -------------------------------------------------
+     1:  functions {
+     2:     void foo(corr_matrix x){
+                     ^
+     3:       return;
+     4:     }
+   -------------------------------------------------
+
+An argument declaration (unsized and unconstrained type followed by identifier) is expected.
   $ ../../../../../install/default/bin/stanc fundef-bad2.stan
 Syntax error in 'fundef-bad2.stan', line 1, column 25 to column 26, parsing error:
    -------------------------------------------------
@@ -247,7 +260,7 @@ Syntax error in 'fundef-bad7.stan', line 1, column 21 to column 26, parsing erro
                               ^
    -------------------------------------------------
 
-(Non-void) type expected in function argument declaration.
+An argument declaration (unsized and unconstrained type followed by identifier) is expected.
   $ ../../../../../install/default/bin/stanc fundef-bad8.stan
 Semantic error in 'fundef-bad8.stan', line 1, column 17 to column 22:
    -------------------------------------------------
@@ -1149,7 +1162,8 @@ Syntax error in 'ill-formed-statement20.stan', line 1, column 23 to column 28, p
 
 Expected "(" after "for".
   $ ../../../../../install/default/bin/stanc ill-formed-statement21.stan
-Warning in 'ill-formed-statement21.stan', line 1, column 19: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.Syntax error in 'ill-formed-statement21.stan', line 1, column 28 to column 33, parsing error:
+Warning in 'ill-formed-statement21.stan', line 1, column 19: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
+Syntax error in 'ill-formed-statement21.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
      1:  transformed data { get_lp ( while
                                      ^
@@ -1157,7 +1171,8 @@ Warning in 'ill-formed-statement21.stan', line 1, column 19: get_lp() function i
 
 Expected ")" after "get_lp(".
   $ ../../../../../install/default/bin/stanc ill-formed-statement22.stan
-Warning in 'ill-formed-statement22.stan', line 1, column 19: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.Syntax error in 'ill-formed-statement22.stan', line 1, column 26 to column 31, parsing error:
+Warning in 'ill-formed-statement22.stan', line 1, column 19: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
+Syntax error in 'ill-formed-statement22.stan', line 1, column 26 to column 31, parsing error:
    -------------------------------------------------
      1:  transformed data { get_lp while
                                    ^
@@ -1213,7 +1228,8 @@ Syntax error in 'ill-formed-statement28.stan', line 1, column 25 to column 26, p
 
 Ill-formed expression. Expression expected after "(", for test of conditional control flow construct.
   $ ../../../../../install/default/bin/stanc ill-formed-statement29.stan
-Warning in 'ill-formed-statement29.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.Syntax error in 'ill-formed-statement29.stan', line 1, column 43 to column 48, parsing error:
+Warning in 'ill-formed-statement29.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Syntax error in 'ill-formed-statement29.stan', line 1, column 43 to column 48, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( 1) while}
                                                     ^
@@ -1229,7 +1245,8 @@ Syntax error in 'ill-formed-statement3.stan', line 1, column 36 to column 40, pa
 
 Ill-formed statement. Expected statement after ")"  for the loop body of the for loop..
   $ ../../../../../install/default/bin/stanc ill-formed-statement30.stan
-Warning in 'ill-formed-statement30.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.Syntax error in 'ill-formed-statement30.stan', line 1, column 42 to column 47, parsing error:
+Warning in 'ill-formed-statement30.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Syntax error in 'ill-formed-statement30.stan', line 1, column 42 to column 47, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( 1 while}
                                                    ^
@@ -1237,7 +1254,8 @@ Warning in 'ill-formed-statement30.stan', line 1, column 19: increment_log_prob(
 
 Ill-formed statement. Expected expression followed by ");" after "(".
   $ ../../../../../install/default/bin/stanc ill-formed-statement31.stan
-Warning in 'ill-formed-statement31.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.Syntax error in 'ill-formed-statement31.stan', line 1, column 44 to column 49, parsing error:
+Warning in 'ill-formed-statement31.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Syntax error in 'ill-formed-statement31.stan', line 1, column 44 to column 49, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( T ) while
                                                      ^
@@ -1245,7 +1263,8 @@ Warning in 'ill-formed-statement31.stan', line 1, column 19: increment_log_prob(
 
 Ill-formed statement. Expected ";" after ")".
   $ ../../../../../install/default/bin/stanc ill-formed-statement32.stan
-Warning in 'ill-formed-statement32.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.Syntax error in 'ill-formed-statement32.stan', line 1, column 42 to column 43, parsing error:
+Warning in 'ill-formed-statement32.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Syntax error in 'ill-formed-statement32.stan', line 1, column 42 to column 43, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( T ~
                                                    ^
@@ -1253,7 +1272,8 @@ Warning in 'ill-formed-statement32.stan', line 1, column 19: increment_log_prob(
 
 Ill-formed statement. Expected expression followed by ");" after "(".
   $ ../../../../../install/default/bin/stanc ill-formed-statement33.stan
-Warning in 'ill-formed-statement33.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.Syntax error in 'ill-formed-statement33.stan', line 1, column 40 to column 45, parsing error:
+Warning in 'ill-formed-statement33.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Syntax error in 'ill-formed-statement33.stan', line 1, column 40 to column 45, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( while
                                                  ^
@@ -1261,7 +1281,8 @@ Warning in 'ill-formed-statement33.stan', line 1, column 19: increment_log_prob(
 
 Ill-formed statement. Expected expression followed by ");" after "(".
   $ ../../../../../install/default/bin/stanc ill-formed-statement34.stan
-Warning in 'ill-formed-statement34.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.Syntax error in 'ill-formed-statement34.stan', line 1, column 39 to column 44, parsing error:
+Warning in 'ill-formed-statement34.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Syntax error in 'ill-formed-statement34.stan', line 1, column 39 to column 44, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob  while
                                                 ^

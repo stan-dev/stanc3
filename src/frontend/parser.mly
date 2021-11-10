@@ -28,11 +28,12 @@ let nest_unsized_array basic_type n =
 %token LBRACE RBRACE LPAREN RPAREN LBRACK RBRACK LABRACK RABRACK COMMA SEMICOLON
        BAR
 %token RETURN IF ELSE WHILE FOR IN BREAK CONTINUE PROFILE
-%token VOID INT REAL VECTOR ROWVECTOR ARRAY MATRIX ORDERED POSITIVEORDERED SIMPLEX
+%token VOID INT REAL COMPLEX VECTOR ROWVECTOR ARRAY MATRIX ORDERED POSITIVEORDERED SIMPLEX
        UNITVECTOR CHOLESKYFACTORCORR CHOLESKYFACTORCOV CORRMATRIX COVMATRIX
 %token LOWER UPPER OFFSET MULTIPLIER
 %token <string> INTNUMERAL
 %token <string> REALNUMERAL
+%token <string> IMAGNUMERAL
 %token <string> STRINGLITERAL
 %token <string> IDENTIFIER
 %token TARGET
@@ -70,8 +71,7 @@ let nest_unsized_array basic_type n =
 %nonassoc ELSE
 
 (* Top level rule *)
-
-%start <Ast.untyped_program> program
+%start <Ast.untyped_program> program functions_only
 %%
 
 
@@ -102,38 +102,59 @@ program:
       ; parametersblock= opb
       ; transformedparametersblock= otpb
       ; modelblock= omb
-      ; generatedquantitiesblock= ogb }
+      ; generatedquantitiesblock= ogb
+      ; comments= [] }
+    }
+
+functions_only:
+  | fd = list(function_def) EOF
+    { grammar_logger "functions_only";
+      { functionblock= Some {stmts= fd; xloc= Location_span.of_positions_exn $loc}
+      ; datablock= None
+      ; transformeddatablock= None
+      ; parametersblock= None
+      ; transformedparametersblock= None
+      ; modelblock= None
+      ; generatedquantitiesblock= None
+      ; comments= [] }
     }
 
 (* blocks *)
 function_block:
   | FUNCTIONBLOCK LBRACE fd=list(function_def) RBRACE
-    {  grammar_logger "function_block" ; fd}
+    { grammar_logger "function_block" ;
+      {stmts= fd; xloc= Location_span.of_positions_exn $loc} }
 
 data_block:
   | DATABLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
-    { grammar_logger "data_block" ; List.concat tvd }
+    { grammar_logger "data_block" ;
+      {stmts= List.concat tvd; xloc= Location_span.of_positions_exn $loc} }
 
 transformed_data_block:
   | TRANSFORMEDDATABLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    {  grammar_logger "transformed_data_block" ; List.concat tvds }
+    { grammar_logger "transformed_data_block" ;
+      {stmts= List.concat tvds; xloc= Location_span.of_positions_exn $loc} }
     (* NOTE: this allows mixing of statements and top_var_decls *)
 
 parameters_block:
   | PARAMETERSBLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
-    { grammar_logger "parameters_block" ; List.concat tvd }
+    { grammar_logger "parameters_block" ;
+      {stmts= List.concat tvd; xloc= Location_span.of_positions_exn $loc} }
 
 transformed_parameters_block:
   | TRANSFORMEDPARAMETERSBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    { grammar_logger "transformed_parameters_block" ; List.concat tvds }
+    { grammar_logger "transformed_parameters_block" ;
+      {stmts= List.concat tvds; xloc= Location_span.of_positions_exn $loc} }
 
 model_block:
   | MODELBLOCK LBRACE vds=list(vardecl_or_statement) RBRACE
-    { grammar_logger "model_block" ; List.concat vds  }
+    { grammar_logger "model_block" ;
+      {stmts= List.concat vds; xloc= Location_span.of_positions_exn $loc} }
 
 generated_quantities_block:
   | GENERATEDQUANTITIESBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    { grammar_logger "generated_quantities_block" ; List.concat tvds }
+    { grammar_logger "generated_quantities_block" ;
+      {stmts= List.concat tvds; xloc= Location_span.of_positions_exn $loc} }
 
 (* function definitions *)
 identifier:
@@ -164,6 +185,7 @@ decl_identifier:
   | VOID { build_id "void" $loc }
   | INT { build_id "int" $loc }
   | REAL { build_id "real" $loc }
+  | COMPLEX { build_id "complex" $loc }
   | VECTOR { build_id "vector" $loc }
   | ROWVECTOR { build_id "row_vector" $loc }
   | MATRIX { build_id "matrix" $loc }
@@ -219,6 +241,8 @@ basic_type:
     {  grammar_logger "basic_type INT" ; UnsizedType.UInt  }
   | REAL
     {  grammar_logger "basic_type REAL"  ; UnsizedType.UReal }
+  | COMPLEX
+    { grammar_logger "basic_type COMPLEX" ; UnsizedType.UComplex }
   | VECTOR
     {  grammar_logger "basic_type VECTOR" ; UnsizedType.UVector }
   | ROWVECTOR
@@ -376,57 +400,68 @@ top_var_decl_no_assign:
     { grammar_logger "top_var_decl_no_assign" ;
       d_fn ~is_global:true
     }
+  | SEMICOLON
+    { grammar_logger "top_var_decl_no_assign_skip"; 
+      [ { stmt= Skip
+        ; smeta= { loc= Location_span.of_positions_exn $loc
+        }
+      }] 
+    }
 
 sized_basic_type:
   | INT
     { grammar_logger "INT_var_type" ; (SizedType.SInt, Identity) }
   | REAL
     { grammar_logger "REAL_var_type" ; (SizedType.SReal, Identity) }
+  | COMPLEX
+    { grammar_logger "COMPLEX_var_type" ; (SizedType.SComplex, Identity) }
   | VECTOR LBRACK e=expression RBRACK
-    { grammar_logger "VECTOR_var_type" ; (SizedType.SVector e, Identity) }
+    { grammar_logger "VECTOR_var_type" ; (SizedType.SVector (Common.Helpers.AoS, e), Identity) }
   | ROWVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "ROWVECTOR_var_type" ; (SizedType.SRowVector e , Identity) }
+    { grammar_logger "ROWVECTOR_var_type" ; (SizedType.SRowVector (AoS, e) , Identity) }
   | MATRIX LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (e1, e2), Identity) }
+    { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (AoS, e1, e2), Identity) }
 
 top_var_type:
   | INT r=range_constraint
     { grammar_logger "INT_top_var_type" ; (SInt, r) }
   | REAL c=type_constraint
     { grammar_logger "REAL_top_var_type" ; (SReal, c) }
+  | COMPLEX c=type_constraint
+    { grammar_logger "COMPLEX_var_type" ; (SComplex, c) }
   | VECTOR c=type_constraint LBRACK e=expression RBRACK
-    { grammar_logger "VECTOR_top_var_type" ; (SVector e, c) }
+    { grammar_logger "VECTOR_top_var_type" ; (SVector (AoS, e), c) }
   | ROWVECTOR c=type_constraint LBRACK e=expression RBRACK
-    { grammar_logger "ROWVECTOR_top_var_type" ; (SRowVector e, c) }
+    { grammar_logger "ROWVECTOR_top_var_type" ; (SRowVector (AoS, e), c) }
   | MATRIX c=type_constraint LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "MATRIX_top_var_type" ; (SMatrix (e1, e2), c) }
+    { grammar_logger "MATRIX_top_var_type" ; (SMatrix (AoS, e1, e2), c) }
   | ORDERED LBRACK e=expression RBRACK
-    { grammar_logger "ORDERED_top_var_type" ; (SVector e, Ordered) }
+    { grammar_logger "ORDERED_top_var_type" ; (SVector (AoS, e), Ordered) }
   | POSITIVEORDERED LBRACK e=expression RBRACK
     {
       grammar_logger "POSITIVEORDERED_top_var_type" ;
-      (SVector e, PositiveOrdered)
+      (SVector (AoS, e), PositiveOrdered)
     }
   | SIMPLEX LBRACK e=expression RBRACK
-    { grammar_logger "SIMPLEX_top_var_type" ; (SVector e, Simplex) }
+    { grammar_logger "SIMPLEX_top_var_type" ; (SVector (AoS, e), Simplex) }
   | UNITVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "UNITVECTOR_top_var_type" ; (SVector e, UnitVector) }
+    { grammar_logger "UNITVECTOR_top_var_type" ; (SVector (AoS, e), UnitVector) }
   | CHOLESKYFACTORCORR LBRACK e=expression RBRACK
     {
       grammar_logger "CHOLESKYFACTORCORR_top_var_type" ;
-      (SMatrix (e, e), CholeskyCorr)
+      (SMatrix (AoS, e, e), CholeskyCorr)
     }
   | CHOLESKYFACTORCOV LBRACK e1=expression oe2=option(pair(COMMA, expression))
     RBRACK
     {
       grammar_logger "CHOLESKYFACTORCOV_top_var_type" ;
-      match oe2 with Some (_,e2) -> ( SMatrix (e1, e2), CholeskyCov)
-                   | _           ->  (SMatrix (e1, e1),  CholeskyCov)
+      match oe2 with Some (_,e2) -> ( SMatrix (AoS, e1, e2), CholeskyCov)
+                   | _           ->  (SMatrix (AoS, e1, e1),  CholeskyCov)
     }
   | CORRMATRIX LBRACK e=expression RBRACK
-    { grammar_logger "CORRMATRIX_top_var_type" ; (SMatrix (e, e), Correlation) }
+    { grammar_logger "CORRMATRIX_top_var_type" ; (SMatrix (AoS, e, e), Correlation) }
   | COVMATRIX LBRACK e=expression RBRACK
-    { grammar_logger "COVMATRIX_top_var_type" ; (SMatrix (e, e), Covariance) }
+    { grammar_logger "COVMATRIX_top_var_type" ; (SMatrix (AoS, e, e), Covariance) }
 
 type_constraint:
   | r=range_constraint
@@ -436,14 +471,14 @@ type_constraint:
 
 range_constraint:
   | (* nothing *)
-    { grammar_logger "empty_constraint" ; Program.Identity }
+    { grammar_logger "empty_constraint" ; Transformation.Identity }
   | LABRACK r=range RABRACK
     {  grammar_logger "range_constraint" ; r }
 
 range:
   | LOWER ASSIGN e1=constr_expression COMMA UPPER ASSIGN e2=constr_expression
   | UPPER ASSIGN e2=constr_expression COMMA LOWER ASSIGN e1=constr_expression
-    { grammar_logger "lower_upper_range" ; Program.LowerUpper (e1, e2) }
+    { grammar_logger "lower_upper_range" ; Transformation.LowerUpper (e1, e2) }
   | LOWER ASSIGN e=constr_expression
     {  grammar_logger "lower_range" ; Lower e }
   | UPPER ASSIGN e=constr_expression
@@ -452,7 +487,7 @@ range:
 offset_mult:
   | OFFSET ASSIGN e1=constr_expression COMMA MULTIPLIER ASSIGN e2=constr_expression
   | MULTIPLIER ASSIGN e2=constr_expression COMMA OFFSET ASSIGN e1=constr_expression
-    { grammar_logger "offset_mult" ; Program.OffsetMultiplier (e1, e2) }
+    { grammar_logger "offset_mult" ; Transformation.OffsetMultiplier (e1, e2) }
   | OFFSET ASSIGN e=constr_expression
     { grammar_logger "offset" ; Offset e }
   | MULTIPLIER ASSIGN e=constr_expression
@@ -539,6 +574,8 @@ common_expression:
     {  grammar_logger ("intnumeral " ^ i) ; IntNumeral i }
   | r=REALNUMERAL
     {  grammar_logger ("realnumeral " ^ r) ; RealNumeral r }
+  | z=IMAGNUMERAL
+    {  grammar_logger ("imagnumeral " ^ z) ; ImagNumeral (String.drop_suffix z 1) }
   | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE
     {  grammar_logger "array_expression" ; ArrayExpr xs  }
   | LBRACK xs=separated_list(COMMA, expression) RBRACK
@@ -662,12 +699,12 @@ statement:
   | s=atomic_statement
     {  grammar_logger "atomic_statement" ;
        {stmt= s;
-        smeta= { loc=Location_span.of_positions_exn $loc} }
+        smeta= { loc=Location_span.of_positions_exn $sloc} }
     }
   | s=nested_statement
     {  grammar_logger "nested_statement" ;
        {stmt= s;
-        smeta={loc = Location_span.of_positions_exn $loc} }
+        smeta={loc = Location_span.of_positions_exn $sloc} }
     }
 
 atomic_statement:

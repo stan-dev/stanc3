@@ -18,18 +18,20 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 11> locations_array__ = 
+static constexpr std::array<const char*, 13> locations_array__ = 
 {" (found before start of program)",
- " (in 'simple_function.stan', line 13, column 4 to column 10)",
- " (in 'simple_function.stan', line 14, column 11 to column 12)",
- " (in 'simple_function.stan', line 14, column 13 to column 14)",
- " (in 'simple_function.stan', line 14, column 4 to column 18)",
+ " (in 'simple_function.stan', line 16, column 4 to column 10)",
+ " (in 'simple_function.stan', line 17, column 11 to column 12)",
+ " (in 'simple_function.stan', line 17, column 13 to column 14)",
+ " (in 'simple_function.stan', line 17, column 4 to column 18)",
  " (in 'simple_function.stan', line 3, column 7 to column 18)",
  " (in 'simple_function.stan', line 2, column 73 to line 4, column 5)",
  " (in 'simple_function.stan', line 6, column 7 to column 16)",
  " (in 'simple_function.stan', line 5, column 54 to line 7, column 5)",
  " (in 'simple_function.stan', line 9, column 7 to column 16)",
- " (in 'simple_function.stan', line 8, column 36 to line 10, column 5)"};
+ " (in 'simple_function.stan', line 8, column 36 to line 10, column 5)",
+ " (in 'simple_function.stan', line 12, column 7 to column 24)",
+ " (in 'simple_function.stan', line 11, column 39 to line 13, column 5)"};
 
 
 template <typename T0__, typename T2__, typename T3__, typename T4__,
@@ -58,8 +60,6 @@ foo1(const T0__& a, const int& b, const std::vector<T2__>& c,
     return 5.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -98,8 +98,6 @@ foo2(const T0__& a_arg__, const std::vector<Eigen::Matrix<T1__, -1, -1>>& b,
     return a;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -134,8 +132,6 @@ foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
     return b;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -147,6 +143,38 @@ stan::value_type_t<T1__>>, -1, -1>
 operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const 
 {
 return foo3(a, b, pstream__);
+}
+};
+
+template <typename T0__, typename T1__>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
+stan::value_type_t<T1__>>, -1, -1>
+add_udf(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
+          stan::value_type_t<T1__>>;
+  int current_statement__ = 0; 
+  const auto& a = to_ref(a_arg__);
+  const auto& b = to_ref(b_arg__);
+  static constexpr bool propto__ = true;
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
+  try {
+    current_statement__ = 11;
+    return add(a, b);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+  }
+  
+}
+
+struct add_udf_functor__ {
+template <typename T0__, typename T1__>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
+stan::value_type_t<T1__>>, -1, -1>
+operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const 
+{
+return add_udf(a, b, pstream__);
 }
 };
 
@@ -222,8 +250,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 0U;
     
@@ -250,8 +276,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -267,8 +291,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
     (void) propto__;
     double lp__ = 0.0;
@@ -291,21 +315,20 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -314,8 +337,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
     
@@ -386,8 +407,12 @@ class simple_function_model final : public model_base_crtp<simple_function_model
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec;
-      vars_vec.reserve(vars.size());
+      const size_t num_params__ = 0;
+      const size_t num_transformed = 0;
+      const size_t num_gen_quantities = 0;
+      std::vector<double> vars_vec(num_params__
+       + (emit_transformed_parameters * num_transformed)
+       + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -402,8 +427,13 @@ class simple_function_model final : public model_base_crtp<simple_function_model
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      write_array_impl(base_rng, params_r, params_i, vars,
-       emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_params__ = 0;
+      const size_t num_transformed = 0;
+      const size_t num_gen_quantities = 0;
+      vars.resize(num_params__
+        + (emit_transformed_parameters * num_transformed)
+        + (emit_generated_quantities * num_gen_quantities));
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -424,20 +454,37 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec;
-      params_r_vec.reserve(params_r.size());
+      std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
         params_r_vec.data(), params_r_vec.size());
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+     constexpr std::array<const char*, 0> names__{};
+      const std::array<Eigen::Index, 0> constrain_param_sizes__{};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
+    
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
+       }
+       ++size_iter__;
+     }
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = simple_function_model_namespace::simple_function_model;

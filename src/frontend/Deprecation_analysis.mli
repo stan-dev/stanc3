@@ -1,7 +1,7 @@
 open Core_kernel
 open Ast
 
-type t = Middle.Warnings.t
+type t = Warnings.t
 
 val find_udf_log_suffix :
   typed_statement -> (string * Middle.UnsizedType.t) option
@@ -17,5 +17,5 @@ val is_deprecated_distribution : string -> bool
 val deprecated_distributions : string String.Map.t
 val deprecated_functions : string String.Map.t
 val rename_deprecated : string String.Map.t -> string -> string
-val userdef_distributions : untyped_statement list option -> string list
+val userdef_distributions : untyped_statement block option -> string list
 val collect_warnings : typed_program -> t list

@@ -20,7 +20,7 @@ parameters {
   real dummy_parameter;
 }
 transformed parameters {
-
+  
 }
 model {
   dummy_parameter ~ normal(0, 1);
@@ -60,6 +60,108 @@ transformed parameters {
   cholesky_factor_cov[3] cfcov_33;
 }
 
+  $ ../../../../../install/default/bin/stanc --auto-format complex_scalar.stan
+functions {
+  complex foo() {
+    return to_complex();
+  }
+  real foo1(complex z) {
+    return 1.0;
+  }
+  complex foo2(real r) {
+    return to_complex(r);
+  }
+  complex foo3(complex z) {
+    return z;
+  }
+  array[] complex foo4() {
+    return {to_complex(), to_complex()};
+  }
+  real foo5(array[] complex z) {
+    return 1.0;
+  }
+  array[] complex foo6(real r) {
+    return {to_complex(r), to_complex(r, r)};
+  }
+  array[] complex foo7(array[] complex z) {
+    return z;
+  }
+}
+data {
+  int<lower=0> N;
+  complex d_complex;
+  array[N] complex d_complex_array;
+  array[N, 2] complex d_complex_array_2d;
+  array[N, 2, 3] complex d_complex_array_3d;
+}
+transformed data {
+  complex td_complex = d_complex;
+  td_complex = 1;
+  td_complex = to_complex(1, 2);
+  array[N] complex td_complex_array = d_complex_array;
+  array[2, 3] complex td_complex_array_2d;
+  array[2, 3, 4] complex td_complex_array_3d;
+  for (td_i in 1 : 2) {
+    for (td_j in 1 : 3) {
+      for (td_k in 1 : 4) {
+        td_complex_array_3d[td_i, td_j, td_k] = to_complex(1, 2.2);
+      }
+    }
+  }
+  real td_r = get_real(td_complex);
+  real td_i = get_imag(td_complex);
+}
+parameters {
+  complex p_complex;
+  array[N] complex p_complex_array;
+  array[N, 2] complex p_complex_array_2d;
+  array[N, 2, 3] complex p_complex_array_3d;
+}
+transformed parameters {
+  complex tp_complex = p_complex;
+  tp_complex = 1;
+  tp_complex = to_complex(1, 2);
+  array[N] complex tp_complex_array = p_complex_array;
+  array[2, 3] complex tp_complex_array_2d;
+  array[2, 3, 4] complex tp_complex_array_3d;
+  for (tp_i in 1 : 2) {
+    for (tp_j in 1 : 3) {
+      for (tp_k in 1 : 4) {
+        tp_complex_array_3d[tp_i, tp_j, tp_k] = to_complex(1, 2.2);
+      }
+    }
+  }
+  real tp_r = get_real(tp_complex);
+  real tp_i = get_imag(tp_complex);
+}
+model {
+  abs(p_complex) ~ normal(0, 1);
+}
+generated quantities {
+  complex gq_complex;
+  array[2] complex gq_complex_array;
+  array[2, 3] complex gq_complex_array_2d = {{1, 2, 3},
+                                             {to_complex(), to_complex(
+                                              1.1), to_complex(1, 2.1)}};
+  array[2, 3, 4] complex gq_complex_array_3d;
+  gq_complex = 3;
+  gq_complex_array[1] = to_complex(5.1, 6);
+  gq_complex = foo();
+  real gq_r = foo1(gq_complex);
+  gq_complex = foo2(gq_r);
+  gq_complex = foo3(gq_complex);
+  gq_complex_array = foo4();
+  gq_r = foo5(gq_complex_array);
+  gq_complex_array = foo6(gq_r);
+  gq_complex_array = foo7(gq_complex_array);
+  
+  // test imaginary literal
+  complex zi = 1 + 3.14i;
+  zi = zi * 0i;
+  complex yi = to_complex(0, 1.1) + to_complex(0.0, 2.2) + to_complex();
+  real x = get_real(3i - 40e-3i);
+}
+
   $ ../../../../../install/default/bin/stanc --auto-format data_qualifier_scope_xformed_data.stan
 functions {
   vector target_(vector y, vector theta, array[] real x_r, array[] int x_i) {
@@ -93,9 +195,11 @@ generated quantities {
 transformed data {
   vector[5] v = [1, 2, 3, 4, 5]';
   real y = 0.1;
+  
   print("y: ", y);
   y += 1;
   print("expect 1.1 actual y: ", y);
+  
   print("v: ", v);
   v[1] = v[2];
   print("expect: [2,2,3,4,5]  v: ", v);
@@ -112,70 +216,82 @@ functions {
           matrix a10, array[] matrix a11, array[,] matrix a12) {
     print("hi");
   }
+  
   int f1(int a1, array[] int a2, array[,] int a3, real a4, array[] real a5,
          array[,] real a6, vector a7, array[] vector a8, array[,] vector a9,
          matrix a10, array[] matrix a11, array[,] matrix a12) {
     return a1;
   }
+  
   array[] int f2(int a1, array[] int a2, array[,] int a3, real a4,
                  array[] real a5, array[,] real a6, vector a7,
                  array[] vector a8, array[,] vector a9, matrix a10,
                  array[] matrix a11, array[,] matrix a12) {
     return a2;
   }
+  
   array[,] int f3(int a1, array[] int a2, array[,] int a3, real a4,
                   array[] real a5, array[,] real a6, vector a7,
                   array[] vector a8, array[,] vector a9, matrix a10,
                   array[] matrix a11, array[,] matrix a12) {
     return a3;
   }
+  
   real f4(int a1, array[] int a2, array[,] int a3, real a4, array[] real a5,
           array[,] real a6, vector a7, array[] vector a8, array[,] vector a9,
           matrix a10, array[] matrix a11, array[,] matrix a12) {
     return a4;
   }
+  
   array[] real f5(int a1, array[] int a2, array[,] int a3, real a4,
                   array[] real a5, array[,] real a6, vector a7,
                   array[] vector a8, array[,] vector a9, matrix a10,
                   array[] matrix a11, array[,] matrix a12) {
     return a5;
   }
+  
   array[,] real f6(int a1, array[] int a2, array[,] int a3, real a4,
                    array[] real a5, array[,] real a6, vector a7,
                    array[] vector a8, array[,] vector a9, matrix a10,
                    array[] matrix a11, array[,] matrix a12) {
     return a6;
   }
+  
   vector f7(int a1, array[] int a2, array[,] int a3, real a4,
             array[] real a5, array[,] real a6, vector a7, array[] vector a8,
             array[,] vector a9, matrix a10, array[] matrix a11,
             array[,] matrix a12) {
     return a7;
   }
+  
   array[] vector f8(int a1, array[] int a2, array[,] int a3, real a4,
                     array[] real a5, array[,] real a6, vector a7,
                     array[] vector a8, array[,] vector a9, matrix a10,
                     array[] matrix a11, array[,] matrix a12) {
     return a8;
   }
+  
   array[,] vector f9(int a1, array[] int a2, array[,] int a3, real a4,
                      array[] real a5, array[,] real a6, vector a7,
                      array[] vector a8, array[,] vector a9, matrix a10,
                      array[] matrix a11, array[,] matrix a12) {
     return a9;
   }
+  
   matrix f10(int a1, array[] int a2, array[,] int a3, real a4,
              array[] real a5, array[,] real a6, vector a7, array[] vector a8,
              array[,] vector a9, matrix a10, array[] matrix a11,
              array[,] matrix a12) {
     return a10;
   }
+  
   array[] matrix f11(int a1, array[] int a2, array[,] int a3, real a4,
                      array[] real a5, array[,] real a6, vector a7,
                      array[] vector a8, array[,] vector a9, matrix a10,
                      array[] matrix a11, array[,] matrix a12) {
     return a11;
   }
+  
   array[,] matrix f12(int a1, array[] int a2, array[,] int a3, real a4,
                       array[] real a5, array[,] real a6, vector a7,
                       array[] vector a8, array[,] vector a9, matrix a10,
@@ -191,76 +307,89 @@ functions {
           matrix a10, array[] matrix a11, array[,] matrix a12) {
     print("hi");
   }
+  
   int f1(int a1, array[] int a2, array[,] int a3, real a4, array[] real a5,
          array[,] real a6, vector a7, array[] vector a8, array[,] vector a9,
          matrix a10, array[] matrix a11, array[,] matrix a12) {
     return a1;
   }
+  
   array[] int f2(int a1, array[] int a2, array[,] int a3, real a4,
                  array[] real a5, array[,] real a6, vector a7,
                  array[] vector a8, array[,] vector a9, matrix a10,
                  array[] matrix a11, array[,] matrix a12) {
     return a2;
   }
+  
   array[,] int f3(int a1, array[] int a2, array[,] int a3, real a4,
                   array[] real a5, array[,] real a6, vector a7,
                   array[] vector a8, array[,] vector a9, matrix a10,
                   array[] matrix a11, array[,] matrix a12) {
     return a3;
   }
+  
   real f4(int a1, array[] int a2, array[,] int a3, real a4, array[] real a5,
           array[,] real a6, vector a7, array[] vector a8, array[,] vector a9,
           matrix a10, array[] matrix a11, array[,] matrix a12) {
     return a4;
   }
+  
   array[] real f5(int a1, array[] int a2, array[,] int a3, real a4,
                   array[] real a5, array[,] real a6, vector a7,
                   array[] vector a8, array[,] vector a9, matrix a10,
                   array[] matrix a11, array[,] matrix a12) {
     return a5;
   }
+  
   array[,] real f6(int a1, array[] int a2, array[,] int a3, real a4,
                    array[] real a5, array[,] real a6, vector a7,
                    array[] vector a8, array[,] vector a9, matrix a10,
                    array[] matrix a11, array[,] matrix a12) {
     return a6;
   }
+  
   vector f7(int a1, array[] int a2, array[,] int a3, real a4,
             array[] real a5, array[,] real a6, vector a7, array[] vector a8,
             array[,] vector a9, matrix a10, array[] matrix a11,
             array[,] matrix a12) {
     return a7;
   }
+  
   array[] vector f8(int a1, array[] int a2, array[,] int a3, real a4,
                     array[] real a5, array[,] real a6, vector a7,
                     array[] vector a8, array[,] vector a9, matrix a10,
                     array[] matrix a11, array[,] matrix a12) {
     return a8;
   }
+  
   array[,] vector f9(int a1, array[] int a2, array[,] int a3, real a4,
                      array[] real a5, array[,] real a6, vector a7,
                      array[] vector a8, array[,] vector a9, matrix a10,
                      array[] matrix a11, array[,] matrix a12) {
     return a9;
   }
+  
   matrix f10(int a1, array[] int a2, array[,] int a3, real a4,
              array[] real a5, array[,] real a6, vector a7, array[] vector a8,
              array[,] vector a9, matrix a10, array[] matrix a11,
              array[,] matrix a12) {
     return a10;
   }
+  
   array[] matrix f11(int a1, array[] int a2, array[,] int a3, real a4,
                      array[] real a5, array[,] real a6, vector a7,
                      array[] vector a8, array[,] vector a9, matrix a10,
                      array[] matrix a11, array[,] matrix a12) {
     return a11;
   }
+  
   array[,] matrix f12(int a1, array[] int a2, array[,] int a3, real a4,
                       array[] real a5, array[,] real a6, vector a7,
                       array[] vector a8, array[,] vector a9, matrix a10,
                       array[] matrix a11, array[,] matrix a12) {
     return a12;
   }
+  
   array[,,,,] matrix f13(int a1, array[,,,] int a2, array[,,,,] int a3,
                          real a4, array[,,,] real a5, array[,,,,] real a6,
                          vector a7, array[,,,] vector a8,
@@ -416,11 +545,13 @@ transformed data {
   array[0] int x_int;
 }
 model {
-
+  
 }
 generated quantities {
   array[T, 2] real y_hat;
   y_hat = integrate_ode(sho, y0, t0, ts, theta, x, x_int);
+  
+  // add measurement error
   for (t in 1 : T) {
     y_hat[t, 1] = y_hat[t, 1] + normal_rng(0, 0.1);
     y_hat[t, 2] = y_hat[t, 2] + normal_rng(0, 0.1);
@@ -452,7 +583,7 @@ transformed data {
   array[0] int x_int;
 }
 model {
-
+  
 }
 generated quantities {
   array[T, 3] real y_hat;
@@ -462,6 +593,8 @@ generated quantities {
                             1e6);
   y_hat = integrate_ode_adams(sho, y0, t0, ts, theta, x, x_int, 1e-10, 1e-10,
                               1e6);
+  
+  // add measurement error
   for (t in 1 : T) {
     y_hat[t, 1] = y_hat[t, 1] + normal_rng(0, 0.1);
     y_hat[t, 2] = y_hat[t, 2] + normal_rng(0, 0.1);
@@ -537,6 +670,12 @@ model {
   z ~ normal(0, 1);
 }
 
+  $ ../../../../../install/default/bin/stanc --auto-format test_transform_inits.stan
+parameters {
+  real<lower=0> nu;
+  real<lower=0, upper=(nu == 0 ? 1 : positive_infinity())> lambda;
+}
+
   $ ../../../../../install/default/bin/stanc --auto-format user-function-struct-const.stan
 functions {
   real foo(real x) {
@@ -544,6 +683,6 @@ functions {
   }
 }
 model {
-
+  
 }
 

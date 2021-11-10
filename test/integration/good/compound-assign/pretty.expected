@@ -184,6 +184,9 @@ generated quantities {
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format divide_equals_print.stan
+// test via printf, compile and then run (cmdstan):
+// > stan/src/test/test-models/good/compound-assign/divide_equals_print sample algorithm=fixed_param num_warmup=0 num_samples=1
+
 functions {
   real foo(real a1) {
     real b = a1;
@@ -200,10 +203,10 @@ transformed data {
   real y = 20;
   print("in transformed data");
   print("x: ", x);
-  x /= 1;
+  x /= 1; // scalar int
   print("x /= 1: ", x);
   print("y: ", y);
-  y /= 1;
+  y /= 1; // scalar double
   print("y /= 1: ", y);
 }
 transformed parameters {
@@ -245,9 +248,9 @@ functions {
     array[2] int J;
     matrix[2, 2] aa;
     matrix[3, 4] bb;
-    bb[1 : 2, 1 : 2] /= a1;
-    aa[1, J] /= a1;
-    aa[J, 1] /= a1;
+    bb[1 : 2, 1 : 2] /= a1; // matrix, real
+    aa[1, J] /= a1; // row_vector, real
+    aa[J, 1] /= a1; // vector, real
   }
 }
 
@@ -315,9 +318,9 @@ functions {
     matrix[3, 4] bb;
     row_vector[2] cc;
     vector[2] dd;
-    bb[1 : 2, 1 : 2] ./= aa;
-    aa[1, J] ./= cc;
-    aa[J, 1] ./= dd;
+    bb[1 : 2, 1 : 2] ./= aa; // matrix, matrix
+    aa[1, J] ./= cc; // row_vector, row_vector
+    aa[J, 1] ./= dd; // vector, vector
   }
 }
 
@@ -368,9 +371,9 @@ functions {
     matrix[3, 4] bb;
     row_vector[2] cc;
     vector[2] dd;
-    bb[1 : 2, 1 : 2] .*= aa;
-    aa[1, J] .*= cc;
-    aa[J, 1] .*= dd;
+    bb[1 : 2, 1 : 2] .*= aa; // matrix, matrix
+    aa[1, J] .*= cc; // row_vector, row_vector
+    aa[J, 1] .*= dd; // vector, vector
   }
 }
 
@@ -380,6 +383,8 @@ transformed data {
   a /= 5.0;
   print("a: ", a);
   a[1,  : ] /= 5.0;
+  a[1, 1 : 2] /= 5.0;
+  a[ : , 1 : 2] /= 5.0;
   print("r1 div 5: ", a);
 }
 
@@ -393,27 +398,35 @@ generated quantities {
   print("ident ", ident);
   z *= x;
   print("z *= x ", z);
+  
   z = [[1, 2], [4, 5]];
   z += x;
   print("z += x ", z);
+  
   z = [[1, 2], [4, 5]];
   z -= x;
   print("z -= x ", z);
+  
   z = [[1, 2], [4, 5]];
   z /= x;
   print("z /= x ", z);
+  
   z = [[1, 2], [4, 5]];
   z *= ident;
   print("z *= ident ", z);
+  
   z = [[1, 2], [4, 5]];
   z .*= ident;
   print("z .*= ident ", z);
+  
   z = [[1, 2], [4, 5]];
   z += ident;
   print("z += ident ", z);
+  
   z = [[1, 2], [4, 5]];
   z -= ident;
   print("z -= ident ", z);
+  
   z = [[1, 2], [4, 5]];
   z ./= ident;
   print("z ./= ident ", z);
@@ -697,8 +710,8 @@ transformed data {
   real y1 = 2;
   print("in transformed data");
   print("x1: ", x1, " y1: ", y1);
-  x1 *= 1;
-  y1 *= 1;
+  x1 *= 1; // scalar int
+  y1 *= 1; // scalar double
   print("x1 *= 1: ", x1, " y1 *= 1: ", y1);
 }
 parameters {
@@ -711,9 +724,9 @@ model {
     y[n] ~ bernoulli(theta);
   print("in model block");
   print("w: ", w);
-  w *= theta;
+  w *= theta; // scalar var
   print("w *= theta: ", w);
-  w *= foo(theta);
+  w *= foo(theta); // scalar var
   print("w *= foo(theta): ", w);
 }
 generated quantities {
@@ -933,11 +946,11 @@ functions {
     array[2] int J;
     matrix[2, 2] aa;
     matrix[3, 4] bb;
-    bb[1 : 2, 1 : 2] *= aa;
-    bb[1 : 2, 1 : 2] *= a1;
-    aa[1, J] *= bb[1 : 2, 1 : 2];
-    aa[1, J] *= a1;
-    aa[J, 1] *= a1;
+    bb[1 : 2, 1 : 2] *= aa; // matrix *= matrix
+    bb[1 : 2, 1 : 2] *= a1; // matrix *= real
+    aa[1, J] *= bb[1 : 2, 1 : 2]; // row_vector *= matrix
+    aa[1, J] *= a1; // row_vector *= real
+    aa[J, 1] *= a1; // vector *= real
   }
 }
 
@@ -1172,6 +1185,9 @@ generated quantities {
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format plus_equals_prim_print.stan
+// test via printf, compile and then run (cmdstan):
+// > stan/src/test/test-models/good/compound-assign/plus_equals_prim_print sample algorithm=fixed_param num_warmup=0 num_samples=1
+
 functions {
   real foo(real a1) {
     real b = a1;
@@ -1188,10 +1204,10 @@ transformed data {
   real y = 20;
   print("in transformed data");
   print("x: ", x);
-  x += 1;
+  x += 1; // scalar int
   print("x += 1: ", x);
   print("y: ", y);
-  y += 1;
+  y += 1; // scalar double
   print("y += 1: ", y);
 }
 transformed parameters {

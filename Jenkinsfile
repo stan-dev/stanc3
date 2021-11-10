@@ -2,8 +2,12 @@
 import org.stan.Utils
 
 def utils = new org.stan.Utils()
+
 def skipExpressionTests = false
+def skipRemainingStages = false
+def skipCompileTests = false
 def buildingAgentARM = "linux"
+
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
     def output = sh (returnStdout: true, script: "${command}").trim()
@@ -39,13 +43,18 @@ pipeline {
             agent { label 'linux' }
             steps {
                 script {
-
                     retry(3) { checkout scm }
                     sh 'git clean -xffd'
 
                     def stanMathSigs = ['test/integration/signatures/stan_math_sigs.expected'].join(" ")
                     skipExpressionTests = utils.verifyChanges(stanMathSigs)
-                    
+
+                    def sourceCodePaths = ['src'].join(" ")
+                    skipRemainingStages = utils.verifyChanges(sourceCodePaths)
+
+                    def compileTests = ['test/integration/good'].join(" ")
+                    skipCompileTests = utils.verifyChanges(compileTests)
+
                     if (buildingTag()) {
                         buildingAgentARM = "arm-ec2"
                     }
@@ -53,9 +62,15 @@ pipeline {
             }
         }
         stage("Build") {
+            when {
+                beforeAgent true
+                expression {
+                    !skipRemainingStages
+                }
+            }
             agent {
-                dockerfile {
-                    filename 'docker/debian/Dockerfile'
+                docker {
+                    image 'stanorg/stanc3:debian'
                     //Forces image to ignore entrypoint
                     args "-u root --entrypoint=\'\'"
                 }
@@ -66,16 +81,22 @@ pipeline {
                     eval \$(opam env)
                     dune build @install
                 """)
-                
+
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
             post { always { runShell("rm -rf ./*") }}
         }
         stage("Code formatting") {
+            when {
+                beforeAgent true
+                expression {
+                    !skipRemainingStages
+                }
+            }
             agent {
-                dockerfile {
-                    filename 'docker/debian/Dockerfile'
+                docker {
+                    image 'stanorg/stanc3:debian'
                     //Forces image to ignore entrypoint
                     args "-u root --entrypoint=\'\'"
                 }
@@ -97,11 +118,17 @@ pipeline {
             post { always { runShell("rm -rf ./*") }}
         }
         stage("OCaml tests") {
+            when {
+                beforeAgent true
+                expression {
+                    !skipRemainingStages
+                }
+            }
             parallel {
                 stage("Dune tests") {
                     agent {
-                        dockerfile {
-                            filename 'docker/debian/Dockerfile'
+                        docker {
+                            image 'stanorg/stanc3:debian'
                             //Forces image to ignore entrypoint
                             args "-u root --entrypoint=\'\'"
                         }
@@ -130,8 +157,8 @@ pipeline {
                 }
                 stage("stancjs tests") {
                     agent {
-                        dockerfile {
-                            filename 'docker/debian/Dockerfile'
+                        docker {
+                            image 'stanorg/stanc3:debian'
                             //Forces image to ignore entrypoint
                             args "-u root --entrypoint=\'\'"
                         }
@@ -150,6 +177,12 @@ pipeline {
         stage("CmdStan & Math tests") {
             parallel {
                 stage("Compile tests") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipCompileTests
+                        }
+                    }
                     agent { label 'linux' }
                     steps {
                         script {
@@ -164,7 +197,7 @@ pipeline {
                                 cd performance-tests-cmdstan
                                 mkdir cmdstan/bin
                                 cp ../bin/stanc cmdstan/bin/linux-stanc
-                                cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..                                
+                                cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../test/integration/good
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
                                 """
@@ -181,6 +214,12 @@ pipeline {
                     post { always { runShell("rm -rf ./*") }}
                 }
                 stage("Model end-to-end tests") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipCompileTests
+                        }
+                    }
                     agent { label 'linux' }
                     steps {
                         unstash 'ubuntu-exe'
@@ -196,7 +235,8 @@ pipeline {
                             cat shotgun_perf_all.tests >> all.tests
                             cat all.tests
                             echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-                            cd cmdstan; make clean-all; git show HEAD --stat; make -j4 build; cd ..
+                            echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
+                            cd cmdstan; make clean-all; git show HEAD --stat; cd ..
                             CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
                         """
 
@@ -221,6 +261,7 @@ pipeline {
                 }
                 stage('Math functions expressions test') {
                     when {
+                        beforeAgent true
                         expression {
                             !skipExpressionTests
                         }
@@ -255,8 +296,13 @@ pipeline {
         stage("Build and test static release binaries") {
             failFast true
             parallel {
-
                 stage("Build & test Mac OS X binary") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipRemainingStages
+                        }
+                    }
                     agent { label "osx && ocaml" }
                     steps {
                         runShell("""
@@ -267,11 +313,6 @@ pipeline {
                             dune build @install
                         """)
 
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --verbose
-                        """)
-
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
                         sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/mac-stan2tfp"
 
@@ -280,9 +321,15 @@ pipeline {
                     post { always { runShell("rm -rf ./*") }}
                 }
                 stage("Build stanc.js") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipRemainingStages
+                        }
+                    }
                     agent {
-                        dockerfile {
-                            filename 'docker/debian/Dockerfile'
+                        docker {
+                            image 'stanorg/stanc3:debian'
                             //Forces image to ignore entrypoint
                             args "-u root --entrypoint=\'\'"
                         }
@@ -301,9 +348,15 @@ pipeline {
                     post {always { runShell("rm -rf ./*")}}
                 }
                 stage("Build & test a static Linux binary") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipRemainingStages
+                        }
+                    }
                     agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
+                        docker {
+                            image 'stanorg/stanc3:static'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\'"
                         }
@@ -315,11 +368,6 @@ pipeline {
                             dune build @install --profile static
                         """)
 
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
-
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
                         sh "mv `find _build -name stan2tfp.exe` bin/linux-stan2tfp"
 
@@ -328,43 +376,206 @@ pipeline {
                     post {always { runShell("rm -rf ./*")}}
                 }
 
-                stage("Build & test a static Linux ARM binary") {
-                    when { anyOf { buildingTag(); branch 'master' } }
-                    agent { label "${buildingAgentARM}" }
+                stage("Build & test a static Linux mips64el binary") {
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRemainingStages }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/stanc3:static'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
                     steps {
-
-                        runShell("""
-                            bash -x scripts/install_ocaml.sh "--disable-sandboxing -y"
-
-                            opam update; opam install -y js_of_ocaml-compiler.3.4.0 js_of_ocaml-ppx.3.4.0 js_of_ocaml.3.4.0
-                            opam update; bash -x scripts/install_build_deps.sh
-                            opam update; bash -x scripts/install_js_deps.sh
-                        """)
-
                         runShell("""
                             eval \$(opam env)
                             dune subst
-                            dune build @install --profile static
                         """)
-                        /*
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
-                        */
-                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm-stanc"
-                        sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/linux-arm-stan2tfp"
+                        sh "sudo apk add docker jq"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh mips64el"
 
-                        stash name:'linux-arm-exe', includes:'bin/*'
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-mips64el-stan2tfp"
+
+                        stash name:'linux-mips64el-exe', includes:'bin/*'
                     }
-                    post { always { runShell("rm -rf ./*") }}
+                    post {always { runShell("rm -rf ./*")}}
+                }
+
+                stage("Build & test a static Linux ppc64el binary") {
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRemainingStages }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/stanc3:static'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker jq"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh ppc64el"
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-ppc64el-stan2tfp"
+
+                        stash name:'linux-ppc64el-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
+
+                stage("Build & test a static Linux s390x binary") {
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRemainingStages }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/stanc3:static'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker jq"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh s390x"
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-s390x-stan2tfp"
+
+                        stash name:'linux-s390x-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
+
+                stage("Build & test a static Linux arm64 binary") {
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRemainingStages }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/stanc3:static'
+                            //Forces image to ignore entrypoint
+                            label 'linux-ec2'
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker jq"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh arm64"
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-arm64-stan2tfp"
+
+                        stash name:'linux-arm64-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
+
+                stage("Build & test a static Linux armhf binary") {
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRemainingStages }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/stanc3:static'
+                            //Forces image to ignore entrypoint
+                            label 'linux-ec2'
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker jq"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh armhf"
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
+
+                        stash name:'linux-armhf-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
+
+                stage("Build & test a static Linux armel binary") {
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRemainingStages }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/stanc3:static'
+                            //Forces image to ignore entrypoint
+                            label 'linux-ec2'
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker jq"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh armel"
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-armel-stan2tfp"
+
+                        stash name:'linux-armel-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
                 }
 
                 // Cross compiling for windows on debian
                 stage("Build & test static Windows binary") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipRemainingStages
+                        }
+                    }
                     agent {
-                        dockerfile {
-                            filename 'docker/debian-windows/Dockerfile'
+                        docker {
+                            image 'stanorg/stanc3:debian-windows'
                             label 'linux-ec2'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\'"
@@ -378,11 +589,6 @@ pipeline {
                             dune build -x windows
                         """)
 
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --verbose
-                        """)
-
                         sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
                         sh "mv _build/default.windows/src/stan2tfp/stan2tfp.exe bin/windows-stan2tfp"
 
@@ -394,14 +600,25 @@ pipeline {
 
         }
         stage("Release tag and publish binaries") {
-            when { anyOf { buildingTag(); branch 'master' } }
+            when {
+                beforeAgent true
+                allOf {
+                    expression { !skipRemainingStages }
+                    anyOf { buildingTag(); branch 'master' }
+                }
+            }
             agent { label 'linux' }
             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
             steps {
                 unstash 'windows-exe'
                 unstash 'linux-exe'
                 unstash 'mac-exe'
-                unstash 'linux-arm-exe'
+                unstash 'linux-mips64el-exe'
+                unstash 'linux-ppc64el-exe'
+                unstash 'linux-s390x-exe'
+                unstash 'linux-arm64-exe'
+                unstash 'linux-armhf-exe'
+                unstash 'linux-armel-exe'
                 unstash 'js-exe'
                 runShell("""
                     wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
@@ -409,6 +626,76 @@ pipeline {
                     ./ghr_v0.12.1_linux_amd64/ghr -recreate ${tagName()} bin/
                 """)
             }
+        }
+        stage('Upload odoc') {
+            when {
+                beforeAgent true
+                anyOf { buildingTag(); branch 'master' }
+            }
+            options { skipDefaultCheckout(true) }
+            agent {
+                docker {
+                    image 'stanorg/stanc3:static'
+                    label 'linux-ec2'
+                    //Forces image to ignore entrypoint
+                    args "-u 1000 --entrypoint=\'\'"
+                }
+            }
+            steps {
+                retry(3) {
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: '*/gh-pages']],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[url: "https://github.com/stan-dev/stanc3.git", credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b']]]
+                    )
+                }
+
+                // Install odoc and git-subtree
+                runShell("opam install odoc -y")
+                runShell("sudo apk update && sudo apk add git-subtree")
+
+                // Checkout gh-pages as a test so we build docs from this branch
+                runShell("""
+                    git remote set-branches --add origin gh-pages
+                    git checkout --track  origin/gh-pages
+                    git checkout master
+                """)
+
+                // Build docs
+                runShell("""
+                     eval \$(opam env)
+                     dune build @doc
+                """)
+
+                // Copy static assets to doc
+                runShell("""
+                    mkdir -p doc
+                    cp -r ./_build/default/_doc/_html/* doc/
+                """)
+
+                // Commit changes to the repository gh-pages branch
+                withCredentials([usernamePassword(credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                    sh """#!/bin/bash
+                        set -e
+
+                        git config --global user.email "mc.stanislaw@gmail.com"
+                        git config --global user.name "Stan Jenkins"
+
+                        git checkout --detach
+                        git branch -D gh-pages
+                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git :gh-pages
+
+                        git checkout --orphan gh-pages
+                        git add -f doc
+                        git commit -m "auto generated docs from Jenkins"
+                        git subtree push --prefix doc/ https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git gh-pages
+                    """
+                }
+
+            }
+            post { always { deleteDir() } }
         }
     }
     post {

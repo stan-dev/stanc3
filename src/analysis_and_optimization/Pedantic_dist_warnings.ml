@@ -6,14 +6,14 @@ open Mir_utils
    Types and utilities
  ********************)
 
-(* Useful information about an expression. Opaque means we don't know anything. *)
+(** Useful information about an expression. [Opaque] means we don't know anything. *)
 type compiletime_val =
   | Opaque
   | Number of (float * string)
-  | Param of (string * Expr.Typed.t Program.transformation)
+  | Param of (string * Expr.Typed.t Transformation.t)
   | Data of string
 
-(* Info about a distribution occurrences that's useful for checking that
+(** Info about a distribution occurrences that's useful for checking that
    distribution properties are met
 *)
 type dist_info =
@@ -21,10 +21,10 @@ type dist_info =
   ; loc: Location_span.t
   ; args: (compiletime_val * Expr.Typed.Meta.t) List.t }
 
-(* Value constraint as a range. The bools are true if the bound is inclusive *)
+(** Value constraint as a range. The bools are true if the bound is inclusive *)
 type range = {lower: (float * bool) option; upper: (float * bool) option}
 
-(* Value constraint for an argument *)
+(** Value constraint for an argument *)
 type var_constraint =
   | Range of range
   | Ordered
@@ -36,7 +36,7 @@ type var_constraint =
   | Correlation
   | Covariance
 
-(* Constraint paired with a name for user messages *)
+(** Constraint paired with a name for user messages *)
 type var_constraint_named = {name: string; constr: var_constraint}
 
 let unit_range =
@@ -66,7 +66,7 @@ let covariance = {name= "covariance"; constr= Covariance}
 let cholesky_covariance =
   {name= "Cholesky factor of covariance"; constr= CholeskyCov}
 
-(* Check for inconsistency between a distribution argument's value range and the
+(** Check for inconsistency between a distribution argument's value range and the
    declared bounds of a variable *)
 let bounds_out_of_range (range : range) (bounds : bound_values) : bool =
   match (bounds.lower, bounds.upper, range.lower, range.upper) with
@@ -76,23 +76,22 @@ let bounds_out_of_range (range : range) (bounds : bound_values) : bool =
   | _, `Lit u, _, Some (u', _) when u > u' -> true
   | _ -> false
 
-(* Check for inconsistency between a distribution argument's constraint and the
+(** Check for inconsistency between a distribution argument's constraint and the
    constraint transformation of a variable *)
 let transform_mismatch_constraint (constr : var_constraint)
-    (trans : Expr.Typed.t Program.transformation) : bool =
+    (trans : Expr.Typed.t Transformation.t) : bool =
   match constr with
   | Range range -> bounds_out_of_range range (trans_bounds_values trans)
-  | Ordered -> trans <> Program.Ordered
-  | PositiveOrdered -> trans <> Program.PositiveOrdered
-  | Simplex -> trans <> Program.Simplex
-  | UnitVector -> trans <> Program.UnitVector
-  | CholeskyCorr -> trans <> Program.CholeskyCorr
-  | CholeskyCov ->
-      trans <> Program.CholeskyCov && trans <> Program.CholeskyCorr
-  | Correlation -> trans <> Program.Correlation
-  | Covariance -> trans <> Program.Covariance && trans <> Program.Correlation
+  | Ordered -> trans <> Transformation.Ordered
+  | PositiveOrdered -> trans <> PositiveOrdered
+  | Simplex -> trans <> Simplex
+  | UnitVector -> trans <> UnitVector
+  | CholeskyCorr -> trans <> CholeskyCorr
+  | CholeskyCov -> trans <> CholeskyCov && trans <> CholeskyCorr
+  | Correlation -> trans <> Correlation
+  | Covariance -> trans <> Covariance && trans <> Correlation
 
-(* Check for inconsistency between a distribution argument's range and
+(** Check for inconsistency between a distribution argument's range and
    a literal value *)
 let value_out_of_range (range : range) (v : float) =
   let lower_bad =
@@ -109,7 +108,7 @@ let value_out_of_range (range : range) (v : float) =
   in
   lower_bad || upper_bad
 
-(* Check for inconsistency between a distribution argument's constraint and
+(** Check for inconsistency between a distribution argument's constraint and
    a literal value *)
 let value_mismatch_constraint (constr : var_constraint) (v : float) =
   match constr with
@@ -157,7 +156,7 @@ let constr_literal_mismatch_message (dist_name : string) (num_str : string)
          not %s."
         num_str dist_name constr_name num_str constr_name
 
-(* Return a warning if the argn-th argument doesn't match its constraints *)
+(** Return a warning if the argn-th argument doesn't match its constraints *)
 let constr_mismatch_warning (constr : var_constraint_named) (arg : arg_info)
     ({args; name; loc} : dist_info) : (Location_span.t * string) option =
   let v =
@@ -199,7 +198,7 @@ let uniform_dist_message (pname : string) : string =
      elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5)."
     pname
 
-(* Warning for all uniform distributions with a parameter *)
+(** Warning for all uniform distributions with a parameter *)
 let uniform_dist_warning (dist_info : dist_info) :
     (Location_span.t * string) option =
   match dist_info with
@@ -221,7 +220,7 @@ let lkj_corr_message : string =
    lkj_corr_cholesky, the Cholesky factor variant. lkj_corr tends to run \
    slower, consume more memory, and has higher risk of numerical errors."
 
-(* Warn about all non-Cholesky lkj_corr distributions *)
+(** Warn about all non-Cholesky lkj_corr distributions *)
 let lkj_corr_dist_warning (dist_info : dist_info) :
     (Location_span.t * string) option =
   Some (dist_info.loc, lkj_corr_message)
@@ -235,7 +234,7 @@ let gamma_arg_dist_message : string =
    explained by Gelman (2006). Instead we recommend something like a \
    normal(0,1) or student_t(4,0,1), with parameter constrained to be positive."
 
-(* Warning particular to gamma and inv_gamma, when A=B<1 *)
+(** Warning particular to gamma and inv_gamma, when A=B<1 *)
 let gamma_arg_dist_warning (dist_info : dist_info) :
     (Location_span.t * string) option =
   match dist_info with
@@ -247,7 +246,7 @@ let gamma_arg_dist_warning (dist_info : dist_info) :
    Distribution properties table
  ********************)
 
-(* Generate all of the warnings that are relevant to a given distribution *)
+(** Generate all of the warnings that are relevant to a given distribution *)
 let distribution_warning (dist_info : dist_info) :
     (Location_span.t * string) List.t =
   let scale_name = "a scale parameter" in
@@ -468,7 +467,7 @@ let distribution_warning (dist_info : dist_info) :
   in
   List.filter_map ~f:(fun f -> f dist_info) warning_fns
 
-(* Generate the distribution warnings for a program *)
+(** Generate the distribution warnings for a program *)
 let distribution_warnings (distributions_list : dist_info Set.Poly.t) :
     (Location_span.t * string) Set.Poly.t =
   union_map

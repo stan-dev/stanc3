@@ -17,6 +17,10 @@ static:
 clean:
 	dune clean
 
+.PHONY: doc
+doc:
+	dune build @doc
+
 re: clean all
 
 test/integration/examples-good/%/dune: test/integration/examples-good/dune
