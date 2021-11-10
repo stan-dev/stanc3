@@ -972,7 +972,6 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
-using namespace stan::math;
 |}
 
 (** Create the model's namespace. *)

@@ -14,7 +14,6 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
-using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -125,11 +124,12 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      if (logical_negation((primitive_value(emit_transformed_parameters__) ||
-            primitive_value(emit_generated_quantities__)))) {
+      if (stan::math::logical_negation((primitive_value(
+            emit_transformed_parameters__) || primitive_value(
+            emit_generated_quantities__)))) {
         return ;
       } 
-      if (logical_negation(emit_generated_quantities__)) {
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       } 
     } catch (const std::exception& e) {

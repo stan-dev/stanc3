@@ -14,7 +14,6 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
-using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -307,7 +306,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       k = std::numeric_limits<int>::min();
       
       current_statement__ = 176;
-      k = context__.vals_i("k")[(1 - 1)];
+      k = context__.vals_i("k")[stan::math::(1 - 1)];
       current_statement__ = 176;
       check_greater_or_equal(function__, "k", k, 1);
       current_statement__ = 177;
@@ -316,13 +315,13 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       n = std::numeric_limits<int>::min();
       
       current_statement__ = 177;
-      n = context__.vals_i("n")[(1 - 1)];
+      n = context__.vals_i("n")[stan::math::(1 - 1)];
       current_statement__ = 177;
       check_greater_or_equal(function__, "n", n, 0);
       current_statement__ = 178;
-      validate_non_negative_index("X_d", "n", n);
+      stan::math::validate_non_negative_index("X_d", "n", n);
       current_statement__ = 179;
-      validate_non_negative_index("X_d", "k", k);
+      stan::math::validate_non_negative_index("X_d", "k", k);
       current_statement__ = 180;
       context__.validate_dims("data initialization","X_d","double",
            std::vector<size_t>{static_cast<size_t>(n),
@@ -342,7 +341,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
           current_statement__ = 180;
           for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
             current_statement__ = 180;
-            assign(X_d, X_d_flat__[(pos__ - 1)],
+            stan::model::assign(X_d, X_d_flat__[stan::math::(pos__ - 1)],
               "assigning variable X_d", index_uni(sym2__), index_uni(sym1__));
             current_statement__ = 180;
             pos__ = (pos__ + 1);
@@ -350,9 +349,9 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         }
       }
       current_statement__ = 181;
-      validate_non_negative_index("X_d_a", "n", n);
+      stan::math::validate_non_negative_index("X_d_a", "n", n);
       current_statement__ = 182;
-      validate_non_negative_index("X_d_a", "k", k);
+      stan::math::validate_non_negative_index("X_d_a", "k", k);
       current_statement__ = 183;
       context__.validate_dims("data initialization","X_d_a","double",
            std::vector<size_t>{static_cast<size_t>(2),
@@ -373,7 +372,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
             current_statement__ = 183;
             for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
               current_statement__ = 183;
-              assign(X_d_a, X_d_a_flat__[(pos__ - 1)],
+              stan::model::assign(X_d_a,
+                X_d_a_flat__[stan::math::(pos__ - 1)],
                 "assigning variable X_d_a", index_uni(sym3__),
                                               index_uni(sym2__),
                                               index_uni(sym1__));
@@ -384,7 +384,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         }
       }
       current_statement__ = 184;
-      validate_non_negative_index("y_v_d", "n", n);
+      stan::math::validate_non_negative_index("y_v_d", "n", n);
       current_statement__ = 185;
       context__.validate_dims("data initialization","y_v_d","double",
            std::vector<size_t>{static_cast<size_t>(n)});
@@ -401,14 +401,14 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         current_statement__ = 185;
         for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
           current_statement__ = 185;
-          assign(y_v_d, y_v_d_flat__[(pos__ - 1)],
+          stan::model::assign(y_v_d, y_v_d_flat__[stan::math::(pos__ - 1)],
             "assigning variable y_v_d", index_uni(sym1__));
           current_statement__ = 185;
           pos__ = (pos__ + 1);
         }
       }
       current_statement__ = 186;
-      validate_non_negative_index("X_rv_d", "n", n);
+      stan::math::validate_non_negative_index("X_rv_d", "n", n);
       current_statement__ = 187;
       context__.validate_dims("data initialization","X_rv_d","double",
            std::vector<size_t>{static_cast<size_t>(n)});
@@ -425,14 +425,14 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         current_statement__ = 187;
         for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
           current_statement__ = 187;
-          assign(X_rv_d, X_rv_d_flat__[(pos__ - 1)],
+          stan::model::assign(X_rv_d, X_rv_d_flat__[stan::math::(pos__ - 1)],
             "assigning variable X_rv_d", index_uni(sym1__));
           current_statement__ = 187;
           pos__ = (pos__ + 1);
         }
       }
       current_statement__ = 188;
-      validate_non_negative_index("y_vi_d", "n", n);
+      stan::math::validate_non_negative_index("y_vi_d", "n", n);
       current_statement__ = 189;
       context__.validate_dims("data initialization","y_vi_d","int",
            std::vector<size_t>{static_cast<size_t>(n)});
@@ -441,7 +441,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 189;
       y_vi_d = context__.vals_i("y_vi_d");
       current_statement__ = 190;
-      validate_non_negative_index("y2_vi_d", "n", n);
+      stan::math::validate_non_negative_index("y2_vi_d", "n", n);
       current_statement__ = 191;
       context__.validate_dims("data initialization","y2_vi_d","int",
            std::vector<size_t>{static_cast<size_t>(n)});
@@ -455,14 +455,14 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       y_s_d = std::numeric_limits<int>::min();
       
       current_statement__ = 192;
-      y_s_d = context__.vals_i("y_s_d")[(1 - 1)];
+      y_s_d = context__.vals_i("y_s_d")[stan::math::(1 - 1)];
       current_statement__ = 193;
       context__.validate_dims("data initialization","y_r_d","double",
            std::vector<size_t>{});
       y_r_d = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 193;
-      y_r_d = context__.vals_r("y_r_d")[(1 - 1)];
+      y_r_d = context__.vals_r("y_r_d")[stan::math::(1 - 1)];
       current_statement__ = 194;
       k_td = std::numeric_limits<int>::min();
       
@@ -470,35 +470,35 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       n_td = std::numeric_limits<int>::min();
       
       current_statement__ = 196;
-      validate_non_negative_index("X_d_td", "n", n);
+      stan::math::validate_non_negative_index("X_d_td", "n", n);
       current_statement__ = 197;
-      validate_non_negative_index("X_d_td", "k", k);
+      stan::math::validate_non_negative_index("X_d_td", "k", k);
       current_statement__ = 198;
       X_d_td__ = Eigen::Matrix<double, -1, -1>(n, k);
       new (&X_d_td) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d_td__.data(), n, k);
       stan::math::fill(X_d_td, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 199;
-      validate_non_negative_index("y_v_d_td", "n", n);
+      stan::math::validate_non_negative_index("y_v_d_td", "n", n);
       current_statement__ = 200;
       y_v_d_td__ = Eigen::Matrix<double, -1, 1>(n);
       new (&y_v_d_td) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_v_d_td__.data(), n);
       stan::math::fill(y_v_d_td, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 201;
-      validate_non_negative_index("X_rv_d_td", "n", n);
+      stan::math::validate_non_negative_index("X_rv_d_td", "n", n);
       current_statement__ = 202;
       X_rv_d_td__ = Eigen::Matrix<double, 1, -1>(n);
       new (&X_rv_d_td) Eigen::Map<Eigen::Matrix<double, 1, -1>>(X_rv_d_td__.data(), n);
       stan::math::fill(X_rv_d_td, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 203;
-      validate_non_negative_index("y_vi_d_td", "n", n);
+      stan::math::validate_non_negative_index("y_vi_d_td", "n", n);
       current_statement__ = 204;
       y_vi_d_td = std::vector<int>(n, std::numeric_limits<int>::min());
       
       current_statement__ = 205;
-      validate_non_negative_index("y2_vi_d_td", "n", n);
+      stan::math::validate_non_negative_index("y2_vi_d_td", "n", n);
       current_statement__ = 206;
       y2_vi_d_td = std::vector<int>(n, std::numeric_limits<int>::min());
       
@@ -513,21 +513,21 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 195;
       check_greater_or_equal(function__, "n_td", n_td, 0);
       current_statement__ = 209;
-      validate_non_negative_index("alpha_v", "k", k);
+      stan::math::validate_non_negative_index("alpha_v", "k", k);
       current_statement__ = 210;
-      validate_non_negative_index("beta", "k", k);
+      stan::math::validate_non_negative_index("beta", "k", k);
       current_statement__ = 211;
-      validate_non_negative_index("cuts", "k", k);
+      stan::math::validate_non_negative_index("cuts", "k", k);
       current_statement__ = 212;
-      validate_non_negative_index("X_p", "n", n);
+      stan::math::validate_non_negative_index("X_p", "n", n);
       current_statement__ = 213;
-      validate_non_negative_index("X_p", "k", k);
+      stan::math::validate_non_negative_index("X_p", "k", k);
       current_statement__ = 214;
-      validate_non_negative_index("beta_m", "n", n);
+      stan::math::validate_non_negative_index("beta_m", "n", n);
       current_statement__ = 215;
-      validate_non_negative_index("beta_m", "k", k);
+      stan::math::validate_non_negative_index("beta_m", "k", k);
       current_statement__ = 216;
-      validate_non_negative_index("X_rv_p", "n", n);
+      stan::math::validate_non_negative_index("X_rv_p", "n", n);
       
       X_d_opencl__ = stan::math::to_matrix_cl(X_d);
       
@@ -1462,11 +1462,12 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       out__.write(X_p);
       out__.write(beta_m);
       out__.write(X_rv_p);
-      if (logical_negation((primitive_value(emit_transformed_parameters__) ||
-            primitive_value(emit_generated_quantities__)))) {
+      if (stan::math::logical_negation((primitive_value(
+            emit_transformed_parameters__) || primitive_value(
+            emit_generated_quantities__)))) {
         return ;
       } 
-      if (logical_negation(emit_generated_quantities__)) {
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       } 
     } catch (const std::exception& e) {
@@ -1496,7 +1497,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       stan::math::fill(alpha_v, DUMMY_VAR__);
       
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        assign(alpha_v, in__.read<local_scalar_t__>(),
+        stan::model::assign(alpha_v, in__.read<local_scalar_t__>(),
           "assigning variable alpha_v", index_uni(sym1__));
       }
       out__.write(alpha_v);
@@ -1505,7 +1506,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       stan::math::fill(beta, DUMMY_VAR__);
       
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        assign(beta, in__.read<local_scalar_t__>(),
+        stan::model::assign(beta, in__.read<local_scalar_t__>(),
           "assigning variable beta", index_uni(sym1__));
       }
       out__.write(beta);
@@ -1514,7 +1515,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       stan::math::fill(cuts, DUMMY_VAR__);
       
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        assign(cuts, in__.read<local_scalar_t__>(),
+        stan::model::assign(cuts, in__.read<local_scalar_t__>(),
           "assigning variable cuts", index_uni(sym1__));
       }
       out__.write(cuts);
@@ -1539,7 +1540,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-          assign(X_p, in__.read<local_scalar_t__>(),
+          stan::model::assign(X_p, in__.read<local_scalar_t__>(),
             "assigning variable X_p", index_uni(sym2__), index_uni(sym1__));
         }
       }
@@ -1550,7 +1551,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-          assign(beta_m, in__.read<local_scalar_t__>(),
+          stan::model::assign(beta_m, in__.read<local_scalar_t__>(),
             "assigning variable beta_m", index_uni(sym2__), index_uni(sym1__));
         }
       }
@@ -1560,7 +1561,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       stan::math::fill(X_rv_p, DUMMY_VAR__);
       
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        assign(X_rv_p, in__.read<local_scalar_t__>(),
+        stan::model::assign(X_rv_p, in__.read<local_scalar_t__>(),
           "assigning variable X_rv_p", index_uni(sym1__));
       }
       out__.write(X_rv_p);
