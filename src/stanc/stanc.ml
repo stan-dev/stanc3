@@ -110,14 +110,14 @@ let options =
     ; ( "-O1"
       , Arg.Unit (fun () -> opt_lvl := Optimize.O1)
       , "\tApply level 1 compiler optimizations (only basic optimizations)." )
-    ; ( "-Od-experimental"
+    ; ( "-Oexperimental"
       , Arg.Unit (fun () -> opt_lvl := Optimize.Od)
       , "\t(Experimental) Apply all compiler optimizations. Some of these are \
          not thorougly tested and may not always improve a programs \
          performance." )
     ; ( "--O"
       , Arg.Unit (fun () -> opt_lvl := Optimize.Od)
-      , "\t(Experimental) Same as -Od-experimental. Apply all compiler \
+      , "\t(Experimental) Same as -Oexperimental. Apply all compiler \
          optimizations. Some of these are not thorougly tested and may not \
          always improve a programs performance." )
     ; ( "--o"
