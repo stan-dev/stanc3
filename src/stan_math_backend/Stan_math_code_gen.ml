@@ -401,8 +401,8 @@ let pp_ctor ppf p =
     [ "stan::io::var_context& context__"; "unsigned int random_seed__ = 0"
     ; "std::ostream* pstream__ = nullptr" ]
   in
-  pf ppf "%s(@[<hov 0>%a) : model_base_crtp(0) @]" p.Program.prog_name
-    (list ~sep:comma string) params ;
+  pf ppf "%s(@[<hov 0>%a) : stan::model::model_base_crtp(0) @]"
+    p.Program.prog_name (list ~sep:comma string) params ;
   let data_idents = List.map ~f:fst p.input_vars |> String.Set.of_list in
   let pp_stmt_topdecl_size_only ppf (Stmt.Fixed.({pattern; meta}) as s) =
     match pattern with
@@ -944,7 +944,8 @@ let model_prefix = "model_"
 
 (** Print the full model class. *)
 let pp_model ppf ({Program.prog_name; _} as p) =
-  pf ppf "class %s final : public model_base_crtp<%s> {" prog_name prog_name ;
+  pf ppf "class %s final : public stan::model::model_base_crtp<%s> {" prog_name
+    prog_name ;
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
   pf ppf "@ public:@ @[<v 1> ~%s() { }" prog_name ;
   pf ppf "@ @ inline std::string model_name() const final { return \"%s\"; }"
@@ -958,21 +959,6 @@ let pp_model ppf ({Program.prog_name; _} as p) =
   |}
     "%%NAME%%3 %%VERSION%%" stanc_args_to_print ;
   pf ppf "@ %a@]@]@ };" pp_model_public p
-
-(** The C++ aliases needed for the model class*)
-let usings =
-  {|
-using stan::io::dump;
-using stan::model::assign;
-using stan::model::index_uni;
-using stan::model::index_max;
-using stan::model::index_min;
-using stan::model::index_min_max;
-using stan::model::index_multi;
-using stan::model::index_omni;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-|}
 
 (** Create the model's namespace. *)
 let namespace Program.({prog_name; _}) = prog_name ^ "_namespace"
@@ -1020,9 +1006,8 @@ let pp_prog ppf (p : Program.Typed.t) =
       (is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p)
     |> Set.elements |> String.concat ~sep:"\n"
   in
-  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
-    includes (namespace p) usings Locations.pp_globals s
-    reduce_sum_struct_decls
+  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %a@ %s@ %a@ %a@ }@ @]" version
+    includes (namespace p) Locations.pp_globals s reduce_sum_struct_decls
     (list ~sep:cut pp_fun_def_with_variadic_fn_list)
     p.functions_block
     (if !standalone_functions then fun _ _ -> () else pp_model)

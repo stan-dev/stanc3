@@ -4,18 +4,6 @@
 #include <stan/model/model_header.hpp>
 namespace ode_adjoint_test_model_model_namespace {
 
-using stan::io::dump;
-using stan::model::assign;
-using stan::model::index_uni;
-using stan::model::index_max;
-using stan::model::index_min;
-using stan::model::index_min_max;
-using stan::model::index_multi;
-using stan::model::index_omni;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-
-
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 36> locations_array__ = 
 {" (found before start of program)",
@@ -190,7 +178,7 @@ return f_2_arg(t, z, b, a, pstream__);
 }
 };
 
-class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_test_model_model> {
+class ode_adjoint_test_model_model final : public stan::model::model_base_crtp<ode_adjoint_test_model_model> {
 
  private:
   int N;
@@ -222,7 +210,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
   
   ode_adjoint_test_model_model(stan::io::var_context& context__,
                                unsigned int random_seed__ = 0,
-                               std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+                               std::ostream* pstream__ = nullptr) : stan::model::model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -513,7 +501,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(y0, in__.read<local_scalar_t__>(),
-          "assigning variable y0", stan::math::index_uni(sym1__));
+          "assigning variable y0", stan::model::index_uni(sym1__));
       }
       out__.write(y0);
       local_scalar_t__ t0;

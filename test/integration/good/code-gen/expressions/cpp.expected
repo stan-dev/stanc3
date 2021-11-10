@@ -4,18 +4,6 @@
 #include <stan/model/model_header.hpp>
 namespace simple_function_model_namespace {
 
-using stan::io::dump;
-using stan::model::assign;
-using stan::model::index_uni;
-using stan::model::index_max;
-using stan::model::index_min;
-using stan::model::index_min_max;
-using stan::model::index_multi;
-using stan::model::index_omni;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-
-
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 13> locations_array__ = 
 {" (found before start of program)",
@@ -177,7 +165,7 @@ return add_udf(a, b, pstream__);
 }
 };
 
-class simple_function_model final : public model_base_crtp<simple_function_model> {
+class simple_function_model final : public stan::model::model_base_crtp<simple_function_model> {
 
  private:
   int N;
@@ -196,7 +184,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
   
   simple_function_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
-                        std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+                        std::ostream* pstream__ = nullptr) : stan::model::model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -241,8 +229,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             current_statement__ = 4;
             stan::model::assign(m, m_flat__[(pos__ - 1)],
-              "assigning variable m", stan::math::index_uni(sym2__),
-                                        stan::math::index_uni(sym1__));
+              "assigning variable m", stan::model::index_uni(sym2__),
+                                        stan::model::index_uni(sym1__));
             current_statement__ = 4;
             pos__ = (pos__ + 1);
           }

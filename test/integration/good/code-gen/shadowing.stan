@@ -39,7 +39,10 @@ parameters {
   real length;
   simplex[5] validate_positive_index;
   real assign;
+  real rvalue;
   real stan_print;
+  real model_base_crtp;
+  real index_uni;
 
   //more
   real bernoulli_logit_glm_lpmf;

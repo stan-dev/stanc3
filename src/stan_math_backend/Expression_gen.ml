@@ -184,12 +184,12 @@ let transform_args = function
       Transformation.fold (fun args arg -> args @ [arg]) [] transform
 
 let rec pp_index ppf = function
-  | Index.All -> pf ppf "stan::math::index_omni()"
-  | Single e -> pf ppf "stan::math::index_uni(%a)" pp_expr e
-  | Upfrom e -> pf ppf "stan::math::index_min(%a)" pp_expr e
+  | Index.All -> pf ppf "stan::model::index_omni()"
+  | Single e -> pf ppf "stan::model::index_uni(%a)" pp_expr e
+  | Upfrom e -> pf ppf "stan::model::index_min(%a)" pp_expr e
   | Between (e_low, e_high) ->
-      pf ppf "stan::math::index_min_max(%a, %a)" pp_expr e_low pp_expr e_high
-  | MultiIndex e -> pf ppf "stan::math::index_multi(%a)" pp_expr e
+      pf ppf "stan::model::index_min_max(%a, %a)" pp_expr e_low pp_expr e_high
+  | MultiIndex e -> pf ppf "stan::model::index_multi(%a)" pp_expr e
 
 and pp_indexes ppf = function
   | [] -> pf ppf ""
@@ -500,7 +500,8 @@ and pp_promoted ad ut ppf e =
           (local_scalar ut ad) pp_expr e )
 
 and pp_indexed ppf (vident, indices, pretty) =
-  pf ppf "@[<hov 2>rvalue(@,%s,@ %S,@ %a)@]" vident pretty pp_indexes indices
+  pf ppf "@[<hov 2>stan::model::rvalue(@,%s,@ %S,@ %a)@]" vident pretty
+    pp_indexes indices
 
 and pp_indexed_simple ppf (obj, idcs) =
   let idx_minus_one = function
@@ -633,7 +634,7 @@ let%expect_test "pp_expr9" =
 
 let%expect_test "pp_expr10" =
   printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All]))) ;
-  [%expect {| rvalue(a, "a", stan::math::index_omni()) |}]
+  [%expect {| stan::model::rvalue(a, "a", stan::model::index_omni()) |}]
 
 let%expect_test "pp_expr11" =
   printf "%s"

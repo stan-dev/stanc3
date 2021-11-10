@@ -4,18 +4,6 @@
 #include <stan/model/model_header.hpp>
 namespace distributions_model_namespace {
 
-using stan::io::dump;
-using stan::model::assign;
-using stan::model::index_uni;
-using stan::model::index_max;
-using stan::model::index_min;
-using stan::model::index_min_max;
-using stan::model::index_multi;
-using stan::model::index_omni;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-
-
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 771> locations_array__ = 
 {" (found before start of program)",
@@ -792,7 +780,7 @@ static constexpr std::array<const char*, 771> locations_array__ =
 
 
 
-class distributions_model final : public model_base_crtp<distributions_model> {
+class distributions_model final : public stan::model::model_base_crtp<distributions_model> {
 
  private:
   int d_int;
@@ -820,7 +808,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
   
   distributions_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
-                      std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+                      std::ostream* pstream__ = nullptr) : stan::model::model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -887,7 +875,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
           current_statement__ = 763;
           stan::model::assign(d_vector, d_vector_flat__[(pos__ - 1)],
-            "assigning variable d_vector", stan::math::index_uni(sym1__));
+            "assigning variable d_vector", stan::model::index_uni(sym1__));
           current_statement__ = 763;
           pos__ = (pos__ + 1);
         }
@@ -911,7 +899,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
           current_statement__ = 765;
           stan::model::assign(d_row_vector, d_row_vector_flat__[(pos__ - 1)],
-            "assigning variable d_row_vector", stan::math::index_uni(sym1__));
+            "assigning variable d_row_vector", stan::model::index_uni(sym1__));
           current_statement__ = 765;
           pos__ = (pos__ + 1);
         }
@@ -7191,8 +7179,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           stan::model::assign(p_matrix, in__.read<local_scalar_t__>(),
-            "assigning variable p_matrix", stan::math::index_uni(sym2__),
-                                             stan::math::index_uni(sym1__));
+            "assigning variable p_matrix", stan::model::index_uni(sym2__),
+                                             stan::model::index_uni(sym1__));
         }
       }
       out__.write(p_matrix);
@@ -7202,7 +7190,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         stan::model::assign(p_vector, in__.read<local_scalar_t__>(),
-          "assigning variable p_vector", stan::math::index_uni(sym1__));
+          "assigning variable p_vector", stan::model::index_uni(sym1__));
       }
       out__.write(p_vector);
       Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
@@ -7211,7 +7199,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         stan::model::assign(p_row_vector, in__.read<local_scalar_t__>(),
-          "assigning variable p_row_vector", stan::math::index_uni(sym1__));
+          "assigning variable p_row_vector", stan::model::index_uni(sym1__));
       }
       out__.write(p_row_vector);
       local_scalar_t__ y_p;
@@ -7459,18 +7447,6 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace restricted_model_namespace {
 
-using stan::io::dump;
-using stan::model::assign;
-using stan::model::index_uni;
-using stan::model::index_max;
-using stan::model::index_min;
-using stan::model::index_min_max;
-using stan::model::index_multi;
-using stan::model::index_omni;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-
-
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 40> locations_array__ = 
 {" (found before start of program)",
@@ -7516,7 +7492,7 @@ static constexpr std::array<const char*, 40> locations_array__ =
 
 
 
-class restricted_model final : public model_base_crtp<restricted_model> {
+class restricted_model final : public stan::model::model_base_crtp<restricted_model> {
 
  private:
   int d_int;
@@ -7541,7 +7517,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
   
   restricted_model(stan::io::var_context& context__,
                    unsigned int random_seed__ = 0,
-                   std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+                   std::ostream* pstream__ = nullptr) : stan::model::model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -7608,7 +7584,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
           current_statement__ = 32;
           stan::model::assign(d_vector, d_vector_flat__[(pos__ - 1)],
-            "assigning variable d_vector", stan::math::index_uni(sym1__));
+            "assigning variable d_vector", stan::model::index_uni(sym1__));
           current_statement__ = 32;
           pos__ = (pos__ + 1);
         }
@@ -7632,7 +7608,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
           current_statement__ = 34;
           stan::model::assign(d_row_vector, d_row_vector_flat__[(pos__ - 1)],
-            "assigning variable d_row_vector", stan::math::index_uni(sym1__));
+            "assigning variable d_row_vector", stan::model::index_uni(sym1__));
           current_statement__ = 34;
           pos__ = (pos__ + 1);
         }
@@ -7943,8 +7919,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           stan::model::assign(p_matrix, in__.read<local_scalar_t__>(),
-            "assigning variable p_matrix", stan::math::index_uni(sym2__),
-                                             stan::math::index_uni(sym1__));
+            "assigning variable p_matrix", stan::model::index_uni(sym2__),
+                                             stan::model::index_uni(sym1__));
         }
       }
       out__.write(p_matrix);
@@ -7954,7 +7930,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         stan::model::assign(p_vector, in__.read<local_scalar_t__>(),
-          "assigning variable p_vector", stan::math::index_uni(sym1__));
+          "assigning variable p_vector", stan::model::index_uni(sym1__));
       }
       out__.write(p_vector);
       Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
@@ -7963,7 +7939,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         stan::model::assign(p_row_vector, in__.read<local_scalar_t__>(),
-          "assigning variable p_row_vector", stan::math::index_uni(sym1__));
+          "assigning variable p_row_vector", stan::model::index_uni(sym1__));
       }
       out__.write(p_row_vector);
       local_scalar_t__ y_p;
