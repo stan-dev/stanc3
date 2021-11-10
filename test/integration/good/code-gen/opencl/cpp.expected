@@ -841,7 +841,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       d_int = std::numeric_limits<int>::min();
       
       current_statement__ = 756;
-      d_int = context__.vals_i("d_int")[stan::math::(1 - 1)];
+      d_int = context__.vals_i("d_int")[(1 - 1)];
       current_statement__ = 757;
       stan::math::validate_non_negative_index("d_int_array", "d_int", d_int);
       current_statement__ = 758;
@@ -857,7 +857,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       d_real = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 759;
-      d_real = context__.vals_r("d_real")[stan::math::(1 - 1)];
+      d_real = context__.vals_r("d_real")[(1 - 1)];
       current_statement__ = 760;
       stan::math::validate_non_negative_index("d_real_array", "d_int", d_int);
       current_statement__ = 761;
@@ -886,9 +886,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
         current_statement__ = 763;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
           current_statement__ = 763;
-          stan::model::assign(d_vector,
-            d_vector_flat__[stan::math::(pos__ - 1)],
-            "assigning variable d_vector", index_uni(sym1__));
+          stan::model::assign(d_vector, d_vector_flat__[(pos__ - 1)],
+            "assigning variable d_vector", stan::math::index_uni(sym1__));
           current_statement__ = 763;
           pos__ = (pos__ + 1);
         }
@@ -911,9 +910,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
         current_statement__ = 765;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
           current_statement__ = 765;
-          stan::model::assign(d_row_vector,
-            d_row_vector_flat__[stan::math::(pos__ - 1)],
-            "assigning variable d_row_vector", index_uni(sym1__));
+          stan::model::assign(d_row_vector, d_row_vector_flat__[(pos__ - 1)],
+            "assigning variable d_row_vector", stan::math::index_uni(sym1__));
           current_statement__ = 765;
           pos__ = (pos__ + 1);
         }
@@ -4114,8 +4112,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       out__.write(p_vector);
       out__.write(p_row_vector);
       out__.write(y_p);
-      if (stan::math::logical_negation((primitive_value(
-            emit_transformed_parameters__) || primitive_value(
+      if (stan::math::logical_negation((stan::math::primitive_value(
+            emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
         return ;
       } 
@@ -7183,8 +7181,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
       
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        p_real_array[stan::math::(sym1__ - 1)] = in__.read<local_scalar_t__>(
-                                                   );
+        p_real_array[(sym1__ - 1)] = in__.read<local_scalar_t__>();
       }
       out__.write(p_real_array);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
@@ -7194,8 +7191,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           stan::model::assign(p_matrix, in__.read<local_scalar_t__>(),
-            "assigning variable p_matrix", index_uni(sym2__),
-                                             index_uni(sym1__));
+            "assigning variable p_matrix", stan::math::index_uni(sym2__),
+                                             stan::math::index_uni(sym1__));
         }
       }
       out__.write(p_matrix);
@@ -7205,7 +7202,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         stan::model::assign(p_vector, in__.read<local_scalar_t__>(),
-          "assigning variable p_vector", index_uni(sym1__));
+          "assigning variable p_vector", stan::math::index_uni(sym1__));
       }
       out__.write(p_vector);
       Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
@@ -7214,7 +7211,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         stan::model::assign(p_row_vector, in__.read<local_scalar_t__>(),
-          "assigning variable p_row_vector", index_uni(sym1__));
+          "assigning variable p_row_vector", stan::math::index_uni(sym1__));
       }
       out__.write(p_row_vector);
       local_scalar_t__ y_p;
@@ -7565,7 +7562,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       d_int = std::numeric_limits<int>::min();
       
       current_statement__ = 25;
-      d_int = context__.vals_i("d_int")[stan::math::(1 - 1)];
+      d_int = context__.vals_i("d_int")[(1 - 1)];
       current_statement__ = 26;
       stan::math::validate_non_negative_index("d_int_array", "d_int", d_int);
       current_statement__ = 27;
@@ -7581,7 +7578,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       d_real = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 28;
-      d_real = context__.vals_r("d_real")[stan::math::(1 - 1)];
+      d_real = context__.vals_r("d_real")[(1 - 1)];
       current_statement__ = 29;
       stan::math::validate_non_negative_index("d_real_array", "d_int", d_int);
       current_statement__ = 30;
@@ -7610,9 +7607,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
         current_statement__ = 32;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
           current_statement__ = 32;
-          stan::model::assign(d_vector,
-            d_vector_flat__[stan::math::(pos__ - 1)],
-            "assigning variable d_vector", index_uni(sym1__));
+          stan::model::assign(d_vector, d_vector_flat__[(pos__ - 1)],
+            "assigning variable d_vector", stan::math::index_uni(sym1__));
           current_statement__ = 32;
           pos__ = (pos__ + 1);
         }
@@ -7635,9 +7631,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
         current_statement__ = 34;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
           current_statement__ = 34;
-          stan::model::assign(d_row_vector,
-            d_row_vector_flat__[stan::math::(pos__ - 1)],
-            "assigning variable d_row_vector", index_uni(sym1__));
+          stan::model::assign(d_row_vector, d_row_vector_flat__[(pos__ - 1)],
+            "assigning variable d_row_vector", stan::math::index_uni(sym1__));
           current_statement__ = 34;
           pos__ = (pos__ + 1);
         }
@@ -7849,8 +7844,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       out__.write(p_vector);
       out__.write(p_row_vector);
       out__.write(y_p);
-      if (stan::math::logical_negation((primitive_value(
-            emit_transformed_parameters__) || primitive_value(
+      if (stan::math::logical_negation((stan::math::primitive_value(
+            emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
         return ;
       } 
@@ -7938,8 +7933,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
       
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        p_real_array[stan::math::(sym1__ - 1)] = in__.read<local_scalar_t__>(
-                                                   );
+        p_real_array[(sym1__ - 1)] = in__.read<local_scalar_t__>();
       }
       out__.write(p_real_array);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
@@ -7949,8 +7943,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           stan::model::assign(p_matrix, in__.read<local_scalar_t__>(),
-            "assigning variable p_matrix", index_uni(sym2__),
-                                             index_uni(sym1__));
+            "assigning variable p_matrix", stan::math::index_uni(sym2__),
+                                             stan::math::index_uni(sym1__));
         }
       }
       out__.write(p_matrix);
@@ -7960,7 +7954,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         stan::model::assign(p_vector, in__.read<local_scalar_t__>(),
-          "assigning variable p_vector", index_uni(sym1__));
+          "assigning variable p_vector", stan::math::index_uni(sym1__));
       }
       out__.write(p_vector);
       Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
@@ -7969,7 +7963,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         stan::model::assign(p_row_vector, in__.read<local_scalar_t__>(),
-          "assigning variable p_row_vector", index_uni(sym1__));
+          "assigning variable p_row_vector", stan::math::index_uni(sym1__));
       }
       out__.write(p_row_vector);
       local_scalar_t__ y_p;

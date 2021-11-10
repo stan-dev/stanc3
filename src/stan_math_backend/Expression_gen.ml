@@ -184,20 +184,21 @@ let transform_args = function
       Transformation.fold (fun args arg -> args @ [arg]) [] transform
 
 let rec pp_index ppf = function
-  | Index.All -> pf ppf "index_omni()"
-  | Single e -> pf ppf "index_uni(%a)" pp_expr e
-  | Upfrom e -> pf ppf "index_min(%a)" pp_expr e
+  | Index.All -> pf ppf "stan::math::index_omni()"
+  | Single e -> pf ppf "stan::math::index_uni(%a)" pp_expr e
+  | Upfrom e -> pf ppf "stan::math::index_min(%a)" pp_expr e
   | Between (e_low, e_high) ->
-      pf ppf "index_min_max(%a, %a)" pp_expr e_low pp_expr e_high
-  | MultiIndex e -> pf ppf "index_multi(%a)" pp_expr e
+      pf ppf "stan::math::index_min_max(%a, %a)" pp_expr e_low pp_expr e_high
+  | MultiIndex e -> pf ppf "stan::math::index_multi(%a)" pp_expr e
 
 and pp_indexes ppf = function
   | [] -> pf ppf ""
   | idxs -> pf ppf "@[<hov 2>%a@]" (list ~sep:comma pp_index) idxs
 
 and pp_logical_op ppf op lhs rhs =
-  pf ppf "(primitive_value(@,%a)@ %s@ primitive_value(@,%a))" pp_expr lhs op
-    pp_expr rhs
+  pf ppf
+    "(stan::math::primitive_value(@,%a)@ %s@ stan::math::primitive_value(@,%a))"
+    pp_expr lhs op pp_expr rhs
 
 and pp_unary ppf fm es = pf ppf fm pp_expr (List.hd_exn es)
 and pp_binary ppf fm es = pf ppf fm pp_expr (first es) pp_expr (second es)
@@ -234,7 +235,7 @@ and gen_operator_app = function
   | PNot -> fun ppf es -> pp_unary ppf "stan::math::logical_negation(@,%a)" es
   | Minus ->
       fun ppf es ->
-        pp_scalar_binary ppf "stan::math::(%a@ -@ %a)" "subtract(@,%a,@ %a)" es
+        pp_scalar_binary ppf "(%a@ -@ %a)" "stan::math::subtract(@,%a,@ %a)" es
   | Times ->
       fun ppf es ->
         pp_scalar_binary ppf "(%a@ *@ %a)" "stan::math::multiply(@,%a,@ %a)" es
@@ -632,7 +633,7 @@ let%expect_test "pp_expr9" =
 
 let%expect_test "pp_expr10" =
   printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All]))) ;
-  [%expect {| rvalue(a, "a", index_omni()) |}]
+  [%expect {| rvalue(a, "a", stan::math::index_omni()) |}]
 
 let%expect_test "pp_expr11" =
   printf "%s"

@@ -124,8 +124,8 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      if (stan::math::logical_negation((primitive_value(
-            emit_transformed_parameters__) || primitive_value(
+      if (stan::math::logical_negation((stan::math::primitive_value(
+            emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
         return ;
       } 

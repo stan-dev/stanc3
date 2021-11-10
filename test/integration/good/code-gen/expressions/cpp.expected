@@ -217,7 +217,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       N = std::numeric_limits<int>::min();
       
       current_statement__ = 1;
-      N = context__.vals_i("N")[stan::math::(1 - 1)];
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 2;
       stan::math::validate_non_negative_index("m", "N", N);
       current_statement__ = 3;
@@ -240,8 +240,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           current_statement__ = 4;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             current_statement__ = 4;
-            stan::model::assign(m, m_flat__[stan::math::(pos__ - 1)],
-              "assigning variable m", index_uni(sym2__), index_uni(sym1__));
+            stan::model::assign(m, m_flat__[(pos__ - 1)],
+              "assigning variable m", stan::math::index_uni(sym2__),
+                                        stan::math::index_uni(sym1__));
             current_statement__ = 4;
             pos__ = (pos__ + 1);
           }
@@ -305,8 +306,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     (void) function__;  // suppress unused var warning
     
     try {
-      if (stan::math::logical_negation((primitive_value(
-            emit_transformed_parameters__) || primitive_value(
+      if (stan::math::logical_negation((stan::math::primitive_value(
+            emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
         return ;
       } 

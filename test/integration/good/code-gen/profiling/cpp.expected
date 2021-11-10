@@ -92,7 +92,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       N = std::numeric_limits<int>::min();
       
       current_statement__ = 21;
-      N = context__.vals_i("N")[stan::math::(1 - 1)];
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 21;
       check_greater_or_equal(function__, "N", N, 1);
       current_statement__ = 22;
@@ -121,8 +121,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         current_statement__ = 25;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 25;
-          stan::model::assign(y, y_flat__[stan::math::(pos__ - 1)],
-            "assigning variable y", index_uni(sym1__));
+          stan::model::assign(y, y_flat__[(pos__ - 1)],
+            "assigning variable y", stan::math::index_uni(sym1__));
           current_statement__ = 25;
           pos__ = (pos__ + 1);
         }
@@ -294,8 +294,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       out__.write(rho);
       out__.write(alpha);
       out__.write(sigma);
-      if (stan::math::logical_negation((primitive_value(
-            emit_transformed_parameters__) || primitive_value(
+      if (stan::math::logical_negation((stan::math::primitive_value(
+            emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
         return ;
       } 

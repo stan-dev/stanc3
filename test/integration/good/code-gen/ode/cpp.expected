@@ -243,21 +243,21 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       N = std::numeric_limits<int>::min();
       
       current_statement__ = 10;
-      N = context__.vals_i("N")[stan::math::(1 - 1)];
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 11;
       context__.validate_dims("data initialization","M","int",
            std::vector<size_t>{});
       M = std::numeric_limits<int>::min();
       
       current_statement__ = 11;
-      M = context__.vals_i("M")[stan::math::(1 - 1)];
+      M = context__.vals_i("M")[(1 - 1)];
       current_statement__ = 12;
       context__.validate_dims("data initialization","i","int",
            std::vector<size_t>{});
       i = std::numeric_limits<int>::min();
       
       current_statement__ = 12;
-      i = context__.vals_i("i")[stan::math::(1 - 1)];
+      i = context__.vals_i("i")[(1 - 1)];
       current_statement__ = 13;
       rel_tol_f = std::numeric_limits<double>::quiet_NaN();
       
@@ -444,8 +444,8 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       out__.write(y0);
       out__.write(t0);
       out__.write(times);
-      if (stan::math::logical_negation((primitive_value(
-            emit_transformed_parameters__) || primitive_value(
+      if (stan::math::logical_negation((stan::math::primitive_value(
+            emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
         return ;
       } 
@@ -473,8 +473,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       if (emit_transformed_parameters__) {
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-            out__.write(
-              z[stan::math::(sym2__ - 1)][stan::math::(sym1__ - 1)]);
+            out__.write(z[(sym2__ - 1)][(sym1__ - 1)]);
           }
         }
       } 
@@ -514,7 +513,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(y0, in__.read<local_scalar_t__>(),
-          "assigning variable y0", index_uni(sym1__));
+          "assigning variable y0", stan::math::index_uni(sym1__));
       }
       out__.write(y0);
       local_scalar_t__ t0;
@@ -526,7 +525,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       times = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        times[stan::math::(sym1__ - 1)] = in__.read<local_scalar_t__>();
+        times[(sym1__ - 1)] = in__.read<local_scalar_t__>();
       }
       out__.write(times);
     } catch (const std::exception& e) {

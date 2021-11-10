@@ -822,8 +822,8 @@ integrand_ode(const T0__& r, const std::vector<T1__>& f,
     x = stan::math::logit(r);
     current_statement__ = 5;
     stan::model::assign(df_dx,
-      ((stan::math::exp(-stan::math::square(x)) * 1) /
-        (r * stan::math::(1 - r))), "assigning variable df_dx", index_uni(1));
+      ((stan::math::exp(-stan::math::square(x)) * 1) / (r * (1 - r))),
+      "assigning variable df_dx", stan::math::index_uni(1));
     current_statement__ = 6;
     return df_dx;
   } catch (const std::exception& e) {
@@ -860,11 +860,10 @@ ode_integrate(std::ostream* pstream__) {
     return rvalue(
              stan::math::integrate_ode_bdf(integrand_ode_functor__(),
   stan::math::rep_array(0.0, 1), 1E-5,
-  stan::math::rep_array(stan::math::(1.0 - 1E-5), 1),
-  stan::math::rep_array(0.0, 0), stan::math::rep_array(0.0, 0), x_i,
-  pstream__),
+  stan::math::rep_array((1.0 - 1E-5), 1), stan::math::rep_array(0.0, 0),
+  stan::math::rep_array(0.0, 0), x_i, pstream__),
              "integrate_ode_bdf(integrand_ode, rep_array(0.0, 1), 1E-5,\nrep_array((1.0 - 1E-5), 1), rep_array(0.0, 0), rep_array(0.0, 0),\nx_i)",
-             index_uni(1), index_uni(1));
+             stan::math::index_uni(1), stan::math::index_uni(1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
