@@ -335,7 +335,8 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   | NRFunApp (CompilerInternal (FnCheck {trans; var_name; var}), args) ->
       Option.iter (check_to_string trans) ~f:(fun check_name ->
           let function_arg = Expr.Helpers.variable "function__" in
-          pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
+          pf ppf "%s(@[<hov>%a@]);"
+            ("stan::math::check_" ^ check_name)
             (list ~sep:comma pp_expr)
             (function_arg :: Expr.Helpers.str var_name :: var :: args) )
   | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; var}), _) -> (

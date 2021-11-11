@@ -299,7 +299,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 176;
       k = context__.vals_i("k")[(1 - 1)];
       current_statement__ = 176;
-      check_greater_or_equal(function__, "k", k, 1);
+      stan::math::check_greater_or_equal(function__, "k", k, 1);
       current_statement__ = 177;
       context__.validate_dims("data initialization","n","int",
            std::vector<size_t>{});
@@ -308,7 +308,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 177;
       n = context__.vals_i("n")[(1 - 1)];
       current_statement__ = 177;
-      check_greater_or_equal(function__, "n", n, 0);
+      stan::math::check_greater_or_equal(function__, "n", n, 0);
       current_statement__ = 178;
       stan::math::validate_non_negative_index("X_d", "n", n);
       current_statement__ = 179;
@@ -500,9 +500,9 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       y_r_d_td = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 194;
-      check_greater_or_equal(function__, "k_td", k_td, 1);
+      stan::math::check_greater_or_equal(function__, "k_td", k_td, 1);
       current_statement__ = 195;
-      check_greater_or_equal(function__, "n_td", n_td, 0);
+      stan::math::check_greater_or_equal(function__, "n_td", n_td, 0);
       current_statement__ = 209;
       stan::math::validate_non_negative_index("alpha_v", "k", k);
       current_statement__ = 210;
