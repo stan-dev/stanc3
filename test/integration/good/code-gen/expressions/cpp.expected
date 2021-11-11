@@ -4,6 +4,9 @@
 #include <stan/model/model_header.hpp>
 namespace simple_function_model_namespace {
 
+using stan::model::model_base_crtp;
+
+
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 13> locations_array__ = 
 {" (found before start of program)",
@@ -35,9 +38,9 @@ foo1(const T0__& a, const int& b, const std::vector<T2__>& c,
           stan::value_type_t<T4__>,
           stan::value_type_t<T5__>>;
   int current_statement__ = 0; 
-  const auto& d = to_ref(d_arg__);
-  const auto& e = to_ref(e_arg__);
-  const auto& f = to_ref(f_arg__);
+  const auto& d = stan::math::to_ref(d_arg__);
+  const auto& e = stan::math::to_ref(e_arg__);
+  const auto& f = stan::math::to_ref(f_arg__);
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -75,7 +78,7 @@ foo2(const T0__& a_arg__, const std::vector<Eigen::Matrix<T1__, -1, -1>>& b,
           T1__,
           T2__>;
   int current_statement__ = 0; 
-  const auto& a = to_ref(a_arg__);
+  const auto& a = stan::math::to_ref(a_arg__);
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -108,8 +111,8 @@ foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>>;
   int current_statement__ = 0; 
-  const auto& a = to_ref(a_arg__);
-  const auto& b = to_ref(b_arg__);
+  const auto& a = stan::math::to_ref(a_arg__);
+  const auto& b = stan::math::to_ref(b_arg__);
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -140,8 +143,8 @@ add_udf(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>>;
   int current_statement__ = 0; 
-  const auto& a = to_ref(a_arg__);
-  const auto& b = to_ref(b_arg__);
+  const auto& a = stan::math::to_ref(a_arg__);
+  const auto& b = stan::math::to_ref(b_arg__);
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -165,7 +168,7 @@ return add_udf(a, b, pstream__);
 }
 };
 
-class simple_function_model final : public stan::model::model_base_crtp<simple_function_model> {
+class simple_function_model final : public model_base_crtp<simple_function_model> {
 
  private:
   int N;
@@ -184,7 +187,7 @@ class simple_function_model final : public stan::model::model_base_crtp<simple_f
   
   simple_function_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
-                        std::ostream* pstream__ = nullptr) : stan::model::model_base_crtp(0) {
+                        std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 

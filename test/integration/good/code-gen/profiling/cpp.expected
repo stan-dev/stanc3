@@ -4,6 +4,9 @@
 #include <stan/model/model_header.hpp>
 namespace simple_function_model_namespace {
 
+using stan::model::model_base_crtp;
+
+
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 29> locations_array__ = 
 {" (found before start of program)",
@@ -38,7 +41,7 @@ static constexpr std::array<const char*, 29> locations_array__ =
 
 
 
-class simple_function_model final : public stan::model::model_base_crtp<simple_function_model> {
+class simple_function_model final : public model_base_crtp<simple_function_model> {
 
  private:
   int N;
@@ -59,7 +62,7 @@ class simple_function_model final : public stan::model::model_base_crtp<simple_f
   
   simple_function_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
-                        std::ostream* pstream__ = nullptr) : stan::model::model_base_crtp(0) {
+                        std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 

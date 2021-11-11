@@ -34,8 +34,8 @@ let%expect_test "udf" =
       using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
               stan::value_type_t<T1__>>;
       int current_statement__ = 0;
-      const auto& x = to_ref(x_arg__);
-      const auto& y = to_ref(y_arg__);
+      const auto& x = stan::math::to_ref(x_arg__);
+      const auto& y = stan::math::to_ref(y_arg__);
       static constexpr bool propto__ = true;
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -97,9 +97,9 @@ let%expect_test "udf-expressions" =
               stan::value_type_t<T2__>,
               T3__>;
       int current_statement__ = 0;
-      const auto& x = to_ref(x_arg__);
-      const auto& y = to_ref(y_arg__);
-      const auto& z = to_ref(z_arg__);
+      const auto& x = stan::math::to_ref(x_arg__);
+      const auto& y = stan::math::to_ref(y_arg__);
+      const auto& z = stan::math::to_ref(z_arg__);
       static constexpr bool propto__ = true;
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());

@@ -356,7 +356,9 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
         (extra_args @ args)
   | NRFunApp (StanLib (fname, _, _), args) ->
-      pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
+      pf ppf "%s(@[<hov>%a@]);"
+        (stan_namespace_qualify fname)
+        (list ~sep:comma pp_expr) args
   | NRFunApp (UserDefined (fname, suffix), args) ->
       pf ppf "%a;" pp_user_defined_fun (fname, suffix, args)
   | Break -> string ppf "break;"

@@ -4,6 +4,9 @@
 #include <stan/model/model_header.hpp>
 namespace distributions_model_namespace {
 
+using stan::model::model_base_crtp;
+
+
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 771> locations_array__ = 
 {" (found before start of program)",
@@ -780,7 +783,7 @@ static constexpr std::array<const char*, 771> locations_array__ =
 
 
 
-class distributions_model final : public stan::model::model_base_crtp<distributions_model> {
+class distributions_model final : public model_base_crtp<distributions_model> {
 
  private:
   int d_int;
@@ -808,7 +811,7 @@ class distributions_model final : public stan::model::model_base_crtp<distributi
   
   distributions_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
-                      std::ostream* pstream__ = nullptr) : stan::model::model_base_crtp(0) {
+                      std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -7447,6 +7450,9 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace restricted_model_namespace {
 
+using stan::model::model_base_crtp;
+
+
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 40> locations_array__ = 
 {" (found before start of program)",
@@ -7492,7 +7498,7 @@ static constexpr std::array<const char*, 40> locations_array__ =
 
 
 
-class restricted_model final : public stan::model::model_base_crtp<restricted_model> {
+class restricted_model final : public model_base_crtp<restricted_model> {
 
  private:
   int d_int;
@@ -7517,7 +7523,7 @@ class restricted_model final : public stan::model::model_base_crtp<restricted_mo
   
   restricted_model(stan::io::var_context& context__,
                    unsigned int random_seed__ = 0,
-                   std::ostream* pstream__ = nullptr) : stan::model::model_base_crtp(0) {
+                   std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 

@@ -4,6 +4,9 @@
 #include <stan/model/model_header.hpp>
 namespace filename_good_model_namespace {
 
+using stan::model::model_base_crtp;
+
+
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 3> locations_array__ = 
 {" (found before start of program)",
@@ -12,7 +15,7 @@ static constexpr std::array<const char*, 3> locations_array__ =
 
 
 
-class filename_good_model final : public stan::model::model_base_crtp<filename_good_model> {
+class filename_good_model final : public model_base_crtp<filename_good_model> {
 
  private:
   double p;
@@ -31,7 +34,7 @@ class filename_good_model final : public stan::model::model_base_crtp<filename_g
   
   filename_good_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
-                      std::ostream* pstream__ = nullptr) : stan::model::model_base_crtp(0) {
+                      std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 

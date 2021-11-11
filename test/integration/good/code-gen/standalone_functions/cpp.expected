@@ -4,6 +4,9 @@
 #include <stan/model/model_header.hpp>
 namespace basic_model_namespace {
 
+using stan::model::model_base_crtp;
+
+
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 21> locations_array__ = 
 {" (found before start of program)",
@@ -113,7 +116,7 @@ Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
   int current_statement__ = 0; 
-  const auto& x = to_ref(x_arg__);
+  const auto& x = stan::math::to_ref(x_arg__);
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -362,6 +365,9 @@ auto test_lpdf(const double& a, const double& b,
 #include <stan/model/model_header.hpp>
 namespace basic_model_namespace {
 
+using stan::model::model_base_crtp;
+
+
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 21> locations_array__ = 
 {" (found before start of program)",
@@ -471,7 +477,7 @@ Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
   int current_statement__ = 0; 
-  const auto& x = to_ref(x_arg__);
+  const auto& x = stan::math::to_ref(x_arg__);
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -720,6 +726,9 @@ auto test_lpdf(const double& a, const double& b,
 #include <stan/model/model_header.hpp>
 namespace integrate_model_namespace {
 
+using stan::model::model_base_crtp;
+
+
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 11> locations_array__ = 
 {" (found before start of program)",
@@ -740,7 +749,7 @@ Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 integrand(const T0__& x_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
   int current_statement__ = 0; 
-  const auto& x = to_ref(x_arg__);
+  const auto& x = stan::math::to_ref(x_arg__);
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
