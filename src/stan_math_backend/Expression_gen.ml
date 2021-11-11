@@ -529,7 +529,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   match pattern with
   | Var s -> pf ppf "%s" s
   | Lit (Str, s) -> pf ppf "\"%s\"" (Cpp_str.escaped s)
-  | Lit (Imaginary, s) -> pf ppf "to_complex(0, %s)" s
+  | Lit (Imaginary, s) -> pf ppf "stan::math::to_complex(0, %s)" s
   | Lit ((Real | Int), s) -> pf ppf "%s" s
   | FunApp
       ( StanLib (op, _, _)

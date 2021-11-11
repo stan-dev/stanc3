@@ -3223,11 +3223,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       
       
       current_statement__ = 336;
-      stan::model::assign(zi, (1 + to_complex(0, 3.14)),
+      stan::model::assign(zi, (1 + stan::math::to_complex(0, 3.14)),
         "assigning variable zi");
       current_statement__ = 337;
       stan::model::assign(zi,
-        (stan::model::deep_copy(zi) * to_complex(0, 0)),
+        (stan::model::deep_copy(zi) * stan::math::to_complex(0, 0)),
         "assigning variable zi");
       std::complex<double> yi;
       yi = std::complex<double>(std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN());
@@ -3241,7 +3241,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       x = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 339;
-      x = stan::math::get_real((to_complex(0, 3) - to_complex(0, 40e-3)));
+      x = stan::math::get_real(
+            (stan::math::to_complex(0, 3) - stan::math::to_complex(0, 40e-3)));
       out__.write(gq_i);
       out__.write(gq_r);
       out__.write(gq_complex);

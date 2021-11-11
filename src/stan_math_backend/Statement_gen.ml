@@ -9,7 +9,7 @@ let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 let pp_profile ppf (pp_body, name, body) =
   let profile =
     Fmt.strf
-      "profile<local_scalar_t__> profile__(%s, \
+      "stan::math::profile<local_scalar_t__> profile__(%s, \
        const_cast<profile_map&>(profiles__));"
       name
   in
@@ -270,7 +270,7 @@ let trans_math_fn f =
 
 let pp_bool_expr ppf expr =
   match Expr.Typed.type_of expr with
-  | UReal -> pp_call ppf ("as_bool", pp_expr, [expr])
+  | UReal -> pp_call ppf ("stan::math::as_bool", pp_expr, [expr])
   | _ -> pp_expr ppf expr
 
 let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
