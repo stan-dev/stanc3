@@ -296,10 +296,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdsuffix; fdargs; fdbody; _})
         | _ ->
             Common.FatalError.fatal_error_msg
               [%message
-                "Ill-formed reduce_sum call!"
-                  ( fdargs
-                    : (UnsizedType.autodifftype * string * UnsizedType.t) list
-                    )]
+                "Ill-formed reduce_sum call!" (fdargs : Program.fun_arg_decl)]
       else if String.Set.mem funs_used_in_variadic_ode fdname then
         (* Produces the variadic ode functors that has the pstream argument
         as the third and not last argument *)

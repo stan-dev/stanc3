@@ -243,7 +243,7 @@ let vexpr_of_expr_exn Expr.Fixed.({pattern; _}) =
   | Var s -> VVar s
   | _ ->
       Common.FatalError.fatal_error_msg
-        [%message "FNon-var expression found, but var expected"]
+        [%message "Non-var expression found, but var expected"]
 
 (** See interface file *)
 let rec expr_var_set Expr.Fixed.({pattern; meta}) =
