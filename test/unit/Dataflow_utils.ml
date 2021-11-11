@@ -2,6 +2,7 @@ open Frontend
 open Middle
 open Analysis_and_optimization.Dataflow_utils
 open Core_kernel
+open Core_kernel.Poly
 open Analysis_and_optimization.Dataflow_types
 
 let mir_of_string s =
@@ -392,9 +393,9 @@ let%expect_test "Controlflow graph example 3" =
 
 let%expect_test "Predecessor graph example 3" =
   (* TODO: this is still wrong. The correct answer is
-      ((6) ((1 ()) (2 (1)) (3 (2)) (4 (3 5)) (5 (4)) (6 (5))))
-  Similarly for for-loops.
-  ) *)
+         ((6) ((1 ()) (2 (1)) (3 (2)) (4 (3 5)) (5 (4)) (6 (5))))
+     Similarly for for-loops.
+     ) *)
   let exits, preds = build_predecessor_graph example3_statement_map in
   print_s
     [%sexp
@@ -493,10 +494,10 @@ let%expect_test "Controlflow graph example 4" =
 let%expect_test "Predecessor graph example 4" =
   let exits, preds = build_predecessor_graph example4_statement_map in
   (* TODO: this is still wrong. The correct answer is
-  ( (7) ( (1 ()) (2 (1)) (3 (2)) (4 (3 6)) (5 (4)) (6 (5)) (7 ()) ) )
-  or a very conservative approximation
-  ( (7) ( (1 ()) (2 (1)) (3 (2)) (4 (3 6 7)) (5 (4)) (6 (5)) (7 (6)) ) )
-   *)
+     ( (7) ( (1 ()) (2 (1)) (3 (2)) (4 (3 6)) (5 (4)) (6 (5)) (7 ()) ) )
+     or a very conservative approximation
+     ( (7) ( (1 ()) (2 (1)) (3 (2)) (4 (3 6 7)) (5 (4)) (6 (5)) (7 (6)) ) )
+  *)
   print_s
     [%sexp
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
@@ -600,9 +601,9 @@ let%expect_test "Controlflow graph example 5" =
 let%expect_test "Predecessor graph example 5" =
   let exits, preds = build_predecessor_graph example5_statement_map in
   (* TODO: this is still very very conservative (e.g. I'd hope for
-  (8) ((1 ())) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 ()) (8 (6))
-  but maybe that's too much to ask for
-  ) *)
+     (8) ((1 ())) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 ()) (8 (6))
+     but maybe that's too much to ask for
+     ) *)
   print_s
     [%sexp
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;

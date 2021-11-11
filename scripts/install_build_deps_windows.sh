@@ -2,20 +2,17 @@
 
 # Cross compiling for windows on debian
 
-# Pin dune to 1.11.3 as newer and 2+ do not work for ocaml-windows64 !
-opam pin -y dune 1.11.3
-opam pin -y opam-file-format 2.1.0
-
 # Add windows repository
 opam repository add windows git://github.com/ocaml-cross/opam-cross-windows
+opam update
 
 #Request the compiler to be built with flambda optimizers
 opam install -y conf-flambda-windows
 
 # Install the compiler
-opam install -y "ocaml-windows64<=4.07.0"
+opam install -y "ocaml-windows64=4.12.0"
 
 # Install dependencies
-opam install -y core_kernel core_kernel-windows menhir menhir-windows ppx_deriving ppx_deriving-windows fmt fmt-windows yojson yojson-windows
+opam install -y core_kernel.v0.14.2 core_kernel-windows.v0.14.2 menhir.20210929 menhir-windows.20210929 ppx_deriving.5.2.1 ppx_deriving-windows.5.2.1 fmt.0.8.8 fmt-windows.0.8.8 yojson.1.7.0 yojson-windows.1.7.0
 
 eval $(opam env)

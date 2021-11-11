@@ -1,6 +1,7 @@
 (** Code for optimization passes on the MIR *)
 
 open Core_kernel
+open Core_kernel.Poly
 open Common
 open Middle
 open Mir_utils
@@ -898,8 +899,8 @@ and unenforce_initialize
  *)
 let transform_mir_blocks (mir : (Expr.Typed.t, Stmt.Located.t) Program.t)
     (transformer :
-         (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t sexp_list
-      -> Stmt.Located.t sexp_list) : (Expr.Typed.t, Stmt.Located.t) Program.t =
+         (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t list
+      -> Stmt.Located.t list) : (Expr.Typed.t, Stmt.Located.t) Program.t =
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
         let new_body =

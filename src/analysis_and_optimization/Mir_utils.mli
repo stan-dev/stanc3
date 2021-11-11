@@ -3,6 +3,7 @@ open Middle
 open Dataflow_types
 
 val var_declarations : ('a, 'b) Stmt.Fixed.t -> string Set.Poly.t
+
 val num_expr_value : Expr.Typed.t -> (float * string) option
 
 type bound_values =
@@ -10,7 +11,9 @@ type bound_values =
   ; upper: [`None | `Nonlit | `Lit of float] }
 
 val trans_bounds_values : Expr.Typed.t Transformation.t -> bound_values
+
 val chop_dist_name : string -> string Option.t
+
 val top_var_declarations : Stmt.Located.t -> string Set.Poly.t
 
 val data_set :
@@ -48,27 +51,27 @@ val map_rec_expr :
 val map_rec_expr_state :
      (   's
       -> Expr.Typed.t Expr.Fixed.Pattern.t
-      -> Expr.Typed.t Expr.Fixed.Pattern.t * 's)
+      -> Expr.Typed.t Expr.Fixed.Pattern.t * 's )
   -> 's
   -> Expr.Typed.t
   -> Expr.Typed.t * 's
 
 val map_rec_stmt_loc :
      (   (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t )
   -> Stmt.Located.t
   -> Stmt.Located.t
 
 val top_down_map_rec_stmt_loc :
      (   (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t )
   -> Stmt.Located.t
   -> Stmt.Located.t
 
 val map_rec_state_stmt_loc :
      (   's
       -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t * 's)
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t * 's )
   -> 's
   -> Stmt.Located.t
   -> Stmt.Located.t * 's
@@ -77,7 +80,7 @@ val map_rec_stmt_loc_num :
      (int, Stmt.Located.Non_recursive.t) Map.Poly.t
   -> (   int
       -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t )
   -> Stmt.Located.Non_recursive.t
   -> Stmt.Located.t
 
@@ -86,7 +89,7 @@ val map_rec_state_stmt_loc_num :
   -> (   int
       -> 's
       -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t * 's)
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t * 's )
   -> 's
   -> Stmt.Located.Non_recursive.t
   -> Stmt.Located.t * 's

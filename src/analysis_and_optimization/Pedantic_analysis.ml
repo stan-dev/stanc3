@@ -1,4 +1,5 @@
 open Core_kernel
+open Core_kernel.Poly
 open Optimize
 open Middle
 open Middle.Program
@@ -33,9 +34,12 @@ let list_hard_constrained (mir : Program.Typed.t) :
     match e with
     | {lower= `Lit 0.; upper= `Lit 1.} | {lower= `Lit -1.; upper= `Lit 1.} ->
         None
-    | {lower= `Lit a; upper= `Lit b} when a >= b -> Some `NonsenseConstraint
-    | {lower= `Lit _; upper= `Lit _} -> Some `HardConstraint
-    | _ -> None
+    | {lower= `Lit a; upper= `Lit b} when a >= b ->
+        Some `NonsenseConstraint
+    | {lower= `Lit _; upper= `Lit _} ->
+        Some `HardConstraint
+    | _ ->
+        None
   in
   Set.Poly.filter_map
     ~f:(fun (name, trans) ->
@@ -51,10 +55,11 @@ let list_multi_twiddles (mir : Program.Typed.t) :
       (string, Location_span.t Set.Poly.t) Map.Poly.t =
     match stmt.pattern with
     | Stmt.Fixed.Pattern.TargetPE
-        { pattern= Expr.Fixed.Pattern.FunApp (_, {pattern= Var vname; _} :: _); _
-        } ->
+        {pattern= Expr.Fixed.Pattern.FunApp (_, {pattern= Var vname; _} :: _); _}
+      ->
         Map.Poly.singleton vname (Set.Poly.singleton stmt.meta)
-    | _ -> Map.Poly.empty
+    | _ ->
+        Map.Poly.empty
   in
   let twiddles =
     fold_stmts
@@ -76,7 +81,8 @@ let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
   (* Labels of dependencies *)
   let dep_labels, expr_vars =
     match expr_opt with
-    | None -> (node_dependencies info_map label, Set.Poly.empty)
+    | None ->
+        (node_dependencies info_map label, Set.Poly.empty)
     | Some expr ->
         let vvars = Set.Poly.map ~f:fst (expr_var_set expr) in
         ( node_vars_dependencies info_map vvars label
@@ -97,13 +103,13 @@ let list_target_dependant_cf
     (info_map :
       ( label
       , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-      Map.Poly.t) (targets : string Set.Poly.t) :
+      Map.Poly.t ) (targets : string Set.Poly.t) :
     (Location_span.t * string Set.Poly.t) Set.Poly.t =
   (* Find all the control flow nodes *)
   let cf_labels =
     Set.Poly.of_list
       (Map.Poly.keys
-         (Map.Poly.filter info_map ~f:(fun (stmt, _) -> is_ctrl_flow stmt)))
+         (Map.Poly.filter info_map ~f:(fun (stmt, _) -> is_ctrl_flow stmt)) )
   in
   Set.Poly.filter_map
     ~f:(fun label ->
@@ -122,16 +128,14 @@ let list_param_dependant_cf (mir : Program.Typed.t) :
   list_target_dependant_cf info_map params
 
 let list_arg_dependant_fundef_cf (mir : Program.Typed.t)
-    (fun_def : 'a Program.fun_def) :
-    (Location_span.t * int * string) Set.Poly.t =
+    (fun_def : 'a Program.fun_def) : (Location_span.t * int * string) Set.Poly.t
+    =
   let args = List.map ~f:(fun (_, name, _) -> name) fun_def.fdargs in
   (* Only look for control flow if this function definition has a body *)
   Option.value_map fun_def.fdbody ~default:Set.Poly.empty ~f:(fun body ->
       (* build dataflow data structure *)
       let info_map = build_dep_info_map mir body in
-      let cf_deps =
-        list_target_dependant_cf info_map (Set.Poly.of_list args)
-      in
+      let cf_deps = list_target_dependant_cf info_map (Set.Poly.of_list args) in
       union_map cf_deps ~f:(fun (loc, names) ->
           Set.Poly.map names ~f:(fun name ->
               let ix, _ =
@@ -164,7 +168,7 @@ let list_param_dependant_fundef_cf (mir : Program.Typed.t)
     (info_map :
       ( label
       , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-      Map.Poly.t) (fun_def : 'a Program.fun_def) :
+      Map.Poly.t ) (fun_def : 'a Program.fun_def) :
     (Location_span.t * string Set.Poly.t * string * Location_span.t) Set.Poly.t
     =
   let dep_args = list_arg_dependant_fundef_cf mir fun_def in
@@ -172,8 +176,7 @@ let list_param_dependant_fundef_cf (mir : Program.Typed.t)
     Set.Poly.union_list
       (List.map ~f:snd
          (Map.Poly.to_alist
-            (Map.Poly.filter_mapi info_map
-               ~f:(fun ~key:label ~data:(stmt, _) ->
+            (Map.Poly.filter_mapi info_map ~f:(fun ~key:label ~data:(stmt, _) ->
                  let funapps =
                    union_map (stmt_rhs stmt) ~f:(fun rhs_expr ->
                        expr_collect_exprs rhs_expr ~f:(fun rhs_subexpr ->
@@ -182,14 +185,14 @@ let list_param_dependant_fundef_cf (mir : Program.Typed.t)
                                (UserDefined (fname, _), _)
                              when fname = fun_def.fdname ->
                                Some (rhs_subexpr, label)
-                           | _ -> None ) )
+                           | _ ->
+                               None ) )
                  in
-                 if Set.Poly.is_empty funapps then None else Some funapps ))))
+                 if Set.Poly.is_empty funapps then None else Some funapps ) ) ) )
   in
   let arg_exprs (fcall_expr : Expr.Typed.t) =
     match fcall_expr with
-    | { pattern= Expr.Fixed.Pattern.FunApp (UserDefined (fname, _), arg_exprs); _
-      }
+    | {pattern= Expr.Fixed.Pattern.FunApp (UserDefined (fname, _), arg_exprs); _}
       when fname = fun_def.fdname ->
         Set.Poly.map dep_args ~f:(fun (loc, ix, arg_name) ->
             (loc, List.nth_exn arg_exprs ix, arg_name) )
@@ -197,7 +200,7 @@ let list_param_dependant_fundef_cf (mir : Program.Typed.t)
         raise
           (Failure
              "In finding searching for parameter dependent functionarguments, \
-              mismatched function. Please report a bug.\n")
+              mismatched function. Please report a bug.\n" )
   in
   let arg_param_deps label arg_expr =
     var_deps info_map ~expr:(Some arg_expr) label (parameter_names_set mir)
@@ -245,14 +248,17 @@ let compiletime_value_of_expr
     match expr with
     | {pattern= Var pname; _} -> (
       match Set.Poly.find params ~f:(fun (name, _) -> name = pname) with
-      | Some (name, trans) -> Param (name, trans)
+      | Some (name, trans) ->
+          Param (name, trans)
       | None -> (
         match Set.Poly.find data ~f:(fun name -> name = pname) with
-        | Some name -> Data name
-        | None -> Opaque ) )
+        | Some name ->
+            Data name
+        | None ->
+            Opaque ) )
     | _ ->
-        Option.value_map (num_expr_value expr) ~default:Opaque
-          ~f:(fun (v, s) -> Number (v, s) )
+        Option.value_map (num_expr_value expr) ~default:Opaque ~f:(fun (v, s) ->
+            Number (v, s) )
   in
   (v, expr.meta)
 
@@ -271,11 +277,12 @@ let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
           List.map ~f:(compiletime_value_of_expr params data) arg_exprs
         in
         Some {name= fname; loc= expr.meta.loc; args}
-    | _ -> None
+    | _ ->
+        None
   in
   stmts_collect_exprs
     (List.append mir.log_prob
-       (List.filter_map ~f:(fun f -> f.fdbody) mir.functions_block))
+       (List.filter_map ~f:(fun f -> f.fdbody) mir.functions_block) )
     ~f:take_dist
 
 (* Our definition of 'unscaled' for constants used in distributions *)
@@ -291,7 +298,8 @@ let list_unscaled_constants (distributions_list : dist_info Set.Poly.t) :
     | Number (num, num_str), meta ->
         if is_unscaled_value num then Set.Poly.singleton (meta.loc, num_str)
         else Set.Poly.empty
-    | _ -> Set.Poly.empty
+    | _ ->
+        Set.Poly.empty
   in
   union_map
     ~f:(fun {args; _} ->
@@ -322,15 +330,14 @@ let nonsense_constrained_message (pname : string) : string =
 let hard_constrained_message (pname : string) : string =
   Printf.sprintf
     "Your Stan program has a parameter %s with a lower and upper bound in its \
-     declaration. These hard constraints are not recommended, for two \
-     reasons: (a) Except when there are logical or physical constraints, it \
-     is very unusual for you to be sure that a parameter will fall inside a \
-     specified range, and (b) The infinite gradient induced by a hard \
-     constraint can cause difficulties for Stan's sampling algorithm. As a \
-     consequence, we recommend soft constraints rather than hard constraints; \
-     for example, instead of constraining an elasticity parameter to fall \
-     between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) \
-     prior distribution."
+     declaration. These hard constraints are not recommended, for two reasons: \
+     (a) Except when there are logical or physical constraints, it is very \
+     unusual for you to be sure that a parameter will fall inside a specified \
+     range, and (b) The infinite gradient induced by a hard constraint can \
+     cause difficulties for Stan's sampling algorithm. As a consequence, we \
+     recommend soft constraints rather than hard constraints; for example, \
+     instead of constraining an elasticity parameter to fall between 0, and 1, \
+     leave it unconstrained and give it a normal(0.5,0.5) prior distribution."
     pname
 
 let hard_constrained_warnings (mir : Program.Typed.t) =
@@ -338,7 +345,8 @@ let hard_constrained_warnings (mir : Program.Typed.t) =
   Set.Poly.map
     ~f:(fun (pname, c) ->
       match c with
-      | `HardConstraint -> (Location_span.empty, hard_constrained_message pname)
+      | `HardConstraint ->
+          (Location_span.empty, hard_constrained_message pname)
       | `NonsenseConstraint ->
           (Location_span.empty, nonsense_constrained_message pname) )
     pnames
@@ -368,8 +376,8 @@ let param_dependant_cf_warnings (mir : Program.Typed.t) =
     cfs
 
 let param_dependant_fundef_cf_message (fname : string)
-    (plist : string Set.Poly.t) (arg_name : string)
-    (callsite : Location_span.t) : string =
+    (plist : string Set.Poly.t) (arg_name : string) (callsite : Location_span.t)
+    : string =
   let plistStr = String.concat ~sep:", " (Set.Poly.to_list plist) in
   Printf.sprintf
     "A control flow statement inside function %s depends on argument %s. At \
@@ -381,8 +389,7 @@ let param_dependant_fundef_cf_message (fname : string)
 let param_dependant_fundef_cf_warnings (mir : Program.Typed.t) =
   Set.Poly.map
     ~f:(fun (fname, cf_loc, deps, arg_name, arg_loc) ->
-      (cf_loc, param_dependant_fundef_cf_message fname deps arg_name arg_loc)
-      )
+      (cf_loc, param_dependant_fundef_cf_message fname deps arg_name arg_loc) )
     (list_param_dependant_fundefs_cf mir)
 
 let unused_params_message (pname : string) : string =
@@ -390,8 +397,8 @@ let unused_params_message (pname : string) : string =
     "The parameter %s was declared but was not used in the density calculation."
     pname
 
-let unused_params_warnings (factor_graph : factor_graph)
-    (mir : Program.Typed.t) =
+let unused_params_warnings (factor_graph : factor_graph) (mir : Program.Typed.t)
+    =
   Set.Poly.map
     ~f:(fun pname -> (Location_span.empty, unused_params_message pname))
     (list_unused_params factor_graph mir)
@@ -400,8 +407,8 @@ let non_one_priors_message (pname : string) (n : int) : string =
   if n = 0 then Printf.sprintf "The parameter %s has no priors." pname
   else Printf.sprintf "The parameter %s has %d priors." pname n
 
-let non_one_priors_warnings (factor_graph : factor_graph)
-    (mir : Program.Typed.t) =
+let non_one_priors_warnings (factor_graph : factor_graph) (mir : Program.Typed.t)
+    =
   Set.Poly.map
     ~f:(fun (pname, n) -> (Location_span.empty, non_one_priors_message pname n))
     (list_non_one_priors factor_graph mir)

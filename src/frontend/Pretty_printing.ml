@@ -1,6 +1,7 @@
 (** Some helpers to produce nice error messages and for auto-formatting Stan programs *)
 
 open Core_kernel
+open Core_kernel.Poly
 open Ast
 
 (** To avoid cluttering the AST, comments are not associated with any particular AST node but instead come in a separate list.
@@ -111,11 +112,11 @@ let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
       Option.iter prev_loc ~f:(fun prev_loc ->
           pp_space false ppf (prev_loc, begin_loc) ) ;
       pp_comment ppf hd ;
-      let _ = recurse Middle.Location.empty !skipped in
+      let (_ : Middle.Location.t) = recurse Middle.Location.empty !skipped in
       skipped := [] ;
       recurse end_loc tl |> finish
   | [] ->
-      let _ = recurse Middle.Location.empty !skipped in
+      let (_ : Middle.Location.t) = recurse Middle.Location.empty !skipped in
       skipped := [] ;
       Option.iter prev_loc ~f:finish
 

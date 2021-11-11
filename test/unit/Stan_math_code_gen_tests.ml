@@ -20,7 +20,7 @@ let%expect_test "udf" =
            ( w
            @@ FunApp
                 ( StanLib ("add", FnPlain, AoS)
-                , [w @@ Var "x"; w @@ Lit (Int, "1")] ) ))
+                , [w @@ Var "x"; w @@ Lit (Int, "1")] ) ) )
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }
@@ -77,7 +77,7 @@ let%expect_test "udf-expressions" =
            ( w
            @@ FunApp
                 ( StanLib ("add", FnPlain, AoS)
-                , [w @@ Var "x"; w @@ Lit (Int, "1")] ) ))
+                , [w @@ Var "x"; w @@ Lit (Int, "1")] ) ) )
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }

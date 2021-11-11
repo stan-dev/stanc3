@@ -194,8 +194,8 @@ let%expect_test "parse indices, two different colons" =
 
 let%expect_test "parse operator precedence" =
   print_ast_of_string
-    "model {  \
-     print({a,b?c:d||e&&f==g!=h<=i<j>=k>l+m-n*o/p%q.*s./t\\r^u[v]'}); }" ;
+    "model {  print({a,b?c:d||e&&f==g!=h<=i<j>=k>l+m-n*o/p%q.*s./t\\r^u[v]'}); \
+     }" ;
   [%expect
     {|
       ((functionblock ()) (datablock ()) (transformeddatablock ())

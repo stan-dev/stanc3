@@ -1,6 +1,7 @@
 (** Types which have dimensionalities but not sizes, e.g. [array\[,,\]] *)
 
 open Core_kernel
+open Core_kernel.Poly
 open Common.Helpers
 
 type t =

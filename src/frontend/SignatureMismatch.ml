@@ -1,4 +1,5 @@
 open Core_kernel
+open Core_kernel.Poly
 open Middle
 module TypeMap = Core_kernel.Map.Make_using_comparator (UnsizedType)
 
@@ -135,8 +136,8 @@ let rec check_same_type depth t1 t2 =
 
 and check_compatible_arguments depth args1 args2 =
   match List.zip args1 args2 with
-  | None -> Some (ArgNumMismatch (List.length args1, List.length args2))
-  | Some l ->
+  | List.Or_unequal_lengths.Unequal_lengths -> Some (ArgNumMismatch (List.length args1, List.length args2))
+  | Ok l ->
       List.find_mapi l ~f:(fun i ((ad1, ut1), (ad2, ut2)) ->
           match check_same_type depth ut1 ut2 with
           | Some e -> Some (ArgError (i + 1, e))

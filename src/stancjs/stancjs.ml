@@ -1,4 +1,5 @@
 open Core_kernel
+open Core_kernel.Poly
 open Frontend
 open Stan_math_backend
 open Analysis_and_optimization
