@@ -15,13 +15,15 @@ let dotproduct xs ys =
 let matprod x y =
   let y_T = transpose y in
   if List.length x <> List.length y_T then
-    failwith "Matrix multiplication dim. mismatch"
+    Common.FatalError.fatal_error_msg
+      [%message "Matrix multiplication dim. mismatch"]
   else List.map ~f:(fun row -> List.map ~f:(dotproduct row) y_T) x
 
 let rec vect_to_mat l m =
   let len = List.length l in
   if len % m <> 0 then
-    failwith "the length has to be a whole multiple of the partition size"
+    Common.FatalError.fatal_error_msg
+      [%message "The length has to be a whole multiple of the partition size"]
   else if len = m then [l]
   else
     let hd, tl = List.split_n l m in
@@ -34,7 +36,9 @@ let unwrap_num_exn m e =
   let e = Analysis_and_optimization.Partial_evaluator.eval_expr e in
   match e.pattern with
   | Lit (_, s) -> Float.of_string s
-  | _ -> raise_s [%sexp ("Cannot convert size to number." : string)]
+  | _ ->
+      Common.FatalError.fatal_error_msg
+        [%message "Cannot convert size to number."]
 
 let unwrap_int_exn m e = Int.of_float (unwrap_num_exn m e)
 
@@ -99,7 +103,7 @@ let gen_row_vector m n t =
      |{expr= PostfixOp ({expr= RowVectorExpr unpacked_e; _}, Transpose); _} ->
         wrap_row_vector (List.map ~f:(fun x -> gen_real m (t x)) unpacked_e)
     | _ ->
-        raise_s
+        Common.FatalError.fatal_error_msg
           [%message
             "Bad bounded (upper OR lower) expr: "
               (e : (typed_expr_meta, fun_kind) expr_with)]
@@ -135,7 +139,7 @@ let gen_row_vector m n t =
         create_bounds unpacked_e1
           (List.init (List.length unpacked_e1) ~f:(fun _ -> e2))
     | _ ->
-        raise_s
+        Common.FatalError.fatal_error_msg
           [%message
             "Bad bounded upper and lower expr: "
               (e1 : (typed_expr_meta, fun_kind) expr_with)
@@ -295,18 +299,18 @@ let rec pp_value_json ppf e =
   | IntNumeral s | RealNumeral s -> Fmt.string ppf s
   | ArrayExpr l | RowVectorExpr l ->
       Fmt.(pf ppf "[@[<hov 1>%a@]]" (list ~sep:comma pp_value_json) l)
-  | _ -> failwith "This should never happen."
+  | _ -> Common.FatalError.fatal_error ()
 
 let var_decl_id d =
   match d.stmt with
   | VarDecl {identifier; _} -> identifier.name
-  | _ -> failwith "This should never happen."
+  | _ -> Common.FatalError.fatal_error ()
 
 let var_decl_gen_val m d =
   match d.stmt with
   | VarDecl {decl_type= Sized sizedtype; transformation; _} ->
       generate_value m sizedtype transformation
-  | _ -> failwith "This should never happen."
+  | _ -> Common.FatalError.fatal_error ()
 
 let print_data_prog s =
   let data = Ast.get_stmts s.datablock in

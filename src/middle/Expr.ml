@@ -207,7 +207,9 @@ module Helpers = struct
     | UArray t, Single _ :: tl -> infer_type_of_indexed t tl
     | UArray t, _ :: tl -> UArray (infer_type_of_indexed t tl)
     | UMatrix, [Single _; Single _] | UVector, [_] | URowVector, [_] -> UReal
-    | _ -> raise_s [%message "Can't index" (ut : UnsizedType.t)]
+    | _ ->
+        FatalError.fatal_error_msg
+          [%message "Can't index" (ut : UnsizedType.t)]
 
   (** [add_index expression index] returns an expression that (additionally)
       indexes into the input [expression] by [index].*)
@@ -218,7 +220,9 @@ module Helpers = struct
       match e.pattern with
       | Var _ -> Fixed.Pattern.Indexed (e, [i])
       | Indexed (e, indices) -> Indexed (e, indices @ [i])
-      | _ -> raise_s [%message "These should go away with Ryan's LHS"]
+      | _ ->
+          (* These should go away with Ryan's LHS *)
+          Common.FatalError.fatal_error ()
     in
     Fixed.{meta; pattern}
 

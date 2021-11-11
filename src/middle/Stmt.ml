@@ -313,7 +313,8 @@ module Helpers = struct
         mk_for_iteratee rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mk_for_iteratee (len iteratee) bodyfn iteratee smeta
     | UMathLibraryFunction | UFun _ ->
-        raise_s [%message "can't iterate over " (iteratee : Expr.Typed.t)]
+        FatalError.fatal_error_msg
+          [%message "Can't iterate over " (iteratee : Expr.Typed.t)]
 
   let contains_fn_kind is_fn_kind ?(init = false) stmt =
     let rec aux accu Fixed.({pattern; _}) =

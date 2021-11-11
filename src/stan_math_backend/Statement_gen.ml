@@ -224,12 +224,10 @@ let pp_map_decl ppf (vident, ut) =
       pf ppf "Eigen::Map<Eigen::Matrix<%s, -1, 1>> %s{nullptr, 0};" scalar
         vident
   | x ->
-      raise_s
+      Common.FatalError.fatal_error_msg
         [%message
           "Error during Map data construction for " vident " of type "
-            (x : UnsizedType.t)
-            ". This should never happen, if you see this please file a bug \
-             report."]
+            (x : UnsizedType.t)]
 
 let pp_unsized_decl ppf (vident, ut, adtype) =
   let pp_type =
