@@ -49,9 +49,7 @@ module Typed : sig
   include Specialized.S with module Meta := Meta and type t = Meta.t Fixed.t
 
   val type_of : t -> UnsizedType.t
-
   val loc_of : t -> Location_span.t
-
   val adlevel_of : t -> UnsizedType.autodifftype
 end
 
@@ -70,15 +68,10 @@ module Labelled : sig
   include Specialized.S with module Meta := Meta and type t = Meta.t Fixed.t
 
   val type_of : t -> UnsizedType.t
-
   val loc_of : t -> Location_span.t
-
   val adlevel_of : t -> UnsizedType.autodifftype
-
   val label_of : t -> Label.Int_label.t
-
   val label : ?init:int -> Typed.t -> t
-
   val associate : ?init:t Label.Int_label.Map.t -> t -> t Label.Int_label.Map.t
 
   val associate_index :
@@ -87,21 +80,13 @@ end
 
 module Helpers : sig
   val int : int -> Typed.t
-
   val float : float -> Typed.t
-
   val str : string -> Typed.t
-
   val variable : string -> Typed.t
-
   val zero : Typed.t
-
   val one : Typed.t
-
   val binop : Typed.t -> Operator.t -> Typed.t -> Typed.t
-
   val binop_list : Typed.t list -> Operator.t -> default:Typed.t -> Typed.t
-
   val loop_bottom : Typed.t
 
   val internal_funapp :
@@ -111,8 +96,6 @@ module Helpers : sig
     ('a Fixed.t Fun_kind.t -> bool) -> ?init:bool -> 'a Fixed.t -> bool
 
   val infer_type_of_indexed : UnsizedType.t -> 'a Index.t list -> UnsizedType.t
-
   val add_int_index : Typed.t -> Typed.t Index.t -> Typed.t
-
   val collect_indices : 'a Fixed.t -> 'a Fixed.t Index.t list
 end

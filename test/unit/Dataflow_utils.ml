@@ -28,8 +28,7 @@ let%expect_test "Loop test" =
       build_statement_map
         (fun {pattern; _} -> pattern)
         (fun {meta; _} -> meta)
-        {meta= Location_span.empty; pattern= block})
-  in
+        {meta= Location_span.empty; pattern= block}) in
   let exits, preds = build_predecessor_graph statement_map in
   print_s
     [%sexp
@@ -122,8 +121,7 @@ let%expect_test "Loop passthrough" =
       build_statement_map
         (fun {pattern; _} -> pattern)
         (fun {meta; _} -> meta)
-        {meta= Location_span.empty; pattern= block})
-  in
+        {meta= Location_span.empty; pattern= block}) in
   let exits, _ = build_predecessor_graph statement_map in
   print_s [%sexp (exits : label Set.Poly.t)] ;
   [%expect {|
@@ -309,8 +307,7 @@ let%test "Reconstructed recursive statement" =
   let stmt =
     build_recursive_statement
       (fun pattern meta -> Stmt.Fixed.{pattern; meta})
-      example1_statement_map 1
-  in
+      example1_statement_map 1 in
   stmt = example1_program
 
 let example3_program =

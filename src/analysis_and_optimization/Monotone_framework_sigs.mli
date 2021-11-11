@@ -13,7 +13,6 @@ module type FLOWGRAPH = sig
   include Base__.Hashtbl_intf.Key.S with type t = labels
 
   val initials : labels Set.Poly.t
-
   val successors : (labels, labels Set.Poly.t) Map.Poly.t
 end
 
@@ -38,9 +37,7 @@ end
 
 (** The data we need to form a dual powerset lattice *)
 module type INITIALTOTALTYPE = sig
-  include INITIALTYPE
-
-  include TOTALTYPE with type vals := vals
+  include INITIALTYPE include TOTALTYPE with type vals := vals
 end
 
 module type LATTICE_NO_BOT = sig
@@ -70,7 +67,6 @@ end
     properties at a given node in the flow graph. *)
 module type TRANSFER_FUNCTION = sig
   type labels
-
   type properties
 
   val transfer_function : labels -> properties -> properties
@@ -88,7 +84,6 @@ type 'a entry_exit = {entry: 'a; exit: 'a}
     For a reverse analysis, supply the reverse flow graph.*)
 module type MONOTONE_FRAMEWORK = sig
   type labels
-
   type properties
 
   val mfp : unit -> (labels, properties entry_exit) Map.Poly.t

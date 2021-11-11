@@ -92,9 +92,7 @@ module Labelled : sig
        and type t = (Expr.Labelled.Meta.t, Meta.t) Fixed.t
 
   val loc_of : t -> Location_span.t
-
   val label_of : t -> Int_label.t
-
   val label : ?init:int -> Located.t -> t
 
   type associations =

@@ -32,7 +32,7 @@ let rec replace_deprecated_expr
     | FunApp (StanLib FnPlain, {name= "if_else"; _}, [c; t; e]) ->
         Paren
           (replace_deprecated_expr deprecated_userdefined
-             {expr= TernaryIf ({expr= Paren c; emeta= c.emeta}, t, e); emeta})
+             {expr= TernaryIf ({expr= Paren c; emeta= c.emeta}, t, e); emeta} )
     | FunApp (StanLib suffix, {name; id_loc}, e) ->
         if is_deprecated_distribution name then
           CondDistApp
@@ -72,8 +72,7 @@ let rec replace_deprecated_expr
     | _ ->
         map_expression
           (replace_deprecated_expr deprecated_userdefined)
-          ident expr
-  in
+          ident expr in
   {expr; emeta}
 
 let replace_deprecated_lval deprecated_userdefined =
@@ -95,8 +94,7 @@ let rec replace_deprecated_stmt
         let newname =
           match String.Map.find deprecated_userdefined name with
           | Some type_ -> update_suffix name type_
-          | None -> name
-        in
+          | None -> name in
         FunDef
           { returntype
           ; funname= {name= newname; id_loc}
@@ -107,8 +105,7 @@ let rec replace_deprecated_stmt
           (replace_deprecated_expr deprecated_userdefined)
           (replace_deprecated_stmt deprecated_userdefined)
           (replace_deprecated_lval deprecated_userdefined)
-          ident stmt
-  in
+          ident stmt in
   {stmt; smeta}
 
 let rec no_parens {expr; emeta} =
@@ -126,7 +123,7 @@ let rec no_parens {expr; emeta} =
             , List.map
                 ~f:(function
                   | Single e -> Single (no_parens e)
-                  | i -> map_index keep_parens i)
+                  | i -> map_index keep_parens i )
                 l )
       ; emeta }
   | ArrayExpr _ | RowVectorExpr _ | FunApp _ | CondDistApp _ ->
@@ -177,8 +174,7 @@ let rec parens_stmt ({stmt; smeta} : typed_statement) : typed_statement =
           ; lower_bound= keep_parens lower_bound
           ; upper_bound= keep_parens upper_bound
           ; loop_body= parens_block loop_body }
-    | _ -> map_statement no_parens parens_stmt parens_lval ident stmt
-  in
+    | _ -> map_statement no_parens parens_stmt parens_lval ident stmt in
   {stmt; smeta}
 
 let repair_syntax program : untyped_program =

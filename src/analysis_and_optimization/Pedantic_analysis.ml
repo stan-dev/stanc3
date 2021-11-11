@@ -23,8 +23,7 @@ let list_unused_params (factor_graph : factor_graph) (mir : Program.Typed.t) :
   let used_params =
     Set.Poly.map
       ~f:(fun (VVar v) -> v)
-      (Set.Poly.of_list (Map.Poly.keys factor_graph.var_map))
-  in
+      (Set.Poly.of_list (Map.Poly.keys factor_graph.var_map)) in
   Set.Poly.diff params used_params
 
 let list_hard_constrained (mir : Program.Typed.t) :
@@ -34,13 +33,9 @@ let list_hard_constrained (mir : Program.Typed.t) :
     match e with
     | {lower= `Lit 0.; upper= `Lit 1.} | {lower= `Lit -1.; upper= `Lit 1.} ->
         None
-    | {lower= `Lit a; upper= `Lit b} when a >= b ->
-        Some `NonsenseConstraint
-    | {lower= `Lit _; upper= `Lit _} ->
-        Some `HardConstraint
-    | _ ->
-        None
-  in
+    | {lower= `Lit a; upper= `Lit b} when a >= b -> Some `NonsenseConstraint
+    | {lower= `Lit _; upper= `Lit _} -> Some `HardConstraint
+    | _ -> None in
   Set.Poly.filter_map
     ~f:(fun (name, trans) ->
       Option.map
@@ -58,19 +53,15 @@ let list_multi_twiddles (mir : Program.Typed.t) :
         {pattern= Expr.Fixed.Pattern.FunApp (_, {pattern= Var vname; _} :: _); _}
       ->
         Map.Poly.singleton vname (Set.Poly.singleton stmt.meta)
-    | _ ->
-        Map.Poly.empty
-  in
+    | _ -> Map.Poly.empty in
   let twiddles =
     fold_stmts
       ~take_stmt:(fun m s -> merge_set_maps m (collect_twiddle_stmt s))
       ~take_expr:(fun m _ -> m)
-      ~init:Map.Poly.empty mir.log_prob
-  in
+      ~init:Map.Poly.empty mir.log_prob in
   (* Filter for parameters assigned more than one distribution *)
   let multi_twiddles =
-    Map.Poly.filter ~f:(fun s -> Set.Poly.length s <> 1) twiddles
-  in
+    Map.Poly.filter ~f:(fun s -> Set.Poly.length s <> 1) twiddles in
   Map.fold ~init:Set.Poly.empty
     ~f:(fun ~key ~data s -> Set.add s (key, data))
     multi_twiddles
@@ -81,19 +72,16 @@ let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
   (* Labels of dependencies *)
   let dep_labels, expr_vars =
     match expr_opt with
-    | None ->
-        (node_dependencies info_map label, Set.Poly.empty)
+    | None -> (node_dependencies info_map label, Set.Poly.empty)
     | Some expr ->
         let vvars = Set.Poly.map ~f:fst (expr_var_set expr) in
         ( node_vars_dependencies info_map vvars label
-        , Set.Poly.map ~f:string_of_vexpr vvars )
-  in
+        , Set.Poly.map ~f:string_of_vexpr vvars ) in
   (* expressions of dependencies *)
   let dep_exprs =
     union_map dep_labels ~f:(fun label ->
         let stmt, _ = Map.Poly.find_exn info_map label in
-        stmt_rhs_var_set stmt )
-  in
+        stmt_rhs_var_set stmt ) in
   (* variable dependencies *)
   let dep_vars = Set.Poly.map ~f:(fun (VVar v, _) -> v) dep_exprs in
   (* target dependencies *)
@@ -143,22 +131,19 @@ let list_arg_dependant_fundef_cf (mir : Program.Typed.t)
                   ~message:
                     "INTERNAL ERROR: Pedantic mode found CF dependent on an \
                      arg,but the arg is mismatched. Please report a bug.\n"
-                  (List.findi args ~f:(fun _ arg -> arg = name))
-              in
+                  (List.findi args ~f:(fun _ arg -> arg = name)) in
               (loc, ix, name) ) ) )
 
 let expr_collect_exprs (expr : Expr.Typed.t) ~f : 'a Set.Poly.t =
   let collect_expr s (expr : Expr.Typed.t) =
-    match f expr with Some a -> Set.Poly.add s a | _ -> s
-  in
+    match f expr with Some a -> Set.Poly.add s a | _ -> s in
   fold_expr ~init:Set.Poly.empty ~take_expr:(fun s e -> collect_expr s e) expr
 
 let stmts_collect_exprs
     (stmts : (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t List.t) ~f :
     'a Set.Poly.t =
   let collect_expr s (expr : Expr.Typed.t) =
-    match f expr with Some a -> Set.Poly.add s a | _ -> s
-  in
+    match f expr with Some a -> Set.Poly.add s a | _ -> s in
   fold_stmts ~init:Set.Poly.empty
     ~take_stmt:(fun s _ -> s)
     ~take_expr:(fun s e -> collect_expr s e)
@@ -185,9 +170,7 @@ let list_param_dependant_fundef_cf (mir : Program.Typed.t)
                                (UserDefined (fname, _), _)
                              when fname = fun_def.fdname ->
                                Some (rhs_subexpr, label)
-                           | _ ->
-                               None ) )
-                 in
+                           | _ -> None ) ) in
                  if Set.Poly.is_empty funapps then None else Some funapps ) ) ) )
   in
   let arg_exprs (fcall_expr : Expr.Typed.t) =
@@ -200,8 +183,7 @@ let list_param_dependant_fundef_cf (mir : Program.Typed.t)
         raise
           (Failure
              "In finding searching for parameter dependent functionarguments, \
-              mismatched function. Please report a bug.\n" )
-  in
+              mismatched function. Please report a bug.\n" ) in
   let arg_param_deps label arg_expr =
     var_deps info_map ~expr:(Some arg_expr) label (parameter_names_set mir)
   in
@@ -217,9 +199,7 @@ let list_param_dependant_fundefs_cf (mir : Program.Typed.t) :
     Set.Poly.t =
   let info_map = log_prob_build_dep_info_map mir in
   union_map (Set.Poly.of_list mir.functions_block) ~f:(fun fun_def ->
-      let dependant_args =
-        list_param_dependant_fundef_cf mir info_map fun_def
-      in
+      let dependant_args = list_param_dependant_fundef_cf mir info_map fun_def in
       Set.Poly.map dependant_args ~f:(fun (cf_loc, deps, arg_name, arg_loc) ->
           (fun_def.fdname, cf_loc, deps, arg_name, arg_loc) ) )
 
@@ -233,8 +213,7 @@ let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t) :
     Map.Poly.fold priors ~init:Set.Poly.empty
       ~f:(fun ~key:(VVar v) ~data:factors_opt s ->
         Option.value_map factors_opt ~default:s ~f:(fun factors ->
-            Set.Poly.add s (v, Set.Poly.length factors) ) )
-  in
+            Set.Poly.add s (v, Set.Poly.length factors) ) ) in
   (* Return only multi-prior parameters *)
   Set.Poly.filter prior_set ~f:(fun (_, n) -> n <> 1)
 
@@ -248,18 +227,14 @@ let compiletime_value_of_expr
     match expr with
     | {pattern= Var pname; _} -> (
       match Set.Poly.find params ~f:(fun (name, _) -> name = pname) with
-      | Some (name, trans) ->
-          Param (name, trans)
+      | Some (name, trans) -> Param (name, trans)
       | None -> (
         match Set.Poly.find data ~f:(fun name -> name = pname) with
-        | Some name ->
-            Data name
-        | None ->
-            Opaque ) )
+        | Some name -> Data name
+        | None -> Opaque ) )
     | _ ->
         Option.value_map (num_expr_value expr) ~default:Opaque ~f:(fun (v, s) ->
-            Number (v, s) )
-  in
+            Number (v, s) ) in
   (v, expr.meta)
 
 (* Scrape all distributions from the program by searching for their function
@@ -274,12 +249,9 @@ let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
         let params = parameter_set mir in
         let data = data_set mir in
         let args =
-          List.map ~f:(compiletime_value_of_expr params data) arg_exprs
-        in
+          List.map ~f:(compiletime_value_of_expr params data) arg_exprs in
         Some {name= fname; loc= expr.meta.loc; args}
-    | _ ->
-        None
-  in
+    | _ -> None in
   stmts_collect_exprs
     (List.append mir.log_prob
        (List.filter_map ~f:(fun f -> f.fdbody) mir.functions_block) )
@@ -298,9 +270,7 @@ let list_unscaled_constants (distributions_list : dist_info Set.Poly.t) :
     | Number (num, num_str), meta ->
         if is_unscaled_value num then Set.Poly.singleton (meta.loc, num_str)
         else Set.Poly.empty
-    | _ ->
-        Set.Poly.empty
-  in
+    | _ -> Set.Poly.empty in
   union_map
     ~f:(fun {args; _} ->
       Set.Poly.union_list (List.map ~f:collect_unscaled_expr args) )
@@ -345,8 +315,7 @@ let hard_constrained_warnings (mir : Program.Typed.t) =
   Set.Poly.map
     ~f:(fun (pname, c) ->
       match c with
-      | `HardConstraint ->
-          (Location_span.empty, hard_constrained_message pname)
+      | `HardConstraint -> (Location_span.empty, hard_constrained_message pname)
       | `NonsenseConstraint ->
           (Location_span.empty, nonsense_constrained_message pname) )
     pnames
@@ -421,8 +390,7 @@ let uninitialized_warnings (mir : Program.Typed.t) =
   let uninit_vars =
     Set.Poly.filter
       ~f:(fun (span, _) -> span <> Location_span.empty)
-      (Dependence_analysis.mir_uninitialized_variables mir)
-  in
+      (Dependence_analysis.mir_uninitialized_variables mir) in
   Set.Poly.map
     ~f:(fun (loc, vname) -> (loc, uninitialized_message vname))
     uninit_vars
@@ -447,18 +415,14 @@ let settings_constant_prop =
 let warn_pedantic (mir_unopt : Program.Typed.t) =
   (* Some warnings will be stronger when constants are propagated *)
   let mir =
-    Optimize.optimization_suite ~settings:settings_constant_prop mir_unopt
-  in
+    Optimize.optimization_suite ~settings:settings_constant_prop mir_unopt in
   (* Try to avoid recomputation by pre-building structures *)
   let distributions_info = list_distributions mir in
   let factor_graph = prog_factor_graph mir in
   Set.Poly.union_list
-    [ uninitialized_warnings mir
-    ; unscaled_constants_warnings distributions_info
-    ; multi_twiddles_warnings mir
-    ; hard_constrained_warnings mir
-    ; unused_params_warnings factor_graph mir
-    ; param_dependant_cf_warnings mir
+    [ uninitialized_warnings mir; unscaled_constants_warnings distributions_info
+    ; multi_twiddles_warnings mir; hard_constrained_warnings mir
+    ; unused_params_warnings factor_graph mir; param_dependant_cf_warnings mir
     ; param_dependant_fundef_cf_warnings mir
     ; non_one_priors_warnings factor_graph mir
     ; distribution_warnings distributions_info ]

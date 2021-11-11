@@ -55,9 +55,7 @@ let nonnegative_range =
   {name= "non-negative"; constr= Range {lower= Some (0., true); upper= None}}
 
 let simplex = {name= "simplex"; constr= Simplex}
-
 let ordered = {name= "ordered"; constr= Ordered}
-
 let correlation = {name= "correlation"; constr= Correlation}
 
 let cholesky_correlation =
@@ -72,74 +70,50 @@ let cholesky_covariance =
    declared bounds of a variable *)
 let bounds_out_of_range (range : range) (bounds : bound_values) : bool =
   match (bounds.lower, bounds.upper, range.lower, range.upper) with
-  | `None, _, Some _, _ ->
-      true
-  | _, `None, _, Some _ ->
-      true
-  | `Lit l, _, Some (l', _), _ when l < l' ->
-      true
-  | _, `Lit u, _, Some (u', _) when u > u' ->
-      true
-  | _ ->
-      false
+  | `None, _, Some _, _ -> true
+  | _, `None, _, Some _ -> true
+  | `Lit l, _, Some (l', _), _ when l < l' -> true
+  | _, `Lit u, _, Some (u', _) when u > u' -> true
+  | _ -> false
 
 (** Check for inconsistency between a distribution argument's constraint and the
    constraint transformation of a variable *)
 let transform_mismatch_constraint (constr : var_constraint)
     (trans : Expr.Typed.t Transformation.t) : bool =
   match constr with
-  | Range range ->
-      bounds_out_of_range range (trans_bounds_values trans)
-  | Ordered ->
-      trans <> Transformation.Ordered
-  | PositiveOrdered ->
-      trans <> PositiveOrdered
-  | Simplex ->
-      trans <> Simplex
-  | UnitVector ->
-      trans <> UnitVector
-  | CholeskyCorr ->
-      trans <> CholeskyCorr
-  | CholeskyCov ->
-      trans <> CholeskyCov && trans <> CholeskyCorr
-  | Correlation ->
-      trans <> Correlation
-  | Covariance ->
-      trans <> Covariance && trans <> Correlation
+  | Range range -> bounds_out_of_range range (trans_bounds_values trans)
+  | Ordered -> trans <> Transformation.Ordered
+  | PositiveOrdered -> trans <> PositiveOrdered
+  | Simplex -> trans <> Simplex
+  | UnitVector -> trans <> UnitVector
+  | CholeskyCorr -> trans <> CholeskyCorr
+  | CholeskyCov -> trans <> CholeskyCov && trans <> CholeskyCorr
+  | Correlation -> trans <> Correlation
+  | Covariance -> trans <> Covariance && trans <> Correlation
 
 (** Check for inconsistency between a distribution argument's range and
    a literal value *)
 let value_out_of_range (range : range) (v : float) =
   let lower_bad =
     match range.lower with
-    | Some (l, true) ->
-        v < l
-    | Some (l, false) ->
-        v <= l
-    | None ->
-        false
-  in
+    | Some (l, true) -> v < l
+    | Some (l, false) -> v <= l
+    | None -> false in
   let upper_bad =
     match range.upper with
-    | Some (u, true) ->
-        v > u
-    | Some (u, false) ->
-        v >= u
-    | None ->
-        false
-  in
+    | Some (u, true) -> v > u
+    | Some (u, false) -> v >= u
+    | None -> false in
   lower_bad || upper_bad
 
 (** Check for inconsistency between a distribution argument's constraint and
    a literal value *)
 let value_mismatch_constraint (constr : var_constraint) (v : float) =
   match constr with
-  | Range range ->
-      value_out_of_range range v
+  | Range range -> value_out_of_range range v
   (* We don't know how to check if a value falls into a constraint other than
      Range, unless we want to inspect e.g. matrix literals. *)
-  | _ ->
-      false
+  | _ -> false
 
 (*********************
    Argument constraint mismatch warnings
@@ -185,15 +159,12 @@ let constr_mismatch_warning (constr : var_constraint_named) (arg : arg_info)
     ({args; name; loc} : dist_info) : (Location_span.t * string) option =
   let v =
     match List.nth args (arg_number arg) with
-    | Some v ->
-        v
+    | Some v -> v
     | None ->
         let arg_fail_msg =
           Printf.sprintf "Distribution %s at %s expects more arguments." name
-            (Location_span.to_string loc)
-        in
-        raise (Failure arg_fail_msg)
-  in
+            (Location_span.to_string loc) in
+        raise (Failure arg_fail_msg) in
   match v with
   | Param (pname, trans), meta ->
       if transform_mismatch_constraint constr.constr trans then
@@ -205,8 +176,7 @@ let constr_mismatch_warning (constr : var_constraint_named) (arg : arg_info)
           ( meta.loc
           , constr_literal_mismatch_message name num_str arg constr.name )
       else None
-  | _ ->
-      None
+  | _ -> None
 
 (*********************
    Distribution-specific warnings
@@ -235,13 +205,11 @@ let uniform_dist_warning (dist_info : dist_info) :
           (* the variate is unbounded *)
           warning
       | Number (uni, _), _, {lower= `Lit bound; _}
-      | _, Number (uni, _), {upper= `Lit bound; _} ->
+       |_, Number (uni, _), {upper= `Lit bound; _} ->
           (* the variate is bounded differently than the uniform dist *)
           if uni = bound then None else warning
-      | _ ->
-          None )
-  | _ ->
-      None
+      | _ -> None )
+  | _ -> None
 
 let lkj_corr_message : string =
   "It is suggested to reparameterize your model to replace lkj_corr with \
@@ -268,8 +236,7 @@ let gamma_arg_dist_warning (dist_info : dist_info) :
   match dist_info with
   | {args= [_; (Number (a, _), meta); (Number (b, _), _)]; _} ->
       if a = b && a < 1. then Some (meta.loc, gamma_arg_dist_message) else None
-  | _ ->
-      None
+  | _ -> None
 
 (*********************
    Distribution properties table
@@ -293,10 +260,8 @@ let distribution_warning (dist_info : dist_info) :
     | "bernoulli" ->
         [ (* Note: variate binary *)
           constr_mismatch_warning unit_range (Arg (1, "chance of success")) ]
-    | "bernoulli_logit" ->
-        [ (* Note: variate binary *) ]
-    | "bernoulli_logit_glm" ->
-        [ (* Note: variate binary *) ]
+    | "bernoulli_logit" -> [ (* Note: variate binary *) ]
+    | "bernoulli_logit_glm" -> [ (* Note: variate binary *) ]
     (* Bounded Discrete Distributions *)
     | "binomial" ->
         [ (* Note: variate nonnegative int *)
@@ -347,18 +312,15 @@ let distribution_warning (dist_info : dist_info) :
         [ (* Note: variate nonnegative int *)
           constr_mismatch_warning positive_range (Arg (1, "a rate parameter"))
         ]
-    | "poisson_log" ->
-        [ (* Note: variate nonnegative int *) ]
-    | "poisson_log_glm" ->
-        [ (* Note: variate nonnegative int *) ]
+    | "poisson_log" -> [ (* Note: variate nonnegative int *) ]
+    | "poisson_log_glm" -> [ (* Note: variate nonnegative int *) ]
     (* Multivariate Discrete Distributions *)
     | "multinomial" ->
         [ (* Note: variate nonnegative int *)
           constr_mismatch_warning simplex (Arg (1, "a distribution parameter"))
         ]
     (* Unbounded Continuous Distributions *)
-    | "normal" ->
-        [constr_mismatch_warning positive_range (Arg (2, scale_name))]
+    | "normal" -> [constr_mismatch_warning positive_range (Arg (2, scale_name))]
     | "normal_id_glm" ->
         [constr_mismatch_warning positive_range (Arg (4, scale_name))]
     | "exp_mod_normal" ->
@@ -369,14 +331,12 @@ let distribution_warning (dist_info : dist_info) :
     | "student_t" ->
         [ constr_mismatch_warning positive_range (Arg (1, dof_name))
         ; constr_mismatch_warning positive_range (Arg (3, scale_name)) ]
-    | "cauchy" ->
-        [constr_mismatch_warning positive_range (Arg (2, scale_name))]
+    | "cauchy" -> [constr_mismatch_warning positive_range (Arg (2, scale_name))]
     | "double_exponential" ->
         [constr_mismatch_warning positive_range (Arg (2, scale_name))]
     | "logistic" ->
         [constr_mismatch_warning positive_range (Arg (2, scale_name))]
-    | "gumbel" ->
-        [constr_mismatch_warning positive_range (Arg (2, scale_name))]
+    | "gumbel" -> [constr_mismatch_warning positive_range (Arg (2, scale_name))]
     (* Positive Continuous Distributions *)
     | "lognormal" ->
         [ constr_mismatch_warning positive_range Variate
@@ -457,8 +417,7 @@ let distribution_warning (dist_info : dist_info) :
           (* Can this be generalized, by restricting a < variate < b? *)
           uniform_dist_warning ]
     (* Distributions over Unbounded Vectors *)
-    | "multi_normal" ->
-        [constr_mismatch_warning covariance (Arg (2, cov_name))]
+    | "multi_normal" -> [constr_mismatch_warning covariance (Arg (2, cov_name))]
     | "multi_normal_prec" ->
         [constr_mismatch_warning covariance (Arg (2, "a precision matrix"))]
     | "multi_normal_cholesky" ->
@@ -485,8 +444,7 @@ let distribution_warning (dist_info : dist_info) :
         ]
     (* Correlation Matrix Distributions *)
     | "lkj_corr" ->
-        [ lkj_corr_dist_warning
-        ; constr_mismatch_warning correlation Variate
+        [ lkj_corr_dist_warning; constr_mismatch_warning correlation Variate
         ; constr_mismatch_warning positive_range (Arg (1, shape_name)) ]
     | "lkj_corr_cholesky" ->
         [ constr_mismatch_warning cholesky_correlation Variate
@@ -500,9 +458,7 @@ let distribution_warning (dist_info : dist_info) :
         [ constr_mismatch_warning covariance Variate
         ; constr_mismatch_warning positive_range (Arg (1, dof_name))
         ; constr_mismatch_warning covariance (Arg (2, scale_mat_name)) ]
-    | _ ->
-        []
-  in
+    | _ -> [] in
   List.filter_map ~f:(fun f -> f dist_info) warning_fns
 
 (** Generate the distribution warnings for a program *)

@@ -50,7 +50,6 @@ val set_raw : t -> string -> info list -> t
 (** Overwrite the existing items bound to a name *)
 
 val mem : t -> string -> bool
-
 val iter : t -> (info list -> unit) -> unit
 
 val nearest_ident : t -> string -> string option

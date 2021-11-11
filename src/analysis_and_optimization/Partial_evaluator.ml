@@ -8,7 +8,7 @@ exception Rejected of Location_span.t * string
 
 let preserve_stability = false
 
-let is_int i Expr.Fixed.({pattern; _}) =
+let is_int i Expr.Fixed.{pattern; _} =
   let nums = List.map ~f:(fun s -> string_of_int i ^ s) [""; "."; ".0"] in
   match pattern with
   | (Lit (Int, i) | Lit (Real, i)) when List.mem nums i ~equal:String.equal ->
@@ -92,9 +92,7 @@ let rec eval_expr (e : Expr.Typed.t) =
           | StanLib (f, suffix, mem_type) ->
               let get_fun_or_op_rt_opt name l' =
                 let argument_types =
-                  List.map
-                    ~f:(fun x -> Expr.Typed.(adlevel_of x, type_of x))
-                    l'
+                  List.map ~f:(fun x -> Expr.Typed.(adlevel_of x, type_of x)) l'
                 in
                 Operator.of_string_opt name
                 |> Option.value_map
@@ -103,8 +101,7 @@ let rec eval_expr (e : Expr.Typed.t) =
                          argument_types )
                      ~default:
                        (Stan_math_signatures.stan_math_returntype name
-                          argument_types)
-              in
+                          argument_types ) in
               let try_partially_evaluate_stanlib e =
                 Expr.Fixed.Pattern.(
                   match e with
@@ -112,11 +109,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                     match get_fun_or_op_rt_opt f' l' with
                     | Some _ -> FunApp (StanLib (f', suffix', mem_type), l')
                     | None -> FunApp (StanLib (f, suffix, mem_type), l) )
-                  | e -> e)
-              in
+                  | e -> e) in
               let lub_mem_pat lst =
-                Common.Helpers.lub_mem_pat (List.cons mem_type lst)
-              in
+                Common.Helpers.lub_mem_pat (List.cons mem_type lst) in
               try_partially_evaluate_stanlib
                 ( match (f, l) with
                 (* TODO: deal with tilde statements and unnormalized distributions properly here *)
@@ -133,8 +128,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                                               FunApp
                                                 ( StanLib
                                                     ("Times__", FnPlain, mem3)
-                                                , [x; beta] ); _ } ] ); _ } ] ); _
-                      } ] )
+                                                , [x; beta] )
+                                          ; _ } ] )
+                                ; _ } ] )
+                      ; _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem1; mem2; mem3] in
                     FunApp
@@ -152,8 +149,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                                               FunApp
                                                 ( StanLib
                                                     ("Times__", FnPlain, mem3)
-                                                , [x; beta] ); _ }
-                                        ; alpha ] ); _ } ] ); _ } ] )
+                                                , [x; beta] )
+                                          ; _ }; alpha ] )
+                                ; _ } ] )
+                      ; _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem1; mem2; mem3] in
                     FunApp
@@ -167,7 +166,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                             , [ { pattern=
                                     FunApp
                                       ( StanLib ("Times__", FnPlain, mem2)
-                                      , [x; beta] ); _ } ] ); _ } ] )
+                                      , [x; beta] )
+                                ; _ } ] )
+                      ; _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
@@ -182,7 +183,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                               ; { pattern=
                                     FunApp
                                       ( StanLib ("Times__", FnPlain, mem2)
-                                      , [x; beta] ); _ } ] ); _ } ] )
+                                      , [x; beta] )
+                                ; _ } ] )
+                      ; _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
@@ -196,8 +199,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                             , [ { pattern=
                                     FunApp
                                       ( StanLib ("Times__", FnPlain, mem2)
-                                      , [x; beta] ); _ }
-                              ; alpha ] ); _ } ] )
+                                      , [x; beta] )
+                                ; _ }; alpha ] )
+                      ; _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
@@ -206,38 +210,35 @@ let rec eval_expr (e : Expr.Typed.t) =
                 | ( "bernoulli_logit_lpmf"
                   , [ y
                     ; { pattern=
-                          FunApp (StanLib ("Times__", FnPlain, mem), [x; beta]); _
-                      } ] )
+                          FunApp (StanLib ("Times__", FnPlain, mem), [x; beta])
+                      ; _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     FunApp
                       ( StanLib
-                          ( "bernoulli_logit_glm_lpmf"
-                          , suffix
-                          , lub_mem_pat [mem] )
+                          ("bernoulli_logit_glm_lpmf", suffix, lub_mem_pat [mem])
                       , [y; x; Expr.Helpers.zero; beta] )
                 | ( "bernoulli_lpmf"
                   , [ y
                     ; { pattern=
-                          FunApp (StanLib ("inv_logit", FnPlain, mem), [alpha]); _
-                      } ] ) ->
+                          FunApp (StanLib ("inv_logit", FnPlain, mem), [alpha])
+                      ; _ } ] ) ->
                     FunApp
                       ( StanLib
                           ("bernoulli_logit_lpmf", suffix, lub_mem_pat [mem])
                       , [y; alpha] )
                 | ( "bernoulli_rng"
                   , [ { pattern=
-                          FunApp (StanLib ("inv_logit", FnPlain, mem), [alpha]); _
-                      } ] ) ->
+                          FunApp (StanLib ("inv_logit", FnPlain, mem), [alpha])
+                      ; _ } ] ) ->
                     FunApp
                       ( StanLib
                           ("bernoulli_logit_rng", suffix, lub_mem_pat [mem])
                       , [alpha] )
                 | ( "binomial_lpmf"
-                  , [ y
-                    ; n
+                  , [ y; n
                     ; { pattern=
-                          FunApp (StanLib ("inv_logit", FnPlain, mem), [alpha]); _
-                      } ] ) ->
+                          FunApp (StanLib ("inv_logit", FnPlain, mem), [alpha])
+                      ; _ } ] ) ->
                     FunApp
                       ( StanLib
                           ("binomial_logit_lpmf", suffix, lub_mem_pat [mem])
@@ -245,16 +246,16 @@ let rec eval_expr (e : Expr.Typed.t) =
                 | ( "categorical_lpmf"
                   , [ y
                     ; { pattern=
-                          FunApp (StanLib ("inv_logit", FnPlain, mem), [alpha]); _
-                      } ] ) ->
+                          FunApp (StanLib ("inv_logit", FnPlain, mem), [alpha])
+                      ; _ } ] ) ->
                     FunApp
                       ( StanLib
                           ("categorical_logit_lpmf", suffix, lub_mem_pat [mem])
                       , [y; alpha] )
                 | ( "categorical_rng"
                   , [ { pattern=
-                          FunApp (StanLib ("inv_logit", FnPlain, mem), [alpha]); _
-                      } ] ) ->
+                          FunApp (StanLib ("inv_logit", FnPlain, mem), [alpha])
+                      ; _ } ] ) ->
                     FunApp
                       ( StanLib
                           ("categorical_logit_rng", suffix, lub_mem_pat [mem])
@@ -264,12 +265,12 @@ let rec eval_expr (e : Expr.Typed.t) =
                 | "dot_product", [x; y] when Expr.Typed.equal x y ->
                     FunApp (StanLib ("dot_self", suffix, mem_type), [x])
                 | ( "inv"
-                  , [{pattern= FunApp (StanLib ("sqrt", FnPlain, mem), l); _}]
-                  ) ->
+                  , [{pattern= FunApp (StanLib ("sqrt", FnPlain, mem), l); _}] )
+                  ->
                     FunApp (StanLib ("inv_sqrt", suffix, mem), l)
                 | ( "inv"
-                  , [ { pattern= FunApp (StanLib ("square", FnPlain, mem), [x]); _
-                      } ] ) ->
+                  , [ { pattern= FunApp (StanLib ("square", FnPlain, mem), [x])
+                      ; _ } ] ) ->
                     FunApp
                       (StanLib ("inv_square", suffix, lub_mem_pat [mem]), [x])
                 | ( "log"
@@ -278,8 +279,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                             ( StanLib ("Minus__", FnPlain, mem1)
                             , [ y
                               ; { pattern=
-                                    FunApp (StanLib ("exp", FnPlain, mem2), [x]); _
-                                } ] ); _ } ] )
+                                    FunApp (StanLib ("exp", FnPlain, mem2), [x])
+                                ; _ } ] )
+                      ; _ } ] )
                   when is_int 1 y && not preserve_stability ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp (StanLib ("log1m_exp", suffix, lub_mem), [x])
@@ -290,15 +292,16 @@ let rec eval_expr (e : Expr.Typed.t) =
                             , [ y
                               ; { pattern=
                                     FunApp
-                                      ( StanLib ("inv_logit", FnPlain, mem2)
-                                      , [x] ); _ } ] ); _ } ] )
+                                      (StanLib ("inv_logit", FnPlain, mem2), [x])
+                                ; _ } ] )
+                      ; _ } ] )
                   when is_int 1 y && not preserve_stability ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp (StanLib ("log1m_inv_logit", suffix, lub_mem), [x])
                 | ( "log"
                   , [ { pattern=
-                          FunApp (StanLib ("Minus__", FnPlain, mem), [y; x]); _
-                      } ] )
+                          FunApp (StanLib ("Minus__", FnPlain, mem), [y; x])
+                      ; _ } ] )
                   when is_int 1 y && not preserve_stability ->
                     FunApp (StanLib ("log1m", suffix, lub_mem_pat [mem]), [x])
                 | ( "log"
@@ -307,15 +310,16 @@ let rec eval_expr (e : Expr.Typed.t) =
                             ( StanLib ("Plus__", FnPlain, mem1)
                             , [ y
                               ; { pattern=
-                                    FunApp (StanLib ("exp", FnPlain, mem2), [x]); _
-                                } ] ); _ } ] )
+                                    FunApp (StanLib ("exp", FnPlain, mem2), [x])
+                                ; _ } ] )
+                      ; _ } ] )
                   when is_int 1 y && not preserve_stability ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp (StanLib ("log1p_exp", suffix, lub_mem), [x])
                 | ( "log"
                   , [ { pattern=
-                          FunApp (StanLib ("Plus__", FnPlain, mem), [y; x]); _
-                      } ] )
+                          FunApp (StanLib ("Plus__", FnPlain, mem), [y; x])
+                      ; _ } ] )
                   when is_int 1 y && not preserve_stability ->
                     FunApp (StanLib ("log1p", suffix, lub_mem_pat [mem]), [x])
                 | ( "log"
@@ -325,7 +329,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                             , [ { pattern=
                                     FunApp
                                       ( StanLib ("determinant", FnPlain, mem2)
-                                      , [x] ); _ } ] ); _ } ] ) ->
+                                      , [x] )
+                                ; _ } ] )
+                      ; _ } ] ) ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp (StanLib ("log_determinant", suffix, lub_mem), [x])
                 | ( "log"
@@ -333,39 +339,39 @@ let rec eval_expr (e : Expr.Typed.t) =
                           FunApp
                             ( StanLib ("Minus__", FnPlain, mem1)
                             , [ { pattern=
-                                    FunApp (StanLib ("exp", FnPlain, mem2), [x]); _
-                                }
+                                    FunApp (StanLib ("exp", FnPlain, mem2), [x])
+                                ; _ }
                               ; { pattern=
-                                    FunApp (StanLib ("exp", FnPlain, mem3), [y]); _
-                                } ] ); _ } ] ) ->
+                                    FunApp (StanLib ("exp", FnPlain, mem3), [y])
+                                ; _ } ] )
+                      ; _ } ] ) ->
                     let lub_mem = lub_mem_pat [mem1; mem2; mem3] in
                     FunApp (StanLib ("log_diff_exp", suffix, lub_mem), [x; y])
                 (* TODO: log_mix?*)
                 | ( "log"
                   , [ { pattern=
-                          FunApp
-                            (StanLib ("falling_factorial", FnPlain, mem), l); _
-                      } ] ) ->
+                          FunApp (StanLib ("falling_factorial", FnPlain, mem), l)
+                      ; _ } ] ) ->
                     FunApp
                       ( StanLib
                           ("log_falling_factorial", suffix, lub_mem_pat [mem])
                       , l )
                 | ( "log"
                   , [ { pattern=
-                          FunApp (StanLib ("rising_factorial", FnPlain, mem), l); _
-                      } ] ) ->
+                          FunApp (StanLib ("rising_factorial", FnPlain, mem), l)
+                      ; _ } ] ) ->
                     FunApp
                       ( StanLib
                           ("log_rising_factorial", suffix, lub_mem_pat [mem])
                       , l )
                 | ( "log"
-                  , [ { pattern= FunApp (StanLib ("inv_logit", FnPlain, mem), l); _
-                      } ] ) ->
+                  , [ { pattern= FunApp (StanLib ("inv_logit", FnPlain, mem), l)
+                      ; _ } ] ) ->
                     FunApp
                       (StanLib ("log_inv_logit", suffix, lub_mem_pat [mem]), l)
                 | ( "log"
-                  , [ { pattern= FunApp (StanLib ("softmax", FnPlain, mem), l); _
-                      } ] ) ->
+                  , [{pattern= FunApp (StanLib ("softmax", FnPlain, mem), l); _}]
+                  ) ->
                     FunApp
                       (StanLib ("log_softmax", suffix, lub_mem_pat [mem]), l)
                 | ( "log"
@@ -373,8 +379,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                           FunApp
                             ( StanLib ("sum", FnPlain, mem1)
                             , [ { pattern=
-                                    FunApp (StanLib ("exp", FnPlain, mem2), l); _
-                                } ] ); _ } ] ) ->
+                                    FunApp (StanLib ("exp", FnPlain, mem2), l)
+                                ; _ } ] )
+                      ; _ } ] ) ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp (StanLib ("log_sum_exp", suffix, lub_mem), l)
                 | ( "log"
@@ -382,19 +389,19 @@ let rec eval_expr (e : Expr.Typed.t) =
                           FunApp
                             ( StanLib ("Plus__", FnPlain, mem1)
                             , [ { pattern=
-                                    FunApp (StanLib ("exp", FnPlain, mem2), [x]); _
-                                }
+                                    FunApp (StanLib ("exp", FnPlain, mem2), [x])
+                                ; _ }
                               ; { pattern=
-                                    FunApp (StanLib ("exp", FnPlain, mem3), [y]); _
-                                } ] ); _ } ] ) ->
+                                    FunApp (StanLib ("exp", FnPlain, mem3), [y])
+                                ; _ } ] )
+                      ; _ } ] ) ->
                     let lub_mem = lub_mem_pat [mem1; mem2; mem3] in
                     FunApp (StanLib ("log_sum_exp", suffix, lub_mem), [x; y])
                 | ( "multi_normal_lpdf"
-                  , [ y
-                    ; mu
+                  , [ y; mu
                     ; { pattern=
-                          FunApp (StanLib ("inverse", FnPlain, mem), [tau]); _
-                      } ] ) ->
+                          FunApp (StanLib ("inverse", FnPlain, mem), [tau])
+                      ; _ } ] ) ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp
                       ( StanLib ("multi_normal_prec_lpdf", suffix, lub_mem)
@@ -412,9 +419,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                                               FunApp
                                                 ( StanLib
                                                     ("Times__", FnPlain, mem3)
-                                                , [x; beta] ); _ } ] ); _ } ] ); _
-                      }
-                    ; sigma ] )
+                                                , [x; beta] )
+                                          ; _ } ] )
+                                ; _ } ] )
+                      ; _ }; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem1; mem2; mem3] in
                     FunApp
@@ -432,9 +440,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                                               FunApp
                                                 ( StanLib
                                                     ("Times__", FnPlain, mem3)
-                                                , [x; beta] ); _ }
-                                        ; alpha ] ); _ } ] ); _ }
-                    ; sigma ] )
+                                                , [x; beta] )
+                                          ; _ }; alpha ] )
+                                ; _ } ] )
+                      ; _ }; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem1; mem2; mem3] in
                     FunApp
@@ -448,8 +457,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                             , [ { pattern=
                                     FunApp
                                       ( StanLib ("Times__", FnPlain, mem2)
-                                      , [x; beta] ); _ } ] ); _ }
-                    ; sigma ] )
+                                      , [x; beta] )
+                                ; _ } ] )
+                      ; _ }; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
@@ -464,8 +474,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                               ; { pattern=
                                     FunApp
                                       ( StanLib ("Times__", FnPlain, mem2)
-                                      , [x; beta] ); _ } ] ); _ }
-                    ; sigma ] )
+                                      , [x; beta] )
+                                ; _ } ] )
+                      ; _ }; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
@@ -479,9 +490,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                             , [ { pattern=
                                     FunApp
                                       ( StanLib ("Times__", FnPlain, mem2)
-                                      , [x; beta] ); _ }
-                              ; alpha ] ); _ }
-                    ; sigma ] )
+                                      , [x; beta] )
+                                ; _ }; alpha ] )
+                      ; _ }; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
@@ -490,9 +501,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                 | ( "neg_binomial_2_log_lpmf"
                   , [ y
                     ; { pattern=
-                          FunApp (StanLib ("Times__", FnPlain, mem), [x; beta]); _
-                      }
-                    ; sigma ] )
+                          FunApp (StanLib ("Times__", FnPlain, mem), [x; beta])
+                      ; _ }; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp
@@ -500,16 +510,14 @@ let rec eval_expr (e : Expr.Typed.t) =
                       , [y; x; Expr.Helpers.zero; beta; sigma] )
                 | ( "neg_binomial_2_lpmf"
                   , [ y
-                    ; { pattern= FunApp (StanLib ("exp", FnPlain, mem), [eta]); _
-                      }
+                    ; {pattern= FunApp (StanLib ("exp", FnPlain, mem), [eta]); _}
                     ; phi ] ) ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp
                       ( StanLib ("neg_binomial_2_log_lpmf", suffix, lub_mem)
                       , [y; eta; phi] )
                 | ( "neg_binomial_2_rng"
-                  , [ { pattern= FunApp (StanLib ("exp", FnPlain, mem), [eta]); _
-                      }
+                  , [ {pattern= FunApp (StanLib ("exp", FnPlain, mem), [eta]); _}
                     ; phi ] ) ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp
@@ -524,8 +532,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                               ; { pattern=
                                     FunApp
                                       ( StanLib ("Times__", FnPlain, mem2)
-                                      , [x; beta] ); _ } ] ); _ }
-                    ; sigma ] )
+                                      , [x; beta] )
+                                ; _ } ] )
+                      ; _ }; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
@@ -539,9 +548,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                             , [ { pattern=
                                     FunApp
                                       ( StanLib ("Times__", FnPlain, mem2)
-                                      , [x; beta] ); _ }
-                              ; alpha ] ); _ }
-                    ; sigma ] )
+                                      , [x; beta] )
+                                ; _ }; alpha ] )
+                      ; _ }; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
@@ -550,9 +559,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                 | ( "normal_lpdf"
                   , [ y
                     ; { pattern=
-                          FunApp (StanLib ("Times__", FnPlain, mem), [x; beta]); _
-                      }
-                    ; sigma ] )
+                          FunApp (StanLib ("Times__", FnPlain, mem), [x; beta])
+                      ; _ }; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp
@@ -571,8 +579,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                                               FunApp
                                                 ( StanLib
                                                     ("Times__", FnPlain, mem3)
-                                                , [x; beta] ); _ } ] ); _ } ] ); _
-                      } ] )
+                                                , [x; beta] )
+                                          ; _ } ] )
+                                ; _ } ] )
+                      ; _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem1; mem2; mem3] in
                     FunApp
@@ -590,8 +600,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                                               FunApp
                                                 ( StanLib
                                                     ("Times__", FnPlain, mem3)
-                                                , [x; beta] ); _ }
-                                        ; alpha ] ); _ } ] ); _ } ] )
+                                                , [x; beta] )
+                                          ; _ }; alpha ] )
+                                ; _ } ] )
+                      ; _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem1; mem2; mem3] in
                     FunApp
@@ -605,7 +617,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                             , [ { pattern=
                                     FunApp
                                       ( StanLib ("Times__", FnPlain, mem2)
-                                      , [x; beta] ); _ } ] ); _ } ] )
+                                      , [x; beta] )
+                                ; _ } ] )
+                      ; _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
@@ -620,7 +634,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                               ; { pattern=
                                     FunApp
                                       ( StanLib ("Times__", FnPlain, mem2)
-                                      , [x; beta] ); _ } ] ); _ } ] )
+                                      , [x; beta] )
+                                ; _ } ] )
+                      ; _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
@@ -634,8 +650,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                             , [ { pattern=
                                     FunApp
                                       ( StanLib ("Times__", FnPlain, mem2)
-                                      , [x; beta] ); _ }
-                              ; alpha ] ); _ } ] )
+                                      , [x; beta] )
+                                ; _ }; alpha ] )
+                      ; _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
@@ -644,8 +661,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                 | ( "poisson_log_lpmf"
                   , [ y
                     ; { pattern=
-                          FunApp (StanLib ("Times__", FnPlain, mem), [x; beta]); _
-                      } ] )
+                          FunApp (StanLib ("Times__", FnPlain, mem), [x; beta])
+                      ; _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp
@@ -653,14 +670,14 @@ let rec eval_expr (e : Expr.Typed.t) =
                       , [y; x; Expr.Helpers.zero; beta] )
                 | ( "poisson_lpmf"
                   , [ y
-                    ; { pattern= FunApp (StanLib ("exp", FnPlain, mem), [eta]); _
-                      } ] ) ->
+                    ; {pattern= FunApp (StanLib ("exp", FnPlain, mem), [eta]); _}
+                    ] ) ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp
                       (StanLib ("poisson_log_lpmf", suffix, lub_mem), [y; eta])
                 | ( "poisson_rng"
-                  , [ { pattern= FunApp (StanLib ("exp", FnPlain, mem), [eta]); _
-                      } ] ) ->
+                  , [{pattern= FunApp (StanLib ("exp", FnPlain, mem), [eta]); _}]
+                  ) ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp (StanLib ("poisson_log_rng", suffix, lub_mem), [eta])
                 | "pow", [y; x] when is_int 2 y ->
@@ -674,15 +691,15 @@ let rec eval_expr (e : Expr.Typed.t) =
                 | ( "pow"
                   , [ x
                     ; { pattern=
-                          FunApp (StanLib ("Divide__", FnPlain, mem), [y; z]); _
-                      } ] )
+                          FunApp (StanLib ("Divide__", FnPlain, mem), [y; z])
+                      ; _ } ] )
                   when is_int 1 y && is_int 2 z ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp (StanLib ("sqrt", suffix, lub_mem), [x])
                     (* This is wrong; if both are type UInt the exponent is rounds down to zero. *)
                 | ( "square"
-                  , [{pattern= FunApp (StanLib ("sd", FnPlain, mem), [x]); _}]
-                  ) ->
+                  , [{pattern= FunApp (StanLib ("sd", FnPlain, mem), [x]); _}] )
+                  ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp (StanLib ("variance", suffix, lub_mem), [x])
                 | "sqrt", [x] when is_int 2 x ->
@@ -694,13 +711,15 @@ let rec eval_expr (e : Expr.Typed.t) =
                             , [ { pattern=
                                     FunApp
                                       ( StanLib ("Minus__", FnPlain, mem2)
-                                      , [x; y] ); _ } ] ); _ } ] ) ->
+                                      , [x; y] )
+                                ; _ } ] )
+                      ; _ } ] ) ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
                       (StanLib ("squared_distance", suffix, lub_mem), [x; y])
                 | ( "sum"
-                  , [ { pattern= FunApp (StanLib ("diagonal", FnPlain, mem), l); _
-                      } ] ) ->
+                  , [ { pattern= FunApp (StanLib ("diagonal", FnPlain, mem), l)
+                      ; _ } ] ) ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp (StanLib ("trace", suffix, lub_mem), l)
                 | ( "trace"
@@ -721,10 +740,11 @@ let rec eval_expr (e : Expr.Typed.t) =
                                                               ( "transpose"
                                                               , FnPlain
                                                               , mem4 )
-                                                          , [b] ); _ } ] ); _
-                                          }
-                                        ; a ] ); _ }
-                              ; c ] ); _ } ] )
+                                                          , [b] )
+                                                    ; _ } ] )
+                                          ; _ }; a ] )
+                                ; _ }; c ] )
+                      ; _ } ] )
                   when Expr.Typed.equal b c ->
                     let lub_mem = lub_mem_pat [mem1; mem2; mem3; mem4] in
                     FunApp
@@ -732,11 +752,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                       , [d; a; b] )
                 | ( "trace"
                   , [ { pattern=
-                          FunApp (StanLib ("quad_form", FnPlain, mem), [a; b]); _
-                      } ] ) ->
+                          FunApp (StanLib ("quad_form", FnPlain, mem), [a; b])
+                      ; _ } ] ) ->
                     let lub_mem = lub_mem_pat [mem] in
-                    FunApp
-                      (StanLib ("trace_quad_form", suffix, lub_mem), [a; b])
+                    FunApp (StanLib ("trace_quad_form", suffix, lub_mem), [a; b])
                 | ( "Minus__"
                   , [x; {pattern= FunApp (StanLib ("erf", FnPlain, mem), l); _}]
                   )
@@ -744,42 +763,40 @@ let rec eval_expr (e : Expr.Typed.t) =
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp (StanLib ("erfc", suffix, lub_mem), l)
                 | ( "Minus__"
-                  , [ x
-                    ; {pattern= FunApp (StanLib ("erfc", FnPlain, mem), l); _}
-                    ] )
+                  , [x; {pattern= FunApp (StanLib ("erfc", FnPlain, mem), l); _}]
+                  )
                   when is_int 1 x ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp (StanLib ("erf", suffix, lub_mem), l)
                 | ( "Minus__"
-                  , [ {pattern= FunApp (StanLib ("exp", FnPlain, mem), l'); _}
-                    ; x ] )
+                  , [{pattern= FunApp (StanLib ("exp", FnPlain, mem), l'); _}; x]
+                  )
                   when is_int 1 x && not preserve_stability ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp (StanLib ("expm1", suffix, lub_mem), l')
                 | ( "Plus__"
                   , [ { pattern=
-                          FunApp (StanLib ("Times__", FnPlain, mem), [x; y]); _
-                      }
-                    ; z ] )
+                          FunApp (StanLib ("Times__", FnPlain, mem), [x; y])
+                      ; _ }; z ] )
                  |( "Plus__"
                   , [ z
                     ; { pattern=
-                          FunApp (StanLib ("Times__", FnPlain, mem), [x; y]); _
-                      } ] )
+                          FunApp (StanLib ("Times__", FnPlain, mem), [x; y])
+                      ; _ } ] )
                   when not preserve_stability ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp (StanLib ("fma", suffix, lub_mem), [x; y; z])
                 | ( "Minus__"
                   , [ x
-                    ; { pattern= FunApp (StanLib ("gamma_p", FnPlain, mem), l); _
-                      } ] )
+                    ; {pattern= FunApp (StanLib ("gamma_p", FnPlain, mem), l); _}
+                    ] )
                   when is_int 1 x ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp (StanLib ("gamma_q", suffix, lub_mem), l)
                 | ( "Minus__"
                   , [ x
-                    ; { pattern= FunApp (StanLib ("gamma_q", FnPlain, mem), l); _
-                      } ] )
+                    ; {pattern= FunApp (StanLib ("gamma_q", FnPlain, mem), l); _}
+                    ] )
                   when is_int 1 x ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp (StanLib ("gamma_p", suffix, lub_mem), l)
@@ -790,8 +807,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                             , [ { pattern=
                                     FunApp
                                       ( StanLib ("Times__", FnPlain, mem2)
-                                      , [t; a] ); _ } ] ); _ }
-                    ; b ] )
+                                      , [t; a] )
+                                ; _ } ] )
+                      ; _ }; b ] )
                   when Expr.Typed.type_of t = UInt
                        || Expr.Typed.type_of t = UReal ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
@@ -805,8 +823,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                             , [ { pattern=
                                     FunApp
                                       ( StanLib ("Times__", FnPlain, mem2)
-                                      , [a; t] ); _ } ] ); _ }
-                    ; b ] )
+                                      , [a; t] )
+                                ; _ } ] )
+                      ; _ }; b ] )
                   when Expr.Typed.type_of t = UInt
                        || Expr.Typed.type_of t = UReal ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
@@ -815,9 +834,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                       , [t; a; b] )
                 | ( "Times__"
                   , [ { pattern=
-                          FunApp (StanLib ("matrix_exp", FnPlain, mem), [a]); _
-                      }
-                    ; b ] ) ->
+                          FunApp (StanLib ("matrix_exp", FnPlain, mem), [a])
+                      ; _ }; b ] ) ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp
                       (StanLib ("matrix_exp_multiply", suffix, lub_mem), [a; b])
@@ -833,12 +851,13 @@ let rec eval_expr (e : Expr.Typed.t) =
                     FunApp (StanLib ("lmultiply", suffix, lub_mem), [x; y])
                 | ( "Times__"
                   , [ { pattern=
-                          FunApp (StanLib ("diag_matrix", FnPlain, mem1), [v]); _
-                      }
+                          FunApp (StanLib ("diag_matrix", FnPlain, mem1), [v])
+                      ; _ }
                     ; { pattern=
                           FunApp
                             ( StanLib ("diag_post_multiply", FnPlain, mem2)
-                            , [a; w] ); _ } ] )
+                            , [a; w] )
+                      ; _ } ] )
                   when Expr.Typed.equal v w ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp (StanLib ("quad_form_diag", suffix, lub_mem), [a; v])
@@ -846,20 +865,21 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ { pattern=
                           FunApp
                             ( StanLib ("diag_pre_multiply", FnPlain, mem1)
-                            , [v; a] ); _ }
+                            , [v; a] )
+                      ; _ }
                     ; { pattern=
-                          FunApp (StanLib ("diag_matrix", FnPlain, mem2), [w]); _
-                      } ] )
+                          FunApp (StanLib ("diag_matrix", FnPlain, mem2), [w])
+                      ; _ } ] )
                   when Expr.Typed.equal v w ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp (StanLib ("quad_form_diag", suffix, lub_mem), [a; v])
                 | ( "Times__"
                   , [ { pattern=
-                          FunApp (StanLib ("transpose", FnPlain, mem1), [b]); _
-                      }
+                          FunApp (StanLib ("transpose", FnPlain, mem1), [b])
+                      ; _ }
                     ; { pattern=
-                          FunApp (StanLib ("Times__", FnPlain, mem2), [a; c]); _
-                      } ] )
+                          FunApp (StanLib ("Times__", FnPlain, mem2), [a; c])
+                      ; _ } ] )
                   when Expr.Typed.equal b c ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp (StanLib ("quad_form", suffix, lub_mem), [a; b])
@@ -869,27 +889,24 @@ let rec eval_expr (e : Expr.Typed.t) =
                             ( StanLib ("Times__", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      ( StanLib ("transpose", FnPlain, mem2)
-                                      , [b] ); _ }
-                              ; a ] ); _ }
-                    ; c ] )
+                                      (StanLib ("transpose", FnPlain, mem2), [b])
+                                ; _ }; a ] )
+                      ; _ }; c ] )
                   when Expr.Typed.equal b c ->
                     let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp (StanLib ("quad_form", suffix, lub_mem), [a; b])
                 | ( "Times__"
                   , [ e1'
                     ; { pattern=
-                          FunApp (StanLib ("diag_matrix", FnPlain, mem), [v]); _
-                      } ] ) ->
+                          FunApp (StanLib ("diag_matrix", FnPlain, mem), [v])
+                      ; _ } ] ) ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp
-                      ( StanLib ("diag_post_multiply", suffix, lub_mem)
-                      , [e1'; v] )
+                      (StanLib ("diag_post_multiply", suffix, lub_mem), [e1'; v])
                 | ( "Times__"
                   , [ { pattern=
-                          FunApp (StanLib ("diag_matrix", FnPlain, mem), [v]); _
-                      }
-                    ; e2' ] ) ->
+                          FunApp (StanLib ("diag_matrix", FnPlain, mem), [v])
+                      ; _ }; e2' ] ) ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp
                       (StanLib ("diag_pre_multiply", suffix, lub_mem), [v; e2'])
@@ -905,29 +922,24 @@ let rec eval_expr (e : Expr.Typed.t) =
                       apply_prefix_operator_real op (Float.of_string r)
                   | _ -> FunApp (kind, l) )
                 | ( ("Divide__" | "IntDivide__")
-                  , [{meta= {type_= UInt; _}; _}; {pattern= Lit (Int, i2); _}]
-                  )
+                  , [{meta= {type_= UInt; _}; _}; {pattern= Lit (Int, i2); _}] )
                   when Int.of_string i2 = 0 ->
                     raise (Rejected (e.meta.loc, "Integer division by zero"))
                 | op, [{pattern= Lit (Int, i1); _}; {pattern= Lit (Int, i2); _}]
-                -> (
+                  -> (
                   match op with
                   | "Plus__" | "Minus__" | "Times__" | "Divide__"
-                   |"IntDivide__" | "Modulo__" | "Or__" | "And__"
-                   |"Equals__" | "NEquals__" | "Less__" | "Leq__"
-                   |"Greater__" | "Geq__" ->
+                   |"IntDivide__" | "Modulo__" | "Or__" | "And__" | "Equals__"
+                   |"NEquals__" | "Less__" | "Leq__" | "Greater__" | "Geq__" ->
                       apply_operator_int op (Int.of_string i1)
                         (Int.of_string i2)
                   | _ -> FunApp (kind, l) )
                 | ( op
                   , [{pattern= Lit (Real, i1); _}; {pattern= Lit (Real, i2); _}]
                   )
-                 |( op
-                  , [{pattern= Lit (Int, i1); _}; {pattern= Lit (Real, i2); _}]
-                  )
-                 |( op
-                  , [{pattern= Lit (Real, i1); _}; {pattern= Lit (Int, i2); _}]
-                  ) -> (
+                 |op, [{pattern= Lit (Int, i1); _}; {pattern= Lit (Real, i2); _}]
+                 |op, [{pattern= Lit (Real, i1); _}; {pattern= Lit (Int, i2); _}]
+                  -> (
                   match op with
                   | "Plus__" | "Minus__" | "Times__" | "Divide__" ->
                       apply_arithmetic_operator_real op (Float.of_string i1)
@@ -963,7 +975,7 @@ let rec eval_expr (e : Expr.Typed.t) =
         | e1', e2' -> EOr (e1', e2') )
       | Indexed (e, l) ->
           (* TODO: do something clever with array and matrix expressions here?
-       Note  that we could also constant fold array sizes if we keep those around on declarations. *)
+             Note  that we could also constant fold array sizes if we keep those around on declarations. *)
           Indexed (eval_expr e, List.map ~f:(Index.map eval_expr) l) ) }
 
 let rec simplify_index_expr pattern =
@@ -975,14 +987,14 @@ let rec simplify_index_expr pattern =
               (* , Single ({emeta= {type_= UArray UInt; _} as emeta; _} as multi)
                *   :: inner_tl ) *)
           ; meta }
-        , ( Single ({meta= Expr.Typed.Meta.({type_= UInt; _}); _} as single_e)
-          as single )
+        , ( Single ({meta= Expr.Typed.Meta.{type_= UInt; _}; _} as single_e) as
+          single )
           :: outer_tl )
       when List.exists ~f:is_multi_index inner_indices -> (
       match List.split_while ~f:(Fn.non is_multi_index) inner_indices with
       | inner_singles, MultiIndex first_multi :: inner_tl ->
           (* foo [arr1, ..., arrN] [i1, ..., iN] ->
-         foo [arr1[i1]] [arr[i2]] ... [arrN[iN]] *)
+             foo [arr1[i1]] [arr[i2]] ... [arrN[iN]] *)
           simplify_index_expr
             (Indexed
                ( { pattern=
@@ -994,7 +1006,7 @@ let rec simplify_index_expr pattern =
                                ; meta= {meta with type_= UInt} } ]
                          @ inner_tl )
                  ; meta }
-               , outer_tl ))
+               , outer_tl ) )
       | inner_singles, All :: inner_tl ->
           (* v[:x][i] -> v[i] *)
           (* v[:][i] -> v[i] *)
@@ -1003,7 +1015,7 @@ let rec simplify_index_expr pattern =
             (Indexed
                ( { pattern= Indexed (obj, inner_singles @ [single] @ inner_tl)
                  ; meta }
-               , outer_tl ))
+               , outer_tl ) )
       | inner_singles, Between (bot, _) :: inner_tl
        |inner_singles, Upfrom bot :: inner_tl ->
           (* v[x:y][z] -> v[x+z-1] *)
@@ -1020,7 +1032,7 @@ let rec simplify_index_expr pattern =
                                    loop_bottom) ]
                          @ inner_tl )
                  ; meta }
-               , outer_tl ))
+               , outer_tl ) )
       | inner_singles, (([] | Single _ :: _) as multis) ->
           Common.FatalError.fatal_error_msg
             [%message
@@ -1035,8 +1047,7 @@ let remove_trailing_alls_expr = function
       let rec remove_trailing_alls indices =
         match List.rev indices with
         | Index.All :: tl -> remove_trailing_alls (List.rev tl)
-        | _ -> indices
-      in
+        | _ -> indices in
       Expr.Fixed.Pattern.Indexed (obj, remove_trailing_alls indices)
   | e -> e
 
@@ -1044,8 +1055,7 @@ let rec simplify_indices_expr expr =
   Expr.Fixed.(
     let pattern =
       expr.pattern |> remove_trailing_alls_expr |> simplify_index_expr
-      |> Expr.Fixed.Pattern.map simplify_indices_expr
-    in
+      |> Expr.Fixed.Pattern.map simplify_indices_expr in
     {expr with pattern})
 
 let try_eval_expr expr = try eval_expr expr with Rejected _ -> expr

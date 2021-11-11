@@ -125,8 +125,7 @@ let options =
     ; ( "--include-paths"
       , Arg.String
           (fun str ->
-            Preprocessor.include_paths := String.split_on_chars ~on:[','] str
-            )
+            Preprocessor.include_paths := String.split_on_chars ~on:[','] str )
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" )
     ; ( "--include_paths"
@@ -191,11 +190,9 @@ let use_file filename =
   let ast =
     Frontend_utils.get_ast_or_exit filename
       ~print_warnings:(not !canonicalize_program)
-      ~bare_functions:!bare_functions
-  in
+      ~bare_functions:!bare_functions in
   let ast =
-    if !canonicalize_program then Canonicalize.repair_syntax ast else ast
-  in
+    if !canonicalize_program then Canonicalize.repair_syntax ast else ast in
   Debugging.ast_logger ast ;
   if !pretty_print_program && not !canonicalize_program then
     print_or_write
@@ -205,8 +202,7 @@ let use_file filename =
     print_endline (Info.info typed_ast) ;
     exit 0 ) ;
   let printed_filename =
-    match !filename_for_msg with "" -> None | s -> Some s
-  in
+    match !filename_for_msg with "" -> None | s -> Some s in
   if not !canonicalize_program then
     Warnings.pp_warnings Fmt.stderr ?printed_filename
       (Deprecation_analysis.collect_warnings typed_ast) ;
@@ -214,7 +210,7 @@ let use_file filename =
     print_or_write
       (Pretty_printing.pretty_print_typed_program
          ~bare_functions:!bare_functions
-         (Canonicalize.canonicalize_program typed_ast)) ;
+         (Canonicalize.canonicalize_program typed_ast) ) ;
   if !generate_data then
     print_endline (Debug_data_generation.print_data_prog typed_ast) ;
   Debugging.typed_ast_logger typed_ast ;
@@ -231,11 +227,9 @@ let use_file filename =
       |> pp_stderr (Warnings.pp_warnings ?printed_filename) ;
     let tx_mir =
       Optimize.optimization_suite ~settings:Optimize.settings_default
-        (Transform_Mir.trans_prog mir)
-    in
+        (Transform_Mir.trans_prog mir) in
     if !dump_tx_mir then
-      Sexp.pp_hum Format.std_formatter
-        [%sexp (tx_mir : Middle.Program.Typed.t)] ;
+      Sexp.pp_hum Format.std_formatter [%sexp (tx_mir : Middle.Program.Typed.t)] ;
     if !dump_tx_mir_pretty then Program.Typed.pp Format.std_formatter tx_mir ;
     let opt_mir =
       if !optimize then (
@@ -245,10 +239,8 @@ let use_file filename =
             [%sexp (opt : Middle.Program.Typed.t)] ;
         if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt ;
         opt )
-      else tx_mir
-    in
-    if !output_file = "" then
-      output_file := remove_dotstan !model_file ^ ".hpp" ;
+      else tx_mir in
+    if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
     let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )

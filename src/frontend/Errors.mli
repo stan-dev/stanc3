@@ -20,7 +20,6 @@ type t =
   | Semantic_error of Semantic_error.t
 
 val pp : ?printed_filename:string -> t Fmt.t
-
 val to_string : t -> string
 
 val pp_syntax_error :

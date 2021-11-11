@@ -8,15 +8,13 @@ let maybe_convert_cmd_to_windows cmd =
   in
   let path =
     String.prefix cmd
-      (String.substr_index_exn ~pattern cmd + String.length pattern)
-  in
+      (String.substr_index_exn ~pattern cmd + String.length pattern) in
   if Sys.file_exists (to_windows path) then to_windows cmd else cmd
 
 let run_capturing_output cmd =
   let noflags = Array.create ~len:0 "" in
   let stdout, stdin, stderr =
-    Unix.open_process_full (maybe_convert_cmd_to_windows cmd) noflags
-  in
+    Unix.open_process_full (maybe_convert_cmd_to_windows cmd) noflags in
   let chns = [stdout; stderr] in
   let out = List.map ~f:In_channel.input_lines chns in
   ignore (Unix.close_process_full (stdout, stdin, stderr)) ;

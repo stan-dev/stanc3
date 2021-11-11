@@ -3,7 +3,6 @@ open Middle
 open Dataflow_types
 
 val var_declarations : ('a, 'b) Stmt.Fixed.t -> string Set.Poly.t
-
 val num_expr_value : Expr.Typed.t -> (float * string) option
 
 type bound_values =
@@ -11,9 +10,7 @@ type bound_values =
   ; upper: [`None | `Nonlit | `Lit of float] }
 
 val trans_bounds_values : Expr.Typed.t Transformation.t -> bound_values
-
 val chop_dist_name : string -> string Option.t
-
 val top_var_declarations : Stmt.Located.t -> string Set.Poly.t
 
 val data_set :

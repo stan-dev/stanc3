@@ -5,8 +5,7 @@ let print_ast_of_string s =
   let ast =
     Frontend_utils.untyped_ast_of_string s
     |> Result.map_error ~f:Errors.to_string
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)]
 
 (* TESTS *)
