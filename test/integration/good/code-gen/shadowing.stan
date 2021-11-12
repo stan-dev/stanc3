@@ -38,6 +38,7 @@ parameters {
   real validate_non_negative_index;
   real length;
   simplex[5] validate_positive_index;
+  real profile_map;
   real assign;
   real rvalue;
   real stan_print;
@@ -69,6 +70,10 @@ transformed parameters {
 
 
   vector[num_elements(x)] result = x * 5.0;
+
+  profile("shadow-1") {
+    mu += profile_map;
+  }
 }
 model {
   print("hello world");

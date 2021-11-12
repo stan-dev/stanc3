@@ -7,13 +7,13 @@ let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
 let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
 let pp_profile ppf (pp_body, name, body) =
-  let profile =
-    Fmt.strf
-      "stan::math::profile<local_scalar_t__> profile__(%s, \
-       const_cast<profile_map&>(profiles__));"
+  let profile ppf name =
+    pf ppf
+      "@[<hov 2>stan::math::profile<local_scalar_t__> profile__(%s,@ \
+       const_cast<stan::math::profile_map&>(profiles__));@]"
       name
   in
-  pf ppf "{@;<1 2>@[<v>%s@;@;%a@]@,}" profile pp_body body
+  pf ppf "{@;<1 2>@[<v>%a@;@;%a@]@,}" profile name pp_body body
 
 let rec contains_eigen (ut : UnsizedType.t) : bool =
   match ut with
@@ -26,7 +26,7 @@ let rec contains_eigen (ut : UnsizedType.t) : bool =
   * does not need to be filled as we are promised user input data has the correct
   * dimensions. Transformed data must be filled as incorrect slices could lead
   * to elements of objects in transform data not being set by the user.
-  *)
+*)
 let pp_filler ppf (decl_id, st, nan_type, needs_filled) =
   match (needs_filled, contains_eigen (SizedType.to_unsized st)) with
   | true, true ->
@@ -296,8 +296,8 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
         rhs
   | Assignment ((assignee, _, idcs), rhs) ->
       (* XXX I think in general we don't need to do a deepcopy if e is nested
-       inside some function call - the function should get its own copy
-       (in all cases???) *)
+         inside some function call - the function should get its own copy
+         (in all cases???) *)
       let rec maybe_deep_copy e =
         let recurse (e : 'a Expr.Fixed.t) =
           { e with

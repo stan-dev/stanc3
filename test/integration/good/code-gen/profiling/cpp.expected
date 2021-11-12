@@ -123,7 +123,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       
       current_statement__ = 28;
       {
-        stan::math::profile<local_scalar_t__> profile__("sum", const_cast<profile_map&>(profiles__));
+        stan::math::profile<local_scalar_t__> profile__("sum",
+          const_cast<stan::math::profile_map&>(profiles__));
         
         current_statement__ = 27;
         sum_y = stan::math::sum(y);
@@ -190,7 +191,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         
         current_statement__ = 11;
         {
-          stan::math::profile<local_scalar_t__> profile__("cov_exp_quad", const_cast<profile_map&>(profiles__));
+          stan::math::profile<local_scalar_t__> profile__("cov_exp_quad",
+            const_cast<stan::math::profile_map&>(profiles__));
           
           current_statement__ = 10;
           stan::model::assign(cov,
@@ -200,7 +202,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         }
         current_statement__ = 13;
         {
-          stan::math::profile<local_scalar_t__> profile__("cholesky_decompose", const_cast<profile_map&>(profiles__));
+          stan::math::profile<local_scalar_t__> profile__("cholesky_decompose",
+            const_cast<stan::math::profile_map&>(profiles__));
           
           current_statement__ = 12;
           stan::model::assign(L_cov, stan::math::cholesky_decompose(cov),
@@ -208,11 +211,13 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         }
         current_statement__ = 20;
         {
-          stan::math::profile<local_scalar_t__> profile__("likelihood", const_cast<profile_map&>(profiles__));
+          stan::math::profile<local_scalar_t__> profile__("likelihood",
+            const_cast<stan::math::profile_map&>(profiles__));
           
           current_statement__ = 17;
           {
-            stan::math::profile<local_scalar_t__> profile__("priors", const_cast<profile_map&>(profiles__));
+            stan::math::profile<local_scalar_t__> profile__("priors",
+              const_cast<stan::math::profile_map&>(profiles__));
             
             current_statement__ = 14;
             lp_accum__.add(stan::math::gamma_lpdf<propto__>(rho, 25, 4));
@@ -223,7 +228,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           }
           current_statement__ = 19;
           {
-            stan::math::profile<local_scalar_t__> profile__("multi_normal_cholesky", const_cast<profile_map&>(profiles__));
+            stan::math::profile<local_scalar_t__> profile__("multi_normal_cholesky",
+              const_cast<stan::math::profile_map&>(profiles__));
             
             current_statement__ = 18;
             lp_accum__.add(
