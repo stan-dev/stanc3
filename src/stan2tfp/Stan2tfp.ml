@@ -22,8 +22,7 @@ let set_model_file s =
   match !model_file with
   | "" ->
       model_file := s ;
-      Semantic_check.model_name :=
-        remove_dotstan (Filename.basename s) ^ "_model"
+      Typechecker.model_name := remove_dotstan (Filename.basename s) ^ "_model"
   | _ -> raise_s [%message "Can only pass in one model file."]
 
 let main () =
@@ -31,11 +30,9 @@ let main () =
   let mir =
     !model_file |> Frontend_utils.get_ast_or_exit
     |> Frontend_utils.type_ast_or_exit
-    |> Ast_to_Mir.trans_prog !Semantic_check.model_name
-  in
+    |> Ast_to_Mir.trans_prog !Typechecker.model_name in
   if !dump_mir then
-    mir |> Middle.Program.Typed.sexp_of_t |> Sexp.to_string_hum
-    |> print_endline ;
+    mir |> Middle.Program.Typed.sexp_of_t |> Sexp.to_string_hum |> print_endline ;
   let mir = Transform_mir.trans_prog mir in
   if !dump_transformed_mir then Fmt.pr "%a" Middle.Program.Typed.pp mir ;
   Fmt.pr "%a" Code_gen.pp_prog mir
@@ -43,4 +40,4 @@ let main () =
 let () = main ()
 
 (* TODO: Refactor this into a shared pluggable compiler interface @enetsee
-talked about.*)
+   talked about.*)

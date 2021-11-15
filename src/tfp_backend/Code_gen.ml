@@ -1,4 +1,5 @@
 open Core_kernel
+open Core_kernel.Poly
 open Middle
 open Fmt
 
@@ -54,7 +55,7 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
        * tf.gather
        * tf.gather_nd
        * tf.strided_slice
-*)
+       *)
       raise_s [%message "Multi-indices not supported yet"]
   | Indexed (obj, indices) -> pf ppf "%a%a" pp_expr obj pp_indices indices
 
@@ -109,8 +110,7 @@ let rec pp_cast prefix ppf (name, st) =
 
 let pp_init ppf p =
   let pp_save_data ppf (name, st) =
-    pf ppf "self.%s = %a" name (pp_cast "") (name, st)
-  in
+    pf ppf "self.%s = %a" name (pp_cast "") (name, st) in
   let pp_prep_data_stmt ppf st = pf ppf "self.%a" pp_stmt st in
   let ppbody ppf =
     match p.Program.input_vars with
@@ -120,8 +120,7 @@ let pp_init ppf p =
           (list ~sep:cut pp_save_data)
           p.Program.input_vars
           (list ~sep:cut pp_prep_data_stmt)
-          p.Program.prepare_data
-  in
+          p.Program.prepare_data in
   pp_method ppf "__init__" ("self" :: List.map ~f:fst p.input_vars) [] ppbody
 
 let pp_var_assignment ppf s = pf ppf "%s = self.%s" s s
@@ -133,21 +132,16 @@ let pp_extract_transf_data ppf p =
   let extract_arg_names x =
     match x.Stmt.Fixed.pattern with
     | Assignment ((lhs, _, _), _) -> Some lhs
-    | _ -> None
-  in
-  let arg_names =
-    List.filter_map ~f:extract_arg_names p.Program.prepare_data
-  in
+    | _ -> None in
+  let arg_names = List.filter_map ~f:extract_arg_names p.Program.prepare_data in
   (list ~sep:cut pp_var_assignment) ppf arg_names
 
 let pp_log_prob_one_chain ppf p =
   let pp_extract_param ppf (idx, name) =
-    pf ppf "%s = tf__.cast(params[%d], tf__.float64)" name idx
-  in
+    pf ppf "%s = tf__.cast(params[%d], tf__.float64)" name idx in
   let grab_params idx = function
     | name, {Program.out_block= Parameters; _} -> [(idx, name)]
-    | _ -> []
-  in
+    | _ -> [] in
   let ppbody ppf =
     pf ppf "@,%s@,%a@,@,%s@,%a@,@,%s@,%a@,@,%s@,%a" "# Data" pp_extract_data p
       "# Transformed data" pp_extract_transf_data p "# Parameters"
@@ -186,9 +180,7 @@ let get_param_st p var =
 
 let pp_log_prob ppf p =
   pf ppf "@ %a@ " pp_log_prob_one_chain p ;
-  let intro =
-    ["return tf__.vectorized_map(self.log_prob_one_chain, params)"]
-  in
+  let intro = ["return tf__.vectorized_map(self.log_prob_one_chain, params)"] in
   pp_method ppf "log_prob" ["self"; "params"] intro (fun _ -> ())
 
 let get_params p =
@@ -201,8 +193,7 @@ let pp_shapes ppf p =
     let cast_expr ppf e = pf ppf "tf__.cast(%a, tf__.int32)" pp_expr e in
     pf ppf "(nchains__, @[<hov>%a@])"
       (list ~sep:comma cast_expr)
-      (SizedType.get_dims_io out_unconstrained_st)
-  in
+      (SizedType.get_dims_io out_unconstrained_st) in
   let ppbody ppf =
     pf ppf "%a@ " pp_extract_data p ;
     pf ppf "return [@[<hov>%a@]]" (list ~sep:comma pp_shape) (get_params p)
@@ -239,19 +230,16 @@ let pp_bijectors ppf p =
     pf ppf "%a@ " pp_extract_data p ;
     pf ppf "return [@[<hov>%a@]]"
       (list ~sep:comma pp_bijector)
-      (List.map ~f:(fun (_, {out_trans; _}) -> out_trans) (get_params p))
-  in
+      (List.map ~f:(fun (_, {out_trans; _}) -> out_trans) (get_params p)) in
   pp_method ppf "parameter_bijectors" ["self"] [] ppbody
 
 let pp_param_names ppf p =
   let param_names =
     List.filter_map
       ~f:(function name, {out_block= Parameters; _} -> Some name | _ -> None)
-      p.Program.output_vars
-  in
+      p.Program.output_vars in
   let ppbody ppf =
-    pf ppf "return [@[<hov>%a@]]" (list ~sep:comma (fmt "%S")) param_names
-  in
+    pf ppf "return [@[<hov>%a@]]" (list ~sep:comma (fmt "%S")) param_names in
   pp_method ppf "parameter_names" ["self"] [] ppbody
 
 let pp_methods ppf p =
@@ -263,8 +251,7 @@ let pp_methods ppf p =
 
 let pp_fundef ppf {Program.fdname; fdargs; fdbody; _} =
   let no_body_default : Stmt.Located.t =
-    {pattern= Stmt.Fixed.Pattern.Skip; meta= Location_span.empty}
-  in
+    {pattern= Stmt.Fixed.Pattern.Skip; meta= Location_span.empty} in
   pp_method ppf fdname
     (List.map ~f:(fun (_, name, _) -> name) fdargs)
     []

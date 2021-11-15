@@ -2,7 +2,6 @@
 
 {
   module Stack = Core_kernel.Stack
-  module Errors = Middle.Errors
   open Lexing
   open Debugging
   open Preprocessor
@@ -31,7 +30,7 @@ let comments : Ast.comment_type list ref = ref []
 
 (* Some auxiliary definition for variables and constants *)
 let string_literal = '"' [^ '"' '\r' '\n']* '"'
-let identifier = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*   (* TODO: We should probably expand the alphabet *)
+let identifier = ['a'-'z' 'A'-'Z'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*   (* TODO: We should probably expand the alphabet *)
 
 let integer_constant =  ['0'-'9']+ ('_' ['0'-'9']+)*
 
@@ -224,17 +223,19 @@ rule token = parse
                                       token old_lexbuf }
 
   | _                         { raise (Errors.SyntaxError
-                                (Errors.Lexing (lexeme (Stack.top_exn include_stack),
-                                        Middle.Location.of_position_exn
-                                        (lexeme_start_p
-                                          (Stack.top_exn include_stack))))) }
+                                        (Errors.Lexing
+                                          (Middle.Location.of_position_exn
+                                            (lexeme_start_p
+                                              (Stack.top_exn include_stack))))) }
 
 (* Multi-line comment terminated by "*/" *)
 and multiline_comment state = parse
   | "*/"     { let ((pos, lines), buffer) = state in
                let lines = (Buffer.contents buffer) :: lines in
                add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p }
-  | eof      { failwith "unterminated comment" }
+  | eof      { raise (Errors.SyntaxError
+                      (Errors.UnexpectedEOF
+                        (Middle.Location.of_position_exn lexbuf.lex_curr_p))) }
   | newline  { incr_linenum lexbuf;
                let ((pos, lines), buffer) = state in
                let lines = (Buffer.contents buffer) :: lines in

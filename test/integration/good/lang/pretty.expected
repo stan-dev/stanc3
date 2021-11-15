@@ -139,6 +139,38 @@ model {
   
 }
 
+  $ ../../../../../install/default/bin/stanc --auto-format good_semicolons.stan
+data {
+  ;
+  real x;
+  ;
+  ;
+}
+transformed data {
+  real x_new = 0;
+  ;
+}
+parameters {
+  real y;
+  ;
+  ;
+}
+transformed parameters {
+  real z;
+  ;
+  ;
+  ;
+}
+model {
+  ;
+  ;
+  int i;
+  ;
+}
+generated quantities {
+  ;
+}
+
   $ ../../../../../install/default/bin/stanc --auto-format good_transformedparameters_target.stan
 functions {
   void foo_lp(real x) {

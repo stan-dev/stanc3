@@ -72,8 +72,6 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type (real) => r
 (vector, int) => void
 (vector, real) => void
 (vector, vector) => void
-(complex, int) => void
-(complex, real) => void
 (complex, complex) => void
 (row_vector, int) => void
 (row_vector, real) => void
@@ -103,7 +101,7 @@ Semantic error in 'plus_equals_bad_var_rhs.stan', line 4, column 11 to column 13
      6:  }
    -------------------------------------------------
 
-Identifier 'a2' not in scope.
+Identifier 'a2' not in scope. Did you mean 'a1'?
   $ ../../../../../install/default/bin/stanc plus_equals_matrix_array.stan
 Semantic error in 'plus_equals_matrix_array.stan', line 7, column 2 to column 9:
    -------------------------------------------------
@@ -121,8 +119,6 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type array[] mat
 (vector, int) => void
 (vector, real) => void
 (vector, vector) => void
-(complex, int) => void
-(complex, real) => void
 (complex, complex) => void
 (row_vector, int) => void
 (row_vector, real) => void
@@ -147,8 +143,6 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type matrix and 
 (vector, int) => void
 (vector, real) => void
 (vector, vector) => void
-(complex, int) => void
-(complex, real) => void
 (complex, complex) => void
 (row_vector, int) => void
 (row_vector, real) => void
@@ -185,8 +179,6 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type array[] rea
 (vector, int) => void
 (vector, real) => void
 (vector, vector) => void
-(complex, int) => void
-(complex, real) => void
 (complex, complex) => void
 (row_vector, int) => void
 (row_vector, real) => void
@@ -211,8 +203,6 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type array[] row
 (vector, int) => void
 (vector, real) => void
 (vector, vector) => void
-(complex, int) => void
-(complex, real) => void
 (complex, complex) => void
 (row_vector, int) => void
 (row_vector, real) => void
@@ -238,8 +228,6 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type vector and 
 (vector, int) => void
 (vector, real) => void
 (vector, vector) => void
-(complex, int) => void
-(complex, real) => void
 (complex, complex) => void
 (row_vector, int) => void
 (row_vector, real) => void
@@ -264,8 +252,6 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type int and rhs
 (vector, int) => void
 (vector, real) => void
 (vector, vector) => void
-(complex, int) => void
-(complex, real) => void
 (complex, complex) => void
 (row_vector, int) => void
 (row_vector, real) => void
@@ -290,8 +276,6 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type real and rh
 (vector, int) => void
 (vector, real) => void
 (vector, vector) => void
-(complex, int) => void
-(complex, real) => void
 (complex, complex) => void
 (row_vector, int) => void
 (row_vector, real) => void
@@ -316,8 +300,6 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type array[] vec
 (vector, int) => void
 (vector, real) => void
 (vector, vector) => void
-(complex, int) => void
-(complex, real) => void
 (complex, complex) => void
 (row_vector, int) => void
 (row_vector, real) => void

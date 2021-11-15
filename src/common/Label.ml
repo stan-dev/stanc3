@@ -1,6 +1,6 @@
 open Core_kernel
 
-(* Comparable, pretty-printable labels used to annotate intermediate 
+(** Comparable, pretty-printable labels used to annotate intermediate
 representations*)
 module type S = sig
   type t [@@deriving compare, hash, sexp]
@@ -10,15 +10,15 @@ module type S = sig
 
   include
     Comparable.S
-    with type t := t
-     and type comparator_witness := comparator_witness
+      with type t := t
+       and type comparator_witness := comparator_witness
 
   val init : t
   val next : t -> t
   val prev : t -> t
 end
 
-(* Integer labels *)
+(** Integer labels *)
 module Int_label = struct
   module Basic = struct
     type t = int [@@deriving compare, hash, sexp]

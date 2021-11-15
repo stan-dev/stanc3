@@ -18,18 +18,20 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 11> locations_array__ = 
+static constexpr std::array<const char*, 13> locations_array__ = 
 {" (found before start of program)",
- " (in 'simple_function.stan', line 13, column 4 to column 10)",
- " (in 'simple_function.stan', line 14, column 11 to column 12)",
- " (in 'simple_function.stan', line 14, column 13 to column 14)",
- " (in 'simple_function.stan', line 14, column 4 to column 18)",
+ " (in 'simple_function.stan', line 16, column 4 to column 10)",
+ " (in 'simple_function.stan', line 17, column 11 to column 12)",
+ " (in 'simple_function.stan', line 17, column 13 to column 14)",
+ " (in 'simple_function.stan', line 17, column 4 to column 18)",
  " (in 'simple_function.stan', line 3, column 7 to column 18)",
  " (in 'simple_function.stan', line 2, column 73 to line 4, column 5)",
  " (in 'simple_function.stan', line 6, column 7 to column 16)",
  " (in 'simple_function.stan', line 5, column 54 to line 7, column 5)",
  " (in 'simple_function.stan', line 9, column 7 to column 16)",
- " (in 'simple_function.stan', line 8, column 36 to line 10, column 5)"};
+ " (in 'simple_function.stan', line 8, column 36 to line 10, column 5)",
+ " (in 'simple_function.stan', line 12, column 7 to column 24)",
+ " (in 'simple_function.stan', line 11, column 39 to line 13, column 5)"};
 
 
 template <typename T0__, typename T2__, typename T3__, typename T4__,
@@ -144,6 +146,38 @@ return foo3(a, b, pstream__);
 }
 };
 
+template <typename T0__, typename T1__>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
+stan::value_type_t<T1__>>, -1, -1>
+add_udf(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
+          stan::value_type_t<T1__>>;
+  int current_statement__ = 0; 
+  const auto& a = to_ref(a_arg__);
+  const auto& b = to_ref(b_arg__);
+  static constexpr bool propto__ = true;
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
+  try {
+    current_statement__ = 11;
+    return add(a, b);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+  }
+  
+}
+
+struct add_udf_functor__ {
+template <typename T0__, typename T1__>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
+stan::value_type_t<T1__>>, -1, -1>
+operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const 
+{
+return add_udf(a, b, pstream__);
+}
+};
+
 class simple_function_model final : public model_base_crtp<simple_function_model> {
 
  private:
@@ -175,6 +209,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
       current_statement__ = 1;
       context__.validate_dims("data initialization","N","int",
@@ -296,6 +332,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -427,18 +465,24 @@ class simple_function_model final : public model_base_crtp<simple_function_model
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 0> names__ = std::array<std::string, 0>{};
+     constexpr std::array<const char*, 0> names__{};
+      const std::array<Eigen::Index, 0> constrain_param_sizes__{};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
-     std::vector<double> params_r_flat__;
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
      for (auto&& param_name__ : names__) {
        const auto param_vec__ = context.vals_r(param_name__);
-       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
-       for (auto&& param_val__ : param_vec__) {
-         params_r_flat__.push_back(param_val__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
        }
+       ++size_iter__;
      }
-    vars.resize(params_r_flat__.size());
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
 };
