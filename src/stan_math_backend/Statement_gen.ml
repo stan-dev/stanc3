@@ -1,4 +1,5 @@
 open Core_kernel
+open Core_kernel.Poly
 open Middle
 open Fmt
 open Expression_gen
@@ -11,8 +12,7 @@ let pp_profile ppf (pp_body, name, body) =
     pf ppf
       "@[<hov 2>stan::math::profile<local_scalar_t__> profile__(%s,@ \
        const_cast<stan::math::profile_map&>(profiles__));@]"
-      name
-  in
+      name in
   pf ppf "{@;<1 2>@[<v>%a@;@;%a@]@,}" profile name pp_body body
 
 let rec contains_eigen (ut : UnsizedType.t) : bool =
@@ -67,8 +67,7 @@ let rec pp_initialize ppf (st, adtype) =
 let pp_assign_sized ppf (decl_id, st, adtype, initialize) =
   let init_nan = nan_type (st, adtype) in
   let pp_assign ppf (decl_id, st, adtype) =
-    pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, adtype)
-  in
+    pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, adtype) in
   pf ppf "@[%a%a@]@," pp_assign (decl_id, st, adtype) pp_filler
     (decl_id, st, init_nan, initialize)
 
@@ -120,13 +119,12 @@ let pp_assign_data ppf
   let pp_placement_new ppf (decl_id, st) =
     match st with
     | SizedType.SVector (_, d) | SRowVector (_, d) ->
-        pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a);@]@,"
-          decl_id pp_st (st, DataOnly) decl_id pp_expr d
+        pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a);@]@," decl_id
+          pp_st (st, DataOnly) decl_id pp_expr d
     | SMatrix (_, d1, d2) ->
         pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a, %a);@]@,"
           decl_id pp_st (st, DataOnly) decl_id pp_expr d1 pp_expr d2
-    | _ -> ()
-  in
+    | _ -> () in
   pf ppf "@[%a%a%a@]@," pp_assign (decl_id, st) pp_placement_new (decl_id, st)
     pp_filler
     (decl_id, st, init_nan, needs_filled)
@@ -191,8 +189,7 @@ let pp_data_decl ppf (vident, ut) =
     match opencl_check with
     | _, UnsizedType.(UInt | UReal) | false, _ -> pp_unsizedtype_local
     | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
-    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
-  in
+    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>" in
   match (opencl_check, ut) with
   | (false, _), ut -> (
     match ut with
@@ -224,20 +221,17 @@ let pp_map_decl ppf (vident, ut) =
       pf ppf "Eigen::Map<Eigen::Matrix<%s, -1, 1>> %s{nullptr, 0};" scalar
         vident
   | x ->
-      raise_s
+      Common.FatalError.fatal_error_msg
         [%message
           "Error during Map data construction for " vident " of type "
-            (x : UnsizedType.t)
-            ". This should never happen, if you see this please file a bug \
-             report."]
+            (x : UnsizedType.t)]
 
 let pp_unsized_decl ppf (vident, ut, adtype) =
   let pp_type =
     match (Transform_Mir.is_opencl_var vident, ut) with
     | _, UnsizedType.(UInt | UReal) | false, _ -> pp_unsizedtype_local
     | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
-    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
-  in
+    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>" in
   pf ppf "%a %s;" pp_type (adtype, ut) vident
 
 let pp_sized_decl ppf (vident, st, adtype, initialize) =
@@ -273,7 +267,7 @@ let pp_bool_expr ppf expr =
   | UReal -> pp_call ppf ("stan::math::as_bool", pp_expr, [expr])
   | _ -> pp_expr ppf expr
 
-let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
+let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
   (* ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) = *)
   let pp_stmt_list = list ~sep:cut pp_statement in
   ( match pattern with
@@ -282,11 +276,11 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   match pattern with
   | Assignment
       ( (vident, _, [])
-      , ( { pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _); _
-          } as rhs ) ) ->
+      , ( {pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _); _}
+        as rhs ) ) ->
       pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
   | Assignment
-      ((vident, _, []), ({meta= Expr.Typed.Meta.({type_= UInt; _}); _} as rhs))
+      ((vident, _, []), ({meta= Expr.Typed.Meta.{type_= UInt; _}; _} as rhs))
    |Assignment ((vident, _, []), ({meta= {type_= UReal; _}; _} as rhs)) ->
       pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
   | Assignment ((assignee, UInt, idcs), rhs)
@@ -301,9 +295,8 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       let rec maybe_deep_copy e =
         let recurse (e : 'a Expr.Fixed.t) =
           { e with
-            Expr.Fixed.pattern=
-              Expr.Fixed.Pattern.map maybe_deep_copy e.pattern }
-        in
+            Expr.Fixed.pattern= Expr.Fixed.Pattern.map maybe_deep_copy e.pattern
+          } in
         match e.pattern with
         | _ when UnsizedType.is_scalar_type (Expr.Typed.type_of e) -> e
         | FunApp (CompilerInternal _, _) -> e
@@ -311,8 +304,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
           when v = assignee ->
             { e with
               Expr.Fixed.pattern= FunApp (CompilerInternal FnDeepCopy, [e]) }
-        | _ -> recurse e
-      in
+        | _ -> recurse e in
       let rhs = maybe_deep_copy rhs in
       pf ppf "@[<hov 2>stan::model::assign(@,%s,@ %a,@ %S%s%a@]);" assignee
         pp_expr rhs
@@ -322,8 +314,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   | TargetPE e -> pf ppf "@[<hov 2>lp_accum__.add(@,%a@]);" pp_expr e
   | NRFunApp (CompilerInternal FnPrint, args) ->
       let pp_arg ppf a =
-        pf ppf "stan::math::stan_print(pstream__, %a);" pp_expr a
-      in
+        pf ppf "stan::math::stan_print(pstream__, %a);" pp_expr a in
       let args = args @ [Expr.Helpers.str "\n"] in
       pf ppf "if (pstream__) %a" pp_block (list ~sep:cut pp_arg, args)
   | NRFunApp (CompilerInternal FnReject, args) ->
@@ -376,8 +367,9 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       { body=
           { pattern=
               Assignment
-                (_, {pattern= FunApp (CompilerInternal (FnReadParam _), _); _}); _
-          } as body; _ } ->
+                (_, {pattern= FunApp (CompilerInternal (FnReadParam _), _); _})
+          ; _ } as body
+      ; _ } ->
       pp_statement ppf body
       (* Skip For loop part, just emit body due to the way FnReadParam emits *)
   | For {loopvar; lower; upper; body} ->

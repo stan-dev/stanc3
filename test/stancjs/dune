@@ -1,18 +1,22 @@
 (executable
  (name run_js_on_args)
  (public_name run_js_on_args)
- (libraries core_kernel)
- (modes exe)
-)
+ (libraries core_kernel core_kernel.caml_unix)
+ (modes exe))
 
 (rule
  (targets stancjs.output)
- (deps ../../src/stancjs/stancjs.bc.js (:jsfiles (glob_files *.js)) utils/utils.js)
+ (deps
+  ../../src/stancjs/stancjs.bc.js
+  (:jsfiles
+   (glob_files *.js))
+  utils/utils.js)
  (action
-  (with-stdout-to %{targets}
+  (with-stdout-to
+   %{targets}
    (run %{bin:run_js_on_args} %{jsfiles}))))
 
-(alias
- (name runjstest)
- (action (diff stancjs.expected stancjs.output)))
-
+(rule
+ (alias runjstest)
+ (action
+  (diff stancjs.expected stancjs.output)))

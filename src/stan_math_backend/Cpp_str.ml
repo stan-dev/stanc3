@@ -49,6 +49,5 @@ let escaped s : string =
       match unsafe_get s i with
       | '\"' | '\\' | '\000' .. '\031' | '\127' .. '\255' ->
           Bytes.to_string (escaped_b (Bytes.of_string s))
-      | _ -> escape_if_needed s n (i + 1)
-  in
+      | _ -> escape_if_needed s n (i + 1) in
   escape_if_needed s (length s) 0

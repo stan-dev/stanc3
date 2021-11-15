@@ -3004,6 +3004,7 @@ program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN RPAREN VOID
 
 Either "{" statement "}" is expected for a function definition or ";" for a function forward declaration.
 
+program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN WHILE
 program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER COMMA WHILE
 ##
 ## Ends in an error in state: 501.
@@ -3014,7 +3015,7 @@ program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER COMMA WHILE
 ## arg_decl COMMA
 ##
 
-An argument declaration (unsized type followed by identifier) is expected.
+An argument declaration (unsized and unconstrained type followed by identifier) is expected.
 
 program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER WHILE
 ##
@@ -3040,18 +3041,6 @@ program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR LBRACK RBRACK LBRACK
 ##
 
 An identifier is expected as a function argument name.
-
-program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN WHILE
-##
-## Ends in an error in state: 60.
-##
-## function_def -> return_type decl_identifier LPAREN . loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN statement [ VOID VECTOR ROWVECTOR REAL RBRACE MATRIX INT EOF COMPLEX ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## return_type decl_identifier LPAREN
-##
-
-(Non-void) type expected in function argument declaration.
 
 program: FUNCTIONBLOCK LBRACE VOID TRUNCATE WHILE
 ##

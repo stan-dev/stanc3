@@ -1,4 +1,5 @@
 open Core_kernel
+module Unix = Caml_unix
 
 let run_capturing_output cmd =
   let noflags = Array.create ~len:0 "" in

@@ -203,7 +203,7 @@ return test_lgamma(x, pstream__);
 };
 
 template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
+         typename T_lp_accum__>
 void
 test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
         std::ostream* pstream__) {
@@ -222,7 +222,7 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
 
 struct test_lp_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
+         typename T_lp_accum__>
 void
 operator()(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__)  const 
@@ -564,7 +564,7 @@ return test_lgamma(x, pstream__);
 };
 
 template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
+         typename T_lp_accum__>
 void
 test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
         std::ostream* pstream__) {
@@ -583,7 +583,7 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
 
 struct test_lp_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
+         typename T_lp_accum__>
 void
 operator()(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__)  const 

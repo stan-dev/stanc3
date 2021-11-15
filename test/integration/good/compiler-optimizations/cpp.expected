@@ -11265,7 +11265,8 @@ return prob_uncaptured(p, phi, pstream__);
 };
 
 template <bool propto__, typename T3__, typename T4__, typename T5__,
-typename T6__, typename T7__, typename T_lp__, typename T_lp_accum__>
+         typename T6__, typename T7__, typename T_lp__,
+         typename T_lp_accum__>
 void
 js_super_lp(const std::vector<std::vector<int>>& y,
             const std::vector<int>& first, const std::vector<int>& last,
@@ -11816,7 +11817,8 @@ js_super_lp(const std::vector<std::vector<int>>& y,
 
 struct js_super_lp_functor__ {
 template <bool propto__, typename T3__, typename T4__, typename T5__,
-typename T6__, typename T7__, typename T_lp__, typename T_lp_accum__>
+         typename T6__, typename T7__, typename T_lp__,
+         typename T_lp_accum__>
 void
 operator()(const std::vector<std::vector<int>>& y,
            const std::vector<int>& first, const std::vector<int>& last,
@@ -19259,8 +19261,8 @@ static constexpr std::array<const char*, 144> locations_array__ =
  " (in 'inlining-fail2.stan', line 149, column 11 to column 12)",
  " (in 'inlining-fail2.stan', line 149, column 4 to column 24)",
  " (in 'inlining-fail2.stan', line 150, column 4 to column 31)",
- " (in 'inlining-fail2.stan', line 153, column 6 to column 55)",
  " (in 'inlining-fail2.stan', line 154, column 6 to column 64)",
+ " (in 'inlining-fail2.stan', line 153, column 6 to column 55)",
  " (in 'inlining-fail2.stan', line 152, column 19 to line 155, column 5)",
  " (in 'inlining-fail2.stan', line 147, column 33 to line 157, column 3)",
  " (in 'inlining-fail2.stan', line 238, column 16 to column 17)",
@@ -19634,7 +19636,7 @@ return prob_uncaptured(p, phi, pstream__);
 };
 
 template <bool propto__, typename T3__, typename T4__, typename T5__,
-typename T6__, typename T_lp__, typename T_lp_accum__>
+         typename T6__, typename T_lp__, typename T_lp_accum__>
 void
 jolly_seber_lp(const std::vector<std::vector<int>>& y,
                const std::vector<int>& first, const std::vector<int>& last,
@@ -20178,7 +20180,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
 
 struct jolly_seber_lp_functor__ {
 template <bool propto__, typename T3__, typename T4__, typename T5__,
-typename T6__, typename T_lp__, typename T_lp_accum__>
+         typename T6__, typename T_lp__, typename T_lp_accum__>
 void
 operator()(const std::vector<std::vector<int>>& y,
            const std::vector<int>& first, const std::vector<int>& last,
@@ -20222,24 +20224,24 @@ seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
       local_scalar_t__ log_residual_prob;
       current_statement__ = 142;
       if (stan::math::logical_gte(lcm_sym128__, 1)) {
-        current_statement__ = 45;
+        current_statement__ = 46;
         stan::model::assign(log_cprob,
           (stan::math::log(
              stan::model::rvalue(gamma, "gamma", stan::model::index_uni(1)))
             + 0), "assigning variable log_cprob", stan::model::index_uni(1));
-        current_statement__ = 46;
+        current_statement__ = 45;
         log_residual_prob = (0 +
                               stan::math::log1m(
                                 stan::model::rvalue(gamma, "gamma",
                                   stan::model::index_uni(1))));
         for (int n = 2; n <= lcm_sym128__; ++n) {
-          current_statement__ = 45;
+          current_statement__ = 46;
           stan::model::assign(log_cprob,
             (stan::math::log(
                stan::model::rvalue(gamma, "gamma", stan::model::index_uni(n)))
               + log_residual_prob),
             "assigning variable log_cprob", stan::model::index_uni(n));
-          current_statement__ = 46;
+          current_statement__ = 45;
           log_residual_prob = (log_residual_prob +
                                 stan::math::log1m(
                                   stan::model::rvalue(gamma, "gamma",
@@ -21826,7 +21828,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       double lcm_sym191__;
       double lcm_sym190__;
       double lcm_sym189__;
-      double lcm_sym162__;
+      local_scalar_t__ lcm_sym162__;
       int lcm_sym187__;
       int lcm_sym186__;
       int lcm_sym185__;
@@ -22494,25 +22496,21 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           
           local_scalar_t__ inline_sym14__;
           if (stan::math::logical_gte(lcm_sym175__, 1)) {
-            current_statement__ = 45;
+            lcm_sym162__ = stan::model::rvalue(gamma, "gamma",
+                             stan::model::index_uni(1));
             stan::model::assign(inline_sym13__,
-              (stan::math::log(
-                 stan::model::rvalue(gamma, "gamma",
-                   stan::model::index_uni(1))) + 0),
+              (stan::math::log(lcm_sym162__) + 0),
               "assigning variable inline_sym13__", stan::model::index_uni(1));
-            current_statement__ = 46;
-            inline_sym14__ = (0 +
-                               stan::math::log1m(
-                                 stan::model::rvalue(gamma, "gamma",
-                                   stan::model::index_uni(1))));
+            current_statement__ = 45;
+            inline_sym14__ = (0 + stan::math::log1m(lcm_sym162__));
             for (int inline_sym15__ = 2; inline_sym15__ <= lcm_sym175__;
                  ++inline_sym15__) {
-              current_statement__ = 45;
+              current_statement__ = 46;
               stan::model::assign(inline_sym13__,
                 (stan::math::log(gamma[(inline_sym15__ - 1)]) +
                   inline_sym14__),
                 "assigning variable inline_sym13__", stan::model::index_uni(inline_sym15__));
-              current_statement__ = 46;
+              current_statement__ = 45;
               inline_sym14__ = (inline_sym14__ +
                                  stan::math::log1m(
                                    gamma[(inline_sym15__ - 1)]));
@@ -28860,7 +28858,7 @@ static constexpr std::array<const char*, 93> locations_array__ =
 
 
 template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
+         typename T_lp_accum__>
 void
 nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
          std::ostream* pstream__) {
@@ -28887,7 +28885,7 @@ nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
 
 struct nrfun_lp_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
+         typename T_lp_accum__>
 void
 operator()(const T0__& x, const int& y, T_lp__& lp__,
            T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
