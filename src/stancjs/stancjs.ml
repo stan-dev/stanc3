@@ -28,7 +28,7 @@ let stan2cpp model_name model_string is_flag_set =
     is_flag_set "standalone-functions" || is_flag_set "functions-only" ;
   With_return.with_return (fun r ->
       if is_flag_set "version" then
-        r.return (Result.Ok (Fmt.strf "%s" version), [], []) ;
+        r.return (Result.Ok (Fmt.str "%s" version), [], []) ;
       let ast, parser_warnings =
         if is_flag_set "functions-only" then
           Parse.parse_string Parser.Incremental.functions_only model_string
@@ -72,7 +72,7 @@ let stan2cpp model_name model_string is_flag_set =
         let opt_mir =
           if is_flag_set "O" then Optimize.optimization_suite tx_mir else tx_mir
         in
-        let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
+        let cpp = Fmt.str "%a" Stan_math_code_gen.pp_prog opt_mir in
         let uninit_warnings =
           if is_flag_set "warn-uninitialized" then
             Pedantic_analysis.warn_uninitialized mir
@@ -96,7 +96,7 @@ let wrap_result ?printed_filename ~warnings = function
                (Js.array (List.to_array (List.map ~f:Js.string warnings))) )
         |]
   | Error e ->
-      let e = Fmt.strf "%a" (Errors.pp ?printed_filename) e in
+      let e = Fmt.str "%a" (Errors.pp ?printed_filename) e in
       Js.Unsafe.obj
         [| ("errors", Js.Unsafe.inject (Array.map ~f:Js.string [|e|]))
          ; ("warnings", Js.Unsafe.inject Js.array_empty) |]
@@ -122,7 +122,7 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
     stan2cpp (Js.to_string name) (Js.to_string code) is_flag_set in
   let warnings =
     List.map
-      ~f:(Fmt.strf "%a" (Warnings.pp ?printed_filename))
+      ~f:(Fmt.str "%a" (Warnings.pp ?printed_filename))
       (warnings @ pedantic_mode_warnings) in
   wrap_result ?printed_filename result ~warnings
 
