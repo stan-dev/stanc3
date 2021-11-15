@@ -36,11 +36,4 @@ transformed parameters {
 model {
   y_p ~ normal(0, 1);
 }
-generated quantities {
-  int y_gen_ar[N];
-  y_gen_ar = bernoulli_logit_glm_rng(d_x_m, d_alpha, d_beta_v);
-  y_gen_ar = bernoulli_logit_glm_rng(d_x_m, d_alpha_v, d_beta_v);
-  y_gen_ar = bernoulli_logit_glm_rng(d_x_rv, d_alpha, d_beta_v);
-  y_gen_ar = bernoulli_logit_glm_rng(d_x_rv, d_alpha_v, d_beta_v);
-}
 
