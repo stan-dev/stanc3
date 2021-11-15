@@ -964,17 +964,7 @@ let () =
   add_unqualified
     ( "bernoulli_logit_glm_rng"
     , ReturnType (UArray UInt)
-    , [UMatrix; UReal; UVector]
-    , AoS ) ;
-  add_unqualified
-    ( "bernoulli_logit_glm_rng"
-    , ReturnType (UArray UInt)
     , [UMatrix; UVector; UVector]
-    , AoS ) ;
-  add_unqualified
-    ( "bernoulli_logit_glm_rng"
-    , ReturnType (UArray UInt)
-    , [URowVector; UReal; UVector]
     , AoS ) ;
   add_unqualified
     ( "bernoulli_logit_glm_rng"
