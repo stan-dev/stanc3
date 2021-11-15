@@ -189,7 +189,7 @@ let get_templates_and_args exprs fdargs =
 let pp_template_decorator ppf = function
   | [] -> ()
   | templates ->
-      pf ppf "@[<hov>template <%a>@]@ " (list ~sep:comma string) templates
+      pf ppf "template @[<hov><%a>@]@ " (list ~sep:comma string) templates
 
 let mk_extra_args templates args =
   List.map ~f:(fun (t, v) -> t ^ "& " ^ v) (List.zip_exn templates args)
