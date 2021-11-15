@@ -53,19 +53,14 @@ module Fixed = struct
       | IfElse (pred, s_true, _) ->
           Fmt.pf ppf {|%a(%a) %a|} pp_builtin_syntax "if" pp_e pred pp_s s_true
       | While (pred, stmt) ->
-          Fmt.pf ppf {|%a(%a) %a|} pp_builtin_syntax "while" pp_e pred pp_s
-            stmt
+          Fmt.pf ppf {|%a(%a) %a|} pp_builtin_syntax "while" pp_e pred pp_s stmt
       | For {loopvar; lower; upper; body} ->
-          Fmt.pf ppf {|%a(%s in %a:%a) %a|} pp_builtin_syntax "for" loopvar
-            pp_e lower pp_e upper pp_s body
+          Fmt.pf ppf {|%a(%s in %a:%a) %a|} pp_builtin_syntax "for" loopvar pp_e
+            lower pp_e upper pp_s body
       | Profile (_, stmts) ->
-          Fmt.pf ppf {|{@;<1 2>@[<v>%a@]@;}|}
-            Fmt.(list pp_s ~sep:Fmt.cut)
-            stmts
+          Fmt.pf ppf {|{@;<1 2>@[<v>%a@]@;}|} Fmt.(list pp_s ~sep:Fmt.cut) stmts
       | Block stmts ->
-          Fmt.pf ppf {|{@;<1 2>@[<v>%a@]@;}|}
-            Fmt.(list pp_s ~sep:Fmt.cut)
-            stmts
+          Fmt.pf ppf {|{@;<1 2>@[<v>%a@]@;}|} Fmt.(list pp_s ~sep:Fmt.cut) stmts
       | SList stmts -> Fmt.(list pp_s ~sep:Fmt.cut |> vbox) ppf stmts
       | Decl {decl_adtype; decl_id; decl_type; _} ->
           Fmt.pf ppf {|%a%a %s;|} UnsizedType.pp_autodifftype decl_adtype
@@ -98,7 +93,7 @@ end
 (** Statements with location information and types for contained expressions *)
 module Located = struct
   module Meta = struct
-    type t = (Location_span.t sexp_opaque[@compare.ignore])
+    type t = (Location_span.t[@sexp.opaque] [@compare.ignore])
     [@@deriving compare, sexp, hash]
 
     let empty = Location_span.empty
@@ -107,7 +102,7 @@ module Located = struct
 
   include Specialized.Make2 (Fixed) (Expr.Typed) (Meta)
 
-  let loc_of Fixed.({meta; _}) = meta
+  let loc_of Fixed.{meta; _} = meta
 
   (** This module acts as a temporary replace for the [stmt_loc_num] type that
   is currently used within [analysis_and_optimization].
@@ -121,7 +116,7 @@ module Located = struct
   module Non_recursive = struct
     type t =
       { pattern: (Expr.Typed.t, int) Fixed.Pattern.t
-      ; meta: Meta.t sexp_opaque [@compare.ignore] }
+      ; meta: (Meta.t[@sexp.opaque] [@compare.ignore]) }
     [@@deriving compare, sexp, hash]
   end
 end
@@ -131,7 +126,7 @@ both are typed and labelled. *)
 module Labelled = struct
   module Meta = struct
     type t =
-      { loc: Location_span.t sexp_opaque [@compare.ignore]
+      { loc: (Location_span.t[@sexp.opaque] [@compare.ignore])
       ; label: Label.Int_label.t [@compare.ignore] }
     [@@deriving compare, create, sexp, hash]
 
@@ -143,20 +138,19 @@ module Labelled = struct
 
   include Specialized.Make2 (Fixed) (Expr.Labelled) (Meta)
 
-  let label_of Fixed.({meta= Meta.({label; _}); _}) = label
-  let loc_of Fixed.({meta= Meta.({loc; _}); _}) = loc
+  let label_of Fixed.{meta= Meta.{label; _}; _} = label
+  let loc_of Fixed.{meta= Meta.{loc; _}; _} = loc
 
   let label ?(init = Label.Int_label.init) (stmt : Located.t) : t =
     let lbl = ref init in
-    let f Expr.Typed.Meta.({adlevel; type_; loc}) =
+    let f Expr.Typed.Meta.{adlevel; type_; loc} =
       let cur_lbl = !lbl in
       lbl := Label.Int_label.next cur_lbl ;
       Expr.Labelled.Meta.create ~type_ ~loc ~adlevel ~label:cur_lbl ()
     and g loc =
       let cur_lbl = !lbl in
       lbl := Label.Int_label.next cur_lbl ;
-      Meta.create ~loc ~label:cur_lbl ()
-    in
+      Meta.create ~loc ~label:cur_lbl () in
     Fixed.map f g stmt
 
   type associations =
@@ -201,8 +195,7 @@ module Labelled = struct
     | For {lower; upper; body; _} ->
         let exprs =
           Expr.Labelled.(
-            associate ~init:(associate ~init:assocs.exprs lower) upper)
-        in
+            associate ~init:(associate ~init:assocs.exprs lower) upper) in
         let assocs' = {assocs with exprs} in
         associate ~init:assocs' body
     | Profile (_, xs) | Block xs | SList xs ->
@@ -216,7 +209,7 @@ end
 
 module Numbered = struct
   module Meta = struct
-    type t = (int sexp_opaque[@compare.ignore])
+    type t = (int[@sexp.opaque] [@compare.ignore])
     [@@deriving compare, sexp, hash]
 
     let empty = 0
@@ -241,13 +234,11 @@ module Helpers = struct
                 { decl_adtype= Expr.Typed.adlevel_of expr
                 ; decl_id= symbol
                 ; decl_type= Unsized (Expr.Typed.type_of expr)
-                ; initialize= true } }
-        in
+                ; initialize= true } } in
         let assign =
           { body with
             Fixed.pattern=
-              Assignment ((symbol, Expr.Typed.type_of expr, []), expr) }
-        in
+              Assignment ((symbol, Expr.Typed.type_of expr, []), expr) } in
         reset () ;
         {body with Fixed.pattern= Block [decl; assign; body]}
 
@@ -260,10 +251,8 @@ module Helpers = struct
     let loopvar, reset = Gensym.enter () in
     let loopvar_expr =
       Expr.Fixed.
-        { meta=
-            Expr.Typed.Meta.create ~type_:UInt ~loc:meta ~adlevel:DataOnly ()
-        ; pattern= Var loopvar }
-    in
+        { meta= Expr.Typed.Meta.create ~type_:UInt ~loc:meta ~adlevel:DataOnly ()
+        ; pattern= Var loopvar } in
     let lower = Expr.Helpers.loop_bottom in
     let body = Fixed.{meta; pattern= Pattern.Block [bodyfn loopvar_expr]} in
     reset () ;
@@ -288,16 +277,14 @@ module Helpers = struct
   let mk_for_iteratee upper iteratee_bodyfn iteratee meta =
     let bodyfn loopvar =
       iteratee_bodyfn
-        (Expr.Helpers.add_int_index iteratee (Index.Single loopvar))
-    in
+        (Expr.Helpers.add_int_index iteratee (Index.Single loopvar)) in
     mk_for upper bodyfn meta
 
   let rec for_each bodyfn iteratee smeta =
     let len (e : Expr.Typed.t) =
       let emeta = e.meta in
       let emeta' = {emeta with Expr.Typed.Meta.type_= UInt} in
-      Expr.Helpers.internal_funapp FnLength [e] emeta'
-    in
+      Expr.Helpers.internal_funapp FnLength [e] emeta' in
     match Expr.Typed.type_of iteratee with
     | UInt | UReal | UComplex -> bodyfn iteratee
     | UVector | URowVector ->
@@ -313,18 +300,18 @@ module Helpers = struct
         mk_for_iteratee rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mk_for_iteratee (len iteratee) bodyfn iteratee smeta
     | UMathLibraryFunction | UFun _ ->
-        raise_s [%message "can't iterate over " (iteratee : Expr.Typed.t)]
+        FatalError.fatal_error_msg
+          [%message "Can't iterate over " (iteratee : Expr.Typed.t)]
 
   let contains_fn_kind is_fn_kind ?(init = false) stmt =
-    let rec aux accu Fixed.({pattern; _}) =
+    let rec aux accu Fixed.{pattern; _} =
       match pattern with
       | NRFunApp (kind, _) when is_fn_kind kind -> true
       | stmt_pattern ->
           Fixed.Pattern.fold_left ~init:accu stmt_pattern
             ~f:(fun accu expr ->
               Expr.Helpers.contains_fn_kind is_fn_kind ~init:accu expr )
-            ~g:aux
-    in
+            ~g:aux in
     aux init stmt
 
   (** [for_eigen unsizedtype...] generates a For statement that loops
@@ -369,12 +356,11 @@ module Helpers = struct
   inverted order.*)
   let for_scalar_inv st bodyfn (var : Expr.Typed.t) smeta =
     let var = {var with pattern= Indexed (var, [])} in
-    let invert_index_order (Expr.Fixed.({pattern; _}) as e) =
+    let invert_index_order (Expr.Fixed.{pattern; _} as e) =
       match pattern with
       | Indexed (obj, []) -> obj
       | Indexed (obj, idxs) -> {e with pattern= Indexed (obj, List.rev idxs)}
-      | _ -> e
-    in
+      | _ -> e in
     let rec go st bodyfn var smeta =
       match st with
       | SizedType.SArray (t, d) ->
@@ -383,8 +369,7 @@ module Helpers = struct
       | SMatrix (mem_pattern, d1, d2) ->
           let bodyfn' var = mk_for_iteratee d1 bodyfn var smeta in
           go (SRowVector (mem_pattern, d2)) bodyfn' var smeta
-      | _ -> for_scalar st bodyfn var smeta
-    in
+      | _ -> for_scalar st bodyfn var smeta in
     go st (Fn.compose bodyfn invert_index_order) var smeta
 
   let assign_indexed decl_type vident meta varfn var =

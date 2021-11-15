@@ -22,13 +22,6 @@ type t =
 val pp : ?printed_filename:string -> t Fmt.t
 val to_string : t -> string
 
-(** Exception for Fatal Errors. These should perhaps be left unhandled,
-    so we can trace their origin. *)
-exception FatalError of string
-
-val fatal_error : ?msg:string -> unit -> 'a
-(** Throw a fatal error reported by the toplevel *)
-
 val pp_syntax_error :
   ?printed_filename:string -> Format.formatter -> syntax_error -> unit
 (** A syntax error message used when handling a SyntaxError *)

@@ -17,18 +17,10 @@ exception SyntaxError of syntax_error
     [msg], occurring in location [loc]. *)
 exception SemanticError of Semantic_error.t
 
-(** Exception [FatalError [msg]] indicates an error that should never happen with message
-    [msg]. *)
-exception FatalError of string
-
 type t =
   | FileNotFound of string
   | Syntax_error of syntax_error
   | Semantic_error of Semantic_error.t
-
-(** A fatal error reported by the toplevel *)
-let fatal_error ?(msg = "") _ =
-  raise (FatalError ("This should never happen. Please file a bug. " ^ msg))
 
 let pp_context_with_message ppf (msg, loc) =
   Fmt.pf ppf "%a@,%s" (Fmt.option Fmt.string)
@@ -52,13 +44,13 @@ let pp_syntax_error ?printed_filename ppf = function
   | Lexing loc ->
       Fmt.pf ppf "Syntax error in %s, lexing error:@,%a@."
         (Middle.Location.to_string ?printed_filename
-           {loc with col_num= loc.col_num - 1})
+           {loc with col_num= loc.col_num - 1} )
         pp_context_with_message
         ("Invalid character found.", loc)
   | UnexpectedEOF loc ->
       Fmt.pf ppf "Syntax error in %s, lexing error:@,%a@."
         (Middle.Location.to_string ?printed_filename
-           {loc with col_num= loc.col_num - 1})
+           {loc with col_num= loc.col_num - 1} )
         pp_context_with_message
         ("Unexpected end of input", loc)
   | Include (message, loc) ->

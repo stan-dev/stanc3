@@ -28,7 +28,7 @@
 ```
    sudo apt-get install opam mingw-w64 gcc m4 make -y
 ```
-3. Init opam, create and switch to 4.07.0, update environment shell
+3. Init opam, create and switch to 4.12.0, update environment shell
 
 If your distro supports `bwrap`
 ```
@@ -39,11 +39,11 @@ If your distro does not support `bwrap`
 opam init --disable-sandboxing -y
 ```
 ```
-   opam switch create 4.07.0
-   opam switch 4.07.0
+   opam switch create 4.12.0
+   opam switch 4.12.0
    eval $(opam env)
 ```
-4. Add the opam repository for the cross-compile windows 
+4. Add the opam repository for the cross-compile windows
 ```
 opam repository add windows git://github.com/ocaml-cross/opam-cross-windows
 ```
@@ -53,7 +53,7 @@ opam repository add windows git://github.com/ocaml-cross/opam-cross-windows
 ```
 6. Install the compiler
 ```
-   opam install "ocaml-windows64<=4.07.0"
+   opam install "ocaml-windows64<=4.12.0"
 ```
 7. Install opam packages that are required for build/runtest
 ```
@@ -86,11 +86,11 @@ Switch to the root of the project and run
 ```
    sudo apt-get install opam mingw-w64 gcc m4 make -y
 ```
-3. Init opam, create and switch to 4.07.0, update environment shell
+3. Init opam, create and switch to 4.12.0, update environment shell
 ```
    opam init --disable-sandboxing -y
-   opam switch create 4.07.0
-   opam switch 4.07.0
+   opam switch create 4.12.0
+   opam switch 4.12.0
    eval $(opam env)
 ```
 4. Install opam packages that are required for build/runtest

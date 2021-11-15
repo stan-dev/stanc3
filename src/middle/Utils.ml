@@ -39,7 +39,7 @@ let split_distribution_suffix (name : string) : (string * string) option =
 let is_distribution_name s =
   (not
      ( String.is_suffix s ~suffix:"_cdf_log"
-     || String.is_suffix s ~suffix:"_ccdf_log" ))
+     || String.is_suffix s ~suffix:"_ccdf_log" ) )
   && List.exists
        ~f:(fun suffix -> String.is_suffix s ~suffix)
        (distribution_suffices @ unnormalized_suffices)

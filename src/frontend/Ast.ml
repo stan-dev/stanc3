@@ -13,7 +13,7 @@ open Middle
 
 (** Our type for identifiers, on which we record a location *)
 type identifier =
-  {name: string; id_loc: Location_span.t sexp_opaque [@compare.ignore]}
+  {name: string; id_loc: (Location_span.t[@sexp.opaque] [@compare.ignore])}
 [@@deriving sexp, hash, compare]
 
 (** Indices for array access *)
@@ -57,7 +57,7 @@ type ('m, 'f) expr_with = {expr: (('m, 'f) expr_with, 'f) expression; emeta: 'm}
 [@@deriving sexp, compare, map, hash, fold]
 
 (** Untyped expressions, which have location_spans as meta-data *)
-type located_meta = {loc: Location_span.t sexp_opaque [@compare.ignore]}
+type located_meta = {loc: (Location_span.t[@sexp.opaque] [@compare.ignore])}
 [@@deriving sexp, compare, map, hash, fold]
 
 type untyped_expression = (located_meta, unit) expr_with
@@ -66,7 +66,7 @@ type untyped_expression = (located_meta, unit) expr_with
 (** Typed expressions also have meta-data after type checking: a location_span, as well as a type
     and an origin block (lub of the origin blocks of the identifiers in it) *)
 type typed_expr_meta =
-  { loc: Location_span.t sexp_opaque [@compare.ignore]
+  { loc: (Location_span.t[@sexp.opaque] [@compare.ignore])
   ; ad_level: UnsizedType.autodifftype
   ; type_: UnsizedType.t }
 [@@deriving sexp, compare, map, hash, fold]
@@ -81,7 +81,9 @@ let mk_typed_expression ~expr ~loc ~type_ ~ad_level =
 
 let expr_loc_lub exprs =
   match List.map ~f:(fun e -> e.emeta.loc) exprs with
-  | [] -> raise_s [%message "Can't find location lub for empty list"]
+  | [] ->
+      Common.FatalError.fatal_error_msg
+        [%message "Can't find location lub for empty list"]
   | [hd] -> hd
   | x1 :: tl -> List.fold ~init:x1 ~f:Location_span.merge tl
 
@@ -127,10 +129,7 @@ type typed_lval = (typed_expression, typed_expr_meta) lval_with
     for 'e and 's respectively to get untyped_statement and typed_expression and
     typed_statement to get typed_statement    *)
 type ('e, 's, 'l, 'f) statement =
-  | Assignment of
-      { assign_lhs: 'l
-      ; assign_op: assignmentoperator
-      ; assign_rhs: 'e }
+  | Assignment of {assign_lhs: 'l; assign_op: assignmentoperator; assign_rhs: 'e}
   | NRFunApp of 'f * identifier * 'e list
   | TargetPE of 'e
   (* IncrementLogProb is deprecated *)
@@ -200,7 +199,7 @@ type untyped_statement =
 let mk_untyped_statement ~stmt ~loc : untyped_statement = {stmt; smeta= {loc}}
 
 type stmt_typed_located_meta =
-  { loc: Middle.Location_span.t sexp_opaque [@compare.ignore]
+  { loc: (Middle.Location_span.t[@sexp.opaque] [@compare.ignore])
   ; return_type: statement_returntype }
 [@@deriving sexp, compare, map, hash]
 
@@ -234,14 +233,13 @@ and 's program =
   ; transformedparametersblock: 's block option
   ; modelblock: 's block option
   ; generatedquantitiesblock: 's block option
-  ; comments: comment_type list sexp_opaque [@ignore] }
+  ; comments: (comment_type list[@sexp.opaque] [@ignore]) }
 [@@deriving sexp, hash, compare, map, fold]
 
 let get_stmts = Option.value_map ~default:[] ~f:(fun x -> x.stmts)
 
 (** Untyped programs (before type checking) *)
-type untyped_program = untyped_statement program
-[@@deriving sexp, compare, map]
+type untyped_program = untyped_statement program [@@deriving sexp, compare, map]
 
 (** Typed programs (after type checking) *)
 type typed_program = typed_statement program [@@deriving sexp, compare, map]
@@ -249,8 +247,8 @@ type typed_program = typed_statement program [@@deriving sexp, compare, map]
 (*========================== Helper functions ===============================*)
 
 (** Forgetful function from typed to untyped expressions *)
-let rec untyped_expression_of_typed_expression
-    ({expr; emeta} : typed_expression) : untyped_expression =
+let rec untyped_expression_of_typed_expression ({expr; emeta} : typed_expression)
+    : untyped_expression =
   { expr=
       map_expression untyped_expression_of_typed_expression (fun _ -> ()) expr
   ; emeta= {loc= emeta.loc} }
@@ -287,7 +285,9 @@ let rec lvalue_of_expr {expr; emeta} =
       ( match expr with
       | Variable s -> LVariable s
       | Indexed (l, i) -> LIndexed (lvalue_of_expr l, i)
-      | _ -> failwith "Trying to convert illegal expression to lval." )
+      | _ ->
+          Common.FatalError.fatal_error_msg
+            [%message "Trying to convert illegal expression to lval."] )
   ; lmeta= emeta }
 
 let rec id_of_lvalue {lval; _} =
@@ -301,8 +301,7 @@ let rec id_of_lvalue {lval; _} =
 
 let rec get_loc_expr (e : untyped_expression) =
   match e.expr with
-  | TernaryIf (e, _, _) | BinOp (e, _, _) | PostfixOp (e, _) | Indexed (e, _)
-    ->
+  | TernaryIf (e, _, _) | BinOp (e, _, _) | PostfixOp (e, _) | Indexed (e, _) ->
       get_loc_expr e
   | PrefixOp (_, e) | ArrayExpr (e :: _) | RowVectorExpr (e :: _) | Paren e ->
       e.emeta.loc.begin_loc

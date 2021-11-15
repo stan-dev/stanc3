@@ -1,4 +1,5 @@
 open Core_kernel
+open Core_kernel.Poly
 open Middle
 open Fmt
 
@@ -27,11 +28,9 @@ let types_match e1 e2 =
 let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 
 (* retun true if the type of the expression
-  is integer, real, or complex (e.g. not a container) *)
+   is integer, real, or complex (e.g. not a container) *)
 let is_scalar e =
-  match Expr.Typed.type_of e with
-  | UInt | UReal | UComplex -> true
-  | _ -> false
+  match Expr.Typed.type_of e with UInt | UReal | UComplex -> true | _ -> false
 
 let is_matrix e = Expr.Typed.type_of e = UMatrix
 let is_row_vector e = Expr.Typed.type_of e = URowVector
@@ -61,8 +60,7 @@ let minus_one e =
 let is_single_index = function Index.Single _ -> true | _ -> false
 
 let dont_need_range_check = function
-  | Index.Single Expr.Fixed.({pattern= Var id; _}) ->
-      not (Utils.is_user_ident id)
+  | Index.Single Expr.Fixed.{pattern= Var id; _} -> not (Utils.is_user_ident id)
   | _ -> false
 
 let promote_adtype =
@@ -79,8 +77,7 @@ let promote_unsizedtype es =
     | UnsizedType.UReal, _ -> UnsizedType.UReal
     | _, UnsizedType.UReal -> UReal
     | UArray t1, UArray t2 -> UArray (fold_type t1 t2)
-    | _, mtype -> mtype
-  in
+    | _, mtype -> mtype in
   List.map es ~f:Expr.Typed.type_of
   |> List.reduce ~f:fold_type
   |> Option.value ~default:UReal
@@ -100,12 +97,13 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   match ut with
   | UnsizedType.UInt | UReal -> string ppf scalar
   | UComplex -> pf ppf "std::complex<%s>" scalar
-  | UArray t ->
-      pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
+  | UArray t -> pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
   | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
-  | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
+  | x ->
+      Common.FatalError.fatal_error_msg
+        [%message (x : UnsizedType.t) "not implemented"]
 
 let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   match ut with
@@ -115,7 +113,9 @@ let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   | UArray t ->
       (* Expressions are not accepted for arrays of Eigen::Matrix *)
       pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
-  | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
+  | x ->
+      Common.FatalError.fatal_error_msg
+        [%message (x : UnsizedType.t) "not implemented"]
 
 let pp_unsizedtype_local ppf (adtype, ut) =
   let s = local_scalar ut adtype in
@@ -177,7 +177,8 @@ let check_to_string = function
   | CholeskyCov -> Some "cholesky_factor"
   | CholeskyCorr -> Some "cholesky_factor_corr"
   | LowerUpper _ ->
-      raise_s [%message "LowerUpper is really two other checks tied together"]
+      Common.FatalError.fatal_error_msg
+        [%message "LowerUpper is really two other checks tied together"]
   | t -> constraint_to_string t
 
 let default_multiplier = 1
@@ -208,8 +209,9 @@ let read_constrain_dims transform unc_dims =
     | Covariance, [_; dim2] ->
         (* k + kc2 *)
         [Expr.Helpers.(binop dim2 Plus (k_choose_2 dim2))]
-    | Simplex, [dim] -> (* k - 1 *)
-                        [Expr.Helpers.(binop dim Minus (int 1))]
+    | Simplex, [dim] ->
+        (* k - 1 *)
+        [Expr.Helpers.(binop dim Minus (int 1))]
     | ( ( Identity | Lower _ | Upper _ | LowerUpper _ | Ordered
         | PositiveOrdered | UnitVector )
       , _ ) ->
@@ -219,8 +221,7 @@ let read_constrain_dims transform unc_dims =
           [%message
             "Error in constraint dimensions "
               (trans : Expr.Typed.t Transformation.t)
-              (dims : Expr.Typed.t list)]
-  in
+              (dims : Expr.Typed.t list)] in
   constrain_dim unc_dims transform
 
 let transform_args transform =
@@ -298,7 +299,8 @@ and gen_operator_app = function
   | Modulo -> fun ppf es -> pp_binary_f ppf "modulus" es
   | LDivide -> fun ppf es -> pp_binary_f ppf "mdivide_left" es
   | And | Or ->
-      raise_s [%message "And/Or should have been converted to an expression"]
+      Common.FatalError.fatal_error_msg
+        [%message "And/Or should have been converted to an expression"]
   | EltTimes ->
       fun ppf es ->
         pp_scalar_binary ppf "(%a@ *@ %a)" "elt_multiply(@,%a,@ %a)" es
@@ -319,8 +321,7 @@ and gen_misc_special_math_app f =
   | "lmultiply" ->
       Some (fun ppf es -> pp_binary ppf "multiply_log(@,%a,@ %a)" es)
   | "lchoose" ->
-      Some
-        (fun ppf es -> pp_binary ppf "binomial_coefficient_log(@,%a,@ %a)" es)
+      Some (fun ppf es -> pp_binary ppf "binomial_coefficient_log(@,%a,@ %a)" es)
   | "target" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
   | "get_lp" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
   | "max" | "min" ->
@@ -330,12 +331,12 @@ and gen_misc_special_math_app f =
           pp_call ppf (f, pp_expr, es) )
   | "ceil" ->
       let std_prefix_data_scalar f = function
-        | [ Expr.({ Fixed.meta=
-                      Typed.Meta.({adlevel= DataOnly; type_= UInt | UReal; _}); _
-                  }) ] ->
+        | [ Expr.
+              { Fixed.meta=
+                  Typed.Meta.{adlevel= DataOnly; type_= UInt | UReal; _}
+              ; _ } ] ->
             "std::" ^ f
-        | _ -> f
-      in
+        | _ -> f in
       Some
         (fun ppf es ->
           let f = std_prefix_data_scalar f es in
@@ -352,8 +353,8 @@ and read_data ut ppf es =
     | UArray UComplex -> "c"
     | UInt | UReal | UComplex | UVector | URowVector | UMatrix | UArray _
      |UFun _ | UMathLibraryFunction ->
-        raise_s [%message "Can't ReadData of " (ut : UnsizedType.t)]
-  in
+        Common.FatalError.fatal_error_msg
+          [%message "Can't ReadData of " (ut : UnsizedType.t)] in
   pf ppf "context__.vals_%s(%a)" i_or_r_or_c pp_expr (List.hd_exn es)
 
 (* assumes everything well formed from parser checks *)
@@ -369,8 +370,7 @@ and gen_fun_app suffix ppf fname es mem_pattern =
                 ( StanLib
                     (name ^ functor_suffix_select fname, FnPlain, mem_pattern)
                 , [] ) }
-      | e -> e
-    in
+      | e -> e in
     let converted_es = List.map ~f:convert_hof_vars es in
     let extra = suffix_args suffix |> List.map ~f:to_var in
     let is_hof_call = not (converted_es = es) in
@@ -406,19 +406,16 @@ and gen_fun_app suffix ppf fname es mem_pattern =
           :: grainsize :: container :: tl )
         when Stan_math_signatures.is_reduce_sum_fn x ->
           let chop_functor_suffix =
-            String.chop_suffix_exn ~suffix:reduce_sum_functor_suffix
-          in
+            String.chop_suffix_exn ~suffix:reduce_sum_functor_suffix in
           let propto_template =
             if Utils.is_distribution_name (chop_functor_suffix f) then
-              if Utils.is_unnormalized_distribution (chop_functor_suffix f)
-              then "<propto__>"
+              if Utils.is_unnormalized_distribution (chop_functor_suffix f) then
+                "<propto__>"
               else "<false>"
-            else ""
-          in
+            else "" in
           let normalized_dist_functor =
             Utils.stdlib_distribution_name (chop_functor_suffix f)
-            ^ reduce_sum_functor_suffix
-          in
+            ^ reduce_sum_functor_suffix in
           ( strf "%s<%s%s>" fname normalized_dist_functor propto_template
           , grainsize :: container :: msgs :: tl )
       | true, x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
@@ -427,8 +424,8 @@ and gen_fun_app suffix ppf fname es mem_pattern =
                   ~suffix:Stan_math_signatures.ode_tolerances_suffix
              && not (Stan_math_signatures.variadic_ode_adjoint_fn = x) ->
           ( fname
-          , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: msgs
-            :: tl )
+          , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: msgs :: tl
+          )
       | true, x, f :: y0 :: t0 :: ts :: tl
         when Stan_math_signatures.is_variadic_ode_fn x
              && not (Stan_math_signatures.variadic_ode_adjoint_fn = x) ->
@@ -453,8 +450,7 @@ and gen_fun_app suffix ppf fname es mem_pattern =
           ( fname
           , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: rel_tol_b :: abs_tol_b
             :: rel_tol_q :: abs_tol_q :: max_num_steps :: num_checkpoints
-            :: interpolation_polynomial :: solver_f :: solver_b :: msgs :: tl
-          )
+            :: interpolation_polynomial :: solver_f :: solver_b :: msgs :: tl )
       | ( true
         , "map_rect"
         , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
@@ -463,25 +459,24 @@ and gen_fun_app suffix ppf fname es mem_pattern =
           Hashtbl.add_exn map_rect_calls ~key:next_map_rect_id ~data:f ;
           (strf "%s<%d, %s>" fname next_map_rect_id f, tl @ [msgs])
       | true, _, args -> (fname, args @ [msgs])
-      | false, _, args -> (fname, args)
-    in
+      | false, _, args -> (fname, args) in
     let fname =
       stan_namespace_qualify fname |> demangle_unnormalized_name false suffix
     in
-    pp_call ppf (fname, pp_expr, args)
-  in
+    pp_call ppf (fname, pp_expr, args) in
   let pp =
     [ Option.map ~f:gen_operator_app (Operator.of_string_opt fname)
     ; gen_misc_special_math_app fname ]
-    |> List.filter_opt |> List.hd |> Option.value ~default
-  in
+    |> List.filter_opt |> List.hd |> Option.value ~default in
   pf ppf "@[<hov 2>%a@]" pp es
 
 and pp_constrain_funapp constrain_or_un_str constraint_flavor ppf = function
   | var :: args ->
       pf ppf "@[<hov 2>stan::math::%s_%s(@,%a@])" constraint_flavor
         constrain_or_un_str (list ~sep:comma pp_expr) (var :: args)
-  | es -> raise_s [%message "Bad constraint " (es : Expr.Typed.t list)]
+  | es ->
+      Common.FatalError.fatal_error_msg
+        [%message "Bad constraint " (es : Expr.Typed.t list)]
 
 and pp_user_defined_fun ppf (f, suffix, es) =
   let extra_args = suffix_args suffix @ ["pstream__"] in
@@ -495,15 +490,15 @@ and pp_compiler_internal_fn ad ut f ppf es =
   let pp_array_literal ut ppf es =
     pf ppf "std::vector<%a>{@,%a}" pp_unsizedtype_local (ad, ut)
       (list ~sep:comma (pp_promoted ad ut))
-      es
-  in
+      es in
   match f with
   | Internal_fun.FnMakeArray ->
       let ut =
         match ut with
         | UnsizedType.UArray ut -> ut
-        | _ -> raise_s [%message "Array literal must have array type"]
-      in
+        | _ ->
+            Common.FatalError.fatal_error_msg
+              [%message "Array literal must have array type"] in
       pp_array_literal ut ppf es
   | FnMakeRowVec -> (
     match ut with
@@ -516,7 +511,7 @@ and pp_compiler_internal_fn ad ut f ppf es =
     | UMatrix ->
         pf ppf "stan::math::to_matrix(@,%a)" (pp_array_literal URowVector) es
     | _ ->
-        raise_s
+        Common.FatalError.fatal_error_msg
           [%message
             "Unexpected type for row vector literal" (ut : UnsizedType.t)] )
   | FnReadData -> read_data ut ppf es
@@ -530,7 +525,7 @@ and pp_compiler_internal_fn ad ut f ppf es =
 
 and pp_promoted ad ut ppf e =
   match e with
-  | Expr.({Fixed.meta= {Typed.Meta.type_; adlevel; _}; _})
+  | Expr.{Fixed.meta= {Typed.Meta.type_; adlevel; _}; _}
     when type_ = ut && adlevel = ad ->
       pp_expr ppf e
   | {pattern= FunApp (CompilerInternal Internal_fun.FnMakeArray, es); _} ->
@@ -549,17 +544,16 @@ and pp_indexed_simple ppf (obj, idcs) =
   let idx_minus_one = function
     | Index.Single e -> minus_one e
     | MultiIndex e | Between (e, _) | Upfrom e ->
-        raise_s
+        Common.FatalError.fatal_error_msg
           [%message
             "No non-Single indices allowed" ~obj
               (idcs : Expr.Typed.t Index.t list)
               (Expr.Typed.loc_of e : Location_span.t)]
     | All ->
-        raise_s
+        Common.FatalError.fatal_error_msg
           [%message
             "No non-Single indices allowed" ~obj
-              (idcs : Expr.Typed.t Index.t list)]
-  in
+              (idcs : Expr.Typed.t Index.t list)] in
   pf ppf "%s%a" obj
     (fun ppf idcs ->
       match idcs with
@@ -596,14 +590,12 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
       let promoted ppf (t, e) =
         pf ppf "stan::math::promote_scalar<%s>(%a)"
           Expr.Typed.(local_scalar (type_of t) (adlevel_of t))
-          pp_expr e
-      in
+          pp_expr e in
       let tform ppf = pf ppf "(@[<hov 2>@,%a@ ?@ %a@ :@ %a@])" in
       let eval_pp ppf a =
         if UnsizedType.is_eigen_type meta.type_ then
           pf ppf "stan::math::eval(%a)" pp_expr a
-        else pf ppf "%a" pp_expr a
-      in
+        else pf ppf "%a" pp_expr a in
       if types_match et ef then tform ppf pp_expr ec eval_pp et eval_pp ef
       else tform ppf eval_pp ec promoted (e, et) promoted (e, ef)
   | Indexed (e, []) -> pp_expr ppf e
@@ -624,8 +616,7 @@ and pp_readparam ppf (ut, outer_dims, dims, constrain, scale) =
     let dims = outer_dims @ read_constrain_dims constrain dims in
     pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
       (UnsizedType.AutoDiffable, input_type ut dims)
-      (list ~sep:comma pp_expr) dims
-  in
+      (list ~sep:comma pp_expr) dims in
   let lp = Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty} in
   let pp_scale ppf () =
     match scale with
@@ -634,8 +625,7 @@ and pp_readparam ppf (ut, outer_dims, dims, constrain, scale) =
         pf ppf "@[<hov 2>%s<jacobian__>(@,%a,@ %a)@]"
           "stan::math::offset_multiplier_constrain" pp_read ()
           (list ~sep:comma pp_expr)
-          (scale_args scale @ [lp])
-  in
+          (scale_args scale @ [lp]) in
   let constrain_opt = constraint_to_string constrain in
   match constrain_opt with
   | None -> pp_scale ppf ()
@@ -647,7 +637,7 @@ and pp_readparam ppf (ut, outer_dims, dims, constrain, scale) =
         constraint_string pp_scale () (list ~sep:comma pp_expr) args
 
 (* This handles the special cases of things like cholesky_corr,
- * which read in a vector and then produce a matrix 
+ * which read in a vector and then produce a matrix
  *)
 and input_type (ut : UnsizedType.t) dims : UnsizedType.t =
   match (ut, dims) with
@@ -690,7 +680,7 @@ let%expect_test "pp_expr6" =
   printf "%s"
     (pp_unlocated
        (FunApp
-          (StanLib ("sqrt", FnPlain, AoS), [dummy_locate (Lit (Int, "123"))]))) ;
+          (StanLib ("sqrt", FnPlain, AoS), [dummy_locate (Lit (Int, "123"))]) ) ) ;
   [%expect {| stan::math::sqrt(123) |}]
 
 let%expect_test "pp_expr7" =
@@ -699,7 +689,7 @@ let%expect_test "pp_expr7" =
        (FunApp
           ( StanLib ("atan", FnPlain, AoS)
           , [dummy_locate (Lit (Int, "123")); dummy_locate (Lit (Real, "1.2"))]
-          ))) ;
+          ) ) ) ;
   [%expect {| stan::math::atan(123, 1.2) |}]
 
 let%expect_test "pp_expr9" =
@@ -708,7 +698,7 @@ let%expect_test "pp_expr9" =
        (TernaryIf
           ( dummy_locate (Lit (Int, "1"))
           , dummy_locate (Lit (Real, "1.2"))
-          , dummy_locate (Lit (Real, "2.3")) ))) ;
+          , dummy_locate (Lit (Real, "2.3")) ) ) ) ;
   [%expect {| (1 ? 1.2 : 2.3) |}]
 
 let%expect_test "pp_expr10" =
@@ -719,6 +709,6 @@ let%expect_test "pp_expr11" =
   printf "%s"
     (pp_unlocated
        (FunApp
-          ( UserDefined ("poisson_rng", FnRng)
-          , [dummy_locate (Lit (Int, "123"))] ))) ;
+          (UserDefined ("poisson_rng", FnRng), [dummy_locate (Lit (Int, "123"))])
+       ) ) ;
   [%expect {| poisson_rng(123, base_rng__, pstream__) |}]

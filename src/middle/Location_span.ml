@@ -1,6 +1,7 @@
 (** Delimited locations in source code *)
 
 open Core_kernel
+open Core_kernel.Poly
 
 type t = {begin_loc: Location.t; end_loc: Location.t}
 [@@deriving sexp, hash, compare]
@@ -18,8 +19,7 @@ let to_string ?printed_filename {begin_loc; end_loc} =
             ~print_file:(begin_loc.filename <> end_loc.filename)
             ~print_line:(begin_loc.line_num <> end_loc.line_num)
             end_loc
-    | Some _ -> ""
-  in
+    | Some _ -> "" in
   Location.to_string ?printed_filename begin_loc ^ end_loc_str
 
 (** Take the Middle.location_span corresponding to a pair of Lexing.position's *)

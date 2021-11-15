@@ -1,6 +1,7 @@
 (** Some helpers to produce nice error messages and for auto-formatting Stan programs *)
 
 open Core_kernel
+open Core_kernel.Poly
 open Ast
 
 (** To avoid cluttering the AST, comments are not associated with any particular AST node but instead come in a separate list.
@@ -24,8 +25,7 @@ let get_comments end_loc =
     | Comma loc :: tl when Middle.Location.compare loc end_loc < 0 -> go tl
     | _ ->
         comments := ls ;
-        []
-  in
+        [] in
   go !comments
 
 let get_comments_until_comma end_loc =
@@ -39,8 +39,7 @@ let get_comments_until_comma end_loc =
         (true, s, loc) :: go tl
     | _ ->
         comments := ls ;
-        []
-  in
+        [] in
   go !comments
 
 let skip_comments loc =
@@ -56,8 +55,7 @@ let remaining_comments () =
     @ List.filter_map !comments ~f:(function
         | LineComment (a, b) -> Some (false, [a], b)
         | BlockComment (a, b) -> Some (true, a, b)
-        | Comma _ -> None )
-  in
+        | Comma _ -> None ) in
   skipped := [] ;
   comments := [] ;
   x
@@ -68,8 +66,7 @@ let pp_space newline ppf (prev_loc, begin_loc) =
     prev_loc.filename <> begin_loc.filename
     || prev_loc.line_num + 1 < begin_loc.line_num
   then Fmt.pf ppf "@,@,"
-  else if newline || prev_loc.line_num < begin_loc.line_num then
-    Fmt.pf ppf "@,"
+  else if newline || prev_loc.line_num < begin_loc.line_num then Fmt.pf ppf "@,"
   else Fmt.pf ppf " "
 
 let pp_comment ppf
@@ -79,43 +76,37 @@ let pp_comment ppf
       List.fold lines ~init ~f:(fun m x ->
           match String.lfindi ~f:(fun _ c -> c <> ' ') x with
           | None -> m
-          | Some x -> min m x )
-    in
-    List.map lines ~f:(fun x -> String.drop_prefix x padding)
-  in
+          | Some x -> min m x ) in
+    List.map lines ~f:(fun x -> String.drop_prefix x padding) in
   let trim_tail col_num lines =
-    match lines with [] -> [] | hd :: tl -> hd :: trim (col_num - 2) tl
-  in
+    match lines with [] -> [] | hd :: tl -> hd :: trim (col_num - 2) tl in
   if is_block then
     Fmt.pf ppf "@[<v>/*%a*/@]" Fmt.(list string) (trim_tail col_num lines)
   else Fmt.pf ppf "//%a" Fmt.string (List.hd_exn lines)
 
 let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
   let newline =
-    newline
-    || match List.last ls with Some (false, _, _) -> true | _ -> false
+    newline || match List.last ls with Some (false, _, _) -> true | _ -> false
   in
   let rec recurse prev_loc = function
     | ((_, _, {Middle.Location_span.begin_loc; end_loc}) as hd) :: tl ->
         pp_space false ppf (prev_loc, begin_loc) ;
         pp_comment ppf hd ;
         recurse end_loc tl
-    | [] -> prev_loc
-  in
+    | [] -> prev_loc in
   let finish prev_loc =
     Option.iter next_loc ~f:(fun next_loc ->
-        pp_space newline ppf (prev_loc, next_loc) )
-  in
+        pp_space newline ppf (prev_loc, next_loc) ) in
   match ls with
   | ((_, _, {Middle.Location_span.begin_loc; end_loc}) as hd) :: tl ->
       Option.iter prev_loc ~f:(fun prev_loc ->
           pp_space false ppf (prev_loc, begin_loc) ) ;
       pp_comment ppf hd ;
-      let _ = recurse Middle.Location.empty !skipped in
+      let (_ : Middle.Location.t) = recurse Middle.Location.empty !skipped in
       skipped := [] ;
       recurse end_loc tl |> finish
   | [] ->
-      let _ = recurse Middle.Location.empty !skipped in
+      let (_ : Middle.Location.t) = recurse Middle.Location.empty !skipped in
       skipped := [] ;
       Option.iter prev_loc ~f:finish
 
@@ -147,8 +138,7 @@ let with_indented_box ppf indentation offset f =
     | 0 -> ()
     | i ->
         Format.pp_print_space ppf () ;
-        pp_print_n_spaces ppf (i - 1)
-  in
+        pp_print_n_spaces ppf (i - 1) in
   with_hbox ppf (fun () ->
       pp_print_n_spaces ppf indentation ;
       with_box ppf offset f ) ;
@@ -206,10 +196,8 @@ let pp_list_of pp (loc_of : 'a -> Middle.Location_span.t) ppf
             pp_comment ppf comment ;
             if not is_block then Format.pp_force_newline ppf () ;
             go is_block tl
-        | [] -> if was_block && not space_before then Fmt.sp ppf ()
-      in
-      go true comments )
-  in
+        | [] -> if was_block && not space_before then Fmt.sp ppf () in
+      go true comments ) in
   let rec go expr more =
     match more with
     | next :: rest ->
@@ -220,8 +208,7 @@ let pp_list_of pp (loc_of : 'a -> Middle.Location_span.t) ppf
         Fmt.comma ppf () ;
         pp_maybe_space false comments ;
         go next rest
-    | [] -> pp ppf expr
-  in
+    | [] -> pp ppf expr in
   skip_comments begin_loc ;
   ( match es with
   | [] -> ()
@@ -264,11 +251,11 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
   | ImagNumeral z -> Fmt.pf ppf "%si" z
   | FunApp (_, id, es) ->
       Fmt.pf ppf "%a(" pp_identifier id ;
-      with_box ppf 0 (fun () -> Fmt.pf ppf "%a)" pp_list_of_expression (es, loc)
-      )
+      with_box ppf 0 (fun () ->
+          Fmt.pf ppf "%a)" pp_list_of_expression (es, loc) )
   | CondDistApp (_, id, es) -> (
     match es with
-    | [] -> Errors.fatal_error ()
+    | [] -> Common.FatalError.fatal_error ()
     | e :: es' ->
         with_hbox ppf (fun () ->
             Fmt.pf ppf "%a(%a | %a)" pp_identifier id pp_expression e
@@ -278,12 +265,12 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
   | GetTarget -> Fmt.pf ppf "target()"
   | ArrayExpr es ->
       Fmt.pf ppf "{" ;
-      with_box ppf 0 (fun () -> Fmt.pf ppf "%a}" pp_list_of_expression (es, loc)
-      )
+      with_box ppf 0 (fun () ->
+          Fmt.pf ppf "%a}" pp_list_of_expression (es, loc) )
   | RowVectorExpr es ->
       Fmt.pf ppf "[" ;
-      with_box ppf 0 (fun () -> Fmt.pf ppf "%a]" pp_list_of_expression (es, loc)
-      )
+      with_box ppf 0 (fun () ->
+          Fmt.pf ppf "%a]" pp_list_of_expression (es, loc) )
   | Paren e -> Fmt.pf ppf "(%a)" pp_expression e
   | Indexed (e, l) -> (
     match l with
@@ -326,7 +313,7 @@ let pp_sizedtype ppf = function
   | SRowVector (_, e) -> Fmt.pf ppf "row_vector[%a]" pp_expression e
   | SMatrix (_, e1, e2) ->
       Fmt.pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
-  | SArray _ -> raise (Errors.FatalError "This should never happen.")
+  | SArray _ -> Common.FatalError.fatal_error ()
 
 let pp_transformation ppf = function
   | Middle.Transformation.Identity -> Fmt.pf ppf ""
@@ -357,15 +344,13 @@ let pp_transformed_type ppf (pst, trans, scale) =
     | Middle.Type.Sized st ->
         Middle.Type.Sized (Fn.compose fst unwind_sized_array_type st)
     | Unsized (UArray t) -> discard_arrays (Unsized t)
-    | Unsized ut -> Unsized ut
-  in
+    | Unsized ut -> Unsized ut in
   let pst = discard_arrays pst in
   let unsizedtype_fmt =
     match pst with
     | Middle.Type.Sized (SArray _ as st) ->
         Fmt.const pp_sizedtype (Fn.compose fst unwind_sized_array_type st)
-    | _ -> Fmt.const pp_unsizedtype (Middle.Type.to_unsized pst)
-  in
+    | _ -> Fmt.const pp_unsizedtype (Middle.Type.to_unsized pst) in
   let sizes_fmt =
     match pst with
     | Sized (SVector (_, e)) | Sized (SRowVector (_, e)) ->
@@ -379,8 +364,7 @@ let pp_transformed_type ppf (pst, trans, scale) =
      |Sized Middle.SizedType.SInt
      |Sized SReal
      |Sized SComplex ->
-        Fmt.nop
-  in
+        Fmt.nop in
   let cov_sizes_fmt =
     match pst with
     | Sized (SMatrix (_, e1, e2)) ->
@@ -390,8 +374,7 @@ let pp_transformed_type ppf (pst, trans, scale) =
           Fmt.const
             (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
             e2
-    | _ -> Fmt.nop
-  in
+    | _ -> Fmt.nop in
   match trans with
   | Middle.Transformation.Identity ->
       Fmt.pf ppf "%a%a%a" unsizedtype_fmt () pp_scale scale sizes_fmt ()
@@ -414,12 +397,10 @@ let pp_array_dims ppf = function
       Fmt.pf ppf "array[" ;
       with_box ppf 0 (fun () ->
           let ({emeta= {loc= {end_loc; _}; _}; _} : untyped_expression) =
-            List.hd_exn es
-          in
+            List.hd_exn es in
           let es = List.rev es in
           let ({emeta= {loc= {begin_loc; _}; _}; _} : untyped_expression) =
-            List.hd_exn es
-          in
+            List.hd_exn es in
           Fmt.pf ppf "%a] " pp_list_of_expression (es, {begin_loc; end_loc}) )
 
 let rec pp_indent_unless_block ppf ((s : untyped_statement), loc) =
@@ -450,8 +431,8 @@ and pp_recursive_ifthenelse ppf (s, loc) =
         (s2, {loc with line_num= loc.line_num + 1})
   | _ -> pp_indent_unless_block ppf (s, loc)
 
-and pp_statement ppf
-    ({stmt= s_content; smeta= {loc}} as ss : untyped_statement) =
+and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
+    =
   match s_content with
   | Assignment {assign_lhs= l; assign_op= assop; assign_rhs= e} ->
       with_hbox ppf (fun () ->
@@ -467,8 +448,8 @@ and pp_statement ppf
           Fmt.pf ppf "increment_log_prob(%a);" pp_expression e )
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
       Fmt.pf ppf "%a ~ %a(" pp_expression e pp_identifier id ;
-      with_box ppf 0 (fun () -> Fmt.pf ppf "%a)" pp_list_of_expression (es, loc)
-      ) ;
+      with_box ppf 0 (fun () ->
+          Fmt.pf ppf "%a)" pp_list_of_expression (es, loc) ) ;
       Fmt.pf ppf "%a;" pp_truncation t
   | Break -> Fmt.pf ppf "break;"
   | Continue -> Fmt.pf ppf "continue;"
@@ -485,23 +466,22 @@ and pp_statement ppf
   | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
       with_vbox ppf 0 (fun () ->
           Fmt.pf ppf "for (%a in %a : %a) %a" pp_identifier id pp_expression e1
-            pp_expression e2 pp_indent_unless_block (s, e2.emeta.loc.end_loc)
-      )
+            pp_expression e2 pp_indent_unless_block (s, e2.emeta.loc.end_loc) )
   | ForEach (id, e, s) ->
       Fmt.pf ppf "for (%a in %a) %a" pp_identifier id pp_expression e
         pp_indent_unless_block (s, e.emeta.loc.end_loc)
   | Block vdsl ->
       Fmt.pf ppf "{" ;
       Format.pp_print_cut ppf () ;
-      with_indented_box ppf 2 0 (fun () -> pp_list_of_statements ppf (vdsl, loc)
-      ) ;
+      with_indented_box ppf 2 0 (fun () ->
+          pp_list_of_statements ppf (vdsl, loc) ) ;
       Format.pp_print_cut ppf () ;
       Fmt.pf ppf "}"
   | Profile (name, vdsl) ->
       Fmt.pf ppf "profile(%s) {" name ;
       Format.pp_print_cut ppf () ;
-      with_indented_box ppf 2 0 (fun () -> pp_list_of_statements ppf (vdsl, loc)
-      ) ;
+      with_indented_box ppf 2 0 (fun () ->
+          pp_list_of_statements ppf (vdsl, loc) ) ;
       Format.pp_print_cut ppf () ;
       Fmt.pf ppf "}"
   | VarDecl
@@ -514,13 +494,11 @@ and pp_statement ppf
       let pp_init ppf init =
         match init with
         | None -> Fmt.pf ppf ""
-        | Some e -> Fmt.pf ppf " = %a" pp_expression e
-      in
+        | Some e -> Fmt.pf ppf " = %a" pp_expression e in
       let es =
         match pst with
         | Sized st -> Fn.compose snd unwind_sized_array_type st
-        | Unsized _ -> []
-      in
+        | Unsized _ -> [] in
       with_hbox ppf (fun () ->
           Fmt.pf ppf "%a%a %a%a;" pp_array_dims es pp_transformed_type
             (pst, trans, scale) pp_identifier id pp_init init )
@@ -555,8 +533,7 @@ and pp_list_of_statements ppf (l, xloc) =
         pp_spacing (Some loc) (Some begin_loc) ppf (get_comments begin_loc) ;
         pp_statement ppf s ;
         pp_tail end_loc ppf l
-    | [] -> pp_spacing (Some loc) None ppf (get_comments xloc.end_loc)
-  in
+    | [] -> pp_spacing (Some loc) None ppf (get_comments xloc.end_loc) in
   with_vbox ppf 0 (fun () -> pp_head ppf l)
 
 let pp_bare_block ppf {stmts; xloc} =
@@ -599,22 +576,23 @@ let pp_program ?(bare_functions = false) ppf
         ~f:(fun (name, block_opt) ->
           Option.map ~f:(fun b -> (name, b)) block_opt )
         [ ("functions", bf); ("data", bd); ("transformed data", btd)
-        ; ("parameters", bp)
-        ; ("transformed parameters", btp)
-        ; ("model", bm)
-        ; ("generated quantities", bgq) ]
-    in
+        ; ("parameters", bp); ("transformed parameters", btp); ("model", bm)
+        ; ("generated quantities", bgq) ] in
     pp_block_list ppf blocks
 
 let check_correctness ?(bare_functions = false) prog pretty =
-  let result_ast, (_ : Warnings.t list) =
-    if bare_functions then
-      Parse.parse_string Parser.Incremental.functions_only pretty
-    else Parse.parse_string Parser.Incremental.program pretty
-  in
-  if
-    compare_untyped_program prog (Option.value_exn (Result.ok result_ast)) <> 0
-  then failwith "Pretty printing failed. Please file a bug."
+  try
+    let result_ast, (_ : Warnings.t list) =
+      if bare_functions then
+        Parse.parse_string Parser.Incremental.functions_only pretty
+      else Parse.parse_string Parser.Incremental.program pretty in
+    if
+      compare_untyped_program prog (Option.value_exn (Result.ok result_ast))
+      <> 0
+    then failwith "Unequal!"
+  with _ ->
+    Common.FatalError.fatal_error_msg
+      [%message (prog : Ast.untyped_program) pretty]
 
 let pp_typed_expression ppf e =
   pp_expression ppf (untyped_expression_of_typed_expression e)

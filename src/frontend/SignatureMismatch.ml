@@ -1,4 +1,5 @@
 open Core_kernel
+open Core_kernel.Poly
 open Middle
 module TypeMap = Core_kernel.Map.Make_using_comparator (UnsizedType)
 
@@ -22,20 +23,17 @@ let pp_unsized_type ctx ppf =
         let ut2, d = UnsizedType.unwind_array_type ut in
         let array_str = "[" ^ String.make d ',' ^ "]" in
         Fmt.pf ppf "array%s %a" array_str pp ut2
-    | UFun _ -> Fmt.pf ppf "<%s>" (get ctx ty)
-  in
+    | UFun _ -> Fmt.pf ppf "<%s>" (get ctx ty) in
   pp ppf
 
 let pp_fundef ctx ppf =
   let pp_returntype ppf = function
     | UnsizedType.Void -> Fmt.string ppf "void"
-    | ReturnType ty -> pp_unsized_type ctx ppf ty
-  in
+    | ReturnType ty -> pp_unsized_type ctx ppf ty in
   let pp_fun_arg ppf (ad, ty) =
     match ad with
     | UnsizedType.DataOnly -> Fmt.pf ppf "data %a" (pp_unsized_type ctx) ty
-    | AutoDiffable -> pp_unsized_type ctx ppf ty
-  in
+    | AutoDiffable -> pp_unsized_type ctx ppf ty in
   function
   | UnsizedType.UFun (args, rt, _, _) ->
       Fmt.pf ppf "@[<hov>(@[<hov>%a@]) => %a@]"
@@ -48,13 +46,10 @@ let pp_with_where ctx f ppf x =
     ( !ctx
     , Map.filter_keys !ctx ~f:(fun ty -> not (Map.mem old ty))
       |> Map.to_alist
-      |> List.sort ~compare:(fun (_, id1) (_, id2) -> String.compare id1 id2)
-    )
+      |> List.sort ~compare:(fun (_, id1) (_, id2) -> String.compare id1 id2) )
   in
   let rec pp_where ppf (old, new_) =
-    let pp ppf (ty, id) =
-      Fmt.pf ppf "%s = @[<hov>%a@]" id (pp_fundef ctx) ty
-    in
+    let pp ppf (ty, id) = Fmt.pf ppf "%s = @[<hov>%a@]" id (pp_fundef ctx) ty in
     Fmt.(list ~sep:cut) pp ppf new_ ;
     let old, new_ = get_new old in
     if not (List.is_empty new_) then Fmt.pf ppf "@,%a" pp_where (old, new_)
@@ -135,8 +130,9 @@ let rec check_same_type depth t1 t2 =
 
 and check_compatible_arguments depth args1 args2 =
   match List.zip args1 args2 with
-  | None -> Some (ArgNumMismatch (List.length args1, List.length args2))
-  | Some l ->
+  | List.Or_unequal_lengths.Unequal_lengths ->
+      Some (ArgNumMismatch (List.length args1, List.length args2))
+  | Ok l ->
       List.find_mapi l ~f:(fun i ((ad1, ut1), (ad2, ut2)) ->
           match check_same_type depth ut1 ut2 with
           | Some e -> Some (ArgError (i + 1, e))
@@ -151,7 +147,7 @@ let max_n_errors = 5
 
 let extract_function_types f =
   match f with
-  | Environment.({type_= UFun (args, return, _, mem); kind= `StanMath}) ->
+  | Environment.{type_= UFun (args, return, _, mem); kind= `StanMath} ->
       Some (return, args, (fun x -> Ast.StanLib x), mem)
   | {type_= UFun (args, return, _, mem); _} ->
       Some (return, args, (fun x -> UserDefined x), mem)
@@ -173,20 +169,17 @@ let returntype env name args =
        ~finish:(fun errors ->
          let errors =
            List.sort errors ~compare:(fun (_, e1) (_, e2) ->
-               compare_errors e1 e2 )
-         in
+               compare_errors e1 e2 ) in
          let errors, omitted = List.split_n errors max_n_errors in
          Error (errors, not (List.is_empty omitted)) )
 
 let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
     fun_return args =
   let minimal_func_type =
-    UnsizedType.UFun
-      (mandatory_fun_arg_tys, ReturnType fun_return, FnPlain, AoS)
+    UnsizedType.UFun (mandatory_fun_arg_tys, ReturnType fun_return, FnPlain, AoS)
   in
   let minimal_args =
-    (UnsizedType.AutoDiffable, minimal_func_type) :: mandatory_arg_tys
-  in
+    (UnsizedType.AutoDiffable, minimal_func_type) :: mandatory_arg_tys in
   let wrap_err x = Some (minimal_args, ArgError (1, x)) in
   match args with
   | ( _
@@ -194,11 +187,9 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
       func_type ) )
     :: _ ->
       let mandatory, variadic_arg_tys =
-        List.split_n fun_args (List.length mandatory_fun_arg_tys)
-      in
+        List.split_n fun_args (List.length mandatory_fun_arg_tys) in
       let wrap_func_error x =
-        TypeMismatch (minimal_func_type, func_type, Some x) |> wrap_err
-      in
+        TypeMismatch (minimal_func_type, func_type, Some x) |> wrap_err in
       let suffix = Fun_kind.without_propto suffix in
       if suffix = FnPlain || (allow_lpdf && suffix = FnLpdf ()) then
         match check_compatible_arguments 1 mandatory mandatory_fun_arg_tys with
@@ -208,12 +199,11 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
           | Some _ ->
               wrap_func_error
                 (ReturnTypeMismatch
-                   (ReturnType fun_return, ReturnType return_type))
+                   (ReturnType fun_return, ReturnType return_type) )
           | None ->
               let expected_args =
                 ((UnsizedType.AutoDiffable, func_type) :: mandatory_arg_tys)
-                @ variadic_arg_tys
-              in
+                @ variadic_arg_tys in
               check_compatible_arguments 0 expected_args args
               |> Option.map ~f:(fun x -> (expected_args, x)) )
       else wrap_func_error (SuffixMismatch (FnPlain, suffix))
@@ -227,25 +217,23 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
     | Fun_kind.FnPlain -> "a pure function"
     | FnRng -> "an rng function"
     | FnLpdf () -> "a probability density or mass function"
-    | FnTarget -> "an _lp function"
-  in
+    | FnTarget -> "an _lp function" in
   let index_str = function
     | 1 -> "first"
     | 2 -> "second"
     | 3 -> "third"
     | 4 -> "fourth"
-    | n -> Fmt.strf "%dth" n
-  in
+    | n -> Fmt.strf "%dth" n in
   let rec pp_explain_rec ppf = function
     | ArgError (n, DataOnlyError) ->
         pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text
           " has an incompatible data-qualifier."
     | ArgError (n, TypeMismatch (expected, found, None)) ->
         pf ppf
-          "@[<hv>The types for the %s argument are incompatible: one is@, %a@ \
-           but the other is@, %a@]"
-          (index_str n) (pp_unsized_type ctx) expected (pp_unsized_type ctx)
-          found
+          "@[<hv>The types for the %s argument are incompatible: one is@,\
+          \ %a@ but the other is@,\
+          \ %a@]" (index_str n) (pp_unsized_type ctx) expected
+          (pp_unsized_type ctx) found
     | ArgError (n, TypeMismatch (_, _, Some (SuffixMismatch (expected, found))))
       ->
         pf ppf
@@ -254,21 +242,21 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
           (index_str n) (suffix_str expected) (suffix_str found)
     | ArgError (n, TypeMismatch (expected, found, Some (InputMismatch err))) ->
         pf ppf
-          "@[<v>The types for the %s argument are incompatible: one is@, %a@ \
-           but the other is@, %a@ @[<v>These are not compatible because:@ \
-           @[<hov>%a@]@]@]"
+          "@[<v>The types for the %s argument are incompatible: one is@,\
+          \ %a@ but the other is@,\
+          \ %a@ @[<v>These are not compatible because:@ @[<hov>%a@]@]@]"
           (index_str n) (pp_fundef ctx) expected (pp_fundef ctx) found
           pp_explain_rec err
     | ArgError (n, TypeMismatch (expected, found, Some (ReturnTypeMismatch _)))
       ->
         pf ppf
-          "@[<v>The %s argument must be@, %a@ but got@, %a@ The return types \
-           are different.@]"
-          (index_str n) (pp_fundef ctx) expected (pp_fundef ctx) found
+          "@[<v>The %s argument must be@,\
+          \ %a@ but got@,\
+          \ %a@ The return types are different.@]" (index_str n) (pp_fundef ctx)
+          expected (pp_fundef ctx) found
     | ArgNumMismatch (expected, found) ->
         pf ppf "One takes %d arguments but the other takes %d arguments."
-          expected found
-  in
+          expected found in
   let pp_explain ppf = function
     | ArgError (n, DataOnlyError) ->
         pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text
@@ -287,32 +275,31 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
           (index_str n) (suffix_str expected) (suffix_str found)
     | ArgError (n, TypeMismatch (expected, found, Some (InputMismatch err))) ->
         pf ppf
-          "@[<v>The %s argument must be@, %a@ but got@, %a@ @[<v 2>These are \
-           not compatible because:@ @[<hov>%a@]@]@]"
+          "@[<v>The %s argument must be@,\
+          \ %a@ but got@,\
+          \ %a@ @[<v 2>These are not compatible because:@ @[<hov>%a@]@]@]"
           (index_str n) (pp_fundef ctx) expected (pp_fundef ctx) found
           pp_explain_rec err
     | ArgError (n, TypeMismatch (expected, found, Some (ReturnTypeMismatch _)))
       ->
         pf ppf
-          "@[<v>The %s argument must be@, %a@ but got@, %a@ The return types \
-           are not compatible.@]"
-          (index_str n) (pp_fundef ctx) expected (pp_fundef ctx) found
+          "@[<v>The %s argument must be@,\
+          \ %a@ but got@,\
+          \ %a@ The return types are not compatible.@]" (index_str n)
+          (pp_fundef ctx) expected (pp_fundef ctx) found
     | ArgNumMismatch (expected, found) ->
         pf ppf "Expected %d arguments but found %d arguments." expected found
   in
   let pp_args =
     pp_with_where ctx (fun ppf ->
-        pf ppf "(@[<hov>%a@])" (list ~sep:comma (pp_unsized_type ctx)) )
-  in
+        pf ppf "(@[<hov>%a@])" (list ~sep:comma (pp_unsized_type ctx)) ) in
   let pp_signature ppf ((rt, args), err) =
     let fun_ty = UnsizedType.UFun (args, rt, FnPlain, AoS) in
     Fmt.pf ppf "%a@ @[<hov 2>  %a@]"
       (pp_with_where ctx (pp_fundef ctx))
-      fun_ty pp_explain err
-  in
+      fun_ty pp_explain err in
   let pp_omitted ppf () =
-    if omitted then pf ppf "@,(Additional signatures omitted)"
-  in
+    if omitted then pf ppf "@,(Additional signatures omitted)" in
   pf ppf
     "@[<v>Ill-typed arguments supplied to function '%s':@ %a@ Available \
      signatures:@ %a%a@]"

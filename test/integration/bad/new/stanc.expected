@@ -7,7 +7,7 @@ Syntax error in 'arg-decl-bad1.stan', line 2, column 16 to column 21, parsing er
      3:  }
    -------------------------------------------------
 
-An argument declaration (unsized type followed by identifier) is expected.
+An argument declaration (unsized and unconstrained type followed by identifier) is expected.
   $ ../../../../../install/default/bin/stanc blocks-bad1.stan
 Syntax error in 'blocks-bad1.stan', line 1, column 5 to column 10, parsing error:
    -------------------------------------------------
@@ -202,6 +202,17 @@ Syntax error in 'fundef-bad1.stan', line 1, column 20 to column 25, parsing erro
    -------------------------------------------------
 
 List of commas expected.
+  $ ../../../../../install/default/bin/stanc fundef-bad10.stan
+Syntax error in 'fundef-bad10.stan', line 2, column 12 to column 23, parsing error:
+   -------------------------------------------------
+     1:  functions {
+     2:     void foo(corr_matrix x){
+                     ^
+     3:       return;
+     4:     }
+   -------------------------------------------------
+
+An argument declaration (unsized and unconstrained type followed by identifier) is expected.
   $ ../../../../../install/default/bin/stanc fundef-bad2.stan
 Syntax error in 'fundef-bad2.stan', line 1, column 25 to column 26, parsing error:
    -------------------------------------------------
@@ -249,7 +260,7 @@ Syntax error in 'fundef-bad7.stan', line 1, column 21 to column 26, parsing erro
                               ^
    -------------------------------------------------
 
-(Non-void) type expected in function argument declaration.
+An argument declaration (unsized and unconstrained type followed by identifier) is expected.
   $ ../../../../../install/default/bin/stanc fundef-bad8.stan
 Semantic error in 'fundef-bad8.stan', line 1, column 17 to column 22:
    -------------------------------------------------

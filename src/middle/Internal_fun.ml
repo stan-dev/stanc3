@@ -14,20 +14,16 @@ type 'expr t =
   | FnReadParam of
       { scale: 'expr Scale.t
       ; constrain: 'expr Transformation.t
-      ; outer_dims:
-          'expr list
-          (* dimensions of the container type. [] unless reading an array *)
-      ; dims:
-          'expr list
-          (* the dimensions of the actual internal type, like `matrix`
-           * currently, all special arguments or shape concerns depend only on this
-           * so we use it in expression generation
-           *)
+      ; outer_dims: 'expr list
+            (* dimensions of the container type. [] unless reading an array *)
+      ; dims: 'expr list
+            (* the dimensions of the actual internal type, like `matrix`
+             * currently, all special arguments or shape concerns depend only on this
+             * so we use it in expression generation
+             *)
       ; mem_pattern: Common.Helpers.mem_pattern }
   | FnWriteParam of
-      { scale: 'expr Scale.t
-      ; unconstrain: 'expr Transformation.t
-      ; var: 'expr }
+      {scale: 'expr Scale.t; unconstrain: 'expr Transformation.t; var: 'expr}
   | FnValidateSize
   | FnValidateSizeSimplex
   | FnValidateSizeUnitVector
@@ -45,15 +41,15 @@ let to_string
       fun _ ->
         raise
           (Failure
-             "Should not be parsing expression from string in function renaming"))
-    x =
+             "Should not be parsing expression from string in function renaming"
+          )) x =
   Sexp.to_string (sexp_of_t expr_to_string x) ^ "__"
 
 let pp (pp_expr : 'a Fmt.t) ppf internal =
   Fmt.string ppf
     (to_string
        ~expr_to_string:(fun expr -> sexp_of_string (Fmt.strf "%a" pp_expr expr))
-       internal)
+       internal )
 
 (* Does this function call change state? Can we call it twice with the same results?
 
