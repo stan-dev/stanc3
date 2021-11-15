@@ -106,7 +106,7 @@ let includes ppf () =
     (List.rev !Preprocessor.included_files)
 
 let info ast =
-  Fmt.strf "{ @[<v 0>%a,@,%a,@,%a,@,%a,@,%a,@,%a @]}@." (block_info "inputs")
+  Fmt.str "{ @[<v 0>%a,@,%a,@,%a,@,%a,@,%a,@,%a @]}@." (block_info "inputs")
     ast.datablock (block_info "parameters") ast.parametersblock
     (block_info "transformed parameters")
     ast.transformedparametersblock

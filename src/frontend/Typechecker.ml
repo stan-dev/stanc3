@@ -577,7 +577,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                   Fmt.pf ppf "%a * 1.0 / %a" Pretty_printing.pp_typed_expression
                     x Pretty_printing.pp_typed_expression y in
             let s =
-              Fmt.strf
+              Fmt.str
                 "@[<v>@[<hov 0>Found int division:@]@   @[<hov 2>%a@]@,\
                  @[<hov>%a@]@   @[<hov 2>%a@]@,\
                  @[<hov>%a@]@]"
@@ -590,7 +590,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
             add_warning x.emeta.loc s
         | (UArray UMatrix | UMatrix), (UInt | UReal), Pow ->
             let s =
-              Fmt.strf
+              Fmt.str
                 "@[<v>@[<hov 0>Found matrix^scalar:@]@   @[<hov 2>%a@]@,\
                  @[<hov>%a@]@ @[<hov>%a@]@]" Pretty_printing.pp_expression
                 {expr; emeta} Fmt.text

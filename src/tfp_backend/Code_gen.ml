@@ -13,7 +13,7 @@ let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
 let pystring_of_operator = function
   | Operator.IntDivide -> "//"
   | Operator.Pow -> "**"
-  | x -> strf "%a" Operator.pp x
+  | x -> str "%a" Operator.pp x
 
 let rec pp_expr ppf {Expr.Fixed.pattern; _} =
   match pattern with

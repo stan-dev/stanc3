@@ -6,7 +6,7 @@ let to_mir s =
   |> Frontend.Ast_to_Mir.trans_prog "test prog"
 
 let print_tdata Middle.Program.{prepare_data; _} =
-  Fmt.(strf "@[<v>%a@]@," (list ~sep:cut Middle.Stmt.Located.pp) prepare_data)
+  Fmt.(str "@[<v>%a@]@," (list ~sep:cut Middle.Stmt.Located.pp) prepare_data)
   |> print_endline
 
 let%expect_test "matrix array multi indexing " =

@@ -32,7 +32,7 @@ let pp_semantic_error ?printed_filename ppf err =
   Fmt.pf ppf "Semantic error in %s:@;%a"
     (Middle.Location_span.to_string ?printed_filename loc_span)
     pp_context_with_message
-    (Fmt.strf "%a@." Semantic_error.pp err, loc_span.begin_loc)
+    (Fmt.str "%a@." Semantic_error.pp err, loc_span.begin_loc)
 
 (** A syntax error message used when handling a SyntaxError *)
 let pp_syntax_error ?printed_filename ppf = function
@@ -64,4 +64,4 @@ let pp ?printed_filename ppf = function
   | Syntax_error e -> pp_syntax_error ?printed_filename ppf e
   | Semantic_error e -> pp_semantic_error ?printed_filename ppf e
 
-let to_string = Fmt.strf "%a" (pp ?printed_filename:None)
+let to_string = Fmt.str "%a" (pp ?printed_filename:None)

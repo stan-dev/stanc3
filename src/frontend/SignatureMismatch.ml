@@ -9,7 +9,7 @@ let get ctx key =
   match TypeMap.find !ctx key with
   | Some s -> s
   | None ->
-      let s = Fmt.strf "F%d" (1 + TypeMap.length !ctx) in
+      let s = Fmt.str "F%d" (1 + TypeMap.length !ctx) in
       set ctx key s ; s
 
 (** Like UnsizedType.pp but with opaque names for function types. *)
@@ -223,7 +223,7 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
     | 2 -> "second"
     | 3 -> "third"
     | 4 -> "fourth"
-    | n -> Fmt.strf "%dth" n in
+    | n -> Fmt.str "%dth" n in
   let rec pp_explain_rec ppf = function
     | ArgError (n, DataOnlyError) ->
         pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text

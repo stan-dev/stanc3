@@ -103,7 +103,7 @@ module TypeError = struct
         Fmt.pf ppf
           "@[<h>Ill-typed arguments supplied to assignment operator %s: lhs \
            has type %a and rhs has type %a. Available signatures:@]%s"
-          (Fmt.strf "%a=" Operator.pp op)
+          (Fmt.str "%a=" Operator.pp op)
           UnsizedType.pp lt UnsizedType.pp rt
           ( Stan_math_signatures.pretty_print_math_lib_assignmentoperator_sigs op
           |> Option.value ~default:"no matching signatures" )

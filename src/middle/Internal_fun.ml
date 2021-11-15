@@ -40,7 +40,7 @@ let to_string
 let pp (pp_expr : 'a Fmt.t) ppf internal =
   Fmt.string ppf
     (to_string
-       ~expr_to_string:(fun expr -> sexp_of_string (Fmt.strf "%a" pp_expr expr))
+       ~expr_to_string:(fun expr -> sexp_of_string (Fmt.str "%a" pp_expr expr))
        internal )
 
 (* Does this function call change state? Can we call it twice with the same results?

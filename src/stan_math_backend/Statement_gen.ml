@@ -9,7 +9,7 @@ let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
 let pp_profile ppf (pp_body, name, body) =
   let profile =
-    Fmt.strf
+    Fmt.str
       "profile<local_scalar_t__> profile__(%s, \
        const_cast<profile_map&>(profiles__));"
       name in
@@ -73,7 +73,7 @@ let pp_assign_sized ppf (decl_id, st, adtype, initialize) =
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
-  strf "@[<v>%a@]" pp_assign_sized
+  str "@[<v>%a@]" pp_assign_sized
     ( "d"
     , SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5)
     , DataOnly
@@ -84,7 +84,7 @@ let%expect_test "set size mat array" =
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
-  strf "@[<v>%a@]" pp_assign_sized
+  str "@[<v>%a@]" pp_assign_sized
     ( "d"
     , SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5)
     , DataOnly
@@ -131,7 +131,7 @@ let pp_assign_data ppf
 
 let%expect_test "set size map int array no initialize" =
   let int = Expr.Helpers.int in
-  strf "@[<v>%a@]" pp_assign_data
+  str "@[<v>%a@]" pp_assign_data
     ("darrmat", SArray (SArray (SInt, int 4), int 5), false)
   |> print_endline ;
   [%expect
@@ -140,7 +140,7 @@ let%expect_test "set size map int array no initialize" =
 
 let%expect_test "set size map mat array" =
   let int = Expr.Helpers.int in
-  strf "@[<v>%a@]" pp_assign_data
+  str "@[<v>%a@]" pp_assign_data
     ( "darrmat"
     , SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5)
     , true )
@@ -152,7 +152,7 @@ let%expect_test "set size map mat array" =
 
 let%expect_test "set size map mat" =
   let int = Expr.Helpers.int in
-  strf "@[<v>%a@]" pp_assign_data ("dmat", SMatrix (AoS, int 2, int 3), false)
+  str "@[<v>%a@]" pp_assign_data ("dmat", SMatrix (AoS, int 2, int 3), false)
   |> print_endline ;
   [%expect
     {|
@@ -160,7 +160,7 @@ let%expect_test "set size map mat" =
     new (&dmat) Eigen::Map<Eigen::Matrix<double, -1, -1>>(dmat__.data(), 2, 3); |}]
 
 let%expect_test "set size map int" =
-  strf "@[<v>%a@]" pp_assign_data ("dint", SInt, true) |> print_endline ;
+  str "@[<v>%a@]" pp_assign_data ("dint", SInt, true) |> print_endline ;
   [%expect {|
   dint = std::numeric_limits<int>::min(); |}]
 
@@ -306,7 +306,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
         | _ -> recurse e in
       let rhs = maybe_deep_copy rhs in
       pf ppf "@[<hov 2>assign(@,%s,@ %a,@ %S%s%a@]);" assignee pp_expr rhs
-        (strf "assigning variable %s" assignee)
+        (str "assigning variable %s" assignee)
         (if List.length idcs = 0 then "" else ", ")
         pp_indexes idcs
   | TargetPE e -> pf ppf "@[<hov 2>lp_accum__.add(@,%a@]);" pp_expr e
