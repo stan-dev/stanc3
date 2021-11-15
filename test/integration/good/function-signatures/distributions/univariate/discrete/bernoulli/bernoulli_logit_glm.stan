@@ -11,7 +11,6 @@ transformed data {
   real transformed_data_real;
   transformed_data_real = bernoulli_logit_glm_lpmf(d_y_a| d_x_m, d_alpha, d_beta_v);
   transformed_data_real = bernoulli_logit_glm_lpmf(d_y_a| d_x_m, d_alpha_v, d_beta_v);
-  transformed_data_real = bernoulli_logit_glm_lpmf(d_y_a| d_x_m, d_alpha_v, d_beta_v);
   transformed_data_real = bernoulli_logit_glm_lpmf(d_y| d_x_m, d_alpha, d_beta_v);
   transformed_data_real = bernoulli_logit_glm_lpmf(d_y| d_x_m, d_alpha_v, d_beta_v);
   transformed_data_real = bernoulli_logit_glm_lpmf(d_y_a| d_x_rv, d_alpha, d_beta_v);
@@ -36,5 +35,12 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+}
+generated quantities {
+  int y_gen_ar[N];
+  y_gen_ar = bernoulli_logit_glm_rng(d_x_m, d_alpha, d_beta_v);
+  y_gen_ar = bernoulli_logit_glm_rng(d_x_m, d_alpha_v, d_beta_v);
+  y_gen_ar = bernoulli_logit_glm_rng(d_x_rv, d_alpha, d_beta_v);
+  y_gen_ar = bernoulli_logit_glm_rng(d_x_rv, d_alpha_v, d_beta_v);
 }
 
