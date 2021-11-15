@@ -9,8 +9,7 @@ let fatal_error_msg message =
     Sexplib0.Sexp.List
       [ [%message
           "Fatal error: this should never happen. Please file a bug on \
-           https://github.com/stan-dev/stanc3/issues/new."]; message ]
-  in
+           https://github.com/stan-dev/stanc3/issues/new."]; message ] in
   raise_s augmented
 
 (** A version of [fatal_error_msg] with an empty message.

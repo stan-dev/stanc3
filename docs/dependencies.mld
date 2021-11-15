@@ -10,17 +10,17 @@ for {!xcomp}, these versions are exactly pinned.
 These are automatically installed through the [scripts/install_ocaml.sh] and
 [scripts/install_build_deps.sh] scripts provided in the stanc3 repository.
 
-- OCaml 4.07.0
-- Dune 1.11.4
-- {{:https://ocaml.janestreet.com/ocaml-core/latest/doc/core_kernel/Core_kernel/index.html}Core_kernel} v0.11.1
+- OCaml 4.12.0
+- Dune 2.8+
+- {{:https://ocaml.janestreet.com/ocaml-core/latest/doc/core_kernel/Core_kernel/index.html}Core_kernel} v0.14.2
 (a standard library replacement)
-- {{:http://gallium.inria.fr/~fpottier/menhir/manual.html}Menhir} 20181113 (a parser generator and parsing library)
-- {{:https://github.com/ocaml-ppx/ppx_deriving}ppx_deriving} 4.2.1 (a tool for generating boilerplate code)
+- {{:http://gallium.inria.fr/~fpottier/menhir/manual.html}Menhir} 20210929 (a parser generator and parsing library)
+- {{:https://github.com/ocaml-ppx/ppx_deriving}ppx_deriving} 5.2.1 (a tool for generating boilerplate code)
 - {{:https://erratique.ch/software/fmt}fmt} 0.8.5 (a tool for pretty-printing of formatted text)
 
 For the JavaScript interface to stanc3 we also use the following, installed
 via [scripts/install_js_deps.sh]
-- js_of_ocaml-ppx 3.4.0
+- js_of_ocaml-ppx 3.11.0
 - yojson 1.7.0
 
 The [stancjs] executable can be built with
@@ -34,8 +34,9 @@ build requirements) with [scripts/setup_dev_env.sh]. Versioning of these depende
 strict, though some (like ocamlformat) are used to ensure a standard format across developers
 and must use the same version.
 
-- ocamlformat 0.8
-- merlin 3.4.1
+- ocamlformat 0.19
+- merlin 4.3.1
+- ocaml-lsp-server 1.8.3
 - utop
 - ocp-indent
 - patdiff

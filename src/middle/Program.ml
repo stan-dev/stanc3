@@ -11,12 +11,11 @@ type 'a fun_def =
   { fdrt: UnsizedType.t option
   ; fdname: string
   ; fdsuffix: unit Fun_kind.suffix
-  ; fdargs:
-      (UnsizedType.autodifftype * string * UnsizedType.t) list
-      (* If fdbody is None, this is a function declaration without body. *)
+  ; fdargs: (UnsizedType.autodifftype * string * UnsizedType.t) list
+        (* If fdbody is None, this is a function declaration without body. *)
   ; fdbody: 'a option
-  ; fdloc: Location_span.t sexp_opaque [@compare.ignore] }
-[@@deriving compare, hash, map, sexp, map, fold]
+  ; fdloc: (Location_span.t[@sexp.opaque] [@compare.ignore]) }
+[@@deriving compare, hash, sexp, map, fold]
 
 type io_block = Parameters | TransformedParameters | GeneratedQuantities
 [@@deriving sexp, hash]
@@ -56,8 +55,7 @@ let pp_fun_def pp_s ppf = function
   | {fdrt; fdname; fdargs; fdbody; _} -> (
       let pp_body_opt ppf = function
         | None -> Fmt.pf ppf ";"
-        | Some body -> pp_s ppf body
-      in
+        | Some body -> pp_s ppf body in
       match fdrt with
       | Some rt ->
           Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} UnsizedType.pp rt fdname
@@ -144,21 +142,21 @@ module Labelled = struct
   let t_of_sexp = t_of_sexp Expr.Labelled.t_of_sexp Stmt.Labelled.t_of_sexp
 
   (* let label ?(init = 0) (prog : Typed.t) : t =
-    let incr_label =
-      State.(get >>= fun label -> put (label + 1) >>= fun _ -> return label)
-    in
-    let f {Expr.Typed.Meta.adlevel; type_; loc} =
-      incr_label
-      |> State.map ~f:(fun label ->
-             Expr.Labelled.Meta.create ~type_ ~loc ~adlevel ~label () )
-    and g loc =
-      incr_label
-      |> State.map ~f:(fun label -> Stmt.Labelled.Meta.create ~loc ~label ())
-    in
-    Traversable_state.traverse prog
-      ~f:(Traversable_expr_state.traverse ~f)
-      ~g:(Traversable_stmt_state.traverse ~f ~g)
-    |> State.run_state ~init |> fst *)
+     let incr_label =
+       State.(get >>= fun label -> put (label + 1) >>= fun _ -> return label)
+     in
+     let f {Expr.Typed.Meta.adlevel; type_; loc} =
+       incr_label
+       |> State.map ~f:(fun label ->
+              Expr.Labelled.Meta.create ~type_ ~loc ~adlevel ~label () )
+     and g loc =
+       incr_label
+       |> State.map ~f:(fun label -> Stmt.Labelled.Meta.create ~loc ~label ())
+     in
+     Traversable_state.traverse prog
+       ~f:(Traversable_expr_state.traverse ~f)
+       ~g:(Traversable_stmt_state.traverse ~f ~g)
+     |> State.run_state ~init |> fst *)
 
   let empty =
     { Stmt.Labelled.exprs= Label.Int_label.Map.empty
@@ -171,24 +169,19 @@ module Labelled = struct
     let assoc_input_vars =
       List.fold_left prog.input_vars ~init:assoc_fundef
         ~f:(fun assocs (_, st) ->
-          {assocs with exprs= SizedType.associate ~init:assocs.exprs st} )
-    in
+          {assocs with exprs= SizedType.associate ~init:assocs.exprs st} ) in
     let assoc_prepare_data =
       List.fold_left prog.prepare_data ~init:assoc_input_vars
-        ~f:(fun assocs stmt -> Stmt.Labelled.associate ~init:assocs stmt )
-    in
+        ~f:(fun assocs stmt -> Stmt.Labelled.associate ~init:assocs stmt) in
     let assoc_log_prog =
       List.fold_left prog.log_prob ~init:assoc_prepare_data
-        ~f:(fun assocs stmt -> Stmt.Labelled.associate ~init:assocs stmt )
-    in
+        ~f:(fun assocs stmt -> Stmt.Labelled.associate ~init:assocs stmt) in
     let assoc_generate_quants =
       List.fold_left prog.generate_quantities ~init:assoc_log_prog
-        ~f:(fun assocs stmt -> Stmt.Labelled.associate ~init:assocs stmt )
-    in
+        ~f:(fun assocs stmt -> Stmt.Labelled.associate ~init:assocs stmt) in
     let assoc_transform_inits =
       List.fold_left prog.transform_inits ~init:assoc_generate_quants
-        ~f:(fun assocs stmt -> Stmt.Labelled.associate ~init:assocs stmt )
-    in
+        ~f:(fun assocs stmt -> Stmt.Labelled.associate ~init:assocs stmt) in
     List.fold_left prog.output_vars ~init:assoc_transform_inits
       ~f:associate_outvar
 
@@ -203,8 +196,7 @@ module Labelled = struct
       SizedType.(
         associate
           ~init:(associate ~init:assocs.exprs out_unconstrained_st)
-          out_constrained_st)
-    in
+          out_constrained_st) in
     {assocs with exprs}
 end
 

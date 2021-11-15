@@ -1,4 +1,5 @@
 open Core_kernel
+open Core_kernel.Poly
 open Middle
 
 type originblock =
@@ -34,11 +35,9 @@ let create () =
            , List.map values ~f:(fun (rt, args, mem) ->
                  let type_ =
                    UnsizedType.UFun
-                     (args, rt, Fun_kind.suffix_from_name key, mem)
-                 in
+                     (args, rt, Fun_kind.suffix_from_name key, mem) in
                  {type_; kind= `StanMath} ) ) )
-    |> String.Map.of_alist_exn
-  in
+    |> String.Map.of_alist_exn in
   functions
 
 let add env key type_ kind = Map.add_multi env ~key ~data:{type_; kind}
@@ -67,8 +66,8 @@ module Distance = struct
         let substitution_cost =
           if s.[i] = t.[j] then !previous_row.(j) else !previous_row.(j) + 1
         in
-        !current_row.(j + 1)
-        <- Int.min deletion_cost (Int.min insertion_cost substitution_cost)
+        !current_row.(j + 1) <-
+          Int.min deletion_cost (Int.min insertion_cost substitution_cost)
       done ;
       (* swap *)
       let temp = !current_row in
@@ -94,15 +93,14 @@ module Distance = struct
           else
             let edist = dist name candidate in
             if edist < cmin then loop lst (candidate, edist)
-            else loop lst (celt, cmin)
-    in
+            else loop lst (celt, cmin) in
     (* don't provide suggestions for length-1 names. Always ends up suggesting 'e' *)
     if n = 1 then None
     else
       let suggestion, _ = loop lst (name, limit) in
       (* if [name = suggestion], that implies that nothing was found which had an
-      edit distance less than the limit (because name is the inital thing given
-      to [loop]), so we return None *)
+         edit distance less than the limit (because name is the inital thing given
+         to [loop]), so we return None *)
       if name <> suggestion then Some suggestion else None
 end
 

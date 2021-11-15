@@ -44,13 +44,13 @@ let pp_syntax_error ?printed_filename ppf = function
   | Lexing loc ->
       Fmt.pf ppf "Syntax error in %s, lexing error:@,%a@."
         (Middle.Location.to_string ?printed_filename
-           {loc with col_num= loc.col_num - 1})
+           {loc with col_num= loc.col_num - 1} )
         pp_context_with_message
         ("Invalid character found.", loc)
   | UnexpectedEOF loc ->
       Fmt.pf ppf "Syntax error in %s, lexing error:@,%a@."
         (Middle.Location.to_string ?printed_filename
-           {loc with col_num= loc.col_num - 1})
+           {loc with col_num= loc.col_num - 1} )
         pp_context_with_message
         ("Unexpected end of input", loc)
   | Include (message, loc) ->

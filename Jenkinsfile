@@ -70,7 +70,7 @@ pipeline {
             }
             agent {
                 docker {
-                    image 'stanorg/stanc3:debian'
+                    image 'stanorg/stanc3:debian-ocaml-update'
                     //Forces image to ignore entrypoint
                     args "-u root --entrypoint=\'\'"
                 }
@@ -96,7 +96,7 @@ pipeline {
             }
             agent {
                 docker {
-                    image 'stanorg/stanc3:debian'
+                    image 'stanorg/stanc3:debian-ocaml-update'
                     //Forces image to ignore entrypoint
                     args "-u root --entrypoint=\'\'"
                 }
@@ -128,7 +128,7 @@ pipeline {
                 stage("Dune tests") {
                     agent {
                         docker {
-                            image 'stanorg/stanc3:debian'
+                            image 'stanorg/stanc3:debian-ocaml-update'
                             //Forces image to ignore entrypoint
                             args "-u root --entrypoint=\'\'"
                         }
@@ -158,7 +158,7 @@ pipeline {
                 stage("stancjs tests") {
                     agent {
                         docker {
-                            image 'stanorg/stanc3:debian'
+                            image 'stanorg/stanc3:debian-ocaml-update'
                             //Forces image to ignore entrypoint
                             args "-u root --entrypoint=\'\'"
                         }
@@ -306,6 +306,7 @@ pipeline {
                     agent { label "osx && ocaml" }
                     steps {
                         runShell("""
+                            opam switch 4.12.0
                             eval \$(opam env)
                             opam update || true
                             bash -x scripts/install_build_deps.sh
@@ -318,7 +319,14 @@ pipeline {
 
                         stash name:'mac-exe', includes:'bin/*'
                     }
-                    post { always { runShell("rm -rf ./*") }}
+                    post {
+                        always {
+                            runShell("""
+                            opam switch 4.07.0
+                            rm -rf ./*
+                            """)
+                            }
+                        }
                 }
                 stage("Build stanc.js") {
                     when {
@@ -329,7 +337,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:debian'
+                            image 'stanorg/stanc3:debian-ocaml-update'
                             //Forces image to ignore entrypoint
                             args "-u root --entrypoint=\'\'"
                         }
@@ -356,7 +364,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:static'
+                            image 'stanorg/stanc3:static-ocaml-update'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\'"
                         }
@@ -386,7 +394,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:static'
+                            image 'stanorg/stanc3:static-ocaml-update'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
@@ -417,7 +425,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:static'
+                            image 'stanorg/stanc3:static-ocaml-update'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
@@ -448,7 +456,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:static'
+                            image 'stanorg/stanc3:static-ocaml-update'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
@@ -479,7 +487,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:static'
+                            image 'stanorg/stanc3:static-ocaml-update'
                             //Forces image to ignore entrypoint
                             label 'linux-ec2'
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
@@ -511,7 +519,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:static'
+                            image 'stanorg/stanc3:static-ocaml-update'
                             //Forces image to ignore entrypoint
                             label 'linux-ec2'
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
@@ -543,7 +551,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:static'
+                            image 'stanorg/stanc3:static-ocaml-update'
                             //Forces image to ignore entrypoint
                             label 'linux-ec2'
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
@@ -575,7 +583,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:debian-windows'
+                            image 'stanorg/stanc3:debian-windows-ocaml-update'
                             label 'linux-ec2'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\'"
@@ -587,6 +595,7 @@ pipeline {
                             eval \$(opam env)
                             dune subst
                             dune build -x windows
+                            dune build -x windows src/stan2tfp/stan2tfp.exe
                         """)
 
                         sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
@@ -635,7 +644,7 @@ pipeline {
             options { skipDefaultCheckout(true) }
             agent {
                 docker {
-                    image 'stanorg/stanc3:static'
+                    image 'stanorg/stanc3:static-ocaml-update'
                     label 'linux-ec2'
                     //Forces image to ignore entrypoint
                     args "-u 1000 --entrypoint=\'\'"
