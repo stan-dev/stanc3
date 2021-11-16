@@ -367,7 +367,7 @@ and gen_fun_app suffix ppf fname es mem_pattern =
           let normalized_dist_functor =
             Utils.stdlib_distribution_name (chop_functor_suffix f)
             ^ reduce_sum_functor_suffix in
-          ( strf "%s<%s%s>" fname normalized_dist_functor propto_template
+          ( str "%s<%s%s>" fname normalized_dist_functor propto_template
           , grainsize :: container :: msgs :: tl )
       | true, x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
         when Stan_math_signatures.is_variadic_ode_fn x
@@ -408,7 +408,7 @@ and gen_fun_app suffix ppf fname es mem_pattern =
           :: tl ) ->
           let next_map_rect_id = Hashtbl.length map_rect_calls + 1 in
           Hashtbl.add_exn map_rect_calls ~key:next_map_rect_id ~data:f ;
-          (strf "%s<%d, %s>" fname next_map_rect_id f, tl @ [msgs])
+          (str "%s<%d, %s>" fname next_map_rect_id f, tl @ [msgs])
       | true, _, args -> (fname, args @ [msgs])
       | false, _, args -> (fname, args) in
     let fname =
@@ -569,13 +569,13 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
     match e.pattern with
     | FunApp (CompilerInternal (FnReadParam _), _) -> pp_expr ppf e
     | FunApp (CompilerInternal FnReadData, _) ->
-        pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
+        pp_indexed_simple ppf (str "%a" pp_expr e, idx)
     | _
       when List.for_all ~f:dont_need_range_check idx
            && not (UnsizedType.is_indexing_matrix (Expr.Typed.type_of e, idx))
       ->
-        pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
-    | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
+        pp_indexed_simple ppf (str "%a" pp_expr e, idx)
+    | _ -> pp_indexed ppf (str "%a" pp_expr e, idx, pretty_print e) )
 
 (* these functions are just for testing *)
 let dummy_locate pattern =
@@ -586,7 +586,7 @@ let dummy_locate pattern =
           Typed.Meta.{type_= UInt; adlevel= DataOnly; loc= Location_span.empty}
       })
 
-let pp_unlocated e = strf "%a" pp_expr (dummy_locate e)
+let pp_unlocated e = str "%a" pp_expr (dummy_locate e)
 
 let%expect_test "pp_expr1" =
   printf "%s" (pp_unlocated (Var "a")) ;

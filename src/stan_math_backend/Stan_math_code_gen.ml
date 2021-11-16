@@ -3,7 +3,7 @@
     This module makes extensive use of the Format[0] module via the Fmt[1] API.
     As such, you'll need to understand the "%a" and "@" notation from [0], especially
     the section headed "Formatted pretty-printing." Then, we use functions like
-    [pf] and [strf] from the Fmt library[1]. On top of that, the "@" pretty-printing
+    [pf] and [str] from the Fmt library[1]. On top of that, the "@" pretty-printing
     specifiers all actually correspond 1-to-1 with commands like [open_box] from
     the Format library[0]. The boxing system is best described in this explainer
     pdf [2], particularly Section 3 ("Format basics"). It's worth noting that someone
@@ -105,7 +105,7 @@ let pp_promoted_scalar ppf args =
 (** Pretty-prints a function's return-type, taking into account templated argument
     promotion.*)
 let pp_returntype ppf arg_types rt =
-  let scalar = strf "%a" pp_promoted_scalar arg_types in
+  let scalar = str "%a" pp_promoted_scalar arg_types in
   match rt with
   | Some ut when UnsizedType.contains_int ut ->
       pf ppf "%a@," pp_unsizedtype_custom_scalar ("int", ut)
@@ -175,11 +175,11 @@ let get_templates_and_args exprs fdargs =
   ( List.filter_opt argtypetemplates
   , if not exprs then
       List.map
-        ~f:(fun a -> strf "%a" pp_arg a)
+        ~f:(fun a -> str "%a" pp_arg a)
         (List.zip_exn argtypetemplates fdargs)
     else
       List.map
-        ~f:(fun a -> strf "%a" pp_arg_eigen_suffix a)
+        ~f:(fun a -> str "%a" pp_arg_eigen_suffix a)
         (List.zip_exn argtypetemplates fdargs) )
 
 (** Print the C++ template parameter decleration before a function.
@@ -300,7 +300,7 @@ let pp_standalone_fun_def namespace_fun ppf
   let args =
     List.map
       ~f:(fun (_, name, ut) ->
-        strf "const %a& %s" pp_unsizedtype_custom_scalar
+        str "const %a& %s" pp_unsizedtype_custom_scalar
           (stantype_prim_str ut, ut)
           name )
       fdargs in
@@ -565,17 +565,17 @@ let emit_name ppf (name, idcs) =
   let to_string = fmt "std::to_string(%s)" in
   pf ppf "param_names__.emplace_back(std::string() + %a);"
     (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
-    (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
+    (str "%S" name :: List.map ~f:(str "%a" to_string) idcs)
 
 let emit_complex_name ppf (name, idcs) =
   let name = Mangle.remove_prefix name in
   let to_string = fmt "std::to_string(%s)" in
   pf ppf "@[param_names__.emplace_back(std::string() + %a);@]@,"
     (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
-    ((strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs) @ ["\"real\""]) ;
+    ((str "%S" name :: List.map ~f:(str "%a" to_string) idcs) @ ["\"real\""]) ;
   pf ppf "param_names__.emplace_back(std::string() + %a);"
     (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
-    ((strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs) @ ["\"imag\""])
+    ((str "%S" name :: List.map ~f:(str "%a" to_string) idcs) @ ["\"imag\""])
 
 (** Print the [constrained_param_names] method of the model class. *)
 let pp_constrained_param_names ppf {Program.output_vars; _} =
