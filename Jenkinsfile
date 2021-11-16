@@ -645,7 +645,7 @@ pipeline {
             agent {
                 docker {
                     image 'stanorg/stanc3:static-ocaml-update'
-                    label 'linux-ec2'
+                    label 'gg-linux'
                     //Forces image to ignore entrypoint
                     args "-u 1000 --entrypoint=\'\'"
                 }
@@ -653,7 +653,7 @@ pipeline {
             steps {
                 retry(3) {
                     checkout([$class: 'GitSCM',
-                        branches: [[name: '*/gh-pages']],
+                        branches: [],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [],
                         submoduleCfg: [],
@@ -700,11 +700,11 @@ pipeline {
                         git add -f doc
                         git commit -m "auto generated docs from Jenkins"
                         git subtree push --prefix doc/ https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git gh-pages
+                        rm -rf *
                     """
                 }
 
             }
-            post { always { deleteDir() } }
         }
     }
     post {
