@@ -180,7 +180,7 @@ let remove_dotstan s =
  *)
 
 let pp_stderr formatter formatee =
-  Fmt.strf "%a" formatter formatee |> Out_channel.(output_string stderr)
+  Fmt.str "%a" formatter formatee |> Out_channel.(output_string stderr)
 
 let print_or_write data =
   if !output_file <> "" then Out_channel.write_all !output_file ~data
@@ -241,7 +241,7 @@ let use_file filename =
         opt )
       else tx_mir in
     if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
-    let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
+    let cpp = Fmt.str "%a" Stan_math_code_gen.pp_prog opt_mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
 

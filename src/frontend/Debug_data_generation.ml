@@ -308,4 +308,4 @@ let print_data_prog s =
         , Map.set m ~key:(var_decl_id decl) ~data:value ) ) in
   let pp ppf (id, value) =
     Fmt.pf ppf {|@[<hov 2>"%s":@ %a@]|} id pp_value_json value in
-  Fmt.(strf "{@ @[<hov>%a@]@ }" (list ~sep:comma pp) l)
+  Fmt.(str "{@ @[<hov>%a@]@ }" (list ~sep:comma pp) l)

@@ -114,7 +114,7 @@ let num_elems_expr st =
 
 let%expect_test "dims" =
   let open Fmt in
-  strf "@[%a@]" (list ~sep:comma string)
+  str "@[%a@]" (list ~sep:comma string)
     (List.map
        ~f:(fun Expr.Fixed.{pattern; _} ->
          match pattern with Expr.Fixed.Pattern.Lit (_, x) -> x | _ -> "fail" )

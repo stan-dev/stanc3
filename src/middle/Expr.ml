@@ -240,7 +240,7 @@ module Helpers = struct
     ; ( UArray UMatrix
       , [Upfrom loop_bottom; Single loop_bottom; Single loop_bottom] ) ]
     |> List.map ~f:(fun (ut, idx) -> infer_type_of_indexed ut idx)
-    |> Fmt.(strf "@[<hov>%a@]" (list ~sep:comma UnsizedType.pp))
+    |> Fmt.(str "@[<hov>%a@]" (list ~sep:comma UnsizedType.pp))
     |> print_endline ;
     [%expect
       {|

@@ -114,7 +114,7 @@ let wrap_fmt fmt x =
   (* Switched from Format.str_formatter partially because of
      https://discuss.ocaml.org/t/debugging-memory-issues/3223/8
   *)
-  Fmt.strf "%a" fmt x
+  Fmt.str "%a" fmt x
 
 let with_hbox ppf f =
   Format.pp_open_hbox ppf () ; f () ; Format.pp_close_box ppf () ; ()
@@ -131,7 +131,7 @@ let with_vbox ppf offset f =
   Format.pp_close_box ppf () ;
   ()
 
-let comma_no_break = Fmt.unit ", "
+let comma_no_break = Fmt.any ", "
 
 let with_indented_box ppf indentation offset f =
   let rec pp_print_n_spaces ppf = function

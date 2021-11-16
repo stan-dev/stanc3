@@ -4,7 +4,7 @@ module Str = Re.Str
 
 let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
   let emit_cpp_expr e =
-    Fmt.strf "+ std::to_string(%a) +" Expression_gen.pp_expr e in
+    Fmt.str "+ std::to_string(%a) +" Expression_gen.pp_expr e in
   match st with
   | SInt -> `Assoc [("name", `String "int")]
   | SReal -> `Assoc [("name", `String "real")]
@@ -24,7 +24,7 @@ let out_var_json (name, st, block) : Yojson.Basic.t =
   `Assoc
     [ ("name", `String (Mangle.remove_prefix name))
     ; ("type", sizedtype_to_json st)
-    ; ("block", `String (Fmt.strf "%a" Program.pp_io_block block)) ]
+    ; ("block", `String (Fmt.str "%a" Program.pp_io_block block)) ]
 
 let%expect_test "outvar to json pretty" =
   let var x = {Expr.Fixed.pattern= Var x; meta= Expr.Typed.Meta.empty} in
