@@ -56,7 +56,7 @@ pipeline {
         stage("Build") {
             agent {
                 docker {
-                    image 'stanorg/stanc3:debian-ocaml-update'
+                    image 'stanorg/stanc3:debian'
                     args "-u root --entrypoint=\'\'"
                     label 'linux-ec2'
                 }
@@ -109,7 +109,7 @@ pipeline {
                 stage("Build stanc.js") {
                     agent {
                         docker {
-                            image 'stanorg/stanc3:debian-ocaml-update'
+                            image 'stanorg/stanc3:debian'
                             //Forces image to ignore entrypoint
                             args "-u root --entrypoint=\'\'"
                             label 'linux-ec2'
@@ -135,7 +135,7 @@ pipeline {
                 stage("Build & test a static Linux binary") {
                     agent {
                         docker {
-                            image 'stanorg/stanc3:static-ocaml-update'
+                            image 'stanorg/stanc3:static'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\'"
                             label 'linux-ec2'
@@ -168,7 +168,7 @@ pipeline {
                 stage("Build & test static Windows binary") {
                     agent {
                         docker {
-                            image 'stanorg/stanc3:debian-windows-ocaml-update'
+                            image 'stanorg/stanc3:debian-windows'
                             label 'linux-ec2'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\'"
