@@ -77,9 +77,10 @@ module Make (Pattern : Pattern.S) : S with module Pattern := Pattern = struct
   let rec pp f ppf {pattern; meta} =
     Fmt.pf ppf {|%a%a|} f meta (Pattern.pp (pp f)) pattern
 
-  include Foldable.Make (struct type nonrec 'a t = 'a t
+  include Foldable.Make (struct
+    type nonrec 'a t = 'a t
 
-                                let fold = fold
+    let fold = fold
   end)
 
   let rec fold_pattern ~f {meta; pattern} =
@@ -183,8 +184,7 @@ module Make2 (First : S) (Pattern : Pattern.S2) :
 
   let rec fold_pattern ~f ~g {meta; pattern} =
     let pattern' =
-      Pattern.map (First.fold_pattern ~f) (fold_pattern ~f ~g) pattern
-    in
+      Pattern.map (First.fold_pattern ~f) (fold_pattern ~f ~g) pattern in
     g (meta, pattern')
 
   (** {[fold_pattern (Fn.compose f First.fix) (Fn.compose g fix) x]} *)
@@ -199,8 +199,7 @@ module Make2 (First : S) (Pattern : Pattern.S2) :
   let rec unfold_pattern ~f ~g x =
     let meta, pattern = g x in
     let pattern' =
-      Pattern.map (First.unfold_pattern ~f) (unfold_pattern ~f ~g) pattern
-    in
+      Pattern.map (First.unfold_pattern ~f) (unfold_pattern ~f ~g) pattern in
     {meta; pattern= pattern'}
 
   (** {[unfold_pattern (Fn.compose First.unfix f) (Fn.compose unfix g) x]} *)

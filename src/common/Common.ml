@@ -13,3 +13,4 @@ module Specialized = Specialized
 (* General helpers *)
 module Gensym = Gensym
 module Helpers = Helpers
+module FatalError = FatalError

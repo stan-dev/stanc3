@@ -18,8 +18,7 @@ let rec pp pp_e ppf = function
   | SReal -> Fmt.string ppf "real"
   | SComplex -> Fmt.string ppf "complex"
   | SVector (_, expr) -> Fmt.pf ppf {|vector%a|} (Fmt.brackets pp_e) expr
-  | SRowVector (_, expr) ->
-      Fmt.pf ppf {|row_vector%a|} (Fmt.brackets pp_e) expr
+  | SRowVector (_, expr) -> Fmt.pf ppf {|row_vector%a|} (Fmt.brackets pp_e) expr
   | SMatrix (_, d1_expr, d2_expr) ->
       Fmt.pf ppf {|matrix%a|}
         Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
@@ -34,8 +33,7 @@ let collect_exprs st =
     | SInt | SReal | SComplex -> List.rev accu
     | SVector (_, e) | SRowVector (_, e) -> List.rev @@ (e :: accu)
     | SMatrix (_, e1, e2) -> List.rev @@ (e1 :: e2 :: accu)
-    | SArray (inner, e) -> aux (e :: accu) inner
-  in
+    | SArray (inner, e) -> aux (e :: accu) inner in
   aux [] st
 
 let rec to_unsized = function
@@ -49,8 +47,7 @@ let rec to_unsized = function
 
 let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
   | SInt | SReal | SComplex -> assocs
-  | SVector (_, e) | SRowVector (_, e) ->
-      Expr.Labelled.associate ~init:assocs e
+  | SVector (_, e) | SRowVector (_, e) -> Expr.Labelled.associate ~init:assocs e
   | SMatrix (_, e1, e2) ->
       Expr.Labelled.(associate ~init:(associate ~init:assocs e1) e2)
   | SArray (st, e) ->
@@ -117,17 +114,15 @@ let num_elems_expr st =
 
 let%expect_test "dims" =
   let open Fmt in
-  strf "@[%a@]" (list ~sep:comma string)
+  str "@[%a@]" (list ~sep:comma string)
     (List.map
-       ~f:(fun Expr.Fixed.({pattern; _}) ->
+       ~f:(fun Expr.Fixed.{pattern; _} ->
          match pattern with Expr.Fixed.Pattern.Lit (_, x) -> x | _ -> "fail" )
        (get_dims_io
           (SArray
              ( SMatrix
-                 ( Common.Helpers.AoS
-                 , Expr.Helpers.str "x"
-                 , Expr.Helpers.str "y" )
-             , Expr.Helpers.str "z" ))))
+                 (Common.Helpers.AoS, Expr.Helpers.str "x", Expr.Helpers.str "y")
+             , Expr.Helpers.str "z" ) ) ) )
   |> print_endline ;
   [%expect {| z, x, y |}]
 

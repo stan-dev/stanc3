@@ -1,6 +1,7 @@
 (** Types which have dimensionalities but not sizes, e.g. [array\[,,\]] *)
 
 open Core_kernel
+open Core_kernel.Poly
 open Common.Helpers
 
 type t =
@@ -29,8 +30,7 @@ let pp_autodifftype ppf = function
 let unsized_array_depth unsized_ty =
   let rec aux depth = function
     | UArray ut -> aux (depth + 1) ut
-    | ut -> (ut, depth)
-  in
+    | ut -> (ut, depth) in
   aux 0 unsized_ty
 
 let count_dims unsized_ty =
@@ -38,8 +38,7 @@ let count_dims unsized_ty =
     | UArray t -> aux (dims + 1) t
     | UMatrix -> dims + 2
     | UVector | URowVector -> dims + 1
-    | _ -> dims
-  in
+    | _ -> dims in
   aux 0 unsized_ty
 
 let rec unwind_array_type = function
@@ -144,6 +143,12 @@ let rec is_autodiffable = function
   | UReal | UVector | URowVector | UMatrix -> true
   | UArray t -> is_autodiffable t
   | _ -> false
+
+let is_autodifftype possibly_adtype =
+  match possibly_adtype with DataOnly -> false | AutoDiffable -> true
+
+let is_dataonlytype possibly_adtype : bool =
+  not (is_autodifftype possibly_adtype)
 
 let is_scalar_type = function UReal | UInt -> true | _ -> false
 let is_int_type = function UInt | UArray UInt -> true | _ -> false

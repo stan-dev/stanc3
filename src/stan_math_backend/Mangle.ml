@@ -13,6 +13,7 @@
 *)
 
 open Core_kernel
+open Core_kernel.Poly
 
 let kwrds_prefix = "_stan_"
 let prefix_len = String.length kwrds_prefix
@@ -35,13 +36,13 @@ let cpp_kwrds =
       ; "do"; "double"; "dynamic_cast"; "enum"; "explicit"; "float"; "friend"
       ; "goto"; "inline"; "long"; "mutable"; "namespace"; "new"; "noexcept"
       ; "not"; "not_eq"; "nullptr"; "operator"; "or"; "or_eq"; "private"
-      ; "protected"; "public"; "register"; "reinterpret_cast"; "short"
-      ; "signed"; "sizeof"; "static_assert"; "static_cast"; "switch"
-      ; "template"; "this"; "thread_local"; "throw"; "try"; "typeid"
-      ; "typename"; "union"; "unsigned"; "using"; "virtual"; "volatile"
-      ; "wchar_t"; "xor"; "xor_eq" ]
+      ; "protected"; "public"; "register"; "reinterpret_cast"; "short"; "signed"
+      ; "sizeof"; "static_assert"; "static_cast"; "switch"; "template"; "this"
+      ; "thread_local"; "throw"; "try"; "typeid"; "typename"; "union"
+      ; "unsigned"; "using"; "virtual"; "volatile"; "wchar_t"; "xor"; "xor_eq"
+      ]
     @ (* stan implementation keywords *)
-      [ "fvar"; "STAN_MAJOR"; "STAN_MINOR"; "STAN_PATCH"; "STAN_MATH_MAJOR"
-      ; "STAN_MATH_MINOR"; "STAN_MATH_PATCH" ] )
+    [ "fvar"; "STAN_MAJOR"; "STAN_MINOR"; "STAN_PATCH"; "STAN_MATH_MAJOR"
+    ; "STAN_MATH_MINOR"; "STAN_MATH_PATCH" ] )
 
 let add_prefix_to_kwrds s = if Set.mem cpp_kwrds s then prepend_kwrd s else s

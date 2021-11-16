@@ -1,4 +1,5 @@
 open Core_kernel
+open Core_kernel.Poly
 open Middle
 open Fmt
 open Expression_gen
@@ -8,11 +9,10 @@ let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
 let pp_profile ppf (pp_body, name, body) =
   let profile =
-    Fmt.strf
+    Fmt.str
       "profile<local_scalar_t__> profile__(%s, \
        const_cast<profile_map&>(profiles__));"
-      name
-  in
+      name in
   pf ppf "{@;<1 2>@[<v>%s@;@;%a@]@,}" profile pp_body body
 
 let rec contains_eigen (ut : UnsizedType.t) : bool =
@@ -26,7 +26,7 @@ let rec contains_eigen (ut : UnsizedType.t) : bool =
   * does not need to be filled as we are promised user input data has the correct
   * dimensions. Transformed data must be filled as incorrect slices could lead
   * to elements of objects in transform data not being set by the user.
-  *)
+*)
 let pp_filler ppf (decl_id, st, nan_type, needs_filled) =
   match (needs_filled, contains_eigen (SizedType.to_unsized st)) with
   | true, true ->
@@ -114,9 +114,7 @@ let%expect_test "set size mat array" =
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_sized
-    ( SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5)
-    , DataOnly
-    , true )
+    (SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5), DataOnly, true)
   |> print_endline ;
   [%expect
     {|
@@ -141,24 +139,22 @@ let pp_assign_data ppf
   let pp_placement_new ppf (decl_id, st) =
     match st with
     | SizedType.SVector (_, d) | SRowVector (_, d) ->
-        pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a);@]@,"
-          decl_id pp_st (st, DataOnly) decl_id pp_expr d
+        pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a);@]@," decl_id
+          pp_st (st, DataOnly) decl_id pp_expr d
     | SMatrix (_, d1, d2) ->
         pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a, %a);@]@,"
           decl_id pp_st (st, DataOnly) decl_id pp_expr d1 pp_expr d2
-    | _ -> ()
-  in
+    | _ -> () in
   let pp_underlying ppf (decl_id, st) =
     match st with
     | SizedType.SVector _ | SRowVector _ | SMatrix _ -> pf ppf "%s__" decl_id
-    | SInt | SReal | SComplex | SArray _ -> pf ppf "%s" decl_id
-  in
+    | SInt | SReal | SComplex | SArray _ -> pf ppf "%s" decl_id in
   pf ppf "@[<hov 2>%a = @,%a;@]@,@[<hov 2>%a@]@," pp_underlying (decl_id, st)
     pp_assign_sized (st, DataOnly, true) pp_placement_new (decl_id, st)
 
 let%expect_test "set size map int array no initialize" =
   let int = Expr.Helpers.int in
-  strf "@[<v>%a@]" pp_assign_data
+  str "@[<v>%a@]" pp_assign_data
     ("darrmat", SArray (SArray (SInt, int 4), int 5), false)
   |> print_endline ;
   [%expect
@@ -169,7 +165,7 @@ let%expect_test "set size map int array no initialize" =
 
 let%expect_test "set size map mat array" =
   let int = Expr.Helpers.int in
-  strf "@[<v>%a@]" pp_assign_data
+  str "@[<v>%a@]" pp_assign_data
     ( "darrmat"
     , SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5)
     , true )
@@ -184,7 +180,7 @@ let%expect_test "set size map mat array" =
 
 let%expect_test "set size map mat" =
   let int = Expr.Helpers.int in
-  strf "@[<v>%a@]" pp_assign_data ("dmat", SMatrix (AoS, int 2, int 3), false)
+  str "@[<v>%a@]" pp_assign_data ("dmat", SMatrix (AoS, int 2, int 3), false)
   |> print_endline ;
   [%expect
     {|
@@ -194,7 +190,7 @@ let%expect_test "set size map mat" =
     new (&dmat) Eigen::Map<Eigen::Matrix<double, -1, -1>>(dmat__.data(), 2, 3); |}]
 
 let%expect_test "set size map int" =
-  strf "@[<v>%a@]" pp_assign_data ("dint", SInt, true) |> print_endline ;
+  str "@[<v>%a@]" pp_assign_data ("dint", SInt, true) |> print_endline ;
   [%expect {|
   dint = std::numeric_limits<int>::min(); |}]
 
@@ -223,8 +219,7 @@ let pp_data_decl ppf (vident, ut) =
     match opencl_check with
     | _, UnsizedType.(UInt | UReal) | false, _ -> pp_unsizedtype_local
     | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
-    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
-  in
+    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>" in
   match (opencl_check, ut) with
   | (false, _), ut -> (
     match ut with
@@ -256,20 +251,17 @@ let pp_map_decl ppf (vident, ut) =
       pf ppf "Eigen::Map<Eigen::Matrix<%s, -1, 1>> %s{nullptr, 0};" scalar
         vident
   | x ->
-      raise_s
+      Common.FatalError.fatal_error_msg
         [%message
           "Error during Map data construction for " vident " of type "
-            (x : UnsizedType.t)
-            ". This should never happen, if you see this please file a bug \
-             report."]
+            (x : UnsizedType.t)]
 
 let pp_unsized_decl ppf (vident, ut, adtype) =
   let pp_type =
     match (Transform_Mir.is_opencl_var vident, ut) with
     | _, UnsizedType.(UInt | UReal) | false, _ -> pp_unsizedtype_local
     | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
-    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
-  in
+    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>" in
   pf ppf "%a %s;" pp_type (adtype, ut) vident
 
 let pp_possibly_opencl_decl ppf (vident, st, adtype) =
@@ -279,8 +271,7 @@ let pp_possibly_opencl_decl ppf (vident, st, adtype) =
     match (Transform_Mir.is_opencl_var vident, ut) with
     | _, UnsizedType.(UInt | UReal) | false, _ -> pp_possibly_var_decl
     | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
-    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
-  in
+    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>" in
   pf ppf "%a %s" pp_type (adtype, ut, mem_pattern) vident
 
 let pp_sized_decl ppf (vident, st, adtype, initialize) =
@@ -312,7 +303,7 @@ let pp_bool_expr ppf expr =
   | UReal -> pp_call ppf ("as_bool", pp_expr, [expr])
   | _ -> pp_expr ppf expr
 
-let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
+let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
   (* ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) = *)
   let pp_stmt_list = list ~sep:cut pp_statement in
   ( match pattern with
@@ -321,11 +312,11 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   match pattern with
   | Assignment
       ( (vident, _, [])
-      , ( { pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _); _
-          } as rhs ) ) ->
+      , ( {pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _); _}
+        as rhs ) ) ->
       pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
   | Assignment
-      ((vident, _, []), ({meta= Expr.Typed.Meta.({type_= UInt; _}); _} as rhs))
+      ((vident, _, []), ({meta= Expr.Typed.Meta.{type_= UInt; _}; _} as rhs))
    |Assignment ((vident, _, []), ({meta= {type_= UReal; _}; _} as rhs)) ->
       pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
   | Assignment ((assignee, UInt, idcs), rhs)
@@ -335,14 +326,13 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
         rhs
   | Assignment ((assignee, _, idcs), rhs) ->
       (* XXX I think in general we don't need to do a deepcopy if e is nested
-       inside some function call - the function should get its own copy
-       (in all cases???) *)
+         inside some function call - the function should get its own copy
+         (in all cases???) *)
       let rec maybe_deep_copy e =
         let recurse (e : 'a Expr.Fixed.t) =
           { e with
-            Expr.Fixed.pattern=
-              Expr.Fixed.Pattern.map maybe_deep_copy e.pattern }
-        in
+            Expr.Fixed.pattern= Expr.Fixed.Pattern.map maybe_deep_copy e.pattern
+          } in
         match e.pattern with
         | _ when UnsizedType.is_scalar_type (Expr.Typed.type_of e) -> e
         | FunApp (CompilerInternal _, _) -> e
@@ -350,11 +340,10 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
           when v = assignee ->
             { e with
               Expr.Fixed.pattern= FunApp (CompilerInternal FnDeepCopy, [e]) }
-        | _ -> recurse e
-      in
+        | _ -> recurse e in
       let rhs = maybe_deep_copy rhs in
       pf ppf "@[<hov 2>assign(@,%s,@ %a,@ %S%s%a@]);" assignee pp_expr rhs
-        (strf "assigning variable %s" assignee)
+        (str "assigning variable %s" assignee)
         (if List.length idcs = 0 then "" else ", ")
         pp_indexes idcs
   | TargetPE e -> pf ppf "@[<hov 2>lp_accum__.add(@,%a@]);" pp_expr e
@@ -416,8 +405,9 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       { body=
           { pattern=
               Assignment
-                (_, {pattern= FunApp (CompilerInternal (FnReadParam _), _); _}); _
-          } as body; _ } ->
+                (_, {pattern= FunApp (CompilerInternal (FnReadParam _), _); _})
+          ; _ } as body
+      ; _ } ->
       pp_statement ppf body
       (* Skip For loop part, just emit body due to the way FnReadParam emits *)
   | For {loopvar; lower; upper; body} ->

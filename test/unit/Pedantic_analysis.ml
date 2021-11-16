@@ -28,7 +28,7 @@ let sigma_example =
 
 let print_warn_pedantic p =
   p |> warn_pedantic
-  |> Fmt.strf "%a" (Warnings.pp_warnings ?printed_filename:None)
+  |> Fmt.str "%a" (Warnings.pp_warnings ?printed_filename:None)
   |> print_endline
 
 let%expect_test "Unbounded sigma warning" =

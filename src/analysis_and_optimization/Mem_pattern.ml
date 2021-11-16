@@ -6,8 +6,8 @@ open Middle.Expr
  * Return a Var expression of the name for each type
  *  containing an eigen matrix
  *)
-let rec matrix_set
-    Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({type_; _}) as meta}) =
+let rec matrix_set Expr.Fixed.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta}
+    =
   let union_recur exprs = Set.Poly.union_list (List.map exprs ~f:matrix_set) in
   if UnsizedType.contains_eigen_type type_ then
     match pattern with
@@ -23,16 +23,15 @@ let rec matrix_set
  * Return a set of all types containing autodiffable Eigen matrices
  *  in an expression.
  *)
-let query_var_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) :
-    string Set.Poly.t =
+let query_var_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t
+    =
   let get_expr_eigen_names
-      (Dataflow_types.VVar s, Expr.Typed.Meta.({adlevel; type_; _})) =
+      (Dataflow_types.VVar s, Expr.Typed.Meta.{adlevel; type_; _}) =
     if
       UnsizedType.contains_eigen_type type_
-      && adlevel = UnsizedType.AutoDiffable
+      && UnsizedType.is_autodifftype adlevel
     then Some s
-    else None
-  in
+    else None in
   Set.Poly.filter_map ~f:get_expr_eigen_names (matrix_set expr)
 
 (**
@@ -48,7 +47,7 @@ let is_nonzero_subset ~set ~subset =
  * @param acc An accumulator from previous folds of multiple expressions.
  * @param pattern The expression patterns to match against
  *)
-let rec count_single_idx_exprs (acc : int) Expr.Fixed.({pattern; _}) : int =
+let rec count_single_idx_exprs (acc : int) Expr.Fixed.{pattern; _} : int =
   match pattern with
   | Expr.Fixed.Pattern.FunApp (_, (exprs : Typed.Meta.t Expr.Fixed.t list)) ->
       List.fold_left ~init:acc ~f:count_single_idx_exprs exprs
@@ -98,8 +97,7 @@ let rec is_uni_eigen_loop_indexing in_loop (ut : UnsizedType.t)
   | false -> false
   | true -> (
       let contains_single_idx =
-        List.fold_left ~init:0 ~f:count_single_idx index
-      in
+        List.fold_left ~init:0 ~f:count_single_idx index in
       match (ut, index) with
       | (UnsizedType.UVector | URowVector), _ when contains_single_idx > 0 ->
           true
@@ -125,21 +123,19 @@ let is_fun_soa_supported name exprs =
  *   will be returned if the matrix or vector is accessed by single 
  *    cell indexing.
  *)
-let rec query_initial_demotable_expr (in_loop : bool) Expr.Fixed.({pattern; _})
-    =
+let rec query_initial_demotable_expr (in_loop : bool) Expr.Fixed.{pattern; _} =
   let query_expr = query_initial_demotable_expr in_loop in
   match pattern with
   | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
       query_initial_demotable_funs in_loop kind exprs
-  | Indexed ((Expr.Fixed.({meta= {type_; _}; _}) as expr), indexed) ->
+  | Indexed ((Expr.Fixed.{meta= {type_; _}; _} as expr), indexed) ->
       let index_set =
         Set.Poly.union_list
           (List.map
              ~f:
                (Index.apply ~default:Set.Poly.empty ~merge:Set.Poly.union
-                  query_expr)
-             indexed)
-      in
+                  query_expr )
+             indexed ) in
       if is_uni_eigen_loop_indexing in_loop type_ indexed then
         Set.Poly.union (query_var_eigen_names expr) index_set
       else Set.Poly.union (query_expr expr) index_set
@@ -173,11 +169,8 @@ and query_initial_demotable_funs (in_loop : bool) (kind : 'a Fun_kind.t)
     (exprs : Typed.Meta.t Expr.Fixed.t list) : string Set.Poly.t =
   let query_expr = query_initial_demotable_expr in_loop in
   let top_level_eigen_names =
-    Set.Poly.union_list (List.map ~f:query_var_eigen_names exprs)
-  in
-  let demoted_eigen_names =
-    Set.Poly.union_list (List.map ~f:query_expr exprs)
-  in
+    Set.Poly.union_list (List.map ~f:query_var_eigen_names exprs) in
+  let demoted_eigen_names = Set.Poly.union_list (List.map ~f:query_expr exprs) in
   match kind with
   | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
     match name with
@@ -197,20 +190,18 @@ and query_initial_demotable_funs (in_loop : bool) (kind : 'a Fun_kind.t)
  * support SoA. If so then return true, otherwise return false.
  *)
 let rec is_any_soa_supported_expr
-    Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({adlevel; type_; _})}) : bool
-    =
+    Expr.Fixed.{pattern; meta= Expr.Typed.Meta.{adlevel; type_; _}} : bool =
   if
-    adlevel = UnsizedType.DataOnly
+    UnsizedType.is_dataonlytype adlevel
     || not (UnsizedType.contains_eigen_type type_)
   then true
   else
     match pattern with
     | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
         is_any_soa_supported_fun_expr kind exprs
-    | Indexed (expr, (_ : Typed.Meta.t Fixed.t Index.t sexp_list)) ->
+    | Indexed (expr, (_ : Typed.Meta.t Fixed.t Index.t list)) ->
         is_any_soa_supported_expr expr
-    | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string))
-      ->
+    | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
         true
     | TernaryIf (_, texpr, fexpr) ->
         is_any_soa_supported_expr texpr && is_any_soa_supported_expr fexpr
@@ -238,15 +229,14 @@ and is_any_soa_supported_fun_expr (kind : 'a Fun_kind.t)
  *  combinations of AutoDiffable Reals and Data Matrices
  *)
 let rec is_any_ad_real_data_matrix_expr
-    Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({adlevel; _})}) : bool =
-  if adlevel = UnsizedType.DataOnly then false
+    Expr.Fixed.{pattern; meta= Expr.Typed.Meta.{adlevel; _}} : bool =
+  if UnsizedType.is_dataonlytype adlevel then false
   else
     match pattern with
     | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
         is_any_ad_real_data_matrix_expr_fun kind exprs
     | Indexed (expr, _) -> is_any_ad_real_data_matrix_expr expr
-    | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string))
-      ->
+    | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
         false
     | TernaryIf (_, texpr, fexpr) ->
         is_any_ad_real_data_matrix_expr texpr
@@ -290,8 +280,7 @@ and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
                  match (x, UnsizedType.contains_eigen_type y) with
                  | UnsizedType.AutoDiffable, true -> false
                  | _ -> true )
-               fun_args
-        in
+               fun_args in
         match is_args_autodiff_real_data_matrix with
         | true -> true
         | false -> List.exists ~f:is_any_ad_real_data_matrix_expr exprs ) )
@@ -323,29 +312,26 @@ and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
  *  `query_initial_demotable_expr` for an explanation of the logic.
  *)
 let rec query_initial_demotable_stmt (in_loop : bool)
-    (Stmt.Fixed.({pattern; _}) :
-      (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t) :
+    (Stmt.Fixed.{pattern; _} :
+      (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t ) :
     string Set.Poly.t =
   let query_expr = query_initial_demotable_expr in_loop in
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
       ( ((name : string), (ut : UnsizedType.t), idx)
-      , (Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) as rhs)
-      ) ->
+      , (Expr.Fixed.{meta= Expr.Typed.Meta.{type_; adlevel; _}; _} as rhs) ) ->
       let idx_demotable =
         let idx_list =
           Set.Poly.union_list
             (List.map
                ~f:
                  (Index.apply ~default:Set.Poly.empty ~merge:Set.Poly.union
-                    query_expr)
-               idx)
-        in
+                    query_expr )
+               idx ) in
         (* RHS (2)*)
         match is_uni_eigen_loop_indexing in_loop ut idx with
         | true -> Set.Poly.add idx_list name
-        | false -> idx_list
-      in
+        | false -> idx_list in
       let rhs_demotable = query_expr rhs in
       (* RHS (3)*)
       let check_bad_assign =
@@ -353,13 +339,11 @@ let rec query_initial_demotable_stmt (in_loop : bool)
         | true, UnsizedType.AutoDiffable ->
             is_any_ad_real_data_matrix_expr rhs
             || not (is_any_soa_supported_expr rhs)
-        | _ -> false
-      in
+        | _ -> false in
       (* RHS (1)*)
       let is_all_rhs_aos =
         let all_eigen_names = query_var_eigen_names rhs in
-        is_nonzero_subset ~set:all_eigen_names ~subset:rhs_demotable
-      in
+        is_nonzero_subset ~set:all_eigen_names ~subset:rhs_demotable in
       if is_all_rhs_aos || check_bad_assign then
         let base_set = Set.Poly.union idx_demotable rhs_demotable in
         Set.Poly.add (Set.Poly.union base_set (query_var_eigen_names rhs)) name
@@ -369,11 +353,9 @@ let rec query_initial_demotable_stmt (in_loop : bool)
       let demotable_rhs =
         Option.value_map
           ~f:(query_initial_demotable_stmt in_loop)
-          ~default:Set.Poly.empty op_false_stmt
-      in
+          ~default:Set.Poly.empty op_false_stmt in
       Set.Poly.union_list
-        [ query_expr predicate
-        ; query_initial_demotable_stmt in_loop true_stmt
+        [ query_expr predicate; query_initial_demotable_stmt in_loop true_stmt
         ; demotable_rhs ]
   | Return optional_expr ->
       Option.value_map ~f:query_expr ~default:Set.Poly.empty optional_expr
@@ -448,24 +430,20 @@ let rec modify_kind ?force_demotion:(force = false)
     (exprs : Expr.Typed.Meta.t Expr.Fixed.t list) =
   let expr_names = Set.Poly.union_list (List.map ~f:query_eigen_names exprs) in
   let is_all_in_list =
-    is_nonzero_subset ~set:modifiable_set ~subset:expr_names
-  in
+    is_nonzero_subset ~set:modifiable_set ~subset:expr_names in
   match kind with
   | Fun_kind.StanLib (name, sfx, (_ : Common.Helpers.mem_pattern)) ->
-      if is_all_in_list || (not (is_fun_soa_supported name exprs)) || force
-      then
+      if is_all_in_list || (not (is_fun_soa_supported name exprs)) || force then
         (*Force demotion of all subexprs*)
         let exprs' =
-          List.map ~f:(modify_expr ~force_demotion:true expr_names) exprs
-        in
+          List.map ~f:(modify_expr ~force_demotion:true expr_names) exprs in
         (Fun_kind.StanLib (name, sfx, Common.Helpers.AoS), exprs')
       else
         ( Fun_kind.StanLib (name, sfx, SoA)
         , List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs
         )
   | UserDefined _ as udf ->
-      ( udf
-      , List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs )
+      (udf, List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs)
   | (_ : 'a Fun_kind.t) ->
       ( kind
       , List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs )
@@ -488,20 +466,17 @@ and modify_expr_pattern ?force_demotion:(force = false)
     (modifiable_set : string Set.Poly.t)
     (pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t) =
   let mod_expr ?force_demotion:(forced = false) =
-    modify_expr ~force_demotion:forced modifiable_set
-  in
+    modify_expr ~force_demotion:forced modifiable_set in
   match pattern with
   | Expr.Fixed.Pattern.FunApp
       (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
       let kind', expr' =
-        modify_kind ~force_demotion:force modifiable_set kind exprs
-      in
+        modify_kind ~force_demotion:force modifiable_set kind exprs in
       Expr.Fixed.Pattern.FunApp (kind', expr')
   | TernaryIf (predicate, texpr, fexpr) ->
       let is_eigen_return =
         UnsizedType.contains_eigen_type fexpr.meta.type_
-        || UnsizedType.contains_eigen_type texpr.meta.type_
-      in
+        || UnsizedType.contains_eigen_type texpr.meta.type_ in
       if is_eigen_return then
         TernaryIf
           ( mod_expr ~force_demotion:force predicate
@@ -530,10 +505,9 @@ and modify_expr_pattern ?force_demotion:(force = false)
 * @param expr the expression to modify.
 *)
 and modify_expr ?force_demotion:(force = false)
-    (modifiable_set : string Set.Poly.t) (Expr.Fixed.({pattern; _}) as expr) =
+    (modifiable_set : string Set.Poly.t) (Expr.Fixed.{pattern; _} as expr) =
   { expr with
-    pattern= modify_expr_pattern ~force_demotion:force modifiable_set pattern
-  }
+    pattern= modify_expr_pattern ~force_demotion:force modifiable_set pattern }
 
 (**
 * Modify statement patterns in the MIR from AoS <-> SoA and vice versa 
@@ -551,7 +525,7 @@ let rec modify_stmt_pattern
     (pattern :
       ( Expr.Typed.Meta.t Expr.Fixed.t
       , (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t )
-      Stmt.Fixed.Pattern.t) (modifiable_set : string Core_kernel.Set.Poly.t) =
+      Stmt.Fixed.Pattern.t ) (modifiable_set : string Core_kernel.Set.Poly.t) =
   let mod_expr force = modify_expr ~force_demotion:force modifiable_set in
   let mod_stmt stmt = modify_stmt stmt modifiable_set in
   match pattern with
@@ -631,6 +605,6 @@ let rec modify_stmt_pattern
 * @param stmt The statement to modify. 
 * @param modifiable_set The name of the variable we are searching for.
 *)
-and modify_stmt (Stmt.Fixed.({pattern; _}) as stmt)
+and modify_stmt (Stmt.Fixed.{pattern; _} as stmt)
     (modifiable_set : string Set.Poly.t) =
   {stmt with pattern= modify_stmt_pattern pattern modifiable_set}
