@@ -700,7 +700,7 @@ pipeline {
                         git add -f doc
                         git commit -m "auto generated docs from Jenkins"
                         git subtree push --prefix doc/ https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git gh-pages
-                        rm -rf *
+                        ls -A1 | xargs rm -rf
                     """
                 }
 
