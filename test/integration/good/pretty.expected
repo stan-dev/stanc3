@@ -3031,6 +3031,16 @@ Warning in 'deprecated_syntax.stan', line 54, column 4: assignment operator
     <- is deprecated in the Stan language and will be removed in Stan 2.32.0;
     use = instead. This can be done automatically with stanc
     --print-canonical
+Warning in 'deprecated_syntax.stan', line 2, column 9: Use of the _log suffix
+    in user defined probability functions is deprecated and will be removed
+    in Stan 2.32.0, use name 'foo_lpdf' instead if you intend on using this
+    function in ~ statements or calling unnormalized probability functions
+    inside of it.
+Warning in 'deprecated_syntax.stan', line 6, column 8: Use of the _log suffix
+    in user defined probability functions is deprecated and will be removed
+    in Stan 2.32.0, use name 'foo_t_lpdf' instead if you intend on using this
+    function in ~ statements or calling unnormalized probability functions
+    inside of it.
 Warning in 'deprecated_syntax.stan', line 26, column 12: normal_log is
     deprecated and will be removed in Stan 2.32.0. Use normal_lpdf instead.
     This can be automatically changed using stanc --print-canonical
@@ -3047,12 +3057,6 @@ Warning in 'deprecated_syntax.stan', line 40, column 21: Use of bernoulli_cdf
 Warning in 'deprecated_syntax.stan', line 49, column 11: multiply_log is
     deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
     This can be automatically changed using stanc --print-canonical
-Warning in 'deprecated_syntax.stan', line 57, column 12: Use of the _log
-    suffix in user defined probability function foo_t_log is deprecated and
-    will be removed in Stan 2.32.0, use name 'foo_t_lpdf' instead.
-Warning in 'deprecated_syntax.stan', line 58, column 6: Use of the _log
-    suffix in user defined probability function foo is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo_lpdf' instead.
   $ ../../../../install/default/bin/stanc --auto-format duplicate-warns.stan
 model {
   real foo;
@@ -3302,12 +3306,16 @@ model {
 Warning in 'fun_log_forward_decl.stan', line 17, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
     instead. This can be done automatically with stanc --print-canonical
-Warning in 'fun_log_forward_decl.stan', line 16, column 7: Use of the _log
-    suffix in user defined probability function n is deprecated and will be
-    removed in Stan 2.32.0, use name 'n_lpdf' instead.
-Warning in 'fun_log_forward_decl.stan', line 17, column 21: Use of the _log
-    suffix in user defined probability function n_log is deprecated and will
-    be removed in Stan 2.32.0, use name 'n_lpdf' instead.
+Warning in 'fun_log_forward_decl.stan', line 6, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'n_lpdf' instead if you intend on using
+    this function in ~ statements or calling unnormalized probability
+    functions inside of it.
+Warning in 'fun_log_forward_decl.stan', line 8, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'n_lpdf' instead if you intend on using
+    this function in ~ statements or calling unnormalized probability
+    functions inside of it.
   $ ../../../../install/default/bin/stanc --auto-format functions-fwd-ref.stan
 functions {
   int foo(int n);
@@ -3583,129 +3591,21 @@ generated quantities {
   z = foo2_rng(1, 2);
 }
 
-Warning in 'functions-good1.stan', line 63, column 6: Use of the _log suffix
-    in user defined probability function foo0_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo0_lpmf' instead.
-Warning in 'functions-good1.stan', line 64, column 6: Use of the _log suffix
-    in user defined probability function foo1_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo1_lpdf' instead.
-Warning in 'functions-good1.stan', line 65, column 6: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 66, column 6: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 67, column 6: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 68, column 6: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 124, column 9: Use of the _log suffix
-    in user defined probability function foo0_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo0_lpmf' instead.
-Warning in 'functions-good1.stan', line 126, column 9: Use of the _log suffix
-    in user defined probability function foo1_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo1_lpdf' instead.
-Warning in 'functions-good1.stan', line 127, column 9: Use of the _log suffix
-    in user defined probability function foo1_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo1_lpdf' instead.
-Warning in 'functions-good1.stan', line 128, column 9: Use of the _log suffix
-    in user defined probability function foo1_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo1_lpdf' instead.
-Warning in 'functions-good1.stan', line 130, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 131, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 132, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 133, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 135, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 136, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 138, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 139, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 141, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 186, column 9: Use of the _log suffix
-    in user defined probability function foo0_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo0_lpmf' instead.
-Warning in 'functions-good1.stan', line 187, column 9: Use of the _log suffix
-    in user defined probability function foo1_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo1_lpdf' instead.
-Warning in 'functions-good1.stan', line 188, column 9: Use of the _log suffix
-    in user defined probability function foo1_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo1_lpdf' instead.
-Warning in 'functions-good1.stan', line 189, column 9: Use of the _log suffix
-    in user defined probability function foo1_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo1_lpdf' instead.
-Warning in 'functions-good1.stan', line 191, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 192, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 193, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 194, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 196, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 197, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 199, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 200, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 202, column 9: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 205, column 13: Use of the _log
-    suffix in user defined probability function foo1 is deprecated and will
-    be removed in Stan 2.32.0, use name 'foo1_lpdf' instead.
-Warning in 'functions-good1.stan', line 206, column 13: Use of the _log
-    suffix in user defined probability function foo2 is deprecated and will
-    be removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 221, column 6: Use of the _log suffix
-    in user defined probability function foo0_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo0_lpmf' instead.
-Warning in 'functions-good1.stan', line 222, column 6: Use of the _log suffix
-    in user defined probability function foo1_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo1_lpdf' instead.
-Warning in 'functions-good1.stan', line 223, column 6: Use of the _log suffix
-    in user defined probability function foo1_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo1_lpdf' instead.
-Warning in 'functions-good1.stan', line 224, column 6: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 225, column 6: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 226, column 6: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
-Warning in 'functions-good1.stan', line 227, column 6: Use of the _log suffix
-    in user defined probability function foo2_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo2_lpdf' instead.
+Warning in 'functions-good1.stan', line 36, column 7: Use of the _log suffix
+    in user defined probability functions is deprecated and will be removed
+    in Stan 2.32.0, use name 'foo0_lpmf' instead if you intend on using this
+    function in ~ statements or calling unnormalized probability functions
+    inside of it.
+Warning in 'functions-good1.stan', line 39, column 7: Use of the _log suffix
+    in user defined probability functions is deprecated and will be removed
+    in Stan 2.32.0, use name 'foo1_lpdf' instead if you intend on using this
+    function in ~ statements or calling unnormalized probability functions
+    inside of it.
+Warning in 'functions-good1.stan', line 42, column 7: Use of the _log suffix
+    in user defined probability functions is deprecated and will be removed
+    in Stan 2.32.0, use name 'foo2_lpdf' instead if you intend on using this
+    function in ~ statements or calling unnormalized probability functions
+    inside of it.
   $ ../../../../install/default/bin/stanc --auto-format functions-good2.stan
 functions {
   real foo_bar0() {
@@ -3815,12 +3715,14 @@ model {
   y ~ unit_normal();
 }
 
+Warning in 'funs3.stan', line 2, column 7: Use of the _log suffix in user
+    defined probability functions is deprecated and will be removed in Stan
+    2.32.0, use name 'unit_normal_lpdf' instead if you intend on using this
+    function in ~ statements or calling unnormalized probability functions
+    inside of it.
 Warning in 'funs3.stan', line 3, column 11: normal_log is deprecated and will
     be removed in Stan 2.32.0. Use normal_lpdf instead. This can be
     automatically changed using stanc --print-canonical
-Warning in 'funs3.stan', line 10, column 6: Use of the _log suffix in user
-    defined probability function unit_normal is deprecated and will be
-    removed in Stan 2.32.0, use name 'unit_normal_lpdf' instead.
   $ ../../../../install/default/bin/stanc --auto-format funs4.stan
 functions {
   real unit_normal_log(real y) {
@@ -3837,12 +3739,14 @@ model {
 Warning in 'funs4.stan', line 10, column 2: increment_log_prob(...); is
     deprecated and will be removed in Stan 2.32.0. Use target += ...;
     instead. This can be done automatically with stanc --print-canonical
+Warning in 'funs4.stan', line 2, column 7: Use of the _log suffix in user
+    defined probability functions is deprecated and will be removed in Stan
+    2.32.0, use name 'unit_normal_lpdf' instead if you intend on using this
+    function in ~ statements or calling unnormalized probability functions
+    inside of it.
 Warning in 'funs4.stan', line 3, column 11: normal_log is deprecated and will
     be removed in Stan 2.32.0. Use normal_lpdf instead. This can be
     automatically changed using stanc --print-canonical
-Warning in 'funs4.stan', line 10, column 21: Use of the _log suffix in user
-    defined probability function unit_normal_log is deprecated and will be
-    removed in Stan 2.32.0, use name 'unit_normal_lpdf' instead.
   $ ../../../../install/default/bin/stanc --auto-format funs5.stan
 functions {
   void foo(real x) {
@@ -5083,24 +4987,36 @@ model {
   }
 }
 
-Warning in 'lower-trunc-discrete.stan', line 72, column 11: Use of the _log
-    suffix in user defined probability function bar is deprecated and will be
-    removed in Stan 2.32.0, use name 'bar_lpmf' instead.
-Warning in 'lower-trunc-discrete.stan', line 73, column 11: Use of the _log
-    suffix in user defined probability function bar is deprecated and will be
-    removed in Stan 2.32.0, use name 'bar_lpmf' instead.
-Warning in 'lower-trunc-discrete.stan', line 74, column 11: Use of the _log
-    suffix in user defined probability function bar is deprecated and will be
-    removed in Stan 2.32.0, use name 'bar_lpmf' instead.
-Warning in 'lower-trunc-discrete.stan', line 87, column 11: Use of the _log
-    suffix in user defined probability function quux is deprecated and will
-    be removed in Stan 2.32.0, use name 'quux_lpdf' instead.
-Warning in 'lower-trunc-discrete.stan', line 88, column 11: Use of the _log
-    suffix in user defined probability function quux is deprecated and will
-    be removed in Stan 2.32.0, use name 'quux_lpdf' instead.
-Warning in 'lower-trunc-discrete.stan', line 89, column 11: Use of the _log
-    suffix in user defined probability function quux is deprecated and will
-    be removed in Stan 2.32.0, use name 'quux_lpdf' instead.
+Warning in 'lower-trunc-discrete.stan', line 14, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'bar_lpmf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
+Warning in 'lower-trunc-discrete.stan', line 17, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'bar_lcdf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
+Warning in 'lower-trunc-discrete.stan', line 20, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'bar_lccdf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
+Warning in 'lower-trunc-discrete.stan', line 36, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'quux_lpdf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
+Warning in 'lower-trunc-discrete.stan', line 39, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'quux_lcdf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
+Warning in 'lower-trunc-discrete.stan', line 42, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'quux_lccdf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
   $ ../../../../install/default/bin/stanc --auto-format lp_in_fun.stan
 functions {
   void foo_lp() {
@@ -6150,15 +6066,21 @@ model {
   y ~ foo(theta) T[L, U];
 }
 
-Warning in 'truncation-user-defined.stan', line 15, column 6: Use of the _log
-    suffix in user defined probability function foo is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo_lpdf' instead.
-Warning in 'truncation-user-defined.stan', line 16, column 6: Use of the _log
-    suffix in user defined probability function foo is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo_lpdf' instead.
-Warning in 'truncation-user-defined.stan', line 17, column 6: Use of the _log
-    suffix in user defined probability function foo is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo_lpdf' instead.
+Warning in 'truncation-user-defined.stan', line 2, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'foo_lpdf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
+Warning in 'truncation-user-defined.stan', line 3, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'foo_lcdf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
+Warning in 'truncation-user-defined.stan', line 4, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'foo_lccdf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
   $ ../../../../install/default/bin/stanc --auto-format truncation-wild.stan
 model {
   array[1, 1] real T = {{42.0}};

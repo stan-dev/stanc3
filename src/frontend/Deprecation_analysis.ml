@@ -87,20 +87,23 @@ let update_suffix name type_ =
   else drop_suffix name 4 ^ "_lpmf"
 
 let find_udf_log_suffix = function
-  | { stmt= FunDef {funname= {name; _}; arguments= (_, type_, _) :: _; _}
+  | { stmt=
+        FunDef
+          { funname= {name; _}
+          ; arguments= (_, ((UReal | UInt) as type_), _) :: _
+          ; _ }
     ; smeta= _ }
     when String.is_suffix ~suffix:"_log" name ->
       Some (name, type_)
   | _ -> None
 
-let rec collect_deprecated_expr deprecated_userdefined
-    (acc : (Location_span.t * string) list)
+let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
     ({expr; emeta} : (typed_expr_meta, fun_kind) expr_with) :
     (Location_span.t * string) list =
   match expr with
   | FunApp (StanLib FnPlain, {name= "abs"; _}, [e])
     when Middle.UnsizedType.is_real_type e.emeta.type_ ->
-      collect_deprecated_expr deprecated_userdefined
+      collect_deprecated_expr
         ( acc
         @ [ ( emeta.loc
             , "Use of the `abs` function with real-valued arguments is \
@@ -112,9 +115,8 @@ let rec collect_deprecated_expr deprecated_userdefined
           , "The function `if_else` is deprecated and will be removed in Stan \
              2.32.0. Use the conditional operator (x ? y : z) instead; this \
              can be automatically changed using stanc --print-canonical" ) ]
-      @ List.concat_map l ~f:(fun e ->
-            collect_deprecated_expr deprecated_userdefined [] e )
-  | FunApp (StanLib _, {name; _}, l) ->
+      @ List.concat_map l ~f:(fun e -> collect_deprecated_expr [] e)
+  | FunApp ((StanLib _ | UserDefined _), {name; _}, l) ->
       let w =
         match Map.find stan_lib_deprecations name with
         | Some (rename, version) ->
@@ -141,76 +143,35 @@ let rec collect_deprecated_expr deprecated_userdefined
                      https://mc-stan.org/users/documentation/case-studies/convert_odes.html"
                 ) ]
           | _ -> [] ) in
-      acc @ w
-      @ List.concat_map l ~f:(fun e ->
-            collect_deprecated_expr deprecated_userdefined [] e )
-  | FunApp (UserDefined _, {name; _}, l) ->
-      let w =
-        match Map.find deprecated_userdefined name with
-        | Some type_ ->
-            [ ( emeta.loc
-              , "Use of the _log suffix in user defined probability function "
-                ^ name
-                ^ " is deprecated and will be removed in Stan 2.32.0, use name \
-                   '" ^ update_suffix name type_ ^ "' instead." ) ]
-        | _ when String.is_suffix name ~suffix:"_cdf" ->
-            [ ( emeta.loc
-              , "Use of " ^ name
-                ^ " without a vertical bar (|) between the first two arguments \
-                   of a CDF is deprecated and will be removed in Stan 2.32.0. \
-                   This can be automatically changed using stanc \
-                   --print-canonical" ) ]
-        | _ -> [] in
-      acc @ w
-      @ List.concat_map l ~f:(fun e ->
-            collect_deprecated_expr deprecated_userdefined [] e )
-  | _ ->
-      fold_expression
-        (collect_deprecated_expr deprecated_userdefined)
-        (fun l _ -> l)
-        acc expr
+      acc @ w @ List.concat_map l ~f:(fun e -> collect_deprecated_expr [] e)
+  | _ -> fold_expression collect_deprecated_expr (fun l _ -> l) acc expr
 
-let collect_deprecated_lval deprecated_userdefined acc l =
-  fold_lval_with
-    (collect_deprecated_expr deprecated_userdefined)
-    (fun x _ -> x)
-    acc l
+let collect_deprecated_lval acc l =
+  fold_lval_with collect_deprecated_expr (fun x _ -> x) acc l
 
-let rec collect_deprecated_stmt deprecated_userdefined
-    (acc : (Location_span.t * string) list) {stmt; _} :
-    (Location_span.t * string) list =
+let rec collect_deprecated_stmt (acc : (Location_span.t * string) list) {stmt; _}
+    : (Location_span.t * string) list =
   match stmt with
-  | IncrementLogProb e -> collect_deprecated_expr deprecated_userdefined acc e
-  | Assignment {assign_lhs= l; assign_op= ArrowAssign; assign_rhs= e} ->
-      acc
-      @ collect_deprecated_lval deprecated_userdefined [] l
-      @ collect_deprecated_expr deprecated_userdefined [] e
-  | Tilde {distribution= {name; id_loc}; arg; args; _} -> (
-    match Map.find deprecated_userdefined (name ^ "_log") with
-    | Some type_ ->
+  | FunDef
+      { body
+      ; funname= {name; id_loc}
+      ; arguments= (_, ((UReal | UInt) as type_), _) :: _
+      ; _ }
+    when String.is_suffix ~suffix:"_log" name ->
+      let acc =
         acc
         @ [ ( id_loc
-            , "Use of the _log suffix in user defined probability function "
-              ^ name
-              ^ " is deprecated and will be removed in Stan 2.32.0, use name '"
-              ^ update_suffix (name ^ "_log") type_
-              ^ "' instead." ) ]
-        @ List.fold
-            ~f:(collect_deprecated_expr deprecated_userdefined)
-            ~init:[] (arg :: args)
-    | None ->
-        fold_statement
-          (collect_deprecated_expr deprecated_userdefined)
-          (collect_deprecated_stmt deprecated_userdefined)
-          (collect_deprecated_lval deprecated_userdefined)
-          (fun l _ -> l)
-          acc stmt )
-  | FunDef {body; _} -> collect_deprecated_stmt deprecated_userdefined acc body
+            , "Use of the _log suffix in user defined probability functions is \
+               deprecated and will be removed in Stan 2.32.0, use name '"
+              ^ update_suffix name type_
+              ^ "' instead if you intend on using this function in ~ \
+                 statements or calling unnormalized probability functions \
+                 inside of it." ) ] in
+      collect_deprecated_stmt acc body
+  | FunDef {body; _} -> collect_deprecated_stmt acc body
   | _ ->
-      fold_statement
-        (collect_deprecated_expr deprecated_userdefined)
-        (collect_deprecated_stmt deprecated_userdefined)
-        (collect_deprecated_lval deprecated_userdefined)
+      fold_statement collect_deprecated_expr collect_deprecated_stmt
+        collect_deprecated_lval
         (fun l _ -> l)
         acc stmt
 
@@ -221,5 +182,4 @@ let collect_userdef_distributions program =
   |> String.Map.of_alist_exn
 
 let collect_warnings (program : typed_program) =
-  let deprecated_userdefined = collect_userdef_distributions program in
-  fold_program (collect_deprecated_stmt deprecated_userdefined) [] program
+  fold_program collect_deprecated_stmt [] program
