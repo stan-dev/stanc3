@@ -121,7 +121,8 @@ let options =
       , " Do not fail if a function is declared but not defined" )
     ; ( "--allow_undefined"
       , Arg.Clear Typechecker.check_that_all_functions_have_definition
-      , " Deprecated. Same as --allow-undefined." )
+      , " Deprecated. Same as --allow-undefined. Will be removed in Stan 2.32.0"
+      )
     ; ( "--include-paths"
       , Arg.String
           (fun str ->
@@ -134,7 +135,8 @@ let options =
             Preprocessor.include_paths :=
               !Preprocessor.include_paths @ String.split_on_chars ~on:[','] str
             )
-      , " Deprecated. Same as --include-paths." )
+      , " Deprecated. Same as --include-paths. Will be removed in Stan 2.32.0"
+      )
     ; ( "--use-opencl"
       , Arg.Set Transform_Mir.use_opencl
       , " If set, try to use matrix_cl signatures." )
@@ -156,9 +158,13 @@ let print_deprecated_arg_warning =
     Array.mem ~equal:(fun x y -> String.is_prefix ~prefix:x y) Sys.argv arg
   in
   if arg_is_used "--allow_undefined" then
-    eprintf "--allow_undefined is deprecated. Please use --allow-undefined.\n" ;
+    eprintf
+      "--allow_undefined is deprecated and will be removed in Stan 2.32.0. \
+       Please use --allow-undefined.\n" ;
   if arg_is_used "--include_paths" then
-    eprintf "--include_paths is deprecated. Please use --include-paths.\n"
+    eprintf
+      "--include_paths is deprecated and Will be removed in Stan 2.32.0. \
+       Please use --include-paths.\n"
 
 let model_file_err () =
   Arg.usage options ("Please specify one model_file.\n\n" ^ usage) ;

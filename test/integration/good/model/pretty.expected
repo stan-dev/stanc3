@@ -7,7 +7,8 @@ model {
 }
 
 Warning in 'domain_fail.stan', line 6, column 2: increment_log_prob(...); is
-    deprecated and will be removed in the future. Use target += ...; instead.
+    deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
   $ ../../../../../install/default/bin/stanc --auto-format valid.stan
 parameters {
   real x;
@@ -17,4 +18,5 @@ model {
 }
 
 Warning in 'valid.stan', line 6, column 2: increment_log_prob(...); is
-    deprecated and will be removed in the future. Use target += ...; instead.
+    deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
