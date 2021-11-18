@@ -147,9 +147,10 @@ let rec collect_deprecated_expr deprecated_userdefined
         if Option.is_some type_ then
           [ ( emeta.loc
             , "Use of the _log suffix in user defined probability function "
-              ^ name ^ " is deprecated and will be removed in Stan 2.32.0, use "
+              ^ name
+              ^ " is deprecated and will be removed in Stan 2.32.0, use name '"
               ^ update_suffix name (Option.value_exn type_)
-              ^ " instead." ) ]
+              ^ "' instead." ) ]
         else if String.is_suffix name ~suffix:"_cdf" then
           [ ( emeta.loc
             , "Use of " ^ name
@@ -183,6 +184,20 @@ let rec collect_deprecated_stmt deprecated_userdefined
       acc
       @ collect_deprecated_lval deprecated_userdefined [] l
       @ collect_deprecated_expr deprecated_userdefined [] e
+  | Tilde {distribution= {name; id_loc}; arg; args; _}
+    when Option.is_some (String.Map.find deprecated_userdefined (name ^ "_log"))
+    ->
+      acc
+      @ [ ( id_loc
+          , "Use of the _log suffix in user defined probability function "
+            ^ name
+            ^ " is deprecated and will be removed in Stan 2.32.0, use name '"
+            ^ update_suffix (name ^ "_log")
+                (String.Map.find_exn deprecated_userdefined (name ^ "_log"))
+            ^ "' instead." ) ]
+      @ List.fold
+          ~f:(collect_deprecated_expr deprecated_userdefined)
+          ~init:[] (arg :: args)
   | FunDef {body; _} -> collect_deprecated_stmt deprecated_userdefined acc body
   | _ ->
       fold_statement
@@ -199,6 +214,5 @@ let collect_userdef_distributions program =
   |> String.Map.of_alist_exn
 
 let collect_warnings (program : typed_program) =
-  fold_program
-    (collect_deprecated_stmt (collect_userdef_distributions program))
-    [] program
+  let deprecated_userdefined = collect_userdef_distributions program in
+  fold_program (collect_deprecated_stmt deprecated_userdefined) [] program
