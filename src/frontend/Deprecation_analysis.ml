@@ -69,9 +69,8 @@ let update_suffix name type_ =
   let open String in
   if is_suffix ~suffix:"_cdf_log" name then drop_suffix name 8 ^ "_lcdf"
   else if is_suffix ~suffix:"_ccdf_log" name then drop_suffix name 9 ^ "_lccdf"
-  else if Middle.UnsizedType.is_real_type type_ then
-    drop_suffix name 4 ^ "_lpdf"
-  else drop_suffix name 4 ^ "_lpmf"
+  else if Middle.UnsizedType.is_int_type type_ then drop_suffix name 4 ^ "_lpmf"
+  else drop_suffix name 4 ^ "_lpdf"
 
 let find_udf_log_suffix = function
   | { stmt= FunDef {funname= {name; _}; arguments= (_, type_, _) :: _; _}
