@@ -128,7 +128,7 @@ let rec collect_deprecated_expr deprecated_userdefined
             , name ^ " is deprecated and will be removed in the future. Use "
               ^ rename_deprecated deprecated_odes name
               ^ " instead. \n\
-                 The new interface is slightly different, see: \n\
+                 The new interface is slightly different, see: \
                  https://mc-stan.org/users/documentation/case-studies/convert_odes.html"
             ) ]
         else [] in
