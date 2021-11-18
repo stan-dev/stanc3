@@ -28,11 +28,21 @@ let deprecated_distributions =
               | Ccdf -> Some (name ^ "_ccdf_log", name ^ "_lccdf")
               | Rng | UnaryVectorized -> None ) ) ) )
 
+let stan_lib_deprecations =
+  Map.merge_skewed deprecated_distributions deprecated_functions
+    ~combine:(fun ~key x y ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Common key in deprecation map"
+            (key : string)
+            (x : string * string)
+            (y : string * string)] )
+
 let is_deprecated_distribution name =
-  Option.is_some (String.Map.find deprecated_distributions name)
+  Option.is_some (Map.find deprecated_distributions name)
 
 let rename_deprecated map name =
-  String.Map.find map name |> Option.map ~f:fst |> Option.value ~default:name
+  Map.find map name |> Option.map ~f:fst |> Option.value ~default:name
 
 let distribution_suffix name =
   let open String in
@@ -102,67 +112,58 @@ let rec collect_deprecated_expr deprecated_userdefined
           , "The function `if_else` is deprecated and will be removed in Stan \
              2.32.0. Use the conditional operator (x ? y : z) instead; this \
              can be automatically changed using stanc --print-canonical" ) ]
-      @ List.concat
-          (List.map l ~f:(fun e ->
-               collect_deprecated_expr deprecated_userdefined [] e ) )
+      @ List.concat_map l ~f:(fun e ->
+            collect_deprecated_expr deprecated_userdefined [] e )
   | FunApp (StanLib _, {name; _}, l) ->
       let w =
-        if Option.is_some (String.Map.find deprecated_distributions name) then
-          let rename, version =
-            String.Map.find_exn deprecated_distributions name in
-          [ ( emeta.loc
-            , name ^ " is deprecated and will be removed in Stan " ^ version
-              ^ ". Use " ^ rename ^ " instead." ) ]
-        else if String.is_suffix name ~suffix:"_cdf" then
-          [ ( emeta.loc
-            , "Use of " ^ name
-              ^ " without a vertical bar (|) between the first two arguments \
-                 of a CDF is deprecated and will be removed in Stan 2.32.0. \
-                 This can be automatically changed using stanc \
-                 --print-canonical" ) ]
-        else if Option.is_some (String.Map.find deprecated_functions name) then
-          let rename, version = String.Map.find_exn deprecated_functions name in
-          [ ( emeta.loc
-            , name ^ " is deprecated and will be removed in Stan " ^ version
-              ^ ". Use " ^ rename
-              ^ " instead. This can be automatically changed using stanc \
-                 --print-canonical" ) ]
-        else if Option.is_some (String.Map.find deprecated_odes name) then
-          let rename, version = String.Map.find_exn deprecated_odes name in
-          [ ( emeta.loc
-            , name ^ " is deprecated and will be removed in Stan " ^ version
-              ^ ". Use " ^ rename
-              ^ " instead. \n\
-                 The new interface is slightly different, see: \
-                 https://mc-stan.org/users/documentation/case-studies/convert_odes.html"
-            ) ]
-        else [] in
+        match Map.find stan_lib_deprecations name with
+        | Some (rename, version) ->
+            [ ( emeta.loc
+              , name ^ " is deprecated and will be removed in Stan " ^ version
+                ^ ". Use " ^ rename
+                ^ " instead. This can be automatically changed using stanc \
+                   --print-canonical" ) ]
+        | _ when String.is_suffix name ~suffix:"_cdf" ->
+            [ ( emeta.loc
+              , "Use of " ^ name
+                ^ " without a vertical bar (|) between the first two arguments \
+                   of a CDF is deprecated and will be removed in Stan 2.32.0. \
+                   This can be automatically changed using stanc \
+                   --print-canonical" ) ]
+        | _ -> (
+          match Map.find deprecated_odes name with
+          | Some (rename, version) ->
+              [ ( emeta.loc
+                , name ^ " is deprecated and will be removed in Stan " ^ version
+                  ^ ". Use " ^ rename
+                  ^ " instead. \n\
+                     The new interface is slightly different, see: \
+                     https://mc-stan.org/users/documentation/case-studies/convert_odes.html"
+                ) ]
+          | _ -> [] ) in
       acc @ w
-      @ List.concat
-          (List.map l ~f:(fun e ->
-               collect_deprecated_expr deprecated_userdefined [] e ) )
+      @ List.concat_map l ~f:(fun e ->
+            collect_deprecated_expr deprecated_userdefined [] e )
   | FunApp (UserDefined _, {name; _}, l) ->
       let w =
-        let type_ = String.Map.find deprecated_userdefined name in
-        if Option.is_some type_ then
-          [ ( emeta.loc
-            , "Use of the _log suffix in user defined probability function "
-              ^ name
-              ^ " is deprecated and will be removed in Stan 2.32.0, use name '"
-              ^ update_suffix name (Option.value_exn type_)
-              ^ "' instead." ) ]
-        else if String.is_suffix name ~suffix:"_cdf" then
-          [ ( emeta.loc
-            , "Use of " ^ name
-              ^ " without a vertical bar (|) between the first two arguments \
-                 of a CDF is deprecated and will be removed in Stan 2.32.0. \
-                 This can be automatically changed using stanc \
-                 --print-canonical" ) ]
-        else [] in
+        match Map.find deprecated_userdefined name with
+        | Some type_ ->
+            [ ( emeta.loc
+              , "Use of the _log suffix in user defined probability function "
+                ^ name
+                ^ " is deprecated and will be removed in Stan 2.32.0, use name \
+                   '" ^ update_suffix name type_ ^ "' instead." ) ]
+        | _ when String.is_suffix name ~suffix:"_cdf" ->
+            [ ( emeta.loc
+              , "Use of " ^ name
+                ^ " without a vertical bar (|) between the first two arguments \
+                   of a CDF is deprecated and will be removed in Stan 2.32.0. \
+                   This can be automatically changed using stanc \
+                   --print-canonical" ) ]
+        | _ -> [] in
       acc @ w
-      @ List.concat
-          (List.map l ~f:(fun e ->
-               collect_deprecated_expr deprecated_userdefined [] e ) )
+      @ List.concat_map l ~f:(fun e ->
+            collect_deprecated_expr deprecated_userdefined [] e )
   | _ ->
       fold_expression
         (collect_deprecated_expr deprecated_userdefined)
@@ -184,20 +185,26 @@ let rec collect_deprecated_stmt deprecated_userdefined
       acc
       @ collect_deprecated_lval deprecated_userdefined [] l
       @ collect_deprecated_expr deprecated_userdefined [] e
-  | Tilde {distribution= {name; id_loc}; arg; args; _}
-    when Option.is_some (String.Map.find deprecated_userdefined (name ^ "_log"))
-    ->
-      acc
-      @ [ ( id_loc
-          , "Use of the _log suffix in user defined probability function "
-            ^ name
-            ^ " is deprecated and will be removed in Stan 2.32.0, use name '"
-            ^ update_suffix (name ^ "_log")
-                (String.Map.find_exn deprecated_userdefined (name ^ "_log"))
-            ^ "' instead." ) ]
-      @ List.fold
-          ~f:(collect_deprecated_expr deprecated_userdefined)
-          ~init:[] (arg :: args)
+  | Tilde {distribution= {name; id_loc}; arg; args; _} -> (
+    match Map.find deprecated_userdefined (name ^ "_log") with
+    | Some type_ ->
+        acc
+        @ [ ( id_loc
+            , "Use of the _log suffix in user defined probability function "
+              ^ name
+              ^ " is deprecated and will be removed in Stan 2.32.0, use name '"
+              ^ update_suffix (name ^ "_log") type_
+              ^ "' instead." ) ]
+        @ List.fold
+            ~f:(collect_deprecated_expr deprecated_userdefined)
+            ~init:[] (arg :: args)
+    | None ->
+        fold_statement
+          (collect_deprecated_expr deprecated_userdefined)
+          (collect_deprecated_stmt deprecated_userdefined)
+          (collect_deprecated_lval deprecated_userdefined)
+          (fun l _ -> l)
+          acc stmt )
   | FunDef {body; _} -> collect_deprecated_stmt deprecated_userdefined acc body
   | _ ->
       fold_statement

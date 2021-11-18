@@ -3033,10 +3033,13 @@ Warning in 'deprecated_syntax.stan', line 54, column 4: assignment operator
     --print-canonical
 Warning in 'deprecated_syntax.stan', line 26, column 12: normal_log is
     deprecated and will be removed in Stan 2.32.0. Use normal_lpdf instead.
+    This can be automatically changed using stanc --print-canonical
 Warning in 'deprecated_syntax.stan', line 27, column 6: normal_cdf_log is
     deprecated and will be removed in Stan 2.32.0. Use normal_lcdf instead.
+    This can be automatically changed using stanc --print-canonical
 Warning in 'deprecated_syntax.stan', line 28, column 6: normal_ccdf_log is
     deprecated and will be removed in Stan 2.32.0. Use normal_lccdf instead.
+    This can be automatically changed using stanc --print-canonical
 Warning in 'deprecated_syntax.stan', line 40, column 21: Use of bernoulli_cdf
     without a vertical bar (|) between the first two arguments of a CDF is
     deprecated and will be removed in Stan 2.32.0. This can be automatically
@@ -3077,11 +3080,14 @@ Warning in 'duplicate-warns.stan', line 7, column 8: binomial_coefficient_log
     is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
     This can be automatically changed using stanc --print-canonical
 Warning in 'duplicate-warns.stan', line 9, column 8: normal_log is deprecated
-    and will be removed in Stan 2.32.0. Use normal_lpdf instead.
+    and will be removed in Stan 2.32.0. Use normal_lpdf instead. This can be
+    automatically changed using stanc --print-canonical
 Warning in 'duplicate-warns.stan', line 10, column 8: normal_cdf_log is
     deprecated and will be removed in Stan 2.32.0. Use normal_lcdf instead.
+    This can be automatically changed using stanc --print-canonical
 Warning in 'duplicate-warns.stan', line 11, column 8: normal_ccdf_log is
     deprecated and will be removed in Stan 2.32.0. Use normal_lccdf instead.
+    This can be automatically changed using stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format fun-defs-lpdf.stan
 functions {
   real bar_baz_lpdf(real a, real b) {
@@ -3777,7 +3783,8 @@ Warning in 'funs1.stan', line 3, column 4: increment_log_prob(...); is
     deprecated and will be removed in Stan 2.32.0. Use target += ...;
     instead. This can be done automatically with stanc --print-canonical
 Warning in 'funs1.stan', line 3, column 23: normal_log is deprecated and will
-    be removed in Stan 2.32.0. Use normal_lpdf instead.
+    be removed in Stan 2.32.0. Use normal_lpdf instead. This can be
+    automatically changed using stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format funs2.stan
 functions {
   real unit_normal_rng() {
@@ -3809,7 +3816,8 @@ model {
 }
 
 Warning in 'funs3.stan', line 3, column 11: normal_log is deprecated and will
-    be removed in Stan 2.32.0. Use normal_lpdf instead.
+    be removed in Stan 2.32.0. Use normal_lpdf instead. This can be
+    automatically changed using stanc --print-canonical
 Warning in 'funs3.stan', line 10, column 6: Use of the _log suffix in user
     defined probability function unit_normal is deprecated and will be
     removed in Stan 2.32.0, use name 'unit_normal_lpdf' instead.
@@ -3830,7 +3838,8 @@ Warning in 'funs4.stan', line 10, column 2: increment_log_prob(...); is
     deprecated and will be removed in Stan 2.32.0. Use target += ...;
     instead. This can be done automatically with stanc --print-canonical
 Warning in 'funs4.stan', line 3, column 11: normal_log is deprecated and will
-    be removed in Stan 2.32.0. Use normal_lpdf instead.
+    be removed in Stan 2.32.0. Use normal_lpdf instead. This can be
+    automatically changed using stanc --print-canonical
 Warning in 'funs4.stan', line 10, column 21: Use of the _log suffix in user
     defined probability function unit_normal_log is deprecated and will be
     removed in Stan 2.32.0, use name 'unit_normal_lpdf' instead.
