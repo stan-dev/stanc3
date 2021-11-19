@@ -192,7 +192,7 @@ Semantic error in 'bad_cov_exp_quad_arr_rvec_data.stan', line 13, column 41 to c
     15:  parameters {
    -------------------------------------------------
 
-Identifier 'd_arr_2' not in scope.
+Identifier 'd_arr_2' not in scope. Did you mean 'd_arr_1'?
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_rvec_param.stan
 Syntax error in 'bad_cov_exp_quad_arr_rvec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
@@ -216,7 +216,7 @@ Semantic error in 'bad_cov_exp_quad_arr_vec_data.stan', line 13, column 41 to co
     15:  parameters {
    -------------------------------------------------
 
-Identifier 'd_arr_2' not in scope.
+Identifier 'd_arr_2' not in scope. Did you mean 'd_arr_1'?
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_vec_param.stan
 Syntax error in 'bad_cov_exp_quad_arr_vec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
@@ -301,7 +301,7 @@ Semantic error in 'bad_cov_exp_quad_rvec_arr_data.stan', line 13, column 50 to c
     15:  parameters {
    -------------------------------------------------
 
-Identifier 'd_arr_2' not in scope.
+Identifier 'd_arr_2' not in scope. Did you mean 'd_arr_1'?
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_arr_param.stan
 Syntax error in 'bad_cov_exp_quad_rvec_arr_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
@@ -448,7 +448,7 @@ Semantic error in 'bad_cov_exp_quad_vec_arr_data.stan', line 13, column 50 to co
     15:  parameters {
    -------------------------------------------------
 
-Identifier 'd_arr_2' not in scope.
+Identifier 'd_arr_2' not in scope. Did you mean 'd_arr_1'?
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_arr_param.stan
 Syntax error in 'bad_cov_exp_quad_vec_arr_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
@@ -592,10 +592,22 @@ Syntax error in 'bad_periods_tparams.stan', line 2, column 7, lexing error:
 
 Invalid character found.
   $ ../../../../../install/default/bin/stanc good_all.stan
-Warning in 'good_all.stan', line 1, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
-Warning in 'good_all.stan', line 2, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
-Warning in 'good_all.stan', line 3, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
-Warning in 'good_all.stan', line 4, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'good_all.stan', line 1, column 0: Comments beginning with # are
+    deprecated and this syntax will be removed in Stan 2.32.0. Use // to
+    begin line comments; this can be done automatically using stanc
+    --auto-format
+Warning in 'good_all.stan', line 2, column 0: Comments beginning with # are
+    deprecated and this syntax will be removed in Stan 2.32.0. Use // to
+    begin line comments; this can be done automatically using stanc
+    --auto-format
+Warning in 'good_all.stan', line 3, column 0: Comments beginning with # are
+    deprecated and this syntax will be removed in Stan 2.32.0. Use // to
+    begin line comments; this can be done automatically using stanc
+    --auto-format
+Warning in 'good_all.stan', line 4, column 0: Comments beginning with # are
+    deprecated and this syntax will be removed in Stan 2.32.0. Use // to
+    begin line comments; this can be done automatically using stanc
+    --auto-format
 Semantic error in 'good_all.stan', line 25, column 2 to column 8:
    -------------------------------------------------
     23:  
@@ -618,6 +630,8 @@ Syntax error in 'incomplete.stan', line 2, column 18 to column 19, parsing error
 
 Found an incomplete binary expression - are you missing the right hand side?
   $ ../../../../../install/default/bin/stanc incomplete2.stan
+Warning in 'incomplete2.stan', line 2, column 9: Variable name 'upper' will
+    be a reserved word starting in Stan 2.32.0. Please rename it!
 Syntax error in 'incomplete2.stan', line 2, column 17 to column 22, parsing error:
    -------------------------------------------------
      1:  transformed data {
@@ -667,6 +681,8 @@ Syntax error in 'incomplete5.stan', line 3, column 0 to column 0, parsing error:
 
 Ill-formed block. Expected a statement, variable declaration, or just "}".
   $ ../../../../../install/default/bin/stanc incomplete6.stan
+Warning in 'incomplete6.stan', line 2, column 8: Variable name 'upper' will
+    be a reserved word starting in Stan 2.32.0. Please rename it!
 Syntax error in 'incomplete6.stan', line 3, column 16 to column 21, parsing error:
    -------------------------------------------------
      1:  transformed data {

@@ -21,6 +21,11 @@ let rec iterate_n f x = function
   | n -> iterate_n f (f x) (n - 1)
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
+
+(* $sloc and $symbolstartpos generates code using !=, which
+    Core_kernel considers to be an error.
+ *)
+let (!=) = Stdlib.(!=)
 %}
 
 %token FUNCTIONBLOCK DATABLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK
@@ -93,7 +98,7 @@ program:
       let () =
         match (ofb, odb, otdb, opb, otpb, omb, ogb) with
         | None, None, None, None, None, None, None ->
-            Input_warnings.empty (fst $loc).pos_fname
+            Input_warnings.empty ($startpos).pos_fname
         | _ -> ()
       in
       { functionblock= ofb
@@ -160,11 +165,19 @@ generated_quantities_block:
 identifier:
   | id=IDENTIFIER { build_id id $loc }
   | TRUNCATE { build_id "T" $loc}
-  | OFFSET { build_id "offset" $loc}
-  | MULTIPLIER { build_id "multiplier" $loc}
-  | LOWER { build_id "lower" $loc}
-  | UPPER { build_id "upper" $loc}
-  | ARRAY { build_id "array" $loc}
+  | id_and_v = future_keyword
+    {
+      let id, v = id_and_v in
+      Input_warnings.future_keyword id.name v $loc;
+      id
+    }
+
+future_keyword:
+  | OFFSET { build_id "offset" $loc, "2.32.0" }
+  | MULTIPLIER { build_id "multiplier" $loc, "2.32.0" }
+  | LOWER { build_id "lower" $loc, "2.32.0" }
+  | UPPER { build_id "upper" $loc, "2.32.0" }
+  | ARRAY { build_id "array" $loc, "2.32.0" }
 
 decl_identifier:
   | id=identifier { id }
@@ -342,6 +355,7 @@ decl(type_rule, rhs):
       in
       let dims = match dims_opt with
         | Some ({expr= Indexed ({expr= Variable {name="array"; _}; _}, ixs); _}) ->
+            Input_warnings.drop_array_future () ;
            (match int_ixs ixs with
             | Some sizes -> sizes
             | None -> error "Dimensions should be expressions, not multiple or range indexing.")
@@ -358,27 +372,7 @@ decl(type_rule, rhs):
                 ; is_global
                 }
           ; smeta= {
-              loc=
-                (* From the docs:
-                We remark that, if the current production has an empty right-hand side,
-                then $startpos and $endpos are equal, and (by convention) are the end
-                position of the most recently parsed symbol (that is, the symbol that
-                happens to be on top of the automaton’s stack when this production is
-                reduced). If the current production has a nonempty right-hand side,
-                then $startpos is the same as $startpos($1) and $endpos is the same
-                as $endpos($n), where n is the length of the right-hand side.
-
-
-                So when dims_opt is empty, it uses the preview token as its startpos,
-                but that makes the whole declaration think it starts at the previous
-                token. Sadly, $sloc and $symbolstartpos generates code using !=, which
-                Core_kernel considers to be an error.
-                 *)
-                let startpos = match dims_opt with
-                  | None -> $startpos(ty)
-                  | Some _ -> $startpos
-                in
-                Location_span.of_positions_exn (startpos, $endpos)
+              loc= Location_span.of_positions_exn $sloc
             }
           })
     )}
@@ -401,11 +395,11 @@ top_var_decl_no_assign:
       d_fn ~is_global:true
     }
   | SEMICOLON
-    { grammar_logger "top_var_decl_no_assign_skip"; 
+    { grammar_logger "top_var_decl_no_assign_skip";
       [ { stmt= Skip
         ; smeta= { loc= Location_span.of_positions_exn $loc
         }
-      }] 
+      }]
     }
 
 sized_basic_type:

@@ -1,5 +1,0 @@
-(library
-  (name tfp_backend)
-  (libraries core_kernel fmt middle analysis_and_optimization)
-  (inline_tests)
-  (preprocess (pps ppx_jane ppx_deriving.map ppx_deriving.fold)))

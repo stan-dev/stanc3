@@ -142,19 +142,6 @@ pipeline {
                     }
                     post { always { runShell("rm -rf ./*") }}
                 }
-                stage("TFP tests") {
-                    agent {
-                        docker {
-                            image 'tensorflow/tensorflow@sha256:08901711826b185136886c7b8271b9fdbe86b8ccb598669781a1f5cb340184eb'
-                            args '-u root'
-                        }
-                    }
-                    steps {
-                        sh "pip3 install tfp-nightly==0.11.0.dev20200516"
-                        sh "python3 test/integration/tfp/tests.py"
-                    }
-                    post { always { runShell("rm -rf ./*") }}
-                }
                 stage("stancjs tests") {
                     agent {
                         docker {
@@ -306,6 +293,7 @@ pipeline {
                     agent { label "osx && ocaml" }
                     steps {
                         runShell("""
+                            opam switch 4.12.0
                             eval \$(opam env)
                             opam update || true
                             bash -x scripts/install_build_deps.sh
@@ -314,7 +302,6 @@ pipeline {
                         """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
-                        sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/mac-stan2tfp"
 
                         stash name:'mac-exe', includes:'bin/*'
                     }
@@ -369,7 +356,6 @@ pipeline {
                         """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-stan2tfp"
 
                         stash name:'linux-exe', includes:'bin/*'
                     }
@@ -400,7 +386,6 @@ pipeline {
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh mips64el"
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-mips64el-stan2tfp"
 
                         stash name:'linux-mips64el-exe', includes:'bin/*'
                     }
@@ -431,7 +416,6 @@ pipeline {
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh ppc64el"
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-ppc64el-stan2tfp"
 
                         stash name:'linux-ppc64el-exe', includes:'bin/*'
                     }
@@ -462,7 +446,6 @@ pipeline {
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh s390x"
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-s390x-stan2tfp"
 
                         stash name:'linux-s390x-exe', includes:'bin/*'
                     }
@@ -494,7 +477,6 @@ pipeline {
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh arm64"
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-arm64-stan2tfp"
 
                         stash name:'linux-arm64-exe', includes:'bin/*'
                     }
@@ -526,7 +508,6 @@ pipeline {
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh armhf"
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
 
                         stash name:'linux-armhf-exe', includes:'bin/*'
                     }
@@ -558,7 +539,6 @@ pipeline {
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh armel"
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-armel-stan2tfp"
 
                         stash name:'linux-armel-exe', includes:'bin/*'
                     }
@@ -590,7 +570,6 @@ pipeline {
                         """)
 
                         sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
-                        sh "mv _build/default.windows/src/stan2tfp/stan2tfp.exe bin/windows-stan2tfp"
 
                         stash name:'windows-exe', includes:'bin/*'
                     }
@@ -636,7 +615,7 @@ pipeline {
             agent {
                 docker {
                     image 'stanorg/stanc3:static'
-                    label 'linux-ec2'
+                    label 'gg-linux'
                     //Forces image to ignore entrypoint
                     args "-u 1000 --entrypoint=\'\'"
                 }
@@ -644,7 +623,7 @@ pipeline {
             steps {
                 retry(3) {
                     checkout([$class: 'GitSCM',
-                        branches: [[name: '*/gh-pages']],
+                        branches: [],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [],
                         submoduleCfg: [],
@@ -691,11 +670,11 @@ pipeline {
                         git add -f doc
                         git commit -m "auto generated docs from Jenkins"
                         git subtree push --prefix doc/ https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git gh-pages
+                        ls -A1 | xargs rm -rf
                     """
                 }
 
             }
-            post { always { deleteDir() } }
         }
     }
     post {

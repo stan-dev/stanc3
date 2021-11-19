@@ -25,9 +25,12 @@ model {
   y_p ~ normal(0, 1);
 }
 
-Warning in 'abs.stan', line 10, column 26: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
-Warning in 'abs.stan', line 20, column 27: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
-Warning in 'abs.stan', line 21, column 27: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
+Warning in 'abs.stan', line 10, column 26: Use of the `abs` function with
+    real-valued arguments is deprecated; use function `fabs` instead.
+Warning in 'abs.stan', line 20, column 27: Use of the `abs` function with
+    real-valued arguments is deprecated; use function `fabs` instead.
+Warning in 'abs.stan', line 21, column 27: Use of the `abs` function with
+    real-valued arguments is deprecated; use function `fabs` instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format acos.stan
 data {
   int d_int;
@@ -350,19 +353,45 @@ model {
   y_p ~ normal(0, 1);
 }
 
-Warning in 'binomial_coefficient_log.stan', line 12, column 26: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-Warning in 'binomial_coefficient_log.stan', line 13, column 26: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-Warning in 'binomial_coefficient_log.stan', line 14, column 26: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-Warning in 'binomial_coefficient_log.stan', line 15, column 26: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-Warning in 'binomial_coefficient_log.stan', line 24, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-Warning in 'binomial_coefficient_log.stan', line 25, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-Warning in 'binomial_coefficient_log.stan', line 26, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-Warning in 'binomial_coefficient_log.stan', line 27, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-Warning in 'binomial_coefficient_log.stan', line 29, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-Warning in 'binomial_coefficient_log.stan', line 30, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-Warning in 'binomial_coefficient_log.stan', line 31, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-Warning in 'binomial_coefficient_log.stan', line 32, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-Warning in 'binomial_coefficient_log.stan', line 33, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+Warning in 'binomial_coefficient_log.stan', line 12, column 26: binomial_coefficient_log
+    is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'binomial_coefficient_log.stan', line 13, column 26: binomial_coefficient_log
+    is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'binomial_coefficient_log.stan', line 14, column 26: binomial_coefficient_log
+    is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'binomial_coefficient_log.stan', line 15, column 26: binomial_coefficient_log
+    is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'binomial_coefficient_log.stan', line 24, column 28: binomial_coefficient_log
+    is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'binomial_coefficient_log.stan', line 25, column 28: binomial_coefficient_log
+    is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'binomial_coefficient_log.stan', line 26, column 28: binomial_coefficient_log
+    is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'binomial_coefficient_log.stan', line 27, column 28: binomial_coefficient_log
+    is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'binomial_coefficient_log.stan', line 29, column 28: binomial_coefficient_log
+    is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'binomial_coefficient_log.stan', line 30, column 28: binomial_coefficient_log
+    is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'binomial_coefficient_log.stan', line 31, column 28: binomial_coefficient_log
+    is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'binomial_coefficient_log.stan', line 32, column 28: binomial_coefficient_log
+    is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'binomial_coefficient_log.stan', line 33, column 28: binomial_coefficient_log
+    is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
+    This can be automatically changed using stanc --print-canonical
   $ ../../../../../../../install/default/bin/stanc --auto-format cbrt.stan
 data {
   int d_int;
@@ -1239,19 +1268,58 @@ model {
   y_p ~ normal(0, 1);
 }
 
-Warning in 'if_else.stan', line 9, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'if_else.stan', line 10, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'if_else.stan', line 11, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'if_else.stan', line 12, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'if_else.stan', line 21, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'if_else.stan', line 22, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'if_else.stan', line 23, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'if_else.stan', line 24, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'if_else.stan', line 26, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'if_else.stan', line 27, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'if_else.stan', line 28, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'if_else.stan', line 29, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'if_else.stan', line 30, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'if_else.stan', line 9, column 26: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'if_else.stan', line 10, column 26: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'if_else.stan', line 11, column 26: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'if_else.stan', line 12, column 26: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'if_else.stan', line 21, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'if_else.stan', line 22, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'if_else.stan', line 23, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'if_else.stan', line 24, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'if_else.stan', line 26, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'if_else.stan', line 27, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'if_else.stan', line 28, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'if_else.stan', line 29, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'if_else.stan', line 30, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
   $ ../../../../../../../install/default/bin/stanc --auto-format inc_beta.stan
 transformed data {
   real a;
@@ -1538,19 +1606,58 @@ model {
   y_p ~ normal(0, 1);
 }
 
-Warning in 'is_inf.stan', line 8, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_inf.stan', line 9, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_inf.stan', line 10, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_inf.stan', line 11, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_inf.stan', line 20, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_inf.stan', line 21, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_inf.stan', line 22, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_inf.stan', line 23, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_inf.stan', line 25, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_inf.stan', line 26, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_inf.stan', line 27, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_inf.stan', line 28, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_inf.stan', line 29, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_inf.stan', line 8, column 26: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_inf.stan', line 9, column 26: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_inf.stan', line 10, column 26: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_inf.stan', line 11, column 26: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_inf.stan', line 20, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_inf.stan', line 21, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_inf.stan', line 22, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_inf.stan', line 23, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_inf.stan', line 25, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_inf.stan', line 26, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_inf.stan', line 27, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_inf.stan', line 28, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_inf.stan', line 29, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
   $ ../../../../../../../install/default/bin/stanc --auto-format is_nan.stan
 data {
   int d_int;
@@ -1587,19 +1694,58 @@ model {
   y_p ~ normal(0, 1);
 }
 
-Warning in 'is_nan.stan', line 8, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_nan.stan', line 9, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_nan.stan', line 10, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_nan.stan', line 11, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_nan.stan', line 20, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_nan.stan', line 21, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_nan.stan', line 22, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_nan.stan', line 23, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_nan.stan', line 25, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_nan.stan', line 26, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_nan.stan', line 27, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_nan.stan', line 28, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'is_nan.stan', line 29, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_nan.stan', line 8, column 26: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_nan.stan', line 9, column 26: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_nan.stan', line 10, column 26: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_nan.stan', line 11, column 26: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_nan.stan', line 20, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_nan.stan', line 21, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_nan.stan', line 22, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_nan.stan', line 23, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_nan.stan', line 25, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_nan.stan', line 26, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_nan.stan', line 27, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_nan.stan', line 28, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
+Warning in 'is_nan.stan', line 29, column 28: The function `if_else` is
+    deprecated and will be removed in Stan 2.32.0. Use the conditional
+    operator (x ? y : z) instead; this can be automatically changed using
+    stanc --print-canonical
   $ ../../../../../../../install/default/bin/stanc --auto-format lambert.stan
 data {
   int d_int;
@@ -2411,19 +2557,45 @@ model {
   y_p ~ normal(0, 1);
 }
 
-Warning in 'multiply_log.stan', line 11, column 26: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'multiply_log.stan', line 12, column 26: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'multiply_log.stan', line 13, column 26: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'multiply_log.stan', line 14, column 26: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'multiply_log.stan', line 23, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'multiply_log.stan', line 24, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'multiply_log.stan', line 25, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'multiply_log.stan', line 26, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'multiply_log.stan', line 28, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'multiply_log.stan', line 29, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'multiply_log.stan', line 30, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'multiply_log.stan', line 31, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'multiply_log.stan', line 32, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+Warning in 'multiply_log.stan', line 11, column 26: multiply_log is
+    deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'multiply_log.stan', line 12, column 26: multiply_log is
+    deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'multiply_log.stan', line 13, column 26: multiply_log is
+    deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'multiply_log.stan', line 14, column 26: multiply_log is
+    deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'multiply_log.stan', line 23, column 28: multiply_log is
+    deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'multiply_log.stan', line 24, column 28: multiply_log is
+    deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'multiply_log.stan', line 25, column 28: multiply_log is
+    deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'multiply_log.stan', line 26, column 28: multiply_log is
+    deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'multiply_log.stan', line 28, column 28: multiply_log is
+    deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'multiply_log.stan', line 29, column 28: multiply_log is
+    deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'multiply_log.stan', line 30, column 28: multiply_log is
+    deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'multiply_log.stan', line 31, column 28: multiply_log is
+    deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'multiply_log.stan', line 32, column 28: multiply_log is
+    deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
+    This can be automatically changed using stanc --print-canonical
   $ ../../../../../../../install/default/bin/stanc --auto-format operators_int.stan
 data {
   int d_int;
@@ -2462,17 +2634,19 @@ model {
 }
 
 Warning in 'operators_int.stan', line 10, column 25: Found int division:
-  d_int / d_int
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  d_int * 1.0 / d_int
-If rounding is intended please use the integer division operator %/%.
+      d_int / d_int
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      d_int * 1.0 / d_int
+    If rounding is intended please use the integer division operator %/%.
 Warning in 'operators_int.stan', line 26, column 27: Found int division:
-  d_int / d_int
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  d_int * 1.0 / d_int
-If rounding is intended please use the integer division operator %/%.
+      d_int / d_int
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      d_int * 1.0 / d_int
+    If rounding is intended please use the integer division operator %/%.
   $ ../../../../../../../install/default/bin/stanc --auto-format operators_real.stan
 data {
   int d_int;
@@ -2563,17 +2737,19 @@ model {
 }
 
 Warning in 'operators_real.stan', line 23, column 26: Found int division:
-  d_int / d_int
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  d_int * 1.0 / d_int
-If rounding is intended please use the integer division operator %/%.
+      d_int / d_int
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      d_int * 1.0 / d_int
+    If rounding is intended please use the integer division operator %/%.
 Warning in 'operators_real.stan', line 69, column 27: Found int division:
-  d_int / d_int
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  d_int * 1.0 / d_int
-If rounding is intended please use the integer division operator %/%.
+      d_int / d_int
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      d_int * 1.0 / d_int
+    If rounding is intended please use the integer division operator %/%.
   $ ../../../../../../../install/default/bin/stanc --auto-format owens_t.stan
 data {
   int d_int;

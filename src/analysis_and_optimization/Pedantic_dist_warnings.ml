@@ -1,4 +1,5 @@
 open Core_kernel
+open Core_kernel.Poly
 open Middle
 open Mir_utils
 
@@ -40,8 +41,7 @@ type var_constraint =
 type var_constraint_named = {name: string; constr: var_constraint}
 
 let unit_range =
-  { name= "[0,1]"
-  ; constr= Range {lower= Some (0., true); upper= Some (1., true)} }
+  {name= "[0,1]"; constr= Range {lower= Some (0., true); upper= Some (1., true)}}
 
 let exclusive_unit_range =
   { name= "(0,1)"
@@ -98,14 +98,12 @@ let value_out_of_range (range : range) (v : float) =
     match range.lower with
     | Some (l, true) -> v < l
     | Some (l, false) -> v <= l
-    | None -> false
-  in
+    | None -> false in
   let upper_bad =
     match range.upper with
     | Some (u, true) -> v > u
     | Some (u, false) -> v >= u
-    | None -> false
-  in
+    | None -> false in
   lower_bad || upper_bad
 
 (** Check for inconsistency between a distribution argument's constraint and
@@ -137,8 +135,8 @@ let constr_mismatch_message (dist_name : string) (param_name : string)
   | Variate ->
       (* Possibly: Either change the distribution or change the constraints. *)
       Printf.sprintf
-        "Parameter %s is given a %s distribution, which has %s support, but \
-         %s was not constrained to be %s."
+        "Parameter %s is given a %s distribution, which has %s support, but %s \
+         was not constrained to be %s."
         param_name dist_name constr_name param_name constr_name
 
 let constr_literal_mismatch_message (dist_name : string) (num_str : string)
@@ -165,10 +163,8 @@ let constr_mismatch_warning (constr : var_constraint_named) (arg : arg_info)
     | None ->
         let arg_fail_msg =
           Printf.sprintf "Distribution %s at %s expects more arguments." name
-            (Location_span.to_string loc)
-        in
-        raise (Failure arg_fail_msg)
-  in
+            (Location_span.to_string loc) in
+        raise (Failure arg_fail_msg) in
   match v with
   | Param (pname, trans), meta ->
       if transform_mismatch_constraint constr.constr trans then
@@ -188,9 +184,9 @@ let constr_mismatch_warning (constr : var_constraint_named) (arg : arg_info)
 
 let uniform_dist_message (pname : string) : string =
   Printf.sprintf
-    "Parameter %s is given a uniform distribution. The uniform distribution \
-     is not recommended, for two reasons: (a) Except when there are logical \
-     or physical constraints, it is very unusual for you to be sure that a \
+    "Parameter %s is given a uniform distribution. The uniform distribution is \
+     not recommended, for two reasons: (a) Except when there are logical or \
+     physical constraints, it is very unusual for you to be sure that a \
      parameter will fall inside a specified range, and (b) The infinite \
      gradient induced by a uniform density can cause difficulties for Stan's \
      sampling algorithm. As a consequence, we recommend soft constraints \
@@ -448,8 +444,7 @@ let distribution_warning (dist_info : dist_info) :
         ]
     (* Correlation Matrix Distributions *)
     | "lkj_corr" ->
-        [ lkj_corr_dist_warning
-        ; constr_mismatch_warning correlation Variate
+        [ lkj_corr_dist_warning; constr_mismatch_warning correlation Variate
         ; constr_mismatch_warning positive_range (Arg (1, shape_name)) ]
     | "lkj_corr_cholesky" ->
         [ constr_mismatch_warning cholesky_correlation Variate
@@ -463,8 +458,7 @@ let distribution_warning (dist_info : dist_info) :
         [ constr_mismatch_warning covariance Variate
         ; constr_mismatch_warning positive_range (Arg (1, dof_name))
         ; constr_mismatch_warning covariance (Arg (2, scale_mat_name)) ]
-    | _ -> []
-  in
+    | _ -> [] in
   List.filter_map ~f:(fun f -> f dist_info) warning_fns
 
 (** Generate the distribution warnings for a program *)
