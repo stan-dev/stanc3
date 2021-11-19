@@ -515,7 +515,8 @@ Semantic error in 'declare-define-var-vec-1.stan', line 6, column 2 to column 23
 
 Ill-typed arguments supplied to assignment operator =: lhs has type vector and rhs has type row_vector
   $ ../../../../install/default/bin/stanc empty.stan
-Warning: Empty file 'empty.stan' detected; this is a valid stan model but likely unintended!
+Warning: Empty file 'empty.stan' detected; this is a valid stan model but
+    likely unintended!
   $ ../../../../install/default/bin/stanc err-bare-type-close-square.stan
 Syntax error in 'err-bare-type-close-square.stan', line 2, column 8 to column 11, parsing error:
    -------------------------------------------------
@@ -731,7 +732,9 @@ Syntax error in 'err-if-else.stan', line 3, column 8 to column 9, parsing error:
 
 Expected ")" after test expression of conditional control flow construct.
   $ ../../../../install/default/bin/stanc err-incr-log-prob-scope.stan
-Warning in 'err-incr-log-prob-scope.stan', line 4, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'err-incr-log-prob-scope.stan', line 4, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
 Semantic error in 'err-incr-log-prob-scope.stan', line 4, column 2 to column 24:
    -------------------------------------------------
      2:    real x;
@@ -1003,7 +1006,9 @@ Semantic error in 'functions-bad11.stan', line 3, column 4 to column 20:
 
 Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc functions-bad12.stan
-Warning in 'functions-bad12.stan', line 3, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'functions-bad12.stan', line 3, column 4: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
 Semantic error in 'functions-bad12.stan', line 3, column 4 to column 42:
    -------------------------------------------------
      1:  functions {
@@ -1040,8 +1045,12 @@ Semantic error in 'functions-bad14.stan', line 5, column 6 to column 9:
 
 Identifier 'abc' is already in use.
   $ ../../../../install/default/bin/stanc functions-bad15.stan
-Warning in 'functions-bad15.stan', line 3, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'functions-bad15.stan', line 10, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'functions-bad15.stan', line 3, column 4: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'functions-bad15.stan', line 10, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
 Semantic error in 'functions-bad15.stan', line 10, column 21 to column 38:
    -------------------------------------------------
      8:  }
@@ -1282,7 +1291,9 @@ Semantic error in 'get-lp-target-data.stan', line 2, column 19 to column 27:
 
 Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc get_lp_bad_scope1.stan
-Warning in 'get_lp_bad_scope1.stan', line 3, column 6: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
+Warning in 'get_lp_bad_scope1.stan', line 3, column 6: get_lp() function is
+    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
+    can be done automatically with stanc --print-canonical
 Semantic error in 'get_lp_bad_scope1.stan', line 3, column 6 to column 14:
    -------------------------------------------------
      1:  transformed data {
@@ -1295,7 +1306,9 @@ Semantic error in 'get_lp_bad_scope1.stan', line 3, column 6 to column 14:
 
 Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc get_lp_bad_scope2.stan
-Warning in 'get_lp_bad_scope2.stan', line 3, column 15: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
+Warning in 'get_lp_bad_scope2.stan', line 3, column 15: get_lp() function is
+    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
+    can be done automatically with stanc --print-canonical
 Semantic error in 'get_lp_bad_scope2.stan', line 3, column 15 to column 23:
    -------------------------------------------------
      1:  functions {
@@ -2054,7 +2067,9 @@ Semantic error in 'shadow.stan', line 2, column 7 to column 12:
 
 Identifier 'log10' clashes with Stan Math library function.
   $ ../../../../install/default/bin/stanc signature_function_known.stan
-Warning in 'signature_function_known.stan', line 8, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'signature_function_known.stan', line 8, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
 Semantic error in 'signature_function_known.stan', line 8, column 21 to column 50:
    -------------------------------------------------
      6:  }
@@ -2079,7 +2094,9 @@ Available signatures:
   The first argument must be array[] int but got vector
 (Additional signatures omitted)
   $ ../../../../install/default/bin/stanc signature_function_unknown.stan
-Warning in 'signature_function_unknown.stan', line 8, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'signature_function_unknown.stan', line 8, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
 Semantic error in 'signature_function_unknown.stan', line 8, column 21 to column 45:
    -------------------------------------------------
      6:  }

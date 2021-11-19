@@ -130,13 +130,9 @@ let rec common_type = function
   | _, _ -> None
 
 (* -- Helpers -- *)
-let is_real_type = function
-  | UReal | UVector | URowVector | UMatrix
-   |UArray UReal
-   |UArray UVector
-   |UArray URowVector
-   |UArray UMatrix ->
-      true
+let rec is_real_type = function
+  | UReal | UVector | URowVector | UMatrix -> true
+  | UArray x -> is_real_type x
   | _ -> false
 
 let rec is_autodiffable = function
@@ -151,7 +147,9 @@ let is_dataonlytype possibly_adtype : bool =
   not (is_autodifftype possibly_adtype)
 
 let is_scalar_type = function UReal | UInt -> true | _ -> false
-let is_int_type = function UInt | UArray UInt -> true | _ -> false
+
+let rec is_int_type ut =
+  match ut with UInt -> true | UArray ut -> is_int_type ut | _ -> false
 
 let is_eigen_type ut =
   match ut with UVector | URowVector | UMatrix -> true | _ -> false

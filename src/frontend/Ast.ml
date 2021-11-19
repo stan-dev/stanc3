@@ -296,7 +296,9 @@ let rec id_of_lvalue {lval; _} =
         token before the current statement and all the whitespace between two statements
         appears as if it were part of the second statement.
         get_first_loc tries to skip the leading whitespace and approximate the location
-        of the first token in the statement. *)
+        of the first token in the statement.
+    TODO: See if $sloc works better than $loc for this
+*)
 
 let rec get_loc_expr (e : untyped_expression) =
   match e.expr with

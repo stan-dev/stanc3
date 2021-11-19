@@ -934,6 +934,16 @@ let () =
     , ReturnType UReal
     , [UArray UInt; URowVector; UVector; UVector]
     , AoS ) ;
+  add_unqualified
+    ( "bernoulli_logit_glm_rng"
+    , ReturnType (UArray UInt)
+    , [UMatrix; UVector; UVector]
+    , AoS ) ;
+  add_unqualified
+    ( "bernoulli_logit_glm_rng"
+    , ReturnType (UArray UInt)
+    , [URowVector; UVector; UVector]
+    , AoS ) ;
   add_binary_vec_int_real "bessel_first_kind" SoA ;
   add_binary_vec_int_real "bessel_second_kind" SoA ;
   add_binary_vec "beta" SoA ;
