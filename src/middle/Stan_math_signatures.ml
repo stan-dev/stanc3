@@ -447,7 +447,7 @@ let pp_math_sig ppf (rt, args, mem_pattern) =
 let pp_math_sigs ppf name =
   (Fmt.list ~sep:Fmt.cut pp_math_sig) ppf (get_sigs name)
 
-let pretty_print_math_sigs = Fmt.strf "@[<v>@,%a@]" pp_math_sigs
+let pretty_print_math_sigs = Fmt.str "@[<v>@,%a@]" pp_math_sigs
 
 let string_operator_to_stan_math_fns str =
   match str with
@@ -521,14 +521,14 @@ let pretty_print_all_math_sigs ppf () =
 
 let pretty_print_math_lib_operator_sigs op =
   if op = Operator.IntDivide then
-    [Fmt.strf "@[<v>@,%a@]" pp_math_sig int_divide_type]
+    [Fmt.str "@[<v>@,%a@]" pp_math_sig int_divide_type]
   else operator_to_stan_math_fns op |> List.map ~f:pretty_print_math_sigs
 
 let pretty_print_math_lib_assignmentoperator_sigs op =
   match op with
   | Operator.Plus | Minus | Times | Divide | EltTimes | EltDivide ->
       Some
-        (Fmt.strf "@[<v>@,%a@]"
+        (Fmt.str "@[<v>@,%a@]"
            (Fmt.list ~sep:Fmt.cut pp_math_sig)
            (make_assigmentoperator_stan_math_signatures op) )
   | _ -> None
@@ -933,6 +933,16 @@ let () =
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; URowVector; UVector; UVector]
+    , AoS ) ;
+  add_unqualified
+    ( "bernoulli_logit_glm_rng"
+    , ReturnType (UArray UInt)
+    , [UMatrix; UVector; UVector]
+    , AoS ) ;
+  add_unqualified
+    ( "bernoulli_logit_glm_rng"
+    , ReturnType (UArray UInt)
+    , [URowVector; UVector; UVector]
     , AoS ) ;
   add_binary_vec_int_real "bessel_first_kind" AoS ;
   add_binary_vec_int_real "bessel_second_kind" AoS ;

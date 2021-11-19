@@ -23,7 +23,7 @@ let%expect_test "udf" =
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }
-  |> strf "@[<v>%a" pp_fun_def_w_rs
+  |> str "@[<v>%a" pp_fun_def_w_rs
   |> print_endline ;
   [%expect
     {|
@@ -77,7 +77,7 @@ let%expect_test "udf-expressions" =
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }
-  |> strf "@[<v>%a" pp_fun_def_w_rs
+  |> str "@[<v>%a" pp_fun_def_w_rs
   |> print_endline ;
   [%expect
     {|

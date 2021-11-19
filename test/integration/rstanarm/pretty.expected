@@ -9670,5 +9670,11 @@ generated quantities {
   }
 }
 
-Warning in 'polr.stan', line 19, column 31: Use of gumbel_cdf without a vertical bar (|) between the first two arguments is deprecated.
-Warning in 'polr.stan', line 21, column 31: Use of cauchy_cdf without a vertical bar (|) between the first two arguments is deprecated.
+Warning in 'polr.stan', line 19, column 31: Use of gumbel_cdf without a
+    vertical bar (|) between the first two arguments of a CDF is deprecated
+    and will be removed in Stan 2.32.0. This can be automatically changed
+    using stanc --print-canonical
+Warning in 'polr.stan', line 21, column 31: Use of cauchy_cdf without a
+    vertical bar (|) between the first two arguments of a CDF is deprecated
+    and will be removed in Stan 2.32.0. This can be automatically changed
+    using stanc --print-canonical

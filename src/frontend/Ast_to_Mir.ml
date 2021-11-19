@@ -307,7 +307,7 @@ let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
       @ check_decl var decl_type' decl_id (Upper ub) smeta adlevel
   | _ when Transformation.has_check decl_trans ->
       let check_id id =
-        let var_name = Fmt.strf "%a" Expr.Typed.pp id in
+        let var_name = Fmt.str "%a" Expr.Typed.pp id in
         let args = extract_transform_args id decl_trans in
         Stmt.Helpers.internal_nrfunapp
           (FnCheck {trans= decl_trans; var_name; var= id})
@@ -322,7 +322,7 @@ let check_sizedtype name =
         [ Stmt.Helpers.internal_nrfunapp FnValidateSize
             Expr.Helpers.
               [ str name
-              ; str (Fmt.strf "%a" Pretty_printing.pp_typed_expression x); n ]
+              ; str (Fmt.str "%a" Pretty_printing.pp_typed_expression x); n ]
             n.meta.loc ] in
   let rec sizedtype = function
     | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
@@ -561,7 +561,7 @@ let trans_sizedtype_decl declc tr name =
   let check fn x n =
     Stmt.Helpers.internal_nrfunapp fn
       Expr.Helpers.
-        [str name; str (Fmt.strf "%a" Pretty_printing.pp_typed_expression x); n]
+        [str name; str (Fmt.str "%a" Pretty_printing.pp_typed_expression x); n]
       n.meta.loc in
   let grab_size fn n = function
     | Ast.{expr= IntNumeral i; _} as s when float_of_string i >= 2. ->
@@ -571,7 +571,7 @@ let trans_sizedtype_decl declc tr name =
         ([check fn s e], e)
     | s ->
         let e = trans_expr s in
-        let decl_id = Fmt.strf "%s_%ddim__" name n in
+        let decl_id = Fmt.str "%s_%ddim__" name n in
         let decl =
           { Stmt.Fixed.pattern=
               Decl

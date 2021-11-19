@@ -59,7 +59,7 @@ let context block =
 let calculate_autodifftype cf origin ut =
   match origin with
   | Env.(Param | TParam | Model | Functions)
-    when not (UnsizedType.contains_int ut || cf.current_block = GQuant) ->
+    when not (UnsizedType.is_int_type ut || cf.current_block = GQuant) ->
       UnsizedType.AutoDiffable
   | _ -> DataOnly
 
@@ -577,7 +577,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                   Fmt.pf ppf "%a * 1.0 / %a" Pretty_printing.pp_typed_expression
                     x Pretty_printing.pp_typed_expression y in
             let s =
-              Fmt.strf
+              Fmt.str
                 "@[<v>@[<hov 0>Found int division:@]@   @[<hov 2>%a@]@,\
                  @[<hov>%a@]@   @[<hov 2>%a@]@,\
                  @[<hov>%a@]@]"
@@ -590,7 +590,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
             add_warning x.emeta.loc s
         | (UArray UMatrix | UMatrix), (UInt | UReal), Pow ->
             let s =
-              Fmt.strf
+              Fmt.str
                 "@[<v>@[<hov 0>Found matrix^scalar:@]@   @[<hov 2>%a@]@,\
                  @[<hov>%a@]@ @[<hov>%a@]@]" Pretty_printing.pp_expression
                 {expr; emeta} Fmt.text
@@ -1137,7 +1137,7 @@ and verify_transformed_param_ty loc cf is_global unsized_ty =
   if
     is_global
     && (cf.current_block = Param || cf.current_block = TParam)
-    && UnsizedType.contains_int unsized_ty
+    && UnsizedType.is_int_type unsized_ty
   then Semantic_error.transformed_params_int loc |> error
 
 and check_sizedtype cf tenv sizedty =
@@ -1268,7 +1268,7 @@ and verify_pdf_fundef_first_arg_ty loc id arg_tys =
   if String.is_suffix id.name ~suffix:"_lpdf" then
     let rt = List.hd arg_tys |> Option.map ~f:snd in
     match rt with
-    | Some rt when UnsizedType.is_real_type rt -> ()
+    | Some rt when not (UnsizedType.is_int_type rt) -> ()
     | _ -> Semantic_error.prob_density_non_real_variate loc rt |> error
 
 and verify_pmf_fundef_first_arg_ty loc id arg_tys =
