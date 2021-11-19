@@ -1016,7 +1016,7 @@ let lazy_expressions_mfp
     used_not_latest_expressions_transfer used_expr latest_expr in
   let (module Mf4) =
     monotone_framework
-      (module Rev_Flowgraph)
+      (module Rev_Flowgraph)  
       (module Lattice2)
       (module Transfer4) in
   let used_not_latest_expressions_mfp = Mf4.mfp () in
