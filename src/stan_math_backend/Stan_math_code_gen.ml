@@ -56,7 +56,7 @@ let pp_located ppf _ =
 (** Detect if argument requires C++ template *)
 let arg_needs_template = function
   | UnsizedType.DataOnly, _, t -> UnsizedType.is_eigen_type t
-  | _, _, t when UnsizedType.contains_int t -> false
+  | _, _, t when UnsizedType.is_int_type t -> false
   | _ -> true
 
 (** Print template arguments for C++ functions that need templates
@@ -107,7 +107,7 @@ let pp_promoted_scalar ppf args =
 let pp_returntype ppf arg_types rt =
   let scalar = str "%a" pp_promoted_scalar arg_types in
   match rt with
-  | Some ut when UnsizedType.contains_int ut ->
+  | Some ut when UnsizedType.is_int_type ut ->
       pf ppf "%a@," pp_unsizedtype_custom_scalar ("int", ut)
   | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
   | None -> pf ppf "void@,"
