@@ -66,10 +66,12 @@ rule token = parse
   | "#"                       { lexer_logger "#comment" ;
                                 Input_warnings.deprecated "#"
                                   (lexbuf.lex_curr_p, "Comments beginning with \
-                                                       # are deprecated. \
-                                                       Please use // in place \
-                                                       of # for line \
-                                                       comments.") ;
+                                                       # are deprecated and this \
+                                                       syntax will be removed in \
+                                                       Stan 2.32.0. Use // to begin \
+                                                       line comments; this can be \
+                                                       done automatically using stanc \
+                                                       --auto-format") ;
                                 singleline_comment (lexbuf.lex_curr_p, Buffer.create 16) lexbuf;
                                 token lexbuf } (* deprecated *)
 (* Program blocks *)
@@ -177,16 +179,21 @@ rule token = parse
                                 Input_warnings.deprecated "<-"
                                   (lexbuf.lex_curr_p, "assignment operator <- \
                                                        is deprecated in the \
-                                                       Stan language; use = \
-                                                       instead.") ;
+                                                       Stan language and will \
+                                                       be removed in Stan 2.32.0; \
+                                                       use = instead. This \
+                                                       can be done automatically \
+                                                       with stanc --print-canonical") ;
                                 Parser.ARROWASSIGN } (* deprecated *)
   | "increment_log_prob"      { lexer_logger "increment_log_prob" ;
                                 Input_warnings.deprecated "increment_log_prob"
                                   (lexbuf.lex_curr_p, "increment_log_prob(...)\
                                                        ; is deprecated and \
-                                                       will be removed in the \
-                                                       future. Use target \
-                                                       += ...; instead.") ;
+                                                       will be removed in Stan \
+                                                       2.32.0. Use target \
+                                                       += ...; instead. This \
+                                                       can be done automatically \
+                                                       with stanc --print-canonical") ;
                                 Parser.INCREMENTLOGPROB } (* deprecated *)
 (* Effects *)
   | "print"                   { lexer_logger "print" ; Parser.PRINT }
@@ -204,9 +211,10 @@ rule token = parse
                                 Input_warnings.deprecated "get_lp"
                                   (lexbuf.lex_curr_p, "get_lp() function is \
                                                        deprecated. It will be \
-                                                       removed in a future \
-                                                       release. Use target() \
-                                                       instead.") ;
+                                                       removed in Stan 2.32.0. \
+                                                       Use target() instead. \
+                                                       This can be done automatically \
+                                                       with stanc --print-canonical") ;
                                 Parser.GETLP } (* deprecated *)
   | string_literal as s       { lexer_logger ("string_literal " ^ s) ;
                                 Parser.STRINGLITERAL (lexeme lexbuf) }

@@ -10,7 +10,8 @@ model {
   y ~ normal(mu, 1);
 }
 
-Warning in 'abs-deprecate.stan', line 3, column 7: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
+Warning in 'abs-deprecate.stan', line 3, column 7: Use of the `abs` function
+    with real-valued arguments is deprecated; use function `fabs` instead.
   $ ../../../../install/default/bin/stanc --auto-format algebra_solver_good.stan
 functions {
   real algebra_solverfake(real x) {
@@ -122,22 +123,6 @@ model {
   dummy_parameter ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format assignment-deprecated.stan
-transformed data {
-  real mu;
-  real<lower=0> sigma;
-  mu <- -1;
-  sigma <- 3;
-}
-parameters {
-  real y;
-}
-model {
-  y ~ normal(mu, sigma);
-}
-
-Warning in 'assignment-deprecated.stan', line 4, column 5: assignment operator <- is deprecated in the Stan language; use = instead.
-Warning in 'assignment-deprecated.stan', line 5, column 8: assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../install/default/bin/stanc --auto-format assignment-new.stan
 transformed data {
   real mu;
@@ -1176,12 +1161,14 @@ model {
   y ~ bernoulli_logit(x * beta_inferred + alpha_inferred);
 }
 
-Warning in 'bernoulli_logit_glm_old_performance.stan', line 10, column 19: Found int division:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
+Warning in 'bernoulli_logit_glm_old_performance.stan', line 10, column 19: Found
+    int division:
+      j / M
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      j * 1.0 / M
+    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format bernoulli_logit_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -1211,12 +1198,14 @@ model {
   y ~ bernoulli_logit_glm(x, alpha_inferred, beta_inferred);
 }
 
-Warning in 'bernoulli_logit_glm_performance.stan', line 10, column 19: Found int division:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
+Warning in 'bernoulli_logit_glm_performance.stan', line 10, column 19: Found
+    int division:
+      j / M
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      j * 1.0 / M
+    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format break-continue.stan
 // test right value passed through for, while and embedded
 functions {
@@ -1396,7 +1385,10 @@ data {
   //nothing here either 
 }
 
-Warning in 'comments.stan', line 3, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'comments.stan', line 3, column 0: Comments beginning with # are
+    deprecated and this syntax will be removed in Stan 2.32.0. Use // to
+    begin line comments; this can be done automatically using stanc
+    --auto-format
   $ ../../../../install/default/bin/stanc --auto-format conditional_condition_good.stan
 parameters {
   real y;
@@ -2939,7 +2931,16 @@ generated quantities {
   
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format deprecate-increment-log-prob.stan
+  $ ../../../../install/default/bin/stanc --auto-format deprecated_syntax.stan
+functions {
+  real foo_log(real alpha, real beta) {
+    return 1.0;
+  }
+  
+  real foo_t_log(real alpha, real beta) {
+    return 1.0;
+  }
+}
 data {
   real a;
   vector[3] b;
@@ -2947,13 +2948,17 @@ data {
   array[8, 9] real d;
 }
 parameters {
+  real y;
   real e;
   vector[3] f;
   array[7] real g;
   array[8, 9] real h;
 }
 model {
-  //  increment_log_prob(-e^2 / 2);
+  // old distriubtion suffixes
+  target += normal_log(y, 0, 1) + normal_cdf_log(2, 0, 1)
+            + normal_ccdf_log(3, 0, 1);
+  // increment log prob
   increment_log_prob(a);
   increment_log_prob(b);
   increment_log_prob(b);
@@ -2963,29 +2968,95 @@ model {
   increment_log_prob(f);
   increment_log_prob(g);
   increment_log_prob(h);
+  // cdf without |
+  increment_log_prob(bernoulli_cdf(0, 1));
+  // getlp
+  real x = get_lp();
+  // old array syntax
+  array[5] real xyz;
+  // future reserved words
+  int offset;
+  int array;
+  // deprecated functions
+  real z = multiply_log(3.4, 3.5);
+  
+  // old comment
+  
+  // old assign
+  z <- 3;
+  
+  // _log UDFs
+  target += foo_t_log(1, 3);
+  1 ~ foo(3);
 }
 
-Warning in 'deprecate-increment-log-prob.stan', line 15, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'deprecate-increment-log-prob.stan', line 16, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'deprecate-increment-log-prob.stan', line 17, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'deprecate-increment-log-prob.stan', line 18, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'deprecate-increment-log-prob.stan', line 19, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'deprecate-increment-log-prob.stan', line 20, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'deprecate-increment-log-prob.stan', line 21, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'deprecate-increment-log-prob.stan', line 22, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'deprecate-increment-log-prob.stan', line 23, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-  $ ../../../../install/default/bin/stanc --auto-format deprecate-old-prob-funs.stan
-parameters {
-  real y;
-}
-model {
-  target += normal_log(y, 0, 1) + normal_cdf_log(2, 0, 1)
-            + normal_ccdf_log(3, 0, 1);
-}
-
-Warning in 'deprecate-old-prob-funs.stan', line 5, column 12: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
-Warning in 'deprecate-old-prob-funs.stan', line 6, column 6: normal_cdf_log is deprecated and will be removed in the future. Use normal_lcdf instead.
-Warning in 'deprecate-old-prob-funs.stan', line 7, column 6: normal_ccdf_log is deprecated and will be removed in the future. Use normal_lccdf instead.
+Warning in 'deprecated_syntax.stan', line 30, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'deprecated_syntax.stan', line 31, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'deprecated_syntax.stan', line 32, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'deprecated_syntax.stan', line 33, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'deprecated_syntax.stan', line 34, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'deprecated_syntax.stan', line 35, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'deprecated_syntax.stan', line 36, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'deprecated_syntax.stan', line 37, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'deprecated_syntax.stan', line 38, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'deprecated_syntax.stan', line 40, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'deprecated_syntax.stan', line 42, column 11: get_lp() function is
+    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
+    can be done automatically with stanc --print-canonical
+Warning in 'deprecated_syntax.stan', line 51, column 2: Comments beginning
+    with # are deprecated and this syntax will be removed in Stan 2.32.0. Use
+    // to begin line comments; this can be done automatically using stanc
+    --auto-format
+Warning in 'deprecated_syntax.stan', line 54, column 4: assignment operator
+    <- is deprecated in the Stan language and will be removed in Stan 2.32.0;
+    use = instead. This can be done automatically with stanc
+    --print-canonical
+Warning in 'deprecated_syntax.stan', line 2, column 9: Use of the _log suffix
+    in user defined probability functions is deprecated and will be removed
+    in Stan 2.32.0, use name 'foo_lpdf' instead if you intend on using this
+    function in ~ statements or calling unnormalized probability functions
+    inside of it.
+Warning in 'deprecated_syntax.stan', line 6, column 8: Use of the _log suffix
+    in user defined probability functions is deprecated and will be removed
+    in Stan 2.32.0, use name 'foo_t_lpdf' instead if you intend on using this
+    function in ~ statements or calling unnormalized probability functions
+    inside of it.
+Warning in 'deprecated_syntax.stan', line 26, column 12: normal_log is
+    deprecated and will be removed in Stan 2.32.0. Use normal_lpdf instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'deprecated_syntax.stan', line 27, column 6: normal_cdf_log is
+    deprecated and will be removed in Stan 2.32.0. Use normal_lcdf instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'deprecated_syntax.stan', line 28, column 6: normal_ccdf_log is
+    deprecated and will be removed in Stan 2.32.0. Use normal_lccdf instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'deprecated_syntax.stan', line 40, column 21: Use of bernoulli_cdf
+    without a vertical bar (|) between the first two arguments of a CDF is
+    deprecated and will be removed in Stan 2.32.0. This can be automatically
+    changed using stanc --print-canonical
+Warning in 'deprecated_syntax.stan', line 49, column 11: multiply_log is
+    deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
+    This can be automatically changed using stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format duplicate-warns.stan
 model {
   real foo;
@@ -3000,14 +3071,27 @@ model {
   foo = normal_ccdf_log(0.5, 0, 1);
 }
 
-Warning in 'duplicate-warns.stan', line 4, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'duplicate-warns.stan', line 5, column 8: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-Warning in 'duplicate-warns.stan', line 5, column 8: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
-Warning in 'duplicate-warns.stan', line 6, column 8: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'duplicate-warns.stan', line 7, column 8: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-Warning in 'duplicate-warns.stan', line 9, column 8: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
-Warning in 'duplicate-warns.stan', line 10, column 8: normal_cdf_log is deprecated and will be removed in the future. Use normal_lcdf instead.
-Warning in 'duplicate-warns.stan', line 11, column 8: normal_ccdf_log is deprecated and will be removed in the future. Use normal_lccdf instead.
+Warning in 'duplicate-warns.stan', line 4, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'duplicate-warns.stan', line 5, column 8: get_lp() function is
+    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
+    can be done automatically with stanc --print-canonical
+Warning in 'duplicate-warns.stan', line 6, column 8: multiply_log is
+    deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'duplicate-warns.stan', line 7, column 8: binomial_coefficient_log
+    is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'duplicate-warns.stan', line 9, column 8: normal_log is deprecated
+    and will be removed in Stan 2.32.0. Use normal_lpdf instead. This can be
+    automatically changed using stanc --print-canonical
+Warning in 'duplicate-warns.stan', line 10, column 8: normal_cdf_log is
+    deprecated and will be removed in Stan 2.32.0. Use normal_lcdf instead.
+    This can be automatically changed using stanc --print-canonical
+Warning in 'duplicate-warns.stan', line 11, column 8: normal_ccdf_log is
+    deprecated and will be removed in Stan 2.32.0. Use normal_lccdf instead.
+    This can be automatically changed using stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format fun-defs-lpdf.stan
 functions {
   real bar_baz_lpdf(real a, real b) {
@@ -3219,8 +3303,19 @@ model {
   increment_log_prob(n_log(mu)); // check both instantiations
 }
 
-Warning in 'fun_log_forward_decl.stan', line 17, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'fun_log_forward_decl.stan', line 17, column 21: Use of the _log suffix in user defined function n_log is deprecated, use n_lpdf instead.
+Warning in 'fun_log_forward_decl.stan', line 17, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'fun_log_forward_decl.stan', line 6, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'n_lpdf' instead if you intend on using
+    this function in ~ statements or calling unnormalized probability
+    functions inside of it.
+Warning in 'fun_log_forward_decl.stan', line 8, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'n_lpdf' instead if you intend on using
+    this function in ~ statements or calling unnormalized probability
+    functions inside of it.
   $ ../../../../install/default/bin/stanc --auto-format functions-fwd-ref.stan
 functions {
   int foo(int n);
@@ -3496,45 +3591,21 @@ generated quantities {
   z = foo2_rng(1, 2);
 }
 
-Warning in 'functions-good1.stan', line 63, column 6: Use of the _log suffix in user defined function foo0_log is deprecated, use foo0_lpmf instead.
-Warning in 'functions-good1.stan', line 64, column 6: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 65, column 6: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 66, column 6: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 67, column 6: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 68, column 6: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 124, column 9: Use of the _log suffix in user defined function foo0_log is deprecated, use foo0_lpmf instead.
-Warning in 'functions-good1.stan', line 126, column 9: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 127, column 9: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 128, column 9: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 130, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 131, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 132, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 133, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 135, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 136, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 138, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 139, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 141, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 186, column 9: Use of the _log suffix in user defined function foo0_log is deprecated, use foo0_lpmf instead.
-Warning in 'functions-good1.stan', line 187, column 9: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 188, column 9: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 189, column 9: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 191, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 192, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 193, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 194, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 196, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 197, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 199, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 200, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 202, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 221, column 6: Use of the _log suffix in user defined function foo0_log is deprecated, use foo0_lpmf instead.
-Warning in 'functions-good1.stan', line 222, column 6: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 223, column 6: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 224, column 6: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 225, column 6: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 226, column 6: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 227, column 6: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning in 'functions-good1.stan', line 36, column 7: Use of the _log suffix
+    in user defined probability functions is deprecated and will be removed
+    in Stan 2.32.0, use name 'foo0_lpmf' instead if you intend on using this
+    function in ~ statements or calling unnormalized probability functions
+    inside of it.
+Warning in 'functions-good1.stan', line 39, column 7: Use of the _log suffix
+    in user defined probability functions is deprecated and will be removed
+    in Stan 2.32.0, use name 'foo1_lpdf' instead if you intend on using this
+    function in ~ statements or calling unnormalized probability functions
+    inside of it.
+Warning in 'functions-good1.stan', line 42, column 7: Use of the _log suffix
+    in user defined probability functions is deprecated and will be removed
+    in Stan 2.32.0, use name 'foo2_lpdf' instead if you intend on using this
+    function in ~ statements or calling unnormalized probability functions
+    inside of it.
   $ ../../../../install/default/bin/stanc --auto-format functions-good2.stan
 functions {
   real foo_bar0() {
@@ -3608,8 +3679,12 @@ model {
   unit_normal_lp(y);
 }
 
-Warning in 'funs1.stan', line 3, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'funs1.stan', line 3, column 23: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+Warning in 'funs1.stan', line 3, column 4: increment_log_prob(...); is
+    deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'funs1.stan', line 3, column 23: normal_log is deprecated and will
+    be removed in Stan 2.32.0. Use normal_lpdf instead. This can be
+    automatically changed using stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format funs2.stan
 functions {
   real unit_normal_rng() {
@@ -3640,7 +3715,14 @@ model {
   y ~ unit_normal();
 }
 
-Warning in 'funs3.stan', line 3, column 11: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+Warning in 'funs3.stan', line 2, column 7: Use of the _log suffix in user
+    defined probability functions is deprecated and will be removed in Stan
+    2.32.0, use name 'unit_normal_lpdf' instead if you intend on using this
+    function in ~ statements or calling unnormalized probability functions
+    inside of it.
+Warning in 'funs3.stan', line 3, column 11: normal_log is deprecated and will
+    be removed in Stan 2.32.0. Use normal_lpdf instead. This can be
+    automatically changed using stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format funs4.stan
 functions {
   real unit_normal_log(real y) {
@@ -3654,9 +3736,17 @@ model {
   increment_log_prob(unit_normal_log(y));
 }
 
-Warning in 'funs4.stan', line 10, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'funs4.stan', line 3, column 11: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
-Warning in 'funs4.stan', line 10, column 21: Use of the _log suffix in user defined function unit_normal_log is deprecated, use unit_normal_lpdf instead.
+Warning in 'funs4.stan', line 10, column 2: increment_log_prob(...); is
+    deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'funs4.stan', line 2, column 7: Use of the _log suffix in user
+    defined probability functions is deprecated and will be removed in Stan
+    2.32.0, use name 'unit_normal_lpdf' instead if you intend on using this
+    function in ~ statements or calling unnormalized probability functions
+    inside of it.
+Warning in 'funs4.stan', line 3, column 11: normal_log is deprecated and will
+    be removed in Stan 2.32.0. Use normal_lpdf instead. This can be
+    automatically changed using stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format funs5.stan
 functions {
   void foo(real x) {
@@ -3724,8 +3814,9 @@ model {
   y ~ normal(0, 1);
 }
 
-Warning in 'get-lp-deprecate.stan', line 5, column 19: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-Warning in 'get-lp-deprecate.stan', line 5, column 19: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+Warning in 'get-lp-deprecate.stan', line 5, column 19: get_lp() function is
+    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
+    can be done automatically with stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format get-lp-target.stan
 parameters {
   real<lower=0> y;
@@ -3740,10 +3831,12 @@ model {
   y ~ normal(0, 1);
 }
 
-Warning in 'get-lp-target.stan', line 6, column 21: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-Warning in 'get-lp-target.stan', line 10, column 21: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-Warning in 'get-lp-target.stan', line 6, column 21: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
-Warning in 'get-lp-target.stan', line 10, column 21: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+Warning in 'get-lp-target.stan', line 6, column 21: get_lp() function is
+    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
+    can be done automatically with stanc --print-canonical
+Warning in 'get-lp-target.stan', line 10, column 21: get_lp() function is
+    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
+    can be done automatically with stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format get_lp_good.stan
 /**
  * get_lp() allowed in:
@@ -3770,12 +3863,15 @@ model {
   y ~ normal(0, 1);
 }
 
-Warning in 'get_lp_good.stan', line 10, column 15: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-Warning in 'get_lp_good.stan', line 18, column 6: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-Warning in 'get_lp_good.stan', line 22, column 6: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-Warning in 'get_lp_good.stan', line 10, column 15: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
-Warning in 'get_lp_good.stan', line 18, column 6: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
-Warning in 'get_lp_good.stan', line 22, column 6: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+Warning in 'get_lp_good.stan', line 10, column 15: get_lp() function is
+    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
+    can be done automatically with stanc --print-canonical
+Warning in 'get_lp_good.stan', line 18, column 6: get_lp() function is
+    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
+    can be done automatically with stanc --print-canonical
+Warning in 'get_lp_good.stan', line 22, column 6: get_lp() function is
+    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
+    can be done automatically with stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes1.stan
 functions {
   real foo() {
@@ -4019,35 +4115,93 @@ model {
   increment_log_prob(p_mmm);
 }
 
-Warning in 'increment_log_prob.stan', line 42, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 43, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 44, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 46, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 47, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 48, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 49, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 51, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 52, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 53, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 55, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 56, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 57, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 59, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 60, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 61, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 64, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 65, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 66, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 67, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 69, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 70, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 71, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 73, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 74, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 75, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 77, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 78, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 79, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'increment_log_prob.stan', line 42, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 43, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 44, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 46, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 47, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 48, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 49, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 51, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 52, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 53, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 55, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 56, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 57, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 59, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 60, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 61, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 64, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 65, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 66, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 67, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 69, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 70, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 71, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 73, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 74, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 75, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 77, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 78, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 79, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format int_div_user.stan
 data {
   array[4] int a;
@@ -4062,11 +4216,12 @@ model {
 }
 
 Warning in 'int_div_user.stan', line 7, column 6: Found int division:
-  a[1] / b[2]
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  a[1] * 1.0 / b[2]
-If rounding is intended please use the integer division operator %/%.
+      a[1] / b[2]
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      a[1] * 1.0 / b[2]
+    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format int_fun.stan
 functions {
   int foo(int x) {
@@ -4293,48 +4448,62 @@ generated quantities {
                               1e-10, 1e8);
 }
 
-Warning in 'integrate_ode_adams.stan', line 28, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 29, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 30, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 32, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 33, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 34, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 38, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 39, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 40, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 41, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 43, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 44, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 45, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 46, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_adams.stan', line 28, column 10: integrate_ode_adams
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_adams.stan', line 29, column 10: integrate_ode_adams
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_adams.stan', line 30, column 10: integrate_ode_adams
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_adams.stan', line 32, column 10: integrate_ode_adams
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_adams.stan', line 33, column 10: integrate_ode_adams
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_adams.stan', line 34, column 10: integrate_ode_adams
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_adams.stan', line 38, column 10: integrate_ode_adams
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_adams.stan', line 39, column 10: integrate_ode_adams
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_adams.stan', line 40, column 10: integrate_ode_adams
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_adams.stan', line 41, column 10: integrate_ode_adams
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_adams.stan', line 43, column 10: integrate_ode_adams
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_adams.stan', line 44, column 10: integrate_ode_adams
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_adams.stan', line 45, column 10: integrate_ode_adams
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_adams.stan', line 46, column 10: integrate_ode_adams
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format integrate_ode_bdf.stan
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
@@ -4391,54 +4560,70 @@ generated quantities {
                             1e-10, 1e8);
 }
 
-Warning in 'integrate_ode_bdf.stan', line 28, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 29, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 30, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 31, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 33, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 34, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 35, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 36, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 40, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 41, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 42, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 43, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 45, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 46, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 47, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 48, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 28, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 29, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 30, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 31, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 33, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 34, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 35, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 36, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 40, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 41, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 42, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 43, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 45, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 46, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 47, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 48, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format integrate_ode_deprecation.stan
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
@@ -4474,9 +4659,10 @@ generated quantities {
   }
 }
 
-Warning in 'integrate_ode_deprecation.stan', line 28, column 10: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_deprecation.stan', line 28, column 10: integrate_ode
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format integrate_ode_rk45.stan
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
@@ -4515,30 +4701,38 @@ generated quantities {
   y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
 }
 
-Warning in 'integrate_ode_rk45.stan', line 28, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 29, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 30, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 31, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 35, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 36, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 37, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 38, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_rk45.stan', line 28, column 10: integrate_ode_rk45
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_rk45.stan', line 29, column 10: integrate_ode_rk45
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_rk45.stan', line 30, column 10: integrate_ode_rk45
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_rk45.stan', line 31, column 10: integrate_ode_rk45
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_rk45.stan', line 35, column 10: integrate_ode_rk45
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_rk45.stan', line 36, column 10: integrate_ode_rk45
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_rk45.stan', line 37, column 10: integrate_ode_rk45
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_rk45.stan', line 38, column 10: integrate_ode_rk45
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format io_example.stan
 transformed data {
   vector[2] y;
@@ -4661,7 +4855,9 @@ model {
   increment_log_prob(lkj_cov_log(Sigma, mu, sigma, eta));
 }
 
-Warning in 'lkj_cov_deprecation2.stan', line 8, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'lkj_cov_deprecation2.stan', line 8, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format logistic_regression_reg_horseshoe.stan
 data {
   int<lower=0> n;
@@ -4791,6 +4987,36 @@ model {
   }
 }
 
+Warning in 'lower-trunc-discrete.stan', line 14, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'bar_lpmf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
+Warning in 'lower-trunc-discrete.stan', line 17, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'bar_lcdf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
+Warning in 'lower-trunc-discrete.stan', line 20, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'bar_lccdf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
+Warning in 'lower-trunc-discrete.stan', line 36, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'quux_lpdf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
+Warning in 'lower-trunc-discrete.stan', line 39, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'quux_lcdf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
+Warning in 'lower-trunc-discrete.stan', line 42, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'quux_lccdf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
   $ ../../../../install/default/bin/stanc --auto-format lp_in_fun.stan
 functions {
   void foo_lp() {
@@ -4801,8 +5027,9 @@ model {
   
 }
 
-Warning in 'lp_in_fun.stan', line 3, column 21: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-Warning in 'lp_in_fun.stan', line 3, column 21: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+Warning in 'lp_in_fun.stan', line 3, column 21: get_lp() function is
+    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
+    can be done automatically with stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format lp_transformed_param.stan
 functions {
   real test_lp(real r) {
@@ -4909,17 +5136,21 @@ transformed data {
 }
 
 Warning in 'matrix_pow_warning.stan', line 8, column 23: Found matrix^scalar:
-  A ^ power
-matrix ^ number is interpreted as element-wise exponentiation. If this is
-intended, you can silence this warning by using elementwise operator .^
-If you intended matrix exponentiation, use the function
-matrix_power(matrix,int) instead.
+      A ^ power
+    matrix ^ number is interpreted as element-wise exponentiation. If this
+    is
+    intended, you can silence this warning by using elementwise operator .^
+    If you intended matrix exponentiation, use the
+    function
+    matrix_power(matrix,int) instead.
 Warning in 'matrix_pow_warning.stan', line 9, column 25: Found matrix^scalar:
-  A ^ 3.5
-matrix ^ number is interpreted as element-wise exponentiation. If this is
-intended, you can silence this warning by using elementwise operator .^
-If you intended matrix exponentiation, use the function
-matrix_power(matrix,int) instead.
+      A ^ 3.5
+    matrix ^ number is interpreted as element-wise exponentiation. If this
+    is
+    intended, you can silence this warning by using elementwise operator .^
+    If you intended matrix exponentiation, use the
+    function
+    matrix_power(matrix,int) instead.
   $ ../../../../install/default/bin/stanc --auto-format min-max-types.stan
 parameters {
   matrix[max(1, 3), min(2, 5)] a;
@@ -5050,12 +5281,14 @@ model {
   y ~ neg_binomial_2_log(x * beta_inferred + alpha_inferred, sigma);
 }
 
-Warning in 'neg_binomial_2_log_glm_old_performance.stan', line 11, column 19: Found int division:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
+Warning in 'neg_binomial_2_log_glm_old_performance.stan', line 11, column 19: Found
+    int division:
+      j / M
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      j * 1.0 / M
+    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format neg_binomial_2_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -5086,12 +5319,14 @@ model {
   y ~ neg_binomial_2_log_glm(x, alpha_inferred, beta_inferred, sigma);
 }
 
-Warning in 'neg_binomial_2_log_glm_performance.stan', line 11, column 19: Found int division:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
+Warning in 'neg_binomial_2_log_glm_performance.stan', line 11, column 19: Found
+    int division:
+      j / M
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      j * 1.0 / M
+    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format new-prob-fun-suffixes.stan
 parameters {
   real y;
@@ -5136,12 +5371,14 @@ model {
   y ~ normal(x * beta_inferred + alpha_inferred, sigma);
 }
 
-Warning in 'normal_id_glm_old_performance.stan', line 11, column 19: Found int division:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
+Warning in 'normal_id_glm_old_performance.stan', line 11, column 19: Found
+    int division:
+      j / M
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      j * 1.0 / M
+    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format normal_id_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -5172,12 +5409,14 @@ model {
   y ~ normal_id_glm(x, alpha_inferred, beta_inferred, sigma);
 }
 
-Warning in 'normal_id_glm_performance.stan', line 11, column 19: Found int division:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
+Warning in 'normal_id_glm_performance.stan', line 11, column 19: Found int
+    division:
+      j / M
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      j * 1.0 / M
+    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format nullary-unconflicted.stan
 parameters {
   real e;
@@ -5251,9 +5490,10 @@ model {
   
 }
 
-Warning in 'ode-int-segments.stan', line 25, column 12: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'ode-int-segments.stan', line 25, column 12: integrate_ode is
+    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format ode-nested-quotes.stan
 /**
  * Minimal example derived from jimsinmss example brought
@@ -5275,9 +5515,10 @@ model {
   
 }
 
-Warning in 'ode-nested-quotes.stan', line 17, column 6: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'ode-nested-quotes.stan', line 17, column 6: integrate_ode is
+    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format ode_good.stan
 functions {
   array[] real harm_osc_ode(real t, array[] real y,
@@ -5361,27 +5602,34 @@ model {
     y[t] ~ normal(y_hat[t], sigma); // independent normal noise
 }
 
-Warning in 'ode_good.stan', line 27, column 10: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 34, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 41, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 48, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 55, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 62, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 69, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'ode_good.stan', line 27, column 10: integrate_ode is deprecated
+    and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'ode_good.stan', line 34, column 10: integrate_ode_rk45 is
+    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'ode_good.stan', line 41, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'ode_good.stan', line 48, column 10: integrate_ode_adams is
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'ode_good.stan', line 55, column 10: integrate_ode_rk45 is
+    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'ode_good.stan', line 62, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'ode_good.stan', line 69, column 10: integrate_ode_adams is
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format old-log-funs.stan
 transformed data {
   real x;
@@ -5397,8 +5645,12 @@ model {
   y ~ normal(0, 1);
 }
 
-Warning in 'old-log-funs.stan', line 3, column 6: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'old-log-funs.stan', line 4, column 6: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+Warning in 'old-log-funs.stan', line 3, column 6: multiply_log is deprecated
+    and will be removed in Stan 2.32.0. Use lmultiply instead. This can be
+    automatically changed using stanc --print-canonical
+Warning in 'old-log-funs.stan', line 4, column 6: binomial_coefficient_log is
+    deprecated and will be removed in Stan 2.32.0. Use lchoose instead. This
+    can be automatically changed using stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format poisson_log_glm_old_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -5428,12 +5680,14 @@ model {
   y ~ poisson_log(x * beta_inferred + alpha_inferred);
 }
 
-Warning in 'poisson_log_glm_old_performance.stan', line 10, column 19: Found int division:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
+Warning in 'poisson_log_glm_old_performance.stan', line 10, column 19: Found
+    int division:
+      j / M
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      j * 1.0 / M
+    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format poisson_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -5463,12 +5717,14 @@ model {
   y ~ poisson_log_glm(x, alpha_inferred, beta_inferred);
 }
 
-Warning in 'poisson_log_glm_performance.stan', line 10, column 19: Found int division:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
+Warning in 'poisson_log_glm_performance.stan', line 10, column 19: Found int
+    division:
+      j / M
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      j * 1.0 / M
+    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format pound-comment-deprecated.stan
 data {
   // hey, this is the old way to do things, should raise warning
@@ -5478,7 +5734,10 @@ model {
   
 }
 
-Warning in 'pound-comment-deprecated.stan', line 2, column 2: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'pound-comment-deprecated.stan', line 2, column 2: Comments
+    beginning with # are deprecated and this syntax will be removed in Stan
+    2.32.0. Use // to begin line comments; this can be done automatically
+    using stanc --auto-format
   $ ../../../../install/default/bin/stanc --auto-format print_chars.stan
 parameters {
   real y;
@@ -5807,6 +6066,21 @@ model {
   y ~ foo(theta) T[L, U];
 }
 
+Warning in 'truncation-user-defined.stan', line 2, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'foo_lpdf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
+Warning in 'truncation-user-defined.stan', line 3, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'foo_lcdf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
+Warning in 'truncation-user-defined.stan', line 4, column 7: Use of the _log
+    suffix in user defined probability functions is deprecated and will be
+    removed in Stan 2.32.0, use name 'foo_lccdf' instead if you intend on
+    using this function in ~ statements or calling unnormalized probability
+    functions inside of it.
   $ ../../../../install/default/bin/stanc --auto-format truncation-wild.stan
 model {
   array[1, 1] real T = {{42.0}};
@@ -6183,9 +6457,18 @@ model {
   y ~ normal(0, 1);
 }
 
-Warning in 'validate_bounds_comparison.stan', line 2, column 13: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'validate_bounds_comparison.stan', line 3, column 13: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'validate_bounds_comparison.stan', line 4, column 29: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'validate_bounds_comparison.stan', line 2, column 13: The function
+    `if_else` is deprecated and will be removed in Stan 2.32.0. Use the
+    conditional operator (x ? y : z) instead; this can be automatically
+    changed using stanc --print-canonical
+Warning in 'validate_bounds_comparison.stan', line 3, column 13: The function
+    `if_else` is deprecated and will be removed in Stan 2.32.0. Use the
+    conditional operator (x ? y : z) instead; this can be automatically
+    changed using stanc --print-canonical
+Warning in 'validate_bounds_comparison.stan', line 4, column 29: The function
+    `if_else` is deprecated and will be removed in Stan 2.32.0. Use the
+    conditional operator (x ? y : z) instead; this can be automatically
+    changed using stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format validate_conditional_op_good.stan
 functions {
   real foo(real fa_x, int fa_y) {
@@ -6434,12 +6717,14 @@ model {
   y ~ normal(0, 1);
 }
 
-Warning in 'validate_division_good.stan', line 19, column 7: Found int division:
-  2 / 3
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  2.0 / 3
-If rounding is intended please use the integer division operator %/%.
+Warning in 'validate_division_good.stan', line 19, column 7: Found int
+    division:
+      2 / 3
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      2.0 / 3
+    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format validate_division_int_warning.stan
 transformed data {
   real u;
@@ -6456,12 +6741,14 @@ model {
   y ~ normal(0, 1);
 }
 
-Warning in 'validate_division_int_warning.stan', line 7, column 6: Found int division:
-  j / k
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / k
-If rounding is intended please use the integer division operator %/%.
+Warning in 'validate_division_int_warning.stan', line 7, column 6: Found int
+    division:
+      j / k
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      j * 1.0 / k
+    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format validate_elt_division_good.stan
 transformed data {
   matrix[3, 3] m;
