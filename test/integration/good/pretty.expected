@@ -3023,6 +3023,11 @@ Warning in 'deprecated_syntax.stan', line 40, column 2: increment_log_prob(...);
 Warning in 'deprecated_syntax.stan', line 42, column 11: get_lp() function is
     deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
     can be done automatically with stanc --print-canonical
+Warning in 'deprecated_syntax.stan', line 46, column 6: Variable name
+    'offset' will be a reserved word starting in Stan 2.32.0. Please rename
+    it!
+Warning in 'deprecated_syntax.stan', line 47, column 6: Variable name 'array'
+    will be a reserved word starting in Stan 2.32.0. Please rename it!
 Warning in 'deprecated_syntax.stan', line 51, column 2: Comments beginning
     with # are deprecated and this syntax will be removed in Stan 2.32.0. Use
     // to begin line comments; this can be done automatically using stanc
@@ -3942,6 +3947,14 @@ data {
   int offset;
 }
 
+Warning in 'identifiers.stan', line 2, column 6: Variable name 'upper' will
+    be a reserved word starting in Stan 2.32.0. Please rename it!
+Warning in 'identifiers.stan', line 3, column 6: Variable name 'lower' will
+    be a reserved word starting in Stan 2.32.0. Please rename it!
+Warning in 'identifiers.stan', line 4, column 6: Variable name 'multiplier'
+    will be a reserved word starting in Stan 2.32.0. Please rename it!
+Warning in 'identifiers.stan', line 5, column 6: Variable name 'offset' will
+    be a reserved word starting in Stan 2.32.0. Please rename it!
   $ ../../../../install/default/bin/stanc --auto-format if-else-formatting.stan
 generated quantities {
   // make sure pp_recursive_ifthenelse properly places else
@@ -6289,6 +6302,15 @@ model {
   array[1, 2, 3] real abc;
 }
 
+Warning in 'unreserved-array-keyword.stan', line 2, column 24: Variable name
+    'array' will be a reserved word starting in Stan 2.32.0. Please rename
+    it!
+Warning in 'unreserved-array-keyword.stan', line 2, column 40: Variable name
+    'array' will be a reserved word starting in Stan 2.32.0. Please rename
+    it!
+Warning in 'unreserved-array-keyword.stan', line 6, column 7: Variable name
+    'array' will be a reserved word starting in Stan 2.32.0. Please rename
+    it!
   $ ../../../../install/default/bin/stanc --auto-format user-defined-lpdf-fun.stan
 functions {
   real bar_lpmf(int y, real z) {

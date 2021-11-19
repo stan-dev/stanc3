@@ -1198,6 +1198,9 @@ Syntax error in 'ill-formed-statement23.stan', line 1, column 35 to column 39, p
 
 Ill-formed statement. Expected statement after "else".
   $ ../../../../../install/default/bin/stanc ill-formed-statement24.stan
+Warning in 'ill-formed-statement24.stan', line 1, column 30: Variable name
+    'upper' will be a reserved word starting in Stan 2.32.0. Please rename
+    it!
 Syntax error in 'ill-formed-statement24.stan', line 1, column 35 to column 36, parsing error:
    -------------------------------------------------
      1:  transformed data { if ( 1 ) ; upper}
@@ -1214,6 +1217,9 @@ Syntax error in 'ill-formed-statement25.stan', line 1, column 34 to column 38, p
 
 Ill-formed statement. Expected statement after else.
   $ ../../../../../install/default/bin/stanc ill-formed-statement26.stan
+Warning in 'ill-formed-statement26.stan', line 1, column 29: Variable name
+    'upper' will be a reserved word starting in Stan 2.32.0. Please rename
+    it!
 Syntax error in 'ill-formed-statement26.stan', line 1, column 34 to column 34, parsing error:
    -------------------------------------------------
      1:  transformed data { if ( T) ; upper
