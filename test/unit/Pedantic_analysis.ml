@@ -45,7 +45,7 @@ let%expect_test "Unbounded sigma warning" =
           parameter sigma_a as a scale parameter (argument 2), but sigma_a was not
           constrained to be strictly positive.
       Warning in 'string', line 11, column 10: The parameter x is on the left-hand
-          side of more than one twiddle statement.
+          side of more than one tilde statement.
       Warning: Your Stan program has a parameter sigma_e with a lower and upper
           bound in its declaration. These hard constraints are not recommended, for
           two reasons: (a) Except when there are logical or physical constraints,
@@ -156,7 +156,7 @@ let%expect_test "Multi tilde warning" =
   [%expect
     {|
       Warning in 'string', line 7, column 10: The parameter x is on the left-hand
-          side of more than one twiddle statement.
+          side of more than one tilde statement.
       Warning: The parameter y has 2 priors.
       Warning: The parameter x has 2 priors. |}]
 
@@ -346,7 +346,7 @@ let%expect_test "Non-one priors warning" =
   [%expect
     {|
       Warning in 'string', line 22, column 10: The parameter f is on the left-hand
-          side of more than one twiddle statement.
+          side of more than one tilde statement.
       Warning: The parameter f has no priors.
       Warning: The parameter e has no priors.
       Warning: The parameter d has no priors.
@@ -399,7 +399,7 @@ let%expect_test "Gamma args warning" =
           (2006). Instead we recommend something like a normal(0,1) or
           student_t(4,0,1), with parameter constrained to be positive.
       Warning in 'string', line 9, column 10: The parameter a is on the left-hand
-          side of more than one twiddle statement.
+          side of more than one tilde statement.
       Warning: The parameter b has 2 priors.
       Warning: The parameter a has 4 priors.
     |}]
@@ -588,7 +588,7 @@ let%expect_test "Dist warnings" =
           distribution, which has covariance support, but mat was not constrained
           to be covariance.
       Warning in 'string', line 135, column 2: The parameter cov is on the
-          left-hand side of more than one twiddle statement.
+          left-hand side of more than one tilde statement.
       Warning in 'string', line 134, column 23: A wishart distribution is given
           parameter mat as a scale matrix (argument 2), but mat was not constrained
           to be covariance.
@@ -606,7 +606,7 @@ let%expect_test "Dist warnings" =
           support, but corr was not constrained to be Cholesky factor of
           correlation.
       Warning in 'string', line 131, column 2: The parameter corr is on the
-          left-hand side of more than one twiddle statement.
+          left-hand side of more than one tilde statement.
       Warning in 'string', line 131, column 2: It is suggested to reparameterize
           your model to replace lkj_corr with lkj_corr_cholesky, the Cholesky
           factor variant. lkj_corr tends to run slower, consume more memory, and
@@ -646,7 +646,7 @@ let%expect_test "Dist warnings" =
           parameter mat as a kernel matrix (argument 1), but mat was not
           constrained to be covariance.
       Warning in 'string', line 120, column 2: The parameter mat is on the
-          left-hand side of more than one twiddle statement.
+          left-hand side of more than one tilde statement.
       Warning in 'string', line 118, column 35: A multi_normal_cholesky
           distribution is given parameter cov as a covariance matrix (argument 2),
           but cov was not constrained to be Cholesky factor of covariance.
@@ -669,7 +669,7 @@ let%expect_test "Dist warnings" =
           beta_proportion distribution, which has (0,1) support, but x was not
           constrained to be (0,1).
       Warning in 'string', line 109, column 2: The parameter x_unit is on the
-          left-hand side of more than one twiddle statement.
+          left-hand side of more than one tilde statement.
       Warning in 'string', line 108, column 18: A beta distribution is given
           parameter unb_p as a count parameter (argument 2), but unb_p was not
           constrained to be strictly positive.
@@ -776,7 +776,7 @@ let%expect_test "Dist warnings" =
           distribution, which has strictly positive support, but x was not
           constrained to be strictly positive.
       Warning in 'string', line 83, column 2: The parameter x_pos is on the
-          left-hand side of more than one twiddle statement.
+          left-hand side of more than one tilde statement.
       Warning in 'string', line 82, column 19: A lognormal distribution is given
           parameter unb_p as a scale parameter (argument 2), but unb_p was not
           constrained to be strictly positive.
@@ -814,17 +814,17 @@ let%expect_test "Dist warnings" =
           given parameter unb_p as a scale parameter (argument 4), but unb_p was
           not constrained to be strictly positive.
       Warning in 'string', line 66, column 2: The parameter vec is on the left-hand
-          side of more than one twiddle statement.
+          side of more than one tilde statement.
       Warning in 'string', line 64, column 16: A normal distribution is given
           parameter unb_p as a scale parameter (argument 2), but unb_p was not
           constrained to be strictly positive.
       Warning in 'string', line 64, column 2: The parameter x is on the left-hand
-          side of more than one twiddle statement.
+          side of more than one tilde statement.
       Warning in 'string', line 62, column 26: A multinomial distribution is given
           parameter vec as a distribution parameter (argument 1), but vec was not
           constrained to be simplex.
       Warning in 'string', line 61, column 2: The parameter pos_d_vec is on the
-          left-hand side of more than one twiddle statement.
+          left-hand side of more than one tilde statement.
       Warning in 'string', line 56, column 18: A poisson distribution is given
           parameter unb_p as a rate parameter (argument 1), but unb_p was not
           constrained to be strictly positive.
@@ -857,7 +857,7 @@ let%expect_test "Dist warnings" =
           parameter vec as a vector of outcome probabilities (argument 1), but vec
           was not constrained to be simplex.
       Warning in 'string', line 39, column 2: The parameter pos_d is on the
-          left-hand side of more than one twiddle statement.
+          left-hand side of more than one tilde statement.
       Warning in 'string', line 38, column 38: A beta_binomial distribution is
           given parameter unb_p as a prior failure count (argument 3), but unb_p
           was not constrained to be strictly positive.
@@ -868,14 +868,14 @@ let%expect_test "Dist warnings" =
           parameter unb_p as chance of success (argument 2), but unb_p was not
           constrained to be [0,1].
       Warning in 'string', line 32, column 2: The parameter unb_d_vec is on the
-          left-hand side of more than one twiddle statement.
+          left-hand side of more than one tilde statement.
       Warning in 'string', line 29, column 2: The parameter bin_d is on the
-          left-hand side of more than one twiddle statement.
+          left-hand side of more than one tilde statement.
       Warning in 'string', line 28, column 20: A bernoulli distribution is given
           parameter unb_p as chance of success (argument 1), but unb_p was not
           constrained to be [0,1].
       Warning in 'string', line 28, column 2: The parameter unb_d is on the
-          left-hand side of more than one twiddle statement.
+          left-hand side of more than one tilde statement.
       Warning: The parameter x_unit has no priors.
       Warning: The parameter x_pos has no priors.
       Warning: The parameter x has no priors.
