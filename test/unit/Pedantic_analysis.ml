@@ -138,7 +138,7 @@ let%expect_test "Unscaled warning" =
           parameters that are not unit scale; consider rescaling with a multiplier
           (see manual section 22.12). |}]
 
-let multi_twiddle_example =
+let multi_tilde_example =
   {|
         parameters {
           real x;
@@ -151,8 +151,8 @@ let multi_twiddle_example =
         }
       |}
 
-let%expect_test "Multi twiddle warning" =
-  print_warn_pedantic (build_program multi_twiddle_example) ;
+let%expect_test "Multi tilde warning" =
+  print_warn_pedantic (build_program multi_tilde_example) ;
   [%expect
     {|
       Warning in 'string', line 7, column 10: The parameter x is on the left-hand

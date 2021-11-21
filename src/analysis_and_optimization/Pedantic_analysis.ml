@@ -43,10 +43,10 @@ let list_hard_constrained (mir : Program.Typed.t) :
         (constrained (trans_bounds_values trans)) )
     (parameter_set mir)
 
-let list_multi_twiddles (mir : Program.Typed.t) :
+let list_multi_tildes (mir : Program.Typed.t) :
     (string * Location_span.t Set.Poly.t) Set.Poly.t =
   (* Collect statements of the form "target += Dist(param, ...)" *)
-  let collect_twiddle_stmt (stmt : Stmt.Located.t) :
+  let collect_tilde_stmt (stmt : Stmt.Located.t) :
       (string, Location_span.t Set.Poly.t) Map.Poly.t =
     match stmt.pattern with
     | Stmt.Fixed.Pattern.TargetPE
@@ -54,17 +54,17 @@ let list_multi_twiddles (mir : Program.Typed.t) :
       ->
         Map.Poly.singleton vname (Set.Poly.singleton stmt.meta)
     | _ -> Map.Poly.empty in
-  let twiddles =
+  let tildes =
     fold_stmts
-      ~take_stmt:(fun m s -> merge_set_maps m (collect_twiddle_stmt s))
+      ~take_stmt:(fun m s -> merge_set_maps m (collect_tilde_stmt s))
       ~take_expr:(fun m _ -> m)
       ~init:Map.Poly.empty mir.log_prob in
   (* Filter for parameters assigned more than one distribution *)
-  let multi_twiddles =
-    Map.Poly.filter ~f:(fun s -> Set.Poly.length s <> 1) twiddles in
+  let multi_tildes =
+    Map.Poly.filter ~f:(fun s -> Set.Poly.length s <> 1) tildes in
   Map.fold ~init:Set.Poly.empty
     ~f:(fun ~key ~data s -> Set.add s (key, data))
-    multi_twiddles
+    multi_tildes
 
 (* Find all of the targets which are dependencies for a given label *)
 let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
@@ -320,17 +320,17 @@ let hard_constrained_warnings (mir : Program.Typed.t) =
           (Location_span.empty, nonsense_constrained_message pname) )
     pnames
 
-let multi_twiddles_message (vname : string) : string =
+let multi_tildes_message (vname : string) : string =
   Printf.sprintf
-    "The parameter %s is on the left-hand side of more than one twiddle \
+    "The parameter %s is on the left-hand side of more than one tilde \
      statement."
     vname
 
-let multi_twiddles_warnings (mir : Program.Typed.t) =
-  let twds = list_multi_twiddles mir in
+let multi_tildes_warnings (mir : Program.Typed.t) =
+  let twds = list_multi_tildes mir in
   Set.Poly.map
     ~f:(fun (vname, locs) ->
-      (Set.Poly.min_elt_exn locs, multi_twiddles_message vname) )
+      (Set.Poly.min_elt_exn locs, multi_tildes_message vname) )
     twds
 
 let param_dependant_cf_message (plist : string Set.Poly.t) : string =
@@ -421,7 +421,7 @@ let warn_pedantic (mir_unopt : Program.Typed.t) =
   let factor_graph = prog_factor_graph mir in
   Set.Poly.union_list
     [ uninitialized_warnings mir; unscaled_constants_warnings distributions_info
-    ; multi_twiddles_warnings mir; hard_constrained_warnings mir
+    ; multi_tildes_warnings mir; hard_constrained_warnings mir
     ; unused_params_warnings factor_graph mir; param_dependant_cf_warnings mir
     ; param_dependant_fundef_cf_warnings mir
     ; non_one_priors_warnings factor_graph mir
