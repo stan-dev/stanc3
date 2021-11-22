@@ -12,7 +12,7 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     container:
-      image: ocaml/opam2:alpine-3.9-ocaml-4.07
+      image: ocaml/opam2:4.12
       options: --user root
     steps:    
       - name: Checkout stanc3
@@ -25,14 +25,12 @@ jobs:
         uses: actions/cache@v2
         with:
           path: "~/.opam"
-          key: linux-stanc-binary-4.07
+          key: linux-stanc-binary-4.12.0
 
       - name: Install dependencies
         run: |
-          sudo apk update
-          sudo apk add build-base bzip2 git tar curl ca-certificates openssl m4 bash
           opam init --disable-sandboxing -y
-          opam switch 4.07.0 || opam switch create 4.07.0
+          opam switch 4.12.0 || opam switch create 4.12.0
           eval $(opam env)
           opam repo add internet https://opam.ocaml.org
           opam update
@@ -44,24 +42,16 @@ jobs:
           dune subst
           dune build @install --profile static
           mv _build/default/src/stanc/stanc.exe linux-stanc
-          mv _build/default/src/stan2tfp/stan2tfp.exe linux-stan2tfp
-      
+
       - name: Upload Linux stanc
         uses: actions/upload-artifact@v2
         with:
           name: linux-stanc
-          path: linux-stanc            
-
-      - name: Upload Linux stan2tfp
-        uses: actions/upload-artifact@v2
-        with:
-          name: linux-stan2tfp
-          path: linux-stan2tfp
-
+          path: linux-stanc
   windows:
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:bionic
+      image: stanorg/stanc3:debian
       options: --user root
     steps:    
       - name: Checkout stanc3
@@ -74,7 +64,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: "~/.opam"
-          key: windows-stanc-binary-4.07
+          key: windows-stanc-binary-4.12.0
 
       - name: Install dependencies
         run: |
@@ -83,14 +73,14 @@ jobs:
           unzip pkg-config libpcre3-dev mingw-w64 gcc wget gawk bubblewrap
           wget https://github.com/ocaml/opam/releases/download/2.0.4/opam-2.0.4-x86_64-linux
           sudo install opam-2.0.4-x86_64-linux /usr/local/bin/opam
-          opam init --comp 4.02.3 --disable-sandboxing -y
+          opam init $1 --disable-sandboxing -y
           eval $(opam env)
-          opam switch 4.07.0 || opam switch create 4.07.0
+          opam switch stanc || opam switch create stanc ocaml-base-compiler.4.12.0
           eval $(opam env)
-          opam update
           bash -x scripts/install_build_deps_windows.sh
-          eval $(opam env)
-          opam install -y js_of_ocaml-compiler.3.4.0 js_of_ocaml-ppx.3.4.0 js_of_ocaml.3.4.0
+          eval $(opam env)  
+          opam pin -y js_of_ocaml-ppx 3.11.0
+          opam install -y js_of_ocaml-ppx
 
       - name: Build Windows binaries
         run: |
@@ -98,7 +88,6 @@ jobs:
           dune subst
           dune build -x windows
           mv _build/default.windows/src/stanc/stanc.exe windows-stanc
-          mv _build/default.windows/src/stan2tfp/stan2tfp.exe windows-stan2tfp
 
       - name: Build stanc.js
         run: |
@@ -112,12 +101,6 @@ jobs:
         with:
           name: windows-stanc
           path: windows-stanc
-
-      - name: Upload Windows stan2tfp
-        uses: actions/upload-artifact@v2
-        with:
-          name: windows-stan2tfp
-          path: windows-stan2tfp
 
       - name: Upload stanc.js
         uses: actions/upload-artifact@v2
@@ -137,7 +120,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: "~/.opam"
-          key: macOS-stanc-binary-4.07
+          key: macOS-stanc-binary-4.12.0
 
       - name: Install dependencies
         run: |
@@ -145,7 +128,7 @@ jobs:
           brew install opam
           opam init --disable-sandboxing -y
           eval $(opam env)
-          opam switch 4.07.0 || opam switch create 4.07.0          
+          opam switch 4.12.0 || opam switch create 4.12.0          
           eval $(opam env)
           bash -x scripts/install_build_deps.sh
 
@@ -155,16 +138,9 @@ jobs:
           dune subst
           dune build @install
           mv _build/default/src/stanc/stanc.exe mac-stanc
-          mv _build/default/src/stan2tfp/stan2tfp.exe mac-stan2tfp
       
       - name: Upload MacOS binaries
         uses: actions/upload-artifact@v2
         with:
           name: mac-stanc
           path: mac-stanc
-
-      - name: Upload MacOS binaries
-        uses: actions/upload-artifact@v2
-        with:
-          name: mac-stan2tfp
-          path: mac-stan2tfp
