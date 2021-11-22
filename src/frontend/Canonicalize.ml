@@ -141,9 +141,9 @@ and keep_parens {expr; emeta} =
 
 let parens_lval = map_lval_with no_parens ident
 
-let stmt_to_block ({stmt; smeta} : typed_statement) : typed_statement =
+let stmt_to_block ({stmt; smeta} as s : typed_statement) : typed_statement =
   match stmt with
-  | Block _ -> {stmt; smeta}
+  | Block _ -> s
   | _ ->
       mk_typed_statement
         ~stmt:(Block [{stmt; smeta}])
@@ -166,6 +166,8 @@ let rec parens_stmt ({stmt; smeta} : typed_statement) : typed_statement =
           ; initial_value= Option.map ~f:no_parens init
           ; is_global }
     | While (e, s) -> While (no_parens e, parens_block s)
+    | IfThenElse (e, s1, (Some {stmt= IfThenElse _; _} as s2)) ->
+        IfThenElse (no_parens e, parens_block s1, Option.map ~f:parens_stmt s2)
     | IfThenElse (e, s1, s2) ->
         IfThenElse (no_parens e, parens_block s1, Option.map ~f:parens_block s2)
     | For {loop_variable; lower_bound; upper_bound; loop_body} ->
