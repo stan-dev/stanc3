@@ -69,18 +69,14 @@ model {
   ///////////////////////////////
   if (N > 5) {
     y ~ std_normal();
-  } else {
-    if (N > 5) {
-      y ~ std_normal();
-    }
+  } else if (N > 5) {
+    y ~ std_normal();
   }
   
   if (N > 5) {
     y ~ std_normal();
-  } else {
-    if (N > 5) {
-      y ~ std_normal();
-    }
+  } else if (N > 5) {
+    y ~ std_normal();
   }
   
   if (N > 5) {
@@ -101,38 +97,26 @@ model {
   
   if (N > 5) {
     y ~ std_normal();
-  } else {
-    if (N > 5) {
-      y ~ std_normal();
-    } else {
-      if (N > 5) {
-        y ~ std_normal();
-      }
-    }
+  } else if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
   }
   
   if (N > 5) {
     y ~ std_normal();
-  } else {
-    if (N > 5) {
-      y ~ std_normal();
-    } else {
-      if (N > 5) {
-        y ~ std_normal();
-      }
-    }
+  } else if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
   }
   
   if (N > 5) {
     y ~ std_normal();
-  } else {
-    if (N > 5) {
-      y ~ std_normal();
-    } else {
-      if (N > 5) {
-        y ~ std_normal();
-      }
-    }
+  } else if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
   }
   
   // test comments in various places wrt IfThenElse
