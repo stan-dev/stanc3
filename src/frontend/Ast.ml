@@ -222,7 +222,10 @@ type 's block = {stmts: 's list; xloc: Middle.Location_span.t [@ignore]}
 and comment_type =
   | LineComment of string * Middle.Location_span.t
   | BlockComment of string list * Middle.Location_span.t
-  | Comma of Middle.Location.t
+  | Separator of Middle.Location.t
+      (** Separator records the location of items like commas, operators, and keywords
+          which don't have location information stored in the AST
+          but are useful for placing comments in pretty printing *)
 
 and 's program =
   { functionblock: 's block option

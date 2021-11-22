@@ -136,9 +136,8 @@ model {
   
   if (N > 5) {
     y ~ std_normal();
-  }
-  //comment before else branch
-  else {
+  } else //comment before else branch
+  {
     y ~ std_normal();
   }
   
