@@ -21,6 +21,15 @@ model {
   y_p ~ normal(0, 1);
 }
 
+Warning in 'multinomial_log.stan', line 8, column 26: multinomial_log is
+    deprecated and will be removed in Stan 2.32.0. Use multinomial_lpmf
+    instead. This can be automatically changed using stanc --print-canonical
+Warning in 'multinomial_log.stan', line 16, column 27: multinomial_log is
+    deprecated and will be removed in Stan 2.32.0. Use multinomial_lpmf
+    instead. This can be automatically changed using stanc --print-canonical
+Warning in 'multinomial_log.stan', line 17, column 27: multinomial_log is
+    deprecated and will be removed in Stan 2.32.0. Use multinomial_lpmf
+    instead. This can be automatically changed using stanc --print-canonical
   $ ../../../../../../../../../install/default/bin/stanc --auto-format multinomial_logit_lpmf.stan
 data {
   int d_int;

@@ -17,3 +17,9 @@ model {
   y_p ~ normal(0, 1);
 }
 
+Warning in 'hypergeometric_log.stan', line 6, column 26: hypergeometric_log
+    is deprecated and will be removed in Stan 2.32.0. Use hypergeometric_lpmf
+    instead. This can be automatically changed using stanc --print-canonical
+Warning in 'hypergeometric_log.stan', line 13, column 27: hypergeometric_log
+    is deprecated and will be removed in Stan 2.32.0. Use hypergeometric_lpmf
+    instead. This can be automatically changed using stanc --print-canonical
