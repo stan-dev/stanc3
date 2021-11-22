@@ -222,7 +222,7 @@ type 's block = {stmts: 's list; xloc: Middle.Location_span.t [@ignore]}
 and comment_type =
   | LineComment of string * Middle.Location_span.t
   | BlockComment of string list * Middle.Location_span.t
-  | Comma of Middle.Location.t
+  | Separator of Middle.Location.t
 
 and 's program =
   { functionblock: 's block option

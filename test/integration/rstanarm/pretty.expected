@@ -6541,11 +6541,11 @@ model {
         //----- etavalue and any interactions
         
         mark2 += 1;
-        if (has_assoc[1, m] == 1 || has_assoc[9, m] == 1
-            || has_assoc[13, m] == 1 || has_assoc[14, m] == 1) {
-          // etavalue
-          // etavalue * data
-          // etavalue * etavalue
+        if (has_assoc[1, m] == 1 || // etavalue
+            has_assoc[9, m] == 1 || // etavalue * data
+            has_assoc[13, m] == 1
+            || // etavalue * etavalue
+            has_assoc[14, m] == 1) {
           // etavalue * muvalue
           
           // declare and define eta at quadpoints for submodel m
@@ -6798,11 +6798,11 @@ model {
         //----- muvalue and any interactions
         
         mark2 += 1;
-        if (has_assoc[4, m] == 1 || has_assoc[11, m] == 1
-            || has_assoc[15, m] == 1 || has_assoc[16, m] == 1) {
-          // muvalue
-          // muvalue * data
-          // muvalue * etavalue
+        if (has_assoc[4, m] == 1 || // muvalue
+            has_assoc[11, m] == 1 || // muvalue * data
+            has_assoc[15, m] == 1
+            || // muvalue * etavalue
+            has_assoc[16, m] == 1) {
           // muvalue * muvalue
           
           // declare and define mu for submodel m
@@ -7256,9 +7256,9 @@ functions {
                         real SSR, real sigma, int N) {
     target += -0.5
               * (dot_self(theta - b) + N * square(intercept - ybar) + SSR)
-              / square(sigma) - N * (log(sigma) + 0.91893853320467267);
-    
-    // ^^^: 0.91... is log(sqrt(2 * pi()))
+              / square(sigma)
+              - // 0.91... is log(sqrt(2 * pi()))
+              N * (log(sigma) + 0.91893853320467267);
     return target();
   }
 }
@@ -7321,8 +7321,8 @@ transformed parameters {
       else if (prior_scale_for_intercept == 0)  // central limit theorem
         alpha[j] = z_alpha[j] * Delta_y * sqrt_inv_N[j]
                    + prior_mean_for_intercept;
-      // arbitrary informative prior
-      else 
+      else // arbitrary informative prior
+      
         alpha[j] = z_alpha[j] * prior_scale_for_intercept
                    + prior_mean_for_intercept;
     }

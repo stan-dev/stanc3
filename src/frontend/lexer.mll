@@ -26,6 +26,11 @@ let comments : Ast.comment_type list ref = ref []
     comments :=
         BlockComment ( lines, Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
       :: !comments
+  let add_separator lexbuf =
+    comments :=
+        Separator (Middle.Location.of_position_exn lexbuf.lex_curr_p)
+      :: !comments
+
 }
 
 (* Some auxiliary definition for variables and constants *)
@@ -100,19 +105,15 @@ rule token = parse
   | ')'                       { lexer_logger ")" ; Parser.RPAREN }
   | '['                       { lexer_logger "[" ; Parser.LBRACK }
   | ']'                       { lexer_logger "]" ; Parser.RBRACK }
-  | '<'                       { lexer_logger "<" ; Parser.LABRACK }
-  | '>'                       { lexer_logger ">" ; Parser.RABRACK }
-  | ','                       { lexer_logger "," ;
-                                comments :=
-                                  Comma (Middle.Location.of_position_exn lexbuf.lex_curr_p)
-                                  :: !comments ;
-                                Parser.COMMA }
+  | '<'                       { lexer_logger "<" ; add_separator lexbuf ; Parser.LABRACK }
+  | '>'                       { lexer_logger ">" ; add_separator lexbuf ; Parser.RABRACK }
+  | ','                       { lexer_logger "," ; add_separator lexbuf ; Parser.COMMA }
   | ';'                       { lexer_logger ";" ; Parser.SEMICOLON }
-  | '|'                       { lexer_logger "|" ; Parser.BAR }
+  | '|'                       { lexer_logger "|" ; add_separator lexbuf ; Parser.BAR }
 (* Control flow keywords *)
   | "return"                  { lexer_logger "return" ; Parser.RETURN }
   | "if"                      { lexer_logger "if" ; Parser.IF }
-  | "else"                    { lexer_logger "else" ; Parser.ELSE }
+  | "else"                    { lexer_logger "else" ; add_separator lexbuf ; Parser.ELSE }
   | "while"                   { lexer_logger "while" ; Parser.WHILE }
   | "profile"                 { lexer_logger "profile" ; Parser.PROFILE }
   | "for"                     { lexer_logger "for" ; Parser.FOR }
@@ -145,27 +146,27 @@ rule token = parse
   | "offset"                  { lexer_logger "offset" ; Parser.OFFSET }
   | "multiplier"              { lexer_logger "multiplier" ; Parser.MULTIPLIER }
 (* Operators *)
-  | '?'                       { lexer_logger "?" ; Parser.QMARK }
+  | '?'                       { lexer_logger "?" ; add_separator lexbuf ; Parser.QMARK }
   | ':'                       { lexer_logger ":" ; Parser.COLON }
   | '!'                       { lexer_logger "!" ; Parser.BANG }
-  | '-'                       { lexer_logger "-" ; Parser.MINUS }
-  | '+'                       { lexer_logger "+" ; Parser.PLUS }
-  | '^'                       { lexer_logger "^" ; Parser.HAT }
+  | '-'                       { lexer_logger "-" ; add_separator lexbuf ; Parser.MINUS }
+  | '+'                       { lexer_logger "+" ; add_separator lexbuf ; Parser.PLUS }
+  | '^'                       { lexer_logger "^" ; add_separator lexbuf ; Parser.HAT }
   | '\''                      { lexer_logger "\'" ; Parser.TRANSPOSE }
-  | '*'                       { lexer_logger "*" ; Parser.TIMES }
-  | '/'                       { lexer_logger "/" ; Parser.DIVIDE }
-  | '%'                       { lexer_logger "%" ; Parser.MODULO }
-  | "%/%"                     { lexer_logger "%/%" ; Parser.IDIVIDE }
-  | "\\"                      { lexer_logger "\\" ; Parser.LDIVIDE }
-  | ".*"                      { lexer_logger ".*" ; Parser.ELTTIMES }
-  | ".^"                      { lexer_logger ".^" ; Parser.ELTPOW }
-  | "./"                      { lexer_logger "./" ; Parser.ELTDIVIDE }
-  | "||"                      { lexer_logger "||" ; Parser.OR }
-  | "&&"                      { lexer_logger "&&" ; Parser.AND }
-  | "=="                      { lexer_logger "==" ; Parser.EQUALS }
-  | "!="                      { lexer_logger "!=" ; Parser.NEQUALS }
-  | "<="                      { lexer_logger "<=" ; Parser.LEQ }
-  | ">="                      { lexer_logger ">=" ; Parser.GEQ }
+  | '*'                       { lexer_logger "*" ; add_separator lexbuf ; Parser.TIMES }
+  | '/'                       { lexer_logger "/" ; add_separator lexbuf ; Parser.DIVIDE }
+  | '%'                       { lexer_logger "%" ; add_separator lexbuf ; Parser.MODULO }
+  | "%/%"                     { lexer_logger "%/%" ; add_separator lexbuf ; Parser.IDIVIDE }
+  | "\\"                      { lexer_logger "\\" ; add_separator lexbuf ; Parser.LDIVIDE }
+  | ".*"                      { lexer_logger ".*" ; add_separator lexbuf ; Parser.ELTTIMES }
+  | ".^"                      { lexer_logger ".^" ; add_separator lexbuf ; Parser.ELTPOW }
+  | "./"                      { lexer_logger "./" ; add_separator lexbuf ; Parser.ELTDIVIDE }
+  | "||"                      { lexer_logger "||" ; add_separator lexbuf ; Parser.OR }
+  | "&&"                      { lexer_logger "&&" ; add_separator lexbuf ; Parser.AND }
+  | "=="                      { lexer_logger "==" ; add_separator lexbuf ; Parser.EQUALS }
+  | "!="                      { lexer_logger "!=" ; add_separator lexbuf ; Parser.NEQUALS }
+  | "<="                      { lexer_logger "<=" ; add_separator lexbuf ; Parser.LEQ }
+  | ">="                      { lexer_logger ">=" ; add_separator lexbuf ; Parser.GEQ }
   | "~"                       { lexer_logger "~" ; Parser.TILDE }
 (* Assignments *)
   | '='                       { lexer_logger "=" ; Parser.ASSIGN }
