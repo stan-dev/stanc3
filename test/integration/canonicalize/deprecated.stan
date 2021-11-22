@@ -64,6 +64,9 @@ model {
   target += normal_cdf(normal_cdf(0, 1, 2), 2, 3);
   target += foo_cdf(1, 2, 3);
 
+  target += hypergeometric_log(1, 2, 3, 4);
+  target += gaussian_dlm_obs_log(K,K,K,K,K,K[:,1],K);
+
   print("target: ", get_lp());
 }
 generated quantities {
