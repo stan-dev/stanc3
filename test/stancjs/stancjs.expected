@@ -145,8 +145,8 @@ $ node pedantic.js
 $ node standalone-functions.js
 
 $ node version.js
-%%NAME%% %%VERSION%%
-%%NAME%% %%VERSION%%
-%%NAME%% %%VERSION%%
+stanc v2.28.1-203-gdf056067-dirty
+stanc v2.28.1-203-gdf056067-dirty
+stanc v2.28.1-203-gdf056067-dirty
 $ node warnings.js
 ["Warning in 'string', line 4, column 4: Comments beginning with # are\n    deprecated and this syntax will be removed in Stan 2.32.0. Use // to\n    begin line comments; this can be done automatically using stanc\n    --auto-format"]

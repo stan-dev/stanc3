@@ -46,7 +46,7 @@ pipeline {
                     retry(3) { checkout scm }
                     sh 'git clean -xffd'
 
-                    def stanMathSigs = ['test/integration/signatures/stan_math_sigs.expected'].join(" ")
+                    def stanMathSigs = ['test/integration/signatures/stan_math_sigs.t'].join(" ")
                     skipExpressionTests = utils.verifyChanges(stanMathSigs)
 
                     def sourceCodePaths = ['src'].join(" ")
