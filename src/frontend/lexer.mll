@@ -31,6 +31,10 @@ let comments : Ast.comment_type list ref = ref []
         Separator (Middle.Location.of_position_exn lexbuf.lex_curr_p)
       :: !comments
 
+  let add_include fname lexbuf =
+    comments :=
+        Include (fname, (Middle.Location_span.of_positions_exn (lexbuf.lex_curr_p, lexbuf.lex_curr_p)) )
+      :: !comments
 }
 
 (* Some auxiliary definition for variables and constants *)
@@ -65,6 +69,7 @@ rule token = parse
     | '<' ([^ '>' '\r' '\n']* as fname) '>'
     | (non_space_or_newline* as fname)
     )                         { lexer_logger ("include " ^ fname) ;
+                                add_include fname lexbuf ;
                                 let new_lexbuf =
                                   try_get_new_lexbuf fname lexbuf.lex_curr_p in
                                 token new_lexbuf }
@@ -227,9 +232,17 @@ rule token = parse
                                 then Parser.EOF
                                 else
                                   let _ : lexbuf = (Stack.pop_exn include_stack) in
-                                  let old_lexbuf =
-                                    (Stack.top_exn include_stack) in
-                                      token old_lexbuf }
+                                  let old_lexbuf = (Stack.top_exn include_stack) in
+                                  (* to get printing includes right we need to make sure that the 'start' of
+                                      our next token is on the following line
+                                   *)
+                                  let old_pos = {old_lexbuf.lex_curr_p with pos_lnum = old_lexbuf.lex_curr_p.pos_lnum + 1}
+                                  in
+                                  lexer_logger "Switching to older lexbuf";
+                                  lexer_pos_logger old_lexbuf.lex_curr_p;
+                                  lexbuf.lex_curr_p <- old_pos;
+                                  lexbuf.lex_start_p <- old_pos;
+                                  token old_lexbuf }
 
   | _                         { raise (Errors.SyntaxError
                                         (Errors.Lexing

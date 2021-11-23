@@ -219,6 +219,7 @@ type 's block = {stmts: 's list; xloc: Middle.Location_span.t [@ignore]}
 
 and comment_type =
   | LineComment of string * Middle.Location_span.t
+  | Include of string * Middle.Location_span.t
   | BlockComment of string list * Middle.Location_span.t
   | Separator of Middle.Location.t
       (** Separator records the location of items like commas, operators, and keywords

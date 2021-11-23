@@ -237,7 +237,7 @@ let use_file filename =
     print_or_write
       (Pretty_printing.pretty_print_typed_program
          ~bare_functions:!bare_functions ~line_length:!pretty_print_line_length
-         canonical_ast ) ;
+         ~inline_includes:!canonicalize_settings.inline_includes canonical_ast ) ;
   if !print_info_json then (
     print_endline (Info.info canonical_ast) ;
     exit 0 ) ;

@@ -1,0 +1,19 @@
+  $ ../../../../../install/default/bin/stanc --auto-format --include-paths=. main.stan
+data {
+  /* ... declarations ... */
+}
+#include <tdata.stan>
+model {
+  // int x = 3;
+  1 ~ bernoulli(0);
+}
+generated quantities {
+  #include <statements.inc>
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format --include-paths=. tdata.stan
+// I'm in another file!
+
+transformed data {
+  int x = 30;
+}

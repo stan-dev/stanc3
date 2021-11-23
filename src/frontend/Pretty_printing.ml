@@ -12,17 +12,39 @@ open Fmt
 let comments : comment_type list ref = ref []
 
 let skipped = ref []
-let set_comments ls = comments := ls
+
+(** If false, don't print any statements which came from another file *)
+let print_included = ref false
+
+let set_comments ?(inline_includes = false) ls =
+  let filtered =
+    if inline_includes then
+      List.filter ~f:(function Include _ -> false | _ -> true) ls
+    else
+      List.filter
+        ~f:(fun x ->
+          match x with
+          | Include (_, {begin_loc= {included_from= Some _; _}; _})
+           |LineComment (_, {begin_loc= {included_from= Some _; _}; _})
+           |BlockComment (_, {begin_loc= {included_from= Some _; _}; _})
+           |Separator {included_from= Some _; _} ->
+              false
+          | _ -> true )
+        ls in
+  comments := filtered
 
 let get_comments end_loc =
   let rec go ls =
     match ls with
     | LineComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
       when Middle.Location.compare begin_loc end_loc < 0 ->
-        (false, [s], loc) :: go tl
+        (`Line, [s], loc) :: go tl
+    | Include (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
+      when Middle.Location.compare begin_loc end_loc < 0 ->
+        (`Include, [s], loc) :: go tl
     | BlockComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
       when Middle.Location.compare begin_loc end_loc < 0 ->
-        (true, s, loc) :: go tl
+        (`Block, s, loc) :: go tl
     | Separator loc :: tl when Middle.Location.compare loc end_loc <= 0 -> go tl
     | _ ->
         comments := ls ;
@@ -34,10 +56,13 @@ let get_comments_until_separator end_loc =
     match ls with
     | LineComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
       when Middle.Location.compare begin_loc end_loc < 0 ->
-        (false, [s], loc) :: go tl
+        (`Line, [s], loc) :: go tl
+    | Include (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
+      when Middle.Location.compare begin_loc end_loc < 0 ->
+        (`Include, [s], loc) :: go tl
     | BlockComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
       when Middle.Location.compare begin_loc end_loc < 0 ->
-        (true, s, loc) :: go tl
+        (`Block, s, loc) :: go tl
     | _ ->
         comments := ls ;
         [] in
@@ -54,8 +79,9 @@ let remaining_comments () =
   let x =
     !skipped
     @ List.filter_map !comments ~f:(function
-        | LineComment (a, b) -> Some (false, [a], b)
-        | BlockComment (a, b) -> Some (true, a, b)
+        | LineComment (a, b) -> Some (`Line, [a], b)
+        | Include (a, b) -> Some (`Include, [a], b)
+        | BlockComment (a, b) -> Some (`Block, a, b)
         | Separator _ -> None ) in
   skipped := [] ;
   comments := [] ;
@@ -63,7 +89,8 @@ let remaining_comments () =
 
 let pp_space newline ppf (prev_loc, begin_loc) =
   let open Middle.Location in
-  if
+  if (not !print_included) && Option.is_some begin_loc.included_from then ()
+  else if
     prev_loc.filename <> begin_loc.filename
     || prev_loc.line_num + 1 < begin_loc.line_num
   then pf ppf "@,@,"
@@ -71,7 +98,7 @@ let pp_space newline ppf (prev_loc, begin_loc) =
   else pf ppf " "
 
 let pp_comment ppf
-    (is_block, lines, {Middle.Location_span.begin_loc= {col_num; _}; _}) =
+    (style, lines, {Middle.Location_span.begin_loc= {col_num; _}; _}) =
   let trim init lines =
     let padding =
       List.fold lines ~init ~f:(fun m x ->
@@ -81,14 +108,19 @@ let pp_comment ppf
     List.map lines ~f:(fun x -> String.drop_prefix x padding) in
   let trim_tail col_num lines =
     match lines with [] -> [] | hd :: tl -> hd :: trim (col_num - 2) tl in
-  if is_block then
-    pf ppf "@[<v>/*%a*/@]" (list string) (trim_tail col_num lines)
-  else pf ppf "//%a" string (List.hd_exn lines)
+  match style with
+  | `Block ->
+      Fmt.pf ppf "@[<v>/*%a*/@]" Fmt.(list string) (trim_tail col_num lines)
+  | `Line -> Fmt.pf ppf "//%a" Fmt.string (List.hd_exn lines)
+  | `Include -> Fmt.pf ppf "#include <%a>" Fmt.string (List.hd_exn lines)
 
 let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
   let newline =
-    newline || match List.last ls with Some (false, _, _) -> true | _ -> false
-  in
+    newline
+    ||
+    match List.last ls with
+    | Some ((`Line | `Include), _, _) -> true
+    | _ -> false in
   let rec recurse prev_loc = function
     | ((_, _, {Middle.Location_span.begin_loc; end_loc}) as hd) :: tl ->
         pp_space false ppf (prev_loc, begin_loc) ;
@@ -116,7 +148,8 @@ let pp_maybe_space space_before f ppf loc =
   if not (List.is_empty comments) then (
     if space_before then sp ppf () ;
     let rec go was_block = function
-      | ((is_block, _, _) as comment) :: tl ->
+      | ((block, _, _) as comment) :: tl ->
+          let is_block = match block with `Block -> true | _ -> false in
           pp_comment ppf comment ;
           if not is_block then Format.pp_force_newline ppf () ;
           go is_block tl
@@ -369,63 +402,66 @@ and pp_recursive_ifthenelse ppf (s, loc) =
 
 and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
     =
-  match s_content with
-  | Assignment {assign_lhs= l; assign_op= assop; assign_rhs= e} ->
-      pf ppf "@[<h>%a %a %a;@]" pp_lvalue l pp_assignmentoperator assop
-        pp_expression e
-  | NRFunApp (_, id, es) ->
-      pf ppf "%a(@[%a);@]" pp_identifier id pp_list_of_expression (es, loc)
-  | TargetPE e -> pf ppf "target += %a;" pp_expression e
-  | IncrementLogProb e ->
-      pf ppf "increment_log_prob(@[<hov>%a@]);" pp_expression e
-  | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
-      pf ppf "%a ~ %a(@[%a)@]%a;" pp_expression e pp_identifier id
-        pp_list_of_expression (es, loc) pp_truncation t
-  | Break -> pf ppf "break;"
-  | Continue -> pf ppf "continue;"
-  | Return e -> pf ppf "return %a;" (hbox pp_expression) e
-  | ReturnVoid -> pf ppf "return;"
-  | Print ps -> pf ppf "print(%a);" pp_list_of_printables ps
-  | Reject ps -> pf ppf "reject(%a);" pp_list_of_printables ps
-  | Skip -> pf ppf ";"
-  | IfThenElse (_, _, _) ->
-      (vbox pp_recursive_ifthenelse) ppf (ss, ss.smeta.loc.begin_loc)
-  | While (e, s) -> pf ppf "while (%a) %a" pp_expression e pp_statement s
-  | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
-      pf ppf "@[<v>for (%a in %a : %a) %a@]" pp_identifier id pp_expression e1
-        pp_expression e2 pp_indent_unless_block (s, e2.emeta.loc.end_loc)
-  | ForEach (id, e, s) ->
-      pf ppf "for (%a in %a) %a" pp_identifier id pp_expression e
-        pp_indent_unless_block (s, e.emeta.loc.end_loc)
-  | Block vdsl ->
-      pf ppf "{@,%a@,}" (indented_box pp_list_of_statements) (vdsl, loc)
-  | Profile (name, vdsl) ->
-      pf ppf "profile(%s) {@,%a@,}" name
-        (indented_box pp_list_of_statements)
-        (vdsl, loc)
-  | VarDecl
-      { decl_type= pst
-      ; transformation= trans
-      ; identifier= id
-      ; initial_value= init
-      ; is_global= _ } ->
-      let pp_init ppf init =
-        match init with None -> () | Some e -> pf ppf " = %a" pp_expression e
-      in
-      let es =
-        match pst with
-        | Sized st -> Fn.compose snd unwind_sized_array_type st
-        | Unsized _ -> [] in
-      pf ppf "@[<h>%a%a %a%a;@]" pp_array_dims es pp_transformed_type
-        (pst, trans) pp_identifier id pp_init init
-  | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
-      let loc_of (_, _, id) = id.id_loc in
-      pf ppf "%a %a(%a" pp_returntype rt pp_identifier id
-        (box (pp_list_of pp_args loc_of))
-        (args, {loc with end_loc= b.smeta.loc.begin_loc}) ;
-      match b with
-      | {stmt= Skip; _} -> pf ppf ");"
-      | b -> pf ppf ") %a" pp_statement b )
+  if (not !print_included) && Option.is_some loc.end_loc.included_from then ()
+  else
+    match s_content with
+    | Assignment {assign_lhs= l; assign_op= assop; assign_rhs= e} ->
+        pf ppf "@[<h>%a %a %a;@]" pp_lvalue l pp_assignmentoperator assop
+          pp_expression e
+    | NRFunApp (_, id, es) ->
+        pf ppf "%a(@[%a);@]" pp_identifier id pp_list_of_expression (es, loc)
+    | TargetPE e -> pf ppf "target += %a;" pp_expression e
+    | IncrementLogProb e ->
+        pf ppf "increment_log_prob(@[<hov>%a@]);" pp_expression e
+    | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
+        pf ppf "%a ~ %a(@[%a)@]%a;" pp_expression e pp_identifier id
+          pp_list_of_expression (es, loc) pp_truncation t
+    | Break -> pf ppf "break;"
+    | Continue -> pf ppf "continue;"
+    | Return e -> pf ppf "return %a;" (hbox pp_expression) e
+    | ReturnVoid -> pf ppf "return;"
+    | Print ps -> pf ppf "print(%a);" pp_list_of_printables ps
+    | Reject ps -> pf ppf "reject(%a);" pp_list_of_printables ps
+    | Skip -> pf ppf ";"
+    | IfThenElse (_, _, _) ->
+        (vbox pp_recursive_ifthenelse) ppf (ss, ss.smeta.loc.begin_loc)
+    | While (e, s) -> pf ppf "while (%a) %a" pp_expression e pp_statement s
+    | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
+        pf ppf "@[<v>for (%a in %a : %a) %a@]" pp_identifier id pp_expression e1
+          pp_expression e2 pp_indent_unless_block (s, e2.emeta.loc.end_loc)
+    | ForEach (id, e, s) ->
+        pf ppf "for (%a in %a) %a" pp_identifier id pp_expression e
+          pp_indent_unless_block (s, e.emeta.loc.end_loc)
+    | Block vdsl ->
+        pf ppf "{@,%a@,}" (indented_box pp_list_of_statements) (vdsl, loc)
+    | Profile (name, vdsl) ->
+        pf ppf "profile(%s) {@,%a@,}" name
+          (indented_box pp_list_of_statements)
+          (vdsl, loc)
+    | VarDecl
+        { decl_type= pst
+        ; transformation= trans
+        ; identifier= id
+        ; initial_value= init
+        ; is_global= _ } ->
+        let pp_init ppf init =
+          match init with
+          | None -> ()
+          | Some e -> pf ppf " = %a" pp_expression e in
+        let es =
+          match pst with
+          | Sized st -> Fn.compose snd unwind_sized_array_type st
+          | Unsized _ -> [] in
+        pf ppf "@[<h>%a%a %a%a;@]" pp_array_dims es pp_transformed_type
+          (pst, trans) pp_identifier id pp_init init
+    | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
+        let loc_of (_, _, id) = id.id_loc in
+        pf ppf "%a %a(%a" pp_returntype rt pp_identifier id
+          (box (pp_list_of pp_args loc_of))
+          (args, {loc with end_loc= b.smeta.loc.begin_loc}) ;
+        match b with
+        | {stmt= Skip; _} -> pf ppf ");"
+        | b -> pf ppf ") %a" pp_statement b )
 
 and pp_args ppf (at, ut, id) =
   pf ppf "%a%a %a" pp_autodifftype at pp_unsizedtype ut pp_identifier id
@@ -461,12 +497,15 @@ let pp_block block_name ppf {stmts; xloc} =
 
 let rec pp_block_list ppf = function
   | (name, {stmts; xloc}) :: tl ->
-      pp_spacing None (Some xloc.begin_loc) ppf (get_comments xloc.begin_loc) ;
-      pp_block name ppf {stmts; xloc} ;
-      pp_block_list ppf tl
+      if (not !print_included) && Option.is_some xloc.end_loc.included_from then
+        pp_block_list ppf tl
+      else (
+        pp_spacing None (Some xloc.begin_loc) ppf (get_comments xloc.begin_loc) ;
+        pp_block name ppf {stmts; xloc} ;
+        pp_block_list ppf tl )
   | [] -> pp_spacing None None ppf (remaining_comments ())
 
-let pp_program ~bare_functions ~line_length ppf
+let pp_program ~bare_functions ~line_length ~inline_includes ppf
     { functionblock= bf
     ; datablock= bd
     ; transformeddatablock= btd
@@ -475,8 +514,9 @@ let pp_program ~bare_functions ~line_length ppf
     ; modelblock= bm
     ; generatedquantitiesblock= bgq
     ; comments } =
-  set_comments comments ;
   Format.pp_set_margin ppf line_length ;
+  set_comments ~inline_includes comments ;
+  print_included := inline_includes ;
   Format.pp_open_vbox ppf 0 ;
   if bare_functions then pp_bare_block ppf @@ Option.value_exn bf
   else
@@ -490,30 +530,38 @@ let pp_program ~bare_functions ~line_length ppf
     pp_block_list ppf blocks
 
 let check_correctness ?(bare_functions = false) prog pretty =
-  try
-    let result_ast, (_ : Warnings.t list) =
-      if bare_functions then
-        Parse.parse_string Parser.Incremental.functions_only pretty
-      else Parse.parse_string Parser.Incremental.program pretty in
-    if
-      compare_untyped_program prog (Option.value_exn (Result.ok result_ast))
-      <> 0
-    then failwith "Unequal!"
-  with _ ->
+  let result_ast =
+    try
+      let res, (_ : Warnings.t list) =
+        if bare_functions then
+          Parse.parse_string Parser.Incremental.functions_only pretty
+        else Parse.parse_string Parser.Incremental.program pretty in
+      Option.value_exn (Result.ok res)
+    with _ ->
+      print_endline pretty ;
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Pretty-printed program failed to parse"
+            (prog : Ast.untyped_program)
+            pretty] in
+  if compare_untyped_program prog result_ast <> 0 then
     Common.FatalError.fatal_error_msg
       [%message
         "Pretty-printed program does match the original!"
           (prog : Ast.untyped_program)
-          pretty]
+          (result_ast : Ast.untyped_program)]
 
 let pp_typed_expression ppf e =
   pp_expression ppf (untyped_expression_of_typed_expression e)
 
-let pretty_print_program ?(bare_functions = false) ?(line_length = 78) p =
-  let result = strf "%a" (pp_program ~bare_functions ~line_length) p in
+let pretty_print_program ?(bare_functions = false) ?(line_length = 78)
+    ?(inline_includes = false) p =
+  let result =
+    strf "%a" (pp_program ~bare_functions ~line_length ~inline_includes) p in
   check_correctness ~bare_functions p result ;
   result
 
-let pretty_print_typed_program ?(bare_functions = false) ?(line_length = 78) p =
-  pretty_print_program ~bare_functions ~line_length
+let pretty_print_typed_program ?(bare_functions = false) ?(line_length = 78)
+    ?(inline_includes = false) p =
+  pretty_print_program ~bare_functions ~line_length ~inline_includes
     (untyped_program_of_typed_program p)

@@ -2,6 +2,7 @@
 
 open Core_kernel
 open Lexing
+open Debugging
 module Str = Re.Str
 
 let dup_exists l =
@@ -43,6 +44,7 @@ let maybe_remove_quotes str =
 let try_get_new_lexbuf fname pos =
   let chan, file, path =
     try_open_in !include_paths (maybe_remove_quotes fname) pos in
+  lexer_logger ("opened " ^ file) ;
   let new_lexbuf = from_channel chan in
   new_lexbuf.lex_start_p <-
     {pos_fname= path; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;

@@ -1,0 +1,28 @@
+  $ ../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes main.stan
+data {
+  /* ... declarations ... */
+}
+transformed data {
+  // I'm in another file!
+
+  int x = 30;
+}
+model {
+  // int x = 3;
+  1 ~ bernoulli(0);
+}
+generated quantities {
+  real z;
+  /* this contains only statements
+
+  */
+
+  z = 10.5;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes tdata.stan
+// I'm in another file!
+
+transformed data {
+  int x = 30;
+}
