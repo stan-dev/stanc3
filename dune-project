@@ -1,6 +1,7 @@
-(lang dune 2.5)
+(lang dune 2.7)
 (using menhir 1.1)
 (name stanc)
+(cram enable)
 (generate_opam_files true)
 (package
  (name stanc)
