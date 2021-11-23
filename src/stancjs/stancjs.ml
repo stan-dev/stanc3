@@ -59,7 +59,7 @@ let stan2cpp model_name model_string is_flag_set =
             ( Result.Ok
                 (Pretty_printing.pretty_print_typed_program
                    ~bare_functions:(is_flag_set "functions-only")
-                   (Canonicalize.canonicalize_program typed_ast) )
+                   (Canonicalize.canonicalize_program typed_ast Canonicalize.all) )
             , warnings
             , [] ) ;
         if is_flag_set "debug-generate-data" then

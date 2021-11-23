@@ -19,7 +19,15 @@ let model_file = ref ""
 let pretty_print_program = ref false
 let print_info_json = ref false
 let filename_for_msg = ref ""
-let canonicalize_program = ref false
+
+let canonicalize_settings =
+  ref
+    Canonicalize.
+      { inline_includes= false
+      ; deprecations= false
+      ; parenthesis= false
+      ; braces= false }
+
 let print_model_cpp = ref false
 let dump_mir = ref false
 let dump_mir_pretty = ref false
@@ -34,6 +42,21 @@ let generate_data = ref false
 let warn_uninitialized = ref false
 let warn_pedantic = ref false
 let bare_functions = ref false
+
+let parse_canonical_options (settings : Canonicalize.canonicalizer_settings)
+    string =
+  match String.lowercase string with
+  | "includes" -> {settings with inline_includes= true}
+  | "deprecations" -> {settings with deprecations= true}
+  | "parenthesis" -> {settings with parenthesis= true}
+  | "braces" -> {settings with braces= true}
+  | s ->
+      raise
+      @@ Arg.Bad
+           ( "Unrecognized canonicalizer option '" ^ s
+           ^ "'. \n\
+              Should be one of 'includes', 'deprecations', 'parenthesis', \
+              'braces'" )
 
 (** Some example command-line options here *)
 let options =
@@ -92,9 +115,22 @@ let options =
     ; ( "--auto-format"
       , Arg.Set pretty_print_program
       , " Pretty prints the program to the console" )
+    ; ( "--canonicalize"
+      , Arg.String
+          (fun s ->
+            let settings =
+              List.fold ~f:parse_canonical_options ~init:!canonicalize_settings
+                (String.split s ~on:',') in
+            canonicalize_settings := settings )
+      , " Enable specific canonicalizations in a comma seperated list. Options \
+         are 'includes', 'deprecations', 'parenthesis', 'braces'." )
     ; ( "--print-canonical"
-      , Arg.Set canonicalize_program
-      , " Prints the canonicalized program to the console" )
+      , Arg.Unit
+          (fun () ->
+            pretty_print_program := true ;
+            canonicalize_settings := Canonicalize.all )
+      , " Prints the canonicalized program to the console. Equivalent to \
+         --auto-format --canonicalize [all options]" )
     ; ( "--version"
       , Arg.Unit
           (fun _ ->
@@ -167,11 +203,12 @@ let print_deprecated_arg_warning =
        Please use --include-paths.\n"
 
 let model_file_err () =
-  Arg.usage options ("Please specify one model_file.\n\n" ^ usage) ;
+  Arg.usage options ("Please specify a model_file.\n" ^ usage) ;
   exit 127
 
 let add_file filename =
-  if !model_file = "" then model_file := filename else model_file_err ()
+  if !model_file = "" then model_file := filename
+  else raise (Arg.Bad "Please specify only one model_file")
 
 let remove_dotstan s =
   if String.is_suffix ~suffix:".stanfunctions" s then String.drop_suffix s 14
@@ -184,7 +221,6 @@ let remove_dotstan s =
       Fmt.flush and various other hacks to no avail. So now I use Fmt to build a
       string, and Out_channel to write it.
  *)
-
 let pp_stderr formatter formatee =
   Fmt.str "%a" formatter formatee |> Out_channel.(output_string stderr)
 
@@ -195,32 +231,30 @@ let print_or_write data =
 let use_file filename =
   let ast =
     Frontend_utils.get_ast_or_exit filename
-      ~print_warnings:(not !canonicalize_program)
+      ~print_warnings:(not !canonicalize_settings.deprecations)
       ~bare_functions:!bare_functions in
-  let ast =
-    if !canonicalize_program then Canonicalize.repair_syntax ast else ast in
+  (* must be before typecheck to fix up deprecated syntax which gets rejected *)
+  let ast = Canonicalize.repair_syntax ast !canonicalize_settings in
   Debugging.ast_logger ast ;
-  if !pretty_print_program && not !canonicalize_program then
-    print_or_write
-      (Pretty_printing.pretty_print_program ~bare_functions:!bare_functions ast) ;
   let typed_ast = Frontend_utils.type_ast_or_exit ast in
+  let canonical_ast =
+    Canonicalize.canonicalize_program typed_ast !canonicalize_settings in
+  if !pretty_print_program then
+    print_or_write
+      (Pretty_printing.pretty_print_typed_program
+         ~bare_functions:!bare_functions canonical_ast ) ;
   if !print_info_json then (
-    print_endline (Info.info typed_ast) ;
+    print_endline (Info.info canonical_ast) ;
     exit 0 ) ;
   let printed_filename =
     match !filename_for_msg with "" -> None | s -> Some s in
-  if not !canonicalize_program then
+  if not !canonicalize_settings.deprecations then
     Warnings.pp_warnings Fmt.stderr ?printed_filename
       (Deprecation_analysis.collect_warnings typed_ast) ;
-  if !canonicalize_program then
-    print_or_write
-      (Pretty_printing.pretty_print_typed_program
-         ~bare_functions:!bare_functions
-         (Canonicalize.canonicalize_program typed_ast) ) ;
   if !generate_data then
     print_endline (Debug_data_generation.print_data_prog typed_ast) ;
   Debugging.typed_ast_logger typed_ast ;
-  if not (!pretty_print_program || !canonicalize_program) then (
+  if not !pretty_print_program then (
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.Program.Typed.t)] ;
