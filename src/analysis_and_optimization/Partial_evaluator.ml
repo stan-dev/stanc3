@@ -23,7 +23,9 @@ let apply_prefix_operator_int (op : string) i =
         | "PPlus__" -> i
         | "PMinus__" -> -i
         | "PNot__" -> if i = 0 then 1 else 0
-        | s -> Common.FatalError.fatal_error_msg [%message s] ) )
+        | s ->
+            Common.FatalError.fatal_error_msg
+              [%message "Not an int prefix operator: " s] ) )
 
 let apply_prefix_operator_real (op : string) i =
   Expr.Fixed.Pattern.Lit
@@ -32,7 +34,9 @@ let apply_prefix_operator_real (op : string) i =
         ( match op with
         | "PPlus__" -> i
         | "PMinus__" -> -.i
-        | s -> Common.FatalError.fatal_error_msg [%message s] ) )
+        | s ->
+            Common.FatalError.fatal_error_msg
+              [%message "Not a real prefix operator: " s] ) )
 
 let apply_operator_int (op : string) i1 i2 =
   Expr.Fixed.Pattern.Lit
@@ -50,7 +54,9 @@ let apply_operator_int (op : string) i1 i2 =
         | "Leq__" -> Bool.to_int (i1 <= i2)
         | "Greater__" -> Bool.to_int (i1 > i2)
         | "Geq__" -> Bool.to_int (i1 >= i2)
-        | s -> Common.FatalError.fatal_error_msg [%message s] ) )
+        | s ->
+            Common.FatalError.fatal_error_msg
+              [%message "Not an int operator: " s] ) )
 
 let apply_arithmetic_operator_real (op : string) r1 r2 =
   Expr.Fixed.Pattern.Lit
@@ -61,7 +67,9 @@ let apply_arithmetic_operator_real (op : string) r1 r2 =
         | "Minus__" -> r1 -. r2
         | "Times__" -> r1 *. r2
         | "Divide__" -> r1 /. r2
-        | s -> Common.FatalError.fatal_error_msg [%message s] ) )
+        | s ->
+            Common.FatalError.fatal_error_msg
+              [%message "Not a real operator: " s] ) )
 
 let apply_logical_operator_real (op : string) r1 r2 =
   Expr.Fixed.Pattern.Lit
@@ -74,7 +82,9 @@ let apply_logical_operator_real (op : string) r1 r2 =
         | "Leq__" -> Bool.to_int (r1 <= r2)
         | "Greater__" -> Bool.to_int (r1 > r2)
         | "Geq__" -> Bool.to_int (r1 >= r2)
-        | s -> Common.FatalError.fatal_error_msg [%message s] ) )
+        | s ->
+            Common.FatalError.fatal_error_msg
+              [%message "Not a logical operator: " s] ) )
 
 let is_multi_index = function
   | Index.MultiIndex _ | Upfrom _ | Between _ | All -> true

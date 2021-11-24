@@ -268,7 +268,9 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
           Fmt.pf ppf "%a)" pp_list_of_expression (es, loc) )
   | CondDistApp (_, id, es) -> (
     match es with
-    | [] -> Common.FatalError.fatal_error ()
+    | [] ->
+        Common.FatalError.fatal_error_msg
+          [%message "CondDistApp with no arguments: " id.name]
     | e :: es' ->
         with_hbox ppf (fun () ->
             let begin_loc =
@@ -333,7 +335,8 @@ let pp_sizedtype ppf = function
   | SRowVector (_, e) -> Fmt.pf ppf "row_vector[%a]" pp_expression e
   | SMatrix (_, e1, e2) ->
       Fmt.pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
-  | SArray _ -> Common.FatalError.fatal_error ()
+  | SArray _ ->
+      Common.FatalError.fatal_error_msg [%message "Error printing array type"]
 
 let pp_transformation ppf = function
   | Middle.Transformation.Identity -> Fmt.pf ppf ""
@@ -610,7 +613,10 @@ let check_correctness ?(bare_functions = false) prog pretty =
     then failwith "Unequal!"
   with _ ->
     Common.FatalError.fatal_error_msg
-      [%message (prog : Ast.untyped_program) pretty]
+      [%message
+        "Pretty-printed program does match the original!"
+          (prog : Ast.untyped_program)
+          pretty]
 
 let pp_typed_expression ppf e =
   pp_expression ppf (untyped_expression_of_typed_expression e)

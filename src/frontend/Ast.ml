@@ -81,9 +81,7 @@ let mk_typed_expression ~expr ~loc ~type_ ~ad_level =
 
 let expr_loc_lub exprs =
   match List.map ~f:(fun e -> e.emeta.loc) exprs with
-  | [] ->
-      Common.FatalError.fatal_error_msg
-        [%message "Can't find location lub for empty list"]
+  | [] -> Location_span.empty
   | [hd] -> hd
   | x1 :: tl -> List.fold ~init:x1 ~f:Location_span.merge tl
 
