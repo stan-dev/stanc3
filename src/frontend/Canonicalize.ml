@@ -166,14 +166,6 @@ let rec parens_stmt ({stmt; smeta} : typed_statement) : typed_statement =
           ; identifier
           ; initial_value= Option.map ~f:no_parens init
           ; is_global }
-    | While (e, s) -> While (no_parens e, parens_stmt s)
-    | IfThenElse (e, s1, Some ({stmt= IfThenElse _; _} as s2))
-     |IfThenElse (e, s1, Some {stmt= Block [({stmt= IfThenElse _; _} as s2)]; _})
-      ->
-        (* Flatten if ... else if ... constructs *)
-        IfThenElse (no_parens e, parens_stmt s1, Some (parens_stmt s2))
-    | IfThenElse (e, s1, s2) ->
-        IfThenElse (no_parens e, parens_stmt s1, Option.map ~f:parens_stmt s2)
     | For {loop_variable; lower_bound; upper_bound; loop_body} ->
         For
           { loop_variable
