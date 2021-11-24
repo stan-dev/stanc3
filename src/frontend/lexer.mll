@@ -33,7 +33,7 @@ let comments : Ast.comment_type list ref = ref []
 
   let add_include fname lexbuf =
     comments :=
-        Include (fname, (Middle.Location_span.of_positions_exn (lexbuf.lex_curr_p, lexbuf.lex_curr_p)) )
+        Include (fname, (Middle.Location_span.of_positions_exn (lexbuf.lex_start_p, lexbuf.lex_curr_p)) )
       :: !comments
 }
 

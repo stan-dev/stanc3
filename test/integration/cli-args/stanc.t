@@ -16,7 +16,7 @@ Show help
     --warn-uninitialized            Emit warnings about uninitialized variables to stderr. Currently an experimental feature.
     --warn-pedantic                 Emit warnings about common mistakes in Stan programs.
     --auto-format                   Pretty prints a formatted version of the Stan program.
-    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'deprecations', 'parentheses', 'braces'.
+    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'deprecations', 'parentheses', 'braces', 'includes'.
     --max-line-length               Set the maximum line length for the formatter. Defaults to 78 characters.
     --print-canonical               Prints the canonicalized program. Equivalent to --auto-format --canonicalize [all options]
     --version                       Display stanc version number

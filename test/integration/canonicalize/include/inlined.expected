@@ -4,7 +4,7 @@ data {
 }
 transformed data {
   // I'm in another file!
-
+  
   int x = 30;
 }
 model {
@@ -14,10 +14,11 @@ model {
 generated quantities {
   real z;
   /* this contains only statements
-
+  
   */
-
-  z = 10.5;
+  
+  z = 10.5; // z = 10.5
+  z = 11.2;
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes tdata.stan
@@ -26,3 +27,4 @@ generated quantities {
 transformed data {
   int x = 30;
 }
+

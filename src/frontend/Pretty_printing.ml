@@ -72,6 +72,12 @@ let skip_comments loc =
   skipped :=
     !skipped
     @ List.filter_map (get_comments loc) ~f:(function
+        | `Include, l, loc ->
+            Common.FatalError.fatal_error_msg
+              [%message
+                "Attempting to move include!"
+                  (l : string list)
+                  (loc : Middle.Location_span.t)]
         | x, s :: l, loc -> Some (x, (" ^^^:" ^ s) :: l, loc)
         | _, [], _ -> None )
 
@@ -100,6 +106,7 @@ let pp_space newline ppf (prev_loc, begin_loc) =
 let pp_comment ppf
     (style, lines, {Middle.Location_span.begin_loc= {col_num; _}; _}) =
   let trim init lines =
+    let init = max init 0 in
     let padding =
       List.fold lines ~init ~f:(fun m x ->
           match String.lfindi ~f:(fun _ c -> c <> ' ') x with
@@ -110,7 +117,7 @@ let pp_comment ppf
     match lines with [] -> [] | hd :: tl -> hd :: trim (col_num - 2) tl in
   match style with
   | `Block ->
-      Fmt.pf ppf "@[<v>/*%a*/@]" Fmt.(list string) (trim_tail col_num lines)
+      Fmt.pf ppf "/*@[<v -2>%a@]*/" Fmt.(list string) (trim_tail col_num lines)
   | `Line -> Fmt.pf ppf "//%a" Fmt.string (List.hd_exn lines)
   | `Include -> Fmt.pf ppf "#include <%a>" Fmt.string (List.hd_exn lines)
 

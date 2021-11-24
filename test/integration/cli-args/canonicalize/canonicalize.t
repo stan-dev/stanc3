@@ -1,7 +1,7 @@
 Test that a nonsense argument is caught
   $ stanc --canonicalize dummy
   stanc: Unrecognized canonicalizer option 'dummy'. 
-  Should be one of 'deprecations', 'parentheses', 'braces'.
+  Should be one of 'deprecations', 'parentheses', 'braces', 'includes'.
   Usage: %%NAME%% [option] ... <model_file.stan[functions]>
     --debug-lex                     For debugging purposes: print the lexer actions
     --debug-parse                   For debugging purposes: print the parser actions
@@ -18,7 +18,7 @@ Test that a nonsense argument is caught
     --warn-uninitialized            Emit warnings about uninitialized variables to stderr. Currently an experimental feature.
     --warn-pedantic                 Emit warnings about common mistakes in Stan programs.
     --auto-format                   Pretty prints a formatted version of the Stan program.
-    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'deprecations', 'parentheses', 'braces'.
+    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'deprecations', 'parentheses', 'braces', 'includes'.
     --max-line-length               Set the maximum line length for the formatter. Defaults to 78 characters.
     --print-canonical               Prints the canonicalized program. Equivalent to --auto-format --canonicalize [all options]
     --version                       Display stanc version number
@@ -57,7 +57,7 @@ Test capitalization - this should fail due to the lack of model_name, not the ca
     --warn-uninitialized            Emit warnings about uninitialized variables to stderr. Currently an experimental feature.
     --warn-pedantic                 Emit warnings about common mistakes in Stan programs.
     --auto-format                   Pretty prints a formatted version of the Stan program.
-    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'deprecations', 'parentheses', 'braces'.
+    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'deprecations', 'parentheses', 'braces', 'includes'.
     --max-line-length               Set the maximum line length for the formatter. Defaults to 78 characters.
     --print-canonical               Prints the canonicalized program. Equivalent to --auto-format --canonicalize [all options]
     --version                       Display stanc version number

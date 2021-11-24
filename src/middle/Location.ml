@@ -12,22 +12,6 @@ module Str = Re.Str
 type t = {filename: string; line_num: int; col_num: int; included_from: t option}
 [@@deriving sexp, hash]
 
-let compare loc1 loc2 =
-  let rec unfold = function
-    | {included_from= None; _} as loc -> [loc]
-    | {included_from= Some loc1; _} as loc2 -> loc2 :: unfold loc1 in
-  let rec go = function
-    | [], [] -> 0
-    | [], _ -> -1
-    | _, [] -> 1
-    | hd1 :: tl1, hd2 :: tl2 ->
-        let x = Int.compare hd1.line_num hd2.line_num in
-        if x <> 0 then x
-        else
-          let x = Int.compare hd1.col_num hd2.col_num in
-          if x <> 0 then x else go (tl1, tl2) in
-  go (List.rev (unfold loc1), List.rev (unfold loc2))
-
 (** Will attempt to {b open} the file and*)
 let pp_context_exn ppf {filename; line_num; col_num; _} =
   let open In_channel in
@@ -74,6 +58,25 @@ let rec to_string ?printed_filename ?(print_file = true) ?(print_line = true)
         sprintf ", included from\n%s" (to_string ?printed_filename loc2)
     | None -> "" in
   sprintf "%s%scolumn %d%s" file line loc.col_num incl
+
+let compare loc1 loc2 =
+  let rec unfold = function
+    | {included_from= None; _} as loc -> [loc]
+    | {included_from= Some loc1; _} as loc2 ->
+        (* force tiebreaker to go to the file included from *)
+        loc2 :: unfold {loc1 with line_num= loc1.line_num + 1} in
+  let rec go = function
+    | [], [] -> 0
+    | [], _ -> -1
+    | _, [] -> 1
+    | hd1 :: tl1, hd2 :: tl2 ->
+        (* print_endline ("// comp " ^ to_string hd1 ^ " and " ^ to_string hd2) ; *)
+        let x = Int.compare hd1.line_num hd2.line_num in
+        if x <> 0 then x
+        else
+          let x = Int.compare hd1.col_num hd2.col_num in
+          if x <> 0 then x else go (tl1, tl2) in
+  go (List.rev (unfold loc1), List.rev (unfold loc2))
 
 let trim_quotes s =
   let s = String.drop_prefix s 1 in
