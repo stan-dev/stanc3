@@ -25,7 +25,7 @@ let canonicalize_settings =
     Canonicalize.
       { inline_includes= false
       ; deprecations= false
-      ; parenthesis= false
+      ; parentheses= false
       ; braces= false }
 
 let print_model_cpp = ref false
@@ -46,17 +46,14 @@ let bare_functions = ref false
 let parse_canonical_options (settings : Canonicalize.canonicalizer_settings)
     string =
   match String.lowercase string with
-  | "includes" -> {settings with inline_includes= true}
   | "deprecations" -> {settings with deprecations= true}
-  | "parenthesis" -> {settings with parenthesis= true}
+  | "parentheses" -> {settings with parentheses= true}
   | "braces" -> {settings with braces= true}
   | s ->
       raise
       @@ Arg.Bad
            ( "Unrecognized canonicalizer option '" ^ s
-           ^ "'. \n\
-              Should be one of 'includes', 'deprecations', 'parenthesis', \
-              'braces'" )
+           ^ "'. \nShould be one of 'deprecations', 'parentheses', 'braces'" )
 
 (** Some example command-line options here *)
 let options =
@@ -123,7 +120,7 @@ let options =
                 (String.split s ~on:',') in
             canonicalize_settings := settings )
       , " Enable specific canonicalizations in a comma seperated list. Options \
-         are 'includes', 'deprecations', 'parenthesis', 'braces'." )
+         are 'deprecations', 'parentheses', 'braces'." )
     ; ( "--print-canonical"
       , Arg.Unit
           (fun () ->

@@ -16,7 +16,7 @@ Show help
     --warn-uninitialized            Emit warnings about uninitialized variables to stderr. Currently an experimental feature.
     --warn-pedantic                 Emit warnings about common mistakes in Stan programs.
     --auto-format                   Pretty prints the program to the console
-    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'includes', 'deprecations', 'parenthesis', 'braces'.
+    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'deprecations', 'parentheses', 'braces'.
     --print-canonical               Prints the canonicalized program to the console. Equivalent to --auto-format --canonicalize [all options]
     --version                       Display stanc version number
     --name                          Take a string to set the model name (default = "$model_filename_model")

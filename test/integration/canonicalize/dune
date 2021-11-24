@@ -31,7 +31,7 @@
   (with-outputs-to
    %{targets}
    (run %{bin:run_bin_on_args}
-     "%{bin:stanc} --auto-format --canonicalize braces,parenthesis"
+     "%{bin:stanc} --auto-format --canonicalize braces,parentheses"
      %{stanfiles}))))
 
 (rule

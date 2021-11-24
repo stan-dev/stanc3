@@ -1,7 +1,7 @@
 Test that a nonsense argument is caught
   $ stanc --canonicalize dummy
   stanc: Unrecognized canonicalizer option 'dummy'. 
-  Should be one of 'includes', 'deprecations', 'parenthesis', 'braces'.
+  Should be one of 'deprecations', 'parentheses', 'braces'.
   Usage: %%NAME%% [option] ... <model_file.stan[functions]>
     --debug-lex                     For debugging purposes: print the lexer actions
     --debug-parse                   For debugging purposes: print the parser actions
@@ -18,7 +18,7 @@ Test that a nonsense argument is caught
     --warn-uninitialized            Emit warnings about uninitialized variables to stderr. Currently an experimental feature.
     --warn-pedantic                 Emit warnings about common mistakes in Stan programs.
     --auto-format                   Pretty prints the program to the console
-    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'includes', 'deprecations', 'parenthesis', 'braces'.
+    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'deprecations', 'parentheses', 'braces'.
     --print-canonical               Prints the canonicalized program to the console. Equivalent to --auto-format --canonicalize [all options]
     --version                       Display stanc version number
     --name                          Take a string to set the model name (default = "$model_filename_model")
@@ -38,7 +38,7 @@ Test that a nonsense argument is caught
   [2]
 
 Test capitalization - this should fail due to the lack of model_name, not the canonicalizer
-  $ stanc --canonicalize DEPRECATIONS,includes,bRaCeS
+  $ stanc --canonicalize DEPRECATIONS,parentheses,bRaCeS
   Please specify a model_file.
   Usage: %%NAME%% [option] ... <model_file.stan[functions]>
     --debug-lex                     For debugging purposes: print the lexer actions
@@ -56,7 +56,7 @@ Test capitalization - this should fail due to the lack of model_name, not the ca
     --warn-uninitialized            Emit warnings about uninitialized variables to stderr. Currently an experimental feature.
     --warn-pedantic                 Emit warnings about common mistakes in Stan programs.
     --auto-format                   Pretty prints the program to the console
-    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'includes', 'deprecations', 'parenthesis', 'braces'.
+    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'deprecations', 'parentheses', 'braces'.
     --print-canonical               Prints the canonicalized program to the console. Equivalent to --auto-format --canonicalize [all options]
     --version                       Display stanc version number
     --name                          Take a string to set the model name (default = "$model_filename_model")

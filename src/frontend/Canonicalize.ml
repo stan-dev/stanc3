@@ -4,13 +4,13 @@ open Deprecation_analysis
 
 type canonicalizer_settings =
   { deprecations: bool
-  ; parenthesis: bool
+  ; parentheses: bool
   ; braces: bool
-  ; (* really for the pretty printer but it makes sense to live here *)
+  ; (* TODO: NYI. Really for the pretty printer but it makes sense to live here *)
     inline_includes: bool }
 
 let all =
-  {deprecations= true; parenthesis= true; inline_includes= true; braces= true}
+  {deprecations= true; parentheses= true; inline_includes= true; braces= true}
 
 let rec repair_syntax_stmt user_dists {stmt; smeta} =
   match stmt with
@@ -222,7 +222,7 @@ let canonicalize_program program settings : typed_program =
            (replace_deprecated_stmt (collect_userdef_distributions program))
     else program in
   let program =
-    if settings.parenthesis then program |> map_program parens_stmt else program
+    if settings.parentheses then program |> map_program parens_stmt else program
   in
   let program =
     if settings.braces then program |> map_program blocks_stmt else program
