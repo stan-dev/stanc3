@@ -1379,6 +1379,28 @@ Semantic error in 'lp-error.stan', line 5, column 2 to column 6:
    -------------------------------------------------
 
 Identifier 'lp__' clashes with reserved keyword.
+  $ ../../../../install/default/bin/stanc lvalue_indexes1.stan
+Semantic error in 'lvalue_indexes1.stan', line 6, column 4 to column 11:
+   -------------------------------------------------
+     4:  transformed data {
+     5:      array[5] vector[5] y;
+     6:      y[:][1] = x[:][1];
+             ^
+     7:  }
+   -------------------------------------------------
+
+Left hand side of an assignment cannot have nested multi-indexing.
+  $ ../../../../install/default/bin/stanc lvalue_indexes2.stan
+Semantic error in 'lvalue_indexes2.stan', line 6, column 4 to column 11:
+   -------------------------------------------------
+     4:  transformed data {
+     5:      vector[5] y;
+     6:      y[:][:] = x[:][:];
+             ^
+     7:  }
+   -------------------------------------------------
+
+Left hand side of an assignment cannot have nested multi-indexing.
   $ ../../../../install/default/bin/stanc matrix_expr_bad1.stan
 Semantic error in 'matrix_expr_bad1.stan', line 2, column 2 to column 34:
    -------------------------------------------------
