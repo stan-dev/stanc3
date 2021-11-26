@@ -110,8 +110,9 @@ let verify_name_fresh_var loc tenv name =
   if Utils.is_unnormalized_distribution name then
     Semantic_error.ident_has_unnormalized_suffix loc name |> error
   else if
-    Env.mem tenv name
-    && not (Stan_math_signatures.is_stan_math_function_name name)
+    List.exists (Env.find tenv name) ~f:(function
+      | {kind= `StanMath; _} -> false
+      | _ -> true )
   then Semantic_error.ident_in_use loc name |> error
 
 (** verify that the variable being declared is previous unused.

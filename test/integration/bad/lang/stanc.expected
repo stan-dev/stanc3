@@ -696,6 +696,17 @@ Expected an expression inside "[" and "]" but found a statement. Indexing should
   var[1 + i]
 not
   var[for (n in 1:N) ...]
+  $ ../../../../../install/default/bin/stanc reused_name.stan
+Semantic error in 'reused_name.stan', line 4, column 14 to column 15:
+   -------------------------------------------------
+     2:      vector[3] e;
+     3:      // e is selected because it is also a Stan-math function 'e()'
+     4:      vector[3] e;
+                       ^
+     5:  }
+   -------------------------------------------------
+
+Identifier 'e' is already in use.
   $ ../../../../../install/default/bin/stanc unterminated_comment.stan
 Syntax error in 'unterminated_comment.stan', line 4, column -1, lexing error:
    -------------------------------------------------
