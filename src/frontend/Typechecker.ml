@@ -111,7 +111,8 @@ let verify_name_fresh_var loc tenv name =
     Semantic_error.ident_has_unnormalized_suffix loc name |> error
   else if
     List.exists (Env.find tenv name) ~f:(function
-      | {kind= `StanMath; _} -> false
+      | {kind= `StanMath; _} ->
+          false (* user variables can shadow library names *)
       | _ -> true )
   then Semantic_error.ident_in_use loc name |> error
 
