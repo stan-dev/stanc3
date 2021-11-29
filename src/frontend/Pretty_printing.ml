@@ -163,11 +163,6 @@ let rec unwind_sized_array_type = function
     match unwind_sized_array_type st with st2, es -> (st2, es @ [e]) )
   | st -> (st, [])
 
-let pp_unsizedtypes ppf l = Fmt.(list ~sep:comma_no_break pp_unsizedtype) ppf l
-
-let pp_argtype ppf = function
-  | at, ut -> Fmt.pair ~sep:Fmt.nop pp_autodifftype pp_unsizedtype ppf (at, ut)
-
 let pp_returntype ppf = function
   | Middle.UnsizedType.ReturnType x -> pp_unsizedtype ppf x
   | Void -> Fmt.pf ppf "void"
@@ -310,8 +305,6 @@ let pp_assignmentoperator ppf = function
   (* ArrowAssign is deprecated *)
   | ArrowAssign -> Fmt.pf ppf "<-"
   | OperatorAssign op -> Fmt.pf ppf "%a=" pp_operator op
-
-let pretty_print_assignmentoperator op = wrap_fmt pp_assignmentoperator op
 
 let pp_truncation ppf = function
   | NoTruncate -> Fmt.pf ppf ""
@@ -579,7 +572,7 @@ let rec pp_block_list ppf = function
       pp_block_list ppf tl
   | [] -> pp_spacing None None ppf (remaining_comments ())
 
-let pp_program ?(bare_functions = false) ppf
+let pp_program ~bare_functions ~line_length ppf
     { functionblock= bf
     ; datablock= bd
     ; transformeddatablock= btd
@@ -589,6 +582,7 @@ let pp_program ?(bare_functions = false) ppf
     ; generatedquantitiesblock= bgq
     ; comments } =
   set_comments comments ;
+  Format.pp_set_margin ppf line_length ;
   Format.pp_open_vbox ppf 0 ;
   if bare_functions then pp_bare_block ppf @@ Option.value_exn bf
   else
@@ -621,13 +615,11 @@ let check_correctness ?(bare_functions = false) prog pretty =
 let pp_typed_expression ppf e =
   pp_expression ppf (untyped_expression_of_typed_expression e)
 
-let pretty_print_program ?(bare_functions = false) p =
-  let result = wrap_fmt (pp_program ~bare_functions) p in
+let pretty_print_program ?(bare_functions = false) ?(line_length = 78) p =
+  let result = wrap_fmt (pp_program ~bare_functions ~line_length) p in
   check_correctness ~bare_functions p result ;
   result
 
-let pretty_print_typed_program ?(bare_functions = false) p =
-  let p = untyped_program_of_typed_program p in
-  let result = wrap_fmt (pp_program ~bare_functions) p in
-  check_correctness ~bare_functions p result ;
-  result
+let pretty_print_typed_program ?(bare_functions = false) ?(line_length = 78) p =
+  pretty_print_program ~bare_functions ~line_length
+    (untyped_program_of_typed_program p)

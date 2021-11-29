@@ -17,6 +17,7 @@ let usage = "Usage: " ^ name ^ " [option] ... <model_file.stan[functions]>"
 
 let model_file = ref ""
 let pretty_print_program = ref false
+let pretty_print_line_length = ref 78
 let print_info_json = ref false
 let filename_for_msg = ref ""
 let canonicalize_settings = ref Canonicalize.none
@@ -103,7 +104,7 @@ let options =
       , " Emit warnings about common mistakes in Stan programs." )
     ; ( "--auto-format"
       , Arg.Set pretty_print_program
-      , " Pretty prints the program to the console" )
+      , " Pretty prints a formatted version of the Stan program." )
     ; ( "--canonicalize"
       , Arg.String
           (fun s ->
@@ -113,13 +114,17 @@ let options =
             canonicalize_settings := settings )
       , " Enable specific canonicalizations in a comma seperated list. Options \
          are 'deprecations', 'parentheses', 'braces'." )
+    ; ( "--max-line-length"
+      , Arg.Set_int pretty_print_line_length
+      , " Set the maximum line length for the formatter. Defaults to 78 \
+         characters." )
     ; ( "--print-canonical"
       , Arg.Unit
           (fun () ->
             pretty_print_program := true ;
             canonicalize_settings := Canonicalize.all )
-      , " Prints the canonicalized program to the console. Equivalent to \
-         --auto-format --canonicalize [all options]" )
+      , " Prints the canonicalized program. Equivalent to --auto-format \
+         --canonicalize [all options]" )
     ; ( "--version"
       , Arg.Unit
           (fun _ ->
@@ -231,7 +236,8 @@ let use_file filename =
   if !pretty_print_program then
     print_or_write
       (Pretty_printing.pretty_print_typed_program
-         ~bare_functions:!bare_functions canonical_ast ) ;
+         ~bare_functions:!bare_functions ~line_length:!pretty_print_line_length
+         canonical_ast ) ;
   if !print_info_json then (
     print_endline (Info.info canonical_ast) ;
     exit 0 ) ;
