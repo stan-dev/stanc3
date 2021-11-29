@@ -904,8 +904,10 @@ let pp_model ppf ({Program.prog_name; _} as p) =
     "%%NAME%%3 %%VERSION%%" stanc_args_to_print ;
   pf ppf "@ %a@]@]@ };" pp_model_public p
 
-let usings = {|
+let usings =
+  {|
 using stan::model::model_base_crtp;
+using namespace stan::math;
 |}
 
 (** Create the model's namespace. *)

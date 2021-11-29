@@ -5,6 +5,7 @@
 namespace basic_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -366,6 +367,7 @@ auto test_lpdf(const double& a, const double& b,
 namespace basic_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -727,6 +729,7 @@ auto test_lpdf(const double& a, const double& b,
 namespace integrate_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;

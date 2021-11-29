@@ -5,6 +5,7 @@
 namespace distributions_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -7451,6 +7452,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace restricted_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;

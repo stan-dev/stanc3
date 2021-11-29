@@ -5,6 +5,7 @@
 namespace filename_good_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;

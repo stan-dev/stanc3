@@ -5,6 +5,7 @@
 namespace _8_schools_ncp_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -480,6 +481,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace _8start_with_number_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -814,6 +816,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace complex_scalar_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -3677,6 +3680,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace conditional_expression_types_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -4088,6 +4092,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace cpp_reserved_words_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -5338,6 +5343,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace eight_schools_ncp_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -5814,6 +5820,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace mixed_type_arrays_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -6297,6 +6304,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace mother_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -15280,6 +15288,7 @@ Warning in 'mother.stan', line 63, column 23: normal_log is deprecated and
 namespace motherHOF_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -17343,6 +17352,7 @@ Warning in 'motherHOF.stan', line 169, column 10: integrate_ode_rk45 is
 namespace new_integrate_interface_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -21774,6 +21784,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace old_integrate_interface_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -22492,6 +22503,7 @@ Warning in 'old_integrate_interface.stan', line 36, column 4: integrate_ode_bdf
 namespace optimize_glm_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -24211,6 +24223,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace param_constraint_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -24655,6 +24668,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace print_unicode_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -24976,6 +24990,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace reduce_sum_m1_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -25564,6 +25579,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace reduce_sum_m2_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -28067,6 +28083,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace reduce_sum_m3_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -32019,6 +32036,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace shadowing_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -33277,6 +33295,7 @@ Warning in 'shadowing.stan', line 67, column 50: binomial_coefficient_log is
 namespace single_argument_lpmf_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -33764,6 +33783,7 @@ Warning in 'single-argument-lpmf.stan', line 11, column 7: Use of the _log
 namespace tilde_block_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -34130,6 +34150,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace transform_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -37183,6 +37204,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace truncate_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -37648,6 +37670,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace udf_tilde_stmt_conflict_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
@@ -38007,6 +38030,7 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace user_constrain_model_namespace {
 
 using stan::model::model_base_crtp;
+using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
