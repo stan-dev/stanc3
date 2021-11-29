@@ -69,18 +69,14 @@ model {
   ///////////////////////////////
   if (N > 5) {
     y ~ std_normal();
-  } else {
-    if (N > 5) {
-      y ~ std_normal();
-    }
+  } else if (N > 5) {
+    y ~ std_normal();
   }
   
   if (N > 5) {
     y ~ std_normal();
-  } else {
-    if (N > 5) {
-      y ~ std_normal();
-    }
+  } else if (N > 5) {
+    y ~ std_normal();
   }
   
   if (N > 5) {
@@ -101,38 +97,26 @@ model {
   
   if (N > 5) {
     y ~ std_normal();
-  } else {
-    if (N > 5) {
-      y ~ std_normal();
-    } else {
-      if (N > 5) {
-        y ~ std_normal();
-      }
-    }
+  } else if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
   }
   
   if (N > 5) {
     y ~ std_normal();
-  } else {
-    if (N > 5) {
-      y ~ std_normal();
-    } else {
-      if (N > 5) {
-        y ~ std_normal();
-      }
-    }
+  } else if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
   }
   
   if (N > 5) {
     y ~ std_normal();
-  } else {
-    if (N > 5) {
-      y ~ std_normal();
-    } else {
-      if (N > 5) {
-        y ~ std_normal();
-      }
-    }
+  } else if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
   }
   
   // test comments in various places wrt IfThenElse
@@ -152,9 +136,8 @@ model {
   
   if (N > 5) {
     y ~ std_normal();
-  }
-  //comment before else branch
-  else {
+  } else //comment before else branch
+  {
     y ~ std_normal();
   }
   
@@ -231,6 +214,9 @@ model {
   target += normal_cdf(1 | 2, 3);
   target += normal_cdf(normal_cdf(0 | 1, 2) | 2, 3);
   target += foo_cdf(1 | 2, 3);
+  
+  target += hypergeometric_lpmf(1 | 2, 3, 4);
+  target += gaussian_dlm_obs_lpdf(K | K, K, K, K, K[ : , 1], K);
   
   print("target: ", target());
 }

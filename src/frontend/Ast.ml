@@ -81,9 +81,7 @@ let mk_typed_expression ~expr ~loc ~type_ ~ad_level =
 
 let expr_loc_lub exprs =
   match List.map ~f:(fun e -> e.emeta.loc) exprs with
-  | [] ->
-      Common.FatalError.fatal_error_msg
-        [%message "Can't find location lub for empty list"]
+  | [] -> Location_span.empty
   | [hd] -> hd
   | x1 :: tl -> List.fold ~init:x1 ~f:Location_span.merge tl
 
@@ -222,7 +220,10 @@ type 's block = {stmts: 's list; xloc: Middle.Location_span.t [@ignore]}
 and comment_type =
   | LineComment of string * Middle.Location_span.t
   | BlockComment of string list * Middle.Location_span.t
-  | Comma of Middle.Location.t
+  | Separator of Middle.Location.t
+      (** Separator records the location of items like commas, operators, and keywords
+          which don't have location information stored in the AST
+          but are useful for placing comments in pretty printing *)
 
 and 's program =
   { functionblock: 's block option
@@ -296,7 +297,9 @@ let rec id_of_lvalue {lval; _} =
         token before the current statement and all the whitespace between two statements
         appears as if it were part of the second statement.
         get_first_loc tries to skip the leading whitespace and approximate the location
-        of the first token in the statement. *)
+        of the first token in the statement.
+    TODO: See if $sloc works better than $loc for this
+*)
 
 let rec get_loc_expr (e : untyped_expression) =
   match e.expr with

@@ -93,9 +93,9 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
   | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
-  | x ->
+  | UMathLibraryFunction | UFun _ ->
       Common.FatalError.fatal_error_msg
-        [%message (x : UnsizedType.t) "not implemented"]
+        [%message "Function types not implemented"]
 
 let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   match ut with
@@ -105,9 +105,9 @@ let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   | UArray t ->
       (* Expressions are not accepted for arrays of Eigen::Matrix *)
       pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
-  | x ->
+  | UMathLibraryFunction | UFun _ ->
       Common.FatalError.fatal_error_msg
-        [%message (x : UnsizedType.t) "not implemented"]
+        [%message "Function types not implemented"]
 
 let pp_unsizedtype_local ppf (adtype, ut) =
   let s = local_scalar ut adtype in
@@ -407,14 +407,6 @@ and gen_fun_app suffix ppf fname es mem_pattern =
     |> List.filter_opt |> List.hd |> Option.value ~default in
   pf ppf "@[<hov 2>%a@]" pp es
 
-and pp_constrain_funapp constrain_or_un_str constraint_flavor ppf = function
-  | var :: args ->
-      pf ppf "@[<hov 2>stan::math::%s_%s(@,%a@])" constraint_flavor
-        constrain_or_un_str (list ~sep:comma pp_expr) (var :: args)
-  | es ->
-      Common.FatalError.fatal_error_msg
-        [%message "Bad constraint " (es : Expr.Typed.t list)]
-
 and pp_user_defined_fun ppf (f, suffix, es) =
   let extra_args = suffix_args suffix @ ["pstream__"] in
   let sep = if List.is_empty es then "" else ", " in
@@ -435,7 +427,9 @@ and pp_compiler_internal_fn ad ut f ppf es =
         | UnsizedType.UArray ut -> ut
         | _ ->
             Common.FatalError.fatal_error_msg
-              [%message "Array literal must have array type"] in
+              [%message
+                "Array literal must have array type but found "
+                  (ut : UnsizedType.t)] in
       pp_array_literal ut ppf es
   | FnMakeRowVec -> (
     match ut with
