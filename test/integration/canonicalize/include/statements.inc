@@ -1,8 +1,12 @@
+  // test 2
+  //print(z);
 
-real z;
-/* this contains only statements
+  z =
 
-*/
+  exp(15);
 
-z = 10.5; // z = 10.5
-z = 11.2;
+  /* this contains only statements
+  */
+
+  z = 10.5; // z = 10.5
+  z = 11.2;

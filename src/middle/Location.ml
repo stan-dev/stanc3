@@ -70,7 +70,6 @@ let compare loc1 loc2 =
     | [], _ -> -1
     | _, [] -> 1
     | hd1 :: tl1, hd2 :: tl2 ->
-        (* print_endline ("// comp " ^ to_string hd1 ^ " and " ^ to_string hd2) ; *)
         let x = Int.compare hd1.line_num hd2.line_num in
         if x <> 0 then x
         else

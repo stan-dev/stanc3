@@ -41,7 +41,9 @@ let maybe_remove_quotes str =
     drop_suffix (drop_prefix str 1) 1
   else str
 
-let try_get_new_lexbuf fname pos =
+let try_get_new_lexbuf fname =
+  let lexbuf = Stack.top_exn include_stack in
+  let pos = lexbuf.lex_curr_p in
   let chan, file, path =
     try_open_in !include_paths (maybe_remove_quotes fname) pos in
   lexer_logger ("opened " ^ file) ;
@@ -54,8 +56,9 @@ let try_get_new_lexbuf fname pos =
       (Errors.SyntaxError
          (Include
             ( Printf.sprintf "File %s recursively included itself." fname
-            , Middle.Location.of_position_exn
-                (lexeme_start_p (Stack.top_exn include_stack)) ) ) ) ;
+            , Middle.Location.of_position_exn (lexeme_start_p lexbuf) ) ) ) ;
   Stack.push include_stack new_lexbuf ;
+  (* lexbuf.lex_curr_p <- new_lexbuf.lex_curr_p ;
+     lexbuf.lex_start_p <- new_lexbuf.lex_curr_p ; *)
   included_files := file :: !included_files ;
   new_lexbuf

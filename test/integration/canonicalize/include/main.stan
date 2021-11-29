@@ -10,5 +10,10 @@ model {
 }
 
 generated quantities {
-  #include "statements.inc"
+  real z;
+  if (1) {
+
+  } else {
+#include "statements.inc"
+  }
 }

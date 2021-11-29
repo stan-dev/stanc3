@@ -8,7 +8,13 @@ model {
   1 ~ bernoulli(0);
 }
 generated quantities {
-  #include <statements.inc>
+  real z;
+  if (1) {
+    
+  } else {
+    #include <statements.inc>
+    
+  }
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format --include-paths=. tdata.stan

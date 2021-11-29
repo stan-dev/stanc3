@@ -12,6 +12,6 @@ val include_paths : string list ref
 val included_files : string list ref
 (** List of files that have been included *)
 
-val try_get_new_lexbuf : string -> Lexing.position -> Lexing.lexbuf
+val try_get_new_lexbuf : string -> Lexing.lexbuf
 (** Search include paths for filename and try to create a new lexing buffer
     with that filename, record that included from specified position *)

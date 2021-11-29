@@ -184,7 +184,7 @@ let pp_identifier ppf id = string ppf id.name
 let pp_operator = Middle.Operator.pp
 
 let pp_list_of pp (loc_of : 'a -> Middle.Location_span.t) ppf
-    (es, {Middle.Location_span.begin_loc; end_loc}) =
+    (es, {Middle.Location_span.end_loc; begin_loc}) =
   let rec go expr more =
     match more with
     | next :: rest ->
@@ -381,8 +381,8 @@ let rec pp_indent_unless_block ppf ((s : untyped_statement), loc) =
   match s.stmt with
   | Block _ -> pp_statement ppf s
   | _ ->
-      pp_spacing (Some loc) (Some s.smeta.loc.begin_loc) ppf
-        (get_comments s.smeta.loc.begin_loc) ;
+      let begin_loc = s.smeta.loc.begin_loc in
+      pp_spacing (Some loc) (Some begin_loc) ppf (get_comments begin_loc) ;
       (indented_box pp_statement) ppf s
 
 (** This function helps write chained if-then-else-if-... blocks

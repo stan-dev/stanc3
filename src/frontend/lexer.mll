@@ -18,6 +18,9 @@ let comments : Ast.comment_type list ref = ref []
 
 (* Store comments *)
   let add_comment (begin_pos, buffer) end_pos =
+  lexer_logger "comment";
+  lexer_pos_logger begin_pos ;   lexer_pos_logger end_pos ;
+
     comments :=
         LineComment ( Buffer.contents buffer
                 , Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
@@ -71,7 +74,7 @@ rule token = parse
     )                         { lexer_logger ("include " ^ fname) ;
                                 add_include fname lexbuf ;
                                 let new_lexbuf =
-                                  try_get_new_lexbuf fname lexbuf.lex_curr_p in
+                                  try_get_new_lexbuf fname in
                                 token new_lexbuf }
   | "#"                       { lexer_logger "#comment" ;
                                 Input_warnings.deprecated "#"
