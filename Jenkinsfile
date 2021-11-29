@@ -187,7 +187,7 @@ pipeline {
                             writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
                                     text:"O=0\nCXX=${CXX}")
                             
-                            utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.stan_pr)
+                            utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
                             utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
                             utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
 
@@ -220,28 +220,28 @@ pipeline {
                     }
                     agent { label 'linux' }
                     steps {
-                        unstash 'ubuntu-exe'
-                        sh """
-                            git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                        """
                         script {
-                            utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.stan_pr)
+                            unstash 'ubuntu-exe'
+                            sh """
+                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                            """
+                            utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
                             utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
                             utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
+                            sh """
+                                cd performance-tests-cmdstan
+                                git show HEAD --stat
+                                echo "example-models/regression_tests/mother.stan" > all.tests
+                                cat known_good_perf_all.tests >> all.tests
+                                echo "" >> all.tests
+                                cat shotgun_perf_all.tests >> all.tests
+                                cat all.tests
+                                echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+                                echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
+                                cd cmdstan; make clean-all; git show HEAD --stat; cd ..
+                                CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
+                            """
                         }
-                        sh """
-                            cd performance-tests-cmdstan
-                            git show HEAD --stat
-                            echo "example-models/regression_tests/mother.stan" > all.tests
-                            cat known_good_perf_all.tests >> all.tests
-                            echo "" >> all.tests
-                            cat shotgun_perf_all.tests >> all.tests
-                            cat all.tests
-                            echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-                            echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
-                            cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                            CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
-                        """
 
                         xunit([GoogleTest(
                             deleteOutputFiles: false,
