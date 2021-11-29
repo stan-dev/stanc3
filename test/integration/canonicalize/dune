@@ -18,8 +18,10 @@
  (action
   (with-outputs-to
    %{targets}
-   (run %{bin:run_bin_on_args}
-     "%{bin:stanc} --auto-format --canonicalize deprecations" %{stanfiles}))))
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --auto-format --canonicalize deprecations"
+    %{stanfiles}))))
 
 (rule
  (targets everything-but.output)
@@ -30,9 +32,10 @@
  (action
   (with-outputs-to
    %{targets}
-   (run %{bin:run_bin_on_args}
-     "%{bin:stanc} --auto-format --canonicalize braces,parentheses"
-     %{stanfiles}))))
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --auto-format --canonicalize braces,parentheses"
+    %{stanfiles}))))
 
 (rule
  (alias runtest)
