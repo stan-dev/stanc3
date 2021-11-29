@@ -55,7 +55,7 @@ pipeline {
                     def stanMathSigs = ['test/integration/signatures/stan_math_sigs.expected'].join(" ")
                     skipExpressionTests = utils.verifyChanges(stanMathSigs)
 
-                    def sourceCodePaths = ['src'].join(" ")
+                    def sourceCodePaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
                     skipRemainingStages = utils.verifyChanges(sourceCodePaths)
 
                     def compileTests = ['test/integration/good'].join(" ")
