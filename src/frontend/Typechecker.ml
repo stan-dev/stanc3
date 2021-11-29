@@ -962,7 +962,11 @@ let rec stmt_is_escape {stmt; _} =
 
 and list_until_escape xs =
   let rec aux accu = function
-    | next :: next' :: _ when stmt_is_escape next' ->
+    | [next; next'] when stmt_is_escape next' -> List.rev (next' :: next :: accu)
+    | next :: next' :: unreachable :: _ when stmt_is_escape next' ->
+        add_warning unreachable.smeta.loc
+          "Unreachable statement (following a reject, break, continue, or \
+           return) found, is this intended?" ;
         List.rev (next' :: next :: accu)
     | next :: rest -> aux (next :: accu) rest
     | [] -> List.rev accu in
