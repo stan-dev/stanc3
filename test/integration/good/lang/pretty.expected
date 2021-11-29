@@ -20,6 +20,17 @@ model {
     y[i] ~ multi_normal(mu[i], Sigma[i]);
 }
 
+  $ ../../../../../install/default/bin/stanc --auto-format good_early_reject.stan
+functions {
+  real test(real k) {
+    if (k < 0) 
+      ;
+    reject("test");
+    
+    return k;
+  }
+}
+
   $ ../../../../../install/default/bin/stanc --auto-format good_fun_name.stan
 parameters {
   real e;

@@ -1099,24 +1099,22 @@ and check_loop_body cf tenv loop_var loop_var_ty loop_body =
 and check_block loc cf tenv stmts =
   let _, checked_stmts =
     List.fold_map stmts ~init:tenv ~f:(check_statement cf) in
-  let stmts = list_until_escape checked_stmts in
   let return_type =
-    stmts
+    checked_stmts |> list_until_escape
     |> List.map ~f:(fun s -> s.smeta.return_type)
     |> List.fold ~init:NoReturnType
          ~f:(try_compute_block_statement_returntype loc) in
-  mk_typed_statement ~stmt:(Block stmts) ~return_type ~loc
+  mk_typed_statement ~stmt:(Block checked_stmts) ~return_type ~loc
 
 and check_profile loc cf tenv name stmts =
   let _, checked_stmts =
     List.fold_map stmts ~init:tenv ~f:(check_statement cf) in
-  let stmts = list_until_escape checked_stmts in
   let return_type =
-    stmts
+    checked_stmts |> list_until_escape
     |> List.map ~f:(fun s -> s.smeta.return_type)
     |> List.fold ~init:NoReturnType
          ~f:(try_compute_block_statement_returntype loc) in
-  mk_typed_statement ~stmt:(Profile (name, stmts)) ~return_type ~loc
+  mk_typed_statement ~stmt:(Profile (name, checked_stmts)) ~return_type ~loc
 
 (* variable declarations *)
 and verify_valid_transformation_for_type loc is_global sized_ty trans =
