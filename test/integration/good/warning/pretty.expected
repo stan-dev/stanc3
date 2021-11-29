@@ -1,0 +1,21 @@
+  $ ../../../../../install/default/bin/stanc --auto-format lvalue_multiindex.stan
+data {
+  array[5] matrix[5, 5] x;
+}
+transformed data {
+  matrix[5, 5] y;
+  y[ : ][ : ] = x[1][ : ][ : ];
+  y[ : ][1] = x[1][ : ][2];
+  array[5] matrix[5, 5] z;
+  z[ : ][ : , 1] = x[ : ][ : , 1];
+}
+
+Warning in 'lvalue_multiindex.stan', line 6, column 3: Nested multi-indexing
+    in LValues does not behave the same as nested indexing in expressions.
+    This is considered a bug and will be disallowed in the future.
+Warning in 'lvalue_multiindex.stan', line 7, column 3: Nested multi-indexing
+    in LValues does not behave the same as nested indexing in expressions.
+    This is considered a bug and will be disallowed in the future.
+Warning in 'lvalue_multiindex.stan', line 9, column 3: Nested multi-indexing
+    in LValues does not behave the same as nested indexing in expressions.
+    This is considered a bug and will be disallowed in the future.

@@ -728,7 +728,7 @@ let verify_assignment_global loc cf block is_global id =
   if (not is_global) || block = cf.current_block then ()
   else Semantic_error.cannot_assign_to_global loc id.name |> error
 
-let check_assignment_operator loc assop lhs rhs =
+let verify_assignment_operator loc assop lhs rhs =
   let err op =
     Semantic_error.illtyped_assignment loc op lhs.lmeta.type_ rhs.emeta.type_
   in
@@ -782,7 +782,11 @@ let check_lvalue cf tenv = function
             let flat_type =
               inferred_unsizedtype_of_indexed ~loc var.lmeta.type_ (flat @ idcs)
             in
-            UnsizedType.compare flat_type type_ <> 0
+            let rec can_assign = function
+              | UnsizedType.(UArray t1, UArray t2) -> can_assign (t1, t2)
+              | UVector, URowVector | URowVector, UVector -> false
+              | t1, t2 -> UnsizedType.compare t1 t2 <> 0 in
+            can_assign (flat_type, type_)
           with Errors.SemanticError _ -> true in
         if lvalue_rvalue_types_differ then
           Semantic_error.cannot_assign_to_multiindex loc |> error ) ;
@@ -805,7 +809,7 @@ let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
         |> error in
   verify_assignment_global loc cf block global assign_id ;
   verify_assignment_read_only loc readonly assign_id ;
-  check_assignment_operator loc assign_op lhs rhs ;
+  verify_assignment_operator loc assign_op lhs rhs ;
   mk_typed_statement ~return_type:NoReturnType ~loc
     ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs})
 
