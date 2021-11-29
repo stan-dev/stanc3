@@ -19,15 +19,7 @@ let model_file = ref ""
 let pretty_print_program = ref false
 let print_info_json = ref false
 let filename_for_msg = ref ""
-
-let canonicalize_settings =
-  ref
-    Canonicalize.
-      { inline_includes= false
-      ; deprecations= false
-      ; parentheses= false
-      ; braces= false }
-
+let canonicalize_settings = ref Canonicalize.none
 let print_model_cpp = ref false
 let dump_mir = ref false
 let dump_mir_pretty = ref false

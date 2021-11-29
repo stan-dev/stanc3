@@ -19,7 +19,7 @@ let warn_uninitialized_msgs (uninit_vars : (Location_span.t * string) Set.Poly.t
   in
   Set.Poly.(to_list (map filtered_uninit_vars ~f:show_var_info))
 
-let stan2cpp model_name model_string is_flag_set =
+let stan2cpp model_name model_string is_flag_set flag_val =
   Typechecker.model_name := model_name ;
   Typechecker.check_that_all_functions_have_definition :=
     not (is_flag_set "allow_undefined" || is_flag_set "allow-undefined") ;
@@ -34,15 +34,6 @@ let stan2cpp model_name model_string is_flag_set =
           Parse.parse_string Parser.Incremental.functions_only model_string
         else Parse.parse_string Parser.Incremental.program model_string in
       let open Result.Monad_infix in
-      if is_flag_set "auto-format" then
-        r.return
-          ( ( ast
-            >>| fun ast ->
-            Pretty_printing.pretty_print_program
-              ~bare_functions:(is_flag_set "functions-only")
-              ast )
-          , parser_warnings
-          , [] ) ;
       let result =
         ast
         >>= fun ast ->
@@ -54,12 +45,28 @@ let stan2cpp model_name model_string is_flag_set =
         let warnings = parser_warnings @ type_warnings in
         if is_flag_set "info" then
           r.return (Result.Ok (Info.info typed_ast), warnings, []) ;
-        if is_flag_set "print-canonical" then
+        let canonicalizer_settings =
+          if is_flag_set "print-canonical" then Canonicalize.all
+          else
+            match flag_val "canonicalize" with
+            | None -> Canonicalize.none
+            | Some s ->
+                let parse settings s =
+                  match String.lowercase s with
+                  | "deprecations" ->
+                      Canonicalize.{settings with deprecations= true}
+                  | "parentheses" -> {settings with parentheses= true}
+                  | "braces" -> {settings with braces= true}
+                  | _ -> settings in
+                List.fold ~f:parse ~init:Canonicalize.none
+                  (String.split ~on:',' s) in
+        if is_flag_set "auto-format" || is_flag_set "print-canonical" then
           r.return
             ( Result.Ok
                 (Pretty_printing.pretty_print_typed_program
                    ~bare_functions:(is_flag_set "functions-only")
-                   (Canonicalize.canonicalize_program typed_ast Canonicalize.all) )
+                   (Canonicalize.canonicalize_program typed_ast
+                      canonicalizer_settings ) )
             , warnings
             , [] ) ;
         if is_flag_set "debug-generate-data" then
@@ -119,7 +126,7 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
       >>= String.chop_prefix ~prefix) in
   let printed_filename = flag_val "filename-in-msg" in
   let result, warnings, pedantic_mode_warnings =
-    stan2cpp (Js.to_string name) (Js.to_string code) is_flag_set in
+    stan2cpp (Js.to_string name) (Js.to_string code) is_flag_set flag_val in
   let warnings =
     List.map
       ~f:(Fmt.str "%a" (Warnings.pp ?printed_filename))

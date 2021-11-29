@@ -12,6 +12,12 @@ type canonicalizer_settings =
 let all =
   {deprecations= true; parentheses= true; inline_includes= true; braces= true}
 
+let none =
+  { deprecations= false
+  ; parentheses= false
+  ; inline_includes= false
+  ; braces= false }
+
 let rec repair_syntax_stmt user_dists {stmt; smeta} =
   match stmt with
   | Tilde {arg; distribution= {name; id_loc}; args; truncation} ->
