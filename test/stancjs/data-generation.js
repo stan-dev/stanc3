@@ -12,4 +12,10 @@ data {
 `
 
 let datagen = stanc.stanc("basic_model", datagen_model, ["debug-generate-data"]);
-utils.print_result(datagen)
+const res = JSON.parse(datagen.result)
+console.log("dim(x) = (" + res.x.length + ", " + res.x[0].length + ")")
+console.log("dim(y) = (" + res.y.length + ", " + res.y[0].length + ", " + res.y[0][0].length + ")")
+console.log("dim(z) = (" + res.z.length + ", " + res.z[0].length + ")")
+console.log("dim(w) = (" + res.w.length + ")")
+console.log("dim(p) = (" + res.p.length + ", " + res.p[0].length + ")")
+console.log()
