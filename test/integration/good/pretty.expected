@@ -2618,7 +2618,8 @@ generated quantities {
   array[3] real gq_p_tp_a1 = d_tp_a1;
   array[3] real gq_p_tp_a2 = d_tp_a3[3];
   print("gq_d_tp1 = ", gq_d_tp1);
-  print("gq_d_tp2 = ", gq_d_tp2, " should be td1 = ", td1, " which should be 123");
+  print("gq_d_tp2 = ", gq_d_tp2, " should be td1 = ", td1,
+        " which should be 123");
   print("gq_d_tp3 = ", gq_d_tp3);
   print("gq_d_tp4 = ", gq_d_tp4);
   print("gq_d_tp_a1 = ", gq_d_tp_a1);
