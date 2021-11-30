@@ -30,6 +30,10 @@ pipeline {
         booleanParam(name:"compile_all", defaultValue: false, description:"Try compiling all models in test/integration/good")
     }
     options {parallelsAlwaysFailFast()}
+    environment {
+        CXX = 'clang++-6.0'
+        PARALLEL = 8
+    }
     stages {
         stage('Kill previous builds') {
             when {
@@ -40,7 +44,12 @@ pipeline {
             steps { script { utils.killOldBuilds() } }
         }
         stage('Verify changes') {
-            agent { label 'linux' }
+            agent {
+                docker {
+                    image 'stanorg/ci:alpine'
+                    label 'linux'
+                }
+            }
             steps {
                 script {
                     retry(3) { checkout scm }
@@ -170,7 +179,12 @@ pipeline {
                             !skipCompileTests
                         }
                     }
-                    agent { label 'linux' }
+                    agent {
+                        docker {
+                            image 'stanorg/ci:alpine'
+                            label 'linux'
+                        }
+                    }
                     steps {
                         script {
                             unstash 'ubuntu-exe'
@@ -207,7 +221,12 @@ pipeline {
                             !skipCompileTests
                         }
                     }
-                    agent { label 'linux' }
+                    agent {
+                        docker {
+                            image 'stanorg/ci:alpine'
+                            label 'linux'
+                        }
+                    }
                     steps {
                         unstash 'ubuntu-exe'
                         sh """
@@ -253,7 +272,12 @@ pipeline {
                             !skipExpressionTests
                         }
                     }
-                    agent any
+                    agent {
+                        docker {
+                            image 'stanorg/ci:alpine'
+                            label 'linux'
+                        }
+                    }
                     steps {
 
                         unstash 'ubuntu-exe'
@@ -290,7 +314,12 @@ pipeline {
                             !skipRemainingStages
                         }
                     }
-                    agent { label "osx && ocaml" }
+                    agent {
+                        docker {
+                            image 'stanorg/ci:alpine'
+                            label 'osx'
+                        }
+                    }
                     steps {
                         runShell("""
                             opam switch 4.12.0
@@ -586,7 +615,12 @@ pipeline {
                     anyOf { buildingTag(); branch 'master' }
                 }
             }
-            agent { label 'linux' }
+            agent {
+                docker {
+                    image 'stanorg/ci:alpine'
+                    label 'linux'
+                }
+            }
             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
             steps {
                 unstash 'windows-exe'
@@ -677,9 +711,10 @@ pipeline {
             }
         }
     }
-    post {
-       always {
-          script {utils.mailBuildResults()}
-        }
-    }
+// Below lines are commented to avoid spamming emails during migration/debug
+//     post {
+//        always {
+//           script {utils.mailBuildResults()}
+//         }
+//     }
 }
