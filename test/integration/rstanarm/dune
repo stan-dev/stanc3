@@ -7,9 +7,10 @@
  (action
   (with-stdout-to
    %{targets}
-   (run %{bin:run_bin_on_args}
-     "%{bin:stanc} --include-paths=\".\" --auto-format --allow-undefined"
-     %{stanfiles}))))
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --include-paths=\".\" --auto-format --allow-undefined"
+    %{stanfiles}))))
 
 (rule
  (alias runtest)

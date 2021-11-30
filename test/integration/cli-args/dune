@@ -6,8 +6,10 @@
  (action
   (with-stdout-to
    %{targets}
-   (run %{bin:run_bin_on_args} "%{bin:stanc} --filename-in-msg=foo.stan "
-     filename_error.stan))))
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --filename-in-msg=foo.stan "
+    filename_error.stan))))
 
 (rule
  (alias runtest)
@@ -22,9 +24,10 @@
  (action
   (with-stdout-to
    %{targets}
-   (run %{bin:run_bin_on_args}
-     "%{bin:stanc} --filename-in-msg=foo.stan --print-cpp "
-     filename_good.stan))))
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --filename-in-msg=foo.stan --print-cpp "
+    filename_good.stan))))
 
 (rule
  (alias runtest)
@@ -42,8 +45,10 @@
  (action
   (with-stdout-to
    %{targets}
-   (run %{bin:run_bin_on_args}
-     "%{bin:stanc} --include-paths=.,includes --info " info.stan))))
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --include-paths=.,includes --info "
+    info.stan))))
 
 (rule
  (alias runtest)
