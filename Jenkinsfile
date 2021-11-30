@@ -6,6 +6,7 @@ def utils = new org.stan.Utils()
 def skipExpressionTests = false
 def skipRemainingStages = false
 def skipCompileTests = false
+def skipRebuildingBinaries = false
 def buildingAgentARM = "linux"
 
 /* Functions that runs a sh command and returns the stdout */
@@ -55,11 +56,14 @@ pipeline {
                     def stanMathSigs = ['test/integration/signatures/stan_math_sigs.expected'].join(" ")
                     skipExpressionTests = utils.verifyChanges(stanMathSigs)
 
-                    def sourceCodePaths = ['src'].join(" ")
-                    skipRemainingStages = utils.verifyChanges(sourceCodePaths)
+                    def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
+                    skipRemainingStages = utils.verifyChanges(runTestPaths)
 
                     def compileTests = ['test/integration/good'].join(" ")
                     skipCompileTests = utils.verifyChanges(compileTests)
+
+                    def sourceCodePaths = ['src'].join(" ")
+                    skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths)
 
                     if (buildingTag()) {
                         buildingAgentARM = "arm-ec2"
@@ -303,7 +307,7 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            !skipRebuildingBinaries
                         }
                     }
                     agent { label "osx && ocaml" }
@@ -327,7 +331,7 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            !skipRebuildingBinaries
                         }
                     }
                     agent {
@@ -354,7 +358,7 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            !skipRebuildingBinaries
                         }
                     }
                     agent {
@@ -382,7 +386,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -412,7 +416,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -442,7 +446,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -472,7 +476,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -503,7 +507,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -534,7 +538,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -566,7 +570,7 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            !skipRebuildingBinaries
                         }
                     }
                     agent {
