@@ -50,5 +50,5 @@ let basic = stanc.stanc("basic_stanfuncs", basic_stanfuncs, ["standalone-functio
 utils.print_error(basic)
 var ind = basic.result.search("auto int_only_multiplication");
 if (ind == -1) {
-    console.log("ERROR: standalone-functions!")
+	console.log("ERROR: standalone-functions!")
 }

@@ -45,6 +45,13 @@ model {
   y ~ normal(0, 1);
 }
 
+$ node data-generation.js
+dim(x) = (3, 4)
+dim(y) = (5, 2, 4)
+dim(z) = (3, 4)
+dim(w) = (3)
+dim(p) = (4, 3)
+
 $ node filename.js
 Semantic error in 'good_filename', line 6, column 4 to column 5: 
 Identifier 'z' not in scope.
