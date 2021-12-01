@@ -139,30 +139,8 @@ let pp_returntype ppf = function
   | Middle.UnsizedType.ReturnType x -> pp_unsizedtype ppf x
   | Void -> pf ppf "void"
 
-let pp_identifier ppf id = pf ppf "%s" id.name
-
-let pp_operator ppf = function
-  | Middle.Operator.Plus | PPlus -> pf ppf "+"
-  | Minus | PMinus -> pf ppf "-"
-  | Times -> pf ppf "*"
-  | Divide -> pf ppf "/"
-  | Modulo -> pf ppf "%%"
-  | IntDivide -> pf ppf "%%/%%"
-  | LDivide -> pf ppf "\\"
-  | EltTimes -> pf ppf ".*"
-  | EltDivide -> pf ppf "./"
-  | Pow -> pf ppf "^"
-  | EltPow -> pf ppf ".^"
-  | Or -> pf ppf "||"
-  | And -> pf ppf "&&"
-  | Equals -> pf ppf "=="
-  | NEquals -> pf ppf "!="
-  | Less -> pf ppf "<"
-  | Leq -> pf ppf "<="
-  | Greater -> pf ppf ">"
-  | Geq -> pf ppf ">="
-  | PNot -> pf ppf "!"
-  | Transpose -> pf ppf "'"
+let pp_identifier ppf id = string ppf id.name
+let pp_operator = Middle.Operator.pp
 
 let pp_list_of pp (loc_of : 'a -> Middle.Location_span.t) ppf
     (es, {Middle.Location_span.begin_loc; end_loc}) =
