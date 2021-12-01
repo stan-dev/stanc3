@@ -603,6 +603,7 @@ pipeline {
                 beforeAgent true
                 allOf {
                     expression { !skipRemainingStages }
+                    expression { !skipRebuildingBinaries }
                     anyOf { buildingTag(); branch 'master' }
                 }
             }
