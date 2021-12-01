@@ -28,13 +28,13 @@ def tagName() {
 pipeline {
     agent none
     parameters {
-        booleanParam(name:"compile_all", defaultValue: false, description:"Try compiling all models in test/integration/good")
+        booleanParam(name:"skip_end_to_end", defaultValue: false, description:"Skip end-to-end tests ")
         string(defaultValue: '', name: 'cmdstan_pr',
                description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: '', name: 'stan_pr',
                description: "Stan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: '', name: 'math_pr',
-               description: "Math PR to test against. Will check out this PR in the downstream Math repo.")
+               description: "Math PR to test against. Will check out this PR in the downstream Math repo.")        
     }
     options {parallelsAlwaysFailFast()}
     stages {
@@ -221,13 +221,16 @@ pipeline {
                         expression {
                             !skipCompileTests
                         }
+                        expression {
+                            !params.skip_end_to_end
+                        }
                     }
                     agent { label 'linux' }
                     steps {
                         script {
                             unstash 'ubuntu-exe'
                             sh """
-                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan -b fix_compare_compilers
                             """
                             utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
                             utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
