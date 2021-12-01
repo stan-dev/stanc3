@@ -185,7 +185,7 @@ let print_deprecated_arg_warning =
   if arg_is_used "--allow_undefined" then
     eprintf
       "--allow_undefined is deprecated and will be removed in Stan 2.32.0. \
-       Please use --allow-undefined." ;
+       Please use --allow-undefined.\n" ;
   if arg_is_used "--include_paths" then
     eprintf
       "--include_paths is deprecated and Will be removed in Stan 2.32.0. \
