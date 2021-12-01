@@ -111,7 +111,8 @@ let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
       skipped := [] ;
       Option.iter prev_loc ~f:finish
 
-let pp_maybe_space space_before ppf comments =
+let pp_maybe_space space_before f ppf loc =
+  let comments = f loc in
   if not (List.is_empty comments) then (
     if space_before then sp ppf () ;
     let rec go was_block = function
@@ -149,19 +150,18 @@ let pp_list_of pp (loc_of : 'a -> Middle.Location_span.t) ppf
     | next :: rest ->
         pp ppf expr ;
         let next_loc = (loc_of next).begin_loc in
-        pp_maybe_space true ppf (get_comments_until_separator next_loc) ;
-        let comments = get_comments next_loc in
+        pp_maybe_space true get_comments_until_separator ppf next_loc ;
         comma ppf () ;
-        pp_maybe_space false ppf comments ;
+        pp_maybe_space false get_comments ppf next_loc ;
         go next rest
     | [] -> pp ppf expr in
   skip_comments begin_loc ;
   ( match es with
   | [] -> ()
   | e :: es ->
-      pp_maybe_space false ppf (get_comments (loc_of e).begin_loc) ;
+      pp_maybe_space false get_comments ppf (loc_of e).begin_loc ;
       go e es ) ;
-  pp_maybe_space true ppf (get_comments end_loc)
+  pp_maybe_space true get_comments ppf end_loc
 
 let rec pp_index ppf = function
   | All -> pf ppf " : "
@@ -178,33 +178,32 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
     =
   match e_content with
   | TernaryIf (e1, e2, e3) ->
-      (* Because printing comments is side-effecting, we need to manually chain
-          rather than having a single [pf ppf] call. In short, pretty-printing
-          the first expression must be complete before we call get_comments* again *)
       let then_loc = e2.emeta.loc.begin_loc in
       let else_loc = e3.emeta.loc.begin_loc in
-      pf ppf "@[%a@ %a" pp_expression e1 (pp_maybe_space false)
-        (get_comments_until_separator then_loc) ;
-      pf ppf "? %a%a@ " (pp_maybe_space false) (get_comments then_loc)
-        pp_expression e2 ;
-      pf ppf "%a: %a%a@]" (pp_maybe_space false)
-        (get_comments_until_separator else_loc)
-        (pp_maybe_space false) (get_comments else_loc) pp_expression e3
+      pf ppf "@[%a@ %a? %a%a@ %a: %a%a@]" pp_expression e1
+        (pp_maybe_space false get_comments_until_separator)
+        then_loc
+        (pp_maybe_space false get_comments)
+        then_loc pp_expression e2
+        (pp_maybe_space false get_comments_until_separator)
+        else_loc
+        (pp_maybe_space false get_comments)
+        else_loc pp_expression e3
   | BinOp (e1, op, e2) ->
-      (* Same note applies as TernaryIf *)
       let next_loc = e2.emeta.loc.begin_loc in
-      pf ppf "@[%a" pp_expression e1 ;
-      pf ppf "@ %a%a %a%a@]" (pp_maybe_space false)
-        (get_comments_until_separator next_loc)
-        pp_operator op (pp_maybe_space false) (get_comments next_loc)
-        pp_expression e2
+      pf ppf "@[%a@ %a%a %a%a@]" pp_expression e1
+        (pp_maybe_space false get_comments_until_separator)
+        next_loc pp_operator op
+        (pp_maybe_space false get_comments)
+        next_loc pp_expression e2
   | PrefixOp (op, e) ->
-      pp_maybe_space false ppf (get_comments e.emeta.loc.begin_loc) ;
-      pf ppf "%a%a" pp_operator op pp_expression e
+      pf ppf "%a%a%a"
+        (pp_maybe_space false get_comments)
+        e.emeta.loc.begin_loc pp_operator op pp_expression e
   | PostfixOp (e, op) -> pf ppf "%a%a" pp_expression e pp_operator op
   | Variable id -> pp_identifier ppf id
-  | IntNumeral i -> pf ppf "%s" i
-  | RealNumeral r -> pf ppf "%s" r
+  | IntNumeral i -> string ppf i
+  | RealNumeral r -> string ppf r
   | ImagNumeral z -> pf ppf "%si" z
   | FunApp (_, id, es) ->
       pf ppf "%a(@[%a)@]" pp_identifier id pp_list_of_expression (es, loc)
@@ -219,10 +218,10 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
           |> Option.map ~f:(fun e -> e.emeta.loc.begin_loc)
           |> Option.value ~default:loc.end_loc in
         pf ppf "@[<h>%a(%a%a | %a%a)@]" pp_identifier id pp_expression e
-          (pp_maybe_space true)
-          (get_comments_until_separator begin_loc)
-          (pp_maybe_space false) (get_comments begin_loc) pp_list_of_expression
-          (es', loc) )
+          (pp_maybe_space true get_comments_until_separator)
+          begin_loc
+          (pp_maybe_space false get_comments)
+          begin_loc pp_list_of_expression (es', loc) )
   (* GetLP is deprecated *)
   | GetLP -> pf ppf "get_lp()"
   | GetTarget -> pf ppf "target()"
@@ -254,7 +253,7 @@ let pp_truncation ppf = function
       pf ppf " T[%a, %a]" pp_expression e1 pp_expression e2
 
 let pp_printable ppf = function
-  | PString s -> pf ppf "%s" s
+  | PString s -> string ppf s
   | PExpr e -> pp_expression ppf e
 
 let pp_list_of_printables ppf l = (hovbox @@ list ~sep:comma pp_printable) ppf l
@@ -370,9 +369,9 @@ and pp_recursive_ifthenelse ppf (s, loc) =
       let loc = s1.smeta.loc.end_loc in
       pp_spacing ~newline (Some loc) (Some loc) ppf
         (get_comments_until_separator s2.smeta.loc.begin_loc) ;
-      pf ppf "else %a%a" (pp_maybe_space false)
-        (get_comments s2.smeta.loc.begin_loc)
-        pp_recursive_ifthenelse
+      pf ppf "else %a%a"
+        (pp_maybe_space false get_comments)
+        s2.smeta.loc.begin_loc pp_recursive_ifthenelse
         (s2, {loc with line_num= loc.line_num + 1})
   | _ -> pp_indent_unless_block ppf (s, loc)
 
