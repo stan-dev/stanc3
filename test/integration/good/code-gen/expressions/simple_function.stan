@@ -14,6 +14,5 @@ functions {
 }
 data {
     int N;
-    int K;
     matrix[N,N] m;
 }
