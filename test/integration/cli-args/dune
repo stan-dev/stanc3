@@ -35,27 +35,6 @@
   (diff filename_good.expected filename_good.output)))
 
 (rule
- (targets info.output)
- (deps
-  (package stanc)
-  info.stan
-  included.stan
-  includes/recursive.stan
-  includes/another_include.stan)
- (action
-  (with-stdout-to
-   %{targets}
-   (run
-    %{bin:run_bin_on_args}
-    "%{bin:stanc} --include-paths=.,includes --info "
-    info.stan))))
-
-(rule
- (alias runtest)
- (action
-  (diff info.expected info.output)))
-
-(rule
  (targets notfound.output)
  (deps
   (package stanc))

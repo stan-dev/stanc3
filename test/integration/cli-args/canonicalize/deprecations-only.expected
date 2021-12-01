@@ -1,4 +1,4 @@
-  $ ../../../../install/default/bin/stanc --auto-format --canonicalize deprecations blocks.stan
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize deprecations blocks.stan
 data {
   int N;
   vector[N] y;
@@ -128,7 +128,7 @@ model {
     y ~ std_normal(); //comment after else branch
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format --canonicalize deprecations deprecated.stan
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize deprecations deprecated.stan
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
                    array[] real x, array[] int x_int) {
@@ -212,7 +212,7 @@ generated quantities {
                                                      x_r, x_i);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format --canonicalize deprecations funs.stanfunctions
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize deprecations funs.stanfunctions
 // comment test comment
 void test(int x, int y) {
   print(x, ((y)));
@@ -221,7 +221,7 @@ void test(int x, int y) {
 real deprecated_lp() {
   return target();
 }
-  $ ../../../../install/default/bin/stanc --auto-format --canonicalize deprecations parenthesize.stan
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize deprecations parenthesize.stan
 transformed data {
   int N = 12;
   real b = 1.5;
@@ -240,7 +240,7 @@ model {
     (x + 4) ~ normal(0, (1 + 1)) T[0, (8)];
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format --canonicalize deprecations squaremc.stan
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize deprecations squaremc.stan
 /*
  * BUGS Volume 3, funshapes, square minus circle
  * http://www.openbugs.net/Examples/Funshapes.html
