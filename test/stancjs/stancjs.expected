@@ -6,6 +6,21 @@ $ node auto-format.js
 parameters {
   real y;
 }
+transformed parameters {
+  print("this line is much, much, much ", "too long", " to print on one line");
+}
+model {
+  y ~ std_normal();
+}
+
+parameters {
+  real y;
+}
+transformed parameters {
+  print("this line is much, much, much ",
+        "too long",
+        " to print on one line");
+}
 model {
   y ~ std_normal();
 }

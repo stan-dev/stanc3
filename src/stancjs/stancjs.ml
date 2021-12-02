@@ -57,14 +57,20 @@ let stan2cpp model_name model_string is_flag_set flag_val =
                       Canonicalize.{settings with deprecations= true}
                   | "parentheses" -> {settings with parentheses= true}
                   | "braces" -> {settings with braces= true}
+                  (* doesn't really make sense to do includes here, does it? *)
                   | _ -> settings in
                 List.fold ~f:parse ~init:Canonicalize.none
                   (String.split ~on:',' s) in
+        let line_length =
+          flag_val "max-line-length"
+          |> Option.map ~f:int_of_string
+          |> Option.value ~default:78 in
         if is_flag_set "auto-format" || is_flag_set "print-canonical" then
           r.return
             ( Result.Ok
                 (Pretty_printing.pretty_print_typed_program
                    ~bare_functions:(is_flag_set "functions-only")
+                   ~line_length
                    (Canonicalize.canonicalize_program typed_ast
                       canonicalizer_settings ) )
             , warnings
