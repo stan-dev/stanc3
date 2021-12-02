@@ -170,9 +170,7 @@ let rec pp_index ppf = function
   | Downfrom e -> pf ppf " : %a" pp_expression e
   | Between (e1, e2) -> pf ppf "%a : %a" pp_expression e1 pp_expression e2
 
-and pp_list_of_indices ppf l =
-  (list ~sep:comma_no_break pp_index) ppf l ;
-  ()
+and pp_list_of_indices ppf l = (list ~sep:comma_no_break pp_index) ppf l
 
 and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
     =
@@ -270,8 +268,7 @@ let pp_sizedtype ppf = function
       Common.FatalError.fatal_error_msg [%message "Error printing array type"]
 
 let pp_transformation ppf = function
-  | Middle.Transformation.Identity -> ()
-  | Lower e -> pf ppf "<@[lower=%a@]>" pp_expression e
+  | Middle.Transformation.Lower e -> pf ppf "<@[lower=%a@]>" pp_expression e
   | Upper e -> pf ppf "<@[upper=%a@]>" pp_expression e
   | LowerUpper (e1, e2) ->
       pf ppf "<@[lower=%a,@ upper=%a@]>" pp_expression e1 pp_expression e2
@@ -279,14 +276,9 @@ let pp_transformation ppf = function
   | Multiplier e -> pf ppf "<@[multiplier=%a@]>" pp_expression e
   | OffsetMultiplier (e1, e2) ->
       pf ppf "<@[offset=%a,@ multiplier=%a@]>" pp_expression e1 pp_expression e2
-  | Ordered -> ()
-  | PositiveOrdered -> ()
-  | Simplex -> ()
-  | UnitVector -> ()
-  | CholeskyCorr -> ()
-  | CholeskyCov -> ()
-  | Correlation -> ()
-  | Covariance -> ()
+  | Identity | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
+   |CholeskyCov | Correlation | Covariance ->
+      ()
 
 let pp_transformed_type ppf (pst, trans) =
   let rec discard_arrays pst =
