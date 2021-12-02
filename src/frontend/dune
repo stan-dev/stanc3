@@ -32,7 +32,13 @@
 
 (menhir
  (modules parser)
- (flags :standard --table --strict --unused-tokens --fixed-exception))
+ (flags
+  :standard
+  --table
+  --strict
+  --unused-tokens
+  --fixed-exception
+  --require-aliases))
 
 (rule
  (with-stdout-to

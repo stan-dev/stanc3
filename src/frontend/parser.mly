@@ -28,28 +28,39 @@ let nest_unsized_array basic_type n =
 let (!=) = Stdlib.(!=)
 %}
 
-%token FUNCTIONBLOCK DATABLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK
-       TRANSFORMEDPARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK
-%token LBRACE RBRACE LPAREN RPAREN LBRACK RBRACK LABRACK RABRACK COMMA SEMICOLON
-       BAR
-%token RETURN IF ELSE WHILE FOR IN BREAK CONTINUE PROFILE
-%token VOID INT REAL COMPLEX VECTOR ROWVECTOR ARRAY MATRIX ORDERED POSITIVEORDERED SIMPLEX
-       UNITVECTOR CHOLESKYFACTORCORR CHOLESKYFACTORCOV CORRMATRIX COVMATRIX
-%token LOWER UPPER OFFSET MULTIPLIER
-%token <string> INTNUMERAL
-%token <string> REALNUMERAL
-%token <string> IMAGNUMERAL
-%token <string> STRINGLITERAL
-%token <string> IDENTIFIER
-%token TARGET
-%token QMARK COLON BANG MINUS PLUS HAT ELTPOW TRANSPOSE TIMES DIVIDE MODULO IDIVIDE
-       LDIVIDE ELTTIMES ELTDIVIDE OR AND EQUALS NEQUALS LEQ GEQ TILDE
-%token ASSIGN PLUSASSIGN MINUSASSIGN TIMESASSIGN DIVIDEASSIGN
-   ELTDIVIDEASSIGN ELTTIMESASSIGN
-%token ARROWASSIGN INCREMENTLOGPROB GETLP (* all of these are deprecated *)
-%token PRINT REJECT
-%token TRUNCATE
-%token EOF
+(* Token definitions. The quoted strings are aliases, used in the examples generated in
+   parser.messages. They have no semantic meaning; see
+   http://gallium.inria.fr/~fpottier/menhir/manual.html#sec%3Atokens
+*)
+%token FUNCTIONBLOCK "functions" DATABLOCK "data"
+       TRANSFORMEDDATABLOCK "transformed data" PARAMETERSBLOCK "parameters"
+       TRANSFORMEDPARAMETERSBLOCK "transformed parameters" MODELBLOCK "model"
+       GENERATEDQUANTITIESBLOCK "generated quantities"
+%token LBRACE "{" RBRACE "}" LPAREN "(" RPAREN ")" LBRACK "[" RBRACK "]"
+       LABRACK "<" RABRACK ">" COMMA "," SEMICOLON ";" BAR "|"
+%token RETURN "return" IF "if" ELSE "else" WHILE "while" FOR "for" IN "in"
+       BREAK "break" CONTINUE "continue" PROFILE "profile"
+%token VOID "void" INT "int" REAL "real" COMPLEX "complex" VECTOR "vector"
+       ROWVECTOR "row_vector" ARRAY "array" MATRIX "matrix" ORDERED "ordered"
+       POSITIVEORDERED "positive_ordered" SIMPLEX "simplex" UNITVECTOR "unit_vector"
+       CHOLESKYFACTORCORR "cholesky_factor_corr" CHOLESKYFACTORCOV "cholesky_factor_cov"
+       CORRMATRIX "corr_matrix" COVMATRIX "cov_matrix"
+%token LOWER "lower" UPPER "upper" OFFSET "offset" MULTIPLIER "multiplier"
+%token <string> INTNUMERAL "24"
+%token <string> REALNUMERAL "3.1415"
+%token <string> IMAGNUMERAL "1i"
+%token <string> STRINGLITERAL "\"hello world\""
+%token <string> IDENTIFIER "foo"
+%token TARGET "target"
+%token QMARK "?" COLON ":" BANG "!" MINUS "-" PLUS "+" HAT "^" ELTPOW ".^" TRANSPOSE "'"
+       TIMES "*" DIVIDE "/" MODULO "%" IDIVIDE "%/%" LDIVIDE "\\" ELTTIMES ".*"
+       ELTDIVIDE "./" OR "||" AND "&&" EQUALS "==" NEQUALS "!=" LEQ "<=" GEQ ">=" TILDE "~"
+%token ASSIGN "=" PLUSASSIGN "+=" MINUSASSIGN "-=" TIMESASSIGN "*="
+       DIVIDEASSIGN "/=" ELTDIVIDEASSIGN "./=" ELTTIMESASSIGN ".*="
+%token ARROWASSIGN "<-" INCREMENTLOGPROB "increment_log_prob" GETLP "get_lp" (* all of these are deprecated *)
+%token PRINT "print" REJECT "reject"
+%token TRUNCATE "T"
+%token EOF ""
 
 (* UNREACHABLE tokens will never be produced by the lexer, so we can use them as
    "a thing that will never parse". This is useful in a few places. For example,
@@ -57,7 +68,7 @@ let (!=) = Stdlib.(!=)
    error message purposes, we can partially accept one of them and then fail by
    requiring an UNREACHABLE token.
  *)
-%token UNREACHABLE
+%token UNREACHABLE "<<<<UNREACHABLE>>>"
 
 %right COMMA
 %right QMARK COLON
@@ -78,7 +89,6 @@ let (!=) = Stdlib.(!=)
 (* Top level rule *)
 %start <Ast.untyped_program> program functions_only
 %%
-
 
 (* Grammar *)
 
@@ -181,6 +191,9 @@ future_keyword:
 
 decl_identifier:
   | id=identifier { id }
+  | id=reserved_word { id }
+
+reserved_word:
   (* Keywords cannot be identifiers but
      semantic check produces a better error message. *)
   | FUNCTIONBLOCK { build_id "functions" $loc }
