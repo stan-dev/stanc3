@@ -1,0 +1,55 @@
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes main.stan
+functions {
+  // line comment
+  /*weird block*/
+  void foo(real x) {
+    return;
+  }
+  // another line comment
+}
+data {
+  /* ... declarations ... */
+}
+// I'm in another file!
+transformed data {
+  int x = 30;
+}
+model {
+  // int x = 3;
+  1 ~ bernoulli(0);
+}
+generated quantities {
+  real z;
+  if (1) {
+    
+  } else {
+    // test 2
+    z = exp(15);
+    
+    /* this contains only statements
+    */
+    
+    z = 10.5; // z = 10.5
+    z = 11.2;
+  }
+  
+  if (1) {
+    /* block comment */
+    foo(3.4);
+  }
+}
+
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes tdata.stan
+// I'm in another file!
+
+transformed data {
+  int x = 30;
+}
+
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes test.stanfunctions
+// line comment
+/*weird block*/
+void foo(real x) {
+  return;
+}
+// another line comment

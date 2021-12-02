@@ -73,6 +73,9 @@ let skip_comments loc =
     !skipped
     @ List.filter_map (get_comments loc) ~f:(function
         | `Include, l, loc ->
+            (* This prevents against bad behavior, but also really terrible but technically allowed things fail
+               For example, an if statement where the 'else' is entirely inside the include.
+               This makes the failure noisy rather than ever producing anything invalid for these. *)
             Common.FatalError.fatal_error_msg
               [%message
                 "Attempting to move include!"

@@ -8,27 +8,30 @@
 
 (* Boilerplate for getting line numbers for errors *)
   let incr_linenum lexbuf =
+    lexer_pos_logger lexbuf.lex_curr_p;
     let pos = lexbuf.lex_curr_p in
     lexbuf.lex_curr_p <- { pos with
       pos_lnum = pos.pos_lnum + 1;
       pos_bol = pos.pos_cnum;
     }
 
-let comments : Ast.comment_type list ref = ref []
+  (* Update start pos to be the end of the comment since no token was produced *)
+  let finish_comment lexbuf = lexbuf.lex_start_p <- lexbuf.lex_curr_p; Preprocessor.update_start_pos lexbuf.lex_curr_p
 
-(* Store comments *)
+  let comments : Ast.comment_type list ref = ref []
+
+  (* Store comments *)
   let add_comment (begin_pos, buffer) end_pos =
-  lexer_logger "comment";
-  lexer_pos_logger begin_pos ;   lexer_pos_logger end_pos ;
-
-    comments :=
+      comments :=
         LineComment ( Buffer.contents buffer
                 , Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
       :: !comments
+
   let add_multi_comment begin_pos lines end_pos =
     comments :=
         BlockComment ( lines, Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
       :: !comments
+
   let add_separator lexbuf =
     comments :=
         Separator (Middle.Location.of_position_exn lexbuf.lex_curr_p)
@@ -228,36 +231,28 @@ rule token = parse
   | string_literal as s       { lexer_logger ("string_literal " ^ s) ;
                                 Parser.STRINGLITERAL (lexeme lexbuf) }
   | identifier as id          { lexer_logger ("identifier " ^ id) ;
+                                lexer_pos_logger (lexeme_start_p lexbuf);
                                 Parser.IDENTIFIER (lexeme lexbuf) }
 (* End of file *)
   | eof                       { lexer_logger "eof" ;
-                                if Stack.length include_stack = 1
+                                if Preprocessor.size () = 1
                                 then Parser.EOF
                                 else
-                                  let _ : lexbuf = (Stack.pop_exn include_stack) in
-                                  let old_lexbuf = (Stack.top_exn include_stack) in
-                                  (* to get printing includes right we need to make sure that the 'start' of
-                                      our next token is on the following line
-                                   *)
-                                  let old_pos = {old_lexbuf.lex_curr_p with pos_lnum = old_lexbuf.lex_curr_p.pos_lnum + 1}
-                                  in
-                                  lexer_logger "Switching to older lexbuf";
-                                  lexer_pos_logger old_lexbuf.lex_curr_p;
-                                  lexbuf.lex_curr_p <- old_pos;
-                                  lexbuf.lex_start_p <- old_pos;
+                                  let old_lexbuf = restore_prior_lexbuf () in
                                   token old_lexbuf }
 
   | _                         { raise (Errors.SyntaxError
                                         (Errors.Lexing
                                           (Middle.Location.of_position_exn
                                             (lexeme_start_p
-                                              (Stack.top_exn include_stack))))) }
+                                              (current_buffer ()))))) }
 
 (* Multi-line comment terminated by "*/" *)
 and multiline_comment state = parse
   | "*/"     { let ((pos, lines), buffer) = state in
                let lines = (Buffer.contents buffer) :: lines in
-               add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p }
+               add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p;
+               finish_comment lexbuf }
   | eof      { raise (Errors.SyntaxError
                       (Errors.UnexpectedEOF
                         (Middle.Location.of_position_exn lexbuf.lex_curr_p))) }
@@ -270,8 +265,8 @@ and multiline_comment state = parse
 
 (* Single-line comment terminated by a newline *)
 and singleline_comment state = parse
-  | newline  { add_comment state lexbuf.lex_curr_p ; incr_linenum lexbuf }
-  | eof      { add_comment state lexbuf.lex_curr_p }
+  | newline  { add_comment state lexbuf.lex_curr_p ; incr_linenum lexbuf; finish_comment lexbuf }
+  | eof      { add_comment state lexbuf.lex_curr_p ; finish_comment lexbuf }
   | _        { Buffer.add_string (snd state) (lexeme lexbuf) ; singleline_comment state lexbuf }
 
 {

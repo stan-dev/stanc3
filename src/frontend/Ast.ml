@@ -336,7 +336,6 @@ let get_loc_tf (t : untyped_expression Transformation.t) =
 
 let get_first_loc (s : untyped_statement) =
   match s.stmt with
-  | Assignment {assign_lhs; _} -> assign_lhs.lmeta.loc.end_loc
   | NRFunApp (_, id, _)
    |For {loop_variable= id; _}
    |ForEach (id, _, _)
@@ -348,7 +347,7 @@ let get_first_loc (s : untyped_statement) =
    |IfThenElse (e, _, _)
    |While (e, _) ->
       e.emeta.loc.begin_loc
-  | Profile _ | Block _ -> s.smeta.loc.begin_loc
+  | Assignment _ | Profile _ | Block _ -> s.smeta.loc.begin_loc
   | Tilde {arg; _} -> get_loc_expr arg
   | Break | Continue | ReturnVoid | Print _ | Reject _ | Skip ->
       s.smeta.loc.end_loc

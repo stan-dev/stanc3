@@ -1621,9 +1621,8 @@ model {
     else 
       eta += gamma[1] - max(eta);
   } else {
+    // correction to eta if model has no intercept (because X is centered)
     eta += dot_product(xbar, beta);
-    
-    // ^^^: correction to eta if model has no intercept (because X is centered)
   }
   
   // Log-likelihood
@@ -1747,9 +1746,8 @@ generated quantities {
         alpha[1] -= shift;
       }
     } else {
+      // correction to eta if model has no intercept (because X is centered)
       eta += dot_product(xbar, beta);
-      
-      // ^^^: correction to eta if model has no intercept (because X is centered)
     }
     
     pi = linkinv_binom(eta, link);
@@ -2907,9 +2905,8 @@ model {
     else 
       eta += gamma[1] - min(eta);
   } else {
+    // correction to eta if model has no intercept (because X is centered)
     eta += dot_product(xbar, beta);
-    
-    // ^^^: correction to eta if model has no intercept (because X is centered)
   }
   
   if (SSfun > 0) {
@@ -3198,9 +3195,8 @@ generated quantities {
         eta += gamma[1] - min_eta;
       }
     } else {
+      // correction to eta if model has no intercept (because X is centered)
       eta += dot_product(xbar, beta);
-      
-      // ^^^: correction to eta if model has no intercept (because X is centered)
     }
     
     if (family == 4 && z_dim > 0 && link_phi > 0) {
@@ -3975,9 +3971,8 @@ model {
     else 
       eta += gamma[1] - min(eta);
   } else {
+    // correction to eta if model has no intercept (because X is centered)
     eta += dot_product(xbar, beta);
-    
-    // ^^^: correction to eta if model has no intercept (because X is centered)
   }
   
   if (family == 8) {
@@ -4139,9 +4134,8 @@ generated quantities {
         alpha[1] -= shift;
       }
     } else {
+      // correction to eta if model has no intercept (because X is centered)
       eta += dot_product(xbar, beta);
-      
-      // ^^^: correction to eta if model has no intercept (because X is centered)
     }
     
     if (family == 8) {

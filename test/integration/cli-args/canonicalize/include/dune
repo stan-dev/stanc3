@@ -5,7 +5,7 @@
   (:inc
    (glob_files *.inc))
   (:stanfiles
-   (glob_files *.stan)))
+   (glob_files *.stan*)))
  (action
   (with-outputs-to
    %{targets}

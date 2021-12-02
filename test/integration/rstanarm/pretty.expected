@@ -279,7 +279,6 @@ model {
       eta += gamma[1] - max(eta);
   } else {
     #include </model/eta_no_intercept.stan>
-    
   }
   
   // Log-likelihood
@@ -324,7 +323,6 @@ generated quantities {
       }
     } else {
       #include </model/eta_no_intercept.stan>
-      
     }
     
     pi = linkinv_binom(eta, link);
@@ -474,7 +472,6 @@ model {
       eta += gamma[1] - min(eta);
   } else {
     #include </model/eta_no_intercept.stan>
-    
   }
   
   if (SSfun > 0) {
@@ -623,7 +620,6 @@ generated quantities {
       }
     } else {
       #include </model/eta_no_intercept.stan>
-      
     }
     #include </model/make_eta_z.stan>
     
@@ -810,7 +806,6 @@ model {
       eta += gamma[1] - min(eta);
   } else {
     #include </model/eta_no_intercept.stan>
-    
   }
   
   if (family == 8) {
@@ -893,7 +888,6 @@ generated quantities {
       }
     } else {
       #include </model/eta_no_intercept.stan>
-      
     }
     
     if (family == 8) {

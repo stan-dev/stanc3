@@ -1,3 +1,7 @@
+functions {
+   #include test.stanfunctions
+}
+
 data {
    /* ... declarations ... */
 }
@@ -14,6 +18,11 @@ generated quantities {
   if (1) {
 
   } else {
-#include "statements.inc"
+#include "statements1.inc"
+  }
+
+  if (1) {
+    #include "statements2.inc"
+
   }
 }
