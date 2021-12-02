@@ -1,4 +1,4 @@
-  $ ../../../../install/default/bin/stanc --include-paths=.,includes --info  info.stan
+  $ ../../../../../install/default/bin/stanc --include-paths=.,includes --info  info.stan
 { "inputs": { "a": { "type": "int", "dimensions": 0},
               "b": { "type": "real", "dimensions": 0},
               "c": { "type": "real", "dimensions": 1},

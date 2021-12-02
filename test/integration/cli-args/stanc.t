@@ -15,9 +15,10 @@ Show help
     --dump-stan-math-signatures     Dump out the list of supported type signatures for Stan Math backend.
     --warn-uninitialized            Emit warnings about uninitialized variables to stderr. Currently an experimental feature.
     --warn-pedantic                 Emit warnings about common mistakes in Stan programs.
-    --auto-format                   Pretty prints the program to the console
+    --auto-format                   Pretty prints a formatted version of the Stan program.
     --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'deprecations', 'parentheses', 'braces'.
-    --print-canonical               Prints the canonicalized program to the console. Equivalent to --auto-format --canonicalize [all options]
+    --max-line-length               Set the maximum line length for the formatter. Defaults to 78 characters.
+    --print-canonical               Prints the canonicalized program. Equivalent to --auto-format --canonicalize [all options]
     --version                       Display stanc version number
     --name                          Take a string to set the model name (default = "$model_filename_model")
     --O                             Allow the compiler to apply all optimizations to the Stan code.
