@@ -218,11 +218,13 @@ pipeline {
                 stage("Model end-to-end tests") {
                     when {
                         beforeAgent true
-                        expression {
+                        allOf {
+                         expression {
                             !skipCompileTests
-                        }
-                        expression {
+                         }
+                         expression {
                             !params.skip_end_to_end
+                         }
                         }
                     }
                     agent { label 'linux' }
