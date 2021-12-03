@@ -119,10 +119,9 @@ let pp_comment ppf
   let trim_tail col_num lines =
     match lines with [] -> [] | hd :: tl -> hd :: trim (col_num - 2) tl in
   match style with
-  | `Block ->
-      Fmt.pf ppf "/*@[<v -2>%a@]*/" Fmt.(list string) (trim_tail col_num lines)
-  | `Line -> Fmt.pf ppf "//%a" Fmt.string (List.hd_exn lines)
-  | `Include -> Fmt.pf ppf "@[#include <%a>@]" Fmt.string (List.hd_exn lines)
+  | `Block -> pf ppf "/*@[<v -2>%a@]*/" (list string) (trim_tail col_num lines)
+  | `Line -> pf ppf "//%s" (List.hd_exn lines)
+  | `Include -> pf ppf "@[#include <%s>@]" (List.hd_exn lines)
 
 let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
   let newline =
