@@ -3198,6 +3198,7 @@ program: FUNCTIONBLOCK LBRACE VECTOR LBRACE
 Either a number of unsized dimensions is expected as part of a function return type or an identifier is expected as a function name.
 
 program: FUNCTIONBLOCK LBRACE VOID WHILE LPAREN RPAREN SEMICOLON EOF
+## Concrete syntax: functions { void while ( ) ;
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN SEMICOLON WHILE
 ##
 ## Concrete syntax: functions { void foo ( ) ; while
@@ -3241,6 +3242,7 @@ program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN RPAREN VOID
 Either "{" statement "}" is expected for a function definition or ";" for a function forward declaration.
 
 program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN WHILE
+## Concrete syntax: functions { void T ( while
 program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER COMMA WHILE
 ##
 ## Concrete syntax: functions { void T ( vector foo , while
@@ -5180,6 +5182,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN SEMICOLON ELSE
 Ill-formed statement. Expected statement after "else".
 
 program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN SEMICOLON VOID
+## Concrete syntax: transformed data { if ( 3.1415 ) ; void
 program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN SEMICOLON UNREACHABLE
 ##
 ## Concrete syntax: transformed data { if ( 3.1415 ) ; <<<<UNREACHABLE>>>
@@ -5817,6 +5820,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE COMMA WHILE
 Ill-formed expression. We expect a comma separated list of expressions.
 
 program: DATABLOCK LBRACE ARRAY LBRACK UPPER RPAREN
+## Concrete syntax: data { array [ upper )
 program: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE RPAREN
 ##
 ## Concrete syntax: transformed data { [ T )
@@ -6404,87 +6408,169 @@ program: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE WHILE
 ";" or plain assignment is expected after a top-level variable declaration.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 && T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 / 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 / T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 ./ 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 \ 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 ./ T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 .* 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 .* T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 == 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 == T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL GEQ REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 >= 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL GEQ TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 >= T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL HAT REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 ^ 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL HAT TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 ^ T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LABRACK REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 < 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LABRACK TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 < T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 \ T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LEQ REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 <= 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LEQ TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 <= T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MINUS REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 - 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MINUS TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 - T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MODULO REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 % 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MODULO TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 % T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL NEQUALS REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 != 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL NEQUALS TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 != T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL OR REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 || 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL OR TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 || T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL PLUS REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 + 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL PLUS TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 + T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL COLON REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 ? 3.1415 : 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL COLON TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 ? 3.1415 : T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE COLON REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 ? T : 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE COLON TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 ? T : T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL RABRACK REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 > 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL RABRACK TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 > T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 * 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 * T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE AND REALNUMERAL WHILE
+## Concrete syntax: transformed data { T && 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE AND TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T && T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T / T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE REALNUMERAL WHILE
+## Concrete syntax: transformed data { T ./ 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T ./ T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES REALNUMERAL WHILE
+## Concrete syntax: transformed data { T .* 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T .* T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS REALNUMERAL WHILE
+## Concrete syntax: transformed data { T == 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T == T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ REALNUMERAL WHILE
+## Concrete syntax: transformed data { T >= 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T >= T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT REALNUMERAL WHILE
+## Concrete syntax: transformed data { T ^ 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T ^ T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK REALNUMERAL WHILE
+## Concrete syntax: transformed data { T < 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T < T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE REALNUMERAL WHILE
+## Concrete syntax: transformed data { T \ 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T \ T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ REALNUMERAL WHILE
+## Concrete syntax: transformed data { T <= 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T <= T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS REALNUMERAL WHILE
+## Concrete syntax: transformed data { T - 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T - T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO REALNUMERAL WHILE
+## Concrete syntax: transformed data { T % 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T % T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS REALNUMERAL WHILE
+## Concrete syntax: transformed data { T != 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T != T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR REALNUMERAL WHILE
+## Concrete syntax: transformed data { T || 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T || T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS REALNUMERAL WHILE
+## Concrete syntax: transformed data { T + 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T + T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON REALNUMERAL WHILE
+## Concrete syntax: transformed data { T ? T : 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T ? T : T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK REALNUMERAL WHILE
+## Concrete syntax: transformed data { T > 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T > T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES REALNUMERAL WHILE
+## Concrete syntax: transformed data { T * 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T * T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON TRUNCATE LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { T ? 3.1415 : T [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON REALNUMERAL WHILE
+## Concrete syntax: transformed data { T ? 3.1415 : 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE UPPER IDIVIDE UPPER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { upper %/% upper [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE UPPER IDIVIDE REALNUMERAL WHILE
+## Concrete syntax: transformed data { upper %/% 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE UPPER ELTPOW UPPER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { upper .^ upper [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE UPPER ELTPOW REALNUMERAL WHILE
+## Concrete syntax: transformed data { upper .^ 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL IDIVIDE UPPER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 %/% upper [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL IDIVIDE REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 %/% 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTPOW UPPER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 .^ upper [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTPOW REALNUMERAL WHILE
 ##
 ## Concrete syntax: transformed data { 3.1415 .^ 3.1415 while
@@ -6549,12 +6635,19 @@ Or did you mean to use the preceding expression in:
 * assignment to a variable?
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE COLON REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 [ T : 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL COLON REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 [ 3.1415 : 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL COLON TRUNCATE TILDE
+## Concrete syntax: transformed data { 3.1415 [ 3.1415 : T ~
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 [ 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE COLON TRUNCATE TILDE
+## Concrete syntax: transformed data { 3.1415 [ T : T ~
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE COLON WHILE
+## Concrete syntax: transformed data { 3.1415 [ T : while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 && 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK WHILE
 ##
 ## Concrete syntax: transformed data { 3.1415 [ while
@@ -6570,36 +6663,67 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK WHILE
 Found an ill-formed expression where we expected a statement. Did you forget to close your "["?
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE WHILE
+## Concrete syntax: transformed data { 3.1415 \ while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MINUS WHILE
+## Concrete syntax: transformed data { 3.1415 - while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL PLUS WHILE
+## Concrete syntax: transformed data { 3.1415 + while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL OR WHILE
+## Concrete syntax: transformed data { 3.1415 || while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL NEQUALS WHILE
+## Concrete syntax: transformed data { 3.1415 != while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MODULO WHILE
+## Concrete syntax: transformed data { 3.1415 % while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LEQ WHILE
+## Concrete syntax: transformed data { 3.1415 <= while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL RABRACK WHILE
+## Concrete syntax: transformed data { 3.1415 > while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES WHILE
+## Concrete syntax: transformed data { 3.1415 * while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE AND WHILE
+## Concrete syntax: transformed data { T && while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE WHILE
+## Concrete syntax: transformed data { T / while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE WHILE
+## Concrete syntax: transformed data { T ./ while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES WHILE
+## Concrete syntax: transformed data { T .* while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS WHILE
+## Concrete syntax: transformed data { T == while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ WHILE
+## Concrete syntax: transformed data { T >= while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT WHILE
+## Concrete syntax: transformed data { T ^ while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK WHILE
+## Concrete syntax: transformed data { T < while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE WHILE
+## Concrete syntax: transformed data { T \ while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ WHILE
+## Concrete syntax: transformed data { T <= while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS WHILE
+## Concrete syntax: transformed data { T - while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO WHILE
+## Concrete syntax: transformed data { T % while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS WHILE
+## Concrete syntax: transformed data { T != while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN WHILE
+## Concrete syntax: transformed data { T .*= while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR WHILE
+## Concrete syntax: transformed data { T || while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS WHILE
+## Concrete syntax: transformed data { T + while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK WHILE
+## Concrete syntax: transformed data { T > while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES WHILE
+## Concrete syntax: transformed data { T * while
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN UPPER IDIVIDE WHILE
+## Concrete syntax: data { vector < upper = upper %/% while
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN UPPER ELTPOW WHILE
+## Concrete syntax: data { vector < upper = upper .^ while
 program: TRANSFORMEDDATABLOCK LBRACE UPPER IDIVIDE WHILE
+## Concrete syntax: transformed data { upper %/% while
 program: TRANSFORMEDDATABLOCK LBRACE UPPER ELTPOW WHILE
+## Concrete syntax: transformed data { upper .^ while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTPOW WHILE
 ##
 ## Concrete syntax: transformed data { 3.1415 .^ while
@@ -6616,14 +6740,23 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTPOW WHILE
 Found an incomplete binary expression - are you missing the right hand side?
 
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON WHILE
+## Concrete syntax: transformed data { T ? 3.1415 : while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL WHILE
+## Concrete syntax: transformed data { T ? 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON WHILE
+## Concrete syntax: transformed data { T ? T : while
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE TILDE
+## Concrete syntax: transformed data { T ? T ~
 program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK WHILE
+## Concrete syntax: transformed data { T ? while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL COLON WHILE
+## Concrete syntax: transformed data { 3.1415 ? 3.1415 : while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 ? 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE COLON WHILE
+## Concrete syntax: transformed data { 3.1415 ? T : while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE TILDE
+## Concrete syntax: transformed data { 3.1415 ? T ~
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK WHILE
 ##
 ## Concrete syntax: transformed data { 3.1415 ? while
@@ -6645,6 +6778,7 @@ For example, this returns 3.0:
   1 ? 0.0 : 3.0
 
 program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN REALNUMERAL WHILE
+## Concrete syntax: transformed data { reject ( 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE TILDE
 ##
 ## Concrete syntax: transformed data { reject ( T ~
@@ -9926,6 +10060,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN UPPER RPAREN SEMICOLON UNREACHABL
 'if (cond)' should be followed by '{' and statements to execute if true.
 
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN UPPER IDIVIDE REALNUMERAL WHILE
+## Concrete syntax: data { vector < upper = upper %/% 3.1415 while
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN UPPER ELTPOW REALNUMERAL WHILE
 ##
 ## Concrete syntax: data { vector < upper = upper .^ 3.1415 while
@@ -9972,6 +10107,7 @@ not
   var[for (n in 1:N) ...]
 
 program: FUNCTIONBLOCK LBRACE ARRAY WHILE
+## Concrete syntax: functions { array while
 program: DATABLOCK LBRACE ARRAY WHILE
 ##
 ## Concrete syntax: data { array while
@@ -9992,8 +10128,11 @@ Invalid type in declaration. Valid types:
 optionally preceded by a single array[...]
 
 program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL UPPER WHILE
+## Concrete syntax: transformed data { array [ foo ] real upper while
 program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL UPPER WHILE
+## Concrete syntax: data { array [ foo ] real upper while
 program: MODELBLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK WHILE
+## Concrete syntax: model { array [ foo ] while
 program: FUNCTIONBLOCK LBRACE ARRAY LBRACK RBRACK WHILE
 ##
 ## Concrete syntax: functions { array [ ] while
@@ -10009,7 +10148,9 @@ program: FUNCTIONBLOCK LBRACE ARRAY LBRACK RBRACK WHILE
 Expected non-array type after array in return type.
 
 program: DATABLOCK LBRACE REAL UPPER ASSIGN WHILE
+## Concrete syntax: data { real upper = while
 program: DATABLOCK LBRACE REAL UPPER ASSIGN UNREACHABLE WHILE
+## Concrete syntax: data { real upper = <<<<UNREACHABLE>>> while
 program: DATABLOCK LBRACE REAL UPPER LBRACK IDENTIFIER RBRACK ASSIGN UNREACHABLE WHILE
 ##
 ## Concrete syntax: data { real upper [ foo ] = <<<<UNREACHABLE>>> while
@@ -10026,8 +10167,11 @@ Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
 after variable declaration.
 
 program: MODELBLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL UNREACHABLE
+## Concrete syntax: model { array [ foo ] real <<<<UNREACHABLE>>>
 program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK VECTOR LBRACK INTNUMERAL RBRACK AND
+## Concrete syntax: data { array [ foo ] vector [ 24 ] &&
 program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK VECTOR LBRACK INTNUMERAL RBRACK AND
+## Concrete syntax: transformed data { array [ foo ] vector [ 24 ] &&
 program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN UPPER RPAREN UPPER VECTOR
 ##
 ## Concrete syntax: transformed data { while ( upper ) upper vector
@@ -10109,6 +10253,7 @@ program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN UPPER RPAREN UPPER VECTOR
 Expected identifier after type in declaration.
 
 program: DATABLOCK LBRACE REAL UPPER COMMA UNREACHABLE
+## Concrete syntax: data { real upper , <<<<UNREACHABLE>>>
 program: MODELBLOCK LBRACE REAL UPPER COMMA UNREACHABLE
 ##
 ## Concrete syntax: model { real upper , <<<<UNREACHABLE>>>
@@ -10124,6 +10269,7 @@ program: MODELBLOCK LBRACE REAL UPPER COMMA UNREACHABLE
 Expected identifier after comma in multiple declaration.
 
 program: TRANSFORMEDDATABLOCK LBRACE REAL UPPER LBRACK ARRAY RBRACK ASSIGN ARRAY COMMA
+## Concrete syntax: transformed data { real upper [ array ] = array ,
 program: MODELBLOCK LBRACE REAL UPPER LBRACK UPPER RBRACK ASSIGN ARRAY COMMA
 ##
 ## Concrete syntax: model { real upper [ upper ] = array ,
