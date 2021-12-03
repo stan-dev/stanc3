@@ -122,7 +122,7 @@ let pp_comment ppf
   | `Block ->
       Fmt.pf ppf "/*@[<v -2>%a@]*/" Fmt.(list string) (trim_tail col_num lines)
   | `Line -> Fmt.pf ppf "//%a" Fmt.string (List.hd_exn lines)
-  | `Include -> Fmt.pf ppf "#include <%a>" Fmt.string (List.hd_exn lines)
+  | `Include -> Fmt.pf ppf "@[#include <%a>@]" Fmt.string (List.hd_exn lines)
 
 let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
   let newline =
@@ -497,8 +497,7 @@ and pp_list_of_statements ppf (l, xloc) =
   (vbox pp_head) ppf l
 
 let pp_bare_block ppf {stmts; xloc} =
-  pp_spacing None (Some xloc.begin_loc) ppf (get_comments xloc.begin_loc) ;
-  (box pp_list_of_statements) ppf (stmts, xloc)
+  (hbox (box pp_list_of_statements)) ppf (stmts, xloc)
 
 let pp_block block_name ppf {stmts; xloc} =
   pf ppf "%s {@,%a@,}@," block_name

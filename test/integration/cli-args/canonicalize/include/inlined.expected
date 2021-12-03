@@ -1,11 +1,41 @@
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes a.stanfunctions
+// line comment a
+/*weird block a*/
+void foo(real x) {
+  return;
+}
+// another line comment a
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes b.stanfunctions
+// line comment a
+/*weird block a*/
+void foo(real x) {
+  return;
+}
+// another line comment a
+
+//include other functions
+// line comment b
+/*weird block b*/
+void bar(real y) {
+  return;
+}
+// another line comment b
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes main.stan
 functions {
-  // line comment
-  /*weird block*/
+  // line comment a
+  /*weird block a*/
   void foo(real x) {
     return;
   }
-  // another line comment
+  // another line comment a
+  
+  //include other functions
+  // line comment b
+  /*weird block b*/
+  void bar(real y) {
+    return;
+  }
+  // another line comment b
 }
 data {
   /* ... declarations ... */
@@ -46,10 +76,3 @@ transformed data {
   int x = 30;
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes test.stanfunctions
-// line comment
-/*weird block*/
-void foo(real x) {
-  return;
-}
-// another line comment

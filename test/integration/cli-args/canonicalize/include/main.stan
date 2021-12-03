@@ -1,5 +1,5 @@
 functions {
-   #include test.stanfunctions
+   #include b.stanfunctions
 }
 
 data {

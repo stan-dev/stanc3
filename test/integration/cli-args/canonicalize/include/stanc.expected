@@ -1,6 +1,22 @@
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. a.stanfunctions
+// line comment a
+/*weird block a*/
+void foo(real x) {
+  return;
+}
+// another line comment a
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. b.stanfunctions
+#include <a.stanfunctions> //include other functions
+
+// line comment b
+/*weird block b*/
+void bar(real y) {
+  return;
+}
+// another line comment b
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. main.stan
 functions {
-  #include <test.stanfunctions>
+  #include <b.stanfunctions>
 }
 data {
   /* ... declarations ... */
