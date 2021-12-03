@@ -28,13 +28,13 @@ def tagName() {
 pipeline {
     agent none
     parameters {
-        booleanParam(name:"compile_all", defaultValue: false, description:"Try compiling all models in test/integration/good")
+        booleanParam(name:"skip_end_to_end", defaultValue: false, description:"Skip end-to-end tests ")
         string(defaultValue: '', name: 'cmdstan_pr',
                description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: '', name: 'stan_pr',
                description: "Stan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: '', name: 'math_pr',
-               description: "Math PR to test against. Will check out this PR in the downstream Math repo.")
+               description: "Math PR to test against. Will check out this PR in the downstream Math repo.")        
     }
     options {parallelsAlwaysFailFast()}
     stages {
@@ -218,8 +218,13 @@ pipeline {
                 stage("Model end-to-end tests") {
                     when {
                         beforeAgent true
-                        expression {
+                        allOf {
+                         expression {
                             !skipCompileTests
+                         }
+                         expression {
+                            !params.skip_end_to_end
+                         }
                         }
                     }
                     agent { label 'linux' }
