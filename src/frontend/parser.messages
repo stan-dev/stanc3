@@ -70,9 +70,9 @@ program: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" for size of cholesky_factor_corr.
 
-program: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK IDENTIFIER TILDE
 ##
-## Concrete syntax: data { cholesky_factor_corr [ T ~
+## Concrete syntax: data { cholesky_factor_corr [ foo ~
 ##
 ## Ends in an error in state: 675.
 ##
@@ -222,9 +222,9 @@ program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
 
-program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA REALNUMERAL WHILE
+program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK IDENTIFIER COMMA REALNUMERAL WHILE
 ##
-## Concrete syntax: data { cholesky_factor_cov [ T , 3.1415 while
+## Concrete syntax: data { cholesky_factor_cov [ foo , 3.1415 while
 ##
 ## Ends in an error in state: 664.
 ##
@@ -280,9 +280,9 @@ program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA REALNUMERAL WH
 
 Expected comma separated list of expressions. Ill-formed expression.
 
-program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA TRUNCATE TILDE
+program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK IDENTIFIER COMMA IDENTIFIER TILDE
 ##
-## Concrete syntax: data { cholesky_factor_cov [ T , T ~
+## Concrete syntax: data { cholesky_factor_cov [ foo , foo ~
 ##
 ## Ends in an error in state: 665.
 ##
@@ -344,9 +344,9 @@ program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA TRUNCATE TILDE
 
 Expected comma separated list of expressions. Ill-formed expression.
 
-program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA WHILE
+program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK IDENTIFIER COMMA WHILE
 ##
-## Concrete syntax: data { cholesky_factor_cov [ T , while
+## Concrete syntax: data { cholesky_factor_cov [ foo , while
 ##
 ## Ends in an error in state: 663.
 ##
@@ -359,9 +359,9 @@ program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA WHILE
 
 Expected comma separated list of expressions. Ill-formed expression.
 
-program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK IDENTIFIER TILDE
 ##
-## Concrete syntax: data { cholesky_factor_cov [ T ~
+## Concrete syntax: data { cholesky_factor_cov [ foo ~
 ##
 ## Ends in an error in state: 668.
 ##
@@ -511,9 +511,9 @@ program: DATABLOCK LBRACE CORRMATRIX LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" for size of corr_matrix.
 
-program: DATABLOCK LBRACE CORRMATRIX LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE CORRMATRIX LBRACK IDENTIFIER TILDE
 ##
-## Concrete syntax: data { corr_matrix [ T ~
+## Concrete syntax: data { corr_matrix [ foo ~
 ##
 ## Ends in an error in state: 656.
 ##
@@ -663,9 +663,9 @@ program: DATABLOCK LBRACE COVMATRIX LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" for size of cov_matrix.
 
-program: DATABLOCK LBRACE COVMATRIX LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE COVMATRIX LBRACK IDENTIFIER TILDE
 ##
-## Concrete syntax: data { cov_matrix [ T ~
+## Concrete syntax: data { cov_matrix [ foo ~
 ##
 ## Ends in an error in state: 650.
 ##
@@ -860,9 +860,9 @@ program: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA REALNUMERAL WHILE
 
 Expected "[" expression "," expression "]" for sizes of matrix.
 
-program: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA TRUNCATE TILDE
+program: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA IDENTIFIER TILDE
 ##
-## Concrete syntax: data { matrix [ 3.1415 , T ~
+## Concrete syntax: data { matrix [ 3.1415 , foo ~
 ##
 ## Ends in an error in state: 635.
 ##
@@ -999,9 +999,9 @@ program: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "," expression "]" for sizes of matrix.
 
-program: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA REALNUMERAL WHILE
+program: DATABLOCK LBRACE MATRIX LBRACK IDENTIFIER COMMA REALNUMERAL WHILE
 ##
-## Concrete syntax: data { matrix [ T , 3.1415 while
+## Concrete syntax: data { matrix [ foo , 3.1415 while
 ##
 ## Ends in an error in state: 639.
 ##
@@ -1057,9 +1057,9 @@ program: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA REALNUMERAL WHILE
 
 Expected "[" expression "," expression "]" for sizes of matrix.
 
-program: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA TRUNCATE TILDE
+program: DATABLOCK LBRACE MATRIX LBRACK IDENTIFIER COMMA IDENTIFIER TILDE
 ##
-## Concrete syntax: data { matrix [ T , T ~
+## Concrete syntax: data { matrix [ foo , foo ~
 ##
 ## Ends in an error in state: 641.
 ##
@@ -1121,9 +1121,9 @@ program: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA TRUNCATE TILDE
 
 Expected "[" expression "," expression "]" for sizes of matrix.
 
-program: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA WHILE
+program: DATABLOCK LBRACE MATRIX LBRACK IDENTIFIER COMMA WHILE
 ##
-## Concrete syntax: data { matrix [ T , while
+## Concrete syntax: data { matrix [ foo , while
 ##
 ## Ends in an error in state: 638.
 ##
@@ -1136,9 +1136,9 @@ program: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA WHILE
 
 Expected "[" expression "," expression "]" for sizes of matrix.
 
-program: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE MATRIX LBRACK IDENTIFIER TILDE
 ##
-## Concrete syntax: data { matrix [ T ~
+## Concrete syntax: data { matrix [ foo ~
 ##
 ## Ends in an error in state: 637.
 ##
@@ -1293,9 +1293,9 @@ program: DATABLOCK LBRACE ORDERED LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" for size of ordered.
 
-program: DATABLOCK LBRACE ORDERED LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE ORDERED LBRACK IDENTIFIER TILDE
 ##
-## Concrete syntax: data { ordered [ T ~
+## Concrete syntax: data { ordered [ foo ~
 ##
 ## Ends in an error in state: 626.
 ##
@@ -1445,9 +1445,9 @@ program: DATABLOCK LBRACE POSITIVEORDERED LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" for size of positive_ordered.
 
-program: DATABLOCK LBRACE POSITIVEORDERED LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE POSITIVEORDERED LBRACK IDENTIFIER TILDE
 ##
-## Concrete syntax: data { positive_ordered [ T ~
+## Concrete syntax: data { positive_ordered [ foo ~
 ##
 ## Ends in an error in state: 620.
 ##
@@ -1567,9 +1567,9 @@ program: DATABLOCK LBRACE REAL IDENTIFIER SEMICOLON WHILE
 
 Only top-level variable declarations allowed in data and parameters blocks.
 
-program: DATABLOCK LBRACE REAL TRUNCATE WHILE
+program: DATABLOCK LBRACE REAL IDENTIFIER WHILE
 ##
-## Concrete syntax: data { real T while
+## Concrete syntax: data { real foo while
 ##
 ## Ends in an error in state: 689.
 ##
@@ -1669,9 +1669,9 @@ program: DATABLOCK LBRACE ROWVECTOR LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" for size declaration of row_vector.
 
-program: DATABLOCK LBRACE ROWVECTOR LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE ROWVECTOR LBRACK IDENTIFIER TILDE
 ##
-## Concrete syntax: data { row_vector [ T ~
+## Concrete syntax: data { row_vector [ foo ~
 ##
 ## Ends in an error in state: 612.
 ##
@@ -1821,9 +1821,9 @@ program: DATABLOCK LBRACE SIMPLEX LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" for size declaration of simplex.
 
-program: DATABLOCK LBRACE SIMPLEX LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE SIMPLEX LBRACK IDENTIFIER TILDE
 ##
-## Concrete syntax: data { simplex [ T ~
+## Concrete syntax: data { simplex [ foo ~
 ##
 ## Ends in an error in state: 604.
 ##
@@ -1973,9 +1973,9 @@ program: DATABLOCK LBRACE UNITVECTOR LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" for size declaration of unit_vector.
 
-program: DATABLOCK LBRACE UNITVECTOR LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE UNITVECTOR LBRACK IDENTIFIER TILDE
 ##
-## Concrete syntax: data { unit_vector [ T ~
+## Concrete syntax: data { unit_vector [ foo ~
 ##
 ## Ends in an error in state: 598.
 ##
@@ -2095,9 +2095,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN REALNUMERAL WHILE
 
 Expected "offset = " expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN TRUNCATE COMMA MULTIPLIER ASSIGN TRUNCATE COMMA
+program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA MULTIPLIER ASSIGN IDENTIFIER COMMA
 ##
-## Concrete syntax: data { vector < offset = T , multiplier = T ,
+## Concrete syntax: data { vector < offset = foo , multiplier = foo ,
 ##
 ## Ends in an error in state: 568.
 ##
@@ -2128,9 +2128,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN TRUNCATE COMMA MULTIPLIER
 
 Expected ">" after "multiplier = " expression.
 
-program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN TRUNCATE COMMA MULTIPLIER ASSIGN WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA MULTIPLIER ASSIGN WHILE
 ##
-## Concrete syntax: data { vector < offset = T , multiplier = while
+## Concrete syntax: data { vector < offset = foo , multiplier = while
 ##
 ## Ends in an error in state: 567.
 ##
@@ -2142,9 +2142,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN TRUNCATE COMMA MULTIPLIER
 
 Expected "multiplier = " expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN TRUNCATE COMMA MULTIPLIER WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA MULTIPLIER WHILE
 ##
-## Concrete syntax: data { vector < offset = T , multiplier while
+## Concrete syntax: data { vector < offset = foo , multiplier while
 ##
 ## Ends in an error in state: 566.
 ##
@@ -2156,9 +2156,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN TRUNCATE COMMA MULTIPLIER
 
 Expected "multiplier = " expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN TRUNCATE COMMA WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA WHILE
 ##
-## Concrete syntax: data { vector < offset = T , while
+## Concrete syntax: data { vector < offset = foo , while
 ##
 ## Ends in an error in state: 565.
 ##
@@ -2228,9 +2228,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN REALNUMERAL WHILE
 
 ">" or ", upper = expression>" (with expression not containing binary logical operators) expected after specifying lower bound for type.
 
-program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER ASSIGN TRUNCATE COMMA
+program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA UPPER ASSIGN IDENTIFIER COMMA
 ##
-## Concrete syntax: data { vector < lower = T , upper = T ,
+## Concrete syntax: data { vector < lower = foo , upper = foo ,
 ##
 ## Ends in an error in state: 582.
 ##
@@ -2261,9 +2261,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER ASSIG
 
 Expected ">" after "upper = " expression.
 
-program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER ASSIGN WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA UPPER ASSIGN WHILE
 ##
-## Concrete syntax: data { vector < lower = T , upper = while
+## Concrete syntax: data { vector < lower = foo , upper = while
 ##
 ## Ends in an error in state: 581.
 ##
@@ -2275,9 +2275,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER ASSIG
 
 Expected expression (not containing binary logical operators) after "upper = ".
 
-program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA UPPER WHILE
 ##
-## Concrete syntax: data { vector < lower = T , upper while
+## Concrete syntax: data { vector < lower = foo , upper while
 ##
 ## Ends in an error in state: 580.
 ##
@@ -2289,9 +2289,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER WHILE
 
 Expected "=" expression (not containing binary logical operators) after "upper".
 
-program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA WHILE
 ##
-## Concrete syntax: data { vector < lower = T , while
+## Concrete syntax: data { vector < lower = foo , while
 ##
 ## Ends in an error in state: 579.
 ##
@@ -2501,9 +2501,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN PLUS WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE DIVIDE REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER DIVIDE REALNUMERAL WHILE
 ##
-## Concrete syntax: data { vector < upper = T / 3.1415 while
+## Concrete syntax: data { vector < upper = foo / 3.1415 while
 ##
 ## Ends in an error in state: 555.
 ##
@@ -2528,9 +2528,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE DIVIDE REALNUMERA
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE DIVIDE WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER DIVIDE WHILE
 ##
-## Concrete syntax: data { vector < upper = T / while
+## Concrete syntax: data { vector < upper = foo / while
 ##
 ## Ends in an error in state: 554.
 ##
@@ -2542,9 +2542,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE DIVIDE WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTDIVIDE REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER ELTDIVIDE REALNUMERAL WHILE
 ##
-## Concrete syntax: data { vector < upper = T ./ 3.1415 while
+## Concrete syntax: data { vector < upper = foo ./ 3.1415 while
 ##
 ## Ends in an error in state: 553.
 ##
@@ -2569,9 +2569,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTDIVIDE REALNUM
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTDIVIDE WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER ELTDIVIDE WHILE
 ##
-## Concrete syntax: data { vector < upper = T ./ while
+## Concrete syntax: data { vector < upper = foo ./ while
 ##
 ## Ends in an error in state: 552.
 ##
@@ -2583,9 +2583,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTDIVIDE WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTTIMES REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER ELTTIMES REALNUMERAL WHILE
 ##
-## Concrete syntax: data { vector < upper = T .* 3.1415 while
+## Concrete syntax: data { vector < upper = foo .* 3.1415 while
 ##
 ## Ends in an error in state: 551.
 ##
@@ -2610,9 +2610,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTTIMES REALNUME
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTTIMES WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER ELTTIMES WHILE
 ##
-## Concrete syntax: data { vector < upper = T .* while
+## Concrete syntax: data { vector < upper = foo .* while
 ##
 ## Ends in an error in state: 550.
 ##
@@ -2624,9 +2624,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTTIMES WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE HAT REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER HAT REALNUMERAL WHILE
 ##
-## Concrete syntax: data { vector < upper = T ^ 3.1415 while
+## Concrete syntax: data { vector < upper = foo ^ 3.1415 while
 ##
 ## Ends in an error in state: 533.
 ##
@@ -2651,9 +2651,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE HAT REALNUMERAL W
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE HAT WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER HAT WHILE
 ##
-## Concrete syntax: data { vector < upper = T ^ while
+## Concrete syntax: data { vector < upper = foo ^ while
 ##
 ## Ends in an error in state: 532.
 ##
@@ -2665,9 +2665,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE HAT WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LBRACK WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER LBRACK WHILE
 ##
-## Concrete syntax: data { vector < upper = T [ while
+## Concrete syntax: data { vector < upper = foo [ while
 ##
 ## Ends in an error in state: 529.
 ##
@@ -2679,9 +2679,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LBRACK WHILE
 
 Ill-formed expression. Expected expression followed by "]".
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LDIVIDE REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER LDIVIDE REALNUMERAL WHILE
 ##
-## Concrete syntax: data { vector < upper = T \ 3.1415 while
+## Concrete syntax: data { vector < upper = foo \ 3.1415 while
 ##
 ## Ends in an error in state: 543.
 ##
@@ -2706,9 +2706,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LDIVIDE REALNUMER
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LDIVIDE WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER LDIVIDE WHILE
 ##
-## Concrete syntax: data { vector < upper = T \ while
+## Concrete syntax: data { vector < upper = foo \ while
 ##
 ## Ends in an error in state: 542.
 ##
@@ -2720,9 +2720,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LDIVIDE WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MINUS REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER MINUS REALNUMERAL WHILE
 ##
-## Concrete syntax: data { vector < upper = T - 3.1415 while
+## Concrete syntax: data { vector < upper = foo - 3.1415 while
 ##
 ## Ends in an error in state: 557.
 ##
@@ -2747,9 +2747,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MINUS REALNUMERAL
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MINUS WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER MINUS WHILE
 ##
-## Concrete syntax: data { vector < upper = T - while
+## Concrete syntax: data { vector < upper = foo - while
 ##
 ## Ends in an error in state: 556.
 ##
@@ -2761,9 +2761,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MINUS WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MODULO REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER MODULO REALNUMERAL WHILE
 ##
-## Concrete syntax: data { vector < upper = T % 3.1415 while
+## Concrete syntax: data { vector < upper = foo % 3.1415 while
 ##
 ## Ends in an error in state: 549.
 ##
@@ -2788,9 +2788,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MODULO REALNUMERA
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MODULO WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER MODULO WHILE
 ##
-## Concrete syntax: data { vector < upper = T % while
+## Concrete syntax: data { vector < upper = foo % while
 ##
 ## Ends in an error in state: 548.
 ##
@@ -2802,9 +2802,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MODULO WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE PLUS REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER PLUS REALNUMERAL WHILE
 ##
-## Concrete syntax: data { vector < upper = T + 3.1415 while
+## Concrete syntax: data { vector < upper = foo + 3.1415 while
 ##
 ## Ends in an error in state: 547.
 ##
@@ -2829,9 +2829,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE PLUS REALNUMERAL 
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE PLUS WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER PLUS WHILE
 ##
-## Concrete syntax: data { vector < upper = T + while
+## Concrete syntax: data { vector < upper = foo + while
 ##
 ## Ends in an error in state: 546.
 ##
@@ -2843,9 +2843,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE PLUS WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE TIMES REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER TIMES REALNUMERAL WHILE
 ##
-## Concrete syntax: data { vector < upper = T * 3.1415 while
+## Concrete syntax: data { vector < upper = foo * 3.1415 while
 ##
 ## Ends in an error in state: 541.
 ##
@@ -2870,9 +2870,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE TIMES REALNUMERAL
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE TIMES WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER TIMES WHILE
 ##
-## Concrete syntax: data { vector < upper = T * while
+## Concrete syntax: data { vector < upper = foo * while
 ##
 ## Ends in an error in state: 540.
 ##
@@ -2884,9 +2884,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE TIMES WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER WHILE
 ##
-## Concrete syntax: data { vector < upper = T while
+## Concrete syntax: data { vector < upper = foo while
 ##
 ## Ends in an error in state: 526.
 ##
@@ -3019,9 +3019,9 @@ program: DATABLOCK LBRACE VECTOR LBRACK REALNUMERAL WHILE
 
 "[" expression "]" expected for vector size.
 
-program: DATABLOCK LBRACE VECTOR LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE VECTOR LBRACK IDENTIFIER TILDE
 ##
-## Concrete syntax: data { vector [ T ~
+## Concrete syntax: data { vector [ foo ~
 ##
 ## Ends in an error in state: 591.
 ##
@@ -3213,9 +3213,9 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN SEMICOLON WHILE
 
 A "}" or a function definition/declaration is expected.
 
-program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN DATABLOCK WHILE
+program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN DATABLOCK WHILE
 ##
-## Concrete syntax: functions { void T ( data while
+## Concrete syntax: functions { void foo ( data while
 ##
 ## Ends in an error in state: 65.
 ##
@@ -3227,9 +3227,9 @@ program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN DATABLOCK WHILE
 
 An identifier is expected as a function argument name.
 
-program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN RPAREN VOID
+program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN VOID
 ##
-## Concrete syntax: functions { void T ( ) void
+## Concrete syntax: functions { void foo ( ) void
 ##
 ## Ends in an error in state: 72.
 ##
@@ -3241,11 +3241,11 @@ program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN RPAREN VOID
 
 Either "{" statement "}" is expected for a function definition or ";" for a function forward declaration.
 
-program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN WHILE
-## Concrete syntax: functions { void T ( while
-program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER COMMA WHILE
+program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN WHILE
+## Concrete syntax: functions { void foo ( while
+program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR IDENTIFIER COMMA WHILE
 ##
-## Concrete syntax: functions { void T ( vector foo , while
+## Concrete syntax: functions { void foo ( vector foo , while
 ##
 ## Ends in an error in state: 503.
 ##
@@ -3257,9 +3257,9 @@ program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER COMMA WHILE
 
 An argument declaration (unsized and unconstrained type followed by identifier) is expected.
 
-program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER WHILE
+program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR IDENTIFIER WHILE
 ##
-## Concrete syntax: functions { void T ( vector foo while
+## Concrete syntax: functions { void foo ( vector foo while
 ##
 ## Ends in an error in state: 502.
 ##
@@ -3272,9 +3272,9 @@ program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER WHILE
 
 "," or ")" expected after function argument declaration.
 
-program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR LBRACK RBRACK LBRACK
+program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR LBRACK RBRACK LBRACK
 ##
-## Concrete syntax: functions { void T ( vector [ ] [
+## Concrete syntax: functions { void foo ( vector [ ] [
 ##
 ## Ends in an error in state: 66.
 ##
@@ -3286,9 +3286,9 @@ program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR LBRACK RBRACK LBRACK
 
 An identifier is expected as a function argument name.
 
-program: FUNCTIONBLOCK LBRACE VOID TRUNCATE WHILE
+program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER WHILE
 ##
-## Concrete syntax: functions { void T while
+## Concrete syntax: functions { void foo while
 ##
 ## Ends in an error in state: 61.
 ##
@@ -3442,9 +3442,9 @@ program: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA REALNUMERAL WHILE
 
 "[" expression "," expression "]" expected for matrix sizes.
 
-program: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA TRUNCATE TILDE
+program: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA IDENTIFIER TILDE
 ##
-## Concrete syntax: model { matrix [ 3.1415 , T ~
+## Concrete syntax: model { matrix [ 3.1415 , foo ~
 ##
 ## Ends in an error in state: 332.
 ##
@@ -3580,9 +3580,9 @@ program: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL WHILE
 
 "[" expression "," expression "]" expected for matrix sizes.
 
-program: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA REALNUMERAL WHILE
+program: MODELBLOCK LBRACE MATRIX LBRACK IDENTIFIER COMMA REALNUMERAL WHILE
 ##
-## Concrete syntax: model { matrix [ T , 3.1415 while
+## Concrete syntax: model { matrix [ foo , 3.1415 while
 ##
 ## Ends in an error in state: 336.
 ##
@@ -3638,9 +3638,9 @@ program: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA REALNUMERAL WHILE
 
 "[" expression "," expression "]" expected for matrix sizes.
 
-program: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA TRUNCATE TILDE
+program: MODELBLOCK LBRACE MATRIX LBRACK IDENTIFIER COMMA IDENTIFIER TILDE
 ##
-## Concrete syntax: model { matrix [ T , T ~
+## Concrete syntax: model { matrix [ foo , foo ~
 ##
 ## Ends in an error in state: 338.
 ##
@@ -3702,9 +3702,9 @@ program: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA TRUNCATE TILDE
 
 "[" expression "," expression "]" expected for matrix sizes.
 
-program: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA WHILE
+program: MODELBLOCK LBRACE MATRIX LBRACK IDENTIFIER COMMA WHILE
 ##
-## Concrete syntax: model { matrix [ T , while
+## Concrete syntax: model { matrix [ foo , while
 ##
 ## Ends in an error in state: 335.
 ##
@@ -3717,9 +3717,9 @@ program: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA WHILE
 
 "[" expression "," expression "]" expected for matrix sizes.
 
-program: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE TILDE
+program: MODELBLOCK LBRACE MATRIX LBRACK IDENTIFIER TILDE
 ##
-## Concrete syntax: model { matrix [ T ~
+## Concrete syntax: model { matrix [ foo ~
 ##
 ## Ends in an error in state: 334.
 ##
@@ -3830,9 +3830,9 @@ program: MODELBLOCK LBRACE RBRACE ELTTIMESASSIGN
 
 Expected "generated quantities {" or end of file after end of model block.
 
-program: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN REALNUMERAL WHILE
+program: MODELBLOCK LBRACE REAL IDENTIFIER ASSIGN REALNUMERAL WHILE
 ##
-## Concrete syntax: model { real T = 3.1415 while
+## Concrete syntax: model { real foo = 3.1415 while
 ##
 ## Ends in an error in state: 474.
 ##
@@ -3888,9 +3888,9 @@ program: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN REALNUMERAL WHILE
 
 Ill-formed expression. Expression followed by ";" expected after "=".
 
-program: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN TRUNCATE TILDE
+program: MODELBLOCK LBRACE REAL IDENTIFIER ASSIGN IDENTIFIER TILDE
 ##
-## Concrete syntax: model { real T = T ~
+## Concrete syntax: model { real foo = foo ~
 ##
 ## Ends in an error in state: 475.
 ##
@@ -3952,9 +3952,9 @@ program: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN TRUNCATE TILDE
 
 Ill-formed expression. Expression followed by ";" expected after "=".
 
-program: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN WHILE
+program: MODELBLOCK LBRACE REAL IDENTIFIER ASSIGN WHILE
 ##
-## Concrete syntax: model { real T = while
+## Concrete syntax: model { real foo = while
 ##
 ## Ends in an error in state: 473.
 ##
@@ -3967,9 +3967,9 @@ program: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN WHILE
 
 Ill-formed expression. Expression followed by ";" expected after "=".
 
-program: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACE
+program: MODELBLOCK LBRACE REAL IDENTIFIER LBRACK IDENTIFIER RBRACE
 ##
-## Concrete syntax: model { real T [ T }
+## Concrete syntax: model { real foo [ foo }
 ##
 ## Ends in an error in state: 480.
 ##
@@ -3988,9 +3988,9 @@ program: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACE
 
 Ill-formed array sizes. "[" (non-empty comma separated list of expressions) "]" expected to specify array sizes.
 
-program: MODELBLOCK LBRACE REAL TRUNCATE LBRACK WHILE
+program: MODELBLOCK LBRACE REAL IDENTIFIER LBRACK WHILE
 ##
-## Concrete syntax: model { real T [ while
+## Concrete syntax: model { real foo [ while
 ##
 ## Ends in an error in state: 479.
 ##
@@ -4002,9 +4002,9 @@ program: MODELBLOCK LBRACE REAL TRUNCATE LBRACK WHILE
 
 Ill-formed array sizes. "[" (non-empty comma separated list of expressions) "]" expected to specify array sizes.
 
-program: MODELBLOCK LBRACE REAL TRUNCATE WHILE
+program: MODELBLOCK LBRACE REAL IDENTIFIER WHILE
 ##
-## Concrete syntax: model { real T while
+## Concrete syntax: model { real foo while
 ##
 ## Ends in an error in state: 478.
 ##
@@ -4090,9 +4090,9 @@ program: MODELBLOCK LBRACE ROWVECTOR LBRACK REALNUMERAL WHILE
 
 "[" expression "]" expected for row_vector sizes.
 
-program: MODELBLOCK LBRACE ROWVECTOR LBRACK TRUNCATE TILDE
+program: MODELBLOCK LBRACE ROWVECTOR LBRACK IDENTIFIER TILDE
 ##
-## Concrete syntax: model { row_vector [ T ~
+## Concrete syntax: model { row_vector [ foo ~
 ##
 ## Ends in an error in state: 318.
 ##
@@ -4256,9 +4256,9 @@ program: MODELBLOCK LBRACE VECTOR LBRACK REALNUMERAL WHILE
 
 "[" expression "]" expected for vector sizes.
 
-program: MODELBLOCK LBRACE VECTOR LBRACK TRUNCATE TILDE
+program: MODELBLOCK LBRACE VECTOR LBRACK IDENTIFIER TILDE
 ##
-## Concrete syntax: model { vector [ T ~
+## Concrete syntax: model { vector [ foo ~
 ##
 ## Ends in an error in state: 312.
 ##
@@ -4478,9 +4478,9 @@ program: TRANSFORMEDDATABLOCK LBRACE BANG REALNUMERAL WHILE
 
 Ill-formed expression. Expression expected after "!".
 
-program: TRANSFORMEDDATABLOCK LBRACE BANG TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE BANG IDENTIFIER LBRACK RBRACK WHILE
 ##
-## Concrete syntax: transformed data { ! T [ ] while
+## Concrete syntax: transformed data { ! foo [ ] while
 ##
 ## Ends in an error in state: 264.
 ##
@@ -4579,9 +4579,9 @@ program: TRANSFORMEDDATABLOCK LBRACE CONTINUE WHILE
 
 Expected ";" after "continue".
 
-program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON REALNUMERAL RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL COLON REALNUMERAL RPAREN VOID
 ##
-## Concrete syntax: transformed data { for ( T in 3.1415 : 3.1415 ) void
+## Concrete syntax: transformed data { for ( foo in 3.1415 : 3.1415 ) void
 ##
 ## Ends in an error in state: 439.
 ##
@@ -4593,9 +4593,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON RE
 
 Ill-formed statement. Expected statement after ")"  for the loop body of the for loop..
 
-program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL COLON REALNUMERAL WHILE
 ##
-## Concrete syntax: transformed data { for ( T in 3.1415 : 3.1415 while
+## Concrete syntax: transformed data { for ( foo in 3.1415 : 3.1415 while
 ##
 ## Ends in an error in state: 438.
 ##
@@ -4651,9 +4651,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON RE
 
 Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
 
-program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON TRUNCATE RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL COLON IDENTIFIER RPAREN VOID
 ##
-## Concrete syntax: transformed data { for ( T in 3.1415 : T ) void
+## Concrete syntax: transformed data { for ( foo in 3.1415 : foo ) void
 ##
 ## Ends in an error in state: 442.
 ##
@@ -4665,9 +4665,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON TR
 
 Ill-formed statement. Expected statement after ")"  for the loop body of the for loop.
 
-program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL COLON IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { for ( T in 3.1415 : T ~
+## Concrete syntax: transformed data { for ( foo in 3.1415 : foo ~
 ##
 ## Ends in an error in state: 441.
 ##
@@ -4729,9 +4729,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON TR
 
 Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
 
-program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON WHILE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL COLON WHILE
 ##
-## Concrete syntax: transformed data { for ( T in 3.1415 : while
+## Concrete syntax: transformed data { for ( foo in 3.1415 : while
 ##
 ## Ends in an error in state: 437.
 ##
@@ -4744,9 +4744,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON WH
 
 Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
 
-program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL RPAREN VOID
 ##
-## Concrete syntax: transformed data { for ( T in 3.1415 ) void
+## Concrete syntax: transformed data { for ( foo in 3.1415 ) void
 ##
 ## Ends in an error in state: 359.
 ##
@@ -4758,9 +4758,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL RPAREN V
 
 Ill-formed statement. Expected statement after ")" for the loop body of the foreach loop.
 
-program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL WHILE
 ##
-## Concrete syntax: transformed data { for ( T in 3.1415 while
+## Concrete syntax: transformed data { for ( foo in 3.1415 while
 ##
 ## Ends in an error in state: 358.
 ##
@@ -4818,9 +4818,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL WHILE
 
 Ill-formed expression. Expected expression after "for (" identifier "in".
 
-program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON REALNUMERAL RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN IDENTIFIER COLON REALNUMERAL RPAREN VOID
 ##
-## Concrete syntax: transformed data { for ( T in T : 3.1415 ) void
+## Concrete syntax: transformed data { for ( foo in foo : 3.1415 ) void
 ##
 ## Ends in an error in state: 449.
 ##
@@ -4832,9 +4832,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON REALN
 
 Ill-formed statement. Expected statement after ")" for the loop body of the for loop.
 
-program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN IDENTIFIER COLON REALNUMERAL WHILE
 ##
-## Concrete syntax: transformed data { for ( T in T : 3.1415 while
+## Concrete syntax: transformed data { for ( foo in foo : 3.1415 while
 ##
 ## Ends in an error in state: 448.
 ##
@@ -4890,9 +4890,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON REALN
 
 Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
 
-program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON TRUNCATE RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN IDENTIFIER COLON IDENTIFIER RPAREN VOID
 ##
-## Concrete syntax: transformed data { for ( T in T : T ) void
+## Concrete syntax: transformed data { for ( foo in foo : foo ) void
 ##
 ## Ends in an error in state: 452.
 ##
@@ -4904,9 +4904,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON TRUNC
 
 Ill-formed statement. Expected statement after ")" for the loop body of the for loop.
 
-program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN IDENTIFIER COLON IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { for ( T in T : T ~
+## Concrete syntax: transformed data { for ( foo in foo : foo ~
 ##
 ## Ends in an error in state: 451.
 ##
@@ -4968,9 +4968,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON TRUNC
 
 Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
 
-program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON WHILE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN IDENTIFIER COLON WHILE
 ##
-## Concrete syntax: transformed data { for ( T in T : while
+## Concrete syntax: transformed data { for ( foo in foo : while
 ##
 ## Ends in an error in state: 447.
 ##
@@ -4983,9 +4983,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON WHILE
 
 Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
 
-program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN IDENTIFIER RPAREN VOID
 ##
-## Concrete syntax: transformed data { for ( T in T ) void
+## Concrete syntax: transformed data { for ( foo in foo ) void
 ##
 ## Ends in an error in state: 445.
 ##
@@ -4997,9 +4997,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE RPAREN VOID
 
 Ill-formed statement. Expected statement after ")" for the loop body of the foreach loop.
 
-program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { for ( T in T ~
+## Concrete syntax: transformed data { for ( foo in foo ~
 ##
 ## Ends in an error in state: 444.
 ##
@@ -5063,9 +5063,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE TILDE
 
 Ill-formed expression. Expected expression followed by ")" or ":" after "for (" identifier "in".
 
-program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN WHILE
 ##
-## Concrete syntax: transformed data { for ( T in while
+## Concrete syntax: transformed data { for ( foo in while
 ##
 ## Ends in an error in state: 357.
 ##
@@ -5082,9 +5082,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN WHILE
 
 Ill-formed expression. Expected expression followed by ")" or ":" after "for (" identifier "in".
 
-program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER WHILE
 ##
-## Concrete syntax: transformed data { for ( T while
+## Concrete syntax: transformed data { for ( foo while
 ##
 ## Ends in an error in state: 356.
 ##
@@ -5272,9 +5272,9 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL WHILE
 
 Expected ")" after test expression of conditional control flow construct.
 
-program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN SEMICOLON ELSE VOID
+program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER RPAREN SEMICOLON ELSE VOID
 ##
-## Concrete syntax: transformed data { if ( T ) ; else void
+## Concrete syntax: transformed data { if ( foo ) ; else void
 ##
 ## Ends in an error in state: 460.
 ##
@@ -5286,9 +5286,9 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN SEMICOLON ELSE VO
 
 Ill-formed statement. Expected statement after else.
 
-program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER RPAREN VOID
 ##
-## Concrete syntax: transformed data { if ( T ) void
+## Concrete syntax: transformed data { if ( foo ) void
 ##
 ## Ends in an error in state: 458.
 ##
@@ -5301,9 +5301,9 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN VOID
 
 Ill-formed statement. Expected statement after ")" for true branch of conditional.
 
-program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { if ( T ~
+## Concrete syntax: transformed data { if ( foo ~
 ##
 ## Ends in an error in state: 457.
 ##
@@ -5472,9 +5472,9 @@ program: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN REALNUMERAL WHILE
 
 Ill-formed statement. Expected expression followed by ");" after "(".
 
-program: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN TRUNCATE RPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN IDENTIFIER RPAREN WHILE
 ##
-## Concrete syntax: transformed data { increment_log_prob ( T ) while
+## Concrete syntax: transformed data { increment_log_prob ( foo ) while
 ##
 ## Ends in an error in state: 348.
 ##
@@ -5486,9 +5486,9 @@ program: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN TRUNCATE RPAREN WHI
 
 Ill-formed statement. Expected ";" after ")".
 
-program: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { increment_log_prob ( T ~
+## Concrete syntax: transformed data { increment_log_prob ( foo ~
 ##
 ## Ends in an error in state: 347.
 ##
@@ -5654,9 +5654,9 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACE REALNUMERAL WHILE
 
 Ill-formed phrase. Found an expression. This can be followed by a "~", a ",", a "}", a "[" or an infix or postfix operator.
 
-program: TRANSFORMEDDATABLOCK LBRACE LBRACE TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE LBRACE IDENTIFIER LBRACK RBRACK WHILE
 ##
-## Concrete syntax: transformed data { { T [ ] while
+## Concrete syntax: transformed data { { foo [ ] while
 ##
 ## Ends in an error in state: 494.
 ##
@@ -5805,9 +5805,9 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACK REALNUMERAL WHILE
 
 Ill-formed phrase. Found an expression. This can be followed by a ",", a "}", a ")", a "]", a "[" or an infix or postfix operator.
 
-program: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE COMMA WHILE
+program: TRANSFORMEDDATABLOCK LBRACE LBRACK IDENTIFIER COMMA WHILE
 ##
-## Concrete syntax: transformed data { [ T , while
+## Concrete syntax: transformed data { [ foo , while
 ##
 ## Ends in an error in state: 233.
 ##
@@ -5819,11 +5819,11 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE COMMA WHILE
 
 Ill-formed expression. We expect a comma separated list of expressions.
 
-program: DATABLOCK LBRACE ARRAY LBRACK UPPER RPAREN
-## Concrete syntax: data { array [ upper )
-program: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE RPAREN
+program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RPAREN
+## Concrete syntax: data { array [ foo )
+program: TRANSFORMEDDATABLOCK LBRACE LBRACK IDENTIFIER RPAREN
 ##
-## Concrete syntax: transformed data { [ T )
+## Concrete syntax: transformed data { [ foo )
 ##
 ## Ends in an error in state: 267.
 ##
@@ -5843,9 +5843,9 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE RPAREN
 
 Ill-formed expression. We expect a comma separated list of expressions, followed by "]".
 
-program: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE LBRACK IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { [ T ~
+## Concrete syntax: transformed data { [ foo ~
 ##
 ## Ends in an error in state: 232.
 ##
@@ -5980,9 +5980,9 @@ program: TRANSFORMEDDATABLOCK LBRACE LPAREN REALNUMERAL WHILE
 
 Expression or range of expressions followed by ")" expected after "(".
 
-program: TRANSFORMEDDATABLOCK LBRACE LPAREN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE LPAREN IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { ( T ~
+## Concrete syntax: transformed data { ( foo ~
 ##
 ## Ends in an error in state: 271.
 ##
@@ -6117,9 +6117,9 @@ program: TRANSFORMEDDATABLOCK LBRACE MINUS REALNUMERAL WHILE
 
 Ill-formed expression. Found an expression. Expect an infix or postfix operator or "["
 
-program: TRANSFORMEDDATABLOCK LBRACE MINUS TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE MINUS IDENTIFIER LBRACK RBRACK WHILE
 ##
-## Concrete syntax: transformed data { - T [ ] while
+## Concrete syntax: transformed data { - foo [ ] while
 ##
 ## Ends in an error in state: 274.
 ##
@@ -6248,9 +6248,9 @@ program: TRANSFORMEDDATABLOCK LBRACE PLUS REALNUMERAL WHILE
 
 Ill-formed expression. Found an expression. Expect an infix or postfix operator or "[" or "~" or "]" or ";".
 
-program: TRANSFORMEDDATABLOCK LBRACE PLUS TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE PLUS IDENTIFIER LBRACK RBRACK WHILE
 ##
-## Concrete syntax: transformed data { + T [ ] while
+## Concrete syntax: transformed data { + foo [ ] while
 ##
 ## Ends in an error in state: 276.
 ##
@@ -6336,9 +6336,9 @@ program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN STRINGLITERAL WHILE
 
 Expected a comma-separated list of expressions or strings followed by ");" after "print(".
 
-program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN TRUNCATE RPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN IDENTIFIER RPAREN WHILE
 ##
-## Concrete syntax: transformed data { print ( T ) while
+## Concrete syntax: transformed data { print ( foo ) while
 ##
 ## Ends in an error in state: 324.
 ##
@@ -6392,9 +6392,9 @@ program: TRANSFORMEDDATABLOCK LBRACE RBRACE ELTTIMESASSIGN
 
 Expected "parameters {", "transformed parameters {", "model {", "generated quantities {" or end-of-file after end of transformed data block.
 
-program: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REAL IDENTIFIER WHILE
 ##
-## Concrete syntax: transformed data { real T while
+## Concrete syntax: transformed data { real foo while
 ##
 ## Ends in an error in state: 710.
 ##
@@ -6407,170 +6407,170 @@ program: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE WHILE
 
 ";" or plain assignment is expected after a top-level variable declaration.
 
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 && T [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 && foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 / 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 / T [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 / foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 ./ 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 \ 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 ./ T [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 ./ foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 .* 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 .* T [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 .* foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 == 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 == T [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 == foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL GEQ REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 >= 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL GEQ TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 >= T [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL GEQ IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 >= foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL HAT REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 ^ 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL HAT TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 ^ T [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL HAT IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 ^ foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LABRACK REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 < 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LABRACK TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 < T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 \ T [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LABRACK IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 < foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 \ foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LEQ REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 <= 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LEQ TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 <= T [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LEQ IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 <= foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MINUS REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 - 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MINUS TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 - T [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MINUS IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 - foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MODULO REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 % 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MODULO TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 % T [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MODULO IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 % foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL NEQUALS REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 != 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL NEQUALS TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 != T [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL NEQUALS IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 != foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL OR REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 || 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL OR TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 || T [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL OR IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 || foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL PLUS REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 + 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL PLUS TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 + T [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL PLUS IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 + foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL COLON REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 ? 3.1415 : 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL COLON TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 ? 3.1415 : T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE COLON REALNUMERAL WHILE
-## Concrete syntax: transformed data { 3.1415 ? T : 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE COLON TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 ? T : T [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL COLON IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 ? 3.1415 : foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK IDENTIFIER COLON REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 ? foo : 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK IDENTIFIER COLON IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 ? foo : foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL RABRACK REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 > 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL RABRACK TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 > T [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL RABRACK IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 > foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 * 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 * T [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 * foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE AND REALNUMERAL WHILE
-## Concrete syntax: transformed data { T && 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE AND TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T && T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T / T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE REALNUMERAL WHILE
-## Concrete syntax: transformed data { T ./ 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T ./ T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES REALNUMERAL WHILE
-## Concrete syntax: transformed data { T .* 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T .* T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS REALNUMERAL WHILE
-## Concrete syntax: transformed data { T == 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T == T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ REALNUMERAL WHILE
-## Concrete syntax: transformed data { T >= 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T >= T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT REALNUMERAL WHILE
-## Concrete syntax: transformed data { T ^ 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T ^ T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK REALNUMERAL WHILE
-## Concrete syntax: transformed data { T < 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T < T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE REALNUMERAL WHILE
-## Concrete syntax: transformed data { T \ 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T \ T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ REALNUMERAL WHILE
-## Concrete syntax: transformed data { T <= 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T <= T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS REALNUMERAL WHILE
-## Concrete syntax: transformed data { T - 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T - T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO REALNUMERAL WHILE
-## Concrete syntax: transformed data { T % 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T % T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS REALNUMERAL WHILE
-## Concrete syntax: transformed data { T != 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T != T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR REALNUMERAL WHILE
-## Concrete syntax: transformed data { T || 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T || T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS REALNUMERAL WHILE
-## Concrete syntax: transformed data { T + 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T + T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON REALNUMERAL WHILE
-## Concrete syntax: transformed data { T ? T : 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T ? T : T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK REALNUMERAL WHILE
-## Concrete syntax: transformed data { T > 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T > T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES REALNUMERAL WHILE
-## Concrete syntax: transformed data { T * 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T * T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON TRUNCATE LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { T ? 3.1415 : T [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON REALNUMERAL WHILE
-## Concrete syntax: transformed data { T ? 3.1415 : 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE UPPER IDIVIDE UPPER LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { upper %/% upper [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE UPPER IDIVIDE REALNUMERAL WHILE
-## Concrete syntax: transformed data { upper %/% 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE UPPER ELTPOW UPPER LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { upper .^ upper [ ] while
-program: TRANSFORMEDDATABLOCK LBRACE UPPER ELTPOW REALNUMERAL WHILE
-## Concrete syntax: transformed data { upper .^ 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL IDIVIDE UPPER LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 %/% upper [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER AND REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo && 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER AND IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo && foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER DIVIDE IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo / foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ELTDIVIDE REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo ./ 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ELTDIVIDE IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo ./ foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ELTTIMES REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo .* 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ELTTIMES IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo .* foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER EQUALS REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo == 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER EQUALS IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo == foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER GEQ REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo >= 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER GEQ IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo >= foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER HAT REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo ^ 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER HAT IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo ^ foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LABRACK REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo < 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LABRACK IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo < foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LDIVIDE REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo \ 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LDIVIDE IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo \ foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LEQ REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo <= 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LEQ IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo <= foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER MINUS REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo - 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER MINUS IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo - foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER MODULO REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo % 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER MODULO IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo % foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER NEQUALS REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo != 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER NEQUALS IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo != foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER OR REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo || 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER OR IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo || foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER PLUS REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo + 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER PLUS IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo + foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER QMARK IDENTIFIER COLON REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo ? foo : 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER QMARK IDENTIFIER COLON IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo ? foo : foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER RABRACK REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo > 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER RABRACK IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo > foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TIMES REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo * 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TIMES IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo * foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER QMARK REALNUMERAL COLON IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo ? 3.1415 : foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER QMARK REALNUMERAL COLON REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo ? 3.1415 : 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER IDIVIDE IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo %/% foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER IDIVIDE REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo %/% 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ELTPOW IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { foo .^ foo [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ELTPOW REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo .^ 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL IDIVIDE IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 %/% foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL IDIVIDE REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 %/% 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTPOW UPPER LBRACK RBRACK WHILE
-## Concrete syntax: transformed data { 3.1415 .^ upper [ ] while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTPOW IDENTIFIER LBRACK RBRACK WHILE
+## Concrete syntax: transformed data { 3.1415 .^ foo [ ] while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTPOW REALNUMERAL WHILE
 ##
 ## Concrete syntax: transformed data { 3.1415 .^ 3.1415 while
@@ -6634,18 +6634,18 @@ Or did you mean to use the preceding expression in:
 * the conditional in a for, while, or if statement
 * assignment to a variable?
 
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE COLON REALNUMERAL WHILE
-## Concrete syntax: transformed data { 3.1415 [ T : 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK IDENTIFIER COLON REALNUMERAL WHILE
+## Concrete syntax: transformed data { 3.1415 [ foo : 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL COLON REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 [ 3.1415 : 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL COLON TRUNCATE TILDE
-## Concrete syntax: transformed data { 3.1415 [ 3.1415 : T ~
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL COLON IDENTIFIER TILDE
+## Concrete syntax: transformed data { 3.1415 [ 3.1415 : foo ~
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 [ 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE COLON TRUNCATE TILDE
-## Concrete syntax: transformed data { 3.1415 [ T : T ~
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE COLON WHILE
-## Concrete syntax: transformed data { 3.1415 [ T : while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK IDENTIFIER COLON IDENTIFIER TILDE
+## Concrete syntax: transformed data { 3.1415 [ foo : foo ~
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK IDENTIFIER COLON WHILE
+## Concrete syntax: transformed data { 3.1415 [ foo : while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 && 3.1415 while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK WHILE
@@ -6680,50 +6680,50 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL RABRACK WHILE
 ## Concrete syntax: transformed data { 3.1415 > while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES WHILE
 ## Concrete syntax: transformed data { 3.1415 * while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE AND WHILE
-## Concrete syntax: transformed data { T && while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE WHILE
-## Concrete syntax: transformed data { T / while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE WHILE
-## Concrete syntax: transformed data { T ./ while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES WHILE
-## Concrete syntax: transformed data { T .* while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS WHILE
-## Concrete syntax: transformed data { T == while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ WHILE
-## Concrete syntax: transformed data { T >= while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT WHILE
-## Concrete syntax: transformed data { T ^ while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK WHILE
-## Concrete syntax: transformed data { T < while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE WHILE
-## Concrete syntax: transformed data { T \ while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ WHILE
-## Concrete syntax: transformed data { T <= while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS WHILE
-## Concrete syntax: transformed data { T - while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO WHILE
-## Concrete syntax: transformed data { T % while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS WHILE
-## Concrete syntax: transformed data { T != while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN WHILE
-## Concrete syntax: transformed data { T .*= while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR WHILE
-## Concrete syntax: transformed data { T || while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS WHILE
-## Concrete syntax: transformed data { T + while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK WHILE
-## Concrete syntax: transformed data { T > while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES WHILE
-## Concrete syntax: transformed data { T * while
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN UPPER IDIVIDE WHILE
-## Concrete syntax: data { vector < upper = upper %/% while
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN UPPER ELTPOW WHILE
-## Concrete syntax: data { vector < upper = upper .^ while
-program: TRANSFORMEDDATABLOCK LBRACE UPPER IDIVIDE WHILE
-## Concrete syntax: transformed data { upper %/% while
-program: TRANSFORMEDDATABLOCK LBRACE UPPER ELTPOW WHILE
-## Concrete syntax: transformed data { upper .^ while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER AND WHILE
+## Concrete syntax: transformed data { foo && while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER DIVIDE WHILE
+## Concrete syntax: transformed data { foo / while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ELTDIVIDE WHILE
+## Concrete syntax: transformed data { foo ./ while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ELTTIMES WHILE
+## Concrete syntax: transformed data { foo .* while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER EQUALS WHILE
+## Concrete syntax: transformed data { foo == while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER GEQ WHILE
+## Concrete syntax: transformed data { foo >= while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER HAT WHILE
+## Concrete syntax: transformed data { foo ^ while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LABRACK WHILE
+## Concrete syntax: transformed data { foo < while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LDIVIDE WHILE
+## Concrete syntax: transformed data { foo \ while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LEQ WHILE
+## Concrete syntax: transformed data { foo <= while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER MINUS WHILE
+## Concrete syntax: transformed data { foo - while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER MODULO WHILE
+## Concrete syntax: transformed data { foo % while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER NEQUALS WHILE
+## Concrete syntax: transformed data { foo != while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ELTTIMESASSIGN WHILE
+## Concrete syntax: transformed data { foo .*= while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER OR WHILE
+## Concrete syntax: transformed data { foo || while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER PLUS WHILE
+## Concrete syntax: transformed data { foo + while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER RABRACK WHILE
+## Concrete syntax: transformed data { foo > while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TIMES WHILE
+## Concrete syntax: transformed data { foo * while
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER IDIVIDE WHILE
+## Concrete syntax: data { vector < upper = foo %/% while
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER ELTPOW WHILE
+## Concrete syntax: data { vector < upper = foo .^ while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER IDIVIDE WHILE
+## Concrete syntax: transformed data { foo %/% while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ELTPOW WHILE
+## Concrete syntax: transformed data { foo .^ while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTPOW WHILE
 ##
 ## Concrete syntax: transformed data { 3.1415 .^ while
@@ -6739,24 +6739,24 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTPOW WHILE
 
 Found an incomplete binary expression - are you missing the right hand side?
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON WHILE
-## Concrete syntax: transformed data { T ? 3.1415 : while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL WHILE
-## Concrete syntax: transformed data { T ? 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON WHILE
-## Concrete syntax: transformed data { T ? T : while
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE TILDE
-## Concrete syntax: transformed data { T ? T ~
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK WHILE
-## Concrete syntax: transformed data { T ? while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER QMARK REALNUMERAL COLON WHILE
+## Concrete syntax: transformed data { foo ? 3.1415 : while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER QMARK REALNUMERAL WHILE
+## Concrete syntax: transformed data { foo ? 3.1415 while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER QMARK IDENTIFIER COLON WHILE
+## Concrete syntax: transformed data { foo ? foo : while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER QMARK IDENTIFIER TILDE
+## Concrete syntax: transformed data { foo ? foo ~
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER QMARK WHILE
+## Concrete syntax: transformed data { foo ? while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL COLON WHILE
 ## Concrete syntax: transformed data { 3.1415 ? 3.1415 : while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL WHILE
 ## Concrete syntax: transformed data { 3.1415 ? 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE COLON WHILE
-## Concrete syntax: transformed data { 3.1415 ? T : while
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE TILDE
-## Concrete syntax: transformed data { 3.1415 ? T ~
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK IDENTIFIER COLON WHILE
+## Concrete syntax: transformed data { 3.1415 ? foo : while
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK IDENTIFIER TILDE
+## Concrete syntax: transformed data { 3.1415 ? foo ~
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK WHILE
 ##
 ## Concrete syntax: transformed data { 3.1415 ? while
@@ -6779,9 +6779,9 @@ For example, this returns 3.0:
 
 program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN REALNUMERAL WHILE
 ## Concrete syntax: transformed data { reject ( 3.1415 while
-program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { reject ( T ~
+## Concrete syntax: transformed data { reject ( foo ~
 ##
 ## Ends in an error in state: 302.
 ##
@@ -6843,9 +6843,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE TILDE
 
 Got an incomplete statement - are you missing a paren or semi-colon?
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER DIVIDE REALNUMERAL WHILE
 ##
-## Concrete syntax: transformed data { T / 3.1415 while
+## Concrete syntax: transformed data { foo / 3.1415 while
 ##
 ## Ends in an error in state: 164.
 ##
@@ -7100,9 +7100,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON REALNUMERAL WHILE
 
 Ill-formed phrase. Found ":" expression. We expect either an infix or postfix operator, or "," or or "[" or "]" next.
 
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { 3.1415 [ : T ~
+## Concrete syntax: transformed data { 3.1415 [ : foo ~
 ##
 ## Ends in an error in state: 261.
 ##
@@ -7211,9 +7211,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL COLON WHILE
 Ill-formed expression. Expected expression or "]" or "," after ":".
 
 
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA RBRACK MULTIPLIER
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE LBRACK COMMA RBRACK MULTIPLIER
 ##
-## Concrete syntax: transformed data { 3.1415 ~ T ( ) T [ , ] multiplier
+## Concrete syntax: transformed data { 3.1415 ~ foo ( ) T [ , ] multiplier
 ##
 ## Ends in an error in state: 380.
 ##
@@ -7225,9 +7225,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TR
 
 Expected ";" after "~"-statement (with optional truncation).
 
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA TRUNCATE COMMA
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE LBRACK COMMA IDENTIFIER COMMA
 ##
-## Concrete syntax: transformed data { 3.1415 ~ T ( ) T [ , T ,
+## Concrete syntax: transformed data { 3.1415 ~ foo ( ) T [ , foo ,
 ##
 ## Ends in an error in state: 375.
 ##
@@ -7246,9 +7246,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TR
 
 Ill-formed truncation. Expect the format "T[" optional expression "," optional expression "];".
 
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE LBRACK COMMA WHILE
 ##
-## Concrete syntax: transformed data { 3.1415 ~ T ( ) T [ , while
+## Concrete syntax: transformed data { 3.1415 ~ foo ( ) T [ , while
 ##
 ## Ends in an error in state: 374.
 ##
@@ -7260,9 +7260,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TR
 
 Ill-formed truncation. Expect the format "T[" optional expression "," optional expression "];".
 
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE LBRACK REALNUMERAL WHILE
 ##
-## Concrete syntax: transformed data { 3.1415 ~ T ( ) T [ 3.1415 while
+## Concrete syntax: transformed data { 3.1415 ~ foo ( ) T [ 3.1415 while
 ##
 ## Ends in an error in state: 377.
 ##
@@ -7318,9 +7318,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TR
 
 Ill-formed expression. Found an expression. Expect a infix or postfix operator or "[" or "]" or "," next.
 
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK TRUNCATE RBRACK
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE LBRACK IDENTIFIER RBRACK
 ##
-## Concrete syntax: transformed data { 3.1415 ~ T ( ) T [ T ]
+## Concrete syntax: transformed data { 3.1415 ~ foo ( ) T [ foo ]
 ##
 ## Ends in an error in state: 373.
 ##
@@ -7339,9 +7339,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TR
 
 Ill-formed truncation. Expect the format "T[" optional expression "," optional expression "];".
 
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE LBRACK IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { 3.1415 ~ T ( ) T [ T ~
+## Concrete syntax: transformed data { 3.1415 ~ foo ( ) T [ foo ~
 ##
 ## Ends in an error in state: 378.
 ##
@@ -7403,9 +7403,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TR
 
 Ill-formed expression. Found an expression. Expect a infix or postfix operator or "[" or "]" or "," next.
 
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE LBRACK WHILE
 ##
-## Concrete syntax: transformed data { 3.1415 ~ T ( ) T [ while
+## Concrete syntax: transformed data { 3.1415 ~ foo ( ) T [ while
 ##
 ## Ends in an error in state: 372.
 ##
@@ -7417,9 +7417,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TR
 
 Ill-formed truncation. Expect the format "T[" optional expression "," optional expression "];".
 
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE WHILE
 ##
-## Concrete syntax: transformed data { 3.1415 ~ T ( ) T while
+## Concrete syntax: transformed data { 3.1415 ~ foo ( ) T while
 ##
 ## Ends in an error in state: 371.
 ##
@@ -7431,9 +7431,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TR
 
 Ill-formed truncation. Expect the format "T[" optional expression "," optional expression "];".
 
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN WHILE
 ##
-## Concrete syntax: transformed data { 3.1415 ~ T ( ) while
+## Concrete syntax: transformed data { 3.1415 ~ foo ( ) while
 ##
 ## Ends in an error in state: 370.
 ##
@@ -7445,9 +7445,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN WH
 
 Ill-formed "~"-statement. Expect either ";" or a truncation with the format "T[" optional expression "," optional expression "];".
 
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN TRUNCATE RBRACK
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN IDENTIFIER RBRACK
 ##
-## Concrete syntax: transformed data { 3.1415 ~ T ( T ]
+## Concrete syntax: transformed data { 3.1415 ~ foo ( foo ]
 ##
 ## Ends in an error in state: 369.
 ##
@@ -7467,9 +7467,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN TRUNCATE 
 
 Ill-formed "~"-statement. Expect a comma separated list of expressions for arguments to the distribution, followed by ")".
 
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN WHILE
 ##
-## Concrete syntax: transformed data { 3.1415 ~ T ( while
+## Concrete syntax: transformed data { 3.1415 ~ foo ( while
 ##
 ## Ends in an error in state: 368.
 ##
@@ -7481,9 +7481,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN WHILE
 
 Ill-formed "~"-statement. Expect a comma separated list of expressions for arguments to the distribution, followed by ")".
 
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER WHILE
 ##
-## Concrete syntax: transformed data { 3.1415 ~ T while
+## Concrete syntax: transformed data { 3.1415 ~ foo while
 ##
 ## Ends in an error in state: 367.
 ##
@@ -7524,9 +7524,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN STRINGLITERAL WHILE
 
 Ill-formed printable. After "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
 
-program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE COMMA STRINGLITERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN IDENTIFIER COMMA STRINGLITERAL WHILE
 ##
-## Concrete syntax: transformed data { reject ( T , "hello world" while
+## Concrete syntax: transformed data { reject ( foo , "hello world" while
 ##
 ## Ends in an error in state: 300.
 ##
@@ -7539,9 +7539,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE COMMA STRINGLITERAL 
 
 Ill-formed printable. After "print(" and "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
 
-program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE COMMA WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN IDENTIFIER COMMA WHILE
 ##
-## Concrete syntax: transformed data { reject ( T , while
+## Concrete syntax: transformed data { reject ( foo , while
 ##
 ## Ends in an error in state: 299.
 ##
@@ -7553,9 +7553,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE COMMA WHILE
 
 Ill-formed printable. After "print(" and "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
 
-program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE RPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN IDENTIFIER RPAREN WHILE
 ##
-## Concrete syntax: transformed data { reject ( T ) while
+## Concrete syntax: transformed data { reject ( foo ) while
 ##
 ## Ends in an error in state: 297.
 ##
@@ -7595,9 +7595,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REJECT WHILE
 
 Ill-formed reject statement. After "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
 
-program: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE TRUNCATE RPAREN
+program: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE IDENTIFIER RPAREN
 ##
-## Concrete syntax: transformed data { return { T )
+## Concrete syntax: transformed data { return { foo )
 ##
 ## Ends in an error in state: 265.
 ##
@@ -7702,9 +7702,9 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN TARGET WHILE
 
 Ill formed expression. After "target", we expect "()".
 
-program: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE LPAREN TRUNCATE COMMA IDENTIFIER RBRACK
+program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER LPAREN IDENTIFIER COMMA IDENTIFIER RBRACK
 ##
-## Concrete syntax: transformed data { return T ( T , foo ]
+## Concrete syntax: transformed data { return foo ( foo , foo ]
 ##
 ## Ends in an error in state: 238.
 ##
@@ -7725,9 +7725,9 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE LPAREN TRUNCATE COMMA IDENT
 
 Ill-formed expression. In function application, expect comma-separated list of expressions followed by ")", after "(".
 
-program: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE LPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER LPAREN WHILE
 ##
-## Concrete syntax: transformed data { return T ( while
+## Concrete syntax: transformed data { return foo ( while
 ##
 ## Ends in an error in state: 123.
 ##
@@ -7741,9 +7741,9 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE LPAREN WHILE
 
 Ill-formed expression. In function application, expect comma-separated list of expressions followed by ")", after "(".
 
-program: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { return T ~
+## Concrete syntax: transformed data { return foo ~
 ##
 ## Ends in an error in state: 290.
 ##
@@ -7805,9 +7805,9 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE TILDE
 
 Ill-formed return statement. ";" or expression followed by ";" expected after "return".
 
-program: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER WHILE
 ##
-## Concrete syntax: transformed data { return T while
+## Concrete syntax: transformed data { return foo while
 ##
 ## Ends in an error in state: 122.
 ##
@@ -7910,9 +7910,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN REALNUMERAL WHILE
 
 Ill-formed expression. Expression followed by ";" expected after "target +=".
 
-program: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { target += T ~
+## Concrete syntax: transformed data { target += foo ~
 ##
 ## Ends in an error in state: 283.
 ##
@@ -8005,9 +8005,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TARGET WHILE
 
 Ill-formed phrase. Expect either "+=" or "()" after "target".
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ARROWASSIGN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ARROWASSIGN REALNUMERAL WHILE
 ##
-## Concrete syntax: transformed data { T <- 3.1415 while
+## Concrete syntax: transformed data { foo <- 3.1415 while
 ##
 ## Ends in an error in state: 427.
 ##
@@ -8063,9 +8063,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ARROWASSIGN REALNUMERAL WHILE
 
 Ill-formed phrase. Found L-value "<-" expression. There are many ways in which this can be completed to a valid phrase.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ARROWASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ARROWASSIGN IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { T <- T ~
+## Concrete syntax: transformed data { foo <- foo ~
 ##
 ## Ends in an error in state: 429.
 ##
@@ -8127,9 +8127,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ARROWASSIGN TRUNCATE TILDE
 
 Ill-formed phrase. Found L-value "<-" expression. There are many ways in which this can be completed to a valid phrase.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ARROWASSIGN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ARROWASSIGN WHILE
 ##
-## Concrete syntax: transformed data { T <- while
+## Concrete syntax: transformed data { foo <- while
 ##
 ## Ends in an error in state: 426.
 ##
@@ -8142,9 +8142,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ARROWASSIGN WHILE
 
 Ill-formed expression. Found L-value "<-". Expect an expression followed by ";" next.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ASSIGN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ASSIGN REALNUMERAL WHILE
 ##
-## Concrete syntax: transformed data { T = 3.1415 while
+## Concrete syntax: transformed data { foo = 3.1415 while
 ##
 ## Ends in an error in state: 422.
 ##
@@ -8200,9 +8200,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ASSIGN REALNUMERAL WHILE
 
 Ill-formed phrase. Found L-value "=" expression. There are many ways in which this can be completed to a valid phrase.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ASSIGN IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { T = T ~
+## Concrete syntax: transformed data { foo = foo ~
 ##
 ## Ends in an error in state: 424.
 ##
@@ -8264,9 +8264,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ASSIGN TRUNCATE TILDE
 
 Ill-formed phrase. Found L-value "=" expression. There are many ways in which this can be completed to a valid phrase.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ASSIGN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ASSIGN WHILE
 ##
-## Concrete syntax: transformed data { T = while
+## Concrete syntax: transformed data { foo = while
 ##
 ## Ends in an error in state: 421.
 ##
@@ -8279,9 +8279,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ASSIGN WHILE
 
 Ill-formed expression. Found L-value "=". Expect an expression followed by ";" next.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER DIVIDEASSIGN REALNUMERAL WHILE
 ##
-## Concrete syntax: transformed data { T /= 3.1415 while
+## Concrete syntax: transformed data { foo /= 3.1415 while
 ##
 ## Ends in an error in state: 417.
 ##
@@ -8337,9 +8337,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN REALNUMERAL WHILE
 
 Ill-formed phrase. Found L-value "/=" expression. There are many ways in which this can be completed to a valid phrase.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER DIVIDEASSIGN IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { T /= T ~
+## Concrete syntax: transformed data { foo /= foo ~
 ##
 ## Ends in an error in state: 419.
 ##
@@ -8401,9 +8401,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN TRUNCATE TILDE
 
 Ill-formed phrase. Found L-value "/=" expression. There are many ways in which this can be completed to a valid phrase.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER DIVIDEASSIGN WHILE
 ##
-## Concrete syntax: transformed data { T /= while
+## Concrete syntax: transformed data { foo /= while
 ##
 ## Ends in an error in state: 416.
 ##
@@ -8416,9 +8416,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN WHILE
 
 Ill-formed expression. Found L-value "/=". Expect an expression followed by ";" next.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ELTDIVIDEASSIGN REALNUMERAL WHILE
 ##
-## Concrete syntax: transformed data { T ./= 3.1415 while
+## Concrete syntax: transformed data { foo ./= 3.1415 while
 ##
 ## Ends in an error in state: 412.
 ##
@@ -8474,9 +8474,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN REALNUMERAL WHILE
 
 Ill-formed phrase. Found L-value "./=" expression. There are many ways in which this can be completed to a valid phrase.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ELTDIVIDEASSIGN IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { T ./= T ~
+## Concrete syntax: transformed data { foo ./= foo ~
 ##
 ## Ends in an error in state: 414.
 ##
@@ -8538,9 +8538,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN TRUNCATE TILDE
 
 Ill-formed phrase. Found L-value "./=" expression. There are many ways in which this can be completed to a valid phrase.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ELTDIVIDEASSIGN WHILE
 ##
-## Concrete syntax: transformed data { T ./= while
+## Concrete syntax: transformed data { foo ./= while
 ##
 ## Ends in an error in state: 411.
 ##
@@ -8553,9 +8553,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN WHILE
 
 Ill-formed expression. Found L-value "./=". Expect an expression followed by ";" next.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ELTTIMESASSIGN REALNUMERAL WHILE
 ##
-## Concrete syntax: transformed data { T .*= 3.1415 while
+## Concrete syntax: transformed data { foo .*= 3.1415 while
 ##
 ## Ends in an error in state: 407.
 ##
@@ -8611,9 +8611,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN REALNUMERAL WHILE
 
 Ill-formed phrase. Found L-value ".*=" expression. There are many ways in which this can be completed to a valid phrase.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ELTTIMESASSIGN IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { T .*= T ~
+## Concrete syntax: transformed data { foo .*= foo ~
 ##
 ## Ends in an error in state: 409.
 ##
@@ -8675,9 +8675,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN TRUNCATE TILDE
 
 Ill-formed phrase. Found L-value ".*=" expression. There are many ways in which this can be completed to a valid phrase.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL BAR TRUNCATE RBRACK
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL BAR IDENTIFIER RBRACK
 ##
-## Concrete syntax: transformed data { T ( 3.1415 | T ]
+## Concrete syntax: transformed data { foo ( 3.1415 | foo ]
 ##
 ## Ends in an error in state: 236.
 ##
@@ -8697,9 +8697,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL BAR TRUNCATE RB
 
 Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by ")" after "|".
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL BAR WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL BAR WHILE
 ##
-## Concrete syntax: transformed data { T ( 3.1415 | while
+## Concrete syntax: transformed data { foo ( 3.1415 | while
 ##
 ## Ends in an error in state: 235.
 ##
@@ -8711,9 +8711,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL BAR WHILE
 
 Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by ")" after "|".
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL WHILE
 ##
-## Concrete syntax: transformed data { T ( 3.1415 while
+## Concrete syntax: transformed data { foo ( 3.1415 while
 ##
 ## Ends in an error in state: 125.
 ##
@@ -8771,9 +8771,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL WHILE
 
 Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN RPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN RPAREN WHILE
 ##
-## Concrete syntax: transformed data { T ( ) while
+## Concrete syntax: transformed data { foo ( ) while
 ##
 ## Ends in an error in state: 434.
 ##
@@ -8786,9 +8786,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN RPAREN WHILE
 
 Ill-formed phrase. Found a well-formed function application. After this, there are many legal completions of the phrase.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE BAR TRUNCATE RBRACK
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN IDENTIFIER BAR IDENTIFIER RBRACK
 ##
-## Concrete syntax: transformed data { T ( T | T ]
+## Concrete syntax: transformed data { foo ( foo | foo ]
 ##
 ## Ends in an error in state: 242.
 ##
@@ -8808,9 +8808,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE BAR TRUNCATE RBRAC
 
 Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by ")" after "|".
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE BAR WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN IDENTIFIER BAR WHILE
 ##
-## Concrete syntax: transformed data { T ( T | while
+## Concrete syntax: transformed data { foo ( foo | while
 ##
 ## Ends in an error in state: 241.
 ##
@@ -8822,9 +8822,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE BAR WHILE
 
 Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by ")" after "|".
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE COMMA IDENTIFIER RBRACK
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN IDENTIFIER COMMA IDENTIFIER RBRACK
 ##
-## Concrete syntax: transformed data { T ( T , foo ]
+## Concrete syntax: transformed data { foo ( foo , foo ]
 ##
 ## Ends in an error in state: 433.
 ##
@@ -8846,9 +8846,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE COMMA IDENTIFIER R
 
 Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { T ( T ~
+## Concrete syntax: transformed data { foo ( foo ~
 ##
 ## Ends in an error in state: 240.
 ##
@@ -8912,9 +8912,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE TILDE
 
 Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN WHILE
 ##
-## Concrete syntax: transformed data { T ( while
+## Concrete syntax: transformed data { foo ( while
 ##
 ## Ends in an error in state: 432.
 ##
@@ -8929,9 +8929,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN WHILE
 
 Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER MINUSASSIGN REALNUMERAL WHILE
 ##
-## Concrete syntax: transformed data { T -= 3.1415 while
+## Concrete syntax: transformed data { foo -= 3.1415 while
 ##
 ## Ends in an error in state: 402.
 ##
@@ -8987,9 +8987,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN REALNUMERAL WHILE
 
 Ill-formed phrase. Found L-value "-=" expression. There are many ways in which this can be completed to a valid phrase.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER MINUSASSIGN IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { T -= T ~
+## Concrete syntax: transformed data { foo -= foo ~
 ##
 ## Ends in an error in state: 404.
 ##
@@ -9051,9 +9051,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN TRUNCATE TILDE
 
 Ill-formed phrase. Found L-value "-=" expression. There are many ways in which this can be completed to a valid phrase.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER MINUSASSIGN WHILE
 ##
-## Concrete syntax: transformed data { T -= while
+## Concrete syntax: transformed data { foo -= while
 ##
 ## Ends in an error in state: 401.
 ##
@@ -9066,9 +9066,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN WHILE
 
 Ill-formed expression. Found L-value "-=". Expect an expression followed by ";" next.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER PLUSASSIGN REALNUMERAL WHILE
 ##
-## Concrete syntax: transformed data { T += 3.1415 while
+## Concrete syntax: transformed data { foo += 3.1415 while
 ##
 ## Ends in an error in state: 397.
 ##
@@ -9124,9 +9124,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN REALNUMERAL WHILE
 
 Ill-formed phrase. Found L-value "+=" expression. There are many ways in which this can be completed to a valid phrase.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER PLUSASSIGN IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { T += T ~
+## Concrete syntax: transformed data { foo += foo ~
 ##
 ## Ends in an error in state: 399.
 ##
@@ -9188,9 +9188,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN TRUNCATE TILDE
 
 Ill-formed phrase. Found L-value "+=" expression. There are many ways in which this can be completed to a valid phrase.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER PLUSASSIGN WHILE
 ##
-## Concrete syntax: transformed data { T += while
+## Concrete syntax: transformed data { foo += while
 ##
 ## Ends in an error in state: 396.
 ##
@@ -9203,9 +9203,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN WHILE
 
 Ill-formed expression. Found L-value "+=". Expect an expression followed by ";" next.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RBRACE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER RBRACE
 ##
-## Concrete syntax: transformed data { T }
+## Concrete syntax: transformed data { foo }
 ##
 ## Ends in an error in state: 717.
 ##
@@ -9284,9 +9284,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RBRACE
 
 Ill-formed phrase. Found L-value. This can be completed in many ways.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA RBRACK MULTIPLIER
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TILDE IDENTIFIER LPAREN RPAREN TRUNCATE LBRACK COMMA RBRACK MULTIPLIER
 ##
-## Concrete syntax: transformed data { T ~ T ( ) T [ , ] multiplier
+## Concrete syntax: transformed data { foo ~ foo ( ) T [ , ] multiplier
 ##
 ## Ends in an error in state: 394.
 ##
@@ -9298,9 +9298,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN RPAREN TRUNC
 
 Ill-formed "~"-statement. Expected ";".
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN RPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TILDE IDENTIFIER LPAREN RPAREN WHILE
 ##
-## Concrete syntax: transformed data { T ~ T ( ) while
+## Concrete syntax: transformed data { foo ~ foo ( ) while
 ##
 ## Ends in an error in state: 393.
 ##
@@ -9312,9 +9312,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN RPAREN WHILE
 
 Ill-formed "~"-statement. Expected ";" or "T[" optional expression "," optional expression "];".
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN TRUNCATE RBRACK
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TILDE IDENTIFIER LPAREN IDENTIFIER RBRACK
 ##
-## Concrete syntax: transformed data { T ~ T ( T ]
+## Concrete syntax: transformed data { foo ~ foo ( foo ]
 ##
 ## Ends in an error in state: 392.
 ##
@@ -9334,9 +9334,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN TRUNCATE RBR
 
 Ill-formed "~"-statement. Expected "," or ")".
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TILDE IDENTIFIER LPAREN WHILE
 ##
-## Concrete syntax: transformed data { T ~ T ( while
+## Concrete syntax: transformed data { foo ~ foo ( while
 ##
 ## Ends in an error in state: 391.
 ##
@@ -9348,9 +9348,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN WHILE
 
 Ill-formed "~"-statement. Expected comma-separated list of expressions followed by ")".
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TILDE IDENTIFIER WHILE
 ##
-## Concrete syntax: transformed data { T ~ T while
+## Concrete syntax: transformed data { foo ~ foo while
 ##
 ## Ends in an error in state: 390.
 ##
@@ -9362,9 +9362,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE WHILE
 
 Ill-formed "~"-statement. Expected "(" followed by a comma-separated list of expressions followed by ")" after distribution name.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TILDE WHILE
 ##
-## Concrete syntax: transformed data { T ~ while
+## Concrete syntax: transformed data { foo ~ while
 ##
 ## Ends in an error in state: 389.
 ##
@@ -9376,9 +9376,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE WHILE
 
 Ill-formed "~"-statement. Expected identifier for distribution name after "~".
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TIMESASSIGN REALNUMERAL WHILE
 ##
-## Concrete syntax: transformed data { T *= 3.1415 while
+## Concrete syntax: transformed data { foo *= 3.1415 while
 ##
 ## Ends in an error in state: 385.
 ##
@@ -9434,9 +9434,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN REALNUMERAL WHILE
 
 Ill-formed phrase. Found L-value "*=" expression. There are many ways in which this can be completed to a valid phrase.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TIMESASSIGN IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { T *= T ~
+## Concrete syntax: transformed data { foo *= foo ~
 ##
 ## Ends in an error in state: 387.
 ##
@@ -9498,9 +9498,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN TRUNCATE TILDE
 
 Ill-formed phrase. Found L-value "*=" expression. There are many ways in which this can be completed to a valid phrase.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TIMESASSIGN WHILE
 ##
-## Concrete syntax: transformed data { T *= while
+## Concrete syntax: transformed data { foo *= while
 ##
 ## Ends in an error in state: 384.
 ##
@@ -9513,9 +9513,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN WHILE
 
 Ill-formed expression. Found L-value "*=". Expect an expression followed by ";" next.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER WHILE
 ##
-## Concrete syntax: transformed data { T while
+## Concrete syntax: transformed data { foo while
 ##
 ## Ends in an error in state: 431.
 ##
@@ -9632,9 +9632,9 @@ program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN REALNUMERAL WHILE
 
 Ill-formed expression. We expect an expression after "(" for the test of the while-loop.
 
-program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN TRUNCATE RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN IDENTIFIER RPAREN VOID
 ##
-## Concrete syntax: transformed data { while ( T ) void
+## Concrete syntax: transformed data { while ( foo ) void
 ##
 ## Ends in an error in state: 499.
 ##
@@ -9646,9 +9646,9 @@ program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN TRUNCATE RPAREN VOID
 
 Ill-formed statement. We expect a statement after ")", for the body of the while-loop.
 
-program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN IDENTIFIER TILDE
 ##
-## Concrete syntax: transformed data { while ( T ~
+## Concrete syntax: transformed data { while ( foo ~
 ##
 ## Ends in an error in state: 498.
 ##
@@ -9796,9 +9796,9 @@ program: TRANSFORMEDPARAMETERSBLOCK WHILE
 
 We expect "{" after "transformed parameters".
 
-program: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACK ARROWASSIGN
+program: MODELBLOCK LBRACE REAL IDENTIFIER LBRACK IDENTIFIER RBRACK ARROWASSIGN
 ##
-## Concrete syntax: model { real T [ T ] <-
+## Concrete syntax: model { real foo [ foo ] <-
 ##
 ## Ends in an error in state: 482.
 ##
@@ -9810,9 +9810,9 @@ program: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACK ARROWASSIGN
 
 Expected  ";" or assignment.
 
-program: DATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK WHILE
+program: DATABLOCK LBRACE REAL IDENTIFIER LBRACK IDENTIFIER RBRACK WHILE
 ##
-## Concrete syntax: data { real T [ foo ] while
+## Concrete syntax: data { real foo [ foo ] while
 ##
 ## Ends in an error in state: 690.
 ##
@@ -9824,9 +9824,9 @@ program: DATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK WHILE
 
 Expected ";".
 
-program: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK ARROWASSIGN
+program: TRANSFORMEDDATABLOCK LBRACE REAL IDENTIFIER LBRACK IDENTIFIER RBRACK ARROWASSIGN
 ##
-## Concrete syntax: transformed data { real T [ foo ] <-
+## Concrete syntax: transformed data { real foo [ foo ] <-
 ##
 ## Ends in an error in state: 711.
 ##
@@ -9866,9 +9866,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN REALNUMERAL WHILE
 
 '>' or lower expression expected after upper expression.
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE COMMA WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA WHILE
 ##
-## Concrete syntax: data { vector < upper = T , while
+## Concrete syntax: data { vector < upper = foo , while
 ##
 ## Ends in an error in state: 558.
 ##
@@ -9880,9 +9880,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE COMMA WHILE
 
 '>' or lower expression expected after upper expression.
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE COMMA LOWER WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER WHILE
 ##
-## Concrete syntax: data { vector < upper = T , lower while
+## Concrete syntax: data { vector < upper = foo , lower while
 ##
 ## Ends in an error in state: 559.
 ##
@@ -9894,9 +9894,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE COMMA LOWER WHILE
 
 '=' expected after 'upper' keyword.
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE COMMA LOWER ASSIGN WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER ASSIGN WHILE
 ##
-## Concrete syntax: data { vector < upper = T , lower = while
+## Concrete syntax: data { vector < upper = foo , lower = while
 ##
 ## Ends in an error in state: 560.
 ##
@@ -9908,9 +9908,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE COMMA LOWER ASSIG
 
 Numerical expression expected after '=' in a lower expression.
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE COMMA LOWER ASSIGN TRUNCATE COMMA
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER ASSIGN IDENTIFIER COMMA
 ##
-## Concrete syntax: data { vector < upper = T , lower = T ,
+## Concrete syntax: data { vector < upper = foo , lower = foo ,
 ##
 ## Ends in an error in state: 561.
 ##
@@ -9969,9 +9969,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN REALNUMERAL WHILE
 
 Expected '>' after multiplier expression.
 
-program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN TRUNCATE COMMA WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA WHILE
 ##
-## Concrete syntax: data { vector < multiplier = T , while
+## Concrete syntax: data { vector < multiplier = foo , while
 ##
 ## Ends in an error in state: 572.
 ##
@@ -9983,9 +9983,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN TRUNCATE COMMA WHILE
 
 Expected '>' or offset expression after multiplier expression.
 
-program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN TRUNCATE COMMA OFFSET WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFSET WHILE
 ##
-## Concrete syntax: data { vector < multiplier = T , offset while
+## Concrete syntax: data { vector < multiplier = foo , offset while
 ##
 ## Ends in an error in state: 573.
 ##
@@ -9997,9 +9997,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN TRUNCATE COMMA OFFSET
 
 '=' expected after 'multiplier' keyword.
 
-program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN TRUNCATE COMMA OFFSET ASSIGN WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFSET ASSIGN WHILE
 ##
-## Concrete syntax: data { vector < multiplier = T , offset = while
+## Concrete syntax: data { vector < multiplier = foo , offset = while
 ##
 ## Ends in an error in state: 574.
 ##
@@ -10011,9 +10011,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN TRUNCATE COMMA OFFSET
 
 Numerical expression expected after '=' in a multiplier expression.
 
-program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN TRUNCATE COMMA OFFSET ASSIGN TRUNCATE COMMA
+program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFSET ASSIGN IDENTIFIER COMMA
 ##
-## Concrete syntax: data { vector < multiplier = T , offset = T ,
+## Concrete syntax: data { vector < multiplier = foo , offset = foo ,
 ##
 ## Ends in an error in state: 575.
 ##
@@ -10059,11 +10059,11 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN UPPER RPAREN SEMICOLON UNREACHABL
 
 'if (cond)' should be followed by '{' and statements to execute if true.
 
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN UPPER IDIVIDE REALNUMERAL WHILE
-## Concrete syntax: data { vector < upper = upper %/% 3.1415 while
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN UPPER ELTPOW REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER IDIVIDE REALNUMERAL WHILE
+## Concrete syntax: data { vector < upper = foo %/% 3.1415 while
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER ELTPOW REALNUMERAL WHILE
 ##
-## Concrete syntax: data { vector < upper = upper .^ 3.1415 while
+## Concrete syntax: data { vector < upper = foo .^ 3.1415 while
 ##
 ## Ends in an error in state: 535.
 ##
@@ -10089,9 +10089,9 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN UPPER ELTPOW REALNUMERAL W
 Missing an ">"? Constraints on a vector declaration should be of the form
   vector<lower=0.0, upper=1.0> var_name;
 
-program: TRANSFORMEDDATABLOCK LBRACE UPPER LBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LBRACK WHILE
 ##
-## Concrete syntax: transformed data { upper [ while
+## Concrete syntax: transformed data { foo [ while
 ##
 ## Ends in an error in state: 105.
 ##
@@ -10127,10 +10127,10 @@ Invalid type in declaration. Valid types:
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov
 optionally preceded by a single array[...]
 
-program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL UPPER WHILE
-## Concrete syntax: transformed data { array [ foo ] real upper while
-program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL UPPER WHILE
-## Concrete syntax: data { array [ foo ] real upper while
+program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL IDENTIFIER WHILE
+## Concrete syntax: transformed data { array [ foo ] real foo while
+program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL IDENTIFIER WHILE
+## Concrete syntax: data { array [ foo ] real foo while
 program: MODELBLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK WHILE
 ## Concrete syntax: model { array [ foo ] while
 program: FUNCTIONBLOCK LBRACE ARRAY LBRACK RBRACK WHILE
@@ -10147,13 +10147,13 @@ program: FUNCTIONBLOCK LBRACE ARRAY LBRACK RBRACK WHILE
 
 Expected non-array type after array in return type.
 
-program: DATABLOCK LBRACE REAL UPPER ASSIGN WHILE
-## Concrete syntax: data { real upper = while
-program: DATABLOCK LBRACE REAL UPPER ASSIGN UNREACHABLE WHILE
-## Concrete syntax: data { real upper = <<<<UNREACHABLE>>> while
-program: DATABLOCK LBRACE REAL UPPER LBRACK IDENTIFIER RBRACK ASSIGN UNREACHABLE WHILE
+program: DATABLOCK LBRACE REAL IDENTIFIER ASSIGN WHILE
+## Concrete syntax: data { real foo = while
+program: DATABLOCK LBRACE REAL IDENTIFIER ASSIGN UNREACHABLE WHILE
+## Concrete syntax: data { real foo = <<<<UNREACHABLE>>> while
+program: DATABLOCK LBRACE REAL IDENTIFIER LBRACK IDENTIFIER RBRACK ASSIGN UNREACHABLE WHILE
 ##
-## Concrete syntax: data { real upper [ foo ] = <<<<UNREACHABLE>>> while
+## Concrete syntax: data { real foo [ foo ] = <<<<UNREACHABLE>>> while
 ##
 ## Ends in an error in state: 691.
 ##
@@ -10172,9 +10172,9 @@ program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK VECTOR LBRACK INTNUMERA
 ## Concrete syntax: data { array [ foo ] vector [ 24 ] &&
 program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK VECTOR LBRACK INTNUMERAL RBRACK AND
 ## Concrete syntax: transformed data { array [ foo ] vector [ 24 ] &&
-program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN UPPER RPAREN UPPER VECTOR
+program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN IDENTIFIER RPAREN IDENTIFIER VECTOR
 ##
-## Concrete syntax: transformed data { while ( upper ) upper vector
+## Concrete syntax: transformed data { while ( foo ) foo vector
 ##
 ## Ends in an error in state: 383.
 ##
@@ -10252,11 +10252,11 @@ program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN UPPER RPAREN UPPER VECTOR
 
 Expected identifier after type in declaration.
 
-program: DATABLOCK LBRACE REAL UPPER COMMA UNREACHABLE
-## Concrete syntax: data { real upper , <<<<UNREACHABLE>>>
-program: MODELBLOCK LBRACE REAL UPPER COMMA UNREACHABLE
+program: DATABLOCK LBRACE REAL IDENTIFIER COMMA UNREACHABLE
+## Concrete syntax: data { real foo , <<<<UNREACHABLE>>>
+program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA UNREACHABLE
 ##
-## Concrete syntax: model { real upper , <<<<UNREACHABLE>>>
+## Concrete syntax: model { real foo , <<<<UNREACHABLE>>>
 ##
 ## Ends in an error in state: 470.
 ##
@@ -10268,11 +10268,11 @@ program: MODELBLOCK LBRACE REAL UPPER COMMA UNREACHABLE
 
 Expected identifier after comma in multiple declaration.
 
-program: TRANSFORMEDDATABLOCK LBRACE REAL UPPER LBRACK ARRAY RBRACK ASSIGN ARRAY COMMA
-## Concrete syntax: transformed data { real upper [ array ] = array ,
-program: MODELBLOCK LBRACE REAL UPPER LBRACK UPPER RBRACK ASSIGN ARRAY COMMA
+program: TRANSFORMEDDATABLOCK LBRACE REAL IDENTIFIER LBRACK ARRAY RBRACK ASSIGN ARRAY COMMA
+## Concrete syntax: transformed data { real foo [ array ] = array ,
+program: MODELBLOCK LBRACE REAL IDENTIFIER LBRACK IDENTIFIER RBRACK ASSIGN ARRAY COMMA
 ##
-## Concrete syntax: model { real upper [ upper ] = array ,
+## Concrete syntax: model { real foo [ foo ] = array ,
 ##
 ## Ends in an error in state: 483.
 ##
