@@ -57,7 +57,8 @@ let stan2cpp model_name model_string is_flag_set flag_val =
                       Canonicalize.{settings with deprecations= true}
                   | "parentheses" -> {settings with parentheses= true}
                   | "braces" -> {settings with braces= true}
-                  (* doesn't really make sense to do includes here, does it? *)
+                  (* this probably never applies to stancjs, but for completion: *)
+                  | "includes" -> {settings with inline_includes= true}
                   | _ -> settings in
                 List.fold ~f:parse ~init:Canonicalize.none
                   (String.split ~on:',' s) in
@@ -71,6 +72,7 @@ let stan2cpp model_name model_string is_flag_set flag_val =
                 (Pretty_printing.pretty_print_typed_program
                    ~bare_functions:(is_flag_set "functions-only")
                    ~line_length
+                   ~inline_includes:canonicalizer_settings.inline_includes
                    (Canonicalize.canonicalize_program typed_ast
                       canonicalizer_settings ) )
             , warnings

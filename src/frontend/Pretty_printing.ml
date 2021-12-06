@@ -16,6 +16,9 @@ let skipped = ref []
 (** If false, don't print any statements which came from another file *)
 let print_included = ref false
 
+let should_skip (loc : Middle.Location.t) =
+  (not !print_included) && Option.is_some loc.included_from
+
 let set_comments ?(inline_includes = false) ls =
   let filtered =
     if inline_includes then
@@ -78,7 +81,7 @@ let skip_comments loc =
                This makes the failure noisy rather than ever producing anything invalid for these. *)
             Common.FatalError.fatal_error_msg
               [%message
-                "Attempting to move include!"
+                "Unable to format #include in this position!"
                   (l : string list)
                   (loc : Middle.Location_span.t)]
         | x, s :: l, loc -> Some (x, (" ^^^:" ^ s) :: l, loc)
@@ -98,7 +101,7 @@ let remaining_comments () =
 
 let pp_space newline ppf (prev_loc, begin_loc) =
   let open Middle.Location in
-  if (not !print_included) && Option.is_some begin_loc.included_from then ()
+  if should_skip begin_loc then ()
   else if
     prev_loc.filename <> begin_loc.filename
     || prev_loc.line_num + 1 < begin_loc.line_num
@@ -152,7 +155,7 @@ let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
       skipped := [] ;
       Option.iter prev_loc ~f:finish
 
-let pp_maybe_space space_before f ppf loc =
+let pp_comments_spacing space_before f ppf loc =
   let comments = f loc in
   if not (List.is_empty comments) then (
     if space_before then sp ppf () ;
@@ -192,18 +195,18 @@ let pp_list_of pp (loc_of : 'a -> Middle.Location_span.t) ppf
     | next :: rest ->
         pp ppf expr ;
         let next_loc = (loc_of next).begin_loc in
-        pp_maybe_space true get_comments_until_separator ppf next_loc ;
+        pp_comments_spacing true get_comments_until_separator ppf next_loc ;
         comma ppf () ;
-        pp_maybe_space false get_comments ppf next_loc ;
+        pp_comments_spacing false get_comments ppf next_loc ;
         go next rest
     | [] -> pp ppf expr in
   skip_comments begin_loc ;
   ( match es with
   | [] -> ()
   | e :: es ->
-      pp_maybe_space false get_comments ppf (loc_of e).begin_loc ;
+      pp_comments_spacing false get_comments ppf (loc_of e).begin_loc ;
       go e es ) ;
-  pp_maybe_space true get_comments ppf end_loc
+  pp_comments_spacing true get_comments ppf end_loc
 
 let rec pp_index ppf = function
   | All -> pf ppf " : "
@@ -221,24 +224,24 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
       let then_loc = e2.emeta.loc.begin_loc in
       let else_loc = e3.emeta.loc.begin_loc in
       pf ppf "@[%a@ %a? %a%a@ %a: %a%a@]" pp_expression e1
-        (pp_maybe_space false get_comments_until_separator)
+        (pp_comments_spacing false get_comments_until_separator)
         then_loc
-        (pp_maybe_space false get_comments)
+        (pp_comments_spacing false get_comments)
         then_loc pp_expression e2
-        (pp_maybe_space false get_comments_until_separator)
+        (pp_comments_spacing false get_comments_until_separator)
         else_loc
-        (pp_maybe_space false get_comments)
+        (pp_comments_spacing false get_comments)
         else_loc pp_expression e3
   | BinOp (e1, op, e2) ->
       let next_loc = e2.emeta.loc.begin_loc in
       pf ppf "@[%a@ %a%a %a%a@]" pp_expression e1
-        (pp_maybe_space false get_comments_until_separator)
+        (pp_comments_spacing false get_comments_until_separator)
         next_loc pp_operator op
-        (pp_maybe_space false get_comments)
+        (pp_comments_spacing false get_comments)
         next_loc pp_expression e2
   | PrefixOp (op, e) ->
       pf ppf "%a%a%a"
-        (pp_maybe_space false get_comments)
+        (pp_comments_spacing false get_comments)
         e.emeta.loc.begin_loc pp_operator op pp_expression e
   | PostfixOp (e, op) -> pf ppf "%a%a" pp_expression e pp_operator op
   | Variable id -> pp_identifier ppf id
@@ -258,9 +261,9 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
           |> Option.map ~f:(fun e -> e.emeta.loc.begin_loc)
           |> Option.value ~default:loc.end_loc in
         pf ppf "@[<h>%a(%a%a | %a%a)@]" pp_identifier id pp_expression e
-          (pp_maybe_space true get_comments_until_separator)
+          (pp_comments_spacing true get_comments_until_separator)
           begin_loc
-          (pp_maybe_space false get_comments)
+          (pp_comments_spacing false get_comments)
           begin_loc pp_list_of_expression (es', loc) )
   (* GetLP is deprecated *)
   | GetLP -> pf ppf "get_lp()"
@@ -404,73 +407,70 @@ and pp_recursive_ifthenelse ppf (s, loc) =
       pp_spacing ~newline (Some loc) (Some loc) ppf
         (get_comments_until_separator s2.smeta.loc.begin_loc) ;
       pf ppf "else %a%a"
-        (pp_maybe_space false get_comments)
+        (pp_comments_spacing false get_comments)
         s2.smeta.loc.begin_loc pp_recursive_ifthenelse
         (s2, {loc with line_num= loc.line_num + 1})
   | _ -> pp_indent_unless_block ppf (s, loc)
 
 and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
     =
-  if (not !print_included) && Option.is_some loc.end_loc.included_from then ()
-  else
-    match s_content with
-    | Assignment {assign_lhs= l; assign_op= assop; assign_rhs= e} ->
-        pf ppf "@[<h>%a %a %a;@]" pp_lvalue l pp_assignmentoperator assop
-          pp_expression e
-    | NRFunApp (_, id, es) ->
-        pf ppf "%a(@[%a);@]" pp_identifier id pp_list_of_expression (es, loc)
-    | TargetPE e -> pf ppf "target += %a;" pp_expression e
-    | IncrementLogProb e ->
-        pf ppf "increment_log_prob(@[<hov>%a@]);" pp_expression e
-    | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
-        pf ppf "%a ~ %a(@[%a)@]%a;" pp_expression e pp_identifier id
-          pp_list_of_expression (es, loc) pp_truncation t
-    | Break -> pf ppf "break;"
-    | Continue -> pf ppf "continue;"
-    | Return e -> pf ppf "return %a;" (hbox pp_expression) e
-    | ReturnVoid -> pf ppf "return;"
-    | Print ps -> pf ppf "print(%a);" pp_list_of_printables ps
-    | Reject ps -> pf ppf "reject(%a);" pp_list_of_printables ps
-    | Skip -> pf ppf ";"
-    | IfThenElse (_, _, _) ->
-        (vbox pp_recursive_ifthenelse) ppf (ss, ss.smeta.loc.begin_loc)
-    | While (e, s) -> pf ppf "while (%a) %a" pp_expression e pp_statement s
-    | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
-        pf ppf "@[<v>for (%a in %a : %a) %a@]" pp_identifier id pp_expression e1
-          pp_expression e2 pp_indent_unless_block (s, e2.emeta.loc.end_loc)
-    | ForEach (id, e, s) ->
-        pf ppf "for (%a in %a) %a" pp_identifier id pp_expression e
-          pp_indent_unless_block (s, e.emeta.loc.end_loc)
-    | Block vdsl ->
-        pf ppf "{@,%a@,}" (indented_box pp_list_of_statements) (vdsl, loc)
-    | Profile (name, vdsl) ->
-        pf ppf "profile(%s) {@,%a@,}" name
-          (indented_box pp_list_of_statements)
-          (vdsl, loc)
-    | VarDecl
-        { decl_type= pst
-        ; transformation= trans
-        ; identifier= id
-        ; initial_value= init
-        ; is_global= _ } ->
-        let pp_init ppf init =
-          match init with
-          | None -> ()
-          | Some e -> pf ppf " = %a" pp_expression e in
-        let es =
-          match pst with
-          | Sized st -> Fn.compose snd unwind_sized_array_type st
-          | Unsized _ -> [] in
-        pf ppf "@[<h>%a%a %a%a;@]" pp_array_dims es pp_transformed_type
-          (pst, trans) pp_identifier id pp_init init
-    | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
-        let loc_of (_, _, id) = id.id_loc in
-        pf ppf "%a %a(%a" pp_returntype rt pp_identifier id
-          (box (pp_list_of pp_args loc_of))
-          (args, {loc with end_loc= b.smeta.loc.begin_loc}) ;
-        match b with
-        | {stmt= Skip; _} -> pf ppf ");"
-        | b -> pf ppf ") %a" pp_statement b )
+  match s_content with
+  | Assignment {assign_lhs= l; assign_op= assop; assign_rhs= e} ->
+      pf ppf "@[<h>%a %a %a;@]" pp_lvalue l pp_assignmentoperator assop
+        pp_expression e
+  | NRFunApp (_, id, es) ->
+      pf ppf "%a(@[%a);@]" pp_identifier id pp_list_of_expression (es, loc)
+  | TargetPE e -> pf ppf "target += %a;" pp_expression e
+  | IncrementLogProb e ->
+      pf ppf "increment_log_prob(@[<hov>%a@]);" pp_expression e
+  | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
+      pf ppf "%a ~ %a(@[%a)@]%a;" pp_expression e pp_identifier id
+        pp_list_of_expression (es, loc) pp_truncation t
+  | Break -> pf ppf "break;"
+  | Continue -> pf ppf "continue;"
+  | Return e -> pf ppf "return %a;" (hbox pp_expression) e
+  | ReturnVoid -> pf ppf "return;"
+  | Print ps -> pf ppf "print(%a);" pp_list_of_printables ps
+  | Reject ps -> pf ppf "reject(%a);" pp_list_of_printables ps
+  | Skip -> pf ppf ";"
+  | IfThenElse (_, _, _) ->
+      (vbox pp_recursive_ifthenelse) ppf (ss, ss.smeta.loc.begin_loc)
+  | While (e, s) -> pf ppf "while (%a) %a" pp_expression e pp_statement s
+  | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
+      pf ppf "@[<v>for (%a in %a : %a) %a@]" pp_identifier id pp_expression e1
+        pp_expression e2 pp_indent_unless_block (s, e2.emeta.loc.end_loc)
+  | ForEach (id, e, s) ->
+      pf ppf "for (%a in %a) %a" pp_identifier id pp_expression e
+        pp_indent_unless_block (s, e.emeta.loc.end_loc)
+  | Block vdsl ->
+      pf ppf "{@,%a@,}" (indented_box pp_list_of_statements) (vdsl, loc)
+  | Profile (name, vdsl) ->
+      pf ppf "profile(%s) {@,%a@,}" name
+        (indented_box pp_list_of_statements)
+        (vdsl, loc)
+  | VarDecl
+      { decl_type= pst
+      ; transformation= trans
+      ; identifier= id
+      ; initial_value= init
+      ; is_global= _ } ->
+      let pp_init ppf init =
+        match init with None -> () | Some e -> pf ppf " = %a" pp_expression e
+      in
+      let es =
+        match pst with
+        | Sized st -> Fn.compose snd unwind_sized_array_type st
+        | Unsized _ -> [] in
+      pf ppf "@[<h>%a%a %a%a;@]" pp_array_dims es pp_transformed_type
+        (pst, trans) pp_identifier id pp_init init
+  | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
+      let loc_of (_, _, id) = id.id_loc in
+      pf ppf "%a %a(%a" pp_returntype rt pp_identifier id
+        (box (pp_list_of pp_args loc_of))
+        (args, {loc with end_loc= b.smeta.loc.begin_loc}) ;
+      match b with
+      | {stmt= Skip; _} -> pf ppf ");"
+      | b -> pf ppf ") %a" pp_statement b )
 
 and pp_args ppf (at, ut, id) =
   pf ppf "%a%a %a" pp_autodifftype at pp_unsizedtype ut pp_identifier id
@@ -481,7 +481,7 @@ and pp_list_of_statements ppf (l, xloc) =
     | ({smeta= ({loc= {end_loc; _}} : located_meta); _} as s) :: l ->
         let begin_loc = Ast.get_first_loc s in
         pp_spacing None (Some begin_loc) ppf (get_comments begin_loc) ;
-        pp_statement ppf s ;
+        if not (should_skip begin_loc) then pp_statement ppf s ;
         pp_tail end_loc ppf l
     | [] -> pp_spacing None None ppf (get_comments xloc.end_loc)
   and pp_tail loc ppf ls =
@@ -490,7 +490,7 @@ and pp_list_of_statements ppf (l, xloc) =
     | ({smeta= ({loc= {end_loc; _}} : located_meta); _} as s) :: l ->
         let begin_loc = Ast.get_first_loc s in
         pp_spacing (Some loc) (Some begin_loc) ppf (get_comments begin_loc) ;
-        pp_statement ppf s ;
+        if not (should_skip begin_loc) then pp_statement ppf s ;
         pp_tail end_loc ppf l
     | [] -> pp_spacing (Some loc) None ppf (get_comments xloc.end_loc) in
   (vbox pp_head) ppf l
@@ -505,8 +505,7 @@ let pp_block block_name ppf {stmts; xloc} =
 
 let rec pp_block_list ppf = function
   | (name, {stmts; xloc}) :: tl ->
-      if (not !print_included) && Option.is_some xloc.end_loc.included_from then
-        pp_block_list ppf tl
+      if should_skip xloc.end_loc then pp_block_list ppf tl
       else (
         pp_spacing None (Some xloc.begin_loc) ppf (get_comments xloc.begin_loc) ;
         pp_block name ppf {stmts; xloc} ;
@@ -546,7 +545,6 @@ let check_correctness ?(bare_functions = false) prog pretty =
         else Parse.parse_string Parser.Incremental.program pretty in
       Option.value_exn (Result.ok res)
     with _ ->
-      print_endline pretty ;
       Common.FatalError.fatal_error_msg
         [%message
           "Pretty-printed program failed to parse"
