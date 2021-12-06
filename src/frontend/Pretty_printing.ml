@@ -13,12 +13,6 @@ let comments : comment_type list ref = ref []
 
 let skipped = ref []
 
-(** If false, don't print any statements which came from another file *)
-let print_included = ref false
-
-let should_skip (loc : Middle.Location.t) =
-  (not !print_included) && Option.is_some loc.included_from
-
 let set_comments ?(inline_includes = false) ls =
   let filtered =
     if inline_includes then
@@ -98,6 +92,13 @@ let remaining_comments () =
   skipped := [] ;
   comments := [] ;
   x
+
+(** If false, don't print any statements which came from another file *)
+let print_included = ref false
+
+(** Checks if something should be skipped based on the print_included setting *)
+let should_skip (loc : Middle.Location.t) =
+  (not !print_included) && Option.is_some loc.included_from
 
 let pp_space newline ppf (prev_loc, begin_loc) =
   let open Middle.Location in

@@ -23,9 +23,7 @@ let current_buffer () =
 let pop_buffer () = Stack.pop_exn include_stack
 
 let update_start_positions pos =
-  List.iter
-    ~f:(fun lexbuf -> lexbuf.lex_start_p <- pos)
-    (Stack.to_list include_stack)
+  Stack.iter ~f:(fun lexbuf -> lexbuf.lex_start_p <- pos) include_stack
 
 let restore_prior_lexbuf () =
   let lexbuf = pop_buffer () in
@@ -86,6 +84,6 @@ let try_get_new_lexbuf fname =
             ( Printf.sprintf "File %s recursively included itself." fname
             , Middle.Location.of_position_exn (lexeme_start_p lexbuf) ) ) ) ;
   Stack.push include_stack new_lexbuf ;
-  lexbuf.lex_start_p <- new_lexbuf.lex_curr_p ;
+  update_start_positions new_lexbuf.lex_curr_p ;
   included_files := file :: !included_files ;
   new_lexbuf
