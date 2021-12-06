@@ -12,8 +12,8 @@
     let pos = lexbuf.lex_curr_p in
     lexbuf.lex_curr_p <- { pos with
       pos_lnum = pos.pos_lnum + 1;
-      pos_bol = pos.pos_cnum;
-    }
+      pos_bol = pos.pos_cnum } ;
+    update_start_positions lexbuf.lex_curr_p
 
 
   let comments : Ast.comment_type list ref = ref []
@@ -263,7 +263,7 @@ and multiline_comment state = parse
 
 (* Single-line comment terminated by a newline *)
 and singleline_comment state = parse
-  | newline  { add_comment state lexbuf.lex_curr_p ; incr_linenum lexbuf; update_start_positions lexbuf.lex_curr_p }
+  | newline  { add_comment state lexbuf.lex_curr_p ; incr_linenum lexbuf }
   | eof      { add_comment state lexbuf.lex_curr_p ; update_start_positions lexbuf.lex_curr_p }
   | _        { Buffer.add_string (snd state) (lexeme lexbuf) ; singleline_comment state lexbuf }
 

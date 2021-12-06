@@ -40,7 +40,6 @@ let restore_prior_lexbuf () =
   lexer_pos_logger old_lexbuf.lex_curr_p ;
   lexbuf.lex_curr_p <- old_pos ;
   lexbuf.lex_start_p <- old_pos ;
-  update_start_positions lexbuf.lex_start_p ;
   old_lexbuf
 
 let rec try_open_in paths fname pos =

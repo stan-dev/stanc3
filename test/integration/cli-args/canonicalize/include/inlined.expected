@@ -63,6 +63,7 @@ data {
   /* ... declarations ... */
 }
 // I'm in another file!
+
 transformed data {
   int x = 30;
 }
@@ -72,6 +73,7 @@ model {
     
   } else {
     // test tildes
+    
     x ~ exponential(15);
   }
 }
@@ -81,6 +83,7 @@ generated quantities {
     
   } else {
     // test 2
+    
     z = exp(15);
     
     /* this contains only statements
@@ -92,6 +95,7 @@ generated quantities {
   
   if (1) {
     /* block comment */
+    
     foo(3.4);
   }
 }

@@ -7,7 +7,8 @@ data {
    /* ... declarations ... */
 }
 
-#include <tdata.stan>
+#include
+  <tdata.stan>
 
 model {
   x ~ bernoulli(0);
