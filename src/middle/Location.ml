@@ -63,7 +63,11 @@ let compare loc1 loc2 =
   let rec unfold = function
     | {included_from= None; _} as loc -> [loc]
     | {included_from= Some loc1; _} as loc2 ->
-        (* force tiebreaker to go to the file included from *)
+        (* When pretty-printing comments it is possible to end up with multiple
+           locations at an identical point in the file when they originated in an include.
+           We artificially break this tie by pretending that included locations
+           were included from the one line down from where they truly were.
+        *)
         loc2 :: unfold {loc1 with line_num= loc1.line_num + 1} in
   let rec go = function
     | [], [] -> 0

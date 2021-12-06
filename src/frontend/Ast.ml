@@ -347,10 +347,9 @@ let get_first_loc (s : untyped_statement) =
    |IfThenElse (e, _, _)
    |While (e, _) ->
       e.emeta.loc.begin_loc
-  | Assignment _ | Profile _ | Block _ -> s.smeta.loc.begin_loc
-  | Tilde {arg; _} -> get_loc_expr arg
-  | Break | Continue | ReturnVoid | Print _ | Reject _ | Skip ->
-      s.smeta.loc.end_loc
+  | Assignment _ | Profile _ | Block _ | Tilde _ | Break | Continue
+   |ReturnVoid | Print _ | Reject _ | Skip ->
+      s.smeta.loc.begin_loc
   | VarDecl {decl_type; transformation; identifier; _} -> (
     match get_loc_dt decl_type with
     | Some loc -> loc

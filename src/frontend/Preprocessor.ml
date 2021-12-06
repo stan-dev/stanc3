@@ -22,10 +22,10 @@ let current_buffer () =
 
 let pop_buffer () = Stack.pop_exn include_stack
 
-let update_start_pos pos =
-  if size () > 1 then
-    let lexbuf = List.nth_exn (Stack.to_list include_stack) 1 in
-    lexbuf.lex_start_p <- pos
+let update_start_positions pos =
+  List.iter
+    ~f:(fun lexbuf -> lexbuf.lex_start_p <- pos)
+    (Stack.to_list include_stack)
 
 let restore_prior_lexbuf () =
   let lexbuf = pop_buffer () in
@@ -40,6 +40,7 @@ let restore_prior_lexbuf () =
   lexer_pos_logger old_lexbuf.lex_curr_p ;
   lexbuf.lex_curr_p <- old_pos ;
   lexbuf.lex_start_p <- old_pos ;
+  update_start_positions lexbuf.lex_start_p ;
   old_lexbuf
 
 let rec try_open_in paths fname pos =

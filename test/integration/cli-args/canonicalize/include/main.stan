@@ -1,5 +1,6 @@
 functions {
    #include b.stanfunctions
+   #include c.stanfunctions
 }
 
 data {
@@ -9,8 +10,12 @@ data {
 #include <tdata.stan>
 
 model {
-  // int x = 3;
-   1 ~ bernoulli(0);
+  x ~ bernoulli(0);
+  if (1) {
+
+  } else {
+#include "tildes.inc"
+  }
 }
 
 generated quantities {

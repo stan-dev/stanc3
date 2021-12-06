@@ -15,8 +15,6 @@
       pos_bol = pos.pos_cnum;
     }
 
-  (* Update start pos to be the end of the comment since no token was produced *)
-  let finish_comment lexbuf = lexbuf.lex_start_p <- lexbuf.lex_curr_p; Preprocessor.update_start_pos lexbuf.lex_curr_p
 
   let comments : Ast.comment_type list ref = ref []
 
@@ -252,7 +250,7 @@ and multiline_comment state = parse
   | "*/"     { let ((pos, lines), buffer) = state in
                let lines = (Buffer.contents buffer) :: lines in
                add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p;
-               finish_comment lexbuf }
+               update_start_positions lexbuf.lex_curr_p }
   | eof      { raise (Errors.SyntaxError
                       (Errors.UnexpectedEOF
                         (Middle.Location.of_position_exn lexbuf.lex_curr_p))) }
@@ -265,8 +263,8 @@ and multiline_comment state = parse
 
 (* Single-line comment terminated by a newline *)
 and singleline_comment state = parse
-  | newline  { add_comment state lexbuf.lex_curr_p ; incr_linenum lexbuf; finish_comment lexbuf }
-  | eof      { add_comment state lexbuf.lex_curr_p ; finish_comment lexbuf }
+  | newline  { add_comment state lexbuf.lex_curr_p ; incr_linenum lexbuf; update_start_positions lexbuf.lex_curr_p }
+  | eof      { add_comment state lexbuf.lex_curr_p ; update_start_positions lexbuf.lex_curr_p }
   | _        { Buffer.add_string (snd state) (lexeme lexbuf) ; singleline_comment state lexbuf }
 
 {

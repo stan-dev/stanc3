@@ -11,8 +11,8 @@ val size : unit -> int
 val init : Lexing.lexbuf -> unit
 (** Push a buffer on to the stack to start *)
 
-val update_start_pos : Lexing.position -> unit
-(** Update the lex_start_p of the 2nd most recent item on the stack.
+val update_start_positions : Lexing.position -> unit
+(** Update the lex_start_p the lexing buffers on the stack.
     This solves an issue where a parser which started with one lexbuf
     but is finishing with another can have the wrong information
 *)
