@@ -1578,10 +1578,10 @@ data {
 transformed data {
   real transformed_data_real;
   
-  transformed_data_real = if_else(is_inf(d_real), d_int, d_int);
-  transformed_data_real = if_else(is_inf(d_real), d_int, d_real);
-  transformed_data_real = if_else(is_inf(d_real), d_real, d_real);
-  transformed_data_real = if_else(is_inf(d_real), d_real, d_int);
+  transformed_data_real = ((is_inf(d_real)) ? d_int : d_int);
+  transformed_data_real = ((is_inf(d_real)) ? d_int : d_real);
+  transformed_data_real = ((is_inf(d_real)) ? d_real : d_real);
+  transformed_data_real = ((is_inf(d_real)) ? d_real : d_int);
 }
 parameters {
   real p_real;
@@ -1590,74 +1590,22 @@ parameters {
 transformed parameters {
   real transformed_param_real;
   
-  transformed_param_real = if_else(is_inf(d_real), d_int, d_int);
+  transformed_param_real = ((is_inf(d_real)) ? d_int : d_int);
   ;
-  transformed_param_real = if_else(is_inf(d_real), d_int, d_real);
-  transformed_param_real = if_else(is_inf(d_real), d_real, d_real);
-  transformed_param_real = if_else(is_inf(d_real), d_real, d_int);
+  transformed_param_real = ((is_inf(d_real)) ? d_int : d_real);
+  transformed_param_real = ((is_inf(d_real)) ? d_real : d_real);
+  transformed_param_real = ((is_inf(d_real)) ? d_real : d_int);
   
-  transformed_param_real = if_else(is_inf(d_real), d_int, p_real);
-  transformed_param_real = if_else(is_inf(d_real), p_real, d_int);
-  transformed_param_real = if_else(is_inf(d_real), d_real, p_real);
-  transformed_param_real = if_else(is_inf(d_real), p_real, d_real);
-  transformed_param_real = if_else(is_inf(d_real), p_real, p_real);
+  transformed_param_real = ((is_inf(d_real)) ? d_int : p_real);
+  transformed_param_real = ((is_inf(d_real)) ? p_real : d_int);
+  transformed_param_real = ((is_inf(d_real)) ? d_real : p_real);
+  transformed_param_real = ((is_inf(d_real)) ? p_real : d_real);
+  transformed_param_real = ((is_inf(d_real)) ? p_real : p_real);
 }
 model {
   y_p ~ normal(0, 1);
 }
 
-Warning in 'is_inf.stan', line 8, column 26: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_inf.stan', line 9, column 26: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_inf.stan', line 10, column 26: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_inf.stan', line 11, column 26: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_inf.stan', line 20, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_inf.stan', line 21, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_inf.stan', line 22, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_inf.stan', line 23, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_inf.stan', line 25, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_inf.stan', line 26, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_inf.stan', line 27, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_inf.stan', line 28, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_inf.stan', line 29, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
   $ ../../../../../../../install/default/bin/stanc --auto-format is_nan.stan
 data {
   int d_int;
@@ -1666,10 +1614,10 @@ data {
 transformed data {
   real transformed_data_real;
   
-  transformed_data_real = if_else(is_nan(d_real), d_int, d_int);
-  transformed_data_real = if_else(is_nan(d_real), d_int, d_real);
-  transformed_data_real = if_else(is_nan(d_real), d_real, d_real);
-  transformed_data_real = if_else(is_nan(d_real), d_real, d_int);
+  transformed_data_real = ((is_nan(d_real)) ? d_int : d_int);
+  transformed_data_real = ((is_nan(d_real)) ? d_int : d_real);
+  transformed_data_real = ((is_nan(d_real)) ? d_real : d_real);
+  transformed_data_real = ((is_nan(d_real)) ? d_real : d_int);
 }
 parameters {
   real p_real;
@@ -1678,74 +1626,22 @@ parameters {
 transformed parameters {
   real transformed_param_real;
   
-  transformed_param_real = if_else(is_nan(d_real), d_int, d_int);
+  transformed_param_real = ((is_nan(d_real)) ? d_int : d_int);
   ;
-  transformed_param_real = if_else(is_nan(d_real), d_int, d_real);
-  transformed_param_real = if_else(is_nan(d_real), d_real, d_real);
-  transformed_param_real = if_else(is_nan(d_real), d_real, d_int);
+  transformed_param_real = ((is_nan(d_real)) ? d_int : d_real);
+  transformed_param_real = ((is_nan(d_real)) ? d_real : d_real);
+  transformed_param_real = ((is_nan(d_real)) ? d_real : d_int);
   
-  transformed_param_real = if_else(is_nan(d_real), d_int, p_real);
-  transformed_param_real = if_else(is_nan(d_real), p_real, d_int);
-  transformed_param_real = if_else(is_nan(d_real), d_real, p_real);
-  transformed_param_real = if_else(is_nan(d_real), p_real, d_real);
-  transformed_param_real = if_else(is_nan(d_real), p_real, p_real);
+  transformed_param_real = ((is_nan(d_real)) ? d_int : p_real);
+  transformed_param_real = ((is_nan(d_real)) ? p_real : d_int);
+  transformed_param_real = ((is_nan(d_real)) ? d_real : p_real);
+  transformed_param_real = ((is_nan(d_real)) ? p_real : d_real);
+  transformed_param_real = ((is_nan(d_real)) ? p_real : p_real);
 }
 model {
   y_p ~ normal(0, 1);
 }
 
-Warning in 'is_nan.stan', line 8, column 26: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_nan.stan', line 9, column 26: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_nan.stan', line 10, column 26: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_nan.stan', line 11, column 26: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_nan.stan', line 20, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_nan.stan', line 21, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_nan.stan', line 22, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_nan.stan', line 23, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_nan.stan', line 25, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_nan.stan', line 26, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_nan.stan', line 27, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_nan.stan', line 28, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'is_nan.stan', line 29, column 28: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
   $ ../../../../../../../install/default/bin/stanc --auto-format lambert.stan
 data {
   int d_int;

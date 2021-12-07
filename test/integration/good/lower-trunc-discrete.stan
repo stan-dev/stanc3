@@ -10,17 +10,6 @@ functions {
     return 1.0;
   }
 
-  // deprecated syntax
-  real bar_log(int y, real lambda) {
-    return 1.0;
-  }
-  real bar_cdf_log(int y, real lambda) {
-    return 1.0;
-  }
-  real bar_ccdf_log(int y, real lambda) {
-    return 1.0;
-  }
-
   // new syntax
   real baz_lpdf(real y, real lambda) {
     return 1.0;
@@ -32,23 +21,11 @@ functions {
     return 1.0;
   }
 
-  // deprecated syntax
-  real quux_log(real y, real lambda) {
-    return 1.0;
-  }
-  real quux_cdf_log(real y, real lambda) {
-    return 1.0;
-  }
-  real quux_ccdf_log(real y, real lambda) {
-    return 1.0;
-  }
-
 }
-
 data {
   int N;
-  int y[N];
-  real u[N];
+  array[N] int y;
+  array[N] real u;
   int L;
   int U;
 }
@@ -56,8 +33,7 @@ parameters {
   real<lower=0> lambda;
 }
 model {
-  for (n in 1:N) {
-
+  for (n in 1 : N) {
     // discrete, built-in
     y[n] ~ poisson(lambda) T[L, ];
     y[n] ~ poisson(lambda) T[L, U];
@@ -67,11 +43,6 @@ model {
     y[n] ~ foo(lambda) T[L, ];
     y[n] ~ foo(lambda) T[L, U];
     y[n] ~ foo(lambda) T[ , U];
-
-    // discrete, user-defined, deprecated syntax
-    y[n] ~ bar(lambda) T[L, ];
-    y[n] ~ bar(lambda) T[L, U];
-    y[n] ~ bar(lambda) T[ , U];
 
     // continuous, built-in
     u[n] ~ normal(0, 1) T[L, ];
@@ -83,10 +54,6 @@ model {
     y[n] ~ baz(lambda) T[L, U];
     y[n] ~ baz(lambda) T[ , U];
 
-    // continuous, user-defined, deprecated syntax
-    y[n] ~ quux(lambda) T[L, ];
-    y[n] ~ quux(lambda) T[L, U];
-    y[n] ~ quux(lambda) T[ , U];
-
   }
 }
+

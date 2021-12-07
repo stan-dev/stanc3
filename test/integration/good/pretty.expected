@@ -1147,7 +1147,7 @@ model {
   y ~ bernoulli_logit(x * beta_inferred + alpha_inferred);
 }
 
-Warning in 'bernoulli_logit_glm_old_performance.stan', line 10, column 19: Found
+Warning in 'bernoulli_logit_glm_old_performance.stan', line 9, column 19: Found
     int division:
       j / M
     Values will be rounded towards zero. If rounding is not desired you can
@@ -1184,7 +1184,7 @@ model {
   y ~ bernoulli_logit_glm(x, alpha_inferred, beta_inferred);
 }
 
-Warning in 'bernoulli_logit_glm_performance.stan', line 10, column 19: Found
+Warning in 'bernoulli_logit_glm_performance.stan', line 9, column 19: Found
     int division:
       j / M
     Values will be rounded towards zero. If rounding is not desired you can
@@ -1351,15 +1351,13 @@ generated quantities {
   $ ../../../../install/default/bin/stanc --auto-format comments.stan
 // this is a line comment */ should stay // /**/
 
-// another one using # - should become //
-
-// how ugly # can */ we make /* this one // # 
+// how ugly # can */ we make /* this one // #
 
 /* one line block */
 
-/* a weird 
+/* a weird
       ly formated
-          block 
+          block
                 */
 
 /**
@@ -1368,13 +1366,9 @@ generated quantities {
  */
 
 data {
-  //nothing here either 
+  //nothing here either
 }
 
-Warning in 'comments.stan', line 3, column 0: Comments beginning with # are
-    deprecated and this syntax will be removed in Stan 2.32.0. Use // to
-    begin line comments; this can be done automatically using stanc
-    --auto-format
   $ ../../../../install/default/bin/stanc --auto-format conditional_condition_good.stan
 parameters {
   real y;
@@ -1411,296 +1405,200 @@ data {
   int a0;
   array[1] int a1;
   array[2, 3] int a2;
-  array[1] int a3;
-  array[2, 3] int a4;
   
   real b0;
   array[4] real b1;
   array[5, 6] real b2;
-  array[4] real b3;
-  array[5, 6] real b4;
   
   vector[7] c0;
   array[8] vector[7] c1;
   array[8, 9] vector[7] c2;
-  array[8] vector[7] c3;
-  array[8, 9] vector[7] c4;
   
   row_vector[7] d0;
   array[8] row_vector[7] d1;
   array[8, 9] row_vector[7] d2;
-  array[8] row_vector[7] d3;
-  array[8, 9] row_vector[7] d4;
   
   matrix[8, 9] e;
   array[11] matrix[8, 9] e1;
   array[11, 12] matrix[8, 9] e2;
-  array[11] matrix[8, 9] e3;
-  array[11, 12] matrix[8, 9] e4;
   
   simplex[8] f;
   array[9] simplex[8] f1;
   array[9, 10] simplex[8] f2;
-  array[9] simplex[8] f3;
-  array[9, 10] simplex[8] f4;
   
   ordered[9] g;
   array[11] ordered[9] g1;
   array[12, 13] ordered[9] g2;
-  array[11] ordered[9] g3;
-  array[12, 13] ordered[9] g4;
   
   positive_ordered[9] h;
   array[11] positive_ordered[9] h1;
   array[12, 13] positive_ordered[9] h2;
-  array[11] positive_ordered[9] h3;
-  array[12, 13] positive_ordered[9] h4;
   
   corr_matrix[10] j;
   array[3] corr_matrix[10] j1;
   array[5, 6] corr_matrix[10] j2;
-  array[3] corr_matrix[10] j3;
-  array[5, 6] corr_matrix[10] j4;
   
   cov_matrix[10] k;
   array[3] cov_matrix[10] k1;
   array[5, 6] cov_matrix[10] k2;
-  array[3] cov_matrix[10] k3;
-  array[5, 6] cov_matrix[10] k4;
 }
 transformed data {
   int td_a0;
   array[1] int td_a1;
   array[2, 3] int td_a2;
-  array[1] int td_a3;
-  array[2, 3] int td_a4;
   
   real td_b0;
   array[4] real td_b1;
   array[5, 6] real td_b2;
-  array[4] real td_b3;
-  array[5, 6] real td_b4;
   
   vector[7] td_c0;
   array[8] vector[7] td_c1;
   array[8, 9] vector[7] td_c2;
-  array[8] vector[7] td_c3;
-  array[8, 9] vector[7] td_c4;
   
   row_vector[7] td_d0;
   array[8] row_vector[7] td_d1;
   array[8, 9] row_vector[7] td_d2;
-  array[8] row_vector[7] td_d3;
-  array[8, 9] row_vector[7] td_d4;
   
   matrix[8, 9] td_e;
   array[11] matrix[8, 9] td_e1;
   array[11, 12] matrix[8, 9] td_e2;
-  array[11] matrix[8, 9] td_e3;
-  array[11, 12] matrix[8, 9] td_e4;
   
   simplex[8] td_f;
   array[9] simplex[8] td_f1;
   array[9, 10] simplex[8] td_f2;
-  array[9] simplex[8] td_f3;
-  array[9, 10] simplex[8] td_f4;
   
   ordered[9] td_g;
   array[11] ordered[9] td_g1;
   array[12, 13] ordered[9] td_g2;
-  array[11] ordered[9] td_g3;
-  array[12, 13] ordered[9] td_g4;
   
   positive_ordered[9] td_h;
   array[11] positive_ordered[9] td_h1;
   array[12, 13] positive_ordered[9] td_h2;
-  array[11] positive_ordered[9] td_h3;
-  array[12, 13] positive_ordered[9] td_h4;
   
   corr_matrix[10] td_j;
   array[3] corr_matrix[10] td_j1;
   array[5, 6] corr_matrix[10] td_j2;
-  array[3] corr_matrix[10] td_j3;
-  array[5, 6] corr_matrix[10] td_j4;
   
   cov_matrix[10] td_k;
   array[3] cov_matrix[10] td_k1;
   array[5, 6] cov_matrix[10] td_k2;
-  array[3] cov_matrix[10] td_k3;
-  array[5, 6] cov_matrix[10] td_k4;
   
   {
     int loc_td_a0;
     array[1] int loc_td_a1;
     array[2, 3] int loc_td_a2;
-    array[1] int loc_td_a3;
-    array[2, 3] int loc_td_a4;
     
     real loc_td_b0;
     array[4] real loc_td_b1;
     array[5, 6] real loc_td_b2;
-    array[4] real loc_td_b3;
-    array[5, 6] real loc_td_b4;
     
     vector[7] loc_td_c0;
     array[8] vector[7] loc_td_c1;
     array[8, 9] vector[7] loc_td_c2;
-    array[8] vector[7] loc_td_c3;
-    array[8, 9] vector[7] loc_td_c4;
     
     row_vector[7] loc_td_d0;
     array[8] row_vector[7] loc_td_d1;
     array[8, 9] row_vector[7] loc_td_d2;
-    array[8] row_vector[7] loc_td_d3;
-    array[8, 9] row_vector[7] loc_td_d4;
     
     matrix[8, 9] loc_td_e;
     array[11] matrix[8, 9] loc_td_e1;
     array[11, 12] matrix[8, 9] loc_td_e2;
-    array[11] matrix[8, 9] loc_td_e3;
-    array[11, 12] matrix[8, 9] loc_td_e4;
   }
 }
 parameters {
   real par_b0;
   array[4] real par_b1;
   array[5, 6] real par_b2;
-  array[4] real par_b3;
-  array[5, 6] real par_b4;
   
   vector[7] par_c0;
   array[8] vector[7] par_c1;
   array[8, 9] vector[7] par_c2;
-  array[8] vector[7] par_c3;
-  array[8, 9] vector[7] par_c4;
   
   row_vector[7] par_d0;
   array[8] row_vector[7] par_d1;
   array[8, 9] row_vector[7] par_d2;
-  array[8] row_vector[7] par_d3;
-  array[8, 9] row_vector[7] par_d4;
   
   matrix[8, 9] par_e;
   array[11] matrix[8, 9] par_e1;
   array[11, 12] matrix[8, 9] par_e2;
-  array[11] matrix[8, 9] par_e3;
-  array[11, 12] matrix[8, 9] par_e4;
   
   simplex[8] par_f;
   array[9] simplex[8] par_f1;
   array[9, 10] simplex[8] par_f2;
-  array[9] simplex[8] par_f3;
-  array[9, 10] simplex[8] par_f4;
   
   ordered[9] par_g;
   array[11] ordered[9] par_g1;
   array[12, 13] ordered[9] par_g2;
-  array[11] ordered[9] par_g3;
-  array[12, 13] ordered[9] par_g4;
   
   positive_ordered[9] par_h;
   array[11] positive_ordered[9] par_h1;
   array[12, 13] positive_ordered[9] par_h2;
-  array[11] positive_ordered[9] par_h3;
-  array[12, 13] positive_ordered[9] par_h4;
   
   corr_matrix[10] par_j;
   array[3] corr_matrix[10] par_j1;
   array[5, 6] corr_matrix[10] par_j2;
-  array[3] corr_matrix[10] par_j3;
-  array[5, 6] corr_matrix[10] par_j4;
   
   cov_matrix[10] par_k;
   array[3] cov_matrix[10] par_k1;
   array[5, 6] cov_matrix[10] par_k2;
-  array[3] cov_matrix[10] par_k3;
-  array[5, 6] cov_matrix[10] par_k4;
 }
 transformed parameters {
   real tpar_b0;
   array[4] real tpar_b1;
   array[5, 6] real tpar_b2;
-  array[4] real tpar_b3;
-  array[5, 6] real tpar_b4;
   
   vector[7] tpar_c0;
   array[8] vector[7] tpar_c1;
   array[8, 9] vector[7] tpar_c2;
-  array[8] vector[7] tpar_c3;
-  array[8, 9] vector[7] tpar_c4;
   
   row_vector[7] tpar_d0;
   array[8] row_vector[7] tpar_d1;
   array[8, 9] row_vector[7] tpar_d2;
-  array[8] row_vector[7] tpar_d3;
-  array[8, 9] row_vector[7] tpar_d4;
   
   matrix[8, 9] tpar_e;
   array[11] matrix[8, 9] tpar_e1;
   array[11, 12] matrix[8, 9] tpar_e2;
-  array[11] matrix[8, 9] tpar_e3;
-  array[11, 12] matrix[8, 9] tpar_e4;
   
   simplex[8] tpar_f;
   array[9] simplex[8] tpar_f1;
   array[9, 10] simplex[8] tpar_f2;
-  array[9] simplex[8] tpar_f3;
-  array[9, 10] simplex[8] tpar_f4;
   
   ordered[9] tpar_g;
   array[11] ordered[9] tpar_g1;
   array[12, 13] ordered[9] tpar_g2;
-  array[11] ordered[9] tpar_g3;
-  array[12, 13] ordered[9] tpar_g4;
   
   positive_ordered[9] tpar_h;
   array[11] positive_ordered[9] tpar_h1;
   array[12, 13] positive_ordered[9] tpar_h2;
-  array[11] positive_ordered[9] tpar_h3;
-  array[12, 13] positive_ordered[9] tpar_h4;
   
   corr_matrix[10] tpar_j;
   array[3] corr_matrix[10] tpar_j1;
   array[5, 6] corr_matrix[10] tpar_j2;
-  array[3] corr_matrix[10] tpar_j3;
-  array[5, 6] corr_matrix[10] tpar_j4;
   
   cov_matrix[10] tpar_k;
   array[3] cov_matrix[10] tpar_k1;
   array[5, 6] cov_matrix[10] tpar_k2;
-  array[3] cov_matrix[10] tpar_k3;
-  array[5, 6] cov_matrix[10] tpar_k4;
   
   {
     int loc_tpar_a0;
     array[1] int loc_tpar_a1;
     array[2, 3] int loc_tpar_a2;
-    array[1] int loc_tpar_a3;
-    array[2, 3] int loc_tpar_a4;
     
     real loc_tpar_b0;
     array[4] real loc_tpar_b1;
     array[5, 6] real loc_tpar_b2;
-    array[4] real loc_tpar_b3;
-    array[5, 6] real loc_tpar_b4;
     
     vector[7] loc_tpar_c0;
     array[8] vector[7] loc_tpar_c1;
     array[8, 9] vector[7] loc_tpar_c2;
-    array[8] vector[7] loc_tpar_c3;
-    array[8, 9] vector[7] loc_tpar_c4;
     
     row_vector[7] loc_tpar_d0;
     array[8] row_vector[7] loc_tpar_d1;
     array[8, 9] row_vector[7] loc_tpar_d2;
-    array[8] row_vector[7] loc_tpar_d3;
-    array[8, 9] row_vector[7] loc_tpar_d4;
     
     matrix[8, 9] loc_tpar_e;
     array[11] matrix[8, 9] loc_tpar_e1;
     array[11, 12] matrix[8, 9] loc_tpar_e2;
-    array[11] matrix[8, 9] loc_tpar_e3;
-    array[11, 12] matrix[8, 9] loc_tpar_e4;
   }
 }
 model {
@@ -1708,119 +1606,81 @@ model {
     int loc_model_a0;
     array[1] int loc_model_a1;
     array[2, 3] int loc_model_a2;
-    array[1] int loc_model_a3;
-    array[2, 3] int loc_model_a4;
     
     real loc_model_b0;
     array[4] real loc_model_b1;
     array[5, 6] real loc_model_b2;
-    array[4] real loc_model_b3;
-    array[5, 6] real loc_model_b4;
     
     vector[7] loc_model_c0;
     array[8] vector[7] loc_model_c1;
     array[8, 9] vector[7] loc_model_c2;
-    array[8] vector[7] loc_model_c3;
-    array[8, 9] vector[7] loc_model_c4;
     
     row_vector[7] loc_model_d0;
     array[8] row_vector[7] loc_model_d1;
     array[8, 9] row_vector[7] loc_model_d2;
-    array[8] row_vector[7] loc_model_d3;
-    array[8, 9] row_vector[7] loc_model_d4;
     
     matrix[8, 9] loc_model_e;
     array[11] matrix[8, 9] loc_model_e1;
     array[11, 12] matrix[8, 9] loc_model_e2;
-    array[11] matrix[8, 9] loc_model_e3;
-    array[11, 12] matrix[8, 9] loc_model_e4;
   }
 }
 generated quantities {
   real gq_b0;
   array[4] real gq_b1;
   array[5, 6] real gq_b2;
-  array[4] real gq_b3;
-  array[5, 6] real gq_b4;
   
   vector[7] gq_c0;
   array[8] vector[7] gq_c1;
   array[8, 9] vector[7] gq_c2;
-  array[8] vector[7] gq_c3;
-  array[8, 9] vector[7] gq_c4;
   
   row_vector[7] gq_d0;
   array[8] row_vector[7] gq_d1;
   array[8, 9] row_vector[7] gq_d2;
-  array[8] row_vector[7] gq_d3;
-  array[8, 9] row_vector[7] gq_d4;
   
   matrix[8, 9] gq_e;
   array[11] matrix[8, 9] gq_e1;
   array[11, 12] matrix[8, 9] gq_e2;
-  array[11] matrix[8, 9] gq_e3;
-  array[11, 12] matrix[8, 9] gq_e4;
   
   simplex[8] gq_f;
   array[9] simplex[8] gq_f1;
   array[9, 10] simplex[8] gq_f2;
-  array[9] simplex[8] gq_f3;
-  array[9, 10] simplex[8] gq_f4;
   
   ordered[9] gq_g;
   array[11] ordered[9] gq_g1;
   array[12, 13] ordered[9] gq_g2;
-  array[11] ordered[9] gq_g3;
-  array[12, 13] ordered[9] gq_g4;
   
   positive_ordered[9] gq_h;
   array[11] positive_ordered[9] gq_h1;
   array[12, 13] positive_ordered[9] gq_h2;
-  array[11] positive_ordered[9] gq_h3;
-  array[12, 13] positive_ordered[9] gq_h4;
   
   corr_matrix[10] gq_j;
   array[3] corr_matrix[10] gq_j1;
   array[5, 6] corr_matrix[10] gq_j2;
-  array[3] corr_matrix[10] gq_j3;
-  array[5, 6] corr_matrix[10] gq_j4;
   
   cov_matrix[10] gq_k;
   array[3] cov_matrix[10] gq_k1;
   array[5, 6] cov_matrix[10] gq_k2;
-  array[3] cov_matrix[10] gq_k3;
-  array[5, 6] cov_matrix[10] gq_k4;
   
   {
     int loc_gq_a0;
     array[1] int loc_gq_a1;
     array[2, 3] int loc_gq_a2;
-    array[1] int loc_gq_a3;
-    array[2, 3] int loc_gq_a4;
     
     real loc_gq_b0;
     array[4] real loc_gq_b1;
     array[5, 6] real loc_gq_b2;
-    array[4] real loc_gq_b3;
-    array[5, 6] real loc_gq_b4;
     
     vector[7] loc_gq_c0;
     array[8] vector[7] loc_gq_c1;
     array[8, 9] vector[7] loc_gq_c2;
-    array[8] vector[7] loc_gq_c3;
-    array[8, 9] vector[7] loc_gq_c4;
     
     row_vector[7] loc_gq_d0;
     array[8] row_vector[7] loc_gq_d1;
     array[8, 9] row_vector[7] loc_gq_d2;
-    array[8] row_vector[7] loc_gq_d3;
-    array[8, 9] row_vector[7] loc_gq_d4;
     
     matrix[8, 9] loc_gq_e;
     array[11] matrix[8, 9] loc_gq_e1;
     array[11, 12] matrix[8, 9] loc_gq_e2;
-    array[11] matrix[8, 9] loc_gq_e3;
-    array[11, 12] matrix[8, 9] loc_gq_e4;
   }
 }
 
@@ -3125,9 +2985,9 @@ model {
  * because of the <false> instantiation of propto
  */
 functions {
-  real n_log(real y);
+  real n_lpdf(real y);
   
-  real n_log(real y) {
+  real n_lpdf(real y) {
     return -0.5 * square(y);
   }
 }
@@ -3136,22 +2996,9 @@ parameters {
 }
 model {
   mu ~ n();
-  increment_log_prob(n_log(mu)); // check both instantiations
+  target += n_lpdf(mu | ); // check both instantiations
 }
 
-Warning in 'fun_log_forward_decl.stan', line 17, column 2: increment_log_prob(...);
-    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
-Warning in 'fun_log_forward_decl.stan', line 6, column 7: Use of the _log
-    suffix in user defined probability functions is deprecated and will be
-    removed in Stan 2.32.0, use name 'n_lpdf' instead if you intend on using
-    this function in ~ statements or calling unnormalized probability
-    functions inside of it.
-Warning in 'fun_log_forward_decl.stan', line 8, column 7: Use of the _log
-    suffix in user defined probability functions is deprecated and will be
-    removed in Stan 2.32.0, use name 'n_lpdf' instead if you intend on using
-    this function in ~ statements or calling unnormalized probability
-    functions inside of it.
   $ ../../../../install/default/bin/stanc --auto-format functions-fwd-ref.stan
 functions {
   int foo(int n);
@@ -3229,13 +3076,13 @@ functions {
     return x * y - 2.0;
   }
   
-  real foo0_log(int y) {
+  real foo0_lpmf(int y) {
     return -5;
   }
-  real foo1_log(real x) {
+  real foo1_lpdf(real x) {
     return -exp(x * x);
   }
-  real foo2_log(real x, real y) {
+  real foo2_lpdf(real x, real y) {
     real diff;
     diff = x - y;
     return -exp(diff * diff);
@@ -3256,12 +3103,12 @@ transformed data {
   c = foo2(2, b);
   c = foo2(2, 3);
   
-  a = foo0_log(2);
-  b = foo1_log(N[6]);
-  c = foo2_log(a, b);
-  c = foo2_log(a, 1);
-  c = foo2_log(2, b);
-  c = foo2_log(2, 3);
+  a = foo0_lpmf(2 | );
+  b = foo1_lpdf(N[6] | );
+  c = foo2_lpdf(a | b);
+  c = foo2_lpdf(a | 1);
+  c = foo2_lpdf(2 | b);
+  c = foo2_lpdf(2 | 3);
   
   a = foo0_rng();
   b = foo1_rng(a);
@@ -3315,24 +3162,24 @@ transformed parameters {
   
   //   phi3 = foo2_lp(phi1,phi2);
   
-  phi1 = foo0_log(3);
+  phi1 = foo0_lpmf(3 | );
   
-  phi2 = foo1_log(1);
-  phi2 = foo1_log(2.0);
-  phi2 = foo1_log(phi1);
+  phi2 = foo1_lpdf(1 | );
+  phi2 = foo1_lpdf(2.0 | );
+  phi2 = foo1_lpdf(phi1 | );
   
-  phi3 = foo2_log(1.0, 2.0);
-  phi3 = foo2_log(1.0, 2);
-  phi3 = foo2_log(1, 2.0);
-  phi3 = foo2_log(1, 2);
+  phi3 = foo2_lpdf(1.0 | 2.0);
+  phi3 = foo2_lpdf(1.0 | 2);
+  phi3 = foo2_lpdf(1 | 2.0);
+  phi3 = foo2_lpdf(1 | 2);
   
-  phi3 = foo2_log(phi1, 2.0);
-  phi3 = foo2_log(phi1, 2);
+  phi3 = foo2_lpdf(phi1 | 2.0);
+  phi3 = foo2_lpdf(phi1 | 2);
   
-  phi3 = foo2_log(1.0, phi2);
-  phi3 = foo2_log(1, phi2);
+  phi3 = foo2_lpdf(1.0 | phi2);
+  phi3 = foo2_lpdf(1 | phi2);
   
-  phi3 = foo2_log(phi1, phi2);
+  phi3 = foo2_lpdf(phi1 | phi2);
 }
 model {
   real psi1;
@@ -3375,23 +3222,23 @@ model {
   
   psi3 = foo2_lp(psi1, psi2);
   
-  psi1 = foo0_log(3);
-  psi2 = foo1_log(1);
-  psi2 = foo1_log(2.0);
-  psi2 = foo1_log(psi1);
+  psi1 = foo0_lpmf(3 | );
+  psi2 = foo1_lpdf(1 | );
+  psi2 = foo1_lpdf(2.0 | );
+  psi2 = foo1_lpdf(psi1 | );
   
-  psi3 = foo2_log(1.0, 2.0);
-  psi3 = foo2_log(1.0, 2);
-  psi3 = foo2_log(1, 2.0);
-  psi3 = foo2_log(1, 2);
+  psi3 = foo2_lpdf(1.0 | 2.0);
+  psi3 = foo2_lpdf(1.0 | 2);
+  psi3 = foo2_lpdf(1 | 2.0);
+  psi3 = foo2_lpdf(1 | 2);
   
-  psi3 = foo2_log(psi1, 2.0);
-  psi3 = foo2_log(psi1, 2);
+  psi3 = foo2_lpdf(psi1 | 2.0);
+  psi3 = foo2_lpdf(psi1 | 2);
   
-  psi3 = foo2_log(1.0, psi2);
-  psi3 = foo2_log(1, psi2);
+  psi3 = foo2_lpdf(1.0 | psi2);
+  psi3 = foo2_lpdf(1 | psi2);
   
-  psi3 = foo2_log(psi1, psi2);
+  psi3 = foo2_lpdf(psi1 | psi2);
   
   // use _log as sampling statements
   theta[1] ~ foo1();
@@ -3410,13 +3257,13 @@ generated quantities {
   z = foo2(x, 2);
   z = foo2(1, 2);
   
-  x = foo0_log(3);
-  y = foo1_log(x);
-  y = foo1_log(1);
-  z = foo2_log(x, y);
-  z = foo2_log(1, y);
-  z = foo2_log(x, 2);
-  z = foo2_log(1, 2);
+  x = foo0_lpmf(3 | );
+  y = foo1_lpdf(x | );
+  y = foo1_lpdf(1 | );
+  z = foo2_lpdf(x | y);
+  z = foo2_lpdf(1 | y);
+  z = foo2_lpdf(x | 2);
+  z = foo2_lpdf(1 | 2);
   
   x = foo0_rng();
   y = foo1_rng(x);
@@ -3427,21 +3274,6 @@ generated quantities {
   z = foo2_rng(1, 2);
 }
 
-Warning in 'functions-good1.stan', line 36, column 7: Use of the _log suffix
-    in user defined probability functions is deprecated and will be removed
-    in Stan 2.32.0, use name 'foo0_lpmf' instead if you intend on using this
-    function in ~ statements or calling unnormalized probability functions
-    inside of it.
-Warning in 'functions-good1.stan', line 39, column 7: Use of the _log suffix
-    in user defined probability functions is deprecated and will be removed
-    in Stan 2.32.0, use name 'foo1_lpdf' instead if you intend on using this
-    function in ~ statements or calling unnormalized probability functions
-    inside of it.
-Warning in 'functions-good1.stan', line 42, column 7: Use of the _log suffix
-    in user defined probability functions is deprecated and will be removed
-    in Stan 2.32.0, use name 'foo2_lpdf' instead if you intend on using this
-    function in ~ statements or calling unnormalized probability functions
-    inside of it.
   $ ../../../../install/default/bin/stanc --auto-format functions-good2.stan
 functions {
   real foo_bar0() {
@@ -3504,7 +3336,7 @@ model {
   $ ../../../../install/default/bin/stanc --auto-format funs1.stan
 functions {
   void unit_normal_lp(real u) {
-    increment_log_prob(normal_log(u, 0, 1));
+    target += normal_lpdf(u | 0, 1);
     u ~ uniform(-100, 100);
   }
 }
@@ -3515,12 +3347,6 @@ model {
   unit_normal_lp(y);
 }
 
-Warning in 'funs1.stan', line 3, column 4: increment_log_prob(...); is
-    deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
-Warning in 'funs1.stan', line 3, column 23: normal_log is deprecated and will
-    be removed in Stan 2.32.0. Use normal_lpdf instead. This can be
-    automatically changed using stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format funs2.stan
 functions {
   real unit_normal_rng() {
@@ -3540,8 +3366,8 @@ generated quantities {
 
   $ ../../../../install/default/bin/stanc --auto-format funs3.stan
 functions {
-  real unit_normal_log(real y) {
-    return normal_log(y, 0, 1); // print's messing this up now
+  real unit_normal_lpdf(real y) {
+    return normal_lpdf(y | 0, 1);
   }
 }
 parameters {
@@ -3551,38 +3377,19 @@ model {
   y ~ unit_normal();
 }
 
-Warning in 'funs3.stan', line 2, column 7: Use of the _log suffix in user
-    defined probability functions is deprecated and will be removed in Stan
-    2.32.0, use name 'unit_normal_lpdf' instead if you intend on using this
-    function in ~ statements or calling unnormalized probability functions
-    inside of it.
-Warning in 'funs3.stan', line 3, column 11: normal_log is deprecated and will
-    be removed in Stan 2.32.0. Use normal_lpdf instead. This can be
-    automatically changed using stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format funs4.stan
 functions {
-  real unit_normal_log(real y) {
-    return normal_log(y, 0, 1);
+  real unit_normal_lpdf(real y) {
+    return normal_lpdf(y | 0, 1);
   }
 }
 parameters {
   real y;
 }
 model {
-  increment_log_prob(unit_normal_log(y));
+  target += unit_normal_lpdf(y | );
 }
 
-Warning in 'funs4.stan', line 10, column 2: increment_log_prob(...); is
-    deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
-Warning in 'funs4.stan', line 2, column 7: Use of the _log suffix in user
-    defined probability functions is deprecated and will be removed in Stan
-    2.32.0, use name 'unit_normal_lpdf' instead if you intend on using this
-    function in ~ statements or calling unnormalized probability functions
-    inside of it.
-Warning in 'funs4.stan', line 3, column 11: normal_log is deprecated and will
-    be removed in Stan 2.32.0. Use normal_lpdf instead. This can be
-    automatically changed using stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format funs5.stan
 functions {
   void foo(real x) {
@@ -3641,61 +3448,6 @@ generated quantities {
   real y = f(x);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format get-lp-target.stan
-parameters {
-  real<lower=0> y;
-}
-transformed parameters {
-  print("target = ", target());
-  print("get_lp = ", get_lp());
-}
-model {
-  print("target = ", target());
-  print("get_lp = ", get_lp());
-  y ~ normal(0, 1);
-}
-
-Warning in 'get-lp-target.stan', line 6, column 21: get_lp() function is
-    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
-    can be done automatically with stanc --print-canonical
-Warning in 'get-lp-target.stan', line 10, column 21: get_lp() function is
-    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
-    can be done automatically with stanc --print-canonical
-  $ ../../../../install/default/bin/stanc --auto-format get_lp_good.stan
-/**
- * get_lp() allowed in:
- *  - functions ending in _lp
- *  transformed parameter block
- *  model block
- */
-functions {
-  // allowed in functions ending in _lp
-  real foo_lp(real x) {
-    return x + get_lp();
-  }
-}
-parameters {
-  real y;
-}
-transformed parameters {
-  real z;
-  z = get_lp();
-}
-model {
-  real w;
-  w = get_lp();
-  y ~ normal(0, 1);
-}
-
-Warning in 'get_lp_good.stan', line 10, column 15: get_lp() function is
-    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
-    can be done automatically with stanc --print-canonical
-Warning in 'get_lp_good.stan', line 18, column 6: get_lp() function is
-    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
-    can be done automatically with stanc --print-canonical
-Warning in 'get_lp_good.stan', line 22, column 6: get_lp() function is
-    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
-    can be done automatically with stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes1.stan
 functions {
   real foo() {
@@ -4144,17 +3896,6 @@ functions {
     return 1.0;
   }
   
-  // deprecated syntax
-  real bar_log(int y, real lambda) {
-    return 1.0;
-  }
-  real bar_cdf_log(int y, real lambda) {
-    return 1.0;
-  }
-  real bar_ccdf_log(int y, real lambda) {
-    return 1.0;
-  }
-  
   // new syntax
   real baz_lpdf(real y, real lambda) {
     return 1.0;
@@ -4163,17 +3904,6 @@ functions {
     return 1.0;
   }
   real baz_lccdf(real y, real lambda) {
-    return 1.0;
-  }
-  
-  // deprecated syntax
-  real quux_log(real y, real lambda) {
-    return 1.0;
-  }
-  real quux_cdf_log(real y, real lambda) {
-    return 1.0;
-  }
-  real quux_ccdf_log(real y, real lambda) {
     return 1.0;
   }
 }
@@ -4199,11 +3929,6 @@ model {
     y[n] ~ foo(lambda) T[L, U];
     y[n] ~ foo(lambda) T[ , U];
     
-    // discrete, user-defined, deprecated syntax
-    y[n] ~ bar(lambda) T[L, ];
-    y[n] ~ bar(lambda) T[L, U];
-    y[n] ~ bar(lambda) T[ , U];
-    
     // continuous, built-in
     u[n] ~ normal(0, 1) T[L, ];
     u[n] ~ normal(0, 1) T[ , U];
@@ -4213,57 +3938,19 @@ model {
     y[n] ~ baz(lambda) T[L, ];
     y[n] ~ baz(lambda) T[L, U];
     y[n] ~ baz(lambda) T[ , U];
-    
-    // continuous, user-defined, deprecated syntax
-    y[n] ~ quux(lambda) T[L, ];
-    y[n] ~ quux(lambda) T[L, U];
-    y[n] ~ quux(lambda) T[ , U];
   }
 }
 
-Warning in 'lower-trunc-discrete.stan', line 14, column 7: Use of the _log
-    suffix in user defined probability functions is deprecated and will be
-    removed in Stan 2.32.0, use name 'bar_lpmf' instead if you intend on
-    using this function in ~ statements or calling unnormalized probability
-    functions inside of it.
-Warning in 'lower-trunc-discrete.stan', line 17, column 7: Use of the _log
-    suffix in user defined probability functions is deprecated and will be
-    removed in Stan 2.32.0, use name 'bar_lcdf' instead if you intend on
-    using this function in ~ statements or calling unnormalized probability
-    functions inside of it.
-Warning in 'lower-trunc-discrete.stan', line 20, column 7: Use of the _log
-    suffix in user defined probability functions is deprecated and will be
-    removed in Stan 2.32.0, use name 'bar_lccdf' instead if you intend on
-    using this function in ~ statements or calling unnormalized probability
-    functions inside of it.
-Warning in 'lower-trunc-discrete.stan', line 36, column 7: Use of the _log
-    suffix in user defined probability functions is deprecated and will be
-    removed in Stan 2.32.0, use name 'quux_lpdf' instead if you intend on
-    using this function in ~ statements or calling unnormalized probability
-    functions inside of it.
-Warning in 'lower-trunc-discrete.stan', line 39, column 7: Use of the _log
-    suffix in user defined probability functions is deprecated and will be
-    removed in Stan 2.32.0, use name 'quux_lcdf' instead if you intend on
-    using this function in ~ statements or calling unnormalized probability
-    functions inside of it.
-Warning in 'lower-trunc-discrete.stan', line 42, column 7: Use of the _log
-    suffix in user defined probability functions is deprecated and will be
-    removed in Stan 2.32.0, use name 'quux_lccdf' instead if you intend on
-    using this function in ~ statements or calling unnormalized probability
-    functions inside of it.
   $ ../../../../install/default/bin/stanc --auto-format lp_in_fun.stan
 functions {
   void foo_lp() {
-    print("lp__ = ", get_lp());
+    print("lp__ = ", target());
   }
 }
 model {
   
 }
 
-Warning in 'lp_in_fun.stan', line 3, column 21: get_lp() function is
-    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
-    can be done automatically with stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format lp_transformed_param.stan
 functions {
   real test_lp(real r) {
@@ -4488,7 +4175,7 @@ model {
   y ~ neg_binomial_2_log(x * beta_inferred + alpha_inferred, sigma);
 }
 
-Warning in 'neg_binomial_2_log_glm_old_performance.stan', line 11, column 19: Found
+Warning in 'neg_binomial_2_log_glm_old_performance.stan', line 10, column 19: Found
     int division:
       j / M
     Values will be rounded towards zero. If rounding is not desired you can
@@ -4526,7 +4213,7 @@ model {
   y ~ neg_binomial_2_log_glm(x, alpha_inferred, beta_inferred, sigma);
 }
 
-Warning in 'neg_binomial_2_log_glm_performance.stan', line 11, column 19: Found
+Warning in 'neg_binomial_2_log_glm_performance.stan', line 10, column 19: Found
     int division:
       j / M
     Values will be rounded towards zero. If rounding is not desired you can
@@ -4697,7 +4384,7 @@ model {
   
 }
 
-Warning in 'ode-int-segments.stan', line 25, column 12: integrate_ode is
+Warning in 'ode-int-segments.stan', line 26, column 12: integrate_ode is
     deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -4722,7 +4409,7 @@ model {
   
 }
 
-Warning in 'ode-nested-quotes.stan', line 17, column 6: integrate_ode is
+Warning in 'ode-nested-quotes.stan', line 14, column 6: integrate_ode is
     deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -4809,31 +4496,31 @@ model {
     y[t] ~ normal(y_hat[t], sigma); // independent normal noise
 }
 
-Warning in 'ode_good.stan', line 27, column 10: integrate_ode is deprecated
+Warning in 'ode_good.stan', line 28, column 10: integrate_ode is deprecated
     and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 34, column 10: integrate_ode_rk45 is
+Warning in 'ode_good.stan', line 35, column 10: integrate_ode_rk45 is
     deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 41, column 10: integrate_ode_bdf is
+Warning in 'ode_good.stan', line 42, column 10: integrate_ode_bdf is
     deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 48, column 10: integrate_ode_adams is
+Warning in 'ode_good.stan', line 49, column 10: integrate_ode_adams is
     deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 55, column 10: integrate_ode_rk45 is
+Warning in 'ode_good.stan', line 56, column 10: integrate_ode_rk45 is
     deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 62, column 10: integrate_ode_bdf is
+Warning in 'ode_good.stan', line 63, column 10: integrate_ode_bdf is
     deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 69, column 10: integrate_ode_adams is
+Warning in 'ode_good.stan', line 70, column 10: integrate_ode_adams is
     deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -4866,7 +4553,7 @@ model {
   y ~ poisson_log(x * beta_inferred + alpha_inferred);
 }
 
-Warning in 'poisson_log_glm_old_performance.stan', line 10, column 19: Found
+Warning in 'poisson_log_glm_old_performance.stan', line 9, column 19: Found
     int division:
       j / M
     Values will be rounded towards zero. If rounding is not desired you can
@@ -4903,7 +4590,7 @@ model {
   y ~ poisson_log_glm(x, alpha_inferred, beta_inferred);
 }
 
-Warning in 'poisson_log_glm_performance.stan', line 10, column 19: Found int
+Warning in 'poisson_log_glm_performance.stan', line 9, column 19: Found int
     division:
       j / M
     Values will be rounded towards zero. If rounding is not desired you can
@@ -4966,150 +4653,6 @@ model {
     
     y ~ multi_normal_cholesky(rep_vector(0, N), L_cov);
   }
-}
-
-  $ ../../../../install/default/bin/stanc --auto-format prophet.stan
-// Copyright (c) 2017-present, Facebook, Inc. All rights reserved.
-functions {
-  array[,] real get_changepoint_matrix(array[] real t, array[] real t_change,
-                                       int T, int S) {
-    // Assumes t and t_change are sorted.
-    array[T, S] real A;
-    array[S] real a_row;
-    int cp_idx;
-    
-    // Start with an empty matrix.
-    A = rep_array(0, T, S);
-    a_row = rep_array(0, S);
-    cp_idx = 1;
-    
-    // Fill in each row of A.
-    for (i in 1 : T) {
-      while ((cp_idx <= S) && (t[i] >= t_change[cp_idx])) {
-        a_row[cp_idx] = 1;
-        cp_idx = cp_idx + 1;
-      }
-      A[i] = a_row;
-    }
-    return A;
-  }
-  
-  // Logistic trend functions
-  
-  array[] real logistic_gamma(real k, real m, array[] real delta,
-                              array[] real t_change, int S) {
-    array[S] real gamma; // adjusted offsets, for piecewise continuity
-    array[S + 1] real k_s; // actual rate in each segment
-    real m_pr;
-    
-    // Compute the rate in each segment
-    k_s[1] = k;
-    for (i in 1 : S) {
-      k_s[i + 1] = k_s[i] + delta[i];
-    }
-    
-    // Piecewise offsets
-    m_pr = m; // The offset in the previous segment
-    for (i in 1 : S) {
-      gamma[i] = (t_change[i] - m_pr) * (1 - k_s[i] / k_s[i + 1]);
-      m_pr = m_pr + gamma[i]; // update for the next segment
-    }
-    return gamma;
-  }
-  
-  array[] real logistic_trend(real k, real m, array[] real delta,
-                              array[] real t, array[] real cap,
-                              array[,] real A, array[] real t_change, int S,
-                              int T) {
-    array[S] real gamma;
-    array[T] real Y;
-    
-    gamma = logistic_gamma(k, m, delta, t_change, S);
-    for (i in 1 : T) {
-      Y[i] = cap[i]
-             / (1
-                + exp(-(k + dot_product(A[i], delta))
-                      * (t[i] - (m + dot_product(A[i], gamma)))));
-    }
-    return Y;
-  }
-  
-  // Linear trend function
-  
-  array[] real linear_trend(real k, real m, array[] real delta,
-                            array[] real t, array[,] real A,
-                            array[] real t_change, int S, int T) {
-    array[S] real gamma;
-    array[T] real Y;
-    
-    for (i in 1 : S) {
-      gamma[i] = -t_change[i] * delta[i];
-    }
-    for (i in 1 : T) {
-      Y[i] = (k + dot_product(A[i], delta)) * t[i]
-             + (m + dot_product(A[i], gamma));
-    }
-    return Y;
-  }
-}
-data {
-  int T; // Number of time periods
-  int<lower=1> K; // Number of regressors
-  array[T] real t; // Time
-  array[T] real cap; // Capacities for logistic trend
-  array[T] real y; // Time series
-  int S; // Number of changepoints
-  array[S] real t_change; // Times of trend changepoints
-  array[T, K] real X; // Regressors
-  vector[K] sigmas; // Scale on seasonality prior
-  real<lower=0> tau; // Scale on changepoints prior
-  int trend_indicator; // 0 for linear, 1 for logistic
-  array[K] real s_a; // Indicator of additive features
-  array[K] real s_m; // Indicator of multiplicative features
-}
-transformed data {
-  array[T, S] real A;
-  A = get_changepoint_matrix(t, t_change, T, S);
-}
-parameters {
-  real k; // Base trend growth rate
-  real m; // Trend offset
-  array[S] real delta; // Trend rate adjustments
-  real<lower=0> sigma_obs; // Observation noise
-  array[K] real beta; // Regressor coefficients
-}
-transformed parameters {
-  array[T] real trend;
-  array[T] real Y;
-  array[K] real beta_m;
-  array[K] real beta_a;
-  
-  if (trend_indicator == 0) {
-    trend = linear_trend(k, m, delta, t, A, t_change, S, T);
-  } else if (trend_indicator == 1) {
-    trend = logistic_trend(k, m, delta, t, cap, A, t_change, S, T);
-  }
-  
-  for (i in 1 : K) {
-    beta_m[i] = beta[i] * s_m[i];
-    beta_a[i] = beta[i] * s_a[i];
-  }
-  
-  for (i in 1 : T) {
-    Y[i] = (trend[i] * (1 + dot_product(X[i], beta_m))
-            + dot_product(X[i], beta_a));
-  }
-}
-model {
-  //priors
-  k ~ normal(0, 5);
-  m ~ normal(0, 5);
-  delta ~ double_exponential(0, tau);
-  sigma_obs ~ normal(0, 0.5);
-  beta ~ normal(0, sigmas);
-  
-  // Likelihood
-  y ~ normal(Y, sigma_obs);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format propto-good.stan
@@ -5196,6 +4739,44 @@ model {
   y ~ normal(0, 1);
 }
 
+  $ ../../../../install/default/bin/stanc --auto-format target.stan
+parameters {
+  real<lower=0> y;
+}
+transformed parameters {
+  print("target = ", target());
+}
+model {
+  print("target = ", target());
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format target_good.stan
+/**
+ * get_lp() allowed in:
+ *  - functions ending in _lp
+ *  transformed parameter block
+ *  model block
+ */
+functions {
+  // allowed in functions ending in _lp
+  real foo_lp(real x) {
+    return x + target();
+  }
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  real z;
+  z = target();
+}
+model {
+  real w;
+  w = target();
+  y ~ normal(0, 1);
+}
+
   $ ../../../../install/default/bin/stanc --auto-format tern_op_contains_var.stan
 data {
   int N;
@@ -5215,13 +4796,13 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format truncation-user-defined.stan
 functions {
-  real foo_log(real y, real theta) {
+  real foo_lpdf(real y, real theta) {
     return 1;
   }
-  real foo_cdf_log(real y, real theta) {
+  real foo_lcdf(real y, real theta) {
     return 1;
   }
-  real foo_ccdf_log(real y, real theta) {
+  real foo_lccdf(real y, real theta) {
     return 1;
   }
 }
@@ -5239,21 +4820,6 @@ model {
   y ~ foo(theta) T[L, U];
 }
 
-Warning in 'truncation-user-defined.stan', line 2, column 7: Use of the _log
-    suffix in user defined probability functions is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo_lpdf' instead if you intend on
-    using this function in ~ statements or calling unnormalized probability
-    functions inside of it.
-Warning in 'truncation-user-defined.stan', line 3, column 7: Use of the _log
-    suffix in user defined probability functions is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo_lcdf' instead if you intend on
-    using this function in ~ statements or calling unnormalized probability
-    functions inside of it.
-Warning in 'truncation-user-defined.stan', line 4, column 7: Use of the _log
-    suffix in user defined probability functions is deprecated and will be
-    removed in Stan 2.32.0, use name 'foo_lccdf' instead if you intend on
-    using this function in ~ statements or calling unnormalized probability
-    functions inside of it.
   $ ../../../../install/default/bin/stanc --auto-format truncation-wild.stan
 model {
   array[1, 1] real T = {{42.0}};
@@ -5608,9 +5174,9 @@ generated quantities {
 
   $ ../../../../install/default/bin/stanc --auto-format validate_bounds_comparison.stan
 data {
-  real<lower=if_else(1 < 2, -1, -2)> a;
-  real<upper=if_else(1 < 2, -1, -2)> b;
-  real<lower=(1 && 3), upper=if_else(1 < 2, -1, -2)> c;
+  real<lower=((1 < 2) ? -1 : -2)> a;
+  real<upper=((1 < 2) ? -1 : -2)> b;
+  real<lower=(1 && 3), upper=((1 < 2) ? -1 : -2)> c;
 }
 parameters {
   real y;
@@ -5619,18 +5185,6 @@ model {
   y ~ normal(0, 1);
 }
 
-Warning in 'validate_bounds_comparison.stan', line 2, column 13: The function
-    `if_else` is deprecated and will be removed in Stan 2.32.0. Use the
-    conditional operator (x ? y : z) instead; this can be automatically
-    changed using stanc --print-canonical
-Warning in 'validate_bounds_comparison.stan', line 3, column 13: The function
-    `if_else` is deprecated and will be removed in Stan 2.32.0. Use the
-    conditional operator (x ? y : z) instead; this can be automatically
-    changed using stanc --print-canonical
-Warning in 'validate_bounds_comparison.stan', line 4, column 29: The function
-    `if_else` is deprecated and will be removed in Stan 2.32.0. Use the
-    conditional operator (x ? y : z) instead; this can be automatically
-    changed using stanc --print-canonical
   $ ../../../../install/default/bin/stanc --auto-format validate_conditional_op_good.stan
 functions {
   real foo(real fa_x, int fa_y) {
