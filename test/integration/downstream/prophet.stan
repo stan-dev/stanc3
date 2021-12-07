@@ -1,0 +1,143 @@
+// Copyright (c) 2017-present, Facebook, Inc. All rights reserved.
+functions {
+  array[,] real get_changepoint_matrix(array[] real t, array[] real t_change,
+                                       int T, int S) {
+    // Assumes t and t_change are sorted.
+    array[T, S] real A;
+    array[S] real a_row;
+    int cp_idx;
+    
+    // Start with an empty matrix.
+    A = rep_array(0, T, S);
+    a_row = rep_array(0, S);
+    cp_idx = 1;
+    
+    // Fill in each row of A.
+    for (i in 1 : T) {
+      while ((cp_idx <= S) && (t[i] >= t_change[cp_idx])) {
+        a_row[cp_idx] = 1;
+        cp_idx = cp_idx + 1;
+      }
+      A[i] = a_row;
+    }
+    return A;
+  }
+  
+  // Logistic trend functions
+  
+  array[] real logistic_gamma(real k, real m, array[] real delta,
+                              array[] real t_change, int S) {
+    array[S] real gamma; // adjusted offsets, for piecewise continuity
+    array[S + 1] real k_s; // actual rate in each segment
+    real m_pr;
+    
+    // Compute the rate in each segment
+    k_s[1] = k;
+    for (i in 1 : S) {
+      k_s[i + 1] = k_s[i] + delta[i];
+    }
+    
+    // Piecewise offsets
+    m_pr = m; // The offset in the previous segment
+    for (i in 1 : S) {
+      gamma[i] = (t_change[i] - m_pr) * (1 - k_s[i] / k_s[i + 1]);
+      m_pr = m_pr + gamma[i]; // update for the next segment
+    }
+    return gamma;
+  }
+  
+  array[] real logistic_trend(real k, real m, array[] real delta,
+                              array[] real t, array[] real cap,
+                              array[,] real A, array[] real t_change, int S,
+                              int T) {
+    array[S] real gamma;
+    array[T] real Y;
+    
+    gamma = logistic_gamma(k, m, delta, t_change, S);
+    for (i in 1 : T) {
+      Y[i] = cap[i]
+             / (1
+                + exp(-(k + dot_product(A[i], delta))
+                      * (t[i] - (m + dot_product(A[i], gamma)))));
+    }
+    return Y;
+  }
+  
+  // Linear trend function
+  
+  array[] real linear_trend(real k, real m, array[] real delta,
+                            array[] real t, array[,] real A,
+                            array[] real t_change, int S, int T) {
+    array[S] real gamma;
+    array[T] real Y;
+    
+    for (i in 1 : S) {
+      gamma[i] = -t_change[i] * delta[i];
+    }
+    for (i in 1 : T) {
+      Y[i] = (k + dot_product(A[i], delta)) * t[i]
+             + (m + dot_product(A[i], gamma));
+    }
+    return Y;
+  }
+}
+data {
+  int T; // Number of time periods
+  int<lower=1> K; // Number of regressors
+  array[T] real t; // Time
+  array[T] real cap; // Capacities for logistic trend
+  array[T] real y; // Time series
+  int S; // Number of changepoints
+  array[S] real t_change; // Times of trend changepoints
+  array[T, K] real X; // Regressors
+  vector[K] sigmas; // Scale on seasonality prior
+  real<lower=0> tau; // Scale on changepoints prior
+  int trend_indicator; // 0 for linear, 1 for logistic
+  array[K] real s_a; // Indicator of additive features
+  array[K] real s_m; // Indicator of multiplicative features
+}
+transformed data {
+  array[T, S] real A;
+  A = get_changepoint_matrix(t, t_change, T, S);
+}
+parameters {
+  real k; // Base trend growth rate
+  real m; // Trend offset
+  array[S] real delta; // Trend rate adjustments
+  real<lower=0> sigma_obs; // Observation noise
+  array[K] real beta; // Regressor coefficients
+}
+transformed parameters {
+  array[T] real trend;
+  array[T] real Y;
+  array[K] real beta_m;
+  array[K] real beta_a;
+  
+  if (trend_indicator == 0) {
+    trend = linear_trend(k, m, delta, t, A, t_change, S, T);
+  } else if (trend_indicator == 1) {
+    trend = logistic_trend(k, m, delta, t, cap, A, t_change, S, T);
+  }
+  
+  for (i in 1 : K) {
+    beta_m[i] = beta[i] * s_m[i];
+    beta_a[i] = beta[i] * s_a[i];
+  }
+  
+  for (i in 1 : T) {
+    Y[i] = (trend[i] * (1 + dot_product(X[i], beta_m))
+            + dot_product(X[i], beta_a));
+  }
+}
+model {
+  //priors
+  k ~ normal(0, 5);
+  m ~ normal(0, 5);
+  delta ~ double_exponential(0, tau);
+  sigma_obs ~ normal(0, 0.5);
+  beta ~ normal(0, sigmas);
+  
+  // Likelihood
+  y ~ normal(Y, sigma_obs);
+}
+
