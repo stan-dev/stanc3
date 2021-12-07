@@ -42,11 +42,14 @@ let parse_canonical_options (settings : Canonicalize.canonicalizer_settings)
   | "deprecations" -> {settings with deprecations= true}
   | "parentheses" -> {settings with parentheses= true}
   | "braces" -> {settings with braces= true}
+  | "includes" -> {settings with inline_includes= true}
   | s ->
       raise
       @@ Arg.Bad
            ( "Unrecognized canonicalizer option '" ^ s
-           ^ "'. \nShould be one of 'deprecations', 'parentheses', 'braces'" )
+           ^ "'. \n\
+              Should be one of 'deprecations', 'parentheses', 'braces', \
+              'includes'" )
 
 (** Some example command-line options here *)
 let options =
@@ -113,7 +116,7 @@ let options =
                 (String.split s ~on:',') in
             canonicalize_settings := settings )
       , " Enable specific canonicalizations in a comma seperated list. Options \
-         are 'deprecations', 'parentheses', 'braces'." )
+         are 'deprecations', 'parentheses', 'braces', 'includes'." )
     ; ( "--max-line-length"
       , Arg.Set_int pretty_print_line_length
       , " Set the maximum line length for the formatter. Defaults to 78 \
@@ -237,7 +240,7 @@ let use_file filename =
     print_or_write
       (Pretty_printing.pretty_print_typed_program
          ~bare_functions:!bare_functions ~line_length:!pretty_print_line_length
-         canonical_ast ) ;
+         ~inline_includes:!canonicalize_settings.inline_includes canonical_ast ) ;
   if !print_info_json then (
     print_endline (Info.info canonical_ast) ;
     exit 0 ) ;

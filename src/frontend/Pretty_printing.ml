@@ -12,17 +12,36 @@ open Fmt
 let comments : comment_type list ref = ref []
 
 let skipped = ref []
-let set_comments ls = comments := ls
+
+let set_comments ?(inline_includes = false) ls =
+  let filtered =
+    if inline_includes then
+      List.filter ~f:(function Include _ -> false | _ -> true) ls
+    else
+      List.filter
+        ~f:(fun x ->
+          match x with
+          | Include (_, {begin_loc= {included_from= Some _; _}; _})
+           |LineComment (_, {begin_loc= {included_from= Some _; _}; _})
+           |BlockComment (_, {begin_loc= {included_from= Some _; _}; _})
+           |Separator {included_from= Some _; _} ->
+              false
+          | _ -> true )
+        ls in
+  comments := filtered
 
 let get_comments end_loc =
   let rec go ls =
     match ls with
     | LineComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
       when Middle.Location.compare begin_loc end_loc < 0 ->
-        (false, [s], loc) :: go tl
+        (`Line, [s], loc) :: go tl
+    | Include (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
+      when Middle.Location.compare begin_loc end_loc < 0 ->
+        (`Include, [s], loc) :: go tl
     | BlockComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
       when Middle.Location.compare begin_loc end_loc < 0 ->
-        (true, s, loc) :: go tl
+        (`Block, s, loc) :: go tl
     | Separator loc :: tl when Middle.Location.compare loc end_loc <= 0 -> go tl
     | _ ->
         comments := ls ;
@@ -34,10 +53,13 @@ let get_comments_until_separator end_loc =
     match ls with
     | LineComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
       when Middle.Location.compare begin_loc end_loc < 0 ->
-        (false, [s], loc) :: go tl
+        (`Line, [s], loc) :: go tl
+    | Include (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
+      when Middle.Location.compare begin_loc end_loc < 0 ->
+        (`Include, [s], loc) :: go tl
     | BlockComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
       when Middle.Location.compare begin_loc end_loc < 0 ->
-        (true, s, loc) :: go tl
+        (`Block, s, loc) :: go tl
     | _ ->
         comments := ls ;
         [] in
@@ -47,6 +69,15 @@ let skip_comments loc =
   skipped :=
     !skipped
     @ List.filter_map (get_comments loc) ~f:(function
+        | `Include, l, loc ->
+            (* This prevents against bad behavior, but also really terrible but technically allowed things fail
+               For example, an if statement where the 'else' is entirely inside the include.
+               This makes the failure noisy rather than ever producing anything invalid for these. *)
+            Common.FatalError.fatal_error_msg
+              [%message
+                "Unable to format #include in this position!"
+                  (l : string list)
+                  (loc : Middle.Location_span.t)]
         | x, s :: l, loc -> Some (x, (" ^^^:" ^ s) :: l, loc)
         | _, [], _ -> None )
 
@@ -54,16 +85,25 @@ let remaining_comments () =
   let x =
     !skipped
     @ List.filter_map !comments ~f:(function
-        | LineComment (a, b) -> Some (false, [a], b)
-        | BlockComment (a, b) -> Some (true, a, b)
+        | LineComment (a, b) -> Some (`Line, [a], b)
+        | Include (a, b) -> Some (`Include, [a], b)
+        | BlockComment (a, b) -> Some (`Block, a, b)
         | Separator _ -> None ) in
   skipped := [] ;
   comments := [] ;
   x
 
+(** If false, don't print any statements which came from another file *)
+let print_included = ref false
+
+(** Checks if something should be skipped based on the print_included setting *)
+let should_skip (loc : Middle.Location.t) =
+  (not !print_included) && Option.is_some loc.included_from
+
 let pp_space newline ppf (prev_loc, begin_loc) =
   let open Middle.Location in
-  if
+  if should_skip begin_loc then ()
+  else if
     prev_loc.filename <> begin_loc.filename
     || prev_loc.line_num + 1 < begin_loc.line_num
   then pf ppf "@,@,"
@@ -71,8 +111,9 @@ let pp_space newline ppf (prev_loc, begin_loc) =
   else pf ppf " "
 
 let pp_comment ppf
-    (is_block, lines, {Middle.Location_span.begin_loc= {col_num; _}; _}) =
+    (style, lines, {Middle.Location_span.begin_loc= {col_num; _}; _}) =
   let trim init lines =
+    let init = max init 0 in
     let padding =
       List.fold lines ~init ~f:(fun m x ->
           match String.lfindi ~f:(fun _ c -> c <> ' ') x with
@@ -81,14 +122,18 @@ let pp_comment ppf
     List.map lines ~f:(fun x -> String.drop_prefix x padding) in
   let trim_tail col_num lines =
     match lines with [] -> [] | hd :: tl -> hd :: trim (col_num - 2) tl in
-  if is_block then
-    pf ppf "@[<v>/*%a*/@]" (list string) (trim_tail col_num lines)
-  else pf ppf "//%a" string (List.hd_exn lines)
+  match style with
+  | `Block -> pf ppf "/*@[<v -2>%a@]*/" (list string) (trim_tail col_num lines)
+  | `Line -> pf ppf "//%s" (List.hd_exn lines)
+  | `Include -> pf ppf "@[#include <%s>@]" (List.hd_exn lines)
 
 let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
   let newline =
-    newline || match List.last ls with Some (false, _, _) -> true | _ -> false
-  in
+    newline
+    ||
+    match List.last ls with
+    | Some ((`Line | `Include), _, _) -> true
+    | _ -> false in
   let rec recurse prev_loc = function
     | ((_, _, {Middle.Location_span.begin_loc; end_loc}) as hd) :: tl ->
         pp_space false ppf (prev_loc, begin_loc) ;
@@ -111,12 +156,13 @@ let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
       skipped := [] ;
       Option.iter prev_loc ~f:finish
 
-let pp_maybe_space space_before f ppf loc =
+let pp_comments_spacing space_before f ppf loc =
   let comments = f loc in
   if not (List.is_empty comments) then (
     if space_before then sp ppf () ;
     let rec go was_block = function
-      | ((is_block, _, _) as comment) :: tl ->
+      | ((block, _, _) as comment) :: tl ->
+          let is_block = match block with `Block -> true | _ -> false in
           pp_comment ppf comment ;
           if not is_block then Format.pp_force_newline ppf () ;
           go is_block tl
@@ -144,24 +190,24 @@ let pp_identifier ppf id = string ppf id.name
 let pp_operator = Middle.Operator.pp
 
 let pp_list_of pp (loc_of : 'a -> Middle.Location_span.t) ppf
-    (es, {Middle.Location_span.begin_loc; end_loc}) =
+    (es, {Middle.Location_span.end_loc; begin_loc}) =
   let rec go expr more =
     match more with
     | next :: rest ->
         pp ppf expr ;
         let next_loc = (loc_of next).begin_loc in
-        pp_maybe_space true get_comments_until_separator ppf next_loc ;
+        pp_comments_spacing true get_comments_until_separator ppf next_loc ;
         comma ppf () ;
-        pp_maybe_space false get_comments ppf next_loc ;
+        pp_comments_spacing false get_comments ppf next_loc ;
         go next rest
     | [] -> pp ppf expr in
   skip_comments begin_loc ;
   ( match es with
   | [] -> ()
   | e :: es ->
-      pp_maybe_space false get_comments ppf (loc_of e).begin_loc ;
+      pp_comments_spacing false get_comments ppf (loc_of e).begin_loc ;
       go e es ) ;
-  pp_maybe_space true get_comments ppf end_loc
+  pp_comments_spacing true get_comments ppf end_loc
 
 let rec pp_index ppf = function
   | All -> pf ppf " : "
@@ -179,24 +225,24 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
       let then_loc = e2.emeta.loc.begin_loc in
       let else_loc = e3.emeta.loc.begin_loc in
       pf ppf "@[%a@ %a? %a%a@ %a: %a%a@]" pp_expression e1
-        (pp_maybe_space false get_comments_until_separator)
+        (pp_comments_spacing false get_comments_until_separator)
         then_loc
-        (pp_maybe_space false get_comments)
+        (pp_comments_spacing false get_comments)
         then_loc pp_expression e2
-        (pp_maybe_space false get_comments_until_separator)
+        (pp_comments_spacing false get_comments_until_separator)
         else_loc
-        (pp_maybe_space false get_comments)
+        (pp_comments_spacing false get_comments)
         else_loc pp_expression e3
   | BinOp (e1, op, e2) ->
       let next_loc = e2.emeta.loc.begin_loc in
       pf ppf "@[%a@ %a%a %a%a@]" pp_expression e1
-        (pp_maybe_space false get_comments_until_separator)
+        (pp_comments_spacing false get_comments_until_separator)
         next_loc pp_operator op
-        (pp_maybe_space false get_comments)
+        (pp_comments_spacing false get_comments)
         next_loc pp_expression e2
   | PrefixOp (op, e) ->
       pf ppf "%a%a%a"
-        (pp_maybe_space false get_comments)
+        (pp_comments_spacing false get_comments)
         e.emeta.loc.begin_loc pp_operator op pp_expression e
   | PostfixOp (e, op) -> pf ppf "%a%a" pp_expression e pp_operator op
   | Variable id -> pp_identifier ppf id
@@ -216,9 +262,9 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
           |> Option.map ~f:(fun e -> e.emeta.loc.begin_loc)
           |> Option.value ~default:loc.end_loc in
         pf ppf "@[<h>%a(%a%a | %a%a)@]" pp_identifier id pp_expression e
-          (pp_maybe_space true get_comments_until_separator)
+          (pp_comments_spacing true get_comments_until_separator)
           begin_loc
-          (pp_maybe_space false get_comments)
+          (pp_comments_spacing false get_comments)
           begin_loc pp_list_of_expression (es', loc) )
   (* GetLP is deprecated *)
   | GetLP -> pf ppf "get_lp()"
@@ -341,8 +387,8 @@ let rec pp_indent_unless_block ppf ((s : untyped_statement), loc) =
   match s.stmt with
   | Block _ -> pp_statement ppf s
   | _ ->
-      pp_spacing (Some loc) (Some s.smeta.loc.begin_loc) ppf
-        (get_comments s.smeta.loc.begin_loc) ;
+      let begin_loc = s.smeta.loc.begin_loc in
+      pp_spacing (Some loc) (Some begin_loc) ppf (get_comments begin_loc) ;
       (indented_box pp_statement) ppf s
 
 (** This function helps write chained if-then-else-if-... blocks
@@ -362,7 +408,7 @@ and pp_recursive_ifthenelse ppf (s, loc) =
       pp_spacing ~newline (Some loc) (Some loc) ppf
         (get_comments_until_separator s2.smeta.loc.begin_loc) ;
       pf ppf "else %a%a"
-        (pp_maybe_space false get_comments)
+        (pp_comments_spacing false get_comments)
         s2.smeta.loc.begin_loc pp_recursive_ifthenelse
         (s2, {loc with line_num= loc.line_num + 1})
   | _ -> pp_indent_unless_block ppf (s, loc)
@@ -436,7 +482,7 @@ and pp_list_of_statements ppf (l, xloc) =
     | ({smeta= ({loc= {end_loc; _}} : located_meta); _} as s) :: l ->
         let begin_loc = Ast.get_first_loc s in
         pp_spacing None (Some begin_loc) ppf (get_comments begin_loc) ;
-        pp_statement ppf s ;
+        if not (should_skip begin_loc) then pp_statement ppf s ;
         pp_tail end_loc ppf l
     | [] -> pp_spacing None None ppf (get_comments xloc.end_loc)
   and pp_tail loc ppf ls =
@@ -445,14 +491,13 @@ and pp_list_of_statements ppf (l, xloc) =
     | ({smeta= ({loc= {end_loc; _}} : located_meta); _} as s) :: l ->
         let begin_loc = Ast.get_first_loc s in
         pp_spacing (Some loc) (Some begin_loc) ppf (get_comments begin_loc) ;
-        pp_statement ppf s ;
+        if not (should_skip begin_loc) then pp_statement ppf s ;
         pp_tail end_loc ppf l
     | [] -> pp_spacing (Some loc) None ppf (get_comments xloc.end_loc) in
   (vbox pp_head) ppf l
 
 let pp_bare_block ppf {stmts; xloc} =
-  pp_spacing None (Some xloc.begin_loc) ppf (get_comments xloc.begin_loc) ;
-  (box pp_list_of_statements) ppf (stmts, xloc)
+  (hbox (box pp_list_of_statements)) ppf (stmts, xloc)
 
 let pp_block block_name ppf {stmts; xloc} =
   pf ppf "%s {@,%a@,}@," block_name
@@ -461,12 +506,14 @@ let pp_block block_name ppf {stmts; xloc} =
 
 let rec pp_block_list ppf = function
   | (name, {stmts; xloc}) :: tl ->
-      pp_spacing None (Some xloc.begin_loc) ppf (get_comments xloc.begin_loc) ;
-      pp_block name ppf {stmts; xloc} ;
-      pp_block_list ppf tl
+      if should_skip xloc.end_loc then pp_block_list ppf tl
+      else (
+        pp_spacing None (Some xloc.begin_loc) ppf (get_comments xloc.begin_loc) ;
+        pp_block name ppf {stmts; xloc} ;
+        pp_block_list ppf tl )
   | [] -> pp_spacing None None ppf (remaining_comments ())
 
-let pp_program ~bare_functions ~line_length ppf
+let pp_program ~bare_functions ~line_length ~inline_includes ppf
     { functionblock= bf
     ; datablock= bd
     ; transformeddatablock= btd
@@ -475,8 +522,9 @@ let pp_program ~bare_functions ~line_length ppf
     ; modelblock= bm
     ; generatedquantitiesblock= bgq
     ; comments } =
-  set_comments comments ;
   Format.pp_set_margin ppf line_length ;
+  set_comments ~inline_includes comments ;
+  print_included := inline_includes ;
   Format.pp_open_vbox ppf 0 ;
   if bare_functions then pp_bare_block ppf @@ Option.value_exn bf
   else
@@ -490,30 +538,37 @@ let pp_program ~bare_functions ~line_length ppf
     pp_block_list ppf blocks
 
 let check_correctness ?(bare_functions = false) prog pretty =
-  try
-    let result_ast, (_ : Warnings.t list) =
-      if bare_functions then
-        Parse.parse_string Parser.Incremental.functions_only pretty
-      else Parse.parse_string Parser.Incremental.program pretty in
-    if
-      compare_untyped_program prog (Option.value_exn (Result.ok result_ast))
-      <> 0
-    then failwith "Unequal!"
-  with _ ->
+  let result_ast =
+    try
+      let res, (_ : Warnings.t list) =
+        if bare_functions then
+          Parse.parse_string Parser.Incremental.functions_only pretty
+        else Parse.parse_string Parser.Incremental.program pretty in
+      Option.value_exn (Result.ok res)
+    with _ ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Pretty-printed program failed to parse"
+            (prog : Ast.untyped_program)
+            pretty] in
+  if compare_untyped_program prog result_ast <> 0 then
     Common.FatalError.fatal_error_msg
       [%message
         "Pretty-printed program does match the original!"
           (prog : Ast.untyped_program)
-          pretty]
+          (result_ast : Ast.untyped_program)]
 
 let pp_typed_expression ppf e =
   pp_expression ppf (untyped_expression_of_typed_expression e)
 
-let pretty_print_program ?(bare_functions = false) ?(line_length = 78) p =
-  let result = strf "%a" (pp_program ~bare_functions ~line_length) p in
+let pretty_print_program ?(bare_functions = false) ?(line_length = 78)
+    ?(inline_includes = false) p =
+  let result =
+    strf "%a" (pp_program ~bare_functions ~line_length ~inline_includes) p in
   check_correctness ~bare_functions p result ;
   result
 
-let pretty_print_typed_program ?(bare_functions = false) ?(line_length = 78) p =
-  pretty_print_program ~bare_functions ~line_length
+let pretty_print_typed_program ?(bare_functions = false) ?(line_length = 78)
+    ?(inline_includes = false) p =
+  pretty_print_program ~bare_functions ~line_length ~inline_includes
     (untyped_program_of_typed_program p)

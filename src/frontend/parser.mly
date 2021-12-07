@@ -681,7 +681,7 @@ lhs:
   | id=identifier
     {  grammar_logger "lhs_identifier" ;
        {expr=Variable id
-       ;emeta = { loc=Location_span.of_positions_exn $loc}}
+       ;emeta = {loc=id.id_loc}}
     }
   | l=lhs LBRACK indices=indexes RBRACK
     {  grammar_logger "lhs_index" ;
