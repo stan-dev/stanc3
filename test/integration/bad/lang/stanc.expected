@@ -630,13 +630,11 @@ Syntax error in 'incomplete.stan', line 2, column 18 to column 19, parsing error
 
 Found an incomplete binary expression - are you missing the right hand side?
   $ ../../../../../install/default/bin/stanc incomplete2.stan
-Warning in 'incomplete2.stan', line 2, column 9: Variable name 'upper' will
-    be a reserved word starting in Stan 2.32.0. Please rename it!
-Syntax error in 'incomplete2.stan', line 2, column 17 to column 22, parsing error:
+Syntax error in 'incomplete2.stan', line 2, column 15 to column 20, parsing error:
    -------------------------------------------------
      1:  transformed data {
-     2:    1.0 .^ upper[] while
-                          ^
+     2:    1.0 .^ foo[] while
+                        ^
      3:  }
    -------------------------------------------------
 
@@ -681,12 +679,10 @@ Syntax error in 'incomplete5.stan', line 3, column 0 to column 0, parsing error:
 
 Ill-formed block. Expected a statement, variable declaration, or just "}".
   $ ../../../../../install/default/bin/stanc incomplete6.stan
-Warning in 'incomplete6.stan', line 2, column 8: Variable name 'upper' will
-    be a reserved word starting in Stan 2.32.0. Please rename it!
 Syntax error in 'incomplete6.stan', line 3, column 16 to column 21, parsing error:
    -------------------------------------------------
      1:  transformed data {
-     2:    print(upper[2.0]);
+     2:    print(foo[2.0]);
      3:    real x = sars[while (0)];
                          ^
      4:  }
