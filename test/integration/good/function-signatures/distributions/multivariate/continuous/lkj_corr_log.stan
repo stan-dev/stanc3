@@ -7,8 +7,8 @@ data {
 }
 transformed data {
   real transformed_data_real;
-  transformed_data_real = lkj_corr_log(d_matrix, d_real);
-  transformed_data_real = lkj_corr_log(d_matrix, d_int);
+  transformed_data_real = lkj_corr_lpdf(d_matrix | d_real);
+  transformed_data_real = lkj_corr_lpdf(d_matrix | d_int);
 }
 parameters {
   matrix[d_int, d_int] p_matrix;
@@ -19,14 +19,13 @@ parameters {
 }
 transformed parameters {
   real transformed_param_real;
-  transformed_param_real = lkj_corr_log(d_matrix, d_real);
-  transformed_param_real = lkj_corr_log(d_matrix, p_real);
-  transformed_param_real = lkj_corr_log(p_matrix, d_real);
-  transformed_param_real = lkj_corr_log(p_matrix, p_real);
-  transformed_param_real = lkj_corr_log(d_matrix, d_int);
-  transformed_param_real = lkj_corr_log(p_matrix, d_int);
+  transformed_param_real = lkj_corr_lpdf(d_matrix | d_real);
+  transformed_param_real = lkj_corr_lpdf(d_matrix | p_real);
+  transformed_param_real = lkj_corr_lpdf(p_matrix | d_real);
+  transformed_param_real = lkj_corr_lpdf(p_matrix | p_real);
+  transformed_param_real = lkj_corr_lpdf(d_matrix | d_int);
+  transformed_param_real = lkj_corr_lpdf(p_matrix | d_int);
 }
 model {
   y_p ~ normal(0, 1);
 }
-
