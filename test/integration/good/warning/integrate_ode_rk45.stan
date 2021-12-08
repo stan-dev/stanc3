@@ -1,10 +1,7 @@
 functions {
-  real[] sho(real t,
-             real[] y, 
-             real[] theta,
-             real[] x,
-             int[] x_int) {
-    real dydt[2];
+  array[] real sho(real t, array[] real y, array[] real theta,
+                   array[] real x, array[] int x_int) {
+    array[2] real dydt;
     dydt[1] = y[2];
     dydt[2] = -y[1] - theta[1] * y[2];
     return dydt;
@@ -12,26 +9,26 @@ functions {
 }
 data {
   int<lower=1> T;
-  real y0_d[2];
+  array[2] real y0_d;
   real t0;
-  real ts[T];
-  real theta_d[1];
-  real x[0];
-  int x_int[0];
+  array[T] real ts;
+  array[1] real theta_d;
+  array[0] real x;
+  array[0] int x_int;
 }
 parameters {
-  real y0_p[2];
-  real theta_p[1];
+  array[2] real y0_p;
+  array[1] real theta_p;
 }
 model {
-  real y_hat[T,2];
+  array[T, 2] real y_hat;
   y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_d, x, x_int);
   y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_p, x, x_int);
   y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_d, x, x_int);
   y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
 }
 generated quantities {
-  real y_hat[T,2];
+  array[T, 2] real y_hat;
   y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_d, x, x_int);
   y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_p, x, x_int);
   y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_d, x, x_int);

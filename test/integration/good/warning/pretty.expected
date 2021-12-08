@@ -1393,7 +1393,15 @@ generated quantities {
                               1e-10, 1e8);
 }
 
-Warning in 'integrate_ode_adams.stan', line 28, column 10: integrate_ode_adams
+Warning in 'integrate_ode_adams.stan', line 25, column 10: integrate_ode_adams
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_adams.stan', line 26, column 10: integrate_ode_adams
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_adams.stan', line 27, column 10: integrate_ode_adams
     is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -1401,19 +1409,11 @@ Warning in 'integrate_ode_adams.stan', line 29, column 10: integrate_ode_adams
     is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 30, column 10: integrate_ode_adams
-    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
-    The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 32, column 10: integrate_ode_adams
+Warning in 'integrate_ode_adams.stan', line 31, column 10: integrate_ode_adams
     is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_adams.stan', line 33, column 10: integrate_ode_adams
-    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
-    The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 34, column 10: integrate_ode_adams
     is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -1437,15 +1437,15 @@ Warning in 'integrate_ode_adams.stan', line 43, column 10: integrate_ode_adams
     is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 44, column 10: integrate_ode_adams
-    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
-    The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_adams.stan', line 45, column 10: integrate_ode_adams
     is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 46, column 10: integrate_ode_adams
+Warning in 'integrate_ode_adams.stan', line 47, column 10: integrate_ode_adams
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_adams.stan', line 49, column 10: integrate_ode_adams
     is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -1505,11 +1505,19 @@ generated quantities {
                             1e-10, 1e8);
 }
 
-Warning in 'integrate_ode_bdf.stan', line 28, column 10: integrate_ode_bdf is
+Warning in 'integrate_ode_bdf.stan', line 25, column 10: integrate_ode_bdf is
     deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 29, column 10: integrate_ode_bdf is
+Warning in 'integrate_ode_bdf.stan', line 26, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 27, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 28, column 10: integrate_ode_bdf is
     deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -1517,11 +1525,7 @@ Warning in 'integrate_ode_bdf.stan', line 30, column 10: integrate_ode_bdf is
     deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 31, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
-    The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 33, column 10: integrate_ode_bdf is
+Warning in 'integrate_ode_bdf.stan', line 32, column 10: integrate_ode_bdf is
     deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -1529,15 +1533,7 @@ Warning in 'integrate_ode_bdf.stan', line 34, column 10: integrate_ode_bdf is
     deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 35, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
-    The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_bdf.stan', line 36, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
-    The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 40, column 10: integrate_ode_bdf is
     deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -1553,7 +1549,7 @@ Warning in 'integrate_ode_bdf.stan', line 43, column 10: integrate_ode_bdf is
     deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 45, column 10: integrate_ode_bdf is
+Warning in 'integrate_ode_bdf.stan', line 44, column 10: integrate_ode_bdf is
     deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -1561,11 +1557,15 @@ Warning in 'integrate_ode_bdf.stan', line 46, column 10: integrate_ode_bdf is
     deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 47, column 10: integrate_ode_bdf is
+Warning in 'integrate_ode_bdf.stan', line 48, column 10: integrate_ode_bdf is
     deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 48, column 10: integrate_ode_bdf is
+Warning in 'integrate_ode_bdf.stan', line 50, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_bdf.stan', line 52, column 10: integrate_ode_bdf is
     deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -1604,7 +1604,7 @@ generated quantities {
   }
 }
 
-Warning in 'integrate_ode_deprecation.stan', line 28, column 10: integrate_ode
+Warning in 'integrate_ode_deprecation.stan', line 26, column 10: integrate_ode
     is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -1646,35 +1646,35 @@ generated quantities {
   y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
 }
 
+Warning in 'integrate_ode_rk45.stan', line 25, column 10: integrate_ode_rk45
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_rk45.stan', line 26, column 10: integrate_ode_rk45
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'integrate_ode_rk45.stan', line 27, column 10: integrate_ode_rk45
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_rk45.stan', line 28, column 10: integrate_ode_rk45
     is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 29, column 10: integrate_ode_rk45
+Warning in 'integrate_ode_rk45.stan', line 32, column 10: integrate_ode_rk45
     is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 30, column 10: integrate_ode_rk45
+Warning in 'integrate_ode_rk45.stan', line 33, column 10: integrate_ode_rk45
     is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 31, column 10: integrate_ode_rk45
+Warning in 'integrate_ode_rk45.stan', line 34, column 10: integrate_ode_rk45
     is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_rk45.stan', line 35, column 10: integrate_ode_rk45
-    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
-    The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 36, column 10: integrate_ode_rk45
-    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
-    The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 37, column 10: integrate_ode_rk45
-    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
-    The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 38, column 10: integrate_ode_rk45
     is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html

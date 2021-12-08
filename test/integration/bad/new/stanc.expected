@@ -252,10 +252,10 @@ Syntax error in 'fundef-bad5.stan', line 1, column 22 to column 26, parsing erro
 
 Either "{" statement "}" is expected for a function definition or ";" for a function forward declaration.
   $ ../../../../../install/default/bin/stanc fundef-bad6.stan
-Semantic error in 'fundef-bad6.stan', line 1, column 31 to column 36:
+Semantic error in 'fundef-bad6.stan', line 1, column 37 to column 42:
    -------------------------------------------------
-     1:  functions { void T ( vector [] while);}
-                                        ^
+     1:  functions { void T ( array [] vector while);}
+                                              ^
    -------------------------------------------------
 
 Identifier 'while' clashes with reserved keyword.

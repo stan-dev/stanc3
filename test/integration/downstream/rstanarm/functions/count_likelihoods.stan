@@ -1,4 +1,4 @@
-  /** 
+  /**
    * Apply inverse link function to linear predictor
    * see help(poisson) in R
    *
@@ -13,8 +13,8 @@
     else reject("Invalid link");
     return eta; // never reached
   }
-  
-  /** 
+
+  /**
   * Pointwise (pw) log-likelihood vector for the Poisson distribution
   *
   * @param y The integer array corresponding to the outcome variable.
@@ -22,7 +22,7 @@
   * @param link An integer indicating the link function
   * @return A vector
   */
-  vector pw_pois(int[] y, vector eta, int link) {
+  vector pw_pois(array[] int y, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
     if (link == 1)  // log
@@ -34,8 +34,8 @@
     else reject("Invalid link");
     return ll;
   }
-  
-  /** 
+
+  /**
   * Pointwise (pw) log-likelihood vector for the negative binomial distribution
   *
   * @param y The integer array corresponding to the outcome variable.
@@ -44,7 +44,7 @@
   * @param link An integer indicating the link function
   * @return A vector
   */
-  vector pw_nb(int[] y, vector eta, real theta, int link) {
+  vector pw_nb(array[] int y, vector eta, real theta, int link) {
     int N = rows(eta);
     vector[N] rho = linkinv_count(eta, link); // link checked
     vector[N] ll;

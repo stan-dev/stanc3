@@ -8,7 +8,7 @@ functions {
   real goo_lpdf(real a) {
     return a;
   }
-  real f_lpdf(real[] y_slice, int start, int end) {
+  real f_lpdf(array[] real y_slice, int start, int end) {
     return normal_lpdf(y_slice| 0, 1);
   }
 }

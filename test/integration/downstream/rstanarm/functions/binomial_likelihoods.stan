@@ -1,4 +1,4 @@
-  /** 
+  /**
    * Apply inverse link function to linear predictor
    *
    * @param eta Linear predictor vector
@@ -14,7 +14,7 @@
     else reject("Invalid link");
     return eta; // never reached
   }
-  
+
   /**
   * Increment with the unweighted log-likelihood
   * @param y An integer array indicating the number of successes
@@ -23,7 +23,7 @@
   * @param link An integer indicating the link function
   * @return lp__
   */
-  real ll_binom_lp(int[] y, int[] trials, vector eta, int link) {
+  real ll_binom_lp(array[] int y, array[] int trials, vector eta, int link) {
     if (link == 1) target += binomial_logit_lpmf(y | trials, eta);
     else if (link <  4) target += binomial_lpmf( y | trials, linkinv_binom(eta, link));
     else if (link == 4) {  // log
@@ -44,19 +44,19 @@
     else reject("Invalid link");
     return target();
   }
-  
-  /** 
+
+  /**
   * Pointwise (pw) log-likelihood vector
   *
   * @param y The integer array corresponding to the outcome variable.
   * @param link An integer indicating the link function
   * @return A vector
   */
-  vector pw_binom(int[] y, int[] trials, vector eta, int link) {
+  vector pw_binom(array[] int y, array[] int trials, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
     if (link == 1) {  // logit
-      for (n in 1:N) 
+      for (n in 1:N)
         ll[n] = binomial_logit_lpmf(y[n] | trials[n], eta[n]);
     }
     else if (link <= 5) {  // link = probit, cauchit, log, or cloglog

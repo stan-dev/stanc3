@@ -2,6 +2,14 @@
  (targets pretty.output)
  (deps
   (package stanc)
+  (glob_files data/*.stan)
+  (glob_files functions/*.stan)
+  (glob_files gqs/*.stan)
+  (glob_files model/*.stan)
+  (glob_files parameters/*.stan)
+  (glob_files pre/*.stan)
+  (glob_files tdata/*.stan)
+  (glob_files tparameters/*.stan)
   (:stanfiles
    (glob_files *.stan)))
  (action

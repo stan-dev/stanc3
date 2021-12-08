@@ -1,6 +1,6 @@
 functions {
-  real[] sho(real t,real[] y, real[] theta, real[] x, int[] x_int) {
-    array[2] real dydt;
+  real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
+    real dydt[2];
     dydt[1] <- y[2];
     dydt[2] <- -y[1] - theta[1] * y[2];
     return dydt;

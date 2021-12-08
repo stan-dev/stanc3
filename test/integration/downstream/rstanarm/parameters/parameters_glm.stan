@@ -2,9 +2,9 @@
   vector[K_smooth] z_beta_smooth;
   vector<lower=0>[K_smooth > 0 ? smooth_map[K_smooth] : 0] smooth_sd_raw;
   array[hs] real<lower=0> global;
-  vector<lower=0>[K] local[hs];
+  array[hs] vector<lower=0>[K] local;
   array[hs > 0] real<lower=0> caux;
-  vector<lower=0>[K] mix[prior_dist == 5 || prior_dist == 6];
+  array[prior_dist == 5 || prior_dist == 6] vector<lower=0>[K] mix;
   array[prior_dist == 6] real<lower=0> one_over_lambda;
   vector[q] z_b;
   vector[len_z_T] z_T;

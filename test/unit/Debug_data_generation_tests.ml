@@ -184,13 +184,13 @@ let%expect_test "whole program data generation check" =
           row_vector[N] d_row_vec;
           array[N] row_vector[N] d_1d_row_vec;
           array[N, M, K] row_vector[N] d_3d_row_vec;
-          matrix<lower=0, upper=1>[2, 3] d_ar_mat[4, 5];
+          array[4, 5] matrix<lower=0, upper=1>[2, 3] d_ar_mat;
           simplex[N] d_simplex;
-          simplex[N] d_1d_simplex[N];
-          simplex[N] d_3d_simplex[N, M, K];
+          array[N] simplex[N] d_1d_simplex;
+          array[N, M, K] simplex[N] d_3d_simplex;
           cholesky_factor_cov[5, 4] d_cfcov_54;
           cholesky_factor_cov[3] d_cfcov_33;
-          cholesky_factor_cov[3] d_cfcov_33_ar[K];
+          array[K] cholesky_factor_cov[3] d_cfcov_33_ar;
         }
       |}
   in

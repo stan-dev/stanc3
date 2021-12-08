@@ -1,5 +1,5 @@
 functions {
-  vector foo(vector shared_params, vector[] job_params,
+  vector foo(vector shared_params, array[] vector job_params,
              array[] real data_r, array[] int data_i) {
     return [1, 2, 3]';
   }

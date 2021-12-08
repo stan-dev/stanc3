@@ -9,7 +9,7 @@
 
   // parameters for priors on log haz ratios
   array[e_hs] real<lower=0> e_global;
-  vector<lower=0>[(e_hs>0)*e_K] e_local[e_hs];
+  array[e_hs] vector<lower=0>[(e_hs>0)*e_K] e_local;
   array[e_hs > 0] real<lower=0> e_caux;
-  vector<lower=0>[e_K] e_mix[e_prior_dist == 5 || e_prior_dist == 6];
+  array[e_prior_dist == 5 || e_prior_dist == 6] vector<lower=0>[e_K] e_mix;
   array[e_prior_dist == 6] real<lower=0> e_ool;
