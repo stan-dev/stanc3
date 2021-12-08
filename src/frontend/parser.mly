@@ -238,14 +238,15 @@ arg_decl:
     {  grammar_logger "arg_decl" ;
        match od with None -> (UnsizedType.AutoDiffable, ut, id) | _ -> (DataOnly, ut, id)  }
 
-always(x):
-  | x=x
-    { Some(x) }
-
 unsized_type:
-  | ARRAY n_opt=always(unsized_dims) bt=basic_type
+  | ARRAY n=unsized_dims bt=basic_type
+      {  grammar_logger "unsized_type";
+       nest_unsized_array bt n
+    }
   | bt=basic_type n_opt=option(unsized_dims)
     {  grammar_logger "unsized_type";
+       if Option.is_some n_opt then
+        Input_warnings.array_syntax ~unsized:true $loc;
        nest_unsized_array bt (Option.value n_opt ~default:0)
     }
 
@@ -304,11 +305,12 @@ decl(type_rule, rhs):
      We need to match it separately because we won't support multiple inline
      declarations using this form.
 
-     This form is likely TO BE DEPRECIATED in Stan 3
+     This form is deprecated.
    *)
   | ty=type_rule id=decl_identifier dims=dims rhs_opt=optional_assignment(rhs)
       SEMICOLON
-    { (fun ~is_global ->
+    { Input_warnings.array_syntax $loc;
+      (fun ~is_global ->
       [{ stmt=
           VarDecl {
               decl_type= Sized (reducearray (fst ty, dims))
