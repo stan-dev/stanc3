@@ -5,5 +5,5 @@ parameters {
   vector[4] theta;
 }
 model {
-  increment_log_prob(bernoulli_logit_log(x, theta));
+  target += bernoulli_logit_lpmf(x, theta);
 }

@@ -1,7 +1,7 @@
-# http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol2.pdf
-# Page 23: Birats
-## 
-## not works yet for some multi_normal specification issue
+// http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol2.pdf
+// Page 23: Birats
+////
+//// not works yet for some multi_normal specification issue
 
 data {
   matrix[2,3] m;
@@ -49,7 +49,7 @@ model {
   rv_a = rv_aa[1];
   rv = rv_aa[1,1];
   s = rv_aa[1,1,1];
-  
+
   s_a = s_aa[1];
   s = s_aa[1,1];
 
@@ -81,7 +81,7 @@ model {
   rv_aa[1] = rv_a;
   rv_aa[1,1] = rv;
   rv_aa[1,1,1] = s;
-  
+
   s_aa[1] = s_a;
   s_aa[1,1] = s;
 

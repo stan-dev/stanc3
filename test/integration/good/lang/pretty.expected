@@ -604,16 +604,3 @@ generated quantities {
   xgq = 2713;
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format unreachable_statement.stan
-functions {
-  void foo(real x) {
-    if (x) 
-      ; // bug - misplaced ; makes the next statement unconditional
-    reject("Cannot be 0");
-    return;
-  }
-}
-
-Warning in 'unreachable_statement.stan', line 5, column 5: Unreachable
-    statement (following a reject, break, continue, or return) found, is this
-    intended?

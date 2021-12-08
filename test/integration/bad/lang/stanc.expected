@@ -592,22 +592,6 @@ Syntax error in 'bad_periods_tparams.stan', line 2, column 7, lexing error:
 
 Invalid character found.
   $ ../../../../../install/default/bin/stanc good_all.stan
-Warning in 'good_all.stan', line 1, column 0: Comments beginning with # are
-    deprecated and this syntax will be removed in Stan 2.32.0. Use // to
-    begin line comments; this can be done automatically using stanc
-    --auto-format
-Warning in 'good_all.stan', line 2, column 0: Comments beginning with # are
-    deprecated and this syntax will be removed in Stan 2.32.0. Use // to
-    begin line comments; this can be done automatically using stanc
-    --auto-format
-Warning in 'good_all.stan', line 3, column 0: Comments beginning with # are
-    deprecated and this syntax will be removed in Stan 2.32.0. Use // to
-    begin line comments; this can be done automatically using stanc
-    --auto-format
-Warning in 'good_all.stan', line 4, column 0: Comments beginning with # are
-    deprecated and this syntax will be removed in Stan 2.32.0. Use // to
-    begin line comments; this can be done automatically using stanc
-    --auto-format
 Semantic error in 'good_all.stan', line 25, column 2 to column 8:
    -------------------------------------------------
     23:  

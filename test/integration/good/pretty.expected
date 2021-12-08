@@ -1127,7 +1127,7 @@ transformed data {
   vector[M] beta_true;
   real alpha_true = 1.5;
   for (j in 1 : M) {
-    beta_true[j] = j / M;
+    beta_true[j] = j * 1.0 / M;
   }
   for (i in 1 : N) {
     for (j in 1 : M) {
@@ -1147,14 +1147,6 @@ model {
   y ~ bernoulli_logit(x * beta_inferred + alpha_inferred);
 }
 
-Warning in 'bernoulli_logit_glm_old_performance.stan', line 9, column 19: Found
-    int division:
-      j / M
-    Values will be rounded towards zero. If rounding is not desired you can
-    write
-    the division as
-      j * 1.0 / M
-    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format bernoulli_logit_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -1164,7 +1156,7 @@ transformed data {
   vector[M] beta_true;
   real alpha_true = 1.5;
   for (j in 1 : M) {
-    beta_true[j] = j / M;
+    beta_true[j] = j * 1.0 / M;
   }
   for (i in 1 : N) {
     for (j in 1 : M) {
@@ -1184,14 +1176,6 @@ model {
   y ~ bernoulli_logit_glm(x, alpha_inferred, beta_inferred);
 }
 
-Warning in 'bernoulli_logit_glm_performance.stan', line 9, column 19: Found
-    int division:
-      j / M
-    Values will be rounded towards zero. If rounding is not desired you can
-    write
-    the division as
-      j * 1.0 / M
-    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format break-continue.stan
 // test right value passed through for, while and embedded
 functions {
@@ -4155,7 +4139,7 @@ transformed data {
   vector[M] beta_true;
   real alpha_true = 1.5;
   for (j in 1 : M) {
-    beta_true[j] = j / M;
+    beta_true[j] = j * 1.0 / M;
   }
   for (i in 1 : N) {
     for (j in 1 : M) {
@@ -4175,14 +4159,6 @@ model {
   y ~ neg_binomial_2_log(x * beta_inferred + alpha_inferred, sigma);
 }
 
-Warning in 'neg_binomial_2_log_glm_old_performance.stan', line 10, column 19: Found
-    int division:
-      j / M
-    Values will be rounded towards zero. If rounding is not desired you can
-    write
-    the division as
-      j * 1.0 / M
-    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format neg_binomial_2_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -4193,7 +4169,7 @@ transformed data {
   vector[M] beta_true;
   real alpha_true = 1.5;
   for (j in 1 : M) {
-    beta_true[j] = j / M;
+    beta_true[j] = j * 1.0 / M;
   }
   for (i in 1 : N) {
     for (j in 1 : M) {
@@ -4213,14 +4189,6 @@ model {
   y ~ neg_binomial_2_log_glm(x, alpha_inferred, beta_inferred, sigma);
 }
 
-Warning in 'neg_binomial_2_log_glm_performance.stan', line 10, column 19: Found
-    int division:
-      j / M
-    Values will be rounded towards zero. If rounding is not desired you can
-    write
-    the division as
-      j * 1.0 / M
-    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format new-prob-fun-suffixes.stan
 parameters {
   real y;
@@ -4245,7 +4213,7 @@ transformed data {
   vector[M] beta_true;
   real alpha_true = 1.5;
   for (j in 1 : M) {
-    beta_true[j] = j / M;
+    beta_true[j] = j * 1.0 / M;
   }
   for (i in 1 : N) {
     for (j in 1 : M) {
@@ -4265,14 +4233,6 @@ model {
   y ~ normal(x * beta_inferred + alpha_inferred, sigma);
 }
 
-Warning in 'normal_id_glm_old_performance.stan', line 11, column 19: Found
-    int division:
-      j / M
-    Values will be rounded towards zero. If rounding is not desired you can
-    write
-    the division as
-      j * 1.0 / M
-    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format normal_id_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -4283,7 +4243,7 @@ transformed data {
   vector[M] beta_true;
   real alpha_true = 1.5;
   for (j in 1 : M) {
-    beta_true[j] = j / M;
+    beta_true[j] = j * 1.0 / M;
   }
   for (i in 1 : N) {
     for (j in 1 : M) {
@@ -4303,14 +4263,6 @@ model {
   y ~ normal_id_glm(x, alpha_inferred, beta_inferred, sigma);
 }
 
-Warning in 'normal_id_glm_performance.stan', line 11, column 19: Found int
-    division:
-      j / M
-    Values will be rounded towards zero. If rounding is not desired you can
-    write
-    the division as
-      j * 1.0 / M
-    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format nullary-unconflicted.stan
 parameters {
   real e;
@@ -4533,7 +4485,7 @@ transformed data {
   vector[M] beta_true;
   real alpha_true = 1.5;
   for (j in 1 : M) {
-    beta_true[j] = j / M;
+    beta_true[j] = j * 1.0 / M;
   }
   for (i in 1 : N) {
     for (j in 1 : M) {
@@ -4553,14 +4505,6 @@ model {
   y ~ poisson_log(x * beta_inferred + alpha_inferred);
 }
 
-Warning in 'poisson_log_glm_old_performance.stan', line 9, column 19: Found
-    int division:
-      j / M
-    Values will be rounded towards zero. If rounding is not desired you can
-    write
-    the division as
-      j * 1.0 / M
-    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format poisson_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -4570,7 +4514,7 @@ transformed data {
   vector[M] beta_true;
   real alpha_true = 1.5;
   for (j in 1 : M) {
-    beta_true[j] = j / M;
+    beta_true[j] = j * 1.0 / M;
   }
   for (i in 1 : N) {
     for (j in 1 : M) {
@@ -4590,14 +4534,6 @@ model {
   y ~ poisson_log_glm(x, alpha_inferred, beta_inferred);
 }
 
-Warning in 'poisson_log_glm_performance.stan', line 9, column 19: Found int
-    division:
-      j / M
-    Values will be rounded towards zero. If rounding is not desired you can
-    write
-    the division as
-      j * 1.0 / M
-    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format print_chars.stan
 parameters {
   real y;
@@ -5422,7 +5358,7 @@ transformed parameters {
   real ut;
   matrix[3, 3] mt;
   row_vector[3] vt;
-  xt = 2 / 3;
+  xt = 2 %/% 3;
   ut = 2.1 / 3;
   ut = 2 / 3.1;
   ut = 2.1 / 3.1;
@@ -5433,14 +5369,6 @@ model {
   y ~ normal(0, 1);
 }
 
-Warning in 'validate_division_good.stan', line 19, column 7: Found int
-    division:
-      2 / 3
-    Values will be rounded towards zero. If rounding is not desired you can
-    write
-    the division as
-      2.0 / 3
-    If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format validate_elt_division_good.stan
 transformed data {
   matrix[3, 3] m;
