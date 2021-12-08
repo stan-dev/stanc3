@@ -1,7 +1,7 @@
-  real mean_PPD[M];
-  real yAlpha1[intercept_type[1] > 0];
-  real yAlpha2[intercept_type[2] > 0];
-  real yAlpha3[intercept_type[3] > 0];
+  array[M] real mean_PPD;
+  array[intercept_type[1] > 0] real yAlpha1;
+  array[intercept_type[2] > 0] real yAlpha2;
+  array[intercept_type[3] > 0] real yAlpha3;
   vector[prior_dist_for_cov == 2 && bK1 > 0 ? size(bCov1_idx) : 0] bCov1;
   vector[prior_dist_for_cov == 2 && bK2 > 0 ? size(bCov2_idx) : 0] bCov2;
   vector[bN1 * bK1] b1 = to_vector(bMat1'); // ensures same order as stan_glmer (make_b)
@@ -27,7 +27,7 @@
       bMat1_colshift += bK1_len[1];
       bMat2_colshift += bK2_len[1];
       yEta2 = evaluate_mu(evaluate_eta(yX2, y2_Z1, y2_Z2, y2_Z1_id, y2_Z2_id, yGamma2, yBeta2,
-                                       bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[2]), 
+                                       bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[2]),
                           family[2], link[2]);
       mean_PPD[2] = mean_PPD_rng(yEta2, yAux2, family[2]);
     }
@@ -38,7 +38,7 @@
       bMat1_colshift += bK1_len[2];
       bMat2_colshift += bK2_len[2];
       yEta3 = evaluate_mu(evaluate_eta(yX3, y3_Z1, y3_Z2, y3_Z1_id, y3_Z2_id, yGamma3, yBeta3,
-                                       bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[3]), 
+                                       bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[3]),
                           family[3], link[3]);
       mean_PPD[3] = mean_PPD_rng(yEta3, yAux3, family[3]);
     }

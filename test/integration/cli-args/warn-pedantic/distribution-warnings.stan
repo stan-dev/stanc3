@@ -2,9 +2,9 @@ data {
   int unb_d;
   int<lower=0, upper=1> bin_d;
   int<lower=0> pos_d;
-  int unb_d_vec[1];
-  int<lower=0, upper=1> bin_d_vec[1];
-  int<lower=0> pos_d_vec[1];
+  array[1] int unb_d_vec;
+  array[1] int<lower=0, upper=1> bin_d_vec;
+  array[1] int<lower=0> pos_d_vec;
 }
 parameters {
   real x;

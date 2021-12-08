@@ -11,8 +11,8 @@ data {
 }
 transformed data {
   // K = 3 shards
-  int ys[3, 4] = { y[1:4], y[5:8], y[9:12] };
-  real xs[3, 4] = { x[1:4], x[5:8], x[9:12] };
+  array[3, 4] int ys = { y[1:4], y[5:8], y[9:12] };
+  array[3, 4] real xs = { x[1:4], x[5:8], x[9:12] };
   array[3] vector[0] theta;
 }
 parameters {

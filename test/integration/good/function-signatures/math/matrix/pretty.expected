@@ -17356,9 +17356,9 @@ transformed parameters {
   
   // no int params yet
   // int n0;
-  // int n1[2];
-  // int n2[3,2];
-  // int n3[4,3,2];
+  // array[2] int n1;
+  // array[3,2] int n2;
+  // array[4,3,2] int n3;
   
   vector[5] v0;
   array[6] vector[5] v1;

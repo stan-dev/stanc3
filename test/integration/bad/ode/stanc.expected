@@ -2,7 +2,7 @@
 Semantic error in 'bad_bdf_control_function_return.stan', line 13, column 6 to line 15, column 35:
    -------------------------------------------------
     11:  model {
-    12:    real x[2, 2]
+    12:    array[2, 2] real x
     13:      = integrate_ode_bdf(twoCptModelODE,
                ^
     14:                          {1, 1.3}, 1.0, { 2.2, 3 }, { 1.0 }, { 1.0 }, { 2 },

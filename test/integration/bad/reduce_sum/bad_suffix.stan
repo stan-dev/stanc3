@@ -11,8 +11,8 @@ functions {
 }
 data {
   int<lower=0> N;
-  int<lower=0> n_redcards[N];
-  int<lower=0> n_games[N];
+  array[N] int<lower=0> n_redcards;
+  array[N] int<lower=0> n_games;
   vector[N] rating;
   int<lower=1> grainsize;
 }

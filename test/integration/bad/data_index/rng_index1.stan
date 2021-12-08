@@ -3,5 +3,5 @@ parameters {
 
 }
 transformed parameters {
-  real z[poisson_rng(10)];
+  array[poisson_rng(10)] real z;
 }

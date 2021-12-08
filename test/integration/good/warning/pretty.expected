@@ -1250,6 +1250,9 @@ Warning in 'increment_log_prob.stan', line 60, column 2: increment_log_prob(...)
 Warning in 'increment_log_prob.stan', line 61, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
     instead. This can be done automatically with stanc --print-canonical
+Warning in 'increment_log_prob.stan', line 63, column 2: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with stanc --print-canonical
 Warning in 'increment_log_prob.stan', line 64, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
     instead. This can be done automatically with stanc --print-canonical
@@ -1259,7 +1262,7 @@ Warning in 'increment_log_prob.stan', line 65, column 2: increment_log_prob(...)
 Warning in 'increment_log_prob.stan', line 66, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
     instead. This can be done automatically with stanc --print-canonical
-Warning in 'increment_log_prob.stan', line 67, column 2: increment_log_prob(...);
+Warning in 'increment_log_prob.stan', line 68, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
     instead. This can be done automatically with stanc --print-canonical
 Warning in 'increment_log_prob.stan', line 69, column 2: increment_log_prob(...);
@@ -1268,7 +1271,7 @@ Warning in 'increment_log_prob.stan', line 69, column 2: increment_log_prob(...)
 Warning in 'increment_log_prob.stan', line 70, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
     instead. This can be done automatically with stanc --print-canonical
-Warning in 'increment_log_prob.stan', line 71, column 2: increment_log_prob(...);
+Warning in 'increment_log_prob.stan', line 72, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
     instead. This can be done automatically with stanc --print-canonical
 Warning in 'increment_log_prob.stan', line 73, column 2: increment_log_prob(...);
@@ -1277,16 +1280,13 @@ Warning in 'increment_log_prob.stan', line 73, column 2: increment_log_prob(...)
 Warning in 'increment_log_prob.stan', line 74, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
     instead. This can be done automatically with stanc --print-canonical
-Warning in 'increment_log_prob.stan', line 75, column 2: increment_log_prob(...);
+Warning in 'increment_log_prob.stan', line 76, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
     instead. This can be done automatically with stanc --print-canonical
 Warning in 'increment_log_prob.stan', line 77, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
     instead. This can be done automatically with stanc --print-canonical
 Warning in 'increment_log_prob.stan', line 78, column 2: increment_log_prob(...);
-    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
-Warning in 'increment_log_prob.stan', line 79, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
     instead. This can be done automatically with stanc --print-canonical
   $ ../../../../../install/default/bin/stanc --auto-format int_div_user.stan

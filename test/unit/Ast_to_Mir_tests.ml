@@ -8,7 +8,7 @@ let%expect_test "Operator-assign example" =
     {|
         model {
           real r;
-          vector[2] x[4];
+          array[4] vector[2] x;
           x[1] ./= r;
         }
       |}
@@ -71,7 +71,7 @@ let%expect_test "Prefix-Op-Example" =
         (meta <opaque>))) |}]
 
 let%expect_test "read data" =
-  let m = mir_from_string "data { matrix[10, 20] mat[5]; }" in
+  let m = mir_from_string "data { array[5] matrix[10, 20] mat; }" in
   print_s [%sexp (m.prepare_data : Stmt.Located.t list)] ;
   [%expect
     {|

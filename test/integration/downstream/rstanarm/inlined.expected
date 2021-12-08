@@ -21,14 +21,14 @@
 functions {
   /* for multiple .stan files */
   
-  /** 
+  /**
    * Create group-specific block-diagonal Cholesky factor, see section 2 of
    * https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
-   * @param len_theta_L An integer indicating the length of returned vector, 
+   * @param len_theta_L An integer indicating the length of returned vector,
    *   which lme4 denotes as m
    * @param p An integer array with the number variables on the LHS of each |
    * @param dispersion Scalar standard deviation of the errors, calles sigma by lme4
-   * @param tau Vector of scale parameters whose squares are proportional to the 
+   * @param tau Vector of scale parameters whose squares are proportional to the
    *   traces of the relative covariance matrices of the group-specific terms
    * @param scale Vector of prior scales that are multiplied by elements of tau
    * @param zeta Vector of positive parameters that are normalized into simplexes
@@ -55,7 +55,7 @@ functions {
         // unlike lme4, theta[theta_L_mark] includes the dispersion term in it
         theta_L_mark += 1;
       } else {
-        // block is lower-triangular               
+        // block is lower-triangular
         matrix[nc, nc] T_i;
         real std_dev;
         real T21;
@@ -99,14 +99,14 @@ functions {
     return theta_L;
   }
   
-  /** 
+  /**
   * Create group-specific coefficients, see section 2 of
   * https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
   *
   * @param z_b Vector whose elements are iid normal(0,sigma) a priori
   * @param theta Vector with covariance parameters as defined in lme4
   * @param p An integer array with the number variables on the LHS of each |
-  * @param l An integer array with the number of levels for the factor(s) on 
+  * @param l An integer array with the number of levels for the factor(s) on
   *   the RHS of each |
   * @return A vector of group-specific coefficients
   */
@@ -144,7 +144,7 @@ functions {
     return b;
   }
   
-  /** 
+  /**
    * Prior on group-specific parameters
    *
    * @param z_b A vector of primitive coefficients
@@ -209,7 +209,7 @@ functions {
     return z_beta .* lambda_tilde * tau;
   }
   
-  /** 
+  /**
    * Hierarchical shrinkage plus parameterization
    *
    * @param z_beta A vector of primitive coefficients
@@ -233,7 +233,7 @@ functions {
     return z_beta .* lambda_tilde * tau;
   }
   
-  /** 
+  /**
    * Cornish-Fisher expansion for standard normal to Student t
    *
    * See result 26.7.5 of
@@ -258,7 +258,7 @@ functions {
              / (92160 * df4);
   }
   
-  /** 
+  /**
    * Return two-dimensional array of group membership
    *
    * @param N An integer indicating the number of observations
@@ -278,7 +278,7 @@ functions {
     return V;
   }
   
-  /** 
+  /**
   * faster version of csr_matrix_times_vector
   * declared here and defined in C++
   *
@@ -969,14 +969,14 @@ generated quantities {
 functions {
   /* for multiple .stan files */
   
-  /** 
+  /**
    * Create group-specific block-diagonal Cholesky factor, see section 2 of
    * https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
-   * @param len_theta_L An integer indicating the length of returned vector, 
+   * @param len_theta_L An integer indicating the length of returned vector,
    *   which lme4 denotes as m
    * @param p An integer array with the number variables on the LHS of each |
    * @param dispersion Scalar standard deviation of the errors, calles sigma by lme4
-   * @param tau Vector of scale parameters whose squares are proportional to the 
+   * @param tau Vector of scale parameters whose squares are proportional to the
    *   traces of the relative covariance matrices of the group-specific terms
    * @param scale Vector of prior scales that are multiplied by elements of tau
    * @param zeta Vector of positive parameters that are normalized into simplexes
@@ -1003,7 +1003,7 @@ functions {
         // unlike lme4, theta[theta_L_mark] includes the dispersion term in it
         theta_L_mark += 1;
       } else {
-        // block is lower-triangular               
+        // block is lower-triangular
         matrix[nc, nc] T_i;
         real std_dev;
         real T21;
@@ -1047,14 +1047,14 @@ functions {
     return theta_L;
   }
   
-  /** 
+  /**
   * Create group-specific coefficients, see section 2 of
   * https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
   *
   * @param z_b Vector whose elements are iid normal(0,sigma) a priori
   * @param theta Vector with covariance parameters as defined in lme4
   * @param p An integer array with the number variables on the LHS of each |
-  * @param l An integer array with the number of levels for the factor(s) on 
+  * @param l An integer array with the number of levels for the factor(s) on
   *   the RHS of each |
   * @return A vector of group-specific coefficients
   */
@@ -1092,7 +1092,7 @@ functions {
     return b;
   }
   
-  /** 
+  /**
    * Prior on group-specific parameters
    *
    * @param z_b A vector of primitive coefficients
@@ -1157,7 +1157,7 @@ functions {
     return z_beta .* lambda_tilde * tau;
   }
   
-  /** 
+  /**
    * Hierarchical shrinkage plus parameterization
    *
    * @param z_beta A vector of primitive coefficients
@@ -1181,7 +1181,7 @@ functions {
     return z_beta .* lambda_tilde * tau;
   }
   
-  /** 
+  /**
    * Cornish-Fisher expansion for standard normal to Student t
    *
    * See result 26.7.5 of
@@ -1206,7 +1206,7 @@ functions {
              / (92160 * df4);
   }
   
-  /** 
+  /**
    * Return two-dimensional array of group membership
    *
    * @param N An integer indicating the number of observations
@@ -1226,7 +1226,7 @@ functions {
     return V;
   }
   
-  /** 
+  /**
   * faster version of csr_matrix_times_vector
   * declared here and defined in C++
   *
@@ -1780,14 +1780,14 @@ generated quantities {
 functions {
   /* for multiple .stan files */
   
-  /** 
+  /**
    * Create group-specific block-diagonal Cholesky factor, see section 2 of
    * https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
-   * @param len_theta_L An integer indicating the length of returned vector, 
+   * @param len_theta_L An integer indicating the length of returned vector,
    *   which lme4 denotes as m
    * @param p An integer array with the number variables on the LHS of each |
    * @param dispersion Scalar standard deviation of the errors, calles sigma by lme4
-   * @param tau Vector of scale parameters whose squares are proportional to the 
+   * @param tau Vector of scale parameters whose squares are proportional to the
    *   traces of the relative covariance matrices of the group-specific terms
    * @param scale Vector of prior scales that are multiplied by elements of tau
    * @param zeta Vector of positive parameters that are normalized into simplexes
@@ -1814,7 +1814,7 @@ functions {
         // unlike lme4, theta[theta_L_mark] includes the dispersion term in it
         theta_L_mark += 1;
       } else {
-        // block is lower-triangular               
+        // block is lower-triangular
         matrix[nc, nc] T_i;
         real std_dev;
         real T21;
@@ -1858,14 +1858,14 @@ functions {
     return theta_L;
   }
   
-  /** 
+  /**
   * Create group-specific coefficients, see section 2 of
   * https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
   *
   * @param z_b Vector whose elements are iid normal(0,sigma) a priori
   * @param theta Vector with covariance parameters as defined in lme4
   * @param p An integer array with the number variables on the LHS of each |
-  * @param l An integer array with the number of levels for the factor(s) on 
+  * @param l An integer array with the number of levels for the factor(s) on
   *   the RHS of each |
   * @return A vector of group-specific coefficients
   */
@@ -1903,7 +1903,7 @@ functions {
     return b;
   }
   
-  /** 
+  /**
    * Prior on group-specific parameters
    *
    * @param z_b A vector of primitive coefficients
@@ -1968,7 +1968,7 @@ functions {
     return z_beta .* lambda_tilde * tau;
   }
   
-  /** 
+  /**
    * Hierarchical shrinkage plus parameterization
    *
    * @param z_beta A vector of primitive coefficients
@@ -1992,7 +1992,7 @@ functions {
     return z_beta .* lambda_tilde * tau;
   }
   
-  /** 
+  /**
    * Cornish-Fisher expansion for standard normal to Student t
    *
    * See result 26.7.5 of
@@ -2017,7 +2017,7 @@ functions {
              / (92160 * df4);
   }
   
-  /** 
+  /**
    * Return two-dimensional array of group membership
    *
    * @param N An integer indicating the number of observations
@@ -2037,7 +2037,7 @@ functions {
     return V;
   }
   
-  /** 
+  /**
   * faster version of csr_matrix_times_vector
   * declared here and defined in C++
   *
@@ -3321,14 +3321,14 @@ generated quantities {
 functions {
   /* for multiple .stan files */
   
-  /** 
+  /**
    * Create group-specific block-diagonal Cholesky factor, see section 2 of
    * https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
-   * @param len_theta_L An integer indicating the length of returned vector, 
+   * @param len_theta_L An integer indicating the length of returned vector,
    *   which lme4 denotes as m
    * @param p An integer array with the number variables on the LHS of each |
    * @param dispersion Scalar standard deviation of the errors, calles sigma by lme4
-   * @param tau Vector of scale parameters whose squares are proportional to the 
+   * @param tau Vector of scale parameters whose squares are proportional to the
    *   traces of the relative covariance matrices of the group-specific terms
    * @param scale Vector of prior scales that are multiplied by elements of tau
    * @param zeta Vector of positive parameters that are normalized into simplexes
@@ -3355,7 +3355,7 @@ functions {
         // unlike lme4, theta[theta_L_mark] includes the dispersion term in it
         theta_L_mark += 1;
       } else {
-        // block is lower-triangular               
+        // block is lower-triangular
         matrix[nc, nc] T_i;
         real std_dev;
         real T21;
@@ -3399,14 +3399,14 @@ functions {
     return theta_L;
   }
   
-  /** 
+  /**
   * Create group-specific coefficients, see section 2 of
   * https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
   *
   * @param z_b Vector whose elements are iid normal(0,sigma) a priori
   * @param theta Vector with covariance parameters as defined in lme4
   * @param p An integer array with the number variables on the LHS of each |
-  * @param l An integer array with the number of levels for the factor(s) on 
+  * @param l An integer array with the number of levels for the factor(s) on
   *   the RHS of each |
   * @return A vector of group-specific coefficients
   */
@@ -3444,7 +3444,7 @@ functions {
     return b;
   }
   
-  /** 
+  /**
    * Prior on group-specific parameters
    *
    * @param z_b A vector of primitive coefficients
@@ -3509,7 +3509,7 @@ functions {
     return z_beta .* lambda_tilde * tau;
   }
   
-  /** 
+  /**
    * Hierarchical shrinkage plus parameterization
    *
    * @param z_beta A vector of primitive coefficients
@@ -3533,7 +3533,7 @@ functions {
     return z_beta .* lambda_tilde * tau;
   }
   
-  /** 
+  /**
    * Cornish-Fisher expansion for standard normal to Student t
    *
    * See result 26.7.5 of
@@ -3558,7 +3558,7 @@ functions {
              / (92160 * df4);
   }
   
-  /** 
+  /**
    * Return two-dimensional array of group membership
    *
    * @param N An integer indicating the number of observations
@@ -3578,7 +3578,7 @@ functions {
     return V;
   }
   
-  /** 
+  /**
   * faster version of csr_matrix_times_vector
   * declared here and defined in C++
   *
@@ -4196,14 +4196,14 @@ generated quantities {
 functions {
   /* for multiple .stan files */
   
-  /** 
+  /**
    * Create group-specific block-diagonal Cholesky factor, see section 2 of
    * https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
-   * @param len_theta_L An integer indicating the length of returned vector, 
+   * @param len_theta_L An integer indicating the length of returned vector,
    *   which lme4 denotes as m
    * @param p An integer array with the number variables on the LHS of each |
    * @param dispersion Scalar standard deviation of the errors, calles sigma by lme4
-   * @param tau Vector of scale parameters whose squares are proportional to the 
+   * @param tau Vector of scale parameters whose squares are proportional to the
    *   traces of the relative covariance matrices of the group-specific terms
    * @param scale Vector of prior scales that are multiplied by elements of tau
    * @param zeta Vector of positive parameters that are normalized into simplexes
@@ -4230,7 +4230,7 @@ functions {
         // unlike lme4, theta[theta_L_mark] includes the dispersion term in it
         theta_L_mark += 1;
       } else {
-        // block is lower-triangular               
+        // block is lower-triangular
         matrix[nc, nc] T_i;
         real std_dev;
         real T21;
@@ -4274,14 +4274,14 @@ functions {
     return theta_L;
   }
   
-  /** 
+  /**
   * Create group-specific coefficients, see section 2 of
   * https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
   *
   * @param z_b Vector whose elements are iid normal(0,sigma) a priori
   * @param theta Vector with covariance parameters as defined in lme4
   * @param p An integer array with the number variables on the LHS of each |
-  * @param l An integer array with the number of levels for the factor(s) on 
+  * @param l An integer array with the number of levels for the factor(s) on
   *   the RHS of each |
   * @return A vector of group-specific coefficients
   */
@@ -4319,7 +4319,7 @@ functions {
     return b;
   }
   
-  /** 
+  /**
    * Prior on group-specific parameters
    *
    * @param z_b A vector of primitive coefficients
@@ -4384,7 +4384,7 @@ functions {
     return z_beta .* lambda_tilde * tau;
   }
   
-  /** 
+  /**
    * Hierarchical shrinkage plus parameterization
    *
    * @param z_beta A vector of primitive coefficients
@@ -4408,7 +4408,7 @@ functions {
     return z_beta .* lambda_tilde * tau;
   }
   
-  /** 
+  /**
    * Cornish-Fisher expansion for standard normal to Student t
    *
    * See result 26.7.5 of
@@ -4433,7 +4433,7 @@ functions {
              / (92160 * df4);
   }
   
-  /** 
+  /**
    * Return two-dimensional array of group membership
    *
    * @param N An integer indicating the number of observations
@@ -4453,7 +4453,7 @@ functions {
     return V;
   }
   
-  /** 
+  /**
   * faster version of csr_matrix_times_vector
   * declared here and defined in C++
   *
@@ -7384,14 +7384,14 @@ generated quantities {
 functions {
   /* for multiple .stan files */
   
-  /** 
+  /**
    * Create group-specific block-diagonal Cholesky factor, see section 2 of
    * https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
-   * @param len_theta_L An integer indicating the length of returned vector, 
+   * @param len_theta_L An integer indicating the length of returned vector,
    *   which lme4 denotes as m
    * @param p An integer array with the number variables on the LHS of each |
    * @param dispersion Scalar standard deviation of the errors, calles sigma by lme4
-   * @param tau Vector of scale parameters whose squares are proportional to the 
+   * @param tau Vector of scale parameters whose squares are proportional to the
    *   traces of the relative covariance matrices of the group-specific terms
    * @param scale Vector of prior scales that are multiplied by elements of tau
    * @param zeta Vector of positive parameters that are normalized into simplexes
@@ -7418,7 +7418,7 @@ functions {
         // unlike lme4, theta[theta_L_mark] includes the dispersion term in it
         theta_L_mark += 1;
       } else {
-        // block is lower-triangular               
+        // block is lower-triangular
         matrix[nc, nc] T_i;
         real std_dev;
         real T21;
@@ -7462,14 +7462,14 @@ functions {
     return theta_L;
   }
   
-  /** 
+  /**
   * Create group-specific coefficients, see section 2 of
   * https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
   *
   * @param z_b Vector whose elements are iid normal(0,sigma) a priori
   * @param theta Vector with covariance parameters as defined in lme4
   * @param p An integer array with the number variables on the LHS of each |
-  * @param l An integer array with the number of levels for the factor(s) on 
+  * @param l An integer array with the number of levels for the factor(s) on
   *   the RHS of each |
   * @return A vector of group-specific coefficients
   */
@@ -7507,7 +7507,7 @@ functions {
     return b;
   }
   
-  /** 
+  /**
    * Prior on group-specific parameters
    *
    * @param z_b A vector of primitive coefficients
@@ -7572,7 +7572,7 @@ functions {
     return z_beta .* lambda_tilde * tau;
   }
   
-  /** 
+  /**
    * Hierarchical shrinkage plus parameterization
    *
    * @param z_beta A vector of primitive coefficients
@@ -7596,7 +7596,7 @@ functions {
     return z_beta .* lambda_tilde * tau;
   }
   
-  /** 
+  /**
    * Cornish-Fisher expansion for standard normal to Student t
    *
    * See result 26.7.5 of
@@ -7621,7 +7621,7 @@ functions {
              / (92160 * df4);
   }
   
-  /** 
+  /**
    * Return two-dimensional array of group membership
    *
    * @param N An integer indicating the number of observations
@@ -7641,7 +7641,7 @@ functions {
     return V;
   }
   
-  /** 
+  /**
   * faster version of csr_matrix_times_vector
   * declared here and defined in C++
   *

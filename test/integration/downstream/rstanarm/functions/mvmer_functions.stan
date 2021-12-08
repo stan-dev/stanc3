@@ -38,7 +38,7 @@
   * @return A vector of indices
   */
   int[] lower_tri_indices(int dim) {
-    int indices[dim + choose(dim, 2)];
+    array[dim + choose(dim, 2)] int indices;
     int mark = 1;
     for (r in 1:dim) {
       for (c in r:dim) {

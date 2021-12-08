@@ -9,7 +9,7 @@ functions{
   }
 }
 model {
-  real x[2, 2]
+  array[2, 2] real x
     = integrate_ode_adams(twoCptModelODE,
                         {1, 1.3}, 1.0, { 2.2, 3 }, { 1.0 }, { 1.0 }, { 2 },
                         10, 10, 10);

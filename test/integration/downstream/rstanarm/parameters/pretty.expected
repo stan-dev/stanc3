@@ -13,15 +13,15 @@ Syntax error in 'parameters_betareg.stan', line 1, column 2 to column 8, parsing
    -------------------------------------------------
      1:    vector[prior_dist_z == 7 ? sum(num_normals_z) : z_dim] z_omega; // betareg z variable coefficients
            ^
-     2:    real<lower=(link_phi <= 1 ? negative_infinity() : 0)> gamma_z[has_intercept_z];  // betareg intercept
-     3:    real<lower=0> global_z[hs_z];
+     2:    array[has_intercept_z] real<lower=(link_phi <= 1 ? negative_infinity() : 0)> gamma_z;  // betareg intercept
+     3:    array[hs_z] real<lower=0> global_z;
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
   $ ../../../../../../install/default/bin/stanc --include-paths="../" --auto-format parameters_event.stan
-Syntax error in 'parameters_event.stan', line 1, column 2 to column 6, parsing error:
+Syntax error in 'parameters_event.stan', line 1, column 2 to column 7, parsing error:
    -------------------------------------------------
-     1:    real e_gamma[e_has_intercept]; // intercept for event submodel
+     1:    array[e_has_intercept] real e_gamma; // intercept for event submodel
            ^
      2:    vector[e_K] e_z_beta;          // primitive log hazard ratios
      3:  

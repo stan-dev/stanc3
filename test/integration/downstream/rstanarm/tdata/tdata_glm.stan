@@ -3,13 +3,13 @@
   int<lower=0> len_rho = sum(p) - t;
   int<lower=0, upper=1> is_continuous = 0; // changed in continuous.stan
   int<lower=1> pos = 1;
-  real<lower=0> delta[len_concentration];
+  array[len_concentration] real<lower=0> delta;
   int<lower=0> hs;
   if (prior_dist <= 2) hs = 0;
   else if (prior_dist == 3) hs = 2;
   else if (prior_dist == 4) hs = 4;
   else hs = 0;
-  
+
   for (i in 1:t) {
     if (p[i] > 1) {
       for (j in 1:p[i]) {

@@ -9,7 +9,7 @@ functions {
 }
 data {
   int N;
-  real x[N];
+  array[N] real x;
 }
 parameters {
   real<lower = 0.0> sigma;
