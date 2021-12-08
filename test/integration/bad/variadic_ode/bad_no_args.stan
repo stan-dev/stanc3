@@ -1,19 +1,19 @@
 functions {
-  real[] dz_dt(real t,       // time
-               real[] z) {     // system state {prey, predator}) {
+  array[] real dz_dt(real t,       // time
+               array[] real z) {     // system state {prey, predator}) {
     real u = z[1];
     real v = z[2];
-   
+
     real du_dt = v * u;
     real dv_dt = u * v;
-   
+
     return { du_dt, dv_dt };
   }
 }
 data {
   int<lower = 0> N;          // number of measurement times
-  real ts[N];                // measurement times > 0
-  real y_init[2];            // initial measured populations
+  array[N] real ts;                // measurement times > 0
+  array[2] real y_init;            // initial measured populations
   real<lower = 0> y[N, 2];   // measured populations
 }
 parameters {

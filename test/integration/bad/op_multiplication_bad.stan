@@ -2,7 +2,7 @@ parameters {
   matrix[3,3] a;
 }
 model {
-  int b[4];
+  array[4] int b;
   matrix[3,3] c;
   c = b * a;
 }

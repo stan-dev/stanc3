@@ -1,10 +1,10 @@
 transformed data {
-  int vs[2,3];
+  array[2,3] int vs;
   int z;
   for (v in vs[1]) {
     z = 3;
   }
-  
+
 parameters {
   real y;
 }

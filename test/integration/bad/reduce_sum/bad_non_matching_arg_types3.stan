@@ -1,11 +1,11 @@
 functions {
-  real my_func(real[] y_slice, int start, int end, real mu, real sigma) {
+  real my_func(array[] real y_slice, int start, int end, real mu, real sigma) {
     return normal_lpdf(y_slice | mu, sigma);
-  }  
+  }
 }
 
 parameters {
-  real a[5];
+  array[5] real a;
   vector[5] b;
 }
 

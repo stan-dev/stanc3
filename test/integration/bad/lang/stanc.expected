@@ -37,10 +37,10 @@ Semantic error in 'bad11.stan', line 2, column 2 to column 12:
 
 (Transformed) Parameters cannot be integers.
   $ ../../../../../install/default/bin/stanc bad2.stan
-Semantic error in 'bad2.stan', line 1, column 28 to column 36:
+Semantic error in 'bad2.stan', line 1, column 34 to column 42:
    -------------------------------------------------
-     1:  data { real a[3]; } model { a = 2.0; }
-                                     ^
+     1:  data { array[3] real a; } model { a = 2.0; }
+                                           ^
    -------------------------------------------------
 
 Cannot assign to global variable 'a' declared in previous blocks.
@@ -71,10 +71,10 @@ Syntax error in 'bad3.stanfunctions', line 1, column 0 to column 5, parsing erro
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
   $ ../../../../../install/default/bin/stanc bad4.stan
-Semantic error in 'bad4.stan', line 1, column 38 to column 42:
+Semantic error in 'bad4.stan', line 1, column 44 to column 48:
    -------------------------------------------------
-     1:  data { real a[5]; } model { for (n in a[1]:5) a[n] = n; }
-                                               ^
+     1:  data { array[5] real a; } model { for (n in a[1]:5) a[n] = n; }
+                                                     ^
    -------------------------------------------------
 
 Lower bound of for-loop must be of type int. Instead found type real.
@@ -132,7 +132,7 @@ Semantic error in 'bad9.stan', line 5, column 3 to column 9:
      4:  parameters {
      5:     int N;
             ^
-     6:     real z[N];
+     6:     array[N] real z;
      7:  }
    -------------------------------------------------
 

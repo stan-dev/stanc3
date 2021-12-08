@@ -7,7 +7,7 @@ data {
 }
 parameters {
   real d_len;
-  real d_sigma[K]; // bad d_sigma type
+  array[K] real d_sigma; // bad d_sigma type
 }
 transformed parameters {
   matrix[N_1, N_2] transformed_param_matrix;

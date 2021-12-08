@@ -1,7 +1,7 @@
 functions {
-  real[3] foo() { 
-    real a[3]; 
-    return a; 
+  array[3] real foo() {
+    array[3] real a;
+    return a;
   }
 }
 model {

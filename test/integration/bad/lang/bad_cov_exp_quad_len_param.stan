@@ -6,7 +6,7 @@ data {
   vector[K] d_rvec_1[N_2];
 }
 parameters {
-  real d_len[K]; // bad d_len type
+  array[K] real d_len; // bad d_len type
   real d_sigma;
 }
 transformed parameters {

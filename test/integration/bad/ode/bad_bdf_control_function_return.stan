@@ -1,10 +1,10 @@
 functions{
   real twoCptModelODE(real t,
-                      real[] x,
-                      real[] parms,
-                      real[] rdata,
-                      int[] idata){
-    real dxdt[2];
+                      array[] real x,
+                      array[] real parms,
+                      array[] real rdata,
+                      array[] int idata){
+    array[2] real dxdt;
     return dxdt[2];
   }
 }

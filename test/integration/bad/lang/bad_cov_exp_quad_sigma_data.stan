@@ -2,7 +2,7 @@ data {
   int K;
   int N_1;
   int N_2;
-  real d_sigma[K]; // bad d_sigma type
+  array[K] real d_sigma; // bad d_sigma type
   real d_len;
   vector[K] d_vec_1[N_1];
   vector[K] d_rvec_1[N_2];
