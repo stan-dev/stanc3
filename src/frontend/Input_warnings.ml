@@ -26,8 +26,8 @@ let array_syntax ?(unsized = false) (pos1, pos2) =
     (Option.value ~default:Middle.Location_span.empty
        (Middle.Location_span.of_positions_opt pos1 pos2) )
     ( "Declaration of arrays by placing brackets after " ^ placement
-    ^ " is deprecated and will be removed in Stan 2.31.0. Instead use the \
-       array keyword before the type; this can be changed automatically using \
+    ^ " is deprecated and will be removed in Stan 2.32.0. Instead use the \
+       array keyword before the type. This can be changed automatically using \
        stanc --auto-format" )
 
 let drop_array_future () =

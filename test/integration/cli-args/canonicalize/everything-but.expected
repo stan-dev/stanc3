@@ -151,27 +151,27 @@ model {
   $ ../../../../../install/default/bin/stanc --auto-format --canonicalize braces,parentheses deprecated.stan
 Warning in 'deprecated.stan', line 2, column 2: Declaration of arrays by
     placing brackets after a type is deprecated and will be removed in Stan
-    2.31.0. Instead use the array keyword before the type; this can be
+    2.32.0. Instead use the array keyword before the type. This can be
     changed automatically using stanc --auto-format
 Warning in 'deprecated.stan', line 2, column 21: Declaration of arrays by
     placing brackets after a type is deprecated and will be removed in Stan
-    2.31.0. Instead use the array keyword before the type; this can be
+    2.32.0. Instead use the array keyword before the type. This can be
     changed automatically using stanc --auto-format
 Warning in 'deprecated.stan', line 2, column 31: Declaration of arrays by
     placing brackets after a type is deprecated and will be removed in Stan
-    2.31.0. Instead use the array keyword before the type; this can be
+    2.32.0. Instead use the array keyword before the type. This can be
     changed automatically using stanc --auto-format
 Warning in 'deprecated.stan', line 2, column 45: Declaration of arrays by
     placing brackets after a type is deprecated and will be removed in Stan
-    2.31.0. Instead use the array keyword before the type; this can be
+    2.32.0. Instead use the array keyword before the type. This can be
     changed automatically using stanc --auto-format
 Warning in 'deprecated.stan', line 2, column 55: Declaration of arrays by
     placing brackets after a type is deprecated and will be removed in Stan
-    2.31.0. Instead use the array keyword before the type; this can be
+    2.32.0. Instead use the array keyword before the type. This can be
     changed automatically using stanc --auto-format
 Warning in 'deprecated.stan', line 3, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
-    in Stan 2.31.0. Instead use the array keyword before the type; this can
+    in Stan 2.32.0. Instead use the array keyword before the type. This can
     be changed automatically using stanc --auto-format
 Warning in 'deprecated.stan', line 4, column 12: assignment operator <- is
     deprecated in the Stan language and will be removed in Stan 2.32.0; use =
