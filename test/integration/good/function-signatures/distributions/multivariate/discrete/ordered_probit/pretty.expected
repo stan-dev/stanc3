@@ -1,93 +1,12 @@
   $ ../../../../../../../../../install/default/bin/stanc --auto-format ordered_probit_log.stan
-data {
-  int d_int;
-  real d_real;
-  array[d_int] int d_int_array;
-  vector[d_int] d_vector;
-  array[d_int] vector[d_int] d_vector_array;
-}
-transformed data {
-  real transformed_data_real;
-  transformed_data_real = ordered_probit_log(d_int, d_real, d_vector);
-  transformed_data_real = ordered_probit_log(d_int_array, d_vector, d_vector);
-  transformed_data_real = ordered_probit_log(d_int_array, d_vector,
-                                             d_vector_array);
-}
-parameters {
-  real p_real;
-  vector[d_int] p_vector;
-  array[d_int] vector[d_int] p_vector_array;
-  real y_p;
-}
-transformed parameters {
-  real transformed_param_real;
-  transformed_param_real = ordered_probit_log(d_int, d_real, d_vector);
-  transformed_param_real = ordered_probit_log(d_int_array, d_vector,
-                                              d_vector);
-  transformed_param_real = ordered_probit_log(d_int_array, d_vector,
-                                              d_vector_array);
-  transformed_param_real = ordered_probit_log(d_int, p_real, d_vector);
-  transformed_param_real = ordered_probit_log(d_int_array, p_vector,
-                                              d_vector);
-  transformed_param_real = ordered_probit_log(d_int_array, p_vector,
-                                              d_vector_array);
-  transformed_param_real = ordered_probit_log(d_int, d_real, p_vector);
-  transformed_param_real = ordered_probit_log(d_int_array, d_vector,
-                                              p_vector);
-  transformed_param_real = ordered_probit_log(d_int_array, d_vector,
-                                              p_vector_array);
-  transformed_param_real = ordered_probit_log(d_int, p_real, p_vector);
-  transformed_param_real = ordered_probit_log(d_int_array, p_vector,
-                                              p_vector);
-  transformed_param_real = ordered_probit_log(d_int_array, p_vector,
-                                              p_vector_array);
-}
-model {
-  y_p ~ normal(0, 1);
-}
+Semantic error in 'ordered_probit_log.stan', line 10, column 26 to column 70:
+   -------------------------------------------------
+     8:  transformed data {
+     9:    real transformed_data_real;
+    10:    transformed_data_real = ordered_probit_lpmf(d_int, d_real, d_vector);
+                                   ^
+    11:    transformed_data_real = ordered_probit_lpmf(d_int_array, d_vector, d_vector);
+    12:    transformed_data_real = ordered_probit_lpmf(d_int_array, d_vector,
+   -------------------------------------------------
 
-Warning in 'ordered_probit_log.stan', line 10, column 26: ordered_probit_log
-    is deprecated and will be removed in Stan 2.32.0. Use ordered_probit_lpmf
-    instead. This can be automatically changed using stanc --print-canonical
-Warning in 'ordered_probit_log.stan', line 11, column 26: ordered_probit_log
-    is deprecated and will be removed in Stan 2.32.0. Use ordered_probit_lpmf
-    instead. This can be automatically changed using stanc --print-canonical
-Warning in 'ordered_probit_log.stan', line 12, column 26: ordered_probit_log
-    is deprecated and will be removed in Stan 2.32.0. Use ordered_probit_lpmf
-    instead. This can be automatically changed using stanc --print-canonical
-Warning in 'ordered_probit_log.stan', line 23, column 27: ordered_probit_log
-    is deprecated and will be removed in Stan 2.32.0. Use ordered_probit_lpmf
-    instead. This can be automatically changed using stanc --print-canonical
-Warning in 'ordered_probit_log.stan', line 24, column 27: ordered_probit_log
-    is deprecated and will be removed in Stan 2.32.0. Use ordered_probit_lpmf
-    instead. This can be automatically changed using stanc --print-canonical
-Warning in 'ordered_probit_log.stan', line 26, column 27: ordered_probit_log
-    is deprecated and will be removed in Stan 2.32.0. Use ordered_probit_lpmf
-    instead. This can be automatically changed using stanc --print-canonical
-Warning in 'ordered_probit_log.stan', line 28, column 27: ordered_probit_log
-    is deprecated and will be removed in Stan 2.32.0. Use ordered_probit_lpmf
-    instead. This can be automatically changed using stanc --print-canonical
-Warning in 'ordered_probit_log.stan', line 29, column 27: ordered_probit_log
-    is deprecated and will be removed in Stan 2.32.0. Use ordered_probit_lpmf
-    instead. This can be automatically changed using stanc --print-canonical
-Warning in 'ordered_probit_log.stan', line 31, column 27: ordered_probit_log
-    is deprecated and will be removed in Stan 2.32.0. Use ordered_probit_lpmf
-    instead. This can be automatically changed using stanc --print-canonical
-Warning in 'ordered_probit_log.stan', line 33, column 27: ordered_probit_log
-    is deprecated and will be removed in Stan 2.32.0. Use ordered_probit_lpmf
-    instead. This can be automatically changed using stanc --print-canonical
-Warning in 'ordered_probit_log.stan', line 34, column 27: ordered_probit_log
-    is deprecated and will be removed in Stan 2.32.0. Use ordered_probit_lpmf
-    instead. This can be automatically changed using stanc --print-canonical
-Warning in 'ordered_probit_log.stan', line 36, column 27: ordered_probit_log
-    is deprecated and will be removed in Stan 2.32.0. Use ordered_probit_lpmf
-    instead. This can be automatically changed using stanc --print-canonical
-Warning in 'ordered_probit_log.stan', line 38, column 27: ordered_probit_log
-    is deprecated and will be removed in Stan 2.32.0. Use ordered_probit_lpmf
-    instead. This can be automatically changed using stanc --print-canonical
-Warning in 'ordered_probit_log.stan', line 39, column 27: ordered_probit_log
-    is deprecated and will be removed in Stan 2.32.0. Use ordered_probit_lpmf
-    instead. This can be automatically changed using stanc --print-canonical
-Warning in 'ordered_probit_log.stan', line 41, column 27: ordered_probit_log
-    is deprecated and will be removed in Stan 2.32.0. Use ordered_probit_lpmf
-    instead. This can be automatically changed using stanc --print-canonical
+Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf and _lccdf, require a vertical bar (|) between the first two arguments.
