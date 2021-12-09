@@ -66,6 +66,32 @@ let list_multi_tildes (mir : Program.Typed.t) :
     ~f:(fun ~key ~data s -> Set.add s (key, data))
     multi_tildes
 
+let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
+    =
+  (* Collect statements of the form "target += Dist(param, ...)" *)
+  let rec is_possible_nonlinear = function
+    | Expr.Fixed.Pattern.Var _ | Lit _ -> false
+    | Indexed (Expr.Fixed.{pattern; _}, _) -> is_possible_nonlinear pattern
+    | _ -> true in
+  let collect_transformed_tilde_stmt (stmt : Stmt.Located.t) :
+      Location_span.t Set.Poly.t =
+    match stmt.pattern with
+    | Stmt.Fixed.Pattern.TargetPE
+        { pattern=
+            Expr.Fixed.Pattern.FunApp
+              ( (StanLib (_, FnLpdf _, _) | UserDefined (_, FnLpdf _))
+              , {pattern; _} :: _ )
+        ; _ }
+      when is_possible_nonlinear pattern ->
+        Set.Poly.singleton stmt.meta
+    | _ -> Set.Poly.empty in
+  let tildes =
+    fold_stmts
+      ~take_stmt:(fun m s -> Set.Poly.union m (collect_transformed_tilde_stmt s))
+      ~take_expr:(fun m _ -> m)
+      ~init:Set.Poly.empty mir.log_prob in
+  tildes
+
 (* Find all of the targets which are dependencies for a given label *)
 let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
     (targets : string Set.Poly.t) : string Set.Poly.t =
@@ -130,7 +156,7 @@ let list_arg_dependant_fundef_cf (mir : Program.Typed.t)
                 Option.value_exn
                   ~message:
                     "INTERNAL ERROR: Pedantic mode found CF dependent on an \
-                     arg,but the arg is mismatched. Please report a bug.\n"
+                     arg, but the arg is mismatched. Please report a bug.\n"
                   (List.findi args ~f:(fun _ arg -> arg = name)) in
               (loc, ix, name) ) ) )
 
@@ -320,6 +346,17 @@ let hard_constrained_warnings (mir : Program.Typed.t) =
           (Location_span.empty, nonsense_constrained_message pname) )
     pnames
 
+let maybe_jacobian_adjustment_warnings (mir : Program.Typed.t) =
+  let locations = list_possible_nonlinear mir in
+  Set.Poly.map
+    ~f:(fun loc ->
+      ( loc
+      , "Left-hand side of sampling statement (~) may contain a non-linear \
+         transform of a parameter or local variable. If it does, you need to \
+         include a target += statement with the log absolute determinant of \
+         the Jacobian of the transform." ) )
+    locations
+
 let multi_tildes_message (vname : string) : string =
   Printf.sprintf
     "The parameter %s is on the left-hand side of more than one tilde \
@@ -421,9 +458,9 @@ let warn_pedantic (mir_unopt : Program.Typed.t) =
   let factor_graph = prog_factor_graph mir in
   Set.Poly.union_list
     [ uninitialized_warnings mir; unscaled_constants_warnings distributions_info
-    ; multi_tildes_warnings mir; hard_constrained_warnings mir
-    ; unused_params_warnings factor_graph mir; param_dependant_cf_warnings mir
-    ; param_dependant_fundef_cf_warnings mir
+    ; multi_tildes_warnings mir; maybe_jacobian_adjustment_warnings mir
+    ; hard_constrained_warnings mir; unused_params_warnings factor_graph mir
+    ; param_dependant_cf_warnings mir; param_dependant_fundef_cf_warnings mir
     ; non_one_priors_warnings factor_graph mir
     ; distribution_warnings distributions_info ]
-  |> to_list
+  |> to_list |> List.rev
