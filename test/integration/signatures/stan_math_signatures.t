@@ -15665,6 +15665,8 @@ Display all Stan math signatures exposed in the language
   ordered_probit_lpmf(int, real, vector) => real
   ordered_probit_lpmf(array[] int, real, vector) => real
   ordered_probit_lpmf(array[] int, real, array[] vector) => real
+  ordered_probit_lpmf(array[] int, vector, vector) => real
+  ordered_probit_lpmf(array[] int, vector, array[] vector) => real
   ordered_probit_rng(real, vector) => int
   owens_t(real, real) => real
   owens_t(real, vector) => vector

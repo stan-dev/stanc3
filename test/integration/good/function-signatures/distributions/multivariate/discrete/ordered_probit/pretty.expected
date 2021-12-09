@@ -1,20 +1,45 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format ordered_probit_log.stan
-Semantic error in 'ordered_probit_log.stan', line 11, column 26 to column 79:
-   -------------------------------------------------
-     9:    real transformed_data_real;
-    10:    transformed_data_real = ordered_probit_lpmf(d_int | d_real, d_vector);
-    11:    transformed_data_real = ordered_probit_lpmf(d_int_array | d_vector, d_vector);
-                                   ^
-    12:    transformed_data_real = ordered_probit_lpmf(d_int_array | d_vector, d_vector_array);
-    13:  }
-   -------------------------------------------------
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format ordered_probit_lpmf.stan
+data {
+  int d_int;
+  real d_real;
+  array[d_int] int d_int_array;
+  vector[d_int] d_vector;
+  array[d_int] vector[d_int] d_vector_array;
+}
+transformed data {
+  real transformed_data_real;
+  transformed_data_real = ordered_probit_lpmf(d_int | d_real, d_vector);
+  transformed_data_real = ordered_probit_lpmf(d_int_array | d_vector, d_vector);
+  transformed_data_real = ordered_probit_lpmf(d_int_array | d_vector, d_vector_array);
+  transformed_data_real = ordered_probit_lpmf(d_int_array | d_real, d_vector);
+  transformed_data_real = ordered_probit_lpmf(d_int_array | d_real, d_vector_array);
+}
+parameters {
+  real p_real;
+  vector[d_int] p_vector;
+  array[d_int] vector[d_int] p_vector_array;
+  real y_p;
+}
+transformed parameters {
+  real transformed_param_real;
+  transformed_param_real = ordered_probit_lpmf(d_int | d_real, d_vector);
+  transformed_param_real = ordered_probit_lpmf(d_int_array | d_vector, d_vector);
+  transformed_param_real = ordered_probit_lpmf(d_int_array | d_vector, d_vector_array);
+  transformed_param_real = ordered_probit_lpmf(d_int_array | d_real, d_vector);
+  transformed_param_real = ordered_probit_lpmf(d_int_array | d_real, d_vector_array);
+  transformed_param_real = ordered_probit_lpmf(d_int | p_real, d_vector);
+  transformed_param_real = ordered_probit_lpmf(d_int_array | p_vector, d_vector);
+  transformed_param_real = ordered_probit_lpmf(d_int_array | p_vector, d_vector_array);
+  transformed_param_real = ordered_probit_lpmf(d_int | d_real, p_vector);
+  transformed_param_real = ordered_probit_lpmf(d_int_array | d_vector, p_vector);
+  transformed_param_real = ordered_probit_lpmf(d_int_array | d_vector, p_vector_array);
+  transformed_param_real = ordered_probit_lpmf(d_int | p_real, p_vector);
+  transformed_param_real = ordered_probit_lpmf(d_int_array | p_vector, p_vector);
+  transformed_param_real = ordered_probit_lpmf(d_int_array | p_vector, p_vector_array);
+  transformed_param_real = ordered_probit_lpmf(d_int_array | p_real, p_vector);
+  transformed_param_real = ordered_probit_lpmf(d_int_array | p_real, p_vector_array);
+}
+model {
+  y_p ~ normal(0, 1);
+}
 
-Ill-typed arguments supplied to function 'ordered_probit_lpmf':
-(array[] int, vector, vector)
-Available signatures:
-(array[] int, real, array[] vector) => real
-  The second argument must be real but got vector
-(array[] int, real, vector) => real
-  The second argument must be real but got vector
-(int, real, vector) => real
-  The first argument must be int but got array[] int
