@@ -149,6 +149,10 @@ real test_rng(real a) {
 real test_lpdf(real a, real b) {
   return normal_lpdf(a | b, 1);
 }
+$ node good_after_bad.js
+Syntax error in 'string', line 8, column 0 to column 5, parsing error:
+Expected "generated quantities {" or end of file after end of model block.
+
 $ node info.js
 { "inputs": { "a": { "type": "int", "dimensions": 0},
               "b": { "type": "real", "dimensions": 0},

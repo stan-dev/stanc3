@@ -14,7 +14,10 @@ let include_stack = Stack.create ()
 let include_paths : string list ref = ref []
 let included_files : string list ref = ref []
 let size () = Stack.length include_stack
-let init buf = Stack.push include_stack buf
+
+let init buf =
+  Stack.clear include_stack ;
+  Stack.push include_stack buf
 
 let current_buffer () =
   let buf = Stack.top_exn include_stack in
