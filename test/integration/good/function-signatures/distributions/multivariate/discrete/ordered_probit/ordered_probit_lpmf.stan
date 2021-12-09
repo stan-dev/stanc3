@@ -7,12 +7,12 @@ data {
 }
 transformed data {
   real transformed_data_real;
-  transformed_data_real = ordered_probit_lpmf(d_int, d_real, d_vector);
-  transformed_data_real = ordered_probit_lpmf(d_int_array, d_vector, d_vector);
-  transformed_data_real = ordered_probit_lpmf(d_int_array, d_vector,
+  transformed_data_real = ordered_probit_lpmf(d_int| d_real, d_vector);
+  transformed_data_real = ordered_probit_lpmf(d_int_array| d_vector, d_vector);
+  transformed_data_real = ordered_probit_lpmf(d_int_array| d_vector,
                                              d_vector_array);
-  transformed_data_real = ordered_probit_lpmf(d_int_array, d_real, d_vector);
-  transformed_data_real = ordered_probit_lpmf(d_int_array, d_real,
+  transformed_data_real = ordered_probit_lpmf(d_int_array| d_real, d_vector);
+  transformed_data_real = ordered_probit_lpmf(d_int_array| d_real,
                                              d_vector_array);
 }
 parameters {
@@ -23,31 +23,31 @@ parameters {
 }
 transformed parameters {
   real transformed_param_real;
-  transformed_param_real = ordered_probit_lpmf(d_int, d_real, d_vector);
-  transformed_param_real = ordered_probit_lpmf(d_int_array, d_vector,
+  transformed_param_real = ordered_probit_lpmf(d_int| d_real, d_vector);
+  transformed_param_real = ordered_probit_lpmf(d_int_array| d_vector,
                                               d_vector);
-  transformed_param_real = ordered_probit_lpmf(d_int_array, d_vector,
+  transformed_param_real = ordered_probit_lpmf(d_int_array| d_vector,
                                               d_vector_array);
-  transformed_param_real = ordered_probit_lpmf(d_int_array, d_real, d_vector);
-  transformed_param_real = ordered_probit_lpmf(d_int_array, d_real,
+  transformed_param_real = ordered_probit_lpmf(d_int_array| d_real, d_vector);
+  transformed_param_real = ordered_probit_lpmf(d_int_array| d_real,
                                              d_vector_array);
-  transformed_param_real = ordered_probit_lpmf(d_int, p_real, d_vector);
-  transformed_param_real = ordered_probit_lpmf(d_int_array, p_vector,
+  transformed_param_real = ordered_probit_lpmf(d_int| p_real, d_vector);
+  transformed_param_real = ordered_probit_lpmf(d_int_array| p_vector,
                                               d_vector);
-  transformed_param_real = ordered_probit_lpmf(d_int_array, p_vector,
+  transformed_param_real = ordered_probit_lpmf(d_int_array| p_vector,
                                               d_vector_array);
-  transformed_param_real = ordered_probit_lpmf(d_int, d_real, p_vector);
-  transformed_param_real = ordered_probit_lpmf(d_int_array, d_vector,
+  transformed_param_real = ordered_probit_lpmf(d_int| d_real, p_vector);
+  transformed_param_real = ordered_probit_lpmf(d_int_array| d_vector,
                                               p_vector);
-  transformed_param_real = ordered_probit_lpmf(d_int_array, d_vector,
+  transformed_param_real = ordered_probit_lpmf(d_int_array| d_vector,
                                               p_vector_array);
-  transformed_param_real = ordered_probit_lpmf(d_int, p_real, p_vector);
-  transformed_param_real = ordered_probit_lpmf(d_int_array, p_vector,
+  transformed_param_real = ordered_probit_lpmf(d_int| p_real, p_vector);
+  transformed_param_real = ordered_probit_lpmf(d_int_array| p_vector,
                                               p_vector);
-  transformed_param_real = ordered_probit_lpmf(d_int_array, p_vector,
+  transformed_param_real = ordered_probit_lpmf(d_int_array| p_vector,
                                               p_vector_array);
-  transformed_param_real = ordered_probit_lpmf(d_int_array, p_real, p_vector);
-  transformed_param_real = ordered_probit_lpmf(d_int_array, p_real,
+  transformed_param_real = ordered_probit_lpmf(d_int_array| p_real, p_vector);
+  transformed_param_real = ordered_probit_lpmf(d_int_array| p_real,
                                              p_vector_array);
 }
 model {

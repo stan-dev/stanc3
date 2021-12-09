@@ -1782,7 +1782,7 @@ let () =
   add_unqualified
     ( "ordered_probit_lpmf"
     , ReturnType UReal
-    , [UArray UInt; UVector; UArray UVector]
+    , [UArray UInt; UVector; UVector]
     , AoS ) ;
   add_unqualified
     ( "ordered_probit_lpmf"
