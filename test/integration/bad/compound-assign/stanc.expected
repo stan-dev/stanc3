@@ -165,7 +165,7 @@ Syntax error in 'plus_equals_matrix_shape_mismatch.stan', line 4, column 10 to c
   $ ../../../../../install/default/bin/stanc plus_equals_prim_array.stan
 Semantic error in 'plus_equals_prim_array.stan', line 5, column 2 to column 9:
    -------------------------------------------------
-     3:    real y[3] = {4.0, 5.0, 6.0};
+     3:    array[3] real y = {4.0, 5.0, 6.0};
      4:    x[1] += y[1];
      5:    x += y;
            ^
@@ -189,7 +189,7 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type array[] rea
   $ ../../../../../install/default/bin/stanc plus_equals_row_vec_array.stan
 Semantic error in 'plus_equals_row_vec_array.stan', line 5, column 2 to column 9:
    -------------------------------------------------
-     3:    row_vector[2] y[3] = {[1,2], [3,4], [5,6]};
+     3:    array[3] row_vector[2] y = {[1,2], [3,4], [5,6]};
      4:    x[1] += y[1];
      5:    x += y;
            ^
@@ -286,7 +286,7 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type real and rh
   $ ../../../../../install/default/bin/stanc plus_equals_vector_array.stan
 Semantic error in 'plus_equals_vector_array.stan', line 5, column 2 to column 9:
    -------------------------------------------------
-     3:    vector[2] y[3] = {[1,2]', [3,4]', [5,6]'};
+     3:    array[3] vector[2] y = {[1,2]', [3,4]', [5,6]'};
      4:    x[1] += y[1];
      5:    x += y;
            ^
@@ -310,7 +310,7 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type array[] vec
   $ ../../../../../install/default/bin/stanc times_equals_matrix_array.stan
 Semantic error in 'times_equals_matrix_array.stan', line 5, column 2 to column 19:
    -------------------------------------------------
-     3:    matrix[2,2] y[3] = {[[4, 5], [6, 7]], [[4, 5], [6, 7]], [[4, 5], [6, 7]]};
+     3:    array[3] matrix[2,2] y = {[[4, 5], [6, 7]], [[4, 5], [6, 7]], [[4, 5], [6, 7]]};
      4:    x[3] *= y[3];
      5:    x[3,1] *= y[3,1];
            ^

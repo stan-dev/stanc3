@@ -1779,6 +1779,16 @@ let () =
     , ReturnType UReal
     , [UArray UInt; UReal; UArray UVector]
     , AoS ) ;
+  add_unqualified
+    ( "ordered_probit_lpmf"
+    , ReturnType UReal
+    , [UArray UInt; UVector; UVector]
+    , AoS ) ;
+  add_unqualified
+    ( "ordered_probit_lpmf"
+    , ReturnType UReal
+    , [UArray UInt; UVector; UArray UVector]
+    , AoS ) ;
   add_unqualified ("ordered_probit_rng", ReturnType UInt, [UReal; UVector], AoS) ;
   add_binary_vec_real_real "owens_t" AoS ;
   add_nullary "pi" ;

@@ -6,6 +6,7 @@ def utils = new org.stan.Utils()
 def skipExpressionTests = false
 def skipRemainingStages = false
 def skipCompileTests = false
+def skipRebuildingBinaries = false
 def buildingAgentARM = "linux"
 
 /* Functions that runs a sh command and returns the stdout */
@@ -27,13 +28,13 @@ def tagName() {
 pipeline {
     agent none
     parameters {
-        booleanParam(name:"compile_all", defaultValue: false, description:"Try compiling all models in test/integration/good")
+        booleanParam(name:"skip_end_to_end", defaultValue: false, description:"Skip end-to-end tests ")
         string(defaultValue: '', name: 'cmdstan_pr',
                description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: '', name: 'stan_pr',
                description: "Stan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: '', name: 'math_pr',
-               description: "Math PR to test against. Will check out this PR in the downstream Math repo.")
+               description: "Math PR to test against. Will check out this PR in the downstream Math repo.")        
     }
     options {parallelsAlwaysFailFast()}
     stages {
@@ -52,14 +53,17 @@ pipeline {
                     retry(3) { checkout scm }
                     sh 'git clean -xffd'
 
-                    def stanMathSigs = ['test/integration/signatures/stan_math_sigs.expected'].join(" ")
+                    def stanMathSigs = ['test/integration/signatures/stan_math_signatures.t'].join(" ")
                     skipExpressionTests = utils.verifyChanges(stanMathSigs)
 
-                    def sourceCodePaths = ['src'].join(" ")
-                    skipRemainingStages = utils.verifyChanges(sourceCodePaths)
+                    def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
+                    skipRemainingStages = utils.verifyChanges(runTestPaths)
 
                     def compileTests = ['test/integration/good'].join(" ")
                     skipCompileTests = utils.verifyChanges(compileTests)
+
+                    def sourceCodePaths = ['src'].join(" ")
+                    skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths)
 
                     if (buildingTag()) {
                         buildingAgentARM = "arm-ec2"
@@ -214,8 +218,13 @@ pipeline {
                 stage("Model end-to-end tests") {
                     when {
                         beforeAgent true
-                        expression {
+                        allOf {
+                         expression {
                             !skipCompileTests
+                         }
+                         expression {
+                            !params.skip_end_to_end
+                         }
                         }
                     }
                     agent { label 'linux' }
@@ -303,7 +312,7 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            !skipRebuildingBinaries
                         }
                     }
                     agent { label "osx && ocaml" }
@@ -327,7 +336,7 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            !skipRebuildingBinaries
                         }
                     }
                     agent {
@@ -354,7 +363,7 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            !skipRebuildingBinaries
                         }
                     }
                     agent {
@@ -382,7 +391,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -412,7 +421,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -442,7 +451,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -472,7 +481,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -503,7 +512,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -534,7 +543,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -566,7 +575,7 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            !skipRebuildingBinaries
                         }
                     }
                     agent {
@@ -599,6 +608,7 @@ pipeline {
                 beforeAgent true
                 allOf {
                     expression { !skipRemainingStages }
+                    expression { !skipRebuildingBinaries }
                     anyOf { buildingTag(); branch 'master' }
                 }
             }

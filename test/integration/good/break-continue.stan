@@ -4,41 +4,47 @@ functions {
     // direct while
     while (1) break;
     while (0) continue;
-
+    
     // direct for
-    for (i in 1:10) break;
-    for (i in 1:10) continue;
-
+    for (i in 1 : 10) 
+      break;
+    for (i in 1 : 10) 
+      continue;
+    
     // in statement seq
     while (1) {
       int b;
       b = 5;
       break;
     }
-
+    
     // if, else if, else body
     while (1) {
-      if (0) break;
-      else if (1) break;
-      else break;
+      if (0) 
+        break;
+      else if (1) 
+        break;
+      else 
+        break;
     }
-
+    
     // nested while
     while (1) while (0) break;
-
+    
     // nested for
     while (1) {
-      for (i in 1:10) break;
+      for (i in 1 : 10) 
+        break;
     }
-
+    
     // nested foreach (array)
     while (1) {
-      int vs[2, 3];
+      array[2, 3] int vs;
       int z;
       for (v in vs) {
         z = 0;
         break;
-      }        
+      }
       for (v in vs) {
         z = 0;
         continue;
@@ -51,11 +57,11 @@ functions {
         z = 1;
       }
     }
-
+    
     // nested foreach (matrix)
     while (1) {
       real z;
-      matrix[2,3] vs;
+      matrix[2, 3] vs;
       for (v in vs) {
         z = 0;
         break;
@@ -65,7 +71,7 @@ functions {
         continue;
       }
     }
-
+    
     // nested foreach (vector)
     while (1) {
       real z;
@@ -79,7 +85,7 @@ functions {
         continue;
       }
     }
-
+    
     // nested foreach (rowvector)
     while (1) {
       real z;
@@ -93,7 +99,7 @@ functions {
         continue;
       }
     }
-
+    
     // nested block
     while (1) {
       int b;
@@ -104,19 +110,21 @@ functions {
         break;
       }
     }
-
-   // nested loop exit
-   while (1) {
-     while (1) {
-     }
-     break;
-   }
-   while (1) {
-     while (1) {
-     }
-     continue;
-   }
-
+    
+    // nested loop exit
+    while (1) {
+      while (1) {
+        
+      }
+      break;
+    }
+    while (1) {
+      while (1) {
+        
+      }
+      continue;
+    }
+    
     return 0;
   }
 }
@@ -136,10 +144,12 @@ transformed parameters {
   while (1) continue;
 }
 model {
+  
 }
 generated quantities {
-   real u;
-   u = 1;
-   while (1) break;
-   while (0) continue;
+  real u;
+  u = 1;
+  while (1) break;
+  while (0) continue;
 }
+

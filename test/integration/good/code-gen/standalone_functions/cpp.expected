@@ -11,26 +11,26 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 21> locations_array__ = 
 {" (found before start of program)",
- " (in 'basic.stan', line 3, column 8 to column 28)",
- " (in 'basic.stan', line 2, column 30 to line 4, column 5)",
- " (in 'basic.stan', line 8, column 2 to column 16)",
- " (in 'basic.stan', line 7, column 1 to line 9, column 2)",
- " (in 'basic.stan', line 13, column 2 to column 16)",
- " (in 'basic.stan', line 12, column 1 to line 14, column 2)",
- " (in 'basic.stan', line 18, column 9 to column 24)",
- " (in 'basic.stan', line 18, column 2 to column 43)",
- " (in 'basic.stan', line 19, column 2 to column 16)",
- " (in 'basic.stan', line 17, column 1 to line 20, column 2)",
- " (in 'basic.stan', line 23, column 2 to column 13)",
- " (in 'basic.stan', line 22, column 43 to line 24, column 2)",
- " (in 'basic.stan', line 27, column 8 to column 25)",
- " (in 'basic.stan', line 26, column 26 to line 28, column 5)",
- " (in 'basic.stan', line 32, column 5 to column 22)",
- " (in 'basic.stan', line 31, column 22 to line 33, column 2)",
- " (in 'basic.stan', line 36, column 2 to column 26)",
- " (in 'basic.stan', line 35, column 23 to line 37, column 2)",
- " (in 'basic.stan', line 40, column 2 to column 31)",
- " (in 'basic.stan', line 39, column 32 to line 41, column 2)"};
+ " (in 'basic.stan', line 3, column 4 to column 24)",
+ " (in 'basic.stan', line 2, column 28 to line 4, column 3)",
+ " (in 'basic.stan', line 7, column 4 to column 18)",
+ " (in 'basic.stan', line 6, column 33 to line 8, column 3)",
+ " (in 'basic.stan', line 11, column 4 to column 18)",
+ " (in 'basic.stan', line 10, column 36 to line 12, column 3)",
+ " (in 'basic.stan', line 15, column 11 to column 26)",
+ " (in 'basic.stan', line 15, column 4 to column 45)",
+ " (in 'basic.stan', line 16, column 4 to column 18)",
+ " (in 'basic.stan', line 14, column 38 to line 17, column 3)",
+ " (in 'basic.stan', line 20, column 4 to column 17)",
+ " (in 'basic.stan', line 19, column 44 to line 21, column 3)",
+ " (in 'basic.stan', line 24, column 4 to column 21)",
+ " (in 'basic.stan', line 23, column 27 to line 25, column 3)",
+ " (in 'basic.stan', line 29, column 4 to column 21)",
+ " (in 'basic.stan', line 28, column 23 to line 30, column 3)",
+ " (in 'basic.stan', line 33, column 4 to column 28)",
+ " (in 'basic.stan', line 32, column 24 to line 34, column 3)",
+ " (in 'basic.stan', line 37, column 4 to column 33)",
+ " (in 'basic.stan', line 36, column 33 to line 38, column 3)"};
 
 
 template <typename T0__>
@@ -373,26 +373,26 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 21> locations_array__ = 
 {" (found before start of program)",
- " (in 'basic.stanfunctions', line 2, column 4 to column 24)",
+ " (in 'basic.stanfunctions', line 2, column 2 to column 22)",
  " (in 'basic.stanfunctions', line 1, column 26 to line 3, column 1)",
- " (in 'basic.stanfunctions', line 7, column 4 to column 18)",
- " (in 'basic.stanfunctions', line 6, column 0 to line 8, column 1)",
- " (in 'basic.stanfunctions', line 12, column 4 to column 18)",
- " (in 'basic.stanfunctions', line 11, column 0 to line 13, column 1)",
- " (in 'basic.stanfunctions', line 17, column 11 to column 26)",
- " (in 'basic.stanfunctions', line 17, column 4 to column 45)",
- " (in 'basic.stanfunctions', line 18, column 4 to column 18)",
- " (in 'basic.stanfunctions', line 16, column 0 to line 19, column 1)",
- " (in 'basic.stanfunctions', line 22, column 4 to column 15)",
- " (in 'basic.stanfunctions', line 21, column 42 to line 23, column 1)",
- " (in 'basic.stanfunctions', line 26, column 4 to column 21)",
- " (in 'basic.stanfunctions', line 25, column 25 to line 27, column 1)",
- " (in 'basic.stanfunctions', line 31, column 4 to column 21)",
- " (in 'basic.stanfunctions', line 30, column 21 to line 32, column 1)",
- " (in 'basic.stanfunctions', line 35, column 4 to column 28)",
- " (in 'basic.stanfunctions', line 34, column 22 to line 36, column 1)",
- " (in 'basic.stanfunctions', line 39, column 4 to column 33)",
- " (in 'basic.stanfunctions', line 38, column 31 to line 40, column 1)"};
+ " (in 'basic.stanfunctions', line 6, column 2 to column 16)",
+ " (in 'basic.stanfunctions', line 5, column 31 to line 7, column 1)",
+ " (in 'basic.stanfunctions', line 10, column 2 to column 16)",
+ " (in 'basic.stanfunctions', line 9, column 34 to line 11, column 1)",
+ " (in 'basic.stanfunctions', line 14, column 9 to column 24)",
+ " (in 'basic.stanfunctions', line 14, column 2 to column 43)",
+ " (in 'basic.stanfunctions', line 15, column 2 to column 16)",
+ " (in 'basic.stanfunctions', line 13, column 36 to line 16, column 1)",
+ " (in 'basic.stanfunctions', line 19, column 2 to column 15)",
+ " (in 'basic.stanfunctions', line 18, column 42 to line 20, column 1)",
+ " (in 'basic.stanfunctions', line 23, column 2 to column 19)",
+ " (in 'basic.stanfunctions', line 22, column 25 to line 24, column 1)",
+ " (in 'basic.stanfunctions', line 28, column 2 to column 19)",
+ " (in 'basic.stanfunctions', line 27, column 21 to line 29, column 1)",
+ " (in 'basic.stanfunctions', line 32, column 2 to column 26)",
+ " (in 'basic.stanfunctions', line 31, column 22 to line 33, column 1)",
+ " (in 'basic.stanfunctions', line 36, column 2 to column 31)",
+ " (in 'basic.stanfunctions', line 35, column 31 to line 37, column 1)"};
 
 
 template <typename T0__>
@@ -735,16 +735,16 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 11> locations_array__ = 
 {" (found before start of program)",
- " (in 'integrate.stan', line 4, column 4 to column 27)",
- " (in 'integrate.stan', line 3, column 29 to line 5, column 3)",
- " (in 'integrate.stan', line 8, column 4 to column 18)",
+ " (in 'integrate.stan', line 3, column 4 to column 27)",
+ " (in 'integrate.stan', line 2, column 29 to line 4, column 3)",
+ " (in 'integrate.stan', line 8, column 4 to column 24)",
  " (in 'integrate.stan', line 9, column 4 to column 22)",
- " (in 'integrate.stan', line 10, column 4 to column 47)",
- " (in 'integrate.stan', line 11, column 4 to column 18)",
- " (in 'integrate.stan', line 7, column 78 to line 12, column 3)",
- " (in 'integrate.stan', line 15, column 4 to column 15)",
- " (in 'integrate.stan', line 21, column 4 to column 142)",
- " (in 'integrate.stan', line 14, column 23 to line 22, column 3)"};
+ " (in 'integrate.stan', line 10, column 4 to column 51)",
+ " (in 'integrate.stan', line 11, column 4 to column 19)",
+ " (in 'integrate.stan', line 7, column 64 to line 12, column 3)",
+ " (in 'integrate.stan', line 15, column 4 to column 21)",
+ " (in 'integrate.stan', line 21, column 4 to line 23, column 61)",
+ " (in 'integrate.stan', line 14, column 23 to line 24, column 3)"};
 
 
 template <typename T0__>
@@ -884,7 +884,7 @@ auto ode_integrate(std::ostream* pstream__ = nullptr)
 }
 
 
-Warning in 'integrate.stan', line 21, column 11: integrate_ode_bdf is
+Warning in 'integrate.stan', line 21, column 12: integrate_ode_bdf is
     deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html

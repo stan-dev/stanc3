@@ -10,10 +10,10 @@ let parse parse_fun lexbuf =
   (* see the Menhir manual for the description of
      error messages support *)
   let module Interp = Parser.MenhirInterpreter in
-  Stack.push Preprocessor.include_stack lexbuf ;
+  Preprocessor.init lexbuf ;
   let input () =
     (Interp.lexer_lexbuf_to_supplier Lexer.token
-       (Stack.top_exn Preprocessor.include_stack) )
+       (Preprocessor.current_buffer ()) )
       () in
   let success prog =
     Result.Ok {prog with Ast.comments= List.rev !Lexer.comments} in
@@ -45,8 +45,8 @@ let parse parse_fun lexbuf =
     Errors.Parsing
       ( message
       , Location_span.of_positions_exn
-          ( Lexing.lexeme_start_p (Stack.top_exn Preprocessor.include_stack)
-          , Lexing.lexeme_end_p (Stack.top_exn Preprocessor.include_stack) ) )
+          ( Lexing.lexeme_start_p (Preprocessor.current_buffer ())
+          , Lexing.lexeme_end_p (Preprocessor.current_buffer ()) ) )
     |> Result.Error in
   let result =
     try

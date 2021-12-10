@@ -1,18 +1,18 @@
 functions {
   vector foo(vector shared_params, vector job_params,
-             real[] data_r, int[] data_i) {
+             array[] real data_r, array[] int data_i) {
     return [1, 2, 3]';
   }
 }
 data {
-  vector[3] shared_params_d[3];
-  vector[3] job_params_d[3];
-  real data_r[3, 3];
-  int data_i[3, 3];
+  array[3] vector[3] shared_params_d;
+  array[3] vector[3] job_params_d;
+  array[3, 3] real data_r;
+  array[3, 3] int data_i;
 }
 parameters {
   vector[3] shared_params_p;
-  vector[3] job_params_p[3];
+  array[3] vector[3] job_params_p;
 }
 transformed parameters {
   vector[3] y_hat_gq

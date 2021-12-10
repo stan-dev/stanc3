@@ -4,22 +4,16 @@ data {
 }
 transformed data {
   real transformed_data_real;
-  transformed_data_real = hypergeometric_log(d_int, d_int, d_int, d_int);
+  transformed_data_real = hypergeometric_lpmf(d_int | d_int, d_int, d_int);
 }
 parameters {
   real y_p;
 }
 transformed parameters {
   real transformed_param_real;
-  transformed_param_real = hypergeometric_log(d_int, d_int, d_int, d_int);
+  transformed_param_real = hypergeometric_lpmf(d_int | d_int, d_int, d_int);
 }
 model {
   y_p ~ normal(0, 1);
 }
 
-Warning in 'hypergeometric_log.stan', line 6, column 26: hypergeometric_log
-    is deprecated and will be removed in Stan 2.32.0. Use hypergeometric_lpmf
-    instead. This can be automatically changed using stanc --print-canonical
-Warning in 'hypergeometric_log.stan', line 13, column 27: hypergeometric_log
-    is deprecated and will be removed in Stan 2.32.0. Use hypergeometric_lpmf
-    instead. This can be automatically changed using stanc --print-canonical

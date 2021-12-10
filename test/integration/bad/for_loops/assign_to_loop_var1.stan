@@ -1,6 +1,6 @@
 functions {
   int foo(int a) {
-    int vs[2];
+    array[2] int vs;
     int y;
     for (v in vs) v = 3;
     return 0;

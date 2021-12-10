@@ -1,5 +1,5 @@
 data {
-  real a1[2];
+  array[2] real a1;
 }
 transformed data {
   vector[2] td_a1 = a1;   // vector = array - bad
