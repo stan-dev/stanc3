@@ -250,7 +250,7 @@
          (((pattern
             (TargetPE
              ((pattern
-               (FunApp (StanLib normal_log (FnLpdf false) AoS)
+               (FunApp (StanLib normal_lpdf (FnLpdf false) AoS)
                 (((pattern (Var u))
                   (meta
                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
@@ -24616,12 +24616,3 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block GeneratedQuantities) (out_trans Identity)))))
  (prog_name mother_model) (prog_path mother.stan))
-Warning in 'mother.stan', line 63, column 4: increment_log_prob(...); is
-    deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
-Warning in 'mother.stan', line 187, column 15: get_lp() function is
-    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
-    can be done automatically with stanc --print-canonical
-Warning in 'mother.stan', line 63, column 23: normal_log is deprecated and
-    will be removed in Stan 2.32.0. Use normal_lpdf instead. This can be
-    automatically changed using stanc --print-canonical

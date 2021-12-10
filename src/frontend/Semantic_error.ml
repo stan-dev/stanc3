@@ -365,7 +365,7 @@ module StatementError = struct
     | InvalidSamplingCDForCCDF name ->
         Fmt.pf ppf
           "CDF and CCDF functions may not be used with sampling notation. Use \
-           increment_log_prob(%s_log(...)) instead."
+           target += %s_log(...) instead."
           name
     | InvalidSamplingNoSuchDistribution name ->
         Fmt.pf ppf

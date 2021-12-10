@@ -1,8 +1,8 @@
 data {
-  real y[3,3];
+  array[3,3] real y;
 }
 transformed data {
-  real z[5];
+  array[5] real z;
   z = y;
 }
 parameters {

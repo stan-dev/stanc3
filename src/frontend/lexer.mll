@@ -8,23 +8,36 @@
 
 (* Boilerplate for getting line numbers for errors *)
   let incr_linenum lexbuf =
+    lexer_pos_logger lexbuf.lex_curr_p;
     let pos = lexbuf.lex_curr_p in
     lexbuf.lex_curr_p <- { pos with
       pos_lnum = pos.pos_lnum + 1;
-      pos_bol = pos.pos_cnum;
-    }
+      pos_bol = pos.pos_cnum } ;
+    update_start_positions lexbuf.lex_curr_p
 
-let comments : Ast.comment_type list ref = ref []
 
-(* Store comments *)
+  let comments : Ast.comment_type list ref = ref []
+
+  (* Store comments *)
   let add_comment (begin_pos, buffer) end_pos =
-    comments :=
+      comments :=
         LineComment ( Buffer.contents buffer
                 , Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
       :: !comments
+
   let add_multi_comment begin_pos lines end_pos =
     comments :=
         BlockComment ( lines, Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
+      :: !comments
+
+  let add_separator lexbuf =
+    comments :=
+        Separator (Middle.Location.of_position_exn lexbuf.lex_curr_p)
+      :: !comments
+
+  let add_include fname lexbuf =
+    comments :=
+        Include (fname, (Middle.Location_span.of_positions_exn (lexbuf.lex_start_p, lexbuf.lex_curr_p)) )
       :: !comments
 }
 
@@ -60,8 +73,9 @@ rule token = parse
     | '<' ([^ '>' '\r' '\n']* as fname) '>'
     | (non_space_or_newline* as fname)
     )                         { lexer_logger ("include " ^ fname) ;
+                                add_include fname lexbuf ;
                                 let new_lexbuf =
-                                  try_get_new_lexbuf fname lexbuf.lex_curr_p in
+                                  try_get_new_lexbuf fname in
                                 token new_lexbuf }
   | "#"                       { lexer_logger "#comment" ;
                                 Input_warnings.deprecated "#"
@@ -100,19 +114,15 @@ rule token = parse
   | ')'                       { lexer_logger ")" ; Parser.RPAREN }
   | '['                       { lexer_logger "[" ; Parser.LBRACK }
   | ']'                       { lexer_logger "]" ; Parser.RBRACK }
-  | '<'                       { lexer_logger "<" ; Parser.LABRACK }
-  | '>'                       { lexer_logger ">" ; Parser.RABRACK }
-  | ','                       { lexer_logger "," ;
-                                comments :=
-                                  Comma (Middle.Location.of_position_exn lexbuf.lex_curr_p)
-                                  :: !comments ;
-                                Parser.COMMA }
+  | '<'                       { lexer_logger "<" ; add_separator lexbuf ; Parser.LABRACK }
+  | '>'                       { lexer_logger ">" ; add_separator lexbuf ; Parser.RABRACK }
+  | ','                       { lexer_logger "," ; add_separator lexbuf ; Parser.COMMA }
   | ';'                       { lexer_logger ";" ; Parser.SEMICOLON }
-  | '|'                       { lexer_logger "|" ; Parser.BAR }
+  | '|'                       { lexer_logger "|" ; add_separator lexbuf ; Parser.BAR }
 (* Control flow keywords *)
   | "return"                  { lexer_logger "return" ; Parser.RETURN }
   | "if"                      { lexer_logger "if" ; Parser.IF }
-  | "else"                    { lexer_logger "else" ; Parser.ELSE }
+  | "else"                    { lexer_logger "else" ; add_separator lexbuf ; Parser.ELSE }
   | "while"                   { lexer_logger "while" ; Parser.WHILE }
   | "profile"                 { lexer_logger "profile" ; Parser.PROFILE }
   | "for"                     { lexer_logger "for" ; Parser.FOR }
@@ -145,27 +155,27 @@ rule token = parse
   | "offset"                  { lexer_logger "offset" ; Parser.OFFSET }
   | "multiplier"              { lexer_logger "multiplier" ; Parser.MULTIPLIER }
 (* Operators *)
-  | '?'                       { lexer_logger "?" ; Parser.QMARK }
+  | '?'                       { lexer_logger "?" ; add_separator lexbuf ; Parser.QMARK }
   | ':'                       { lexer_logger ":" ; Parser.COLON }
   | '!'                       { lexer_logger "!" ; Parser.BANG }
-  | '-'                       { lexer_logger "-" ; Parser.MINUS }
-  | '+'                       { lexer_logger "+" ; Parser.PLUS }
-  | '^'                       { lexer_logger "^" ; Parser.HAT }
+  | '-'                       { lexer_logger "-" ; add_separator lexbuf ; Parser.MINUS }
+  | '+'                       { lexer_logger "+" ; add_separator lexbuf ; Parser.PLUS }
+  | '^'                       { lexer_logger "^" ; add_separator lexbuf ; Parser.HAT }
   | '\''                      { lexer_logger "\'" ; Parser.TRANSPOSE }
-  | '*'                       { lexer_logger "*" ; Parser.TIMES }
-  | '/'                       { lexer_logger "/" ; Parser.DIVIDE }
-  | '%'                       { lexer_logger "%" ; Parser.MODULO }
-  | "%/%"                     { lexer_logger "%/%" ; Parser.IDIVIDE }
-  | "\\"                      { lexer_logger "\\" ; Parser.LDIVIDE }
-  | ".*"                      { lexer_logger ".*" ; Parser.ELTTIMES }
-  | ".^"                      { lexer_logger ".^" ; Parser.ELTPOW }
-  | "./"                      { lexer_logger "./" ; Parser.ELTDIVIDE }
-  | "||"                      { lexer_logger "||" ; Parser.OR }
-  | "&&"                      { lexer_logger "&&" ; Parser.AND }
-  | "=="                      { lexer_logger "==" ; Parser.EQUALS }
-  | "!="                      { lexer_logger "!=" ; Parser.NEQUALS }
-  | "<="                      { lexer_logger "<=" ; Parser.LEQ }
-  | ">="                      { lexer_logger ">=" ; Parser.GEQ }
+  | '*'                       { lexer_logger "*" ; add_separator lexbuf ; Parser.TIMES }
+  | '/'                       { lexer_logger "/" ; add_separator lexbuf ; Parser.DIVIDE }
+  | '%'                       { lexer_logger "%" ; add_separator lexbuf ; Parser.MODULO }
+  | "%/%"                     { lexer_logger "%/%" ; add_separator lexbuf ; Parser.IDIVIDE }
+  | "\\"                      { lexer_logger "\\" ; add_separator lexbuf ; Parser.LDIVIDE }
+  | ".*"                      { lexer_logger ".*" ; add_separator lexbuf ; Parser.ELTTIMES }
+  | ".^"                      { lexer_logger ".^" ; add_separator lexbuf ; Parser.ELTPOW }
+  | "./"                      { lexer_logger "./" ; add_separator lexbuf ; Parser.ELTDIVIDE }
+  | "||"                      { lexer_logger "||" ; add_separator lexbuf ; Parser.OR }
+  | "&&"                      { lexer_logger "&&" ; add_separator lexbuf ; Parser.AND }
+  | "=="                      { lexer_logger "==" ; add_separator lexbuf ; Parser.EQUALS }
+  | "!="                      { lexer_logger "!=" ; add_separator lexbuf ; Parser.NEQUALS }
+  | "<="                      { lexer_logger "<=" ; add_separator lexbuf ; Parser.LEQ }
+  | ">="                      { lexer_logger ">=" ; add_separator lexbuf ; Parser.GEQ }
   | "~"                       { lexer_logger "~" ; Parser.TILDE }
 (* Assignments *)
   | '='                       { lexer_logger "=" ; Parser.ASSIGN }
@@ -219,28 +229,28 @@ rule token = parse
   | string_literal as s       { lexer_logger ("string_literal " ^ s) ;
                                 Parser.STRINGLITERAL (lexeme lexbuf) }
   | identifier as id          { lexer_logger ("identifier " ^ id) ;
+                                lexer_pos_logger (lexeme_start_p lexbuf);
                                 Parser.IDENTIFIER (lexeme lexbuf) }
 (* End of file *)
   | eof                       { lexer_logger "eof" ;
-                                if Stack.length include_stack = 1
+                                if Preprocessor.size () = 1
                                 then Parser.EOF
                                 else
-                                  let _ : lexbuf = (Stack.pop_exn include_stack) in
-                                  let old_lexbuf =
-                                    (Stack.top_exn include_stack) in
-                                      token old_lexbuf }
+                                  let old_lexbuf = restore_prior_lexbuf () in
+                                  token old_lexbuf }
 
   | _                         { raise (Errors.SyntaxError
                                         (Errors.Lexing
                                           (Middle.Location.of_position_exn
                                             (lexeme_start_p
-                                              (Stack.top_exn include_stack))))) }
+                                              (current_buffer ()))))) }
 
 (* Multi-line comment terminated by "*/" *)
 and multiline_comment state = parse
   | "*/"     { let ((pos, lines), buffer) = state in
                let lines = (Buffer.contents buffer) :: lines in
-               add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p }
+               add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p;
+               update_start_positions lexbuf.lex_curr_p }
   | eof      { raise (Errors.SyntaxError
                       (Errors.UnexpectedEOF
                         (Middle.Location.of_position_exn lexbuf.lex_curr_p))) }
@@ -254,7 +264,7 @@ and multiline_comment state = parse
 (* Single-line comment terminated by a newline *)
 and singleline_comment state = parse
   | newline  { add_comment state lexbuf.lex_curr_p ; incr_linenum lexbuf }
-  | eof      { add_comment state lexbuf.lex_curr_p }
+  | eof      { add_comment state lexbuf.lex_curr_p ; update_start_positions lexbuf.lex_curr_p }
   | _        { Buffer.add_string (snd state) (lexeme lexbuf) ; singleline_comment state lexbuf }
 
 {

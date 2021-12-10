@@ -81,7 +81,7 @@ Functions with names ending in _lupdf and _lupmf can only be used in the model b
 Semantic error in 'lupdf_in_trans_params_rs.stan', line 9, column 24 to column 33:
    -------------------------------------------------
      7:      real p;
-     8:      real ya[5];
+     8:      array[5] real ya;
      9:      real y = reduce_sum(foo_lupdf,ya,1);
                                  ^
     10:  }

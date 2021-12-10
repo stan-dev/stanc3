@@ -252,10 +252,10 @@ Syntax error in 'fundef-bad5.stan', line 1, column 22 to column 26, parsing erro
 
 Either "{" statement "}" is expected for a function definition or ";" for a function forward declaration.
   $ ../../../../../install/default/bin/stanc fundef-bad6.stan
-Semantic error in 'fundef-bad6.stan', line 1, column 31 to column 36:
+Semantic error in 'fundef-bad6.stan', line 1, column 37 to column 42:
    -------------------------------------------------
-     1:  functions { void T ( vector [] while);}
-                                        ^
+     1:  functions { void T ( array [] vector while);}
+                                              ^
    -------------------------------------------------
 
 Identifier 'while' clashes with reserved keyword.
@@ -1198,13 +1198,10 @@ Syntax error in 'ill-formed-statement23.stan', line 1, column 35 to column 39, p
 
 Ill-formed statement. Expected statement after "else".
   $ ../../../../../install/default/bin/stanc ill-formed-statement24.stan
-Warning in 'ill-formed-statement24.stan', line 1, column 30: Variable name
-    'upper' will be a reserved word starting in Stan 2.32.0. Please rename
-    it!
-Syntax error in 'ill-formed-statement24.stan', line 1, column 35 to column 36, parsing error:
+Syntax error in 'ill-formed-statement24.stan', line 1, column 33 to column 34, parsing error:
    -------------------------------------------------
-     1:  transformed data { if ( 1 ) ; upper}
-                                            ^
+     1:  transformed data { if ( 1 ) ; foo}
+                                          ^
    -------------------------------------------------
 
 Ill-formed phrase. Found L-value. This can be completed in many ways.
@@ -1217,13 +1214,10 @@ Syntax error in 'ill-formed-statement25.stan', line 1, column 34 to column 38, p
 
 Ill-formed statement. Expected statement after else.
   $ ../../../../../install/default/bin/stanc ill-formed-statement26.stan
-Warning in 'ill-formed-statement26.stan', line 1, column 29: Variable name
-    'upper' will be a reserved word starting in Stan 2.32.0. Please rename
-    it!
-Syntax error in 'ill-formed-statement26.stan', line 1, column 34 to column 34, parsing error:
+Syntax error in 'ill-formed-statement26.stan', line 2, column 0 to column 0, parsing error:
    -------------------------------------------------
-     1:  transformed data { if ( T) ; upper
-                                           ^
+     1:  transformed data { if ( T) ; foo
+         ^
    -------------------------------------------------
 
 Ill-formed statement or expression. A statement or expression could be expected here.

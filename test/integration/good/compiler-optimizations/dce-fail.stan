@@ -5,13 +5,13 @@ data {
   int<lower=0> n_region;
   int<lower=0> n_state;
 
-  int<lower=0, upper=1> female[N];
-  int<lower=0, upper=1> black[N];
-  int<lower=0, upper=n_age> age[N];
-  int<lower=0, upper=n_edu> edu[N];
-  int<lower=0, upper=n_state> region[n_state];
-  int<lower=0, upper=n_state> state[N];
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=0, upper=1> female;
+  array[N] int<lower=0, upper=1> black;
+  array[N] int<lower=0, upper=n_age> age;
+  array[N] int<lower=0, upper=n_edu> edu;
+  array[n_state] int<lower=0, upper=n_state> region;
+  array[N] int<lower=0, upper=n_state> state;
+  array[N] int<lower=0, upper=1> y;
   vector[n_state] v_prev;
 }
 parameters {
@@ -62,7 +62,7 @@ model {
   b_hat ~ normal(b_state_hat, sigma_state);
 
   for (i in 1:N)
-    p[i] = fmax(0, fmin(1, inv_logit(b_0 + b_female*female[i] 
+    p[i] = fmax(0, fmin(1, inv_logit(b_0 + b_female*female[i]
       + b_black*black[i] + b_female_black*female[i]*black[i] +
       b_age[age[i]] + b_edu[edu[i]] + b_age_edu[age[i],edu[i]] +
       b_hat[state[i]])));

@@ -7,8 +7,10 @@
  (action
   (with-stdout-to
    %{targets}
-   (run %{bin:run_bin_on_args}
-     "%{bin:stanc} --standalone-functions --print-cpp" %{stanfiles}))))
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --standalone-functions --print-cpp"
+    %{stanfiles}))))
 
 (rule
  (alias runtest)

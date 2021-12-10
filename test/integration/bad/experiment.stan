@@ -5,7 +5,7 @@ transformed data {
   int N = 5;
 }
 parameters {
-  ordered[2] mu[N];
+  array[N] ordered[2] mu;
 }
 model {
   for (i in 1:4) {

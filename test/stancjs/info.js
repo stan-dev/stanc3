@@ -8,11 +8,11 @@ data {
     vector[2] c;
     row_vector[3] d;
     matrix[2,2] e;
-    int f[5];
-    real g[6];
-    vector[1] h[7];
-    matrix[2,2] i[2];
-    int j[3,1,3];
+    array[5] int f;
+    array[6] real g;
+    array[7] vector[1] h;
+    array[2] matrix[2,2] i;
+    array[3,1,3] int j;
 }
 transformed data {
     int k = a + 1;
