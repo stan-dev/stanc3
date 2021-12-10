@@ -4,7 +4,7 @@ data {
 }
 parameters {
   vector[3] v;
-  real a[4,5];
+  array[4,5] real a;
   matrix[6,6] m;
   real y;
   real z;
@@ -60,6 +60,10 @@ model {
 
   // unary_op
   (-y) ~ normal(0,1);
-  // -(-y) ~ normal(0,1);
+  -(-y) ~ normal(0,1);
+
+  // literals
+  [1] ~ normal(0,1);
+  to_vector({1}) ~ normal(0,1);
 
 }

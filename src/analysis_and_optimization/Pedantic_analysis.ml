@@ -69,13 +69,43 @@ let list_multi_tildes (mir : Program.Typed.t) :
     ~f:(fun ~key ~data s -> Set.add s (key, data))
     multi_tildes
 
+(** These functions are linear if all of their arguments are *)
+let linear_fnames =
+  Operator.([Plus; PPlus; Minus; PMinus] |> List.map ~f:to_string)
+  @ [ "block"; "col"; "cols"; "row"; "rows"; "diagonal"; "head"; "tail"
+    ; "negative_infinity"; "not_a_number"; "rep_matrix"; "positive_infinity"
+    ; "segment"; "sum"; "to_vector" ]
+  |> String.Set.of_list
+
 let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
     =
   (* Collect statements of the form "target += Dist(param, ...)" *)
-  let rec is_possible_nonlinear = function
-    | Expr.Fixed.Pattern.Var _ | Lit _ -> false
-    | Indexed (Expr.Fixed.{pattern; _}, _) -> is_possible_nonlinear pattern
-    | _ -> true in
+  let rec is_linear_function allow_var name (args : 'a Expr.Fixed.t list) =
+    if Set.mem linear_fnames name then
+      List.for_all ~f:(fun {pattern; _} -> is_linear allow_var pattern) args
+      (* A function of all constants is fine *)
+    else if List.for_all ~f:(fun {pattern; _} -> is_linear false pattern) args
+    then true
+    else
+      match (name, args) with
+      (* We require at least one of these operands to be a constant *)
+      | ("Times__" | "Divide__" | "IntDivide__"), [a; b] ->
+          (is_linear allow_var a.pattern && is_linear false b.pattern)
+          || (is_linear false a.pattern && is_linear allow_var b.pattern)
+          (* Transpose of transpose is fine *)
+      | ( "Transpose__"
+        , [{pattern= FunApp (StanLib ("Transpose__", _, _), [a]); _}] ) ->
+          is_linear allow_var a.pattern
+      | _ -> false
+  and is_linear allow_var = function
+    | Expr.Fixed.Pattern.Var _ -> allow_var
+    | Lit _ -> true
+    | Indexed (Expr.Fixed.{pattern; _}, _) -> is_linear allow_var pattern
+    | FunApp (StanLib (name, _, _), args) ->
+        is_linear_function allow_var name args
+    | FunApp (CompilerInternal (FnMakeArray | FnMakeRowVec), args) ->
+        List.for_all ~f:(fun {pattern; _} -> is_linear allow_var pattern) args
+    | _ -> false in
   let collect_transformed_tilde_stmt (stmt : Stmt.Located.t) :
       Location_span.t Set.Poly.t =
     match stmt.pattern with
@@ -85,7 +115,7 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
               ( (StanLib (_, FnLpdf _, _) | UserDefined (_, FnLpdf _))
               , {pattern; _} :: _ )
         ; _ }
-      when is_possible_nonlinear pattern ->
+      when not (is_linear true pattern) ->
         Set.Poly.singleton stmt.meta
     | _ -> Set.Poly.empty in
   let tildes =
