@@ -1,7 +1,7 @@
 transformed data {
   int tx;
   real ty;
-  row_vector[6] twa2[2,2];
+  array[2,2] row_vector[6] twa2;
   tx = 0 ? ty : twa2;   // BAD
 }
 parameters {

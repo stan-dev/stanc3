@@ -44,21 +44,14 @@ transformed data {
   real z;
   int n;
   
-  z = if_else(n, x, y);
+  z = ((n) ? x : y);
   
-  z = binomial_coefficient_log(x, y);
+  z = lchoose(x, y);
 }
 model {
   
 }
 
-Warning in 'good_funs.stan', line 7, column 6: The function `if_else` is
-    deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
-Warning in 'good_funs.stan', line 9, column 6: binomial_coefficient_log is
-    deprecated and will be removed in Stan 2.32.0. Use lchoose instead. This
-    can be automatically changed using stanc --print-canonical
   $ ../../../../../install/default/bin/stanc --auto-format good_intercept_var.stan
 data {
   int<lower=0> m1; // make sure didn't mess up spacing
@@ -611,16 +604,3 @@ generated quantities {
   xgq = 2713;
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format unreachable_statement.stan
-functions {
-  void foo(real x) {
-    if (x) 
-      ; // bug - misplaced ; makes the next statement unconditional
-    reject("Cannot be 0");
-    return;
-  }
-}
-
-Warning in 'unreachable_statement.stan', line 5, column 5: Unreachable
-    statement (following a reject, break, continue, or return) found, is this
-    intended?

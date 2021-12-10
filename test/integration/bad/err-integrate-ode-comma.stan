@@ -1,11 +1,11 @@
 transformed data {
-  real y[10,10];
+  array[10,10] real y;
   real y0;
   real t0;
-  real ts[10];
-  real theta[3];
-  real x[2];
-  int x_int[4];
+  array[10] real ts;
+  array[3] real theta;
+  array[2] real x;
+  array[4] int x_int;
   y = integrate_ode_rk45(foo,y0,t0,ts,theta,x x_int);
 }
 model {

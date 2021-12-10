@@ -1,6 +1,6 @@
 functions {
   real foo(real x) {
-    return x + get_lp();
+    return x + target();
   }
 }
 parameters {

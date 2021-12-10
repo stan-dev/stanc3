@@ -3,10 +3,12 @@ transformed data {
   real y;
   real z;
   int n;
-
-  z = if_else(n,x,y);
-
-  z = binomial_coefficient_log(x,y);
+  
+  z = ((n) ? x : y);
+  
+  z = lchoose(x, y);
 }
 model {
+  
 }
+

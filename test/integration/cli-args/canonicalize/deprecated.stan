@@ -1,5 +1,5 @@
 functions {
-  real[] sho(real t,real[] y, real[] theta, real[] x, int[] x_int) {
+  real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
     real dydt[2];
     dydt[1] <- y[2];
     dydt[2] <- -y[1] - theta[1] * y[2];
@@ -21,20 +21,20 @@ functions {
 }
 data {
   int<lower=1> N;
-  real x_quad[N];
+  array[N] real x_quad;
 }
 transformed data {
   int a = -12;
   real b = 1.5;
   int c = abs(a);
   real d = abs(b);
-  int x_i[0];
-  real x_r[0];
+  array[0] int x_i;
+  array[0] real x_r;
   matrix[N, N] K = cov_exp_quad(x_quad, 1.0, 1.0);
 }
 parameters {
   real x;
-  real theta[3];
+  array[3] real theta;
 }
 model {
   real k = if_else(b<0, multiply_log(1, d), 0);
@@ -70,10 +70,10 @@ model {
   print("target: ", get_lp());
 }
 generated quantities {
-  real y0[2] = {1.0, 2.0};
-  real ts[3] = {0.5, 1.0, 2.0};
-  real y_hat[3,2] = integrate_ode(sho, y0, 0.0, ts, theta, x_r, x_i );
-  real y_hat_45[3,2] = integrate_ode_rk45(sho, y0, 0.0, ts, theta, x_r, x_i );
-  real y_hat_bdf[3,2] = integrate_ode_bdf(sho, y0, 0.0, ts, theta, x_r, x_i );
-  real y_hat_adams[3,2] = integrate_ode_adams(sho, y0, 0.0, ts, theta, x_r, x_i );
+  array[2] real y0 = {1.0, 2.0};
+  array[3] real ts = {0.5, 1.0, 2.0};
+  array[3,2] real y_hat = integrate_ode(sho, y0, 0.0, ts, theta, x_r, x_i );
+  array[3,2] real y_hat_45 = integrate_ode_rk45(sho, y0, 0.0, ts, theta, x_r, x_i );
+  array[3,2] real y_hat_bdf = integrate_ode_bdf(sho, y0, 0.0, ts, theta, x_r, x_i );
+  array[3,2] real y_hat_adams = integrate_ode_adams(sho, y0, 0.0, ts, theta, x_r, x_i );
 }

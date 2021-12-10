@@ -1,6 +1,6 @@
 parameters {
-  real x[3];
-  real y[size(x)];
+  array[3] real x;
+  array[size(x)] real y;
 }
 model {
   y ~ normal(0,1);

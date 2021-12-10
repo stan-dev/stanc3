@@ -133,7 +133,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   $ ../../../../../install/default/bin/stanc bad_not_enough_args.stan
 Semantic error in 'bad_not_enough_args.stan', line 13, column 8 to column 68:
    -------------------------------------------------
-    11:    int data_i[3, 3];
+    11:    array[3, 3] int data_i;
     12:    vector[3] y_hat_tp1
     13:        = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
                  ^

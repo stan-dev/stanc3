@@ -6,8 +6,8 @@ data {
 parameters {
   real d_sigma;
   real d_len;
-  vector[K] d_vec_1[N_1];
-  row_vector[K] d_rvec_1[N_2]; // bad mixed Eigen vector types
+  array[N_1] vector[K] d_vec_1;
+  array[N_2] row_vector[K] d_rvec_1; // bad mixed Eigen vector types
 }
 transformed parameters {
   matrix[N_2, N_1] transformed_params_matrix;

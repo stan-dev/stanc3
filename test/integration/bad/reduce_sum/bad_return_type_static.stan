@@ -1,11 +1,11 @@
 functions {
-  int my_func_0(real[] y_slice, int start, int end) {
+  int my_func_0(array[] real y_slice, int start, int end) {
     return 5;
   }
 }
 
 parameters {
-  real a[5];
+  array[5] real a;
 }
 
 model {
