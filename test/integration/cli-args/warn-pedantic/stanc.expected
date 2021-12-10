@@ -399,6 +399,197 @@ Warning: Parameter f has constraints that don't make sense. The lower bound
     should be strictly less than the upper bound.
 Warning: Parameter e has constraints that don't make sense. The lower bound
     should be strictly less than the upper bound.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_false_alarm.stan
+Warning in 'jacobian_false_alarm.stan', line 7, column 2: Declaration of
+    arrays by placing brackets after a variable name is deprecated and will
+    be removed in Stan 2.32.0. Instead use the array keyword before the type.
+    This can be changed automatically using stanc --auto-format
+Warning in 'jacobian_false_alarm.stan', line 62, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 58, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 57, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 56, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 55, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 54, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 53, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 43, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 42, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 41, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 40, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 39, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 38, column 25: A multi_normal
+    distribution is given parameter m as a covariance matrix (argument 2),
+    but m was not constrained to be covariance.
+Warning in 'jacobian_false_alarm.stan', line 38, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 37, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 37, column 2: It is suggested to
+    reparameterize your model to replace lkj_corr with lkj_corr_cholesky, the
+    Cholesky factor variant. lkj_corr tends to run slower, consume more
+    memory, and has higher risk of numerical errors.
+Warning in 'jacobian_false_alarm.stan', line 36, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 35, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 34, column 29: A multi_normal
+    distribution is given parameter m as a covariance matrix (argument 2),
+    but m was not constrained to be covariance.
+Warning in 'jacobian_false_alarm.stan', line 34, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 33, column 31: A multi_normal
+    distribution is given parameter m as a covariance matrix (argument 2),
+    but m was not constrained to be covariance.
+Warning in 'jacobian_false_alarm.stan', line 33, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 32, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 31, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 30, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 29, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 28, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 28, column 2: It is suggested to
+    reparameterize your model to replace lkj_corr with lkj_corr_cholesky, the
+    Cholesky factor variant. lkj_corr tends to run slower, consume more
+    memory, and has higher risk of numerical errors.
+Warning in 'jacobian_false_alarm.stan', line 27, column 27: A multi_normal
+    distribution is given parameter m as a covariance matrix (argument 2),
+    but m was not constrained to be covariance.
+Warning in 'jacobian_false_alarm.stan', line 27, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 26, column 27: A multi_normal
+    distribution is given parameter m as a covariance matrix (argument 2),
+    but m was not constrained to be covariance.
+Warning in 'jacobian_false_alarm.stan', line 26, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 25, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 25, column 2: It is suggested to
+    reparameterize your model to replace lkj_corr with lkj_corr_cholesky, the
+    Cholesky factor variant. lkj_corr tends to run slower, consume more
+    memory, and has higher risk of numerical errors.
+Warning in 'jacobian_false_alarm.stan', line 24, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_false_alarm.stan', line 24, column 2: It is suggested to
+    reparameterize your model to replace lkj_corr with lkj_corr_cholesky, the
+    Cholesky factor variant. lkj_corr tends to run slower, consume more
+    memory, and has higher risk of numerical errors.
+Warning in 'jacobian_false_alarm.stan', line 23, column 2: It is suggested to
+    reparameterize your model to replace lkj_corr with lkj_corr_cholesky, the
+    Cholesky factor variant. lkj_corr tends to run slower, consume more
+    memory, and has higher risk of numerical errors.
+Warning in 'jacobian_false_alarm.stan', line 23, column 2: Parameter m is
+    given a lkj_corr distribution, which has correlation support, but m was
+    not constrained to be correlation.
+Warning: The parameter z has 7 priors.
+Warning: The parameter y has 7 priors.
+Warning: The parameter v has 9 priors.
+Warning: The parameter m has 16 priors.
+Warning: The parameter a has 2 priors.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning1.stan
+Warning in 'jacobian_warning1.stan', line 5, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning2.stan
+Warning in 'jacobian_warning2.stan', line 5, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning3.stan
+Warning in 'jacobian_warning3.stan', line 5, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning4.stan
+Warning in 'jacobian_warning4.stan', line 5, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning5.stan
+Warning in 'jacobian_warning5.stan', line 5, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning6.stan
+Warning in 'jacobian_warning6.stan', line 5, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning_user.stan
+Warning in 'jacobian_warning_user.stan', line 5, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  missing_priors.stan
 Warning: The parameter tau has no priors.
 Warning: The parameter mu has no priors.

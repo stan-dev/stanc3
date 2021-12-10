@@ -10,7 +10,10 @@ open Factor_graph
 open Mir_utils
 open Pedantic_dist_warnings
 
-type warning_span = Location_span.t * string [@@deriving compare]
+type warning_span = Location_span.t * string
+
+let compare_warning_span (w1 : warning_span) (w2 : warning_span) =
+  Location.compare (fst w1).begin_loc (fst w2).begin_loc
 
 (*********************
    Pattern collection functions
@@ -463,4 +466,4 @@ let warn_pedantic (mir_unopt : Program.Typed.t) =
     ; param_dependant_cf_warnings mir; param_dependant_fundef_cf_warnings mir
     ; non_one_priors_warnings factor_graph mir
     ; distribution_warnings distributions_info ]
-  |> to_list |> List.rev
+  |> to_list
