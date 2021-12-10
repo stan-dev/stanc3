@@ -10,10 +10,7 @@ open Factor_graph
 open Mir_utils
 open Pedantic_dist_warnings
 
-type warning_span = Location_span.t * string
-
-let compare_warning_span (w1 : warning_span) (w2 : warning_span) =
-  Location.compare (fst w1).begin_loc (fst w2).begin_loc
+type warning_span = Location_span.t * string [@@deriving compare]
 
 (*********************
    Pattern collection functions
