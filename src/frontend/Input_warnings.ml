@@ -28,7 +28,7 @@ let array_syntax ?(unsized = false) (pos1, pos2) =
     ( "Declaration of arrays by placing brackets after " ^ placement
     ^ " is deprecated and will be removed in Stan 2.32.0. Instead use the \
        array keyword before the type. This can be changed automatically using \
-       stanc --auto-format" )
+       the auto-format flag to stanc" )
 
 let drop_array_future () =
   match !warnings with
