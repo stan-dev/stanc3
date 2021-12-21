@@ -84,8 +84,8 @@ rule token = parse
                                                        syntax will be removed in \
                                                        Stan 2.32.0. Use // to begin \
                                                        line comments; this can be \
-                                                       done automatically using stanc \
-                                                       --auto-format") ;
+                                                       done automatically using the \
+                                                       auto-format flag to stanc") ;
                                 singleline_comment (lexbuf.lex_curr_p, Buffer.create 16) lexbuf;
                                 token lexbuf } (* deprecated *)
 (* Program blocks *)
@@ -193,7 +193,8 @@ rule token = parse
                                                        be removed in Stan 2.32.0; \
                                                        use = instead. This \
                                                        can be done automatically \
-                                                       with stanc --print-canonical") ;
+                                                       with the canonicalize flag \
+                                                       for stanc") ;
                                 Parser.ARROWASSIGN } (* deprecated *)
   | "increment_log_prob"      { lexer_logger "increment_log_prob" ;
                                 Input_warnings.deprecated "increment_log_prob"
@@ -203,7 +204,8 @@ rule token = parse
                                                        2.32.0. Use target \
                                                        += ...; instead. This \
                                                        can be done automatically \
-                                                       with stanc --print-canonical") ;
+                                                       with the canonicalize flag \
+                                                       for stanc") ;
                                 Parser.INCREMENTLOGPROB } (* deprecated *)
 (* Effects *)
   | "print"                   { lexer_logger "print" ; Parser.PRINT }
@@ -224,7 +226,8 @@ rule token = parse
                                                        removed in Stan 2.32.0. \
                                                        Use target() instead. \
                                                        This can be done automatically \
-                                                       with stanc --print-canonical") ;
+                                                       with the canonicalize flag for \
+                                                       stanc") ;
                                 Parser.GETLP } (* deprecated *)
   | string_literal as s       { lexer_logger ("string_literal " ^ s) ;
                                 Parser.STRINGLITERAL (lexeme lexbuf) }
