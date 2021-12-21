@@ -3234,7 +3234,7 @@ let%expect_test "adlevel_optimization" =
       }
 
       generate_quantities {
-        real w;
+        data real w;
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         {
           data int x;
@@ -3432,14 +3432,14 @@ let%expect_test "adlevel_optimization 2" =
       }
 
       generate_quantities {
-        real w;
+        data real w;
         data real w_trans;
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         w_trans = 1;
         {
           data int x;
-          array[real, 2] y;
-          real z;
+          data array[real, 2] y;
+          data real z;
           data real z_data;
           if((1 > 2)) y[1] = (y[1] + x); else y[2] = (y[2] + w);
           if((2 > 1)) z = y[1];

@@ -134,6 +134,24 @@ let reverse (type l) (module F : FLOWGRAPH with type labels = l) =
   : FLOWGRAPH
     with type labels = l )
 
+let make_circular_flowgraph (type l)
+    (module Flowgraph : FLOWGRAPH with type labels = l) =
+  ( module struct
+    type labels = Flowgraph.labels
+    type t = labels
+
+    let compare = Flowgraph.compare
+    let hash = Flowgraph.hash
+    let sexp_of_t = Flowgraph.sexp_of_t
+    let initials = Flowgraph.initials
+
+    let successors =
+      let set_exits_to_depend_on_inits x =
+        match Set.Poly.length x with 0 -> Flowgraph.initials | _ -> x in
+      Map.map Flowgraph.successors ~f:set_exits_to_depend_on_inits end
+  : FLOWGRAPH
+    with type labels = l )
+
 (** Compute the forward flowgraph of a Stan statement (for forward analyses) *)
 let forward_flowgraph_of_stmt ?(flatten_loops = false)
     ?(blocks_after_body = true) stmt =
@@ -1024,8 +1042,6 @@ let lazy_expressions_mfp
 
 let rec minimal_variables_mfp
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH with type labels = int)
-    (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-      with type labels = int )
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (initial_variables : string Set.Poly.t)
     (gen_variable :
@@ -1033,40 +1049,19 @@ let rec minimal_variables_mfp
       -> int
       -> string Set.Poly.t
       -> string Set.Poly.t ) =
+  let get_names ~key ~data acc =
+    match key with _ -> Set.Poly.union acc data.exit in
   let (module Lattice1) = minimal_variables_lattice initial_variables in
-  let (module Lattice2) = minimal_variables_lattice Set.Poly.empty in
   let (module Transfer1) =
     minimal_variables_fwd1_transfer true gen_variable flowgraph_to_mir in
   let (module Mf1) =
     monotone_framework (module Flowgraph) (module Lattice1) (module Transfer1)
   in
   let fwd1_min_vars_mfp = Mf1.mfp () in
-  let (module Transfer2) =
-    minimal_variables_rev_transfer false flowgraph_to_mir
-      (Map.map ~f:(fun x -> x.exit) fwd1_min_vars_mfp) in
-  let (module Mf2) =
-    monotone_framework
-      (module Rev_Flowgraph)
-      (module Lattice2)
-      (module Transfer2) in
-  let rev_min_vars_mfp = Mf2.mfp () in
-  let get_names ~key ~data acc =
-    match key with _ -> Set.Poly.union acc data.exit in
-  let (module Lattice3) =
-    minimal_variables_lattice
-      (Map.fold ~init:Set.Poly.empty ~f:get_names rev_min_vars_mfp) in
-  let (module Transfer3) =
-    minimal_variables_fwd2_transfer false flowgraph_to_mir
-      (Map.map ~f:(fun x -> x.entry) rev_min_vars_mfp) in
-  let (module Mf3) =
-    monotone_framework (module Flowgraph) (module Lattice3) (module Transfer3)
-  in
-  let fwd2_min_vars_mfp = Mf3.mfp () in
   let variable_set =
-    Map.fold ~init:Set.Poly.empty ~f:get_names fwd2_min_vars_mfp in
+    Map.fold ~init:Set.Poly.empty ~f:get_names fwd1_min_vars_mfp in
   if Set.Poly.length initial_variables <> Set.Poly.length variable_set then
     minimal_variables_mfp
       (module Flowgraph)
-      (module Rev_Flowgraph)
       flowgraph_to_mir variable_set gen_variable
-  else fwd2_min_vars_mfp
+  else fwd1_min_vars_mfp
