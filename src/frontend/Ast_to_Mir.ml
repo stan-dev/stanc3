@@ -357,7 +357,9 @@ let trans_decl {transform_action; dadlevel} smeta decl_type transform identifier
   if Utils.is_user_ident decl_id then
     let constrain_checks =
       match transform_action with
-      | Constrain | Unconstrain -> Common.FatalError.fatal_error ()
+      | Constrain | Unconstrain ->
+          Common.FatalError.fatal_error_msg
+            [%message "Constraints must use trans_sizedtype_decl instead"]
       | Check ->
           check_transform_shape decl_id decl_var smeta transform
           @ check_decl decl_var dt decl_id transform smeta dadlevel

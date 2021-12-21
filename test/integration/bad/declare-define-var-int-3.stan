@@ -1,5 +1,5 @@
 transformed data {
-  int td_a1[2] = 1;   // array = scalar - bad
+  array[2] int td_a1 = 1;   // array = scalar - bad
 }
 parameters {
   real y;

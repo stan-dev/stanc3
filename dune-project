@@ -1,13 +1,13 @@
-(lang dune 2.5)
+(lang dune 2.8)
 (using menhir 1.1)
 (name stanc)
+(cram enable)
 (generate_opam_files true)
 (package
  (name stanc)
  (synopsis "The Stan compiler and utilities")
  (depends
   (ocaml (= 4.12.0))
-  (dune (>= 2.8))
   (core_kernel (= v0.14.2))
   (menhir (= 20210929))
   (ppx_deriving (= 5.2.1))

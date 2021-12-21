@@ -3,7 +3,7 @@ data {
 }
 parameters {
    int N;
-   real z[N];
+   array[N] real z;
 }
 model {
 }

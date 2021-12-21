@@ -221,7 +221,10 @@ module Helpers = struct
       | Indexed (e, indices) -> Indexed (e, indices @ [i])
       | _ ->
           (* These should go away with Ryan's LHS *)
-          Common.FatalError.fatal_error () in
+          Common.FatalError.fatal_error_msg
+            [%message
+              "Expected Var or Indexed but found " (e : Typed.Meta.t Fixed.t)]
+    in
     Fixed.{meta; pattern}
 
   (** TODO: Make me tail recursive *)

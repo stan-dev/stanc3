@@ -8,7 +8,7 @@ transformed data {
   real alpha_true = 1.5;
   for (j in 1:M)
   {
-    beta_true[j] = j/M;
+    beta_true[j] = j* 1.0 /M;
   }
   for (i in 1:N)
   {
@@ -22,11 +22,11 @@ transformed data {
 parameters {
   real alpha_inferred;
   vector[M] beta_inferred;
-  
+
 }
 model {
   beta_inferred ~ normal(0, 2);
   alpha_inferred ~ normal(0, 4);
-  
+
   y ~ normal_id_glm(x, alpha_inferred, beta_inferred, sigma);
 }

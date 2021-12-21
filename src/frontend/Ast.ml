@@ -81,9 +81,7 @@ let mk_typed_expression ~expr ~loc ~type_ ~ad_level =
 
 let expr_loc_lub exprs =
   match List.map ~f:(fun e -> e.emeta.loc) exprs with
-  | [] ->
-      Common.FatalError.fatal_error_msg
-        [%message "Can't find location lub for empty list"]
+  | [] -> Location_span.empty
   | [hd] -> hd
   | x1 :: tl -> List.fold ~init:x1 ~f:Location_span.merge tl
 
@@ -221,8 +219,12 @@ type 's block = {stmts: 's list; xloc: Middle.Location_span.t [@ignore]}
 
 and comment_type =
   | LineComment of string * Middle.Location_span.t
+  | Include of string * Middle.Location_span.t
   | BlockComment of string list * Middle.Location_span.t
-  | Comma of Middle.Location.t
+  | Separator of Middle.Location.t
+      (** Separator records the location of items like commas, operators, and keywords
+          which don't have location information stored in the AST
+          but are useful for placing comments in pretty printing *)
 
 and 's program =
   { functionblock: 's block option
@@ -334,7 +336,6 @@ let get_loc_tf (t : untyped_expression Transformation.t) =
 
 let get_first_loc (s : untyped_statement) =
   match s.stmt with
-  | Assignment {assign_lhs; _} -> assign_lhs.lmeta.loc.end_loc
   | NRFunApp (_, id, _)
    |For {loop_variable= id; _}
    |ForEach (id, _, _)
@@ -346,10 +347,9 @@ let get_first_loc (s : untyped_statement) =
    |IfThenElse (e, _, _)
    |While (e, _) ->
       e.emeta.loc.begin_loc
-  | Profile _ | Block _ -> s.smeta.loc.begin_loc
-  | Tilde {arg; _} -> get_loc_expr arg
-  | Break | Continue | ReturnVoid | Print _ | Reject _ | Skip ->
-      s.smeta.loc.end_loc
+  | Assignment _ | Profile _ | Block _ | Tilde _ | Break | Continue
+   |ReturnVoid | Print _ | Reject _ | Skip ->
+      s.smeta.loc.begin_loc
   | VarDecl {decl_type; transformation; identifier; _} -> (
     match get_loc_dt decl_type with
     | Some loc -> loc

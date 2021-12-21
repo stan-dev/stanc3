@@ -10777,6 +10777,10 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name indexing_model) (prog_path indexing.stan))
+Warning in 'indexing.stan', line 12, column 1: Declaration of arrays by
+    placing brackets after a variable name is deprecated and will be removed
+    in Stan 2.32.0. Instead use the array keyword before the type. This can
+    be changed automatically using the auto-format flag to stanc
   $ ../../../../../install/default/bin/stanc --debug-transformed-mir indexing2.stan
 ((functions_block ())
  (input_vars

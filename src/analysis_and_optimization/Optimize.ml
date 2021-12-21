@@ -210,6 +210,16 @@ let handle_early_returns opt_var b =
               ; body= map_rec_stmt_loc f b }
         ; meta= Location_span.empty } ]
 
+let inline_list f es =
+  let dse_list = List.map ~f es in
+  (* function arguments are evaluated from right to left in C++, so we need to reverse *)
+  let d_list =
+    List.concat (List.rev (List.map ~f:(function x, _, _ -> x) dse_list)) in
+  let s_list =
+    List.concat (List.rev (List.map ~f:(function _, x, _ -> x) dse_list)) in
+  let es = List.map ~f:(function _, _, x -> x) dse_list in
+  (d_list, s_list, es)
+
 (* Triple is (declaration list, statement list, return expression) *)
 let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
     =
@@ -217,16 +227,8 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
   | Var _ -> ([], [], e)
   | Lit (_, _) -> ([], [], e)
   | FunApp (kind, es) -> (
-      let dse_list =
-        List.map ~f:(inline_function_expression propto adt fim) es in
-      (* function arguments are evaluated from right to left in C++, so we need to reverse *)
-      let d_list =
-        List.concat (List.rev (List.map ~f:(function x, _, _ -> x) dse_list))
-      in
-      let s_list =
-        List.concat (List.rev (List.map ~f:(function _, x, _ -> x) dse_list))
-      in
-      let es = List.map ~f:(function _, _, x -> x) dse_list in
+      let d_list, s_list, es =
+        inline_list (inline_function_expression propto adt fim) es in
       match kind with
       | CompilerInternal _ ->
           (d_list, s_list, {e with pattern= FunApp (kind, es)})
@@ -282,14 +284,8 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
       , {e with pattern= TernaryIf (e1, e2, e3)} )
   | Indexed (e', i_list) ->
       let dl, sl, e' = inline_function_expression propto adt fim e' in
-      let dsi_list = List.map ~f:(inline_function_index propto adt fim) i_list in
-      let d_list =
-        List.concat (List.rev (List.map ~f:(function x, _, _ -> x) dsi_list))
-      in
-      let s_list =
-        List.concat (List.rev (List.map ~f:(function _, x, _ -> x) dsi_list))
-      in
-      let i_list = List.map ~f:(function _, _, x -> x) dsi_list in
+      let d_list, s_list, i_list =
+        inline_list (inline_function_index propto adt fim) i_list in
       (d_list @ dl, s_list @ sl, {e with pattern= Indexed (e', i_list)})
   | EAnd (e1, e2) ->
       let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
@@ -335,17 +331,9 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.{pattern; meta} =
     { pattern=
         ( match pattern with
         | Assignment ((x, ut, l), e2) ->
-            let e1 = {e2 with pattern= Indexed ({e2 with pattern= Var x}, l)} in
-            (* This inner e2 is wrong. We are giving the wrong type to Var x. But it doens't really matter as we discard it later. *)
-            let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
+            let dl1, sl1, l =
+              inline_list (inline_function_index propto adt fim) l in
             let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
-            let x, l =
-              match e1.pattern with
-              | Var x -> (x, [])
-              | Indexed ({pattern= Var x; _}, l) -> (x, l)
-              | _ as w ->
-                  Common.FatalError.fatal_error_msg
-                    [%sexp (w : Expr.Typed.t Expr.Fixed.Pattern.t)] in
             slist_concat_no_loc
               (dl2 @ dl1 @ sl2 @ sl1)
               (Assignment ((x, ut, l), e2))
@@ -353,16 +341,8 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.{pattern; meta} =
             let d, s, e = inline_function_expression propto adt fim e in
             slist_concat_no_loc (d @ s) (TargetPE e)
         | NRFunApp (kind, es) ->
-            let dse_list =
-              List.map ~f:(inline_function_expression propto adt fim) es in
-            (* function arguments are evaluated from right to left in C++, so we need to reverse *)
-            let d_list =
-              List.concat
-                (List.rev (List.map ~f:(function x, _, _ -> x) dse_list)) in
-            let s_list =
-              List.concat
-                (List.rev (List.map ~f:(function _, x, _ -> x) dse_list)) in
-            let es = List.map ~f:(function _, _, x -> x) dse_list in
+            let d_list, s_list, es =
+              inline_list (inline_function_expression propto adt fim) es in
             slist_concat_no_loc (d_list @ s_list)
               ( match kind with
               | CompilerInternal _ -> NRFunApp (kind, es)

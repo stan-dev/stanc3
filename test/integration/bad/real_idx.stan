@@ -1,5 +1,5 @@
 transformed data {
-  real a[10];
+  array[10] real a;
   a[1.0] = 5;
 }
 model {
