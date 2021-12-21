@@ -5942,7 +5942,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 787> locations_array__ = 
+static constexpr std::array<const char*, 785> locations_array__ = 
 {" (found before start of program)",
  " (in 'mother.stan', line 603, column 2 to column 14)",
  " (in 'mother.stan', line 604, column 2 to column 29)",
@@ -6285,7 +6285,6 @@ static constexpr std::array<const char*, 787> locations_array__ =
  " (in 'mother.stan', line 424, column 19 to line 434, column 3)",
  " (in 'mother.stan', line 424, column 2 to line 434, column 3)",
  " (in 'mother.stan', line 437, column 6 to column 42)",
- " (in 'mother.stan', line 438, column 6 to column 65)",
  " (in 'mother.stan', line 436, column 21 to line 439, column 5)",
  " (in 'mother.stan', line 436, column 4 to line 439, column 5)",
  " (in 'mother.stan', line 435, column 19 to line 440, column 3)",
@@ -6679,7 +6678,6 @@ static constexpr std::array<const char*, 787> locations_array__ =
  " (in 'mother.stan', line 224, column 4 to column 24)",
  " (in 'mother.stan', line 225, column 4 to column 13)",
  " (in 'mother.stan', line 220, column 49 to line 226, column 3)",
- " (in 'mother.stan', line 230, column 4 to column 16)",
  " (in 'mother.stan', line 229, column 63 to line 231, column 3)",
  " (in 'mother.stan', line 236, column 4 to column 14)",
  " (in 'mother.stan', line 235, column 62 to line 237, column 3)",
@@ -6744,12 +6742,12 @@ foo(const int& n, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 593;
+    current_statement__ = 592;
     if (logical_eq(n, 0)) {
-      current_statement__ = 592;
+      current_statement__ = 591;
       return 1;
     } 
-    current_statement__ = 594;
+    current_statement__ = 593;
     return (n * foo((n - 1), pstream__));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6787,15 +6785,15 @@ sho(const T0__& t, const std::vector<T1__>& y,
   try {
     std::vector<local_scalar_t__> dydt =
        std::vector<local_scalar_t__>(2, DUMMY_VAR__);
-    current_statement__ = 597;
+    current_statement__ = 596;
     assign(dydt, rvalue(y, "y", index_uni(2)),
       "assigning variable dydt", index_uni(1));
-    current_statement__ = 598;
+    current_statement__ = 597;
     assign(dydt,
       (-rvalue(y, "y", index_uni(1)) -
         (rvalue(theta, "theta", index_uni(1)) * rvalue(y, "y", index_uni(2)))),
       "assigning variable dydt", index_uni(2));
-    current_statement__ = 599;
+    current_statement__ = 598;
     return dydt;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6824,7 +6822,7 @@ foo_bar0(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 601;
+    current_statement__ = 600;
     return 0.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6850,7 +6848,7 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 603;
+    current_statement__ = 602;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6878,7 +6876,7 @@ foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 605;
+    current_statement__ = 604;
     return 2.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6904,7 +6902,7 @@ foo_lpmf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 607;
+    current_statement__ = 606;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6931,7 +6929,7 @@ foo_lcdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 609;
+    current_statement__ = 608;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6958,7 +6956,7 @@ foo_lccdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 611;
+    current_statement__ = 610;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6987,7 +6985,7 @@ foo_rng(const T0__& mu, const T1__& sigma, RNG& base_rng__,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 613;
+    current_statement__ = 612;
     return normal_rng(mu, sigma, base_rng__);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7016,9 +7014,9 @@ unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 615;
+    current_statement__ = 614;
     lp_accum__.add(normal_lpdf<false>(u, 0, 1));
-    current_statement__ = 616;
+    current_statement__ = 615;
     lp_accum__.add(uniform_lpdf<propto__>(u, -100, 100));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7046,32 +7044,32 @@ foo_1(const int& a, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 619;
+    current_statement__ = 618;
     while (1) {
       break;
     }
-    current_statement__ = 621;
+    current_statement__ = 620;
     while (0) {
       continue;
     }
-    current_statement__ = 623;
+    current_statement__ = 622;
     for (int i = 1; i <= 10; ++i) { break;}
-    current_statement__ = 625;
+    current_statement__ = 624;
     for (int i = 1; i <= 10; ++i) { continue;}
-    current_statement__ = 630;
+    current_statement__ = 629;
     while (1) {
       int b = std::numeric_limits<int>::min();
-      current_statement__ = 627;
+      current_statement__ = 626;
       b = 5;
       break;
     }
-    current_statement__ = 637;
+    current_statement__ = 636;
     while (1) {
-      current_statement__ = 635;
+      current_statement__ = 634;
       if (0) {
         break;
       } else {
-        current_statement__ = 633;
+        current_statement__ = 632;
         if (1) {
           break;
         } else {
@@ -7079,175 +7077,175 @@ foo_1(const int& a, std::ostream* pstream__) {
         }
       }
     }
-    current_statement__ = 640;
+    current_statement__ = 639;
     while (1) {
-      current_statement__ = 639;
+      current_statement__ = 638;
       while (0) {
         break;
       }
     }
-    current_statement__ = 644;
+    current_statement__ = 643;
     while (1) {
-      current_statement__ = 642;
+      current_statement__ = 641;
       for (int i = 1; i <= 10; ++i) { break;}
     }
-    current_statement__ = 659;
+    current_statement__ = 658;
     while (1) {
       std::vector<std::vector<int>> vs =
          std::vector<std::vector<int>>(2, 
            std::vector<int>(3, std::numeric_limits<int>::min()));
       int z = std::numeric_limits<int>::min();
-      current_statement__ = 647;
+      current_statement__ = 646;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           std::vector<int> v;
-          current_statement__ = 647;
+          current_statement__ = 646;
           assign(v, vs[(sym1__ - 1)], "assigning variable v");
-          current_statement__ = 648;
+          current_statement__ = 647;
           z = 0;
           break;
         }
       }
-      current_statement__ = 650;
+      current_statement__ = 649;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           std::vector<int> v;
-          current_statement__ = 650;
+          current_statement__ = 649;
           assign(v, vs[(sym1__ - 1)], "assigning variable v");
-          current_statement__ = 651;
+          current_statement__ = 650;
           z = 0;
           continue;
         }
       }
-      current_statement__ = 653;
+      current_statement__ = 652;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           std::vector<int> v;
-          current_statement__ = 653;
+          current_statement__ = 652;
           assign(v, vs[(sym1__ - 1)], "assigning variable v");
-          current_statement__ = 654;
+          current_statement__ = 653;
           for (int sym1__ = 1; sym1__ <= stan::math::size(v); ++sym1__) {
             {
               int vv;
-              current_statement__ = 654;
+              current_statement__ = 653;
               vv = v[(sym1__ - 1)];
-              current_statement__ = 655;
+              current_statement__ = 654;
               z = 0;
               break;
             }
           }
-          current_statement__ = 657;
+          current_statement__ = 656;
           z = 1;
         }
       }
     }
-    current_statement__ = 669;
+    current_statement__ = 668;
     while (1) {
       local_scalar_t__ z = DUMMY_VAR__;
       Eigen::Matrix<local_scalar_t__, -1, -1> vs =
          Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(2, 3, DUMMY_VAR__);
-      current_statement__ = 662;
+      current_statement__ = 661;
       for (int sym1__ = 1; sym1__ <= rows(vs); ++sym1__) {
-        current_statement__ = 662;
+        current_statement__ = 661;
         for (int sym2__ = 1;
              sym2__ <= stan::math::size(rvalue(vs, "vs", index_uni(sym1__)));
              ++sym2__) {
           {
             local_scalar_t__ v;
-            current_statement__ = 662;
+            current_statement__ = 661;
             v = rvalue(vs, "vs", index_uni(sym1__), index_uni(sym2__));
-            current_statement__ = 663;
+            current_statement__ = 662;
             z = 0;
             break;
           }
         }
       }
-      current_statement__ = 665;
+      current_statement__ = 664;
       for (int sym1__ = 1; sym1__ <= rows(vs); ++sym1__) {
-        current_statement__ = 665;
+        current_statement__ = 664;
         for (int sym2__ = 1;
              sym2__ <= stan::math::size(rvalue(vs, "vs", index_uni(sym1__)));
              ++sym2__) {
           {
             local_scalar_t__ v;
-            current_statement__ = 665;
+            current_statement__ = 664;
             v = rvalue(vs, "vs", index_uni(sym1__), index_uni(sym2__));
-            current_statement__ = 666;
+            current_statement__ = 665;
             z = 3.1;
             continue;
           }
         }
       }
     }
-    current_statement__ = 679;
+    current_statement__ = 678;
     while (1) {
       local_scalar_t__ z = DUMMY_VAR__;
       Eigen::Matrix<local_scalar_t__, -1, 1> vs =
          Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
-      current_statement__ = 672;
+      current_statement__ = 671;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 672;
+          current_statement__ = 671;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 673;
+          current_statement__ = 672;
           z = 0;
           break;
         }
       }
-      current_statement__ = 675;
+      current_statement__ = 674;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 675;
+          current_statement__ = 674;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 676;
+          current_statement__ = 675;
           z = 3.2;
           continue;
         }
       }
     }
-    current_statement__ = 689;
+    current_statement__ = 688;
     while (1) {
       local_scalar_t__ z = DUMMY_VAR__;
       Eigen::Matrix<local_scalar_t__, 1, -1> vs =
          Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(2, DUMMY_VAR__);
-      current_statement__ = 682;
+      current_statement__ = 681;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 682;
+          current_statement__ = 681;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 683;
+          current_statement__ = 682;
           z = 0;
           break;
         }
       }
-      current_statement__ = 685;
+      current_statement__ = 684;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 685;
+          current_statement__ = 684;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 686;
+          current_statement__ = 685;
           z = 3.3;
           continue;
         }
       }
     }
-    current_statement__ = 697;
+    current_statement__ = 696;
     while (1) {
       int b = std::numeric_limits<int>::min();
-      current_statement__ = 691;
+      current_statement__ = 690;
       b = 5;
       {
         int c = std::numeric_limits<int>::min();
-        current_statement__ = 693;
+        current_statement__ = 692;
         c = 6;
         break;
       }
     }
-    current_statement__ = 698;
+    current_statement__ = 697;
     return 0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7275,17 +7273,17 @@ foo_2(const int& a, std::ostream* pstream__) {
     std::vector<int> vs =
        std::vector<int>(2, std::numeric_limits<int>::min());
     int y = std::numeric_limits<int>::min();
-    current_statement__ = 702;
+    current_statement__ = 701;
     for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
       {
         int v;
-        current_statement__ = 702;
+        current_statement__ = 701;
         v = vs[(sym1__ - 1)];
-        current_statement__ = 703;
+        current_statement__ = 702;
         y = v;
       }
     }
-    current_statement__ = 704;
+    current_statement__ = 703;
     return 0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7311,7 +7309,7 @@ foo_3(const T0__& t, const int& n, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 706;
+    current_statement__ = 705;
     return rep_array(t, n);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7338,7 +7336,7 @@ foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 708;
+    current_statement__ = 707;
     return (x + get_lp(lp__, lp_accum__));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7367,7 +7365,7 @@ foo_4(const T0__& x, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 710;
+    current_statement__ = 709;
     std::stringstream errmsg_stream__;
     errmsg_stream__ << "user-specified rejection";
     errmsg_stream__ << x;
@@ -7401,13 +7399,13 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
   try {
     local_scalar_t__ abs_diff = DUMMY_VAR__;
     local_scalar_t__ avg_scale = DUMMY_VAR__;
-    current_statement__ = 714;
+    current_statement__ = 713;
     abs_diff = stan::math::fabs((x - y));
-    current_statement__ = 715;
+    current_statement__ = 714;
     avg_scale = ((stan::math::fabs(x) + stan::math::fabs(y)) / 2);
-    current_statement__ = 717;
+    current_statement__ = 716;
     if (logical_gt((abs_diff / avg_scale), max_)) {
-      current_statement__ = 716;
+      current_statement__ = 715;
       std::stringstream errmsg_stream__;
       errmsg_stream__ << "user-specified rejection, difference above ";
       errmsg_stream__ << max_;
@@ -7417,9 +7415,9 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
       errmsg_stream__ << y;
       throw std::domain_error(errmsg_stream__.str());
     } 
-    current_statement__ = 719;
+    current_statement__ = 718;
     if (logical_lt((abs_diff / avg_scale), min_)) {
-      current_statement__ = 718;
+      current_statement__ = 717;
       std::stringstream errmsg_stream__;
       errmsg_stream__ << "user-specified rejection, difference below ";
       errmsg_stream__ << min_;
@@ -7429,7 +7427,7 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
       errmsg_stream__ << y;
       throw std::domain_error(errmsg_stream__.str());
     } 
-    current_statement__ = 720;
+    current_statement__ = 719;
     return (abs_diff / avg_scale);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7464,7 +7462,7 @@ foo_5(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 722;
+    current_statement__ = 721;
     return (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished();
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7501,7 +7499,7 @@ foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 724;
+    current_statement__ = 723;
     return x1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7539,7 +7537,7 @@ foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 726;
+    current_statement__ = 725;
     return x1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7574,22 +7572,22 @@ covsqrt2corsqrt(const T0__& mat_arg__, const int& invert,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 728;
+    current_statement__ = 727;
     validate_non_negative_index("o", "rows(mat)", rows(mat));
-    current_statement__ = 729;
+    current_statement__ = 728;
     validate_non_negative_index("o", "cols(mat)", cols(mat));
     Eigen::Matrix<local_scalar_t__, -1, -1> o =
        Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(rows(mat),
          cols(mat), DUMMY_VAR__);
-    current_statement__ = 731;
+    current_statement__ = 730;
     assign(o, mat, "assigning variable o");
-    current_statement__ = 732;
+    current_statement__ = 731;
     assign(o, stan::model::deep_copy(rvalue(o, "o", index_uni(2))),
       "assigning variable o", index_uni(1));
-    current_statement__ = 733;
+    current_statement__ = 732;
     assign(o, stan::model::deep_copy(rvalue(o, "o", index_min_max(1, 2))),
       "assigning variable o", index_min_max(3, 4));
-    current_statement__ = 734;
+    current_statement__ = 733;
     return o;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7634,11 +7632,7 @@ f0(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 736;
-    if (pstream__) {
-      stan_print(pstream__, "hi");
-      stan_print(pstream__, "\n");
-    }
+    
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -7692,7 +7686,7 @@ f1(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 738;
+    current_statement__ = 736;
     return a1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7747,7 +7741,7 @@ f2(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 740;
+    current_statement__ = 738;
     return a2;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7802,7 +7796,7 @@ f3(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 742;
+    current_statement__ = 740;
     return a3;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7859,7 +7853,7 @@ f4(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 744;
+    current_statement__ = 742;
     return a4;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7918,7 +7912,7 @@ f5(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 746;
+    current_statement__ = 744;
     return a5;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7977,7 +7971,7 @@ f6(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 748;
+    current_statement__ = 746;
     return a6;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8036,7 +8030,7 @@ f7(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 750;
+    current_statement__ = 748;
     return a7;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8095,7 +8089,7 @@ f8(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 752;
+    current_statement__ = 750;
     return a8;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8154,7 +8148,7 @@ f9(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 754;
+    current_statement__ = 752;
     return a9;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8213,7 +8207,7 @@ f10(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 756;
+    current_statement__ = 754;
     return a10;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8272,7 +8266,7 @@ f11(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 758;
+    current_statement__ = 756;
     return a11;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8331,7 +8325,7 @@ f12(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 760;
+    current_statement__ = 758;
     return a12;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8379,7 +8373,7 @@ foo_6(std::ostream* pstream__) {
          std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(70, 
            Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(40, 50,
              DUMMY_VAR__)));
-    current_statement__ = 766;
+    current_statement__ = 764;
     assign(ar_mat, b,
       "assigning variable ar_mat", index_uni(1), index_uni(1), index_uni(1),
                                      index_uni(1));
@@ -8406,7 +8400,7 @@ matfoo(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 768;
+    current_statement__ = 766;
     return stan::math::to_matrix(std::vector<Eigen::Matrix<double, 1, -1>>{
         (Eigen::Matrix<double,1,-1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9,
         10).finished(), (Eigen::Matrix<double,1,-1>(10) << 1, 2, 3, 4, 5, 6,
@@ -8435,7 +8429,7 @@ vecfoo(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 770;
+    current_statement__ = 768;
     return (Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9,
         10).finished();
   } catch (const std::exception& e) {
@@ -8464,9 +8458,9 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
   try {
     Eigen::Matrix<local_scalar_t__, -1, 1> l =
        Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(10, DUMMY_VAR__);
-    current_statement__ = 772;
+    current_statement__ = 770;
     assign(l, multiply(mu, vecfoo(pstream__)), "assigning variable l");
-    current_statement__ = 773;
+    current_statement__ = 771;
     return l;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8495,11 +8489,11 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
   try {
     Eigen::Matrix<local_scalar_t__, -1, 1> l =
        Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(10, DUMMY_VAR__);
-    current_statement__ = 775;
+    current_statement__ = 773;
     assign(l,
       multiply(mu, (Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5, 6, 7, 8,
         9, 10).finished()), "assigning variable l");
-    current_statement__ = 776;
+    current_statement__ = 774;
     return rvalue(l, "l", index_multi(std::vector<int>{1, 2, 3, 4, 5}));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8535,15 +8529,15 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
   try {
     Eigen::Matrix<local_scalar_t__, -1, 1> f_x =
        Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
-    current_statement__ = 779;
+    current_statement__ = 777;
     assign(f_x,
       (rvalue(x, "x", index_uni(1)) - rvalue(y, "y", index_uni(1))),
       "assigning variable f_x", index_uni(1));
-    current_statement__ = 780;
+    current_statement__ = 778;
     assign(f_x,
       (rvalue(x, "x", index_uni(2)) - rvalue(y, "y", index_uni(2))),
       "assigning variable f_x", index_uni(2));
-    current_statement__ = 781;
+    current_statement__ = 779;
     return f_x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8580,9 +8574,9 @@ binomialf(const T0__& phi_arg__, const T1__& theta_arg__,
   try {
     Eigen::Matrix<local_scalar_t__, -1, 1> lpmf =
        Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(1, DUMMY_VAR__);
-    current_statement__ = 784;
+    current_statement__ = 782;
     assign(lpmf, 0.0, "assigning variable lpmf", index_uni(1));
-    current_statement__ = 785;
+    current_statement__ = 783;
     return lpmf;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -10152,9 +10146,9 @@ class mother_model final : public model_base_crtp<mother_model> {
           }
         }
       }
-      current_statement__ = 346;
+      current_statement__ = 345;
       for (int i = 1; i <= 4; ++i) {
-        current_statement__ = 344;
+        current_statement__ = 343;
         for (int j = 1; j <= 5; ++j) {
           Eigen::Matrix<double, -1, -1> l_mat =
              Eigen::Matrix<double, -1, -1>::Constant(2, 3,
@@ -10163,22 +10157,12 @@ class mother_model final : public model_base_crtp<mother_model> {
           assign(l_mat,
             rvalue(d_ar_mat, "d_ar_mat", index_uni(i), index_uni(j)),
             "assigning variable l_mat");
-          current_statement__ = 342;
-          if (pstream__) {
-            stan_print(pstream__, "ar dim1: ");
-            stan_print(pstream__, i);
-            stan_print(pstream__, " ar dim2: ");
-            stan_print(pstream__, j);
-            stan_print(pstream__, " matrix: ");
-            stan_print(pstream__, l_mat);
-            stan_print(pstream__, "\n");
-          }
         }
       }
-      current_statement__ = 347;
+      current_statement__ = 346;
       assign(td_cfcov_54, diag_matrix(rep_vector(1, rows(td_cfcov_54))),
         "assigning variable td_cfcov_54");
-      current_statement__ = 348;
+      current_statement__ = 347;
       assign(td_cfcov_33, diag_matrix(rep_vector(1, rows(td_cfcov_33))),
         "assigning variable td_cfcov_33");
       {
@@ -10186,114 +10170,117 @@ class mother_model final : public model_base_crtp<mother_model> {
         Eigen::Matrix<double, 1, -1> blocked_tdata_vs =
            Eigen::Matrix<double, 1, -1>::Constant(2,
              std::numeric_limits<double>::quiet_NaN());
-        current_statement__ = 351;
+        current_statement__ = 350;
         for (int sym1__ = 1; sym1__ <= stan::math::size(blocked_tdata_vs);
              ++sym1__) {
           {
             double v;
-            current_statement__ = 351;
+            current_statement__ = 350;
             v = blocked_tdata_vs[(sym1__ - 1)];
-            current_statement__ = 352;
+            current_statement__ = 351;
             z = 0;
           }
         }
         std::vector<int> indices =
            std::vector<int>(4, std::numeric_limits<int>::min());
-        current_statement__ = 353;
+        current_statement__ = 352;
         assign(indices, std::vector<int>{1, 2, 3, 4},
           "assigning variable indices");
         {
           std::vector<int> sym1__;
-          current_statement__ = 354;
+          current_statement__ = 353;
           assign(sym1__, rvalue(indices, "indices", index_min_max(1, 3)),
             "assigning variable sym1__");
-          current_statement__ = 354;
+          current_statement__ = 353;
           for (int sym2__ = 1; sym2__ <= stan::math::size(sym1__); ++sym2__) {
             {
               int i;
-              current_statement__ = 354;
+              current_statement__ = 353;
               i = sym1__[(sym2__ - 1)];
-              current_statement__ = 355;
+              current_statement__ = 354;
               z = i;
             }
           }
         }
       }
-      current_statement__ = 357;
+      current_statement__ = 356;
       assign(td_1dk,
         rvalue(td_1d, "td_1d", index_multi(stan::model::deep_copy(td_1dk))),
         "assigning variable td_1dk");
+      current_statement__ = 357;
+      assign(td_simplex,
+        rvalue(td_1d_simplex, "td_1d_simplex", index_uni(1), index_omni()),
+        "assigning variable td_simplex");
       current_statement__ = 358;
       assign(td_simplex,
         rvalue(td_1d_simplex, "td_1d_simplex", index_uni(1), index_omni()),
         "assigning variable td_simplex");
       current_statement__ = 359;
       assign(td_simplex,
-        rvalue(td_1d_simplex, "td_1d_simplex", index_uni(1), index_omni()),
-        "assigning variable td_simplex");
-      current_statement__ = 360;
-      assign(td_simplex,
         rvalue(td_1d_simplex, "td_1d_simplex",
           index_uni(1), index_min_max(1, N)), "assigning variable td_simplex");
-      current_statement__ = 361;
+      current_statement__ = 360;
       arr_mul_ind = 
         std::vector<std::vector<int>>(2, 
           std::vector<int>(2, std::numeric_limits<int>::min()));
       
       
-      current_statement__ = 362;
+      current_statement__ = 361;
       assign(arr_mul_ind, std::vector<int>{1, 1},
         "assigning variable arr_mul_ind", index_uni(1), index_min_max(1, 2));
-      current_statement__ = 363;
+      current_statement__ = 362;
       x_mul_ind = 
         std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       
-      current_statement__ = 363;
+      current_statement__ = 362;
       assign(x_mul_ind, std::vector<int>{1, 2},
         "assigning variable x_mul_ind");
-      current_statement__ = 364;
+      current_statement__ = 363;
       transformed_data_real = std::numeric_limits<double>::quiet_NaN();
       
       
-      current_statement__ = 365;
+      current_statement__ = 364;
       validate_non_negative_index("transformed_data_real_array", "d_int",
                                   d_int);
-      current_statement__ = 366;
+      current_statement__ = 365;
       transformed_data_real_array = 
         std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
       
-      current_statement__ = 367;
+      current_statement__ = 366;
       validate_non_negative_index("transformed_data_real_array_2d", "d_int",
                                   d_int);
-      current_statement__ = 368;
+      current_statement__ = 367;
       transformed_data_real_array_2d = 
         std::vector<std::vector<double>>(d_int, 
           std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
       
       
-      current_statement__ = 369;
+      current_statement__ = 368;
       validate_non_negative_index("transformed_data_real_array_3d", "d_int",
                                   d_int);
-      current_statement__ = 370;
+      current_statement__ = 369;
       transformed_data_real_array_3d = 
         std::vector<std::vector<std::vector<double>>>(d_int, 
           std::vector<std::vector<double>>(2, 
             std::vector<double>(3, std::numeric_limits<double>::quiet_NaN())));
       
       
+      current_statement__ = 370;
+      validate_non_negative_index("transformed_data_matrix", "d_int", d_int);
       current_statement__ = 371;
       validate_non_negative_index("transformed_data_matrix", "d_int", d_int);
       current_statement__ = 372;
-      validate_non_negative_index("transformed_data_matrix", "d_int", d_int);
-      current_statement__ = 373;
       transformed_data_matrix__ = 
         Eigen::Matrix<double, -1, -1>::Constant(d_int, d_int,
           std::numeric_limits<double>::quiet_NaN());
       new (&transformed_data_matrix) Eigen::Map<Eigen::Matrix<double, -1, -1>>(transformed_data_matrix__.data(), d_int, d_int);
         
       
+      current_statement__ = 373;
+      validate_non_negative_index("transformed_data_matrix_array", "d_int",
+                                  d_int);
       current_statement__ = 374;
       validate_non_negative_index("transformed_data_matrix_array", "d_int",
                                   d_int);
@@ -10301,15 +10288,15 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("transformed_data_matrix_array", "d_int",
                                   d_int);
       current_statement__ = 376;
-      validate_non_negative_index("transformed_data_matrix_array", "d_int",
-                                  d_int);
-      current_statement__ = 377;
       transformed_data_matrix_array = 
         std::vector<Eigen::Matrix<double, -1, -1>>(d_int, 
           Eigen::Matrix<double, -1, -1>::Constant(d_int, d_int,
             std::numeric_limits<double>::quiet_NaN()));
       
       
+      current_statement__ = 377;
+      validate_non_negative_index("transformed_data_matrix_array_2d",
+                                  "d_int", d_int);
       current_statement__ = 378;
       validate_non_negative_index("transformed_data_matrix_array_2d",
                                   "d_int", d_int);
@@ -10317,9 +10304,6 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("transformed_data_matrix_array_2d",
                                   "d_int", d_int);
       current_statement__ = 380;
-      validate_non_negative_index("transformed_data_matrix_array_2d",
-                                  "d_int", d_int);
-      current_statement__ = 381;
       transformed_data_matrix_array_2d = 
         std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(d_int, 
           std::vector<Eigen::Matrix<double, -1, -1>>(2, 
@@ -10327,6 +10311,9 @@ class mother_model final : public model_base_crtp<mother_model> {
               std::numeric_limits<double>::quiet_NaN())));
       
       
+      current_statement__ = 381;
+      validate_non_negative_index("transformed_data_matrix_array_3d",
+                                  "d_int", d_int);
       current_statement__ = 382;
       validate_non_negative_index("transformed_data_matrix_array_3d",
                                   "d_int", d_int);
@@ -10334,9 +10321,6 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("transformed_data_matrix_array_3d",
                                   "d_int", d_int);
       current_statement__ = 384;
-      validate_non_negative_index("transformed_data_matrix_array_3d",
-                                  "d_int", d_int);
-      current_statement__ = 385;
       transformed_data_matrix_array_3d = 
         std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>>(
           d_int, 
@@ -10346,35 +10330,35 @@ class mother_model final : public model_base_crtp<mother_model> {
                 std::numeric_limits<double>::quiet_NaN()))));
       
       
-      current_statement__ = 386;
+      current_statement__ = 385;
       validate_non_negative_index("transformed_data_vector", "d_int", d_int);
-      current_statement__ = 387;
+      current_statement__ = 386;
       transformed_data_vector__ = 
         Eigen::Matrix<double, -1, 1>::Constant(d_int,
           std::numeric_limits<double>::quiet_NaN());
       new (&transformed_data_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(transformed_data_vector__.data(), d_int);
         
       
+      current_statement__ = 387;
+      validate_non_negative_index("transformed_data_vector_array", "d_int",
+                                  d_int);
       current_statement__ = 388;
       validate_non_negative_index("transformed_data_vector_array", "d_int",
                                   d_int);
       current_statement__ = 389;
-      validate_non_negative_index("transformed_data_vector_array", "d_int",
-                                  d_int);
-      current_statement__ = 390;
       transformed_data_vector_array = 
         std::vector<Eigen::Matrix<double, -1, 1>>(d_int, 
           Eigen::Matrix<double, -1, 1>::Constant(d_int,
             std::numeric_limits<double>::quiet_NaN()));
       
       
+      current_statement__ = 390;
+      validate_non_negative_index("transformed_data_vector_array_2d",
+                                  "d_int", d_int);
       current_statement__ = 391;
       validate_non_negative_index("transformed_data_vector_array_2d",
                                   "d_int", d_int);
       current_statement__ = 392;
-      validate_non_negative_index("transformed_data_vector_array_2d",
-                                  "d_int", d_int);
-      current_statement__ = 393;
       transformed_data_vector_array_2d = 
         std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(d_int, 
           std::vector<Eigen::Matrix<double, -1, 1>>(2, 
@@ -10382,13 +10366,13 @@ class mother_model final : public model_base_crtp<mother_model> {
               std::numeric_limits<double>::quiet_NaN())));
       
       
+      current_statement__ = 393;
+      validate_non_negative_index("transformed_data_vector_array_3d",
+                                  "d_int", d_int);
       current_statement__ = 394;
       validate_non_negative_index("transformed_data_vector_array_3d",
                                   "d_int", d_int);
       current_statement__ = 395;
-      validate_non_negative_index("transformed_data_vector_array_3d",
-                                  "d_int", d_int);
-      current_statement__ = 396;
       transformed_data_vector_array_3d = 
         std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(
           d_int, 
@@ -10398,36 +10382,36 @@ class mother_model final : public model_base_crtp<mother_model> {
                 std::numeric_limits<double>::quiet_NaN()))));
       
       
-      current_statement__ = 397;
+      current_statement__ = 396;
       validate_non_negative_index("transformed_data_row_vector", "d_int",
                                   d_int);
-      current_statement__ = 398;
+      current_statement__ = 397;
       transformed_data_row_vector__ = 
         Eigen::Matrix<double, 1, -1>::Constant(d_int,
           std::numeric_limits<double>::quiet_NaN());
       new (&transformed_data_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(transformed_data_row_vector__.data(), d_int);
         
       
+      current_statement__ = 398;
+      validate_non_negative_index("transformed_data_row_vector_array",
+                                  "d_int", d_int);
       current_statement__ = 399;
       validate_non_negative_index("transformed_data_row_vector_array",
                                   "d_int", d_int);
       current_statement__ = 400;
-      validate_non_negative_index("transformed_data_row_vector_array",
-                                  "d_int", d_int);
-      current_statement__ = 401;
       transformed_data_row_vector_array = 
         std::vector<Eigen::Matrix<double, 1, -1>>(d_int, 
           Eigen::Matrix<double, 1, -1>::Constant(d_int,
             std::numeric_limits<double>::quiet_NaN()));
       
       
+      current_statement__ = 401;
+      validate_non_negative_index("transformed_data_row_vector_array_2d",
+                                  "d_int", d_int);
       current_statement__ = 402;
       validate_non_negative_index("transformed_data_row_vector_array_2d",
                                   "d_int", d_int);
       current_statement__ = 403;
-      validate_non_negative_index("transformed_data_row_vector_array_2d",
-                                  "d_int", d_int);
-      current_statement__ = 404;
       transformed_data_row_vector_array_2d = 
         std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(d_int, 
           std::vector<Eigen::Matrix<double, 1, -1>>(2, 
@@ -10435,13 +10419,13 @@ class mother_model final : public model_base_crtp<mother_model> {
               std::numeric_limits<double>::quiet_NaN())));
       
       
+      current_statement__ = 404;
+      validate_non_negative_index("transformed_data_row_vector_array_3d",
+                                  "d_int", d_int);
       current_statement__ = 405;
       validate_non_negative_index("transformed_data_row_vector_array_3d",
                                   "d_int", d_int);
       current_statement__ = 406;
-      validate_non_negative_index("transformed_data_row_vector_array_3d",
-                                  "d_int", d_int);
-      current_statement__ = 407;
       transformed_data_row_vector_array_3d = 
         std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(
           d_int, 
@@ -10451,348 +10435,348 @@ class mother_model final : public model_base_crtp<mother_model> {
                 std::numeric_limits<double>::quiet_NaN()))));
       
       
-      current_statement__ = 408;
+      current_statement__ = 407;
       transformed_data_real = pow(d_int, d_int);
-      current_statement__ = 409;
+      current_statement__ = 408;
       transformed_data_real = pow(d_real, d_int);
-      current_statement__ = 410;
+      current_statement__ = 409;
       transformed_data_real = pow(d_int, d_real);
-      current_statement__ = 411;
+      current_statement__ = 410;
       transformed_data_real = pow(d_real, d_real);
-      current_statement__ = 412;
+      current_statement__ = 411;
       assign(transformed_data_real_array, pow(d_int_array, d_int),
         "assigning variable transformed_data_real_array");
-      current_statement__ = 413;
+      current_statement__ = 412;
       assign(transformed_data_real_array, pow(d_int_array, d_real),
         "assigning variable transformed_data_real_array");
-      current_statement__ = 414;
+      current_statement__ = 413;
       assign(transformed_data_real_array_2d, pow(d_int_array_2d, d_int),
         "assigning variable transformed_data_real_array_2d");
-      current_statement__ = 415;
+      current_statement__ = 414;
       assign(transformed_data_real_array_2d, pow(d_int_array_2d, d_real),
         "assigning variable transformed_data_real_array_2d");
-      current_statement__ = 416;
+      current_statement__ = 415;
       assign(transformed_data_real_array_3d, pow(d_int_array_3d, d_int),
         "assigning variable transformed_data_real_array_3d");
-      current_statement__ = 417;
+      current_statement__ = 416;
       assign(transformed_data_real_array_3d, pow(d_int_array_3d, d_real),
         "assigning variable transformed_data_real_array_3d");
-      current_statement__ = 418;
+      current_statement__ = 417;
       assign(transformed_data_real_array, pow(d_int, d_int_array),
         "assigning variable transformed_data_real_array");
-      current_statement__ = 419;
+      current_statement__ = 418;
       assign(transformed_data_real_array, pow(d_real, d_int_array),
         "assigning variable transformed_data_real_array");
-      current_statement__ = 420;
+      current_statement__ = 419;
       assign(transformed_data_real_array_2d, pow(d_int, d_int_array_2d),
         "assigning variable transformed_data_real_array_2d");
-      current_statement__ = 421;
+      current_statement__ = 420;
       assign(transformed_data_real_array_2d, pow(d_real, d_int_array_2d),
         "assigning variable transformed_data_real_array_2d");
-      current_statement__ = 422;
+      current_statement__ = 421;
       assign(transformed_data_real_array_3d, pow(d_int, d_int_array_3d),
         "assigning variable transformed_data_real_array_3d");
-      current_statement__ = 423;
+      current_statement__ = 422;
       assign(transformed_data_real_array_3d, pow(d_real, d_int_array_3d),
         "assigning variable transformed_data_real_array_3d");
-      current_statement__ = 424;
+      current_statement__ = 423;
       assign(transformed_data_real_array, pow(d_int, d_real_array),
         "assigning variable transformed_data_real_array");
-      current_statement__ = 425;
+      current_statement__ = 424;
       assign(transformed_data_real_array, pow(d_real, d_real_array),
         "assigning variable transformed_data_real_array");
-      current_statement__ = 426;
+      current_statement__ = 425;
       assign(transformed_data_real_array_2d, pow(d_int, d_real_array_2d),
         "assigning variable transformed_data_real_array_2d");
-      current_statement__ = 427;
+      current_statement__ = 426;
       assign(transformed_data_real_array_2d, pow(d_real, d_real_array_2d),
         "assigning variable transformed_data_real_array_2d");
-      current_statement__ = 428;
+      current_statement__ = 427;
       assign(transformed_data_real_array_3d, pow(d_int, d_real_array_3d),
         "assigning variable transformed_data_real_array_3d");
-      current_statement__ = 429;
+      current_statement__ = 428;
       assign(transformed_data_real_array_3d, pow(d_real, d_real_array_3d),
         "assigning variable transformed_data_real_array_3d");
-      current_statement__ = 430;
+      current_statement__ = 429;
       assign(transformed_data_real_array, pow(d_real_array, d_int),
         "assigning variable transformed_data_real_array");
-      current_statement__ = 431;
+      current_statement__ = 430;
       assign(transformed_data_real_array, pow(d_real_array, d_real),
         "assigning variable transformed_data_real_array");
-      current_statement__ = 432;
+      current_statement__ = 431;
       assign(transformed_data_real_array_2d, pow(d_real_array_2d, d_int),
         "assigning variable transformed_data_real_array_2d");
-      current_statement__ = 433;
+      current_statement__ = 432;
       assign(transformed_data_real_array_2d, pow(d_real_array_2d, d_real),
         "assigning variable transformed_data_real_array_2d");
-      current_statement__ = 434;
+      current_statement__ = 433;
       assign(transformed_data_real_array_3d, pow(d_real_array_3d, d_int),
         "assigning variable transformed_data_real_array_3d");
-      current_statement__ = 435;
+      current_statement__ = 434;
       assign(transformed_data_real_array_3d, pow(d_real_array_3d, d_real),
         "assigning variable transformed_data_real_array_3d");
-      current_statement__ = 436;
+      current_statement__ = 435;
       assign(transformed_data_real_array, pow(d_int_array, d_int_array),
         "assigning variable transformed_data_real_array");
-      current_statement__ = 437;
+      current_statement__ = 436;
       assign(transformed_data_real_array, pow(d_real_array, d_real_array),
         "assigning variable transformed_data_real_array");
-      current_statement__ = 438;
+      current_statement__ = 437;
       assign(transformed_data_real_array_2d,
         pow(d_int_array_2d, d_int_array_2d),
         "assigning variable transformed_data_real_array_2d");
-      current_statement__ = 439;
+      current_statement__ = 438;
       assign(transformed_data_real_array_2d,
         pow(d_real_array_2d, d_real_array_2d),
         "assigning variable transformed_data_real_array_2d");
-      current_statement__ = 440;
+      current_statement__ = 439;
       assign(transformed_data_real_array_3d,
         pow(d_int_array_3d, d_int_array_3d),
         "assigning variable transformed_data_real_array_3d");
-      current_statement__ = 441;
+      current_statement__ = 440;
       assign(transformed_data_real_array_3d,
         pow(d_real_array_3d, d_real_array_3d),
         "assigning variable transformed_data_real_array_3d");
-      current_statement__ = 442;
+      current_statement__ = 441;
       assign(transformed_data_vector, pow(d_vector, d_int),
         "assigning variable transformed_data_vector");
-      current_statement__ = 443;
+      current_statement__ = 442;
       assign(transformed_data_vector, pow(d_vector, d_real),
+        "assigning variable transformed_data_vector");
+      current_statement__ = 443;
+      assign(transformed_data_vector,
+        stan::math::fma(d_vector, d_vector, d_vector),
         "assigning variable transformed_data_vector");
       current_statement__ = 444;
       assign(transformed_data_vector,
-        stan::math::fma(d_vector, d_vector, d_vector),
+        stan::math::fma(d_vector, d_vector, d_real),
         "assigning variable transformed_data_vector");
       current_statement__ = 445;
       assign(transformed_data_vector,
-        stan::math::fma(d_vector, d_vector, d_real),
-        "assigning variable transformed_data_vector");
-      current_statement__ = 446;
-      assign(transformed_data_vector,
         stan::math::fma(d_real, d_vector, d_real),
         "assigning variable transformed_data_vector");
-      current_statement__ = 447;
+      current_statement__ = 446;
       assign(transformed_data_vector_array, pow(d_vector_array, d_int),
         "assigning variable transformed_data_vector_array");
-      current_statement__ = 448;
+      current_statement__ = 447;
       assign(transformed_data_vector_array, pow(d_vector_array, d_real),
         "assigning variable transformed_data_vector_array");
-      current_statement__ = 449;
+      current_statement__ = 448;
       assign(transformed_data_vector_array_2d, pow(d_vector_array_2d, d_int),
         "assigning variable transformed_data_vector_array_2d");
-      current_statement__ = 450;
+      current_statement__ = 449;
       assign(transformed_data_vector_array_2d,
         pow(d_vector_array_2d, d_real),
         "assigning variable transformed_data_vector_array_2d");
-      current_statement__ = 451;
+      current_statement__ = 450;
       assign(transformed_data_vector_array_3d, pow(d_vector_array_3d, d_int),
         "assigning variable transformed_data_vector_array_3d");
-      current_statement__ = 452;
+      current_statement__ = 451;
       assign(transformed_data_vector_array_3d,
         pow(d_vector_array_3d, d_real),
         "assigning variable transformed_data_vector_array_3d");
-      current_statement__ = 453;
+      current_statement__ = 452;
       assign(transformed_data_vector, pow(d_int, d_vector),
         "assigning variable transformed_data_vector");
-      current_statement__ = 454;
+      current_statement__ = 453;
       assign(transformed_data_vector, pow(d_real, d_vector),
         "assigning variable transformed_data_vector");
-      current_statement__ = 455;
+      current_statement__ = 454;
       assign(transformed_data_vector_array, pow(d_int, d_vector_array),
         "assigning variable transformed_data_vector_array");
-      current_statement__ = 456;
+      current_statement__ = 455;
       assign(transformed_data_vector_array, pow(d_real, d_vector_array),
         "assigning variable transformed_data_vector_array");
-      current_statement__ = 457;
+      current_statement__ = 456;
       assign(transformed_data_vector_array_2d, pow(d_int, d_vector_array_2d),
         "assigning variable transformed_data_vector_array_2d");
-      current_statement__ = 458;
+      current_statement__ = 457;
       assign(transformed_data_vector_array_2d,
         pow(d_real, d_vector_array_2d),
         "assigning variable transformed_data_vector_array_2d");
-      current_statement__ = 459;
+      current_statement__ = 458;
       assign(transformed_data_vector_array_3d, pow(d_int, d_vector_array_3d),
         "assigning variable transformed_data_vector_array_3d");
-      current_statement__ = 460;
+      current_statement__ = 459;
       assign(transformed_data_vector_array_3d,
         pow(d_real, d_vector_array_3d),
         "assigning variable transformed_data_vector_array_3d");
-      current_statement__ = 461;
+      current_statement__ = 460;
       assign(transformed_data_vector, pow(d_vector, d_vector),
         "assigning variable transformed_data_vector");
-      current_statement__ = 462;
+      current_statement__ = 461;
       assign(transformed_data_vector,
         stan::math::fma(d_vector, d_vector, d_vector),
         "assigning variable transformed_data_vector");
-      current_statement__ = 463;
+      current_statement__ = 462;
       assign(transformed_data_vector,
         stan::math::fma(d_vector, d_vector, d_real),
         "assigning variable transformed_data_vector");
-      current_statement__ = 464;
+      current_statement__ = 463;
       assign(transformed_data_vector_array,
         pow(d_vector_array, d_vector_array),
         "assigning variable transformed_data_vector_array");
-      current_statement__ = 465;
+      current_statement__ = 464;
       assign(transformed_data_vector_array_2d,
         pow(d_vector_array_2d, d_vector_array_2d),
         "assigning variable transformed_data_vector_array_2d");
-      current_statement__ = 466;
+      current_statement__ = 465;
       assign(transformed_data_vector_array_3d,
         pow(d_vector_array_3d, d_vector_array_3d),
         "assigning variable transformed_data_vector_array_3d");
-      current_statement__ = 467;
+      current_statement__ = 466;
       assign(transformed_data_row_vector, pow(d_row_vector, d_int),
         "assigning variable transformed_data_row_vector");
-      current_statement__ = 468;
+      current_statement__ = 467;
       assign(transformed_data_row_vector, pow(d_row_vector, d_real),
         "assigning variable transformed_data_row_vector");
-      current_statement__ = 469;
+      current_statement__ = 468;
       assign(transformed_data_row_vector_array,
         pow(d_row_vector_array, d_int),
         "assigning variable transformed_data_row_vector_array");
-      current_statement__ = 470;
+      current_statement__ = 469;
       assign(transformed_data_row_vector_array,
         pow(d_row_vector_array, d_real),
         "assigning variable transformed_data_row_vector_array");
-      current_statement__ = 471;
+      current_statement__ = 470;
       assign(transformed_data_row_vector_array_2d,
         pow(d_row_vector_array_2d, d_int),
         "assigning variable transformed_data_row_vector_array_2d");
-      current_statement__ = 472;
+      current_statement__ = 471;
       assign(transformed_data_row_vector_array_2d,
         pow(d_row_vector_array_2d, d_real),
         "assigning variable transformed_data_row_vector_array_2d");
-      current_statement__ = 473;
+      current_statement__ = 472;
       assign(transformed_data_row_vector_array_3d,
         pow(d_row_vector_array_3d, d_int),
         "assigning variable transformed_data_row_vector_array_3d");
-      current_statement__ = 474;
+      current_statement__ = 473;
       assign(transformed_data_row_vector_array_3d,
         pow(d_row_vector_array_3d, d_real),
         "assigning variable transformed_data_row_vector_array_3d");
-      current_statement__ = 475;
+      current_statement__ = 474;
       assign(transformed_data_row_vector, pow(d_int, d_row_vector),
         "assigning variable transformed_data_row_vector");
-      current_statement__ = 476;
+      current_statement__ = 475;
       assign(transformed_data_row_vector, pow(d_real, d_row_vector),
         "assigning variable transformed_data_row_vector");
-      current_statement__ = 477;
+      current_statement__ = 476;
       assign(transformed_data_row_vector_array,
         pow(d_int, d_row_vector_array),
         "assigning variable transformed_data_row_vector_array");
-      current_statement__ = 478;
+      current_statement__ = 477;
       assign(transformed_data_row_vector_array,
         pow(d_real, d_row_vector_array),
         "assigning variable transformed_data_row_vector_array");
-      current_statement__ = 479;
+      current_statement__ = 478;
       assign(transformed_data_row_vector_array_2d,
         pow(d_int, d_row_vector_array_2d),
         "assigning variable transformed_data_row_vector_array_2d");
-      current_statement__ = 480;
+      current_statement__ = 479;
       assign(transformed_data_row_vector_array_2d,
         pow(d_real, d_row_vector_array_2d),
         "assigning variable transformed_data_row_vector_array_2d");
-      current_statement__ = 481;
+      current_statement__ = 480;
       assign(transformed_data_row_vector_array_3d,
         pow(d_int, d_row_vector_array_3d),
         "assigning variable transformed_data_row_vector_array_3d");
-      current_statement__ = 482;
+      current_statement__ = 481;
       assign(transformed_data_row_vector_array_3d,
         pow(d_real, d_row_vector_array_3d),
         "assigning variable transformed_data_row_vector_array_3d");
-      current_statement__ = 483;
+      current_statement__ = 482;
       assign(transformed_data_row_vector, pow(d_row_vector, d_row_vector),
         "assigning variable transformed_data_row_vector");
-      current_statement__ = 484;
+      current_statement__ = 483;
       assign(transformed_data_row_vector_array,
         pow(d_row_vector_array, d_row_vector_array),
         "assigning variable transformed_data_row_vector_array");
-      current_statement__ = 485;
+      current_statement__ = 484;
       assign(transformed_data_row_vector_array_2d,
         pow(d_row_vector_array_2d, d_row_vector_array_2d),
         "assigning variable transformed_data_row_vector_array_2d");
-      current_statement__ = 486;
+      current_statement__ = 485;
       assign(transformed_data_row_vector_array_3d,
         pow(d_row_vector_array_3d, d_row_vector_array_3d),
         "assigning variable transformed_data_row_vector_array_3d");
-      current_statement__ = 487;
+      current_statement__ = 486;
       assign(transformed_data_matrix, pow(d_matrix, d_int),
         "assigning variable transformed_data_matrix");
-      current_statement__ = 488;
+      current_statement__ = 487;
       assign(transformed_data_matrix, pow(d_matrix, d_real),
         "assigning variable transformed_data_matrix");
-      current_statement__ = 489;
+      current_statement__ = 488;
       assign(transformed_data_matrix,
         stan::math::fma(d_matrix, d_matrix, d_matrix),
         "assigning variable transformed_data_matrix");
-      current_statement__ = 490;
+      current_statement__ = 489;
       assign(transformed_data_matrix,
         stan::math::fma(d_matrix, d_matrix, d_real),
         "assigning variable transformed_data_matrix");
-      current_statement__ = 491;
+      current_statement__ = 490;
       assign(transformed_data_matrix_array, pow(d_matrix_array, d_int),
         "assigning variable transformed_data_matrix_array");
-      current_statement__ = 492;
+      current_statement__ = 491;
       assign(transformed_data_matrix_array, pow(d_matrix_array, d_real),
         "assigning variable transformed_data_matrix_array");
-      current_statement__ = 493;
+      current_statement__ = 492;
       assign(transformed_data_matrix_array_2d, pow(d_matrix_array_2d, d_int),
         "assigning variable transformed_data_matrix_array_2d");
-      current_statement__ = 494;
+      current_statement__ = 493;
       assign(transformed_data_matrix_array_2d,
         pow(d_matrix_array_2d, d_real),
         "assigning variable transformed_data_matrix_array_2d");
-      current_statement__ = 495;
+      current_statement__ = 494;
       assign(transformed_data_matrix_array_3d, pow(d_matrix_array_3d, d_int),
         "assigning variable transformed_data_matrix_array_3d");
-      current_statement__ = 496;
+      current_statement__ = 495;
       assign(transformed_data_matrix_array_3d,
         pow(d_matrix_array_3d, d_real),
         "assigning variable transformed_data_matrix_array_3d");
-      current_statement__ = 497;
+      current_statement__ = 496;
       assign(transformed_data_matrix, pow(d_int, d_matrix),
         "assigning variable transformed_data_matrix");
-      current_statement__ = 498;
+      current_statement__ = 497;
       assign(transformed_data_matrix, pow(d_real, d_matrix),
         "assigning variable transformed_data_matrix");
-      current_statement__ = 499;
+      current_statement__ = 498;
       assign(transformed_data_matrix_array, pow(d_int, d_matrix_array),
         "assigning variable transformed_data_matrix_array");
-      current_statement__ = 500;
+      current_statement__ = 499;
       assign(transformed_data_matrix_array, pow(d_real, d_matrix_array),
         "assigning variable transformed_data_matrix_array");
-      current_statement__ = 501;
+      current_statement__ = 500;
       assign(transformed_data_matrix_array_2d, pow(d_int, d_matrix_array_2d),
         "assigning variable transformed_data_matrix_array_2d");
-      current_statement__ = 502;
+      current_statement__ = 501;
       assign(transformed_data_matrix_array_2d,
         pow(d_real, d_matrix_array_2d),
         "assigning variable transformed_data_matrix_array_2d");
-      current_statement__ = 503;
+      current_statement__ = 502;
       assign(transformed_data_matrix_array_3d, pow(d_int, d_matrix_array_3d),
         "assigning variable transformed_data_matrix_array_3d");
-      current_statement__ = 504;
+      current_statement__ = 503;
       assign(transformed_data_matrix_array_3d,
         pow(d_real, d_matrix_array_3d),
         "assigning variable transformed_data_matrix_array_3d");
-      current_statement__ = 505;
+      current_statement__ = 504;
       assign(transformed_data_matrix, pow(d_matrix, d_matrix),
         "assigning variable transformed_data_matrix");
-      current_statement__ = 506;
+      current_statement__ = 505;
       assign(transformed_data_matrix_array,
         pow(d_matrix_array, d_matrix_array),
         "assigning variable transformed_data_matrix_array");
-      current_statement__ = 507;
+      current_statement__ = 506;
       assign(transformed_data_matrix_array_2d,
         pow(d_matrix_array_2d, d_matrix_array_2d),
         "assigning variable transformed_data_matrix_array_2d");
-      current_statement__ = 508;
+      current_statement__ = 507;
       assign(transformed_data_matrix_array_3d,
         pow(d_matrix_array_3d, d_matrix_array_3d),
         "assigning variable transformed_data_matrix_array_3d");
-      current_statement__ = 509;
+      current_statement__ = 508;
       td_int = (d_int * d_int);
-      current_statement__ = 510;
+      current_statement__ = 509;
       transformed_data_real = (d_real * d_real);
       current_statement__ = 300;
       check_greater_or_equal(function__, "td_ar_mat", td_ar_mat, 0);
@@ -10808,173 +10792,173 @@ class mother_model final : public model_base_crtp<mother_model> {
       check_cholesky_factor(function__, "td_cfcov_54", td_cfcov_54);
       current_statement__ = 312;
       check_cholesky_factor(function__, "td_cfcov_33", td_cfcov_33);
-      current_statement__ = 511;
+      current_statement__ = 510;
       validate_non_negative_index("p_real_1d_ar", "N", N);
-      current_statement__ = 512;
+      current_statement__ = 511;
       validate_non_negative_index("p_real_3d_ar", "N", N);
-      current_statement__ = 513;
+      current_statement__ = 512;
       validate_non_negative_index("p_real_3d_ar", "M", M);
-      current_statement__ = 514;
+      current_statement__ = 513;
       validate_non_negative_index("p_real_3d_ar", "K", K);
-      current_statement__ = 515;
+      current_statement__ = 514;
       validate_non_negative_index("p_vec", "N", N);
+      current_statement__ = 515;
+      validate_non_negative_index("p_1d_vec", "N", N);
       current_statement__ = 516;
       validate_non_negative_index("p_1d_vec", "N", N);
       current_statement__ = 517;
-      validate_non_negative_index("p_1d_vec", "N", N);
+      validate_non_negative_index("p_3d_vec", "N", N);
       current_statement__ = 518;
-      validate_non_negative_index("p_3d_vec", "N", N);
-      current_statement__ = 519;
       validate_non_negative_index("p_3d_vec", "M", M);
-      current_statement__ = 520;
+      current_statement__ = 519;
       validate_non_negative_index("p_3d_vec", "K", K);
-      current_statement__ = 521;
+      current_statement__ = 520;
       validate_non_negative_index("p_3d_vec", "N", N);
-      current_statement__ = 522;
+      current_statement__ = 521;
       validate_non_negative_index("p_row_vec", "N", N);
+      current_statement__ = 522;
+      validate_non_negative_index("p_1d_row_vec", "N", N);
       current_statement__ = 523;
       validate_non_negative_index("p_1d_row_vec", "N", N);
       current_statement__ = 524;
-      validate_non_negative_index("p_1d_row_vec", "N", N);
+      validate_non_negative_index("p_3d_row_vec", "N", N);
       current_statement__ = 525;
-      validate_non_negative_index("p_3d_row_vec", "N", N);
-      current_statement__ = 526;
       validate_non_negative_index("p_3d_row_vec", "M", M);
-      current_statement__ = 527;
+      current_statement__ = 526;
       validate_non_negative_index("p_3d_row_vec", "K", K);
-      current_statement__ = 528;
+      current_statement__ = 527;
       validate_non_negative_index("p_3d_row_vec", "N", N);
-      current_statement__ = 529;
+      current_statement__ = 528;
       validate_positive_index("p_simplex", "N", N);
-      current_statement__ = 530;
+      current_statement__ = 529;
       validate_non_negative_index("p_1d_simplex", "N", N);
-      current_statement__ = 531;
+      current_statement__ = 530;
       validate_positive_index("p_1d_simplex", "N", N);
-      current_statement__ = 532;
+      current_statement__ = 531;
       validate_non_negative_index("p_3d_simplex", "N", N);
-      current_statement__ = 533;
+      current_statement__ = 532;
       validate_non_negative_index("p_3d_simplex", "M", M);
-      current_statement__ = 534;
+      current_statement__ = 533;
       validate_non_negative_index("p_3d_simplex", "K", K);
-      current_statement__ = 535;
+      current_statement__ = 534;
       validate_positive_index("p_3d_simplex", "N", N);
-      current_statement__ = 536;
+      current_statement__ = 535;
       check_greater_or_equal("cholesky_factor_cov p_cfcov_54",
                              "num rows (must be greater or equal to num cols)",
                              5, 4);
-      current_statement__ = 537;
+      current_statement__ = 536;
       check_greater_or_equal("cholesky_factor_cov p_cfcov_33",
                              "num rows (must be greater or equal to num cols)",
                              3, 3);
-      current_statement__ = 538;
+      current_statement__ = 537;
       validate_non_negative_index("p_cfcov_33_ar", "K", K);
-      current_statement__ = 539;
+      current_statement__ = 538;
       check_greater_or_equal("cholesky_factor_cov p_cfcov_33_ar",
                              "num rows (must be greater or equal to num cols)",
                              3, 3);
-      current_statement__ = 540;
+      current_statement__ = 539;
       validate_non_negative_index("tp_real_1d_ar", "N", N);
-      current_statement__ = 541;
+      current_statement__ = 540;
       validate_non_negative_index("tp_real_3d_ar", "N", N);
-      current_statement__ = 542;
+      current_statement__ = 541;
       validate_non_negative_index("tp_real_3d_ar", "M", M);
-      current_statement__ = 543;
+      current_statement__ = 542;
       validate_non_negative_index("tp_real_3d_ar", "K", K);
-      current_statement__ = 544;
+      current_statement__ = 543;
       validate_non_negative_index("tp_vec", "N", N);
+      current_statement__ = 544;
+      validate_non_negative_index("tp_1d_vec", "N", N);
       current_statement__ = 545;
       validate_non_negative_index("tp_1d_vec", "N", N);
       current_statement__ = 546;
-      validate_non_negative_index("tp_1d_vec", "N", N);
+      validate_non_negative_index("tp_3d_vec", "N", N);
       current_statement__ = 547;
-      validate_non_negative_index("tp_3d_vec", "N", N);
-      current_statement__ = 548;
       validate_non_negative_index("tp_3d_vec", "M", M);
-      current_statement__ = 549;
+      current_statement__ = 548;
       validate_non_negative_index("tp_3d_vec", "K", K);
-      current_statement__ = 550;
+      current_statement__ = 549;
       validate_non_negative_index("tp_3d_vec", "N", N);
-      current_statement__ = 551;
+      current_statement__ = 550;
       validate_non_negative_index("tp_row_vec", "N", N);
+      current_statement__ = 551;
+      validate_non_negative_index("tp_1d_row_vec", "N", N);
       current_statement__ = 552;
       validate_non_negative_index("tp_1d_row_vec", "N", N);
       current_statement__ = 553;
-      validate_non_negative_index("tp_1d_row_vec", "N", N);
+      validate_non_negative_index("tp_3d_row_vec", "N", N);
       current_statement__ = 554;
-      validate_non_negative_index("tp_3d_row_vec", "N", N);
-      current_statement__ = 555;
       validate_non_negative_index("tp_3d_row_vec", "M", M);
-      current_statement__ = 556;
+      current_statement__ = 555;
       validate_non_negative_index("tp_3d_row_vec", "K", K);
-      current_statement__ = 557;
+      current_statement__ = 556;
       validate_non_negative_index("tp_3d_row_vec", "N", N);
-      current_statement__ = 558;
+      current_statement__ = 557;
       validate_non_negative_index("tp_simplex", "N", N);
+      current_statement__ = 558;
+      validate_non_negative_index("tp_1d_simplex", "N", N);
       current_statement__ = 559;
       validate_non_negative_index("tp_1d_simplex", "N", N);
       current_statement__ = 560;
-      validate_non_negative_index("tp_1d_simplex", "N", N);
+      validate_non_negative_index("tp_3d_simplex", "N", N);
       current_statement__ = 561;
-      validate_non_negative_index("tp_3d_simplex", "N", N);
-      current_statement__ = 562;
       validate_non_negative_index("tp_3d_simplex", "M", M);
-      current_statement__ = 563;
+      current_statement__ = 562;
       validate_non_negative_index("tp_3d_simplex", "K", K);
-      current_statement__ = 564;
+      current_statement__ = 563;
       validate_non_negative_index("tp_3d_simplex", "N", N);
-      current_statement__ = 565;
+      current_statement__ = 564;
       validate_non_negative_index("tp_cfcov_33_ar", "K", K);
-      current_statement__ = 566;
+      current_statement__ = 565;
       validate_non_negative_index("gq_real_1d_ar", "N", N);
-      current_statement__ = 567;
+      current_statement__ = 566;
       validate_non_negative_index("gq_real_3d_ar", "N", N);
-      current_statement__ = 568;
+      current_statement__ = 567;
       validate_non_negative_index("gq_real_3d_ar", "M", M);
-      current_statement__ = 569;
+      current_statement__ = 568;
       validate_non_negative_index("gq_real_3d_ar", "K", K);
-      current_statement__ = 570;
+      current_statement__ = 569;
       validate_non_negative_index("gq_vec", "N", N);
+      current_statement__ = 570;
+      validate_non_negative_index("gq_1d_vec", "N", N);
       current_statement__ = 571;
       validate_non_negative_index("gq_1d_vec", "N", N);
       current_statement__ = 572;
-      validate_non_negative_index("gq_1d_vec", "N", N);
+      validate_non_negative_index("gq_3d_vec", "N", N);
       current_statement__ = 573;
-      validate_non_negative_index("gq_3d_vec", "N", N);
-      current_statement__ = 574;
       validate_non_negative_index("gq_3d_vec", "M", M);
-      current_statement__ = 575;
+      current_statement__ = 574;
       validate_non_negative_index("gq_3d_vec", "K", K);
-      current_statement__ = 576;
+      current_statement__ = 575;
       validate_non_negative_index("gq_3d_vec", "N", N);
-      current_statement__ = 577;
+      current_statement__ = 576;
       validate_non_negative_index("gq_row_vec", "N", N);
+      current_statement__ = 577;
+      validate_non_negative_index("gq_1d_row_vec", "N", N);
       current_statement__ = 578;
       validate_non_negative_index("gq_1d_row_vec", "N", N);
       current_statement__ = 579;
-      validate_non_negative_index("gq_1d_row_vec", "N", N);
+      validate_non_negative_index("gq_3d_row_vec", "N", N);
       current_statement__ = 580;
-      validate_non_negative_index("gq_3d_row_vec", "N", N);
-      current_statement__ = 581;
       validate_non_negative_index("gq_3d_row_vec", "M", M);
-      current_statement__ = 582;
+      current_statement__ = 581;
       validate_non_negative_index("gq_3d_row_vec", "K", K);
-      current_statement__ = 583;
+      current_statement__ = 582;
       validate_non_negative_index("gq_3d_row_vec", "N", N);
-      current_statement__ = 584;
+      current_statement__ = 583;
       validate_non_negative_index("gq_simplex", "N", N);
+      current_statement__ = 584;
+      validate_non_negative_index("gq_1d_simplex", "N", N);
       current_statement__ = 585;
       validate_non_negative_index("gq_1d_simplex", "N", N);
       current_statement__ = 586;
-      validate_non_negative_index("gq_1d_simplex", "N", N);
+      validate_non_negative_index("gq_3d_simplex", "N", N);
       current_statement__ = 587;
-      validate_non_negative_index("gq_3d_simplex", "N", N);
-      current_statement__ = 588;
       validate_non_negative_index("gq_3d_simplex", "M", M);
-      current_statement__ = 589;
+      current_statement__ = 588;
       validate_non_negative_index("gq_3d_simplex", "K", K);
-      current_statement__ = 590;
+      current_statement__ = 589;
       validate_non_negative_index("gq_3d_simplex", "N", N);
-      current_statement__ = 591;
+      current_statement__ = 590;
       validate_non_negative_index("gq_cfcov_33_ar", "K", K);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
