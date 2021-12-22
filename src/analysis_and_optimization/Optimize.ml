@@ -1065,7 +1065,7 @@ let optimize_minimal_variables
     Monotone_framework.inverse_flowgraph_of_stmt stmt in
   let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
   let (module Fwd_Flowgraph) =
-    Monotone_framework.make_circular_flowgraph fwd_flowgraph in
+    (Monotone_framework.make_circular_flowgraph fwd_flowgraph rev_flowgraph) in
   let mfp_variables =
     Monotone_framework.minimal_variables_mfp
       (module Fwd_Flowgraph)

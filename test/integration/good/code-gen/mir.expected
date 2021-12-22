@@ -1559,7 +1559,16 @@
       (AutoDiffable a9 (UArray (UArray UVector))) (AutoDiffable a10 UMatrix)
       (AutoDiffable a11 (UArray UMatrix))
       (AutoDiffable a12 (UArray (UArray UMatrix)))))
-    (fdbody (((pattern (Block ())) (meta <opaque>)))) (fdloc <opaque>))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (NRFunApp (CompilerInternal FnPrint)
+             (((pattern (Lit Str hi))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))
    ((fdrt (UInt)) (fdname f1) (fdsuffix FnPlain)
     (fdargs
      ((AutoDiffable a1 UInt) (AutoDiffable a2 (UArray UInt))
@@ -4409,6 +4418,27 @@
                              ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                        (meta
                         ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
+                    (meta <opaque>))
+                   ((pattern
+                     (NRFunApp (CompilerInternal FnPrint)
+                      (((pattern (Lit Str "ar dim1: "))
+                        (meta
+                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                       ((pattern (Var i))
+                        (meta
+                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                       ((pattern (Lit Str " ar dim2: "))
+                        (meta
+                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                       ((pattern (Var j))
+                        (meta
+                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                       ((pattern (Lit Str " matrix: "))
+                        (meta
+                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                       ((pattern (Var l_mat))
+                        (meta
+                         ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))

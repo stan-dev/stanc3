@@ -227,7 +227,7 @@ functions {
   void f0(int a1, array[] int a2, array[,] int a3, real a4, array[] real a5,
           array[,] real a6, vector a7, array[] vector a8, array[,] vector a9,
           matrix a10, array[] matrix a11, array[,] matrix a12) {
-    //print("hi");
+    print("hi");
   }
   
   int f1(int a1, array[] int a2, array[,] int a3, real a4, array[] real a5,
@@ -435,7 +435,7 @@ transformed data {
   for (i in 1 : 4) {
     for (j in 1 : 5) {
       matrix[2, 3] l_mat = d_ar_mat[i, j];
-      //print("ar dim1: ", i, " ar dim2: ", j, " matrix: ", l_mat);
+      print("ar dim1: ", i, " ar dim2: ", j, " matrix: ", l_mat);
     }
   }
   td_cfcov_54 = diag_matrix(rep_vector(1, rows(td_cfcov_54)));

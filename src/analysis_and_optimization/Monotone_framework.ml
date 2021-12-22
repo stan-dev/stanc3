@@ -135,7 +135,7 @@ let reverse (type l) (module F : FLOWGRAPH with type labels = l) =
     with type labels = l )
 
 let make_circular_flowgraph (type l)
-    (module Flowgraph : FLOWGRAPH with type labels = l) =
+    (module Flowgraph : FLOWGRAPH with type labels = l) (module RevFlowgraph : FLOWGRAPH with type labels = l) =
   ( module struct
     type labels = Flowgraph.labels
     type t = labels
@@ -146,9 +146,14 @@ let make_circular_flowgraph (type l)
     let initials = Flowgraph.initials
 
     let successors =
-      let set_exits_to_depend_on_inits x =
-        match Set.Poly.length x with 0 -> Flowgraph.initials | _ -> x in
-      Map.map Flowgraph.successors ~f:set_exits_to_depend_on_inits end
+      let set_exits_to_depend_on_inits ~key ~data = 
+        if Set.Poly.mem RevFlowgraph.initials key 
+        then
+           Set.Poly.union data Flowgraph.initials
+       else
+         data
+       in
+      Map.mapi Flowgraph.successors ~f:set_exits_to_depend_on_inits end
   : FLOWGRAPH
     with type labels = l )
 
@@ -1040,7 +1045,7 @@ let lazy_expressions_mfp
   let used_not_latest_expressions_mfp = Mf4.mfp () in
   (latest_expr, used_not_latest_expressions_mfp)
 
-let rec minimal_variables_mfp
+let minimal_variables_mfp
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH with type labels = int)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (initial_variables : string Set.Poly.t)
@@ -1049,8 +1054,6 @@ let rec minimal_variables_mfp
       -> int
       -> string Set.Poly.t
       -> string Set.Poly.t ) =
-  let get_names ~key ~data acc =
-    match key with _ -> Set.Poly.union acc data.exit in
   let (module Lattice1) = minimal_variables_lattice initial_variables in
   let (module Transfer1) =
     minimal_variables_fwd1_transfer true gen_variable flowgraph_to_mir in
@@ -1058,10 +1061,4 @@ let rec minimal_variables_mfp
     monotone_framework (module Flowgraph) (module Lattice1) (module Transfer1)
   in
   let fwd1_min_vars_mfp = Mf1.mfp () in
-  let variable_set =
-    Map.fold ~init:Set.Poly.empty ~f:get_names fwd1_min_vars_mfp in
-  if Set.Poly.length initial_variables <> Set.Poly.length variable_set then
-    minimal_variables_mfp
-      (module Flowgraph)
-      flowgraph_to_mir variable_set gen_variable
-  else fwd1_min_vars_mfp
+  fwd1_min_vars_mfp
