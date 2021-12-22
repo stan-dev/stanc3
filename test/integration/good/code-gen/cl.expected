@@ -297,7 +297,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      int pos__ = std::numeric_limits<int>::min();
+      int pos__;
       pos__ = 1;
       current_statement__ = 176;
       context__.validate_dims("data initialization","k","int",
@@ -590,39 +590,33 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v =
-         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
       current_statement__ = 1;
       alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
-      Eigen::Matrix<local_scalar_t__, -1, 1> beta =
-         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       current_statement__ = 2;
       beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
-      Eigen::Matrix<local_scalar_t__, -1, 1> cuts =
-         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> cuts;
       current_statement__ = 3;
       cuts = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
-      local_scalar_t__ sigma = DUMMY_VAR__;
+      local_scalar_t__ sigma;
       current_statement__ = 4;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
-      local_scalar_t__ alpha = DUMMY_VAR__;
+      local_scalar_t__ alpha;
       current_statement__ = 5;
       alpha = in__.template read<local_scalar_t__>();
-      local_scalar_t__ phi = DUMMY_VAR__;
+      local_scalar_t__ phi;
       current_statement__ = 6;
       phi = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__, -1, -1> X_p =
-         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(n, k, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
       current_statement__ = 7;
       X_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k);
-      Eigen::Matrix<local_scalar_t__, -1, -1> beta_m =
-         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(n, k, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__, -1, -1> beta_m;
       current_statement__ = 8;
       beta_m = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n,
                  k);
-      Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p =
-         Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(n, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p;
       current_statement__ = 9;
       X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
       {
@@ -1296,45 +1290,33 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      Eigen::Matrix<double, -1, 1> alpha_v =
-         Eigen::Matrix<double, -1, 1>::Constant(k,
-           std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, 1> alpha_v;
       current_statement__ = 1;
       alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
-      Eigen::Matrix<double, -1, 1> beta =
-         Eigen::Matrix<double, -1, 1>::Constant(k,
-           std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, 1> beta;
       current_statement__ = 2;
       beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
-      Eigen::Matrix<double, -1, 1> cuts =
-         Eigen::Matrix<double, -1, 1>::Constant(k,
-           std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, 1> cuts;
       current_statement__ = 3;
       cuts = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
-      double sigma = std::numeric_limits<double>::quiet_NaN();
+      double sigma;
       current_statement__ = 4;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
-      double alpha = std::numeric_limits<double>::quiet_NaN();
+      double alpha;
       current_statement__ = 5;
       alpha = in__.template read<local_scalar_t__>();
-      double phi = std::numeric_limits<double>::quiet_NaN();
+      double phi;
       current_statement__ = 6;
       phi = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double, -1, -1> X_p =
-         Eigen::Matrix<double, -1, -1>::Constant(n, k,
-           std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, -1> X_p;
       current_statement__ = 7;
       X_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k);
-      Eigen::Matrix<double, -1, -1> beta_m =
-         Eigen::Matrix<double, -1, -1>::Constant(n, k,
-           std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, -1> beta_m;
       current_statement__ = 8;
       beta_m = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n,
                  k);
-      Eigen::Matrix<double, 1, -1> X_rv_p =
-         Eigen::Matrix<double, 1, -1>::Constant(n,
-           std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, 1, -1> X_rv_p;
       current_statement__ = 9;
       X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
       out__.write(alpha_v);
@@ -1371,7 +1353,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
-      int pos__ = std::numeric_limits<int>::min();
+      int pos__;
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v =
          Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
@@ -1394,13 +1376,13 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
           "assigning variable cuts", index_uni(sym1__));
       }
       out__.write(cuts);
-      local_scalar_t__ sigma = DUMMY_VAR__;
+      local_scalar_t__ sigma;
       sigma = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, sigma);
-      local_scalar_t__ alpha = DUMMY_VAR__;
+      local_scalar_t__ alpha;
       alpha = in__.read<local_scalar_t__>();
       out__.write(alpha);
-      local_scalar_t__ phi = DUMMY_VAR__;
+      local_scalar_t__ phi;
       phi = in__.read<local_scalar_t__>();
       out__.write(phi);
       Eigen::Matrix<local_scalar_t__, -1, -1> X_p =

@@ -832,7 +832,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      int pos__ = std::numeric_limits<int>::min();
+      int pos__;
       pos__ = 1;
       current_statement__ = 756;
       context__.validate_dims("data initialization","d_int","int",
@@ -966,37 +966,30 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      local_scalar_t__ p_real = DUMMY_VAR__;
+      local_scalar_t__ p_real;
       current_statement__ = 1;
       p_real = in__.template read<local_scalar_t__>();
-      std::vector<local_scalar_t__> p_real_array =
-         std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
+      std::vector<local_scalar_t__> p_real_array;
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       stan::conditional_var_value_t<local_scalar_t__, 
-        Eigen::Matrix<local_scalar_t__, -1, -1>> p_matrix =
-         stan::conditional_var_value_t<local_scalar_t__, 
-           Eigen::Matrix<local_scalar_t__, -1, -1>>(
-           Eigen::Matrix<double, -1, -1>::Constant(d_int, d_int,
-             std::numeric_limits<double>::quiet_NaN()));
+        Eigen::Matrix<local_scalar_t__, -1, -1>> p_matrix;
       current_statement__ = 3;
       p_matrix = in__.template read<
                    stan::conditional_var_value_t<local_scalar_t__, 
                      Eigen::Matrix<local_scalar_t__, -1, -1>>>(d_int, d_int);
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_vector =
-         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(d_int, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
       current_statement__ = 4;
       p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    d_int);
-      Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector =
-         Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(d_int, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
       current_statement__ = 5;
       p_row_vector = in__.template read<
                        Eigen::Matrix<local_scalar_t__, 1, -1>>(d_int);
-      local_scalar_t__ y_p = DUMMY_VAR__;
+      local_scalar_t__ y_p;
       current_statement__ = 6;
       y_p = in__.template read<local_scalar_t__>();
-      local_scalar_t__ transformed_param_real = DUMMY_VAR__;
+      local_scalar_t__ transformed_param_real;
       current_statement__ = 8;
       transformed_param_real = bernoulli_logit_lpmf<false>(d_int, d_int);
       current_statement__ = 9;
@@ -3506,32 +3499,25 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      double p_real = std::numeric_limits<double>::quiet_NaN();
+      double p_real;
       current_statement__ = 1;
       p_real = in__.template read<local_scalar_t__>();
-      std::vector<double> p_real_array =
-         std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
+      std::vector<double> p_real_array;
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
-      Eigen::Matrix<double, -1, -1> p_matrix =
-         Eigen::Matrix<double, -1, -1>::Constant(d_int, d_int,
-           std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, -1> p_matrix;
       current_statement__ = 3;
       p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                    d_int, d_int);
-      Eigen::Matrix<double, -1, 1> p_vector =
-         Eigen::Matrix<double, -1, 1>::Constant(d_int,
-           std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, 1> p_vector;
       current_statement__ = 4;
       p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    d_int);
-      Eigen::Matrix<double, 1, -1> p_row_vector =
-         Eigen::Matrix<double, 1, -1>::Constant(d_int,
-           std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, 1, -1> p_row_vector;
       current_statement__ = 5;
       p_row_vector = in__.template read<
                        Eigen::Matrix<local_scalar_t__, 1, -1>>(d_int);
-      double y_p = std::numeric_limits<double>::quiet_NaN();
+      double y_p;
       current_statement__ = 6;
       y_p = in__.template read<local_scalar_t__>();
       double transformed_param_real =
@@ -6039,9 +6025,9 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
-      int pos__ = std::numeric_limits<int>::min();
+      int pos__;
       pos__ = 1;
-      local_scalar_t__ p_real = DUMMY_VAR__;
+      local_scalar_t__ p_real;
       p_real = in__.read<local_scalar_t__>();
       out__.write(p_real);
       std::vector<local_scalar_t__> p_real_array =
@@ -6075,7 +6061,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
           "assigning variable p_row_vector", index_uni(sym1__));
       }
       out__.write(p_row_vector);
-      local_scalar_t__ y_p = DUMMY_VAR__;
+      local_scalar_t__ y_p;
       y_p = in__.read<local_scalar_t__>();
       out__.write(y_p);
     } catch (const std::exception& e) {
@@ -6412,7 +6398,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      int pos__ = std::numeric_limits<int>::min();
+      int pos__;
       pos__ = 1;
       current_statement__ = 25;
       context__.validate_dims("data initialization","d_int","int",
@@ -6540,47 +6526,34 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      local_scalar_t__ p_real = DUMMY_VAR__;
+      local_scalar_t__ p_real;
       current_statement__ = 1;
       p_real = in__.template read<local_scalar_t__>();
-      std::vector<local_scalar_t__> p_real_array =
-         std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
+      std::vector<local_scalar_t__> p_real_array;
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       stan::conditional_var_value_t<local_scalar_t__, 
-        Eigen::Matrix<local_scalar_t__, -1, -1>> p_matrix =
-         stan::conditional_var_value_t<local_scalar_t__, 
-           Eigen::Matrix<local_scalar_t__, -1, -1>>(
-           Eigen::Matrix<double, -1, -1>::Constant(d_int, d_int,
-             std::numeric_limits<double>::quiet_NaN()));
+        Eigen::Matrix<local_scalar_t__, -1, -1>> p_matrix;
       current_statement__ = 3;
       p_matrix = in__.template read<
                    stan::conditional_var_value_t<local_scalar_t__, 
                      Eigen::Matrix<local_scalar_t__, -1, -1>>>(d_int, d_int);
       stan::conditional_var_value_t<local_scalar_t__, 
-        Eigen::Matrix<local_scalar_t__, -1, 1>> p_vector =
-         stan::conditional_var_value_t<local_scalar_t__, 
-           Eigen::Matrix<local_scalar_t__, -1, 1>>(
-           Eigen::Matrix<double, -1, 1>::Constant(d_int,
-             std::numeric_limits<double>::quiet_NaN()));
+        Eigen::Matrix<local_scalar_t__, -1, 1>> p_vector;
       current_statement__ = 4;
       p_vector = in__.template read<
                    stan::conditional_var_value_t<local_scalar_t__, 
                      Eigen::Matrix<local_scalar_t__, -1, 1>>>(d_int);
       stan::conditional_var_value_t<local_scalar_t__, 
-        Eigen::Matrix<local_scalar_t__, 1, -1>> p_row_vector =
-         stan::conditional_var_value_t<local_scalar_t__, 
-           Eigen::Matrix<local_scalar_t__, 1, -1>>(
-           Eigen::Matrix<double, 1, -1>::Constant(d_int,
-             std::numeric_limits<double>::quiet_NaN()));
+        Eigen::Matrix<local_scalar_t__, 1, -1>> p_row_vector;
       current_statement__ = 5;
       p_row_vector = in__.template read<
                        stan::conditional_var_value_t<local_scalar_t__, 
                          Eigen::Matrix<local_scalar_t__, 1, -1>>>(d_int);
-      local_scalar_t__ y_p = DUMMY_VAR__;
+      local_scalar_t__ y_p;
       current_statement__ = 6;
       y_p = in__.template read<local_scalar_t__>();
-      local_scalar_t__ transformed_param_real = DUMMY_VAR__;
+      local_scalar_t__ transformed_param_real;
       current_statement__ = 8;
       transformed_param_real = bernoulli_lpmf<false>(d_int_array, d_real);
       current_statement__ = 9;
@@ -6656,32 +6629,25 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      double p_real = std::numeric_limits<double>::quiet_NaN();
+      double p_real;
       current_statement__ = 1;
       p_real = in__.template read<local_scalar_t__>();
-      std::vector<double> p_real_array =
-         std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
+      std::vector<double> p_real_array;
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
-      Eigen::Matrix<double, -1, -1> p_matrix =
-         Eigen::Matrix<double, -1, -1>::Constant(d_int, d_int,
-           std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, -1> p_matrix;
       current_statement__ = 3;
       p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                    d_int, d_int);
-      Eigen::Matrix<double, -1, 1> p_vector =
-         Eigen::Matrix<double, -1, 1>::Constant(d_int,
-           std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, 1> p_vector;
       current_statement__ = 4;
       p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    d_int);
-      Eigen::Matrix<double, 1, -1> p_row_vector =
-         Eigen::Matrix<double, 1, -1>::Constant(d_int,
-           std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, 1, -1> p_row_vector;
       current_statement__ = 5;
       p_row_vector = in__.template read<
                        Eigen::Matrix<local_scalar_t__, 1, -1>>(d_int);
-      double y_p = std::numeric_limits<double>::quiet_NaN();
+      double y_p;
       current_statement__ = 6;
       y_p = in__.template read<local_scalar_t__>();
       double transformed_param_real =
@@ -6758,9 +6724,9 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
-      int pos__ = std::numeric_limits<int>::min();
+      int pos__;
       pos__ = 1;
-      local_scalar_t__ p_real = DUMMY_VAR__;
+      local_scalar_t__ p_real;
       p_real = in__.read<local_scalar_t__>();
       out__.write(p_real);
       std::vector<local_scalar_t__> p_real_array =
@@ -6794,7 +6760,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
           "assigning variable p_row_vector", index_uni(sym1__));
       }
       out__.write(p_row_vector);
-      local_scalar_t__ y_p = DUMMY_VAR__;
+      local_scalar_t__ y_p;
       y_p = in__.read<local_scalar_t__>();
       out__.write(y_p);
     } catch (const std::exception& e) {
