@@ -18,7 +18,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 34> locations_array__ = 
+static constexpr std::array<const char*, 35> locations_array__ = 
 {" (found before start of program)",
  " (in 'ad-level-failing.stan', line 37, column 2 to column 21)",
  " (in 'ad-level-failing.stan', line 38, column 2 to column 22)",
@@ -52,7 +52,8 @@ static constexpr std::array<const char*, 34> locations_array__ =
  " (in 'ad-level-failing.stan', line 14, column 4 to column 58)",
  " (in 'ad-level-failing.stan', line 16, column 4 to column 30)",
  " (in 'ad-level-failing.stan', line 17, column 4 to column 48)",
- " (in 'ad-level-failing.stan', line 19, column 4 to column 16)"};
+ " (in 'ad-level-failing.stan', line 19, column 4 to column 16)",
+ " (in 'ad-level-failing.stan', line 11, column 61 to line 20, column 3)"};
 
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
@@ -72,35 +73,38 @@ simple_SIR(const T0__& t, const std::vector<T1__>& y,
     double lcm_sym3__;
     double lcm_sym2__;
     double lcm_sym1__;
-    std::vector<local_scalar_t__> dydt =
-       std::vector<local_scalar_t__>(4, DUMMY_VAR__);
-    current_statement__ = 30;
-    assign(dydt,
-      (((-rvalue(theta, "theta", index_uni(1)) *
-          rvalue(y, "y", index_uni(4))) /
-         (rvalue(y, "y", index_uni(4)) +
-           rvalue(theta, "theta", index_uni(2)))) *
-        rvalue(y, "y", index_uni(1))),
-      "assigning variable dydt", index_uni(1));
-    lcm_sym4__ = (rvalue(theta, "theta", index_uni(3)) *
-                   rvalue(y, "y", index_uni(2)));
-    assign(dydt,
-      ((((rvalue(theta, "theta", index_uni(1)) *
-           rvalue(y, "y", index_uni(4))) /
-          (rvalue(y, "y", index_uni(4)) +
-            rvalue(theta, "theta", index_uni(2)))) *
-         rvalue(y, "y", index_uni(1))) - lcm_sym4__),
-      "assigning variable dydt", index_uni(2));
-    current_statement__ = 31;
-    assign(dydt, lcm_sym4__, "assigning variable dydt", index_uni(3));
-    current_statement__ = 32;
-    assign(dydt,
-      ((rvalue(theta, "theta", index_uni(4)) * rvalue(y, "y", index_uni(2)))
-        -
-        (rvalue(theta, "theta", index_uni(5)) * rvalue(y, "y", index_uni(4)))),
-      "assigning variable dydt", index_uni(4));
-    current_statement__ = 33;
-    return dydt;
+    {
+      std::vector<local_scalar_t__> dydt =
+         std::vector<local_scalar_t__>(4, DUMMY_VAR__);
+      current_statement__ = 30;
+      assign(dydt,
+        (((-rvalue(theta, "theta", index_uni(1)) *
+            rvalue(y, "y", index_uni(4))) /
+           (rvalue(y, "y", index_uni(4)) +
+             rvalue(theta, "theta", index_uni(2)))) *
+          rvalue(y, "y", index_uni(1))),
+        "assigning variable dydt", index_uni(1));
+      lcm_sym4__ = (rvalue(theta, "theta", index_uni(3)) *
+                     rvalue(y, "y", index_uni(2)));
+      assign(dydt,
+        ((((rvalue(theta, "theta", index_uni(1)) *
+             rvalue(y, "y", index_uni(4))) /
+            (rvalue(y, "y", index_uni(4)) +
+              rvalue(theta, "theta", index_uni(2)))) *
+           rvalue(y, "y", index_uni(1))) - lcm_sym4__),
+        "assigning variable dydt", index_uni(2));
+      current_statement__ = 31;
+      assign(dydt, lcm_sym4__, "assigning variable dydt", index_uni(3));
+      current_statement__ = 32;
+      assign(dydt,
+        ((rvalue(theta, "theta", index_uni(4)) *
+           rvalue(y, "y", index_uni(2))) -
+          (rvalue(theta, "theta", index_uni(5)) *
+            rvalue(y, "y", index_uni(4)))),
+        "assigning variable dydt", index_uni(4));
+      current_statement__ = 33;
+      return dydt;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -808,23 +812,25 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     int lcm_sym28__;
     int lcm_sym27__;
     int lcm_sym26__;
-    lcm_sym27__ = size(y_i);
-    if (logical_gte(lcm_sym27__, 1)) {
-      current_statement__ = 46;
-      if (rvalue(y_i, "y_i", index_uni(1))) {
-        current_statement__ = 45;
-        return 1;
-      } 
-      for (int k = 2; k <= lcm_sym27__; ++k) {
+    {
+      lcm_sym27__ = size(y_i);
+      if (logical_gte(lcm_sym27__, 1)) {
         current_statement__ = 46;
-        if (rvalue(y_i, "y_i", index_uni(k))) {
+        if (rvalue(y_i, "y_i", index_uni(1))) {
           current_statement__ = 45;
-          return k;
+          return 1;
         } 
-      }
-    } 
-    current_statement__ = 64;
-    return 0;
+        for (int k = 2; k <= lcm_sym27__; ++k) {
+          current_statement__ = 46;
+          if (rvalue(y_i, "y_i", index_uni(k))) {
+            current_statement__ = 45;
+            return k;
+          } 
+        }
+      } 
+      current_statement__ = 64;
+      return 0;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -854,27 +860,29 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     int lcm_sym32__;
     int lcm_sym31__;
     int lcm_sym30__;
-    lcm_sym33__ = (size(y_i) - 1);
-    if (logical_gte(lcm_sym33__, 0)) {
-      int k;
-      lcm_sym32__ = (size(y_i) - 0);
-      current_statement__ = 52;
-      if (y_i[(lcm_sym32__ - 1)]) {
-        current_statement__ = 51;
-        return lcm_sym32__;
-      } 
-      for (int k_rev = 1; k_rev <= lcm_sym33__; ++k_rev) {
+    {
+      lcm_sym33__ = (size(y_i) - 1);
+      if (logical_gte(lcm_sym33__, 0)) {
         int k;
-        lcm_sym31__ = (size(y_i) - k_rev);
+        lcm_sym32__ = (size(y_i) - 0);
         current_statement__ = 52;
-        if (y_i[(lcm_sym31__ - 1)]) {
+        if (y_i[(lcm_sym32__ - 1)]) {
           current_statement__ = 51;
-          return lcm_sym31__;
+          return lcm_sym32__;
         } 
-      }
-    } 
-    current_statement__ = 65;
-    return 0;
+        for (int k_rev = 1; k_rev <= lcm_sym33__; ++k_rev) {
+          int k;
+          lcm_sym31__ = (size(y_i) - k_rev);
+          current_statement__ = 52;
+          if (y_i[(lcm_sym31__ - 1)]) {
+            current_statement__ = 51;
+            return lcm_sym31__;
+          } 
+        }
+      } 
+      current_statement__ = 65;
+      return 0;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -914,54 +922,21 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
     int lcm_sym38__;
     int lcm_sym37__;
     int lcm_sym36__;
-    current_statement__ = 15;
-    validate_non_negative_index("chi", "nind", nind);
-    current_statement__ = 16;
-    validate_non_negative_index("chi", "n_occasions", n_occasions);
-    Eigen::Matrix<local_scalar_t__, -1, -1> chi =
-       Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(nind, n_occasions,
-         DUMMY_VAR__);
-    current_statement__ = 67;
-    if (logical_gte(nind, 1)) {
-      current_statement__ = 18;
-      assign(chi, 1.0,
-        "assigning variable chi", index_uni(1), index_uni(n_occasions));
-      lcm_sym39__ = (n_occasions - 1);
-      lcm_sym37__ = logical_gte(lcm_sym39__, 1);
-      if (lcm_sym37__) {
-        int t_curr;
-        int t_next;
-        lcm_sym41__ = (lcm_sym39__ + 1);
-        current_statement__ = 21;
-        assign(chi,
-          stan::math::fma(
-            (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym39__)) *
-              (1 -
-                rvalue(p, "p", index_uni(1), index_uni((lcm_sym41__ - 1))))),
-            rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym41__)),
-            (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym39__)))),
-          "assigning variable chi", index_uni(1), index_uni(lcm_sym39__));
-        for (int t = 2; t <= lcm_sym39__; ++t) {
-          int t_curr;
-          lcm_sym38__ = (n_occasions - t);
-          int t_next;
-          lcm_sym40__ = (lcm_sym38__ + 1);
-          current_statement__ = 21;
-          assign(chi,
-            stan::math::fma(
-              (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym38__)) *
-                (1 -
-                  rvalue(p, "p", index_uni(1), index_uni((lcm_sym40__ - 1))))),
-              rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym40__)),
-              (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym38__)))),
-            "assigning variable chi", index_uni(1), index_uni(lcm_sym38__));
-        }
-      } 
-      for (int i = 2; i <= nind; ++i) {
+    {
+      current_statement__ = 15;
+      validate_non_negative_index("chi", "nind", nind);
+      current_statement__ = 16;
+      validate_non_negative_index("chi", "n_occasions", n_occasions);
+      Eigen::Matrix<local_scalar_t__, -1, -1> chi =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(nind, n_occasions,
+           DUMMY_VAR__);
+      current_statement__ = 67;
+      if (logical_gte(nind, 1)) {
         current_statement__ = 18;
         assign(chi, 1.0,
-          "assigning variable chi", index_uni(i), index_uni(n_occasions));
-        current_statement__ = 66;
+          "assigning variable chi", index_uni(1), index_uni(n_occasions));
+        lcm_sym39__ = (n_occasions - 1);
+        lcm_sym37__ = logical_gte(lcm_sym39__, 1);
         if (lcm_sym37__) {
           int t_curr;
           int t_next;
@@ -969,12 +944,12 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
           current_statement__ = 21;
           assign(chi,
             stan::math::fma(
-              (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym39__)) *
+              (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym39__)) *
                 (1 -
-                  rvalue(p, "p", index_uni(i), index_uni((lcm_sym41__ - 1))))),
-              rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym41__)),
-              (1 - rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym39__)))),
-            "assigning variable chi", index_uni(i), index_uni(lcm_sym39__));
+                  rvalue(p, "p", index_uni(1), index_uni((lcm_sym41__ - 1))))),
+              rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym41__)),
+              (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym39__)))),
+            "assigning variable chi", index_uni(1), index_uni(lcm_sym39__));
           for (int t = 2; t <= lcm_sym39__; ++t) {
             int t_curr;
             lcm_sym38__ = (n_occasions - t);
@@ -983,20 +958,60 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
             current_statement__ = 21;
             assign(chi,
               stan::math::fma(
-                (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym38__)) *
+                (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym38__)) *
                   (1 -
                     rvalue(p, "p",
-                      index_uni(i), index_uni((lcm_sym40__ - 1))))),
-                rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym40__)),
+                      index_uni(1), index_uni((lcm_sym40__ - 1))))),
+                rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym40__)),
                 (1 -
-                  rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym38__)))),
-              "assigning variable chi", index_uni(i), index_uni(lcm_sym38__));
+                  rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym38__)))),
+              "assigning variable chi", index_uni(1), index_uni(lcm_sym38__));
           }
         } 
-      }
-    } 
-    current_statement__ = 68;
-    return chi;
+        for (int i = 2; i <= nind; ++i) {
+          current_statement__ = 18;
+          assign(chi, 1.0,
+            "assigning variable chi", index_uni(i), index_uni(n_occasions));
+          current_statement__ = 66;
+          if (lcm_sym37__) {
+            int t_curr;
+            int t_next;
+            lcm_sym41__ = (lcm_sym39__ + 1);
+            current_statement__ = 21;
+            assign(chi,
+              stan::math::fma(
+                (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym39__)) *
+                  (1 -
+                    rvalue(p, "p",
+                      index_uni(i), index_uni((lcm_sym41__ - 1))))),
+                rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym41__)),
+                (1 -
+                  rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym39__)))),
+              "assigning variable chi", index_uni(i), index_uni(lcm_sym39__));
+            for (int t = 2; t <= lcm_sym39__; ++t) {
+              int t_curr;
+              lcm_sym38__ = (n_occasions - t);
+              int t_next;
+              lcm_sym40__ = (lcm_sym38__ + 1);
+              current_statement__ = 21;
+              assign(chi,
+                stan::math::fma(
+                  (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym38__)) *
+                    (1 -
+                      rvalue(p, "p",
+                        index_uni(i), index_uni((lcm_sym40__ - 1))))),
+                  rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym40__)),
+                  (1 -
+                    rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym38__)))),
+                "assigning variable chi", index_uni(i),
+                                            index_uni(lcm_sym38__));
+            }
+          } 
+        }
+      } 
+      current_statement__ = 68;
+      return chi;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -6932,23 +6947,25 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     int lcm_sym28__;
     int lcm_sym27__;
     int lcm_sym26__;
-    lcm_sym27__ = size(y_i);
-    if (logical_gte(lcm_sym27__, 1)) {
-      current_statement__ = 48;
-      if (rvalue(y_i, "y_i", index_uni(1))) {
-        current_statement__ = 47;
-        return 1;
-      } 
-      for (int k = 2; k <= lcm_sym27__; ++k) {
+    {
+      lcm_sym27__ = size(y_i);
+      if (logical_gte(lcm_sym27__, 1)) {
         current_statement__ = 48;
-        if (rvalue(y_i, "y_i", index_uni(k))) {
+        if (rvalue(y_i, "y_i", index_uni(1))) {
           current_statement__ = 47;
-          return k;
+          return 1;
         } 
-      }
-    } 
-    current_statement__ = 66;
-    return 0;
+        for (int k = 2; k <= lcm_sym27__; ++k) {
+          current_statement__ = 48;
+          if (rvalue(y_i, "y_i", index_uni(k))) {
+            current_statement__ = 47;
+            return k;
+          } 
+        }
+      } 
+      current_statement__ = 66;
+      return 0;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -6978,27 +6995,29 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     int lcm_sym32__;
     int lcm_sym31__;
     int lcm_sym30__;
-    lcm_sym33__ = (size(y_i) - 1);
-    if (logical_gte(lcm_sym33__, 0)) {
-      int k;
-      lcm_sym32__ = (size(y_i) - 0);
-      current_statement__ = 54;
-      if (y_i[(lcm_sym32__ - 1)]) {
-        current_statement__ = 53;
-        return lcm_sym32__;
-      } 
-      for (int k_rev = 1; k_rev <= lcm_sym33__; ++k_rev) {
+    {
+      lcm_sym33__ = (size(y_i) - 1);
+      if (logical_gte(lcm_sym33__, 0)) {
         int k;
-        lcm_sym31__ = (size(y_i) - k_rev);
+        lcm_sym32__ = (size(y_i) - 0);
         current_statement__ = 54;
-        if (y_i[(lcm_sym31__ - 1)]) {
+        if (y_i[(lcm_sym32__ - 1)]) {
           current_statement__ = 53;
-          return lcm_sym31__;
+          return lcm_sym32__;
         } 
-      }
-    } 
-    current_statement__ = 67;
-    return 0;
+        for (int k_rev = 1; k_rev <= lcm_sym33__; ++k_rev) {
+          int k;
+          lcm_sym31__ = (size(y_i) - k_rev);
+          current_statement__ = 54;
+          if (y_i[(lcm_sym31__ - 1)]) {
+            current_statement__ = 53;
+            return lcm_sym31__;
+          } 
+        }
+      } 
+      current_statement__ = 67;
+      return 0;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -7038,89 +7057,96 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
     int lcm_sym38__;
     int lcm_sym37__;
     int lcm_sym36__;
-    current_statement__ = 18;
-    validate_non_negative_index("chi", "nind", nind);
-    current_statement__ = 19;
-    validate_non_negative_index("chi", "n_occasions", n_occasions);
-    Eigen::Matrix<local_scalar_t__, -1, -1> chi =
-       Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(nind, n_occasions,
-         DUMMY_VAR__);
-    current_statement__ = 69;
-    if (logical_gte(nind, 1)) {
-      current_statement__ = 21;
-      assign(chi, 1.0,
-        "assigning variable chi", index_uni(1), index_uni(n_occasions));
-      lcm_sym39__ = (n_occasions - 1);
-      lcm_sym37__ = logical_gte(lcm_sym39__, 1);
-      if (lcm_sym37__) {
-        int t_curr;
-        int t_next;
-        lcm_sym41__ = (lcm_sym39__ + 1);
-        current_statement__ = 24;
-        assign(chi,
-          stan::math::fma(
-            (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym39__)) *
-              (1 -
-                rvalue(p, "p", index_uni(1), index_uni((lcm_sym41__ - 1))))),
-            rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym41__)),
-            (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym39__)))),
-          "assigning variable chi", index_uni(1), index_uni(lcm_sym39__));
-        for (int t = 2; t <= lcm_sym39__; ++t) {
-          int t_curr;
-          lcm_sym38__ = (n_occasions - t);
-          int t_next;
-          lcm_sym40__ = (lcm_sym38__ + 1);
-          current_statement__ = 24;
-          assign(chi,
-            stan::math::fma(
-              (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym38__)) *
-                (1 -
-                  rvalue(p, "p", index_uni(1), index_uni((lcm_sym40__ - 1))))),
-              rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym40__)),
-              (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym38__)))),
-            "assigning variable chi", index_uni(1), index_uni(lcm_sym38__));
-        }
-      } 
-      for (int i = 2; i <= nind; ++i) {
+    {
+      current_statement__ = 18;
+      validate_non_negative_index("chi", "nind", nind);
+      current_statement__ = 19;
+      validate_non_negative_index("chi", "n_occasions", n_occasions);
+      Eigen::Matrix<local_scalar_t__, -1, -1> chi =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(nind, n_occasions,
+           DUMMY_VAR__);
+      current_statement__ = 69;
+      if (logical_gte(nind, 1)) {
         current_statement__ = 21;
         assign(chi, 1.0,
-          "assigning variable chi", index_uni(i), index_uni(n_occasions));
-        current_statement__ = 68;
+          "assigning variable chi", index_uni(1), index_uni(n_occasions));
+        lcm_sym39__ = (n_occasions - 1);
+        lcm_sym37__ = logical_gte(lcm_sym39__, 1);
         if (lcm_sym37__) {
           int t_curr;
-          int t_next;
+          int t_next = std::numeric_limits<int>::min();
           lcm_sym41__ = (lcm_sym39__ + 1);
           current_statement__ = 24;
           assign(chi,
             stan::math::fma(
-              (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym39__)) *
+              (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym39__)) *
                 (1 -
-                  rvalue(p, "p", index_uni(i), index_uni((lcm_sym41__ - 1))))),
-              rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym41__)),
-              (1 - rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym39__)))),
-            "assigning variable chi", index_uni(i), index_uni(lcm_sym39__));
+                  rvalue(p, "p", index_uni(1), index_uni((lcm_sym41__ - 1))))),
+              rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym41__)),
+              (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym39__)))),
+            "assigning variable chi", index_uni(1), index_uni(lcm_sym39__));
           for (int t = 2; t <= lcm_sym39__; ++t) {
             int t_curr;
             lcm_sym38__ = (n_occasions - t);
-            int t_next;
+            int t_next = std::numeric_limits<int>::min();
             lcm_sym40__ = (lcm_sym38__ + 1);
             current_statement__ = 24;
             assign(chi,
               stan::math::fma(
-                (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym38__)) *
+                (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym38__)) *
                   (1 -
                     rvalue(p, "p",
-                      index_uni(i), index_uni((lcm_sym40__ - 1))))),
-                rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym40__)),
+                      index_uni(1), index_uni((lcm_sym40__ - 1))))),
+                rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym40__)),
                 (1 -
-                  rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym38__)))),
-              "assigning variable chi", index_uni(i), index_uni(lcm_sym38__));
+                  rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym38__)))),
+              "assigning variable chi", index_uni(1), index_uni(lcm_sym38__));
           }
         } 
-      }
-    } 
-    current_statement__ = 70;
-    return chi;
+        for (int i = 2; i <= nind; ++i) {
+          current_statement__ = 21;
+          assign(chi, 1.0,
+            "assigning variable chi", index_uni(i), index_uni(n_occasions));
+          current_statement__ = 68;
+          if (lcm_sym37__) {
+            int t_curr;
+            int t_next = std::numeric_limits<int>::min();
+            lcm_sym41__ = (lcm_sym39__ + 1);
+            current_statement__ = 24;
+            assign(chi,
+              stan::math::fma(
+                (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym39__)) *
+                  (1 -
+                    rvalue(p, "p",
+                      index_uni(i), index_uni((lcm_sym41__ - 1))))),
+                rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym41__)),
+                (1 -
+                  rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym39__)))),
+              "assigning variable chi", index_uni(i), index_uni(lcm_sym39__));
+            for (int t = 2; t <= lcm_sym39__; ++t) {
+              int t_curr;
+              lcm_sym38__ = (n_occasions - t);
+              int t_next = std::numeric_limits<int>::min();
+              lcm_sym40__ = (lcm_sym38__ + 1);
+              current_statement__ = 24;
+              assign(chi,
+                stan::math::fma(
+                  (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym38__)) *
+                    (1 -
+                      rvalue(p, "p",
+                        index_uni(i), index_uni((lcm_sym40__ - 1))))),
+                  rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym40__)),
+                  (1 -
+                    rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym38__)))),
+                "assigning variable chi", index_uni(i),
+                                            index_uni(lcm_sym38__));
+            }
+          } 
+        }
+      } 
+      current_statement__ = 70;
+      return chi;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -7624,8 +7650,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                                                    index_uni(n_occasions));
           lcm_sym82__ = (n_occasions - 1);
           if (logical_gte(lcm_sym82__, 1)) {
-            int inline_sym11__;
-            int inline_sym12__;
+            int inline_sym11__ = std::numeric_limits<int>::min();
+            int inline_sym12__ = std::numeric_limits<int>::min();
             lcm_sym86__ = (lcm_sym82__ + 1);
             current_statement__ = 24;
             assign(inline_sym10__,
@@ -7644,8 +7670,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                                                      index_uni(lcm_sym82__));
             for (int inline_sym13__ = 2; inline_sym13__ <= lcm_sym82__;
                  ++inline_sym13__) {
-              int inline_sym11__;
-              int inline_sym12__;
+              int inline_sym11__ = std::numeric_limits<int>::min();
+              int inline_sym12__ = std::numeric_limits<int>::min();
               lcm_sym81__ = (n_occasions - inline_sym13__);
               lcm_sym85__ = (lcm_sym81__ + 1);
               current_statement__ = 24;
@@ -7951,8 +7977,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                                                   index_uni(n_occasions));
           lcm_sym54__ = (n_occasions - 1);
           if (logical_gte(lcm_sym54__, 1)) {
-            int inline_sym3__;
-            int inline_sym4__;
+            int inline_sym3__ = std::numeric_limits<int>::min();
+            int inline_sym4__ = std::numeric_limits<int>::min();
             lcm_sym60__ = (lcm_sym54__ + 1);
             current_statement__ = 24;
             assign(inline_sym2__,
@@ -7971,8 +7997,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                                                     index_uni(lcm_sym54__));
             for (int inline_sym5__ = 2; inline_sym5__ <= lcm_sym54__;
                  ++inline_sym5__) {
-              int inline_sym3__;
-              int inline_sym4__;
+              int inline_sym3__ = std::numeric_limits<int>::min();
+              int inline_sym4__ = std::numeric_limits<int>::min();
               lcm_sym53__ = (n_occasions - inline_sym5__);
               lcm_sym59__ = (lcm_sym53__ + 1);
               current_statement__ = 24;
@@ -8365,7 +8391,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 145> locations_array__ = 
+static constexpr std::array<const char*, 146> locations_array__ = 
 {" (found before start of program)",
  " (in 'expr-prop-fail6.stan', line 160, column 2 to column 34)",
  " (in 'expr-prop-fail6.stan', line 161, column 2 to column 32)",
@@ -8510,7 +8536,8 @@ static constexpr std::array<const char*, 145> locations_array__ =
  " (in 'expr-prop-fail6.stan', line 64, column 4 to column 15)",
  " (in 'expr-prop-fail6.stan', line 133, column 8 to line 137, column 50)",
  " (in 'expr-prop-fail6.stan', line 107, column 10 to line 112, column 57)",
- " (in 'expr-prop-fail6.stan', line 86, column 4 to line 142, column 5)"};
+ " (in 'expr-prop-fail6.stan', line 86, column 4 to line 142, column 5)",
+ " (in 'expr-prop-fail6.stan', line 81, column 74 to line 143, column 3)"};
 
 
 int
@@ -8526,23 +8553,25 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     int lcm_sym45__;
     int lcm_sym44__;
     int lcm_sym43__;
-    lcm_sym44__ = size(y_i);
-    if (logical_gte(lcm_sym44__, 1)) {
-      current_statement__ = 58;
-      if (rvalue(y_i, "y_i", index_uni(1))) {
-        current_statement__ = 57;
-        return 1;
-      } 
-      for (int k = 2; k <= lcm_sym44__; ++k) {
+    {
+      lcm_sym44__ = size(y_i);
+      if (logical_gte(lcm_sym44__, 1)) {
         current_statement__ = 58;
-        if (rvalue(y_i, "y_i", index_uni(k))) {
+        if (rvalue(y_i, "y_i", index_uni(1))) {
           current_statement__ = 57;
-          return k;
+          return 1;
         } 
-      }
-    } 
-    current_statement__ = 137;
-    return 0;
+        for (int k = 2; k <= lcm_sym44__; ++k) {
+          current_statement__ = 58;
+          if (rvalue(y_i, "y_i", index_uni(k))) {
+            current_statement__ = 57;
+            return k;
+          } 
+        }
+      } 
+      current_statement__ = 137;
+      return 0;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -8572,27 +8601,29 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     int lcm_sym49__;
     int lcm_sym48__;
     int lcm_sym47__;
-    lcm_sym50__ = (size(y_i) - 1);
-    if (logical_gte(lcm_sym50__, 0)) {
-      int k;
-      lcm_sym49__ = (size(y_i) - 0);
-      current_statement__ = 118;
-      if (y_i[(lcm_sym49__ - 1)]) {
-        current_statement__ = 117;
-        return lcm_sym49__;
-      } 
-      for (int k_rev = 1; k_rev <= lcm_sym50__; ++k_rev) {
+    {
+      lcm_sym50__ = (size(y_i) - 1);
+      if (logical_gte(lcm_sym50__, 0)) {
         int k;
-        lcm_sym48__ = (size(y_i) - k_rev);
+        lcm_sym49__ = (size(y_i) - 0);
         current_statement__ = 118;
-        if (y_i[(lcm_sym48__ - 1)]) {
+        if (y_i[(lcm_sym49__ - 1)]) {
           current_statement__ = 117;
-          return lcm_sym48__;
+          return lcm_sym49__;
         } 
-      }
-    } 
-    current_statement__ = 138;
-    return 0;
+        for (int k_rev = 1; k_rev <= lcm_sym50__; ++k_rev) {
+          int k;
+          lcm_sym48__ = (size(y_i) - k_rev);
+          current_statement__ = 118;
+          if (y_i[(lcm_sym48__ - 1)]) {
+            current_statement__ = 117;
+            return lcm_sym48__;
+          } 
+        }
+      } 
+      current_statement__ = 138;
+      return 0;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -8634,57 +8665,26 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
     int lcm_sym55__;
     int lcm_sym54__;
     int lcm_sym53__;
-    int n_ind;
-    lcm_sym64__ = rows(p);
-    int n_occasions;
-    lcm_sym59__ = cols(p);
-    n_occasions = lcm_sym59__;
-    current_statement__ = 23;
-    validate_non_negative_index("chi", "n_ind", lcm_sym64__);
-    current_statement__ = 24;
-    validate_non_negative_index("chi", "n_occasions", lcm_sym59__);
-    Eigen::Matrix<local_scalar_t__, -1, -1> chi =
-       Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(lcm_sym64__,
-         lcm_sym59__, DUMMY_VAR__);
-    current_statement__ = 140;
-    if (logical_gte(lcm_sym64__, 1)) {
-      current_statement__ = 26;
-      assign(chi, 1.0,
-        "assigning variable chi", index_uni(1), index_uni(lcm_sym59__));
-      lcm_sym56__ = (lcm_sym59__ - 1);
-      lcm_sym53__ = logical_gte(lcm_sym56__, 1);
-      if (lcm_sym53__) {
-        int t_curr;
-        int t_next;
-        lcm_sym58__ = (lcm_sym56__ + 1);
-        current_statement__ = 29;
-        assign(chi,
-          stan::math::fma(
-            (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym56__)) *
-              (1 - rvalue(p, "p", index_uni(1), index_uni(lcm_sym58__)))),
-            rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym58__)),
-            (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym56__)))),
-          "assigning variable chi", index_uni(1), index_uni(lcm_sym56__));
-        for (int t = 2; t <= lcm_sym56__; ++t) {
-          int t_curr;
-          lcm_sym55__ = (lcm_sym59__ - t);
-          int t_next;
-          lcm_sym57__ = (lcm_sym55__ + 1);
-          current_statement__ = 29;
-          assign(chi,
-            stan::math::fma(
-              (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym55__)) *
-                (1 - rvalue(p, "p", index_uni(1), index_uni(lcm_sym57__)))),
-              rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym57__)),
-              (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym55__)))),
-            "assigning variable chi", index_uni(1), index_uni(lcm_sym55__));
-        }
-      } 
-      for (int i = 2; i <= lcm_sym64__; ++i) {
+    {
+      int n_ind;
+      lcm_sym64__ = rows(p);
+      int n_occasions;
+      lcm_sym59__ = cols(p);
+      n_occasions = lcm_sym59__;
+      current_statement__ = 23;
+      validate_non_negative_index("chi", "n_ind", lcm_sym64__);
+      current_statement__ = 24;
+      validate_non_negative_index("chi", "n_occasions", lcm_sym59__);
+      Eigen::Matrix<local_scalar_t__, -1, -1> chi =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(lcm_sym64__,
+           lcm_sym59__, DUMMY_VAR__);
+      current_statement__ = 140;
+      if (logical_gte(lcm_sym64__, 1)) {
         current_statement__ = 26;
         assign(chi, 1.0,
-          "assigning variable chi", index_uni(i), index_uni(lcm_sym59__));
-        current_statement__ = 139;
+          "assigning variable chi", index_uni(1), index_uni(lcm_sym59__));
+        lcm_sym56__ = (lcm_sym59__ - 1);
+        lcm_sym53__ = logical_gte(lcm_sym56__, 1);
         if (lcm_sym53__) {
           int t_curr;
           int t_next;
@@ -8692,11 +8692,11 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
           current_statement__ = 29;
           assign(chi,
             stan::math::fma(
-              (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym56__)) *
-                (1 - rvalue(p, "p", index_uni(i), index_uni(lcm_sym58__)))),
-              rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym58__)),
-              (1 - rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym56__)))),
-            "assigning variable chi", index_uni(i), index_uni(lcm_sym56__));
+              (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym56__)) *
+                (1 - rvalue(p, "p", index_uni(1), index_uni(lcm_sym58__)))),
+              rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym58__)),
+              (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym56__)))),
+            "assigning variable chi", index_uni(1), index_uni(lcm_sym56__));
           for (int t = 2; t <= lcm_sym56__; ++t) {
             int t_curr;
             lcm_sym55__ = (lcm_sym59__ - t);
@@ -8705,18 +8705,55 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
             current_statement__ = 29;
             assign(chi,
               stan::math::fma(
-                (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym55__)) *
-                  (1 - rvalue(p, "p", index_uni(i), index_uni(lcm_sym57__)))),
-                rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym57__)),
+                (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym55__)) *
+                  (1 - rvalue(p, "p", index_uni(1), index_uni(lcm_sym57__)))),
+                rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym57__)),
                 (1 -
-                  rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym55__)))),
-              "assigning variable chi", index_uni(i), index_uni(lcm_sym55__));
+                  rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym55__)))),
+              "assigning variable chi", index_uni(1), index_uni(lcm_sym55__));
           }
         } 
-      }
-    } 
-    current_statement__ = 141;
-    return chi;
+        for (int i = 2; i <= lcm_sym64__; ++i) {
+          current_statement__ = 26;
+          assign(chi, 1.0,
+            "assigning variable chi", index_uni(i), index_uni(lcm_sym59__));
+          current_statement__ = 139;
+          if (lcm_sym53__) {
+            int t_curr;
+            int t_next;
+            lcm_sym58__ = (lcm_sym56__ + 1);
+            current_statement__ = 29;
+            assign(chi,
+              stan::math::fma(
+                (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym56__)) *
+                  (1 - rvalue(p, "p", index_uni(i), index_uni(lcm_sym58__)))),
+                rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym58__)),
+                (1 -
+                  rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym56__)))),
+              "assigning variable chi", index_uni(i), index_uni(lcm_sym56__));
+            for (int t = 2; t <= lcm_sym56__; ++t) {
+              int t_curr;
+              lcm_sym55__ = (lcm_sym59__ - t);
+              int t_next;
+              lcm_sym57__ = (lcm_sym55__ + 1);
+              current_statement__ = 29;
+              assign(chi,
+                stan::math::fma(
+                  (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym55__)) *
+                    (1 -
+                      rvalue(p, "p", index_uni(i), index_uni(lcm_sym57__)))),
+                  rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym57__)),
+                  (1 -
+                    rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym55__)))),
+                "assigning variable chi", index_uni(i),
+                                            index_uni(lcm_sym55__));
+            }
+          } 
+        }
+      } 
+      current_statement__ = 141;
+      return chi;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -8805,229 +8842,57 @@ js_super_lp(const std::vector<std::vector<int>>& y,
     int lcm_sym67__;
     int lcm_sym66__;
     int lcm_sym65__;
-    int n_ind;
-    lcm_sym114__ = rvalue(dims(y), "dims(y)", index_uni(1));
-    int n_occasions;
-    lcm_sym115__ = rvalue(dims(y), "dims(y)", index_uni(2));
-    n_occasions = lcm_sym115__;
-    current_statement__ = 79;
-    validate_non_negative_index("qnu", "n_occasions", lcm_sym115__);
-    Eigen::Matrix<double, -1, 1> qnu;
-    assign(lcm_sym73__, subtract(1.0, nu), "assigning variable lcm_sym73__");
-    current_statement__ = 144;
-    if (logical_gte(lcm_sym114__, 1)) {
-      current_statement__ = 81;
-      validate_non_negative_index("qp", "n_occasions", lcm_sym115__);
-      Eigen::Matrix<double, -1, 1> qp;
-      assign(lcm_sym75__,
-        subtract(1.0, transpose(rvalue(p, "p", index_uni(1)))),
-        "assigning variable lcm_sym75__");
-      lcm_sym111__ = rvalue(first, "first", index_uni(1));
-      if (lcm_sym111__) {
-        current_statement__ = 89;
-        lp_accum__.add(bernoulli_lpmf<propto__>(1, psi));
-        current_statement__ = 98;
-        if (logical_eq(lcm_sym111__, 1)) {
-          current_statement__ = 96;
-          lp_accum__.add(
-            bernoulli_lpmf<propto__>(1,
-              (rvalue(nu, "nu", index_uni(1)) *
-                rvalue(p, "p", index_uni(1), index_uni(1)))));
-        } else {
-          current_statement__ = 90;
-          validate_non_negative_index("lp", "first[i]", lcm_sym111__);
-          Eigen::Matrix<local_scalar_t__, -1, 1> lp =
-             Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym111__,
-               DUMMY_VAR__);
-          lcm_sym77__ = (lcm_sym111__ - 1);
-          assign(lp,
-            (((bernoulli_lpmf<false>(1, rvalue(nu, "nu", index_uni(1))) +
-                bernoulli_lpmf<false>(1,
-                  prod(
-                    rvalue(lcm_sym75__, "lcm_sym75__",
-                      index_min_max(1, lcm_sym77__))))) +
-               bernoulli_lpmf<false>(1,
-                 prod(
-                   rvalue(phi, "phi",
-                     index_uni(1), index_min_max(1, lcm_sym77__))))) +
-              bernoulli_lpmf<false>(1,
-                rvalue(p, "p", index_uni(1), index_uni(lcm_sym111__)))),
-            "assigning variable lp", index_uni(1));
-          current_statement__ = 143;
-          if (logical_gte(lcm_sym77__, 2)) {
-            current_statement__ = 92;
-            assign(lp,
-              ((((bernoulli_lpmf<false>(1,
-                    prod(
-                      rvalue(lcm_sym73__, "lcm_sym73__", index_min_max(1, 1))))
-                   +
-                   bernoulli_lpmf<false>(1, rvalue(nu, "nu", index_uni(2))))
-                  +
-                  bernoulli_lpmf<false>(1,
-                    prod(
-                      rvalue(lcm_sym75__, "lcm_sym75__",
-                        index_min_max(2, lcm_sym77__))))) +
-                 bernoulli_lpmf<false>(1,
-                   prod(
-                     rvalue(phi, "phi",
-                       index_uni(1), index_min_max(2, lcm_sym77__))))) +
-                bernoulli_lpmf<false>(1,
-                  rvalue(p, "p", index_uni(1), index_uni(lcm_sym111__)))),
-              "assigning variable lp", index_uni(2));
-            for (int t = 3; t <= lcm_sym77__; ++t) {
-              current_statement__ = 92;
-              assign(lp,
-                ((((bernoulli_lpmf<false>(1,
-                      prod(
-                        rvalue(lcm_sym73__, "lcm_sym73__",
-                          index_min_max(1, (t - 1))))) +
-                     bernoulli_lpmf<false>(1, rvalue(nu, "nu", index_uni(t))))
-                    +
-                    bernoulli_lpmf<false>(1,
-                      prod(
-                        rvalue(lcm_sym75__, "lcm_sym75__",
-                          index_min_max(t, lcm_sym77__))))) +
-                   bernoulli_lpmf<false>(1,
-                     prod(
-                       rvalue(phi, "phi",
-                         index_uni(1), index_min_max(t, lcm_sym77__))))) +
-                  bernoulli_lpmf<false>(1,
-                    rvalue(p, "p", index_uni(1), index_uni(lcm_sym111__)))),
-                "assigning variable lp", index_uni(t));
-            }
-          } 
-          current_statement__ = 93;
-          assign(lp,
-            ((bernoulli_lpmf<false>(1,
-                prod(
-                  rvalue(lcm_sym73__, "lcm_sym73__",
-                    index_min_max(1, lcm_sym77__)))) +
-               bernoulli_lpmf<false>(1, nu[(lcm_sym111__ - 1)])) +
-              bernoulli_lpmf<false>(1,
-                rvalue(p, "p", index_uni(1), index_uni(lcm_sym111__)))),
-            "assigning variable lp", index_uni(lcm_sym111__));
-          current_statement__ = 94;
-          lp_accum__.add(log_sum_exp(lp));
-        }
-        lcm_sym113__ = rvalue(last, "last", index_uni(1));
-        if (logical_gte(lcm_sym113__, (lcm_sym111__ + 1))) {
-          current_statement__ = 99;
-          lp_accum__.add(
-            bernoulli_lpmf<propto__>(1,
-              rvalue(phi, "phi",
-                index_uni(1), index_uni(((lcm_sym111__ + 1) - 1)))));
-          lcm_sym93__ = ((lcm_sym111__ + 1) + 1);
-          lp_accum__.add(
-            bernoulli_lpmf<propto__>(
-              rvalue(y, "y", index_uni(1), index_uni((lcm_sym111__ + 1))),
-              rvalue(p, "p", index_uni(1), index_uni((lcm_sym111__ + 1)))));
-          for (int t = lcm_sym93__; t <= lcm_sym113__; ++t) {
-            current_statement__ = 99;
-            lp_accum__.add(
-              bernoulli_lpmf<propto__>(1,
-                rvalue(phi, "phi", index_uni(1), index_uni((t - 1)))));
-            current_statement__ = 100;
-            lp_accum__.add(
-              bernoulli_lpmf<propto__>(
-                rvalue(y, "y", index_uni(1), index_uni(t)),
-                rvalue(p, "p", index_uni(1), index_uni(t))));
-          }
-        } 
-        current_statement__ = 102;
-        lp_accum__.add(
-          bernoulli_lpmf<propto__>(1,
-            rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym113__))));
-      } else {
-        lcm_sym94__ = (lcm_sym115__ + 1);
-        validate_non_negative_index("lp", "n_occasions + 1", lcm_sym94__);
-        Eigen::Matrix<local_scalar_t__, -1, 1> lp =
-           Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym94__,
-             DUMMY_VAR__);
-        current_statement__ = 84;
-        assign(lp,
-          (((bernoulli_lpmf<false>(1, psi) +
-              bernoulli_lpmf<false>(1, rvalue(nu, "nu", index_uni(1)))) +
-             bernoulli_lpmf<false>(0,
-               rvalue(p, "p", index_uni(1), index_uni(1)))) +
-            bernoulli_lpmf<false>(1,
-              rvalue(chi, "chi", index_uni(1), index_uni(1)))),
-          "assigning variable lp", index_uni(1));
-        current_statement__ = 142;
-        if (logical_gte(lcm_sym115__, 2)) {
-          current_statement__ = 85;
-          assign(lp,
-            ((((bernoulli_lpmf<false>(1, psi) +
-                 bernoulli_lpmf<false>(1,
-                   prod(
-                     rvalue(lcm_sym73__, "lcm_sym73__", index_min_max(1, 1)))))
-                + bernoulli_lpmf<false>(1, rvalue(nu, "nu", index_uni(2)))) +
-               bernoulli_lpmf<false>(0,
-                 rvalue(p, "p", index_uni(1), index_uni(2)))) +
-              bernoulli_lpmf<false>(1,
-                rvalue(chi, "chi", index_uni(1), index_uni(2)))),
-            "assigning variable lp", index_uni(2));
-          for (int t = 3; t <= lcm_sym115__; ++t) {
-            current_statement__ = 85;
-            assign(lp,
-              ((((bernoulli_lpmf<false>(1, psi) +
-                   bernoulli_lpmf<false>(1,
-                     prod(
-                       rvalue(lcm_sym73__, "lcm_sym73__",
-                         index_min_max(1, (t - 1)))))) +
-                  bernoulli_lpmf<false>(1, rvalue(nu, "nu", index_uni(t)))) +
-                 bernoulli_lpmf<false>(0,
-                   rvalue(p, "p", index_uni(1), index_uni(t)))) +
-                bernoulli_lpmf<false>(1,
-                  rvalue(chi, "chi", index_uni(1), index_uni(t)))),
-              "assigning variable lp", index_uni(t));
-          }
-        } 
-        current_statement__ = 86;
-        assign(lp, bernoulli_lpmf<false>(0, psi),
-          "assigning variable lp", index_uni(lcm_sym94__));
-        current_statement__ = 87;
-        lp_accum__.add(log_sum_exp(lp));
-      }
-      for (int i = 2; i <= lcm_sym114__; ++i) {
+    {
+      int n_ind;
+      lcm_sym114__ = rvalue(dims(y), "dims(y)", index_uni(1));
+      int n_occasions;
+      lcm_sym115__ = rvalue(dims(y), "dims(y)", index_uni(2));
+      n_occasions = lcm_sym115__;
+      current_statement__ = 79;
+      validate_non_negative_index("qnu", "n_occasions", lcm_sym115__);
+      Eigen::Matrix<double, -1, 1> qnu;
+      assign(lcm_sym73__, subtract(1.0, nu), "assigning variable lcm_sym73__");
+      current_statement__ = 144;
+      if (logical_gte(lcm_sym114__, 1)) {
         current_statement__ = 81;
         validate_non_negative_index("qp", "n_occasions", lcm_sym115__);
         Eigen::Matrix<double, -1, 1> qp;
-        assign(lcm_sym74__,
-          subtract(1.0, transpose(rvalue(p, "p", index_uni(i)))),
-          "assigning variable lcm_sym74__");
-        lcm_sym110__ = rvalue(first, "first", index_uni(i));
-        if (lcm_sym110__) {
+        assign(lcm_sym75__,
+          subtract(1.0, transpose(rvalue(p, "p", index_uni(1)))),
+          "assigning variable lcm_sym75__");
+        lcm_sym111__ = rvalue(first, "first", index_uni(1));
+        if (lcm_sym111__) {
           current_statement__ = 89;
           lp_accum__.add(bernoulli_lpmf<propto__>(1, psi));
           current_statement__ = 98;
-          if (logical_eq(lcm_sym110__, 1)) {
+          if (logical_eq(lcm_sym111__, 1)) {
             current_statement__ = 96;
             lp_accum__.add(
               bernoulli_lpmf<propto__>(1,
                 (rvalue(nu, "nu", index_uni(1)) *
-                  rvalue(p, "p", index_uni(i), index_uni(1)))));
+                  rvalue(p, "p", index_uni(1), index_uni(1)))));
           } else {
             current_statement__ = 90;
-            validate_non_negative_index("lp", "first[i]", lcm_sym110__);
+            validate_non_negative_index("lp", "first[i]", lcm_sym111__);
             Eigen::Matrix<local_scalar_t__, -1, 1> lp =
-               Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym110__,
+               Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym111__,
                  DUMMY_VAR__);
-            lcm_sym76__ = (lcm_sym110__ - 1);
+            lcm_sym77__ = (lcm_sym111__ - 1);
             assign(lp,
               (((bernoulli_lpmf<false>(1, rvalue(nu, "nu", index_uni(1))) +
                   bernoulli_lpmf<false>(1,
                     prod(
-                      rvalue(lcm_sym74__, "lcm_sym74__",
-                        index_min_max(1, lcm_sym76__))))) +
+                      rvalue(lcm_sym75__, "lcm_sym75__",
+                        index_min_max(1, lcm_sym77__))))) +
                  bernoulli_lpmf<false>(1,
                    prod(
                      rvalue(phi, "phi",
-                       index_uni(i), index_min_max(1, lcm_sym76__))))) +
+                       index_uni(1), index_min_max(1, lcm_sym77__))))) +
                 bernoulli_lpmf<false>(1,
-                  rvalue(p, "p", index_uni(i), index_uni(lcm_sym110__)))),
+                  rvalue(p, "p", index_uni(1), index_uni(lcm_sym111__)))),
               "assigning variable lp", index_uni(1));
             current_statement__ = 143;
-            if (logical_gte(lcm_sym76__, 2)) {
+            if (logical_gte(lcm_sym77__, 2)) {
               current_statement__ = 92;
               assign(lp,
                 ((((bernoulli_lpmf<false>(1,
@@ -9038,16 +8903,16 @@ js_super_lp(const std::vector<std::vector<int>>& y,
                     +
                     bernoulli_lpmf<false>(1,
                       prod(
-                        rvalue(lcm_sym74__, "lcm_sym74__",
-                          index_min_max(2, lcm_sym76__))))) +
+                        rvalue(lcm_sym75__, "lcm_sym75__",
+                          index_min_max(2, lcm_sym77__))))) +
                    bernoulli_lpmf<false>(1,
                      prod(
                        rvalue(phi, "phi",
-                         index_uni(i), index_min_max(2, lcm_sym76__))))) +
+                         index_uni(1), index_min_max(2, lcm_sym77__))))) +
                   bernoulli_lpmf<false>(1,
-                    rvalue(p, "p", index_uni(i), index_uni(lcm_sym110__)))),
+                    rvalue(p, "p", index_uni(1), index_uni(lcm_sym111__)))),
                 "assigning variable lp", index_uni(2));
-              for (int t = 3; t <= lcm_sym76__; ++t) {
+              for (int t = 3; t <= lcm_sym77__; ++t) {
                 current_statement__ = 92;
                 assign(lp,
                   ((((bernoulli_lpmf<false>(1,
@@ -9058,14 +8923,14 @@ js_super_lp(const std::vector<std::vector<int>>& y,
                          rvalue(nu, "nu", index_uni(t)))) +
                       bernoulli_lpmf<false>(1,
                         prod(
-                          rvalue(lcm_sym74__, "lcm_sym74__",
-                            index_min_max(t, lcm_sym76__))))) +
+                          rvalue(lcm_sym75__, "lcm_sym75__",
+                            index_min_max(t, lcm_sym77__))))) +
                      bernoulli_lpmf<false>(1,
                        prod(
                          rvalue(phi, "phi",
-                           index_uni(i), index_min_max(t, lcm_sym76__))))) +
+                           index_uni(1), index_min_max(t, lcm_sym77__))))) +
                     bernoulli_lpmf<false>(1,
-                      rvalue(p, "p", index_uni(i), index_uni(lcm_sym110__)))),
+                      rvalue(p, "p", index_uni(1), index_uni(lcm_sym111__)))),
                   "assigning variable lp", index_uni(t));
               }
             } 
@@ -9074,42 +8939,42 @@ js_super_lp(const std::vector<std::vector<int>>& y,
               ((bernoulli_lpmf<false>(1,
                   prod(
                     rvalue(lcm_sym73__, "lcm_sym73__",
-                      index_min_max(1, lcm_sym76__)))) +
-                 bernoulli_lpmf<false>(1, nu[(lcm_sym110__ - 1)])) +
+                      index_min_max(1, lcm_sym77__)))) +
+                 bernoulli_lpmf<false>(1, nu[(lcm_sym111__ - 1)])) +
                 bernoulli_lpmf<false>(1,
-                  rvalue(p, "p", index_uni(i), index_uni(lcm_sym110__)))),
-              "assigning variable lp", index_uni(lcm_sym110__));
+                  rvalue(p, "p", index_uni(1), index_uni(lcm_sym111__)))),
+              "assigning variable lp", index_uni(lcm_sym111__));
             current_statement__ = 94;
             lp_accum__.add(log_sum_exp(lp));
           }
-          lcm_sym112__ = rvalue(last, "last", index_uni(i));
-          if (logical_gte(lcm_sym112__, (lcm_sym110__ + 1))) {
+          lcm_sym113__ = rvalue(last, "last", index_uni(1));
+          if (logical_gte(lcm_sym113__, (lcm_sym111__ + 1))) {
             current_statement__ = 99;
             lp_accum__.add(
               bernoulli_lpmf<propto__>(1,
                 rvalue(phi, "phi",
-                  index_uni(i), index_uni(((lcm_sym110__ + 1) - 1)))));
-            lcm_sym92__ = ((lcm_sym110__ + 1) + 1);
+                  index_uni(1), index_uni(((lcm_sym111__ + 1) - 1)))));
+            lcm_sym93__ = ((lcm_sym111__ + 1) + 1);
             lp_accum__.add(
               bernoulli_lpmf<propto__>(
-                rvalue(y, "y", index_uni(i), index_uni((lcm_sym110__ + 1))),
-                rvalue(p, "p", index_uni(i), index_uni((lcm_sym110__ + 1)))));
-            for (int t = lcm_sym92__; t <= lcm_sym112__; ++t) {
+                rvalue(y, "y", index_uni(1), index_uni((lcm_sym111__ + 1))),
+                rvalue(p, "p", index_uni(1), index_uni((lcm_sym111__ + 1)))));
+            for (int t = lcm_sym93__; t <= lcm_sym113__; ++t) {
               current_statement__ = 99;
               lp_accum__.add(
                 bernoulli_lpmf<propto__>(1,
-                  rvalue(phi, "phi", index_uni(i), index_uni((t - 1)))));
+                  rvalue(phi, "phi", index_uni(1), index_uni((t - 1)))));
               current_statement__ = 100;
               lp_accum__.add(
                 bernoulli_lpmf<propto__>(
-                  rvalue(y, "y", index_uni(i), index_uni(t)),
-                  rvalue(p, "p", index_uni(i), index_uni(t))));
+                  rvalue(y, "y", index_uni(1), index_uni(t)),
+                  rvalue(p, "p", index_uni(1), index_uni(t))));
             }
           } 
           current_statement__ = 102;
           lp_accum__.add(
             bernoulli_lpmf<propto__>(1,
-              rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym112__))));
+              rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym113__))));
         } else {
           lcm_sym94__ = (lcm_sym115__ + 1);
           validate_non_negative_index("lp", "n_occasions + 1", lcm_sym94__);
@@ -9121,9 +8986,9 @@ js_super_lp(const std::vector<std::vector<int>>& y,
             (((bernoulli_lpmf<false>(1, psi) +
                 bernoulli_lpmf<false>(1, rvalue(nu, "nu", index_uni(1)))) +
                bernoulli_lpmf<false>(0,
-                 rvalue(p, "p", index_uni(i), index_uni(1)))) +
+                 rvalue(p, "p", index_uni(1), index_uni(1)))) +
               bernoulli_lpmf<false>(1,
-                rvalue(chi, "chi", index_uni(i), index_uni(1)))),
+                rvalue(chi, "chi", index_uni(1), index_uni(1)))),
             "assigning variable lp", index_uni(1));
           current_statement__ = 142;
           if (logical_gte(lcm_sym115__, 2)) {
@@ -9136,9 +9001,9 @@ js_super_lp(const std::vector<std::vector<int>>& y,
                          index_min_max(1, 1))))) +
                   bernoulli_lpmf<false>(1, rvalue(nu, "nu", index_uni(2)))) +
                  bernoulli_lpmf<false>(0,
-                   rvalue(p, "p", index_uni(i), index_uni(2)))) +
+                   rvalue(p, "p", index_uni(1), index_uni(2)))) +
                 bernoulli_lpmf<false>(1,
-                  rvalue(chi, "chi", index_uni(i), index_uni(2)))),
+                  rvalue(chi, "chi", index_uni(1), index_uni(2)))),
               "assigning variable lp", index_uni(2));
             for (int t = 3; t <= lcm_sym115__; ++t) {
               current_statement__ = 85;
@@ -9151,9 +9016,9 @@ js_super_lp(const std::vector<std::vector<int>>& y,
                     bernoulli_lpmf<false>(1, rvalue(nu, "nu", index_uni(t))))
                    +
                    bernoulli_lpmf<false>(0,
-                     rvalue(p, "p", index_uni(i), index_uni(t)))) +
+                     rvalue(p, "p", index_uni(1), index_uni(t)))) +
                   bernoulli_lpmf<false>(1,
-                    rvalue(chi, "chi", index_uni(i), index_uni(t)))),
+                    rvalue(chi, "chi", index_uni(1), index_uni(t)))),
                 "assigning variable lp", index_uni(t));
             }
           } 
@@ -9163,8 +9028,186 @@ js_super_lp(const std::vector<std::vector<int>>& y,
           current_statement__ = 87;
           lp_accum__.add(log_sum_exp(lp));
         }
-      }
-    } 
+        for (int i = 2; i <= lcm_sym114__; ++i) {
+          current_statement__ = 81;
+          validate_non_negative_index("qp", "n_occasions", lcm_sym115__);
+          Eigen::Matrix<double, -1, 1> qp;
+          assign(lcm_sym74__,
+            subtract(1.0, transpose(rvalue(p, "p", index_uni(i)))),
+            "assigning variable lcm_sym74__");
+          lcm_sym110__ = rvalue(first, "first", index_uni(i));
+          if (lcm_sym110__) {
+            current_statement__ = 89;
+            lp_accum__.add(bernoulli_lpmf<propto__>(1, psi));
+            current_statement__ = 98;
+            if (logical_eq(lcm_sym110__, 1)) {
+              current_statement__ = 96;
+              lp_accum__.add(
+                bernoulli_lpmf<propto__>(1,
+                  (rvalue(nu, "nu", index_uni(1)) *
+                    rvalue(p, "p", index_uni(i), index_uni(1)))));
+            } else {
+              current_statement__ = 90;
+              validate_non_negative_index("lp", "first[i]", lcm_sym110__);
+              Eigen::Matrix<local_scalar_t__, -1, 1> lp =
+                 Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
+                   lcm_sym110__, DUMMY_VAR__);
+              lcm_sym76__ = (lcm_sym110__ - 1);
+              assign(lp,
+                (((bernoulli_lpmf<false>(1, rvalue(nu, "nu", index_uni(1))) +
+                    bernoulli_lpmf<false>(1,
+                      prod(
+                        rvalue(lcm_sym74__, "lcm_sym74__",
+                          index_min_max(1, lcm_sym76__))))) +
+                   bernoulli_lpmf<false>(1,
+                     prod(
+                       rvalue(phi, "phi",
+                         index_uni(i), index_min_max(1, lcm_sym76__))))) +
+                  bernoulli_lpmf<false>(1,
+                    rvalue(p, "p", index_uni(i), index_uni(lcm_sym110__)))),
+                "assigning variable lp", index_uni(1));
+              current_statement__ = 143;
+              if (logical_gte(lcm_sym76__, 2)) {
+                current_statement__ = 92;
+                assign(lp,
+                  ((((bernoulli_lpmf<false>(1,
+                        prod(
+                          rvalue(lcm_sym73__, "lcm_sym73__",
+                            index_min_max(1, 1)))) +
+                       bernoulli_lpmf<false>(1,
+                         rvalue(nu, "nu", index_uni(2)))) +
+                      bernoulli_lpmf<false>(1,
+                        prod(
+                          rvalue(lcm_sym74__, "lcm_sym74__",
+                            index_min_max(2, lcm_sym76__))))) +
+                     bernoulli_lpmf<false>(1,
+                       prod(
+                         rvalue(phi, "phi",
+                           index_uni(i), index_min_max(2, lcm_sym76__))))) +
+                    bernoulli_lpmf<false>(1,
+                      rvalue(p, "p", index_uni(i), index_uni(lcm_sym110__)))),
+                  "assigning variable lp", index_uni(2));
+                for (int t = 3; t <= lcm_sym76__; ++t) {
+                  current_statement__ = 92;
+                  assign(lp,
+                    ((((bernoulli_lpmf<false>(1,
+                          prod(
+                            rvalue(lcm_sym73__, "lcm_sym73__",
+                              index_min_max(1, (t - 1))))) +
+                         bernoulli_lpmf<false>(1,
+                           rvalue(nu, "nu", index_uni(t)))) +
+                        bernoulli_lpmf<false>(1,
+                          prod(
+                            rvalue(lcm_sym74__, "lcm_sym74__",
+                              index_min_max(t, lcm_sym76__))))) +
+                       bernoulli_lpmf<false>(1,
+                         prod(
+                           rvalue(phi, "phi",
+                             index_uni(i), index_min_max(t, lcm_sym76__)))))
+                      +
+                      bernoulli_lpmf<false>(1,
+                        rvalue(p, "p", index_uni(i), index_uni(lcm_sym110__)))),
+                    "assigning variable lp", index_uni(t));
+                }
+              } 
+              current_statement__ = 93;
+              assign(lp,
+                ((bernoulli_lpmf<false>(1,
+                    prod(
+                      rvalue(lcm_sym73__, "lcm_sym73__",
+                        index_min_max(1, lcm_sym76__)))) +
+                   bernoulli_lpmf<false>(1, nu[(lcm_sym110__ - 1)])) +
+                  bernoulli_lpmf<false>(1,
+                    rvalue(p, "p", index_uni(i), index_uni(lcm_sym110__)))),
+                "assigning variable lp", index_uni(lcm_sym110__));
+              current_statement__ = 94;
+              lp_accum__.add(log_sum_exp(lp));
+            }
+            lcm_sym112__ = rvalue(last, "last", index_uni(i));
+            if (logical_gte(lcm_sym112__, (lcm_sym110__ + 1))) {
+              current_statement__ = 99;
+              lp_accum__.add(
+                bernoulli_lpmf<propto__>(1,
+                  rvalue(phi, "phi",
+                    index_uni(i), index_uni(((lcm_sym110__ + 1) - 1)))));
+              lcm_sym92__ = ((lcm_sym110__ + 1) + 1);
+              lp_accum__.add(
+                bernoulli_lpmf<propto__>(
+                  rvalue(y, "y", index_uni(i), index_uni((lcm_sym110__ + 1))),
+                  rvalue(p, "p", index_uni(i), index_uni((lcm_sym110__ + 1)))));
+              for (int t = lcm_sym92__; t <= lcm_sym112__; ++t) {
+                current_statement__ = 99;
+                lp_accum__.add(
+                  bernoulli_lpmf<propto__>(1,
+                    rvalue(phi, "phi", index_uni(i), index_uni((t - 1)))));
+                current_statement__ = 100;
+                lp_accum__.add(
+                  bernoulli_lpmf<propto__>(
+                    rvalue(y, "y", index_uni(i), index_uni(t)),
+                    rvalue(p, "p", index_uni(i), index_uni(t))));
+              }
+            } 
+            current_statement__ = 102;
+            lp_accum__.add(
+              bernoulli_lpmf<propto__>(1,
+                rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym112__))));
+          } else {
+            lcm_sym94__ = (lcm_sym115__ + 1);
+            validate_non_negative_index("lp", "n_occasions + 1", lcm_sym94__);
+            Eigen::Matrix<local_scalar_t__, -1, 1> lp =
+               Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym94__,
+                 DUMMY_VAR__);
+            current_statement__ = 84;
+            assign(lp,
+              (((bernoulli_lpmf<false>(1, psi) +
+                  bernoulli_lpmf<false>(1, rvalue(nu, "nu", index_uni(1)))) +
+                 bernoulli_lpmf<false>(0,
+                   rvalue(p, "p", index_uni(i), index_uni(1)))) +
+                bernoulli_lpmf<false>(1,
+                  rvalue(chi, "chi", index_uni(i), index_uni(1)))),
+              "assigning variable lp", index_uni(1));
+            current_statement__ = 142;
+            if (logical_gte(lcm_sym115__, 2)) {
+              current_statement__ = 85;
+              assign(lp,
+                ((((bernoulli_lpmf<false>(1, psi) +
+                     bernoulli_lpmf<false>(1,
+                       prod(
+                         rvalue(lcm_sym73__, "lcm_sym73__",
+                           index_min_max(1, 1))))) +
+                    bernoulli_lpmf<false>(1, rvalue(nu, "nu", index_uni(2))))
+                   +
+                   bernoulli_lpmf<false>(0,
+                     rvalue(p, "p", index_uni(i), index_uni(2)))) +
+                  bernoulli_lpmf<false>(1,
+                    rvalue(chi, "chi", index_uni(i), index_uni(2)))),
+                "assigning variable lp", index_uni(2));
+              for (int t = 3; t <= lcm_sym115__; ++t) {
+                current_statement__ = 85;
+                assign(lp,
+                  ((((bernoulli_lpmf<false>(1, psi) +
+                       bernoulli_lpmf<false>(1,
+                         prod(
+                           rvalue(lcm_sym73__, "lcm_sym73__",
+                             index_min_max(1, (t - 1)))))) +
+                      bernoulli_lpmf<false>(1,
+                        rvalue(nu, "nu", index_uni(t)))) +
+                     bernoulli_lpmf<false>(0,
+                       rvalue(p, "p", index_uni(i), index_uni(t)))) +
+                    bernoulli_lpmf<false>(1,
+                      rvalue(chi, "chi", index_uni(i), index_uni(t)))),
+                  "assigning variable lp", index_uni(t));
+              }
+            } 
+            current_statement__ = 86;
+            assign(lp, bernoulli_lpmf<false>(0, psi),
+              "assigning variable lp", index_uni(lcm_sym94__));
+            current_statement__ = 87;
+            lp_accum__.add(log_sum_exp(lp));
+          }
+        }
+      } 
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -10610,7 +10653,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
            std::vector<int>(M, std::numeric_limits<int>::min());
         current_statement__ = 63;
         if (lcm_sym121__) {
-          int f;
+          int f = std::numeric_limits<int>::min();
           int inline_sym11__;
           int inline_sym13__;
           inline_sym13__ = 0;
@@ -10640,7 +10683,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                                               index_uni(inline_sym11__));
           } 
           for (int i = 2; i <= M; ++i) {
-            int f;
+            int f = std::numeric_limits<int>::min();
             int inline_sym11__;
             int inline_sym13__;
             inline_sym13__ = 0;
@@ -12907,23 +12950,25 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     int lcm_sym28__;
     int lcm_sym27__;
     int lcm_sym26__;
-    lcm_sym27__ = size(y_i);
-    if (logical_gte(lcm_sym27__, 1)) {
-      current_statement__ = 46;
-      if (rvalue(y_i, "y_i", index_uni(1))) {
-        current_statement__ = 45;
-        return 1;
-      } 
-      for (int k = 2; k <= lcm_sym27__; ++k) {
+    {
+      lcm_sym27__ = size(y_i);
+      if (logical_gte(lcm_sym27__, 1)) {
         current_statement__ = 46;
-        if (rvalue(y_i, "y_i", index_uni(k))) {
+        if (rvalue(y_i, "y_i", index_uni(1))) {
           current_statement__ = 45;
-          return k;
+          return 1;
         } 
-      }
-    } 
-    current_statement__ = 64;
-    return 0;
+        for (int k = 2; k <= lcm_sym27__; ++k) {
+          current_statement__ = 46;
+          if (rvalue(y_i, "y_i", index_uni(k))) {
+            current_statement__ = 45;
+            return k;
+          } 
+        }
+      } 
+      current_statement__ = 64;
+      return 0;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -12953,27 +12998,29 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     int lcm_sym32__;
     int lcm_sym31__;
     int lcm_sym30__;
-    lcm_sym33__ = (size(y_i) - 1);
-    if (logical_gte(lcm_sym33__, 0)) {
-      int k;
-      lcm_sym32__ = (size(y_i) - 0);
-      current_statement__ = 52;
-      if (y_i[(lcm_sym32__ - 1)]) {
-        current_statement__ = 51;
-        return lcm_sym32__;
-      } 
-      for (int k_rev = 1; k_rev <= lcm_sym33__; ++k_rev) {
+    {
+      lcm_sym33__ = (size(y_i) - 1);
+      if (logical_gte(lcm_sym33__, 0)) {
         int k;
-        lcm_sym31__ = (size(y_i) - k_rev);
+        lcm_sym32__ = (size(y_i) - 0);
         current_statement__ = 52;
-        if (y_i[(lcm_sym31__ - 1)]) {
+        if (y_i[(lcm_sym32__ - 1)]) {
           current_statement__ = 51;
-          return lcm_sym31__;
+          return lcm_sym32__;
         } 
-      }
-    } 
-    current_statement__ = 65;
-    return 0;
+        for (int k_rev = 1; k_rev <= lcm_sym33__; ++k_rev) {
+          int k;
+          lcm_sym31__ = (size(y_i) - k_rev);
+          current_statement__ = 52;
+          if (y_i[(lcm_sym31__ - 1)]) {
+            current_statement__ = 51;
+            return lcm_sym31__;
+          } 
+        }
+      } 
+      current_statement__ = 65;
+      return 0;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -13013,54 +13060,21 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
     int lcm_sym38__;
     int lcm_sym37__;
     int lcm_sym36__;
-    current_statement__ = 15;
-    validate_non_negative_index("chi", "nind", nind);
-    current_statement__ = 16;
-    validate_non_negative_index("chi", "n_occasions", n_occasions);
-    Eigen::Matrix<local_scalar_t__, -1, -1> chi =
-       Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(nind, n_occasions,
-         DUMMY_VAR__);
-    current_statement__ = 67;
-    if (logical_gte(nind, 1)) {
-      current_statement__ = 18;
-      assign(chi, 1.0,
-        "assigning variable chi", index_uni(1), index_uni(n_occasions));
-      lcm_sym39__ = (n_occasions - 1);
-      lcm_sym37__ = logical_gte(lcm_sym39__, 1);
-      if (lcm_sym37__) {
-        int t_curr;
-        int t_next;
-        lcm_sym41__ = (lcm_sym39__ + 1);
-        current_statement__ = 21;
-        assign(chi,
-          stan::math::fma(
-            (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym39__)) *
-              (1 -
-                rvalue(p, "p", index_uni(1), index_uni((lcm_sym41__ - 1))))),
-            rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym41__)),
-            (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym39__)))),
-          "assigning variable chi", index_uni(1), index_uni(lcm_sym39__));
-        for (int t = 2; t <= lcm_sym39__; ++t) {
-          int t_curr;
-          lcm_sym38__ = (n_occasions - t);
-          int t_next;
-          lcm_sym40__ = (lcm_sym38__ + 1);
-          current_statement__ = 21;
-          assign(chi,
-            stan::math::fma(
-              (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym38__)) *
-                (1 -
-                  rvalue(p, "p", index_uni(1), index_uni((lcm_sym40__ - 1))))),
-              rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym40__)),
-              (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym38__)))),
-            "assigning variable chi", index_uni(1), index_uni(lcm_sym38__));
-        }
-      } 
-      for (int i = 2; i <= nind; ++i) {
+    {
+      current_statement__ = 15;
+      validate_non_negative_index("chi", "nind", nind);
+      current_statement__ = 16;
+      validate_non_negative_index("chi", "n_occasions", n_occasions);
+      Eigen::Matrix<local_scalar_t__, -1, -1> chi =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(nind, n_occasions,
+           DUMMY_VAR__);
+      current_statement__ = 67;
+      if (logical_gte(nind, 1)) {
         current_statement__ = 18;
         assign(chi, 1.0,
-          "assigning variable chi", index_uni(i), index_uni(n_occasions));
-        current_statement__ = 66;
+          "assigning variable chi", index_uni(1), index_uni(n_occasions));
+        lcm_sym39__ = (n_occasions - 1);
+        lcm_sym37__ = logical_gte(lcm_sym39__, 1);
         if (lcm_sym37__) {
           int t_curr;
           int t_next;
@@ -13068,12 +13082,12 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
           current_statement__ = 21;
           assign(chi,
             stan::math::fma(
-              (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym39__)) *
+              (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym39__)) *
                 (1 -
-                  rvalue(p, "p", index_uni(i), index_uni((lcm_sym41__ - 1))))),
-              rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym41__)),
-              (1 - rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym39__)))),
-            "assigning variable chi", index_uni(i), index_uni(lcm_sym39__));
+                  rvalue(p, "p", index_uni(1), index_uni((lcm_sym41__ - 1))))),
+              rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym41__)),
+              (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym39__)))),
+            "assigning variable chi", index_uni(1), index_uni(lcm_sym39__));
           for (int t = 2; t <= lcm_sym39__; ++t) {
             int t_curr;
             lcm_sym38__ = (n_occasions - t);
@@ -13082,20 +13096,60 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
             current_statement__ = 21;
             assign(chi,
               stan::math::fma(
-                (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym38__)) *
+                (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym38__)) *
                   (1 -
                     rvalue(p, "p",
-                      index_uni(i), index_uni((lcm_sym40__ - 1))))),
-                rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym40__)),
+                      index_uni(1), index_uni((lcm_sym40__ - 1))))),
+                rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym40__)),
                 (1 -
-                  rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym38__)))),
-              "assigning variable chi", index_uni(i), index_uni(lcm_sym38__));
+                  rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym38__)))),
+              "assigning variable chi", index_uni(1), index_uni(lcm_sym38__));
           }
         } 
-      }
-    } 
-    current_statement__ = 68;
-    return chi;
+        for (int i = 2; i <= nind; ++i) {
+          current_statement__ = 18;
+          assign(chi, 1.0,
+            "assigning variable chi", index_uni(i), index_uni(n_occasions));
+          current_statement__ = 66;
+          if (lcm_sym37__) {
+            int t_curr;
+            int t_next;
+            lcm_sym41__ = (lcm_sym39__ + 1);
+            current_statement__ = 21;
+            assign(chi,
+              stan::math::fma(
+                (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym39__)) *
+                  (1 -
+                    rvalue(p, "p",
+                      index_uni(i), index_uni((lcm_sym41__ - 1))))),
+                rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym41__)),
+                (1 -
+                  rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym39__)))),
+              "assigning variable chi", index_uni(i), index_uni(lcm_sym39__));
+            for (int t = 2; t <= lcm_sym39__; ++t) {
+              int t_curr;
+              lcm_sym38__ = (n_occasions - t);
+              int t_next;
+              lcm_sym40__ = (lcm_sym38__ + 1);
+              current_statement__ = 21;
+              assign(chi,
+                stan::math::fma(
+                  (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym38__)) *
+                    (1 -
+                      rvalue(p, "p",
+                        index_uni(i), index_uni((lcm_sym40__ - 1))))),
+                  rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym40__)),
+                  (1 -
+                    rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym38__)))),
+                "assigning variable chi", index_uni(i),
+                                            index_uni(lcm_sym38__));
+            }
+          } 
+        }
+      } 
+      current_statement__ = 68;
+      return chi;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -14373,7 +14427,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 143> locations_array__ = 
+static constexpr std::array<const char*, 144> locations_array__ = 
 {" (found before start of program)",
  " (in 'inlining-fail2.stan', line 175, column 2 to column 34)",
  " (in 'inlining-fail2.stan', line 176, column 2 to column 32)",
@@ -14515,6 +14569,7 @@ static constexpr std::array<const char*, 143> locations_array__ =
  " (in 'inlining-fail2.stan', line 127, column 8 to line 131, column 50)",
  " (in 'inlining-fail2.stan', line 101, column 10 to line 106, column 57)",
  " (in 'inlining-fail2.stan', line 84, column 4 to line 136, column 5)",
+ " (in 'inlining-fail2.stan', line 79, column 70 to line 137, column 3)",
  " (in 'inlining-fail2.stan', line 153, column 4 to line 156, column 5)",
  " (in 'inlining-fail2.stan', line 157, column 4 to column 26)"};
 
@@ -14532,23 +14587,25 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     int lcm_sym52__;
     int lcm_sym51__;
     int lcm_sym50__;
-    lcm_sym51__ = size(y_i);
-    if (logical_gte(lcm_sym51__, 1)) {
-      current_statement__ = 59;
-      if (rvalue(y_i, "y_i", index_uni(1))) {
-        current_statement__ = 58;
-        return 1;
-      } 
-      for (int k = 2; k <= lcm_sym51__; ++k) {
+    {
+      lcm_sym51__ = size(y_i);
+      if (logical_gte(lcm_sym51__, 1)) {
         current_statement__ = 59;
-        if (rvalue(y_i, "y_i", index_uni(k))) {
+        if (rvalue(y_i, "y_i", index_uni(1))) {
           current_statement__ = 58;
-          return k;
+          return 1;
         } 
-      }
-    } 
-    current_statement__ = 133;
-    return 0;
+        for (int k = 2; k <= lcm_sym51__; ++k) {
+          current_statement__ = 59;
+          if (rvalue(y_i, "y_i", index_uni(k))) {
+            current_statement__ = 58;
+            return k;
+          } 
+        }
+      } 
+      current_statement__ = 133;
+      return 0;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -14578,27 +14635,29 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     int lcm_sym56__;
     int lcm_sym55__;
     int lcm_sym54__;
-    lcm_sym57__ = (size(y_i) - 1);
-    if (logical_gte(lcm_sym57__, 0)) {
-      int k;
-      lcm_sym56__ = (size(y_i) - 0);
-      current_statement__ = 115;
-      if (y_i[(lcm_sym56__ - 1)]) {
-        current_statement__ = 114;
-        return lcm_sym56__;
-      } 
-      for (int k_rev = 1; k_rev <= lcm_sym57__; ++k_rev) {
+    {
+      lcm_sym57__ = (size(y_i) - 1);
+      if (logical_gte(lcm_sym57__, 0)) {
         int k;
-        lcm_sym55__ = (size(y_i) - k_rev);
+        lcm_sym56__ = (size(y_i) - 0);
         current_statement__ = 115;
-        if (y_i[(lcm_sym55__ - 1)]) {
+        if (y_i[(lcm_sym56__ - 1)]) {
           current_statement__ = 114;
-          return lcm_sym55__;
+          return lcm_sym56__;
         } 
-      }
-    } 
-    current_statement__ = 134;
-    return 0;
+        for (int k_rev = 1; k_rev <= lcm_sym57__; ++k_rev) {
+          int k;
+          lcm_sym55__ = (size(y_i) - k_rev);
+          current_statement__ = 115;
+          if (y_i[(lcm_sym55__ - 1)]) {
+            current_statement__ = 114;
+            return lcm_sym55__;
+          } 
+        }
+      } 
+      current_statement__ = 134;
+      return 0;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -14640,57 +14699,26 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
     int lcm_sym62__;
     int lcm_sym61__;
     int lcm_sym60__;
-    int n_ind;
-    lcm_sym71__ = rows(p);
-    int n_occasions;
-    lcm_sym66__ = cols(p);
-    n_occasions = lcm_sym66__;
-    current_statement__ = 14;
-    validate_non_negative_index("chi", "n_ind", lcm_sym71__);
-    current_statement__ = 15;
-    validate_non_negative_index("chi", "n_occasions", lcm_sym66__);
-    Eigen::Matrix<local_scalar_t__, -1, -1> chi =
-       Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(lcm_sym71__,
-         lcm_sym66__, DUMMY_VAR__);
-    current_statement__ = 136;
-    if (logical_gte(lcm_sym71__, 1)) {
-      current_statement__ = 17;
-      assign(chi, 1.0,
-        "assigning variable chi", index_uni(1), index_uni(lcm_sym66__));
-      lcm_sym63__ = (lcm_sym66__ - 1);
-      lcm_sym60__ = logical_gte(lcm_sym63__, 1);
-      if (lcm_sym60__) {
-        int t_curr;
-        int t_next;
-        lcm_sym65__ = (lcm_sym63__ + 1);
-        current_statement__ = 20;
-        assign(chi,
-          stan::math::fma(
-            (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym63__)) *
-              (1 - rvalue(p, "p", index_uni(1), index_uni(lcm_sym65__)))),
-            rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym65__)),
-            (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym63__)))),
-          "assigning variable chi", index_uni(1), index_uni(lcm_sym63__));
-        for (int t = 2; t <= lcm_sym63__; ++t) {
-          int t_curr;
-          lcm_sym62__ = (lcm_sym66__ - t);
-          int t_next;
-          lcm_sym64__ = (lcm_sym62__ + 1);
-          current_statement__ = 20;
-          assign(chi,
-            stan::math::fma(
-              (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym62__)) *
-                (1 - rvalue(p, "p", index_uni(1), index_uni(lcm_sym64__)))),
-              rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym64__)),
-              (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym62__)))),
-            "assigning variable chi", index_uni(1), index_uni(lcm_sym62__));
-        }
-      } 
-      for (int i = 2; i <= lcm_sym71__; ++i) {
+    {
+      int n_ind;
+      lcm_sym71__ = rows(p);
+      int n_occasions;
+      lcm_sym66__ = cols(p);
+      n_occasions = lcm_sym66__;
+      current_statement__ = 14;
+      validate_non_negative_index("chi", "n_ind", lcm_sym71__);
+      current_statement__ = 15;
+      validate_non_negative_index("chi", "n_occasions", lcm_sym66__);
+      Eigen::Matrix<local_scalar_t__, -1, -1> chi =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(lcm_sym71__,
+           lcm_sym66__, DUMMY_VAR__);
+      current_statement__ = 136;
+      if (logical_gte(lcm_sym71__, 1)) {
         current_statement__ = 17;
         assign(chi, 1.0,
-          "assigning variable chi", index_uni(i), index_uni(lcm_sym66__));
-        current_statement__ = 135;
+          "assigning variable chi", index_uni(1), index_uni(lcm_sym66__));
+        lcm_sym63__ = (lcm_sym66__ - 1);
+        lcm_sym60__ = logical_gte(lcm_sym63__, 1);
         if (lcm_sym60__) {
           int t_curr;
           int t_next;
@@ -14698,11 +14726,11 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
           current_statement__ = 20;
           assign(chi,
             stan::math::fma(
-              (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym63__)) *
-                (1 - rvalue(p, "p", index_uni(i), index_uni(lcm_sym65__)))),
-              rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym65__)),
-              (1 - rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym63__)))),
-            "assigning variable chi", index_uni(i), index_uni(lcm_sym63__));
+              (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym63__)) *
+                (1 - rvalue(p, "p", index_uni(1), index_uni(lcm_sym65__)))),
+              rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym65__)),
+              (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym63__)))),
+            "assigning variable chi", index_uni(1), index_uni(lcm_sym63__));
           for (int t = 2; t <= lcm_sym63__; ++t) {
             int t_curr;
             lcm_sym62__ = (lcm_sym66__ - t);
@@ -14711,18 +14739,55 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
             current_statement__ = 20;
             assign(chi,
               stan::math::fma(
-                (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym62__)) *
-                  (1 - rvalue(p, "p", index_uni(i), index_uni(lcm_sym64__)))),
-                rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym64__)),
+                (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym62__)) *
+                  (1 - rvalue(p, "p", index_uni(1), index_uni(lcm_sym64__)))),
+                rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym64__)),
                 (1 -
-                  rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym62__)))),
-              "assigning variable chi", index_uni(i), index_uni(lcm_sym62__));
+                  rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym62__)))),
+              "assigning variable chi", index_uni(1), index_uni(lcm_sym62__));
           }
         } 
-      }
-    } 
-    current_statement__ = 137;
-    return chi;
+        for (int i = 2; i <= lcm_sym71__; ++i) {
+          current_statement__ = 17;
+          assign(chi, 1.0,
+            "assigning variable chi", index_uni(i), index_uni(lcm_sym66__));
+          current_statement__ = 135;
+          if (lcm_sym60__) {
+            int t_curr;
+            int t_next;
+            lcm_sym65__ = (lcm_sym63__ + 1);
+            current_statement__ = 20;
+            assign(chi,
+              stan::math::fma(
+                (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym63__)) *
+                  (1 - rvalue(p, "p", index_uni(i), index_uni(lcm_sym65__)))),
+                rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym65__)),
+                (1 -
+                  rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym63__)))),
+              "assigning variable chi", index_uni(i), index_uni(lcm_sym63__));
+            for (int t = 2; t <= lcm_sym63__; ++t) {
+              int t_curr;
+              lcm_sym62__ = (lcm_sym66__ - t);
+              int t_next;
+              lcm_sym64__ = (lcm_sym62__ + 1);
+              current_statement__ = 20;
+              assign(chi,
+                stan::math::fma(
+                  (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym62__)) *
+                    (1 -
+                      rvalue(p, "p", index_uni(i), index_uni(lcm_sym64__)))),
+                  rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym64__)),
+                  (1 -
+                    rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym62__)))),
+                "assigning variable chi", index_uni(i),
+                                            index_uni(lcm_sym62__));
+            }
+          } 
+        }
+      } 
+      current_statement__ = 137;
+      return chi;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -14809,228 +14874,57 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
     int lcm_sym74__;
     int lcm_sym73__;
     int lcm_sym72__;
-    int n_ind;
-    lcm_sym120__ = rvalue(dims(y), "dims(y)", index_uni(1));
-    int n_occasions;
-    lcm_sym121__ = rvalue(dims(y), "dims(y)", index_uni(2));
-    n_occasions = lcm_sym121__;
-    current_statement__ = 77;
-    validate_non_negative_index("qgamma", "n_occasions", lcm_sym121__);
-    Eigen::Matrix<double, -1, 1> qgamma;
-    assign(lcm_sym80__, subtract(1.0, gamma),
-      "assigning variable lcm_sym80__");
-    current_statement__ = 140;
-    if (logical_gte(lcm_sym120__, 1)) {
-      current_statement__ = 79;
-      validate_non_negative_index("qp", "n_occasions", lcm_sym121__);
-      Eigen::Matrix<double, -1, 1> qp;
-      assign(lcm_sym82__,
-        subtract(1.0, transpose(rvalue(p, "p", index_uni(1)))),
-        "assigning variable lcm_sym82__");
-      lcm_sym117__ = rvalue(first, "first", index_uni(1));
-      if (lcm_sym117__) {
-        current_statement__ = 95;
-        if (logical_eq(lcm_sym117__, 1)) {
-          current_statement__ = 93;
-          lp_accum__.add(
-            bernoulli_lpmf<propto__>(1,
-              (rvalue(gamma, "gamma", index_uni(1)) *
-                rvalue(p, "p", index_uni(1), index_uni(1)))));
-        } else {
-          current_statement__ = 87;
-          validate_non_negative_index("lp", "first[i]", lcm_sym117__);
-          Eigen::Matrix<local_scalar_t__, -1, 1> lp =
-             Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym117__,
-               DUMMY_VAR__);
-          lcm_sym84__ = (lcm_sym117__ - 1);
-          assign(lp,
-            (((bernoulli_lpmf<false>(1, rvalue(gamma, "gamma", index_uni(1)))
-                +
-                bernoulli_lpmf<false>(1,
-                  prod(
-                    rvalue(lcm_sym82__, "lcm_sym82__",
-                      index_min_max(1, lcm_sym84__))))) +
-               bernoulli_lpmf<false>(1,
-                 prod(
-                   rvalue(phi, "phi",
-                     index_uni(1), index_min_max(1, lcm_sym84__))))) +
-              bernoulli_lpmf<false>(1,
-                rvalue(p, "p", index_uni(1), index_uni(lcm_sym117__)))),
-            "assigning variable lp", index_uni(1));
-          current_statement__ = 139;
-          if (logical_gte(lcm_sym84__, 2)) {
-            current_statement__ = 89;
-            assign(lp,
-              ((((bernoulli_lpmf<false>(1,
-                    prod(
-                      rvalue(lcm_sym80__, "lcm_sym80__", index_min_max(1, 1))))
-                   +
-                   bernoulli_lpmf<false>(1,
-                     rvalue(gamma, "gamma", index_uni(2)))) +
-                  bernoulli_lpmf<false>(1,
-                    prod(
-                      rvalue(lcm_sym82__, "lcm_sym82__",
-                        index_min_max(2, lcm_sym84__))))) +
-                 bernoulli_lpmf<false>(1,
-                   prod(
-                     rvalue(phi, "phi",
-                       index_uni(1), index_min_max(2, lcm_sym84__))))) +
-                bernoulli_lpmf<false>(1,
-                  rvalue(p, "p", index_uni(1), index_uni(lcm_sym117__)))),
-              "assigning variable lp", index_uni(2));
-            for (int t = 3; t <= lcm_sym84__; ++t) {
-              current_statement__ = 89;
-              assign(lp,
-                ((((bernoulli_lpmf<false>(1,
-                      prod(
-                        rvalue(lcm_sym80__, "lcm_sym80__",
-                          index_min_max(1, (t - 1))))) +
-                     bernoulli_lpmf<false>(1,
-                       rvalue(gamma, "gamma", index_uni(t)))) +
-                    bernoulli_lpmf<false>(1,
-                      prod(
-                        rvalue(lcm_sym82__, "lcm_sym82__",
-                          index_min_max(t, lcm_sym84__))))) +
-                   bernoulli_lpmf<false>(1,
-                     prod(
-                       rvalue(phi, "phi",
-                         index_uni(1), index_min_max(t, lcm_sym84__))))) +
-                  bernoulli_lpmf<false>(1,
-                    rvalue(p, "p", index_uni(1), index_uni(lcm_sym117__)))),
-                "assigning variable lp", index_uni(t));
-            }
-          } 
-          current_statement__ = 90;
-          assign(lp,
-            ((bernoulli_lpmf<false>(1,
-                prod(
-                  rvalue(lcm_sym80__, "lcm_sym80__",
-                    index_min_max(1, lcm_sym84__)))) +
-               bernoulli_lpmf<false>(1, gamma[(lcm_sym117__ - 1)])) +
-              bernoulli_lpmf<false>(1,
-                rvalue(p, "p", index_uni(1), index_uni(lcm_sym117__)))),
-            "assigning variable lp", index_uni(lcm_sym117__));
-          current_statement__ = 91;
-          lp_accum__.add(log_sum_exp(lp));
-        }
-        lcm_sym119__ = rvalue(last, "last", index_uni(1));
-        if (logical_gte(lcm_sym119__, (lcm_sym117__ + 1))) {
-          current_statement__ = 96;
-          lp_accum__.add(
-            bernoulli_lpmf<propto__>(1,
-              rvalue(phi, "phi",
-                index_uni(1), index_uni(((lcm_sym117__ + 1) - 1)))));
-          lcm_sym100__ = ((lcm_sym117__ + 1) + 1);
-          lp_accum__.add(
-            bernoulli_lpmf<propto__>(
-              rvalue(y, "y", index_uni(1), index_uni((lcm_sym117__ + 1))),
-              rvalue(p, "p", index_uni(1), index_uni((lcm_sym117__ + 1)))));
-          for (int t = lcm_sym100__; t <= lcm_sym119__; ++t) {
-            current_statement__ = 96;
-            lp_accum__.add(
-              bernoulli_lpmf<propto__>(1,
-                rvalue(phi, "phi", index_uni(1), index_uni((t - 1)))));
-            current_statement__ = 97;
-            lp_accum__.add(
-              bernoulli_lpmf<propto__>(
-                rvalue(y, "y", index_uni(1), index_uni(t)),
-                rvalue(p, "p", index_uni(1), index_uni(t))));
-          }
-        } 
-        current_statement__ = 99;
-        lp_accum__.add(
-          bernoulli_lpmf<propto__>(1,
-            rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym119__))));
-      } else {
-        lcm_sym101__ = (lcm_sym121__ + 1);
-        validate_non_negative_index("lp", "n_occasions + 1", lcm_sym101__);
-        Eigen::Matrix<local_scalar_t__, -1, 1> lp =
-           Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym101__,
-             DUMMY_VAR__);
-        current_statement__ = 82;
-        assign(lp,
-          ((bernoulli_lpmf<false>(1, rvalue(gamma, "gamma", index_uni(1))) +
-             bernoulli_lpmf<false>(0,
-               rvalue(p, "p", index_uni(1), index_uni(1)))) +
-            bernoulli_lpmf<false>(1,
-              rvalue(chi, "chi", index_uni(1), index_uni(1)))),
-          "assigning variable lp", index_uni(1));
-        current_statement__ = 138;
-        if (logical_gte(lcm_sym121__, 2)) {
-          current_statement__ = 83;
-          assign(lp,
-            (((bernoulli_lpmf<false>(1,
-                 prod(
-                   rvalue(lcm_sym80__, "lcm_sym80__", index_min_max(1, 1))))
-                +
-                bernoulli_lpmf<false>(1,
-                  rvalue(gamma, "gamma", index_uni(2)))) +
-               bernoulli_lpmf<false>(0,
-                 rvalue(p, "p", index_uni(1), index_uni(2)))) +
-              bernoulli_lpmf<false>(1,
-                rvalue(chi, "chi", index_uni(1), index_uni(2)))),
-            "assigning variable lp", index_uni(2));
-          for (int t = 3; t <= lcm_sym121__; ++t) {
-            current_statement__ = 83;
-            assign(lp,
-              (((bernoulli_lpmf<false>(1,
-                   prod(
-                     rvalue(lcm_sym80__, "lcm_sym80__",
-                       index_min_max(1, (t - 1))))) +
-                  bernoulli_lpmf<false>(1,
-                    rvalue(gamma, "gamma", index_uni(t)))) +
-                 bernoulli_lpmf<false>(0,
-                   rvalue(p, "p", index_uni(1), index_uni(t)))) +
-                bernoulli_lpmf<false>(1,
-                  rvalue(chi, "chi", index_uni(1), index_uni(t)))),
-              "assigning variable lp", index_uni(t));
-          }
-        } 
-        current_statement__ = 84;
-        assign(lp, bernoulli_lpmf<false>(1, prod(lcm_sym80__)),
-          "assigning variable lp", index_uni(lcm_sym101__));
-        current_statement__ = 85;
-        lp_accum__.add(log_sum_exp(lp));
-      }
-      for (int i = 2; i <= lcm_sym120__; ++i) {
+    {
+      int n_ind;
+      lcm_sym120__ = rvalue(dims(y), "dims(y)", index_uni(1));
+      int n_occasions;
+      lcm_sym121__ = rvalue(dims(y), "dims(y)", index_uni(2));
+      n_occasions = lcm_sym121__;
+      current_statement__ = 77;
+      validate_non_negative_index("qgamma", "n_occasions", lcm_sym121__);
+      Eigen::Matrix<double, -1, 1> qgamma;
+      assign(lcm_sym80__, subtract(1.0, gamma),
+        "assigning variable lcm_sym80__");
+      current_statement__ = 140;
+      if (logical_gte(lcm_sym120__, 1)) {
         current_statement__ = 79;
         validate_non_negative_index("qp", "n_occasions", lcm_sym121__);
         Eigen::Matrix<double, -1, 1> qp;
-        assign(lcm_sym81__,
-          subtract(1.0, transpose(rvalue(p, "p", index_uni(i)))),
-          "assigning variable lcm_sym81__");
-        lcm_sym116__ = rvalue(first, "first", index_uni(i));
-        if (lcm_sym116__) {
+        assign(lcm_sym82__,
+          subtract(1.0, transpose(rvalue(p, "p", index_uni(1)))),
+          "assigning variable lcm_sym82__");
+        lcm_sym117__ = rvalue(first, "first", index_uni(1));
+        if (lcm_sym117__) {
           current_statement__ = 95;
-          if (logical_eq(lcm_sym116__, 1)) {
+          if (logical_eq(lcm_sym117__, 1)) {
             current_statement__ = 93;
             lp_accum__.add(
               bernoulli_lpmf<propto__>(1,
                 (rvalue(gamma, "gamma", index_uni(1)) *
-                  rvalue(p, "p", index_uni(i), index_uni(1)))));
+                  rvalue(p, "p", index_uni(1), index_uni(1)))));
           } else {
             current_statement__ = 87;
-            validate_non_negative_index("lp", "first[i]", lcm_sym116__);
+            validate_non_negative_index("lp", "first[i]", lcm_sym117__);
             Eigen::Matrix<local_scalar_t__, -1, 1> lp =
-               Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym116__,
+               Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym117__,
                  DUMMY_VAR__);
-            lcm_sym83__ = (lcm_sym116__ - 1);
+            lcm_sym84__ = (lcm_sym117__ - 1);
             assign(lp,
               (((bernoulli_lpmf<false>(1,
                    rvalue(gamma, "gamma", index_uni(1))) +
                   bernoulli_lpmf<false>(1,
                     prod(
-                      rvalue(lcm_sym81__, "lcm_sym81__",
-                        index_min_max(1, lcm_sym83__))))) +
+                      rvalue(lcm_sym82__, "lcm_sym82__",
+                        index_min_max(1, lcm_sym84__))))) +
                  bernoulli_lpmf<false>(1,
                    prod(
                      rvalue(phi, "phi",
-                       index_uni(i), index_min_max(1, lcm_sym83__))))) +
+                       index_uni(1), index_min_max(1, lcm_sym84__))))) +
                 bernoulli_lpmf<false>(1,
-                  rvalue(p, "p", index_uni(i), index_uni(lcm_sym116__)))),
+                  rvalue(p, "p", index_uni(1), index_uni(lcm_sym117__)))),
               "assigning variable lp", index_uni(1));
             current_statement__ = 139;
-            if (logical_gte(lcm_sym83__, 2)) {
+            if (logical_gte(lcm_sym84__, 2)) {
               current_statement__ = 89;
               assign(lp,
                 ((((bernoulli_lpmf<false>(1,
@@ -15041,16 +14935,16 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
                        rvalue(gamma, "gamma", index_uni(2)))) +
                     bernoulli_lpmf<false>(1,
                       prod(
-                        rvalue(lcm_sym81__, "lcm_sym81__",
-                          index_min_max(2, lcm_sym83__))))) +
+                        rvalue(lcm_sym82__, "lcm_sym82__",
+                          index_min_max(2, lcm_sym84__))))) +
                    bernoulli_lpmf<false>(1,
                      prod(
                        rvalue(phi, "phi",
-                         index_uni(i), index_min_max(2, lcm_sym83__))))) +
+                         index_uni(1), index_min_max(2, lcm_sym84__))))) +
                   bernoulli_lpmf<false>(1,
-                    rvalue(p, "p", index_uni(i), index_uni(lcm_sym116__)))),
+                    rvalue(p, "p", index_uni(1), index_uni(lcm_sym117__)))),
                 "assigning variable lp", index_uni(2));
-              for (int t = 3; t <= lcm_sym83__; ++t) {
+              for (int t = 3; t <= lcm_sym84__; ++t) {
                 current_statement__ = 89;
                 assign(lp,
                   ((((bernoulli_lpmf<false>(1,
@@ -15061,14 +14955,14 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
                          rvalue(gamma, "gamma", index_uni(t)))) +
                       bernoulli_lpmf<false>(1,
                         prod(
-                          rvalue(lcm_sym81__, "lcm_sym81__",
-                            index_min_max(t, lcm_sym83__))))) +
+                          rvalue(lcm_sym82__, "lcm_sym82__",
+                            index_min_max(t, lcm_sym84__))))) +
                      bernoulli_lpmf<false>(1,
                        prod(
                          rvalue(phi, "phi",
-                           index_uni(i), index_min_max(t, lcm_sym83__))))) +
+                           index_uni(1), index_min_max(t, lcm_sym84__))))) +
                     bernoulli_lpmf<false>(1,
-                      rvalue(p, "p", index_uni(i), index_uni(lcm_sym116__)))),
+                      rvalue(p, "p", index_uni(1), index_uni(lcm_sym117__)))),
                   "assigning variable lp", index_uni(t));
               }
             } 
@@ -15077,42 +14971,42 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
               ((bernoulli_lpmf<false>(1,
                   prod(
                     rvalue(lcm_sym80__, "lcm_sym80__",
-                      index_min_max(1, lcm_sym83__)))) +
-                 bernoulli_lpmf<false>(1, gamma[(lcm_sym116__ - 1)])) +
+                      index_min_max(1, lcm_sym84__)))) +
+                 bernoulli_lpmf<false>(1, gamma[(lcm_sym117__ - 1)])) +
                 bernoulli_lpmf<false>(1,
-                  rvalue(p, "p", index_uni(i), index_uni(lcm_sym116__)))),
-              "assigning variable lp", index_uni(lcm_sym116__));
+                  rvalue(p, "p", index_uni(1), index_uni(lcm_sym117__)))),
+              "assigning variable lp", index_uni(lcm_sym117__));
             current_statement__ = 91;
             lp_accum__.add(log_sum_exp(lp));
           }
-          lcm_sym118__ = rvalue(last, "last", index_uni(i));
-          if (logical_gte(lcm_sym118__, (lcm_sym116__ + 1))) {
+          lcm_sym119__ = rvalue(last, "last", index_uni(1));
+          if (logical_gte(lcm_sym119__, (lcm_sym117__ + 1))) {
             current_statement__ = 96;
             lp_accum__.add(
               bernoulli_lpmf<propto__>(1,
                 rvalue(phi, "phi",
-                  index_uni(i), index_uni(((lcm_sym116__ + 1) - 1)))));
-            lcm_sym99__ = ((lcm_sym116__ + 1) + 1);
+                  index_uni(1), index_uni(((lcm_sym117__ + 1) - 1)))));
+            lcm_sym100__ = ((lcm_sym117__ + 1) + 1);
             lp_accum__.add(
               bernoulli_lpmf<propto__>(
-                rvalue(y, "y", index_uni(i), index_uni((lcm_sym116__ + 1))),
-                rvalue(p, "p", index_uni(i), index_uni((lcm_sym116__ + 1)))));
-            for (int t = lcm_sym99__; t <= lcm_sym118__; ++t) {
+                rvalue(y, "y", index_uni(1), index_uni((lcm_sym117__ + 1))),
+                rvalue(p, "p", index_uni(1), index_uni((lcm_sym117__ + 1)))));
+            for (int t = lcm_sym100__; t <= lcm_sym119__; ++t) {
               current_statement__ = 96;
               lp_accum__.add(
                 bernoulli_lpmf<propto__>(1,
-                  rvalue(phi, "phi", index_uni(i), index_uni((t - 1)))));
+                  rvalue(phi, "phi", index_uni(1), index_uni((t - 1)))));
               current_statement__ = 97;
               lp_accum__.add(
                 bernoulli_lpmf<propto__>(
-                  rvalue(y, "y", index_uni(i), index_uni(t)),
-                  rvalue(p, "p", index_uni(i), index_uni(t))));
+                  rvalue(y, "y", index_uni(1), index_uni(t)),
+                  rvalue(p, "p", index_uni(1), index_uni(t))));
             }
           } 
           current_statement__ = 99;
           lp_accum__.add(
             bernoulli_lpmf<propto__>(1,
-              rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym118__))));
+              rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym119__))));
         } else {
           lcm_sym101__ = (lcm_sym121__ + 1);
           validate_non_negative_index("lp", "n_occasions + 1", lcm_sym101__);
@@ -15124,9 +15018,9 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
             ((bernoulli_lpmf<false>(1, rvalue(gamma, "gamma", index_uni(1)))
                +
                bernoulli_lpmf<false>(0,
-                 rvalue(p, "p", index_uni(i), index_uni(1)))) +
+                 rvalue(p, "p", index_uni(1), index_uni(1)))) +
               bernoulli_lpmf<false>(1,
-                rvalue(chi, "chi", index_uni(i), index_uni(1)))),
+                rvalue(chi, "chi", index_uni(1), index_uni(1)))),
             "assigning variable lp", index_uni(1));
           current_statement__ = 138;
           if (logical_gte(lcm_sym121__, 2)) {
@@ -15139,9 +15033,9 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
                   bernoulli_lpmf<false>(1,
                     rvalue(gamma, "gamma", index_uni(2)))) +
                  bernoulli_lpmf<false>(0,
-                   rvalue(p, "p", index_uni(i), index_uni(2)))) +
+                   rvalue(p, "p", index_uni(1), index_uni(2)))) +
                 bernoulli_lpmf<false>(1,
-                  rvalue(chi, "chi", index_uni(i), index_uni(2)))),
+                  rvalue(chi, "chi", index_uni(1), index_uni(2)))),
               "assigning variable lp", index_uni(2));
             for (int t = 3; t <= lcm_sym121__; ++t) {
               current_statement__ = 83;
@@ -15153,9 +15047,9 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
                     bernoulli_lpmf<false>(1,
                       rvalue(gamma, "gamma", index_uni(t)))) +
                    bernoulli_lpmf<false>(0,
-                     rvalue(p, "p", index_uni(i), index_uni(t)))) +
+                     rvalue(p, "p", index_uni(1), index_uni(t)))) +
                   bernoulli_lpmf<false>(1,
-                    rvalue(chi, "chi", index_uni(i), index_uni(t)))),
+                    rvalue(chi, "chi", index_uni(1), index_uni(t)))),
                 "assigning variable lp", index_uni(t));
             }
           } 
@@ -15165,8 +15059,183 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
           current_statement__ = 85;
           lp_accum__.add(log_sum_exp(lp));
         }
-      }
-    } 
+        for (int i = 2; i <= lcm_sym120__; ++i) {
+          current_statement__ = 79;
+          validate_non_negative_index("qp", "n_occasions", lcm_sym121__);
+          Eigen::Matrix<double, -1, 1> qp;
+          assign(lcm_sym81__,
+            subtract(1.0, transpose(rvalue(p, "p", index_uni(i)))),
+            "assigning variable lcm_sym81__");
+          lcm_sym116__ = rvalue(first, "first", index_uni(i));
+          if (lcm_sym116__) {
+            current_statement__ = 95;
+            if (logical_eq(lcm_sym116__, 1)) {
+              current_statement__ = 93;
+              lp_accum__.add(
+                bernoulli_lpmf<propto__>(1,
+                  (rvalue(gamma, "gamma", index_uni(1)) *
+                    rvalue(p, "p", index_uni(i), index_uni(1)))));
+            } else {
+              current_statement__ = 87;
+              validate_non_negative_index("lp", "first[i]", lcm_sym116__);
+              Eigen::Matrix<local_scalar_t__, -1, 1> lp =
+                 Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
+                   lcm_sym116__, DUMMY_VAR__);
+              lcm_sym83__ = (lcm_sym116__ - 1);
+              assign(lp,
+                (((bernoulli_lpmf<false>(1,
+                     rvalue(gamma, "gamma", index_uni(1))) +
+                    bernoulli_lpmf<false>(1,
+                      prod(
+                        rvalue(lcm_sym81__, "lcm_sym81__",
+                          index_min_max(1, lcm_sym83__))))) +
+                   bernoulli_lpmf<false>(1,
+                     prod(
+                       rvalue(phi, "phi",
+                         index_uni(i), index_min_max(1, lcm_sym83__))))) +
+                  bernoulli_lpmf<false>(1,
+                    rvalue(p, "p", index_uni(i), index_uni(lcm_sym116__)))),
+                "assigning variable lp", index_uni(1));
+              current_statement__ = 139;
+              if (logical_gte(lcm_sym83__, 2)) {
+                current_statement__ = 89;
+                assign(lp,
+                  ((((bernoulli_lpmf<false>(1,
+                        prod(
+                          rvalue(lcm_sym80__, "lcm_sym80__",
+                            index_min_max(1, 1)))) +
+                       bernoulli_lpmf<false>(1,
+                         rvalue(gamma, "gamma", index_uni(2)))) +
+                      bernoulli_lpmf<false>(1,
+                        prod(
+                          rvalue(lcm_sym81__, "lcm_sym81__",
+                            index_min_max(2, lcm_sym83__))))) +
+                     bernoulli_lpmf<false>(1,
+                       prod(
+                         rvalue(phi, "phi",
+                           index_uni(i), index_min_max(2, lcm_sym83__))))) +
+                    bernoulli_lpmf<false>(1,
+                      rvalue(p, "p", index_uni(i), index_uni(lcm_sym116__)))),
+                  "assigning variable lp", index_uni(2));
+                for (int t = 3; t <= lcm_sym83__; ++t) {
+                  current_statement__ = 89;
+                  assign(lp,
+                    ((((bernoulli_lpmf<false>(1,
+                          prod(
+                            rvalue(lcm_sym80__, "lcm_sym80__",
+                              index_min_max(1, (t - 1))))) +
+                         bernoulli_lpmf<false>(1,
+                           rvalue(gamma, "gamma", index_uni(t)))) +
+                        bernoulli_lpmf<false>(1,
+                          prod(
+                            rvalue(lcm_sym81__, "lcm_sym81__",
+                              index_min_max(t, lcm_sym83__))))) +
+                       bernoulli_lpmf<false>(1,
+                         prod(
+                           rvalue(phi, "phi",
+                             index_uni(i), index_min_max(t, lcm_sym83__)))))
+                      +
+                      bernoulli_lpmf<false>(1,
+                        rvalue(p, "p", index_uni(i), index_uni(lcm_sym116__)))),
+                    "assigning variable lp", index_uni(t));
+                }
+              } 
+              current_statement__ = 90;
+              assign(lp,
+                ((bernoulli_lpmf<false>(1,
+                    prod(
+                      rvalue(lcm_sym80__, "lcm_sym80__",
+                        index_min_max(1, lcm_sym83__)))) +
+                   bernoulli_lpmf<false>(1, gamma[(lcm_sym116__ - 1)])) +
+                  bernoulli_lpmf<false>(1,
+                    rvalue(p, "p", index_uni(i), index_uni(lcm_sym116__)))),
+                "assigning variable lp", index_uni(lcm_sym116__));
+              current_statement__ = 91;
+              lp_accum__.add(log_sum_exp(lp));
+            }
+            lcm_sym118__ = rvalue(last, "last", index_uni(i));
+            if (logical_gte(lcm_sym118__, (lcm_sym116__ + 1))) {
+              current_statement__ = 96;
+              lp_accum__.add(
+                bernoulli_lpmf<propto__>(1,
+                  rvalue(phi, "phi",
+                    index_uni(i), index_uni(((lcm_sym116__ + 1) - 1)))));
+              lcm_sym99__ = ((lcm_sym116__ + 1) + 1);
+              lp_accum__.add(
+                bernoulli_lpmf<propto__>(
+                  rvalue(y, "y", index_uni(i), index_uni((lcm_sym116__ + 1))),
+                  rvalue(p, "p", index_uni(i), index_uni((lcm_sym116__ + 1)))));
+              for (int t = lcm_sym99__; t <= lcm_sym118__; ++t) {
+                current_statement__ = 96;
+                lp_accum__.add(
+                  bernoulli_lpmf<propto__>(1,
+                    rvalue(phi, "phi", index_uni(i), index_uni((t - 1)))));
+                current_statement__ = 97;
+                lp_accum__.add(
+                  bernoulli_lpmf<propto__>(
+                    rvalue(y, "y", index_uni(i), index_uni(t)),
+                    rvalue(p, "p", index_uni(i), index_uni(t))));
+              }
+            } 
+            current_statement__ = 99;
+            lp_accum__.add(
+              bernoulli_lpmf<propto__>(1,
+                rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym118__))));
+          } else {
+            lcm_sym101__ = (lcm_sym121__ + 1);
+            validate_non_negative_index("lp", "n_occasions + 1", lcm_sym101__);
+            Eigen::Matrix<local_scalar_t__, -1, 1> lp =
+               Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym101__,
+                 DUMMY_VAR__);
+            current_statement__ = 82;
+            assign(lp,
+              ((bernoulli_lpmf<false>(1,
+                  rvalue(gamma, "gamma", index_uni(1))) +
+                 bernoulli_lpmf<false>(0,
+                   rvalue(p, "p", index_uni(i), index_uni(1)))) +
+                bernoulli_lpmf<false>(1,
+                  rvalue(chi, "chi", index_uni(i), index_uni(1)))),
+              "assigning variable lp", index_uni(1));
+            current_statement__ = 138;
+            if (logical_gte(lcm_sym121__, 2)) {
+              current_statement__ = 83;
+              assign(lp,
+                (((bernoulli_lpmf<false>(1,
+                     prod(
+                       rvalue(lcm_sym80__, "lcm_sym80__",
+                         index_min_max(1, 1)))) +
+                    bernoulli_lpmf<false>(1,
+                      rvalue(gamma, "gamma", index_uni(2)))) +
+                   bernoulli_lpmf<false>(0,
+                     rvalue(p, "p", index_uni(i), index_uni(2)))) +
+                  bernoulli_lpmf<false>(1,
+                    rvalue(chi, "chi", index_uni(i), index_uni(2)))),
+                "assigning variable lp", index_uni(2));
+              for (int t = 3; t <= lcm_sym121__; ++t) {
+                current_statement__ = 83;
+                assign(lp,
+                  (((bernoulli_lpmf<false>(1,
+                       prod(
+                         rvalue(lcm_sym80__, "lcm_sym80__",
+                           index_min_max(1, (t - 1))))) +
+                      bernoulli_lpmf<false>(1,
+                        rvalue(gamma, "gamma", index_uni(t)))) +
+                     bernoulli_lpmf<false>(0,
+                       rvalue(p, "p", index_uni(i), index_uni(t)))) +
+                    bernoulli_lpmf<false>(1,
+                      rvalue(chi, "chi", index_uni(i), index_uni(t)))),
+                  "assigning variable lp", index_uni(t));
+              }
+            } 
+            current_statement__ = 84;
+            assign(lp, bernoulli_lpmf<false>(1, prod(lcm_sym80__)),
+              "assigning variable lp", index_uni(lcm_sym101__));
+            current_statement__ = 85;
+            lp_accum__.add(log_sum_exp(lp));
+          }
+        }
+      } 
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -15206,35 +15275,38 @@ seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
     double lcm_sym124__;
     double lcm_sym123__;
     int lcm_sym122__;
-    int N;
-    lcm_sym128__ = rows(gamma);
-    N = lcm_sym128__;
-    current_statement__ = 43;
-    validate_non_negative_index("log_cprob", "N", lcm_sym128__);
-    Eigen::Matrix<local_scalar_t__, -1, 1> log_cprob =
-       Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym128__,
-         DUMMY_VAR__);
-    local_scalar_t__ log_residual_prob;
-    current_statement__ = 141;
-    if (logical_gte(lcm_sym128__, 1)) {
-      current_statement__ = 47;
-      assign(log_cprob,
-        (stan::math::log(rvalue(gamma, "gamma", index_uni(1))) + 0),
-        "assigning variable log_cprob", index_uni(1));
-      current_statement__ = 46;
-      log_residual_prob = (0 + log1m(rvalue(gamma, "gamma", index_uni(1))));
-      for (int n = 2; n <= lcm_sym128__; ++n) {
+    {
+      int N;
+      lcm_sym128__ = rows(gamma);
+      N = lcm_sym128__;
+      current_statement__ = 43;
+      validate_non_negative_index("log_cprob", "N", lcm_sym128__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> log_cprob =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym128__,
+           DUMMY_VAR__);
+      local_scalar_t__ log_residual_prob;
+      current_statement__ = 142;
+      if (logical_gte(lcm_sym128__, 1)) {
         current_statement__ = 47;
         assign(log_cprob,
-          (stan::math::log(rvalue(gamma, "gamma", index_uni(n))) +
-            log_residual_prob), "assigning variable log_cprob", index_uni(n));
+          (stan::math::log(rvalue(gamma, "gamma", index_uni(1))) + 0),
+          "assigning variable log_cprob", index_uni(1));
         current_statement__ = 46;
-        log_residual_prob = (log_residual_prob +
-                              log1m(rvalue(gamma, "gamma", index_uni(n))));
-      }
-    } 
-    current_statement__ = 142;
-    return stan::math::exp(log_cprob);
+        log_residual_prob = (0 + log1m(rvalue(gamma, "gamma", index_uni(1))));
+        for (int n = 2; n <= lcm_sym128__; ++n) {
+          current_statement__ = 47;
+          assign(log_cprob,
+            (stan::math::log(rvalue(gamma, "gamma", index_uni(n))) +
+              log_residual_prob),
+            "assigning variable log_cprob", index_uni(n));
+          current_statement__ = 46;
+          log_residual_prob = (log_residual_prob +
+                                log1m(rvalue(gamma, "gamma", index_uni(n))));
+        }
+      } 
+      current_statement__ = 143;
+      return stan::math::exp(log_cprob);
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -16590,7 +16662,9 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       {
         current_statement__ = 40;
         validate_non_negative_index("cprob", "n_occasions", n_occasions);
-        Eigen::Matrix<double, -1, 1> cprob;
+        Eigen::Matrix<double, -1, 1> cprob =
+           Eigen::Matrix<double, -1, 1>::Constant(n_occasions,
+             std::numeric_limits<double>::quiet_NaN());
         Eigen::Matrix<double, -1, 1> inline_sym11__;
         int inline_sym16__;
         inline_sym16__ = 0;
@@ -16654,7 +16728,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         assign(b, lcm_sym133__, "assigning variable b");
         current_statement__ = 64;
         if (lcm_sym134__) {
-          int f;
+          int f = std::numeric_limits<int>::min();
           int inline_sym18__;
           int inline_sym20__;
           inline_sym20__ = 0;
@@ -16684,7 +16758,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                                               index_uni(inline_sym18__));
           } 
           for (int i = 2; i <= M; ++i) {
-            int f;
+            int f = std::numeric_limits<int>::min();
             int inline_sym18__;
             int inline_sym20__;
             inline_sym20__ = 0;
@@ -18349,23 +18423,25 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     int lcm_sym28__;
     int lcm_sym27__;
     int lcm_sym26__;
-    lcm_sym27__ = size(y_i);
-    if (logical_gte(lcm_sym27__, 1)) {
-      current_statement__ = 43;
-      if (rvalue(y_i, "y_i", index_uni(1))) {
-        current_statement__ = 42;
-        return 1;
-      } 
-      for (int k = 2; k <= lcm_sym27__; ++k) {
+    {
+      lcm_sym27__ = size(y_i);
+      if (logical_gte(lcm_sym27__, 1)) {
         current_statement__ = 43;
-        if (rvalue(y_i, "y_i", index_uni(k))) {
+        if (rvalue(y_i, "y_i", index_uni(1))) {
           current_statement__ = 42;
-          return k;
+          return 1;
         } 
-      }
-    } 
-    current_statement__ = 60;
-    return 0;
+        for (int k = 2; k <= lcm_sym27__; ++k) {
+          current_statement__ = 43;
+          if (rvalue(y_i, "y_i", index_uni(k))) {
+            current_statement__ = 42;
+            return k;
+          } 
+        }
+      } 
+      current_statement__ = 60;
+      return 0;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -18395,27 +18471,29 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     int lcm_sym32__;
     int lcm_sym31__;
     int lcm_sym30__;
-    lcm_sym33__ = (size(y_i) - 1);
-    if (logical_gte(lcm_sym33__, 0)) {
-      int k;
-      lcm_sym32__ = (size(y_i) - 0);
-      current_statement__ = 49;
-      if (y_i[(lcm_sym32__ - 1)]) {
-        current_statement__ = 48;
-        return lcm_sym32__;
-      } 
-      for (int k_rev = 1; k_rev <= lcm_sym33__; ++k_rev) {
+    {
+      lcm_sym33__ = (size(y_i) - 1);
+      if (logical_gte(lcm_sym33__, 0)) {
         int k;
-        lcm_sym31__ = (size(y_i) - k_rev);
+        lcm_sym32__ = (size(y_i) - 0);
         current_statement__ = 49;
-        if (y_i[(lcm_sym31__ - 1)]) {
+        if (y_i[(lcm_sym32__ - 1)]) {
           current_statement__ = 48;
-          return lcm_sym31__;
+          return lcm_sym32__;
         } 
-      }
-    } 
-    current_statement__ = 61;
-    return 0;
+        for (int k_rev = 1; k_rev <= lcm_sym33__; ++k_rev) {
+          int k;
+          lcm_sym31__ = (size(y_i) - k_rev);
+          current_statement__ = 49;
+          if (y_i[(lcm_sym31__ - 1)]) {
+            current_statement__ = 48;
+            return lcm_sym31__;
+          } 
+        }
+      } 
+      current_statement__ = 61;
+      return 0;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -18455,54 +18533,21 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
     int lcm_sym38__;
     int lcm_sym37__;
     int lcm_sym36__;
-    current_statement__ = 15;
-    validate_non_negative_index("chi", "nind", nind);
-    current_statement__ = 16;
-    validate_non_negative_index("chi", "n_occasions", n_occasions);
-    Eigen::Matrix<local_scalar_t__, -1, -1> chi =
-       Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(nind, n_occasions,
-         DUMMY_VAR__);
-    current_statement__ = 63;
-    if (logical_gte(nind, 1)) {
-      current_statement__ = 18;
-      assign(chi, 1.0,
-        "assigning variable chi", index_uni(1), index_uni(n_occasions));
-      lcm_sym39__ = (n_occasions - 1);
-      lcm_sym37__ = logical_gte(lcm_sym39__, 1);
-      if (lcm_sym37__) {
-        int t_curr;
-        int t_next;
-        lcm_sym41__ = (lcm_sym39__ + 1);
-        current_statement__ = 21;
-        assign(chi,
-          stan::math::fma(
-            (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym39__)) *
-              (1 -
-                rvalue(p, "p", index_uni(1), index_uni((lcm_sym41__ - 1))))),
-            rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym41__)),
-            (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym39__)))),
-          "assigning variable chi", index_uni(1), index_uni(lcm_sym39__));
-        for (int t = 2; t <= lcm_sym39__; ++t) {
-          int t_curr;
-          lcm_sym38__ = (n_occasions - t);
-          int t_next;
-          lcm_sym40__ = (lcm_sym38__ + 1);
-          current_statement__ = 21;
-          assign(chi,
-            stan::math::fma(
-              (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym38__)) *
-                (1 -
-                  rvalue(p, "p", index_uni(1), index_uni((lcm_sym40__ - 1))))),
-              rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym40__)),
-              (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym38__)))),
-            "assigning variable chi", index_uni(1), index_uni(lcm_sym38__));
-        }
-      } 
-      for (int i = 2; i <= nind; ++i) {
+    {
+      current_statement__ = 15;
+      validate_non_negative_index("chi", "nind", nind);
+      current_statement__ = 16;
+      validate_non_negative_index("chi", "n_occasions", n_occasions);
+      Eigen::Matrix<local_scalar_t__, -1, -1> chi =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(nind, n_occasions,
+           DUMMY_VAR__);
+      current_statement__ = 63;
+      if (logical_gte(nind, 1)) {
         current_statement__ = 18;
         assign(chi, 1.0,
-          "assigning variable chi", index_uni(i), index_uni(n_occasions));
-        current_statement__ = 62;
+          "assigning variable chi", index_uni(1), index_uni(n_occasions));
+        lcm_sym39__ = (n_occasions - 1);
+        lcm_sym37__ = logical_gte(lcm_sym39__, 1);
         if (lcm_sym37__) {
           int t_curr;
           int t_next;
@@ -18510,12 +18555,12 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
           current_statement__ = 21;
           assign(chi,
             stan::math::fma(
-              (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym39__)) *
+              (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym39__)) *
                 (1 -
-                  rvalue(p, "p", index_uni(i), index_uni((lcm_sym41__ - 1))))),
-              rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym41__)),
-              (1 - rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym39__)))),
-            "assigning variable chi", index_uni(i), index_uni(lcm_sym39__));
+                  rvalue(p, "p", index_uni(1), index_uni((lcm_sym41__ - 1))))),
+              rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym41__)),
+              (1 - rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym39__)))),
+            "assigning variable chi", index_uni(1), index_uni(lcm_sym39__));
           for (int t = 2; t <= lcm_sym39__; ++t) {
             int t_curr;
             lcm_sym38__ = (n_occasions - t);
@@ -18524,20 +18569,60 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
             current_statement__ = 21;
             assign(chi,
               stan::math::fma(
-                (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym38__)) *
+                (rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym38__)) *
                   (1 -
                     rvalue(p, "p",
-                      index_uni(i), index_uni((lcm_sym40__ - 1))))),
-                rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym40__)),
+                      index_uni(1), index_uni((lcm_sym40__ - 1))))),
+                rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym40__)),
                 (1 -
-                  rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym38__)))),
-              "assigning variable chi", index_uni(i), index_uni(lcm_sym38__));
+                  rvalue(phi, "phi", index_uni(1), index_uni(lcm_sym38__)))),
+              "assigning variable chi", index_uni(1), index_uni(lcm_sym38__));
           }
         } 
-      }
-    } 
-    current_statement__ = 64;
-    return chi;
+        for (int i = 2; i <= nind; ++i) {
+          current_statement__ = 18;
+          assign(chi, 1.0,
+            "assigning variable chi", index_uni(i), index_uni(n_occasions));
+          current_statement__ = 62;
+          if (lcm_sym37__) {
+            int t_curr;
+            int t_next;
+            lcm_sym41__ = (lcm_sym39__ + 1);
+            current_statement__ = 21;
+            assign(chi,
+              stan::math::fma(
+                (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym39__)) *
+                  (1 -
+                    rvalue(p, "p",
+                      index_uni(i), index_uni((lcm_sym41__ - 1))))),
+                rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym41__)),
+                (1 -
+                  rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym39__)))),
+              "assigning variable chi", index_uni(i), index_uni(lcm_sym39__));
+            for (int t = 2; t <= lcm_sym39__; ++t) {
+              int t_curr;
+              lcm_sym38__ = (n_occasions - t);
+              int t_next;
+              lcm_sym40__ = (lcm_sym38__ + 1);
+              current_statement__ = 21;
+              assign(chi,
+                stan::math::fma(
+                  (rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym38__)) *
+                    (1 -
+                      rvalue(p, "p",
+                        index_uni(i), index_uni((lcm_sym40__ - 1))))),
+                  rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym40__)),
+                  (1 -
+                    rvalue(phi, "phi", index_uni(i), index_uni(lcm_sym38__)))),
+                "assigning variable chi", index_uni(i),
+                                            index_uni(lcm_sym38__));
+            }
+          } 
+        }
+      } 
+      current_statement__ = 64;
+      return chi;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -19712,8 +19797,10 @@ foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     double lcm_sym37__;
-    current_statement__ = 10;
-    return normal_lpdf<propto__>(x, mu, 1);
+    {
+      current_statement__ = 10;
+      return normal_lpdf<propto__>(x, mu, 1);
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -19739,8 +19826,10 @@ bar_lpmf(const int& n, const T1__& mu, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     double lcm_sym38__;
-    current_statement__ = 11;
-    return poisson_lpmf<propto__>(n, mu);
+    {
+      current_statement__ = 11;
+      return poisson_lpmf<propto__>(n, mu);
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -19765,8 +19854,10 @@ baz_lpdf(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     double lcm_sym39__;
-    current_statement__ = 12;
-    return foo_lpdf<propto__>(x, 0.5, pstream__);
+    {
+      current_statement__ = 12;
+      return foo_lpdf<propto__>(x, 0.5, pstream__);
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -21955,13 +22046,15 @@ nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     int lcm_sym35__;
-    current_statement__ = 89;
-    if (logical_gt(x, 342)) {
-      current_statement__ = 88;
-      return ;
-    } 
-    current_statement__ = 7;
-    lp_accum__.add(y);
+    {
+      current_statement__ = 89;
+      if (logical_gt(x, 342)) {
+        current_statement__ = 88;
+        return ;
+      } 
+      current_statement__ = 7;
+      lp_accum__.add(y);
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -21991,13 +22084,15 @@ rfun(const int& y, std::ostream* pstream__) {
     int lcm_sym38__;
     int lcm_sym37__;
     int lcm_sym36__;
-    current_statement__ = 9;
-    if (logical_gt(y, 2)) {
-      current_statement__ = 90;
-      return (y + 24);
-    } 
-    current_statement__ = 91;
-    return (y + 2);
+    {
+      current_statement__ = 9;
+      if (logical_gt(y, 2)) {
+        current_statement__ = 90;
+        return (y + 24);
+      } 
+      current_statement__ = 91;
+      return (y + 2);
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -22020,10 +22115,12 @@ rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 59;
-    lp_accum__.add(2);
-    current_statement__ = 92;
-    return 24;
+    {
+      current_statement__ = 59;
+      lp_accum__.add(2);
+      current_statement__ = 92;
+      return 24;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -22494,12 +22591,12 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         current_statement__ = 50;
         lp_accum__.add(2);
         {
-          double y;
+          double y = std::numeric_limits<double>::quiet_NaN();
           current_statement__ = 52;
           lp_accum__.add(24);
         }
         {
-          double y;
+          double y = std::numeric_limits<double>::quiet_NaN();
           current_statement__ = 55;
           lp_accum__.add(245);
         }
@@ -22579,7 +22676,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             lp_accum__.add(1);
           }
         }
-        double temp;
+        double temp = std::numeric_limits<double>::quiet_NaN();
         {
           current_statement__ = 76;
           if (pstream__) {
@@ -22587,7 +22684,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             stan_print(pstream__, "\n");
           }
         }
-        double temp2;
+        double temp2 = std::numeric_limits<double>::quiet_NaN();
         {
           current_statement__ = 79;
           lp_accum__.add(4);
