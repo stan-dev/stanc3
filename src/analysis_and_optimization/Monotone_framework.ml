@@ -135,7 +135,8 @@ let reverse (type l) (module F : FLOWGRAPH with type labels = l) =
     with type labels = l )
 
 let make_circular_flowgraph (type l)
-    (module Flowgraph : FLOWGRAPH with type labels = l) (module RevFlowgraph : FLOWGRAPH with type labels = l) =
+    (module Flowgraph : FLOWGRAPH with type labels = l)
+    (module RevFlowgraph : FLOWGRAPH with type labels = l) =
   ( module struct
     type labels = Flowgraph.labels
     type t = labels
@@ -146,13 +147,10 @@ let make_circular_flowgraph (type l)
     let initials = Flowgraph.initials
 
     let successors =
-      let set_exits_to_depend_on_inits ~key ~data = 
-        if Set.Poly.mem RevFlowgraph.initials key 
-        then
-           Set.Poly.union data Flowgraph.initials
-       else
-         data
-       in
+      let set_exits_to_depend_on_inits ~key ~data =
+        if Set.Poly.mem RevFlowgraph.initials key then
+          Set.Poly.union data Flowgraph.initials
+        else data in
       Map.mapi Flowgraph.successors ~f:set_exits_to_depend_on_inits end
   : FLOWGRAPH
     with type labels = l )
