@@ -234,7 +234,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      int pos__ = std::numeric_limits<int>::min();
+      int pos__;
       pos__ = 1;
       current_statement__ = 10;
       context__.validate_dims("data initialization","N","int",
@@ -347,23 +347,19 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     (void) function__;  // suppress unused var warning
     
     try {
-      local_scalar_t__ y = DUMMY_VAR__;
+      local_scalar_t__ y;
       current_statement__ = 1;
       y = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__, -1, 1> y0 =
-         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> y0;
       current_statement__ = 2;
       y0 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
-      local_scalar_t__ t0 = DUMMY_VAR__;
+      local_scalar_t__ t0;
       current_statement__ = 3;
       t0 = in__.template read<local_scalar_t__>();
-      std::vector<local_scalar_t__> times =
-         std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      std::vector<local_scalar_t__> times;
       current_statement__ = 4;
       times = in__.template read<std::vector<local_scalar_t__>>(N);
-      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> z =
-         std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(M, 
-           Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__));
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> z;
       current_statement__ = 6;
       assign(z,
         ode_adjoint_tol_ctl(f_0_arg_odefunctor__(), y0, t0, times, rel_tol_f,
@@ -418,19 +414,16 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     (void) function__;  // suppress unused var warning
     
     try {
-      double y = std::numeric_limits<double>::quiet_NaN();
+      double y;
       current_statement__ = 1;
       y = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double, -1, 1> y0 =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, 1> y0;
       current_statement__ = 2;
       y0 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
-      double t0 = std::numeric_limits<double>::quiet_NaN();
+      double t0;
       current_statement__ = 3;
       t0 = in__.template read<local_scalar_t__>();
-      std::vector<double> times =
-         std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      std::vector<double> times;
       current_statement__ = 4;
       times = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<Eigen::Matrix<double, -1, 1>> z =
@@ -491,9 +484,9 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
-      int pos__ = std::numeric_limits<int>::min();
+      int pos__;
       pos__ = 1;
-      local_scalar_t__ y = DUMMY_VAR__;
+      local_scalar_t__ y;
       y = in__.read<local_scalar_t__>();
       out__.write(y);
       Eigen::Matrix<local_scalar_t__, -1, 1> y0 =
@@ -503,7 +496,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
           "assigning variable y0", index_uni(sym1__));
       }
       out__.write(y0);
-      local_scalar_t__ t0 = DUMMY_VAR__;
+      local_scalar_t__ t0;
       t0 = in__.read<local_scalar_t__>();
       out__.write(t0);
       std::vector<local_scalar_t__> times =

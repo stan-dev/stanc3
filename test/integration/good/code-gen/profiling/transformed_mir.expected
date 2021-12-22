@@ -13,7 +13,7 @@
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
+      (initialize false)))
     (meta <opaque>))
    ((pattern
      (Assignment (pos__ UInt ())
@@ -22,7 +22,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt))
-      (initialize true)))
+      (initialize false)))
     (meta <opaque>))
    ((pattern
      (Assignment (N UInt ())
@@ -69,7 +69,7 @@
         (SArray SReal
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize true)))
+      (initialize false)))
     (meta <opaque>))
    ((pattern
      (Assignment (x (UArray UReal) ())
@@ -162,7 +162,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id sum_y) (decl_type (Sized SReal))
-      (initialize true)))
+      (initialize false)))
     (meta <opaque>))
    ((pattern
      (Profile "\"sum\""
@@ -178,7 +178,7 @@
  (log_prob
   (((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id rho) (decl_type (Sized SReal))
-      (initialize true)))
+      (initialize false)))
     (meta <opaque>))
    ((pattern
      (Assignment (rho UReal ())
@@ -196,7 +196,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id alpha)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized SReal)) (initialize false)))
     (meta <opaque>))
    ((pattern
      (Assignment (alpha UReal ())
@@ -214,7 +214,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized SReal)) (initialize false)))
     (meta <opaque>))
    ((pattern
      (Assignment (sigma UReal ())
@@ -427,7 +427,7 @@
  (generate_quantities
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id rho) (decl_type (Sized SReal))
-      (initialize true)))
+      (initialize false)))
     (meta <opaque>))
    ((pattern
      (Assignment (rho UReal ())
@@ -445,7 +445,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id alpha) (decl_type (Sized SReal))
-      (initialize true)))
+      (initialize false)))
     (meta <opaque>))
    ((pattern
      (Assignment (alpha UReal ())
@@ -463,7 +463,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id sigma) (decl_type (Sized SReal))
-      (initialize true)))
+      (initialize false)))
     (meta <opaque>))
    ((pattern
      (Assignment (sigma UReal ())
@@ -536,7 +536,7 @@
  (transform_inits
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
+      (initialize false)))
     (meta <opaque>))
    ((pattern
      (Assignment (pos__ UInt ())
@@ -545,7 +545,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id rho) (decl_type (Sized SReal))
-      (initialize true)))
+      (initialize false)))
     (meta <opaque>))
    ((pattern
      (Assignment (rho UReal ())
@@ -567,7 +567,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id alpha)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized SReal)) (initialize false)))
     (meta <opaque>))
    ((pattern
      (Assignment (alpha UReal ())
@@ -589,7 +589,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized SReal)) (initialize false)))
     (meta <opaque>))
    ((pattern
      (Assignment (sigma UReal ())
