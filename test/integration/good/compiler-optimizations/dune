@@ -28,6 +28,7 @@
    stalled1-failure.stan
    expr-prop-fail.stan
    ad-level-failing.stan
+   ad-level-deep-dependence.stan
    lupdf-inlining.stan))
  (action
   (with-stdout-to
