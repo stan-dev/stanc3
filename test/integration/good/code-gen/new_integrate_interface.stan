@@ -3,17 +3,16 @@ functions {
     return z;
   }
 }
-
 data {
   int N;
   int id;
   real rd;
-  real rad[N];
+  array[N] real rad;
   vector[N] vd;
 }
-
 transformed data {
-  vector[N] zd[N] = ode_bdf_tol(f, vd, rd, rad, 1e-6, 1e-6, 100, rd, vd);
+  array[N] vector[N] zd = ode_bdf_tol(f, vd, rd, rad, 1e-6, 1e-6, 100, rd,
+                                      vd);
   zd = ode_bdf_tol(f, vd, id, rad, 1e-6, 1e-6, 100, rd, vd);
   zd = ode_adams_tol(f, vd, rd, rad, 1e-6, 1e-6, 100, rd, vd);
   zd = ode_adams_tol(f, vd, id, rad, 1e-6, 1e-6, 100, rd, vd);
@@ -26,15 +25,13 @@ transformed data {
   zd = ode_rk45(f, vd, rd, rad, rd, vd);
   zd = ode_rk45(f, vd, id, rad, rd, vd);
 }
-
 parameters {
   real r;
-  real ra[N];
+  array[N] real ra;
   vector[N] v;
 }
-
 transformed parameters {
-  vector[N] z[N] = ode_bdf_tol(f, vd, id, rad, 1e-6, 1e-6, 100, rd, vd);
+  array[N] vector[N] z = ode_bdf_tol(f, vd, id, rad, 1e-6, 1e-6, 100, rd, vd);
   
   z = ode_bdf_tol(f, vd, rd, rad, 1e-6, 1e-6, 100, rd, vd);
   z = ode_bdf_tol(f, vd, rd, rad, 1e-6, 1e-6, 100, rd, v);
@@ -234,10 +231,10 @@ transformed parameters {
   z = ode_rk45(f, v, r, ra, r, vd);
   z = ode_rk45(f, v, r, ra, r, v);
 }
-
 model {
-  vector[N] zm[N] = ode_bdf_tol(f, vd, id, rad, 1e-6, 1e-6, 100, rd, vd);
-
+  array[N] vector[N] zm = ode_bdf_tol(f, vd, id, rad, 1e-6, 1e-6, 100, rd,
+                                      vd);
+  
   zm = ode_bdf_tol(f, vd, rd, rad, 1e-6, 1e-6, 100, rd, vd);
   zm = ode_bdf_tol(f, vd, rd, rad, 1e-6, 1e-6, 100, rd, v);
   zm = ode_bdf_tol(f, vd, rd, rad, 1e-6, 1e-6, 100, r, vd);
@@ -437,9 +434,9 @@ model {
   zm = ode_bdf(f, v, r, ra, r, v);
   r ~ normal(0, 1);
 }
-
 generated quantities {
-  vector[N] zg[N] = ode_bdf_tol(f, vd, id, rad, 1e-6, 1e-6, 100, rd, vd);
+  array[N] vector[N] zg = ode_bdf_tol(f, vd, id, rad, 1e-6, 1e-6, 100, rd,
+                                      vd);
   zg = ode_bdf_tol(f, vd, rd, rad, 1e-6, 1e-6, 100, rd, vd);
   zg = ode_bdf_tol(f, vd, rd, rad, 1e-6, 1e-6, 100, rd, v);
   zg = ode_bdf_tol(f, vd, rd, rad, 1e-6, 1e-6, 100, r, vd);
@@ -638,3 +635,4 @@ generated quantities {
   zg = ode_bdf(f, v, r, ra, r, vd);
   zg = ode_bdf(f, v, r, ra, r, v);
 }
+

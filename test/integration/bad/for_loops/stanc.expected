@@ -1,7 +1,7 @@
   $ ../../../../../install/default/bin/stanc assign_to_loop_var1.stan
 Semantic error in 'assign_to_loop_var1.stan', line 5, column 18 to column 24:
    -------------------------------------------------
-     3:      int vs[2];
+     3:      array[2] int vs;
      4:      int y;
      5:      for (v in vs) v = 3;
                            ^
@@ -13,7 +13,7 @@ Cannot assign to function argument or loop identifier 'v'.
   $ ../../../../../install/default/bin/stanc assign_to_loop_var2.stan
 Semantic error in 'assign_to_loop_var2.stan', line 5, column 18 to column 24:
    -------------------------------------------------
-     3:      int vs[2,3];
+     3:      array[2,3] int vs;
      4:      int y;
      5:      for (v in vs) v = 3;
                            ^
@@ -25,12 +25,12 @@ Cannot assign to function argument or loop identifier 'v'.
   $ ../../../../../install/default/bin/stanc assign_to_loop_var3.stan
 Semantic error in 'assign_to_loop_var3.stan', line 6, column 6 to column 15:
    -------------------------------------------------
-     4:      int vs[2, 3];
+     4:      array[2, 3] int vs;
      5:      for (v in vs) {
      6:        v[1] = 0;
                ^
      7:        break;
-     8:      }        
+     8:      }
    -------------------------------------------------
 
 Cannot assign to function argument or loop identifier 'v'.
@@ -86,7 +86,7 @@ Too many indexes, expression dimensions=0, indexes found=1.
 Semantic error in 'for_statements_bad_indices0.stan', line 5, column 20 to column 28:
    -------------------------------------------------
      3:      while (1) {
-     4:        int vs[2];
+     4:        array[2] int vs;
      5:        for (v in vs) v = 3.2;
                              ^
      6:      }
@@ -98,7 +98,7 @@ Cannot assign to function argument or loop identifier 'v'.
 Semantic error in 'for_statements_bad_indices1.stan', line 5, column 20 to column 24:
    -------------------------------------------------
      3:      while (1) {
-     4:        int vs[2];
+     4:        array[2] int vs;
      5:        for (v in vs) v[2] = 3;
                              ^
      6:      }
@@ -110,7 +110,7 @@ Too many indexes, expression dimensions=0, indexes found=1.
 Semantic error in 'for_statements_bad_indices2.stan', line 5, column 20 to column 26:
    -------------------------------------------------
      3:      while (1) {
-     4:        int vs[2,3];
+     4:        array[2,3] int vs;
      5:        for (v in vs) v = 3;
                              ^
      6:      }

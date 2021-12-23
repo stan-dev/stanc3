@@ -14,11 +14,11 @@ installed via apt, homebrew, or your system's package manager.
  {- Download the repository (or your fork of it) from Github}
  {- Install the necessary {!page-dependencies} by running
 
-[bash -x scripts/setup_dev_env.sh].
+[cd scripts; bash -x ./setup_dev_env.sh].
 
    If you already have opam installed, you can instead run
 
-[opam install --deps-only --with-test .]
+[opam update; opam install --deps-only --with-test .]
 
    If you wish to {e install} stanc on your system, you can run the above
 [opam] command without [--deps-only].}
@@ -156,5 +156,3 @@ If you use {{:https://github.com/jwiegley/use-package}[use-package.el]}, this sn
             (define-key tuareg-mode-map (kbd "C-M-<tab>") #'ocamlformat)
             (add-hook 'before-save-hook #'ocamlformat-before-save)))
 ]}
-
-

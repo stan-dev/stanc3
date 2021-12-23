@@ -1,7 +1,9 @@
+(** Utilities for emitting deprecation warnings and
+  finding proper replacements for deprecated features
+*)
+
 open Core_kernel
 open Ast
-
-type t = Warnings.t
 
 val find_udf_log_suffix :
   typed_statement -> (string * Middle.UnsizedType.t) option
@@ -12,10 +14,10 @@ val collect_userdef_distributions :
   typed_program -> Middle.UnsizedType.t String.Map.t
 
 val distribution_suffix : string -> bool
-val without_suffix : string sexp_list -> string -> string
+val without_suffix : string list -> string -> string
 val is_deprecated_distribution : string -> bool
-val deprecated_distributions : string String.Map.t
-val deprecated_functions : string String.Map.t
-val rename_deprecated : string String.Map.t -> string -> string
+val deprecated_distributions : (string * string) String.Map.t
+val deprecated_functions : (string * string) String.Map.t
+val rename_deprecated : (string * string) String.Map.t -> string -> string
 val userdef_distributions : untyped_statement block option -> string list
-val collect_warnings : typed_program -> t list
+val collect_warnings : typed_program -> Warnings.t list

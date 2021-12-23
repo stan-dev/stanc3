@@ -1,10 +1,11 @@
 functions {
-  real[] harm_osc_ode(real t,           // time
-                      real[] y,         // state
-                      real[] theta,     // parameters
-                      real[] x,         // data
-                      int[] x_int) {    // integer data
-    real dydt[size(y)];
+  array[] real harm_osc_ode(real t, // time
+                            array[] real y, // state
+                            array[] real theta, // parameters
+                            array[] real x, // data
+                            array[] int x_int) {
+    // integer data
+    array[size(y)] real dydt;
     // ... set dydt at state y and time t ...
     return dydt;
   }
@@ -13,5 +14,6 @@ parameters {
   real y;
 }
 model {
-  y ~ normal(0,1);
+  y ~ normal(0, 1);
 }
+

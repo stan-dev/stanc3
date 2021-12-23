@@ -120,7 +120,7 @@ generated quantities {
   vector[11] y;
   array[11] int k;
   {
-    matrix[N, N] cov = cov_exp_quad(x, alpha, rho)
+    matrix[N, N] cov = gp_exp_quad_cov(x, alpha, rho)
                        + diag_matrix(rep_vector(1e-10, N));
     matrix[N, N] L_cov = cholesky_decompose(cov);
     vector[N] f = multi_normal_cholesky_rng(rep_vector(0, N), L_cov);
@@ -132,7 +132,6 @@ generated quantities {
   }
 }
 
-Warning in 'gen_gp_data.stan', line 16, column 25: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
   $ ../../../../../install/default/bin/stanc --auto-format gp_pois_regr.stan
 data {
   int<lower=1> N;
@@ -147,7 +146,7 @@ parameters {
 transformed parameters {
   vector[N] f;
   {
-    matrix[N, N] cov = cov_exp_quad(x, alpha, rho)
+    matrix[N, N] cov = gp_exp_quad_cov(x, alpha, rho)
                        + diag_matrix(rep_vector(1e-10, N));
     matrix[N, N] L_cov = cholesky_decompose(cov);
     f = L_cov * f_tilde;
@@ -161,7 +160,6 @@ model {
   k ~ poisson_log(f);
 }
 
-Warning in 'gp_pois_regr.stan', line 16, column 25: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
   $ ../../../../../install/default/bin/stanc --auto-format gp_regr.stan
 data {
   int<lower=1> N;
@@ -174,7 +172,7 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  matrix[N, N] cov = cov_exp_quad(x, alpha, rho)
+  matrix[N, N] cov = gp_exp_quad_cov(x, alpha, rho)
                      + diag_matrix(rep_vector(sigma, N));
   matrix[N, N] L_cov = cholesky_decompose(cov);
   
@@ -185,7 +183,6 @@ model {
   y ~ multi_normal_cholesky(rep_vector(0, N), L_cov);
 }
 
-Warning in 'gp_regr.stan', line 14, column 23: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
   $ ../../../../../install/default/bin/stanc --auto-format irt_2pl.stan
 data {
   int<lower=0> I;
@@ -367,9 +364,10 @@ generated quantities {
     C_ppc[n] = lognormal_rng(log(C[n, 1]), sigma);
 }
 
-Warning in 'one_comp_mm_elim_abs.stan', line 55, column 8: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'one_comp_mm_elim_abs.stan', line 49, column 8: integrate_ode_bdf
+    is deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../../install/default/bin/stanc --auto-format sim_one_comp_mm_elim_abs.stan
 functions {
   array[] real one_comp_mm_elim_abs(real t, array[] real y,
@@ -431,9 +429,10 @@ generated quantities {
     C_hat[n] = lognormal_rng(log(C[n, 1]), sigma);
 }
 
-Warning in 'sim_one_comp_mm_elim_abs.stan', line 58, column 6: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'sim_one_comp_mm_elim_abs.stan', line 55, column 6: integrate_ode_bdf
+    is deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../../install/default/bin/stanc --auto-format sir.stan
 // Simple SIR model inspired by the presentation in
 // http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3380087/pdf/nihms372789.pdf
@@ -496,6 +495,7 @@ model {
   B_hat ~ lognormal(log(col(to_matrix(y), 4)), 0.15);
 }
 
-Warning in 'sir.stan', line 55, column 8: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'sir.stan', line 46, column 8: integrate_ode_rk45 is deprecated
+    and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html

@@ -1,43 +1,49 @@
 (rule
  (targets filename_error.output)
- (deps (package stanc) filename_error.stan)
+ (deps
+  (package stanc)
+  filename_error.stan)
  (action
-  (with-stdout-to %{targets}
-   (run %{bin:run_bin_on_args} "%{bin:stanc} --filename-in-msg=foo.stan " filename_error.stan))))
+  (with-stdout-to
+   %{targets}
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --filename-in-msg=foo.stan "
+    filename_error.stan))))
 
-(alias
- (name runtest)
- (action (diff filename_error.expected filename_error.output)))
+(rule
+ (alias runtest)
+ (action
+  (diff filename_error.expected filename_error.output)))
 
 (rule
  (targets filename_good.output)
- (deps (package stanc) filename_good.stan)
+ (deps
+  (package stanc)
+  filename_good.stan)
  (action
-  (with-stdout-to %{targets}
-   (run %{bin:run_bin_on_args} "%{bin:stanc} --filename-in-msg=foo.stan --print-cpp " filename_good.stan))))
-
-(alias
- (name runtest)
- (action (diff filename_good.expected filename_good.output)))
+  (with-stdout-to
+   %{targets}
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --filename-in-msg=foo.stan --print-cpp "
+    filename_good.stan))))
 
 (rule
- (targets info.output)
- (deps (package stanc) info.stan included.stan includes/recursive.stan includes/another_include.stan)
+ (alias runtest)
  (action
-  (with-stdout-to %{targets}
-   (run %{bin:run_bin_on_args} "%{bin:stanc} --include-paths=.,includes --info " info.stan))))
-
-(alias
- (name runtest)
- (action (diff info.expected info.output)))
+  (diff filename_good.expected filename_good.output)))
 
 (rule
  (targets notfound.output)
- (deps (package stanc))
+ (deps
+  (package stanc))
  (action
-  (with-stdout-to %{targets}
+  (with-stdout-to
+   %{targets}
    (run %{bin:run_bin_on_args} "%{bin:stanc}" notfound.stan))))
 
-(alias
- (name runtest)
- (action (diff notfound.expected notfound.output)))
+(rule
+ (alias runtest)
+ (action
+  (diff notfound.expected notfound.output)))

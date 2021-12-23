@@ -1,123 +1,121 @@
 functions {
-  real f1(real[] y_slice, int start, int end) {
+  real f1(array[] real y_slice, int start, int end) {
     return 0.0;
   }
-  real f1a(real[] y_slice, int start, int end) {
+  real f1a(array[] real y_slice, int start, int end) {
     return 0.0;
   }
-  real f2(vector[] y_slice, int start, int end) {
+  real f2(array[] vector y_slice, int start, int end) {
     return 0.0;
   }
-  real f3(row_vector[] y_slice, int start, int end) {
+  real f3(array[] row_vector y_slice, int start, int end) {
     return 0.0;
   }
-  real f4(matrix[] y_slice, int start, int end) {
+  real f4(array[] matrix y_slice, int start, int end) {
     return 0.0;
   }
-  real f5(real[,] y_slice, int start, int end) {
+  real f5(array[,] real y_slice, int start, int end) {
     return 0.0;
   }
-  real f6(vector[,] y_slice, int start, int end) {
+  real f6(array[,] vector y_slice, int start, int end) {
     return 0.0;
   }
-  real f7(row_vector[,] y_slice, int start, int end) {
+  real f7(array[,] row_vector y_slice, int start, int end) {
     return 0.0;
   }
-  real f8(matrix[,] y_slice, int start, int end) {
+  real f8(array[,] matrix y_slice, int start, int end) {
     return 0.0;
   }
-  real f9(int[] y_slice, int start, int end) {
+  real f9(array[] int y_slice, int start, int end) {
     return 0.0;
   }
-  real f10(int[,] y_slice, int start, int end) {
+  real f10(array[,] int y_slice, int start, int end) {
     return 0.0;
   }
-  real f11(int[,,] y_slice, int start, int end) {
+  real f11(array[,,] int y_slice, int start, int end) {
     return 0.0;
   }
-  real f12(real[,,] y_slice, int start, int end) {
+  real f12(array[,,] real y_slice, int start, int end) {
     return 0.0;
   }
-  real g1(real[] y_slice, int start, int end, real a) {
+  real g1(array[] real y_slice, int start, int end, real a) {
     return 0.0;
   }
-  real g2(real[] y_slice, int start, int end, vector a) {
+  real g2(array[] real y_slice, int start, int end, vector a) {
     return 0.0;
   }
-  real g3(real[] y_slice, int start, int end, row_vector a) {
+  real g3(array[] real y_slice, int start, int end, row_vector a) {
     return 0.0;
   }
-  real g4(real[] y_slice, int start, int end, matrix a) {
+  real g4(array[] real y_slice, int start, int end, matrix a) {
     return 0.0;
   }
-  real g5(real[] y_slice, int start, int end, real[] a) {
+  real g5(array[] real y_slice, int start, int end, array[] real a) {
     return 0.0;
   }
-  real g6(real[] y_slice, int start, int end, vector[] a) {
+  real g6(array[] real y_slice, int start, int end, array[] vector a) {
     return 0.0;
   }
-  real g7(real[] y_slice, int start, int end, row_vector[] a) {
+  real g7(array[] real y_slice, int start, int end, array[] row_vector a) {
     return 0.0;
   }
-  real g8(real[] y_slice, int start, int end, matrix[] a) {
+  real g8(array[] real y_slice, int start, int end, array[] matrix a) {
     return 0.0;
   }
-  real g9(real[] y_slice, int start, int end, real[,] a) {
+  real g9(array[] real y_slice, int start, int end, array[,] real a) {
     return 0.0;
   }
-  real g10(real[] y_slice, int start, int end, vector[,] a) {
+  real g10(array[] real y_slice, int start, int end, array[,] vector a) {
     return 0.0;
   }
-  real g11(real[] y_slice, int start, int end, row_vector[,] a) {
+  real g11(array[] real y_slice, int start, int end, array[,] row_vector a) {
     return 0.0;
   }
-  real g12(real[] y_slice, int start, int end, matrix[,] a) {
+  real g12(array[] real y_slice, int start, int end, array[,] matrix a) {
     return 0.0;
   }
-  real s(real[] y_slice, int start, int end,
-         int a, real b, vector c, row_vector d, matrix e,
-         int[] f, real[] g, vector[] h, row_vector[] i, matrix[] j,
-         int[,] k, real[,] l, vector[,] m, row_vector[,] n, matrix[,] o,
-         int[,,] p, real[,,] q) {
-    return reduce_sum(s, y_slice, 1,
-                      a, b, c, d, e,
-                      f, g, h, i, j,
-                      k, l, m, n, o,
-                      p, q);
+  real s(array[] real y_slice, int start, int end, int a, real b, vector c,
+         row_vector d, matrix e, array[] int f, array[] real g,
+         array[] vector h, array[] row_vector i, array[] matrix j,
+         array[,] int k, array[,] real l, array[,] vector m,
+         array[,] row_vector n, array[,] matrix o, array[,,] int p,
+         array[,,] real q) {
+    return reduce_sum(s, y_slice, 1, a, b, c, d, e, f, g, h, i, j, k, l, m,
+                      n, o, p, q);
   }
   real r() {
     int N;
-    real y1d[N];
-    vector[N] y2d[N];
-    row_vector[N] y3d[N];
-    matrix[N, N] y4d[N];
-    real y5d[N, N];
-    vector[N] y6d[N, N];
-    row_vector[N] y7d[N, N];
-    matrix[N, N] y8d[N, N];
+    array[N] real y1d;
+    array[N] vector[N] y2d;
+    array[N] row_vector[N] y3d;
+    array[N] matrix[N, N] y4d;
+    array[N, N] real y5d;
+    array[N, N] vector[N] y6d;
+    array[N, N] row_vector[N] y7d;
+    array[N, N] matrix[N, N] y8d;
     real y9d;
     vector[N] y10d;
     row_vector[N] y11d;
     matrix[N, N] y12d;
     int y13d;
-    int y14d[N];
-    int y15d[N, N];
-    int y16d[N, N, N];
-    real y17d[N, N, N];
+    array[N] int y14d;
+    array[N, N] int y15d;
+    array[N, N, N] int y16d;
+    array[N, N, N] real y17d;
     
-    real y1[N];
-    vector[N] y2[N];
-    row_vector[N] y3[N];
-    matrix[N, N] y4[N];
-    real y5[N, N];
-    vector[N] y6[N, N];
-    row_vector[N] y7[N, N];
-    matrix[N, N] y8[N, N];
+    array[N] real y1;
+    array[N] vector[N] y2;
+    array[N] row_vector[N] y3;
+    array[N] matrix[N, N] y4;
+    array[N, N] real y5;
+    array[N, N] vector[N] y6;
+    array[N, N] row_vector[N] y7;
+    array[N, N] matrix[N, N] y8;
     real y9;
     vector[N] y10;
     row_vector[N] y11;
     matrix[N, N] y12;
-    real y17[N, N, N];
+    array[N, N, N] real y17;
     
     real t1 = reduce_sum(f1, y1, 1);
     real t1a = reduce_sum(f1, y1, 1) + reduce_sum(f1a, y1, 1);
@@ -144,36 +142,32 @@ functions {
     real tg10 = reduce_sum(g10, y1, 1, y6);
     real tg11 = reduce_sum(g11, y1, 1, y7);
     real tg12 = reduce_sum(g12, y1, 1, y8);
-    real ts = reduce_sum(s, y1d, 1, y13d, y9, y10, y11, y12,
-                         y14d, y1, y2, y3, y4,
-                         y15d, y5, y6, y7, y8,
-                         y16d, y17);
-                         
+    real ts = reduce_sum(s, y1d, 1, y13d, y9, y10, y11, y12, y14d, y1, y2,
+                         y3, y4, y15d, y5, y6, y7, y8, y16d, y17);
+    
     return 0.0;
   }
 }
-
 data {
   int N;
-  real y1d[N];
-  vector[N] y2d[N];
-  row_vector[N] y3d[N];
-  matrix[N, N] y4d[N];
-  real y5d[N, N];
-  vector[N] y6d[N, N];
-  row_vector[N] y7d[N, N];
-  matrix[N, N] y8d[N, N];
+  array[N] real y1d;
+  array[N] vector[N] y2d;
+  array[N] row_vector[N] y3d;
+  array[N] matrix[N, N] y4d;
+  array[N, N] real y5d;
+  array[N, N] vector[N] y6d;
+  array[N, N] row_vector[N] y7d;
+  array[N, N] matrix[N, N] y8d;
   real y9d;
   vector[N] y10d;
   row_vector[N] y11d;
   matrix[N, N] y12d;
   int y13d;
-  int y14d[N];
-  int y15d[N, N];
-  int y16d[N, N, N];
-  real y17d[N, N, N];
+  array[N] int y14d;
+  array[N, N] int y15d;
+  array[N, N, N] int y16d;
+  array[N, N, N] real y17d;
 }
-
 transformed data {
   real td1 = reduce_sum(f1, y1d, 1);
   real td1a = reduce_sum(f1, y1d, 1) + reduce_sum(f1a, y1d, 1);
@@ -200,28 +194,24 @@ transformed data {
   real tgd10 = reduce_sum(g10, y1d, 1, y6d);
   real tgd11 = reduce_sum(g11, y1d, 1, y7d);
   real tgd12 = reduce_sum(g12, y1d, 1, y8d);
-  real tsd = reduce_sum(s, y1d, 1, y13d, y9d, y10d, y11d, y12d,
-                        y14d, y1d, y2d, y3d, y4d,
-                        y15d, y5d, y6d, y7d, y8d,
-                        y16d, y17d);
+  real tsd = reduce_sum(s, y1d, 1, y13d, y9d, y10d, y11d, y12d, y14d, y1d,
+                        y2d, y3d, y4d, y15d, y5d, y6d, y7d, y8d, y16d, y17d);
 }
-
 parameters {
-  real y1[N];
-  vector[N] y2[N];
-  row_vector[N] y3[N];
-  matrix[N, N] y4[N];
-  real y5[N, N];
-  vector[N] y6[N, N];
-  row_vector[N] y7[N, N];
-  matrix[N, N] y8[N, N];
+  array[N] real y1;
+  array[N] vector[N] y2;
+  array[N] row_vector[N] y3;
+  array[N] matrix[N, N] y4;
+  array[N, N] real y5;
+  array[N, N] vector[N] y6;
+  array[N, N] row_vector[N] y7;
+  array[N, N] matrix[N, N] y8;
   real y9;
   vector[N] y10;
   row_vector[N] y11;
   matrix[N, N] y12;
-  real y17[N, N, N];
+  array[N, N, N] real y17;
 }
-
 model {
   real t1 = reduce_sum(f1, y1, 1);
   real t1a = reduce_sum(f1, y1, 1) + reduce_sum(f1a, y1, 1);
@@ -248,14 +238,11 @@ model {
   real tg10 = reduce_sum(g10, y1, 1, y6);
   real tg11 = reduce_sum(g11, y1, 1, y7);
   real tg12 = reduce_sum(g12, y1, 1, y8);
-  real ts = reduce_sum(s, y1d, 1, y13d, y9, y10, y11, y12,
-                       y14d, y1, y2, y3, y4,
-                       y15d, y5, y6, y7, y8,
-                       y16d, y17);
+  real ts = reduce_sum(s, y1d, 1, y13d, y9, y10, y11, y12, y14d, y1, y2, y3,
+                       y4, y15d, y5, y6, y7, y8, y16d, y17);
   
   real tt = r();
 }
-
 generated quantities {
   real t1 = reduce_sum(f1, y1, 1);
   real t1a = reduce_sum(f1, y1, 1) + reduce_sum(f1a, y1, 1);
@@ -282,8 +269,7 @@ generated quantities {
   real tg10 = reduce_sum(g10, y1, 1, y6);
   real tg11 = reduce_sum(g11, y1, 1, y7);
   real tg12 = reduce_sum(g12, y1, 1, y8);
-  real tgs = reduce_sum(s, y1d, 1, y13d, y9d, y10d, y11d, y12d,
-                        y14d, y1d, y2d, y3d, y4d,
-                        y15d, y5d, y6d, y7d, y8d,
-                        y16d, y17);
+  real tgs = reduce_sum(s, y1d, 1, y13d, y9d, y10d, y11d, y12d, y14d, y1d,
+                        y2d, y3d, y4d, y15d, y5d, y6d, y7d, y8d, y16d, y17);
 }
+

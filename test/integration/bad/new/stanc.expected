@@ -105,7 +105,10 @@ Syntax error in 'blocks-bad9.stan', line 1, column 19 to column 23, parsing erro
 
 Expect a statement or top-level variable declaration.
   $ ../../../../../install/default/bin/stanc compound-assign-decl-bad1.stan
-Warning in 'compound-assign-decl-bad1.stan', line 1, column 18: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'compound-assign-decl-bad1.stan', line 1, column 18: assignment
+    operator <- is deprecated in the Stan language and will be removed in
+    Stan 2.32.0; use = instead. This can be done automatically with the
+    canonicalize flag for stanc
 Syntax error in 'compound-assign-decl-bad1.stan', line 1, column 18 to column 20, parsing error:
    -------------------------------------------------
      1:  model { real T[1] <- {5.0};}
@@ -114,7 +117,10 @@ Syntax error in 'compound-assign-decl-bad1.stan', line 1, column 18 to column 20
 
 Expected  ";" or assignment.
   $ ../../../../../install/default/bin/stanc compound-assign-decl-bad2.stan
-Warning in 'compound-assign-decl-bad2.stan', line 1, column 29: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'compound-assign-decl-bad2.stan', line 1, column 29: assignment
+    operator <- is deprecated in the Stan language and will be removed in
+    Stan 2.32.0; use = instead. This can be done automatically with the
+    canonicalize flag for stanc
 Syntax error in 'compound-assign-decl-bad2.stan', line 1, column 29 to column 31, parsing error:
    -------------------------------------------------
      1:  transformed data { real T[1] <- {1.1};}
@@ -246,10 +252,10 @@ Syntax error in 'fundef-bad5.stan', line 1, column 22 to column 26, parsing erro
 
 Either "{" statement "}" is expected for a function definition or ";" for a function forward declaration.
   $ ../../../../../install/default/bin/stanc fundef-bad6.stan
-Semantic error in 'fundef-bad6.stan', line 1, column 31 to column 36:
+Semantic error in 'fundef-bad6.stan', line 1, column 37 to column 42:
    -------------------------------------------------
-     1:  functions { void T ( vector [] while);}
-                                        ^
+     1:  functions { void T ( array [] vector while);}
+                                              ^
    -------------------------------------------------
 
 Identifier 'while' clashes with reserved keyword.
@@ -1162,7 +1168,10 @@ Syntax error in 'ill-formed-statement20.stan', line 1, column 23 to column 28, p
 
 Expected "(" after "for".
   $ ../../../../../install/default/bin/stanc ill-formed-statement21.stan
-Warning in 'ill-formed-statement21.stan', line 1, column 19: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
+Warning in 'ill-formed-statement21.stan', line 1, column 19: get_lp()
+    function is deprecated. It will be removed in Stan 2.32.0. Use target()
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Syntax error in 'ill-formed-statement21.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
      1:  transformed data { get_lp ( while
@@ -1171,7 +1180,10 @@ Syntax error in 'ill-formed-statement21.stan', line 1, column 28 to column 33, p
 
 Expected ")" after "get_lp(".
   $ ../../../../../install/default/bin/stanc ill-formed-statement22.stan
-Warning in 'ill-formed-statement22.stan', line 1, column 19: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
+Warning in 'ill-formed-statement22.stan', line 1, column 19: get_lp()
+    function is deprecated. It will be removed in Stan 2.32.0. Use target()
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Syntax error in 'ill-formed-statement22.stan', line 1, column 26 to column 31, parsing error:
    -------------------------------------------------
      1:  transformed data { get_lp while
@@ -1188,10 +1200,10 @@ Syntax error in 'ill-formed-statement23.stan', line 1, column 35 to column 39, p
 
 Ill-formed statement. Expected statement after "else".
   $ ../../../../../install/default/bin/stanc ill-formed-statement24.stan
-Syntax error in 'ill-formed-statement24.stan', line 1, column 35 to column 36, parsing error:
+Syntax error in 'ill-formed-statement24.stan', line 1, column 33 to column 34, parsing error:
    -------------------------------------------------
-     1:  transformed data { if ( 1 ) ; upper}
-                                            ^
+     1:  transformed data { if ( 1 ) ; foo}
+                                          ^
    -------------------------------------------------
 
 Ill-formed phrase. Found L-value. This can be completed in many ways.
@@ -1204,10 +1216,10 @@ Syntax error in 'ill-formed-statement25.stan', line 1, column 34 to column 38, p
 
 Ill-formed statement. Expected statement after else.
   $ ../../../../../install/default/bin/stanc ill-formed-statement26.stan
-Syntax error in 'ill-formed-statement26.stan', line 1, column 34 to column 34, parsing error:
+Syntax error in 'ill-formed-statement26.stan', line 2, column 0 to column 0, parsing error:
    -------------------------------------------------
-     1:  transformed data { if ( T) ; upper
-                                           ^
+     1:  transformed data { if ( T) ; foo
+         ^
    -------------------------------------------------
 
 Ill-formed statement or expression. A statement or expression could be expected here.
@@ -1228,7 +1240,10 @@ Syntax error in 'ill-formed-statement28.stan', line 1, column 25 to column 26, p
 
 Ill-formed expression. Expression expected after "(", for test of conditional control flow construct.
   $ ../../../../../install/default/bin/stanc ill-formed-statement29.stan
-Warning in 'ill-formed-statement29.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'ill-formed-statement29.stan', line 1, column 19: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Syntax error in 'ill-formed-statement29.stan', line 1, column 43 to column 48, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( 1) while}
@@ -1245,7 +1260,10 @@ Syntax error in 'ill-formed-statement3.stan', line 1, column 36 to column 40, pa
 
 Ill-formed statement. Expected statement after ")"  for the loop body of the for loop..
   $ ../../../../../install/default/bin/stanc ill-formed-statement30.stan
-Warning in 'ill-formed-statement30.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'ill-formed-statement30.stan', line 1, column 19: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Syntax error in 'ill-formed-statement30.stan', line 1, column 42 to column 47, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( 1 while}
@@ -1254,7 +1272,10 @@ Syntax error in 'ill-formed-statement30.stan', line 1, column 42 to column 47, p
 
 Ill-formed statement. Expected expression followed by ");" after "(".
   $ ../../../../../install/default/bin/stanc ill-formed-statement31.stan
-Warning in 'ill-formed-statement31.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'ill-formed-statement31.stan', line 1, column 19: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Syntax error in 'ill-formed-statement31.stan', line 1, column 44 to column 49, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( T ) while
@@ -1263,7 +1284,10 @@ Syntax error in 'ill-formed-statement31.stan', line 1, column 44 to column 49, p
 
 Ill-formed statement. Expected ";" after ")".
   $ ../../../../../install/default/bin/stanc ill-formed-statement32.stan
-Warning in 'ill-formed-statement32.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'ill-formed-statement32.stan', line 1, column 19: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Syntax error in 'ill-formed-statement32.stan', line 1, column 42 to column 43, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( T ~
@@ -1272,7 +1296,10 @@ Syntax error in 'ill-formed-statement32.stan', line 1, column 42 to column 43, p
 
 Ill-formed statement. Expected expression followed by ");" after "(".
   $ ../../../../../install/default/bin/stanc ill-formed-statement33.stan
-Warning in 'ill-formed-statement33.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'ill-formed-statement33.stan', line 1, column 19: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Syntax error in 'ill-formed-statement33.stan', line 1, column 40 to column 45, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( while
@@ -1281,7 +1308,10 @@ Syntax error in 'ill-formed-statement33.stan', line 1, column 40 to column 45, p
 
 Ill-formed statement. Expected expression followed by ");" after "(".
   $ ../../../../../install/default/bin/stanc ill-formed-statement34.stan
-Warning in 'ill-formed-statement34.stan', line 1, column 19: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'ill-formed-statement34.stan', line 1, column 19: increment_log_prob(...);
+    is deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Syntax error in 'ill-formed-statement34.stan', line 1, column 39 to column 44, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob  while

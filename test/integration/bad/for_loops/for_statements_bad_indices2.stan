@@ -1,7 +1,7 @@
 functions {
   int foo(int a) {
     while (1) {
-      int vs[2,3];
+      array[2,3] int vs;
       for (v in vs) v = 3;
     }
     return 0;

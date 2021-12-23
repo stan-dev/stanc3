@@ -1,29 +1,29 @@
 functions {
-  real[] harm_osc_ode(real[] t,
-                      real[] y,         // state
-                      real[] theta,     // parameters
-                      real[] x,         // data
-                      int[] x_int) {    // integer data
-    real dydt[2];
+  array[] real harm_osc_ode(array[] real t,
+                      array[] real y,         // state
+                      array[] real theta,     // parameters
+                      array[] real x,         // data
+                      array[] int x_int) {    // integer data
+    array[2] real dydt;
     dydt[1] = x[1] * y[2];
     dydt[2] = -y[1] - theta[1] * y[2];
     return dydt;
   }
 }
 data {
-  real y0[2];
+  array[2] real y0;
   real t0;
-  real ts[10];
-  real x[1];   
-  int x_int[0];
-  real y[10,2];
+  array[10] real ts;
+  array[1] real x;
+  array[0] int x_int;
+  array[10,2] real y;
 }
 parameters {
-  real theta[1];
+  array[1] real theta;
   real<lower=0> sigma;
 }
 transformed parameters {
-  real y_hat[10,2];
+  array[10,2] real y_hat;
   y_hat = integrate_ode_adams(harm_osc_ode,  // system
                      y0,            // initial state
                      t0,            // initial time
@@ -31,7 +31,7 @@ transformed parameters {
                      theta,         // parameters
                      x,             // data
                      x_int);        // integer data
-  
+
 }
 model {
   for (t in 1:10)

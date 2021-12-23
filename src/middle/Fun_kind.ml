@@ -3,6 +3,7 @@
 *)
 
 open Core_kernel
+open Core_kernel.Poly
 
 type 'propto suffix = FnPlain | FnRng | FnLpdf of 'propto | FnTarget
 [@@deriving compare, sexp, hash, map]

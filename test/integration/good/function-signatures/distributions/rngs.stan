@@ -7,25 +7,29 @@ model {
 generated quantities {
   int n;
   real z;
-  real x[3];
-  real u[3];
+  array[3] real x;
+  array[3] real u;
   vector[3] theta;
   vector[3] alpha;
   row_vector[3] nu;
-  row_vector[3] nu_array[3];
+  array[3] row_vector[3] nu_array;
   vector[3] v;
-  vector[3] v_array[3];
+  array[3] vector[3] v_array;
   vector[3] mu;
-  vector[3] mu_array[3];
+  array[3] vector[3] mu_array;
   vector[3] rho;
   matrix[3, 3] Sigma;
   matrix[3, 3] L;
   matrix[3, 3] log_omegas;
   matrix[3, 3] Gamma;
-  int ns[3];
-  int N[3];
-  int latent_states[3];
+  array[3] int ns;
+  array[3] int N;
+  array[3] int latent_states;
   matrix[3, 3] latent_states_prob;
+  matrix[2, 3] d_x_m = [[1, 2, 3], [4, 5, 6]];
+  row_vector[3] d_x_rv = [1, 2, 3];
+  vector[3] d_beta_v = [1, 2, 3]';
+  vector[2] d_alpha_v = [0.5, 0.6]';
   n = bernoulli_logit_rng(0.0);
   N = bernoulli_logit_rng(alpha);
   N = bernoulli_logit_rng(nu);
@@ -1728,5 +1732,7 @@ generated quantities {
   N = discrete_range_rng(n, N);
   N = discrete_range_rng(N, n);
   N = discrete_range_rng(N, N);
+  N = bernoulli_logit_glm_rng(d_x_m, d_alpha_v, d_beta_v);
+  N = bernoulli_logit_glm_rng(d_x_rv, d_alpha_v, d_beta_v);
 }
 

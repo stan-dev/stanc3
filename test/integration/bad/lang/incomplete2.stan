@@ -1,3 +1,3 @@
 transformed data {
-  1.0 .^ upper[] while
+  1.0 .^ foo[] while
 }

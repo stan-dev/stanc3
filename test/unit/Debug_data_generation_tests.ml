@@ -9,8 +9,8 @@ let%expect_test "whole program data generation check" =
                   int<lower=7> K;
                   int<lower=1> D;
                   int<lower=0> N;
-                  int<lower=0,upper=1> y[N,D];
-                  vector[K] x[N];
+                  array[N,D] int<lower=0,upper=1> y;
+                  array[N] vector[K] x;
                     }
       |}
   in
@@ -31,11 +31,11 @@ let%expect_test "whole program data generation check" =
   let ast =
     Frontend_utils.typed_ast_of_string_exn
       {|       data {
-                    int x[3, 4];
-                    int y[5, 2, 4];
+                    array[3, 4] int x;
+                    array[5, 2, 4] int y;
                     matrix[3, 4] z;
                     vector[3] w;
-                    vector[3] p[4];
+                    array[4] vector[3] p;
                 }
       |}
   in
@@ -73,7 +73,7 @@ let%expect_test "whole program data generation check" =
                   vector[K - 1] x;
                   vector[K * D] y;
                   vector[K ? D : K] z;
-                  vector[K ? D : K] w[(D + 2 == K) + 3];
+                  array[(D + 2 == K) + 3] vector[K ? D : K] w;
                 }
       |}
   in
@@ -173,24 +173,24 @@ let%expect_test "whole program data generation check" =
           int<lower=0> N;
           int<lower=0> M;
           int<lower=0, upper=N * M> K;
-          int<upper=N> d_int_1d_ar[N];
-          int<upper=N> d_int_3d_ar[N, M, K];
+          array[N] int<upper=N> d_int_1d_ar;
+          array[N, M, K] int<upper=N> d_int_3d_ar;
           real<lower=-2.0, upper=2.0> J;
-          real d_real_1d_ar[N];
-          real d_real_3d_ar[N, M, K];
+          array[N] real d_real_1d_ar;
+          array[N, M, K] real d_real_3d_ar;
           vector[N] d_vec;
-          vector[N] d_1d_vec[N];
-          vector[N] d_3d_vec[N, M, K];
+          array[N] vector[N] d_1d_vec;
+          array[N, M, K] vector[N] d_3d_vec;
           row_vector[N] d_row_vec;
-          row_vector[N] d_1d_row_vec[N];
-          row_vector[N] d_3d_row_vec[N, M, K];
-          matrix<lower=0, upper=1>[2, 3] d_ar_mat[4, 5];
+          array[N] row_vector[N] d_1d_row_vec;
+          array[N, M, K] row_vector[N] d_3d_row_vec;
+          array[4, 5] matrix<lower=0, upper=1>[2, 3] d_ar_mat;
           simplex[N] d_simplex;
-          simplex[N] d_1d_simplex[N];
-          simplex[N] d_3d_simplex[N, M, K];
+          array[N] simplex[N] d_1d_simplex;
+          array[N, M, K] simplex[N] d_3d_simplex;
           cholesky_factor_cov[5, 4] d_cfcov_54;
           cholesky_factor_cov[3] d_cfcov_33;
-          cholesky_factor_cov[3] d_cfcov_33_ar[K];
+          array[K] cholesky_factor_cov[3] d_cfcov_33_ar;
         }
       |}
   in
@@ -433,9 +433,9 @@ let%expect_test "whole program data generation check" =
       data {
         int<lower = 0> K;                     // players
         int<lower = 0> N;                     // games
-        int<lower=1, upper = K> player1[N];   // player 1 for game n
-        int<lower=1, upper = K> player0[N];   // player 0 for game n
-        int<lower = 0, upper = 1> y[N];       // winner for game n
+        array[N] int<lower=1, upper = K> player1;   // player 1 for game n
+        array[N] int<lower=1, upper = K> player0;   // player 0 for game n
+        array[N] int<lower = 0, upper = 1> y;       // winner for game n
       }
       |}
   in

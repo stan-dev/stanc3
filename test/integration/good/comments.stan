@@ -1,21 +1,19 @@
 // this is a line comment */ should stay // /**/
 
-# another one using # - should become //
-
-// how ugly # can */ we make /* this one // # 
+// how ugly # can */ we make /* this one // #
 
 /* one line block */
 
-/* a weird 
+/* a weird
       ly formated
-          block 
+          block
                 */
-                
+
 /**
  * Doc comment
  * @return nothing
  */
 
- data {
-   //nothing here either 
- }
+data {
+  //nothing here either
+}

@@ -14,6 +14,7 @@
 *)
 
 open Core_kernel
+open Core_kernel.Poly
 open Middle
 open Ast
 module Env = Environment
@@ -58,7 +59,7 @@ let context block =
 let calculate_autodifftype cf origin ut =
   match origin with
   | Env.(Param | TParam | Model | Functions)
-    when not (UnsizedType.contains_int ut || cf.current_block = GQuant) ->
+    when not (UnsizedType.is_int_type ut || cf.current_block = GQuant) ->
       UnsizedType.AutoDiffable
   | _ -> DataOnly
 
@@ -109,8 +110,10 @@ let verify_name_fresh_var loc tenv name =
   if Utils.is_unnormalized_distribution name then
     Semantic_error.ident_has_unnormalized_suffix loc name |> error
   else if
-    Env.mem tenv name
-    && not (Stan_math_signatures.is_stan_math_function_name name)
+    List.exists (Env.find tenv name) ~f:(function
+      | {kind= `StanMath; _} ->
+          false (* user variables can shadow library names *)
+      | _ -> true )
   then Semantic_error.ident_in_use loc name |> error
 
 (** verify that the variable being declared is previous unused.
@@ -135,8 +138,7 @@ let verify_name_fresh_udf loc tenv name =
 let verify_name_fresh tenv id ~is_udf =
   let f =
     if is_udf then verify_name_fresh_udf id.id_loc tenv
-    else verify_name_fresh_var id.id_loc tenv
-  in
+    else verify_name_fresh_var id.id_loc tenv in
   List.iter ~f (distribution_name_variants id.name)
 
 let is_of_compatible_return_type rt1 srt2 =
@@ -172,8 +174,7 @@ let check_ternary_if loc pe te fe =
 let check_binop loc op le re =
   let rt =
     [le; re] |> get_arg_types
-    |> Stan_math_signatures.operator_stan_math_return_type op
-  in
+    |> Stan_math_signatures.operator_stan_math_return_type op in
   match rt with
   | Some (ReturnType type_) ->
       mk_typed_expression
@@ -186,8 +187,7 @@ let check_binop loc op le re =
 
 let check_prefixop loc op te =
   let rt =
-    Stan_math_signatures.operator_stan_math_return_type op [arg_type te]
-  in
+    Stan_math_signatures.operator_stan_math_return_type op [arg_type te] in
   match rt with
   | Some (ReturnType type_) ->
       mk_typed_expression
@@ -198,8 +198,7 @@ let check_prefixop loc op te =
 
 let check_postfixop loc op te =
   let rt =
-    Stan_math_signatures.operator_stan_math_return_type op [arg_type te]
-  in
+    Stan_math_signatures.operator_stan_math_return_type op [arg_type te] in
   match rt with
   | Some (ReturnType type_) ->
       mk_typed_expression
@@ -235,14 +234,13 @@ let check_variable cf loc tenv id =
         ~ad_level:(calculate_autodifftype cf origin type_)
         ~type_ ~loc
   (* TODO - When it's time for overloading, will this need
-    some kind of filter/match on arg types? *)
+     some kind of filter/match on arg types? *)
   | { kind= `UserDefined | `UserDeclared _
     ; type_= UFun (args, rt, FnLpdf _, mem_pattern) }
     :: _ ->
       let type_ =
         UnsizedType.UFun
-          (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern)
-      in
+          (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in
       mk_typed_expression ~expr:(Variable id)
         ~ad_level:(calculate_autodifftype cf Functions type_)
         ~type_ ~loc
@@ -259,12 +257,10 @@ let get_consistent_types ad_level type_ es =
         let ad =
           if UnsizedType.autodifftype_can_convert e.emeta.ad_level ad then
             e.emeta.ad_level
-          else ad
-        in
+          else ad in
         match UnsizedType.common_type (ty, e.emeta.type_) with
         | Some ty -> Ok (ad, ty)
-        | None -> Error (ty, e.emeta) )
-  in
+        | None -> Error (ty, e.emeta) ) in
   List.fold ~init:(Ok (ad_level, type_)) ~f es
 
 let check_array_expr loc es =
@@ -290,8 +286,8 @@ let check_rowvector loc es =
   | _ -> (
     match get_consistent_types DataOnly UReal es with
     | Ok (ad_level, _) ->
-        mk_typed_expression ~expr:(RowVectorExpr es) ~ad_level
-          ~type_:URowVector ~loc
+        mk_typed_expression ~expr:(RowVectorExpr es) ~ad_level ~type_:URowVector
+          ~loc
     | Error (_, meta) ->
         Semantic_error.invalid_row_vector_types meta.loc meta.type_ |> error )
 
@@ -317,8 +313,7 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
     | UMatrix, _ :: _ :: _ :: _
      |(UVector | URowVector), _ :: _ :: _
      |(UInt | UReal | UComplex | UFun _ | UMathLibraryFunction), _ :: _ ->
-        Semantic_error.not_indexable loc ut (List.length indices) |> error
-  in
+        Semantic_error.not_indexable loc ut (List.length indices) |> error in
   aux ut (List.map ~f:indexing_type indices)
 
 let inferred_ad_type_of_indexed at uindices =
@@ -331,7 +326,7 @@ let inferred_ad_type_of_indexed at uindices =
                UnsizedType.lub_ad_type [at; ue1.emeta.ad_level]
            | Between (ue1, ue2) ->
                UnsizedType.lub_ad_type
-                 [at; ue1.emeta.ad_level; ue2.emeta.ad_level])
+                 [at; ue1.emeta.ad_level; ue2.emeta.ad_level] )
          uindices )
 
 (* function checking *)
@@ -393,7 +388,7 @@ let check_fn ~is_cond_dist loc tenv id es =
   (* variables can sometimes shadow stanlib functions, so we have to check this *)
     when not
            (Stan_math_signatures.is_stan_math_function_name
-              (Utils.normalized_name id.name)) ->
+              (Utils.normalized_name id.name) ) ->
       Semantic_error.returning_fn_expected_nonfn_found loc id.name |> error
   | [] ->
       ( match Utils.split_distribution_suffix id.name with
@@ -401,11 +396,9 @@ let check_fn ~is_cond_dist loc tenv id es =
           let known_families =
             List.map
               ~f:(fun (_, y, _, _) -> y)
-              Stan_math_signatures.distributions
-          in
+              Stan_math_signatures.distributions in
           let is_known_family s =
-            List.mem known_families s ~equal:String.equal
-          in
+            List.mem known_families s ~equal:String.equal in
           match suffix with
           | ("lpmf" | "lumpf") when Env.mem tenv (prefix ^ "_lpdf") ->
               Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
@@ -427,8 +420,7 @@ let check_fn ~is_cond_dist loc tenv id es =
                   id.name
                   (Env.nearest_ident tenv id.name) )
       | None ->
-          Semantic_error.returning_fn_expected_undeclaredident_found loc
-            id.name
+          Semantic_error.returning_fn_expected_undeclaredident_found loc id.name
             (Env.nearest_ident tenv id.name) )
       |> error
   | _ (* a function *) -> (
@@ -440,7 +432,7 @@ let check_fn ~is_cond_dist loc tenv id es =
         mk_typed_expression
           ~expr:
             (mk_fun_app ~is_cond_dist
-               (fnk (Fun_kind.suffix_from_name id.name), id, es))
+               (fnk (Fun_kind.suffix_from_name id.name), id, es) )
           ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
     | Error x ->
         es
@@ -453,15 +445,15 @@ let check_reduce_sum ~is_cond_dist loc id es =
   | { emeta=
         { type_=
             UnsizedType.UFun
-              (((_, sliced_arg_fun_type) as sliced_arg_fun) :: _, _, _, _); _
-        }; _ }
+              (((_, sliced_arg_fun_type) as sliced_arg_fun) :: _, _, _, _)
+        ; _ }
+    ; _ }
     :: _
     when List.mem Stan_math_signatures.reduce_sum_slice_types
            sliced_arg_fun_type ~equal:( = ) -> (
       let mandatory_args = [sliced_arg_fun; (AutoDiffable, UInt)] in
       let mandatory_fun_args =
-        [sliced_arg_fun; (DataOnly, UInt); (DataOnly, UInt)]
-      in
+        [sliced_arg_fun; (DataOnly, UInt); (DataOnly, UInt)] in
       match
         SignatureMismatch.check_variadic_args true mandatory_args
           mandatory_fun_args UReal (get_arg_types es)
@@ -477,8 +469,7 @@ let check_reduce_sum ~is_cond_dist loc id es =
           |> error )
   | _ ->
       let mandatory_args =
-        UnsizedType.[(AutoDiffable, UArray UReal); (AutoDiffable, UInt)]
-      in
+        UnsizedType.[(AutoDiffable, UArray UReal); (AutoDiffable, UInt)] in
       let mandatory_fun_args =
         UnsizedType.
           [(AutoDiffable, UArray UReal); (DataOnly, UInt); (DataOnly, UInt)]
@@ -486,8 +477,7 @@ let check_reduce_sum ~is_cond_dist loc id es =
       let expected_args, err =
         SignatureMismatch.check_variadic_args true mandatory_args
           mandatory_fun_args UReal (get_arg_types es)
-        |> Option.value_exn
-      in
+        |> Option.value_exn in
       Semantic_error.illtyped_reduce_sum_generic loc id.name
         (List.map ~f:type_of_expr_typed es)
         expected_args err
@@ -499,12 +489,10 @@ let check_variadic_ode ~is_cond_dist loc id es =
       Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
     else if Stan_math_signatures.is_variadic_ode_nonadjoint_tol_fn id.name then
       Stan_math_signatures.variadic_ode_tol_arg_types
-    else []
-  in
+    else [] in
   let mandatory_arg_types =
     Stan_math_signatures.variadic_ode_mandatory_arg_types
-    @ optional_tol_mandatory_args
-  in
+    @ optional_tol_mandatory_args in
   match
     SignatureMismatch.check_variadic_args false mandatory_arg_types
       Stan_math_signatures.variadic_ode_mandatory_fun_args
@@ -531,8 +519,7 @@ let check_fn ~is_cond_dist loc tenv id es =
 let rec check_funapp loc cf tenv ~is_cond_dist id tes =
   (* overloading will need to defer typechecking of arguments? *)
   let name_check =
-    if is_cond_dist then verify_conddist_name else verify_fn_conditioning
-  in
+    if is_cond_dist then verify_conddist_name else verify_fn_conditioning in
   let res = check_fn ~is_cond_dist loc tenv id tes in
   verify_identifier id ;
   name_check loc id ;
@@ -585,44 +572,38 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
             let hint ppf () =
               match (x.expr, y.expr) with
               | IntNumeral x, _ ->
-                  Fmt.pf ppf "%s.0 / %a" x Pretty_printing.pp_typed_expression
-                    y
+                  Fmt.pf ppf "%s.0 / %a" x Pretty_printing.pp_typed_expression y
               | _, Ast.IntNumeral y ->
-                  Fmt.pf ppf "%a / %s.0" Pretty_printing.pp_typed_expression x
-                    y
+                  Fmt.pf ppf "%a / %s.0" Pretty_printing.pp_typed_expression x y
               | _ ->
-                  Fmt.pf ppf "%a * 1.0 / %a"
-                    Pretty_printing.pp_typed_expression x
-                    Pretty_printing.pp_typed_expression y
-            in
+                  Fmt.pf ppf "%a * 1.0 / %a" Pretty_printing.pp_typed_expression
+                    x Pretty_printing.pp_typed_expression y in
             let s =
-              Fmt.strf
-                "@[<v>@[<hov 0>Found int division:@]@   @[<hov \
-                 2>%a@]@,@[<hov>%a@]@   @[<hov 2>%a@]@,@[<hov>%a@]@]"
+              Fmt.str
+                "@[<v>@[<hov 0>Found int division:@]@   @[<hov 2>%a@]@,\
+                 @[<hov>%a@]@   @[<hov 2>%a@]@,\
+                 @[<hov>%a@]@]"
                 Pretty_printing.pp_expression {expr; emeta} Fmt.text
                 "Values will be rounded towards zero. If rounding is not \
                  desired you can write the division as"
                 hint () Fmt.text
                 "If rounding is intended please use the integer division \
-                 operator %/%."
-            in
+                 operator %/%." in
             add_warning x.emeta.loc s
         | (UArray UMatrix | UMatrix), (UInt | UReal), Pow ->
             let s =
-              Fmt.strf
-                "@[<v>@[<hov 0>Found matrix^scalar:@]@   @[<hov \
-                 2>%a@]@,@[<hov>%a@]@ @[<hov>%a@]@]"
-                Pretty_printing.pp_expression {expr; emeta} Fmt.text
+              Fmt.str
+                "@[<v>@[<hov 0>Found matrix^scalar:@]@   @[<hov 2>%a@]@,\
+                 @[<hov>%a@]@ @[<hov>%a@]@]" Pretty_printing.pp_expression
+                {expr; emeta} Fmt.text
                 "matrix ^ number is interpreted as element-wise \
                  exponentiation. If this is intended, you can silence this \
                  warning by using elementwise operator .^"
                 Fmt.text
                 "If you intended matrix exponentiation, use the function \
-                 matrix_power(matrix,int) instead."
-            in
+                 matrix_power(matrix,int) instead." in
             add_warning x.emeta.loc s
-        | _ -> ()
-      in
+        | _ -> () in
       binop_type_warnings le re ; check_binop loc op le re
   | PrefixOp (op, e) -> ce e |> check_prefixop loc op
   | PostfixOp (e, op) -> ce e |> check_postfixop loc op
@@ -744,7 +725,7 @@ let verify_assignment_read_only loc is_readonly id =
 
 (* Variables from previous blocks are read-only.
      In particular, data and parameters never assigned to
-  *)
+*)
 let verify_assignment_global loc cf block is_global id =
   if (not is_global) || block = cf.current_block then ()
   else Semantic_error.cannot_assign_to_global loc id.name |> error
@@ -770,8 +751,7 @@ let check_assignment_operator loc assop lhs rhs =
         let return_type =
           Stan_math_signatures.assignmentoperator_stan_math_return_type op args
         in
-        match return_type with Some Void -> () | _ -> err op |> error )
-  in
+        match return_type with Some Void -> () | _ -> err op |> error ) in
   mk_typed_statement ~return_type:NoReturnType ~loc
     ~stmt:(mk_assignment_from_indexed_expr assop lhs rhs)
 
@@ -789,8 +769,7 @@ let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
     | _ ->
         Semantic_error.ident_not_in_scope loc assign_id.name
           (Env.nearest_ident tenv assign_id.name)
-        |> error
-  in
+        |> error in
   verify_assignment_global loc cf block global assign_id ;
   verify_assignment_read_only loc readonly assign_id ;
   check_assignment_operator loc assign_op lhs rhs
@@ -843,33 +822,28 @@ let verify_sampling_distribution loc tenv id arguments =
   and argumenttypes = List.map ~f:arg_type arguments
   and is_real_rt = function
     | UnsizedType.ReturnType UReal -> true
-    | _ -> false
-  in
+    | _ -> false in
   let is_name_w_suffix_sampling_dist suffix =
     Stan_math_signatures.stan_math_returntype (name ^ suffix) argumenttypes
-    |> Option.value_map ~default:false ~f:is_real_rt
-  in
+    |> Option.value_map ~default:false ~f:is_real_rt in
   let is_sampling_dist_in_math =
     List.exists ~f:is_name_w_suffix_sampling_dist
       (Utils.distribution_suffices @ Utils.unnormalized_suffices)
     && name <> "binomial_coefficient"
-    && name <> "multiply"
-  in
+    && name <> "multiply" in
   let is_name_w_suffix_udf_sampling_dist suffix =
     let f = function
-      | Env.({ kind= `UserDefined | `UserDeclared _
-             ; type_= UFun (listedtypes, ReturnType UReal, FnLpdf _, _) })
+      | Env.
+          { kind= `UserDefined | `UserDeclared _
+          ; type_= UFun (listedtypes, ReturnType UReal, FnLpdf _, _) }
         when UnsizedType.check_compatible_arguments_mod_conv name listedtypes
                argumenttypes ->
           true
-      | _ -> false
-    in
-    List.exists (Env.find tenv (name ^ suffix)) ~f
-  in
+      | _ -> false in
+    List.exists (Env.find tenv (name ^ suffix)) ~f in
   let is_udf_sampling_dist =
     List.exists ~f:is_name_w_suffix_udf_sampling_dist
-      (Utils.distribution_suffices @ Utils.unnormalized_suffices)
-  in
+      (Utils.distribution_suffices @ Utils.unnormalized_suffices) in
   if is_sampling_dist_in_math || is_udf_sampling_dist then ()
   else Semantic_error.invalid_sampling_no_such_dist loc name |> error
 
@@ -878,22 +852,20 @@ let is_cumulative_density_defined tenv id arguments =
   and argumenttypes = List.map ~f:arg_type arguments
   and is_real_rt = function
     | UnsizedType.ReturnType UReal -> true
-    | _ -> false
-  in
+    | _ -> false in
   let is_real_rt_for_suffix suffix =
     Stan_math_signatures.stan_math_returntype (name ^ suffix) argumenttypes
     |> Option.value_map ~default:false ~f:is_real_rt
   and valid_arg_types_for_suffix suffix =
     let f = function
-      | Env.({ kind= `UserDefined | `UserDeclared _
-             ; type_= UFun (listedtypes, ReturnType UReal, FnPlain, _) })
+      | Env.
+          { kind= `UserDefined | `UserDeclared _
+          ; type_= UFun (listedtypes, ReturnType UReal, FnPlain, _) }
         when UnsizedType.check_compatible_arguments_mod_conv name listedtypes
                argumenttypes ->
           true
-      | _ -> false
-    in
-    List.exists (Env.find tenv (name ^ suffix)) ~f
-  in
+      | _ -> false in
+    List.exists (Env.find tenv (name ^ suffix)) ~f in
   ( is_real_rt_for_suffix "_lcdf"
   || valid_arg_types_for_suffix "_lcdf"
   || is_real_rt_for_suffix "_cdf_log"
@@ -919,8 +891,7 @@ let verify_sampling_cdf_defined loc tenv id truncation args =
 
 let check_truncation cf tenv truncation =
   let check e =
-    check_expression_of_int_or_real_type cf tenv e "Truncation bound"
-  in
+    check_expression_of_int_or_real_type cf tenv e "Truncation bound" in
   match truncation with
   | NoTruncate -> NoTruncate
   | TruncateUpFrom e -> check e |> TruncateUpFrom
@@ -991,11 +962,14 @@ let rec stmt_is_escape {stmt; _} =
 
 and list_until_escape xs =
   let rec aux accu = function
-    | next :: next' :: _ when stmt_is_escape next' ->
+    | [next; next'] when stmt_is_escape next' -> List.rev (next' :: next :: accu)
+    | next :: next' :: unreachable :: _ when stmt_is_escape next' ->
+        add_warning unreachable.smeta.loc
+          "Unreachable statement (following a reject, break, continue, or \
+           return) found, is this intended?" ;
         List.rev (next' :: next :: accu)
     | next :: rest -> aux (next :: accu) rest
-    | [] -> List.rev accu
-  in
+    | [] -> List.rev accu in
   aux [] xs
 
 let returntype_leastupperbound loc rt1 rt2 =
@@ -1061,18 +1035,14 @@ let rec check_if_then_else loc cf tenv pred_e s_true s_false_opt =
   in
   let te =
     check_expression_of_int_or_real_type cf tenv pred_e
-      "Condition in conditional"
-  in
+      "Condition in conditional" in
   let stmt = IfThenElse (te, ts_true, ts_false_opt) in
   let srt1 = ts_true.smeta.return_type in
   let srt2 =
     ts_false_opt
     |> Option.map ~f:(fun s -> s.smeta.return_type)
-    |> Option.value ~default:NoReturnType
-  in
-  let return_type =
-    try_compute_ifthenelse_statement_returntype loc srt1 srt2
-  in
+    |> Option.value ~default:NoReturnType in
+  let return_type = try_compute_ifthenelse_statement_returntype loc srt1 srt2 in
   mk_typed_statement ~stmt ~return_type ~loc
 
 and check_while loc cf tenv cond_e loop_body =
@@ -1080,19 +1050,16 @@ and check_while loc cf tenv cond_e loop_body =
     check_statement {cf with loop_depth= cf.loop_depth + 1} tenv loop_body
   and te =
     check_expression_of_int_or_real_type cf tenv cond_e
-      "Condition in while-loop"
-  in
+      "Condition in while-loop" in
   mk_typed_statement
     ~stmt:(While (te, ts))
     ~return_type:ts.smeta.return_type ~loc
 
 and check_for loc cf tenv loop_var lower_bound_e upper_bound_e loop_body =
   let te1 =
-    check_expression_of_int_type cf tenv lower_bound_e
-      "Lower bound of for-loop"
+    check_expression_of_int_type cf tenv lower_bound_e "Lower bound of for-loop"
   and te2 =
-    check_expression_of_int_type cf tenv upper_bound_e
-      "Upper bound of for-loop"
+    check_expression_of_int_type cf tenv upper_bound_e "Upper bound of for-loop"
   in
   verify_identifier loop_var ;
   let ts = check_loop_body cf tenv loop_var UnsizedType.UInt loop_body in
@@ -1102,7 +1069,7 @@ and check_for loc cf tenv loop_var lower_bound_e upper_bound_e loop_body =
          { loop_variable= loop_var
          ; lower_bound= te1
          ; upper_bound= te2
-         ; loop_body= ts })
+         ; loop_body= ts } )
     ~return_type:ts.smeta.return_type ~loc
 
 and check_foreach_loop_identifier_type loc ty =
@@ -1115,8 +1082,7 @@ and check_foreach loc cf tenv loop_var foreach_e loop_body =
   let te = check_expression cf tenv foreach_e in
   verify_identifier loop_var ;
   let loop_var_ty =
-    check_foreach_loop_identifier_type te.emeta.loc te.emeta.type_
-  in
+    check_foreach_loop_identifier_type te.emeta.loc te.emeta.type_ in
   let ts = check_loop_body cf tenv loop_var loop_var_ty loop_body in
   mk_typed_statement
     ~stmt:(ForEach (loop_var, te, ts))
@@ -1125,8 +1091,8 @@ and check_foreach loc cf tenv loop_var foreach_e loop_body =
 and check_loop_body cf tenv loop_var loop_var_ty loop_body =
   verify_name_fresh tenv loop_var ~is_udf:false ;
   (* Add to type environment as readonly.
-    Check that function args and loop identifiers are not modified in
-    function. (passed by const ref)
+     Check that function args and loop identifiers are not modified in
+     function. (passed by const ref)
   *)
   let tenv =
     Env.add tenv loop_var.name loop_var_ty
@@ -1136,29 +1102,23 @@ and check_loop_body cf tenv loop_var loop_var_ty loop_body =
 
 and check_block loc cf tenv stmts =
   let _, checked_stmts =
-    List.fold_map stmts ~init:tenv ~f:(check_statement cf)
-  in
-  let stmts = list_until_escape checked_stmts in
+    List.fold_map stmts ~init:tenv ~f:(check_statement cf) in
   let return_type =
-    stmts
+    checked_stmts |> list_until_escape
     |> List.map ~f:(fun s -> s.smeta.return_type)
     |> List.fold ~init:NoReturnType
-         ~f:(try_compute_block_statement_returntype loc)
-  in
-  mk_typed_statement ~stmt:(Block stmts) ~return_type ~loc
+         ~f:(try_compute_block_statement_returntype loc) in
+  mk_typed_statement ~stmt:(Block checked_stmts) ~return_type ~loc
 
 and check_profile loc cf tenv name stmts =
   let _, checked_stmts =
-    List.fold_map stmts ~init:tenv ~f:(check_statement cf)
-  in
-  let stmts = list_until_escape checked_stmts in
+    List.fold_map stmts ~init:tenv ~f:(check_statement cf) in
   let return_type =
-    stmts
+    checked_stmts |> list_until_escape
     |> List.map ~f:(fun s -> s.smeta.return_type)
     |> List.fold ~init:NoReturnType
-         ~f:(try_compute_block_statement_returntype loc)
-  in
-  mk_typed_statement ~stmt:(Profile (name, stmts)) ~return_type ~loc
+         ~f:(try_compute_block_statement_returntype loc) in
+  mk_typed_statement ~stmt:(Profile (name, checked_stmts)) ~return_type ~loc
 
 (* variable declarations *)
 and verify_valid_transformation_for_type loc is_global sized_ty trans =
@@ -1168,24 +1128,20 @@ and verify_valid_transformation_for_type loc is_global sized_ty trans =
     | Transformation.Lower e -> is_real e
     | Upper e -> is_real e
     | LowerUpper (e1, e2) -> is_real e1 || is_real e2
-    | _ -> false
-  in
+    | _ -> false in
   if is_global && sized_ty = SizedType.SInt && is_real_transformation then
     Semantic_error.non_int_bounds loc |> error ;
   let is_transformation =
-    match trans with Transformation.Identity -> false | _ -> true
-  in
+    match trans with Transformation.Identity -> false | _ -> true in
   if
-    is_global
-    && SizedType.(inner_type sized_ty = SComplex)
-    && is_transformation
+    is_global && SizedType.(inner_type sized_ty = SComplex) && is_transformation
   then Semantic_error.complex_transform loc |> error
 
 and verify_transformed_param_ty loc cf is_global unsized_ty =
   if
     is_global
     && (cf.current_block = Param || cf.current_block = TParam)
-    && UnsizedType.contains_int unsized_ty
+    && UnsizedType.is_int_type unsized_ty
   then Semantic_error.transformed_params_int loc |> error
 
 and check_sizedtype cf tenv sizedty =
@@ -1216,17 +1172,15 @@ and check_var_decl_initial_value loc cf tenv id init_val_opt =
         Assignment
           { assign_lhs= {lval= LVariable id; lmeta= {loc}}
           ; assign_op= Assign
-          ; assign_rhs= e }
-      in
+          ; assign_rhs= e } in
       mk_untyped_statement ~loc ~stmt
       |> check_statement cf tenv |> snd
       |> fun ts ->
       match (ts.stmt, ts.smeta.return_type) with
       | Assignment {assign_rhs= ue; _}, NoReturnType -> Some ue
       | _ ->
-          raise_s
-            [%message "Internal error: check_var_decl: `Assignment` expected."]
-      )
+          Common.FatalError.fatal_error_msg
+            [%message " check_var_decl: `Assignment` expected."] )
   | None -> None
 
 and check_transformation cf tenv ut trans =
@@ -1252,16 +1206,14 @@ and check_transformation cf tenv ut trans =
 
 and check_var_decl loc cf tenv sized_ty trans id init is_global =
   let checked_type =
-    check_sizedtype {cf with in_toplevel_decl= is_global} tenv sized_ty
-  in
+    check_sizedtype {cf with in_toplevel_decl= is_global} tenv sized_ty in
   let unsized_type = SizedType.to_unsized checked_type in
   let checked_trans = check_transformation cf tenv unsized_type trans in
   verify_identifier id ;
   verify_name_fresh tenv id ~is_udf:false ;
   let tenv =
     Env.add tenv id.name unsized_type
-      (`Variable
-        {origin= cf.current_block; global= is_global; readonly= false})
+      (`Variable {origin= cf.current_block; global= is_global; readonly= false})
   in
   let tinit = check_var_decl_initial_value loc cf tenv id init in
   verify_valid_transformation_for_type loc is_global checked_type checked_trans ;
@@ -1272,18 +1224,16 @@ and check_var_decl loc cf tenv sized_ty trans id init is_global =
       ; transformation= checked_trans
       ; identifier= id
       ; initial_value= tinit
-      ; is_global }
-  in
+      ; is_global } in
   (tenv, mk_typed_statement ~stmt ~loc ~return_type:NoReturnType)
 
 (* function definitions *)
 and exists_matching_fn_declared tenv id arg_tys rt =
   let f = function
-    | Env.({kind= `UserDeclared _; type_= UFun (listedtypes, rt', _, _)})
+    | Env.{kind= `UserDeclared _; type_= UFun (listedtypes, rt', _, _)}
       when arg_tys = listedtypes && rt = rt' ->
         true
-    | _ -> false
-  in
+    | _ -> false in
   List.exists (Env.find tenv id.name) ~f
 
 and verify_fundef_overloaded loc tenv id arg_tys rt =
@@ -1291,7 +1241,7 @@ and verify_fundef_overloaded loc tenv id arg_tys rt =
    *)
   if exists_matching_fn_declared tenv id arg_tys rt then ()
   else
-    let f = function Env.({kind= `UserDeclared _; _}) -> true | _ -> false in
+    let f = function Env.{kind= `UserDeclared _; _} -> true | _ -> false in
     if List.exists ~f (Env.find tenv id.name) then
       (* a function of the same name but different signature *)
       Env.find tenv id.name |> List.hd
@@ -1312,8 +1262,7 @@ and verify_fundef_dist_rt loc id return_ty =
   let is_dist =
     List.exists
       ~f:(fun x -> String.is_suffix id.name ~suffix:x)
-      Utils.conditioning_suffices_w_log
-  in
+      Utils.conditioning_suffices_w_log in
   if is_dist then
     match return_ty with
     | UnsizedType.ReturnType UReal -> ()
@@ -1323,7 +1272,7 @@ and verify_pdf_fundef_first_arg_ty loc id arg_tys =
   if String.is_suffix id.name ~suffix:"_lpdf" then
     let rt = List.hd arg_tys |> Option.map ~f:snd in
     match rt with
-    | Some rt when UnsizedType.is_real_type rt -> ()
+    | Some rt when not (UnsizedType.is_int_type rt) -> ()
     | _ -> Semantic_error.prob_density_non_real_variate loc rt |> error
 
 and verify_pmf_fundef_first_arg_ty loc id arg_tys =
@@ -1335,8 +1284,7 @@ and verify_pmf_fundef_first_arg_ty loc id arg_tys =
 
 and verify_fundef_distinct_arg_ids loc arg_names =
   let dup_exists l =
-    List.find_a_dup ~compare:String.compare l |> Option.is_some
-  in
+    List.find_a_dup ~compare:String.compare l |> Option.is_some in
   if dup_exists arg_names then Semantic_error.duplicate_arg_names loc |> error
 
 and verify_fundef_return_tys loc return_type body =
@@ -1348,17 +1296,16 @@ and verify_fundef_return_tys loc return_type body =
 
 and add_function tenv name type_ defined =
   (* if we're providing a definition, we remove prior declarations
-    to simplify the environment *)
+     to simplify the environment *)
   if defined = `UserDefined then
     let existing_defns = Env.find tenv name in
     let defns =
       List.filter
         ~f:(function
-          | Env.({kind= `UserDeclared _; type_= type'}) when type' = type_ ->
+          | Env.{kind= `UserDeclared _; type_= type'} when type' = type_ ->
               false
-          | _ -> true)
-        existing_defns
-    in
+          | _ -> true )
+        existing_defns in
     let new_fn = Env.{kind= `UserDefined; type_} in
     Env.set_raw tenv name (new_fn :: defns)
   else Env.add tenv name type_ defined
@@ -1377,8 +1324,7 @@ and check_fundef loc cf tenv return_ty id args body =
   let tenv =
     add_function tenv id.name
       (UFun (arg_types, return_ty, Fun_kind.suffix_from_name id.name, AoS))
-      defined
-  in
+      defined in
   List.iter
     ~f:(fun id -> verify_name_fresh tenv id ~is_udf:false)
     arg_identifiers ;
@@ -1390,30 +1336,26 @@ and check_fundef loc cf tenv return_ty id args body =
     List.map
       ~f:(function
         | UnsizedType.DataOnly, ut -> (Env.Data, ut)
-        | AutoDiffable, ut -> (Param, ut))
-      arg_types
-  in
+        | AutoDiffable, ut -> (Param, ut) )
+      arg_types in
   let tenv_body =
     List.fold2_exn arg_names arg_types_internal ~init:tenv
       ~f:(fun env name (origin, typ) ->
         Env.add env name typ
           (* readonly so that function args and loop identifiers
-          are not modified in function. (passed by const ref) *)
-          (`Variable {origin; readonly= true; global= false}) )
-  in
+             are not modified in function. (passed by const ref) *)
+          (`Variable {origin; readonly= true; global= false}) ) in
   let context =
     let is_udf_dist name =
       List.exists
         ~f:(fun suffix -> String.is_suffix name ~suffix)
-        Utils.distribution_suffices
-    in
+        Utils.distribution_suffices in
     { cf with
       in_fun_def= true
     ; in_rng_fun_def= String.is_suffix id.name ~suffix:"_rng"
     ; in_lp_fun_def= String.is_suffix id.name ~suffix:"_lp"
     ; in_udf_dist_def= is_udf_dist id.name
-    ; in_returning_fun_def= return_ty <> Void }
-  in
+    ; in_returning_fun_def= return_ty <> Void } in
   let _, checked_body = check_statement context tenv_body body in
   verify_fundef_return_tys loc return_ty checked_body ;
   let stmt =
@@ -1446,21 +1388,18 @@ and check_statement (cf : context_flags_record) (tenv : Env.t)
   | While (e, s) -> (tenv, check_while loc cf tenv e s)
   | For {loop_variable; lower_bound; upper_bound; loop_body} ->
       ( tenv
-      , check_for loc cf tenv loop_variable lower_bound upper_bound loop_body
-      )
+      , check_for loc cf tenv loop_variable lower_bound upper_bound loop_body )
   | ForEach (id, e, s) -> (tenv, check_foreach loc cf tenv id e s)
   | Block stmts -> (tenv, check_block loc cf tenv stmts)
   | Profile (name, vdsl) -> (tenv, check_profile loc cf tenv name vdsl)
   | VarDecl {decl_type= Unsized _; _} ->
       (* currently unallowed by parser *)
-      raise_s [%message "Don't support unsized declarations yet."]
+      Common.FatalError.fatal_error_msg
+        [%message "Don't support unsized declarations yet."]
   (* these two are special in that they're allowed to change the type environment *)
   | VarDecl
-      { decl_type= Sized st
-      ; transformation
-      ; identifier
-      ; initial_value
-      ; is_global } ->
+      {decl_type= Sized st; transformation; identifier; initial_value; is_global}
+    ->
       check_var_decl loc cf tenv st transformation identifier initial_value
         is_global
   | FunDef {returntype; funname; arguments; body} ->
@@ -1478,10 +1417,9 @@ let verify_functions_have_defn tenv function_block_stmts_opt =
   let error_on_undefined funs =
     List.iter funs ~f:(fun f ->
         match f with
-        | Env.({kind= `UserDeclared loc; _}) ->
+        | Env.{kind= `UserDeclared loc; _} ->
             Semantic_error.fn_decl_without_def loc |> error
-        | _ -> () )
-  in
+        | _ -> () ) in
   if !check_that_all_functions_have_definition then
     Env.iter tenv error_on_undefined ;
   match function_block_stmts_opt with
@@ -1493,8 +1431,7 @@ let check_toplevel_block block tenv stmts_opt =
   match stmts_opt with
   | Some {stmts; xloc} ->
       let tenv', stmts =
-        List.fold_map stmts ~init:tenv ~f:(check_statement cf)
-      in
+        List.fold_map stmts ~init:tenv ~f:(check_statement cf) in
       (tenv', Some {stmts; xloc})
   | None -> (tenv, None)
 
@@ -1503,9 +1440,9 @@ let verify_correctness_invariant (ast : untyped_program)
   let detyped = untyped_program_of_typed_program decorated_ast in
   if compare_untyped_program ast detyped = 0 then ()
   else
-    raise_s
+    Common.FatalError.fatal_error_msg
       [%message
-        "Type checked AST does not match original AST. Please file a bug!"
+        "Type checked AST does not match original AST. "
           (detyped : untyped_program)
           (ast : untyped_program)]
 
@@ -1536,11 +1473,10 @@ let check_program_exn
     ; transformedparametersblock= typed_tpb
     ; modelblock= typed_mb
     ; generatedquantitiesblock= typed_gqb
-    ; comments }
-  in
+    ; comments } in
   verify_correctness_invariant ast prog ;
   attach_warnings prog
 
 let check_program ast =
-  try Result.Ok (check_program_exn ast) with Errors.SemanticError err ->
-    Result.Error err
+  try Result.Ok (check_program_exn ast)
+  with Errors.SemanticError err -> Result.Error err

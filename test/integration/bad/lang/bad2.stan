@@ -1,1 +1,1 @@
-data { real a[3]; } model { a = 2.0; }
+data { array[3] real a; } model { a = 2.0; }

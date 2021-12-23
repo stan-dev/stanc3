@@ -5,8 +5,7 @@ let print_ast_of_string s =
   let ast =
     Frontend_utils.untyped_ast_of_string s
     |> Result.map_error ~f:Errors.to_string
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)]
 
 (* TESTS *)
@@ -194,8 +193,8 @@ let%expect_test "parse indices, two different colons" =
 
 let%expect_test "parse operator precedence" =
   print_ast_of_string
-    "model {  \
-     print({a,b?c:d||e&&f==g!=h<=i<j>=k>l+m-n*o/p%q.*s./t\\r^u[v]'}); }" ;
+    "model {  print({a,b?c:d||e&&f==g!=h<=i<j>=k>l+m-n*o/p%q.*s./t\\r^u[v]'}); \
+     }" ;
   [%expect
     {|
       ((functionblock ()) (datablock ()) (transformeddatablock ())
@@ -373,7 +372,7 @@ let%expect_test "parse crazy truncation example" =
   print_ast_of_string
     "\n\
     \      model {\n\
-    \        real T[1,1] = {{42.0}};\n\
+    \        array[1,1] real T = {{42.0}};\n\
     \        1 ~ normal(0, 1) T[1, T[1,1]];\n\
     \        print(T[1,1]);\n\
     \      }\n\
