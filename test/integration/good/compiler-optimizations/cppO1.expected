@@ -1349,17 +1349,17 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       current_statement__ = 2;
       beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                0, 1, lp__, max_age);
-      Eigen::Matrix<local_scalar_t__, -1, -1> phi;
-      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occ_minus_1);
-      stan::math::fill(phi, DUMMY_VAR__);
+      Eigen::Matrix<double, -1, -1> phi;
+      phi = Eigen::Matrix<double, -1, -1>(nind, n_occ_minus_1);
+      stan::math::fill(phi, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<double, -1, -1> p;
       p = Eigen::Matrix<double, -1, -1>(nind, n_occ_minus_1);
       stan::math::fill(p, std::numeric_limits<double>::quiet_NaN());
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
-      stan::math::fill(chi, DUMMY_VAR__);
+      Eigen::Matrix<double, -1, -1> chi;
+      chi = Eigen::Matrix<double, -1, -1>(nind, n_occasions);
+      stan::math::fill(chi, std::numeric_limits<double>::quiet_NaN());
       
       out__.write(mean_p);
       out__.write(beta);
@@ -5140,9 +5140,9 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 11;
       sigma_e = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                   0, 100, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, 1> y_hat;
-      y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(y_hat, DUMMY_VAR__);
+      Eigen::Matrix<double, -1, 1> y_hat;
+      y_hat = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(y_hat, std::numeric_limits<double>::quiet_NaN());
       
       out__.write(a);
       out__.write(b);
@@ -6932,17 +6932,17 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       current_statement__ = 4;
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, -1> phi;
-      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occ_minus_1);
-      stan::math::fill(phi, DUMMY_VAR__);
+      Eigen::Matrix<double, -1, -1> phi;
+      phi = Eigen::Matrix<double, -1, -1>(nind, n_occ_minus_1);
+      stan::math::fill(phi, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<double, -1, -1> p;
       p = Eigen::Matrix<double, -1, -1>(nind, n_occ_minus_1);
       stan::math::fill(p, std::numeric_limits<double>::quiet_NaN());
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
-      stan::math::fill(chi, DUMMY_VAR__);
+      Eigen::Matrix<double, -1, -1> chi;
+      chi = Eigen::Matrix<double, -1, -1>(nind, n_occasions);
+      stan::math::fill(chi, std::numeric_limits<double>::quiet_NaN());
       
       double mu;
       mu = std::numeric_limits<double>::quiet_NaN();
@@ -8376,9 +8376,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       b = Eigen::Matrix<double, -1, 1>(n_occasions);
       stan::math::fill(b, std::numeric_limits<double>::quiet_NaN());
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> nu;
-      nu = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
-      stan::math::fill(nu, DUMMY_VAR__);
+      Eigen::Matrix<double, -1, 1> nu;
+      nu = Eigen::Matrix<double, -1, 1>(n_occasions);
+      stan::math::fill(nu, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<double, -1, -1> chi;
       chi = Eigen::Matrix<double, -1, -1>(M, n_occasions);
@@ -8406,8 +8406,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       current_statement__ = 15;
       assign(b, divide(beta, sum(beta)), "assigning variable b");
       {
-        local_scalar_t__ cum_b;
-        cum_b = DUMMY_VAR__;
+        double cum_b;
+        cum_b = std::numeric_limits<double>::quiet_NaN();
         
         current_statement__ = 16;
         cum_b = rvalue(b, "b", index_uni(1));
@@ -11102,17 +11102,17 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       current_statement__ = 2;
       beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                0, 1, lp__, max_age);
-      Eigen::Matrix<local_scalar_t__, -1, -1> phi;
-      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occ_minus_1);
-      stan::math::fill(phi, DUMMY_VAR__);
+      Eigen::Matrix<double, -1, -1> phi;
+      phi = Eigen::Matrix<double, -1, -1>(nind, n_occ_minus_1);
+      stan::math::fill(phi, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<double, -1, -1> p;
       p = Eigen::Matrix<double, -1, -1>(nind, n_occ_minus_1);
       stan::math::fill(p, std::numeric_limits<double>::quiet_NaN());
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
-      stan::math::fill(chi, DUMMY_VAR__);
+      Eigen::Matrix<double, -1, -1> chi;
+      chi = Eigen::Matrix<double, -1, -1>(nind, n_occasions);
+      stan::math::fill(chi, std::numeric_limits<double>::quiet_NaN());
       
       out__.write(mean_p);
       out__.write(beta);
@@ -12497,17 +12497,17 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       current_statement__ = 5;
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, -1> phi;
-      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, phi_2dim__);
-      stan::math::fill(phi, DUMMY_VAR__);
+      Eigen::Matrix<double, -1, -1> phi;
+      phi = Eigen::Matrix<double, -1, -1>(M, phi_2dim__);
+      stan::math::fill(phi, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<double, -1, -1> p;
       p = Eigen::Matrix<double, -1, -1>(M, n_occasions);
       stan::math::fill(p, std::numeric_limits<double>::quiet_NaN());
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, n_occasions);
-      stan::math::fill(chi, DUMMY_VAR__);
+      Eigen::Matrix<double, -1, -1> chi;
+      chi = Eigen::Matrix<double, -1, -1>(M, n_occasions);
+      stan::math::fill(chi, std::numeric_limits<double>::quiet_NaN());
       
       out__.write(mean_phi);
       out__.write(mean_p);
@@ -16833,9 +16833,9 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       a2 = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(a2, std::numeric_limits<double>::quiet_NaN());
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> y_hat;
-      y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(y_hat, DUMMY_VAR__);
+      Eigen::Matrix<double, -1, 1> y_hat;
+      y_hat = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(y_hat, std::numeric_limits<double>::quiet_NaN());
       
       out__.write(beta);
       out__.write(eta1);
@@ -18430,9 +18430,9 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 5;
       sigma_y = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                   0, 100, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, 1> y_hat;
-      y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(y_hat, DUMMY_VAR__);
+      Eigen::Matrix<double, -1, 1> y_hat;
+      y_hat = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(y_hat, std::numeric_limits<double>::quiet_NaN());
       
       out__.write(a);
       out__.write(beta);
