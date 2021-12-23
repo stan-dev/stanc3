@@ -1022,7 +1022,8 @@ let lazy_expressions_mfp
  * 
  *)
 let minimal_variables_mfp
-    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH with type labels = int)
+    (module Circular_Fwd_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int )
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (initial_variables : string Set.Poly.t)
     (gen_variable :
@@ -1034,6 +1035,8 @@ let minimal_variables_mfp
   let (module Transfer) =
     minimal_variables_fwd_transfer gen_variable flowgraph_to_mir in
   let (module Mf) =
-    monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
-  in
+    monotone_framework
+      (module Circular_Fwd_Flowgraph)
+      (module Lattice)
+      (module Transfer) in
   Mf.mfp ()
