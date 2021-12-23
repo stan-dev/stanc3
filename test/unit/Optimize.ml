@@ -3438,8 +3438,8 @@ let%expect_test "adlevel_optimization 2" =
         w_trans = 1;
         {
           data int x;
-          array[real, 2] y;
-          real z;
+          data array[real, 2] y;
+          data real z;
           data real z_data;
           if((1 > 2)) y[1] = (y[1] + x); else y[2] = (y[2] + w);
           if((2 > 1)) z = y[1];

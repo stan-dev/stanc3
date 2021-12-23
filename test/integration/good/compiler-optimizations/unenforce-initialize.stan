@@ -10,4 +10,8 @@ transformed parameters {
   if (1 == 1) {
     no_init_if = 1.0;
   }
+  real for_loop_var;
+  for (i in 1:10) {
+    for_loop_var = 1;
+  }
 }
