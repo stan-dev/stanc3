@@ -55,8 +55,8 @@ pipeline {
     stages {
         stage("Build") {
             agent {
-                dockerfile {
-                    filename 'docker/debian/Dockerfile'
+                docker {
+                    image 'stanorg/stanc3:debian'
                     args "-u root --entrypoint=\'\'"
                     label 'linux-ec2'
                 }
@@ -100,7 +100,6 @@ pipeline {
                         """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
-                        sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/mac-stan2tfp"
 
                         archiveArtifacts 'bin/*'
                     }
@@ -108,8 +107,8 @@ pipeline {
                 }
                 stage("Build stanc.js") {
                     agent {
-                        dockerfile {
-                            filename 'docker/debian/Dockerfile'
+                        docker {
+                            image 'stanorg/stanc3:debian'
                             //Forces image to ignore entrypoint
                             args "-u root --entrypoint=\'\'"
                             label 'linux-ec2'
@@ -134,8 +133,8 @@ pipeline {
                 }
                 stage("Build & test a static Linux binary") {
                     agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
+                        docker {
+                            image 'stanorg/stanc3:static'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\'"
                             label 'linux-ec2'
@@ -158,7 +157,6 @@ pipeline {
                         """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-stan2tfp"
 
                         archiveArtifacts 'bin/*'
                     }
@@ -167,8 +165,8 @@ pipeline {
                 // Cross compiling for windows on debian
                 stage("Build & test static Windows binary") {
                     agent {
-                        dockerfile {
-                            filename 'docker/debian-windows/Dockerfile'
+                        docker {
+                            image 'stanorg/stanc3:debian-windows'
                             label 'linux-ec2'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\'"
@@ -178,7 +176,7 @@ pipeline {
 
                         script {
                             checkoutRepository("sh")
-                        }                        
+                        }
                         runShell("""
                             eval \$(opam env)
                             dune subst
@@ -191,7 +189,6 @@ pipeline {
                         """)
 
                         sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
-                        sh "mv _build/default.windows/src/stan2tfp/stan2tfp.exe bin/windows-stan2tfp"
 
                         stash name:'windows-exe', includes:'bin/*'
                         archiveArtifacts 'bin/*'

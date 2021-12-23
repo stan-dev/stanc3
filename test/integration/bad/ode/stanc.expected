@@ -2,7 +2,7 @@
 Semantic error in 'bad_bdf_control_function_return.stan', line 13, column 6 to line 15, column 35:
    -------------------------------------------------
     11:  model {
-    12:    real x[2, 2]
+    12:    array[2, 2] real x
     13:      = integrate_ode_bdf(twoCptModelODE,
                ^
     14:                          {1, 1.3}, 1.0, { 2.2, 3 }, { 1.0 }, { 1.0 }, { 2 },
@@ -30,7 +30,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_fun_type.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
     25:  transformed parameters {
-    26:    real y_hat[10,2];
+    26:    array[10,2] real y_hat;
     27:    y_hat = integrate_ode(harm_osc_ode,  // system
                    ^
     28:                       y0,            // initial state
@@ -60,7 +60,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_fun_type_bdf.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
     25:  transformed parameters {
-    26:    real y_hat[10,2];
+    26:    array[10,2] real y_hat;
     27:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
                    ^
     28:                       y0,            // initial state
@@ -93,7 +93,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_fun_type_bdf_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
     25:  transformed parameters {
-    26:    real y_hat[10,2];
+    26:    array[10,2] real y_hat;
     27:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
                    ^
     28:                       y0,            // initial state
@@ -126,7 +126,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_fun_type_rk45.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
     25:  transformed parameters {
-    26:    real y_hat[10,2];
+    26:    array[10,2] real y_hat;
     27:    y_hat = integrate_ode_rk45(harm_osc_ode,  // system
                    ^
     28:                       y0,            // initial state
@@ -159,7 +159,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_fun_type_rk45_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
     25:  transformed parameters {
-    26:    real y_hat[10,2];
+    26:    array[10,2] real y_hat;
     27:    y_hat = integrate_ode_rk45(harm_osc_ode,  // system
                    ^
     28:                       y0,            // initial state
@@ -192,7 +192,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_t_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -213,7 +213,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_t_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -237,7 +237,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_t_type_bdf_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -261,7 +261,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_t_type_rk45.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_rk45(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -285,7 +285,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_t_type_rk45_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_rk45(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -309,7 +309,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_theta_type.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
     25:  transformed parameters {
-    26:    real y_hat[10,2];
+    26:    array[10,2] real y_hat;
     27:    y_hat = integrate_ode(harm_osc_ode,  // system
                    ^
     28:                       y0,            // initial state
@@ -330,7 +330,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_theta_type_bdf.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
     25:  transformed parameters {
-    26:    real y_hat[10,2];
+    26:    array[10,2] real y_hat;
     27:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
                    ^
     28:                       y0,            // initial state
@@ -354,7 +354,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_theta_type_bdf_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
     25:  transformed parameters {
-    26:    real y_hat[10,2];
+    26:    array[10,2] real y_hat;
     27:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
                    ^
     28:                       y0,            // initial state
@@ -378,7 +378,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_theta_type_rk45.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
     25:  transformed parameters {
-    26:    real y_hat[10,2];
+    26:    array[10,2] real y_hat;
     27:    y_hat = integrate_ode_rk45(harm_osc_ode,  // system
                    ^
     28:                       y0,            // initial state
@@ -402,7 +402,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_theta_type_rk45_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
     25:  transformed parameters {
-    26:    real y_hat[10,2];
+    26:    array[10,2] real y_hat;
     27:    y_hat = integrate_ode_rk45(harm_osc_ode,  // system
                    ^
     28:                       y0,            // initial state
@@ -426,7 +426,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_ts_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -447,7 +447,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_ts_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -471,7 +471,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_ts_type_bdf_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -495,7 +495,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_ts_type_rk45.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_rk45(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -519,7 +519,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_ts_type_rk45_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_rk45(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -609,7 +609,7 @@ Available signatures:
 Semantic error in 'bad_x_int_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -630,7 +630,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_x_int_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -654,7 +654,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_x_int_type_bdf_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -678,7 +678,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_x_int_type_rk45.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_rk45(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -702,7 +702,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_x_int_type_rk45_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_rk45(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -726,7 +726,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_x_type.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
     25:  transformed parameters {
-    26:    real y_hat[10,2];
+    26:    array[10,2] real y_hat;
     27:    y_hat = integrate_ode(harm_osc_ode,  // system
                    ^
     28:                       y0,            // initial state
@@ -747,7 +747,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_x_type_bdf.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
     25:  transformed parameters {
-    26:    real y_hat[10,2];
+    26:    array[10,2] real y_hat;
     27:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
                    ^
     28:                       y0,            // initial state
@@ -771,7 +771,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_x_type_bdf_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
     25:  transformed parameters {
-    26:    real y_hat[10,2];
+    26:    array[10,2] real y_hat;
     27:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
                    ^
     28:                       y0,            // initial state
@@ -795,7 +795,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_x_type_rk45.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
     25:  transformed parameters {
-    26:    real y_hat[10,2];
+    26:    array[10,2] real y_hat;
     27:    y_hat = integrate_ode_rk45(harm_osc_ode,  // system
                    ^
     28:                       y0,            // initial state
@@ -819,7 +819,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_x_type_rk45_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
     25:  transformed parameters {
-    26:    real y_hat[10,2];
+    26:    array[10,2] real y_hat;
     27:    y_hat = integrate_ode_rk45(harm_osc_ode,  // system
                    ^
     28:                       y0,            // initial state
@@ -843,7 +843,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_x_var_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -866,7 +866,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_x_var_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -892,7 +892,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_x_var_type_bdf_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -918,7 +918,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_x_var_type_rk45.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_rk45(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -944,7 +944,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_x_var_type_rk45_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_rk45(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -970,7 +970,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_y_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -991,7 +991,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_y_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -1015,7 +1015,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_y_type_bdf_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -1039,7 +1039,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_y_type_rk45.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_rk45(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state
@@ -1063,7 +1063,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 Semantic error in 'bad_y_type_rk45_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
     24:  transformed parameters {
-    25:    real y_hat[10,2];
+    25:    array[10,2] real y_hat;
     26:    y_hat = integrate_ode_rk45(harm_osc_ode,  // system
                    ^
     27:                       y0,            // initial state

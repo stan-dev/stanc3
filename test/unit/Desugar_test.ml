@@ -5,16 +5,16 @@ let to_mir s =
   Frontend.Frontend_utils.typed_ast_of_string_exn s
   |> Frontend.Ast_to_Mir.trans_prog "test prog"
 
-let print_tdata Middle.Program.({prepare_data; _}) =
-  Fmt.(strf "@[<v>%a@]@," (list ~sep:cut Middle.Stmt.Located.pp) prepare_data)
+let print_tdata Middle.Program.{prepare_data; _} =
+  Fmt.(str "@[<v>%a@]@," (list ~sep:cut Middle.Stmt.Located.pp) prepare_data)
   |> print_endline
 
 let%expect_test "matrix array multi indexing " =
   to_mir
     {|
 transformed data {
-  int arr[3] = {2, 3, 1};
-  matrix[3,4] mat[5];
+  array[3] int arr = {2, 3, 1};
+  array[5] matrix[3,4] mat;
   print(mat[2, arr, 2]);
 } |}
   |> Partial_evaluator.eval_prog |> print_tdata ;
@@ -29,8 +29,8 @@ let%expect_test "matrix array multi indexing " =
   to_mir
     {|
 transformed data {
-  int arr[3] = {2, 3, 1};
-  matrix[3,4] mat[5];
+  array[3] int arr = {2, 3, 1};
+  array[5] matrix[3,4] mat;
   print(mat[2][arr][2]);
 } |}
   |> Partial_evaluator.eval_prog |> print_tdata ;
@@ -46,8 +46,8 @@ let%expect_test "matrix array multi indexing " =
   to_mir
     {|
 transformed data {
-  int arr[3] = {2, 3, 1};
-  matrix[3,4] mat[5];
+  array[3] int arr = {2, 3, 1};
+  array[5] matrix[3,4] mat;
   print(mat[2, arr, arr][2, 2]);
 } |}
   |> Partial_evaluator.eval_prog |> print_tdata ;
@@ -63,8 +63,8 @@ let%expect_test "matrix array multi indexing " =
   to_mir
     {|
 transformed data {
-  int arr[3] = {2, 3, 1};
-  matrix[3,4] mat[5];
+  array[3] int arr = {2, 3, 1};
+  array[5] matrix[3,4] mat;
   print(mat[3:, 2:3][2, 1]);
 } |}
   |> Partial_evaluator.eval_prog |> print_tdata ;
@@ -80,8 +80,8 @@ let%expect_test "matrix array multi indexing " =
   to_mir
     {|
 transformed data {
-  int arr[3] = {2, 3, 1};
-  matrix[3,4] mat[5];
+  array[3] int arr = {2, 3, 1};
+  array[5] matrix[3,4] mat;
   print(mat[:3, 1, :]);
 } |}
   |> Partial_evaluator.eval_prog |> print_tdata ;
@@ -97,8 +97,8 @@ let%expect_test "matrix array multi indexing " =
   to_mir
     {|
 transformed data {
-  int arr[3] = {2, 3, 1};
-  matrix[3, 4] mat[5];
+  array[3] int arr = {2, 3, 1};
+  array[5] matrix[3, 4] mat;
   print(mat[4:, 2:3, 1]);
   print(mat[:, arr][2, 1, 1]);
   print(mat[:, arr, :][2, 1, 1]);

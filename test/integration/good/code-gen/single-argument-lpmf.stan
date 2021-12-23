@@ -1,5 +1,5 @@
 functions {
-  real foo0_log(int y) {
+  real foo0_lpmf(int y) {
     return -5;
   }
   real foo1_lpmf(int y) {
@@ -8,7 +8,7 @@ functions {
   real foo4_lp(int y) {
     return -5;
   }
-  real foo2_log(real y) {
+  real foo2_lpdf(real y) {
     return -5;
   }
   real foo3_lpdf(real y) {
@@ -18,3 +18,4 @@ functions {
     return -5;
   }
 }
+

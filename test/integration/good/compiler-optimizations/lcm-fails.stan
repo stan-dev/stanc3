@@ -1,10 +1,11 @@
 data {
-  int<lower=0> J;          // number of schools
-  real y[J];               // estimated treatment effect (school j)
+  int<lower=0> J; // number of schools
+  array[J] real y; // estimated treatment effect (school j)
 }
 parameters {
-  real theta[J];
+  array[J] real theta;
 }
 model {
-  y ~ normal(theta,1);
+  y ~ normal(theta, 1);
 }
+

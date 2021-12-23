@@ -1,10 +1,25 @@
 $ node allow-undefined.js
-Semantic error in 'string', line 3, column 4 to column 20: 
-Some function is declared without specifying a definition.
+Semantic error in 'string', line 3, column 8 to column 11: 
+Function is declared without specifying a definition.
 
 $ node auto-format.js
 parameters {
   real y;
+}
+transformed parameters {
+  print("this line is much, much, much ", "too long", " to print on one line");
+}
+model {
+  y ~ std_normal();
+}
+
+parameters {
+  real y;
+}
+transformed parameters {
+  print("this line is much, much, much ",
+        "too long",
+        " to print on one line");
 }
 model {
   y ~ std_normal();
@@ -25,33 +40,118 @@ model {
   y ~ normal(0, 1);
 }
 
-$ node data-generation.js
-{
-"x": [[6, 2, 4, 2], [3, 2, 6, 2], [6, 3, 4, 2]],
-"y":
-  [[[6, 5, 5, 5], [6, 3, 2, 5]], [[6, 2, 6, 6], [2, 5, 5, 2]],
-    [[4, 4, 4, 3], [2, 4, 6, 2]], [[2, 5, 3, 6], [5, 5, 6, 5]],
-    [[6, 6, 5, 3], [3, 4, 2, 5]]],
-"z":
-  [[5.8530474347281336, 6.3955297933730639, 6.4404632518168468,
-     5.8926590620580992],
-    [5.8815901469879766, 3.9191590616049568, 3.7206314135215708,
-      2.171635388977561],
-    [4.925001387848174, 6.97212837743693, 2.8719106043920211,
-      5.3835056697400123]],
-"w": [2.9621789585306804, 5.5083017771155482, 5.505904011446936],
-"p":
-  [[5.2217505923869556, 2.0493220812048105, 3.1335081619228875],
-    [2.3086085754863221, 5.0735880143406691, 4.9955866267343172],
-    [6.7239589323018487, 6.0503609645580525, 6.1832136714928119],
-    [2.9385807829191903, 5.5620586856883119, 6.2768699310734206]]
+transformed data {
+  real a = lmultiply(4, 5);
 }
+parameters {
+  real y;
+}
+model {
+  y ~ normal(((((((((0)))))))), 1);
+}
+
+transformed data {
+  real a = multiply_log(4, 5);
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+$ node data-generation.js
+dim(x) = (3, 4)
+dim(y) = (5, 2, 4)
+dim(z) = (3, 4)
+dim(w) = (3)
+dim(p) = (4, 3)
+
 $ node filename.js
 Semantic error in 'good_filename', line 6, column 4 to column 5: 
 Identifier 'z' not in scope.
 
 Semantic error in 'string', line 6, column 4 to column 5: 
 Identifier 'z' not in scope.
+
+$ node functions-only.js
+real my_log1p_exp(real x) {
+  return log1p_exp(x);
+}
+
+real array_fun(array[] real a) {
+  return sum(a);
+}
+
+real int_array_fun(array[] int a) {
+  return sum(a);
+}
+
+vector my_vector_mul_by_5(vector x) {
+  vector[num_elements(x)] result = x * 5.0;
+  return result;
+}
+
+int int_only_multiplication(int a, int b) {
+  return a * b;
+}
+
+real test_lgamma(real x) {
+  return lgamma(x);
+}
+
+// test special functions
+void test_lp(real a) {
+  a ~ normal(0, 1);
+}
+
+real test_rng(real a) {
+  return normal_rng(a, 1);
+}
+
+real test_lpdf(real a, real b) {
+  return normal_lpdf(a | b, 1);
+}
+real my_log1p_exp(real x) {
+  return log1p_exp(x);
+}
+
+real array_fun(array[] real a) {
+  return sum(a);
+}
+
+real int_array_fun(array[] int a) {
+  return sum(a);
+}
+
+vector my_vector_mul_by_5(vector x) {
+  vector[num_elements(x)] result = x * 5.0;
+  return result;
+}
+
+int int_only_multiplication(int a, int b) {
+  return a * b;
+}
+
+real test_lgamma(real x) {
+  return lgamma(x);
+}
+
+// test special functions
+void test_lp(real a) {
+  a ~ normal(0, 1);
+}
+
+real test_rng(real a) {
+  return normal_rng(a, 1);
+}
+
+real test_lpdf(real a, real b) {
+  return normal_lpdf(a | b, 1);
+}
+$ node good_after_bad.js
+Syntax error in 'string', line 8, column 0 to column 5, parsing error:
+Expected "generated quantities {" or end of file after end of model block.
 
 $ node info.js
 { "inputs": { "a": { "type": "int", "dimensions": 0},
@@ -80,13 +180,13 @@ $ node info.js
   "included_files": [  ] }
 
 $ node optimization.js
-Semantic error in 'string', line 3, column 4 to column 20: 
-Some function is declared without specifying a definition.
+Semantic error in 'string', line 3, column 8 to column 11: 
+Function is declared without specifying a definition.
 
 $ node pedantic.js
-["Warning in 'string', line 7, column 17: Argument 10000 suggests there may be parameters that are not unit scale; consider rescaling with a multiplier (see manual section 22.12).","Warning: The parameter k was declared but was not used in the density calculation."]
+["Warning in 'string', line 7, column 17: Argument 10000 suggests there may be\n    parameters that are not unit scale; consider rescaling with a multiplier\n    (see manual section 22.12).","Warning: The parameter k was declared but was not used in the density\n    calculation."]
 []
-["Warning in 'string', line 4, column 9: The variable tt may not have been assigned a value before its use."]
+["Warning in 'string', line 4, column 9: The variable tt may not have been\n    assigned a value before its use."]
 []
 $ node standalone-functions.js
 
@@ -95,4 +195,4 @@ $ node version.js
 %%NAME%% %%VERSION%%
 %%NAME%% %%VERSION%%
 $ node warnings.js
-["Warning in 'string', line 4, column 4: Comments beginning with # are deprecated. Please use // in place of # for line comments."]
+["Warning in 'string', line 4, column 4: Comments beginning with # are\n    deprecated and this syntax will be removed in Stan 2.32.0. Use // to\n    begin line comments; this can be done automatically using the auto-format\n    flag to stanc"]

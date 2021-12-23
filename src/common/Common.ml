@@ -2,7 +2,6 @@
 module Foldable = Foldable
 
 (* Other signatures *)
-module Validation = Validation
 module Pretty = Pretty
 
 (* 'Two-level type' signatures and functors *)
@@ -14,3 +13,4 @@ module Specialized = Specialized
 (* General helpers *)
 module Gensym = Gensym
 module Helpers = Helpers
+module FatalError = FatalError

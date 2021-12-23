@@ -1,5 +1,5 @@
 data {
-  real a1[2];
+  array[2] real a1;
   real a2 = 1.0; // cannot assign in data block
 }
 parameters {

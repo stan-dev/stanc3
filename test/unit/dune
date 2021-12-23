@@ -1,5 +1,11 @@
 (library
-  (name unit_tests)
-  (libraries frontend stan_math_backend middle analysis_and_optimization)
-  (inline_tests)
-  (preprocess (pps ppx_jane ppx_deriving.map ppx_deriving.fold)))
+ (name unit_tests)
+ (libraries
+  core_kernel
+  frontend
+  stan_math_backend
+  middle
+  analysis_and_optimization)
+ (inline_tests)
+ (preprocess
+  (pps ppx_jane ppx_deriving.map ppx_deriving.fold)))

@@ -1,4 +1,9 @@
+(** Types for function kinds, e.g. [StanLib] or [UserDefined], and
+  function suffix types, e.g. [foo_ldfp], [bar_lp]
+*)
+
 open Core_kernel
+open Core_kernel.Poly
 
 type 'propto suffix = FnPlain | FnRng | FnLpdf of 'propto | FnTarget
 [@@deriving compare, sexp, hash, map]

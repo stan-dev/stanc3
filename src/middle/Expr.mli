@@ -1,4 +1,5 @@
-open Core_kernel
+(** MIR types and modules corresponding to the expressions of the language *)
+
 open Common
 
 module Fixed : sig
@@ -38,7 +39,7 @@ module Typed : sig
   module Meta : sig
     type t =
       { type_: UnsizedType.t
-      ; loc: Location_span.t sexp_opaque [@compare.ignore]
+      ; loc: Location_span.t [@sexp.opaque] [@compare.ignore]
       ; adlevel: UnsizedType.autodifftype }
     [@@deriving compare, create, sexp, hash]
 
@@ -56,7 +57,7 @@ module Labelled : sig
   module Meta : sig
     type t =
       { type_: UnsizedType.t
-      ; loc: Location_span.t sexp_opaque [@compare.ignore]
+      ; loc: Location_span.t [@sexp.opaque] [@compare.ignore]
       ; adlevel: UnsizedType.autodifftype
       ; label: Label.Int_label.t }
     [@@deriving compare, create, sexp, hash]
