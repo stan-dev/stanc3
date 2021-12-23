@@ -152,42 +152,46 @@ model {
 Warning in 'deprecated.stan', line 2, column 2: Declaration of arrays by
     placing brackets after a type is deprecated and will be removed in Stan
     2.32.0. Instead use the array keyword before the type. This can be
-    changed automatically using stanc --auto-format
+    changed automatically using the auto-format flag to stanc
 Warning in 'deprecated.stan', line 2, column 21: Declaration of arrays by
     placing brackets after a type is deprecated and will be removed in Stan
     2.32.0. Instead use the array keyword before the type. This can be
-    changed automatically using stanc --auto-format
+    changed automatically using the auto-format flag to stanc
 Warning in 'deprecated.stan', line 2, column 31: Declaration of arrays by
     placing brackets after a type is deprecated and will be removed in Stan
     2.32.0. Instead use the array keyword before the type. This can be
-    changed automatically using stanc --auto-format
+    changed automatically using the auto-format flag to stanc
 Warning in 'deprecated.stan', line 2, column 45: Declaration of arrays by
     placing brackets after a type is deprecated and will be removed in Stan
     2.32.0. Instead use the array keyword before the type. This can be
-    changed automatically using stanc --auto-format
+    changed automatically using the auto-format flag to stanc
 Warning in 'deprecated.stan', line 2, column 55: Declaration of arrays by
     placing brackets after a type is deprecated and will be removed in Stan
     2.32.0. Instead use the array keyword before the type. This can be
-    changed automatically using stanc --auto-format
+    changed automatically using the auto-format flag to stanc
 Warning in 'deprecated.stan', line 3, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'deprecated.stan', line 4, column 12: assignment operator <- is
     deprecated in the Stan language and will be removed in Stan 2.32.0; use =
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'deprecated.stan', line 5, column 12: assignment operator <- is
     deprecated in the Stan language and will be removed in Stan 2.32.0; use =
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'deprecated.stan', line 51, column 4: increment_log_prob(...); is
     deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'deprecated.stan', line 55, column 4: increment_log_prob(...); is
     deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'deprecated.stan', line 70, column 20: get_lp() function is
     deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
-    can be done automatically with stanc --print-canonical
+    can be done automatically with the canonicalize flag for stanc
 Semantic error in 'deprecated.stan', line 43, column 6 to column 18:
    -------------------------------------------------
     41:    target += binomial_coefficient_log(10, 10);
@@ -211,7 +215,7 @@ real deprecated_lp() {
 }
 Warning in 'funs.stanfunctions', line 5, column 11: get_lp() function is
     deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
-    can be done automatically with stanc --print-canonical
+    can be done automatically with the canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc --auto-format --canonicalize braces,parentheses parenthesize.stan
 transformed data {
   int N = 12;
