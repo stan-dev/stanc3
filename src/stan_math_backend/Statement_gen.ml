@@ -15,12 +15,11 @@ let pp_profile ppf (pp_body, name, body) =
       name in
   pf ppf "{@;<1 2>@[<v>%s@;@;%a@]@,}" profile pp_body body
 
-let rec contains_eigen (ut : UnsizedType.t) : bool =
+let rec contains_eigen_or_cl (ut : UnsizedType.t) : bool =
   match ut with
-  | UnsizedType.UArray t -> contains_eigen t
-  | UMatrix | URowVector | UVector -> true
-  | UInt | UReal | UComplex | UMathLibraryFunction | UFun _ | UVectorCL -> false
-
+  | UnsizedType.UArray t -> contains_eigen_or_cl t
+  | UMatrix | URowVector | UVector | UVectorCL -> true
+  | UInt | UReal | UComplex | UMathLibraryFunction | UFun _ -> false
 
 (*Fill only needs to happen for containers
   * Note: This should probably be moved into its own function as data
@@ -29,7 +28,7 @@ let rec contains_eigen (ut : UnsizedType.t) : bool =
   * to elements of objects in transform data not being set by the user.
 *)
 let pp_filler ppf (decl_id, st, nan_type, needs_filled) =
-  match (needs_filled, contains_eigen (SizedType.to_unsized st)) with
+  match (needs_filled, contains_eigen_or_cl (SizedType.to_unsized st)) with
   | true, true ->
       pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id nan_type
   | _ -> ()
