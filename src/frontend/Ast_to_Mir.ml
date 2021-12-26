@@ -331,7 +331,7 @@ let check_sizedtype name =
         (check s e, SizedType.SVector (mem_pattern, e))
     | SVectorCL (mem_pattern, s) ->
         let e = trans_expr s in
-        (check s e, SizedType.SVector (mem_pattern, e))
+        (check s e, SizedType.SVectorCL (mem_pattern, e))
     | SRowVector (mem_pattern, s) ->
         let e = trans_expr s in
         (check s e, SizedType.SRowVector (mem_pattern, e))
@@ -616,7 +616,7 @@ let trans_sizedtype_decl declc tr name =
           | Constrain, UnitVector -> FnValidateSizeUnitVector
           | _ -> FnValidateSize in
         let l, s = grab_size fn n s in
-        (l, SizedType.SVector (mem_pattern, s))
+        (l, SizedType.SVectorCL (mem_pattern, s))
     | SRowVector (mem_pattern, s) ->
         let l, s = grab_size FnValidateSize n s in
         (l, SizedType.SRowVector (mem_pattern, s))

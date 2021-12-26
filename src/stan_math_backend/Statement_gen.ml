@@ -211,6 +211,9 @@ let pp_map_decl ppf (vident, ut) =
   let scalar = local_scalar ut DataOnly in
   match ut with
   | UnsizedType.UInt | UReal -> ()
+  | UVectorCL ->
+      pf ppf "matrix_cl<%s> %s;" scalar
+        vident
   | UMatrix ->
       pf ppf "Eigen::Map<Eigen::Matrix<%s, -1, -1>> %s{nullptr, 0, 0};" scalar
         vident
