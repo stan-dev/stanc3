@@ -62,7 +62,7 @@ rule token = parse
   | newline                   { lexer_logger "newline" ;
                                 incr_linenum lexbuf ; token lexbuf }
   | space                     { lexer_logger "space" ; token lexbuf }
-  | "/*"                      { lexer_logger "multicomment" ;
+  | "/*"                      { lexer_logger "multicomment" ; 
                                 multiline_comment ((lexbuf.lex_curr_p, []), Buffer.create 16) lexbuf ; token lexbuf }
   | "//"                      { lexer_logger "single comment" ;
                                 singleline_comment (lexbuf.lex_curr_p, Buffer.create 16) lexbuf ;
@@ -135,6 +135,7 @@ rule token = parse
   | "real"                    { lexer_logger "real" ; Parser.REAL }
   | "complex"                 { lexer_logger "complex" ; Parser.COMPLEX }
   | "vector"                  { lexer_logger "vector" ; Parser.VECTOR }
+  | "vector_cl"                  { lexer_logger "vector_cl" ; Parser.VECTORCL }
   | "row_vector"              { lexer_logger "row_vector" ; Parser.ROWVECTOR }
   | "array"                   { lexer_logger "array" ; Parser.ARRAY }
   | "matrix"                  { lexer_logger "matrix" ; Parser.MATRIX }

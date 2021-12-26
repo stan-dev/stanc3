@@ -319,7 +319,7 @@ let get_loc_dt (t : untyped_expression Type.t) =
   match t with
   | Type.Unsized _ | Sized (SInt | SReal | SComplex) -> None
   | Sized
-      (SVector (_, e) | SRowVector (_, e) | SMatrix (_, e, _) | SArray (_, e))
+      (SVector (_, e) | SVectorCL (_, e) | SRowVector (_, e) | SMatrix (_, e, _) | SArray (_, e))
     ->
       Some e.emeta.loc.begin_loc
 

@@ -16,7 +16,7 @@ let get ctx key =
 let pp_unsized_type ctx ppf =
   let rec pp ppf ty =
     match ty with
-    | UnsizedType.UInt | UReal | UVector | URowVector | UMatrix | UComplex
+    | UnsizedType.UInt | UReal | UVector | UVectorCL | URowVector | UMatrix | UComplex
      |UMathLibraryFunction ->
         UnsizedType.pp ppf ty
     | UArray ut ->

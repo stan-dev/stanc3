@@ -111,7 +111,7 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.{pattern; _} as e) =
 
 let rec base_type = function
   | SizedType.SArray (t, _) -> base_type t
-  | SVector _ | SRowVector _ | SMatrix _ -> UnsizedType.UReal
+  | SVector _ | SVectorCL _ | SRowVector _ | SMatrix _ -> UnsizedType.UReal
   | x -> SizedType.to_unsized x
 
 let pos = "pos__"
@@ -143,7 +143,7 @@ let data_read smeta (decl_id, st) =
   | UFun _ | UMathLibraryFunction ->
       Common.FatalError.fatal_error_msg
         [%message "Cannot read a function type."]
-  | UVector | URowVector | UMatrix | UArray _ ->
+  | UVector | UVectorCL | URowVector | UMatrix | UArray _ ->
       let decl, assign, flat_var =
         let decl_id = decl_id ^ "_flat__" in
         ( Stmt.Fixed.Pattern.Decl
@@ -188,7 +188,7 @@ let read_constrain_dims constrain_transform st =
   let rec constrain_get_dims st =
     match st with
     | SizedType.SInt | SReal | SComplex -> []
-    | SVector (_, d) | SRowVector (_, d) -> [d]
+    | SVector (_, d) | SVectorCL (_, d) | SRowVector (_, d) -> [d]
     | SMatrix (_, _, dim2) -> [dim2]
     | SArray (t, dim) -> dim :: constrain_get_dims t in
   match constrain_transform with

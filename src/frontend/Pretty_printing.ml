@@ -307,6 +307,7 @@ let pp_sizedtype ppf = function
   | SReal -> pf ppf "real"
   | SComplex -> pf ppf "complex"
   | SVector (_, e) -> pf ppf "vector[%a]" pp_expression e
+  | SVectorCL (_, e) -> pf ppf "vector_cl[%a]" pp_expression e
   | SRowVector (_, e) -> pf ppf "row_vector[%a]" pp_expression e
   | SMatrix (_, e1, e2) ->
       pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
@@ -341,7 +342,7 @@ let pp_transformed_type ppf (pst, trans) =
     | _ -> const pp_unsizedtype (Middle.Type.to_unsized pst) in
   let sizes_fmt =
     match pst with
-    | Sized (SVector (_, e)) | Sized (SRowVector (_, e)) ->
+    | Sized (SVector (_, e)) | Sized (SVectorCL (_, e)) | Sized (SRowVector (_, e)) ->
         const (fun ppf -> pf ppf "[%a]" pp_expression) e
     | Sized (SMatrix (_, e1, e2)) ->
         const (fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression) e2

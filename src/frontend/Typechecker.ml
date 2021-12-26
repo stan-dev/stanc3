@@ -304,14 +304,14 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
     | _, [] -> type_
     | UnsizedType.UArray type_, `Single :: tl -> aux type_ tl
     | UArray type_, `Multi :: tl -> aux type_ tl |> UnsizedType.UArray
-    | (UVector | URowVector), [`Single] | UMatrix, [`Single; `Single] ->
+    | (UVector | UVectorCL | URowVector), [`Single] | UMatrix, [`Single; `Single] ->
         UnsizedType.UReal
-    | (UVector | URowVector | UMatrix), [`Multi] | UMatrix, [`Multi; `Multi] ->
+    | (UVector |UVectorCL | URowVector | UMatrix), [`Multi] | UMatrix, [`Multi; `Multi] ->
         type_
     | UMatrix, ([`Single] | [`Single; `Multi]) -> UnsizedType.URowVector
     | UMatrix, [`Multi; `Single] -> UnsizedType.UVector
     | UMatrix, _ :: _ :: _ :: _
-     |(UVector | URowVector), _ :: _ :: _
+     |(UVector | UVectorCL | URowVector), _ :: _ :: _
      |(UInt | UReal | UComplex | UFun _ | UMathLibraryFunction), _ :: _ ->
         Semantic_error.not_indexable loc ut (List.length indices) |> error in
   aux ut (List.map ~f:indexing_type indices)
@@ -1153,6 +1153,9 @@ and check_sizedtype cf tenv sizedty =
   | SVector (mem_pattern, e) ->
       let te = check e "Vector sizes" in
       SizedType.SVector (mem_pattern, te)
+    | SVectorCL (mem_pattern, e) ->
+      let te = check e "Vector sizes" in
+      SizedType.SVectorCL (mem_pattern, te)
   | SRowVector (mem_pattern, e) ->
       let te = check e "Row vector sizes" in
       SizedType.SRowVector (mem_pattern, te)

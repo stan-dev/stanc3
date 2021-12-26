@@ -9,7 +9,7 @@ let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
   | SInt -> `Assoc [("name", `String "int")]
   | SReal -> `Assoc [("name", `String "real")]
   | SComplex -> `Assoc [("name", `String "complex")]
-  | SVector (_, d) | SRowVector (_, d) ->
+  | SVector (_, d) | SVectorCL (_, d) | SRowVector (_, d) ->
       `Assoc [("name", `String "vector"); ("length", `String (emit_cpp_expr d))]
   | SMatrix (_, d1, d2) ->
       `Assoc

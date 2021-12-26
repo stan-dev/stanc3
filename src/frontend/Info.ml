@@ -7,7 +7,7 @@ let rec sized_basetype_dims t =
   | SizedType.SInt -> ("int", 0)
   | SReal -> ("real", 0)
   | SComplex -> ("complex", 0)
-  | SVector _ | SRowVector _ -> ("real", 1)
+  | SVector _ | SRowVector _ | SVectorCL _ -> ("real", 1)
   | SMatrix _ -> ("real", 2)
   | SArray (t, _) ->
       let bt, n = sized_basetype_dims t in
@@ -18,7 +18,7 @@ let rec unsized_basetype_dims t =
   | UnsizedType.UInt -> ("int", 0)
   | UReal -> ("real", 0)
   | UComplex -> ("complex", 0)
-  | UVector | URowVector -> ("real", 1)
+  | UVector | URowVector | UVectorCL -> ("real", 1)
   | UMatrix -> ("real", 2)
   | UArray t ->
       let bt, n = unsized_basetype_dims t in

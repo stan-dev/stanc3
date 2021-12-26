@@ -18,7 +18,7 @@ let pp_profile ppf (pp_body, name, body) =
 let rec contains_eigen (ut : UnsizedType.t) : bool =
   match ut with
   | UnsizedType.UArray t -> contains_eigen t
-  | UMatrix | URowVector | UVector -> true
+  | UMatrix | URowVector | UVector | UVectorCL -> true
   | UInt | UReal | UComplex | UMathLibraryFunction | UFun _ -> false
 
 (*Fill only needs to happen for containers
@@ -56,7 +56,7 @@ let rec pp_initialize ppf (st, adtype) =
   | SComplex ->
       let scalar = local_scalar (SizedType.to_unsized st) adtype in
       pf ppf "std::complex<%s>(%s, %s)" scalar init_nan init_nan
-  | SVector (_, d) | SRowVector (_, d) ->
+  | SVector (_, d) | SVectorCL (_, d) | SRowVector (_, d) ->
       pf ppf "%a(%a)" pp_st (st, adtype) pp_expr d
   | SMatrix (_, d1, d2) ->
       pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d1 pp_expr d2
@@ -111,7 +111,7 @@ let pp_assign_data ppf
   let init_nan = nan_type (st, DataOnly) in
   let pp_assign ppf (decl_id, st) =
     match st with
-    | SizedType.SVector _ | SRowVector _ | SMatrix _ ->
+    | SizedType.SVector _ | SVectorCL _ | SRowVector _ | SMatrix _ ->
         pf ppf "@[<hov 2>%s__ = %a;@]@," decl_id pp_initialize (st, DataOnly)
     | SInt | SReal | SComplex | SArray _ ->
         pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, DataOnly)

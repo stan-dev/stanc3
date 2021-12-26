@@ -8,6 +8,7 @@ type t =
   | UInt
   | UReal
   | UVector
+  | UVectorCL
   | UComplex
   | URowVector
   | UMatrix
@@ -50,6 +51,7 @@ let rec pp ppf = function
   | UReal -> pp_keyword ppf "real"
   | UComplex -> pp_keyword ppf "complex"
   | UVector -> pp_keyword ppf "vector"
+  | UVectorCL -> pp_keyword ppf "vector_cl"
   | URowVector -> pp_keyword ppf "row_vector"
   | UMatrix -> pp_keyword ppf "matrix"
   | UArray ut ->

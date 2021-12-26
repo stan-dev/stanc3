@@ -40,7 +40,7 @@ let (!=) = Stdlib.(!=)
        LABRACK "<" RABRACK ">" COMMA "," SEMICOLON ";" BAR "|"
 %token RETURN "return" IF "if" ELSE "else" WHILE "while" FOR "for" IN "in"
        BREAK "break" CONTINUE "continue" PROFILE "profile"
-%token VOID "void" INT "int" REAL "real" COMPLEX "complex" VECTOR "vector"
+%token VOID "void" INT "int" REAL "real" COMPLEX "complex" VECTOR "vector" VECTORCL "vector_cl"
        ROWVECTOR "row_vector" ARRAY "array" MATRIX "matrix" ORDERED "ordered"
        POSITIVEORDERED "positive_ordered" SIMPLEX "simplex" UNITVECTOR "unit_vector"
        CHOLESKYFACTORCORR "cholesky_factor_corr" CHOLESKYFACTORCOV "cholesky_factor_cov"
@@ -213,6 +213,7 @@ reserved_word:
   | REAL { build_id "real" $loc }
   | COMPLEX { build_id "complex" $loc }
   | VECTOR { build_id "vector" $loc }
+  | VECTORCL { build_id "vector_cl" $loc }
   | ROWVECTOR { build_id "row_vector" $loc }
   | MATRIX { build_id "matrix" $loc }
   | ORDERED { build_id "ordered" $loc }
@@ -272,6 +273,8 @@ basic_type:
     { grammar_logger "basic_type COMPLEX" ; UnsizedType.UComplex }
   | VECTOR
     {  grammar_logger "basic_type VECTOR" ; UnsizedType.UVector }
+  | VECTORCL
+    {  grammar_logger "basic_type VECTORCL" ; UnsizedType.UVectorCL }
   | ROWVECTOR
     {  grammar_logger "basic_type ROWVECTOR" ; UnsizedType.URowVector }
   | MATRIX
@@ -426,6 +429,8 @@ sized_basic_type:
     { grammar_logger "COMPLEX_var_type" ; (SizedType.SComplex, Identity) }
   | VECTOR LBRACK e=expression RBRACK
     { grammar_logger "VECTOR_var_type" ; (SizedType.SVector (Common.Helpers.AoS, e), Identity) }
+  | VECTORCL LBRACK e=expression RBRACK
+    { grammar_logger "VECTORCL_var_type" ; (SizedType.SVectorCL (Common.Helpers.AoS, e), Identity) }
   | ROWVECTOR LBRACK e=expression RBRACK
     { grammar_logger "ROWVECTOR_var_type" ; (SizedType.SRowVector (AoS, e) , Identity) }
   | MATRIX LBRACK e1=expression COMMA e2=expression RBRACK
@@ -440,6 +445,8 @@ top_var_type:
     { grammar_logger "COMPLEX_var_type" ; (SComplex, c) }
   | VECTOR c=type_constraint LBRACK e=expression RBRACK
     { grammar_logger "VECTOR_top_var_type" ; (SVector (AoS, e), c) }
+  | VECTORCL c=type_constraint LBRACK e=expression RBRACK
+    { grammar_logger "VECTORCL_top_var_type" ; (SVectorCL (AoS, e), c) }
   | ROWVECTOR c=type_constraint LBRACK e=expression RBRACK
     { grammar_logger "ROWVECTOR_top_var_type" ; (SRowVector (AoS, e), c) }
   | MATRIX c=type_constraint LBRACK e1=expression COMMA e2=expression RBRACK

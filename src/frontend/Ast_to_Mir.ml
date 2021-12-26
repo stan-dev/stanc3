@@ -248,7 +248,7 @@ let param_size transform sizedtype =
   let rec shrink_eigen f st =
     match st with
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen f t, d)
-    | SVector (mem_pattern, d) | SMatrix (mem_pattern, d, _) ->
+    | SVector (mem_pattern, d) | SVectorCL (mem_pattern, d) | SMatrix (mem_pattern, d, _) ->
         SVector (mem_pattern, f d)
     | SInt | SReal | SComplex | SRowVector _ ->
         Common.FatalError.fatal_error_msg
@@ -259,7 +259,7 @@ let param_size transform sizedtype =
     match st with
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen_mat f t, d)
     | SMatrix (mem_pattern, d1, d2) -> SVector (mem_pattern, f d1 d2)
-    | SInt | SReal | SComplex | SRowVector _ | SVector _ ->
+    | SInt | SReal | SComplex | SRowVector _ | SVector _ | SVectorCL _ ->
         Common.FatalError.fatal_error_msg
           [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
   in
@@ -327,6 +327,9 @@ let check_sizedtype name =
   let rec sizedtype = function
     | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
     | SVector (mem_pattern, s) ->
+        let e = trans_expr s in
+        (check s e, SizedType.SVector (mem_pattern, e))
+    | SVectorCL (mem_pattern, s) ->
         let e = trans_expr s in
         (check s e, SizedType.SVector (mem_pattern, e))
     | SRowVector (mem_pattern, s) ->
@@ -597,6 +600,15 @@ let trans_sizedtype_decl declc tr name =
   let rec go n = function
     | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
     | SVector (mem_pattern, s) ->
+        let fn =
+          match (declc.transform_action, tr) with
+          | Constrain, Transformation.Simplex ->
+              Internal_fun.FnValidateSizeSimplex
+          | Constrain, UnitVector -> FnValidateSizeUnitVector
+          | _ -> FnValidateSize in
+        let l, s = grab_size fn n s in
+        (l, SizedType.SVector (mem_pattern, s))
+    | SVectorCL (mem_pattern, s) ->
         let fn =
           match (declc.transform_action, tr) with
           | Constrain, Transformation.Simplex ->

@@ -101,13 +101,14 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
   | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
+  | UVectorCL -> pf ppf "matrix_cl<%s>" scalar
   | UMathLibraryFunction | UFun _ ->
       Common.FatalError.fatal_error_msg
         [%message "Function types not implemented"]
 
 let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   match ut with
-  | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector ->
+  | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector | UVectorCL ->
       string ppf scalar
   | UComplex -> pf ppf "std::complex<%s>" scalar
   | UArray t ->
@@ -302,7 +303,7 @@ and read_data ut ppf es =
     | UnsizedType.UArray UInt -> "i"
     | UArray UReal -> "r"
     | UArray UComplex -> "c"
-    | UInt | UReal | UComplex | UVector | URowVector | UMatrix | UArray _
+    | UInt | UReal | UComplex | UVector | UVectorCL | URowVector | UMatrix | UArray _
      |UFun _ | UMathLibraryFunction ->
         Common.FatalError.fatal_error_msg
           [%message "Can't ReadData of " (ut : UnsizedType.t)] in

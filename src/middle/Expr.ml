@@ -205,7 +205,7 @@ module Helpers = struct
         UVector
     | UArray t, Single _ :: tl -> infer_type_of_indexed t tl
     | UArray t, _ :: tl -> UArray (infer_type_of_indexed t tl)
-    | UMatrix, [Single _; Single _] | UVector, [_] | URowVector, [_] -> UReal
+    | UMatrix, [Single _; Single _] | UVector, [_] | UVectorCL, [_] | URowVector, [_] -> UReal
     | _ ->
         FatalError.fatal_error_msg [%message "Can't index" (ut : UnsizedType.t)]
 
