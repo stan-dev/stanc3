@@ -18,8 +18,9 @@ let pp_profile ppf (pp_body, name, body) =
 let rec contains_eigen (ut : UnsizedType.t) : bool =
   match ut with
   | UnsizedType.UArray t -> contains_eigen t
-  | UMatrix | URowVector | UVector | UVectorCL -> true
-  | UInt | UReal | UComplex | UMathLibraryFunction | UFun _ -> false
+  | UMatrix | URowVector | UVector -> true
+  | UInt | UReal | UComplex | UMathLibraryFunction | UFun _ | UVectorCL -> false
+
 
 (*Fill only needs to happen for containers
   * Note: This should probably be moved into its own function as data
@@ -111,8 +112,9 @@ let pp_assign_data ppf
   let init_nan = nan_type (st, DataOnly) in
   let pp_assign ppf (decl_id, st) =
     match st with
-    | SizedType.SVector _ | SVectorCL _ | SRowVector _ | SMatrix _ ->
+    | SizedType.SVector _ | SRowVector _ | SMatrix _ ->
         pf ppf "@[<hov 2>%s__ = %a;@]@," decl_id pp_initialize (st, DataOnly)
+    | SVectorCL _ -> ()
     | SInt | SReal | SComplex | SArray _ ->
         pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, DataOnly)
   in
@@ -211,9 +213,7 @@ let pp_map_decl ppf (vident, ut) =
   let scalar = local_scalar ut DataOnly in
   match ut with
   | UnsizedType.UInt | UReal -> ()
-  | UVectorCL ->
-      pf ppf "matrix_cl<%s> %s;" scalar
-        vident
+  | UVectorCL -> pf ppf "matrix_cl<%s> %s;" scalar vident
   | UMatrix ->
       pf ppf "Eigen::Map<Eigen::Matrix<%s, -1, -1>> %s{nullptr, 0, 0};" scalar
         vident

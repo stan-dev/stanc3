@@ -33,7 +33,8 @@ let rec pp pp_e ppf = function
 let collect_exprs st =
   let rec aux accu = function
     | SInt | SReal | SComplex -> List.rev accu
-    | SVector (_, e) | SVectorCL (_, e) | SRowVector (_, e) -> List.rev @@ (e :: accu)
+    | SVector (_, e) | SVectorCL (_, e) | SRowVector (_, e) ->
+        List.rev @@ (e :: accu)
     | SMatrix (_, e1, e2) -> List.rev @@ (e1 :: e2 :: accu)
     | SArray (inner, e) -> aux (e :: accu) inner in
   aux [] st
@@ -50,7 +51,8 @@ let rec to_unsized = function
 
 let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
   | SInt | SReal | SComplex -> assocs
-  | SVector (_, e) | SVectorCL (_, e) | SRowVector (_, e) -> Expr.Labelled.associate ~init:assocs e
+  | SVector (_, e) | SVectorCL (_, e) | SRowVector (_, e) ->
+      Expr.Labelled.associate ~init:assocs e
   | SMatrix (_, e1, e2) ->
       Expr.Labelled.(associate ~init:(associate ~init:assocs e1) e2)
   | SArray (st, e) ->
@@ -105,7 +107,7 @@ let is_recursive_container st =
 let rec get_array_dims st =
   match st with
   | SInt | SReal | SComplex -> (st, [])
-  | SVector (_, d)| SVectorCL (_, d) | SRowVector (_, d) -> (st, [d])
+  | SVector (_, d) | SVectorCL (_, d) | SRowVector (_, d) -> (st, [d])
   | SMatrix (_, d1, d2) -> (st, [d1; d2])
   | SArray (st, dim) ->
       let st', dims = get_array_dims st in
@@ -144,8 +146,16 @@ let rec contains_eigen_type st =
 let rec contains_soa st =
   match st with
   | SInt | SReal | SComplex -> false
-  | SVector (SoA, _) | SRowVector (SoA, _) | SMatrix (SoA, _, _) | SVectorCL (SoA, _) -> true
-  | SVector (AoS, _) | SRowVector (AoS, _) | SMatrix (AoS, _, _) | SVectorCL (AoS, _) -> false
+  | SVector (SoA, _)
+   |SRowVector (SoA, _)
+   |SMatrix (SoA, _, _)
+   |SVectorCL (SoA, _) ->
+      true
+  | SVector (AoS, _)
+   |SRowVector (AoS, _)
+   |SMatrix (AoS, _, _)
+   |SVectorCL (AoS, _) ->
+      false
   | SArray (t, _) -> contains_soa t
 
 (**
@@ -154,8 +164,16 @@ let rec contains_soa st =
 let rec get_mem_pattern st =
   match st with
   | SInt | SReal | SComplex -> Common.Helpers.AoS
-  | SVector (SoA, _) | SRowVector (SoA, _) | SMatrix (SoA, _, _) | SVectorCL (SoA, _) -> SoA
-  | SVector (AoS, _) | SRowVector (AoS, _) | SMatrix (AoS, _, _) | SVectorCL (AoS, _) -> AoS
+  | SVector (SoA, _)
+   |SRowVector (SoA, _)
+   |SMatrix (SoA, _, _)
+   |SVectorCL (SoA, _) ->
+      SoA
+  | SVector (AoS, _)
+   |SRowVector (AoS, _)
+   |SMatrix (AoS, _, _)
+   |SVectorCL (AoS, _) ->
+      AoS
   | SArray (t, _) -> get_mem_pattern t
 
 (*Given a sizedtype, demote it's mem pattern from SoA to AoS*)

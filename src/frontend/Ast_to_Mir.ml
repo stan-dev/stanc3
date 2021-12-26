@@ -248,7 +248,9 @@ let param_size transform sizedtype =
   let rec shrink_eigen f st =
     match st with
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen f t, d)
-    | SVector (mem_pattern, d) | SVectorCL (mem_pattern, d) | SMatrix (mem_pattern, d, _) ->
+    | SVector (mem_pattern, d)
+     |SVectorCL (mem_pattern, d)
+     |SMatrix (mem_pattern, d, _) ->
         SVector (mem_pattern, f d)
     | SInt | SReal | SComplex | SRowVector _ ->
         Common.FatalError.fatal_error_msg

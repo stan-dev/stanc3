@@ -303,8 +303,8 @@ and read_data ut ppf es =
     | UnsizedType.UArray UInt -> "i"
     | UArray UReal -> "r"
     | UArray UComplex -> "c"
-    | UInt | UReal | UComplex | UVector | UVectorCL | URowVector | UMatrix | UArray _
-     |UFun _ | UMathLibraryFunction ->
+    | UInt | UReal | UComplex | UVector | UVectorCL | URowVector | UMatrix
+     |UArray _ | UFun _ | UMathLibraryFunction ->
         Common.FatalError.fatal_error_msg
           [%message "Can't ReadData of " (ut : UnsizedType.t)] in
   pf ppf "context__.vals_%s(%a)" i_or_r_or_c pp_expr (List.hd_exn es)

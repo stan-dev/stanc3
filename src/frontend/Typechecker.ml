@@ -304,9 +304,11 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
     | _, [] -> type_
     | UnsizedType.UArray type_, `Single :: tl -> aux type_ tl
     | UArray type_, `Multi :: tl -> aux type_ tl |> UnsizedType.UArray
-    | (UVector | UVectorCL | URowVector), [`Single] | UMatrix, [`Single; `Single] ->
+    | (UVector | UVectorCL | URowVector), [`Single] | UMatrix, [`Single; `Single]
+      ->
         UnsizedType.UReal
-    | (UVector |UVectorCL | URowVector | UMatrix), [`Multi] | UMatrix, [`Multi; `Multi] ->
+    | (UVector | UVectorCL | URowVector | UMatrix), [`Multi]
+     |UMatrix, [`Multi; `Multi] ->
         type_
     | UMatrix, ([`Single] | [`Single; `Multi]) -> UnsizedType.URowVector
     | UMatrix, [`Multi; `Single] -> UnsizedType.UVector
@@ -1153,7 +1155,7 @@ and check_sizedtype cf tenv sizedty =
   | SVector (mem_pattern, e) ->
       let te = check e "Vector sizes" in
       SizedType.SVector (mem_pattern, te)
-    | SVectorCL (mem_pattern, e) ->
+  | SVectorCL (mem_pattern, e) ->
       let te = check e "Vector sizes" in
       SizedType.SVectorCL (mem_pattern, te)
   | SRowVector (mem_pattern, e) ->

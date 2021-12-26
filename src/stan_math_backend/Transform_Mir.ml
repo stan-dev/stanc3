@@ -143,7 +143,13 @@ let data_read smeta (decl_id, st) =
   | UFun _ | UMathLibraryFunction ->
       Common.FatalError.fatal_error_msg
         [%message "Cannot read a function type."]
-  | UVector | UVectorCL | URowVector | UMatrix | UArray _ ->
+  | UVectorCL ->
+      (* [Assignment ((decl_id, flat_type, []), readfnapp decl_var) |> swrap] *)
+      [ Assignment
+          ( (decl_id, UnsizedType.UVectorCL, [])
+          , to_matrix_cl (readfnapp decl_var) )
+        |> swrap ]
+  | UVector | URowVector | UMatrix | UArray _ ->
       let decl, assign, flat_var =
         let decl_id = decl_id ^ "_flat__" in
         ( Stmt.Fixed.Pattern.Decl

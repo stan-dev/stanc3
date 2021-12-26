@@ -2128,6 +2128,10 @@ let () =
   add_unqualified ("zeros_array", ReturnType (UArray UReal), [UInt], AoS) ;
   add_unqualified ("zeros_row_vector", ReturnType URowVector, [UInt], AoS) ;
   add_unqualified ("zeros_vector", ReturnType UVector, [UInt], AoS) ;
+  add_unqualified ("from_matrix_cl", ReturnType UVector, [UVectorCL], AoS) ;
+  add_unqualified ("multiply", ReturnType UVectorCL, [UVectorCL; UReal], AoS) ;
+  add_unqualified ("multiply", ReturnType UVectorCL, [UReal;UVectorCL], AoS) ;
+
   (* Now add all the manually added stuff to the main hashtable used
      for type-checking *)
   Hashtbl.iteri manual_stan_math_signatures ~f:(fun ~key ~data ->
