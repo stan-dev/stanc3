@@ -21,6 +21,31 @@ if (ind > -1) {
     console.log("ERROR: No optimization without the O flag!")
 }
 
+var ad_model = `
+data {
+    matrix[10, 10] X_d;
+}
+parameters {
+    matrix[10, 10] X_p;
+}
+
+transformed parameters {
+    matrix[10, 10] X_tp1 = X_d;
+}
+`
+
+var opt_test = stanc.stanc("optimization", ad_model, ["O1"]);
+var ind = opt_test.result.search("\\<double, -1, -1\\> X_tp1");
+if (ind == -1) {
+    console.log("ERROR: No AD optimization with the O1 flag!")
+}
+
+var opt_test = stanc.stanc("optimization", ad_model, ["O0"]);
+var ind = opt_test.result.search("\\<local_scalar_t__, -1, -1\\> X_tp1");
+if (ind == -1) {
+    console.log("ERROR: AD optimization without the O1 flag!")
+}
+
 var glm_model = `
 data {
     int<lower=1> k;
