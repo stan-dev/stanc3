@@ -6,8 +6,6 @@ open Monotone_framework_sigs
 open Mir_utils
 open Middle
 
-let preserve_stability = false
-
 (** Debugging tool to print out MFP sets **)
 let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) : unit =
@@ -134,6 +132,17 @@ let reverse (type l) (module F : FLOWGRAPH with type labels = l) =
   : FLOWGRAPH
     with type labels = l )
 
+(** Modify the end nodes of a flowgraph to depend on its inits
+ * To force the monotone framework to run until the program never changes 
+ *  this function modifies the input `Flowgraph` so that it's end nodes 
+ *  depend on it's initial nodes. The inits of the reverse flowgraph are used
+ *  for this since we normally have both the forward and reverse flowgraphs 
+ *  available.
+ * @tparam l Type of the label for each flowgraph, most commonly an int 
+ * @param Flowgraph The flowgraph to modify
+ * @param RevFlowgraph The same flowgraph as `Flowgraph` but reversed. 
+ * 
+ *)
 let make_circular_flowgraph (type l)
     (module Flowgraph : FLOWGRAPH with type labels = l)
     (module RevFlowgraph : FLOWGRAPH with type labels = l) =
@@ -289,7 +298,7 @@ let reaching_definitions_lattice (type v l)
       let initial = Set.Poly.map ~f:(fun x -> (x, None)) Variables.initial
     end )
 
-(* Autodiff-level lattice *)
+(** Lattice for finding the smallest set that satisfies some criterion *)
 let minimal_variables_lattice initial_variables =
   powerset_lattice
     ( module struct
@@ -298,8 +307,8 @@ let minimal_variables_lattice initial_variables =
       let initial = initial_variables
     end )
 
-(** The transfer function for a constant propagation analysis *)
-let constant_propagation_transfer
+(* The transfer function for a constant propagation analysis *)
+let constant_propagation_transfer ?(preserve_stability = false)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   ( module struct
     type labels = int
@@ -343,7 +352,7 @@ let label_top_decls
 
 (** The transfer function for an expression propagation analysis,
     AKA forward substitution (see page 396 of Muchnick) *)
-let expression_propagation_transfer
+let expression_propagation_transfer ?(preserve_stability = false)
     (can_side_effect_expr : Middle.Expr.Typed.t -> bool)
     (flowgraph_to_mir : (int, Middle.Stmt.Located.Non_recursive.t) Map.Poly.t) =
   ( module struct
@@ -745,7 +754,7 @@ let used_not_latest_expressions_transfer
      and type properties = Expr.Typed.Set.t )
 
 (** The transfer function for the first forward analysis part of determining optimal ad-levels for variables *)
-let minimal_variables_fwd1_transfer allow_kill
+let minimal_variables_fwd_transfer
     (gen_variable :
          (int, Stmt.Located.Non_recursive.t) Map.Poly.t
       -> int
@@ -760,50 +769,9 @@ let minimal_variables_fwd1_transfer allow_kill
       let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
       let gen = gen_variable flowgraph_to_mir l p in
       let kill =
-        match (allow_kill, mir_node) with
+        match mir_node with
         (* This probably isn't necessary because Stan doesn't allow shadowing, right? *)
-        | true, Decl {decl_id; decl_adtype= DataOnly; _} ->
-            Set.Poly.singleton decl_id
-        | _ -> Set.Poly.empty in
-      transfer_gen_kill p gen kill end : TRANSFER_FUNCTION
-    with type labels = int
-     and type properties = string Set.Poly.t )
-
-(** The transfer function for the reverse analysis part of determining optimal ad-levels for variables *)
-let minimal_variables_rev_transfer allow_kill
-    (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-    (fwd_min_vars : (int, string Set.Poly.t) Map.Poly.t) =
-  ( module struct
-    type labels = int
-    type properties = string Set.Poly.t
-
-    let transfer_function l p =
-      let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
-      let gen = Map.find_exn fwd_min_vars l in
-      let kill =
-        match (allow_kill, mir_node) with
-        | true, Decl {decl_id; _} -> Set.Poly.singleton decl_id
-        | _ -> Set.Poly.empty in
-      transfer_gen_kill_alt p gen kill
-
-    (* gens and then kills *) end : TRANSFER_FUNCTION
-    with type labels = int
-     and type properties = string Set.Poly.t )
-
-(** The transfer function for the second forward analysis part of determining optimal ad-levels for variables *)
-let minimal_variables_fwd2_transfer allow_kill
-    (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-    (rev_min_vars : (int, string Set.Poly.t) Map.Poly.t) =
-  ( module struct
-    type labels = int
-    type properties = string Set.Poly.t
-
-    let transfer_function l p =
-      let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
-      let gen = Map.find_exn rev_min_vars l in
-      let kill =
-        match (allow_kill, mir_node) with
-        | true, Decl {decl_id; _} -> Set.Poly.singleton decl_id
+        | Decl {decl_id; decl_adtype= DataOnly; _} -> Set.Poly.singleton decl_id
         | _ -> Set.Poly.empty in
       transfer_gen_kill p gen kill end : TRANSFER_FUNCTION
     with type labels = int
@@ -1043,8 +1011,18 @@ let lazy_expressions_mfp
   let used_not_latest_expressions_mfp = Mf4.mfp () in
   (latest_expr, used_not_latest_expressions_mfp)
 
+(** Run the minimal fixed point algorithm to deduce the smallest set of 
+ *   variables that satisfy a set of conditions.
+ * @param Flowgraph The set of nodes to analyze 
+ * @param flowgraph_to_mir Map of nodes to their actual values in the MIR 
+ * @param initial_variables The set of variables to start in the set
+ * @param gen_variable Used in the transfer function to deduce variables 
+ *  that should be in the set
+ * 
+ *)
 let minimal_variables_mfp
-    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH with type labels = int)
+    (module Circular_Fwd_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int )
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (initial_variables : string Set.Poly.t)
     (gen_variable :
@@ -1052,11 +1030,12 @@ let minimal_variables_mfp
       -> int
       -> string Set.Poly.t
       -> string Set.Poly.t ) =
-  let (module Lattice1) = minimal_variables_lattice initial_variables in
-  let (module Transfer1) =
-    minimal_variables_fwd1_transfer true gen_variable flowgraph_to_mir in
-  let (module Mf1) =
-    monotone_framework (module Flowgraph) (module Lattice1) (module Transfer1)
-  in
-  let fwd1_min_vars_mfp = Mf1.mfp () in
-  fwd1_min_vars_mfp
+  let (module Lattice) = minimal_variables_lattice initial_variables in
+  let (module Transfer) =
+    minimal_variables_fwd_transfer gen_variable flowgraph_to_mir in
+  let (module Mf) =
+    monotone_framework
+      (module Circular_Fwd_Flowgraph)
+      (module Lattice)
+      (module Transfer) in
+  Mf.mfp ()

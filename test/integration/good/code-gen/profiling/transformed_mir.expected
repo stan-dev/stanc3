@@ -190,7 +190,7 @@
             (Lower
              ((pattern (Lit Int 0))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (dims ()) (mem_pattern SoA)))
+           (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -208,7 +208,7 @@
             (Lower
              ((pattern (Lit Int 0))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (dims ()) (mem_pattern SoA)))
+           (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -226,7 +226,7 @@
             (Lower
              ((pattern (Lit Int 0))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (dims ()) (mem_pattern SoA)))
+           (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -348,7 +348,7 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib gamma_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib gamma_lpdf (FnLpdf true) AoS)
                      (((pattern (Var rho))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
@@ -364,7 +364,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
                      (((pattern (Var alpha))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
@@ -380,7 +380,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
                      (((pattern (Var sigma))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))

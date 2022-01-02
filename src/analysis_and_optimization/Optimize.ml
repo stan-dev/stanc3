@@ -6,8 +6,6 @@ open Common
 open Middle
 open Mir_utils
 
-let preserve_stability = false
-
 (**
    Apply the transformation to each function body and to the rest of the program as one
    block.
@@ -615,8 +613,9 @@ let propagation
     propagate_stmt (Map.find_exn flowgraph_to_mir 1) in
   transform_program mir transform
 
-let constant_propagation =
-  propagation Monotone_framework.constant_propagation_transfer
+let constant_propagation ?(preserve_stability = false) =
+  propagation
+    (Monotone_framework.constant_propagation_transfer ~preserve_stability)
 
 let rec expr_any pred (e : Expr.Typed.t) =
   match e.pattern with
@@ -635,7 +634,7 @@ let can_side_effect_top_expr (e : Expr.Typed.t) =
       Internal_fun.can_side_effect internal_fn
   | _ -> false
 
-let cannot_duplicate_expr (e : Expr.Typed.t) =
+let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
   let pred e =
     can_side_effect_top_expr e
     || ( match e.pattern with
@@ -646,9 +645,10 @@ let cannot_duplicate_expr (e : Expr.Typed.t) =
 
 let cannot_remove_expr (e : Expr.Typed.t) = expr_any can_side_effect_top_expr e
 
-let expression_propagation mir =
+let expression_propagation ?(preserve_stability = false) mir =
   propagation
-    (Monotone_framework.expression_propagation_transfer cannot_duplicate_expr)
+    (Monotone_framework.expression_propagation_transfer ~preserve_stability
+       (cannot_duplicate_expr ~preserve_stability) )
     mir
 
 let copy_propagation mir =
@@ -846,7 +846,7 @@ let transform_mir_blocks (mir : (Expr.Typed.t, Stmt.Located.t) Program.t)
 let allow_uninitialized_decls mir =
   transform_mir_blocks mir unenforce_initialize
 
-let lazy_code_motion (mir : Program.Typed.t) =
+let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
   (* TODO: clean up this code. It is not very pretty. *)
   (* TODO: make lazy code motion operate on transformed parameters and models blocks
      simultaneously *)
@@ -898,7 +898,7 @@ let lazy_code_motion (mir : Program.Typed.t) =
         match e.pattern with
         | Lit (_, _) -> accum
         | Var _ -> accum
-        | _ when cannot_duplicate_expr e ->
+        | _ when cannot_duplicate_expr ~preserve_stability e ->
             (* Immovable expressions might have movable subexpressions *)
             Expr.Fixed.Pattern.fold collect_expressions accum e.pattern
         | _ -> Map.set accum ~key:e ~data:(Gensym.generate ~prefix:"lcm_" ())
@@ -1064,11 +1064,11 @@ let optimize_minimal_variables
   let rev_flowgraph, flowgraph_to_mir =
     Monotone_framework.inverse_flowgraph_of_stmt stmt in
   let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
-  let (module Fwd_Flowgraph) =
+  let (module Circular_Fwd_Flowgraph) =
     Monotone_framework.make_circular_flowgraph fwd_flowgraph rev_flowgraph in
   let mfp_variables =
     Monotone_framework.minimal_variables_mfp
-      (module Fwd_Flowgraph)
+      (module Circular_Fwd_Flowgraph)
       flowgraph_to_mir initial_variables gen_variables in
   let optimize_min_vars_stmt_base i stmt_pattern =
     let variable_set =
@@ -1186,8 +1186,7 @@ let optimize_soa (mir : Program.Typed.t) =
 (* Apparently you need to completely copy/paste type definitions between
    ml and mli files?*)
 type optimization_settings =
-  { optimize_soa: bool
-  ; function_inlining: bool
+  { function_inlining: bool
   ; static_loop_unrolling: bool
   ; one_step_loop_unrolling: bool
   ; list_collapsing: bool
@@ -1199,11 +1198,12 @@ type optimization_settings =
   ; dead_code_elimination: bool
   ; partial_evaluation: bool
   ; lazy_code_motion: bool
-  ; optimize_ad_levels: bool }
+  ; optimize_ad_levels: bool
+  ; preserve_stability: bool
+  ; optimize_soa: bool }
 
 let settings_const b =
-  { optimize_soa= b
-  ; function_inlining= b
+  { function_inlining= b
   ; static_loop_unrolling= b
   ; one_step_loop_unrolling= b
   ; list_collapsing= b
@@ -1215,16 +1215,38 @@ let settings_const b =
   ; dead_code_elimination= b
   ; partial_evaluation= b
   ; lazy_code_motion= b
-  ; optimize_ad_levels= b }
+  ; optimize_ad_levels= b
+  ; preserve_stability= not b
+  ; optimize_soa= b }
 
 let all_optimizations : optimization_settings = settings_const true
 let no_optimizations : optimization_settings = settings_const false
 
-let settings_default : optimization_settings =
-  let xx = settings_const false in
-  {xx with allow_uninitialized_decls= false; optimize_soa= true}
+type optimization_level = O0 | O1 | Oexperimental
+
+let level_optimizations (lvl : optimization_level) : optimization_settings =
+  match lvl with
+  | O0 -> {no_optimizations with optimize_soa= true}
+  | O1 ->
+      { function_inlining= false
+      ; static_loop_unrolling= false
+      ; one_step_loop_unrolling= false
+      ; list_collapsing= true
+      ; block_fixing= true
+      ; constant_propagation= true
+      ; expression_propagation= false
+      ; copy_propagation= true
+      ; dead_code_elimination= true
+      ; partial_evaluation= true
+      ; lazy_code_motion= false
+      ; allow_uninitialized_decls= false
+      ; optimize_ad_levels= true
+      ; preserve_stability= false
+      ; optimize_soa= true }
+  | Oexperimental -> all_optimizations
 
 let optimization_suite ?(settings = all_optimizations) mir =
+  let preserve_stability = settings.preserve_stability in
   let maybe_optimizations =
     [ (* Phase order. See phase-ordering-nodes.org for details *)
       (* Book section A *)
@@ -1232,26 +1254,27 @@ let optimization_suite ?(settings = all_optimizations) mir =
       (* Book: Procedure integration *)
       (function_inlining, settings.function_inlining)
       (* Book: Sparse conditional constant propagation *)
-    ; (constant_propagation, settings.constant_propagation)
+    ; (constant_propagation ~preserve_stability, settings.constant_propagation)
       (* Book section C *)
       (* Book: Local and global copy propagation *)
     ; (copy_propagation, settings.copy_propagation)
       (* Book: Sparse conditional constant propagation *)
-    ; (constant_propagation, settings.constant_propagation)
+    ; (constant_propagation ~preserve_stability, settings.constant_propagation)
       (* Book: Dead-code elimination *)
     ; (dead_code_elimination, settings.dead_code_elimination)
       (* Matthijs: Before lazy code motion to get loop-invariant code motion *)
     ; (one_step_loop_unrolling, settings.one_step_loop_unrolling)
       (* Matthjis: expression_propagation < partial_evaluation *)
-    ; (expression_propagation, settings.expression_propagation)
+    ; ( expression_propagation ~preserve_stability
+      , settings.expression_propagation )
       (* Matthjis: partial_evaluation < lazy_code_motion *)
     ; (partial_evaluation, settings.partial_evaluation)
       (* Book: Loop-invariant code motion *)
-    ; (lazy_code_motion, settings.lazy_code_motion)
+    ; (lazy_code_motion ~preserve_stability, settings.lazy_code_motion)
       (* Matthijs: lazy_code_motion < copy_propagation TODO: Check if this is necessary *)
     ; (copy_propagation, settings.copy_propagation)
       (* Matthijs: Constant propagation before static loop unrolling *)
-    ; (constant_propagation, settings.constant_propagation)
+    ; (constant_propagation ~preserve_stability, settings.constant_propagation)
       (* Book: Loop simplification *)
     ; (static_loop_unrolling, settings.static_loop_unrolling)
       (*Remove decls immediately assigned to*)
