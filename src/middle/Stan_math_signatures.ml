@@ -1691,6 +1691,16 @@ let () =
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
+    , [UReal; UMatrix; UReal; UVector; UReal]
+    , AoS ) ;
+  add_unqualified
+    ( "normal_id_glm_lpdf"
+    , ReturnType UReal
+    , [UReal; UMatrix; UVector; UVector; UReal]
+    , AoS ) ;
+  add_unqualified
+    ( "normal_id_glm_lpdf"
+    , ReturnType UReal
     , [UReal; UMatrix; UReal; UVector; UVector]
     , AoS ) ;
   add_unqualified
@@ -1706,7 +1716,17 @@ let () =
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
+    , [UVector; URowVector; UVector; UVector; UReal]
+    , AoS ) ;
+  add_unqualified
+    ( "normal_id_glm_lpdf"
+    , ReturnType UReal
     , [UVector; URowVector; UVector; UVector; UVector]
+    , AoS ) ;
+  add_unqualified
+    ( "normal_id_glm_lpdf"
+    , ReturnType UReal
+    , [UVector; URowVector; UReal; UVector; UReal]
     , AoS ) ;
   add_nullary "not_a_number" ;
   add_unqualified ("num_elements", ReturnType UInt, [UMatrix], AoS) ;
