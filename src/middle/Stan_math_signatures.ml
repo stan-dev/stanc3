@@ -271,7 +271,7 @@ let distributions =
   ; (full_lpdf, "student_t", [DVReal; DVReal; DVReal; DVReal], AoS)
   ; (full_lpdf, "std_normal", [DVReal], AoS)
   ; (full_lpdf, "uniform", [DVReal; DVReal; DVReal], AoS)
-  ; ([Lpdf; Rng], "von_mises", [DVReal; DVReal; DVReal], AoS)
+  ; (full_lpdf, "von_mises", [DVReal; DVReal; DVReal], AoS)
   ; (full_lpdf, "weibull", [DVReal; DVReal; DVReal], AoS)
   ; ([Lpdf], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal], AoS)
   ; ([Lpdf], "wishart", [DMatrix; DReal; DMatrix], AoS) ]
