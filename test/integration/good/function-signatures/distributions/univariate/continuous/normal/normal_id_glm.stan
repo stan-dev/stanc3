@@ -15,8 +15,12 @@ transformed data {
   transformed_data_real = normal_id_glm_lpdf(d_y_v| d_x_m, d_alpha_v, d_beta_v, d_phi);
   transformed_data_real = normal_id_glm_lpdf(d_y| d_x_m, d_alpha, d_beta_v, d_phi_v);
   transformed_data_real = normal_id_glm_lpdf(d_y| d_x_m, d_alpha_v, d_beta_v, d_phi_v);
+  transformed_data_real = normal_id_glm_lpdf(d_y| d_x_m, d_alpha, d_beta_v, d_phi);
+  transformed_data_real = normal_id_glm_lpdf(d_y| d_x_m, d_alpha_v, d_beta_v, d_phi);
   transformed_data_real = normal_id_glm_lpdf(d_y_v| d_x_rv, d_alpha, d_beta_v, d_phi_v);
   transformed_data_real = normal_id_glm_lpdf(d_y_v| d_x_rv, d_alpha_v, d_beta_v, d_phi_v);
+  transformed_data_real = normal_id_glm_lpdf(d_y_v| d_x_rv, d_alpha, d_beta_v, d_phi);
+  transformed_data_real = normal_id_glm_lpdf(d_y_v| d_x_rv, d_alpha_v, d_beta_v, d_phi);
 }
 parameters {
   real p_y;
@@ -36,10 +40,13 @@ transformed parameters {
   transformed_param_real = normal_id_glm_lpdf(p_y_v| p_x_m, p_alpha_v, p_beta_v, p_phi);
   transformed_param_real = normal_id_glm_lpdf(p_y| p_x_m, p_alpha, p_beta_v, p_phi_v);
   transformed_param_real = normal_id_glm_lpdf(p_y| p_x_m, p_alpha_v, p_beta_v, p_phi_v);
+  transformed_param_real = normal_id_glm_lpdf(p_y| p_x_m, p_alpha_v, p_beta_v, p_phi);
+  transformed_param_real = normal_id_glm_lpdf(p_y| p_x_m, p_alpha, p_beta_v, p_phi);
   transformed_param_real = normal_id_glm_lpdf(p_y_v| p_x_rv, p_alpha, p_beta_v, p_phi_v);
   transformed_param_real = normal_id_glm_lpdf(p_y_v| p_x_rv, p_alpha_v, p_beta_v, p_phi_v);
+  transformed_param_real = normal_id_glm_lpdf(p_y_v| p_x_rv, p_alpha, p_beta_v, p_phi);
+  transformed_param_real = normal_id_glm_lpdf(p_y_v| p_x_rv, p_alpha_v, p_beta_v, p_phi);
 }
 model {
   y_p ~ normal(0, 1);
 }
-
