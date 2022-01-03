@@ -285,6 +285,9 @@ pipeline {
 
                         sh """
                             git clone --recursive https://github.com/stan-dev/math.git
+                        """
+                        utils.checkout_pr("math", "math", params.math_pr)
+                        sh """
                             cp bin/stanc math/test/expressions/stanc
                         """
 
