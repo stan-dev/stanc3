@@ -2128,7 +2128,6 @@ let () =
   add_unqualified ("zeros_array", ReturnType (UArray UReal), [UInt], AoS) ;
   add_unqualified ("zeros_row_vector", ReturnType URowVector, [UInt], AoS) ;
   add_unqualified ("zeros_vector", ReturnType UVector, [UInt], AoS) ;
-  
   (*  *)
   add_unqualified ("from_matrix_cl", ReturnType UVector, [UVectorCL], AoS) ;
   add_unqualified ("Phi", ReturnType UVectorCL, [UVectorCL], AoS) ;
@@ -2187,7 +2186,6 @@ let () =
   add_unqualified ("tgamma", ReturnType UVectorCL, [UVectorCL], AoS) ;
   add_unqualified ("trigamma", ReturnType UVectorCL, [UVectorCL], AoS) ;
   add_unqualified ("trunc", ReturnType UVectorCL, [UVectorCL], AoS) ;
-
   add_unqualified ("mean", ReturnType UReal, [UVectorCL], AoS) ;
   add_unqualified ("prod", ReturnType UReal, [UVectorCL], AoS) ;
   add_unqualified ("sd", ReturnType UReal, [UVectorCL], AoS) ;
@@ -2195,17 +2193,18 @@ let () =
   add_unqualified ("variance", ReturnType UReal, [UVectorCL], AoS) ;
   add_unqualified ("dot_self", ReturnType UReal, [UVectorCL], AoS) ;
   add_unqualified ("log_sum_exp", ReturnType UReal, [UVectorCL], AoS) ;
-
   add_unqualified ("num_elements", ReturnType UInt, [UVectorCL], AoS) ;
   add_unqualified ("rows", ReturnType UInt, [UVectorCL], AoS) ;
   add_unqualified ("size", ReturnType UInt, [UVectorCL], AoS) ;
   add_unqualified ("cols", ReturnType UInt, [UVectorCL], AoS) ;
-
   add_unqualified ("add", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
-  add_unqualified ("append_row", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
+  add_unqualified
+    ("append_row", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
   add_unqualified ("beta", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
-  add_unqualified ("elt_divide", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
-  add_unqualified ("elt_multiply", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
+  add_unqualified
+    ("elt_divide", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
+  add_unqualified
+    ("elt_multiply", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
   add_unqualified ("fdim", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
   add_unqualified ("fmax", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
   add_unqualified ("fmin", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
@@ -2213,19 +2212,23 @@ let () =
   add_unqualified ("hypot", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
   add_unqualified ("lbeta", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
   add_unqualified ("lchoose", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
-  add_unqualified ("lmultiply", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
-  add_unqualified ("log_diff_exp", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
-  add_unqualified ("log_falling_factorial", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
-  add_unqualified ("log_inv_logit_diff", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
+  add_unqualified
+    ("lmultiply", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
+  add_unqualified
+    ("log_diff_exp", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
+  add_unqualified
+    ("log_falling_factorial", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
+  add_unqualified
+    ("log_inv_logit_diff", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
   add_unqualified ("pow", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
-  add_unqualified ("rows_dot_product", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
+  add_unqualified
+    ("rows_dot_product", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
   add_unqualified ("subtract", ReturnType UVectorCL, [UVectorCL; UVectorCL], AoS) ;
-
   add_unqualified ("distance", ReturnType UReal, [UVectorCL; UVectorCL], AoS) ;
   add_unqualified ("dot_product", ReturnType UReal, [UVectorCL; UVectorCL], AoS) ;
   add_unqualified ("log_mix", ReturnType UReal, [UVectorCL; UVectorCL], AoS) ;
-  add_unqualified ("squared_distance", ReturnType UReal, [UVectorCL; UVectorCL], AoS) ;
-
+  add_unqualified
+    ("squared_distance", ReturnType UReal, [UVectorCL; UVectorCL], AoS) ;
   add_unqualified ("beta", ReturnType UVectorCL, [UInt; UVectorCL], AoS) ;
   add_unqualified ("fdim", ReturnType UVectorCL, [UInt; UVectorCL], AoS) ;
   add_unqualified ("fmax", ReturnType UVectorCL, [UInt; UVectorCL], AoS) ;
@@ -2236,9 +2239,9 @@ let () =
   add_unqualified ("lchoose", ReturnType UVectorCL, [UInt; UVectorCL], AoS) ;
   add_unqualified ("lmultiply", ReturnType UVectorCL, [UInt; UVectorCL], AoS) ;
   add_unqualified ("log_diff_exp", ReturnType UVectorCL, [UInt; UVectorCL], AoS) ;
-  add_unqualified ("log_inv_logit_diff", ReturnType UVectorCL, [UInt; UVectorCL], AoS) ;
-  add_unqualified ("pow", ReturnType UVectorCL, [UInt; UVectorCL], AoS) ; 
-
+  add_unqualified
+    ("log_inv_logit_diff", ReturnType UVectorCL, [UInt; UVectorCL], AoS) ;
+  add_unqualified ("pow", ReturnType UVectorCL, [UInt; UVectorCL], AoS) ;
   add_unqualified ("beta", ReturnType UVectorCL, [UVectorCL; UInt], AoS) ;
   add_unqualified ("fdim", ReturnType UVectorCL, [UVectorCL; UInt], AoS) ;
   add_unqualified ("fmax", ReturnType UVectorCL, [UVectorCL; UInt], AoS) ;
@@ -2249,10 +2252,10 @@ let () =
   add_unqualified ("lchoose", ReturnType UVectorCL, [UVectorCL; UInt], AoS) ;
   add_unqualified ("lmultiply", ReturnType UVectorCL, [UVectorCL; UInt], AoS) ;
   add_unqualified ("log_diff_exp", ReturnType UVectorCL, [UVectorCL; UInt], AoS) ;
-  add_unqualified ("log_inv_logit_diff", ReturnType UVectorCL, [UVectorCL; UInt], AoS) ;
+  add_unqualified
+    ("log_inv_logit_diff", ReturnType UVectorCL, [UVectorCL; UInt], AoS) ;
   add_unqualified ("pow", ReturnType UVectorCL, [UVectorCL; UInt], AoS) ;
   add_unqualified ("tail", ReturnType UVectorCL, [UVectorCL; UInt], AoS) ;
-
   add_unqualified ("add", ReturnType UVectorCL, [UReal; UVectorCL], AoS) ;
   add_unqualified ("beta", ReturnType UVectorCL, [UReal; UVectorCL], AoS) ;
   add_unqualified ("elt_divide", ReturnType UVectorCL, [UReal; UVectorCL], AoS) ;
@@ -2265,11 +2268,11 @@ let () =
   add_unqualified ("lchoose", ReturnType UVectorCL, [UReal; UVectorCL], AoS) ;
   add_unqualified ("lmultiply", ReturnType UVectorCL, [UReal; UVectorCL], AoS) ;
   add_unqualified ("log_diff_exp", ReturnType UVectorCL, [UReal; UVectorCL], AoS) ;
-  add_unqualified ("log_inv_logit_diff", ReturnType UVectorCL, [UReal; UVectorCL], AoS) ;
+  add_unqualified
+    ("log_inv_logit_diff", ReturnType UVectorCL, [UReal; UVectorCL], AoS) ;
   add_unqualified ("pow", ReturnType UVectorCL, [UReal; UVectorCL], AoS) ;
   add_unqualified ("multiply", ReturnType UVectorCL, [UReal; UVectorCL], AoS) ;
   add_unqualified ("subtract", ReturnType UVectorCL, [UReal; UVectorCL], AoS) ;
-
   add_unqualified ("add", ReturnType UVectorCL, [UVectorCL; UReal], AoS) ;
   add_unqualified ("beta", ReturnType UVectorCL, [UVectorCL; UReal], AoS) ;
   add_unqualified ("elt_divide", ReturnType UVectorCL, [UVectorCL; UReal], AoS) ;
@@ -2282,21 +2285,25 @@ let () =
   add_unqualified ("lchoose", ReturnType UVectorCL, [UVectorCL; UReal], AoS) ;
   add_unqualified ("lmultiply", ReturnType UVectorCL, [UVectorCL; UReal], AoS) ;
   add_unqualified ("log_diff_exp", ReturnType UVectorCL, [UVectorCL; UReal], AoS) ;
-  add_unqualified ("log_inv_logit_diff", ReturnType UVectorCL, [UVectorCL; UReal], AoS) ;
+  add_unqualified
+    ("log_inv_logit_diff", ReturnType UVectorCL, [UVectorCL; UReal], AoS) ;
   add_unqualified ("pow", ReturnType UVectorCL, [UVectorCL; UReal], AoS) ;
   add_unqualified ("multiply", ReturnType UVectorCL, [UVectorCL; UReal], AoS) ;
   add_unqualified ("subtract", ReturnType UVectorCL, [UVectorCL; UReal], AoS) ;
-
   add_unqualified ("fma", ReturnType UVectorCL, [UReal; UReal; UVectorCL], AoS) ;
   add_unqualified ("fma", ReturnType UVectorCL, [UReal; UVectorCL; UReal], AoS) ;
-  add_unqualified ("fma", ReturnType UVectorCL, [UReal; UVectorCL; UVectorCL], AoS) ;
+  add_unqualified
+    ("fma", ReturnType UVectorCL, [UReal; UVectorCL; UVectorCL], AoS) ;
   add_unqualified ("fma", ReturnType UVectorCL, [UVectorCL; UReal; UReal], AoS) ;
-  add_unqualified ("fma", ReturnType UVectorCL, [UVectorCL; UReal; UVectorCL], AoS) ;
-  add_unqualified ("fma", ReturnType UVectorCL, [UVectorCL; UVectorCL; UReal], AoS) ;
-  add_unqualified ("fma", ReturnType UVectorCL, [UVectorCL; UVectorCL; UVectorCL], AoS) ;
+  add_unqualified
+    ("fma", ReturnType UVectorCL, [UVectorCL; UReal; UVectorCL], AoS) ;
+  add_unqualified
+    ("fma", ReturnType UVectorCL, [UVectorCL; UVectorCL; UReal], AoS) ;
+  add_unqualified
+    ("fma", ReturnType UVectorCL, [UVectorCL; UVectorCL; UVectorCL], AoS) ;
   add_unqualified ("segment", ReturnType UVectorCL, [UVectorCL; UInt; UInt], AoS) ;
-  add_unqualified ("sub_col", ReturnType UVectorCL, [UVectorCL; UInt; UInt; UInt], AoS) ;
-
+  add_unqualified
+    ("sub_col", ReturnType UVectorCL, [UVectorCL; UInt; UInt; UInt], AoS) ;
   (* Now add all the manually added stuff to the main hashtable used
      for type-checking *)
   Hashtbl.iteri manual_stan_math_signatures ~f:(fun ~key ~data ->

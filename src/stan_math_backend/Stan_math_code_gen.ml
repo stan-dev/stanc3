@@ -688,8 +688,14 @@ let pp_log_prob ppf Program.{prog_name; log_prob; _} =
   in
   let intro ppf () =
     pf ppf "%a@ %a@ %a" (list ~sep:cut string)
-      [ "using T__ = stan::scalar_type_t<VecR>;"; "using local_scalar_t__ = T__;"
-      ; "T__ lp__(0.0);"; "stan::math::accumulator<T__> lp_accum__;"
+      [ "using T__ = stan::scalar_type_t<VecR>;"
+      ; "using cond_var_cl = std::conditional_t<stan::is_var<T__>::value, \
+         var_value<stan::math::matrix_cl<double>>, \
+         stan::math::matrix_cl<double>>;"
+      ; "using cond_var_ret_cl = std::conditional_t<stan::is_var<T__>::value, \
+         stan::math::matrix_v, stan::math::matrix_d>;"
+      ; "using local_scalar_t__ = T__;"; "T__ lp__(0.0);"
+      ; "stan::math::accumulator<T__> lp_accum__;"
       ; "stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);"
       ; "int current_statement__ = 0;"
       ; "local_scalar_t__ \

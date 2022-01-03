@@ -106,6 +106,13 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
       Common.FatalError.fatal_error_msg
         [%message "Function types not implemented"]
 
+let pp_unsizedtype_custom_scalar_ad_cl ppf ut =
+  match ut with
+  | UnsizedType.UVectorCL -> pf ppf "cond_var_cl"
+  | _ ->
+      Common.FatalError.fatal_error_msg
+        [%message "Function types not implemented"]
+
 let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   match ut with
   | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector | UVectorCL ->
@@ -120,7 +127,9 @@ let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
 
 let pp_unsizedtype_local ppf (adtype, ut) =
   let s = local_scalar ut adtype in
-  pp_unsizedtype_custom_scalar ppf (s, ut)
+  match (ut, adtype) with
+  | UVectorCL, AutoDiffable -> pp_unsizedtype_custom_scalar_ad_cl ppf ut
+  | _ -> pp_unsizedtype_custom_scalar ppf (s, ut)
 
 let pp_expr_type ppf e =
   pp_unsizedtype_local ppf Expr.Typed.(adlevel_of e, type_of e)
