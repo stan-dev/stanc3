@@ -15284,9 +15284,13 @@ Display all Stan math signatures exposed in the language
   normal_cdf_log(array[] real, array[] real, vector) => real
   normal_cdf_log(array[] real, array[] real, row_vector) => real
   normal_cdf_log(array[] real, array[] real, array[] real) => real
+  normal_id_glm_lpdf(real, matrix, real, vector, real) => real
   normal_id_glm_lpdf(real, matrix, real, vector, vector) => real
+  normal_id_glm_lpdf(real, matrix, vector, vector, real) => real
   normal_id_glm_lpdf(real, matrix, vector, vector, vector) => real
+  normal_id_glm_lpdf(vector, row_vector, real, vector, real) => real
   normal_id_glm_lpdf(vector, row_vector, real, vector, vector) => real
+  normal_id_glm_lpdf(vector, row_vector, vector, vector, real) => real
   normal_id_glm_lpdf(vector, row_vector, vector, vector, vector) => real
   normal_id_glm_lpdf(vector, matrix, real, vector, real) => real
   normal_id_glm_lpdf(vector, matrix, vector, vector, real) => real

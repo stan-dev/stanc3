@@ -113,7 +113,8 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
       @ [ ( emeta.loc
           , "The function `if_else` is deprecated and will be removed in Stan \
              2.32.0. Use the conditional operator (x ? y : z) instead; this \
-             can be automatically changed using stanc --print-canonical" ) ]
+             can be automatically changed using the canonicalize flag for \
+             stanc" ) ]
       @ List.concat_map l ~f:(fun e -> collect_deprecated_expr [] e)
   | FunApp ((StanLib _ | UserDefined _), {name; _}, l) ->
       let w =
@@ -122,15 +123,15 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
             [ ( emeta.loc
               , name ^ " is deprecated and will be removed in Stan " ^ version
                 ^ ". Use " ^ rename
-                ^ " instead. This can be automatically changed using stanc \
-                   --print-canonical" ) ]
+                ^ " instead. This can be automatically changed using the \
+                   canonicalize flag for stanc" ) ]
         | _ when String.is_suffix name ~suffix:"_cdf" ->
             [ ( emeta.loc
               , "Use of " ^ name
                 ^ " without a vertical bar (|) between the first two arguments \
                    of a CDF is deprecated and will be removed in Stan 2.32.0. \
-                   This can be automatically changed using stanc \
-                   --print-canonical" ) ]
+                   This can be automatically changed using the canonicalize \
+                   flag for stanc" ) ]
         | _ -> (
           match Map.find deprecated_odes name with
           | Some (rename, version) ->
