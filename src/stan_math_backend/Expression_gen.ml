@@ -200,7 +200,9 @@ and pp_logical_op ppf op lhs rhs =
     pp_expr lhs op pp_expr rhs
 
 and pp_unary ppf fm es = pf ppf fm pp_expr (List.hd_exn es)
-and pp_binary ppf fm es = pf ppf fm pp_expr (first es) pp_expr (second es)
+
+and pp_binary_op ppf op es =
+  pf ppf "(%a@ %s@ %a)" pp_expr (first es) op pp_expr (second es)
 
 and pp_binary_f ppf f es =
   pf ppf "%s(@,%a,@ %a)" f pp_expr (first es) pp_expr (second es)
@@ -208,74 +210,55 @@ and pp_binary_f ppf f es =
 and first es = List.nth_exn es 0
 and second es = List.nth_exn es 1
 
-and pp_scalar_binary ppf scalar_fmt generic_fmt es =
-  pp_binary ppf
-    ( if is_scalar (first es) && is_scalar (second es) then scalar_fmt
-    else generic_fmt )
-    es
+and pp_scalar_binary ppf op fn es =
+  if is_scalar (first es) && is_scalar (second es) then pp_binary_op ppf op es
+  else pp_binary_f ppf fn es
 
-and gen_operator_app = function
-  | Operator.Plus ->
-      fun ppf es ->
-        pp_scalar_binary ppf "(%a@ +@ %a)" "stan::math::add(@,%a,@ %a)" es
+and gen_operator_app op ppf es =
+  match op with
+  | Operator.Plus -> pp_scalar_binary ppf "+" "stan::math::add" es
   | PMinus ->
-      fun ppf es ->
-        pp_unary ppf
-          ( if is_scalar (List.hd_exn es) then "-%a"
-          else "stan::math::minus(@,%a)" )
-          es
-  | PPlus -> fun ppf es -> pp_unary ppf "%a" es
+      pp_unary ppf
+        (if is_scalar (List.hd_exn es) then "-%a" else "stan::math::minus(@,%a)")
+        es
+  | PPlus -> pp_unary ppf "%a" es
   | Transpose ->
-      fun ppf es ->
-        pp_unary ppf
-          ( if is_scalar (List.hd_exn es) then "%a"
-          else "stan::math::transpose(@,%a)" )
-          es
-  | PNot -> fun ppf es -> pp_unary ppf "stan::math::logical_negation(@,%a)" es
-  | Minus ->
-      fun ppf es ->
-        pp_scalar_binary ppf "(%a@ -@ %a)" "stan::math::subtract(@,%a,@ %a)" es
-  | Times ->
-      fun ppf es ->
-        pp_scalar_binary ppf "(%a@ *@ %a)" "stan::math::multiply(@,%a,@ %a)" es
+      pp_unary ppf
+        ( if is_scalar (List.hd_exn es) then "%a"
+        else "stan::math::transpose(@,%a)" )
+        es
+  | PNot -> pp_unary ppf "stan::math::logical_negation(@,%a)" es
+  | Minus -> pp_scalar_binary ppf "-" "stan::math::subtract" es
+  | Times -> pp_scalar_binary ppf "*" "stan::math::multiply" es
   | Divide | IntDivide ->
-      fun ppf es ->
-        if
-          is_matrix (second es)
-          && (is_matrix (first es) || is_row_vector (first es))
-        then pp_binary_f ppf "stan::math::mdivide_right" es
-        else
-          pp_scalar_binary ppf "(%a@ /@ %a)" "stan::math::divide(@,%a,@ %a)" es
-  | Modulo -> fun ppf es -> pp_binary_f ppf "stan::math::modulus" es
-  | LDivide -> fun ppf es -> pp_binary_f ppf "stan::math::mdivide_left" es
+      if
+        is_matrix (second es)
+        && (is_matrix (first es) || is_row_vector (first es))
+      then pp_binary_f ppf "stan::math::mdivide_right" es
+      else pp_scalar_binary ppf "/" "stan::math::divide" es
+  | Modulo -> pp_binary_f ppf "stan::math::modulus" es
+  | LDivide -> pp_binary_f ppf "stan::math::mdivide_left" es
   | And | Or ->
       Common.FatalError.fatal_error_msg
         [%message "And/Or should have been converted to an expression"]
-  | EltTimes ->
-      fun ppf es ->
-        pp_scalar_binary ppf "(%a@ *@ %a)" "stan::math::elt_multiply(@,%a,@ %a)"
-          es
-  | EltDivide ->
-      fun ppf es ->
-        pp_scalar_binary ppf "(%a@ /@ %a)" "stan::math::elt_divide(@,%a,@ %a)"
-          es
-  | Pow -> fun ppf es -> pp_binary_f ppf "stan::math::pow" es
-  | EltPow -> fun ppf es -> pp_binary_f ppf "stan::math::pow" es
-  | Equals -> fun ppf es -> pp_binary_f ppf "stan::math::logical_eq" es
-  | NEquals -> fun ppf es -> pp_binary_f ppf "stan::math::logical_neq" es
-  | Less -> fun ppf es -> pp_binary_f ppf "stan::math::logical_lt" es
-  | Leq -> fun ppf es -> pp_binary_f ppf "stan::math::logical_lte" es
-  | Greater -> fun ppf es -> pp_binary_f ppf "stan::math::logical_gt" es
-  | Geq -> fun ppf es -> pp_binary_f ppf "stan::math::logical_gte" es
+  | EltTimes -> pp_scalar_binary ppf "*" "stan::math::elt_multiply" es
+  | EltDivide -> pp_scalar_binary ppf "/" "stan::math::elt_divide" es
+  | Pow -> pp_binary_f ppf "stan::math::pow" es
+  | EltPow -> pp_binary_f ppf "stan::math::pow" es
+  | Equals -> pp_binary_f ppf "stan::math::logical_eq" es
+  | NEquals -> pp_binary_f ppf "stan::math::logical_neq" es
+  | Less -> pp_binary_f ppf "stan::math::logical_lt" es
+  | Leq -> pp_binary_f ppf "stan::math::logical_lte" es
+  | Greater -> pp_binary_f ppf "stan::math::logical_gt" es
+  | Geq -> pp_binary_f ppf "stan::math::logical_gte" es
 
 and gen_misc_special_math_app f =
   match f with
   | "lmultiply" ->
-      Some (fun ppf es -> pp_binary ppf "stan::math::multiply_log(@,%a,@ %a)" es)
+      Some (fun ppf es -> pp_binary_f ppf "stan::math::multiply_log" es)
   | "lchoose" ->
       Some
-        (fun ppf es ->
-          pp_binary ppf "stan::math::binomial_coefficient_log(@,%a,@ %a)" es )
+        (fun ppf es -> pp_binary_f ppf "stan::math::binomial_coefficient_log" es)
   | "target" -> Some (fun ppf _ -> pf ppf "stan::math::get_lp(lp__, lp_accum__)")
   | "get_lp" -> Some (fun ppf _ -> pf ppf "stan::math::get_lp(lp__, lp_accum__)")
   | f when Map.mem fn_renames f ->
