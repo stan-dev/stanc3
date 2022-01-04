@@ -283,12 +283,15 @@ pipeline {
 
                         unstash 'ubuntu-exe'
 
-                        sh """
-                            git clone --recursive https://github.com/stan-dev/math.git
-                            cp bin/stanc math/test/expressions/stanc
-                        """
-
                         script {
+                            sh """
+                                git clone --recursive https://github.com/stan-dev/math.git
+                            """
+                            utils.checkout_pr("math", "math", params.math_pr)
+                            sh """
+                                cp bin/stanc math/test/expressions/stanc
+                            """
+
                             dir("math") {
                                 sh """
                                     echo O=0 >> make/local
