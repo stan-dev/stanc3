@@ -20,10 +20,16 @@ Semantic error in 'completely_undefined2.stan', line 5, column 12 to column 23:
 
 Function 'foo_lpdf' is not implemented for distribution 'foo', use 'foo_lpmf' instead.
   $ ../../../../../install/default/bin/stanc deprecated_suffix.stan
-Warning in 'deprecated_suffix.stan', line 4, column 14: von_mises_ccdf_log is
-    deprecated and will be removed in Stan 2.32.0. Use von_mises_lccdf
-    instead. This can be automatically changed using the canonicalize flag
-    for stanc
+Semantic error in 'deprecated_suffix.stan', line 4, column 14 to column 45:
+   -------------------------------------------------
+     2:  }
+     3:  model {
+     4:      target += binomial_logit_ccdf_log(1, 0,1);
+                       ^
+     5:  }
+   -------------------------------------------------
+
+Function 'binomial_logit_ccdf_log' is not implemented for distribution 'binomial_logit'.
   $ ../../../../../install/default/bin/stanc lpmf_lpdf_replacement1.stan
 Semantic error in 'lpmf_lpdf_replacement1.stan', line 5, column 14 to column 34:
    -------------------------------------------------
