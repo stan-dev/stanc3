@@ -57,7 +57,16 @@ Semantic error in 'no_rng_suffix.stan', line 2, column 12 to column 55:
 
 Function 'multi_gp_cholesky_rng' is not implemented for distribution 'multi_gp_cholesky'.
   $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix1.stan
+Semantic error in 'non_existing_distribution_suffix1.stan', line 4, column 14 to column 39:
+   -------------------------------------------------
+     2:  }
+     3:  model {  
+     4:      target += binomial_logit_cdf(1|0,1);
+                       ^
+     5:  }
+   -------------------------------------------------
 
+Function 'binomial_logit_cdf' is not implemented for distribution 'binomial_logit'.
   $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix2.stan
 
   $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix3.stan
