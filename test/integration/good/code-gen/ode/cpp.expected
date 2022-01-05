@@ -117,8 +117,8 @@ template <typename T0__, typename T1__, typename
   T3__>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
   T3__>, -1, 1>
-  operator()(const T0__& t, const T1__& z, const int& b, const T3__& a,
-             std::ostream* pstream__)  const
+   operator()(const T0__& t, const T1__& z, const int& b, const T3__& a,
+              std::ostream* pstream__)  const
   {
     return f_2_arg(t, z, b, a, pstream__);
   }
@@ -129,7 +129,7 @@ template <typename T0__, typename
   T1__>
   Eigen::Matrix<stan::promote_args_t<T0__,
   stan::value_type_t<T1__>>, -1, 1>
-  operator()(const T0__& t, const T1__& z, std::ostream* pstream__)  const
+   operator()(const T0__& t, const T1__& z, std::ostream* pstream__)  const
   {
     return f_0_arg(t, z, pstream__);
   }
@@ -140,8 +140,8 @@ template <typename T0__, typename T1__, typename
   T2__>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
   T2__>, -1, 1>
-  operator()(const T0__& t, const T1__& z, const T2__& a,
-             std::ostream* pstream__)  const
+   operator()(const T0__& t, const T1__& z, const T2__& a,
+              std::ostream* pstream__)  const
   {
     return f_1_arg(t, z, a, pstream__);
   }
@@ -152,8 +152,8 @@ template <typename T0__, typename T1__, typename
   T2__>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
   T2__>, -1, 1>
-  operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
-             const T2__& a)  const
+   operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
+              const T2__& a)  const
   {
     return f_1_arg(t, z, a, pstream__);
   }
@@ -164,7 +164,7 @@ template <typename T0__, typename
   T1__>
   Eigen::Matrix<stan::promote_args_t<T0__,
   stan::value_type_t<T1__>>, -1, 1>
-  operator()(const T0__& t, const T1__& z, std::ostream* pstream__)  const
+   operator()(const T0__& t, const T1__& z, std::ostream* pstream__)  const
   {
     return f_0_arg(t, z, pstream__);
   }
@@ -175,8 +175,8 @@ template <typename T0__, typename T1__, typename
   T3__>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
   T3__>, -1, 1>
-  operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
-             const int& b, const T3__& a)  const
+   operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
+              const int& b, const T3__& a)  const
   {
     return f_2_arg(t, z, b, a, pstream__);
   }

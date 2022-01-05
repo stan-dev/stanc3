@@ -54,12 +54,12 @@ is_real(const int& x, std::ostream* pstream__) {
   
 }
 struct is_real_functor__ {
-intoperator()(const int& x, std::ostream* pstream__)  const
+int operator()(const int& x, std::ostream* pstream__)  const
   {
     return is_real(x, pstream__);
   }
   template <typename T0__> int
-  operator()(const T0__& x, std::ostream* pstream__)  const
+   operator()(const T0__& x, std::ostream* pstream__)  const
   {
     return is_real(x, pstream__);
   }
@@ -420,11 +420,11 @@ foo(const T0__& b, std::ostream* pstream__) {
 }
 struct foo_functor__ {
 template <typename T0__> stan::promote_args_t<T0__>
-  operator()(const T0__& b, std::ostream* pstream__)  const
+   operator()(const T0__& b, std::ostream* pstream__)  const
   {
     return foo(b, pstream__);
   }
-  intoperator()(const int& a, std::ostream* pstream__)  const
+  int operator()(const int& a, std::ostream* pstream__)  const
   {
     return foo(a, pstream__);
   }
@@ -795,16 +795,15 @@ foo(const T0__& one, const T1__& two, std::ostream* pstream__) {
   
 }
 struct foo_functor__ {
-template <typename T0__, typename T1__>
-  stan::promote_args_t<T0__,
+template <typename T0__, typename T1__> stan::promote_args_t<T0__,
   T1__>
-  operator()(const T0__& one, const T1__& two, std::ostream* pstream__) 
+   operator()(const T0__& one, const T1__& two, std::ostream* pstream__) 
   const
   {
     return foo(one, two, pstream__);
   }
   template <typename T0__> stan::promote_args_t<T0__>
-  operator()(const T0__& one, std::ostream* pstream__)  const
+   operator()(const T0__& one, std::ostream* pstream__)  const
   {
     return foo(one, pstream__);
   }
@@ -1158,7 +1157,7 @@ foo_ccdf_log(const int& n, const T1__& x, std::ostream* pstream__) {
 }
 struct foo_ccdf_log_functor__ {
 template <typename T1__> stan::promote_args_t<T1__>
-  operator()(const int& n, const T1__& x, std::ostream* pstream__)  const
+   operator()(const int& n, const T1__& x, std::ostream* pstream__)  const
   {
     return foo_ccdf_log(n, x, pstream__);
   }
@@ -1166,7 +1165,7 @@ template <typename T1__> stan::promote_args_t<T1__>
 };
 struct foo_lccdf_functor__ {
 template <typename T1__> stan::promote_args_t<T1__>
-  operator()(const int& n, const T1__& x, std::ostream* pstream__)  const
+   operator()(const int& n, const T1__& x, std::ostream* pstream__)  const
   {
     return foo_lccdf(n, x, pstream__);
   }
@@ -1546,7 +1545,7 @@ foo_cdf_log(const int& n, const T1__& x, std::ostream* pstream__) {
 }
 struct foo_cdf_log_functor__ {
 template <typename T1__> stan::promote_args_t<T1__>
-  operator()(const int& n, const T1__& x, std::ostream* pstream__)  const
+   operator()(const int& n, const T1__& x, std::ostream* pstream__)  const
   {
     return foo_cdf_log(n, x, pstream__);
   }
@@ -1554,7 +1553,7 @@ template <typename T1__> stan::promote_args_t<T1__>
 };
 struct foo_lcdf_functor__ {
 template <typename T1__> stan::promote_args_t<T1__>
-  operator()(const int& n, const T1__& x, std::ostream* pstream__)  const
+   operator()(const int& n, const T1__& x, std::ostream* pstream__)  const
   {
     return foo_lcdf(n, x, pstream__);
   }
@@ -1917,7 +1916,7 @@ template <bool propto__, typename T0__, typename
   T1__>
   stan::promote_args_t<T0__,
   T1__>
-  operator()(const T0__& n, const T1__& x, std::ostream* pstream__)  const
+   operator()(const T0__& n, const T1__& x, std::ostream* pstream__)  const
   {
     return poisson_lpdf<propto__>(n, x, pstream__);
   }
@@ -2288,7 +2287,7 @@ foo_lpmf(const int& y, std::ostream* pstream__) {
 }
 struct foo_log_functor__ {
 template <bool propto__> double
-  operator()(const int& y, std::ostream* pstream__)  const
+   operator()(const int& y, std::ostream* pstream__)  const
   {
     return foo_log<propto__>(y, pstream__);
   }
@@ -2296,7 +2295,7 @@ template <bool propto__> double
 };
 struct foo_lpmf_functor__ {
 template <bool propto__> double
-  operator()(const int& y, std::ostream* pstream__)  const
+   operator()(const int& y, std::ostream* pstream__)  const
   {
     return foo_lpmf<propto__>(y, pstream__);
   }
@@ -2685,7 +2684,7 @@ to_vector(const int& x, std::ostream* pstream__) {
   
 }
 struct to_vector_functor__ {
-voidoperator()(const int& x, std::ostream* pstream__)  const
+void operator()(const int& x, std::ostream* pstream__)  const
   {
     return to_vector(x, pstream__);
   }
@@ -2693,8 +2692,8 @@ voidoperator()(const int& x, std::ostream* pstream__)  const
   T2__>
   Eigen::Matrix<stan::promote_args_t<T0__, T1__,
   T2__>, -1, 1>
-  operator()(const T0__& one, const T1__& two, const T2__& three,
-             std::ostream* pstream__)  const
+   operator()(const T0__& one, const T1__& two, const T2__& three,
+              std::ostream* pstream__)  const
   {
     return to_vector(one, two, three, pstream__);
   }

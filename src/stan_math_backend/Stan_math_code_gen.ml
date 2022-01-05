@@ -266,7 +266,7 @@ let pp_fun_def ppf Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
           | _ -> "" in
         let defn =
           strf "%a@ const@,{@.  return %a;@.}@." pp_sig
-            ("operator()", false, variadic)
+            (" operator()", false, variadic)
             pp_call_str
             ( ( match fdsuffix with
               | FnLpdf _ | FnTarget -> fdname ^ "<propto__>"

@@ -2069,9 +2069,9 @@ template <typename T0__, typename T1__, typename T2__, typename
   T3__>
   std::vector<stan::promote_args_t<T0__, T1__, T2__,
   T3__>>
-  operator()(const T0__& t, const std::vector<T1__>& y,
-             const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
-             const std::vector<int>& x_i, std::ostream* pstream__)  const
+   operator()(const T0__& t, const std::vector<T1__>& y,
+              const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
+              const std::vector<int>& x_i, std::ostream* pstream__)  const
   {
     return simple_SIR(t, y, theta, x_r, x_i, pstream__);
   }
@@ -3167,7 +3167,7 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
   
 }
 struct first_capture_functor__ {
-intoperator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
+int operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
   {
     return first_capture(y_i, pstream__);
   }
@@ -3178,15 +3178,15 @@ template <typename T2__, typename
   T3__>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
   stan::value_type_t<T3__>>, -1, -1>
-  operator()(const int& nind, const int& n_occasions, const T2__& p,
-             const T3__& phi, std::ostream* pstream__)  const
+   operator()(const int& nind, const int& n_occasions, const T2__& p,
+              const T3__& phi, std::ostream* pstream__)  const
   {
     return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
   }
   
 };
 struct last_capture_functor__ {
-intoperator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
+int operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
   {
     return last_capture(y_i, pstream__);
   }
@@ -10768,7 +10768,7 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
   
 }
 struct first_capture_functor__ {
-intoperator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
+int operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
   {
     return first_capture(y_i, pstream__);
   }
@@ -10779,15 +10779,15 @@ template <typename T2__, typename
   T3__>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
   stan::value_type_t<T3__>>, -1, -1>
-  operator()(const int& nind, const int& n_occasions, const T2__& p,
-             const T3__& phi, std::ostream* pstream__)  const
+   operator()(const int& nind, const int& n_occasions, const T2__& p,
+              const T3__& phi, std::ostream* pstream__)  const
   {
     return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
   }
   
 };
 struct last_capture_functor__ {
-intoperator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
+int operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
   {
     return last_capture(y_i, pstream__);
   }
@@ -13752,7 +13752,7 @@ js_super_lp(const std::vector<std::vector<int>>& y,
   
 }
 struct first_capture_functor__ {
-intoperator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
+int operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
   {
     return first_capture(y_i, pstream__);
   }
@@ -13763,14 +13763,15 @@ template <typename T0__, typename
   T1__>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
   stan::value_type_t<T1__>>, -1, -1>
-  operator()(const T0__& p, const T1__& phi, std::ostream* pstream__)  const
+   operator()(const T0__& p, const T1__& phi, std::ostream* pstream__) 
+  const
   {
     return prob_uncaptured(p, phi, pstream__);
   }
   
 };
 struct last_capture_functor__ {
-intoperator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
+int operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
   {
     return last_capture(y_i, pstream__);
   }
@@ -13780,11 +13781,12 @@ struct js_super_lp_functor__ {
 template <bool propto__, typename T3__, typename T4__, typename T5__,
            typename T6__, typename T7__, typename T_lp__,
            typename T_lp_accum__> void
-  operator()(const std::vector<std::vector<int>>& y,
-             const std::vector<int>& first, const std::vector<int>& last,
-             const T3__& p, const T4__& phi, const T5__& psi, const T6__& nu,
-             const T7__& chi, T_lp__& lp__, T_lp_accum__& lp_accum__,
-             std::ostream* pstream__)  const
+   operator()(const std::vector<std::vector<int>>& y,
+              const std::vector<int>& first, const std::vector<int>& last,
+              const T3__& p, const T4__& phi, const T5__& psi, const T6__&
+  nu,
+              const T7__& chi, T_lp__& lp__, T_lp_accum__& lp_accum__,
+              std::ostream* pstream__)  const
   {
     return js_super_lp<propto__>(y, first, last, p, phi, psi, nu, chi, lp__,
              lp_accum__, pstream__);
@@ -19028,7 +19030,7 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
   
 }
 struct first_capture_functor__ {
-intoperator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
+int operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
   {
     return first_capture(y_i, pstream__);
   }
@@ -19039,15 +19041,15 @@ template <typename T2__, typename
   T3__>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
   stan::value_type_t<T3__>>, -1, -1>
-  operator()(const int& nind, const int& n_occasions, const T2__& p,
-             const T3__& phi, std::ostream* pstream__)  const
+   operator()(const int& nind, const int& n_occasions, const T2__& p,
+              const T3__& phi, std::ostream* pstream__)  const
   {
     return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
   }
   
 };
 struct last_capture_functor__ {
-intoperator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
+int operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
   {
     return last_capture(y_i, pstream__);
   }
@@ -22171,13 +22173,12 @@ seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
 }
 struct jolly_seber_lp_functor__ {
 template <bool propto__, typename T3__, typename T4__, typename T5__,
-           typename T6__, typename T_lp__, typename T_lp_accum__>
-  void
-  operator()(const std::vector<std::vector<int>>& y,
-             const std::vector<int>& first, const std::vector<int>& last,
-             const T3__& p, const T4__& phi, const T5__& gamma,
-             const T6__& chi, T_lp__& lp__, T_lp_accum__& lp_accum__,
-             std::ostream* pstream__)  const
+           typename T6__, typename T_lp__, typename T_lp_accum__> void
+   operator()(const std::vector<std::vector<int>>& y,
+              const std::vector<int>& first, const std::vector<int>& last,
+              const T3__& p, const T4__& phi, const T5__& gamma,
+              const T6__& chi, T_lp__& lp__, T_lp_accum__& lp_accum__,
+              std::ostream* pstream__)  const
   {
     return jolly_seber_lp<propto__>(y, first, last, p, phi, gamma, chi, lp__,
              lp_accum__, pstream__);
@@ -22185,7 +22186,7 @@ template <bool propto__, typename T3__, typename T4__, typename T5__,
   
 };
 struct last_capture_functor__ {
-intoperator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
+int operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
   {
     return last_capture(y_i, pstream__);
   }
@@ -22194,16 +22195,15 @@ intoperator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
 struct seq_cprob_functor__ {
 template <typename
   T0__>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1,
-  1>
-  operator()(const T0__& gamma, std::ostream* pstream__)  const
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
+   operator()(const T0__& gamma, std::ostream* pstream__)  const
   {
     return seq_cprob(gamma, pstream__);
   }
   
 };
 struct first_capture_functor__ {
-intoperator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
+int operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
   {
     return first_capture(y_i, pstream__);
   }
@@ -22214,7 +22214,8 @@ template <typename T0__, typename
   T1__>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
   stan::value_type_t<T1__>>, -1, -1>
-  operator()(const T0__& p, const T1__& phi, std::ostream* pstream__)  const
+   operator()(const T0__& p, const T1__& phi, std::ostream* pstream__) 
+  const
   {
     return prob_uncaptured(p, phi, pstream__);
   }
@@ -26431,7 +26432,7 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
   
 }
 struct first_capture_functor__ {
-intoperator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
+int operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
   {
     return first_capture(y_i, pstream__);
   }
@@ -26442,15 +26443,15 @@ template <typename T2__, typename
   T3__>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
   stan::value_type_t<T3__>>, -1, -1>
-  operator()(const int& nind, const int& n_occasions, const T2__& p,
-             const T3__& phi, std::ostream* pstream__)  const
+   operator()(const int& nind, const int& n_occasions, const T2__& p,
+              const T3__& phi, std::ostream* pstream__)  const
   {
     return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
   }
   
 };
 struct last_capture_functor__ {
-intoperator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
+int operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const
   {
     return last_capture(y_i, pstream__);
   }
@@ -28421,18 +28422,16 @@ baz_lpdf(const T0__& x, std::ostream* pstream__) {
   
 }
 struct baz_lpdf_functor__ {
-template <bool propto__, typename T0__>
-  stan::promote_args_t<T0__>
-  operator()(const T0__& x, std::ostream* pstream__)  const
+template <bool propto__, typename T0__> stan::promote_args_t<T0__>
+   operator()(const T0__& x, std::ostream* pstream__)  const
   {
     return baz_lpdf<propto__>(x, pstream__);
   }
   
 };
 struct bar_lpmf_functor__ {
-template <bool propto__, typename T1__>
-  stan::promote_args_t<T1__>
-  operator()(const int& n, const T1__& mu, std::ostream* pstream__)  const
+template <bool propto__, typename T1__> stan::promote_args_t<T1__>
+   operator()(const int& n, const T1__& mu, std::ostream* pstream__)  const
   {
     return bar_lpmf<propto__>(n, mu, pstream__);
   }
@@ -28443,7 +28442,7 @@ template <bool propto__, typename T0__, typename
   T1__>
   stan::promote_args_t<T0__,
   T1__>
-  operator()(const T0__& x, const T1__& mu, std::ostream* pstream__)  const
+   operator()(const T0__& x, const T1__& mu, std::ostream* pstream__)  const
   {
     return foo_lpdf<propto__>(x, mu, pstream__);
   }
@@ -30884,17 +30883,16 @@ rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   
 }
 struct rfun_functor__ {
-intoperator()(const int& y, std::ostream* pstream__)  const
+int operator()(const int& y, std::ostream* pstream__)  const
   {
     return rfun(y, pstream__);
   }
   
 };
 struct rfun_lp_functor__ {
-template <bool propto__, typename T_lp__, typename T_lp_accum__>
-  int
-  operator()(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__)
-  
+template <bool propto__, typename T_lp__, typename T_lp_accum__> int
+   operator()(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
+  pstream__) 
   const
   {
     return rfun_lp<propto__>(lp__, lp_accum__, pstream__);
@@ -30904,8 +30902,8 @@ template <bool propto__, typename T_lp__, typename T_lp_accum__>
 struct nrfun_lp_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
            typename T_lp_accum__> void
-  operator()(const T0__& x, const int& y, T_lp__& lp__,
-             T_lp_accum__& lp_accum__, std::ostream* pstream__)  const
+   operator()(const T0__& x, const int& y, T_lp__& lp__,
+              T_lp_accum__& lp_accum__, std::ostream* pstream__)  const
   {
     return nrfun_lp<propto__>(x, y, lp__, lp_accum__, pstream__);
   }

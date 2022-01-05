@@ -126,9 +126,9 @@ template <typename T0__, typename T2__, typename T3__, typename T4__,
   stan::value_type_t<T3__>,
   stan::value_type_t<T4__>,
   stan::value_type_t<T5__>>
-  operator()(const T0__& a, const int& b, const std::vector<T2__>& c,
-             const T3__& d, const T4__& e, const T5__& f,
-             std::ostream* pstream__)  const
+   operator()(const T0__& a, const int& b, const std::vector<T2__>& c,
+              const T3__& d, const T4__& e, const T5__& f,
+              std::ostream* pstream__)  const
   {
     return foo1(a, b, c, d, e, f, pstream__);
   }
@@ -139,10 +139,10 @@ template <typename T0__, typename T1__, typename
   T2__>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, T1__,
   T2__>, -1, 1>
-  operator()(const T0__& a, const std::vector<Eigen::Matrix<T1__, -1, -1>>&
+   operator()(const T0__& a, const std::vector<Eigen::Matrix<T1__, -1, -1>>&
   b,
-             const std::vector<Eigen::Matrix<T2__, 1, -1>>& c,
-             std::ostream* pstream__)  const
+              const std::vector<Eigen::Matrix<T2__, 1, -1>>& c,
+              std::ostream* pstream__)  const
   {
     return foo2(a, b, c, pstream__);
   }
@@ -153,7 +153,7 @@ template <typename T0__, typename
   T1__>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
   stan::value_type_t<T1__>>, -1, -1>
-  operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const
+   operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const
   {
     return foo3(a, b, pstream__);
   }
@@ -164,7 +164,7 @@ template <typename T0__, typename
   T1__>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
   stan::value_type_t<T1__>>, -1, -1>
-  operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const
+   operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const
   {
     return add_udf(a, b, pstream__);
   }
