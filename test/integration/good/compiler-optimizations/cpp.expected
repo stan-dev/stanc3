@@ -28044,7 +28044,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 8;
           if (logical_gt(4, 342)) {
             break;
-          }
+          } 
           current_statement__ = 9;
           lp_accum__.add(3);
         }
@@ -28131,7 +28131,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
               current_statement__ = 8;
               if (logical_gt(34, 342)) {
                 break;
-              }
+              } 
               current_statement__ = 9;
               lp_accum__.add(3);
             }
@@ -28174,7 +28174,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                 current_statement__ = 8;
                 if (logical_gt(34, 342)) {
                   break;
-                }
+                } 
                 current_statement__ = 9;
                 lp_accum__.add(3);
               }
