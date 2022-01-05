@@ -424,15 +424,17 @@ let check_fn ~is_cond_dist loc tenv id es =
             (Env.nearest_ident tenv id.name) )
       |> error
   | _ (* a function *) -> (
-    match SignatureMismatch.returntype tenv id.name es with
-    | Ok (Void, _) ->
+    match SignatureMismatch.returntype tenv id.name (get_arg_types es) with
+    | Ok (Void, _, _) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
         |> error
-    | Ok (ReturnType ut, fnk) ->
+    | Ok (ReturnType ut, fnk, promotions) ->
         mk_typed_expression
           ~expr:
             (mk_fun_app ~is_cond_dist
-               (fnk (Fun_kind.suffix_from_name id.name), id, es) )
+               ( fnk (Fun_kind.suffix_from_name id.name)
+               , id
+               , SignatureMismatch.promote es promotions ) )
           ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
     | Error x ->
         es
@@ -458,9 +460,11 @@ let check_reduce_sum ~is_cond_dist loc id es =
         SignatureMismatch.check_variadic_args true mandatory_args
           mandatory_fun_args UReal (get_arg_types es)
       with
-      | Ok () ->
+      | Ok promotions ->
           mk_typed_expression
-            ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, es))
+            ~expr:
+              (mk_fun_app ~is_cond_dist
+                 (StanLib FnPlain, id, SignatureMismatch.promote es promotions) )
             ~ad_level:(expr_ad_lub es) ~type_:UnsizedType.UReal ~loc
       | Error (expected_args, err) ->
           Semantic_error.illtyped_reduce_sum loc id.name
@@ -498,9 +502,11 @@ let check_variadic_ode ~is_cond_dist loc id es =
       Stan_math_signatures.variadic_ode_mandatory_fun_args
       Stan_math_signatures.variadic_ode_fun_return_type (get_arg_types es)
   with
-  | Ok () ->
+  | Ok promotions ->
       mk_typed_expression
-        ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, es))
+        ~expr:
+          (mk_fun_app ~is_cond_dist
+             (StanLib FnPlain, id, SignatureMismatch.promote es promotions) )
         ~ad_level:(expr_ad_lub es)
         ~type_:Stan_math_signatures.variadic_ode_return_type ~loc
   | Error (expected_args, err) ->
@@ -702,12 +708,16 @@ let check_nrfn loc tenv id es =
         (Env.nearest_ident tenv id.name)
       |> error
   | _ (* a function *) -> (
-    match SignatureMismatch.returntype tenv id.name es with
-    | Ok (Void, fnk) ->
+    match SignatureMismatch.returntype tenv id.name (get_arg_types es) with
+    | Ok (Void, fnk, promotions) ->
         mk_typed_statement
-          ~stmt:(NRFunApp (fnk (Fun_kind.suffix_from_name id.name), id, es))
+          ~stmt:
+            (NRFunApp
+               ( fnk (Fun_kind.suffix_from_name id.name)
+               , id
+               , SignatureMismatch.promote es promotions ) )
           ~return_type:NoReturnType ~loc
-    | Ok (ReturnType _, _) ->
+    | Ok (ReturnType _, _, _) ->
         Semantic_error.nonreturning_fn_expected_returning_found loc id.name
         |> error
     | Error x ->

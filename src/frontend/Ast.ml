@@ -251,9 +251,14 @@ type typed_program = typed_statement program [@@deriving sexp, compare, map]
 (** Forgetful function from typed to untyped expressions *)
 let rec untyped_expression_of_typed_expression ({expr; emeta} : typed_expression)
     : untyped_expression =
-  { expr=
-      map_expression untyped_expression_of_typed_expression (fun _ -> ()) expr
-  ; emeta= {loc= emeta.loc} }
+  match expr with
+  | Promotion (e, _) -> untyped_expression_of_typed_expression e
+  | _ ->
+      { expr=
+          map_expression untyped_expression_of_typed_expression
+            (fun _ -> ())
+            expr
+      ; emeta= {loc= emeta.loc} }
 
 let rec untyped_lvalue_of_typed_lvalue ({lval; lmeta} : typed_lval) :
     untyped_lval =

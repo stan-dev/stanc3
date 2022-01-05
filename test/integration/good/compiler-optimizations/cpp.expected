@@ -27754,6 +27754,8 @@ static constexpr std::array<const char*, 93> locations_array__ =
  " (in 'optimizations.stan', line 23, column 4 to column 23)",
  " (in 'optimizations.stan', line 24, column 4 to column 24)",
  " (in 'optimizations.stan', line 27, column 4 to column 11)",
+ " (in 'optimizations.stan', line 4, column 10 to column 17)",
+ " (in 'optimizations.stan', line 3, column 8 to line 4, column 17)",
  " (in 'optimizations.stan', line 5, column 8 to column 20)",
  " (in 'optimizations.stan', line 2, column 33 to line 6, column 5)",
  " (in 'optimizations.stan', line 9, column 8 to line 10, column 26)",
@@ -27835,8 +27837,6 @@ static constexpr std::array<const char*, 93> locations_array__ =
  " (in 'optimizations.stan', line 146, column 6 to column 28)",
  " (in 'optimizations.stan', line 145, column 4 to line 146, column 28)",
  " (in 'optimizations.stan', line 147, column 4 to column 23)",
- " (in 'optimizations.stan', line 4, column 10 to column 17)",
- " (in 'optimizations.stan', line 3, column 8 to line 4, column 17)",
  " (in 'optimizations.stan', line 10, column 12 to column 26)",
  " (in 'optimizations.stan', line 11, column 8 to column 21)",
  " (in 'optimizations.stan', line 16, column 8 to column 18)"};
@@ -27854,12 +27854,12 @@ nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
   try {
     int lcm_sym35__;
     {
-      current_statement__ = 89;
+      current_statement__ = 8;
       if (logical_gt(x, 342)) {
-        current_statement__ = 88;
+        current_statement__ = 7;
         return ;
       } 
-      current_statement__ = 7;
+      current_statement__ = 9;
       lp_accum__.add(y);
     }
   } catch (const std::exception& e) {
@@ -27892,7 +27892,7 @@ rfun(const int& y, std::ostream* pstream__) {
     int lcm_sym37__;
     int lcm_sym36__;
     {
-      current_statement__ = 9;
+      current_statement__ = 11;
       if (logical_gt(y, 2)) {
         current_statement__ = 90;
         return (y + 24);
@@ -27923,7 +27923,7 @@ rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     {
-      current_statement__ = 59;
+      current_statement__ = 61;
       lp_accum__.add(2);
       current_statement__ = 92;
       return 24;
@@ -27999,7 +27999,9 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      double lcm_sym54__;
+      double lcm_sym56__;
+      int lcm_sym55__;
+      int lcm_sym54__;
       int lcm_sym53__;
       int lcm_sym52__;
       int lcm_sym51__;
@@ -28039,7 +28041,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         inline_sym1__ = std::numeric_limits<int>::min();
         
         for (int inline_sym2__ = 1; inline_sym2__ <= 1; ++inline_sym2__) {
-          current_statement__ = 7;
+          current_statement__ = 8;
+          if (logical_gt(4, 342)) {
+            break;
+          }
+          current_statement__ = 9;
           lp_accum__.add(3);
         }
         int inline_sym3__;
@@ -28071,7 +28077,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           break;
         }
         if (inline_sym6__) {
-          current_statement__ = 11;
+          current_statement__ = 13;
           if (pstream__) {
             stan_print(pstream__, "a");
             stan_print(pstream__, "\n");
@@ -28122,25 +28128,29 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             
             for (int inline_sym19__ = 1; inline_sym19__ <= 1;
                  ++inline_sym19__) {
-              current_statement__ = 7;
+              current_statement__ = 8;
+              if (logical_gt(34, 342)) {
+                break;
+              }
+              current_statement__ = 9;
               lp_accum__.add(3);
             }
           }
           int inline_sym13__;
           inline_sym13__ = std::numeric_limits<int>::min();
           
-          lcm_sym50__ = (inline_sym9__ + 1);
+          lcm_sym52__ = (inline_sym9__ + 1);
           for (int inline_sym14__ = 1; inline_sym14__ <= 1; ++inline_sym14__) {
             {
               inline_sym12__ = 29;
-              lcm_sym50__ = (inline_sym9__ + 1);
+              lcm_sym52__ = (inline_sym9__ + 1);
               break;
             }
             inline_sym12__ = 7;
-            lcm_sym50__ = (inline_sym9__ + 1);
+            lcm_sym52__ = (inline_sym9__ + 1);
             break;
           }
-          for (int i = lcm_sym50__; i <= inline_sym12__; ++i) {
+          for (int i = lcm_sym52__; i <= inline_sym12__; ++i) {
             {
               int inline_sym15__;
               int inline_sym16__;
@@ -28161,7 +28171,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
               
               for (int inline_sym19__ = 1; inline_sym19__ <= 1;
                    ++inline_sym19__) {
-                current_statement__ = 7;
+                current_statement__ = 8;
+                if (logical_gt(34, 342)) {
+                  break;
+                }
+                current_statement__ = 9;
                 lp_accum__.add(3);
               }
             }
@@ -28180,81 +28194,110 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           }
         } 
         {
-          current_statement__ = 13;
+          current_statement__ = 15;
           lp_accum__.add(53);
           {
-            current_statement__ = 13;
+            current_statement__ = 15;
             lp_accum__.add(53);
           }
           {
-            current_statement__ = 13;
+            current_statement__ = 15;
             lp_accum__.add(53);
           }
           {
-            current_statement__ = 13;
+            current_statement__ = 15;
             lp_accum__.add(53);
           }
           {
-            current_statement__ = 13;
+            current_statement__ = 15;
             lp_accum__.add(53);
           }
         }
         {
           {
             {
-              current_statement__ = 15;
+              current_statement__ = 17;
               lp_accum__.add(53);
               {
-                current_statement__ = 15;
+                current_statement__ = 17;
                 lp_accum__.add(53);
               }
             }
             {
-              lcm_sym53__ = (2 * 2);
-              if (logical_gte(lcm_sym53__, 2)) {
+              lcm_sym55__ = (2 * 2);
+              if (logical_gte(lcm_sym55__, 2)) {
+                lcm_sym53__ = (2 + 1);
+                lp_accum__.add(53);
+                for (int k = lcm_sym53__; k <= lcm_sym55__; ++k) {
+                  current_statement__ = 17;
+                  lp_accum__.add(53);
+                }
+              } 
+            }
+            {
+              lcm_sym55__ = (3 * 2);
+              if (logical_gte(lcm_sym55__, 3)) {
+                lcm_sym53__ = (3 + 1);
+                lp_accum__.add(53);
+                for (int k = lcm_sym53__; k <= lcm_sym55__; ++k) {
+                  current_statement__ = 17;
+                  lp_accum__.add(53);
+                }
+              } 
+            }
+          }
+          {
+            lcm_sym50__ = (2 + 2);
+            if (logical_gte(lcm_sym50__, 2)) {
+              lcm_sym54__ = (2 * 2);
+              if (logical_gte(lcm_sym54__, 2)) {
+                {
+                  lcm_sym51__ = (2 + 1);
+                  lp_accum__.add(53);
+                  for (int k = lcm_sym51__; k <= lcm_sym54__; ++k) {
+                    current_statement__ = 17;
+                    lp_accum__.add(53);
+                  }
+                }
+              } else {
                 lcm_sym51__ = (2 + 1);
-                lp_accum__.add(53);
-                for (int k = lcm_sym51__; k <= lcm_sym53__; ++k) {
-                  current_statement__ = 15;
+              }
+              for (int j = lcm_sym51__; j <= lcm_sym50__; ++j) {
+                lcm_sym55__ = (j * 2);
+                if (logical_gte(lcm_sym55__, j)) {
+                  lcm_sym53__ = (j + 1);
                   lp_accum__.add(53);
+                  for (int k = lcm_sym53__; k <= lcm_sym55__; ++k) {
+                    current_statement__ = 17;
+                    lp_accum__.add(53);
+                  }
+                } 
+              }
+            } 
+          }
+          {
+            lcm_sym50__ = (3 + 2);
+            if (logical_gte(lcm_sym50__, 3)) {
+              lcm_sym54__ = (3 * 2);
+              if (logical_gte(lcm_sym54__, 3)) {
+                {
+                  lcm_sym51__ = (3 + 1);
+                  lp_accum__.add(53);
+                  for (int k = lcm_sym51__; k <= lcm_sym54__; ++k) {
+                    current_statement__ = 17;
+                    lp_accum__.add(53);
+                  }
                 }
-              } 
-            }
-            {
-              lcm_sym53__ = (3 * 2);
-              if (logical_gte(lcm_sym53__, 3)) {
+              } else {
                 lcm_sym51__ = (3 + 1);
-                lp_accum__.add(53);
-                for (int k = lcm_sym51__; k <= lcm_sym53__; ++k) {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                }
-              } 
-            }
-          }
-          {
-            lcm_sym48__ = (2 + 2);
-            if (logical_gte(lcm_sym48__, 2)) {
-              lcm_sym52__ = (2 * 2);
-              if (logical_gte(lcm_sym52__, 2)) {
-                {
-                  lcm_sym49__ = (2 + 1);
-                  lp_accum__.add(53);
-                  for (int k = lcm_sym49__; k <= lcm_sym52__; ++k) {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                }
-              } else {
-                lcm_sym49__ = (2 + 1);
               }
-              for (int j = lcm_sym49__; j <= lcm_sym48__; ++j) {
-                lcm_sym53__ = (j * 2);
-                if (logical_gte(lcm_sym53__, j)) {
-                  lcm_sym51__ = (j + 1);
+              for (int j = lcm_sym51__; j <= lcm_sym50__; ++j) {
+                lcm_sym55__ = (j * 2);
+                if (logical_gte(lcm_sym55__, j)) {
+                  lcm_sym53__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym51__; k <= lcm_sym53__; ++k) {
-                    current_statement__ = 15;
+                  for (int k = lcm_sym53__; k <= lcm_sym55__; ++k) {
+                    current_statement__ = 17;
                     lp_accum__.add(53);
                   }
                 } 
@@ -28262,28 +28305,28 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             } 
           }
           {
-            lcm_sym48__ = (3 + 2);
-            if (logical_gte(lcm_sym48__, 3)) {
-              lcm_sym52__ = (3 * 2);
-              if (logical_gte(lcm_sym52__, 3)) {
+            lcm_sym50__ = (4 + 2);
+            if (logical_gte(lcm_sym50__, 4)) {
+              lcm_sym54__ = (4 * 2);
+              if (logical_gte(lcm_sym54__, 4)) {
                 {
-                  lcm_sym49__ = (3 + 1);
+                  lcm_sym51__ = (4 + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym49__; k <= lcm_sym52__; ++k) {
-                    current_statement__ = 15;
+                  for (int k = lcm_sym51__; k <= lcm_sym54__; ++k) {
+                    current_statement__ = 17;
                     lp_accum__.add(53);
                   }
                 }
               } else {
-                lcm_sym49__ = (3 + 1);
+                lcm_sym51__ = (4 + 1);
               }
-              for (int j = lcm_sym49__; j <= lcm_sym48__; ++j) {
-                lcm_sym53__ = (j * 2);
-                if (logical_gte(lcm_sym53__, j)) {
-                  lcm_sym51__ = (j + 1);
+              for (int j = lcm_sym51__; j <= lcm_sym50__; ++j) {
+                lcm_sym55__ = (j * 2);
+                if (logical_gte(lcm_sym55__, j)) {
+                  lcm_sym53__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym51__; k <= lcm_sym53__; ++k) {
-                    current_statement__ = 15;
+                  for (int k = lcm_sym53__; k <= lcm_sym55__; ++k) {
+                    current_statement__ = 17;
                     lp_accum__.add(53);
                   }
                 } 
@@ -28291,57 +28334,28 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             } 
           }
           {
-            lcm_sym48__ = (4 + 2);
-            if (logical_gte(lcm_sym48__, 4)) {
-              lcm_sym52__ = (4 * 2);
-              if (logical_gte(lcm_sym52__, 4)) {
+            lcm_sym50__ = (5 + 2);
+            if (logical_gte(lcm_sym50__, 5)) {
+              lcm_sym54__ = (5 * 2);
+              if (logical_gte(lcm_sym54__, 5)) {
                 {
-                  lcm_sym49__ = (4 + 1);
+                  lcm_sym51__ = (5 + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym49__; k <= lcm_sym52__; ++k) {
-                    current_statement__ = 15;
+                  for (int k = lcm_sym51__; k <= lcm_sym54__; ++k) {
+                    current_statement__ = 17;
                     lp_accum__.add(53);
                   }
                 }
               } else {
-                lcm_sym49__ = (4 + 1);
+                lcm_sym51__ = (5 + 1);
               }
-              for (int j = lcm_sym49__; j <= lcm_sym48__; ++j) {
-                lcm_sym53__ = (j * 2);
-                if (logical_gte(lcm_sym53__, j)) {
-                  lcm_sym51__ = (j + 1);
+              for (int j = lcm_sym51__; j <= lcm_sym50__; ++j) {
+                lcm_sym55__ = (j * 2);
+                if (logical_gte(lcm_sym55__, j)) {
+                  lcm_sym53__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym51__; k <= lcm_sym53__; ++k) {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                } 
-              }
-            } 
-          }
-          {
-            lcm_sym48__ = (5 + 2);
-            if (logical_gte(lcm_sym48__, 5)) {
-              lcm_sym52__ = (5 * 2);
-              if (logical_gte(lcm_sym52__, 5)) {
-                {
-                  lcm_sym49__ = (5 + 1);
-                  lp_accum__.add(53);
-                  for (int k = lcm_sym49__; k <= lcm_sym52__; ++k) {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                }
-              } else {
-                lcm_sym49__ = (5 + 1);
-              }
-              for (int j = lcm_sym49__; j <= lcm_sym48__; ++j) {
-                lcm_sym53__ = (j * 2);
-                if (logical_gte(lcm_sym53__, j)) {
-                  lcm_sym51__ = (j + 1);
-                  lp_accum__.add(53);
-                  for (int k = lcm_sym51__; k <= lcm_sym53__; ++k) {
-                    current_statement__ = 15;
+                  for (int k = lcm_sym53__; k <= lcm_sym55__; ++k) {
+                    current_statement__ = 17;
                     lp_accum__.add(53);
                   }
                 } 
@@ -28349,87 +28363,87 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             } 
           }
         }
-        current_statement__ = 23;
+        current_statement__ = 25;
         for (int i = 1; i <= 5; ++i) {
-          current_statement__ = 20;
+          current_statement__ = 22;
           if (logical_gt(i, 4)) {
             break;
           } 
-          current_statement__ = 21;
+          current_statement__ = 23;
           lp_accum__.add(2);
         }
-        current_statement__ = 28;
+        current_statement__ = 30;
         for (int i = 1; i <= 5; ++i) {
-          current_statement__ = 25;
+          current_statement__ = 27;
           if (logical_gt(i, 4)) {
             continue;
           } 
-          current_statement__ = 26;
+          current_statement__ = 28;
           lp_accum__.add(2);
         }
-        current_statement__ = 33;
-        for (int i = 1; i <= 5; ++i) {
-          current_statement__ = 30;
-          if (logical_gt(i, 4)) {
-            continue;
-          } 
-          current_statement__ = 31;
-          lp_accum__.add(2);
-        }
-        current_statement__ = 34;
-        x = 3;
         current_statement__ = 35;
-        lp_accum__.add(3);
+        for (int i = 1; i <= 5; ++i) {
+          current_statement__ = 32;
+          if (logical_gt(i, 4)) {
+            continue;
+          } 
+          current_statement__ = 33;
+          lp_accum__.add(2);
+        }
+        current_statement__ = 36;
+        x = 3;
         current_statement__ = 37;
+        lp_accum__.add(3);
+        current_statement__ = 39;
         if (logical_gt(theta, 2)) {
-          current_statement__ = 36;
+          current_statement__ = 38;
           x = 2;
         } 
-        current_statement__ = 38;
-        lp_accum__.add(x);
-        current_statement__ = 39;
-        lp_accum__.add(247);
         current_statement__ = 40;
-        x = 576;
+        lp_accum__.add(x);
         current_statement__ = 41;
+        lp_accum__.add(247);
+        current_statement__ = 42;
+        x = 576;
+        current_statement__ = 43;
         lp_accum__.add(576);
         lcm_sym47__ = logical_gt(theta, 46);
         if (lcm_sym47__) {
-          current_statement__ = 42;
+          current_statement__ = 44;
           x = 5880;
         } 
-        current_statement__ = 43;
+        current_statement__ = 45;
         lp_accum__.add(x);
         double z;
-        current_statement__ = 45;
+        current_statement__ = 47;
         z = x;
-        current_statement__ = 46;
-        lp_accum__.add(x);
         current_statement__ = 48;
+        lp_accum__.add(x);
+        current_statement__ = 50;
         if (lcm_sym47__) {
-          current_statement__ = 47;
+          current_statement__ = 49;
           z = x;
         } 
-        current_statement__ = 49;
+        current_statement__ = 51;
         lp_accum__.add(z);
-        current_statement__ = 50;
+        current_statement__ = 52;
         lp_accum__.add(2);
         {
           double y;
           y = std::numeric_limits<double>::quiet_NaN();
           
-          current_statement__ = 52;
+          current_statement__ = 54;
           lp_accum__.add(24);
         }
         {
           double y;
           y = std::numeric_limits<double>::quiet_NaN();
           
-          current_statement__ = 55;
+          current_statement__ = 57;
           lp_accum__.add(245);
         }
         {
-          current_statement__ = 57;
+          current_statement__ = 59;
           lp_accum__.add(2);
         }
         int inline_sym20__;
@@ -28437,11 +28451,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         inline_sym21__ = std::numeric_limits<int>::min();
         
         for (int inline_sym22__ = 1; inline_sym22__ <= 1; ++inline_sym22__) {
-          current_statement__ = 59;
+          current_statement__ = 61;
           lp_accum__.add(2);
           break;
         }
-        current_statement__ = 61;
+        current_statement__ = 63;
         while (576) {
           break;
         }
@@ -28450,7 +28464,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         inline_sym24__ = std::numeric_limits<int>::min();
         
         for (int inline_sym25__ = 1; inline_sym25__ <= 1; ++inline_sym25__) {
-          current_statement__ = 59;
+          current_statement__ = 61;
           lp_accum__.add(2);
           inline_sym23__ = 24;
           break;
@@ -28463,22 +28477,22 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           inline_sym24__ = std::numeric_limits<int>::min();
           
           for (int inline_sym25__ = 1; inline_sym25__ <= 1; ++inline_sym25__) {
-            current_statement__ = 59;
+            current_statement__ = 61;
             lp_accum__.add(2);
             inline_sym23__ = 24;
             break;
           }
         }
-        current_statement__ = 64;
-        for (int i = 31; i <= 225; ++i) { continue;}
         current_statement__ = 66;
+        for (int i = 31; i <= 225; ++i) { continue;}
+        current_statement__ = 68;
         for (int i = 31; i <= 225; ++i) { break;}
         int inline_sym26__;
         int inline_sym27__;
         inline_sym27__ = std::numeric_limits<int>::min();
         
         for (int inline_sym28__ = 1; inline_sym28__ <= 1; ++inline_sym28__) {
-          current_statement__ = 59;
+          current_statement__ = 61;
           lp_accum__.add(2);
           inline_sym26__ = 24;
           break;
@@ -28489,7 +28503,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         inline_sym30__ = std::numeric_limits<int>::min();
         
         for (int inline_sym31__ = 1; inline_sym31__ <= 1; ++inline_sym31__) {
-          current_statement__ = 59;
+          current_statement__ = 61;
           lp_accum__.add(2);
           inline_sym29__ = 24;
           break;
@@ -28500,19 +28514,19 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         inline_sym33__ = std::numeric_limits<int>::min();
         
         for (int inline_sym34__ = 1; inline_sym34__ <= 1; ++inline_sym34__) {
-          current_statement__ = 59;
+          current_statement__ = 61;
           lp_accum__.add(2);
           break;
         }
         {
-          current_statement__ = 69;
+          current_statement__ = 71;
           lp_accum__.add(1);
-          current_statement__ = 70;
+          current_statement__ = 72;
           lp_accum__.add(24);
         }
         {
           {
-            current_statement__ = 72;
+            current_statement__ = 74;
             lp_accum__.add(1);
           }
         }
@@ -28520,7 +28534,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         temp = std::numeric_limits<double>::quiet_NaN();
         
         {
-          current_statement__ = 76;
+          current_statement__ = 78;
           if (pstream__) {
             stan_print(pstream__, "hello");
             stan_print(pstream__, "\n");
@@ -28530,28 +28544,28 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         temp2 = std::numeric_limits<double>::quiet_NaN();
         
         {
-          current_statement__ = 79;
+          current_statement__ = 81;
           lp_accum__.add(4);
-          current_statement__ = 80;
+          current_statement__ = 82;
           lp_accum__.add(6);
           {
-            current_statement__ = 79;
+            current_statement__ = 81;
             lp_accum__.add(4);
-            current_statement__ = 80;
+            current_statement__ = 82;
             lp_accum__.add(6);
           }
         }
         double dataonlyvar;
-        current_statement__ = 82;
+        current_statement__ = 84;
         dataonlyvar = 3;
-        current_statement__ = 83;
+        current_statement__ = 85;
         lp_accum__.add(dataonlyvar);
         local_scalar_t__ paramvar;
         {
-          current_statement__ = 85;
+          current_statement__ = 87;
           paramvar = (theta * 34);
         }
-        current_statement__ = 87;
+        current_statement__ = 89;
         lp_accum__.add(paramvar);
       }
     } catch (const std::exception& e) {
@@ -28745,25 +28759,25 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     
     param_names__.emplace_back(std::string() + "theta");
     param_names__.emplace_back(std::string() + "phi");
-    for (int sym55__ = 1; sym55__ <= 2; ++sym55__) {
+    for (int sym57__ = 1; sym57__ <= 2; ++sym57__) {
       {
-        for (int sym56__ = 1; sym56__ <= 3; ++sym56__) {
+        for (int sym58__ = 1; sym58__ <= 3; ++sym58__) {
           {
-            param_names__.emplace_back(std::string() + "x_matrix" + '.' + std::to_string(sym56__) + '.' + std::to_string(sym55__));
+            param_names__.emplace_back(std::string() + "x_matrix" + '.' + std::to_string(sym58__) + '.' + std::to_string(sym57__));
           } 
         }
       } 
     }
-    for (int sym55__ = 1; sym55__ <= 2; ++sym55__) {
+    for (int sym57__ = 1; sym57__ <= 2; ++sym57__) {
       {
-        param_names__.emplace_back(std::string() + "x_vector" + '.' + std::to_string(sym55__));
+        param_names__.emplace_back(std::string() + "x_vector" + '.' + std::to_string(sym57__));
       } 
     }
-    for (int sym55__ = 1; sym55__ <= 2; ++sym55__) {
+    for (int sym57__ = 1; sym57__ <= 2; ++sym57__) {
       {
-        for (int sym56__ = 1; sym56__ <= 2; ++sym56__) {
+        for (int sym58__ = 1; sym58__ <= 2; ++sym58__) {
           {
-            param_names__.emplace_back(std::string() + "x_cov" + '.' + std::to_string(sym56__) + '.' + std::to_string(sym55__));
+            param_names__.emplace_back(std::string() + "x_cov" + '.' + std::to_string(sym58__) + '.' + std::to_string(sym57__));
           } 
         }
       } 
@@ -28786,23 +28800,23 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     
     param_names__.emplace_back(std::string() + "theta");
     param_names__.emplace_back(std::string() + "phi");
-    for (int sym55__ = 1; sym55__ <= 2; ++sym55__) {
+    for (int sym57__ = 1; sym57__ <= 2; ++sym57__) {
       {
-        for (int sym56__ = 1; sym56__ <= 3; ++sym56__) {
+        for (int sym58__ = 1; sym58__ <= 3; ++sym58__) {
           {
-            param_names__.emplace_back(std::string() + "x_matrix" + '.' + std::to_string(sym56__) + '.' + std::to_string(sym55__));
+            param_names__.emplace_back(std::string() + "x_matrix" + '.' + std::to_string(sym58__) + '.' + std::to_string(sym57__));
           } 
         }
       } 
     }
-    for (int sym55__ = 1; sym55__ <= 2; ++sym55__) {
+    for (int sym57__ = 1; sym57__ <= 2; ++sym57__) {
       {
-        param_names__.emplace_back(std::string() + "x_vector" + '.' + std::to_string(sym55__));
+        param_names__.emplace_back(std::string() + "x_vector" + '.' + std::to_string(sym57__));
       } 
     }
-    for (int sym55__ = 1; sym55__ <= 3; ++sym55__) {
+    for (int sym57__ = 1; sym57__ <= 3; ++sym57__) {
       {
-        param_names__.emplace_back(std::string() + "x_cov" + '.' + std::to_string(sym55__));
+        param_names__.emplace_back(std::string() + "x_cov" + '.' + std::to_string(sym57__));
       } 
     }
     if (emit_transformed_parameters__) {

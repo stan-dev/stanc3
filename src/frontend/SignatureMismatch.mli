@@ -19,16 +19,23 @@ type signature_error =
   (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
   * function_mismatch
 
+type promotions = private None | RealPromotion | ComplexPromotion
+
 val check_compatible_arguments_mod_conv :
      (UnsizedType.autodifftype * UnsizedType.t) list
   -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> (unit (* Ast.typed_expression list *), function_mismatch) result
+  -> (promotions list, function_mismatch) result
+
+val promote :
+  Ast.typed_expression list -> promotions list -> Ast.typed_expression list
 
 val returntype :
      Environment.t
   -> string
-  -> Ast.typed_expression list
-  -> ( UnsizedType.returntype * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
+  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> ( UnsizedType.returntype
+       * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
+       * promotions list
      , signature_error list * bool )
      result
 
@@ -38,7 +45,7 @@ val check_variadic_args :
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> UnsizedType.t
   -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> ( unit
+  -> ( promotions list
      , (UnsizedType.autodifftype * UnsizedType.t) list * function_mismatch )
      result
 

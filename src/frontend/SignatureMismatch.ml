@@ -110,13 +110,18 @@ let rec compare_errors e1 e2 =
       | SuffixMismatch _, _ | _, InputMismatch _ -> -1
       | InputMismatch _, _ | _, SuffixMismatch _ -> 1 ) )
 
+type promotions = None | RealPromotion | ComplexPromotion
+
+(*
+PROMOTION TODO: Not sure what depth actually means, or how it needs to change
+*)
 let rec check_same_type depth t1 t2 =
   let wrap_func = Result.map_error ~f:(fun e -> TypeMismatch (t1, t2, Some e)) in
   match (t1, t2) with
-  | t1, t2 when t1 = t2 -> Ok ()
-  | UnsizedType.(UReal, UInt) when depth < 1 -> Ok ()
-  | UnsizedType.(UComplex, UInt) when depth < 1 -> Ok ()
-  | UnsizedType.(UComplex, UReal) when depth < 1 -> Ok ()
+  | t1, t2 when t1 = t2 -> Ok None
+  | UnsizedType.(UReal, UInt) when depth < 1 -> Ok RealPromotion
+  | UnsizedType.(UComplex, UInt) when depth < 1 -> Ok ComplexPromotion
+  | UnsizedType.(UComplex, UReal) when depth < 1 -> Ok ComplexPromotion
   | UFun (_, _, s1, _), UFun (_, _, s2, _)
     when Fun_kind.without_propto s1 <> Fun_kind.without_propto s2 ->
       Error
@@ -124,27 +129,33 @@ let rec check_same_type depth t1 t2 =
       |> wrap_func
   | UFun (_, rt1, _, _), UFun (_, rt2, _, _) when rt1 <> rt2 ->
       Error (ReturnTypeMismatch (rt1, rt2)) |> wrap_func
-  | UFun (l1, _, _, _), UFun (l2, _, _, _) ->
-      check_compatible_arguments (depth + 1) l2 l1
-      |> Result.map_error ~f:(fun e -> InputMismatch e)
-      |> wrap_func
+  | UFun (l1, _, _, _), UFun (l2, _, _, _) -> (
+    match check_compatible_arguments (depth + 1) l2 l1 with
+    | Ok _ -> Ok None
+    | Error e -> Error (InputMismatch e) |> wrap_func )
+  (* PROMOTION TODO: Need to allow array promotion, this doesn't quite work? *)
+  | UArray ut1, UArray ut2 ->
+      check_same_type depth ut1 ut2
+      |> Result.map_error ~f:(function
+           | TypeMismatch (_, _, _) -> TypeMismatch (t1, t2, None)
+           | e -> e )
   | t1, t2 -> Error (TypeMismatch (t1, t2, None))
 
-and check_compatible_arguments depth args1 args2 =
-  match List.zip args1 args2 with
+and check_compatible_arguments depth typs args2 :
+    (promotions list, function_mismatch) result =
+  match List.zip typs args2 with
   | List.Or_unequal_lengths.Unequal_lengths ->
-      Error (ArgNumMismatch (List.length args1, List.length args2))
+      Error (ArgNumMismatch (List.length typs, List.length args2))
   | Ok l ->
-      List.find_mapi l ~f:(fun i ((ad1, ut1), (ad2, ut2)) ->
+      List.mapi l ~f:(fun i ((ad1, ut1), (ad2, ut2)) ->
           match check_same_type depth ut1 ut2 with
-          | Error e -> Some (ArgError (i + 1, e))
-          | Ok _ ->
-              if ad1 = ad2 then None
+          | Error e -> Error (ArgError (i + 1, e))
+          | Ok p ->
+              if ad1 = ad2 then Ok p
               else if depth < 2 && UnsizedType.autodifftype_can_convert ad1 ad2
-              then None
-              else Some (ArgError (i + 1, DataOnlyError)) )
-      |> Option.map ~f:Result.fail
-      |> Option.value ~default:(Ok ())
+              then Ok p
+              else Error (ArgError (i + 1, DataOnlyError)) )
+      |> Result.all
 
 let check_compatible_arguments_mod_conv = check_compatible_arguments 0
 let max_n_errors = 5
@@ -157,13 +168,19 @@ let extract_function_types f =
       Some (return, args, (fun x -> UserDefined x), mem)
   | _ -> None
 
-let arg_type x = Ast.(x.emeta.ad_level, x.emeta.type_)
-let get_arg_types = List.map ~f:arg_type
+let promote es promotions =
+  List.map2_exn es promotions ~f:(fun (exp : Ast.typed_expression) prom ->
+      let emeta = exp.emeta in
+      match prom with
+      | RealPromotion when emeta.type_ <> UReal ->
+          Ast.{expr= Ast.Promotion (exp, UReal); emeta}
+      | ComplexPromotion when emeta.type_ <> UComplex ->
+          {expr= Promotion (exp, UComplex); emeta}
+      | _ -> exp )
 
-let returntype env name arg_exprs =
+let returntype env name args =
   (* NB: Variadic arguments are special-cased in the typechecker and not handled here *)
   let name = Utils.stdlib_distribution_name name in
-  let args = get_arg_types arg_exprs in
   Environment.find env name
   |> List.filter_map ~f:extract_function_types
   |> List.sort ~compare:(fun (x, _, _, _) (y, _, _, _) ->
@@ -173,7 +190,7 @@ let returntype env name arg_exprs =
        ~f:(fun errors (rt, tys, funkind_constructor, _) ->
          match check_compatible_arguments 0 tys args with
          (* TODO instead of unit, return Ast.typed_expr list which could contain promotions*)
-         | Ok () -> Stop (Ok (rt, funkind_constructor))
+         | Ok p -> Stop (Ok (rt, funkind_constructor, p))
          | Error e -> Continue (((rt, tys), e) :: errors) )
        ~finish:(fun errors ->
          let errors =
@@ -203,13 +220,13 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
       if suffix = FnPlain || (allow_lpdf && suffix = FnLpdf ()) then
         match check_compatible_arguments 1 mandatory mandatory_fun_arg_tys with
         | Error x -> wrap_func_error (InputMismatch x)
-        | Ok () -> (
+        | Ok _ -> (
           match check_same_type 1 return_type fun_return with
           | Error _ ->
               wrap_func_error
                 (ReturnTypeMismatch
                    (ReturnType fun_return, ReturnType return_type) )
-          | Ok () ->
+          | Ok _ ->
               let expected_args =
                 ((UnsizedType.AutoDiffable, func_type) :: mandatory_arg_tys)
                 @ variadic_arg_tys in
