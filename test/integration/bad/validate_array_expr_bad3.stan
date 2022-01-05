@@ -2,7 +2,7 @@ parameters {
   real y;
 }
 model {
-  int int_1_a[3];
+  array[3] int int_1_a;
   int_1_a = { };  // cannot be empty
   y ~ normal(0,1);
 }

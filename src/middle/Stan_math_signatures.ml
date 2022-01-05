@@ -271,7 +271,7 @@ let distributions =
   ; (full_lpdf, "student_t", [DVReal; DVReal; DVReal; DVReal], AoS)
   ; (full_lpdf, "std_normal", [DVReal], AoS)
   ; (full_lpdf, "uniform", [DVReal; DVReal; DVReal], AoS)
-  ; ([Lpdf; Rng], "von_mises", [DVReal; DVReal; DVReal], AoS)
+  ; (full_lpdf, "von_mises", [DVReal; DVReal; DVReal], AoS)
   ; (full_lpdf, "weibull", [DVReal; DVReal; DVReal], AoS)
   ; ([Lpdf], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal], AoS)
   ; ([Lpdf], "wishart", [DMatrix; DReal; DMatrix], AoS) ]
@@ -1691,6 +1691,16 @@ let () =
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
+    , [UReal; UMatrix; UReal; UVector; UReal]
+    , AoS ) ;
+  add_unqualified
+    ( "normal_id_glm_lpdf"
+    , ReturnType UReal
+    , [UReal; UMatrix; UVector; UVector; UReal]
+    , AoS ) ;
+  add_unqualified
+    ( "normal_id_glm_lpdf"
+    , ReturnType UReal
     , [UReal; UMatrix; UReal; UVector; UVector]
     , AoS ) ;
   add_unqualified
@@ -1706,7 +1716,17 @@ let () =
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
+    , [UVector; URowVector; UVector; UVector; UReal]
+    , AoS ) ;
+  add_unqualified
+    ( "normal_id_glm_lpdf"
+    , ReturnType UReal
     , [UVector; URowVector; UVector; UVector; UVector]
+    , AoS ) ;
+  add_unqualified
+    ( "normal_id_glm_lpdf"
+    , ReturnType UReal
+    , [UVector; URowVector; UReal; UVector; UReal]
     , AoS ) ;
   add_nullary "not_a_number" ;
   add_unqualified ("num_elements", ReturnType UInt, [UMatrix], AoS) ;
@@ -1778,6 +1798,16 @@ let () =
     ( "ordered_probit_lpmf"
     , ReturnType UReal
     , [UArray UInt; UReal; UArray UVector]
+    , AoS ) ;
+  add_unqualified
+    ( "ordered_probit_lpmf"
+    , ReturnType UReal
+    , [UArray UInt; UVector; UVector]
+    , AoS ) ;
+  add_unqualified
+    ( "ordered_probit_lpmf"
+    , ReturnType UReal
+    , [UArray UInt; UVector; UArray UVector]
     , AoS ) ;
   add_unqualified ("ordered_probit_rng", ReturnType UInt, [UReal; UVector], AoS) ;
   add_binary_vec_real_real "owens_t" AoS ;

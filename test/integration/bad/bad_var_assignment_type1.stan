@@ -1,6 +1,6 @@
 transformed data {
   vector[5] y;
-  real z[5];
+  array[5] real z;
   z = y;
 }
 parameters {

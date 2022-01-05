@@ -3,9 +3,9 @@ data {
   int N_1;
   int N_2;
   real d_sigma;
-  real d_len[K]; // bad d_len type
-  vector[K] d_vec_1[N_1];
-  vector[K] d_rvec_1[N_2];
+  array[K] real d_len; // bad d_len type
+  array[N_1] vector[K] d_vec_1;
+  array[N_2] vector[K] d_rvec_1;
 }
 transformed data {
   matrix[N_1, N_2] transformed_data_matrix;

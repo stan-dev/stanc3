@@ -6,6 +6,7 @@ def utils = new org.stan.Utils()
 def skipExpressionTests = false
 def skipRemainingStages = false
 def skipCompileTests = false
+def skipRebuildingBinaries = false
 def buildingAgentARM = "linux"
 
 /* Functions that runs a sh command and returns the stdout */
@@ -28,6 +29,7 @@ pipeline {
     agent none
     parameters {
         booleanParam(name:"compile_all", defaultValue: false, description:"Try compiling all models in test/integration/good")
+        booleanParam(name:"skip_end_to_end", defaultValue: false, description:"Skip end-to-end tests ")
         string(defaultValue: 'develop', name: 'cmdstan_pr',
                description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: 'develop', name: 'stan_pr',
@@ -61,14 +63,17 @@ pipeline {
                     retry(3) { checkout scm }
                     sh 'git clean -xffd'
 
-                    def stanMathSigs = ['test/integration/signatures/stan_math_sigs.expected'].join(" ")
+                    def stanMathSigs = ['test/integration/signatures/stan_math_signatures.t'].join(" ")
                     skipExpressionTests = utils.verifyChanges(stanMathSigs)
 
-                    def sourceCodePaths = ['src'].join(" ")
-                    skipRemainingStages = utils.verifyChanges(sourceCodePaths)
+                    def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
+                    skipRemainingStages = utils.verifyChanges(runTestPaths)
 
                     def compileTests = ['test/integration/good'].join(" ")
                     skipCompileTests = utils.verifyChanges(compileTests)
+
+                    def sourceCodePaths = ['src'].join(" ")
+                    skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths)
 
                     if (buildingTag()) {
                         buildingAgentARM = "arm-ec2"
@@ -200,6 +205,11 @@ pipeline {
 
                             writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
                                     text:"O=0\nCXX=${CXX}")
+                            
+                            utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
+                            utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
+                            utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
+
                             sh """
                                 cd performance-tests-cmdstan
                                 mkdir cmdstan/bin
@@ -223,8 +233,13 @@ pipeline {
                 stage("Model end-to-end tests") {
                     when {
                         beforeAgent true
-                        expression {
+                        allOf {
+                         expression {
                             !skipCompileTests
+                         }
+                         expression {
+                            !params.skip_end_to_end
+                         }
                         }
                     }
                     agent {
@@ -234,28 +249,28 @@ pipeline {
                         }
                     }
                     steps {
-                        unstash 'ubuntu-exe'
-                        sh """
-                            git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                        """
                         script {
+                            unstash 'ubuntu-exe'
+                            sh """
+                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                            """
                             utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
                             utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
                             utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
+                            sh """
+                                cd performance-tests-cmdstan
+                                git show HEAD --stat
+                                echo "example-models/regression_tests/mother.stan" > all.tests
+                                cat known_good_perf_all.tests >> all.tests
+                                echo "" >> all.tests
+                                cat shotgun_perf_all.tests >> all.tests
+                                cat all.tests
+                                echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+                                echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
+                                cd cmdstan; make clean-all; git show HEAD --stat; cd ..
+                                CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
+                            """
                         }
-                        sh """
-                            cd performance-tests-cmdstan
-                            git show HEAD --stat
-                            echo "example-models/regression_tests/mother.stan" > all.tests
-                            cat known_good_perf_all.tests >> all.tests
-                            echo "" >> all.tests
-                            cat shotgun_perf_all.tests >> all.tests
-                            cat all.tests
-                            echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-                            echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
-                            cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                            CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
-                        """
 
                         xunit([GoogleTest(
                             deleteOutputFiles: false,
@@ -293,12 +308,15 @@ pipeline {
 
                         unstash 'ubuntu-exe'
 
-                        sh """
-                            git clone --recursive https://github.com/stan-dev/math.git
-                            cp bin/stanc math/test/expressions/stanc
-                        """
-
                         script {
+                            sh """
+                                git clone --recursive https://github.com/stan-dev/math.git
+                            """
+                            utils.checkout_pr("math", "math", params.math_pr)
+                            sh """
+                                cp bin/stanc math/test/expressions/stanc
+                            """
+
                             dir("math") {
                                 sh """
                                     echo O=0 >> make/local
@@ -322,7 +340,7 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            !skipRebuildingBinaries
                         }
                     }
                     agent {
@@ -351,7 +369,7 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            !skipRebuildingBinaries
                         }
                     }
                     agent {
@@ -378,7 +396,7 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            !skipRebuildingBinaries
                         }
                     }
                     agent {
@@ -406,7 +424,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -436,7 +454,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -466,7 +484,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -496,7 +514,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -527,7 +545,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -558,7 +576,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -590,7 +608,7 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            !skipRebuildingBinaries
                         }
                     }
                     agent {
@@ -623,6 +641,7 @@ pipeline {
                 beforeAgent true
                 allOf {
                     expression { !skipRemainingStages }
+                    expression { !skipRebuildingBinaries }
                     anyOf { buildingTag(); branch 'master' }
                 }
             }

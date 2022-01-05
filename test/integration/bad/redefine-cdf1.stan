@@ -1,5 +1,5 @@
 functions {
-  real poisson_cdf_log(int n, real x) {
+  real poisson_lcdf(int n, real x) {
     return -x^2;
   }
 }

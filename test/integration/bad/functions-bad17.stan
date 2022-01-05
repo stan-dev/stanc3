@@ -1,5 +1,5 @@
 functions {
-  vector bizbuz_log(vector x) {
+  vector bizbuz_lpdf(vector x) {
     return exp(x);
   }
 }

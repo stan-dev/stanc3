@@ -327,8 +327,6 @@ where F1 = (array[] real, int, int, real, real) => real
 Available signatures:
 (<F1>, array[] real, int, real, real) => real
   The 5th argument must be real but got vector
-  $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types_static.stan
-
   $ ../../../../../install/default/bin/stanc bad_not_slice_type.stan
 Semantic error in 'bad_not_slice_type.stan', line 12, column 12 to column 42:
    -------------------------------------------------

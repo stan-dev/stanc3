@@ -1,11 +1,12 @@
 data {
-  vector[5] y[10];
-  vector[5] mu[10];
+  array[10] vector[5] y;
+  array[10] vector[5] mu;
 }
 parameters {
-  cov_matrix[5] Sigma[10];
+  array[10] cov_matrix[5] Sigma;
 }
 model {
-  for (i in 1:10)
-    y[i] ~ multi_normal(mu[i],Sigma[i]);
+  for (i in 1 : 10) 
+    y[i] ~ multi_normal(mu[i], Sigma[i]);
 }
+

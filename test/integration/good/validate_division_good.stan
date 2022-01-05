@@ -16,7 +16,7 @@ transformed parameters {
   real ut;
   matrix[3,3] mt;
   row_vector[3] vt;
-  xt = 2 / 3;
+  xt = 2 %/% 3;
   ut = 2.1 / 3;
   ut = 2 / 3.1;
   ut = 2.1 / 3.1;

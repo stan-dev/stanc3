@@ -16,7 +16,10 @@ val deprecated : string -> Lexing.position * string -> unit
 (** Register that a deprecated language construct has been found. *)
 
 val empty : string -> unit
-(** Register that an empty file is being lexxed *)
+(** Register that an empty file is being parsed *)
+
+val array_syntax : ?unsized:bool -> Lexing.position * Lexing.position -> unit
+(** Warn on the old [real x\[3\]] syntax and suggest the [array] keyword*)
 
 val future_keyword :
   string -> string -> Lexing.position * Lexing.position -> unit
