@@ -34,7 +34,7 @@ val returning_fn_expected_nonreturning_found : Location_span.t -> string -> t
 val returning_fn_expected_nonfn_found : Location_span.t -> string -> t
 
 val returning_fn_expected_undeclaredident_found :
-  Location_span.t -> string -> t
+  Location_span.t -> string -> string option -> t
 
 val returning_fn_expected_undeclared_dist_suffix_found :
   Location_span.t -> string * string -> t
@@ -70,7 +70,7 @@ val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
 val nonreturning_fn_expected_nonfn_found : Location_span.t -> string -> t
 
 val nonreturning_fn_expected_undeclaredident_found :
-  Location_span.t -> string -> t
+  Location_span.t -> string -> string option -> t
 
 val illtyped_fn_app :
      Location_span.t
@@ -89,7 +89,7 @@ val ident_is_keyword : Location_span.t -> string -> t
 val ident_is_model_name : Location_span.t -> string -> t
 val ident_is_stanmath_name : Location_span.t -> string -> t
 val ident_in_use : Location_span.t -> string -> t
-val ident_not_in_scope : Location_span.t -> string -> t
+val ident_not_in_scope : Location_span.t -> string -> string option -> t
 val invalid_map_rect_fn : Location_span.t -> string -> t
 val invalid_decl_rng_fn : Location_span.t -> t
 val invalid_rng_fn : Location_span.t -> t
@@ -130,10 +130,7 @@ val fn_decl_exists : Location_span.t -> string -> t
 val fn_decl_without_def : Location_span.t -> t
 val fn_decl_needs_block : Location_span.t -> t
 val non_real_prob_fn_def : Location_span.t -> t
-
-val prob_density_non_real_variate :
-  Location_span.t -> UnsizedType.t option -> t
-
+val prob_density_non_real_variate : Location_span.t -> UnsizedType.t option -> t
 val prob_mass_non_int_variate : Location_span.t -> UnsizedType.t option -> t
 val duplicate_arg_names : Location_span.t -> t
 val incompatible_return_types : Location_span.t -> t

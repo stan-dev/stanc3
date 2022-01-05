@@ -1,5 +1,5 @@
 data {
 }
 model {
-    target += von_mises_ccdf_log(1, 0,1);
+    target += binomial_logit_ccdf_log(1, 0,1);
 }

@@ -1,0 +1,53 @@
+(rule
+ (targets canonical.output)
+ (deps
+  (package stanc)
+  (:stanfiles
+   (glob_files *.stan*)))
+ (action
+  (with-outputs-to
+   %{targets}
+   (run %{bin:run_bin_on_args} "%{bin:stanc} --print-canonical" %{stanfiles}))))
+
+(rule
+ (targets deprecations-only.output)
+ (deps
+  (package stanc)
+  (:stanfiles
+   (glob_files *.stan*)))
+ (action
+  (with-outputs-to
+   %{targets}
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --auto-format --canonicalize deprecations"
+    %{stanfiles}))))
+
+(rule
+ (targets everything-but.output)
+ (deps
+  (package stanc)
+  (:stanfiles
+   (glob_files *.stan*)))
+ (action
+  (with-outputs-to
+   %{targets}
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --auto-format --canonicalize braces,parentheses"
+    %{stanfiles}))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff canonical.expected canonical.output)))
+
+(rule
+ (alias runtest)
+ (action
+  (diff deprecations-only.expected deprecations-only.output)))
+
+(rule
+ (alias runtest)
+ (action
+  (diff everything-but.expected everything-but.output)))

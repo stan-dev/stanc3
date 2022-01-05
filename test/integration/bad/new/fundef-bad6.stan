@@ -1,1 +1,1 @@
-functions { void T ( vector [] while);}
+functions { void T ( array [] vector while);}

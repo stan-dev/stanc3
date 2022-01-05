@@ -4,8 +4,8 @@ data {
   int K;
   int N_1;
   int N_2;
-  vector[K] d_vec_1[N_1];
-  row_vector[K] d_rvec_1[N_2]; // bad mixed Eigen vector types
+  array[N_1] vector[K] d_vec_1;
+  array[N_2] row_vector[K] d_rvec_1; // bad mixed Eigen vector types
 }
 transformed data {
   matrix[N_2, N_1] transformed_data_matrix;

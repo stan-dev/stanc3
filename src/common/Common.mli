@@ -17,3 +17,4 @@ module Specialized : module type of Specialized
 
 module Gensym : module type of Gensym
 module Helpers : module type of Helpers
+module FatalError : module type of FatalError

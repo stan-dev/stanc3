@@ -1,6 +1,7 @@
 (library
-  (name stan_math_backend)
-  (public_name stanc.stan_math_backend)
-  (libraries core_kernel re fmt middle yojson)
-  (inline_tests)
-  (preprocess (pps ppx_jane ppx_deriving.map ppx_deriving.fold)))
+ (name stan_math_backend)
+ (public_name stanc.stan_math_backend)
+ (libraries core_kernel re fmt middle yojson)
+ (inline_tests)
+ (preprocess
+  (pps ppx_jane ppx_deriving.map ppx_deriving.fold)))

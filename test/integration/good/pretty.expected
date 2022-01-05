@@ -1,16 +1,3 @@
-  $ ../../../../install/default/bin/stanc --auto-format abs-deprecate.stan
-transformed data {
-  real mu;
-  mu = abs(-1.2);
-}
-parameters {
-  real y;
-}
-model {
-  y ~ normal(mu, 1);
-}
-
-Warning in 'abs-deprecate.stan', line 3, column 7: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
   $ ../../../../install/default/bin/stanc --auto-format algebra_solver_good.stan
 functions {
   real algebra_solverfake(real x) {
@@ -122,22 +109,6 @@ model {
   dummy_parameter ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format assignment-deprecated.stan
-transformed data {
-  real mu;
-  real<lower=0> sigma;
-  mu <- -1;
-  sigma <- 3;
-}
-parameters {
-  real y;
-}
-model {
-  y ~ normal(mu, sigma);
-}
-
-Warning in 'assignment-deprecated.stan', line 4, column 5: assignment operator <- is deprecated in the Stan language; use = instead.
-Warning in 'assignment-deprecated.stan', line 5, column 8: assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../install/default/bin/stanc --auto-format assignment-new.stan
 transformed data {
   real mu;
@@ -1156,7 +1127,7 @@ transformed data {
   vector[M] beta_true;
   real alpha_true = 1.5;
   for (j in 1 : M) {
-    beta_true[j] = j / M;
+    beta_true[j] = j * 1.0 / M;
   }
   for (i in 1 : N) {
     for (j in 1 : M) {
@@ -1176,12 +1147,6 @@ model {
   y ~ bernoulli_logit(x * beta_inferred + alpha_inferred);
 }
 
-Warning in 'bernoulli_logit_glm_old_performance.stan', line 10, column 19: Found int division:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format bernoulli_logit_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -1191,7 +1156,7 @@ transformed data {
   vector[M] beta_true;
   real alpha_true = 1.5;
   for (j in 1 : M) {
-    beta_true[j] = j / M;
+    beta_true[j] = j * 1.0 / M;
   }
   for (i in 1 : N) {
     for (j in 1 : M) {
@@ -1211,12 +1176,6 @@ model {
   y ~ bernoulli_logit_glm(x, alpha_inferred, beta_inferred);
 }
 
-Warning in 'bernoulli_logit_glm_performance.stan', line 10, column 19: Found int division:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format break-continue.stan
 // test right value passed through for, while and embedded
 functions {
@@ -1376,15 +1335,13 @@ generated quantities {
   $ ../../../../install/default/bin/stanc --auto-format comments.stan
 // this is a line comment */ should stay // /**/
 
-// another one using # - should become //
-
-// how ugly # can */ we make /* this one // # 
+// how ugly # can */ we make /* this one // #
 
 /* one line block */
 
-/* a weird 
+/* a weird
       ly formated
-          block 
+          block
                 */
 
 /**
@@ -1393,10 +1350,9 @@ generated quantities {
  */
 
 data {
-  //nothing here either 
+  //nothing here either
 }
 
-Warning in 'comments.stan', line 3, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
   $ ../../../../install/default/bin/stanc --auto-format conditional_condition_good.stan
 parameters {
   real y;
@@ -1433,296 +1389,200 @@ data {
   int a0;
   array[1] int a1;
   array[2, 3] int a2;
-  array[1] int a3;
-  array[2, 3] int a4;
   
   real b0;
   array[4] real b1;
   array[5, 6] real b2;
-  array[4] real b3;
-  array[5, 6] real b4;
   
   vector[7] c0;
   array[8] vector[7] c1;
   array[8, 9] vector[7] c2;
-  array[8] vector[7] c3;
-  array[8, 9] vector[7] c4;
   
   row_vector[7] d0;
   array[8] row_vector[7] d1;
   array[8, 9] row_vector[7] d2;
-  array[8] row_vector[7] d3;
-  array[8, 9] row_vector[7] d4;
   
   matrix[8, 9] e;
   array[11] matrix[8, 9] e1;
   array[11, 12] matrix[8, 9] e2;
-  array[11] matrix[8, 9] e3;
-  array[11, 12] matrix[8, 9] e4;
   
   simplex[8] f;
   array[9] simplex[8] f1;
   array[9, 10] simplex[8] f2;
-  array[9] simplex[8] f3;
-  array[9, 10] simplex[8] f4;
   
   ordered[9] g;
   array[11] ordered[9] g1;
   array[12, 13] ordered[9] g2;
-  array[11] ordered[9] g3;
-  array[12, 13] ordered[9] g4;
   
   positive_ordered[9] h;
   array[11] positive_ordered[9] h1;
   array[12, 13] positive_ordered[9] h2;
-  array[11] positive_ordered[9] h3;
-  array[12, 13] positive_ordered[9] h4;
   
   corr_matrix[10] j;
   array[3] corr_matrix[10] j1;
   array[5, 6] corr_matrix[10] j2;
-  array[3] corr_matrix[10] j3;
-  array[5, 6] corr_matrix[10] j4;
   
   cov_matrix[10] k;
   array[3] cov_matrix[10] k1;
   array[5, 6] cov_matrix[10] k2;
-  array[3] cov_matrix[10] k3;
-  array[5, 6] cov_matrix[10] k4;
 }
 transformed data {
   int td_a0;
   array[1] int td_a1;
   array[2, 3] int td_a2;
-  array[1] int td_a3;
-  array[2, 3] int td_a4;
   
   real td_b0;
   array[4] real td_b1;
   array[5, 6] real td_b2;
-  array[4] real td_b3;
-  array[5, 6] real td_b4;
   
   vector[7] td_c0;
   array[8] vector[7] td_c1;
   array[8, 9] vector[7] td_c2;
-  array[8] vector[7] td_c3;
-  array[8, 9] vector[7] td_c4;
   
   row_vector[7] td_d0;
   array[8] row_vector[7] td_d1;
   array[8, 9] row_vector[7] td_d2;
-  array[8] row_vector[7] td_d3;
-  array[8, 9] row_vector[7] td_d4;
   
   matrix[8, 9] td_e;
   array[11] matrix[8, 9] td_e1;
   array[11, 12] matrix[8, 9] td_e2;
-  array[11] matrix[8, 9] td_e3;
-  array[11, 12] matrix[8, 9] td_e4;
   
   simplex[8] td_f;
   array[9] simplex[8] td_f1;
   array[9, 10] simplex[8] td_f2;
-  array[9] simplex[8] td_f3;
-  array[9, 10] simplex[8] td_f4;
   
   ordered[9] td_g;
   array[11] ordered[9] td_g1;
   array[12, 13] ordered[9] td_g2;
-  array[11] ordered[9] td_g3;
-  array[12, 13] ordered[9] td_g4;
   
   positive_ordered[9] td_h;
   array[11] positive_ordered[9] td_h1;
   array[12, 13] positive_ordered[9] td_h2;
-  array[11] positive_ordered[9] td_h3;
-  array[12, 13] positive_ordered[9] td_h4;
   
   corr_matrix[10] td_j;
   array[3] corr_matrix[10] td_j1;
   array[5, 6] corr_matrix[10] td_j2;
-  array[3] corr_matrix[10] td_j3;
-  array[5, 6] corr_matrix[10] td_j4;
   
   cov_matrix[10] td_k;
   array[3] cov_matrix[10] td_k1;
   array[5, 6] cov_matrix[10] td_k2;
-  array[3] cov_matrix[10] td_k3;
-  array[5, 6] cov_matrix[10] td_k4;
   
   {
     int loc_td_a0;
     array[1] int loc_td_a1;
     array[2, 3] int loc_td_a2;
-    array[1] int loc_td_a3;
-    array[2, 3] int loc_td_a4;
     
     real loc_td_b0;
     array[4] real loc_td_b1;
     array[5, 6] real loc_td_b2;
-    array[4] real loc_td_b3;
-    array[5, 6] real loc_td_b4;
     
     vector[7] loc_td_c0;
     array[8] vector[7] loc_td_c1;
     array[8, 9] vector[7] loc_td_c2;
-    array[8] vector[7] loc_td_c3;
-    array[8, 9] vector[7] loc_td_c4;
     
     row_vector[7] loc_td_d0;
     array[8] row_vector[7] loc_td_d1;
     array[8, 9] row_vector[7] loc_td_d2;
-    array[8] row_vector[7] loc_td_d3;
-    array[8, 9] row_vector[7] loc_td_d4;
     
     matrix[8, 9] loc_td_e;
     array[11] matrix[8, 9] loc_td_e1;
     array[11, 12] matrix[8, 9] loc_td_e2;
-    array[11] matrix[8, 9] loc_td_e3;
-    array[11, 12] matrix[8, 9] loc_td_e4;
   }
 }
 parameters {
   real par_b0;
   array[4] real par_b1;
   array[5, 6] real par_b2;
-  array[4] real par_b3;
-  array[5, 6] real par_b4;
   
   vector[7] par_c0;
   array[8] vector[7] par_c1;
   array[8, 9] vector[7] par_c2;
-  array[8] vector[7] par_c3;
-  array[8, 9] vector[7] par_c4;
   
   row_vector[7] par_d0;
   array[8] row_vector[7] par_d1;
   array[8, 9] row_vector[7] par_d2;
-  array[8] row_vector[7] par_d3;
-  array[8, 9] row_vector[7] par_d4;
   
   matrix[8, 9] par_e;
   array[11] matrix[8, 9] par_e1;
   array[11, 12] matrix[8, 9] par_e2;
-  array[11] matrix[8, 9] par_e3;
-  array[11, 12] matrix[8, 9] par_e4;
   
   simplex[8] par_f;
   array[9] simplex[8] par_f1;
   array[9, 10] simplex[8] par_f2;
-  array[9] simplex[8] par_f3;
-  array[9, 10] simplex[8] par_f4;
   
   ordered[9] par_g;
   array[11] ordered[9] par_g1;
   array[12, 13] ordered[9] par_g2;
-  array[11] ordered[9] par_g3;
-  array[12, 13] ordered[9] par_g4;
   
   positive_ordered[9] par_h;
   array[11] positive_ordered[9] par_h1;
   array[12, 13] positive_ordered[9] par_h2;
-  array[11] positive_ordered[9] par_h3;
-  array[12, 13] positive_ordered[9] par_h4;
   
   corr_matrix[10] par_j;
   array[3] corr_matrix[10] par_j1;
   array[5, 6] corr_matrix[10] par_j2;
-  array[3] corr_matrix[10] par_j3;
-  array[5, 6] corr_matrix[10] par_j4;
   
   cov_matrix[10] par_k;
   array[3] cov_matrix[10] par_k1;
   array[5, 6] cov_matrix[10] par_k2;
-  array[3] cov_matrix[10] par_k3;
-  array[5, 6] cov_matrix[10] par_k4;
 }
 transformed parameters {
   real tpar_b0;
   array[4] real tpar_b1;
   array[5, 6] real tpar_b2;
-  array[4] real tpar_b3;
-  array[5, 6] real tpar_b4;
   
   vector[7] tpar_c0;
   array[8] vector[7] tpar_c1;
   array[8, 9] vector[7] tpar_c2;
-  array[8] vector[7] tpar_c3;
-  array[8, 9] vector[7] tpar_c4;
   
   row_vector[7] tpar_d0;
   array[8] row_vector[7] tpar_d1;
   array[8, 9] row_vector[7] tpar_d2;
-  array[8] row_vector[7] tpar_d3;
-  array[8, 9] row_vector[7] tpar_d4;
   
   matrix[8, 9] tpar_e;
   array[11] matrix[8, 9] tpar_e1;
   array[11, 12] matrix[8, 9] tpar_e2;
-  array[11] matrix[8, 9] tpar_e3;
-  array[11, 12] matrix[8, 9] tpar_e4;
   
   simplex[8] tpar_f;
   array[9] simplex[8] tpar_f1;
   array[9, 10] simplex[8] tpar_f2;
-  array[9] simplex[8] tpar_f3;
-  array[9, 10] simplex[8] tpar_f4;
   
   ordered[9] tpar_g;
   array[11] ordered[9] tpar_g1;
   array[12, 13] ordered[9] tpar_g2;
-  array[11] ordered[9] tpar_g3;
-  array[12, 13] ordered[9] tpar_g4;
   
   positive_ordered[9] tpar_h;
   array[11] positive_ordered[9] tpar_h1;
   array[12, 13] positive_ordered[9] tpar_h2;
-  array[11] positive_ordered[9] tpar_h3;
-  array[12, 13] positive_ordered[9] tpar_h4;
   
   corr_matrix[10] tpar_j;
   array[3] corr_matrix[10] tpar_j1;
   array[5, 6] corr_matrix[10] tpar_j2;
-  array[3] corr_matrix[10] tpar_j3;
-  array[5, 6] corr_matrix[10] tpar_j4;
   
   cov_matrix[10] tpar_k;
   array[3] cov_matrix[10] tpar_k1;
   array[5, 6] cov_matrix[10] tpar_k2;
-  array[3] cov_matrix[10] tpar_k3;
-  array[5, 6] cov_matrix[10] tpar_k4;
   
   {
     int loc_tpar_a0;
     array[1] int loc_tpar_a1;
     array[2, 3] int loc_tpar_a2;
-    array[1] int loc_tpar_a3;
-    array[2, 3] int loc_tpar_a4;
     
     real loc_tpar_b0;
     array[4] real loc_tpar_b1;
     array[5, 6] real loc_tpar_b2;
-    array[4] real loc_tpar_b3;
-    array[5, 6] real loc_tpar_b4;
     
     vector[7] loc_tpar_c0;
     array[8] vector[7] loc_tpar_c1;
     array[8, 9] vector[7] loc_tpar_c2;
-    array[8] vector[7] loc_tpar_c3;
-    array[8, 9] vector[7] loc_tpar_c4;
     
     row_vector[7] loc_tpar_d0;
     array[8] row_vector[7] loc_tpar_d1;
     array[8, 9] row_vector[7] loc_tpar_d2;
-    array[8] row_vector[7] loc_tpar_d3;
-    array[8, 9] row_vector[7] loc_tpar_d4;
     
     matrix[8, 9] loc_tpar_e;
     array[11] matrix[8, 9] loc_tpar_e1;
     array[11, 12] matrix[8, 9] loc_tpar_e2;
-    array[11] matrix[8, 9] loc_tpar_e3;
-    array[11, 12] matrix[8, 9] loc_tpar_e4;
   }
 }
 model {
@@ -1730,119 +1590,81 @@ model {
     int loc_model_a0;
     array[1] int loc_model_a1;
     array[2, 3] int loc_model_a2;
-    array[1] int loc_model_a3;
-    array[2, 3] int loc_model_a4;
     
     real loc_model_b0;
     array[4] real loc_model_b1;
     array[5, 6] real loc_model_b2;
-    array[4] real loc_model_b3;
-    array[5, 6] real loc_model_b4;
     
     vector[7] loc_model_c0;
     array[8] vector[7] loc_model_c1;
     array[8, 9] vector[7] loc_model_c2;
-    array[8] vector[7] loc_model_c3;
-    array[8, 9] vector[7] loc_model_c4;
     
     row_vector[7] loc_model_d0;
     array[8] row_vector[7] loc_model_d1;
     array[8, 9] row_vector[7] loc_model_d2;
-    array[8] row_vector[7] loc_model_d3;
-    array[8, 9] row_vector[7] loc_model_d4;
     
     matrix[8, 9] loc_model_e;
     array[11] matrix[8, 9] loc_model_e1;
     array[11, 12] matrix[8, 9] loc_model_e2;
-    array[11] matrix[8, 9] loc_model_e3;
-    array[11, 12] matrix[8, 9] loc_model_e4;
   }
 }
 generated quantities {
   real gq_b0;
   array[4] real gq_b1;
   array[5, 6] real gq_b2;
-  array[4] real gq_b3;
-  array[5, 6] real gq_b4;
   
   vector[7] gq_c0;
   array[8] vector[7] gq_c1;
   array[8, 9] vector[7] gq_c2;
-  array[8] vector[7] gq_c3;
-  array[8, 9] vector[7] gq_c4;
   
   row_vector[7] gq_d0;
   array[8] row_vector[7] gq_d1;
   array[8, 9] row_vector[7] gq_d2;
-  array[8] row_vector[7] gq_d3;
-  array[8, 9] row_vector[7] gq_d4;
   
   matrix[8, 9] gq_e;
   array[11] matrix[8, 9] gq_e1;
   array[11, 12] matrix[8, 9] gq_e2;
-  array[11] matrix[8, 9] gq_e3;
-  array[11, 12] matrix[8, 9] gq_e4;
   
   simplex[8] gq_f;
   array[9] simplex[8] gq_f1;
   array[9, 10] simplex[8] gq_f2;
-  array[9] simplex[8] gq_f3;
-  array[9, 10] simplex[8] gq_f4;
   
   ordered[9] gq_g;
   array[11] ordered[9] gq_g1;
   array[12, 13] ordered[9] gq_g2;
-  array[11] ordered[9] gq_g3;
-  array[12, 13] ordered[9] gq_g4;
   
   positive_ordered[9] gq_h;
   array[11] positive_ordered[9] gq_h1;
   array[12, 13] positive_ordered[9] gq_h2;
-  array[11] positive_ordered[9] gq_h3;
-  array[12, 13] positive_ordered[9] gq_h4;
   
   corr_matrix[10] gq_j;
   array[3] corr_matrix[10] gq_j1;
   array[5, 6] corr_matrix[10] gq_j2;
-  array[3] corr_matrix[10] gq_j3;
-  array[5, 6] corr_matrix[10] gq_j4;
   
   cov_matrix[10] gq_k;
   array[3] cov_matrix[10] gq_k1;
   array[5, 6] cov_matrix[10] gq_k2;
-  array[3] cov_matrix[10] gq_k3;
-  array[5, 6] cov_matrix[10] gq_k4;
   
   {
     int loc_gq_a0;
     array[1] int loc_gq_a1;
     array[2, 3] int loc_gq_a2;
-    array[1] int loc_gq_a3;
-    array[2, 3] int loc_gq_a4;
     
     real loc_gq_b0;
     array[4] real loc_gq_b1;
     array[5, 6] real loc_gq_b2;
-    array[4] real loc_gq_b3;
-    array[5, 6] real loc_gq_b4;
     
     vector[7] loc_gq_c0;
     array[8] vector[7] loc_gq_c1;
     array[8, 9] vector[7] loc_gq_c2;
-    array[8] vector[7] loc_gq_c3;
-    array[8, 9] vector[7] loc_gq_c4;
     
     row_vector[7] loc_gq_d0;
     array[8] row_vector[7] loc_gq_d1;
     array[8, 9] row_vector[7] loc_gq_d2;
-    array[8] row_vector[7] loc_gq_d3;
-    array[8, 9] row_vector[7] loc_gq_d4;
     
     matrix[8, 9] loc_gq_e;
     array[11] matrix[8, 9] loc_gq_e1;
     array[11, 12] matrix[8, 9] loc_gq_e2;
-    array[11] matrix[8, 9] loc_gq_e3;
-    array[11, 12] matrix[8, 9] loc_gq_e4;
   }
 }
 
@@ -2626,7 +2448,8 @@ generated quantities {
   array[3] real gq_p_tp_a1 = d_tp_a1;
   array[3] real gq_p_tp_a2 = d_tp_a3[3];
   print("gq_d_tp1 = ", gq_d_tp1);
-  print("gq_d_tp2 = ", gq_d_tp2, " should be td1 = ", td1, " which should be 123");
+  print("gq_d_tp2 = ", gq_d_tp2, " should be td1 = ", td1,
+        " which should be 123");
   print("gq_d_tp3 = ", gq_d_tp3);
   print("gq_d_tp4 = ", gq_d_tp4);
   print("gq_d_tp_a1 = ", gq_d_tp_a1);
@@ -2939,86 +2762,27 @@ generated quantities {
   
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format deprecate-increment-log-prob.stan
-data {
-  real a;
-  vector[3] b;
-  array[7] real c;
-  array[8, 9] real d;
-}
-parameters {
-  real e;
-  vector[3] f;
-  array[7] real g;
-  array[8, 9] real h;
-}
-model {
-  //  increment_log_prob(-e^2 / 2);
-  increment_log_prob(a);
-  increment_log_prob(b);
-  increment_log_prob(b);
-  increment_log_prob(c);
-  increment_log_prob(d);
-  increment_log_prob(e);
-  increment_log_prob(f);
-  increment_log_prob(g);
-  increment_log_prob(h);
-}
-
-Warning in 'deprecate-increment-log-prob.stan', line 15, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'deprecate-increment-log-prob.stan', line 16, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'deprecate-increment-log-prob.stan', line 17, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'deprecate-increment-log-prob.stan', line 18, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'deprecate-increment-log-prob.stan', line 19, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'deprecate-increment-log-prob.stan', line 20, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'deprecate-increment-log-prob.stan', line 21, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'deprecate-increment-log-prob.stan', line 22, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'deprecate-increment-log-prob.stan', line 23, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-  $ ../../../../install/default/bin/stanc --auto-format deprecate-old-prob-funs.stan
-parameters {
-  real y;
-}
-model {
-  target += normal_log(y, 0, 1) + normal_cdf_log(2, 0, 1)
-            + normal_ccdf_log(3, 0, 1);
-}
-
-Warning in 'deprecate-old-prob-funs.stan', line 5, column 12: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
-Warning in 'deprecate-old-prob-funs.stan', line 6, column 6: normal_cdf_log is deprecated and will be removed in the future. Use normal_lcdf instead.
-Warning in 'deprecate-old-prob-funs.stan', line 7, column 6: normal_ccdf_log is deprecated and will be removed in the future. Use normal_lccdf instead.
-  $ ../../../../install/default/bin/stanc --auto-format duplicate-warns.stan
-model {
-  real foo;
-  foo = 1;
-  increment_log_prob(0);
-  foo = get_lp();
-  foo = multiply_log(1, 1);
-  foo = binomial_coefficient_log(1, 1);
-  // deprecated distribution functions versions
-  foo = normal_log(0.5, 0, 1);
-  foo = normal_cdf_log(0.5, 0, 1);
-  foo = normal_ccdf_log(0.5, 0, 1);
-}
-
-Warning in 'duplicate-warns.stan', line 4, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'duplicate-warns.stan', line 5, column 8: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-Warning in 'duplicate-warns.stan', line 5, column 8: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
-Warning in 'duplicate-warns.stan', line 6, column 8: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'duplicate-warns.stan', line 7, column 8: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-Warning in 'duplicate-warns.stan', line 9, column 8: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
-Warning in 'duplicate-warns.stan', line 10, column 8: normal_cdf_log is deprecated and will be removed in the future. Use normal_lcdf instead.
-Warning in 'duplicate-warns.stan', line 11, column 8: normal_ccdf_log is deprecated and will be removed in the future. Use normal_lccdf instead.
   $ ../../../../install/default/bin/stanc --auto-format fun-defs-lpdf.stan
 functions {
   real bar_baz_lpdf(real a, real b) {
     return a / b;
   }
+  real foo_bar_lpdf(array[,,,] real x) {
+    return 1.0;
+  }
+  real baz_foo_lpdf(complex z, real a) {
+    return get_imag(z) * a;
+  }
 }
 parameters {
   real y;
+  complex z;
+  array[1, 1, 1, 1] real arr;
 }
 model {
   y ~ bar_baz(3.2);
+  z ~ baz_foo(1.5);
+  arr ~ foo_bar();
 }
 
   $ ../../../../install/default/bin/stanc --auto-format fun-return-typ1.stan
@@ -3205,9 +2969,9 @@ model {
  * because of the <false> instantiation of propto
  */
 functions {
-  real n_log(real y);
+  real n_lpdf(real y);
   
-  real n_log(real y) {
+  real n_lpdf(real y) {
     return -0.5 * square(y);
   }
 }
@@ -3216,11 +2980,9 @@ parameters {
 }
 model {
   mu ~ n();
-  increment_log_prob(n_log(mu)); // check both instantiations
+  target += n_lpdf(mu | ); // check both instantiations
 }
 
-Warning in 'fun_log_forward_decl.stan', line 17, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'fun_log_forward_decl.stan', line 17, column 21: Use of the _log suffix in user defined function n_log is deprecated, use n_lpdf instead.
   $ ../../../../install/default/bin/stanc --auto-format functions-fwd-ref.stan
 functions {
   int foo(int n);
@@ -3298,13 +3060,13 @@ functions {
     return x * y - 2.0;
   }
   
-  real foo0_log(int y) {
+  real foo0_lpmf(int y) {
     return -5;
   }
-  real foo1_log(real x) {
+  real foo1_lpdf(real x) {
     return -exp(x * x);
   }
-  real foo2_log(real x, real y) {
+  real foo2_lpdf(real x, real y) {
     real diff;
     diff = x - y;
     return -exp(diff * diff);
@@ -3325,12 +3087,12 @@ transformed data {
   c = foo2(2, b);
   c = foo2(2, 3);
   
-  a = foo0_log(2);
-  b = foo1_log(N[6]);
-  c = foo2_log(a, b);
-  c = foo2_log(a, 1);
-  c = foo2_log(2, b);
-  c = foo2_log(2, 3);
+  a = foo0_lpmf(2 | );
+  b = foo1_lpdf(N[6] | );
+  c = foo2_lpdf(a | b);
+  c = foo2_lpdf(a | 1);
+  c = foo2_lpdf(2 | b);
+  c = foo2_lpdf(2 | 3);
   
   a = foo0_rng();
   b = foo1_rng(a);
@@ -3384,24 +3146,24 @@ transformed parameters {
   
   //   phi3 = foo2_lp(phi1,phi2);
   
-  phi1 = foo0_log(3);
+  phi1 = foo0_lpmf(3 | );
   
-  phi2 = foo1_log(1);
-  phi2 = foo1_log(2.0);
-  phi2 = foo1_log(phi1);
+  phi2 = foo1_lpdf(1 | );
+  phi2 = foo1_lpdf(2.0 | );
+  phi2 = foo1_lpdf(phi1 | );
   
-  phi3 = foo2_log(1.0, 2.0);
-  phi3 = foo2_log(1.0, 2);
-  phi3 = foo2_log(1, 2.0);
-  phi3 = foo2_log(1, 2);
+  phi3 = foo2_lpdf(1.0 | 2.0);
+  phi3 = foo2_lpdf(1.0 | 2);
+  phi3 = foo2_lpdf(1 | 2.0);
+  phi3 = foo2_lpdf(1 | 2);
   
-  phi3 = foo2_log(phi1, 2.0);
-  phi3 = foo2_log(phi1, 2);
+  phi3 = foo2_lpdf(phi1 | 2.0);
+  phi3 = foo2_lpdf(phi1 | 2);
   
-  phi3 = foo2_log(1.0, phi2);
-  phi3 = foo2_log(1, phi2);
+  phi3 = foo2_lpdf(1.0 | phi2);
+  phi3 = foo2_lpdf(1 | phi2);
   
-  phi3 = foo2_log(phi1, phi2);
+  phi3 = foo2_lpdf(phi1 | phi2);
 }
 model {
   real psi1;
@@ -3444,23 +3206,23 @@ model {
   
   psi3 = foo2_lp(psi1, psi2);
   
-  psi1 = foo0_log(3);
-  psi2 = foo1_log(1);
-  psi2 = foo1_log(2.0);
-  psi2 = foo1_log(psi1);
+  psi1 = foo0_lpmf(3 | );
+  psi2 = foo1_lpdf(1 | );
+  psi2 = foo1_lpdf(2.0 | );
+  psi2 = foo1_lpdf(psi1 | );
   
-  psi3 = foo2_log(1.0, 2.0);
-  psi3 = foo2_log(1.0, 2);
-  psi3 = foo2_log(1, 2.0);
-  psi3 = foo2_log(1, 2);
+  psi3 = foo2_lpdf(1.0 | 2.0);
+  psi3 = foo2_lpdf(1.0 | 2);
+  psi3 = foo2_lpdf(1 | 2.0);
+  psi3 = foo2_lpdf(1 | 2);
   
-  psi3 = foo2_log(psi1, 2.0);
-  psi3 = foo2_log(psi1, 2);
+  psi3 = foo2_lpdf(psi1 | 2.0);
+  psi3 = foo2_lpdf(psi1 | 2);
   
-  psi3 = foo2_log(1.0, psi2);
-  psi3 = foo2_log(1, psi2);
+  psi3 = foo2_lpdf(1.0 | psi2);
+  psi3 = foo2_lpdf(1 | psi2);
   
-  psi3 = foo2_log(psi1, psi2);
+  psi3 = foo2_lpdf(psi1 | psi2);
   
   // use _log as sampling statements
   theta[1] ~ foo1();
@@ -3479,13 +3241,13 @@ generated quantities {
   z = foo2(x, 2);
   z = foo2(1, 2);
   
-  x = foo0_log(3);
-  y = foo1_log(x);
-  y = foo1_log(1);
-  z = foo2_log(x, y);
-  z = foo2_log(1, y);
-  z = foo2_log(x, 2);
-  z = foo2_log(1, 2);
+  x = foo0_lpmf(3 | );
+  y = foo1_lpdf(x | );
+  y = foo1_lpdf(1 | );
+  z = foo2_lpdf(x | y);
+  z = foo2_lpdf(1 | y);
+  z = foo2_lpdf(x | 2);
+  z = foo2_lpdf(1 | 2);
   
   x = foo0_rng();
   y = foo1_rng(x);
@@ -3496,45 +3258,6 @@ generated quantities {
   z = foo2_rng(1, 2);
 }
 
-Warning in 'functions-good1.stan', line 63, column 6: Use of the _log suffix in user defined function foo0_log is deprecated, use foo0_lpmf instead.
-Warning in 'functions-good1.stan', line 64, column 6: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 65, column 6: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 66, column 6: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 67, column 6: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 68, column 6: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 124, column 9: Use of the _log suffix in user defined function foo0_log is deprecated, use foo0_lpmf instead.
-Warning in 'functions-good1.stan', line 126, column 9: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 127, column 9: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 128, column 9: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 130, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 131, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 132, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 133, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 135, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 136, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 138, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 139, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 141, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 186, column 9: Use of the _log suffix in user defined function foo0_log is deprecated, use foo0_lpmf instead.
-Warning in 'functions-good1.stan', line 187, column 9: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 188, column 9: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 189, column 9: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 191, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 192, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 193, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 194, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 196, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 197, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 199, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 200, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 202, column 9: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 221, column 6: Use of the _log suffix in user defined function foo0_log is deprecated, use foo0_lpmf instead.
-Warning in 'functions-good1.stan', line 222, column 6: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 223, column 6: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
-Warning in 'functions-good1.stan', line 224, column 6: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 225, column 6: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 226, column 6: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
-Warning in 'functions-good1.stan', line 227, column 6: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
   $ ../../../../install/default/bin/stanc --auto-format functions-good2.stan
 functions {
   real foo_bar0() {
@@ -3597,7 +3320,7 @@ model {
   $ ../../../../install/default/bin/stanc --auto-format funs1.stan
 functions {
   void unit_normal_lp(real u) {
-    increment_log_prob(normal_log(u, 0, 1));
+    target += normal_lpdf(u | 0, 1);
     u ~ uniform(-100, 100);
   }
 }
@@ -3608,8 +3331,6 @@ model {
   unit_normal_lp(y);
 }
 
-Warning in 'funs1.stan', line 3, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'funs1.stan', line 3, column 23: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
   $ ../../../../install/default/bin/stanc --auto-format funs2.stan
 functions {
   real unit_normal_rng() {
@@ -3629,8 +3350,8 @@ generated quantities {
 
   $ ../../../../install/default/bin/stanc --auto-format funs3.stan
 functions {
-  real unit_normal_log(real y) {
-    return normal_log(y, 0, 1); // print's messing this up now
+  real unit_normal_lpdf(real y) {
+    return normal_lpdf(y | 0, 1);
   }
 }
 parameters {
@@ -3640,23 +3361,19 @@ model {
   y ~ unit_normal();
 }
 
-Warning in 'funs3.stan', line 3, column 11: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
   $ ../../../../install/default/bin/stanc --auto-format funs4.stan
 functions {
-  real unit_normal_log(real y) {
-    return normal_log(y, 0, 1);
+  real unit_normal_lpdf(real y) {
+    return normal_lpdf(y | 0, 1);
   }
 }
 parameters {
   real y;
 }
 model {
-  increment_log_prob(unit_normal_log(y));
+  target += unit_normal_lpdf(y | );
 }
 
-Warning in 'funs4.stan', line 10, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'funs4.stan', line 3, column 11: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
-Warning in 'funs4.stan', line 10, column 21: Use of the _log suffix in user defined function unit_normal_log is deprecated, use unit_normal_lpdf instead.
   $ ../../../../install/default/bin/stanc --auto-format funs5.stan
 functions {
   void foo(real x) {
@@ -3715,67 +3432,6 @@ generated quantities {
   real y = f(x);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format get-lp-deprecate.stan
-parameters {
-  real<lower=0> y;
-}
-model {
-  print("target=", get_lp());
-  y ~ normal(0, 1);
-}
-
-Warning in 'get-lp-deprecate.stan', line 5, column 19: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-Warning in 'get-lp-deprecate.stan', line 5, column 19: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
-  $ ../../../../install/default/bin/stanc --auto-format get-lp-target.stan
-parameters {
-  real<lower=0> y;
-}
-transformed parameters {
-  print("target = ", target());
-  print("get_lp = ", get_lp());
-}
-model {
-  print("target = ", target());
-  print("get_lp = ", get_lp());
-  y ~ normal(0, 1);
-}
-
-Warning in 'get-lp-target.stan', line 6, column 21: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-Warning in 'get-lp-target.stan', line 10, column 21: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-Warning in 'get-lp-target.stan', line 6, column 21: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
-Warning in 'get-lp-target.stan', line 10, column 21: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
-  $ ../../../../install/default/bin/stanc --auto-format get_lp_good.stan
-/**
- * get_lp() allowed in:
- *  - functions ending in _lp
- *  transformed parameter block
- *  model block
- */
-functions {
-  // allowed in functions ending in _lp
-  real foo_lp(real x) {
-    return x + get_lp();
-  }
-}
-parameters {
-  real y;
-}
-transformed parameters {
-  real z;
-  z = get_lp();
-}
-model {
-  real w;
-  w = get_lp();
-  y ~ normal(0, 1);
-}
-
-Warning in 'get_lp_good.stan', line 10, column 15: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-Warning in 'get_lp_good.stan', line 18, column 6: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-Warning in 'get_lp_good.stan', line 22, column 6: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-Warning in 'get_lp_good.stan', line 10, column 15: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
-Warning in 'get_lp_good.stan', line 18, column 6: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
-Warning in 'get_lp_good.stan', line 22, column 6: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
   $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes1.stan
 functions {
   real foo() {
@@ -3826,14 +3482,6 @@ parameters {
 }
 model {
   infty ~ normal(0, 1);
-}
-
-  $ ../../../../install/default/bin/stanc --auto-format identifiers.stan
-data {
-  int upper;
-  int lower;
-  int multiplier;
-  int offset;
 }
 
   $ ../../../../install/default/bin/stanc --auto-format if-else-formatting.stan
@@ -3938,135 +3586,6 @@ model {
   target += h;
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format increment_log_prob.stan
-transformed data {
-  int n;
-  array[2] int nn;
-  array[3, 4] int nnn;
-  
-  real x;
-  array[5] real xx;
-  array[6, 7] real xxx;
-  array[8, 9, 10] real xxxx;
-  
-  vector[2] v;
-  array[4] vector[3] vv;
-  array[5, 6] vector[4] vvv;
-  
-  row_vector[2] rv;
-  array[4] row_vector[3] rvv;
-  array[5, 6] row_vector[4] rvvv;
-  
-  matrix[7, 8] m;
-  array[2] matrix[7, 8] mm;
-  array[3, 4] matrix[7, 8] mmm;
-}
-parameters {
-  real p_x;
-  array[5] real p_xx;
-  array[6, 7] real p_xxx;
-  array[8, 9, 10] real p_xxxx;
-  
-  vector[2] p_v;
-  array[4] vector[3] p_vv;
-  array[5, 6] vector[4] p_vvv;
-  
-  row_vector[2] p_rv;
-  array[4] row_vector[3] p_rvv;
-  array[5, 6] row_vector[4] p_rvvv;
-  
-  matrix[7, 8] p_m;
-  array[2] matrix[7, 8] p_mm;
-  array[3, 4] matrix[7, 8] p_mmm;
-}
-model {
-  increment_log_prob(n);
-  increment_log_prob(nn);
-  increment_log_prob(nnn);
-  
-  increment_log_prob(x);
-  increment_log_prob(xx);
-  increment_log_prob(xxx);
-  increment_log_prob(xxxx);
-  
-  increment_log_prob(v);
-  increment_log_prob(vv);
-  increment_log_prob(vvv);
-  
-  increment_log_prob(rv);
-  increment_log_prob(rvv);
-  increment_log_prob(rvvv);
-  
-  increment_log_prob(m);
-  increment_log_prob(mm);
-  increment_log_prob(mmm);
-  
-  increment_log_prob(p_x);
-  increment_log_prob(p_xx);
-  increment_log_prob(p_xxx);
-  increment_log_prob(p_xxxx);
-  
-  increment_log_prob(p_v);
-  increment_log_prob(p_vv);
-  increment_log_prob(p_vvv);
-  
-  increment_log_prob(p_rv);
-  increment_log_prob(p_rvv);
-  increment_log_prob(p_rvvv);
-  
-  increment_log_prob(p_m);
-  increment_log_prob(p_mm);
-  increment_log_prob(p_mmm);
-}
-
-Warning in 'increment_log_prob.stan', line 42, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 43, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 44, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 46, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 47, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 48, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 49, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 51, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 52, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 53, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 55, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 56, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 57, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 59, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 60, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 61, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 64, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 65, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 66, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 67, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 69, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 70, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 71, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 73, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 74, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 75, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 77, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 78, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'increment_log_prob.stan', line 79, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-  $ ../../../../install/default/bin/stanc --auto-format int_div_user.stan
-data {
-  array[4] int a;
-  array[3] int b;
-}
-transformed data {
-  int c;
-  c = a[1] / b[2];
-}
-model {
-  
-}
-
-Warning in 'int_div_user.stan', line 7, column 6: Found int division:
-  a[1] / b[2]
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  a[1] * 1.0 / b[2]
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format int_fun.stan
 functions {
   int foo(int x) {
@@ -4209,336 +3728,6 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format integrate_1d_good.stan
-functions {
-  real foo(real x, real xc, array[] real theta, array[] real x_r,
-           array[] int x_i) {
-    return x ^ 2;
-  }
-}
-data {
-  array[2] real x_r;
-  array[10] int x_i;
-}
-transformed data {
-  array[3] real theta_d;
-  real int_foo1 = integrate_1d(foo, 0.2, 1.3, theta_d, x_r, x_i, 0.01);
-}
-parameters {
-  real lb;
-  real ub;
-  array[3] real theta;
-}
-model {
-  real int_foo2 = integrate_1d(foo, 0.2, 1.3, theta, x_r, x_i, 0.01);
-  real int_foo3 = integrate_1d(foo, lb, 1.3, theta, x_r, x_i, 0.01);
-  real int_foo4 = integrate_1d(foo, 0.2, ub, theta, x_r, x_i, 0.01);
-  real int_foo5 = integrate_1d(foo, lb, ub, theta, x_r, x_i, 0.01);
-  real int_foo6 = integrate_1d(foo, 0.2, 1.3, theta_d, x_r, x_i, 0.01);
-  real int_foo7 = integrate_1d(foo, lb, 1.3, theta_d, x_r, x_i, 0.01);
-  real int_foo8 = integrate_1d(foo, 0.2, ub, theta_d, x_r, x_i, 0.01);
-  real int_foo9 = integrate_1d(foo, lb, ub, theta_d, x_r, x_i, 0.01);
-}
-
-  $ ../../../../install/default/bin/stanc --auto-format integrate_ode_adams.stan
-functions {
-  array[] real sho(real t, array[] real y, array[] real theta,
-                   array[] real x, array[] int x_int) {
-    array[2] real dydt;
-    dydt[1] = y[2];
-    dydt[2] = -y[1] - theta[1] * y[2];
-    return dydt;
-  }
-}
-data {
-  int<lower=1> T;
-  array[2] real y0_d;
-  real t0;
-  array[T] real ts;
-  array[1] real theta_d;
-  array[0] real x;
-  array[0] int x_int;
-}
-parameters {
-  array[2] real y0_p;
-  array[1] real theta_p;
-}
-model {
-  array[T, 2] real y_hat;
-  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
-  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
-  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
-  
-  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
-                              1e-10, 1e8);
-  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
-                              1e-10, 1e8);
-  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
-                              1e-10, 1e8);
-}
-generated quantities {
-  array[T, 2] real y_hat;
-  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_d, x, x_int);
-  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
-  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
-  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
-  
-  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
-                              1e-10, 1e8);
-  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
-                              1e-10, 1e8);
-  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
-                              1e-10, 1e8);
-  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
-                              1e-10, 1e8);
-}
-
-Warning in 'integrate_ode_adams.stan', line 28, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 29, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 30, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 32, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 33, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 34, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 38, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 39, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 40, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 41, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 43, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 44, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 45, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 46, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-  $ ../../../../install/default/bin/stanc --auto-format integrate_ode_bdf.stan
-functions {
-  array[] real sho(real t, array[] real y, array[] real theta,
-                   array[] real x, array[] int x_int) {
-    array[2] real dydt;
-    dydt[1] = y[2];
-    dydt[2] = -y[1] - theta[1] * y[2];
-    return dydt;
-  }
-}
-data {
-  int<lower=1> T;
-  array[2] real y0_d;
-  real t0;
-  array[T] real ts;
-  array[1] real theta_d;
-  array[0] real x;
-  array[0] int x_int;
-}
-parameters {
-  array[2] real y0_p;
-  array[1] real theta_p;
-}
-model {
-  array[T, 2] real y_hat;
-  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int);
-  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
-  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
-  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
-  
-  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
-                            1e-10, 1e8);
-  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
-                            1e-10, 1e8);
-  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
-                            1e-10, 1e8);
-  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
-                            1e-10, 1e8);
-}
-generated quantities {
-  array[T, 2] real y_hat;
-  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int);
-  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
-  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
-  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
-  
-  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
-                            1e-10, 1e8);
-  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
-                            1e-10, 1e8);
-  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
-                            1e-10, 1e8);
-  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
-                            1e-10, 1e8);
-}
-
-Warning in 'integrate_ode_bdf.stan', line 28, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 29, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 30, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 31, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 33, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 34, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 35, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 36, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 40, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 41, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 42, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 43, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 45, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 46, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 47, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 48, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-  $ ../../../../install/default/bin/stanc --auto-format integrate_ode_deprecation.stan
-functions {
-  array[] real sho(real t, array[] real y, array[] real theta,
-                   array[] real x, array[] int x_int) {
-    array[2] real dydt;
-    dydt[1] = y[2];
-    dydt[2] = -y[1] - theta[1] * y[2];
-    return dydt;
-  }
-}
-data {
-  int<lower=1> T;
-  array[2] real y0;
-  real t0;
-  array[T] real ts;
-  array[1] real theta;
-}
-transformed data {
-  array[0] real x;
-  array[0] int x_int;
-}
-model {
-  
-}
-generated quantities {
-  array[T, 2] real y_hat;
-  y_hat = integrate_ode(sho, y0, t0, ts, theta, x, x_int);
-  
-  // add measurement error
-  for (t in 1 : T) {
-    y_hat[t, 1] = y_hat[t, 1] + normal_rng(0, 0.1);
-    y_hat[t, 2] = y_hat[t, 2] + normal_rng(0, 0.1);
-  }
-}
-
-Warning in 'integrate_ode_deprecation.stan', line 28, column 10: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-  $ ../../../../install/default/bin/stanc --auto-format integrate_ode_rk45.stan
-functions {
-  array[] real sho(real t, array[] real y, array[] real theta,
-                   array[] real x, array[] int x_int) {
-    array[2] real dydt;
-    dydt[1] = y[2];
-    dydt[2] = -y[1] - theta[1] * y[2];
-    return dydt;
-  }
-}
-data {
-  int<lower=1> T;
-  array[2] real y0_d;
-  real t0;
-  array[T] real ts;
-  array[1] real theta_d;
-  array[0] real x;
-  array[0] int x_int;
-}
-parameters {
-  array[2] real y0_p;
-  array[1] real theta_p;
-}
-model {
-  array[T, 2] real y_hat;
-  y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_d, x, x_int);
-  y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_p, x, x_int);
-  y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_d, x, x_int);
-  y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
-}
-generated quantities {
-  array[T, 2] real y_hat;
-  y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_d, x, x_int);
-  y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_p, x, x_int);
-  y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_d, x, x_int);
-  y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
-}
-
-Warning in 'integrate_ode_rk45.stan', line 28, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 29, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 30, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 31, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 35, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 36, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 37, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 38, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format io_example.stan
 transformed data {
   vector[2] y;
@@ -4639,29 +3828,6 @@ model {
   whiley ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format lkj_cov_deprecation1.stan
-parameters {
-  cov_matrix[3] Sigma;
-  vector[3] mu;
-  vector[3] sigma;
-  real<lower=0> eta;
-}
-model {
-  Sigma ~ lkj_cov(mu, sigma, eta);
-}
-
-  $ ../../../../install/default/bin/stanc --auto-format lkj_cov_deprecation2.stan
-parameters {
-  cov_matrix[3] Sigma;
-  vector[3] mu;
-  vector[3] sigma;
-  real<lower=0> eta;
-}
-model {
-  increment_log_prob(lkj_cov_log(Sigma, mu, sigma, eta));
-}
-
-Warning in 'lkj_cov_deprecation2.stan', line 8, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
   $ ../../../../install/default/bin/stanc --auto-format logistic_regression_reg_horseshoe.stan
 data {
   int<lower=0> n;
@@ -4714,17 +3880,6 @@ functions {
     return 1.0;
   }
   
-  // deprecated syntax
-  real bar_log(int y, real lambda) {
-    return 1.0;
-  }
-  real bar_cdf_log(int y, real lambda) {
-    return 1.0;
-  }
-  real bar_ccdf_log(int y, real lambda) {
-    return 1.0;
-  }
-  
   // new syntax
   real baz_lpdf(real y, real lambda) {
     return 1.0;
@@ -4733,17 +3888,6 @@ functions {
     return 1.0;
   }
   real baz_lccdf(real y, real lambda) {
-    return 1.0;
-  }
-  
-  // deprecated syntax
-  real quux_log(real y, real lambda) {
-    return 1.0;
-  }
-  real quux_cdf_log(real y, real lambda) {
-    return 1.0;
-  }
-  real quux_ccdf_log(real y, real lambda) {
     return 1.0;
   }
 }
@@ -4769,11 +3913,6 @@ model {
     y[n] ~ foo(lambda) T[L, U];
     y[n] ~ foo(lambda) T[ , U];
     
-    // discrete, user-defined, deprecated syntax
-    y[n] ~ bar(lambda) T[L, ];
-    y[n] ~ bar(lambda) T[L, U];
-    y[n] ~ bar(lambda) T[ , U];
-    
     // continuous, built-in
     u[n] ~ normal(0, 1) T[L, ];
     u[n] ~ normal(0, 1) T[ , U];
@@ -4783,26 +3922,19 @@ model {
     y[n] ~ baz(lambda) T[L, ];
     y[n] ~ baz(lambda) T[L, U];
     y[n] ~ baz(lambda) T[ , U];
-    
-    // continuous, user-defined, deprecated syntax
-    y[n] ~ quux(lambda) T[L, ];
-    y[n] ~ quux(lambda) T[L, U];
-    y[n] ~ quux(lambda) T[ , U];
   }
 }
 
   $ ../../../../install/default/bin/stanc --auto-format lp_in_fun.stan
 functions {
   void foo_lp() {
-    print("lp__ = ", get_lp());
+    print("lp__ = ", target());
   }
 }
 model {
   
 }
 
-Warning in 'lp_in_fun.stan', line 3, column 21: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-Warning in 'lp_in_fun.stan', line 3, column 21: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
   $ ../../../../install/default/bin/stanc --auto-format lp_transformed_param.stan
 functions {
   real test_lp(real r) {
@@ -4897,29 +4029,6 @@ model {
   z ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format matrix_pow_warning.stan
-data {
-  int<lower=0> N;
-  matrix[N, N] A;
-  int power;
-}
-transformed data {
-  matrix[N, N] A_pow = A ^ power;
-  matrix[N, N] A_pow_r = A ^ 3.5;
-}
-
-Warning in 'matrix_pow_warning.stan', line 8, column 23: Found matrix^scalar:
-  A ^ power
-matrix ^ number is interpreted as element-wise exponentiation. If this is
-intended, you can silence this warning by using elementwise operator .^
-If you intended matrix exponentiation, use the function
-matrix_power(matrix,int) instead.
-Warning in 'matrix_pow_warning.stan', line 9, column 25: Found matrix^scalar:
-  A ^ 3.5
-matrix ^ number is interpreted as element-wise exponentiation. If this is
-intended, you can silence this warning by using elementwise operator .^
-If you intended matrix exponentiation, use the function
-matrix_power(matrix,int) instead.
   $ ../../../../install/default/bin/stanc --auto-format min-max-types.stan
 parameters {
   matrix[max(1, 3), min(2, 5)] a;
@@ -5030,7 +4139,7 @@ transformed data {
   vector[M] beta_true;
   real alpha_true = 1.5;
   for (j in 1 : M) {
-    beta_true[j] = j / M;
+    beta_true[j] = j * 1.0 / M;
   }
   for (i in 1 : N) {
     for (j in 1 : M) {
@@ -5050,12 +4159,6 @@ model {
   y ~ neg_binomial_2_log(x * beta_inferred + alpha_inferred, sigma);
 }
 
-Warning in 'neg_binomial_2_log_glm_old_performance.stan', line 11, column 19: Found int division:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format neg_binomial_2_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -5066,7 +4169,7 @@ transformed data {
   vector[M] beta_true;
   real alpha_true = 1.5;
   for (j in 1 : M) {
-    beta_true[j] = j / M;
+    beta_true[j] = j * 1.0 / M;
   }
   for (i in 1 : N) {
     for (j in 1 : M) {
@@ -5086,12 +4189,6 @@ model {
   y ~ neg_binomial_2_log_glm(x, alpha_inferred, beta_inferred, sigma);
 }
 
-Warning in 'neg_binomial_2_log_glm_performance.stan', line 11, column 19: Found int division:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format new-prob-fun-suffixes.stan
 parameters {
   real y;
@@ -5116,7 +4213,7 @@ transformed data {
   vector[M] beta_true;
   real alpha_true = 1.5;
   for (j in 1 : M) {
-    beta_true[j] = j / M;
+    beta_true[j] = j * 1.0 / M;
   }
   for (i in 1 : N) {
     for (j in 1 : M) {
@@ -5136,12 +4233,6 @@ model {
   y ~ normal(x * beta_inferred + alpha_inferred, sigma);
 }
 
-Warning in 'normal_id_glm_old_performance.stan', line 11, column 19: Found int division:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format normal_id_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -5152,7 +4243,7 @@ transformed data {
   vector[M] beta_true;
   real alpha_true = 1.5;
   for (j in 1 : M) {
-    beta_true[j] = j / M;
+    beta_true[j] = j * 1.0 / M;
   }
   for (i in 1 : N) {
     for (j in 1 : M) {
@@ -5170,41 +4261,6 @@ model {
   alpha_inferred ~ normal(0, 4);
   
   y ~ normal_id_glm(x, alpha_inferred, beta_inferred, sigma);
-}
-
-Warning in 'normal_id_glm_performance.stan', line 11, column 19: Found int division:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
-  $ ../../../../install/default/bin/stanc --auto-format nullary-unconflicted.stan
-parameters {
-  real e;
-  real pi;
-  real log2;
-  real log10;
-  real sqrt2;
-  real not_a_number;
-  real positive_infinity;
-  real negative_infinity;
-  real machine_precision;
-  real inv_logit;
-  real logit;
-  real bernoulli_logit_glm_lpmf;
-  real reduce_sum;
-  real ode_bdf;
-  real ode_bdf_tol;
-}
-transformed parameters {
-  real mu;
-  mu = e() + pi() + log2() + log10() + sqrt2() + not_a_number()
-       + positive_infinity() + negative_infinity() + machine_precision(
-       );
-  mu += logit + bernoulli_logit_glm_lpmf + reduce_sum;
-}
-model {
-  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format numeric-literal.stan
@@ -5251,9 +4307,10 @@ model {
   
 }
 
-Warning in 'ode-int-segments.stan', line 25, column 12: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'ode-int-segments.stan', line 26, column 12: integrate_ode is
+    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format ode-nested-quotes.stan
 /**
  * Minimal example derived from jimsinmss example brought
@@ -5275,9 +4332,10 @@ model {
   
 }
 
-Warning in 'ode-nested-quotes.stan', line 17, column 6: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'ode-nested-quotes.stan', line 14, column 6: integrate_ode is
+    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format ode_good.stan
 functions {
   array[] real harm_osc_ode(real t, array[] real y,
@@ -5361,44 +4419,34 @@ model {
     y[t] ~ normal(y_hat[t], sigma); // independent normal noise
 }
 
-Warning in 'ode_good.stan', line 27, column 10: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 34, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 41, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 48, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 55, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 62, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_good.stan', line 69, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
-The new interface is slightly different, see: 
-https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-  $ ../../../../install/default/bin/stanc --auto-format old-log-funs.stan
-transformed data {
-  real x;
-  x = multiply_log(x, x); // should raise deprecation warning
-  x = binomial_coefficient_log(x, x); // ditto
-  x = lmultiply(x, x); // new function is OK
-  x = lchoose(x, x); // new function is OK
-}
-parameters {
-  real y;
-}
-model {
-  y ~ normal(0, 1);
-}
-
-Warning in 'old-log-funs.stan', line 3, column 6: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'old-log-funs.stan', line 4, column 6: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+Warning in 'ode_good.stan', line 28, column 10: integrate_ode is deprecated
+    and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'ode_good.stan', line 35, column 10: integrate_ode_rk45 is
+    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'ode_good.stan', line 42, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'ode_good.stan', line 49, column 10: integrate_ode_adams is
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'ode_good.stan', line 56, column 10: integrate_ode_rk45 is
+    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'ode_good.stan', line 63, column 10: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Warning in 'ode_good.stan', line 70, column 10: integrate_ode_adams is
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format poisson_log_glm_old_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -5408,7 +4456,7 @@ transformed data {
   vector[M] beta_true;
   real alpha_true = 1.5;
   for (j in 1 : M) {
-    beta_true[j] = j / M;
+    beta_true[j] = j * 1.0 / M;
   }
   for (i in 1 : N) {
     for (j in 1 : M) {
@@ -5428,12 +4476,6 @@ model {
   y ~ poisson_log(x * beta_inferred + alpha_inferred);
 }
 
-Warning in 'poisson_log_glm_old_performance.stan', line 10, column 19: Found int division:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format poisson_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -5443,7 +4485,7 @@ transformed data {
   vector[M] beta_true;
   real alpha_true = 1.5;
   for (j in 1 : M) {
-    beta_true[j] = j / M;
+    beta_true[j] = j * 1.0 / M;
   }
   for (i in 1 : N) {
     for (j in 1 : M) {
@@ -5463,22 +4505,6 @@ model {
   y ~ poisson_log_glm(x, alpha_inferred, beta_inferred);
 }
 
-Warning in 'poisson_log_glm_performance.stan', line 10, column 19: Found int division:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
-  $ ../../../../install/default/bin/stanc --auto-format pound-comment-deprecated.stan
-data {
-  // hey, this is the old way to do things, should raise warning
-  int N;
-}
-model {
-  
-}
-
-Warning in 'pound-comment-deprecated.stan', line 2, column 2: Comments beginning with # are deprecated. Please use // in place of # for line comments.
   $ ../../../../install/default/bin/stanc --auto-format print_chars.stan
 parameters {
   real y;
@@ -5534,150 +4560,6 @@ model {
     
     y ~ multi_normal_cholesky(rep_vector(0, N), L_cov);
   }
-}
-
-  $ ../../../../install/default/bin/stanc --auto-format prophet.stan
-// Copyright (c) 2017-present, Facebook, Inc. All rights reserved.
-functions {
-  array[,] real get_changepoint_matrix(array[] real t, array[] real t_change,
-                                       int T, int S) {
-    // Assumes t and t_change are sorted.
-    array[T, S] real A;
-    array[S] real a_row;
-    int cp_idx;
-    
-    // Start with an empty matrix.
-    A = rep_array(0, T, S);
-    a_row = rep_array(0, S);
-    cp_idx = 1;
-    
-    // Fill in each row of A.
-    for (i in 1 : T) {
-      while ((cp_idx <= S) && (t[i] >= t_change[cp_idx])) {
-        a_row[cp_idx] = 1;
-        cp_idx = cp_idx + 1;
-      }
-      A[i] = a_row;
-    }
-    return A;
-  }
-  
-  // Logistic trend functions
-  
-  array[] real logistic_gamma(real k, real m, array[] real delta,
-                              array[] real t_change, int S) {
-    array[S] real gamma; // adjusted offsets, for piecewise continuity
-    array[S + 1] real k_s; // actual rate in each segment
-    real m_pr;
-    
-    // Compute the rate in each segment
-    k_s[1] = k;
-    for (i in 1 : S) {
-      k_s[i + 1] = k_s[i] + delta[i];
-    }
-    
-    // Piecewise offsets
-    m_pr = m; // The offset in the previous segment
-    for (i in 1 : S) {
-      gamma[i] = (t_change[i] - m_pr) * (1 - k_s[i] / k_s[i + 1]);
-      m_pr = m_pr + gamma[i]; // update for the next segment
-    }
-    return gamma;
-  }
-  
-  array[] real logistic_trend(real k, real m, array[] real delta,
-                              array[] real t, array[] real cap,
-                              array[,] real A, array[] real t_change, int S,
-                              int T) {
-    array[S] real gamma;
-    array[T] real Y;
-    
-    gamma = logistic_gamma(k, m, delta, t_change, S);
-    for (i in 1 : T) {
-      Y[i] = cap[i]
-             / (1
-                + exp(-(k + dot_product(A[i], delta))
-                      * (t[i] - (m + dot_product(A[i], gamma)))));
-    }
-    return Y;
-  }
-  
-  // Linear trend function
-  
-  array[] real linear_trend(real k, real m, array[] real delta,
-                            array[] real t, array[,] real A,
-                            array[] real t_change, int S, int T) {
-    array[S] real gamma;
-    array[T] real Y;
-    
-    for (i in 1 : S) {
-      gamma[i] = -t_change[i] * delta[i];
-    }
-    for (i in 1 : T) {
-      Y[i] = (k + dot_product(A[i], delta)) * t[i]
-             + (m + dot_product(A[i], gamma));
-    }
-    return Y;
-  }
-}
-data {
-  int T; // Number of time periods
-  int<lower=1> K; // Number of regressors
-  array[T] real t; // Time
-  array[T] real cap; // Capacities for logistic trend
-  array[T] real y; // Time series
-  int S; // Number of changepoints
-  array[S] real t_change; // Times of trend changepoints
-  array[T, K] real X; // Regressors
-  vector[K] sigmas; // Scale on seasonality prior
-  real<lower=0> tau; // Scale on changepoints prior
-  int trend_indicator; // 0 for linear, 1 for logistic
-  array[K] real s_a; // Indicator of additive features
-  array[K] real s_m; // Indicator of multiplicative features
-}
-transformed data {
-  array[T, S] real A;
-  A = get_changepoint_matrix(t, t_change, T, S);
-}
-parameters {
-  real k; // Base trend growth rate
-  real m; // Trend offset
-  array[S] real delta; // Trend rate adjustments
-  real<lower=0> sigma_obs; // Observation noise
-  array[K] real beta; // Regressor coefficients
-}
-transformed parameters {
-  array[T] real trend;
-  array[T] real Y;
-  array[K] real beta_m;
-  array[K] real beta_a;
-  
-  if (trend_indicator == 0) {
-    trend = linear_trend(k, m, delta, t, A, t_change, S, T);
-  } else if (trend_indicator == 1) {
-    trend = logistic_trend(k, m, delta, t, cap, A, t_change, S, T);
-  }
-  
-  for (i in 1 : K) {
-    beta_m[i] = beta[i] * s_m[i];
-    beta_a[i] = beta[i] * s_a[i];
-  }
-  
-  for (i in 1 : T) {
-    Y[i] = (trend[i] * (1 + dot_product(X[i], beta_m))
-            + dot_product(X[i], beta_a));
-  }
-}
-model {
-  //priors
-  k ~ normal(0, 5);
-  m ~ normal(0, 5);
-  delta ~ double_exponential(0, tau);
-  sigma_obs ~ normal(0, 0.5);
-  beta ~ normal(0, sigmas);
-  
-  // Likelihood
-  y ~ normal(Y, sigma_obs);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format propto-good.stan
@@ -5764,6 +4646,44 @@ model {
   y ~ normal(0, 1);
 }
 
+  $ ../../../../install/default/bin/stanc --auto-format target.stan
+parameters {
+  real<lower=0> y;
+}
+transformed parameters {
+  print("target = ", target());
+}
+model {
+  print("target = ", target());
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format target_good.stan
+/**
+ * get_lp() allowed in:
+ *  - functions ending in _lp
+ *  transformed parameter block
+ *  model block
+ */
+functions {
+  // allowed in functions ending in _lp
+  real foo_lp(real x) {
+    return x + target();
+  }
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  real z;
+  z = target();
+}
+model {
+  real w;
+  w = target();
+  y ~ normal(0, 1);
+}
+
   $ ../../../../install/default/bin/stanc --auto-format tern_op_contains_var.stan
 data {
   int N;
@@ -5783,13 +4703,13 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format truncation-user-defined.stan
 functions {
-  real foo_log(real y, real theta) {
+  real foo_lpdf(real y, real theta) {
     return 1;
   }
-  real foo_cdf_log(real y, real theta) {
+  real foo_lcdf(real y, real theta) {
     return 1;
   }
-  real foo_ccdf_log(real y, real theta) {
+  real foo_lccdf(real y, real theta) {
     return 1;
   }
 }
@@ -5994,17 +4914,6 @@ model {
   r += foo_lupmf(i1 | r1, m1, v1, ai1, rv1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format unreserved-array-keyword.stan
-functions {
-  real f(array[,,] real array) {
-    return array[1, 2, 3];
-  }
-}
-model {
-  real array;
-  array[1, 2, 3] real abc;
-}
-
   $ ../../../../install/default/bin/stanc --auto-format user-defined-lpdf-fun.stan
 functions {
   real bar_lpmf(int y, real z) {
@@ -6172,9 +5081,9 @@ generated quantities {
 
   $ ../../../../install/default/bin/stanc --auto-format validate_bounds_comparison.stan
 data {
-  real<lower=if_else(1 < 2, -1, -2)> a;
-  real<upper=if_else(1 < 2, -1, -2)> b;
-  real<lower=(1 && 3), upper=if_else(1 < 2, -1, -2)> c;
+  real<lower=((1 < 2) ? -1 : -2)> a;
+  real<upper=((1 < 2) ? -1 : -2)> b;
+  real<lower=(1 && 3), upper=((1 < 2) ? -1 : -2)> c;
 }
 parameters {
   real y;
@@ -6183,9 +5092,6 @@ model {
   y ~ normal(0, 1);
 }
 
-Warning in 'validate_bounds_comparison.stan', line 2, column 13: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'validate_bounds_comparison.stan', line 3, column 13: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'validate_bounds_comparison.stan', line 4, column 29: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
   $ ../../../../install/default/bin/stanc --auto-format validate_conditional_op_good.stan
 functions {
   real foo(real fa_x, int fa_y) {
@@ -6423,7 +5329,7 @@ transformed parameters {
   real ut;
   matrix[3, 3] mt;
   row_vector[3] vt;
-  xt = 2 / 3;
+  xt = 2 %/% 3;
   ut = 2.1 / 3;
   ut = 2 / 3.1;
   ut = 2.1 / 3.1;
@@ -6434,34 +5340,6 @@ model {
   y ~ normal(0, 1);
 }
 
-Warning in 'validate_division_good.stan', line 19, column 7: Found int division:
-  2 / 3
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  2.0 / 3
-If rounding is intended please use the integer division operator %/%.
-  $ ../../../../install/default/bin/stanc --auto-format validate_division_int_warning.stan
-transformed data {
-  real u;
-  int j;
-  int k;
-  j = 2;
-  k = 3;
-  u = j / k;
-}
-parameters {
-  real y;
-}
-model {
-  y ~ normal(0, 1);
-}
-
-Warning in 'validate_division_int_warning.stan', line 7, column 6: Found int division:
-  j / k
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / k
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format validate_elt_division_good.stan
 transformed data {
   matrix[3, 3] m;
@@ -6659,54 +5537,6 @@ model {
     y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning1.stan
-parameters {
-  real y;
-}
-model {
-  log(y) ~ normal(0, 1);
-}
-
-  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning2.stan
-parameters {
-  real y;
-}
-model {
-  (y * y) ~ normal(0, 1);
-}
-
-  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning3.stan
-parameters {
-  vector[5] v;
-}
-model {
-  (v' * v) ~ normal(0, 1);
-}
-
-  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning4.stan
-parameters {
-  real y;
-}
-model {
-  1 + (y * y) ~ normal(0, 1);
-}
-
-  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning5.stan
-parameters {
-  vector[10] y;
-}
-model {
-  head((y .* y), 2) ~ normal(0, 1);
-}
-
-  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning6.stan
-parameters {
-  real y;
-}
-model {
-  -(y * y) ~ normal(0, 1);
-}
-
   $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning_good.stan
 data {
   int N;
@@ -6771,14 +5601,6 @@ model {
   // unary_op
   (-y) ~ normal(0, 1);
   // -(-y) ~ normal(0,1);
-}
-
-  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning_user.stan
-parameters {
-  vector[1] y;
-}
-model {
-  exp(y[1]) ~ normal(0, 2);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format validate_left_division_good.stan

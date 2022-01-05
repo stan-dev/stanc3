@@ -43,13 +43,12 @@ module type S = sig
 
   include
     Comparable.S
-    with type t := t
-     and type comparator_witness := comparator_witness
+      with type t := t
+       and type comparator_witness := comparator_witness
 end
 
 module Make (X : Unspecialized) (Meta : Meta) :
-  S with type t = (Meta.t[@compare.ignore]) X.t and module Meta := Meta =
-struct
+  S with type t = (Meta.t[@compare.ignore]) X.t and module Meta := Meta = struct
   module Basic = struct
     type t = (Meta.t[@compare.ignore]) X.t [@@deriving hash, sexp, compare]
 
@@ -69,9 +68,9 @@ end
 
 module Make2 (X : Unspecialized2) (First : S) (Meta : Meta) :
   S
-  with type t =
-              ((First.Meta.t[@compare.ignore]), (Meta.t[@compare.ignore])) X.t
-   and module Meta := Meta = struct
+    with type t =
+          ((First.Meta.t[@compare.ignore]), (Meta.t[@compare.ignore])) X.t
+     and module Meta := Meta = struct
   module Basic = struct
     type t = ((First.Meta.t[@compare.ignore]), (Meta.t[@compare.ignore])) X.t
     [@@deriving hash, sexp, compare]

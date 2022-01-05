@@ -6,6 +6,7 @@ def utils = new org.stan.Utils()
 def skipExpressionTests = false
 def skipRemainingStages = false
 def skipCompileTests = false
+def skipRebuildingBinaries = false
 def buildingAgentARM = "linux"
 
 /* Functions that runs a sh command and returns the stdout */
@@ -27,7 +28,13 @@ def tagName() {
 pipeline {
     agent none
     parameters {
-        booleanParam(name:"compile_all", defaultValue: false, description:"Try compiling all models in test/integration/good")
+        booleanParam(name:"skip_end_to_end", defaultValue: false, description:"Skip end-to-end tests ")
+        string(defaultValue: 'develop', name: 'cmdstan_pr',
+               description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
+        string(defaultValue: 'develop', name: 'stan_pr',
+               description: "Stan PR to test against. Will check out this PR in the downstream Stan repo.")
+        string(defaultValue: 'develop', name: 'math_pr',
+               description: "Math PR to test against. Will check out this PR in the downstream Math repo.")        
     }
     options {parallelsAlwaysFailFast()}
     stages {
@@ -46,14 +53,17 @@ pipeline {
                     retry(3) { checkout scm }
                     sh 'git clean -xffd'
 
-                    def stanMathSigs = ['test/integration/signatures/stan_math_sigs.expected'].join(" ")
+                    def stanMathSigs = ['test/integration/signatures/stan_math_signatures.t'].join(" ")
                     skipExpressionTests = utils.verifyChanges(stanMathSigs)
 
-                    def sourceCodePaths = ['src'].join(" ")
-                    skipRemainingStages = utils.verifyChanges(sourceCodePaths)
+                    def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
+                    skipRemainingStages = utils.verifyChanges(runTestPaths)
 
                     def compileTests = ['test/integration/good'].join(" ")
                     skipCompileTests = utils.verifyChanges(compileTests)
+
+                    def sourceCodePaths = ['src'].join(" ")
+                    skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths)
 
                     if (buildingTag()) {
                         buildingAgentARM = "arm-ec2"
@@ -142,19 +152,6 @@ pipeline {
                     }
                     post { always { runShell("rm -rf ./*") }}
                 }
-                stage("TFP tests") {
-                    agent {
-                        docker {
-                            image 'tensorflow/tensorflow@sha256:08901711826b185136886c7b8271b9fdbe86b8ccb598669781a1f5cb340184eb'
-                            args '-u root'
-                        }
-                    }
-                    steps {
-                        sh "pip3 install tfp-nightly==0.11.0.dev20200516"
-                        sh "python3 test/integration/tfp/tests.py"
-                    }
-                    post { always { runShell("rm -rf ./*") }}
-                }
                 stage("stancjs tests") {
                     agent {
                         docker {
@@ -193,6 +190,11 @@ pipeline {
 
                             writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
                                     text:"O=0\nCXX=${CXX}")
+                            
+                            utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
+                            utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
+                            utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
+
                             sh """
                                 cd performance-tests-cmdstan
                                 mkdir cmdstan/bin
@@ -216,29 +218,39 @@ pipeline {
                 stage("Model end-to-end tests") {
                     when {
                         beforeAgent true
-                        expression {
+                        allOf {
+                         expression {
                             !skipCompileTests
+                         }
+                         expression {
+                            !params.skip_end_to_end
+                         }
                         }
                     }
                     agent { label 'linux' }
                     steps {
-                        unstash 'ubuntu-exe'
-                        sh """
-                            git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                        """
-                        sh """
-                            cd performance-tests-cmdstan
-                            git show HEAD --stat
-                            echo "example-models/regression_tests/mother.stan" > all.tests
-                            cat known_good_perf_all.tests >> all.tests
-                            echo "" >> all.tests
-                            cat shotgun_perf_all.tests >> all.tests
-                            cat all.tests
-                            echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-                            echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
-                            cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                            CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
-                        """
+                        script {
+                            unstash 'ubuntu-exe'
+                            sh """
+                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                            """
+                            utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
+                            utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
+                            utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
+                            sh """
+                                cd performance-tests-cmdstan
+                                git show HEAD --stat
+                                echo "example-models/regression_tests/mother.stan" > all.tests
+                                cat known_good_perf_all.tests >> all.tests
+                                echo "" >> all.tests
+                                cat shotgun_perf_all.tests >> all.tests
+                                cat all.tests
+                                echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+                                echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
+                                cd cmdstan; make clean-all; git show HEAD --stat; cd ..
+                                CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
+                            """
+                        }
 
                         xunit([GoogleTest(
                             deleteOutputFiles: false,
@@ -271,12 +283,15 @@ pipeline {
 
                         unstash 'ubuntu-exe'
 
-                        sh """
-                            git clone --recursive https://github.com/stan-dev/math.git
-                            cp bin/stanc math/test/expressions/stanc
-                        """
-
                         script {
+                            sh """
+                                git clone --recursive https://github.com/stan-dev/math.git
+                            """
+                            utils.checkout_pr("math", "math", params.math_pr)
+                            sh """
+                                cp bin/stanc math/test/expressions/stanc
+                            """
+
                             dir("math") {
                                 sh """
                                     echo O=0 >> make/local
@@ -300,12 +315,13 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            !skipRebuildingBinaries
                         }
                     }
                     agent { label "osx && ocaml" }
                     steps {
                         runShell("""
+                            opam switch 4.12.0
                             eval \$(opam env)
                             opam update || true
                             bash -x scripts/install_build_deps.sh
@@ -314,7 +330,6 @@ pipeline {
                         """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
-                        sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/mac-stan2tfp"
 
                         stash name:'mac-exe', includes:'bin/*'
                     }
@@ -324,7 +339,7 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            !skipRebuildingBinaries
                         }
                     }
                     agent {
@@ -351,7 +366,7 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            !skipRebuildingBinaries
                         }
                     }
                     agent {
@@ -369,7 +384,6 @@ pipeline {
                         """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-stan2tfp"
 
                         stash name:'linux-exe', includes:'bin/*'
                     }
@@ -380,7 +394,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -400,7 +414,6 @@ pipeline {
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh mips64el"
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-mips64el-stan2tfp"
 
                         stash name:'linux-mips64el-exe', includes:'bin/*'
                     }
@@ -411,7 +424,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -431,7 +444,6 @@ pipeline {
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh ppc64el"
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-ppc64el-stan2tfp"
 
                         stash name:'linux-ppc64el-exe', includes:'bin/*'
                     }
@@ -442,7 +454,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -462,7 +474,6 @@ pipeline {
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh s390x"
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-s390x-stan2tfp"
 
                         stash name:'linux-s390x-exe', includes:'bin/*'
                     }
@@ -473,7 +484,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -494,7 +505,6 @@ pipeline {
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh arm64"
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-arm64-stan2tfp"
 
                         stash name:'linux-arm64-exe', includes:'bin/*'
                     }
@@ -505,7 +515,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -526,7 +536,6 @@ pipeline {
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh armhf"
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
 
                         stash name:'linux-armhf-exe', includes:'bin/*'
                     }
@@ -537,7 +546,7 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            expression { !skipRemainingStages }
+                            expression { !skipRebuildingBinaries }
                             anyOf { buildingTag(); branch 'master' }
                         }
                     }
@@ -558,7 +567,6 @@ pipeline {
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh armel"
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-armel-stan2tfp"
 
                         stash name:'linux-armel-exe', includes:'bin/*'
                     }
@@ -570,7 +578,7 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            !skipRebuildingBinaries
                         }
                     }
                     agent {
@@ -590,7 +598,6 @@ pipeline {
                         """)
 
                         sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
-                        sh "mv _build/default.windows/src/stan2tfp/stan2tfp.exe bin/windows-stan2tfp"
 
                         stash name:'windows-exe', includes:'bin/*'
                     }
@@ -604,6 +611,7 @@ pipeline {
                 beforeAgent true
                 allOf {
                     expression { !skipRemainingStages }
+                    expression { !skipRebuildingBinaries }
                     anyOf { buildingTag(); branch 'master' }
                 }
             }
@@ -636,7 +644,7 @@ pipeline {
             agent {
                 docker {
                     image 'stanorg/stanc3:static'
-                    label 'linux-ec2'
+                    label 'gg-linux'
                     //Forces image to ignore entrypoint
                     args "-u 1000 --entrypoint=\'\'"
                 }
@@ -644,7 +652,7 @@ pipeline {
             steps {
                 retry(3) {
                     checkout([$class: 'GitSCM',
-                        branches: [[name: '*/gh-pages']],
+                        branches: [],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [],
                         submoduleCfg: [],
@@ -691,11 +699,11 @@ pipeline {
                         git add -f doc
                         git commit -m "auto generated docs from Jenkins"
                         git subtree push --prefix doc/ https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git gh-pages
+                        ls -A1 | xargs rm -rf
                     """
                 }
 
             }
-            post { always { deleteDir() } }
         }
     }
     post {

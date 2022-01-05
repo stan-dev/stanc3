@@ -1,0 +1,45 @@
+(rule
+ (targets pretty.output)
+ (deps
+  (package stanc)
+  (glob_files data/*.stan)
+  (glob_files functions/*.stan)
+  (glob_files gqs/*.stan)
+  (glob_files model/*.stan)
+  (glob_files parameters/*.stan)
+  (glob_files pre/*.stan)
+  (glob_files tdata/*.stan)
+  (glob_files tparameters/*.stan)
+  (:stanfiles
+   (glob_files *.stan)))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --include-paths=\".\" --auto-format --allow-undefined"
+    %{stanfiles}))))
+
+(rule
+ (targets inlined.output)
+ (deps
+  (package stanc)
+  (:stanfiles
+   (glob_files *.stan)))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --include-paths=\".\" --auto-format --canonicalize=includes --allow-undefined"
+    %{stanfiles}))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff pretty.expected pretty.output)))
+
+(rule
+ (alias runtest)
+ (action
+  (diff inlined.expected inlined.output)))

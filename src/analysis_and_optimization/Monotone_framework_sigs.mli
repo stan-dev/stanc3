@@ -10,7 +10,7 @@ open Core_kernel
 module type FLOWGRAPH = sig
   type labels
 
-  include Base__.Hashtbl_intf.Key with type t = labels
+  include Base__.Hashtbl_intf.Key.S with type t = labels
 
   val initials : labels Set.Poly.t
   val successors : (labels, labels Set.Poly.t) Map.Poly.t
@@ -37,8 +37,7 @@ end
 
 (** The data we need to form a dual powerset lattice *)
 module type INITIALTOTALTYPE = sig
-  include INITIALTYPE
-  include TOTALTYPE with type vals := vals
+  include INITIALTYPE include TOTALTYPE with type vals := vals
 end
 
 module type LATTICE_NO_BOT = sig
@@ -81,7 +80,7 @@ type 'a entry_exit = {entry: 'a; exit: 'a}
     equations/inequalities are generated from the transfer function.
     Returns a map of the (input_properties, output_properties) for
     each node l in the flow graph.
-    The analysis performed is always a forward analysis. 
+    The analysis performed is always a forward analysis.
     For a reverse analysis, supply the reverse flow graph.*)
 module type MONOTONE_FRAMEWORK = sig
   type labels

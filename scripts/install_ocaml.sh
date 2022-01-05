@@ -9,9 +9,9 @@ opam init $1
 # Have further shell commands be evaluated in the proper opam context.
 eval $(opam env)
 
-# Create and switch to 4.07.0
-opam switch create 4.07.0
-opam switch 4.07.0
+# Create and switch to 4.12.0
+opam switch create stanc ocaml-base-compiler.4.12.0
+opam switch stanc
 
 # Have further shell commands be evaluated in the proper opam context.
 eval $(opam env)

@@ -1,10 +1,10 @@
   $ ../../../../../install/default/bin/stanc non_data_index1.stan
-Semantic error in 'non_data_index1.stan', line 6, column 14 to column 15:
+Semantic error in 'non_data_index1.stan', line 6, column 13 to column 14:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
-     6:    real z[size(y)];
-                       ^
+     6:    array[size(y)] real z;
+                      ^
      7:  }
    -------------------------------------------------
 
@@ -154,12 +154,12 @@ Semantic error in 'non_data_index9.stan', line 6, column 19 to column 20:
 
 Non-data variables are not allowed in top level size declarations.
   $ ../../../../../install/default/bin/stanc rng_index1.stan
-Semantic error in 'rng_index1.stan', line 6, column 9 to column 24:
+Semantic error in 'rng_index1.stan', line 6, column 8 to column 23:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
-     6:    real z[poisson_rng(10)];
-                  ^
+     6:    array[poisson_rng(10)] real z;
+                 ^
      7:  }
    -------------------------------------------------
 

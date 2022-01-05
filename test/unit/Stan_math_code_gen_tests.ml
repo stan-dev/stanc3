@@ -6,8 +6,7 @@ open Stan_math_code_gen
 
 let%expect_test "udf" =
   let with_no_loc stmt =
-    Stmt.Fixed.{pattern= stmt; meta= Locations.no_span_num}
-  in
+    Stmt.Fixed.{pattern= stmt; meta= Locations.no_span_num} in
   let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
   let pp_fun_def_w_rs a b = pp_fun_def a b String.Set.empty String.Set.empty in
   { fdrt= None
@@ -20,11 +19,11 @@ let%expect_test "udf" =
            ( w
            @@ FunApp
                 ( StanLib ("add", FnPlain, AoS)
-                , [w @@ Var "x"; w @@ Lit (Int, "1")] ) ))
+                , [w @@ Var "x"; w @@ Lit (Int, "1")] ) ) )
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }
-  |> strf "@[<v>%a" pp_fun_def_w_rs
+  |> str "@[<v>%a" pp_fun_def_w_rs
   |> print_endline ;
   [%expect
     {|
@@ -34,14 +33,14 @@ let%expect_test "udf" =
       using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
               stan::value_type_t<T1__>>;
       int current_statement__ = 0;
-      const auto& x = to_ref(x_arg__);
-      const auto& y = to_ref(y_arg__);
+      const auto& x = stan::math::to_ref(x_arg__);
+      const auto& y = stan::math::to_ref(y_arg__);
       static constexpr bool propto__ = true;
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
       try {
-        return add(x, 1);
+        return stan::math::add(x, 1);
       } catch (const std::exception& e) {
         stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       }
@@ -50,29 +49,26 @@ let%expect_test "udf" =
 
 let%expect_test "udf-expressions" =
   let with_no_loc stmt =
-    Stmt.Fixed.{pattern= stmt; meta= Locations.no_span_num}
-  in
+    Stmt.Fixed.{pattern= stmt; meta= Locations.no_span_num} in
   let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
   let pp_fun_def_w_rs a b = pp_fun_def a b String.Set.empty String.Set.empty in
   { fdrt= Some UMatrix
   ; fdname= "sars"
   ; fdsuffix= FnPlain
   ; fdargs=
-      [ (DataOnly, "x", UMatrix)
-      ; (AutoDiffable, "y", URowVector)
-      ; (AutoDiffable, "z", URowVector)
-      ; (AutoDiffable, "w", UArray UMatrix) ]
+      [ (DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)
+      ; (AutoDiffable, "z", URowVector); (AutoDiffable, "w", UArray UMatrix) ]
   ; fdbody=
       Stmt.Fixed.Pattern.Return
         (Some
            ( w
            @@ FunApp
                 ( StanLib ("add", FnPlain, AoS)
-                , [w @@ Var "x"; w @@ Lit (Int, "1")] ) ))
+                , [w @@ Var "x"; w @@ Lit (Int, "1")] ) ) )
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }
-  |> strf "@[<v>%a" pp_fun_def_w_rs
+  |> str "@[<v>%a" pp_fun_def_w_rs
   |> print_endline ;
   [%expect
     {|
@@ -88,15 +84,15 @@ let%expect_test "udf-expressions" =
               stan::value_type_t<T2__>,
               T3__>;
       int current_statement__ = 0;
-      const auto& x = to_ref(x_arg__);
-      const auto& y = to_ref(y_arg__);
-      const auto& z = to_ref(z_arg__);
+      const auto& x = stan::math::to_ref(x_arg__);
+      const auto& y = stan::math::to_ref(y_arg__);
+      const auto& z = stan::math::to_ref(z_arg__);
       static constexpr bool propto__ = true;
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
       try {
-        return add(x, 1);
+        return stan::math::add(x, 1);
       } catch (const std::exception& e) {
         stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       }
