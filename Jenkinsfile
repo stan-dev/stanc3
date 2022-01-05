@@ -28,6 +28,12 @@ pipeline {
     agent none
     parameters {
         booleanParam(name:"compile_all", defaultValue: false, description:"Try compiling all models in test/integration/good")
+        string(defaultValue: 'develop', name: 'cmdstan_pr',
+               description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
+        string(defaultValue: 'develop', name: 'stan_pr',
+               description: "Stan PR to test against. Will check out this PR in the downstream Stan repo.")
+        string(defaultValue: 'develop', name: 'math_pr',
+               description: "Math PR to test against. Will check out this PR in the downstream Math repo.")
     }
     options {parallelsAlwaysFailFast()}
     environment {
@@ -232,6 +238,11 @@ pipeline {
                         sh """
                             git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                         """
+                        script {
+                            utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
+                            utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
+                            utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
+                        }
                         sh """
                             cd performance-tests-cmdstan
                             git show HEAD --stat
