@@ -46,7 +46,7 @@ pipeline {
         stage('Verify changes') {
             agent {
                 docker {
-                    image 'stanorg/ci:alpine'
+                    image 'stanorg/ci:gpu'
                     label 'linux'
                 }
             }
@@ -181,7 +181,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/ci:alpine'
+                            image 'stanorg/ci:gpu'
                             label 'linux'
                         }
                     }
@@ -223,7 +223,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/ci:alpine'
+                            image 'stanorg/ci:gpu'
                             label 'linux'
                         }
                     }
@@ -274,7 +274,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/ci:alpine'
+                            image 'stanorg/ci:gpu'
                             label 'linux'
                         }
                     }
@@ -316,7 +316,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/ci:alpine'
+                            image 'stanorg/ci:gpu'
                             label 'osx'
                         }
                     }
@@ -493,7 +493,7 @@ pipeline {
                         docker {
                             image 'stanorg/stanc3:static'
                             //Forces image to ignore entrypoint
-                            label 'linux-ec2'
+                            label 'linux'
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
                     }
@@ -524,7 +524,7 @@ pipeline {
                         docker {
                             image 'stanorg/stanc3:static'
                             //Forces image to ignore entrypoint
-                            label 'linux-ec2'
+                            label 'linux'
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
                     }
@@ -555,7 +555,7 @@ pipeline {
                         docker {
                             image 'stanorg/stanc3:static'
                             //Forces image to ignore entrypoint
-                            label 'linux-ec2'
+                            label 'linux'
                             args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
                     }
@@ -585,7 +585,7 @@ pipeline {
                     agent {
                         docker {
                             image 'stanorg/stanc3:debian-windows'
-                            label 'linux-ec2'
+                            label 'linux'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\'"
                         }
@@ -617,7 +617,7 @@ pipeline {
             }
             agent {
                 docker {
-                    image 'stanorg/ci:alpine'
+                    image 'stanorg/ci:gpu'
                     label 'linux'
                 }
             }
@@ -649,7 +649,7 @@ pipeline {
             agent {
                 docker {
                     image 'stanorg/stanc3:static'
-                    label 'gg-linux'
+                    label 'linux'
                     //Forces image to ignore entrypoint
                     args "-u 1000 --entrypoint=\'\'"
                 }
