@@ -22,12 +22,12 @@ type signature_error =
 val check_compatible_arguments_mod_conv :
      (UnsizedType.autodifftype * UnsizedType.t) list
   -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> function_mismatch option
+  -> (unit (* Ast.typed_expression list *), function_mismatch) result
 
 val returntype :
      Environment.t
   -> string
-  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> Ast.typed_expression list
   -> ( UnsizedType.returntype * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
      , signature_error list * bool )
      result
@@ -38,8 +38,9 @@ val check_variadic_args :
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> UnsizedType.t
   -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> ((UnsizedType.autodifftype * UnsizedType.t) list * function_mismatch)
-     option
+  -> ( unit
+     , (UnsizedType.autodifftype * UnsizedType.t) list * function_mismatch )
+     result
 
 val pp_signature_mismatch :
      Format.formatter

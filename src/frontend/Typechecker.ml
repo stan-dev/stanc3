@@ -424,7 +424,7 @@ let check_fn ~is_cond_dist loc tenv id es =
             (Env.nearest_ident tenv id.name) )
       |> error
   | _ (* a function *) -> (
-    match SignatureMismatch.returntype tenv id.name (get_arg_types es) with
+    match SignatureMismatch.returntype tenv id.name es with
     | Ok (Void, _) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
         |> error
@@ -458,11 +458,11 @@ let check_reduce_sum ~is_cond_dist loc id es =
         SignatureMismatch.check_variadic_args true mandatory_args
           mandatory_fun_args UReal (get_arg_types es)
       with
-      | None ->
+      | Ok () ->
           mk_typed_expression
             ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, es))
             ~ad_level:(expr_ad_lub es) ~type_:UnsizedType.UReal ~loc
-      | Some (expected_args, err) ->
+      | Error (expected_args, err) ->
           Semantic_error.illtyped_reduce_sum loc id.name
             (List.map ~f:type_of_expr_typed es)
             expected_args err
@@ -477,7 +477,7 @@ let check_reduce_sum ~is_cond_dist loc id es =
       let expected_args, err =
         SignatureMismatch.check_variadic_args true mandatory_args
           mandatory_fun_args UReal (get_arg_types es)
-        |> Option.value_exn in
+        |> Result.error |> Option.value_exn in
       Semantic_error.illtyped_reduce_sum_generic loc id.name
         (List.map ~f:type_of_expr_typed es)
         expected_args err
@@ -498,12 +498,12 @@ let check_variadic_ode ~is_cond_dist loc id es =
       Stan_math_signatures.variadic_ode_mandatory_fun_args
       Stan_math_signatures.variadic_ode_fun_return_type (get_arg_types es)
   with
-  | None ->
+  | Ok () ->
       mk_typed_expression
         ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, es))
         ~ad_level:(expr_ad_lub es)
         ~type_:Stan_math_signatures.variadic_ode_return_type ~loc
-  | Some (expected_args, err) ->
+  | Error (expected_args, err) ->
       Semantic_error.illtyped_variadic_ode loc id.name
         (List.map ~f:type_of_expr_typed es)
         expected_args err
@@ -657,6 +657,10 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:false id
   | CondDistApp ((), id, es) ->
       es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:true id
+  | Promotion (e, _) ->
+      (* Should never happen: promotions are produced during typechecking *)
+      Common.FatalError.fatal_error_msg
+        [%message "Promotion in untyped AST" (e : Ast.untyped_expression)]
 
 and check_expression_of_int_type cf tenv e name =
   let te = check_expression cf tenv e in
@@ -698,7 +702,7 @@ let check_nrfn loc tenv id es =
         (Env.nearest_ident tenv id.name)
       |> error
   | _ (* a function *) -> (
-    match SignatureMismatch.returntype tenv id.name (get_arg_types es) with
+    match SignatureMismatch.returntype tenv id.name es with
     | Ok (Void, fnk) ->
         mk_typed_statement
           ~stmt:(NRFunApp (fnk (Fun_kind.suffix_from_name id.name), id, es))

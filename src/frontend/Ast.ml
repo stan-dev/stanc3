@@ -44,6 +44,7 @@ type ('e, 'f) expression =
   | ImagNumeral of string
   | FunApp of 'f * identifier * 'e list
   | CondDistApp of 'f * identifier * 'e list
+  | Promotion of 'e * UnsizedType.t
   (* GetLP is deprecated *)
   | GetLP
   | GetTarget
@@ -304,7 +305,11 @@ let rec id_of_lvalue {lval; _} =
 
 let rec get_loc_expr (e : untyped_expression) =
   match e.expr with
-  | TernaryIf (e, _, _) | BinOp (e, _, _) | PostfixOp (e, _) | Indexed (e, _) ->
+  | TernaryIf (e, _, _)
+   |BinOp (e, _, _)
+   |PostfixOp (e, _)
+   |Indexed (e, _)
+   |Promotion (e, _) ->
       get_loc_expr e
   | PrefixOp (_, e) | ArrayExpr (e :: _) | RowVectorExpr (e :: _) | Paren e ->
       e.emeta.loc.begin_loc

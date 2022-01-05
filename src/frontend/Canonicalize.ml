@@ -142,7 +142,7 @@ let rec no_parens {expr; emeta} =
                   | i -> map_index keep_parens i )
                 l )
       ; emeta }
-  | ArrayExpr _ | RowVectorExpr _ | FunApp _ | CondDistApp _ ->
+  | ArrayExpr _ | RowVectorExpr _ | FunApp _ | CondDistApp _ | Promotion _ ->
       {expr= map_expression no_parens ident expr; emeta}
 
 and keep_parens {expr; emeta} =
