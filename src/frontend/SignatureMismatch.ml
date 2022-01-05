@@ -122,6 +122,12 @@ let rec check_same_type depth t1 t2 =
   | UnsizedType.(UReal, UInt) when depth < 1 -> Ok RealPromotion
   | UnsizedType.(UComplex, UInt) when depth < 1 -> Ok ComplexPromotion
   | UnsizedType.(UComplex, UReal) when depth < 1 -> Ok ComplexPromotion
+  (* PROMOTION TODO: Need to allow array promotion, this doesn't quite work? *)
+  | UArray nt1, UArray nt2 ->
+      check_same_type depth nt1 nt2
+      |> Result.map_error ~f:(function
+           | TypeMismatch _ -> TypeMismatch (t1, t2, None)
+           | e -> e )
   | UFun (_, _, s1, _), UFun (_, _, s2, _)
     when Fun_kind.without_propto s1 <> Fun_kind.without_propto s2 ->
       Error
@@ -133,12 +139,6 @@ let rec check_same_type depth t1 t2 =
     match check_compatible_arguments (depth + 1) l2 l1 with
     | Ok _ -> Ok None
     | Error e -> Error (InputMismatch e) |> wrap_func )
-  (* PROMOTION TODO: Need to allow array promotion, this doesn't quite work? *)
-  | UArray ut1, UArray ut2 ->
-      check_same_type depth ut1 ut2
-      |> Result.map_error ~f:(function
-           | TypeMismatch (_, _, _) -> TypeMismatch (t1, t2, None)
-           | e -> e )
   | t1, t2 -> Error (TypeMismatch (t1, t2, None))
 
 and check_compatible_arguments depth typs args2 :
