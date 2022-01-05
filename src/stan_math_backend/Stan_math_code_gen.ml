@@ -114,7 +114,8 @@ let pp_returntype ppf arg_types rt =
 
 let pp_eigen_arg_to_ref ppf arg_types =
   let pp_ref ppf name =
-    pf ppf "@[<hv 8>const auto& %s = to_ref(%s);@]" name (name ^ "_arg__") in
+    pf ppf "@[<hv 8>const auto& %s = stan::math::to_ref(%s);@]" name
+      (name ^ "_arg__") in
   pf ppf "@[<v>%a@]@ " (list ~sep:cut pp_ref)
     (List.filter_map
        ~f:(fun (_, name, ut) ->
@@ -188,7 +189,7 @@ let get_templates_and_args exprs fdargs =
 let pp_template_decorator ppf = function
   | [] -> ()
   | templates ->
-      pf ppf "@[<hov>template <%a>@]@ " (list ~sep:comma string) templates
+      pf ppf "template @[<hov><%a>@]@ " (list ~sep:comma string) templates
 
 let mk_extra_args templates args =
   List.map ~f:(fun (t, v) -> t ^ "& " ^ v) (List.zip_exn templates args)
@@ -903,19 +904,9 @@ let pp_model ppf ({Program.prog_name; _} as p) =
     "%%NAME%%3 %%VERSION%%" stanc_args_to_print ;
   pf ppf "@ %a@]@]@ };" pp_model_public p
 
-(** The C++ aliases needed for the model class*)
 let usings =
   {|
-using stan::io::dump;
-using stan::model::assign;
-using stan::model::index_uni;
-using stan::model::index_max;
-using stan::model::index_min;
-using stan::model::index_min_max;
-using stan::model::index_multi;
-using stan::model::index_omni;
 using stan::model::model_base_crtp;
-using stan::model::rvalue;
 using namespace stan::math;
 |}
 
