@@ -500,7 +500,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   | Promotion (expr, ut) ->
       if is_scalar expr && ut = UReal then pp_expr ppf expr
       else
-        pf ppf "stan::math::promote_scalar_t<%a>(%a)" pp_unsizedtype_local
+        pf ppf "stan::math::promote_scalar<%a>(%a)" pp_unsizedtype_local
           (meta.adlevel, ut) pp_expr expr
   | FunApp
       ( StanLib (op, _, _)
