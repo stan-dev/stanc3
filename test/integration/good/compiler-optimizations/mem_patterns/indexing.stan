@@ -98,12 +98,8 @@ model {
     y ~ normal(multiply(dat_x, p_soa_loop_mat_multi_uni_uni_idx[idx_tester[i],]'), 1.0);
     y ~ normal(multiply(dat_x[,i], transpose(multiply(p_soa_mat_pass_func_outer_single_indexed1,
      p_soa_mat_pass_func_outer_single_indexed2))[mask_fun(i), mask_fun(i)]), 1.0);
-     /*
-     Note: Make test showing this passes
-         y ~ normal(multiply(dat_x[,i], p_aos_mat_fail_uni_uni_idx1[i, i] *
+    y ~ normal(multiply(dat_x[,i], p_aos_mat_fail_uni_uni_idx1[i, i] *
      p_aos_mat_fail_uni_uni_idx2[i, i]), 1.0);
-
-*/
   }
 
   // SHOULD NOT BE SOA

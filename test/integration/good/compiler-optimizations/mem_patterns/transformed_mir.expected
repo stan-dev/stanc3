@@ -8409,6 +8409,82 @@
                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta
                     ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                (meta <opaque>))
+               ((pattern
+                 (TargetPE
+                  ((pattern
+                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                     (((pattern (Var y))
+                       (meta
+                        ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern
+                        (FunApp (StanLib multiply FnPlain AoS)
+                         (((pattern
+                            (Indexed
+                             ((pattern (Var dat_x))
+                              (meta
+                               ((type_ UMatrix) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             (All
+                              (Single
+                               ((pattern (Var i))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly))))))))
+                           (meta
+                            ((type_ UVector) (loc <opaque>)
+                             (adlevel DataOnly))))
+                          ((pattern
+                            (FunApp (StanLib Times__ FnPlain AoS)
+                             (((pattern
+                                (Indexed
+                                 ((pattern (Var p_aos_mat_fail_uni_uni_idx1))
+                                  (meta
+                                   ((type_ UMatrix) (loc <opaque>)
+                                    (adlevel AutoDiffable))))
+                                 ((Single
+                                   ((pattern (Var i))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>)
+                                      (adlevel DataOnly)))))
+                                  (Single
+                                   ((pattern (Var i))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>)
+                                      (adlevel DataOnly))))))))
+                               (meta
+                                ((type_ UReal) (loc <opaque>)
+                                 (adlevel AutoDiffable))))
+                              ((pattern
+                                (Indexed
+                                 ((pattern (Var p_aos_mat_fail_uni_uni_idx2))
+                                  (meta
+                                   ((type_ UMatrix) (loc <opaque>)
+                                    (adlevel AutoDiffable))))
+                                 ((Single
+                                   ((pattern (Var i))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>)
+                                      (adlevel DataOnly)))))
+                                  (Single
+                                   ((pattern (Var i))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>)
+                                      (adlevel DataOnly))))))))
+                               (meta
+                                ((type_ UReal) (loc <opaque>)
+                                 (adlevel AutoDiffable)))))))
+                           (meta
+                            ((type_ UReal) (loc <opaque>)
+                             (adlevel AutoDiffable)))))))
+                       (meta
+                        ((type_ UVector) (loc <opaque>)
+                         (adlevel AutoDiffable))))
+                      ((pattern (Lit Real 1.0))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
         (meta <opaque>))
