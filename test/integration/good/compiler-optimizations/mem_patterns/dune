@@ -7,7 +7,7 @@
  (action
   (with-stdout-to
    %{targets}
-   (run %{bin:run_bin_on_args} "%{bin:stanc} --print-cpp" %{stanfiles}))))
+   (run %{bin:run_bin_on_args} "%{bin:stanc} -fsoa --print-cpp" %{stanfiles}))))
 
 (rule
  (alias runtest)
@@ -25,7 +25,7 @@
    %{targets}
    (run
     %{bin:run_bin_on_args}
-    "%{bin:stanc} --debug-transformed-mir"
+    "%{bin:stanc} -fsoa --debug-transformed-mir"
     %{stanfiles}))))
 
 (rule

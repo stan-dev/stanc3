@@ -20,16 +20,16 @@ Semantic error in 'completely_undefined2.stan', line 5, column 12 to column 23:
 
 Function 'foo_lpdf' is not implemented for distribution 'foo', use 'foo_lpmf' instead.
   $ ../../../../../install/default/bin/stanc deprecated_suffix.stan
-Semantic error in 'deprecated_suffix.stan', line 4, column 14 to column 40:
+Semantic error in 'deprecated_suffix.stan', line 4, column 14 to column 45:
    -------------------------------------------------
      2:  }
      3:  model {
-     4:      target += von_mises_ccdf_log(1, 0,1);
+     4:      target += binomial_logit_ccdf_log(1, 0,1);
                        ^
      5:  }
    -------------------------------------------------
 
-Function 'von_mises_ccdf_log' is not implemented for distribution 'von_mises'.
+Function 'binomial_logit_ccdf_log' is not implemented for distribution 'binomial_logit'.
   $ ../../../../../install/default/bin/stanc lpmf_lpdf_replacement1.stan
 Semantic error in 'lpmf_lpdf_replacement1.stan', line 5, column 14 to column 34:
    -------------------------------------------------
@@ -63,38 +63,38 @@ Semantic error in 'no_rng_suffix.stan', line 2, column 12 to column 55:
 
 Function 'multi_gp_cholesky_rng' is not implemented for distribution 'multi_gp_cholesky'.
   $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix1.stan
-Semantic error in 'non_existing_distribution_suffix1.stan', line 4, column 14 to column 34:
+Semantic error in 'non_existing_distribution_suffix1.stan', line 4, column 14 to column 39:
    -------------------------------------------------
      2:  }
      3:  model {  
-     4:      target += von_mises_cdf(1|0,1);
+     4:      target += binomial_logit_cdf(1|0,1);
                        ^
      5:  }
    -------------------------------------------------
 
-Function 'von_mises_cdf' is not implemented for distribution 'von_mises'.
+Function 'binomial_logit_cdf' is not implemented for distribution 'binomial_logit'.
   $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix2.stan
-Semantic error in 'non_existing_distribution_suffix2.stan', line 4, column 14 to column 35:
+Semantic error in 'non_existing_distribution_suffix2.stan', line 4, column 14 to column 40:
    -------------------------------------------------
      2:  }
      3:  model {  
-     4:      target += von_mises_lcdf(1|0,1);
+     4:      target += binomial_logit_lcdf(1|0,1);
                        ^
      5:  }
    -------------------------------------------------
 
-Function 'von_mises_lcdf' is not implemented for distribution 'von_mises'.
+Function 'binomial_logit_lcdf' is not implemented for distribution 'binomial_logit'.
   $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix3.stan
-Semantic error in 'non_existing_distribution_suffix3.stan', line 4, column 14 to column 36:
+Semantic error in 'non_existing_distribution_suffix3.stan', line 4, column 14 to column 41:
    -------------------------------------------------
      2:  }
      3:  model {  
-     4:      target += von_mises_lccdf(1|0,1);
+     4:      target += binomial_logit_lccdf(1|0,1);
                        ^
      5:  }
    -------------------------------------------------
 
-Function 'von_mises_lccdf' is not implemented for distribution 'von_mises'.
+Function 'binomial_logit_lccdf' is not implemented for distribution 'binomial_logit'.
   $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix4.stan
 Semantic error in 'non_existing_distribution_suffix4.stan', line 4, column 14 to column 41:
    -------------------------------------------------

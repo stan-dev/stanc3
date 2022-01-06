@@ -27,6 +27,8 @@ Test that a nonsense argument is caught
     -O1                             Apply level 1 compiler optimizations (only basic optimizations).
     -Oexperimental                  (Experimental) Apply all compiler optimizations. Some of these are not thorougly tested and may not always improve a programs performance.
     --O                             (Experimental) Same as -Oexperimental. Apply all compiler optimizations. Some of these are not thorougly tested and may not always improve a programs performance.
+    -fno-soa                        Turn off the Struct of Arrays optimization
+    -fsoa                           Turn on the Struct of Arrays optimization
     --o                             Take the path to an output file for generated C++ code (default = "$name.hpp") or auto-formatting output (default: no file/print to stdout)
     --print-cpp                     If set, output the generated C++ Stan model class to stdout.
     --allow-undefined               Do not fail if a function is declared but not defined
@@ -40,9 +42,6 @@ Test that a nonsense argument is caught
     -help                           Display this list of options
     --help                          Display this list of options
   [2]
-<<<<<<< HEAD
-=======
->>>>>>> upstream/master
 
 Test capitalization - this should fail due to the lack of model_name, not the canonicalizer
   $ stanc --canonicalize DEPRECATIONS,parentheses,bRaCeS
@@ -72,6 +71,8 @@ Test capitalization - this should fail due to the lack of model_name, not the ca
     -O1                             Apply level 1 compiler optimizations (only basic optimizations).
     -Oexperimental                  (Experimental) Apply all compiler optimizations. Some of these are not thorougly tested and may not always improve a programs performance.
     --O                             (Experimental) Same as -Oexperimental. Apply all compiler optimizations. Some of these are not thorougly tested and may not always improve a programs performance.
+    -fno-soa                        Turn off the Struct of Arrays optimization
+    -fsoa                           Turn on the Struct of Arrays optimization
     --o                             Take the path to an output file for generated C++ code (default = "$name.hpp") or auto-formatting output (default: no file/print to stdout)
     --print-cpp                     If set, output the generated C++ Stan model class to stdout.
     --allow-undefined               Do not fail if a function is declared but not defined
@@ -85,6 +86,3 @@ Test capitalization - this should fail due to the lack of model_name, not the ca
     -help                           Display this list of options
     --help                          Display this list of options
   [127]
-<<<<<<< HEAD
-=======
->>>>>>> upstream/master

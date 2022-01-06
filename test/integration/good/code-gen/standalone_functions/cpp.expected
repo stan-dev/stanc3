@@ -4,16 +4,7 @@
 #include <stan/model/model_header.hpp>
 namespace basic_model_namespace {
 
-using stan::io::dump;
-using stan::model::assign;
-using stan::model::index_uni;
-using stan::model::index_max;
-using stan::model::index_min;
-using stan::model::index_min_max;
-using stan::model::index_multi;
-using stan::model::index_omni;
 using stan::model::model_base_crtp;
-using stan::model::rvalue;
 using namespace stan::math;
 
 
@@ -53,7 +44,7 @@ my_log1p_exp(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 1;
-    return log1p_exp(x);
+    return stan::math::log1p_exp(x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -80,7 +71,7 @@ array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 3;
-    return sum(a);
+    return stan::math::sum(a);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -106,7 +97,7 @@ int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 5;
-    return sum(a);
+    return stan::math::sum(a);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -126,19 +117,21 @@ Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
   int current_statement__ = 0; 
-  const auto& x = to_ref(x_arg__);
+  const auto& x = stan::math::to_ref(x_arg__);
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 7;
-    validate_non_negative_index("result", "num_elements(x)", num_elements(x));
+    stan::math::validate_non_negative_index("result", "num_elements(x)",
+                                            stan::math::num_elements(x));
     Eigen::Matrix<local_scalar_t__, -1, 1> result =
-       Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(num_elements(x),
-         DUMMY_VAR__);
+       Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
+         stan::math::num_elements(x), DUMMY_VAR__);
     current_statement__ = 8;
-    assign(result, multiply(x, 5.0), "assigning variable result");
+    stan::model::assign(result, stan::math::multiply(x, 5.0),
+      "assigning variable result");
     current_statement__ = 9;
     return result;
   } catch (const std::exception& e) {
@@ -209,7 +202,7 @@ return test_lgamma(x, pstream__);
 };
 
 template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
+         typename T_lp_accum__>
 void
 test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
         std::ostream* pstream__) {
@@ -219,7 +212,7 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 15;
-    lp_accum__.add(normal_lpdf<propto__>(a, 0, 1));
+    lp_accum__.add(stan::math::normal_lpdf<propto__>(a, 0, 1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -228,7 +221,7 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
 
 struct test_lp_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
+         typename T_lp_accum__>
 void
 operator()(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__)  const 
@@ -248,7 +241,7 @@ test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 17;
-    return normal_rng(a, 1, base_rng__);
+    return stan::math::normal_rng(a, 1, base_rng__);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -274,7 +267,7 @@ test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 19;
-    return normal_lpdf<false>(a, b, 1);
+    return stan::math::normal_lpdf<false>(a, b, 1);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -371,16 +364,7 @@ auto test_lpdf(const double& a, const double& b,
 #include <stan/model/model_header.hpp>
 namespace basic_model_namespace {
 
-using stan::io::dump;
-using stan::model::assign;
-using stan::model::index_uni;
-using stan::model::index_max;
-using stan::model::index_min;
-using stan::model::index_min_max;
-using stan::model::index_multi;
-using stan::model::index_omni;
 using stan::model::model_base_crtp;
-using stan::model::rvalue;
 using namespace stan::math;
 
 
@@ -420,7 +404,7 @@ my_log1p_exp(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 1;
-    return log1p_exp(x);
+    return stan::math::log1p_exp(x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -447,7 +431,7 @@ array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 3;
-    return sum(a);
+    return stan::math::sum(a);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -473,7 +457,7 @@ int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 5;
-    return sum(a);
+    return stan::math::sum(a);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -493,19 +477,21 @@ Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
   int current_statement__ = 0; 
-  const auto& x = to_ref(x_arg__);
+  const auto& x = stan::math::to_ref(x_arg__);
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 7;
-    validate_non_negative_index("result", "num_elements(x)", num_elements(x));
+    stan::math::validate_non_negative_index("result", "num_elements(x)",
+                                            stan::math::num_elements(x));
     Eigen::Matrix<local_scalar_t__, -1, 1> result =
-       Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(num_elements(x),
-         DUMMY_VAR__);
+       Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
+         stan::math::num_elements(x), DUMMY_VAR__);
     current_statement__ = 8;
-    assign(result, multiply(x, 5.0), "assigning variable result");
+    stan::model::assign(result, stan::math::multiply(x, 5.0),
+      "assigning variable result");
     current_statement__ = 9;
     return result;
   } catch (const std::exception& e) {
@@ -576,7 +562,7 @@ return test_lgamma(x, pstream__);
 };
 
 template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
+         typename T_lp_accum__>
 void
 test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
         std::ostream* pstream__) {
@@ -586,7 +572,7 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 15;
-    lp_accum__.add(normal_lpdf<propto__>(a, 0, 1));
+    lp_accum__.add(stan::math::normal_lpdf<propto__>(a, 0, 1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -595,7 +581,7 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
 
 struct test_lp_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
+         typename T_lp_accum__>
 void
 operator()(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__)  const 
@@ -615,7 +601,7 @@ test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 17;
-    return normal_rng(a, 1, base_rng__);
+    return stan::math::normal_rng(a, 1, base_rng__);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -641,7 +627,7 @@ test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 19;
-    return normal_lpdf<false>(a, b, 1);
+    return stan::math::normal_lpdf<false>(a, b, 1);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -738,16 +724,7 @@ auto test_lpdf(const double& a, const double& b,
 #include <stan/model/model_header.hpp>
 namespace integrate_model_namespace {
 
-using stan::io::dump;
-using stan::model::assign;
-using stan::model::index_uni;
-using stan::model::index_max;
-using stan::model::index_min;
-using stan::model::index_min_max;
-using stan::model::index_multi;
-using stan::model::index_omni;
 using stan::model::model_base_crtp;
-using stan::model::rvalue;
 using namespace stan::math;
 
 
@@ -771,14 +748,14 @@ Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 integrand(const T0__& x_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
   int current_statement__ = 0; 
-  const auto& x = to_ref(x_arg__);
+  const auto& x = stan::math::to_ref(x_arg__);
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 1;
-    return stan::math::exp(minus(square(x)));
+    return stan::math::exp(stan::math::minus(stan::math::square(x)));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -811,10 +788,11 @@ integrand_ode(const T0__& r, const std::vector<T1__>& f,
        std::vector<local_scalar_t__>(1, DUMMY_VAR__);
     local_scalar_t__ x = DUMMY_VAR__;
     current_statement__ = 4;
-    x = logit(r);
+    x = stan::math::logit(r);
     current_statement__ = 5;
-    assign(df_dx, ((stan::math::exp(-square(x)) * 1) / (r * (1 - r))),
-      "assigning variable df_dx", index_uni(1));
+    stan::model::assign(df_dx,
+      ((stan::math::exp(-stan::math::square(x)) * 1) / (r * (1 - r))),
+      "assigning variable df_dx", stan::model::index_uni(1));
     current_statement__ = 6;
     return df_dx;
   } catch (const std::exception& e) {
@@ -847,12 +825,13 @@ ode_integrate(std::ostream* pstream__) {
     std::vector<int> x_i =
        std::vector<int>(0, std::numeric_limits<int>::min());
     current_statement__ = 9;
-    return rvalue(
-             integrate_ode_bdf(integrand_ode_functor__(), rep_array(0.0, 1), 1E-5,
-  rep_array((1.0 - 1E-5), 1), rep_array(0.0, 0), rep_array(0.0, 0), x_i,
-  pstream__),
+    return stan::model::rvalue(
+             stan::math::integrate_ode_bdf(integrand_ode_functor__(),
+  stan::math::rep_array(0.0, 1), 1E-5,
+  stan::math::rep_array((1.0 - 1E-5), 1), stan::math::rep_array(0.0, 0),
+  stan::math::rep_array(0.0, 0), x_i, pstream__),
              "integrate_ode_bdf(integrand_ode, rep_array(0.0, 1), 1E-5,\nrep_array((1.0 - 1E-5), 1), rep_array(0.0, 0), rep_array(0.0, 0),\nx_i)",
-             index_uni(1), index_uni(1));
+             stan::model::index_uni(1), stan::model::index_uni(1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
