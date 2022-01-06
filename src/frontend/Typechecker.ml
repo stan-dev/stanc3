@@ -1244,7 +1244,6 @@ and exists_matching_fn_declared tenv id arg_tys rt =
   List.exists (Env.find tenv id.name) ~f
 
 and verify_unique_signature tenv loc id arg_tys rt =
-  (* TODO does this need to be UserDefined only? *)
   let existing = Env.find tenv id.name in
   let same_args = function
     | Env.{type_= UFun (listedtypes, _, _, _); _}
@@ -1261,10 +1260,12 @@ and verify_unique_signature tenv loc id arg_tys rt =
       |> error
 
 and verify_fundef_overloaded loc tenv id arg_tys rt =
-  (* User defined functions cannot be overloaded at the moment
-   *)
-  if exists_matching_fn_declared tenv id arg_tys rt then ()
-  else verify_unique_signature tenv loc id arg_tys rt ;
+  if exists_matching_fn_declared tenv id arg_tys rt then
+    (* this is the definition to an existing forward declaration *)
+    ()
+  else
+    (* this should be an overload with a unique signature *)
+    verify_unique_signature tenv loc id arg_tys rt ;
   verify_name_fresh tenv id ~is_udf:true
 
 and get_fn_decl_or_defn loc tenv id arg_tys rt body =
