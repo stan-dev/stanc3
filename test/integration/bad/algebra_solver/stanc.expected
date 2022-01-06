@@ -127,10 +127,6 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The 5th argument must be array[] int but got array[] real
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
-  $ ../../../../../install/default/bin/stanc bad_newton_x_r_type.stan
-
-  $ ../../../../../install/default/bin/stanc bad_newton_x_r_type_control.stan
-
   $ ../../../../../install/default/bin/stanc bad_newton_x_r_var_type.stan
 Semantic error in 'bad_newton_x_r_var_type.stan', line 31, column 10 to column 71:
    -------------------------------------------------
@@ -335,10 +331,6 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The 5th argument must be array[] int but got array[] real
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
-  $ ../../../../../install/default/bin/stanc bad_x_r_type.stan
-
-  $ ../../../../../install/default/bin/stanc bad_x_r_type_control.stan
-
   $ ../../../../../install/default/bin/stanc bad_x_r_var_type.stan
 Semantic error in 'bad_x_r_var_type.stan', line 31, column 10 to column 64:
    -------------------------------------------------

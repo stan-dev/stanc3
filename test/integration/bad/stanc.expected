@@ -1779,8 +1779,6 @@ Semantic error in 'prob-poisson_log-trunc-low.stan', line 11, column 2 to column
    -------------------------------------------------
 
 Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
-  $ ../../../../install/default/bin/stanc propto-bad1.stan
-
   $ ../../../../install/default/bin/stanc real-pdf.stan
 Semantic error in 'real-pdf.stan', line 2, column 2 to line 4, column 3:
    -------------------------------------------------

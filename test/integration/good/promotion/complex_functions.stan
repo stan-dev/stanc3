@@ -1,3 +1,9 @@
+functions {
+   void promote_complex_array(array[] complex zs){
+      print(zs[0]);
+   }
+}
+
 generated quantities {
    real x = norm(1);
    x = norm(1.5);
@@ -19,5 +25,8 @@ generated quantities {
 
    z = polar(1.5,0.5);
    z = polar(2,3);
+
+   array[3] int xs = {1,2,3};
+   promote_complex_array(xs);
 
 }

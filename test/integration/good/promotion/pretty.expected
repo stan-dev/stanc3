@@ -1,0 +1,159 @@
+  $ ../../../../../install/default/bin/stanc --auto-format bad_newton_x_r_type.stan
+functions {
+  vector algebra_system(vector y, vector theta, array[] real x_r,
+                        array[] int x_i) {
+    vector[2] f_y;
+    f_y[1] = y[1] - theta[1];
+    f_y[2] = y[2] - theta[2];
+    return f_y;
+  }
+}
+data {
+  
+}
+transformed data {
+  vector[2] y;
+  array[0] int x_r;
+  array[0] int x_i;
+}
+parameters {
+  vector[2] theta_p;
+  real dummy_parameter;
+}
+transformed parameters {
+  vector[2] y_s_p;
+  y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i);
+}
+model {
+  dummy_parameter ~ normal(0, 1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format bad_newton_x_r_type_control.stan
+functions {
+  vector algebra_system(vector y, vector theta, array[] real x_r,
+                        array[] int x_i) {
+    vector[2] f_y;
+    f_y[1] = y[1] - theta[1];
+    f_y[2] = y[2] - theta[2];
+    return f_y;
+  }
+}
+data {
+  
+}
+transformed data {
+  vector[2] y;
+  array[0] int x_r;
+  array[0] int x_i;
+}
+parameters {
+  vector[2] theta_p;
+  real dummy_parameter;
+}
+transformed parameters {
+  vector[2] y_s_p;
+  y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i, 0.01,
+                                0.01, 10);
+}
+model {
+  dummy_parameter ~ normal(0, 1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format bad_x_r_type.stan
+functions {
+  vector algebra_system(vector y, vector theta, array[] real x_r,
+                        array[] int x_i) {
+    vector[2] f_y;
+    f_y[1] = y[1] - theta[1];
+    f_y[2] = y[2] - theta[2];
+    return f_y;
+  }
+}
+data {
+  
+}
+transformed data {
+  vector[2] y;
+  array[0] int x_r;
+  array[0] int x_i;
+}
+parameters {
+  vector[2] theta_p;
+  real dummy_parameter;
+}
+transformed parameters {
+  vector[2] y_s_p;
+  y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i);
+}
+model {
+  dummy_parameter ~ normal(0, 1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format bad_x_r_type_control.stan
+functions {
+  vector algebra_system(vector y, vector theta, array[] real x_r,
+                        array[] int x_i) {
+    vector[2] f_y;
+    f_y[1] = y[1] - theta[1];
+    f_y[2] = y[2] - theta[2];
+    return f_y;
+  }
+}
+data {
+  
+}
+transformed data {
+  vector[2] y;
+  array[0] int x_r;
+  array[0] int x_i;
+}
+parameters {
+  vector[2] theta_p;
+  real dummy_parameter;
+}
+transformed parameters {
+  vector[2] y_s_p;
+  y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01,
+                         10);
+}
+model {
+  dummy_parameter ~ normal(0, 1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format complex_functions.stan
+functions {
+  void promote_complex_array(array[] complex zs) {
+    print(zs[0]);
+  }
+}
+generated quantities {
+  real x = norm(1);
+  x = norm(1.5);
+  x = norm(3i);
+  
+  real y = abs(4 + 3i);
+  y = arg(4 + 1i);
+  y = arg(2.5);
+  y = arg(1);
+  
+  complex z;
+  z = conj(4.1 + 7i);
+  z = conj(4.1);
+  z = conj(0);
+  
+  z = proj(4.1 + 7i);
+  z = proj(4.1);
+  z = proj(0);
+  
+  z = polar(1.5, 0.5);
+  z = polar(2, 3);
+  
+  array[3] int xs = {1, 2, 3};
+  promote_complex_array(xs);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format propto-bad1.stan
+model {
+  target += normal_lupdf(1 | {0}, 1);
+}
+
