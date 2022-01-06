@@ -52,43 +52,43 @@ model {
 
 Warning in 'binomial_coefficient_log.stan', line 12, column 26: binomial_coefficient_log
     is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'binomial_coefficient_log.stan', line 13, column 26: binomial_coefficient_log
     is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'binomial_coefficient_log.stan', line 14, column 26: binomial_coefficient_log
     is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'binomial_coefficient_log.stan', line 15, column 26: binomial_coefficient_log
     is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'binomial_coefficient_log.stan', line 24, column 28: binomial_coefficient_log
     is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'binomial_coefficient_log.stan', line 25, column 28: binomial_coefficient_log
     is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'binomial_coefficient_log.stan', line 26, column 28: binomial_coefficient_log
     is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'binomial_coefficient_log.stan', line 27, column 28: binomial_coefficient_log
     is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'binomial_coefficient_log.stan', line 29, column 28: binomial_coefficient_log
     is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'binomial_coefficient_log.stan', line 30, column 28: binomial_coefficient_log
     is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'binomial_coefficient_log.stan', line 31, column 28: binomial_coefficient_log
     is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'binomial_coefficient_log.stan', line 32, column 28: binomial_coefficient_log
     is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'binomial_coefficient_log.stan', line 33, column 28: binomial_coefficient_log
     is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc --auto-format cov_exp_quad.stan
 data {
   int d_int_1;
@@ -206,196 +206,260 @@ model {
 
 Warning in 'cov_exp_quad.stan', line 17, column 28: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 18, column 28: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 19, column 28: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 20, column 28: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 21, column 28: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 22, column 28: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 38, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 39, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 40, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 41, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 43, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 44, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 45, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 46, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 48, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 49, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 50, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 51, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 53, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 54, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 55, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 56, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 58, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 59, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 60, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 61, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 63, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 64, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 65, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 66, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 68, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 69, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 70, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 71, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 73, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 74, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 75, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 76, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 78, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 79, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 80, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 82, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 83, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 84, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 85, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 87, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 88, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 89, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 90, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 92, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 93, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 94, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 95, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 97, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 98, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 99, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 100, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 102, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 103, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 104, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 106, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 107, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 108, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
 Warning in 'cov_exp_quad.stan', line 109, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
-    instead. This can be automatically changed using stanc --print-canonical
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
   $ ../../../../../install/default/bin/stanc --auto-format declarations.stan
 data {
   int a0;
@@ -817,539 +881,539 @@ generated quantities {
 Warning in 'declarations.stan', line 3, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 4, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 9, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 10, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 15, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 16, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 21, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 22, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 27, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 28, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 33, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 34, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 39, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 40, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 45, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 46, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 51, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 52, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 57, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 58, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 64, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 65, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 70, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 71, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 76, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 77, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 82, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 83, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 88, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 89, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 94, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 95, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 100, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 101, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 106, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 107, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 112, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 113, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 118, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 119, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 125, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 126, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 131, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 132, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 137, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 138, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 143, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 144, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 149, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 150, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 157, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 158, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 163, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 164, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 169, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 170, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 175, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 176, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 181, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 182, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 187, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 188, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 193, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 194, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 199, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 200, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 205, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 206, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 212, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 213, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 218, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 219, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 224, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 225, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 230, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 231, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 236, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 237, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 242, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 243, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 248, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 249, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 254, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 255, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 260, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 261, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 267, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 268, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 273, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 274, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 279, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 280, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 285, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 286, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 291, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 292, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 302, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 303, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 308, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 309, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 314, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 315, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 320, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 321, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 326, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 327, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 335, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 336, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 341, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 342, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 347, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 348, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 353, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 354, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 359, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 360, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 365, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 366, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 371, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 372, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 377, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 378, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 383, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 384, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 390, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 391, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 396, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 397, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 402, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 403, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 408, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 409, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 414, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
 Warning in 'declarations.stan', line 415, column 4: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
-    be changed automatically using stanc --auto-format
+    be changed automatically using the auto-format flag to stanc
   $ ../../../../../install/default/bin/stanc --auto-format deprecated_syntax.stan
 functions {
   real foo_log(real alpha, real beta) {
@@ -1412,56 +1476,66 @@ model {
 Warning in 'deprecated_syntax.stan', line 14, column 2: Declaration of arrays
     by placing brackets after a variable name is deprecated and will be
     removed in Stan 2.32.0. Instead use the array keyword before the type.
-    This can be changed automatically using stanc --auto-format
+    This can be changed automatically using the auto-format flag to stanc
 Warning in 'deprecated_syntax.stan', line 15, column 2: Declaration of arrays
     by placing brackets after a variable name is deprecated and will be
     removed in Stan 2.32.0. Instead use the array keyword before the type.
-    This can be changed automatically using stanc --auto-format
+    This can be changed automatically using the auto-format flag to stanc
 Warning in 'deprecated_syntax.stan', line 21, column 2: Declaration of arrays
     by placing brackets after a variable name is deprecated and will be
     removed in Stan 2.32.0. Instead use the array keyword before the type.
-    This can be changed automatically using stanc --auto-format
+    This can be changed automatically using the auto-format flag to stanc
 Warning in 'deprecated_syntax.stan', line 22, column 2: Declaration of arrays
     by placing brackets after a variable name is deprecated and will be
     removed in Stan 2.32.0. Instead use the array keyword before the type.
-    This can be changed automatically using stanc --auto-format
+    This can be changed automatically using the auto-format flag to stanc
 Warning in 'deprecated_syntax.stan', line 30, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'deprecated_syntax.stan', line 31, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'deprecated_syntax.stan', line 32, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'deprecated_syntax.stan', line 33, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'deprecated_syntax.stan', line 34, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'deprecated_syntax.stan', line 35, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'deprecated_syntax.stan', line 36, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'deprecated_syntax.stan', line 37, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'deprecated_syntax.stan', line 38, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'deprecated_syntax.stan', line 40, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'deprecated_syntax.stan', line 42, column 11: get_lp() function is
     deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
-    can be done automatically with stanc --print-canonical
+    can be done automatically with the canonicalize flag for stanc
 Warning in 'deprecated_syntax.stan', line 44, column 2: Declaration of arrays
     by placing brackets after a variable name is deprecated and will be
     removed in Stan 2.32.0. Instead use the array keyword before the type.
-    This can be changed automatically using stanc --auto-format
+    This can be changed automatically using the auto-format flag to stanc
 Warning in 'deprecated_syntax.stan', line 46, column 6: Variable name
     'offset' will be a reserved word starting in Stan 2.32.0. Please rename
     it!
@@ -1469,12 +1543,12 @@ Warning in 'deprecated_syntax.stan', line 47, column 6: Variable name 'array'
     will be a reserved word starting in Stan 2.32.0. Please rename it!
 Warning in 'deprecated_syntax.stan', line 51, column 2: Comments beginning
     with # are deprecated and this syntax will be removed in Stan 2.32.0. Use
-    // to begin line comments; this can be done automatically using stanc
-    --auto-format
+    // to begin line comments; this can be done automatically using the
+    auto-format flag to stanc
 Warning in 'deprecated_syntax.stan', line 54, column 4: assignment operator
     <- is deprecated in the Stan language and will be removed in Stan 2.32.0;
-    use = instead. This can be done automatically with stanc
-    --print-canonical
+    use = instead. This can be done automatically with the canonicalize flag
+    for stanc
 Warning in 'deprecated_syntax.stan', line 2, column 9: Use of the _log suffix
     in user defined probability functions is deprecated and will be removed
     in Stan 2.32.0, use name 'foo_lpdf' instead if you intend on using this
@@ -1487,20 +1561,20 @@ Warning in 'deprecated_syntax.stan', line 6, column 8: Use of the _log suffix
     inside of it.
 Warning in 'deprecated_syntax.stan', line 26, column 12: normal_log is
     deprecated and will be removed in Stan 2.32.0. Use normal_lpdf instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'deprecated_syntax.stan', line 27, column 6: normal_cdf_log is
     deprecated and will be removed in Stan 2.32.0. Use normal_lcdf instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'deprecated_syntax.stan', line 28, column 6: normal_ccdf_log is
     deprecated and will be removed in Stan 2.32.0. Use normal_lccdf instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'deprecated_syntax.stan', line 40, column 21: Use of bernoulli_cdf
     without a vertical bar (|) between the first two arguments of a CDF is
     deprecated and will be removed in Stan 2.32.0. This can be automatically
-    changed using stanc --print-canonical
+    changed using the canonicalize flag for stanc
 Warning in 'deprecated_syntax.stan', line 49, column 11: multiply_log is
     deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc --auto-format duplicate-warns.stan
 model {
   real foo;
@@ -1517,25 +1591,26 @@ model {
 
 Warning in 'duplicate-warns.stan', line 4, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'duplicate-warns.stan', line 5, column 8: get_lp() function is
     deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
-    can be done automatically with stanc --print-canonical
+    can be done automatically with the canonicalize flag for stanc
 Warning in 'duplicate-warns.stan', line 6, column 8: multiply_log is
     deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'duplicate-warns.stan', line 7, column 8: binomial_coefficient_log
     is deprecated and will be removed in Stan 2.32.0. Use lchoose instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'duplicate-warns.stan', line 9, column 8: normal_log is deprecated
     and will be removed in Stan 2.32.0. Use normal_lpdf instead. This can be
-    automatically changed using stanc --print-canonical
+    automatically changed using the canonicalize flag for stanc
 Warning in 'duplicate-warns.stan', line 10, column 8: normal_cdf_log is
     deprecated and will be removed in Stan 2.32.0. Use normal_lcdf instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'duplicate-warns.stan', line 11, column 8: normal_ccdf_log is
     deprecated and will be removed in Stan 2.32.0. Use normal_lccdf instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc --auto-format empty.stan
 
 Warning: Empty file 'empty.stan' detected; this is a valid stan model but
@@ -1551,7 +1626,7 @@ model {
 
 Warning in 'get-lp-deprecate.stan', line 5, column 19: get_lp() function is
     deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
-    can be done automatically with stanc --print-canonical
+    can be done automatically with the canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc --auto-format get_lp_target.stan
 parameters {
   real<lower=0> y;
@@ -1568,10 +1643,10 @@ model {
 
 Warning in 'get_lp_target.stan', line 6, column 21: get_lp() function is
     deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
-    can be done automatically with stanc --print-canonical
+    can be done automatically with the canonicalize flag for stanc
 Warning in 'get_lp_target.stan', line 10, column 21: get_lp() function is
     deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
-    can be done automatically with stanc --print-canonical
+    can be done automatically with the canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc --auto-format identifiers.stan
 data {
   int upper;
@@ -1627,56 +1702,56 @@ model {
 
 Warning in 'if_else.stan', line 9, column 26: The function `if_else` is
     deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
+    operator (x ? y : z) instead; this can be automatically changed using the
+    canonicalize flag for stanc
 Warning in 'if_else.stan', line 10, column 26: The function `if_else` is
     deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
+    operator (x ? y : z) instead; this can be automatically changed using the
+    canonicalize flag for stanc
 Warning in 'if_else.stan', line 11, column 26: The function `if_else` is
     deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
+    operator (x ? y : z) instead; this can be automatically changed using the
+    canonicalize flag for stanc
 Warning in 'if_else.stan', line 12, column 26: The function `if_else` is
     deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
+    operator (x ? y : z) instead; this can be automatically changed using the
+    canonicalize flag for stanc
 Warning in 'if_else.stan', line 21, column 28: The function `if_else` is
     deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
+    operator (x ? y : z) instead; this can be automatically changed using the
+    canonicalize flag for stanc
 Warning in 'if_else.stan', line 22, column 28: The function `if_else` is
     deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
+    operator (x ? y : z) instead; this can be automatically changed using the
+    canonicalize flag for stanc
 Warning in 'if_else.stan', line 23, column 28: The function `if_else` is
     deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
+    operator (x ? y : z) instead; this can be automatically changed using the
+    canonicalize flag for stanc
 Warning in 'if_else.stan', line 24, column 28: The function `if_else` is
     deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
+    operator (x ? y : z) instead; this can be automatically changed using the
+    canonicalize flag for stanc
 Warning in 'if_else.stan', line 26, column 28: The function `if_else` is
     deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
+    operator (x ? y : z) instead; this can be automatically changed using the
+    canonicalize flag for stanc
 Warning in 'if_else.stan', line 27, column 28: The function `if_else` is
     deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
+    operator (x ? y : z) instead; this can be automatically changed using the
+    canonicalize flag for stanc
 Warning in 'if_else.stan', line 28, column 28: The function `if_else` is
     deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
+    operator (x ? y : z) instead; this can be automatically changed using the
+    canonicalize flag for stanc
 Warning in 'if_else.stan', line 29, column 28: The function `if_else` is
     deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
+    operator (x ? y : z) instead; this can be automatically changed using the
+    canonicalize flag for stanc
 Warning in 'if_else.stan', line 30, column 28: The function `if_else` is
     deprecated and will be removed in Stan 2.32.0. Use the conditional
-    operator (x ? y : z) instead; this can be automatically changed using
-    stanc --print-canonical
+    operator (x ? y : z) instead; this can be automatically changed using the
+    canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc --auto-format increment_log_prob.stan
 transformed data {
   int n;
@@ -1760,91 +1835,120 @@ model {
 
 Warning in 'increment_log_prob.stan', line 42, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 43, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 44, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 46, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 47, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 48, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 49, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 51, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 52, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 53, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 55, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 56, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 57, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 59, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 60, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 61, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 63, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 64, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 65, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 66, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 68, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 69, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 70, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 72, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 73, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 74, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 76, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 77, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
 Warning in 'increment_log_prob.stan', line 78, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
   $ ../../../../../install/default/bin/stanc --auto-format int_div_user.stan
 data {
   array[4] int a;
@@ -2258,7 +2362,8 @@ model {
 
 Warning in 'lkj_cov_deprecation2.stan', line 8, column 2: increment_log_prob(...);
     is deprecated and will be removed in Stan 2.32.0. Use target += ...;
-    instead. This can be done automatically with stanc --print-canonical
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
   $ ../../../../../install/default/bin/stanc --auto-format matrix_pow_warning.stan
 data {
   int<lower=0> N;
@@ -2326,43 +2431,43 @@ model {
 
 Warning in 'multiply_log.stan', line 11, column 26: multiply_log is
     deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'multiply_log.stan', line 12, column 26: multiply_log is
     deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'multiply_log.stan', line 13, column 26: multiply_log is
     deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'multiply_log.stan', line 14, column 26: multiply_log is
     deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'multiply_log.stan', line 23, column 28: multiply_log is
     deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'multiply_log.stan', line 24, column 28: multiply_log is
     deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'multiply_log.stan', line 25, column 28: multiply_log is
     deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'multiply_log.stan', line 26, column 28: multiply_log is
     deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'multiply_log.stan', line 28, column 28: multiply_log is
     deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'multiply_log.stan', line 29, column 28: multiply_log is
     deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'multiply_log.stan', line 30, column 28: multiply_log is
     deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'multiply_log.stan', line 31, column 28: multiply_log is
     deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
 Warning in 'multiply_log.stan', line 32, column 28: multiply_log is
     deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
-    This can be automatically changed using stanc --print-canonical
+    This can be automatically changed using the canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc --auto-format old-log-funs.stan
 transformed data {
   real x;
@@ -2380,10 +2485,10 @@ model {
 
 Warning in 'old-log-funs.stan', line 3, column 6: multiply_log is deprecated
     and will be removed in Stan 2.32.0. Use lmultiply instead. This can be
-    automatically changed using stanc --print-canonical
+    automatically changed using the canonicalize flag for stanc
 Warning in 'old-log-funs.stan', line 4, column 6: binomial_coefficient_log is
     deprecated and will be removed in Stan 2.32.0. Use lchoose instead. This
-    can be automatically changed using stanc --print-canonical
+    can be automatically changed using the canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc --auto-format pound-comment-deprecated.stan
 data {
   // hey, this is the old way to do things, should raise warning
@@ -2396,7 +2501,7 @@ model {
 Warning in 'pound-comment-deprecated.stan', line 2, column 2: Comments
     beginning with # are deprecated and this syntax will be removed in Stan
     2.32.0. Use // to begin line comments; this can be done automatically
-    using stanc --auto-format
+    using the auto-format flag to stanc
   $ ../../../../../install/default/bin/stanc --auto-format unreachable_statement.stan
 functions {
   void foo(real x) {

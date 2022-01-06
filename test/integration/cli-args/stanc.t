@@ -21,7 +21,10 @@ Show help
     --print-canonical               Prints the canonicalized program. Equivalent to --auto-format --canonicalize [all options]
     --version                       Display stanc version number
     --name                          Take a string to set the model name (default = "$model_filename_model")
-    --O                             Allow the compiler to apply all optimizations to the Stan code.
+    -O0                             (Default) Do not apply optimizations to the Stan code.
+    -O1                             Apply level 1 compiler optimizations (only basic optimizations).
+    -Oexperimental                  (Experimental) Apply all compiler optimizations. Some of these are not thorougly tested and may not always improve a programs performance.
+    --O                             (Experimental) Same as -Oexperimental. Apply all compiler optimizations. Some of these are not thorougly tested and may not always improve a programs performance.
     --o                             Take the path to an output file for generated C++ code (default = "$name.hpp") or auto-formatting output (default: no file/print to stdout)
     --print-cpp                     If set, output the generated C++ Stan model class to stdout.
     --allow-undefined               Do not fail if a function is declared but not defined
