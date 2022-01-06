@@ -112,9 +112,6 @@ let rec compare_errors e1 e2 =
 
 type promotions = None | RealPromotion | ComplexPromotion
 
-(*
-PROMOTION TODO: Not sure what depth actually means, or how it needs to change
-*)
 let rec check_same_type depth t1 t2 =
   let wrap_func = Result.map_error ~f:(fun e -> TypeMismatch (t1, t2, Some e)) in
   match (t1, t2) with
@@ -122,7 +119,8 @@ let rec check_same_type depth t1 t2 =
   | UnsizedType.(UReal, UInt) when depth < 1 -> Ok RealPromotion
   | UnsizedType.(UComplex, UInt) when depth < 1 -> Ok ComplexPromotion
   | UnsizedType.(UComplex, UReal) when depth < 1 -> Ok ComplexPromotion
-  (* PROMOTION TODO: Need to allow array promotion, this doesn't quite work? *)
+  (* Arrays: Try to recursively promote, but make sure the error is for these types,
+     not the recursive call *)
   | UArray nt1, UArray nt2 ->
       check_same_type depth nt1 nt2
       |> Result.map_error ~f:(function
@@ -189,7 +187,6 @@ let returntype env name args =
   |> List.fold_until ~init:[]
        ~f:(fun errors (rt, tys, funkind_constructor, _) ->
          match check_compatible_arguments 0 tys args with
-         (* TODO instead of unit, return Ast.typed_expr list which could contain promotions*)
          | Ok p -> Stop (Ok (rt, funkind_constructor, p))
          | Error e -> Continue (((rt, tys), e) :: errors) )
        ~finish:(fun errors ->

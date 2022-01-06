@@ -362,11 +362,7 @@ let rec expr_depth Expr.Fixed.{pattern; _} =
       + max (expr_depth e)
           (Option.value ~default:0
              (List.max_elt ~compare:compare_int (List.map ~f:idx_depth l)) )
-  | Promotion (expr, _) ->
-      (*FIXME: No need for a list here*)
-      1
-      + Option.value ~default:0
-          (List.max_elt ~compare:compare_int (List.map ~f:expr_depth [expr]))
+  | Promotion (expr, _) -> 1 + expr_depth expr
   | EAnd (e1, e2) | EOr (e1, e2) ->
       1
       + Option.value ~default:0
