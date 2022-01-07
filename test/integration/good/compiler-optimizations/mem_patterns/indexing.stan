@@ -2,6 +2,9 @@ functions {
   int mask_fun(int i) {
     return i;
   }
+  vector udf_fun(vector A) {
+    return A;
+  }
 }
 
 data {
@@ -9,7 +12,7 @@ data {
  int M;
  matrix[N, M] dat_x;
  vector[N] y;
- int idx_tester[N];
+ array[N] int idx_tester;
 }
 
 parameters {
@@ -24,9 +27,7 @@ parameters {
   row_vector[N] p_soa_lhs_loop_mul;
   vector[N] p_soa_rhs_loop_mul;
   vector[N] p_soa_used_with_aos_in_excluded_fun;
-  vector[N] p_soa_rep_matrix_vec;
-  matrix[N, M] p_soa_mat_pass_func_outer_single_indexed1;
-  matrix[N, M] p_soa_mat_pass_func_outer_single_indexed2;
+  matrix[N,M] p_soa_loop_mat_multi_uni_uni_idx;
   // Should not be SoA
     // because of failed function
   vector[M] p_aos_vec_v_assign_to_aos;
@@ -37,10 +38,12 @@ parameters {
   // Because of multi index assign
   vector[M] p_aos_fail_assign_from_top_idx;
   matrix[N,M] p_aos_loop_mat_uni_uni_idx;
-  matrix[N,M] p_soa_loop_mat_multi_uni_uni_idx;
   // Because used in sub-function that supports 
   // SoA but outer function does not
   matrix[N, M] p_aos_mat;
+  // Single index called on result of multiply
+  matrix[N, M] p_aos_mat_pass_func_outer_single_indexed1;
+  matrix[N, M] p_aos_mat_pass_func_outer_single_indexed2;
 
   // Because used in single cell index from function
   matrix[N, M] p_aos_mat_fail_uni_uni_idx1;
@@ -53,7 +56,7 @@ transformed parameters {
   real tp_real_from_aos = p_soa_vec_v[1];
   // should be AoS
     // because assigning AoS
-  vector[M] tp_aos_vec_v = inv(p_aos_vec_v_assign_to_aos);
+  vector[M] tp_aos_vec_v = udf_fun(p_aos_vec_v_assign_to_aos);
   // Should be SoA because single assign out of loop
   vector[M] tp_soa_single_idx_uninit;
   tp_soa_single_idx_uninit[1] = tp_real_from_aos;
@@ -65,8 +68,6 @@ transformed parameters {
   tp_aos_fail_func_vec_v[1] = p_soa_vec_v[1];
   // Should fail
   vector[M] tp_aos_fail_assign_from_top_idx;
-  matrix[N, 10] tp_soa_rep_matrix_mat = rep_matrix(p_soa_rep_matrix_vec, 10);
-  matrix[N, 10] tp_soa_rep_matrix_from_data_mat = rep_matrix(y, 10);
   tp_aos_fail_assign_from_top_idx[1:] = p_aos_fail_assign_from_top_idx[1:];
 }
 
@@ -76,10 +77,10 @@ model {
   y ~ normal(alpha + multiply(dat_x, p_soa_vec_v), 1.0);
   y ~ normal(multiply(dat_x, p_soa_mat_uni_col_idx[,N]), 1.0);
   y ~ normal(multiply(dat_x, p_soa_mat_uni_col_idx[,N]), p_soa_vec_uni_idx[N]);
-  y ~ normal(multiply(dat_x, inv(tp_aos_fail_func_vec_v)), p_soa_vec_uni_idx[N]);
-  y ~ normal(multiply(p_soa_mat, inv(tp_aos_fail_func_vec_v)), p_soa_vec_uni_idx[N]);
-  y ~ normal(multiply(p_soa_mat, inv(tp_aos_fail_assign_from_top_idx)), p_soa_vec_uni_idx[N]);
-  y ~ normal(multiply(p_soa_mat, inv(multiply(p_aos_mat, tp_aos_fail_func_vec_v))), p_soa_vec_uni_idx[N]);
+  y ~ normal(multiply(dat_x, udf_fun(tp_aos_fail_func_vec_v)), p_soa_vec_uni_idx[N]);
+  y ~ normal(multiply(p_soa_mat, udf_fun(tp_aos_fail_func_vec_v)), p_soa_vec_uni_idx[N]);
+  y ~ normal(multiply(p_soa_mat, udf_fun(tp_aos_fail_assign_from_top_idx)), p_soa_vec_uni_idx[N]);
+  y ~ normal(multiply(p_soa_mat, udf_fun(multiply(p_aos_mat, tp_aos_fail_func_vec_v))), p_soa_vec_uni_idx[N]);
 
 
   vector[N] tp_soa_single_assign;
@@ -96,8 +97,8 @@ model {
     y ~ normal(multiply(dat_x, p_soa_loop_mat_uni_col_idx[1:N, 1]), 1.0);
     y ~ normal(multiply(dat_x, p_soa_loop_mat_uni_col_idx[i]'), 1.0);
     y ~ normal(multiply(dat_x, p_soa_loop_mat_multi_uni_uni_idx[idx_tester[i],]'), 1.0);
-    y ~ normal(multiply(dat_x[,i], transpose(multiply(p_soa_mat_pass_func_outer_single_indexed1,
-     p_soa_mat_pass_func_outer_single_indexed2))[mask_fun(i), mask_fun(i)]), 1.0);
+    y ~ normal(multiply(dat_x[,i], transpose(multiply(p_aos_mat_pass_func_outer_single_indexed1,
+     p_aos_mat_pass_func_outer_single_indexed2))[mask_fun(i), mask_fun(i)]), 1.0);
     y ~ normal(multiply(dat_x[,i], p_aos_mat_fail_uni_uni_idx1[i, i] *
      p_aos_mat_fail_uni_uni_idx2[i, i]), 1.0);
   }

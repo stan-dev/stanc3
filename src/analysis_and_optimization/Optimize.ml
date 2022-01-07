@@ -1153,10 +1153,9 @@ let optimize_soa (mir : Program.Typed.t) =
     match (mir_node l).pattern with
     | stmt -> Mem_pattern.query_demotable_stmt aos_variables stmt in
   let initial_variables =
-    Set.Poly.union_list
-      (List.map
-         ~f:(Mem_pattern.query_initial_demotable_stmt false)
-         mir.log_prob ) in
+    List.fold ~init:Set.Poly.empty
+      ~f:(Mem_pattern.query_initial_demotable_stmt false)
+      mir.log_prob in
   (*
   let print_set s = 
     Set.Poly.iter ~f:print_endline s in
