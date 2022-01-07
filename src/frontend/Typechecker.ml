@@ -444,6 +444,7 @@ let check_fn ~is_cond_dist loc tenv id es =
 
 let check_reduce_sum ~is_cond_dist loc id es =
   match es with
+  (* TODO do lookup of functions here *)
   | { emeta=
         { type_=
             UnsizedType.UFun
