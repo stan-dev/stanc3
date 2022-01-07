@@ -345,8 +345,7 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
       let idx_demotable =
         (* RHS (2)*)
         match is_uni_eigen_loop_indexing in_loop ut idx with
-        | true ->
-              (Set.Poly.add idx_list name)
+        | true -> Set.Poly.add idx_list name
         | false -> idx_list in
       let rhs_demotable_names = query_expr acc rhs in
       (* RHS (3)*)
@@ -360,17 +359,20 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
       let is_all_rhs_aos =
         let all_rhs_eigen_names = query_var_eigen_names rhs in
         let contains_only_eigen_aos =
-          is_nonzero_subset ~set:all_rhs_eigen_names ~subset:rhs_demotable_names in
+          is_nonzero_subset ~subset:all_rhs_eigen_names ~set:rhs_demotable_names
+        in
         let is_not_supported_func =
           match rhs.pattern with
           | FunApp (CompilerInternal _, _) -> false
-          | FunApp (StanLib (name, _, _),  exprs) when UnsizedType.contains_eigen_type rhs.meta.type_ -> not (is_fun_soa_supported name exprs)
+          | FunApp (StanLib (name, _, _), exprs)
+            when UnsizedType.contains_eigen_type rhs.meta.type_ ->
+              not (is_fun_soa_supported name exprs)
           | _ -> true in
-          contains_only_eigen_aos && is_not_supported_func  in
+        contains_only_eigen_aos && is_not_supported_func in
       let assign_demotes =
         if
-          (UnsizedType.contains_eigen_type rhs.meta.type_) && (is_all_rhs_aos
-          || check_if_rhs_ad_real_data_matrix_expr)
+          UnsizedType.contains_eigen_type rhs.meta.type_
+          && (is_all_rhs_aos || check_if_rhs_ad_real_data_matrix_expr)
         then
           let base_set = Set.Poly.union idx_demotable rhs_demotable_names in
           Set.Poly.add
@@ -436,14 +438,6 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
   | _ -> Set.Poly.empty
 
 (**
- * Search through an expression for the names of all types that hold matrices 
- *  and vectors.
- **)
-let query_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
-  let get_expr_names (Dataflow_types.VVar s, _) = Some s in
-  Set.Poly.filter_map ~f:get_expr_names (matrix_set expr)
-
-(**
  * Modify a function and it's subexpressions from SoA <-> AoS and vice versa.
  * This performs demotion for sub expressions recursively. The top level 
  *  expression and it's sub expressions are demoted to SoA if 
@@ -461,7 +455,8 @@ let query_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
 let rec modify_kind ?force_demotion:(force = false)
     (modifiable_set : string Set.Poly.t) (kind : 'a Fun_kind.t)
     (exprs : Expr.Typed.Meta.t Expr.Fixed.t list) =
-  let expr_names = Set.Poly.union_list (List.map ~f:query_eigen_names exprs) in
+  let expr_names =
+    Set.Poly.union_list (List.map ~f:query_var_eigen_names exprs) in
   let is_all_in_list =
     is_nonzero_subset ~set:modifiable_set ~subset:expr_names in
   match kind with
