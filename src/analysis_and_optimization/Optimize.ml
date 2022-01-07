@@ -1152,10 +1152,16 @@ let optimize_soa (mir : Program.Typed.t) =
     let mir_node mir_idx = Map.find_exn flowgraph_to_mir mir_idx in
     match (mir_node l).pattern with
     | stmt -> Mem_pattern.query_demotable_stmt aos_variables stmt in
-  let initial_variables =
-    List.fold ~init:Set.Poly.empty
+  let rec initial_variables_rec init_set =
+    let iter_fold =
+    List.fold ~init:init_set
       ~f:(Mem_pattern.query_initial_demotable_stmt false)
       mir.log_prob in
+    if (Set.Poly.length (Set.Poly.diff init_set iter_fold)) <> 0 then 
+    initial_variables_rec iter_fold
+  else 
+    iter_fold in
+  let initial_variables = initial_variables_rec Set.Poly.empty in
   (*
   let print_set s = 
     Set.Poly.iter ~f:print_endline s in
