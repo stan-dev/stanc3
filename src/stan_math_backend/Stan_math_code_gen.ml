@@ -266,12 +266,16 @@ let pp_fun_def ppf
         let functor_name = fdname ^ suffix in
         let template =
           match (fdsuffix, variadic) with
-          | FnLpdf _, `ReduceSum -> "template <bool propto__>"
+          | FnLpdf _, `ReduceSum -> "template <bool propto__> "
           | _ -> "" in
         let signature = str "%a" pp_sig ("operator()", false, variadic) in
         let defn =
           str "%a@ const@,{@.  return %a;@.}@." pp_sig
-            (functor_name ^ "::operator()", false, variadic)
+            ( functor_name
+              ^ (if template <> "" then "<propto__>" else "")
+              ^ "::operator()"
+            , false
+            , variadic )
             pp_call_str
             ( ( match fdsuffix with
               | FnLpdf _ | FnTarget -> fdname ^ "<propto__>"
