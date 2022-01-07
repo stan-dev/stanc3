@@ -119,8 +119,6 @@ let verify_name_fresh_var loc tenv name =
 (** verify that the variable being declared is previous unused. *)
 let verify_name_fresh_udf loc tenv name =
   if
-    (* Stan_math_signatures.is_stan_math_function_name name
-       || *)
     (* variadic functions are currently not in math sigs *)
     Stan_math_signatures.is_reduce_sum_fn name
     || Stan_math_signatures.is_variadic_ode_fn name
@@ -215,9 +213,6 @@ let check_postfixop loc op te =
 let check_variable cf loc tenv id =
   match Env.find tenv (Utils.stdlib_distribution_name id.name) with
   | [] ->
-      (* OCaml in these situations suggests similar names
-         We could too, if we did a fuzzy search on the keys in tenv
-      *)
       Semantic_error.ident_not_in_scope loc id.name
         (Env.nearest_ident tenv id.name)
       |> error

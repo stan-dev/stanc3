@@ -27,9 +27,8 @@ static constexpr std::array<const char*, 13> locations_array__ =
 struct foo1_functor__ {
 template <typename T0__, typename T2__, typename T3__, typename T4__,
            typename T5__>
-  stan::promote_args_t<T0__, T2__,
-  stan::value_type_t<T3__>,
-  stan::value_type_t<T4__>,
+  stan::promote_args_t<T0__, T2__, stan::value_type_t<T3__>,
+                       stan::value_type_t<T4__>,
   stan::value_type_t<T5__>>
   operator()(const T0__& a, const int& b, const std::vector<T2__>& c,
              const T3__& d, const T4__& e, const T5__& f,
@@ -38,8 +37,8 @@ template <typename T0__, typename T2__, typename T3__, typename T4__,
 struct foo2_functor__ {
 template <typename T0__, typename T1__, typename
   T2__>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, T1__,
-  T2__>, -1, 1>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, T1__, T2__>,
+  -1, 1>
   operator()(const T0__& a, const std::vector<Eigen::Matrix<T1__, -1, -1>>&
   b,
              const std::vector<Eigen::Matrix<T2__, 1, -1>>& c,
@@ -62,98 +61,94 @@ template <typename T0__, typename
 
 template <typename T0__, typename T2__, typename T3__, typename T4__,
          typename T5__>
-stan::promote_args_t<T0__, T2__, stan::value_type_t<T3__>,
-stan::value_type_t<T4__>,
-stan::value_type_t<T5__>>
-foo1(const T0__& a, const int& b, const std::vector<T2__>& c,
-     const T3__& d_arg__, const T4__& e_arg__, const T5__& f_arg__,
-     std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__,
-          T2__,
-          stan::value_type_t<T3__>,
-          stan::value_type_t<T4__>,
-          stan::value_type_t<T5__>>;
-  int current_statement__ = 0; 
-  const auto& d = stan::math::to_ref(d_arg__);
-  const auto& e = stan::math::to_ref(e_arg__);
-  const auto& f = stan::math::to_ref(f_arg__);
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 5;
-    return 5.0;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, T1__,
-T2__>, -1, 1>
-foo2(const T0__& a_arg__, const std::vector<Eigen::Matrix<T1__, -1, -1>>& b,
-     const std::vector<Eigen::Matrix<T2__, 1, -1>>& c,
-     std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-          T1__,
-          T2__>;
-  int current_statement__ = 0; 
-  const auto& a = stan::math::to_ref(a_arg__);
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 7;
-    return a;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, -1>
-foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-          stan::value_type_t<T1__>>;
-  int current_statement__ = 0; 
-  const auto& a = stan::math::to_ref(a_arg__);
-  const auto& b = stan::math::to_ref(b_arg__);
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 9;
-    return b;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, -1>
-add_udf(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-          stan::value_type_t<T1__>>;
-  int current_statement__ = 0; 
-  const auto& a = stan::math::to_ref(a_arg__);
-  const auto& b = stan::math::to_ref(b_arg__);
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 11;
-    return stan::math::add(a, b);
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
+  stan::promote_args_t<T0__, T2__, stan::value_type_t<T3__>,
+                     stan::value_type_t<T4__>, stan::value_type_t<T5__>>
+  foo1(const T0__& a, const int& b, const std::vector<T2__>& c,
+       const T3__& d_arg__, const T4__& e_arg__, const T5__& f_arg__,
+       std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<T0__, T2__,
+                                                  stan::value_type_t<T3__>,
+                                                  stan::value_type_t<T4__>,
+                                                  stan::value_type_t<T5__>>;
+    int current_statement__ = 0; 
+    const auto& d = stan::math::to_ref(d_arg__);
+    const auto& e = stan::math::to_ref(e_arg__);
+    const auto& f = stan::math::to_ref(f_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 5;
+      return 5.0;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__, typename T1__, typename T2__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, T1__, T2__>, -1, 1>
+  foo2(const T0__& a_arg__,
+       const std::vector<Eigen::Matrix<T1__, -1, -1>>& b,
+       const std::vector<Eigen::Matrix<T2__, 1, -1>>& c,
+       std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
+                                                  T1__, T2__>;
+    int current_statement__ = 0; 
+    const auto& a = stan::math::to_ref(a_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 7;
+      return a;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__, typename T1__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
+  foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
+                                                  stan::value_type_t<T1__>>;
+    int current_statement__ = 0; 
+    const auto& a = stan::math::to_ref(a_arg__);
+    const auto& b = stan::math::to_ref(b_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 9;
+      return b;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__, typename T1__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
+  add_udf(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
+                                                  stan::value_type_t<T1__>>;
+    int current_statement__ = 0; 
+    const auto& a = stan::math::to_ref(a_arg__);
+    const auto& b = stan::math::to_ref(b_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 11;
+      return stan::math::add(a, b);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
 
 template <typename T0__, typename T2__, typename T3__, typename T4__,
          typename T5__>
 stan::promote_args_t<T0__, T2__, stan::value_type_t<T3__>,
-stan::value_type_t<T4__>,
-stan::value_type_t<T5__>>
+                     stan::value_type_t<T4__>, stan::value_type_t<T5__>>
 foo1_functor__::operator()(const T0__& a, const int& b,
                            const std::vector<T2__>& c, const T3__& d,
                            const T4__& e, const T5__& f,
@@ -164,8 +159,7 @@ foo1_functor__::operator()(const T0__& a, const int& b,
 
 
 template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, T1__,
-T2__>, -1, 1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, T1__, T2__>, -1, 1>
 foo2_functor__::operator()(const T0__& a,
                            const std::vector<Eigen::Matrix<T1__, -1, -1>>& b,
                            const std::vector<Eigen::Matrix<T2__, 1, -1>>& c,
@@ -176,8 +170,7 @@ foo2_functor__::operator()(const T0__& a,
 
 
 template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
 foo3_functor__::operator()(const T0__& a, const T1__& b,
                            std::ostream* pstream__)  const
 {
@@ -186,8 +179,7 @@ foo3_functor__::operator()(const T0__& a, const T1__& b,
 
 
 template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
 add_udf_functor__::operator()(const T0__& a, const T1__& b,
                               std::ostream* pstream__)  const
 {

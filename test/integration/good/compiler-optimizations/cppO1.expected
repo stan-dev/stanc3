@@ -699,70 +699,66 @@ static constexpr std::array<const char*, 37> locations_array__ =
 struct simple_SIR_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename
   T3__>
-  std::vector<stan::promote_args_t<T0__, T1__, T2__,
-  T3__>>
+  std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
   operator()(const T0__& t, const std::vector<T1__>& y,
              const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
              const std::vector<int>& x_i, std::ostream* pstream__) const;
 };
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-std::vector<stan::promote_args_t<T0__, T1__, T2__,
-T3__>>
-simple_SIR(const T0__& t, const std::vector<T1__>& y,
-           const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
-           const std::vector<int>& x_i, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
-  int current_statement__ = 0; 
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    std::vector<local_scalar_t__> dydt;
-    dydt = std::vector<local_scalar_t__>(4, DUMMY_VAR__);
-    
-    current_statement__ = 31;
-    stan::model::assign(dydt,
-      (((-stan::model::rvalue(theta, "theta", stan::model::index_uni(1)) *
-          stan::model::rvalue(y, "y", stan::model::index_uni(4))) /
-         (stan::model::rvalue(y, "y", stan::model::index_uni(4)) +
-           stan::model::rvalue(theta, "theta", stan::model::index_uni(2)))) *
-        stan::model::rvalue(y, "y", stan::model::index_uni(1))),
-      "assigning variable dydt", stan::model::index_uni(1));
-    current_statement__ = 32;
-    stan::model::assign(dydt,
-      ((((stan::model::rvalue(theta, "theta", stan::model::index_uni(1)) *
-           stan::model::rvalue(y, "y", stan::model::index_uni(4))) /
-          (stan::model::rvalue(y, "y", stan::model::index_uni(4)) +
-            stan::model::rvalue(theta, "theta", stan::model::index_uni(2))))
-         * stan::model::rvalue(y, "y", stan::model::index_uni(1))) -
+  std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
+  simple_SIR(const T0__& t, const std::vector<T1__>& y,
+             const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
+             const std::vector<int>& x_i, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      std::vector<local_scalar_t__> dydt;
+      dydt = std::vector<local_scalar_t__>(4, DUMMY_VAR__);
+      
+      current_statement__ = 31;
+      stan::model::assign(dydt,
+        (((-stan::model::rvalue(theta, "theta", stan::model::index_uni(1)) *
+            stan::model::rvalue(y, "y", stan::model::index_uni(4))) /
+           (stan::model::rvalue(y, "y", stan::model::index_uni(4)) +
+             stan::model::rvalue(theta, "theta", stan::model::index_uni(2))))
+          * stan::model::rvalue(y, "y", stan::model::index_uni(1))),
+        "assigning variable dydt", stan::model::index_uni(1));
+      current_statement__ = 32;
+      stan::model::assign(dydt,
+        ((((stan::model::rvalue(theta, "theta", stan::model::index_uni(1)) *
+             stan::model::rvalue(y, "y", stan::model::index_uni(4))) /
+            (stan::model::rvalue(y, "y", stan::model::index_uni(4)) +
+              stan::model::rvalue(theta, "theta", stan::model::index_uni(2))))
+           * stan::model::rvalue(y, "y", stan::model::index_uni(1))) -
+          (stan::model::rvalue(theta, "theta", stan::model::index_uni(3)) *
+            stan::model::rvalue(y, "y", stan::model::index_uni(2)))),
+        "assigning variable dydt", stan::model::index_uni(2));
+      current_statement__ = 33;
+      stan::model::assign(dydt,
         (stan::model::rvalue(theta, "theta", stan::model::index_uni(3)) *
-          stan::model::rvalue(y, "y", stan::model::index_uni(2)))),
-      "assigning variable dydt", stan::model::index_uni(2));
-    current_statement__ = 33;
-    stan::model::assign(dydt,
-      (stan::model::rvalue(theta, "theta", stan::model::index_uni(3)) *
-        stan::model::rvalue(y, "y", stan::model::index_uni(2))),
-      "assigning variable dydt", stan::model::index_uni(3));
-    current_statement__ = 34;
-    stan::model::assign(dydt,
-      ((stan::model::rvalue(theta, "theta", stan::model::index_uni(4)) *
-         stan::model::rvalue(y, "y", stan::model::index_uni(2))) -
-        (stan::model::rvalue(theta, "theta", stan::model::index_uni(5)) *
-          stan::model::rvalue(y, "y", stan::model::index_uni(4)))),
-      "assigning variable dydt", stan::model::index_uni(4));
-    current_statement__ = 35;
-    return dydt;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
+          stan::model::rvalue(y, "y", stan::model::index_uni(2))),
+        "assigning variable dydt", stan::model::index_uni(3));
+      current_statement__ = 34;
+      stan::model::assign(dydt,
+        ((stan::model::rvalue(theta, "theta", stan::model::index_uni(4)) *
+           stan::model::rvalue(y, "y", stan::model::index_uni(2))) -
+          (stan::model::rvalue(theta, "theta", stan::model::index_uni(5)) *
+            stan::model::rvalue(y, "y", stan::model::index_uni(4)))),
+        "assigning variable dydt", stan::model::index_uni(4));
+      current_statement__ = 35;
+      return dydt;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-std::vector<stan::promote_args_t<T0__, T1__, T2__,
-T3__>>
+std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
 simple_SIR_functor__::operator()(const T0__& t, const std::vector<T1__>& y,
                                  const std::vector<T2__>& theta,
                                  const std::vector<T3__>& x_r,
@@ -1443,118 +1439,120 @@ int
 };
 
 int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
-  int current_statement__ = 0; 
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 53;
-    for (int k = 1; k <= stan::math::size(y_i); ++k) {
-      current_statement__ = 52;
-      if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
-        current_statement__ = 51;
-        return k;
-      } 
-    }
-    current_statement__ = 54;
-    return 0;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
-  int current_statement__ = 0; 
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 60;
-    for (int k_rev = 0; k_rev <= (stan::math::size(y_i) - 1); ++k_rev) {
-      int k;
-      k = std::numeric_limits<int>::min();
-      
-      current_statement__ = 56;
-      k = (stan::math::size(y_i) - k_rev);
-      current_statement__ = 58;
-      if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
-        current_statement__ = 57;
-        return k;
-      } 
-    }
-    current_statement__ = 61;
-    return 0;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
-stan::value_type_t<T3__>>, -1, -1>
-prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
-                const T3__& phi_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
-          stan::value_type_t<T3__>>;
-  int current_statement__ = 0; 
-  const auto& p = stan::math::to_ref(p_arg__);
-  const auto& phi = stan::math::to_ref(phi_arg__);
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 63;
-    stan::math::validate_non_negative_index("chi", "nind", nind);
-    current_statement__ = 64;
-    stan::math::validate_non_negative_index("chi", "n_occasions", n_occasions);
-    Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-    chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
-    stan::math::fill(chi, DUMMY_VAR__);
-    
-    current_statement__ = 73;
-    for (int i = 1; i <= nind; ++i) {
-      current_statement__ = 66;
-      stan::model::assign(chi, 1.0,
-        "assigning variable chi", stan::model::index_uni(i),
-                                    stan::model::index_uni(n_occasions));
-      current_statement__ = 71;
-      for (int t = 1; t <= (n_occasions - 1); ++t) {
-        int t_curr;
-        t_curr = std::numeric_limits<int>::min();
-        
-        current_statement__ = 67;
-        t_curr = (n_occasions - t);
-        int t_next;
-        t_next = std::numeric_limits<int>::min();
-        
-        current_statement__ = 68;
-        t_next = (t_curr + 1);
-        current_statement__ = 69;
-        stan::model::assign(chi,
-          stan::math::fma(
-            (stan::model::rvalue(phi, "phi",
-               stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
-              (1 -
-                stan::model::rvalue(p, "p",
-                  stan::model::index_uni(i),
-                    stan::model::index_uni((t_next - 1))))),
-            stan::model::rvalue(chi, "chi",
-              stan::model::index_uni(i), stan::model::index_uni(t_next)),
-            (1 -
-              stan::model::rvalue(phi, "phi",
-                stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
-          "assigning variable chi", stan::model::index_uni(i),
-                                      stan::model::index_uni(t_curr));
+    using local_scalar_t__ = double;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 53;
+      for (int k = 1; k <= stan::math::size(y_i); ++k) {
+        current_statement__ = 52;
+        if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
+          current_statement__ = 51;
+          return k;
+        } 
       }
+      current_statement__ = 54;
+      return 0;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    current_statement__ = 74;
-    return chi;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
+    }
+int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+    using local_scalar_t__ = double;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 60;
+      for (int k_rev = 0; k_rev <= (stan::math::size(y_i) - 1); ++k_rev) {
+        int k;
+        k = std::numeric_limits<int>::min();
+        
+        current_statement__ = 56;
+        k = (stan::math::size(y_i) - k_rev);
+        current_statement__ = 58;
+        if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
+          current_statement__ = 57;
+          return k;
+        } 
+      }
+      current_statement__ = 61;
+      return 0;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T2__, typename T3__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
+  prob_uncaptured(const int& nind, const int& n_occasions,
+                  const T2__& p_arg__, const T3__& phi_arg__,
+                  std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
+                                                  stan::value_type_t<T3__>>;
+    int current_statement__ = 0; 
+    const auto& p = stan::math::to_ref(p_arg__);
+    const auto& phi = stan::math::to_ref(phi_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 63;
+      stan::math::validate_non_negative_index("chi", "nind", nind);
+      current_statement__ = 64;
+      stan::math::validate_non_negative_index("chi", "n_occasions",
+                                              n_occasions);
+      Eigen::Matrix<local_scalar_t__, -1, -1> chi;
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
+      stan::math::fill(chi, DUMMY_VAR__);
+      
+      current_statement__ = 73;
+      for (int i = 1; i <= nind; ++i) {
+        current_statement__ = 66;
+        stan::model::assign(chi, 1.0,
+          "assigning variable chi", stan::model::index_uni(i),
+                                      stan::model::index_uni(n_occasions));
+        current_statement__ = 71;
+        for (int t = 1; t <= (n_occasions - 1); ++t) {
+          int t_curr;
+          t_curr = std::numeric_limits<int>::min();
+          
+          current_statement__ = 67;
+          t_curr = (n_occasions - t);
+          int t_next;
+          t_next = std::numeric_limits<int>::min();
+          
+          current_statement__ = 68;
+          t_next = (t_curr + 1);
+          current_statement__ = 69;
+          stan::model::assign(chi,
+            stan::math::fma(
+              (stan::model::rvalue(phi, "phi",
+                 stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
+                (1 -
+                  stan::model::rvalue(p, "p",
+                    stan::model::index_uni(i),
+                      stan::model::index_uni((t_next - 1))))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next)),
+              (1 -
+                stan::model::rvalue(phi, "phi",
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
+            "assigning variable chi", stan::model::index_uni(i),
+                                        stan::model::index_uni(t_curr));
+        }
+      }
+      current_statement__ = 74;
+      return chi;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
 
 int
 first_capture_functor__::operator()(const std::vector<int>& y_i,
@@ -1565,8 +1563,7 @@ first_capture_functor__::operator()(const std::vector<int>& y_i,
 
 
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
-stan::value_type_t<T3__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
 prob_uncaptured_functor__::operator()(const int& nind,
                                       const int& n_occasions, const T2__& p,
                                       const T3__& phi,
@@ -7185,118 +7182,120 @@ int
 };
 
 int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
-  int current_statement__ = 0; 
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 56;
-    for (int k = 1; k <= stan::math::size(y_i); ++k) {
-      current_statement__ = 55;
-      if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
-        current_statement__ = 54;
-        return k;
-      } 
-    }
-    current_statement__ = 57;
-    return 0;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
-  int current_statement__ = 0; 
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 63;
-    for (int k_rev = 0; k_rev <= (stan::math::size(y_i) - 1); ++k_rev) {
-      int k;
-      k = std::numeric_limits<int>::min();
-      
-      current_statement__ = 59;
-      k = (stan::math::size(y_i) - k_rev);
-      current_statement__ = 61;
-      if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
-        current_statement__ = 60;
-        return k;
-      } 
-    }
-    current_statement__ = 64;
-    return 0;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
-stan::value_type_t<T3__>>, -1, -1>
-prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
-                const T3__& phi_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
-          stan::value_type_t<T3__>>;
-  int current_statement__ = 0; 
-  const auto& p = stan::math::to_ref(p_arg__);
-  const auto& phi = stan::math::to_ref(phi_arg__);
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 66;
-    stan::math::validate_non_negative_index("chi", "nind", nind);
-    current_statement__ = 67;
-    stan::math::validate_non_negative_index("chi", "n_occasions", n_occasions);
-    Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-    chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
-    stan::math::fill(chi, DUMMY_VAR__);
-    
-    current_statement__ = 78;
-    for (int i = 1; i <= nind; ++i) {
-      current_statement__ = 69;
-      stan::model::assign(chi, 1.0,
-        "assigning variable chi", stan::model::index_uni(i),
-                                    stan::model::index_uni(n_occasions));
-      current_statement__ = 76;
-      for (int t = 1; t <= (n_occasions - 1); ++t) {
-        int t_curr;
-        t_curr = std::numeric_limits<int>::min();
-        
-        int t_next;
-        t_next = std::numeric_limits<int>::min();
-        
-        current_statement__ = 72;
-        t_curr = (n_occasions - t);
-        current_statement__ = 73;
-        t_next = (t_curr + 1);
-        current_statement__ = 74;
-        stan::model::assign(chi,
-          stan::math::fma(
-            (stan::model::rvalue(phi, "phi",
-               stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
-              (1 -
-                stan::model::rvalue(p, "p",
-                  stan::model::index_uni(i),
-                    stan::model::index_uni((t_next - 1))))),
-            stan::model::rvalue(chi, "chi",
-              stan::model::index_uni(i), stan::model::index_uni(t_next)),
-            (1 -
-              stan::model::rvalue(phi, "phi",
-                stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
-          "assigning variable chi", stan::model::index_uni(i),
-                                      stan::model::index_uni(t_curr));
+    using local_scalar_t__ = double;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 56;
+      for (int k = 1; k <= stan::math::size(y_i); ++k) {
+        current_statement__ = 55;
+        if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
+          current_statement__ = 54;
+          return k;
+        } 
       }
+      current_statement__ = 57;
+      return 0;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    current_statement__ = 79;
-    return chi;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
+    }
+int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+    using local_scalar_t__ = double;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 63;
+      for (int k_rev = 0; k_rev <= (stan::math::size(y_i) - 1); ++k_rev) {
+        int k;
+        k = std::numeric_limits<int>::min();
+        
+        current_statement__ = 59;
+        k = (stan::math::size(y_i) - k_rev);
+        current_statement__ = 61;
+        if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
+          current_statement__ = 60;
+          return k;
+        } 
+      }
+      current_statement__ = 64;
+      return 0;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T2__, typename T3__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
+  prob_uncaptured(const int& nind, const int& n_occasions,
+                  const T2__& p_arg__, const T3__& phi_arg__,
+                  std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
+                                                  stan::value_type_t<T3__>>;
+    int current_statement__ = 0; 
+    const auto& p = stan::math::to_ref(p_arg__);
+    const auto& phi = stan::math::to_ref(phi_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 66;
+      stan::math::validate_non_negative_index("chi", "nind", nind);
+      current_statement__ = 67;
+      stan::math::validate_non_negative_index("chi", "n_occasions",
+                                              n_occasions);
+      Eigen::Matrix<local_scalar_t__, -1, -1> chi;
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
+      stan::math::fill(chi, DUMMY_VAR__);
+      
+      current_statement__ = 78;
+      for (int i = 1; i <= nind; ++i) {
+        current_statement__ = 69;
+        stan::model::assign(chi, 1.0,
+          "assigning variable chi", stan::model::index_uni(i),
+                                      stan::model::index_uni(n_occasions));
+        current_statement__ = 76;
+        for (int t = 1; t <= (n_occasions - 1); ++t) {
+          int t_curr;
+          t_curr = std::numeric_limits<int>::min();
+          
+          int t_next;
+          t_next = std::numeric_limits<int>::min();
+          
+          current_statement__ = 72;
+          t_curr = (n_occasions - t);
+          current_statement__ = 73;
+          t_next = (t_curr + 1);
+          current_statement__ = 74;
+          stan::model::assign(chi,
+            stan::math::fma(
+              (stan::model::rvalue(phi, "phi",
+                 stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
+                (1 -
+                  stan::model::rvalue(p, "p",
+                    stan::model::index_uni(i),
+                      stan::model::index_uni((t_next - 1))))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next)),
+              (1 -
+                stan::model::rvalue(phi, "phi",
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
+            "assigning variable chi", stan::model::index_uni(i),
+                                        stan::model::index_uni(t_curr));
+        }
+      }
+      current_statement__ = 79;
+      return chi;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
 
 int
 first_capture_functor__::operator()(const std::vector<int>& y_i,
@@ -7307,8 +7306,7 @@ first_capture_functor__::operator()(const std::vector<int>& y_i,
 
 
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
-stan::value_type_t<T3__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
 prob_uncaptured_functor__::operator()(const int& nind,
                                       const int& n_occasions, const T2__& p,
                                       const T3__& phi,
@@ -8447,253 +8445,221 @@ template <bool propto__, typename T3__, typename T4__, typename T5__,
 };
 
 int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
-  int current_statement__ = 0; 
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 97;
-    for (int k = 1; k <= stan::math::size(y_i); ++k) {
-      current_statement__ = 96;
-      if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
-        current_statement__ = 95;
-        return k;
-      } 
-    }
-    current_statement__ = 98;
-    return 0;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
-  int current_statement__ = 0; 
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 104;
-    for (int k_rev = 0; k_rev <= (stan::math::size(y_i) - 1); ++k_rev) {
-      int k;
-      k = std::numeric_limits<int>::min();
-      
-      current_statement__ = 100;
-      k = (stan::math::size(y_i) - k_rev);
-      current_statement__ = 102;
-      if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
-        current_statement__ = 101;
-        return k;
-      } 
-    }
-    current_statement__ = 105;
-    return 0;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, -1>
-prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
-                std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-          stan::value_type_t<T1__>>;
-  int current_statement__ = 0; 
-  const auto& p = stan::math::to_ref(p_arg__);
-  const auto& phi = stan::math::to_ref(phi_arg__);
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    int n_ind;
-    n_ind = std::numeric_limits<int>::min();
-    
-    current_statement__ = 107;
-    n_ind = stan::math::rows(p);
-    int n_occasions;
-    n_occasions = std::numeric_limits<int>::min();
-    
-    current_statement__ = 108;
-    n_occasions = stan::math::cols(p);
-    current_statement__ = 109;
-    stan::math::validate_non_negative_index("chi", "n_ind", n_ind);
-    current_statement__ = 110;
-    stan::math::validate_non_negative_index("chi", "n_occasions", n_occasions);
-    Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-    chi = Eigen::Matrix<local_scalar_t__, -1, -1>(n_ind, n_occasions);
-    stan::math::fill(chi, DUMMY_VAR__);
-    
-    current_statement__ = 119;
-    for (int i = 1; i <= n_ind; ++i) {
-      current_statement__ = 112;
-      stan::model::assign(chi, 1.0,
-        "assigning variable chi", stan::model::index_uni(i),
-                                    stan::model::index_uni(n_occasions));
-      current_statement__ = 117;
-      for (int t = 1; t <= (n_occasions - 1); ++t) {
-        int t_curr;
-        t_curr = std::numeric_limits<int>::min();
-        
-        current_statement__ = 113;
-        t_curr = (n_occasions - t);
-        int t_next;
-        t_next = std::numeric_limits<int>::min();
-        
-        current_statement__ = 114;
-        t_next = (t_curr + 1);
-        current_statement__ = 115;
-        stan::model::assign(chi,
-          stan::math::fma(
-            (stan::model::rvalue(phi, "phi",
-               stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
-              (1 -
-                stan::model::rvalue(p, "p",
-                  stan::model::index_uni(i), stan::model::index_uni(t_next)))),
-            stan::model::rvalue(chi, "chi",
-              stan::model::index_uni(i), stan::model::index_uni(t_next)),
-            (1 -
-              stan::model::rvalue(phi, "phi",
-                stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
-          "assigning variable chi", stan::model::index_uni(i),
-                                      stan::model::index_uni(t_curr));
+    using local_scalar_t__ = double;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 97;
+      for (int k = 1; k <= stan::math::size(y_i); ++k) {
+        current_statement__ = 96;
+        if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
+          current_statement__ = 95;
+          return k;
+        } 
       }
+      current_statement__ = 98;
+      return 0;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    current_statement__ = 120;
-    return chi;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }
+    }
+int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+    using local_scalar_t__ = double;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 104;
+      for (int k_rev = 0; k_rev <= (stan::math::size(y_i) - 1); ++k_rev) {
+        int k;
+        k = std::numeric_limits<int>::min();
+        
+        current_statement__ = 100;
+        k = (stan::math::size(y_i) - k_rev);
+        current_statement__ = 102;
+        if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
+          current_statement__ = 101;
+          return k;
+        } 
+      }
+      current_statement__ = 105;
+      return 0;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__, typename T1__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
+  prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
+                  std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
+                                                  stan::value_type_t<T1__>>;
+    int current_statement__ = 0; 
+    const auto& p = stan::math::to_ref(p_arg__);
+    const auto& phi = stan::math::to_ref(phi_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int n_ind;
+      n_ind = std::numeric_limits<int>::min();
+      
+      current_statement__ = 107;
+      n_ind = stan::math::rows(p);
+      int n_occasions;
+      n_occasions = std::numeric_limits<int>::min();
+      
+      current_statement__ = 108;
+      n_occasions = stan::math::cols(p);
+      current_statement__ = 109;
+      stan::math::validate_non_negative_index("chi", "n_ind", n_ind);
+      current_statement__ = 110;
+      stan::math::validate_non_negative_index("chi", "n_occasions",
+                                              n_occasions);
+      Eigen::Matrix<local_scalar_t__, -1, -1> chi;
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(n_ind, n_occasions);
+      stan::math::fill(chi, DUMMY_VAR__);
+      
+      current_statement__ = 119;
+      for (int i = 1; i <= n_ind; ++i) {
+        current_statement__ = 112;
+        stan::model::assign(chi, 1.0,
+          "assigning variable chi", stan::model::index_uni(i),
+                                      stan::model::index_uni(n_occasions));
+        current_statement__ = 117;
+        for (int t = 1; t <= (n_occasions - 1); ++t) {
+          int t_curr;
+          t_curr = std::numeric_limits<int>::min();
+          
+          current_statement__ = 113;
+          t_curr = (n_occasions - t);
+          int t_next;
+          t_next = std::numeric_limits<int>::min();
+          
+          current_statement__ = 114;
+          t_next = (t_curr + 1);
+          current_statement__ = 115;
+          stan::model::assign(chi,
+            stan::math::fma(
+              (stan::model::rvalue(phi, "phi",
+                 stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
+                (1 -
+                  stan::model::rvalue(p, "p",
+                    stan::model::index_uni(i), stan::model::index_uni(t_next)))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next)),
+              (1 -
+                stan::model::rvalue(phi, "phi",
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
+            "assigning variable chi", stan::model::index_uni(i),
+                                        stan::model::index_uni(t_curr));
+        }
+      }
+      current_statement__ = 120;
+      return chi;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
 template <bool propto__, typename T3__, typename T4__, typename T5__,
          typename T6__, typename T7__, typename T_lp__,
          typename T_lp_accum__> void
-js_super_lp(const std::vector<std::vector<int>>& y,
-            const std::vector<int>& first, const std::vector<int>& last,
-            const T3__& p_arg__, const T4__& phi_arg__, const T5__& psi,
-            const T6__& nu_arg__, const T7__& chi_arg__, T_lp__& lp__,
-            T_lp_accum__& lp_accum__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T3__>,
-          stan::value_type_t<T4__>,
-          T5__,
-          stan::value_type_t<T6__>,
-          stan::value_type_t<T7__>>;
-  int current_statement__ = 0; 
-  const auto& p = stan::math::to_ref(p_arg__);
-  const auto& phi = stan::math::to_ref(phi_arg__);
-  const auto& nu = stan::math::to_ref(nu_arg__);
-  const auto& chi = stan::math::to_ref(chi_arg__);
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    int n_ind;
-    n_ind = std::numeric_limits<int>::min();
-    
-    current_statement__ = 122;
-    n_ind = stan::model::rvalue(stan::math::dims(y), "dims(y)",
-              stan::model::index_uni(1));
-    int n_occasions;
-    n_occasions = std::numeric_limits<int>::min();
-    
-    current_statement__ = 123;
-    n_occasions = stan::model::rvalue(stan::math::dims(y), "dims(y)",
-                    stan::model::index_uni(2));
-    current_statement__ = 124;
-    stan::math::validate_non_negative_index("qnu", "n_occasions", n_occasions);
-    Eigen::Matrix<local_scalar_t__, -1, 1> qnu;
-    qnu = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
-    stan::math::fill(qnu, DUMMY_VAR__);
-    
-    current_statement__ = 125;
-    stan::model::assign(qnu, stan::math::subtract(1.0, nu),
-      "assigning variable qnu");
-    current_statement__ = 156;
-    for (int i = 1; i <= n_ind; ++i) {
-      current_statement__ = 126;
-      stan::math::validate_non_negative_index("qp", "n_occasions",
-                                              n_occasions);
-      Eigen::Matrix<local_scalar_t__, -1, 1> qp;
-      qp = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
-      stan::math::fill(qp, DUMMY_VAR__);
+  js_super_lp(const std::vector<std::vector<int>>& y,
+              const std::vector<int>& first, const std::vector<int>& last,
+              const T3__& p_arg__, const T4__& phi_arg__, const T5__& psi,
+              const T6__& nu_arg__, const T7__& chi_arg__, T_lp__& lp__,
+              T_lp_accum__& lp_accum__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T3__>,
+                                                  stan::value_type_t<T4__>,
+                                                  T5__,
+                                                  stan::value_type_t<T6__>,
+                                                  stan::value_type_t<T7__>>;
+    int current_statement__ = 0; 
+    const auto& p = stan::math::to_ref(p_arg__);
+    const auto& phi = stan::math::to_ref(phi_arg__);
+    const auto& nu = stan::math::to_ref(nu_arg__);
+    const auto& chi = stan::math::to_ref(chi_arg__);
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int n_ind;
+      n_ind = std::numeric_limits<int>::min();
       
-      current_statement__ = 127;
-      stan::model::assign(qp,
-        stan::math::subtract(1.0,
-          stan::math::transpose(
-            stan::model::rvalue(p, "p", stan::model::index_uni(i)))),
-        "assigning variable qp");
-      current_statement__ = 154;
-      if (stan::model::rvalue(first, "first", stan::model::index_uni(i))) {
-        current_statement__ = 136;
-        lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1, psi));
-        current_statement__ = 147;
-        if (stan::math::logical_eq(
-              stan::model::rvalue(first, "first", stan::model::index_uni(i)),
-              1)) {
-          current_statement__ = 145;
-          lp_accum__.add(
-            stan::math::bernoulli_lpmf<propto__>(1,
-              (stan::model::rvalue(nu, "nu", stan::model::index_uni(1)) *
-                stan::model::rvalue(p, "p",
-                  stan::model::index_uni(i), stan::model::index_uni(1)))));
-        } else {
-          current_statement__ = 137;
-          stan::math::validate_non_negative_index("lp", "first[i]",
-                                                  stan::model::rvalue(first,
-                                                    "first",
-                                                    stan::model::index_uni(i)));
-          Eigen::Matrix<local_scalar_t__, -1, 1> lp;
-          lp = Eigen::Matrix<local_scalar_t__, -1, 1>(stan::model::rvalue(
-                                                        first, "first",
-                                                        stan::model::index_uni(i)));
-          stan::math::fill(lp, DUMMY_VAR__);
-          
-          current_statement__ = 139;
-          stan::model::assign(lp,
-            (((stan::math::bernoulli_lpmf<false>(1,
-                 stan::model::rvalue(nu, "nu", stan::model::index_uni(1))) +
-                stan::math::bernoulli_lpmf<false>(1,
-                  stan::math::prod(
-                    stan::model::rvalue(qp, "qp",
-                      stan::model::index_min_max(1, (stan::model::rvalue(
-                                                       first, "first",
-                                                       stan::model::index_uni(i))
-                                                      - 1)))))) +
-               stan::math::bernoulli_lpmf<false>(1,
-                 stan::math::prod(
-                   stan::model::rvalue(phi, "phi",
-                     stan::model::index_uni(i),
-                       stan::model::index_min_max(1, (stan::model::rvalue(
-                                                        first, "first",
-                                                        stan::model::index_uni(i))
-                                                       - 1)))))) +
-              stan::math::bernoulli_lpmf<false>(1,
-                stan::model::rvalue(p, "p",
-                  stan::model::index_uni(i),
-                    stan::model::index_uni(stan::model::rvalue(first,
-                                             "first",
-                                             stan::model::index_uni(i)))))),
-            "assigning variable lp", stan::model::index_uni(1));
-          current_statement__ = 141;
-          for (int t = 2;
-               t <= (stan::model::rvalue(first, "first",
-                       stan::model::index_uni(i)) - 1);
-               ++t) {
-            current_statement__ = 140;
+      current_statement__ = 122;
+      n_ind = stan::model::rvalue(stan::math::dims(y), "dims(y)",
+                stan::model::index_uni(1));
+      int n_occasions;
+      n_occasions = std::numeric_limits<int>::min();
+      
+      current_statement__ = 123;
+      n_occasions = stan::model::rvalue(stan::math::dims(y), "dims(y)",
+                      stan::model::index_uni(2));
+      current_statement__ = 124;
+      stan::math::validate_non_negative_index("qnu", "n_occasions",
+                                              n_occasions);
+      Eigen::Matrix<local_scalar_t__, -1, 1> qnu;
+      qnu = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
+      stan::math::fill(qnu, DUMMY_VAR__);
+      
+      current_statement__ = 125;
+      stan::model::assign(qnu, stan::math::subtract(1.0, nu),
+        "assigning variable qnu");
+      current_statement__ = 156;
+      for (int i = 1; i <= n_ind; ++i) {
+        current_statement__ = 126;
+        stan::math::validate_non_negative_index("qp", "n_occasions",
+                                                n_occasions);
+        Eigen::Matrix<local_scalar_t__, -1, 1> qp;
+        qp = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
+        stan::math::fill(qp, DUMMY_VAR__);
+        
+        current_statement__ = 127;
+        stan::model::assign(qp,
+          stan::math::subtract(1.0,
+            stan::math::transpose(
+              stan::model::rvalue(p, "p", stan::model::index_uni(i)))),
+          "assigning variable qp");
+        current_statement__ = 154;
+        if (stan::model::rvalue(first, "first", stan::model::index_uni(i))) {
+          current_statement__ = 136;
+          lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1, psi));
+          current_statement__ = 147;
+          if (stan::math::logical_eq(
+                stan::model::rvalue(first, "first",
+                  stan::model::index_uni(i)), 1)) {
+            current_statement__ = 145;
+            lp_accum__.add(
+              stan::math::bernoulli_lpmf<propto__>(1,
+                (stan::model::rvalue(nu, "nu", stan::model::index_uni(1)) *
+                  stan::model::rvalue(p, "p",
+                    stan::model::index_uni(i), stan::model::index_uni(1)))));
+          } else {
+            current_statement__ = 137;
+            stan::math::validate_non_negative_index("lp", "first[i]",
+                                                    stan::model::rvalue(
+                                                      first, "first",
+                                                      stan::model::index_uni(i)));
+            Eigen::Matrix<local_scalar_t__, -1, 1> lp;
+            lp = Eigen::Matrix<local_scalar_t__, -1, 1>(stan::model::rvalue(
+                                                          first, "first",
+                                                          stan::model::index_uni(i)));
+            stan::math::fill(lp, DUMMY_VAR__);
+            
+            current_statement__ = 139;
             stan::model::assign(lp,
-              ((((stan::math::bernoulli_lpmf<false>(1,
-                    stan::math::prod(
-                      stan::model::rvalue(qnu, "qnu",
-                        stan::model::index_min_max(1, (t - 1))))) +
-                   stan::math::bernoulli_lpmf<false>(1,
-                     stan::model::rvalue(nu, "nu", stan::model::index_uni(t))))
+              (((stan::math::bernoulli_lpmf<false>(1,
+                   stan::model::rvalue(nu, "nu", stan::model::index_uni(1)))
                   +
                   stan::math::bernoulli_lpmf<false>(1,
                     stan::math::prod(
                       stan::model::rvalue(qp, "qp",
-                        stan::model::index_min_max(t, (stan::model::rvalue(
+                        stan::model::index_min_max(1, (stan::model::rvalue(
                                                          first, "first",
                                                          stan::model::index_uni(i))
                                                         - 1)))))) +
@@ -8701,7 +8667,7 @@ js_super_lp(const std::vector<std::vector<int>>& y,
                    stan::math::prod(
                      stan::model::rvalue(phi, "phi",
                        stan::model::index_uni(i),
-                         stan::model::index_min_max(t, (stan::model::rvalue(
+                         stan::model::index_min_max(1, (stan::model::rvalue(
                                                           first, "first",
                                                           stan::model::index_uni(i))
                                                          - 1)))))) +
@@ -8711,111 +8677,151 @@ js_super_lp(const std::vector<std::vector<int>>& y,
                       stan::model::index_uni(stan::model::rvalue(first,
                                                "first",
                                                stan::model::index_uni(i)))))),
-              "assigning variable lp", stan::model::index_uni(t));
+              "assigning variable lp", stan::model::index_uni(1));
+            current_statement__ = 141;
+            for (int t = 2;
+                 t <= (stan::model::rvalue(first, "first",
+                         stan::model::index_uni(i)) - 1);
+                 ++t) {
+              current_statement__ = 140;
+              stan::model::assign(lp,
+                ((((stan::math::bernoulli_lpmf<false>(1,
+                      stan::math::prod(
+                        stan::model::rvalue(qnu, "qnu",
+                          stan::model::index_min_max(1, (t - 1))))) +
+                     stan::math::bernoulli_lpmf<false>(1,
+                       stan::model::rvalue(nu, "nu",
+                         stan::model::index_uni(t)))) +
+                    stan::math::bernoulli_lpmf<false>(1,
+                      stan::math::prod(
+                        stan::model::rvalue(qp, "qp",
+                          stan::model::index_min_max(t, (stan::model::rvalue(
+                                                           first, "first",
+                                                           stan::model::index_uni(i))
+                                                          - 1)))))) +
+                   stan::math::bernoulli_lpmf<false>(1,
+                     stan::math::prod(
+                       stan::model::rvalue(phi, "phi",
+                         stan::model::index_uni(i),
+                           stan::model::index_min_max(t, (stan::model::rvalue(
+                                                            first, "first",
+                                                            stan::model::index_uni(i))
+                                                           - 1)))))) +
+                  stan::math::bernoulli_lpmf<false>(1,
+                    stan::model::rvalue(p, "p",
+                      stan::model::index_uni(i),
+                        stan::model::index_uni(stan::model::rvalue(first,
+                                                 "first",
+                                                 stan::model::index_uni(i)))))),
+                "assigning variable lp", stan::model::index_uni(t));
+            }
+            current_statement__ = 142;
+            stan::model::assign(lp,
+              ((stan::math::bernoulli_lpmf<false>(1,
+                  stan::math::prod(
+                    stan::model::rvalue(qnu, "qnu",
+                      stan::model::index_min_max(1, (stan::model::rvalue(
+                                                       first, "first",
+                                                       stan::model::index_uni(i))
+                                                      - 1))))) +
+                 stan::math::bernoulli_lpmf<false>(1,
+                   stan::model::rvalue(nu, "nu",
+                     stan::model::index_uni(stan::model::rvalue(first,
+                                              "first",
+                                              stan::model::index_uni(i))))))
+                +
+                stan::math::bernoulli_lpmf<false>(1,
+                  stan::model::rvalue(p, "p",
+                    stan::model::index_uni(i),
+                      stan::model::index_uni(stan::model::rvalue(first,
+                                               "first",
+                                               stan::model::index_uni(i)))))),
+              "assigning variable lp", stan::model::index_uni(stan::model::rvalue(
+                                                                first,
+                                                                "first",
+                                                                stan::model::index_uni(i))));
+            current_statement__ = 143;
+            lp_accum__.add(stan::math::log_sum_exp(lp));
           }
-          current_statement__ = 142;
-          stan::model::assign(lp,
-            ((stan::math::bernoulli_lpmf<false>(1,
-                stan::math::prod(
-                  stan::model::rvalue(qnu, "qnu",
-                    stan::model::index_min_max(1, (stan::model::rvalue(first,
-                                                     "first",
-                                                     stan::model::index_uni(i))
-                                                    - 1))))) +
-               stan::math::bernoulli_lpmf<false>(1,
-                 stan::model::rvalue(nu, "nu",
-                   stan::model::index_uni(stan::model::rvalue(first, "first",
-                                            stan::model::index_uni(i)))))) +
-              stan::math::bernoulli_lpmf<false>(1,
+          current_statement__ = 151;
+          for (int t = (stan::model::rvalue(first, "first",
+                          stan::model::index_uni(i)) + 1);
+               t <= stan::model::rvalue(last, "last",
+                      stan::model::index_uni(i));
+               ++t) {
+            current_statement__ = 148;
+            lp_accum__.add(
+              stan::math::bernoulli_lpmf<propto__>(1,
+                stan::model::rvalue(phi, "phi",
+                  stan::model::index_uni(i), stan::model::index_uni((t - 1)))));
+            current_statement__ = 149;
+            lp_accum__.add(
+              stan::math::bernoulli_lpmf<propto__>(
+                stan::model::rvalue(y, "y",
+                  stan::model::index_uni(i), stan::model::index_uni(t)),
                 stan::model::rvalue(p, "p",
-                  stan::model::index_uni(i),
-                    stan::model::index_uni(stan::model::rvalue(first,
-                                             "first",
-                                             stan::model::index_uni(i)))))),
-            "assigning variable lp", stan::model::index_uni(stan::model::rvalue(
-                                                              first, "first",
-                                                              stan::model::index_uni(i))));
-          current_statement__ = 143;
-          lp_accum__.add(stan::math::log_sum_exp(lp));
-        }
-        current_statement__ = 151;
-        for (int t = (stan::model::rvalue(first, "first",
-                        stan::model::index_uni(i)) + 1);
-             t <= stan::model::rvalue(last, "last",
-                    stan::model::index_uni(i));
-             ++t) {
-          current_statement__ = 148;
+                  stan::model::index_uni(i), stan::model::index_uni(t))));
+          }
+          current_statement__ = 152;
           lp_accum__.add(
             stan::math::bernoulli_lpmf<propto__>(1,
-              stan::model::rvalue(phi, "phi",
-                stan::model::index_uni(i), stan::model::index_uni((t - 1)))));
-          current_statement__ = 149;
-          lp_accum__.add(
-            stan::math::bernoulli_lpmf<propto__>(
-              stan::model::rvalue(y, "y",
-                stan::model::index_uni(i), stan::model::index_uni(t)),
-              stan::model::rvalue(p, "p",
-                stan::model::index_uni(i), stan::model::index_uni(t))));
-        }
-        current_statement__ = 152;
-        lp_accum__.add(
-          stan::math::bernoulli_lpmf<propto__>(1,
-            stan::model::rvalue(chi, "chi",
-              stan::model::index_uni(i),
-                stan::model::index_uni(stan::model::rvalue(last, "last",
-                                         stan::model::index_uni(i))))));
-      } else {
-        current_statement__ = 128;
-        stan::math::validate_non_negative_index("lp", "n_occasions + 1",
-                                                (n_occasions + 1));
-        Eigen::Matrix<local_scalar_t__, -1, 1> lp;
-        lp = Eigen::Matrix<local_scalar_t__, -1, 1>((n_occasions + 1));
-        stan::math::fill(lp, DUMMY_VAR__);
-        
-        current_statement__ = 130;
-        stan::model::assign(lp,
-          (((stan::math::bernoulli_lpmf<false>(1, psi) +
-              stan::math::bernoulli_lpmf<false>(1,
-                stan::model::rvalue(nu, "nu", stan::model::index_uni(1)))) +
-             stan::math::bernoulli_lpmf<false>(0,
-               stan::model::rvalue(p, "p",
-                 stan::model::index_uni(i), stan::model::index_uni(1)))) +
-            stan::math::bernoulli_lpmf<false>(1,
               stan::model::rvalue(chi, "chi",
-                stan::model::index_uni(i), stan::model::index_uni(1)))),
-          "assigning variable lp", stan::model::index_uni(1));
-        current_statement__ = 132;
-        for (int t = 2; t <= n_occasions; ++t) {
-          current_statement__ = 131;
+                stan::model::index_uni(i),
+                  stan::model::index_uni(stan::model::rvalue(last, "last",
+                                           stan::model::index_uni(i))))));
+        } else {
+          current_statement__ = 128;
+          stan::math::validate_non_negative_index("lp", "n_occasions + 1",
+                                                  (n_occasions + 1));
+          Eigen::Matrix<local_scalar_t__, -1, 1> lp;
+          lp = Eigen::Matrix<local_scalar_t__, -1, 1>((n_occasions + 1));
+          stan::math::fill(lp, DUMMY_VAR__);
+          
+          current_statement__ = 130;
           stan::model::assign(lp,
-            ((((stan::math::bernoulli_lpmf<false>(1, psi) +
-                 stan::math::bernoulli_lpmf<false>(1,
-                   stan::math::prod(
-                     stan::model::rvalue(qnu, "qnu",
-                       stan::model::index_min_max(1, (t - 1)))))) +
+            (((stan::math::bernoulli_lpmf<false>(1, psi) +
                 stan::math::bernoulli_lpmf<false>(1,
-                  stan::model::rvalue(nu, "nu", stan::model::index_uni(t))))
+                  stan::model::rvalue(nu, "nu", stan::model::index_uni(1))))
                +
                stan::math::bernoulli_lpmf<false>(0,
                  stan::model::rvalue(p, "p",
-                   stan::model::index_uni(i), stan::model::index_uni(t)))) +
+                   stan::model::index_uni(i), stan::model::index_uni(1)))) +
               stan::math::bernoulli_lpmf<false>(1,
                 stan::model::rvalue(chi, "chi",
-                  stan::model::index_uni(i), stan::model::index_uni(t)))),
-            "assigning variable lp", stan::model::index_uni(t));
+                  stan::model::index_uni(i), stan::model::index_uni(1)))),
+            "assigning variable lp", stan::model::index_uni(1));
+          current_statement__ = 132;
+          for (int t = 2; t <= n_occasions; ++t) {
+            current_statement__ = 131;
+            stan::model::assign(lp,
+              ((((stan::math::bernoulli_lpmf<false>(1, psi) +
+                   stan::math::bernoulli_lpmf<false>(1,
+                     stan::math::prod(
+                       stan::model::rvalue(qnu, "qnu",
+                         stan::model::index_min_max(1, (t - 1)))))) +
+                  stan::math::bernoulli_lpmf<false>(1,
+                    stan::model::rvalue(nu, "nu", stan::model::index_uni(t))))
+                 +
+                 stan::math::bernoulli_lpmf<false>(0,
+                   stan::model::rvalue(p, "p",
+                     stan::model::index_uni(i), stan::model::index_uni(t))))
+                +
+                stan::math::bernoulli_lpmf<false>(1,
+                  stan::model::rvalue(chi, "chi",
+                    stan::model::index_uni(i), stan::model::index_uni(t)))),
+              "assigning variable lp", stan::model::index_uni(t));
+          }
+          current_statement__ = 133;
+          stan::model::assign(lp, stan::math::bernoulli_lpmf<false>(0, psi),
+            "assigning variable lp", stan::model::index_uni((n_occasions + 1)));
+          current_statement__ = 134;
+          lp_accum__.add(stan::math::log_sum_exp(lp));
         }
-        current_statement__ = 133;
-        stan::model::assign(lp, stan::math::bernoulli_lpmf<false>(0, psi),
-          "assigning variable lp", stan::model::index_uni((n_occasions + 1)));
-        current_statement__ = 134;
-        lp_accum__.add(stan::math::log_sum_exp(lp));
       }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
+    }
 
 int
 first_capture_functor__::operator()(const std::vector<int>& y_i,
@@ -8826,8 +8832,7 @@ first_capture_functor__::operator()(const std::vector<int>& y_i,
 
 
 template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
 prob_uncaptured_functor__::operator()(const T0__& p, const T1__& phi,
                                       std::ostream* pstream__)  const
 {
@@ -11579,118 +11584,120 @@ int
 };
 
 int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
-  int current_statement__ = 0; 
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 53;
-    for (int k = 1; k <= stan::math::size(y_i); ++k) {
-      current_statement__ = 52;
-      if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
-        current_statement__ = 51;
-        return k;
-      } 
-    }
-    current_statement__ = 54;
-    return 0;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
-  int current_statement__ = 0; 
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 60;
-    for (int k_rev = 0; k_rev <= (stan::math::size(y_i) - 1); ++k_rev) {
-      int k;
-      k = std::numeric_limits<int>::min();
-      
-      current_statement__ = 56;
-      k = (stan::math::size(y_i) - k_rev);
-      current_statement__ = 58;
-      if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
-        current_statement__ = 57;
-        return k;
-      } 
-    }
-    current_statement__ = 61;
-    return 0;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
-stan::value_type_t<T3__>>, -1, -1>
-prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
-                const T3__& phi_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
-          stan::value_type_t<T3__>>;
-  int current_statement__ = 0; 
-  const auto& p = stan::math::to_ref(p_arg__);
-  const auto& phi = stan::math::to_ref(phi_arg__);
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 63;
-    stan::math::validate_non_negative_index("chi", "nind", nind);
-    current_statement__ = 64;
-    stan::math::validate_non_negative_index("chi", "n_occasions", n_occasions);
-    Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-    chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
-    stan::math::fill(chi, DUMMY_VAR__);
-    
-    current_statement__ = 73;
-    for (int i = 1; i <= nind; ++i) {
-      current_statement__ = 66;
-      stan::model::assign(chi, 1.0,
-        "assigning variable chi", stan::model::index_uni(i),
-                                    stan::model::index_uni(n_occasions));
-      current_statement__ = 71;
-      for (int t = 1; t <= (n_occasions - 1); ++t) {
-        int t_curr;
-        t_curr = std::numeric_limits<int>::min();
-        
-        current_statement__ = 67;
-        t_curr = (n_occasions - t);
-        int t_next;
-        t_next = std::numeric_limits<int>::min();
-        
-        current_statement__ = 68;
-        t_next = (t_curr + 1);
-        current_statement__ = 69;
-        stan::model::assign(chi,
-          stan::math::fma(
-            (stan::model::rvalue(phi, "phi",
-               stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
-              (1 -
-                stan::model::rvalue(p, "p",
-                  stan::model::index_uni(i),
-                    stan::model::index_uni((t_next - 1))))),
-            stan::model::rvalue(chi, "chi",
-              stan::model::index_uni(i), stan::model::index_uni(t_next)),
-            (1 -
-              stan::model::rvalue(phi, "phi",
-                stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
-          "assigning variable chi", stan::model::index_uni(i),
-                                      stan::model::index_uni(t_curr));
+    using local_scalar_t__ = double;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 53;
+      for (int k = 1; k <= stan::math::size(y_i); ++k) {
+        current_statement__ = 52;
+        if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
+          current_statement__ = 51;
+          return k;
+        } 
       }
+      current_statement__ = 54;
+      return 0;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    current_statement__ = 74;
-    return chi;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
+    }
+int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+    using local_scalar_t__ = double;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 60;
+      for (int k_rev = 0; k_rev <= (stan::math::size(y_i) - 1); ++k_rev) {
+        int k;
+        k = std::numeric_limits<int>::min();
+        
+        current_statement__ = 56;
+        k = (stan::math::size(y_i) - k_rev);
+        current_statement__ = 58;
+        if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
+          current_statement__ = 57;
+          return k;
+        } 
+      }
+      current_statement__ = 61;
+      return 0;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T2__, typename T3__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
+  prob_uncaptured(const int& nind, const int& n_occasions,
+                  const T2__& p_arg__, const T3__& phi_arg__,
+                  std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
+                                                  stan::value_type_t<T3__>>;
+    int current_statement__ = 0; 
+    const auto& p = stan::math::to_ref(p_arg__);
+    const auto& phi = stan::math::to_ref(phi_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 63;
+      stan::math::validate_non_negative_index("chi", "nind", nind);
+      current_statement__ = 64;
+      stan::math::validate_non_negative_index("chi", "n_occasions",
+                                              n_occasions);
+      Eigen::Matrix<local_scalar_t__, -1, -1> chi;
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
+      stan::math::fill(chi, DUMMY_VAR__);
+      
+      current_statement__ = 73;
+      for (int i = 1; i <= nind; ++i) {
+        current_statement__ = 66;
+        stan::model::assign(chi, 1.0,
+          "assigning variable chi", stan::model::index_uni(i),
+                                      stan::model::index_uni(n_occasions));
+        current_statement__ = 71;
+        for (int t = 1; t <= (n_occasions - 1); ++t) {
+          int t_curr;
+          t_curr = std::numeric_limits<int>::min();
+          
+          current_statement__ = 67;
+          t_curr = (n_occasions - t);
+          int t_next;
+          t_next = std::numeric_limits<int>::min();
+          
+          current_statement__ = 68;
+          t_next = (t_curr + 1);
+          current_statement__ = 69;
+          stan::model::assign(chi,
+            stan::math::fma(
+              (stan::model::rvalue(phi, "phi",
+                 stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
+                (1 -
+                  stan::model::rvalue(p, "p",
+                    stan::model::index_uni(i),
+                      stan::model::index_uni((t_next - 1))))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next)),
+              (1 -
+                stan::model::rvalue(phi, "phi",
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
+            "assigning variable chi", stan::model::index_uni(i),
+                                        stan::model::index_uni(t_curr));
+        }
+      }
+      current_statement__ = 74;
+      return chi;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
 
 int
 first_capture_functor__::operator()(const std::vector<int>& y_i,
@@ -11701,8 +11708,7 @@ first_capture_functor__::operator()(const std::vector<int>& y_i,
 
 
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
-stan::value_type_t<T3__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
 prob_uncaptured_functor__::operator()(const int& nind,
                                       const int& n_occasions, const T2__& p,
                                       const T3__& phi,
@@ -12832,252 +12838,219 @@ template <typename T0__, typename
 };
 
 int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
-  int current_statement__ = 0; 
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 88;
-    for (int k = 1; k <= stan::math::size(y_i); ++k) {
-      current_statement__ = 87;
-      if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
-        current_statement__ = 86;
-        return k;
-      } 
-    }
-    current_statement__ = 89;
-    return 0;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
-  int current_statement__ = 0; 
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 95;
-    for (int k_rev = 0; k_rev <= (stan::math::size(y_i) - 1); ++k_rev) {
-      int k;
-      k = std::numeric_limits<int>::min();
-      
-      current_statement__ = 91;
-      k = (stan::math::size(y_i) - k_rev);
-      current_statement__ = 93;
-      if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
-        current_statement__ = 92;
-        return k;
-      } 
-    }
-    current_statement__ = 96;
-    return 0;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, -1>
-prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
-                std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-          stan::value_type_t<T1__>>;
-  int current_statement__ = 0; 
-  const auto& p = stan::math::to_ref(p_arg__);
-  const auto& phi = stan::math::to_ref(phi_arg__);
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    int n_ind;
-    n_ind = std::numeric_limits<int>::min();
-    
-    current_statement__ = 98;
-    n_ind = stan::math::rows(p);
-    int n_occasions;
-    n_occasions = std::numeric_limits<int>::min();
-    
-    current_statement__ = 99;
-    n_occasions = stan::math::cols(p);
-    current_statement__ = 100;
-    stan::math::validate_non_negative_index("chi", "n_ind", n_ind);
-    current_statement__ = 101;
-    stan::math::validate_non_negative_index("chi", "n_occasions", n_occasions);
-    Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-    chi = Eigen::Matrix<local_scalar_t__, -1, -1>(n_ind, n_occasions);
-    stan::math::fill(chi, DUMMY_VAR__);
-    
-    current_statement__ = 110;
-    for (int i = 1; i <= n_ind; ++i) {
-      current_statement__ = 103;
-      stan::model::assign(chi, 1.0,
-        "assigning variable chi", stan::model::index_uni(i),
-                                    stan::model::index_uni(n_occasions));
-      current_statement__ = 108;
-      for (int t = 1; t <= (n_occasions - 1); ++t) {
-        int t_curr;
-        t_curr = std::numeric_limits<int>::min();
-        
-        current_statement__ = 104;
-        t_curr = (n_occasions - t);
-        int t_next;
-        t_next = std::numeric_limits<int>::min();
-        
-        current_statement__ = 105;
-        t_next = (t_curr + 1);
-        current_statement__ = 106;
-        stan::model::assign(chi,
-          stan::math::fma(
-            (stan::model::rvalue(phi, "phi",
-               stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
-              (1 -
-                stan::model::rvalue(p, "p",
-                  stan::model::index_uni(i), stan::model::index_uni(t_next)))),
-            stan::model::rvalue(chi, "chi",
-              stan::model::index_uni(i), stan::model::index_uni(t_next)),
-            (1 -
-              stan::model::rvalue(phi, "phi",
-                stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
-          "assigning variable chi", stan::model::index_uni(i),
-                                      stan::model::index_uni(t_curr));
+    using local_scalar_t__ = double;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 88;
+      for (int k = 1; k <= stan::math::size(y_i); ++k) {
+        current_statement__ = 87;
+        if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
+          current_statement__ = 86;
+          return k;
+        } 
       }
+      current_statement__ = 89;
+      return 0;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    current_statement__ = 111;
-    return chi;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }
+    }
+int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+    using local_scalar_t__ = double;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 95;
+      for (int k_rev = 0; k_rev <= (stan::math::size(y_i) - 1); ++k_rev) {
+        int k;
+        k = std::numeric_limits<int>::min();
+        
+        current_statement__ = 91;
+        k = (stan::math::size(y_i) - k_rev);
+        current_statement__ = 93;
+        if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
+          current_statement__ = 92;
+          return k;
+        } 
+      }
+      current_statement__ = 96;
+      return 0;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__, typename T1__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
+  prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
+                  std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
+                                                  stan::value_type_t<T1__>>;
+    int current_statement__ = 0; 
+    const auto& p = stan::math::to_ref(p_arg__);
+    const auto& phi = stan::math::to_ref(phi_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int n_ind;
+      n_ind = std::numeric_limits<int>::min();
+      
+      current_statement__ = 98;
+      n_ind = stan::math::rows(p);
+      int n_occasions;
+      n_occasions = std::numeric_limits<int>::min();
+      
+      current_statement__ = 99;
+      n_occasions = stan::math::cols(p);
+      current_statement__ = 100;
+      stan::math::validate_non_negative_index("chi", "n_ind", n_ind);
+      current_statement__ = 101;
+      stan::math::validate_non_negative_index("chi", "n_occasions",
+                                              n_occasions);
+      Eigen::Matrix<local_scalar_t__, -1, -1> chi;
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(n_ind, n_occasions);
+      stan::math::fill(chi, DUMMY_VAR__);
+      
+      current_statement__ = 110;
+      for (int i = 1; i <= n_ind; ++i) {
+        current_statement__ = 103;
+        stan::model::assign(chi, 1.0,
+          "assigning variable chi", stan::model::index_uni(i),
+                                      stan::model::index_uni(n_occasions));
+        current_statement__ = 108;
+        for (int t = 1; t <= (n_occasions - 1); ++t) {
+          int t_curr;
+          t_curr = std::numeric_limits<int>::min();
+          
+          current_statement__ = 104;
+          t_curr = (n_occasions - t);
+          int t_next;
+          t_next = std::numeric_limits<int>::min();
+          
+          current_statement__ = 105;
+          t_next = (t_curr + 1);
+          current_statement__ = 106;
+          stan::model::assign(chi,
+            stan::math::fma(
+              (stan::model::rvalue(phi, "phi",
+                 stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
+                (1 -
+                  stan::model::rvalue(p, "p",
+                    stan::model::index_uni(i), stan::model::index_uni(t_next)))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next)),
+              (1 -
+                stan::model::rvalue(phi, "phi",
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
+            "assigning variable chi", stan::model::index_uni(i),
+                                        stan::model::index_uni(t_curr));
+        }
+      }
+      current_statement__ = 111;
+      return chi;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
 template <bool propto__, typename T3__, typename T4__, typename T5__,
          typename T6__, typename T_lp__, typename T_lp_accum__> void
-jolly_seber_lp(const std::vector<std::vector<int>>& y,
-               const std::vector<int>& first, const std::vector<int>& last,
-               const T3__& p_arg__, const T4__& phi_arg__,
-               const T5__& gamma_arg__, const T6__& chi_arg__, T_lp__& lp__,
-               T_lp_accum__& lp_accum__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T3__>,
-          stan::value_type_t<T4__>,
-          stan::value_type_t<T5__>,
-          stan::value_type_t<T6__>>;
-  int current_statement__ = 0; 
-  const auto& p = stan::math::to_ref(p_arg__);
-  const auto& phi = stan::math::to_ref(phi_arg__);
-  const auto& gamma = stan::math::to_ref(gamma_arg__);
-  const auto& chi = stan::math::to_ref(chi_arg__);
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    int n_ind;
-    n_ind = std::numeric_limits<int>::min();
-    
-    current_statement__ = 113;
-    n_ind = stan::model::rvalue(stan::math::dims(y), "dims(y)",
-              stan::model::index_uni(1));
-    int n_occasions;
-    n_occasions = std::numeric_limits<int>::min();
-    
-    current_statement__ = 114;
-    n_occasions = stan::model::rvalue(stan::math::dims(y), "dims(y)",
-                    stan::model::index_uni(2));
-    current_statement__ = 115;
-    stan::math::validate_non_negative_index("qgamma", "n_occasions",
-                                            n_occasions);
-    Eigen::Matrix<local_scalar_t__, -1, 1> qgamma;
-    qgamma = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
-    stan::math::fill(qgamma, DUMMY_VAR__);
-    
-    current_statement__ = 116;
-    stan::model::assign(qgamma, stan::math::subtract(1.0, gamma),
-      "assigning variable qgamma");
-    current_statement__ = 146;
-    for (int i = 1; i <= n_ind; ++i) {
-      current_statement__ = 117;
-      stan::math::validate_non_negative_index("qp", "n_occasions",
-                                              n_occasions);
-      Eigen::Matrix<local_scalar_t__, -1, 1> qp;
-      qp = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
-      stan::math::fill(qp, DUMMY_VAR__);
+  jolly_seber_lp(const std::vector<std::vector<int>>& y,
+                 const std::vector<int>& first, const std::vector<int>& last,
+                 const T3__& p_arg__, const T4__& phi_arg__,
+                 const T5__& gamma_arg__, const T6__& chi_arg__,
+                 T_lp__& lp__, T_lp_accum__& lp_accum__,
+                 std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T3__>,
+                                                  stan::value_type_t<T4__>,
+                                                  stan::value_type_t<T5__>,
+                                                  stan::value_type_t<T6__>>;
+    int current_statement__ = 0; 
+    const auto& p = stan::math::to_ref(p_arg__);
+    const auto& phi = stan::math::to_ref(phi_arg__);
+    const auto& gamma = stan::math::to_ref(gamma_arg__);
+    const auto& chi = stan::math::to_ref(chi_arg__);
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int n_ind;
+      n_ind = std::numeric_limits<int>::min();
       
-      current_statement__ = 118;
-      stan::model::assign(qp,
-        stan::math::subtract(1.0,
-          stan::math::transpose(
-            stan::model::rvalue(p, "p", stan::model::index_uni(i)))),
-        "assigning variable qp");
-      current_statement__ = 144;
-      if (stan::model::rvalue(first, "first", stan::model::index_uni(i))) {
-        current_statement__ = 137;
-        if (stan::math::logical_eq(
-              stan::model::rvalue(first, "first", stan::model::index_uni(i)),
-              1)) {
-          current_statement__ = 135;
-          lp_accum__.add(
-            stan::math::bernoulli_lpmf<propto__>(1,
-              (stan::model::rvalue(gamma, "gamma", stan::model::index_uni(1))
-                *
-                stan::model::rvalue(p, "p",
-                  stan::model::index_uni(i), stan::model::index_uni(1)))));
-        } else {
-          current_statement__ = 127;
-          stan::math::validate_non_negative_index("lp", "first[i]",
-                                                  stan::model::rvalue(first,
-                                                    "first",
-                                                    stan::model::index_uni(i)));
-          Eigen::Matrix<local_scalar_t__, -1, 1> lp;
-          lp = Eigen::Matrix<local_scalar_t__, -1, 1>(stan::model::rvalue(
-                                                        first, "first",
-                                                        stan::model::index_uni(i)));
-          stan::math::fill(lp, DUMMY_VAR__);
-          
-          current_statement__ = 129;
-          stan::model::assign(lp,
-            (((stan::math::bernoulli_lpmf<false>(1,
-                 stan::model::rvalue(gamma, "gamma",
-                   stan::model::index_uni(1))) +
-                stan::math::bernoulli_lpmf<false>(1,
-                  stan::math::prod(
-                    stan::model::rvalue(qp, "qp",
-                      stan::model::index_min_max(1, (stan::model::rvalue(
-                                                       first, "first",
-                                                       stan::model::index_uni(i))
-                                                      - 1)))))) +
-               stan::math::bernoulli_lpmf<false>(1,
-                 stan::math::prod(
-                   stan::model::rvalue(phi, "phi",
-                     stan::model::index_uni(i),
-                       stan::model::index_min_max(1, (stan::model::rvalue(
-                                                        first, "first",
-                                                        stan::model::index_uni(i))
-                                                       - 1)))))) +
-              stan::math::bernoulli_lpmf<false>(1,
-                stan::model::rvalue(p, "p",
-                  stan::model::index_uni(i),
-                    stan::model::index_uni(stan::model::rvalue(first,
-                                             "first",
-                                             stan::model::index_uni(i)))))),
-            "assigning variable lp", stan::model::index_uni(1));
-          current_statement__ = 131;
-          for (int t = 2;
-               t <= (stan::model::rvalue(first, "first",
-                       stan::model::index_uni(i)) - 1);
-               ++t) {
-            current_statement__ = 130;
+      current_statement__ = 113;
+      n_ind = stan::model::rvalue(stan::math::dims(y), "dims(y)",
+                stan::model::index_uni(1));
+      int n_occasions;
+      n_occasions = std::numeric_limits<int>::min();
+      
+      current_statement__ = 114;
+      n_occasions = stan::model::rvalue(stan::math::dims(y), "dims(y)",
+                      stan::model::index_uni(2));
+      current_statement__ = 115;
+      stan::math::validate_non_negative_index("qgamma", "n_occasions",
+                                              n_occasions);
+      Eigen::Matrix<local_scalar_t__, -1, 1> qgamma;
+      qgamma = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
+      stan::math::fill(qgamma, DUMMY_VAR__);
+      
+      current_statement__ = 116;
+      stan::model::assign(qgamma, stan::math::subtract(1.0, gamma),
+        "assigning variable qgamma");
+      current_statement__ = 146;
+      for (int i = 1; i <= n_ind; ++i) {
+        current_statement__ = 117;
+        stan::math::validate_non_negative_index("qp", "n_occasions",
+                                                n_occasions);
+        Eigen::Matrix<local_scalar_t__, -1, 1> qp;
+        qp = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
+        stan::math::fill(qp, DUMMY_VAR__);
+        
+        current_statement__ = 118;
+        stan::model::assign(qp,
+          stan::math::subtract(1.0,
+            stan::math::transpose(
+              stan::model::rvalue(p, "p", stan::model::index_uni(i)))),
+          "assigning variable qp");
+        current_statement__ = 144;
+        if (stan::model::rvalue(first, "first", stan::model::index_uni(i))) {
+          current_statement__ = 137;
+          if (stan::math::logical_eq(
+                stan::model::rvalue(first, "first",
+                  stan::model::index_uni(i)), 1)) {
+            current_statement__ = 135;
+            lp_accum__.add(
+              stan::math::bernoulli_lpmf<propto__>(1,
+                (stan::model::rvalue(gamma, "gamma",
+                   stan::model::index_uni(1)) *
+                  stan::model::rvalue(p, "p",
+                    stan::model::index_uni(i), stan::model::index_uni(1)))));
+          } else {
+            current_statement__ = 127;
+            stan::math::validate_non_negative_index("lp", "first[i]",
+                                                    stan::model::rvalue(
+                                                      first, "first",
+                                                      stan::model::index_uni(i)));
+            Eigen::Matrix<local_scalar_t__, -1, 1> lp;
+            lp = Eigen::Matrix<local_scalar_t__, -1, 1>(stan::model::rvalue(
+                                                          first, "first",
+                                                          stan::model::index_uni(i)));
+            stan::math::fill(lp, DUMMY_VAR__);
+            
+            current_statement__ = 129;
             stan::model::assign(lp,
-              ((((stan::math::bernoulli_lpmf<false>(1,
-                    stan::math::prod(
-                      stan::model::rvalue(qgamma, "qgamma",
-                        stan::model::index_min_max(1, (t - 1))))) +
-                   stan::math::bernoulli_lpmf<false>(1,
-                     stan::model::rvalue(gamma, "gamma",
-                       stan::model::index_uni(t)))) +
+              (((stan::math::bernoulli_lpmf<false>(1,
+                   stan::model::rvalue(gamma, "gamma",
+                     stan::model::index_uni(1))) +
                   stan::math::bernoulli_lpmf<false>(1,
                     stan::math::prod(
                       stan::model::rvalue(qp, "qp",
-                        stan::model::index_min_max(t, (stan::model::rvalue(
+                        stan::model::index_min_max(1, (stan::model::rvalue(
                                                          first, "first",
                                                          stan::model::index_uni(i))
                                                         - 1)))))) +
@@ -13085,7 +13058,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
                    stan::math::prod(
                      stan::model::rvalue(phi, "phi",
                        stan::model::index_uni(i),
-                         stan::model::index_min_max(t, (stan::model::rvalue(
+                         stan::model::index_min_max(1, (stan::model::rvalue(
                                                           first, "first",
                                                           stan::model::index_uni(i))
                                                          - 1)))))) +
@@ -13095,157 +13068,197 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
                       stan::model::index_uni(stan::model::rvalue(first,
                                                "first",
                                                stan::model::index_uni(i)))))),
-              "assigning variable lp", stan::model::index_uni(t));
+              "assigning variable lp", stan::model::index_uni(1));
+            current_statement__ = 131;
+            for (int t = 2;
+                 t <= (stan::model::rvalue(first, "first",
+                         stan::model::index_uni(i)) - 1);
+                 ++t) {
+              current_statement__ = 130;
+              stan::model::assign(lp,
+                ((((stan::math::bernoulli_lpmf<false>(1,
+                      stan::math::prod(
+                        stan::model::rvalue(qgamma, "qgamma",
+                          stan::model::index_min_max(1, (t - 1))))) +
+                     stan::math::bernoulli_lpmf<false>(1,
+                       stan::model::rvalue(gamma, "gamma",
+                         stan::model::index_uni(t)))) +
+                    stan::math::bernoulli_lpmf<false>(1,
+                      stan::math::prod(
+                        stan::model::rvalue(qp, "qp",
+                          stan::model::index_min_max(t, (stan::model::rvalue(
+                                                           first, "first",
+                                                           stan::model::index_uni(i))
+                                                          - 1)))))) +
+                   stan::math::bernoulli_lpmf<false>(1,
+                     stan::math::prod(
+                       stan::model::rvalue(phi, "phi",
+                         stan::model::index_uni(i),
+                           stan::model::index_min_max(t, (stan::model::rvalue(
+                                                            first, "first",
+                                                            stan::model::index_uni(i))
+                                                           - 1)))))) +
+                  stan::math::bernoulli_lpmf<false>(1,
+                    stan::model::rvalue(p, "p",
+                      stan::model::index_uni(i),
+                        stan::model::index_uni(stan::model::rvalue(first,
+                                                 "first",
+                                                 stan::model::index_uni(i)))))),
+                "assigning variable lp", stan::model::index_uni(t));
+            }
+            current_statement__ = 132;
+            stan::model::assign(lp,
+              ((stan::math::bernoulli_lpmf<false>(1,
+                  stan::math::prod(
+                    stan::model::rvalue(qgamma, "qgamma",
+                      stan::model::index_min_max(1, (stan::model::rvalue(
+                                                       first, "first",
+                                                       stan::model::index_uni(i))
+                                                      - 1))))) +
+                 stan::math::bernoulli_lpmf<false>(1,
+                   stan::model::rvalue(gamma, "gamma",
+                     stan::model::index_uni(stan::model::rvalue(first,
+                                              "first",
+                                              stan::model::index_uni(i))))))
+                +
+                stan::math::bernoulli_lpmf<false>(1,
+                  stan::model::rvalue(p, "p",
+                    stan::model::index_uni(i),
+                      stan::model::index_uni(stan::model::rvalue(first,
+                                               "first",
+                                               stan::model::index_uni(i)))))),
+              "assigning variable lp", stan::model::index_uni(stan::model::rvalue(
+                                                                first,
+                                                                "first",
+                                                                stan::model::index_uni(i))));
+            current_statement__ = 133;
+            lp_accum__.add(stan::math::log_sum_exp(lp));
           }
-          current_statement__ = 132;
-          stan::model::assign(lp,
-            ((stan::math::bernoulli_lpmf<false>(1,
-                stan::math::prod(
-                  stan::model::rvalue(qgamma, "qgamma",
-                    stan::model::index_min_max(1, (stan::model::rvalue(first,
-                                                     "first",
-                                                     stan::model::index_uni(i))
-                                                    - 1))))) +
-               stan::math::bernoulli_lpmf<false>(1,
-                 stan::model::rvalue(gamma, "gamma",
-                   stan::model::index_uni(stan::model::rvalue(first, "first",
-                                            stan::model::index_uni(i)))))) +
-              stan::math::bernoulli_lpmf<false>(1,
+          current_statement__ = 141;
+          for (int t = (stan::model::rvalue(first, "first",
+                          stan::model::index_uni(i)) + 1);
+               t <= stan::model::rvalue(last, "last",
+                      stan::model::index_uni(i));
+               ++t) {
+            current_statement__ = 138;
+            lp_accum__.add(
+              stan::math::bernoulli_lpmf<propto__>(1,
+                stan::model::rvalue(phi, "phi",
+                  stan::model::index_uni(i), stan::model::index_uni((t - 1)))));
+            current_statement__ = 139;
+            lp_accum__.add(
+              stan::math::bernoulli_lpmf<propto__>(
+                stan::model::rvalue(y, "y",
+                  stan::model::index_uni(i), stan::model::index_uni(t)),
                 stan::model::rvalue(p, "p",
-                  stan::model::index_uni(i),
-                    stan::model::index_uni(stan::model::rvalue(first,
-                                             "first",
-                                             stan::model::index_uni(i)))))),
-            "assigning variable lp", stan::model::index_uni(stan::model::rvalue(
-                                                              first, "first",
-                                                              stan::model::index_uni(i))));
-          current_statement__ = 133;
-          lp_accum__.add(stan::math::log_sum_exp(lp));
-        }
-        current_statement__ = 141;
-        for (int t = (stan::model::rvalue(first, "first",
-                        stan::model::index_uni(i)) + 1);
-             t <= stan::model::rvalue(last, "last",
-                    stan::model::index_uni(i));
-             ++t) {
-          current_statement__ = 138;
+                  stan::model::index_uni(i), stan::model::index_uni(t))));
+          }
+          current_statement__ = 142;
           lp_accum__.add(
             stan::math::bernoulli_lpmf<propto__>(1,
-              stan::model::rvalue(phi, "phi",
-                stan::model::index_uni(i), stan::model::index_uni((t - 1)))));
-          current_statement__ = 139;
-          lp_accum__.add(
-            stan::math::bernoulli_lpmf<propto__>(
-              stan::model::rvalue(y, "y",
-                stan::model::index_uni(i), stan::model::index_uni(t)),
-              stan::model::rvalue(p, "p",
-                stan::model::index_uni(i), stan::model::index_uni(t))));
-        }
-        current_statement__ = 142;
-        lp_accum__.add(
-          stan::math::bernoulli_lpmf<propto__>(1,
-            stan::model::rvalue(chi, "chi",
-              stan::model::index_uni(i),
-                stan::model::index_uni(stan::model::rvalue(last, "last",
-                                         stan::model::index_uni(i))))));
-      } else {
-        current_statement__ = 119;
-        stan::math::validate_non_negative_index("lp", "n_occasions + 1",
-                                                (n_occasions + 1));
-        Eigen::Matrix<local_scalar_t__, -1, 1> lp;
-        lp = Eigen::Matrix<local_scalar_t__, -1, 1>((n_occasions + 1));
-        stan::math::fill(lp, DUMMY_VAR__);
-        
-        current_statement__ = 121;
-        stan::model::assign(lp,
-          ((stan::math::bernoulli_lpmf<false>(1,
-              stan::model::rvalue(gamma, "gamma", stan::model::index_uni(1)))
-             +
-             stan::math::bernoulli_lpmf<false>(0,
-               stan::model::rvalue(p, "p",
-                 stan::model::index_uni(i), stan::model::index_uni(1)))) +
-            stan::math::bernoulli_lpmf<false>(1,
               stan::model::rvalue(chi, "chi",
-                stan::model::index_uni(i), stan::model::index_uni(1)))),
-          "assigning variable lp", stan::model::index_uni(1));
-        current_statement__ = 123;
-        for (int t = 2; t <= n_occasions; ++t) {
-          current_statement__ = 122;
+                stan::model::index_uni(i),
+                  stan::model::index_uni(stan::model::rvalue(last, "last",
+                                           stan::model::index_uni(i))))));
+        } else {
+          current_statement__ = 119;
+          stan::math::validate_non_negative_index("lp", "n_occasions + 1",
+                                                  (n_occasions + 1));
+          Eigen::Matrix<local_scalar_t__, -1, 1> lp;
+          lp = Eigen::Matrix<local_scalar_t__, -1, 1>((n_occasions + 1));
+          stan::math::fill(lp, DUMMY_VAR__);
+          
+          current_statement__ = 121;
           stan::model::assign(lp,
-            (((stan::math::bernoulli_lpmf<false>(1,
-                 stan::math::prod(
-                   stan::model::rvalue(qgamma, "qgamma",
-                     stan::model::index_min_max(1, (t - 1))))) +
-                stan::math::bernoulli_lpmf<false>(1,
-                  stan::model::rvalue(gamma, "gamma",
-                    stan::model::index_uni(t)))) +
+            ((stan::math::bernoulli_lpmf<false>(1,
+                stan::model::rvalue(gamma, "gamma",
+                  stan::model::index_uni(1))) +
                stan::math::bernoulli_lpmf<false>(0,
                  stan::model::rvalue(p, "p",
-                   stan::model::index_uni(i), stan::model::index_uni(t)))) +
+                   stan::model::index_uni(i), stan::model::index_uni(1)))) +
               stan::math::bernoulli_lpmf<false>(1,
                 stan::model::rvalue(chi, "chi",
-                  stan::model::index_uni(i), stan::model::index_uni(t)))),
-            "assigning variable lp", stan::model::index_uni(t));
+                  stan::model::index_uni(i), stan::model::index_uni(1)))),
+            "assigning variable lp", stan::model::index_uni(1));
+          current_statement__ = 123;
+          for (int t = 2; t <= n_occasions; ++t) {
+            current_statement__ = 122;
+            stan::model::assign(lp,
+              (((stan::math::bernoulli_lpmf<false>(1,
+                   stan::math::prod(
+                     stan::model::rvalue(qgamma, "qgamma",
+                       stan::model::index_min_max(1, (t - 1))))) +
+                  stan::math::bernoulli_lpmf<false>(1,
+                    stan::model::rvalue(gamma, "gamma",
+                      stan::model::index_uni(t)))) +
+                 stan::math::bernoulli_lpmf<false>(0,
+                   stan::model::rvalue(p, "p",
+                     stan::model::index_uni(i), stan::model::index_uni(t))))
+                +
+                stan::math::bernoulli_lpmf<false>(1,
+                  stan::model::rvalue(chi, "chi",
+                    stan::model::index_uni(i), stan::model::index_uni(t)))),
+              "assigning variable lp", stan::model::index_uni(t));
+          }
+          current_statement__ = 124;
+          stan::model::assign(lp,
+            stan::math::bernoulli_lpmf<false>(1, stan::math::prod(qgamma)),
+            "assigning variable lp", stan::model::index_uni((n_occasions + 1)));
+          current_statement__ = 125;
+          lp_accum__.add(stan::math::log_sum_exp(lp));
         }
-        current_statement__ = 124;
-        stan::model::assign(lp,
-          stan::math::bernoulli_lpmf<false>(1, stan::math::prod(qgamma)),
-          "assigning variable lp", stan::model::index_uni((n_occasions + 1)));
-        current_statement__ = 125;
-        lp_accum__.add(stan::math::log_sum_exp(lp));
       }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
-seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
-  int current_statement__ = 0; 
-  const auto& gamma = stan::math::to_ref(gamma_arg__);
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    int N;
-    N = std::numeric_limits<int>::min();
-    
-    current_statement__ = 148;
-    N = stan::math::rows(gamma);
-    current_statement__ = 149;
-    stan::math::validate_non_negative_index("log_cprob", "N", N);
-    Eigen::Matrix<local_scalar_t__, -1, 1> log_cprob;
-    log_cprob = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-    stan::math::fill(log_cprob, DUMMY_VAR__);
-    
-    local_scalar_t__ log_residual_prob;
-    log_residual_prob = DUMMY_VAR__;
-    
-    current_statement__ = 151;
-    log_residual_prob = 0;
-    current_statement__ = 155;
-    for (int n = 1; n <= N; ++n) {
-      current_statement__ = 152;
-      stan::model::assign(log_cprob,
-        (stan::math::log(
-           stan::model::rvalue(gamma, "gamma", stan::model::index_uni(n))) +
-          log_residual_prob),
-        "assigning variable log_cprob", stan::model::index_uni(n));
-      current_statement__ = 153;
-      log_residual_prob = (log_residual_prob +
-                            stan::math::log1m(
-                              stan::model::rvalue(gamma, "gamma",
-                                stan::model::index_uni(n))));
     }
-    current_statement__ = 156;
-    return stan::math::exp(log_cprob);
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
+template <typename T0__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
+  seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
+    int current_statement__ = 0; 
+    const auto& gamma = stan::math::to_ref(gamma_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int N;
+      N = std::numeric_limits<int>::min();
+      
+      current_statement__ = 148;
+      N = stan::math::rows(gamma);
+      current_statement__ = 149;
+      stan::math::validate_non_negative_index("log_cprob", "N", N);
+      Eigen::Matrix<local_scalar_t__, -1, 1> log_cprob;
+      log_cprob = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      stan::math::fill(log_cprob, DUMMY_VAR__);
+      
+      local_scalar_t__ log_residual_prob;
+      log_residual_prob = DUMMY_VAR__;
+      
+      current_statement__ = 151;
+      log_residual_prob = 0;
+      current_statement__ = 155;
+      for (int n = 1; n <= N; ++n) {
+        current_statement__ = 152;
+        stan::model::assign(log_cprob,
+          (stan::math::log(
+             stan::model::rvalue(gamma, "gamma", stan::model::index_uni(n)))
+            + log_residual_prob),
+          "assigning variable log_cprob", stan::model::index_uni(n));
+        current_statement__ = 153;
+        log_residual_prob = (log_residual_prob +
+                              stan::math::log1m(
+                                stan::model::rvalue(gamma, "gamma",
+                                  stan::model::index_uni(n))));
+      }
+      current_statement__ = 156;
+      return stan::math::exp(log_cprob);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
 
 template <bool propto__, typename T3__, typename T4__, typename T5__,
          typename T6__, typename T_lp__, typename T_lp_accum__> void
@@ -13288,8 +13301,7 @@ first_capture_functor__::operator()(const std::vector<int>& y_i,
 
 
 template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
 prob_uncaptured_functor__::operator()(const T0__& p, const T1__& phi,
                                       std::ostream* pstream__)  const
 {
@@ -15569,118 +15581,120 @@ int
 };
 
 int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
-  int current_statement__ = 0; 
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 48;
-    for (int k = 1; k <= stan::math::size(y_i); ++k) {
-      current_statement__ = 47;
-      if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
-        current_statement__ = 46;
-        return k;
-      } 
-    }
-    current_statement__ = 49;
-    return 0;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
-  int current_statement__ = 0; 
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 55;
-    for (int k_rev = 0; k_rev <= (stan::math::size(y_i) - 1); ++k_rev) {
-      int k;
-      k = std::numeric_limits<int>::min();
-      
-      current_statement__ = 51;
-      k = (stan::math::size(y_i) - k_rev);
-      current_statement__ = 53;
-      if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
-        current_statement__ = 52;
-        return k;
-      } 
-    }
-    current_statement__ = 56;
-    return 0;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
-stan::value_type_t<T3__>>, -1, -1>
-prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
-                const T3__& phi_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
-          stan::value_type_t<T3__>>;
-  int current_statement__ = 0; 
-  const auto& p = stan::math::to_ref(p_arg__);
-  const auto& phi = stan::math::to_ref(phi_arg__);
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 58;
-    stan::math::validate_non_negative_index("chi", "nind", nind);
-    current_statement__ = 59;
-    stan::math::validate_non_negative_index("chi", "n_occasions", n_occasions);
-    Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-    chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
-    stan::math::fill(chi, DUMMY_VAR__);
-    
-    current_statement__ = 68;
-    for (int i = 1; i <= nind; ++i) {
-      current_statement__ = 61;
-      stan::model::assign(chi, 1.0,
-        "assigning variable chi", stan::model::index_uni(i),
-                                    stan::model::index_uni(n_occasions));
-      current_statement__ = 66;
-      for (int t = 1; t <= (n_occasions - 1); ++t) {
-        int t_curr;
-        t_curr = std::numeric_limits<int>::min();
-        
-        current_statement__ = 62;
-        t_curr = (n_occasions - t);
-        int t_next;
-        t_next = std::numeric_limits<int>::min();
-        
-        current_statement__ = 63;
-        t_next = (t_curr + 1);
-        current_statement__ = 64;
-        stan::model::assign(chi,
-          stan::math::fma(
-            (stan::model::rvalue(phi, "phi",
-               stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
-              (1 -
-                stan::model::rvalue(p, "p",
-                  stan::model::index_uni(i),
-                    stan::model::index_uni((t_next - 1))))),
-            stan::model::rvalue(chi, "chi",
-              stan::model::index_uni(i), stan::model::index_uni(t_next)),
-            (1 -
-              stan::model::rvalue(phi, "phi",
-                stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
-          "assigning variable chi", stan::model::index_uni(i),
-                                      stan::model::index_uni(t_curr));
+    using local_scalar_t__ = double;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 48;
+      for (int k = 1; k <= stan::math::size(y_i); ++k) {
+        current_statement__ = 47;
+        if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
+          current_statement__ = 46;
+          return k;
+        } 
       }
+      current_statement__ = 49;
+      return 0;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    current_statement__ = 69;
-    return chi;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
+    }
+int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+    using local_scalar_t__ = double;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 55;
+      for (int k_rev = 0; k_rev <= (stan::math::size(y_i) - 1); ++k_rev) {
+        int k;
+        k = std::numeric_limits<int>::min();
+        
+        current_statement__ = 51;
+        k = (stan::math::size(y_i) - k_rev);
+        current_statement__ = 53;
+        if (stan::model::rvalue(y_i, "y_i", stan::model::index_uni(k))) {
+          current_statement__ = 52;
+          return k;
+        } 
+      }
+      current_statement__ = 56;
+      return 0;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T2__, typename T3__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
+  prob_uncaptured(const int& nind, const int& n_occasions,
+                  const T2__& p_arg__, const T3__& phi_arg__,
+                  std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
+                                                  stan::value_type_t<T3__>>;
+    int current_statement__ = 0; 
+    const auto& p = stan::math::to_ref(p_arg__);
+    const auto& phi = stan::math::to_ref(phi_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 58;
+      stan::math::validate_non_negative_index("chi", "nind", nind);
+      current_statement__ = 59;
+      stan::math::validate_non_negative_index("chi", "n_occasions",
+                                              n_occasions);
+      Eigen::Matrix<local_scalar_t__, -1, -1> chi;
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
+      stan::math::fill(chi, DUMMY_VAR__);
+      
+      current_statement__ = 68;
+      for (int i = 1; i <= nind; ++i) {
+        current_statement__ = 61;
+        stan::model::assign(chi, 1.0,
+          "assigning variable chi", stan::model::index_uni(i),
+                                      stan::model::index_uni(n_occasions));
+        current_statement__ = 66;
+        for (int t = 1; t <= (n_occasions - 1); ++t) {
+          int t_curr;
+          t_curr = std::numeric_limits<int>::min();
+          
+          current_statement__ = 62;
+          t_curr = (n_occasions - t);
+          int t_next;
+          t_next = std::numeric_limits<int>::min();
+          
+          current_statement__ = 63;
+          t_next = (t_curr + 1);
+          current_statement__ = 64;
+          stan::model::assign(chi,
+            stan::math::fma(
+              (stan::model::rvalue(phi, "phi",
+                 stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
+                (1 -
+                  stan::model::rvalue(p, "p",
+                    stan::model::index_uni(i),
+                      stan::model::index_uni((t_next - 1))))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next)),
+              (1 -
+                stan::model::rvalue(phi, "phi",
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
+            "assigning variable chi", stan::model::index_uni(i),
+                                        stan::model::index_uni(t_curr));
+        }
+      }
+      current_statement__ = 69;
+      return chi;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
 
 int
 first_capture_functor__::operator()(const std::vector<int>& y_i,
@@ -15691,8 +15705,7 @@ first_capture_functor__::operator()(const std::vector<int>& y_i,
 
 
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
-stan::value_type_t<T3__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
 prob_uncaptured_functor__::operator()(const int& nind,
                                       const int& n_occasions, const T2__& p,
                                       const T3__& phi,
@@ -16568,51 +16581,50 @@ template <bool propto__, typename T1__>
 struct foo_lpdf_functor__ {
 template <bool propto__, typename T0__, typename
   T1__>
-  stan::promote_args_t<T0__,
-  T1__>
+  stan::promote_args_t<T0__, T1__>
   operator()(const T0__& x, const T1__& mu, std::ostream* pstream__) const;
 };
 
 template <bool propto__, typename T0__, typename T1__>
-stan::promote_args_t<T0__,
-T1__>
-foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
-  int current_statement__ = 0; 
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 8;
-    return stan::math::normal_lpdf<propto__>(x, mu, 1);
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }template <bool propto__, typename T1__> stan::promote_args_t<T1__>
-bar_lpmf(const int& n, const T1__& mu, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T1__>;
-  int current_statement__ = 0; 
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 10;
-    return stan::math::poisson_lpmf<propto__>(n, mu);
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }template <bool propto__, typename T0__> stan::promote_args_t<T0__>
-baz_lpdf(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
-  int current_statement__ = 0; 
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 12;
-    return foo_lpdf<propto__>(x, 0.5, pstream__);
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
+  stan::promote_args_t<T0__, T1__>
+  foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
+    int current_statement__ = 0; 
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 8;
+      return stan::math::normal_lpdf<propto__>(x, mu, 1);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <bool propto__, typename T1__> stan::promote_args_t<T1__>
+  bar_lpmf(const int& n, const T1__& mu, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<T1__>;
+    int current_statement__ = 0; 
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 10;
+      return stan::math::poisson_lpmf<propto__>(n, mu);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <bool propto__, typename T0__> stan::promote_args_t<T0__>
+  baz_lpdf(const T0__& x, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<T0__>;
+    int current_statement__ = 0; 
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 12;
+      return foo_lpdf<propto__>(x, 0.5, pstream__);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
 
 template <bool propto__, typename T0__> stan::promote_args_t<T0__>
 baz_lpdf_functor__::operator()(const T0__& x, std::ostream* pstream__)  const
@@ -16630,8 +16642,7 @@ bar_lpmf_functor__::operator()(const int& n, const T1__& mu,
 
 
 template <bool propto__, typename T0__, typename T1__>
-stan::promote_args_t<T0__,
-T1__>
+stan::promote_args_t<T0__, T1__>
 foo_lpdf_functor__::operator()(const T0__& x, const T1__& mu,
                                std::ostream* pstream__)  const
 {
@@ -18684,57 +18695,58 @@ template <bool propto__, typename T0__, typename T_lp__,
 
 template <bool propto__, typename T0__, typename T_lp__,
          typename T_lp_accum__> void
-nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
-         std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
-  int current_statement__ = 0; 
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 101;
-    if (stan::math::logical_gt(x, 342)) {
-      current_statement__ = 100;
-      return ;
-    } 
-    current_statement__ = 102;
-    lp_accum__.add(y);
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }int rfun(const int& y, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
-  int current_statement__ = 0; 
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 105;
-    if (stan::math::logical_gt(y, 2)) {
-      current_statement__ = 104;
-      return (y + 24);
-    } 
-    current_statement__ = 106;
-    return (y + 2);
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  }template <bool propto__, typename T_lp__, typename T_lp_accum__> int
-rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
-  int current_statement__ = 0; 
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 108;
-    lp_accum__.add(2);
-    current_statement__ = 109;
-    return 24;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
+  nrfun_lp(const T0__& x, const int& y, T_lp__& lp__,
+           T_lp_accum__& lp_accum__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<T0__>;
+    int current_statement__ = 0; 
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 101;
+      if (stan::math::logical_gt(x, 342)) {
+        current_statement__ = 100;
+        return ;
+      } 
+      current_statement__ = 102;
+      lp_accum__.add(y);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+int rfun(const int& y, std::ostream* pstream__) {
+    using local_scalar_t__ = double;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 105;
+      if (stan::math::logical_gt(y, 2)) {
+        current_statement__ = 104;
+        return (y + 24);
+      } 
+      current_statement__ = 106;
+      return (y + 2);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <bool propto__, typename T_lp__, typename T_lp_accum__> int
+  rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
+    using local_scalar_t__ = double;
+    int current_statement__ = 0; 
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 108;
+      lp_accum__.add(2);
+      current_statement__ = 109;
+      return 24;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
 
 int rfun_functor__::operator()(const int& y, std::ostream* pstream__)  const
 {

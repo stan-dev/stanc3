@@ -96,20 +96,20 @@ let pp_promoted_scalar ppf args =
   | _ ->
       let rec promote_args_chunked ppf args =
         let go ppf tl =
-          match tl with [] -> () | _ -> pf ppf ", %a" promote_args_chunked tl
+          match tl with [] -> () | _ -> pf ppf ",@ %a" promote_args_chunked tl
         in
         match args with
         | [] -> pf ppf "double"
         | hd :: tl ->
-            pf ppf "stan::promote_args_t<%a%a>" (list ~sep:comma string) hd go
-              tl in
+            pf ppf "stan::promote_args_t<@[%a%a@]>" (list ~sep:comma string) hd
+              go tl in
       promote_args_chunked ppf
         List.(chunks_of ~length:5 (filter_opt (return_arg_types args)))
 
 (** Pretty-prints a function's return-type, taking into account templated argument
     promotion.*)
 let pp_returntype ppf arg_types rt =
-  let scalar = str "%a" pp_promoted_scalar arg_types in
+  let scalar = str "@[%a@]" pp_promoted_scalar arg_types in
   match rt with
   | Some ut when UnsizedType.is_int_type ut ->
       pf ppf "%a@ " pp_unsizedtype_custom_scalar ("int", ut)
@@ -203,8 +203,10 @@ let mk_extra_args templates args =
   Refactor this please - one idea might be to have different functions for
    printing user defined distributions vs rngs vs regular functions.
 *)
-let pp_fun_def ppf Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
-    funs_used_in_reduce_sum funs_used_in_variadic_ode =
+let pp_fun_def ppf
+    ( Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
+    , funs_used_in_reduce_sum
+    , funs_used_in_variadic_ode ) =
   let extra, extra_templates =
     match fdsuffix with
     | Fun_kind.FnTarget -> (["lp__"; "lp_accum__"], ["T_lp__"; "T_lp_accum__"])
@@ -945,11 +947,15 @@ let is_fun_used_with_variadic_fn variadic_fn_test p =
 
 let collect_functors_functions p =
   let pp_fun_def_with_variadic_fn_list ppf fblock =
-    pp_fun_def ppf fblock
-      (is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p)
-      (is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_ode_fn p)
-  in
-  str "%a" (list ~sep:cut pp_fun_def_with_variadic_fn_list) p.functions_block
+    (hovbox ~indent:2 pp_fun_def)
+      ppf
+      ( fblock
+      , is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p
+      , is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_ode_fn p
+      ) in
+  str "@[<v>%a@]"
+    (list ~sep:cut pp_fun_def_with_variadic_fn_list)
+    p.functions_block
 
 (** Print the full C++ for the stan program. *)
 let pp_prog ppf (p : Program.Typed.t) =
