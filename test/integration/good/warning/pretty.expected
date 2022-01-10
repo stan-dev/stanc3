@@ -11,11 +11,14 @@ transformed data {
 }
 
 Warning in 'lvalue_multiindex.stan', line 6, column 3: Nested multi-indexing
-    in LValues does not behave the same as nested indexing in expressions.
-    This is considered a bug and will be disallowed in the future.
+    on the left hand side of assignment does not behave the same as nested
+    indexing in expressions. This is considered a bug and will be disallowed
+    in Stan 2.32.0.
 Warning in 'lvalue_multiindex.stan', line 7, column 3: Nested multi-indexing
-    in LValues does not behave the same as nested indexing in expressions.
-    This is considered a bug and will be disallowed in the future.
+    on the left hand side of assignment does not behave the same as nested
+    indexing in expressions. This is considered a bug and will be disallowed
+    in Stan 2.32.0.
 Warning in 'lvalue_multiindex.stan', line 9, column 3: Nested multi-indexing
-    in LValues does not behave the same as nested indexing in expressions.
-    This is considered a bug and will be disallowed in the future.
+    on the left hand side of assignment does not behave the same as nested
+    indexing in expressions. This is considered a bug and will be disallowed
+    in Stan 2.32.0.

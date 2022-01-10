@@ -774,9 +774,9 @@ let check_lvalue cf tenv = function
       let type_ = inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in
       if List.exists ~f:is_multiindex flat then (
         add_warning loc
-          "Nested multi-indexing on the left hand side of assignment does not behave the same as nested \
-           indexing in expressions. This is considered a bug and will be \
-           disallowed in the future." ;
+          "Nested multi-indexing on the left hand side of assignment does not \
+           behave the same as nested indexing in expressions. This is \
+           considered a bug and will be disallowed in Stan 2.32.0." ;
         let lvalue_rvalue_types_differ =
           try
             let flat_type =

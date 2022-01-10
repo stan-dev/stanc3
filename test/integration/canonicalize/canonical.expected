@@ -183,6 +183,9 @@ transformed data {
   array[0] int x_i;
   array[0] real x_r;
   matrix[N, N] K = gp_exp_quad_cov(x_quad, 1.0, 1.0);
+  array[5, 5] real idxs;
+  idxs[1][ : ] = idxs[1][ : ];
+  idxs[ : , 1] = idxs[ : ][2];
 }
 parameters {
   real x;
@@ -232,6 +235,10 @@ generated quantities {
                                                      x_r, x_i);
 }
 
+Warning in 'deprecated.stan', line 36, column 2: Nested multi-indexing on the
+    left hand side of assignment does not behave the same as nested indexing
+    in expressions. This is considered a bug and will be disallowed in Stan
+    2.32.0.
   $ ../../../../install/default/bin/stanc --print-canonical funs.stanfunctions
 // comment test comment
 void test(int x, int y) {
