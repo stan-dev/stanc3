@@ -2379,15 +2379,18 @@ transformed data {
 Warning in 'lvalue_multiindex.stan', line 6, column 3: Nested multi-indexing
     on the left hand side of assignment does not behave the same as nested
     indexing in expressions. This is considered a bug and will be disallowed
-    in Stan 2.32.0.
+    in Stan 2.32.0. The indexing can be automatically fixed using the
+    canonicalize flag for stanc.
 Warning in 'lvalue_multiindex.stan', line 7, column 3: Nested multi-indexing
     on the left hand side of assignment does not behave the same as nested
     indexing in expressions. This is considered a bug and will be disallowed
-    in Stan 2.32.0.
+    in Stan 2.32.0. The indexing can be automatically fixed using the
+    canonicalize flag for stanc.
 Warning in 'lvalue_multiindex.stan', line 9, column 3: Nested multi-indexing
     on the left hand side of assignment does not behave the same as nested
     indexing in expressions. This is considered a bug and will be disallowed
-    in Stan 2.32.0.
+    in Stan 2.32.0. The indexing can be automatically fixed using the
+    canonicalize flag for stanc.
   $ ../../../../../install/default/bin/stanc --auto-format matrix_pow_warning.stan
 data {
   int<lower=0> N;
