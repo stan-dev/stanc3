@@ -117,8 +117,7 @@ let rec check_same_type depth t1 t2 =
   match (t1, t2) with
   | t1, t2 when t1 = t2 -> Ok None
   | UnsizedType.(UReal, UInt) when depth < 1 -> Ok RealPromotion
-  | UnsizedType.(UComplex, UInt) when depth < 1 -> Ok ComplexPromotion
-  | UnsizedType.(UComplex, UReal) when depth < 1 -> Ok ComplexPromotion
+  | UnsizedType.(UComplex, (UInt | UReal)) when depth < 1 -> Ok ComplexPromotion
   (* Arrays: Try to recursively promote, but make sure the error is for these types,
      not the recursive call *)
   | UArray nt1, UArray nt2 ->
@@ -168,12 +167,16 @@ let extract_function_types f =
 
 let promote es promotions =
   List.map2_exn es promotions ~f:(fun (exp : Ast.typed_expression) prom ->
+      let open UnsizedType in
       let emeta = exp.emeta in
       match prom with
-      | RealPromotion when emeta.type_ <> UReal ->
-          Ast.{expr= Ast.Promotion (exp, UReal); emeta}
-      | ComplexPromotion when emeta.type_ <> UComplex ->
-          {expr= Promotion (exp, UComplex); emeta}
+      | RealPromotion when is_int_type emeta.type_ ->
+          Ast.
+            { expr= Ast.Promotion (exp, UReal)
+            ; emeta= {emeta with type_= promote_array emeta.type_ UReal} }
+      | ComplexPromotion when not (is_complex_type emeta.type_) ->
+          { expr= Promotion (exp, UComplex)
+          ; emeta= {emeta with type_= promote_array emeta.type_ UComplex} }
       | _ -> exp )
 
 let returntype env name args =

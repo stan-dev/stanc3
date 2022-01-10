@@ -142,8 +142,20 @@ let rec is_autodiffable = function
 
 let is_scalar_type = function UReal | UInt -> true | _ -> false
 
+let rec promote_array ut scalar =
+  match (ut, scalar) with
+  | (UInt | UReal), (UReal | UComplex) -> scalar
+  | UArray ut2, _ -> UArray (promote_array ut2 scalar)
+  | _, _ -> ut
+
 let rec is_int_type ut =
   match ut with UInt -> true | UArray ut -> is_int_type ut | _ -> false
+
+let rec is_complex_type ut =
+  match ut with
+  | UComplex -> true
+  | UArray ut -> is_complex_type ut
+  | _ -> false
 
 let is_eigen_type ut =
   match ut with UVector | URowVector | UMatrix -> true | _ -> false
