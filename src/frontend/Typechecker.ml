@@ -110,8 +110,10 @@ let verify_name_fresh_var loc tenv name =
   if Utils.is_unnormalized_distribution name then
     Semantic_error.ident_has_unnormalized_suffix loc name |> error
   else if
-    Env.mem tenv name
-    && not (Stan_math_signatures.is_stan_math_function_name name)
+    List.exists (Env.find tenv name) ~f:(function
+      | {kind= `StanMath; _} ->
+          false (* user variables can shadow library names *)
+      | _ -> true )
   then Semantic_error.ident_in_use loc name |> error
 
 (** verify that the variable being declared is previous unused.
@@ -1001,7 +1003,11 @@ let rec stmt_is_escape {stmt; _} =
 
 and list_until_escape xs =
   let rec aux accu = function
-    | next :: next' :: _ when stmt_is_escape next' ->
+    | [next; next'] when stmt_is_escape next' -> List.rev (next' :: next :: accu)
+    | next :: next' :: unreachable :: _ when stmt_is_escape next' ->
+        add_warning unreachable.smeta.loc
+          "Unreachable statement (following a reject, break, continue, or \
+           return) found, is this intended?" ;
         List.rev (next' :: next :: accu)
     | next :: rest -> aux (next :: accu) rest
     | [] -> List.rev accu in
@@ -1138,24 +1144,22 @@ and check_loop_body cf tenv loop_var loop_var_ty loop_body =
 and check_block loc cf tenv stmts =
   let _, checked_stmts =
     List.fold_map stmts ~init:tenv ~f:(check_statement cf) in
-  let stmts = list_until_escape checked_stmts in
   let return_type =
-    stmts
+    checked_stmts |> list_until_escape
     |> List.map ~f:(fun s -> s.smeta.return_type)
     |> List.fold ~init:NoReturnType
          ~f:(try_compute_block_statement_returntype loc) in
-  mk_typed_statement ~stmt:(Block stmts) ~return_type ~loc
+  mk_typed_statement ~stmt:(Block checked_stmts) ~return_type ~loc
 
 and check_profile loc cf tenv name stmts =
   let _, checked_stmts =
     List.fold_map stmts ~init:tenv ~f:(check_statement cf) in
-  let stmts = list_until_escape checked_stmts in
   let return_type =
-    stmts
+    checked_stmts |> list_until_escape
     |> List.map ~f:(fun s -> s.smeta.return_type)
     |> List.fold ~init:NoReturnType
          ~f:(try_compute_block_statement_returntype loc) in
-  mk_typed_statement ~stmt:(Profile (name, stmts)) ~return_type ~loc
+  mk_typed_statement ~stmt:(Profile (name, checked_stmts)) ~return_type ~loc
 
 (* variable declarations *)
 and verify_valid_transformation_for_type loc is_global sized_ty trans =

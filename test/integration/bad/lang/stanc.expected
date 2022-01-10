@@ -37,10 +37,10 @@ Semantic error in 'bad11.stan', line 2, column 2 to column 12:
 
 (Transformed) Parameters cannot be integers.
   $ ../../../../../install/default/bin/stanc bad2.stan
-Semantic error in 'bad2.stan', line 1, column 28 to column 36:
+Semantic error in 'bad2.stan', line 1, column 34 to column 42:
    -------------------------------------------------
-     1:  data { real a[3]; } model { a = 2.0; }
-                                     ^
+     1:  data { array[3] real a; } model { a = 2.0; }
+                                           ^
    -------------------------------------------------
 
 Cannot assign to global variable 'a' declared in previous blocks.
@@ -71,10 +71,10 @@ Syntax error in 'bad3.stanfunctions', line 1, column 0 to column 5, parsing erro
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
   $ ../../../../../install/default/bin/stanc bad4.stan
-Semantic error in 'bad4.stan', line 1, column 38 to column 42:
+Semantic error in 'bad4.stan', line 1, column 44 to column 48:
    -------------------------------------------------
-     1:  data { real a[5]; } model { for (n in a[1]:5) a[n] = n; }
-                                               ^
+     1:  data { array[5] real a; } model { for (n in a[1]:5) a[n] = n; }
+                                                     ^
    -------------------------------------------------
 
 Lower bound of for-loop must be of type int. Instead found type real.
@@ -132,7 +132,7 @@ Semantic error in 'bad9.stan', line 5, column 3 to column 9:
      4:  parameters {
      5:     int N;
             ^
-     6:     real z[N];
+     6:     array[N] real z;
      7:  }
    -------------------------------------------------
 
@@ -592,22 +592,6 @@ Syntax error in 'bad_periods_tparams.stan', line 2, column 7, lexing error:
 
 Invalid character found.
   $ ../../../../../install/default/bin/stanc good_all.stan
-Warning in 'good_all.stan', line 1, column 0: Comments beginning with # are
-    deprecated and this syntax will be removed in Stan 2.32.0. Use // to
-    begin line comments; this can be done automatically using stanc
-    --auto-format
-Warning in 'good_all.stan', line 2, column 0: Comments beginning with # are
-    deprecated and this syntax will be removed in Stan 2.32.0. Use // to
-    begin line comments; this can be done automatically using stanc
-    --auto-format
-Warning in 'good_all.stan', line 3, column 0: Comments beginning with # are
-    deprecated and this syntax will be removed in Stan 2.32.0. Use // to
-    begin line comments; this can be done automatically using stanc
-    --auto-format
-Warning in 'good_all.stan', line 4, column 0: Comments beginning with # are
-    deprecated and this syntax will be removed in Stan 2.32.0. Use // to
-    begin line comments; this can be done automatically using stanc
-    --auto-format
 Semantic error in 'good_all.stan', line 25, column 2 to column 8:
    -------------------------------------------------
     23:  
@@ -630,13 +614,11 @@ Syntax error in 'incomplete.stan', line 2, column 18 to column 19, parsing error
 
 Found an incomplete binary expression - are you missing the right hand side?
   $ ../../../../../install/default/bin/stanc incomplete2.stan
-Warning in 'incomplete2.stan', line 2, column 9: Variable name 'upper' will
-    be a reserved word starting in Stan 2.32.0. Please rename it!
-Syntax error in 'incomplete2.stan', line 2, column 17 to column 22, parsing error:
+Syntax error in 'incomplete2.stan', line 2, column 15 to column 20, parsing error:
    -------------------------------------------------
      1:  transformed data {
-     2:    1.0 .^ upper[] while
-                          ^
+     2:    1.0 .^ foo[] while
+                        ^
      3:  }
    -------------------------------------------------
 
@@ -681,12 +663,10 @@ Syntax error in 'incomplete5.stan', line 3, column 0 to column 0, parsing error:
 
 Ill-formed block. Expected a statement, variable declaration, or just "}".
   $ ../../../../../install/default/bin/stanc incomplete6.stan
-Warning in 'incomplete6.stan', line 2, column 8: Variable name 'upper' will
-    be a reserved word starting in Stan 2.32.0. Please rename it!
 Syntax error in 'incomplete6.stan', line 3, column 16 to column 21, parsing error:
    -------------------------------------------------
      1:  transformed data {
-     2:    print(upper[2.0]);
+     2:    print(foo[2.0]);
      3:    real x = sars[while (0)];
                          ^
      4:  }
@@ -696,6 +676,17 @@ Expected an expression inside "[" and "]" but found a statement. Indexing should
   var[1 + i]
 not
   var[for (n in 1:N) ...]
+  $ ../../../../../install/default/bin/stanc reused_name.stan
+Semantic error in 'reused_name.stan', line 4, column 14 to column 15:
+   -------------------------------------------------
+     2:      vector[3] e;
+     3:      // e is selected because it is also a Stan-math function 'e()'
+     4:      vector[3] e;
+                       ^
+     5:  }
+   -------------------------------------------------
+
+Identifier 'e' is already in use.
   $ ../../../../../install/default/bin/stanc unterminated_comment.stan
 Syntax error in 'unterminated_comment.stan', line 4, column -1, lexing error:
    -------------------------------------------------

@@ -8,12 +8,12 @@ let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
 let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
 let pp_profile ppf (pp_body, name, body) =
-  let profile =
-    Fmt.str
-      "profile<local_scalar_t__> profile__(%s, \
-       const_cast<profile_map&>(profiles__));"
+  let profile ppf name =
+    pf ppf
+      "@[<hov 2>stan::math::profile<local_scalar_t__> profile__(%s,@ \
+       const_cast<stan::math::profile_map&>(profiles__));@]"
       name in
-  pf ppf "{@;<1 2>@[<v>%s@;@;%a@]@,}" profile pp_body body
+  pf ppf "{@;<1 2>@[<v>%a@;@;%a@]@,}" profile name pp_body body
 
 let rec contains_eigen (ut : UnsizedType.t) : bool =
   match ut with
@@ -251,9 +251,10 @@ let pp_decl ppf (vident, pst, adtype, initialize) =
 
 let math_fn_translations = function
   | Internal_fun.FnLength -> Some ("length", [])
-  | FnValidateSize -> Some ("validate_non_negative_index", [])
-  | FnValidateSizeSimplex -> Some ("validate_positive_index", [])
-  | FnValidateSizeUnitVector -> Some ("validate_unit_vector_index", [])
+  | FnValidateSize -> Some ("stan::math::validate_non_negative_index", [])
+  | FnValidateSizeSimplex -> Some ("stan::math::validate_positive_index", [])
+  | FnValidateSizeUnitVector ->
+      Some ("stan::math::validate_unit_vector_index", [])
   | FnReadWriteEventsOpenCL x -> Some (x ^ ".wait_for_read_write_events", [])
   | _ -> None
 
@@ -263,7 +264,7 @@ let trans_math_fn f =
 
 let pp_bool_expr ppf expr =
   match Expr.Typed.type_of expr with
-  | UReal -> pp_call ppf ("as_bool", pp_expr, [expr])
+  | UReal -> pp_call ppf ("stan::math::as_bool", pp_expr, [expr])
   | _ -> pp_expr ppf expr
 
 let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
@@ -305,13 +306,15 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
               Expr.Fixed.pattern= FunApp (CompilerInternal FnDeepCopy, [e]) }
         | _ -> recurse e in
       let rhs = maybe_deep_copy rhs in
-      pf ppf "@[<hov 2>assign(@,%s,@ %a,@ %S%s%a@]);" assignee pp_expr rhs
+      pf ppf "@[<hov 2>stan::model::assign(@,%s,@ %a,@ %S%s%a@]);" assignee
+        pp_expr rhs
         (str "assigning variable %s" assignee)
         (if List.length idcs = 0 then "" else ", ")
         pp_indexes idcs
   | TargetPE e -> pf ppf "@[<hov 2>lp_accum__.add(@,%a@]);" pp_expr e
   | NRFunApp (CompilerInternal FnPrint, args) ->
-      let pp_arg ppf a = pf ppf "stan_print(pstream__, %a);" pp_expr a in
+      let pp_arg ppf a =
+        pf ppf "stan::math::stan_print(pstream__, %a);" pp_expr a in
       let args = args @ [Expr.Helpers.str "\n"] in
       pf ppf "if (pstream__) %a" pp_block (list ~sep:cut pp_arg, args)
   | NRFunApp (CompilerInternal FnReject, args) ->
@@ -323,7 +326,8 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
   | NRFunApp (CompilerInternal (FnCheck {trans; var_name; var}), args) ->
       Option.iter (check_to_string trans) ~f:(fun check_name ->
           let function_arg = Expr.Helpers.variable "function__" in
-          pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
+          pf ppf "%s(@[<hov>%a@]);"
+            ("stan::math::check_" ^ check_name)
             (list ~sep:comma pp_expr)
             (function_arg :: Expr.Helpers.str var_name :: var :: args) )
   | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; var}), _) -> (
@@ -344,7 +348,9 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
         (extra_args @ args)
   | NRFunApp (StanLib (fname, _, _), args) ->
-      pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
+      pf ppf "%s(@[<hov>%a@]);"
+        (stan_namespace_qualify fname)
+        (list ~sep:comma pp_expr) args
   | NRFunApp (UserDefined (fname, suffix), args) ->
       pf ppf "%a;" pp_user_defined_fun (fname, suffix, args)
   | Break -> string ppf "break;"

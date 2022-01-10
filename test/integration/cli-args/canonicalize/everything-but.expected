@@ -1,0 +1,268 @@
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize braces,parentheses blocks.stan
+data {
+  int N;
+  vector[N] y;
+}
+model {
+  int j = 0;
+  
+  // test for - with / without parens
+  for (i in 1 : N) {
+    target += i;
+  }
+  for (i in 1 : N) {
+    target += i;
+  }
+  
+  // test for - with / without parens
+  while (j < N) {
+    j = j + 1;
+  }
+  while (j < N) {
+    j = j + 1;
+  }
+  while (j < N) {
+    j = j + 1;
+  }
+  
+  // test if - with / without parens
+  if (N > 5) {
+    y ~ std_normal();
+  }
+  if (N > 5) {
+    y ~ std_normal();
+  }
+  
+  // test if-else - with / without parens
+  if (N > 5) {
+    y ~ std_normal();
+  } else {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else {
+    y ~ std_normal();
+  }
+  
+  ///////////////////////////////
+  // nested if else combinations
+  ///////////////////////////////
+  if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    if (N > 5) {
+      y ~ std_normal();
+    } else {
+      y ~ std_normal();
+    }
+  }
+  
+  if (N > 5) {
+    if (N > 5) {
+      y ~ std_normal();
+    }
+  } else {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
+  }
+  
+  // test comments in various places wrt IfThenElse
+  if (N > 5) {
+    //comment before then branch
+    y ~ std_normal();
+  } else {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } //comment after then branch
+  else {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else //comment before else branch
+  {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else {
+    y ~ std_normal();
+  } //comment after else branch
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize braces,parentheses deprecated.stan
+Warning in 'deprecated.stan', line 2, column 2: Declaration of arrays by
+    placing brackets after a type is deprecated and will be removed in Stan
+    2.32.0. Instead use the array keyword before the type. This can be
+    changed automatically using the auto-format flag to stanc
+Warning in 'deprecated.stan', line 2, column 21: Declaration of arrays by
+    placing brackets after a type is deprecated and will be removed in Stan
+    2.32.0. Instead use the array keyword before the type. This can be
+    changed automatically using the auto-format flag to stanc
+Warning in 'deprecated.stan', line 2, column 31: Declaration of arrays by
+    placing brackets after a type is deprecated and will be removed in Stan
+    2.32.0. Instead use the array keyword before the type. This can be
+    changed automatically using the auto-format flag to stanc
+Warning in 'deprecated.stan', line 2, column 45: Declaration of arrays by
+    placing brackets after a type is deprecated and will be removed in Stan
+    2.32.0. Instead use the array keyword before the type. This can be
+    changed automatically using the auto-format flag to stanc
+Warning in 'deprecated.stan', line 2, column 55: Declaration of arrays by
+    placing brackets after a type is deprecated and will be removed in Stan
+    2.32.0. Instead use the array keyword before the type. This can be
+    changed automatically using the auto-format flag to stanc
+Warning in 'deprecated.stan', line 3, column 4: Declaration of arrays by
+    placing brackets after a variable name is deprecated and will be removed
+    in Stan 2.32.0. Instead use the array keyword before the type. This can
+    be changed automatically using the auto-format flag to stanc
+Warning in 'deprecated.stan', line 4, column 12: assignment operator <- is
+    deprecated in the Stan language and will be removed in Stan 2.32.0; use =
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
+Warning in 'deprecated.stan', line 5, column 12: assignment operator <- is
+    deprecated in the Stan language and will be removed in Stan 2.32.0; use =
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
+Warning in 'deprecated.stan', line 34, column 2: Declaration of arrays by
+    placing brackets after a variable name is deprecated and will be removed
+    in Stan 2.32.0. Instead use the array keyword before the type. This can
+    be changed automatically using the auto-format flag to stanc
+Warning in 'deprecated.stan', line 54, column 4: increment_log_prob(...); is
+    deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
+Warning in 'deprecated.stan', line 58, column 4: increment_log_prob(...); is
+    deprecated and will be removed in Stan 2.32.0. Use target += ...;
+    instead. This can be done automatically with the canonicalize flag for
+    stanc
+Warning in 'deprecated.stan', line 73, column 20: get_lp() function is
+    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
+    can be done automatically with the canonicalize flag for stanc
+Semantic error in 'deprecated.stan', line 46, column 6 to column 18:
+   -------------------------------------------------
+    44:    target += binomial_coefficient_log(10, 10);
+    45:  
+    46:    c ~ poisson_lpmf(3.0);
+               ^
+    47:    c ~ poisson_log(3.0);
+    48:    c ~ poisson_log_log(3.0);
+   -------------------------------------------------
+
+~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
+For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize braces,parentheses funs.stanfunctions
+// comment test comment
+void test(int x, int y) {
+  print(x, y);
+}
+
+real deprecated_lp() {
+  return get_lp();
+}
+Warning in 'funs.stanfunctions', line 5, column 11: get_lp() function is
+    deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
+    can be done automatically with the canonicalize flag for stanc
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize braces,parentheses parenthesize.stan
+transformed data {
+  int N = 12;
+  real b = 1.5;
+}
+parameters {
+  real<lower=((b > 3) ? 1.0 : b - 2)> x;
+  matrix[N, N] m;
+}
+model {
+  matrix[N - 3, 4] n;
+  row_vector[N] v = ((1.0 + m)')[1];
+  for (i in 1 : (N - 3)) {
+    n[i] = m[i : (i + 3), i]';
+  }
+  if ((b < x) && (x < 1)) {
+    x + 4 ~ normal(0, 1 + 1) T[0, 8];
+  }
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize braces,parentheses squaremc.stan
+/*
+ * BUGS Volume 3, funshapes, square minus circle
+ * http://www.openbugs.net/Examples/Funshapes.html
+ *
+ * first draw raw samples from diamond-like shape reflected per
+ * quadrant, then reflect in transformed parameters
+ *
+ * unfortunate redundancy in 1-sqrt() term because we can't
+ * get local variables into parameter declarations
+ */
+parameters {
+  real<lower=-1, upper=1> x_raw;
+  real<lower=-(1 - sqrt(1 - square(1 - fabs(x_raw)))),
+       upper=(1 - sqrt(1 - square(1 - fabs(x_raw))))> y_raw;
+}
+transformed parameters {
+  real<lower=-1, upper=1> x;
+  real<lower=-1, upper=1> y;
+  x = ((x_raw > 0) ? 1 : -1) - x_raw;
+  y = ((y_raw > 0) ? 1 : -1) - y_raw;
+}
+model {
+  target += log1m(sqrt(1 - square(1 - fabs(x_raw))));
+}
+

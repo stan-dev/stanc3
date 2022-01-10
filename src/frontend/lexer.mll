@@ -8,29 +8,37 @@
 
 (* Boilerplate for getting line numbers for errors *)
   let incr_linenum lexbuf =
+    lexer_pos_logger lexbuf.lex_curr_p;
     let pos = lexbuf.lex_curr_p in
     lexbuf.lex_curr_p <- { pos with
       pos_lnum = pos.pos_lnum + 1;
-      pos_bol = pos.pos_cnum;
-    }
+      pos_bol = pos.pos_cnum } ;
+    update_start_positions lexbuf.lex_curr_p
 
-let comments : Ast.comment_type list ref = ref []
 
-(* Store comments *)
+  let comments : Ast.comment_type list ref = ref []
+
+  (* Store comments *)
   let add_comment (begin_pos, buffer) end_pos =
-    comments :=
+      comments :=
         LineComment ( Buffer.contents buffer
                 , Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
       :: !comments
+
   let add_multi_comment begin_pos lines end_pos =
     comments :=
         BlockComment ( lines, Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
       :: !comments
+
   let add_separator lexbuf =
     comments :=
         Separator (Middle.Location.of_position_exn lexbuf.lex_curr_p)
       :: !comments
 
+  let add_include fname lexbuf =
+    comments :=
+        Include (fname, (Middle.Location_span.of_positions_exn (lexbuf.lex_start_p, lexbuf.lex_curr_p)) )
+      :: !comments
 }
 
 (* Some auxiliary definition for variables and constants *)
@@ -65,8 +73,9 @@ rule token = parse
     | '<' ([^ '>' '\r' '\n']* as fname) '>'
     | (non_space_or_newline* as fname)
     )                         { lexer_logger ("include " ^ fname) ;
+                                add_include fname lexbuf ;
                                 let new_lexbuf =
-                                  try_get_new_lexbuf fname lexbuf.lex_curr_p in
+                                  try_get_new_lexbuf fname in
                                 token new_lexbuf }
   | "#"                       { lexer_logger "#comment" ;
                                 Input_warnings.deprecated "#"
@@ -75,8 +84,8 @@ rule token = parse
                                                        syntax will be removed in \
                                                        Stan 2.32.0. Use // to begin \
                                                        line comments; this can be \
-                                                       done automatically using stanc \
-                                                       --auto-format") ;
+                                                       done automatically using the \
+                                                       auto-format flag to stanc") ;
                                 singleline_comment (lexbuf.lex_curr_p, Buffer.create 16) lexbuf;
                                 token lexbuf } (* deprecated *)
 (* Program blocks *)
@@ -184,7 +193,8 @@ rule token = parse
                                                        be removed in Stan 2.32.0; \
                                                        use = instead. This \
                                                        can be done automatically \
-                                                       with stanc --print-canonical") ;
+                                                       with the canonicalize flag \
+                                                       for stanc") ;
                                 Parser.ARROWASSIGN } (* deprecated *)
   | "increment_log_prob"      { lexer_logger "increment_log_prob" ;
                                 Input_warnings.deprecated "increment_log_prob"
@@ -194,7 +204,8 @@ rule token = parse
                                                        2.32.0. Use target \
                                                        += ...; instead. This \
                                                        can be done automatically \
-                                                       with stanc --print-canonical") ;
+                                                       with the canonicalize flag \
+                                                       for stanc") ;
                                 Parser.INCREMENTLOGPROB } (* deprecated *)
 (* Effects *)
   | "print"                   { lexer_logger "print" ; Parser.PRINT }
@@ -215,33 +226,34 @@ rule token = parse
                                                        removed in Stan 2.32.0. \
                                                        Use target() instead. \
                                                        This can be done automatically \
-                                                       with stanc --print-canonical") ;
+                                                       with the canonicalize flag for \
+                                                       stanc") ;
                                 Parser.GETLP } (* deprecated *)
   | string_literal as s       { lexer_logger ("string_literal " ^ s) ;
                                 Parser.STRINGLITERAL (lexeme lexbuf) }
   | identifier as id          { lexer_logger ("identifier " ^ id) ;
+                                lexer_pos_logger (lexeme_start_p lexbuf);
                                 Parser.IDENTIFIER (lexeme lexbuf) }
 (* End of file *)
   | eof                       { lexer_logger "eof" ;
-                                if Stack.length include_stack = 1
+                                if Preprocessor.size () = 1
                                 then Parser.EOF
                                 else
-                                  let _ : lexbuf = (Stack.pop_exn include_stack) in
-                                  let old_lexbuf =
-                                    (Stack.top_exn include_stack) in
-                                      token old_lexbuf }
+                                  let old_lexbuf = restore_prior_lexbuf () in
+                                  token old_lexbuf }
 
   | _                         { raise (Errors.SyntaxError
                                         (Errors.Lexing
                                           (Middle.Location.of_position_exn
                                             (lexeme_start_p
-                                              (Stack.top_exn include_stack))))) }
+                                              (current_buffer ()))))) }
 
 (* Multi-line comment terminated by "*/" *)
 and multiline_comment state = parse
   | "*/"     { let ((pos, lines), buffer) = state in
                let lines = (Buffer.contents buffer) :: lines in
-               add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p }
+               add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p;
+               update_start_positions lexbuf.lex_curr_p }
   | eof      { raise (Errors.SyntaxError
                       (Errors.UnexpectedEOF
                         (Middle.Location.of_position_exn lexbuf.lex_curr_p))) }
@@ -255,7 +267,7 @@ and multiline_comment state = parse
 (* Single-line comment terminated by a newline *)
 and singleline_comment state = parse
   | newline  { add_comment state lexbuf.lex_curr_p ; incr_linenum lexbuf }
-  | eof      { add_comment state lexbuf.lex_curr_p }
+  | eof      { add_comment state lexbuf.lex_curr_p ; update_start_positions lexbuf.lex_curr_p }
   | _        { Buffer.add_string (snd state) (lexeme lexbuf) ; singleline_comment state lexbuf }
 
 {

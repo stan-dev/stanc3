@@ -1,5 +1,5 @@
 data {
-  real a1[2];
+  array[2] real a1;
 }
 transformed data {
   real td_a1 = a1;   // scalar = array - bad

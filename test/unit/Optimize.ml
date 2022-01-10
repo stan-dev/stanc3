@@ -964,7 +964,7 @@ let%expect_test "inline function indices " =
         }
       }
       model {
-        int a[2, 2];
+        array[2, 2] int a;
         print(a[f(1), f(2)]);
       }
       |}
@@ -1732,10 +1732,10 @@ let%expect_test "dead code elimination" =
     reset_and_mir_of_string
       {|
       transformed data {
-        int i[2];
+        array[2] int i;
         i[1] = 2;
         i = {3, 2};
-        int j[2];
+        array[2] int j;
         j = {3, 2};
         j[1] = 2;
       }
@@ -2082,7 +2082,7 @@ model {
     real x;
     int i = 23;
     int j = 32;
-    int y_arr[3] = {32, 2, 35};
+    array[3] int y_arr = {32, 2, 35};
     target += +i;
     target += -i;
     target += !i;
@@ -3393,7 +3393,7 @@ let%expect_test "adlevel_optimization 2" =
         real w_trans = 1;
         {
           int x;
-          real y[2];
+          array[2] real y;
           real z;
           real z_data;
           if (1 > 2)
@@ -3438,8 +3438,8 @@ let%expect_test "adlevel_optimization 2" =
         w_trans = 1;
         {
           data int x;
-          array[real, 2] y;
-          real z;
+          data array[real, 2] y;
+          data real z;
           data real z_data;
           if((1 > 2)) y[1] = (y[1] + x); else y[2] = (y[2] + w);
           if((2 > 1)) z = y[1];

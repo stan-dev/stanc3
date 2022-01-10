@@ -1,0 +1,499 @@
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  distribution-warnings.stan
+Warning in 'distribution-warnings.stan', line 135, column 27: A inv_wishart
+    distribution is given parameter mat as a scale matrix (argument 2), but
+    mat was not constrained to be covariance.
+Warning in 'distribution-warnings.stan', line 135, column 20: A inv_wishart
+    distribution is given parameter unb_p as degrees of freedom (argument 1),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 135, column 2: Parameter mat is
+    given a inv_wishart distribution, which has covariance support, but mat
+    was not constrained to be covariance.
+Warning in 'distribution-warnings.stan', line 134, column 2: The parameter
+    cov is on the left-hand side of more than one tilde statement.
+Warning in 'distribution-warnings.stan', line 133, column 23: A wishart
+    distribution is given parameter mat as a scale matrix (argument 2), but
+    mat was not constrained to be covariance.
+Warning in 'distribution-warnings.stan', line 133, column 16: A wishart
+    distribution is given parameter unb_p as degrees of freedom (argument 1),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 133, column 2: Parameter mat is
+    given a wishart distribution, which has covariance support, but mat was
+    not constrained to be covariance.
+Warning in 'distribution-warnings.stan', line 131, column 27: A
+    lkj_corr_cholesky distribution is given parameter unb_p as a shape
+    parameter (argument 1), but unb_p was not constrained to be strictly
+    positive.
+Warning in 'distribution-warnings.stan', line 131, column 2: Parameter corr
+    is given a lkj_corr_cholesky distribution, which has Cholesky factor of
+    correlation support, but corr was not constrained to be Cholesky factor
+    of correlation.
+Warning in 'distribution-warnings.stan', line 130, column 2: The parameter
+    corr is on the left-hand side of more than one tilde statement.
+Warning in 'distribution-warnings.stan', line 130, column 2: It is suggested
+    to reparameterize your model to replace lkj_corr with lkj_corr_cholesky,
+    the Cholesky factor variant. lkj_corr tends to run slower, consume more
+    memory, and has higher risk of numerical errors.
+Warning in 'distribution-warnings.stan', line 129, column 17: A lkj_corr
+    distribution is given parameter unb_p as a shape parameter (argument 1),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 129, column 2: It is suggested
+    to reparameterize your model to replace lkj_corr with lkj_corr_cholesky,
+    the Cholesky factor variant. lkj_corr tends to run slower, consume more
+    memory, and has higher risk of numerical errors.
+Warning in 'distribution-warnings.stan', line 129, column 2: Parameter mat is
+    given a lkj_corr distribution, which has correlation support, but mat was
+    not constrained to be correlation.
+Warning in 'distribution-warnings.stan', line 127, column 18: A dirichlet
+    distribution is given parameter vec as a count parameter (argument 1),
+    but vec was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 127, column 2: Parameter vec is
+    given a dirichlet distribution, which has simplex support, but vec was
+    not constrained to be simplex.
+Warning in 'distribution-warnings.stan', line 125, column 40: A
+    gaussian_dlm_obs distribution is given parameter mat as system covariance
+    matrix (argument 4), but mat was not constrained to be covariance.
+Warning in 'distribution-warnings.stan', line 125, column 35: A
+    gaussian_dlm_obs distribution is given parameter mat as observation
+    covariance matrix (argument 3), but mat was not constrained to be
+    covariance.
+Warning in 'distribution-warnings.stan', line 123, column 36: A
+    multi_student_t distribution is given parameter mat as a scale matrix
+    (argument 3), but mat was not constrained to be covariance.
+Warning in 'distribution-warnings.stan', line 123, column 24: A
+    multi_student_t distribution is given parameter unb_p as degrees of
+    freedom (argument 1), but unb_p was not constrained to be strictly
+    positive.
+Warning in 'distribution-warnings.stan', line 121, column 26: A
+    multi_gp_cholesky distribution is given parameter cov as Cholesky factor
+    of the kernel matrix (argument 1), but cov was not constrained to be
+    Cholesky factor of covariance.
+Warning in 'distribution-warnings.stan', line 119, column 17: A multi_gp
+    distribution is given parameter mat as a kernel matrix (argument 1), but
+    mat was not constrained to be covariance.
+Warning in 'distribution-warnings.stan', line 119, column 2: The parameter
+    mat is on the left-hand side of more than one tilde statement.
+Warning in 'distribution-warnings.stan', line 117, column 35: A
+    multi_normal_cholesky distribution is given parameter cov as a covariance
+    matrix (argument 2), but cov was not constrained to be Cholesky factor of
+    covariance.
+Warning in 'distribution-warnings.stan', line 115, column 31: A
+    multi_normal_prec distribution is given parameter mat as a precision
+    matrix (argument 2), but mat was not constrained to be covariance.
+Warning in 'distribution-warnings.stan', line 113, column 26: A multi_normal
+    distribution is given parameter mat as a covariance matrix (argument 2),
+    but mat was not constrained to be covariance.
+Warning in 'distribution-warnings.stan', line 111, column 19: A von_mises
+    distribution is given parameter unb_p as a scale parameter (argument 2),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 109, column 29: A
+    beta_proportion distribution is given parameter unb_p as a precision
+    parameter (argument 2), but unb_p was not constrained to be strictly
+    positive.
+Warning in 'distribution-warnings.stan', line 109, column 22: A
+    beta_proportion distribution is given parameter unb_p as a unit mean
+    parameter (argument 1), but unb_p was not constrained to be (0,1).
+Warning in 'distribution-warnings.stan', line 109, column 2: Parameter x is
+    given a beta_proportion distribution, which has (0,1) support, but x was
+    not constrained to be (0,1).
+Warning in 'distribution-warnings.stan', line 108, column 2: The parameter
+    x_unit is on the left-hand side of more than one tilde statement.
+Warning in 'distribution-warnings.stan', line 107, column 18: A beta
+    distribution is given parameter unb_p as a count parameter (argument 2),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 107, column 11: A beta
+    distribution is given parameter unb_p as a count parameter (argument 1),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 107, column 2: Parameter x is
+    given a beta distribution, which has (0,1) support, but x was not
+    constrained to be (0,1).
+Warning in 'distribution-warnings.stan', line 105, column 30: A pareto_type_2
+    distribution is given parameter unb_p as a shape parameter (argument 3),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 105, column 23: A pareto_type_2
+    distribution is given parameter unb_p as a scale parameter (argument 2),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 103, column 20: A pareto
+    distribution is given parameter unb_p as a shape parameter (argument 2),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 103, column 13: A pareto
+    distribution is given parameter unb_p as a positive minimum parameter
+    (argument 1), but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 103, column 2: Parameter x is
+    given a pareto distribution, which has strictly positive support, but x
+    was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 101, column 27: A wiener
+    distribution is given parameter pos_p as an a-priori bias parameter
+    (argument 3), but pos_p was not constrained to be [0,1].
+Warning in 'distribution-warnings.stan', line 101, column 20: A wiener
+    distribution is given parameter unb_p as a non-decision time parameter
+    (argument 2), but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 101, column 13: A wiener
+    distribution is given parameter unb_p as a boundary separation parameter
+    (argument 1), but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 101, column 2: Parameter x is
+    given a wiener distribution, which has strictly positive support, but x
+    was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 99, column 15: A rayleigh
+    distribution is given parameter unb_p as a scale parameter (argument 1),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 99, column 2: Parameter x is
+    given a rayleigh distribution, which has non-negative support, but x was
+    not constrained to be non-negative.
+Warning in 'distribution-warnings.stan', line 97, column 21: A frechet
+    distribution is given parameter unb_p as a scale parameter (argument 2),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 97, column 14: A frechet
+    distribution is given parameter unb_p as a shape parameter (argument 1),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 97, column 2: Parameter x is
+    given a frechet distribution, which has strictly positive support, but x
+    was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 95, column 21: A weibull
+    distribution is given parameter unb_p as a scale parameter (argument 2),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 95, column 14: A weibull
+    distribution is given parameter unb_p as a shape parameter (argument 1),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 95, column 2: Parameter x is
+    given a weibull distribution, which has non-negative support, but x was
+    not constrained to be non-negative.
+Warning in 'distribution-warnings.stan', line 93, column 23: A inv_gamma
+    distribution is given parameter unb_p as a scale parameter (argument 2),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 93, column 16: A inv_gamma
+    distribution is given parameter unb_p as a shape parameter (argument 1),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 93, column 2: Parameter x is
+    given a inv_gamma distribution, which has strictly positive support, but
+    x was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 91, column 19: A gamma
+    distribution is given parameter unb_p as an inverse scale parameter
+    (argument 2), but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 91, column 12: A gamma
+    distribution is given parameter unb_p as a shape parameter (argument 1),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 91, column 2: Parameter x is
+    given a gamma distribution, which has strictly positive support, but x
+    was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 89, column 18: A exponential
+    distribution is given parameter unb_p as a scale parameter (argument 1),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 89, column 2: Parameter x is
+    given a exponential distribution, which has strictly positive support,
+    but x was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 87, column 35: A
+    scaled_inv_chi_square distribution is given parameter unb_p as a scale
+    parameter (argument 2), but unb_p was not constrained to be strictly
+    positive.
+Warning in 'distribution-warnings.stan', line 87, column 28: A
+    scaled_inv_chi_square distribution is given parameter unb_p as degrees of
+    freedom (argument 1), but unb_p was not constrained to be strictly
+    positive.
+Warning in 'distribution-warnings.stan', line 87, column 2: Parameter x is
+    given a scaled_inv_chi_square distribution, which has strictly positive
+    support, but x was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 85, column 21: A inv_chi_square
+    distribution is given parameter unb_p as degrees of freedom (argument 1),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 85, column 2: Parameter x is
+    given a inv_chi_square distribution, which has strictly positive support,
+    but x was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 83, column 17: A chi_square
+    distribution is given parameter unb_p as degrees of freedom (argument 1),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 83, column 2: Parameter x is
+    given a chi_square distribution, which has strictly positive support, but
+    x was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 82, column 2: The parameter
+    x_pos is on the left-hand side of more than one tilde statement.
+Warning in 'distribution-warnings.stan', line 81, column 19: A lognormal
+    distribution is given parameter unb_p as a scale parameter (argument 2),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 81, column 2: Parameter x is
+    given a lognormal distribution, which has strictly positive support, but
+    x was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 79, column 16: A gumbel
+    distribution is given parameter unb_p as a scale parameter (argument 2),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 77, column 18: A logistic
+    distribution is given parameter unb_p as a scale parameter (argument 2),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 75, column 28: A
+    double_exponential distribution is given parameter unb_p as a scale
+    parameter (argument 2), but unb_p was not constrained to be strictly
+    positive.
+Warning in 'distribution-warnings.stan', line 73, column 16: A cauchy
+    distribution is given parameter unb_p as a scale parameter (argument 2),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 71, column 26: A student_t
+    distribution is given parameter unb_p as a scale parameter (argument 3),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 71, column 16: A student_t
+    distribution is given parameter unb_p as degrees of freedom (argument 1),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 69, column 21: A skew_normal
+    distribution is given parameter unb_p as a scale parameter (argument 2),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 67, column 31: A exp_mod_normal
+    distribution is given parameter unb_p as a shape parameter (argument 3),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 67, column 24: A exp_mod_normal
+    distribution is given parameter unb_p as a scale parameter (argument 2),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 65, column 37: A normal_id_glm
+    distribution is given parameter unb_p as a scale parameter (argument 4),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 65, column 2: The parameter vec
+    is on the left-hand side of more than one tilde statement.
+Warning in 'distribution-warnings.stan', line 63, column 16: A normal
+    distribution is given parameter unb_p as a scale parameter (argument 2),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 63, column 2: The parameter x
+    is on the left-hand side of more than one tilde statement.
+Warning in 'distribution-warnings.stan', line 61, column 26: A multinomial
+    distribution is given parameter vec as a distribution parameter (argument
+    1), but vec was not constrained to be simplex.
+Warning in 'distribution-warnings.stan', line 60, column 2: The parameter
+    pos_d_vec is on the left-hand side of more than one tilde statement.
+Warning in 'distribution-warnings.stan', line 55, column 18: A poisson
+    distribution is given parameter unb_p as a rate parameter (argument 1),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 53, column 52: A
+    neg_binomial_2_log_glm distribution is given parameter unb_p as an
+    inverse overdispersion control parameter (argument 4), but unb_p was not
+    constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 51, column 36: A
+    neg_binomial_2_log distribution is given parameter unb_p as an inverse
+    overdispersion control parameter (argument 2), but unb_p was not
+    constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 49, column 32: A neg_binomial_2
+    distribution is given parameter unb_p as a precision parameter (argument
+    2), but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 49, column 25: A neg_binomial_2
+    distribution is given parameter unb_p as a shape parameter (argument 1),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 47, column 30: A neg_binomial
+    distribution is given parameter unb_p as an inverse scale parameter
+    (argument 2), but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 47, column 23: A neg_binomial
+    distribution is given parameter unb_p as a shape parameter (argument 1),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 45, column 32: A ordered_probit
+    distribution is given parameter vec as cutpoints (argument 2), but vec
+    was not constrained to be ordered.
+Warning in 'distribution-warnings.stan', line 43, column 34: A
+    ordered_logistic distribution is given parameter vec as cutpoints
+    (argument 2), but vec was not constrained to be ordered.
+Warning in 'distribution-warnings.stan', line 41, column 22: A categorical
+    distribution is given parameter vec as a vector of outcome probabilities
+    (argument 1), but vec was not constrained to be simplex.
+Warning in 'distribution-warnings.stan', line 38, column 2: The parameter
+    pos_d is on the left-hand side of more than one tilde statement.
+Warning in 'distribution-warnings.stan', line 37, column 38: A beta_binomial
+    distribution is given parameter unb_p as a prior failure count (argument
+    3), but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 37, column 31: A beta_binomial
+    distribution is given parameter unb_p as a prior success count (argument
+    2), but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 33, column 26: A binomial
+    distribution is given parameter unb_p as chance of success (argument 2),
+    but unb_p was not constrained to be [0,1].
+Warning in 'distribution-warnings.stan', line 31, column 2: The parameter
+    unb_d_vec is on the left-hand side of more than one tilde statement.
+Warning in 'distribution-warnings.stan', line 28, column 2: The parameter
+    bin_d is on the left-hand side of more than one tilde statement.
+Warning in 'distribution-warnings.stan', line 27, column 20: A bernoulli
+    distribution is given parameter unb_p as chance of success (argument 1),
+    but unb_p was not constrained to be [0,1].
+Warning in 'distribution-warnings.stan', line 27, column 2: The parameter
+    unb_d is on the left-hand side of more than one tilde statement.
+Warning: The parameter x_unit has no priors.
+Warning: The parameter x_pos has no priors.
+Warning: The parameter x has no priors.
+Warning: The parameter vec has 2 priors.
+Warning: The parameter unit_p has 2 priors.
+Warning: The parameter unb_p has 15 priors.
+Warning: The parameter sim has 2 priors.
+Warning: The parameter pos_vec has no priors.
+Warning: The parameter pos_p has 19 priors.
+Warning: The parameter ord has no priors.
+Warning: The parameter mat has no priors.
+Warning: The parameter cov has no priors.
+Warning: The parameter corr has no priors.
+Warning: The parameter chol_cov has no priors.
+Warning: The parameter chol_corr has no priors.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  distribution_bounds.stan
+Warning in 'distribution_bounds.stan', line 10, column 2: Parameter c is
+    given a lognormal distribution, which has strictly positive support, but
+    c was not constrained to be strictly positive.
+Warning in 'distribution_bounds.stan', line 8, column 2: Parameter a is given
+    a gamma distribution, which has strictly positive support, but a was not
+    constrained to be strictly positive.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  function-param-control-flow.stan
+Warning in 'function-param-control-flow.stan', line 3, column 4: A control
+    flow statement inside function func depends on argument b. At
+    'function-param-control-flow.stan', line 18, column 21 to column 26, the
+    value of b depends on parameter(s): sigma.
+Warning: The parameter sigma has no priors.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  gamma-args.stan
+Warning in 'gamma-args.stan', line 11, column 21: A inv_gamma distribution is
+    given parameter b as a scale parameter (argument 2), but b was not
+    constrained to be strictly positive.
+Warning in 'gamma-args.stan', line 10, column 16: There is a gamma or
+    inverse-gamma distribution with parameters that are equal to each other
+    and set to values less than 1. This is mathematically acceptable and can
+    make sense in some problems, but typically we see this model used as an
+    attempt to assign a noninformative prior distribution. In fact, priors
+    such as inverse-gamma(.001,.001) can be very strong, as explained by
+    Gelman (2006). Instead we recommend something like a normal(0,1) or
+    student_t(4,0,1), with parameter constrained to be positive.
+Warning in 'gamma-args.stan', line 9, column 17: A gamma distribution is
+    given parameter b as an inverse scale parameter (argument 2), but b was
+    not constrained to be strictly positive.
+Warning in 'gamma-args.stan', line 8, column 12: There is a gamma or
+    inverse-gamma distribution with parameters that are equal to each other
+    and set to values less than 1. This is mathematically acceptable and can
+    make sense in some problems, but typically we see this model used as an
+    attempt to assign a noninformative prior distribution. In fact, priors
+    such as inverse-gamma(.001,.001) can be very strong, as explained by
+    Gelman (2006). Instead we recommend something like a normal(0,1) or
+    student_t(4,0,1), with parameter constrained to be positive.
+Warning in 'gamma-args.stan', line 8, column 2: The parameter a is on the
+    left-hand side of more than one tilde statement.
+Warning: The parameter b has 2 priors.
+Warning: The parameter a has 4 priors.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  hard-constraint.stan
+Warning: Your Stan program has a parameter d with a lower and upper bound in
+    its declaration. These hard constraints are not recommended, for two
+    reasons: (a) Except when there are logical or physical constraints, it is
+    very unusual for you to be sure that a parameter will fall inside a
+    specified range, and (b) The infinite gradient induced by a hard
+    constraint can cause difficulties for Stan's sampling algorithm. As a
+    consequence, we recommend soft constraints rather than hard constraints;
+    for example, instead of constraining an elasticity parameter to fall
+    between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5)
+    prior distribution.
+Warning: Your Stan program has a parameter c with a lower and upper bound in
+    its declaration. These hard constraints are not recommended, for two
+    reasons: (a) Except when there are logical or physical constraints, it is
+    very unusual for you to be sure that a parameter will fall inside a
+    specified range, and (b) The infinite gradient induced by a hard
+    constraint can cause difficulties for Stan's sampling algorithm. As a
+    consequence, we recommend soft constraints rather than hard constraints;
+    for example, instead of constraining an elasticity parameter to fall
+    between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5)
+    prior distribution.
+Warning: The parameter f was declared but was not used in the density
+    calculation.
+Warning: The parameter e was declared but was not used in the density
+    calculation.
+Warning: The parameter d was declared but was not used in the density
+    calculation.
+Warning: The parameter c was declared but was not used in the density
+    calculation.
+Warning: The parameter b was declared but was not used in the density
+    calculation.
+Warning: The parameter a was declared but was not used in the density
+    calculation.
+Warning: Parameter f has constraints that don't make sense. The lower bound
+    should be strictly less than the upper bound.
+Warning: Parameter e has constraints that don't make sense. The lower bound
+    should be strictly less than the upper bound.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  missing_priors.stan
+Warning: The parameter tau has no priors.
+Warning: The parameter mu has no priors.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  multi-tilde.stan
+Warning in 'multi-tilde.stan', line 6, column 2: The parameter x is on the
+    left-hand side of more than one tilde statement.
+Warning: The parameter y has 2 priors.
+Warning: The parameter x has 2 priors.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  non-one-priors.stan
+Warning in 'non-one-priors.stan', line 16, column 16: A normal distribution
+    is given parameter d as a scale parameter (argument 2), but d was not
+    constrained to be strictly positive.
+Warning in 'non-one-priors.stan', line 14, column 16: A normal distribution
+    is given parameter b as a scale parameter (argument 2), but b was not
+    constrained to be strictly positive.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  non-one-priors2.stan
+Warning in 'non-one-priors2.stan', line 21, column 2: The parameter f is on
+    the left-hand side of more than one tilde statement.
+Warning: The parameter f has no priors.
+Warning: The parameter e has no priors.
+Warning: The parameter d has no priors.
+Warning: The parameter c has no priors.
+Warning: The parameter b has 2 priors.
+Warning: The parameter a has 3 priors.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  param-depend-control.stan
+Warning in 'param-depend-control.stan', line 16, column 2: A control flow
+    statement depends on parameter(s): a.
+Warning in 'param-depend-control.stan', line 13, column 2: A control flow
+    statement depends on parameter(s): a.
+Warning in 'param-depend-control.stan', line 8, column 2: A control flow
+    statement depends on parameter(s): a.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  unbounded-sigma.stan
+Warning in 'unbounded-sigma.stan', line 15, column 11: A normal distribution
+    is given value -1 as a scale parameter (argument 2), but a scale
+    parameter is not strictly positive.
+Warning in 'unbounded-sigma.stan', line 12, column 17: A normal distribution
+    is given parameter sigma_c as a scale parameter (argument 2), but sigma_c
+    was not constrained to be strictly positive.
+Warning in 'unbounded-sigma.stan', line 10, column 17: A normal distribution
+    is given parameter sigma_a as a scale parameter (argument 2), but sigma_a
+    was not constrained to be strictly positive.
+Warning in 'unbounded-sigma.stan', line 10, column 2: The parameter x is on
+    the left-hand side of more than one tilde statement.
+Warning: Your Stan program has a parameter sigma_e with a lower and upper
+    bound in its declaration. These hard constraints are not recommended, for
+    two reasons: (a) Except when there are logical or physical constraints,
+    it is very unusual for you to be sure that a parameter will fall inside a
+    specified range, and (b) The infinite gradient induced by a hard
+    constraint can cause difficulties for Stan's sampling algorithm. As a
+    consequence, we recommend soft constraints rather than hard constraints;
+    for example, instead of constraining an elasticity parameter to fall
+    between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5)
+    prior distribution.
+Warning: The parameter x has 6 priors.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  uniform.stan
+Warning in 'uniform.stan', line 12, column 2: Parameter d is given a uniform
+    distribution. The uniform distribution is not recommended, for two
+    reasons: (a) Except when there are logical or physical constraints, it is
+    very unusual for you to be sure that a parameter will fall inside a
+    specified range, and (b) The infinite gradient induced by a uniform
+    density can cause difficulties for Stan's sampling algorithm. As a
+    consequence, we recommend soft constraints rather than hard constraints;
+    for example, instead of giving an elasticity parameter a uniform(0,1)
+    distribution, try normal(0.5,0.5).
+Warning in 'uniform.stan', line 11, column 2: Parameter c is given a uniform
+    distribution. The uniform distribution is not recommended, for two
+    reasons: (a) Except when there are logical or physical constraints, it is
+    very unusual for you to be sure that a parameter will fall inside a
+    specified range, and (b) The infinite gradient induced by a uniform
+    density can cause difficulties for Stan's sampling algorithm. As a
+    consequence, we recommend soft constraints rather than hard constraints;
+    for example, instead of giving an elasticity parameter a uniform(0,1)
+    distribution, try normal(0.5,0.5).
+Warning in 'uniform.stan', line 8, column 2: Parameter a is given a uniform
+    distribution. The uniform distribution is not recommended, for two
+    reasons: (a) Except when there are logical or physical constraints, it is
+    very unusual for you to be sure that a parameter will fall inside a
+    specified range, and (b) The infinite gradient induced by a uniform
+    density can cause difficulties for Stan's sampling algorithm. As a
+    consequence, we recommend soft constraints rather than hard constraints;
+    for example, instead of giving an elasticity parameter a uniform(0,1)
+    distribution, try normal(0.5,0.5).
+Warning: The parameter a has 2 priors.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  unscaled.stan
+Warning in 'unscaled.stan', line 10, column 20: Argument 10000 suggests there
+    may be parameters that are not unit scale; consider rescaling with a
+    multiplier (see manual section 22.12).
+Warning in 'unscaled.stan', line 10, column 13: Argument 0.001 suggests there
+    may be parameters that are not unit scale; consider rescaling with a
+    multiplier (see manual section 22.12).
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  unused-param.stan
+Warning: The parameter e was declared but was not used in the density
+    calculation.
+Warning: The parameter d was declared but was not used in the density
+    calculation.
+Warning: The parameter c was declared but was not used in the density
+    calculation.
+Warning: The parameter b has 2 priors.

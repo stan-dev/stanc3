@@ -8,7 +8,7 @@ functions {
 }
 generated quantities {
     real t0 = 1;
-    vector[1] true_states[1];
+    array[1] vector[1] true_states;
     true_states = ode_rk45(
       t0 < 0 ? rflow : gflow, [1]', t0, {1.}
     );
