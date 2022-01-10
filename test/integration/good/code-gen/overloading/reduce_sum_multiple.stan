@@ -1,46 +1,32 @@
-// adapted from reduce_sum_m1
-// tests overloading
 functions {
-  real g(array[] real y_slice, int start, int end) {
-    if (size(y_slice) > 1) {
-      return reduce_sum(g, y_slice, 1);
-    } else {
-      return normal_lpdf(y_slice | 0, 1);
-    }
+  real fun(array[] real y_slice, int start, int end, real m) {
+    return sum(y_slice) * m;
   }
 
-  real g(array[] real y_slice, int start, int end, array[] real a) {
-    if (size(a) > 1) {
-      return reduce_sum(g, y_slice, 1, a[start : end]);
-    } else {
-      return normal_lpdf(a | 0, 1);
-    }
+  real fun(array[] real y_slice, int start, int end) {
+    return sum(y_slice);
   }
-  real foo_lpdf(array[] real y_slice, int start, int end, array[] real a) {
-    return normal_lpdf(y_slice | 0, 1) * sum(a);
-  }
-
-  real foo_lpdf(array[] real y_slice, int start, int end) {
-    return normal_lpdf(y_slice | 0, 1);
-  }
-
 }
 transformed data {
   int N = 100;
+  array[N] real data_y = ones_array(N);
+
+  real sum_1 = reduce_sum(fun, data_y, 1);
+  print(sum_1);
+  real sum_2 = reduce_sum(fun, data_y, 1, 5);
+  print(sum_2);
 }
 parameters {
-  array[N] real y1;
-  array[N] real y2;
-  array[N] real y3;
+   real y;
+}
+transformed parameters {
+   array[N] real param_y = ones_array(N);
+
+   real p_sum_1 = reduce_sum(fun, param_y, 1);
+   print(y, " - ", p_sum_1);
+   real p_sum_2 = reduce_sum(fun, param_y, 1, y);
+   print(y, " -- ", p_sum_2);
 }
 model {
-  target += reduce_sum(g, y2, 1, y2);
-  target += reduce_sum(g, y1, 1);
-  
-  target += reduce_sum(foo_lpdf, y3, 1);
-  target += reduce_sum(foo_lpdf, y3, 1, y2);
-  target += reduce_sum(foo_lupdf, y3, 1);
-  target += reduce_sum(foo_lupdf, y3, 1, y2);
-
+   y ~ std_normal();
 }
-
