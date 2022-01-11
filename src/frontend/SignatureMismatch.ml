@@ -172,10 +172,10 @@ let promote es promotions =
       match prom with
       | RealPromotion when is_int_type emeta.type_ ->
           Ast.
-            { expr= Ast.Promotion (exp, UReal)
+            { expr= Ast.Promotion (exp, UReal, emeta.ad_level)
             ; emeta= {emeta with type_= promote_array emeta.type_ UReal} }
       | ComplexPromotion when not (is_complex_type emeta.type_) ->
-          { expr= Promotion (exp, UComplex)
+          { expr= Promotion (exp, UComplex, emeta.ad_level)
           ; emeta= {emeta with type_= promote_array emeta.type_ UComplex} }
       | _ -> exp )
 

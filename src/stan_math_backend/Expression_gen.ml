@@ -10,13 +10,6 @@ let stan_namespace_qualify f =
   if String.is_suffix ~suffix:"functor__" f || String.contains f ':' then f
   else "stan::math::" ^ f
 
-(* return true if the types of the two expression are the same *)
-let types_match e1 e2 =
-  UnsizedType.equal (Expr.Typed.type_of e1) (Expr.Typed.type_of e2)
-  && UnsizedType.compare_autodifftype (Expr.Typed.adlevel_of e1)
-       (Expr.Typed.adlevel_of e2)
-     = 0
-
 let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 
 (* retun true if the type of the expression
@@ -491,17 +484,17 @@ and pp_indexed_simple ppf (obj, idcs) =
       | idcs -> pf ppf "[%a]" (list ~sep:(const string "][") pp_expr) idcs )
     (List.map ~f:idx_minus_one idcs)
 
-and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
+and pp_expr ppf Expr.Fixed.{pattern; meta} =
   match pattern with
   | Var s -> pf ppf "%s" s
   | Lit (Str, s) -> pf ppf "\"%s\"" (Cpp_str.escaped s)
   | Lit (Imaginary, s) -> pf ppf "stan::math::to_complex(0, %s)" s
   | Lit ((Real | Int), s) -> pf ppf "%s" s
-  | Promotion (expr, ut) ->
+  | Promotion (expr, ut, ad) ->
       if is_scalar expr && ut = UReal then pp_expr ppf expr
       else
         pf ppf "stan::math::promote_scalar<%a>(%a)" pp_unsizedtype_local
-          (meta.adlevel, ut) pp_expr expr
+          (ad, ut) pp_expr expr
   | FunApp
       ( StanLib (op, _, _)
       , [ { meta= {type_= URowVector; _}
@@ -521,17 +514,12 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
-      let promoted ppf (t, e) =
-        pf ppf "stan::math::promote_scalar<%s>(%a)"
-          Expr.Typed.(local_scalar (type_of t) (adlevel_of t))
-          pp_expr e in
       let tform ppf = pf ppf "(@[<hov 2>@,%a@ ?@ %a@ :@ %a@])" in
       let eval_pp ppf a =
         if UnsizedType.is_eigen_type meta.type_ then
           pf ppf "stan::math::eval(%a)" pp_expr a
         else pf ppf "%a" pp_expr a in
-      if types_match et ef then tform ppf pp_expr ec eval_pp et eval_pp ef
-      else tform ppf eval_pp ec promoted (e, et) promoted (e, ef)
+      tform ppf pp_expr ec eval_pp et eval_pp ef
   | Indexed (e, []) -> pp_expr ppf e
   | Indexed (e, idx) -> (
     match e.pattern with

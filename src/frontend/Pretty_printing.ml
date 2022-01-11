@@ -272,7 +272,7 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
   | ArrayExpr es -> pf ppf "{@[%a}@]" pp_list_of_expression (es, loc)
   | RowVectorExpr es -> pf ppf "[@[%a]@]" pp_list_of_expression (es, loc)
   | Paren e -> pf ppf "(%a)" pp_expression e
-  | Promotion (e, _) -> pp_expression ppf e
+  | Promotion (e, _, _) -> pp_expression ppf e
   | Indexed (e, l) -> (
     match l with
     | [] -> pf ppf "%a" pp_expression e

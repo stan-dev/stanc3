@@ -158,15 +158,25 @@ let is_of_compatible_return_type rt1 srt2 =
 
 (* -- Expressions ------------------------------------------------- *)
 let check_ternary_if loc pe te fe =
+  let promote expr type_ ad_level =
+    if
+      (not (UnsizedType.equal expr.emeta.type_ type_))
+      || UnsizedType.compare_autodifftype expr.emeta.ad_level ad_level <> 0
+    then
+      { expr= Promotion (expr, type_, ad_level)
+      ; emeta= {expr.emeta with type_; ad_level} }
+    else expr in
   match
-    (pe.emeta.type_, UnsizedType.common_type (te.emeta.type_, fe.emeta.type_))
+    ( pe.emeta.type_
+    , UnsizedType.common_type (te.emeta.type_, fe.emeta.type_)
+    , UnsizedType.lub_ad_type [te.emeta.ad_level; fe.emeta.ad_level] )
   with
-  | UInt, Some type_ when not (UnsizedType.is_fun_type type_) ->
+  | UInt, Some type_, ad when not (UnsizedType.is_fun_type type_) ->
       mk_typed_expression
-        ~expr:(TernaryIf (pe, te, fe))
+        ~expr:(TernaryIf (pe, promote te type_ ad, promote fe type_ ad))
         ~ad_level:(expr_ad_lub [pe; te; fe])
         ~type_ ~loc
-  | _, _ ->
+  | _, _, _ ->
       Semantic_error.illtyped_ternary_if loc pe.emeta.type_ te.emeta.type_
         fe.emeta.type_
       |> error
@@ -663,7 +673,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:false id
   | CondDistApp ((), id, es) ->
       es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:true id
-  | Promotion (e, _) ->
+  | Promotion (e, _, _) ->
       (* Should never happen: promotions are produced during typechecking *)
       Common.FatalError.fatal_error_msg
         [%message "Promotion in untyped AST" (e : Ast.untyped_expression)]
