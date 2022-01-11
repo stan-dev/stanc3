@@ -210,6 +210,24 @@ let check_postfixop loc op te =
         ~type_ ~loc
   | _ -> Semantic_error.illtyped_postfix_op loc op te.emeta.type_ |> error
 
+let make_function_variable cf loc id = function
+  | UnsizedType.UFun (args, rt, FnLpdf _, mem_pattern) ->
+      let type_ =
+        UnsizedType.UFun
+          (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in
+      mk_typed_expression ~expr:(Variable id)
+        ~ad_level:(calculate_autodifftype cf Functions type_)
+        ~type_ ~loc
+  | UnsizedType.UFun _ as type_ ->
+      mk_typed_expression ~expr:(Variable id)
+        ~ad_level:(calculate_autodifftype cf Functions type_)
+        ~type_ ~loc
+  | type_ ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Attempting to create function variable out of "
+            (type_ : UnsizedType.t)]
+
 let check_variable cf loc tenv id =
   match Env.find tenv (Utils.stdlib_distribution_name id.name) with
   | [] ->
@@ -233,19 +251,8 @@ let check_variable cf loc tenv id =
       mk_typed_expression ~expr:(Variable id)
         ~ad_level:(calculate_autodifftype cf origin type_)
         ~type_ ~loc
-  (* TODO - When it's time for overloading, will this need
-     some kind of filter/match on arg types?
-     Yes, if we want to allow overloading of ode inputs etc
-  *)
-  | { kind= `UserDefined | `UserDeclared _
-    ; type_= UFun (args, rt, FnLpdf _, mem_pattern) }
-    :: _ ->
-      let type_ =
-        UnsizedType.UFun
-          (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in
-      mk_typed_expression ~expr:(Variable id)
-        ~ad_level:(calculate_autodifftype cf Functions type_)
-        ~type_ ~loc
+  | {kind= `UserDefined | `UserDeclared _; type_= UFun _ as ftype} :: _ ->
+      make_function_variable cf loc id ftype
   | {kind= `UserDefined | `UserDeclared _; type_} :: _ ->
       mk_typed_expression ~expr:(Variable id)
         ~ad_level:(calculate_autodifftype cf Functions type_)
@@ -384,7 +391,7 @@ let verify_unnormalized cf loc id =
 let mk_fun_app ~is_cond_dist (x, y, z) =
   if is_cond_dist then CondDistApp (x, y, z) else FunApp (x, y, z)
 
-let check_fn ~is_cond_dist loc tenv id es =
+let check_normal_fn ~is_cond_dist loc tenv id es =
   match Env.find tenv (Utils.normalized_name id.name) with
   | {kind= `Variable _; _} :: _
   (* variables can sometimes shadow stanlib functions, so we have to check this *)
@@ -442,88 +449,160 @@ let check_fn ~is_cond_dist loc tenv id es =
         |> Semantic_error.illtyped_fn_app loc id.name x
         |> error )
 
-let check_reduce_sum ~is_cond_dist loc id es =
-  match es with
-  (* TODO do lookup of functions here *)
-  | { emeta=
+(** Given a constraint function [matches], find any signature which exists
+
+   If it [matches] is expected to return Error of the matching type if a valid
+    function is found.
+  Otherwise, return Ok with an optional error. This backwards style
+    allows the use of [Result.all]
+*)
+let find_matching_function_signature tenv
+    (f : Env.info -> ('a option, 'b) result) fname =
+  match
+    Result.all
+      (List.map ~f (Env.find tenv (Utils.stdlib_distribution_name fname.name)))
+  with
+  | Error ftype ->
+      (* a valid signature exists *)
+      Ok ftype
+  | Ok l -> (
+    (* no valid signature exists, report first error
+       TODO: Should we try to return more than one? For example,
+       if we have two signatures defined, the first might not be the "closest"
+    *)
+    match List.hd (List.filter_opt l) with
+    | Some s -> Error (Some s)
+    | _ -> Error None )
+
+let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
+    =
+  (* TODO add map rect *)
+  if Stan_math_signatures.is_reduce_sum_fn id.name then
+    check_reduce_sum ~is_cond_dist loc cf tenv id tes
+  else if Stan_math_signatures.is_variadic_ode_fn id.name then
+    check_variadic_ode ~is_cond_dist loc cf tenv id tes
+  else check_normal_fn ~is_cond_dist loc tenv id tes
+
+and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
+  let fail () =
+    let mandatory_args =
+      UnsizedType.[(AutoDiffable, UArray UReal); (AutoDiffable, UInt)] in
+    let mandatory_fun_args =
+      UnsizedType.
+        [(AutoDiffable, UArray UReal); (DataOnly, UInt); (DataOnly, UInt)] in
+    let expected_args, err =
+      SignatureMismatch.check_variadic_args true mandatory_args
+        mandatory_fun_args UReal (get_arg_types tes)
+      |> Option.value_exn in
+    Semantic_error.illtyped_reduce_sum_generic loc id.name
+      (List.map ~f:type_of_expr_typed tes)
+      expected_args err
+    |> error in
+  let matching es fn =
+    match fn with
+    | Env.
         { type_=
             UnsizedType.UFun
-              (((_, sliced_arg_fun_type) as sliced_arg_fun) :: _, _, _, _)
+              (((_, sliced_arg_fun_type) as sliced_arg_fun) :: _, _, _, _) as
+            ftype
         ; _ }
-    ; _ }
-    :: _
-    when List.mem Stan_math_signatures.reduce_sum_slice_types
-           sliced_arg_fun_type ~equal:( = ) -> (
-      let mandatory_args = [sliced_arg_fun; (AutoDiffable, UInt)] in
-      let mandatory_fun_args =
-        [sliced_arg_fun; (DataOnly, UInt); (DataOnly, UInt)] in
-      match
-        SignatureMismatch.check_variadic_args true mandatory_args
-          mandatory_fun_args UReal (get_arg_types es)
-      with
-      | None ->
-          mk_typed_expression
-            ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, es))
-            ~ad_level:(expr_ad_lub es) ~type_:UnsizedType.UReal ~loc
-      | Some (expected_args, err) ->
-          Semantic_error.illtyped_reduce_sum loc id.name
-            (List.map ~f:type_of_expr_typed es)
-            expected_args err
-          |> error )
-  | _ ->
-      let mandatory_args =
-        UnsizedType.[(AutoDiffable, UArray UReal); (AutoDiffable, UInt)] in
-      let mandatory_fun_args =
-        UnsizedType.
-          [(AutoDiffable, UArray UReal); (DataOnly, UInt); (DataOnly, UInt)]
-      in
-      let expected_args, err =
-        SignatureMismatch.check_variadic_args true mandatory_args
-          mandatory_fun_args UReal (get_arg_types es)
-        |> Option.value_exn in
-      Semantic_error.illtyped_reduce_sum_generic loc id.name
-        (List.map ~f:type_of_expr_typed es)
-        expected_args err
-      |> error
+      when List.mem Stan_math_signatures.reduce_sum_slice_types
+             sliced_arg_fun_type ~equal:( = ) -> (
+        let mandatory_args = [sliced_arg_fun; (AutoDiffable, UInt)] in
+        let mandatory_fun_args =
+          [sliced_arg_fun; (DataOnly, UInt); (DataOnly, UInt)] in
+        match
+          SignatureMismatch.check_variadic_args true mandatory_args
+            mandatory_fun_args UReal
+            ( (calculate_autodifftype cf Functions ftype, ftype)
+            :: get_arg_types es )
+        with
+        | Some (expected_args, err) -> Ok (Some (expected_args, err))
+        | None -> Error ftype )
+    | _ -> Ok None in
+  match tes with
+  | {expr= Variable fname; _} :: remaining_es -> (
+    match
+      find_matching_function_signature tenv (matching remaining_es) fname
+    with
+    | Ok ftype ->
+        (* a valid signature exists *)
+        let tes = make_function_variable cf loc fname ftype :: remaining_es in
+        mk_typed_expression
+          ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, tes))
+          ~ad_level:(expr_ad_lub tes) ~type_:UnsizedType.UReal ~loc
+    | Error (Some (expected_args, err)) ->
+        Semantic_error.illtyped_reduce_sum loc id.name
+          (List.map ~f:type_of_expr_typed tes)
+          expected_args err
+        |> error
+    | Error None -> fail () )
+  | _ -> fail ()
 
-let check_variadic_ode ~is_cond_dist loc id es =
-  let optional_tol_mandatory_args =
-    if Stan_math_signatures.variadic_ode_adjoint_fn = id.name then
-      Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
-    else if Stan_math_signatures.is_variadic_ode_nonadjoint_tol_fn id.name then
-      Stan_math_signatures.variadic_ode_tol_arg_types
-    else [] in
-  let mandatory_arg_types =
-    Stan_math_signatures.variadic_ode_mandatory_arg_types
-    @ optional_tol_mandatory_args in
-  match
-    SignatureMismatch.check_variadic_args false mandatory_arg_types
-      Stan_math_signatures.variadic_ode_mandatory_fun_args
-      Stan_math_signatures.variadic_ode_fun_return_type (get_arg_types es)
-  with
-  | None ->
-      mk_typed_expression
-        ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, es))
-        ~ad_level:(expr_ad_lub es)
-        ~type_:Stan_math_signatures.variadic_ode_return_type ~loc
-  | Some (expected_args, err) ->
-      Semantic_error.illtyped_variadic_ode loc id.name
-        (List.map ~f:type_of_expr_typed es)
-        expected_args err
-      |> error
+and check_variadic_ode ~is_cond_dist loc cf tenv id tes =
+  let fail () =
+    let optional_tol_mandatory_args =
+      if Stan_math_signatures.variadic_ode_adjoint_fn = id.name then
+        Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
+      else if Stan_math_signatures.is_variadic_ode_nonadjoint_tol_fn id.name
+      then Stan_math_signatures.variadic_ode_tol_arg_types
+      else [] in
+    let mandatory_arg_types =
+      Stan_math_signatures.variadic_ode_mandatory_arg_types
+      @ optional_tol_mandatory_args in
+    let expected_args, err =
+      SignatureMismatch.check_variadic_args false mandatory_arg_types
+        Stan_math_signatures.variadic_ode_mandatory_fun_args
+        Stan_math_signatures.variadic_ode_fun_return_type (get_arg_types tes)
+      |> Option.value_exn in
+    Semantic_error.illtyped_variadic_ode loc id.name
+      (List.map ~f:type_of_expr_typed tes)
+      expected_args err
+    |> error in
+  let matching remaining_es fn =
+    match fn with
+    | Env.{type_= ftype; _} -> (
+        let optional_tol_mandatory_args =
+          if Stan_math_signatures.variadic_ode_adjoint_fn = id.name then
+            Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
+          else if Stan_math_signatures.is_variadic_ode_nonadjoint_tol_fn id.name
+          then Stan_math_signatures.variadic_ode_tol_arg_types
+          else [] in
+        let mandatory_arg_types =
+          Stan_math_signatures.variadic_ode_mandatory_arg_types
+          @ optional_tol_mandatory_args in
+        match
+          SignatureMismatch.check_variadic_args false mandatory_arg_types
+            Stan_math_signatures.variadic_ode_mandatory_fun_args
+            Stan_math_signatures.variadic_ode_fun_return_type
+            ( (calculate_autodifftype cf Functions ftype, ftype)
+            :: get_arg_types remaining_es )
+        with
+        | Some (expected_args, err) -> Ok (Some (expected_args, err))
+        | None -> Error ftype ) in
+  match tes with
+  | {expr= Variable fname; _} :: remaining_es -> (
+    match
+      find_matching_function_signature tenv (matching remaining_es) fname
+    with
+    | Ok ftype ->
+        let tes = make_function_variable cf loc fname ftype :: remaining_es in
+        mk_typed_expression
+          ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, tes))
+          ~ad_level:(expr_ad_lub tes)
+          ~type_:Stan_math_signatures.variadic_ode_return_type ~loc
+    | Error (Some (expected_args, err)) ->
+        Semantic_error.illtyped_variadic_ode loc id.name
+          (List.map ~f:type_of_expr_typed tes)
+          expected_args err
+        |> error
+    | Error None -> fail () )
+  | _ -> fail ()
 
-let check_fn ~is_cond_dist loc tenv id es =
-  if Stan_math_signatures.is_reduce_sum_fn id.name then
-    check_reduce_sum ~is_cond_dist loc id es
-  else if Stan_math_signatures.is_variadic_ode_fn id.name then
-    check_variadic_ode ~is_cond_dist loc id es
-  else check_fn ~is_cond_dist loc tenv id es
-
-let rec check_funapp loc cf tenv ~is_cond_dist id tes =
-  (* overloading will need to defer typechecking of arguments? *)
+and check_funapp loc cf tenv ~is_cond_dist id (es : Ast.typed_expression list) =
   let name_check =
     if is_cond_dist then verify_conddist_name else verify_fn_conditioning in
-  let res = check_fn ~is_cond_dist loc tenv id tes in
+  let res = check_fn ~is_cond_dist loc cf tenv id es in
   verify_identifier id ;
   name_check loc id ;
   verify_fn_target_plus_equals cf loc id ;

@@ -182,7 +182,6 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
     (UnsizedType.AutoDiffable, minimal_func_type) :: mandatory_arg_tys in
   let wrap_err x = Some (minimal_args, ArgError (1, x)) in
   match args with
-  (* TODO do lookup of functions here?? *)
   | ( _
     , ( UnsizedType.UFun (fun_args, ReturnType return_type, suffix, _) as
       func_type ) )
