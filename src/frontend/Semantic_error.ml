@@ -31,6 +31,11 @@ module TypeError = struct
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
         * SignatureMismatch.function_mismatch
+    | IllTypedVariadicDAE of
+        string
+        * UnsizedType.t list
+        * (UnsizedType.autodifftype * UnsizedType.t) list
+        * SignatureMismatch.function_mismatch
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string * string option
@@ -131,6 +136,15 @@ module TypeError = struct
           , arg_tys
           , ( [ ( ( UnsizedType.ReturnType
                       Stan_math_signatures.variadic_ode_fun_return_type
+                  , args )
+                , error ) ]
+            , false ) )
+    | IllTypedVariadicDAE (name, arg_tys, args, error) ->
+        SignatureMismatch.pp_signature_mismatch ppf
+          ( name
+          , arg_tys
+          , ( [ ( ( UnsizedType.ReturnType
+                      Stan_math_signatures.variadic_dae_fun_return_type
                   , args )
                 , error ) ]
             , false ) )
@@ -519,6 +533,9 @@ let illtyped_reduce_sum_generic loc name arg_tys expected_args error =
 
 let illtyped_variadic_ode loc name arg_tys args error =
   TypeError (loc, TypeError.IllTypedVariadicODE (name, arg_tys, args, error))
+
+let illtyped_variadic_dae loc name arg_tys args error =
+  TypeError (loc, TypeError.IllTypedVariadicDAE (name, arg_tys, args, error))
 
 let returning_fn_expected_nonfn_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonFnFound name)

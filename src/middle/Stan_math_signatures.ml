@@ -140,6 +140,26 @@ let variadic_ode_mandatory_fun_args =
 let variadic_ode_fun_return_type = UnsizedType.UVector
 let variadic_ode_return_type = UnsizedType.UArray UnsizedType.UVector
 
+(* Variadic DAE *)
+let variadic_dae_tol_arg_types =
+  [ (UnsizedType.DataOnly, UnsizedType.UReal); (DataOnly, UReal)
+  ; (DataOnly, UInt) ]
+
+let variadic_dae_mandatory_arg_types =
+  [ (UnsizedType.AutoDiffable, UnsizedType.UVector); (* yy *)
+    (UnsizedType.AutoDiffable, UnsizedType.UVector); (* yp *)
+    (AutoDiffable, UReal);                           (* t0 *)
+    (AutoDiffable, UArray UReal) ]                   (* ts *)
+
+let variadic_dae_mandatory_fun_args =
+  [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
+  ; (UnsizedType.AutoDiffable, UnsizedType.UVector)
+  ; (UnsizedType.AutoDiffable, UnsizedType.UVector) ]
+
+let variadic_dae_fun_return_type = UnsizedType.UVector
+let variadic_dae_return_type = UnsizedType.UArray UnsizedType.UVector
+(* end of Variadic DAE *)
+
 let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
   let is_glm = String.is_suffix ~suffix:"_glm" name in
   let sfxes = function
@@ -203,6 +223,15 @@ let is_variadic_ode_fn f =
 let is_variadic_ode_nonadjoint_tol_fn f =
   is_variadic_ode_nonadjoint_fn f
   && String.is_suffix f ~suffix:ode_tolerances_suffix
+
+(* dae *)
+let variadic_dae_fns = String.Set.of_list
+                         [ "dae_tol"; "dae" ]
+let dae_tolerances_suffix = "_tol"
+let is_variadic_dae_fn f = Set.mem variadic_dae_fns f
+let is_variadic_dae_tol_fn f =
+  is_variadic_dae_fn f && String.is_suffix f ~suffix:dae_tolerances_suffix
+(* end of dae *)
 
 let distributions =
   [ ( full_lpmf
@@ -351,6 +380,7 @@ let stan_math_returntype (name : string) (args : fun_arg list) =
   match name with
   | x when is_reduce_sum_fn x -> Some (UnsizedType.ReturnType UReal)
   | x when is_variadic_ode_fn x -> Some (UnsizedType.ReturnType (UArray UVector))
+  | x when is_variadic_dae_fn x -> Some (UnsizedType.ReturnType (UArray UVector))
   | _ ->
       if List.length filteredmatches = 0 then None
         (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
@@ -517,6 +547,7 @@ let query_stan_math_mem_pattern_support (name : string) (args : fun_arg list) =
   match name with
   | x when is_reduce_sum_fn x -> false
   | x when is_variadic_ode_fn x -> false
+  | x when is_variadic_dae_fn x -> false
   | _ -> (
     (*    let printer intro s = Set.Poly.iter ~f:(printf intro) s in*)
     match List.length filteredmatches = 0 with

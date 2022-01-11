@@ -200,7 +200,7 @@ let mk_extra_args templates args =
    printing user defined distributions vs rngs vs regular functions.
 *)
 let pp_fun_def ppf Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
-    funs_used_in_reduce_sum funs_used_in_variadic_ode =
+    funs_used_in_reduce_sum funs_used_in_variadic_ode funs_used_in_variadic_dae =
   let extra, extra_templates =
     match fdsuffix with
     | Fun_kind.FnTarget -> (["lp__"; "lp_accum__"], ["T_lp__"; "T_lp_accum__"])
@@ -239,6 +239,7 @@ let pp_fun_def ppf Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
       match variadic with
       | `ReduceSum -> List.split_n args 3
       | `VariadicODE -> List.split_n args 2
+      | `VariadicDAE -> List.split_n args 3
       | `None -> (args, []) in
     let arg_strs =
       args
@@ -256,7 +257,8 @@ let pp_fun_def ppf Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
           match variadic with
           | `None -> functor_suffix
           | `ReduceSum -> reduce_sum_functor_suffix
-          | `VariadicODE -> variadic_ode_functor_suffix in
+          | `VariadicODE -> variadic_ode_functor_suffix
+          | `VariadicDAE -> variadic_dae_functor_suffix in
         let pp_template_propto ppf () =
           match (fdsuffix, variadic) with
           | FnLpdf _, `ReduceSum -> pf ppf "template <bool propto__>@ "
@@ -287,6 +289,10 @@ let pp_fun_def ppf Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
         (* Produces the variadic ode functors that has the pstream argument
            as the third and not last argument *)
         pp_functor ppf ([], fdargs, `VariadicODE)
+      else if String.Set.mem funs_used_in_variadic_dae fdname then
+        (* Produces the variadic DAE functors that has the pstream argument
+           as the fourth and not last argument *)
+        pp_functor ppf ([], fdargs, `VariadicDAE)
 
 (** Creates functions outside the model namespaces which only call the ones
    inside the namespaces *)
@@ -943,6 +949,7 @@ let pp_prog ppf (p : Program.Typed.t) =
     pp_fun_def ppf fblock
       (is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p)
       (is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_ode_fn p)
+      (is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_dae_fn p)
   in
   let reduce_sum_struct_decls =
     String.Set.map

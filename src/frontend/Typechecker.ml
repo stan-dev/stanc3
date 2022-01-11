@@ -124,6 +124,7 @@ let verify_name_fresh_udf loc tenv name =
     (* variadic functions are currently not in math sigs *)
     || Stan_math_signatures.is_reduce_sum_fn name
     || Stan_math_signatures.is_variadic_ode_fn name
+    || Stan_math_signatures.is_variadic_dae_fn name
   then Semantic_error.ident_is_stanmath_name loc name |> error
   else if Utils.is_unnormalized_distribution name then
     Semantic_error.udf_is_unnormalized_fn loc name |> error
@@ -509,11 +510,37 @@ let check_variadic_ode ~is_cond_dist loc id es =
         expected_args err
       |> error
 
+let check_variadic_dae ~is_cond_dist loc id es =
+  let optional_tol_mandatory_args =
+    if Stan_math_signatures.is_variadic_dae_tol_fn id.name then
+      Stan_math_signatures.variadic_dae_tol_arg_types
+    else [] in
+  let mandatory_arg_types =
+    Stan_math_signatures.variadic_dae_mandatory_arg_types
+    @ optional_tol_mandatory_args in
+  match
+    SignatureMismatch.check_variadic_args false mandatory_arg_types
+      Stan_math_signatures.variadic_dae_mandatory_fun_args
+      Stan_math_signatures.variadic_dae_fun_return_type (get_arg_types es)
+  with
+  | None ->
+      mk_typed_expression
+        ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, es))
+        ~ad_level:(expr_ad_lub es)
+        ~type_:Stan_math_signatures.variadic_dae_return_type ~loc
+  | Some (expected_args, err) ->
+      Semantic_error.illtyped_variadic_dae loc id.name
+        (List.map ~f:type_of_expr_typed es)
+        expected_args err
+      |> error
+
 let check_fn ~is_cond_dist loc tenv id es =
   if Stan_math_signatures.is_reduce_sum_fn id.name then
     check_reduce_sum ~is_cond_dist loc id es
   else if Stan_math_signatures.is_variadic_ode_fn id.name then
     check_variadic_ode ~is_cond_dist loc id es
+  else if Stan_math_signatures.is_variadic_dae_fn id.name then
+    check_variadic_dae ~is_cond_dist loc id es
   else check_fn ~is_cond_dist loc tenv id es
 
 let rec check_funapp loc cf tenv ~is_cond_dist id tes =
