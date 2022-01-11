@@ -163,7 +163,7 @@ let check_ternary_if loc pe te fe =
       (not (UnsizedType.equal expr.emeta.type_ type_))
       || UnsizedType.compare_autodifftype expr.emeta.ad_level ad_level <> 0
     then
-      { expr= Promotion (expr, type_, ad_level)
+      { expr= Promotion (expr, UnsizedType.internal_scalar type_, ad_level)
       ; emeta= {expr.emeta with type_; ad_level} }
     else expr in
   match

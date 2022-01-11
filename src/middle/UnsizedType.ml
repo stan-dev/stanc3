@@ -157,6 +157,16 @@ let rec is_complex_type ut =
   | UArray ut -> is_complex_type ut
   | _ -> false
 
+let rec internal_scalar ut =
+  match ut with
+  | UVector | UMatrix | URowVector | UReal -> UReal
+  | UInt -> UInt
+  | UComplex -> UComplex
+  | UArray ut -> internal_scalar ut
+  | _ ->
+      Common.FatalError.fatal_error_msg
+        [%message "Tried to get scalar type of " (ut : t)]
+
 let is_eigen_type ut =
   match ut with UVector | URowVector | UMatrix -> true | _ -> false
 
