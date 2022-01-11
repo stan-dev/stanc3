@@ -24,6 +24,7 @@ parameters {
 transformed parameters {
     matrix[10, 10] user_func_aos = mat_ret_user_func(udf_input_aos);
     matrix[10, 10] empty_user_func_aos = empty_user_func();
+    matrix[10, 10] inner_empty_user_func_aos = multiply(udf_input_aos, empty_user_func());
     matrix[10, 10] int_aos_mul_aos = rows(row_soa) * empty_user_func_aos;
     matrix[10, 10] mul_two_aos = cols(row_soa) * transpose(int_aos_mul_aos) * user_func_aos;
 }

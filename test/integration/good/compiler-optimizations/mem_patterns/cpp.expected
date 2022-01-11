@@ -5430,14 +5430,15 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 12> locations_array__ = 
+static constexpr std::array<const char*, 13> locations_array__ = 
 {" (found before start of program)",
  " (in 'return_types_and_udfs_demotes.stan', line 20, column 4 to column 27)",
  " (in 'return_types_and_udfs_demotes.stan', line 21, column 4 to column 33)",
  " (in 'return_types_and_udfs_demotes.stan', line 25, column 4 to column 68)",
  " (in 'return_types_and_udfs_demotes.stan', line 26, column 4 to column 59)",
- " (in 'return_types_and_udfs_demotes.stan', line 27, column 4 to column 73)",
- " (in 'return_types_and_udfs_demotes.stan', line 28, column 4 to column 92)",
+ " (in 'return_types_and_udfs_demotes.stan', line 27, column 4 to column 90)",
+ " (in 'return_types_and_udfs_demotes.stan', line 28, column 4 to column 73)",
+ " (in 'return_types_and_udfs_demotes.stan', line 29, column 4 to column 92)",
  " (in 'return_types_and_udfs_demotes.stan', line 11, column 8 to column 32)",
  " (in 'return_types_and_udfs_demotes.stan', line 12, column 8 to column 24)",
  " (in 'return_types_and_udfs_demotes.stan', line 10, column 29 to line 13, column 5)",
@@ -5456,7 +5457,7 @@ empty_user_func(std::ostream* pstream__) {
   try {
     Eigen::Matrix<local_scalar_t__, -1, -1> some_mat =
        Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10, DUMMY_VAR__);
-    current_statement__ = 8;
+    current_statement__ = 9;
     return some_mat;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -5483,7 +5484,7 @@ mat_ret_user_func(const T0__& A_arg__, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 10;
+    current_statement__ = 11;
     return A;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -5579,32 +5580,30 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
       stan::model::assign(user_func_aos,
         mat_ret_user_func(udf_input_aos, pstream__),
         "assigning variable user_func_aos");
-      stan::conditional_var_value_t<local_scalar_t__, 
-        Eigen::Matrix<local_scalar_t__, -1, -1>> empty_user_func_aos =
-         stan::conditional_var_value_t<local_scalar_t__, 
-           Eigen::Matrix<local_scalar_t__, -1, -1>>(
-           Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-             std::numeric_limits<double>::quiet_NaN()));
+      Eigen::Matrix<local_scalar_t__, -1, -1> empty_user_func_aos =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10,
+           DUMMY_VAR__);
       current_statement__ = 4;
       stan::model::assign(empty_user_func_aos, empty_user_func(pstream__),
         "assigning variable empty_user_func_aos");
-      stan::conditional_var_value_t<local_scalar_t__, 
-        Eigen::Matrix<local_scalar_t__, -1, -1>> int_aos_mul_aos =
-         stan::conditional_var_value_t<local_scalar_t__, 
-           Eigen::Matrix<local_scalar_t__, -1, -1>>(
-           Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-             std::numeric_limits<double>::quiet_NaN()));
+      Eigen::Matrix<local_scalar_t__, -1, -1> inner_empty_user_func_aos =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10,
+           DUMMY_VAR__);
       current_statement__ = 5;
+      stan::model::assign(inner_empty_user_func_aos,
+        stan::math::multiply(udf_input_aos, empty_user_func(pstream__)),
+        "assigning variable inner_empty_user_func_aos");
+      Eigen::Matrix<local_scalar_t__, -1, -1> int_aos_mul_aos =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10,
+           DUMMY_VAR__);
+      current_statement__ = 6;
       stan::model::assign(int_aos_mul_aos,
         stan::math::multiply(stan::math::rows(row_soa), empty_user_func_aos),
         "assigning variable int_aos_mul_aos");
-      stan::conditional_var_value_t<local_scalar_t__, 
-        Eigen::Matrix<local_scalar_t__, -1, -1>> mul_two_aos =
-         stan::conditional_var_value_t<local_scalar_t__, 
-           Eigen::Matrix<local_scalar_t__, -1, -1>>(
-           Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-             std::numeric_limits<double>::quiet_NaN()));
-      current_statement__ = 6;
+      Eigen::Matrix<local_scalar_t__, -1, -1> mul_two_aos =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10,
+           DUMMY_VAR__);
+      current_statement__ = 7;
       stan::model::assign(mul_two_aos,
         stan::math::multiply(
           stan::math::multiply(stan::math::cols(row_soa),
@@ -5660,6 +5659,9 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
       Eigen::Matrix<double, -1, -1> empty_user_func_aos =
          Eigen::Matrix<double, -1, -1>::Constant(10, 10,
            std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, -1> inner_empty_user_func_aos =
+         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+           std::numeric_limits<double>::quiet_NaN());
       Eigen::Matrix<double, -1, -1> int_aos_mul_aos =
          Eigen::Matrix<double, -1, -1>::Constant(10, 10,
            std::numeric_limits<double>::quiet_NaN());
@@ -5681,10 +5683,14 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
       stan::model::assign(empty_user_func_aos, empty_user_func(pstream__),
         "assigning variable empty_user_func_aos");
       current_statement__ = 5;
+      stan::model::assign(inner_empty_user_func_aos,
+        stan::math::multiply(udf_input_aos, empty_user_func(pstream__)),
+        "assigning variable inner_empty_user_func_aos");
+      current_statement__ = 6;
       stan::model::assign(int_aos_mul_aos,
         stan::math::multiply(stan::math::rows(row_soa), empty_user_func_aos),
         "assigning variable int_aos_mul_aos");
-      current_statement__ = 6;
+      current_statement__ = 7;
       stan::model::assign(mul_two_aos,
         stan::math::multiply(
           stan::math::multiply(stan::math::cols(row_soa),
@@ -5693,6 +5699,7 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
       if (emit_transformed_parameters__) {
         out__.write(user_func_aos);
         out__.write(empty_user_func_aos);
+        out__.write(inner_empty_user_func_aos);
         out__.write(int_aos_mul_aos);
         out__.write(mul_two_aos);
       } 
@@ -5749,8 +5756,8 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__ = std::vector<std::string>{"row_soa", "udf_input_aos",
-      "user_func_aos", "empty_user_func_aos", "int_aos_mul_aos",
-      "mul_two_aos"};
+      "user_func_aos", "empty_user_func_aos", "inner_empty_user_func_aos",
+      "int_aos_mul_aos", "mul_two_aos"};
     
     } // get_param_names() 
     
@@ -5761,6 +5768,7 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
                                                                    ,
                                                                    static_cast<size_t>(10)
                                                                    },
+      std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)},
       std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)},
       std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)},
       std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)},
@@ -5808,6 +5816,15 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
           for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
             {
               param_names__.emplace_back(std::string() + "empty_user_func_aos" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            } 
+          }
+        } 
+      }
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        {
+          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+            {
+              param_names__.emplace_back(std::string() + "inner_empty_user_func_aos" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
             } 
           }
         } 
@@ -5885,6 +5902,15 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
         {
           for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
             {
+              param_names__.emplace_back(std::string() + "inner_empty_user_func_aos" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            } 
+          }
+        } 
+      }
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        {
+          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+            {
               param_names__.emplace_back(std::string() + "int_aos_mul_aos" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
             } 
           }
@@ -5909,13 +5935,13 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
     
   inline std::string get_constrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"row_soa\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"udf_input_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"empty_user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"int_aos_mul_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mul_two_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"row_soa\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"udf_input_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"empty_user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"inner_empty_user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"int_aos_mul_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mul_two_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
     
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"row_soa\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"udf_input_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"empty_user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"int_aos_mul_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mul_two_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"row_soa\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"udf_input_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"empty_user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"inner_empty_user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"int_aos_mul_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mul_two_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
     
     } // get_unconstrained_sizedtypes() 
     
@@ -5930,7 +5956,9 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   ((10 * 10) + (10 * 10));
-      const size_t num_transformed = ((((10 * 10)
+      const size_t num_transformed = (((((10 * 10)
+                                                                    +
+                                                                    (10 * 10))
                                                                     +
                                                                     (10 * 10))
                                                                    +
@@ -5957,7 +5985,9 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   ((10 * 10) + (10 * 10));
-      const size_t num_transformed = ((((10 * 10)
+      const size_t num_transformed = (((((10 * 10)
+                                                                    +
+                                                                    (10 * 10))
                                                                     +
                                                                     (10 * 10))
                                                                    +

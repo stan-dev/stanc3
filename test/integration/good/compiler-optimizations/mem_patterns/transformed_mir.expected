@@ -11915,7 +11915,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id empty_user_func_aos)
       (decl_type
        (Sized
-        (SMatrix SoA
+        (SMatrix AoS
          ((pattern (Lit Int 10))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10))
@@ -11928,10 +11928,31 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id inner_empty_user_func_aos)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Lit Int 10))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (inner_empty_user_func_aos UMatrix ())
+      ((pattern
+        (FunApp (StanLib multiply FnPlain AoS)
+         (((pattern (Var udf_input_aos))
+           (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern (FunApp (UserDefined empty_user_func FnPlain) ()))
+           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id int_aos_mul_aos)
       (decl_type
        (Sized
-        (SMatrix SoA
+        (SMatrix AoS
          ((pattern (Lit Int 10))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10))
@@ -11941,9 +11962,9 @@
    ((pattern
      (Assignment (int_aos_mul_aos UMatrix ())
       ((pattern
-        (FunApp (StanLib Times__ FnPlain SoA)
+        (FunApp (StanLib Times__ FnPlain AoS)
          (((pattern
-            (FunApp (StanLib rows FnPlain SoA)
+            (FunApp (StanLib rows FnPlain AoS)
              (((pattern (Var row_soa))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable))))
@@ -11955,7 +11976,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id mul_two_aos)
       (decl_type
        (Sized
-        (SMatrix SoA
+        (SMatrix AoS
          ((pattern (Lit Int 10))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10))
@@ -11965,17 +11986,17 @@
    ((pattern
      (Assignment (mul_two_aos UMatrix ())
       ((pattern
-        (FunApp (StanLib Times__ FnPlain SoA)
+        (FunApp (StanLib Times__ FnPlain AoS)
          (((pattern
-            (FunApp (StanLib Times__ FnPlain SoA)
+            (FunApp (StanLib Times__ FnPlain AoS)
              (((pattern
-                (FunApp (StanLib cols FnPlain SoA)
+                (FunApp (StanLib cols FnPlain AoS)
                  (((pattern (Var row_soa))
                    (meta
                     ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
-                (FunApp (StanLib transpose FnPlain SoA)
+                (FunApp (StanLib transpose FnPlain AoS)
                  (((pattern (Var int_aos_mul_aos))
                    (meta
                     ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -12061,6 +12082,17 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id inner_empty_user_func_aos)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Lit Int 10))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
      (Decl (decl_adtype DataOnly) (decl_id int_aos_mul_aos)
       (decl_type
        (Sized
@@ -12130,6 +12162,16 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
+     (Assignment (inner_empty_user_func_aos UMatrix ())
+      ((pattern
+        (FunApp (StanLib multiply FnPlain AoS)
+         (((pattern (Var udf_input_aos))
+           (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern (FunApp (UserDefined empty_user_func FnPlain) ()))
+           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
      (Assignment (int_aos_mul_aos UMatrix ())
       ((pattern
         (FunApp (StanLib Times__ FnPlain AoS)
@@ -12186,6 +12228,15 @@
               (FnWriteParam (unconstrain_opt ())
                (var
                 ((pattern (Var empty_user_func_aos))
+                 (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+             ()))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp
+             (CompilerInternal
+              (FnWriteParam (unconstrain_opt ())
+               (var
+                ((pattern (Var inner_empty_user_func_aos))
                  (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
              ()))
            (meta <opaque>))
@@ -12413,6 +12464,20 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (empty_user_func_aos
+    ((out_unconstrained_st
+      (SMatrix AoS
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_constrained_st
+      (SMatrix AoS
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block TransformedParameters) (out_trans Identity)))
+   (inner_empty_user_func_aos
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))

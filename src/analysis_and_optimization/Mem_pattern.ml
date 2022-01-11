@@ -358,21 +358,19 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
       (* RHS (1)*)
       let is_all_rhs_aos =
         let all_rhs_eigen_names = query_var_eigen_names rhs in
-        let contains_only_eigen_aos =
-          is_nonzero_subset ~subset:all_rhs_eigen_names ~set:rhs_demotable_names
-        in
-        let is_not_supported_func =
-          match rhs.pattern with
-          | FunApp (CompilerInternal _, _) -> false
-          | FunApp (StanLib (name, _, _), exprs)
-            when UnsizedType.contains_eigen_type rhs.meta.type_ ->
-              not (is_fun_soa_supported name exprs)
-          | _ -> true in
-        contains_only_eigen_aos && is_not_supported_func in
+        is_nonzero_subset ~subset:all_rhs_eigen_names ~set:rhs_demotable_names
+      in
+      let is_not_supported_func =
+        match rhs.pattern with
+        | FunApp (CompilerInternal _, _) -> false
+        | FunApp (UserDefined _, _) -> true
+        | _ -> false in
+      let is_eigen_stmt = UnsizedType.contains_eigen_type rhs.meta.type_ in
       let assign_demotes =
         if
-          UnsizedType.contains_eigen_type rhs.meta.type_
-          && (is_all_rhs_aos || check_if_rhs_ad_real_data_matrix_expr)
+          is_eigen_stmt
+          && ( is_all_rhs_aos || check_if_rhs_ad_real_data_matrix_expr
+             || is_not_supported_func )
         then
           let base_set = Set.Poly.union idx_demotable rhs_demotable_names in
           Set.Poly.add
