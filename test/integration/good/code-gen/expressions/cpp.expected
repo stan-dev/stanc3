@@ -512,13 +512,17 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 7> locations_array__ = 
+static constexpr std::array<const char*, 11> locations_array__ = 
 {" (found before start of program)",
  " (in 'ternary_if.stan', line 5, column 2 to column 14)",
  " (in 'ternary_if.stan', line 6, column 2 to column 14)",
- " (in 'ternary_if.stan', line 9, column 2 to column 73)",
- " (in 'ternary_if.stan', line 10, column 2 to column 41)",
- " (in 'ternary_if.stan', line 12, column 2 to column 25)",
+ " (in 'ternary_if.stan', line 7, column 2 to column 9)",
+ " (in 'ternary_if.stan', line 8, column 2 to column 13)",
+ " (in 'ternary_if.stan', line 11, column 2 to column 73)",
+ " (in 'ternary_if.stan', line 12, column 2 to column 41)",
+ " (in 'ternary_if.stan', line 14, column 2 to column 25)",
+ " (in 'ternary_if.stan', line 17, column 4 to column 27)",
+ " (in 'ternary_if.stan', line 18, column 4 to column 20)",
  " (in 'ternary_if.stan', line 2, column 2 to column 9)"};
 
 
@@ -556,17 +560,17 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      current_statement__ = 6;
+      current_statement__ = 10;
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{});
       y = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 6;
+      current_statement__ = 10;
       y = context__.vals_r("y")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 2 + 2;
+    num_params_r__ = 2 + 2 + 1 + 2;
     
   }
   
@@ -600,11 +604,21 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
       
       current_statement__ = 2;
       b = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
+      local_scalar_t__ r;
+      r = DUMMY_VAR__;
+      
+      current_statement__ = 3;
+      r = in__.template read<local_scalar_t__>();
+      std::complex<local_scalar_t__> zp;
+      zp = std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      
+      current_statement__ = 4;
+      zp = in__.template read<std::complex<local_scalar_t__>>();
       Eigen::Matrix<local_scalar_t__, -1, 1> c;
       c = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(c, DUMMY_VAR__);
       
-      current_statement__ = 3;
+      current_statement__ = 5;
       stan::model::assign(c,
         (stan::math::logical_gt(stan::math::sum(a), 1) ?
            stan::math::eval(stan::math::add(stan::math::multiply(2.0, a), b))
@@ -614,7 +628,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
       d = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(d, DUMMY_VAR__);
       
-      current_statement__ = 4;
+      current_statement__ = 6;
       stan::model::assign(d,
         (stan::math::logical_gt(stan::math::sum(a), 1) ?
            stan::math::eval(stan::math::add(stan::math::multiply(2, a), b)) :
@@ -623,11 +637,22 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
       std::complex<local_scalar_t__> z;
       z = std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
       
-      current_statement__ = 5;
+      current_statement__ = 7;
       stan::model::assign(z,
         (1 ? stan::math::to_complex(0, 3) :
            stan::math::promote_scalar<std::complex<double>>(2)),
         "assigning variable z");
+      {
+        std::complex<local_scalar_t__> z2;
+        z2 = std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+        
+        current_statement__ = 8;
+        z2 = (1 ? r : 2);
+        current_statement__ = 9;
+        stan::model::assign(z2,
+          (1 ? stan::math::promote_scalar<std::complex<local_scalar_t__>>(0)
+             : zp), "assigning variable z2");
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -672,6 +697,17 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
       
       current_statement__ = 2;
       b = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
+      double r;
+      r = std::numeric_limits<double>::quiet_NaN();
+      
+      current_statement__ = 3;
+      r = in__.template read<local_scalar_t__>();
+      std::complex<double> zp;
+      zp = std::complex<double>(std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN());
+      
+      
+      current_statement__ = 4;
+      zp = in__.template read<std::complex<local_scalar_t__>>();
       Eigen::Matrix<double, -1, 1> c;
       c = Eigen::Matrix<double, -1, 1>(2);
       stan::math::fill(c, std::numeric_limits<double>::quiet_NaN());
@@ -686,24 +722,26 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
       
       out__.write(a);
       out__.write(b);
+      out__.write(r);
+      out__.write(zp);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
         return ;
       } 
-      current_statement__ = 3;
+      current_statement__ = 5;
       stan::model::assign(c,
         (stan::math::logical_gt(stan::math::sum(a), 1) ?
            stan::math::eval(stan::math::add(stan::math::multiply(2.0, a), b))
            : stan::math::eval(stan::math::multiply(2.0, a))),
         "assigning variable c");
-      current_statement__ = 4;
+      current_statement__ = 6;
       stan::model::assign(d,
         (stan::math::logical_gt(stan::math::sum(a), 1) ?
            stan::math::eval(stan::math::add(stan::math::multiply(2, a), b)) :
            stan::math::eval(stan::math::multiply(2, a))),
         "assigning variable d");
-      current_statement__ = 5;
+      current_statement__ = 7;
       stan::model::assign(z,
         (1 ? stan::math::to_complex(0, 3) :
            stan::math::promote_scalar<std::complex<double>>(2)),
@@ -756,6 +794,17 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
           "assigning variable b", stan::model::index_uni(sym1__));
       }
       out__.write(b);
+      local_scalar_t__ r;
+      r = DUMMY_VAR__;
+      
+      r = in__.read<local_scalar_t__>();
+      out__.write(r);
+      std::complex<local_scalar_t__> zp;
+      zp = std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      
+      stan::model::assign(zp, in__.read<local_scalar_t__>(),
+        "assigning variable zp");
+      out__.write(zp);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -763,7 +812,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__ = std::vector<std::string>{"a", "b", "c", "d", "z"};
+    names__ = std::vector<std::string>{"a", "b", "r", "zp", "c", "d", "z"};
     
     } // get_param_names() 
     
@@ -772,7 +821,8 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
                                                                    static_cast<size_t>(2)
                                                                    },
-      std::vector<size_t>{static_cast<size_t>(2)},
+      std::vector<size_t>{static_cast<size_t>(2)}, std::vector<size_t>{
+      }, std::vector<size_t>{static_cast<size_t>(2)},
       std::vector<size_t>{static_cast<size_t>(2)},
       std::vector<size_t>{static_cast<size_t>(2)},
       std::vector<size_t>{static_cast<size_t>(2)}};
@@ -795,6 +845,9 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
         param_names__.emplace_back(std::string() + "b" + '.' + std::to_string(sym1__));
       } 
     }
+    param_names__.emplace_back(std::string() + "r");
+    param_names__.emplace_back(std::string() + "zp" + '.' + "real");
+    param_names__.emplace_back(std::string() + "zp" + '.' + "imag");
     if (emit_transformed_parameters__) {
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         {
@@ -832,6 +885,9 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
         param_names__.emplace_back(std::string() + "b" + '.' + std::to_string(sym1__));
       } 
     }
+    param_names__.emplace_back(std::string() + "r");
+    param_names__.emplace_back(std::string() + "zp" + '.' + "real");
+    param_names__.emplace_back(std::string() + "zp" + '.' + "imag");
     if (emit_transformed_parameters__) {
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         {
@@ -855,13 +911,13 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     
   inline std::string get_constrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"c\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"d\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"zp\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"c\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"d\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"}]");
     
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"c\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"d\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"zp\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"c\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"d\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"}]");
     
     } // get_unconstrained_sizedtypes() 
     
@@ -875,7 +931,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  (2 + 2);
+  (((2 + 2) + 1) + 2);
       const size_t num_transformed = ((2 + 2) + 2);
       const size_t num_gen_quantities = 0;
       std::vector<double> vars_vec(num_params__
@@ -896,7 +952,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  (2 + 2);
+  (((2 + 2) + 1) + 2);
       const size_t num_transformed = ((2 + 2) + 2);
       const size_t num_gen_quantities = 0;
       vars.resize(num_params__
@@ -934,8 +990,8 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-     constexpr std::array<const char*, 2> names__{"a", "b"};
-      const std::array<Eigen::Index, 2> constrain_param_sizes__{2, 2};
+     constexpr std::array<const char*, 4> names__{"a", "b", "r", "zp"};
+      const std::array<Eigen::Index, 4> constrain_param_sizes__{2, 2, 1, 2};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
