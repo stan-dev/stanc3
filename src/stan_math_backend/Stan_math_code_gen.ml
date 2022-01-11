@@ -200,7 +200,8 @@ let mk_extra_args templates args =
    printing user defined distributions vs rngs vs regular functions.
 *)
 let pp_fun_def ppf Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
-    funs_used_in_reduce_sum funs_used_in_variadic_ode funs_used_in_variadic_dae =
+    funs_used_in_reduce_sum funs_used_in_variadic_ode funs_used_in_variadic_dae
+    =
   let extra, extra_templates =
     match fdsuffix with
     | Fun_kind.FnTarget -> (["lp__"; "lp_accum__"], ["T_lp__"; "T_lp_accum__"])

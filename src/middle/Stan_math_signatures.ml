@@ -148,8 +148,7 @@ let variadic_dae_tol_arg_types =
 let variadic_dae_mandatory_arg_types =
   [ (UnsizedType.AutoDiffable, UnsizedType.UVector); (* yy *)
     (UnsizedType.AutoDiffable, UnsizedType.UVector); (* yp *)
-    (AutoDiffable, UReal);                           (* t0 *)
-    (AutoDiffable, UArray UReal) ]                   (* ts *)
+    (AutoDiffable, UReal); (AutoDiffable, UArray UReal) ]
 
 let variadic_dae_mandatory_fun_args =
   [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
@@ -225,10 +224,10 @@ let is_variadic_ode_nonadjoint_tol_fn f =
   && String.is_suffix f ~suffix:ode_tolerances_suffix
 
 (* dae *)
-let variadic_dae_fns = String.Set.of_list
-                         [ "dae_tol"; "dae" ]
+let variadic_dae_fns = String.Set.of_list ["dae_tol"; "dae"]
 let dae_tolerances_suffix = "_tol"
 let is_variadic_dae_fn f = Set.mem variadic_dae_fns f
+
 let is_variadic_dae_tol_fn f =
   is_variadic_dae_fn f && String.is_suffix f ~suffix:dae_tolerances_suffix
 (* end of dae *)

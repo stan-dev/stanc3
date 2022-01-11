@@ -146,8 +146,10 @@ let variadic_dae_functor_suffix = "_daefunctor__"
 let functor_suffix_select hof =
   match hof with
   | x when Stan_math_signatures.is_reduce_sum_fn x -> reduce_sum_functor_suffix
-  | x when Stan_math_signatures.is_variadic_ode_fn x -> variadic_ode_functor_suffix
-  | x when Stan_math_signatures.is_variadic_dae_fn x -> variadic_dae_functor_suffix
+  | x when Stan_math_signatures.is_variadic_ode_fn x ->
+      variadic_ode_functor_suffix
+  | x when Stan_math_signatures.is_variadic_dae_fn x ->
+      variadic_dae_functor_suffix
   | _ -> functor_suffix
 
 let constraint_to_string = function
@@ -372,13 +374,15 @@ and gen_fun_app suffix ppf fname es mem_pattern =
           , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: rel_tol_b :: abs_tol_b
             :: rel_tol_q :: abs_tol_q :: max_num_steps :: num_checkpoints
             :: interpolation_polynomial :: solver_f :: solver_b :: msgs :: tl )
-      | true, x, f :: yy0 :: yp0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
+      | ( true
+        , x
+        , f :: yy0 :: yp0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl )
         when Stan_math_signatures.is_variadic_dae_fn x
              && String.is_suffix fname
                   ~suffix:Stan_math_signatures.dae_tolerances_suffix ->
           ( fname
-          , f :: yy0 :: yp0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: msgs :: tl
-          )
+          , f :: yy0 :: yp0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps
+            :: msgs :: tl )
       | true, x, f :: yy0 :: yp0 :: t0 :: ts :: tl
         when Stan_math_signatures.is_variadic_dae_fn x ->
           (fname, f :: yy0 :: yp0 :: t0 :: ts :: msgs :: tl)
