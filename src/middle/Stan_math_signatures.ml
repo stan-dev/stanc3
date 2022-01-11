@@ -297,6 +297,7 @@ let math_sigs =
   ; ([UnaryVectorized], "floor", [DDeepVectorized], SoA)
   ; ([UnaryVectorized], "inv", [DDeepVectorized], SoA)
   ; ([UnaryVectorized], "inv_cloglog", [DDeepVectorized], SoA)
+  ; ([UnaryVectorized], "inv_erfc", [DDeepVectorized], SoA)
   ; ([UnaryVectorized], "inv_logit", [DDeepVectorized], SoA)
   ; ([UnaryVectorized], "inv_Phi", [DDeepVectorized], SoA)
   ; ([UnaryVectorized], "inv_sqrt", [DDeepVectorized], SoA)
