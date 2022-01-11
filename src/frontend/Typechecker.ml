@@ -210,34 +210,15 @@ let check_postfixop loc op te =
         ~type_ ~loc
   | _ -> Semantic_error.illtyped_postfix_op loc op te.emeta.type_ |> error
 
-let make_function_variable cf loc id = function
-  | UnsizedType.UFun (args, rt, FnLpdf _, mem_pattern) ->
-      let type_ =
-        UnsizedType.UFun
-          (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in
-      mk_typed_expression ~expr:(Variable id)
-        ~ad_level:(calculate_autodifftype cf Functions type_)
-        ~type_ ~loc
-  | UnsizedType.UFun _ as type_ ->
-      mk_typed_expression ~expr:(Variable id)
-        ~ad_level:(calculate_autodifftype cf Functions type_)
-        ~type_ ~loc
-  | type_ ->
-      Common.FatalError.fatal_error_msg
-        [%message
-          "Attempting to create function variable out of "
-            (type_ : UnsizedType.t)]
-
-let check_variable cf loc tenv id =
+let check_id cf loc tenv id =
   match Env.find tenv (Utils.stdlib_distribution_name id.name) with
   | [] ->
       Semantic_error.ident_not_in_scope loc id.name
         (Env.nearest_ident tenv id.name)
       |> error
   | {kind= `StanMath; _} :: _ ->
-      mk_typed_expression ~expr:(Variable id)
-        ~ad_level:(calculate_autodifftype cf MathLibrary UMathLibraryFunction)
-        ~type_:UMathLibraryFunction ~loc
+      ( calculate_autodifftype cf MathLibrary UMathLibraryFunction
+      , UnsizedType.UMathLibraryFunction )
   | {kind= `Variable {origin= Param | TParam | GQuant; _}; _} :: _
     when cf.in_toplevel_decl ->
       Semantic_error.non_data_variable_size_decl loc |> error
@@ -248,15 +229,20 @@ let check_variable cf loc tenv id =
               || cf.current_block = Model ) ->
       Semantic_error.invalid_unnormalized_fn loc |> error
   | {kind= `Variable {origin; _}; type_} :: _ ->
-      mk_typed_expression ~expr:(Variable id)
-        ~ad_level:(calculate_autodifftype cf origin type_)
-        ~type_ ~loc
-  | {kind= `UserDefined | `UserDeclared _; type_= UFun _ as ftype} :: _ ->
-      make_function_variable cf loc id ftype
+      (calculate_autodifftype cf origin type_, type_)
+  | { kind= `UserDefined | `UserDeclared _
+    ; type_= UFun (args, rt, FnLpdf _, mem_pattern) }
+    :: _ ->
+      let type_ =
+        UnsizedType.UFun
+          (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in
+      (calculate_autodifftype cf Functions type_, type_)
   | {kind= `UserDefined | `UserDeclared _; type_} :: _ ->
-      mk_typed_expression ~expr:(Variable id)
-        ~ad_level:(calculate_autodifftype cf Functions type_)
-        ~type_ ~loc
+      (calculate_autodifftype cf Functions type_, type_)
+
+let check_variable cf loc tenv id =
+  let ad_level, type_ = check_id cf loc tenv id in
+  mk_typed_expression ~expr:(Variable id) ~ad_level ~type_ ~loc
 
 let get_consistent_types ad_level type_ es =
   let f state e =
@@ -306,6 +292,9 @@ let indexing_type idx =
   match idx with
   | Single {emeta= {type_= UnsizedType.UInt; _}; _} -> `Single
   | _ -> `Multi
+
+let is_multiindex i =
+  match indexing_type i with `Single -> false | `Multi -> true
 
 let inferred_unsizedtype_of_indexed ~loc ut indices =
   let rec aux type_ idcs =
@@ -473,6 +462,24 @@ let find_matching_function_signature tenv
     match List.hd (List.filter_opt l) with
     | Some s -> Error (Some s)
     | _ -> Error None )
+
+let make_function_variable cf loc id = function
+  | UnsizedType.UFun (args, rt, FnLpdf _, mem_pattern) ->
+      let type_ =
+        UnsizedType.UFun
+          (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in
+      mk_typed_expression ~expr:(Variable id)
+        ~ad_level:(calculate_autodifftype cf Functions type_)
+        ~type_ ~loc
+  | UnsizedType.UFun _ as type_ ->
+      mk_typed_expression ~expr:(Variable id)
+        ~ad_level:(calculate_autodifftype cf Functions type_)
+        ~type_ ~loc
+  | type_ ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Attempting to create function variable out of "
+            (type_ : UnsizedType.t)]
 
 let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
     =
@@ -812,34 +819,75 @@ let verify_assignment_global loc cf block is_global id =
   if (not is_global) || block = cf.current_block then ()
   else Semantic_error.cannot_assign_to_global loc id.name |> error
 
-let mk_assignment_from_indexed_expr assop lhs rhs =
-  Assignment
-    {assign_lhs= Ast.lvalue_of_expr lhs; assign_op= assop; assign_rhs= rhs}
-
-let check_assignment_operator loc assop lhs rhs =
+let verify_assignment_operator loc assop lhs rhs =
   let err op =
-    Semantic_error.illtyped_assignment loc op lhs.emeta.type_ rhs.emeta.type_
+    Semantic_error.illtyped_assignment loc op lhs.lmeta.type_ rhs.emeta.type_
   in
-  let () =
-    match assop with
-    | Assign | ArrowAssign ->
-        if
-          UnsizedType.check_of_same_type_mod_array_conv "" lhs.emeta.type_
-            rhs.emeta.type_
-        then ()
-        else err Operator.Equals |> error
-    | OperatorAssign op -> (
-        let args = List.map ~f:arg_type [lhs; rhs] in
-        let return_type =
-          Stan_math_signatures.assignmentoperator_stan_math_return_type op args
-        in
-        match return_type with Some Void -> () | _ -> err op |> error ) in
-  mk_typed_statement ~return_type:NoReturnType ~loc
-    ~stmt:(mk_assignment_from_indexed_expr assop lhs rhs)
+  match assop with
+  | Assign | ArrowAssign ->
+      if
+        UnsizedType.check_of_same_type_mod_array_conv "" lhs.lmeta.type_
+          rhs.emeta.type_
+      then ()
+      else err Operator.Equals |> error
+  | OperatorAssign op -> (
+      let args = List.map ~f:arg_type [Ast.expr_of_lvalue lhs; rhs] in
+      let return_type =
+        Stan_math_signatures.assignmentoperator_stan_math_return_type op args
+      in
+      match return_type with Some Void -> () | _ -> err op |> error )
+
+let check_lvalue cf tenv = function
+  | {lval= LVariable id; lmeta= ({loc} : located_meta)} ->
+      verify_identifier id ;
+      let ad_level, type_ = check_id cf loc tenv id in
+      {lval= LVariable id; lmeta= {ad_level; type_; loc}}
+  | {lval= LIndexed (lval, idcs); lmeta= {loc}} ->
+      let rec check_inner = function
+        | {lval= LVariable id; lmeta= ({loc} : located_meta)} ->
+            verify_identifier id ;
+            let ad_level, type_ = check_id cf loc tenv id in
+            let var = {lval= LVariable id; lmeta= {ad_level; type_; loc}} in
+            (var, var, [])
+        | {lval= LIndexed (lval, idcs); lmeta= {loc}} ->
+            let lval, var, flat = check_inner lval in
+            let idcs = List.map ~f:(check_index cf tenv) idcs in
+            let ad_level =
+              inferred_ad_type_of_indexed lval.lmeta.ad_level idcs in
+            let type_ =
+              inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in
+            ( {lval= LIndexed (lval, idcs); lmeta= {ad_level; type_; loc}}
+            , var
+            , flat @ idcs ) in
+      let lval, var, flat = check_inner lval in
+      let idcs = List.map ~f:(check_index cf tenv) idcs in
+      let ad_level = inferred_ad_type_of_indexed lval.lmeta.ad_level idcs in
+      let type_ = inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in
+      if List.exists ~f:is_multiindex flat then (
+        add_warning loc
+          "Nested multi-indexing on the left hand side of assignment does not \
+           behave the same as nested indexing in expressions. This is \
+           considered a bug and will be disallowed in Stan 2.32.0. The \
+           indexing can be automatically fixed using the canonicalize flag for \
+           stanc." ;
+        let lvalue_rvalue_types_differ =
+          try
+            let flat_type =
+              inferred_unsizedtype_of_indexed ~loc var.lmeta.type_ (flat @ idcs)
+            in
+            let rec can_assign = function
+              | UnsizedType.(UArray t1, UArray t2) -> can_assign (t1, t2)
+              | UVector, URowVector | URowVector, UVector -> false
+              | t1, t2 -> UnsizedType.compare t1 t2 <> 0 in
+            can_assign (flat_type, type_)
+          with Errors.SemanticError _ -> true in
+        if lvalue_rvalue_types_differ then
+          Semantic_error.cannot_assign_to_multiindex loc |> error ) ;
+      {lval= LIndexed (lval, idcs); lmeta= {ad_level; type_; loc}}
 
 let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
   let assign_id = Ast.id_of_lvalue assign_lhs in
-  let lhs = assign_lhs |> expr_of_lvalue |> check_expression cf tenv in
+  let lhs = check_lvalue cf tenv assign_lhs in
   let rhs = check_expression cf tenv assign_rhs in
   let block, global, readonly =
     let var = Env.find tenv assign_id.name in
@@ -854,7 +902,9 @@ let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
         |> error in
   verify_assignment_global loc cf block global assign_id ;
   verify_assignment_read_only loc readonly assign_id ;
-  check_assignment_operator loc assign_op lhs rhs
+  verify_assignment_operator loc assign_op lhs rhs ;
+  mk_typed_statement ~return_type:NoReturnType ~loc
+    ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs})
 
 (* target plus-equals / increment log-prob *)
 
@@ -1249,20 +1299,17 @@ and check_sizedtype cf tenv sizedty =
 
 and check_var_decl_initial_value loc cf tenv id init_val_opt =
   match init_val_opt with
-  | Some e -> (
-      let stmt =
-        Assignment
-          { assign_lhs= {lval= LVariable id; lmeta= {loc}}
-          ; assign_op= Assign
-          ; assign_rhs= e } in
-      mk_untyped_statement ~loc ~stmt
-      |> check_statement cf tenv |> snd
-      |> fun ts ->
-      match (ts.stmt, ts.smeta.return_type) with
-      | Assignment {assign_rhs= ue; _}, NoReturnType -> Some ue
-      | _ ->
-          Common.FatalError.fatal_error_msg
-            [%message " check_var_decl: `Assignment` expected."] )
+  | Some e ->
+      let lhs = check_lvalue cf tenv {lval= LVariable id; lmeta= {loc}} in
+      let rhs = check_expression cf tenv e in
+      if
+        UnsizedType.check_of_same_type_mod_array_conv "" lhs.lmeta.type_
+          rhs.emeta.type_
+      then Some rhs
+      else
+        Semantic_error.illtyped_assignment loc Equals lhs.lmeta.type_
+          rhs.emeta.type_
+        |> error
   | None -> None
 
 and check_transformation cf tenv ut trans =
