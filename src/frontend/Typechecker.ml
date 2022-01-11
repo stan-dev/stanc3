@@ -169,13 +169,13 @@ let check_ternary_if loc pe te fe =
   match
     ( pe.emeta.type_
     , UnsizedType.common_type (te.emeta.type_, fe.emeta.type_)
-    , UnsizedType.lub_ad_type [te.emeta.ad_level; fe.emeta.ad_level] )
+    , expr_ad_lub [pe; te; fe] )
   with
-  | UInt, Some type_, ad when not (UnsizedType.is_fun_type type_) ->
+  | UInt, Some type_, ad_level when not (UnsizedType.is_fun_type type_) ->
       mk_typed_expression
-        ~expr:(TernaryIf (pe, promote te type_ ad, promote fe type_ ad))
-        ~ad_level:(expr_ad_lub [pe; te; fe])
-        ~type_ ~loc
+        ~expr:
+          (TernaryIf (pe, promote te type_ ad_level, promote fe type_ ad_level))
+        ~ad_level ~type_ ~loc
   | _, _, _ ->
       Semantic_error.illtyped_ternary_if loc pe.emeta.type_ te.emeta.type_
         fe.emeta.type_
