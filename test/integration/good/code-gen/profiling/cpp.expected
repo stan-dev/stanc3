@@ -4,16 +4,7 @@
 #include <stan/model/model_header.hpp>
 namespace simple_function_model_namespace {
 
-using stan::io::dump;
-using stan::model::assign;
-using stan::model::index_uni;
-using stan::model::index_max;
-using stan::model::index_min;
-using stan::model::index_min_max;
-using stan::model::index_multi;
-using stan::model::index_omni;
 using stan::model::model_base_crtp;
-using stan::model::rvalue;
 using namespace stan::math;
 
 
@@ -83,34 +74,36 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
+      int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       current_statement__ = 21;
       context__.validate_dims("data initialization","N","int",
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 21;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 21;
-      check_greater_or_equal(function__, "N", N, 1);
+      stan::math::check_greater_or_equal(function__, "N", N, 1);
       current_statement__ = 22;
-      validate_non_negative_index("x", "N", N);
+      stan::math::validate_non_negative_index("x", "N", N);
       current_statement__ = 23;
       context__.validate_dims("data initialization","x","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       x = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 23;
       x = context__.vals_r("x");
       current_statement__ = 24;
-      validate_non_negative_index("y", "N", N);
+      stan::math::validate_non_negative_index("y", "N", N);
       current_statement__ = 25;
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      y__ = Eigen::Matrix<double, -1, 1>(N);
+      y__ = 
+        Eigen::Matrix<double, -1, 1>::Constant(N,
+          std::numeric_limits<double>::quiet_NaN());
       new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
       
       {
@@ -122,8 +115,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         current_statement__ = 25;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 25;
-          assign(y, y_flat__[(pos__ - 1)],
-            "assigning variable y", index_uni(sym1__));
+          stan::model::assign(y, y_flat__[(pos__ - 1)],
+            "assigning variable y", stan::model::index_uni(sym1__));
           current_statement__ = 25;
           pos__ = (pos__ + 1);
         }
@@ -131,12 +124,14 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       current_statement__ = 26;
       sum_y = std::numeric_limits<double>::quiet_NaN();
       
+      
       current_statement__ = 28;
       {
-        profile<local_scalar_t__> profile__("sum", const_cast<profile_map&>(profiles__));
+        stan::math::profile<local_scalar_t__> profile__("sum",
+          const_cast<stan::math::profile_map&>(profiles__));
         
         current_statement__ = 27;
-        sum_y = sum(y);
+        sum_y = stan::math::sum(y);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -163,80 +158,79 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     (void) function__;  // suppress unused var warning
     
     try {
-      local_scalar_t__ rho;
-      rho = DUMMY_VAR__;
-      
+      local_scalar_t__ rho = DUMMY_VAR__;
       current_statement__ = 1;
       rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
-      local_scalar_t__ alpha;
-      alpha = DUMMY_VAR__;
-      
+      local_scalar_t__ alpha = DUMMY_VAR__;
       current_statement__ = 2;
       alpha = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
-      local_scalar_t__ sigma;
-      sigma = DUMMY_VAR__;
-      
+      local_scalar_t__ sigma = DUMMY_VAR__;
       current_statement__ = 3;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       {
         current_statement__ = 4;
-        validate_non_negative_index("cov", "N", N);
+        stan::math::validate_non_negative_index("cov", "N", N);
         current_statement__ = 5;
-        validate_non_negative_index("cov", "N", N);
-        Eigen::Matrix<local_scalar_t__, -1, -1> cov;
-        cov = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
-        stan::math::fill(cov, DUMMY_VAR__);
-        
+        stan::math::validate_non_negative_index("cov", "N", N);
+        Eigen::Matrix<local_scalar_t__, -1, -1> cov =
+           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, N,
+             DUMMY_VAR__);
         current_statement__ = 7;
-        validate_non_negative_index("L_cov", "N", N);
+        stan::math::validate_non_negative_index("L_cov", "N", N);
         current_statement__ = 8;
-        validate_non_negative_index("L_cov", "N", N);
-        Eigen::Matrix<local_scalar_t__, -1, -1> L_cov;
-        L_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
-        stan::math::fill(L_cov, DUMMY_VAR__);
-        
+        stan::math::validate_non_negative_index("L_cov", "N", N);
+        Eigen::Matrix<local_scalar_t__, -1, -1> L_cov =
+           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, N,
+             DUMMY_VAR__);
         current_statement__ = 11;
         {
-          profile<local_scalar_t__> profile__("cov_exp_quad", const_cast<profile_map&>(profiles__));
+          stan::math::profile<local_scalar_t__> profile__("cov_exp_quad",
+            const_cast<stan::math::profile_map&>(profiles__));
           
           current_statement__ = 10;
-          assign(cov,
-            add(gp_exp_quad_cov(x, alpha, rho),
-              diag_matrix(rep_vector(sigma, N))), "assigning variable cov");
+          stan::model::assign(cov,
+            stan::math::add(stan::math::gp_exp_quad_cov(x, alpha, rho),
+              stan::math::diag_matrix(stan::math::rep_vector(sigma, N))),
+            "assigning variable cov");
         }
         current_statement__ = 13;
         {
-          profile<local_scalar_t__> profile__("cholesky_decompose", const_cast<profile_map&>(profiles__));
+          stan::math::profile<local_scalar_t__> profile__("cholesky_decompose",
+            const_cast<stan::math::profile_map&>(profiles__));
           
           current_statement__ = 12;
-          assign(L_cov, cholesky_decompose(cov), "assigning variable L_cov");
+          stan::model::assign(L_cov, stan::math::cholesky_decompose(cov),
+            "assigning variable L_cov");
         }
         current_statement__ = 20;
         {
-          profile<local_scalar_t__> profile__("likelihood", const_cast<profile_map&>(profiles__));
+          stan::math::profile<local_scalar_t__> profile__("likelihood",
+            const_cast<stan::math::profile_map&>(profiles__));
           
           current_statement__ = 17;
           {
-            profile<local_scalar_t__> profile__("priors", const_cast<profile_map&>(profiles__));
+            stan::math::profile<local_scalar_t__> profile__("priors",
+              const_cast<stan::math::profile_map&>(profiles__));
             
             current_statement__ = 14;
-            lp_accum__.add(gamma_lpdf<propto__>(rho, 25, 4));
+            lp_accum__.add(stan::math::gamma_lpdf<propto__>(rho, 25, 4));
             current_statement__ = 15;
-            lp_accum__.add(normal_lpdf<propto__>(alpha, 0, 2));
+            lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha, 0, 2));
             current_statement__ = 16;
-            lp_accum__.add(normal_lpdf<propto__>(sigma, 0, 1));
+            lp_accum__.add(stan::math::normal_lpdf<propto__>(sigma, 0, 1));
           }
           current_statement__ = 19;
           {
-            profile<local_scalar_t__> profile__("multi_normal_cholesky", const_cast<profile_map&>(profiles__));
+            stan::math::profile<local_scalar_t__> profile__("multi_normal_cholesky",
+              const_cast<stan::math::profile_map&>(profiles__));
             
             current_statement__ = 18;
             lp_accum__.add(
-              multi_normal_cholesky_lpdf<propto__>(y, rep_vector(0, N),
-                L_cov));
+              stan::math::multi_normal_cholesky_lpdf<propto__>(y,
+                stan::math::rep_vector(0, N), L_cov));
           }
         }
       }
@@ -272,32 +266,27 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     (void) function__;  // suppress unused var warning
     
     try {
-      double rho;
-      rho = std::numeric_limits<double>::quiet_NaN();
-      
+      double rho = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
-      double alpha;
-      alpha = std::numeric_limits<double>::quiet_NaN();
-      
+      double alpha = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       alpha = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
-      double sigma;
-      sigma = std::numeric_limits<double>::quiet_NaN();
-      
+      double sigma = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       out__.write(rho);
       out__.write(alpha);
       out__.write(sigma);
-      if (logical_negation((primitive_value(emit_transformed_parameters__) ||
-            primitive_value(emit_generated_quantities__)))) {
+      if (stan::math::logical_negation((stan::math::primitive_value(
+            emit_transformed_parameters__) || stan::math::primitive_value(
+            emit_generated_quantities__)))) {
         return ;
       } 
-      if (logical_negation(emit_generated_quantities__)) {
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       } 
     } catch (const std::exception& e) {
@@ -318,23 +307,15 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
-      int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
+      int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      local_scalar_t__ rho;
-      rho = DUMMY_VAR__;
-      
+      local_scalar_t__ rho = DUMMY_VAR__;
       rho = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, rho);
-      local_scalar_t__ alpha;
-      alpha = DUMMY_VAR__;
-      
+      local_scalar_t__ alpha = DUMMY_VAR__;
       alpha = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, alpha);
-      local_scalar_t__ sigma;
-      sigma = DUMMY_VAR__;
-      
+      local_scalar_t__ sigma = DUMMY_VAR__;
       sigma = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, sigma);
     } catch (const std::exception& e) {

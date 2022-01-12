@@ -6,24 +6,9 @@ open Fmt
 let ends_with suffix s = String.is_suffix ~suffix s
 let starts_with prefix s = String.is_prefix ~prefix s
 
-let functions_requiring_namespace =
-  String.Set.of_list
-    [ "e"; "pi"; "log2"; "log10"; "sqrt2"; "not_a_number"; "positive_infinity"
-    ; "negative_infinity"; "machine_precision"; "abs"; "acos"; "acosh"; "asin"
-    ; "asinh"; "atan"; "atanh"; "cbrt"; "ceil"; "cos"; "cosh"; "erf"; "erfc"
-    ; "exp"; "exp2"; "expm1"; "fabs"; "floor"; "lgamma"; "log"; "log1p"; "log2"
-    ; "log10"; "round"; "sin"; "sinh"; "sqrt"; "tan"; "tanh"; "tgamma"; "trunc"
-    ; "fdim"; "fmax"; "fmin"; "hypot"; "fma"; "complex" ]
-
 let stan_namespace_qualify f =
-  if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
-
-(* return true if the types of the two expression are the same *)
-let types_match e1 e2 =
-  UnsizedType.equal (Expr.Typed.type_of e1) (Expr.Typed.type_of e2)
-  && UnsizedType.compare_autodifftype (Expr.Typed.adlevel_of e1)
-       (Expr.Typed.adlevel_of e2)
-     = 0
+  if String.is_suffix ~suffix:"functor__" f || String.contains f ':' then f
+  else "stan::math::" ^ f
 
 let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 
@@ -124,6 +109,22 @@ let pp_unsizedtype_local ppf (adtype, ut) =
 let pp_expr_type ppf e =
   pp_unsizedtype_local ppf Expr.Typed.(adlevel_of e, type_of e)
 
+let rec pp_possibly_var_decl ppf (adtype, ut, mem_pattern) =
+  let scalar = local_scalar ut adtype in
+  let pp_var_decl ppf p_ut =
+    if mem_pattern = Common.Helpers.SoA && adtype = UnsizedType.AutoDiffable
+    then
+      pf ppf "@[<hov 2>stan::conditional_var_value_t<%s,@ @,%a>@]" scalar
+        pp_unsizedtype_local (adtype, p_ut)
+    else pf ppf "%a" pp_unsizedtype_local (adtype, p_ut) in
+  match ut with
+  | UArray t ->
+      pf ppf "@[<hov 2>std::vector<@,%a>@]" pp_possibly_var_decl
+        (adtype, t, mem_pattern)
+  | UMatrix | UVector | URowVector -> pf ppf "%a" pp_var_decl ut
+  | UReal | UInt | UComplex -> pf ppf "%a" pp_unsizedtype_local (adtype, ut)
+  | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
+
 let suffix_args = function
   | Fun_kind.FnRng -> ["base_rng__"]
   | FnTarget -> ["lp__"; "lp_accum__"]
@@ -141,7 +142,7 @@ let fn_renames =
     ~f:(fun (k, v) -> (Internal_fun.to_string k, v))
     [ (Internal_fun.FnLength, "stan::math::size")
     ; (FnNegInf, "stan::math::negative_infinity")
-    ; (FnResizeToMatch, "resize_to_match")
+    ; (FnResizeToMatch, "stan::math::resize_to_match")
     ; (FnNaN, "std::numeric_limits<double>::quiet_NaN") ]
   |> String.Map.of_alist_exn
 
@@ -191,23 +192,26 @@ let transform_args = function
   | transform -> Transformation.fold (fun args arg -> args @ [arg]) [] transform
 
 let rec pp_index ppf = function
-  | Index.All -> pf ppf "index_omni()"
-  | Single e -> pf ppf "index_uni(%a)" pp_expr e
-  | Upfrom e -> pf ppf "index_min(%a)" pp_expr e
+  | Index.All -> pf ppf "stan::model::index_omni()"
+  | Single e -> pf ppf "stan::model::index_uni(%a)" pp_expr e
+  | Upfrom e -> pf ppf "stan::model::index_min(%a)" pp_expr e
   | Between (e_low, e_high) ->
-      pf ppf "index_min_max(%a, %a)" pp_expr e_low pp_expr e_high
-  | MultiIndex e -> pf ppf "index_multi(%a)" pp_expr e
+      pf ppf "stan::model::index_min_max(%a, %a)" pp_expr e_low pp_expr e_high
+  | MultiIndex e -> pf ppf "stan::model::index_multi(%a)" pp_expr e
 
 and pp_indexes ppf = function
   | [] -> pf ppf ""
   | idxs -> pf ppf "@[<hov 2>%a@]" (list ~sep:comma pp_index) idxs
 
 and pp_logical_op ppf op lhs rhs =
-  pf ppf "(primitive_value(@,%a)@ %s@ primitive_value(@,%a))" pp_expr lhs op
-    pp_expr rhs
+  pf ppf
+    "(stan::math::primitive_value(@,%a)@ %s@ stan::math::primitive_value(@,%a))"
+    pp_expr lhs op pp_expr rhs
 
 and pp_unary ppf fm es = pf ppf fm pp_expr (List.hd_exn es)
-and pp_binary ppf fm es = pf ppf fm pp_expr (first es) pp_expr (second es)
+
+and pp_binary_op ppf op es =
+  pf ppf "(%a@ %s@ %a)" pp_expr (first es) op pp_expr (second es)
 
 and pp_binary_f ppf f es =
   pf ppf "%s(@,%a,@ %a)" f pp_expr (first es) pp_expr (second es)
@@ -215,85 +219,77 @@ and pp_binary_f ppf f es =
 and first es = List.nth_exn es 0
 and second es = List.nth_exn es 1
 
-and pp_scalar_binary ppf scalar_fmt generic_fmt es =
-  pp_binary ppf
-    ( if is_scalar (first es) && is_scalar (second es) then scalar_fmt
-    else generic_fmt )
-    es
+and pp_scalar_binary ppf op fn es =
+  if is_scalar (first es) && is_scalar (second es) then pp_binary_op ppf op es
+  else pp_binary_f ppf fn es
 
-and gen_operator_app = function
-  | Operator.Plus ->
-      fun ppf es -> pp_scalar_binary ppf "(%a@ +@ %a)" "add(@,%a,@ %a)" es
+and gen_operator_app op ppf es =
+  match op with
+  | Operator.Plus -> pp_scalar_binary ppf "+" "stan::math::add" es
   | PMinus ->
-      fun ppf es ->
-        pp_unary ppf
-          (if is_scalar (List.hd_exn es) then "-%a" else "minus(@,%a)")
-          es
-  | PPlus -> fun ppf es -> pp_unary ppf "%a" es
+      pp_unary ppf
+        (if is_scalar (List.hd_exn es) then "-%a" else "stan::math::minus(@,%a)")
+        es
+  | PPlus -> pp_unary ppf "%a" es
   | Transpose ->
-      fun ppf es ->
-        pp_unary ppf
-          (if is_scalar (List.hd_exn es) then "%a" else "transpose(@,%a)")
-          es
-  | PNot -> fun ppf es -> pp_unary ppf "logical_negation(@,%a)" es
-  | Minus ->
-      fun ppf es -> pp_scalar_binary ppf "(%a@ -@ %a)" "subtract(@,%a,@ %a)" es
-  | Times ->
-      fun ppf es -> pp_scalar_binary ppf "(%a@ *@ %a)" "multiply(@,%a,@ %a)" es
+      pp_unary ppf
+        ( if is_scalar (List.hd_exn es) then "%a"
+        else "stan::math::transpose(@,%a)" )
+        es
+  | PNot -> pp_unary ppf "stan::math::logical_negation(@,%a)" es
+  | Minus -> pp_scalar_binary ppf "-" "stan::math::subtract" es
+  | Times -> pp_scalar_binary ppf "*" "stan::math::multiply" es
   | Divide | IntDivide ->
-      fun ppf es ->
-        if
-          is_matrix (second es)
-          && (is_matrix (first es) || is_row_vector (first es))
-        then pp_binary_f ppf "mdivide_right" es
-        else pp_scalar_binary ppf "(%a@ /@ %a)" "divide(@,%a,@ %a)" es
-  | Modulo -> fun ppf es -> pp_binary_f ppf "modulus" es
-  | LDivide -> fun ppf es -> pp_binary_f ppf "mdivide_left" es
+      if
+        is_matrix (second es)
+        && (is_matrix (first es) || is_row_vector (first es))
+      then pp_binary_f ppf "stan::math::mdivide_right" es
+      else pp_scalar_binary ppf "/" "stan::math::divide" es
+  | Modulo -> pp_binary_f ppf "stan::math::modulus" es
+  | LDivide -> pp_binary_f ppf "stan::math::mdivide_left" es
   | And | Or ->
       Common.FatalError.fatal_error_msg
         [%message "And/Or should have been converted to an expression"]
-  | EltTimes ->
-      fun ppf es ->
-        pp_scalar_binary ppf "(%a@ *@ %a)" "elt_multiply(@,%a,@ %a)" es
-  | EltDivide ->
-      fun ppf es ->
-        pp_scalar_binary ppf "(%a@ /@ %a)" "elt_divide(@,%a,@ %a)" es
-  | Pow -> fun ppf es -> pp_binary_f ppf "pow" es
-  | EltPow -> fun ppf es -> pp_binary_f ppf "pow" es
-  | Equals -> fun ppf es -> pp_binary_f ppf "logical_eq" es
-  | NEquals -> fun ppf es -> pp_binary_f ppf "logical_neq" es
-  | Less -> fun ppf es -> pp_binary_f ppf "logical_lt" es
-  | Leq -> fun ppf es -> pp_binary_f ppf "logical_lte" es
-  | Greater -> fun ppf es -> pp_binary_f ppf "logical_gt" es
-  | Geq -> fun ppf es -> pp_binary_f ppf "logical_gte" es
+  | EltTimes -> pp_scalar_binary ppf "*" "stan::math::elt_multiply" es
+  | EltDivide -> pp_scalar_binary ppf "/" "stan::math::elt_divide" es
+  | Pow -> pp_binary_f ppf "stan::math::pow" es
+  | EltPow -> pp_binary_f ppf "stan::math::pow" es
+  | Equals -> pp_binary_f ppf "stan::math::logical_eq" es
+  | NEquals -> pp_binary_f ppf "stan::math::logical_neq" es
+  | Less -> pp_binary_f ppf "stan::math::logical_lt" es
+  | Leq -> pp_binary_f ppf "stan::math::logical_lte" es
+  | Greater -> pp_binary_f ppf "stan::math::logical_gt" es
+  | Geq -> pp_binary_f ppf "stan::math::logical_gte" es
 
-and gen_misc_special_math_app f =
+and gen_misc_special_math_app (f : string)
+    (mem_pattern : Common.Helpers.mem_pattern)
+    (ret_type : UnsizedType.returntype option) =
   match f with
   | "lmultiply" ->
-      Some (fun ppf es -> pp_binary ppf "multiply_log(@,%a,@ %a)" es)
+      Some (fun ppf es -> pp_binary_f ppf "stan::math::multiply_log" es)
   | "lchoose" ->
-      Some (fun ppf es -> pp_binary ppf "binomial_coefficient_log(@,%a,@ %a)" es)
-  | "target" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
-  | "get_lp" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
-  | "max" | "min" ->
       Some
-        (fun ppf es ->
-          let f = match es with [_; _] -> "std::" ^ f | _ -> f in
-          pp_call ppf (f, pp_expr, es) )
-  | "ceil" ->
-      let std_prefix_data_scalar f = function
-        | [ Expr.
-              { Fixed.meta=
-                  Typed.Meta.{adlevel= DataOnly; type_= UInt | UReal; _}
-              ; _ } ] ->
-            "std::" ^ f
-        | _ -> f in
-      Some
-        (fun ppf es ->
-          let f = std_prefix_data_scalar f es in
-          pp_call ppf (f, pp_expr, es) )
+        (fun ppf es -> pp_binary_f ppf "stan::math::binomial_coefficient_log" es)
+  | "target" -> Some (fun ppf _ -> pf ppf "stan::math::get_lp(lp__, lp_accum__)")
+  | "get_lp" -> Some (fun ppf _ -> pf ppf "stan::math::get_lp(lp__, lp_accum__)")
   | f when Map.mem fn_renames f ->
       Some (fun ppf es -> pp_call ppf (Map.find_exn fn_renames f, pp_expr, es))
+  | "rep_matrix" | "rep_vector" | "rep_row_vector" | "append_row" | "append_col"
+    when mem_pattern = Common.Helpers.SoA -> (
+      let is_autodiffable Expr.Fixed.{meta= Expr.Typed.Meta.{adlevel; _}; _} =
+        adlevel = UnsizedType.AutoDiffable in
+      match ret_type with
+      | Some (UnsizedType.ReturnType t) ->
+          Some
+            (fun ppf es ->
+              match List.exists ~f:is_autodiffable es with
+              | true ->
+                  pf ppf "%s<%a>(@,%a)" f pp_possibly_var_decl
+                    (UnsizedType.AutoDiffable, t, mem_pattern)
+                    (list ~sep:comma pp_expr) es
+              | false -> pf ppf "%s(@,%a)" f (list ~sep:comma pp_expr) es )
+      | Some Void -> None
+      | None -> None )
   | _ -> None
 
 and read_data ut ppf es =
@@ -309,7 +305,8 @@ and read_data ut ppf es =
   pf ppf "context__.vals_%s(%a)" i_or_r_or_c pp_expr (List.hd_exn es)
 
 (* assumes everything well formed from parser checks *)
-and gen_fun_app suffix ppf fname es mem_pattern =
+and gen_fun_app suffix ppf fname es mem_pattern
+    (ret_type : UnsizedType.returntype option) =
   let default ppf es =
     let to_var s = Expr.{Fixed.pattern= Var s; meta= Typed.Meta.empty} in
     let convert_hof_vars = function
@@ -417,7 +414,7 @@ and gen_fun_app suffix ppf fname es mem_pattern =
     pp_call ppf (fname, pp_expr, args) in
   let pp =
     [ Option.map ~f:gen_operator_app (Operator.of_string_opt fname)
-    ; gen_misc_special_math_app fname ]
+    ; gen_misc_special_math_app fname mem_pattern ret_type ]
     |> List.filter_opt |> List.hd |> Option.value ~default in
   pf ppf "@[<hov 2>%a@]" pp es
 
@@ -461,14 +458,15 @@ and pp_compiler_internal_fn ad ut f ppf es =
             "Unexpected type for row vector literal" (ut : UnsizedType.t)] )
   | FnReadData -> read_data ut ppf es
   | FnReadDataSerializer ->
-      pf ppf "@[<hov 2>in__.read<%a>(@,)@]" pp_unsizedtype_local
+      pf ppf "@[<hov 2>in__.read<@,%a>()@]" pp_unsizedtype_local
         (UnsizedType.AutoDiffable, UnsizedType.UReal)
-  | FnReadParam {constrain; dims; _} -> (
+  | FnReadParam {constrain; dims; mem_pattern} -> (
       let constrain_opt = constraint_to_string constrain in
       match constrain_opt with
       | None ->
-          pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
-            (UnsizedType.AutoDiffable, ut)
+          pf ppf "@[<hov 2>in__.template read<@,%a>(@,%a)@]"
+            pp_possibly_var_decl
+            (UnsizedType.AutoDiffable, ut, mem_pattern)
             (list ~sep:comma pp_expr) dims
       | Some constraint_string ->
           let constraint_args = transform_args constrain in
@@ -476,12 +474,19 @@ and pp_compiler_internal_fn ad ut f ppf es =
             Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty} in
           let args = constraint_args @ [lp] @ dims in
           pf ppf
-            "@[<hov 2>in__.template read_constrain_%s<%a, jacobian__>(@,%a)@]"
-            constraint_string pp_unsizedtype_local
-            (UnsizedType.AutoDiffable, ut)
+            "@[<hov 2>in__.template read_constrain_%s<@,\
+             %a,@ @,\
+             jacobian__>(@,\
+             %a)@]"
+            constraint_string pp_possibly_var_decl
+            (UnsizedType.AutoDiffable, ut, mem_pattern)
             (list ~sep:comma pp_expr) args )
-  | FnDeepCopy -> gen_fun_app FnPlain ppf "stan::model::deep_copy" es AoS
-  | _ -> gen_fun_app FnPlain ppf (Internal_fun.to_string f) es AoS
+  | FnDeepCopy ->
+      gen_fun_app FnPlain ppf "stan::model::deep_copy" es Common.Helpers.AoS
+        (Some UnsizedType.Void)
+  | _ ->
+      gen_fun_app FnPlain ppf (Internal_fun.to_string f) es Common.Helpers.AoS
+        (Some UnsizedType.Void)
 
 and pp_promoted ad ut ppf e =
   match e with
@@ -498,7 +503,8 @@ and pp_promoted ad ut ppf e =
           (local_scalar ut ad) pp_expr e )
 
 and pp_indexed ppf (vident, indices, pretty) =
-  pf ppf "@[<hov 2>rvalue(@,%s,@ %S,@ %a)@]" vident pretty pp_indexes indices
+  pf ppf "@[<hov 2>stan::model::rvalue(@,%s,@ %S,@ %a)@]" vident pretty
+    pp_indexes indices
 
 and pp_indexed_simple ppf (obj, idcs) =
   let idx_minus_one = function
@@ -521,12 +527,17 @@ and pp_indexed_simple ppf (obj, idcs) =
       | idcs -> pf ppf "[%a]" (list ~sep:(const string "][") pp_expr) idcs )
     (List.map ~f:idx_minus_one idcs)
 
-and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
+and pp_expr ppf Expr.Fixed.{pattern; meta} =
   match pattern with
   | Var s -> pf ppf "%s" s
   | Lit (Str, s) -> pf ppf "\"%s\"" (Cpp_str.escaped s)
-  | Lit (Imaginary, s) -> pf ppf "to_complex(0, %s)" s
+  | Lit (Imaginary, s) -> pf ppf "stan::math::to_complex(0, %s)" s
   | Lit ((Real | Int), s) -> pf ppf "%s" s
+  | Promotion (expr, ut, ad) ->
+      if is_scalar expr && ut = UReal then pp_expr ppf expr
+      else
+        pf ppf "stan::math::promote_scalar<%a>(%a)" pp_unsizedtype_local
+          (ad, ut) pp_expr expr
   | FunApp
       ( StanLib (op, _, _)
       , [ { meta= {type_= URowVector; _}
@@ -538,26 +549,22 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
         pf ppf "(Eigen::Matrix<%s,-1,1>(%d) <<@ %a).finished()" st
           (List.length es) (list ~sep:comma pp_expr) es
   | FunApp (StanLib (f, suffix, mem_pattern), es) ->
-      gen_fun_app suffix ppf f es mem_pattern
+      let fun_args = List.map ~f:Expr.Typed.fun_arg es in
+      let ret_type = Stan_math_signatures.stan_math_returntype f fun_args in
+      gen_fun_app suffix ppf f es mem_pattern ret_type
   | FunApp (CompilerInternal f, es) ->
       pp_compiler_internal_fn meta.adlevel meta.type_ f ppf es
-      (* stan_namespace_qualify?  *)
   | FunApp (UserDefined (f, suffix), es) ->
       pp_user_defined_fun ppf (f, suffix, es)
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
-      let promoted ppf (t, e) =
-        pf ppf "stan::math::promote_scalar<%s>(%a)"
-          Expr.Typed.(local_scalar (type_of t) (adlevel_of t))
-          pp_expr e in
       let tform ppf = pf ppf "(@[<hov 2>@,%a@ ?@ %a@ :@ %a@])" in
       let eval_pp ppf a =
         if UnsizedType.is_eigen_type meta.type_ then
           pf ppf "stan::math::eval(%a)" pp_expr a
         else pf ppf "%a" pp_expr a in
-      if types_match et ef then tform ppf pp_expr ec eval_pp et eval_pp ef
-      else tform ppf eval_pp ec promoted (e, et) promoted (e, ef)
+      tform ppf pp_expr ec eval_pp et eval_pp ef
   | Indexed (e, []) -> pp_expr ppf e
   | Indexed (e, idx) -> (
     match e.pattern with
@@ -629,7 +636,7 @@ let%expect_test "pp_expr9" =
 
 let%expect_test "pp_expr10" =
   printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All]))) ;
-  [%expect {| rvalue(a, "a", index_omni()) |}]
+  [%expect {| stan::model::rvalue(a, "a", stan::model::index_omni()) |}]
 
 let%expect_test "pp_expr11" =
   printf "%s"

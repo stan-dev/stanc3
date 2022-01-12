@@ -140,15 +140,64 @@ let rec is_autodiffable = function
   | UArray t -> is_autodiffable t
   | _ -> false
 
+let is_autodifftype possibly_adtype =
+  match possibly_adtype with DataOnly -> false | AutoDiffable -> true
+
+let is_dataonlytype possibly_adtype : bool =
+  not (is_autodifftype possibly_adtype)
+
 let is_scalar_type = function UReal | UInt -> true | _ -> false
+
+let rec promote_array ut scalar =
+  match (ut, scalar) with
+  | (UInt | UReal), (UReal | UComplex) -> scalar
+  | UArray ut2, _ -> UArray (promote_array ut2 scalar)
+  | _, _ -> ut
 
 let rec is_int_type ut =
   match ut with UInt -> true | UArray ut -> is_int_type ut | _ -> false
+
+let rec is_complex_type ut =
+  match ut with
+  | UComplex -> true
+  | UArray ut -> is_complex_type ut
+  | _ -> false
+
+let rec internal_scalar ut =
+  match ut with
+  | UVector | UMatrix | URowVector | UReal -> UReal
+  | UInt -> UInt
+  | UComplex -> UComplex
+  | UArray ut -> internal_scalar ut
+  | _ ->
+      Common.FatalError.fatal_error_msg
+        [%message "Tried to get scalar type of " (ut : t)]
 
 let is_eigen_type ut =
   match ut with UVector | URowVector | UMatrix -> true | _ -> false
 
 let is_fun_type = function UFun _ | UMathLibraryFunction -> true | _ -> false
+
+(** Detect if type contains an integer *)
+let rec contains_int ut =
+  match ut with UInt -> true | UArray ut -> contains_int ut | _ -> false
+
+let rec contains_eigen_type ut =
+  match ut with
+  | UInt | UComplex -> false
+  | UReal | UMathLibraryFunction | UFun (_, Void, _, _) -> false
+  | UVector | URowVector | UMatrix -> true
+  | UArray t | UFun (_, ReturnType t, _, _) -> contains_eigen_type t
+
+let rec is_container ut =
+  match ut with
+  | UVector | URowVector | UMatrix | UArray _ -> true
+  | UReal | UInt | UComplex | UFun (_, Void, _, _) -> false
+  | UFun (_, ReturnType t, _, _) -> is_container t
+  | UMathLibraryFunction -> false
+
+let return_contains_eigen_type ret =
+  match ret with ReturnType t -> contains_eigen_type t | Void -> false
 
 let rec is_indexing_matrix = function
   | UArray t, _ :: idcs -> is_indexing_matrix (t, idcs)

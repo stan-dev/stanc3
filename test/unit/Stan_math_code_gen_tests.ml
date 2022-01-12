@@ -33,14 +33,14 @@ let%expect_test "udf" =
       using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
               stan::value_type_t<T1__>>;
       int current_statement__ = 0;
-      const auto& x = to_ref(x_arg__);
-      const auto& y = to_ref(y_arg__);
+      const auto& x = stan::math::to_ref(x_arg__);
+      const auto& y = stan::math::to_ref(y_arg__);
       static constexpr bool propto__ = true;
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
       try {
-        return add(x, 1);
+        return stan::math::add(x, 1);
       } catch (const std::exception& e) {
         stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       }
@@ -93,15 +93,15 @@ let%expect_test "udf-expressions" =
               stan::value_type_t<T2__>,
               T3__>;
       int current_statement__ = 0;
-      const auto& x = to_ref(x_arg__);
-      const auto& y = to_ref(y_arg__);
-      const auto& z = to_ref(z_arg__);
+      const auto& x = stan::math::to_ref(x_arg__);
+      const auto& y = stan::math::to_ref(y_arg__);
+      const auto& z = stan::math::to_ref(z_arg__);
       static constexpr bool propto__ = true;
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
       try {
-        return add(x, 1);
+        return stan::math::add(x, 1);
       } catch (const std::exception& e) {
         stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       }

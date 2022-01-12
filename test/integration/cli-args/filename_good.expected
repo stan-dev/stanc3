@@ -4,16 +4,7 @@
 #include <stan/model/model_header.hpp>
 namespace filename_good_model_namespace {
 
-using stan::io::dump;
-using stan::model::assign;
-using stan::model::index_uni;
-using stan::model::index_max;
-using stan::model::index_min;
-using stan::model::index_min_max;
-using stan::model::index_multi;
-using stan::model::index_omni;
 using stan::model::model_base_crtp;
-using stan::model::rvalue;
 using namespace stan::math;
 
 
@@ -55,15 +46,15 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
+      int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       current_statement__ = 1;
       p = std::numeric_limits<double>::quiet_NaN();
       
+      
       current_statement__ = 2;
       q = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 2;
       q = (p + 5);
@@ -125,11 +116,12 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      if (logical_negation((primitive_value(emit_transformed_parameters__) ||
-            primitive_value(emit_generated_quantities__)))) {
+      if (stan::math::logical_negation((stan::math::primitive_value(
+            emit_transformed_parameters__) || stan::math::primitive_value(
+            emit_generated_quantities__)))) {
         return ;
       } 
-      if (logical_negation(emit_generated_quantities__)) {
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       } 
     } catch (const std::exception& e) {
@@ -150,9 +142,7 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
-      int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
+      int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

@@ -29,11 +29,11 @@ pipeline {
     agent none
     parameters {
         booleanParam(name:"skip_end_to_end", defaultValue: false, description:"Skip end-to-end tests ")
-        string(defaultValue: '', name: 'cmdstan_pr',
+        string(defaultValue: 'develop', name: 'cmdstan_pr',
                description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
-        string(defaultValue: '', name: 'stan_pr',
+        string(defaultValue: 'develop', name: 'stan_pr',
                description: "Stan PR to test against. Will check out this PR in the downstream Stan repo.")
-        string(defaultValue: '', name: 'math_pr',
+        string(defaultValue: 'develop', name: 'math_pr',
                description: "Math PR to test against. Will check out this PR in the downstream Math repo.")        
     }
     options {parallelsAlwaysFailFast()}
@@ -283,12 +283,15 @@ pipeline {
 
                         unstash 'ubuntu-exe'
 
-                        sh """
-                            git clone --recursive https://github.com/stan-dev/math.git
-                            cp bin/stanc math/test/expressions/stanc
-                        """
-
                         script {
+                            sh """
+                                git clone --recursive https://github.com/stan-dev/math.git
+                            """
+                            utils.checkout_pr("math", "math", params.math_pr)
+                            sh """
+                                cp bin/stanc math/test/expressions/stanc
+                            """
+
                             dir("math") {
                                 sh """
                                     echo O=0 >> make/local

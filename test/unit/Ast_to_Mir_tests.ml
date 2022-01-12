@@ -156,82 +156,17 @@ let%expect_test "gen quant" =
         (initialize true)))
       (meta <opaque>))
      ((pattern
-       (For (loopvar sym1__)
-        (lower
-         ((pattern (Lit Int 1))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-        (upper
-         ((pattern (Lit Int 5))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-        (body
-         ((pattern
-           (Block
-            (((pattern
-               (For (loopvar sym2__)
-                (lower
-                 ((pattern (Lit Int 1))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                (upper
-                 ((pattern (Lit Int 10))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                (body
-                 ((pattern
-                   (Block
-                    (((pattern
-                       (For (loopvar sym3__)
-                        (lower
-                         ((pattern (Lit Int 1))
-                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                        (upper
-                         ((pattern (Lit Int 20))
-                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                        (body
-                         ((pattern
-                           (Block
-                            (((pattern
-                               (NRFunApp
-                                (CompilerInternal
-                                 (FnCheck
-                                  (trans
-                                   (Lower
-                                    ((pattern (Lit Int 0))
-                                     (meta
-                                      ((type_ UInt) (loc <opaque>)
-                                       (adlevel DataOnly))))))
-                                  (var_name "mat[sym1__, sym2__, sym3__]")
-                                  (var
-                                   ((pattern
-                                     (Indexed
-                                      ((pattern (Var mat))
-                                       (meta
-                                        ((type_ (UArray UMatrix)) (loc <opaque>)
-                                         (adlevel DataOnly))))
-                                      ((Single
-                                        ((pattern (Var sym1__))
-                                         (meta
-                                          ((type_ UInt) (loc <opaque>)
-                                           (adlevel DataOnly)))))
-                                       (Single
-                                        ((pattern (Var sym2__))
-                                         (meta
-                                          ((type_ UInt) (loc <opaque>)
-                                           (adlevel DataOnly)))))
-                                       (Single
-                                        ((pattern (Var sym3__))
-                                         (meta
-                                          ((type_ UInt) (loc <opaque>)
-                                           (adlevel DataOnly))))))))
-                                    (meta
-                                     ((type_ UReal) (loc <opaque>)
-                                      (adlevel DataOnly)))))))
-                                (((pattern (Lit Int 0))
-                                  (meta
-                                   ((type_ UInt) (loc <opaque>)
-                                    (adlevel DataOnly)))))))
-                              (meta <opaque>)))))
-                          (meta <opaque>)))))
-                      (meta <opaque>)))))
-                  (meta <opaque>)))))
-              (meta <opaque>)))))
-          (meta <opaque>)))))
+       (NRFunApp
+        (CompilerInternal
+         (FnCheck
+          (trans
+           (Lower
+            ((pattern (Lit Int 0))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+          (var_name mat)
+          (var
+           ((pattern (Var mat))
+            (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly)))))))
+        (((pattern (Lit Int 0))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (meta <opaque>))) |}]
