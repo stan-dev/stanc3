@@ -432,6 +432,10 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
             (Env.nearest_ident tenv id.name) )
       |> error
   | _ (* a function *) -> (
+    (* NB: At present, [SignatureMismatch.returntype] cannot handle overloaded function types.
+       This is not needed until UDFs can be higher-order, as it is special cased for
+       variadic functions
+    *)
     match SignatureMismatch.returntype tenv id.name (get_arg_types es) with
     | Ok (Void, _, _) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
@@ -451,28 +455,20 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
         |> error )
 
 (** Given a constraint function [matches], find any signature which exists
-   If it [matches] is expected to return Error of the matching type if a valid
-    function is found.
-  Otherwise, return Ok with an optional error. This backwards style
-    allows the use of [Result.all]
+    Returns the first [Ok] if any exist, or else [Error]
 *)
 let find_matching_function_signature tenv
-    (f : Env.info -> ('a option, 'b) result) fname =
-  match
-    Result.all
-      (List.map ~f (Env.find tenv (Utils.stdlib_distribution_name fname.name)))
-  with
-  | Error ftype ->
-      (* a valid signature exists *)
-      Ok ftype
-  | Ok l -> (
-    (* no valid signature exists, report first error
-       TODO: Should we try to return more than one? For example,
-       if we have two signatures defined, the first might not be the "closest"
-    *)
-    match List.hd (List.filter_opt l) with
-    | Some s -> Error (Some s)
-    | _ -> Error None )
+    (matches : Env.info -> ('a, 'b option) result) fname =
+  let any_ok l =
+    let ok, errs = List.partition_map l ~f:Result.to_either in
+    match ok with
+    | a :: _ -> Ok a
+    | _ -> (
+      match List.hd (List.filter_opt errs) with
+      | Some s -> Error (Some s)
+      | _ -> Error None ) in
+  Utils.stdlib_distribution_name fname.name
+  |> Env.find tenv |> List.map ~f:matches |> any_ok
 
 let make_function_variable cf loc id = function
   | UnsizedType.UFun (args, rt, FnLpdf _, mem_pattern) ->
@@ -494,7 +490,6 @@ let make_function_variable cf loc id = function
 
 let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
     =
-  (* TODO add map rect *)
   if Stan_math_signatures.is_reduce_sum_fn id.name then
     check_reduce_sum ~is_cond_dist loc cf tenv id tes
   else if Stan_math_signatures.is_variadic_ode_fn id.name then
@@ -511,12 +506,12 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
     let expected_args, err =
       SignatureMismatch.check_variadic_args true mandatory_args
         mandatory_fun_args UReal (get_arg_types tes)
-      |> Result.error |> Option.value_exn in
+      |> Result.error |> Option.value_exn |> Option.value_exn in
     Semantic_error.illtyped_reduce_sum_generic loc id.name
       (List.map ~f:type_of_expr_typed tes)
       expected_args err
     |> error in
-  let matching es fn =
+  let matching remaining_es fn =
     match fn with
     | Env.
         { type_=
@@ -525,19 +520,17 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
             ftype
         ; _ }
       when List.mem Stan_math_signatures.reduce_sum_slice_types
-             sliced_arg_fun_type ~equal:( = ) -> (
+             sliced_arg_fun_type ~equal:( = ) ->
         let mandatory_args = [sliced_arg_fun; (AutoDiffable, UInt)] in
         let mandatory_fun_args =
           [sliced_arg_fun; (DataOnly, UInt); (DataOnly, UInt)] in
-        match
-          SignatureMismatch.check_variadic_args true mandatory_args
-            mandatory_fun_args UReal
-            ( (calculate_autodifftype cf Functions ftype, ftype)
-            :: get_arg_types es )
-        with
-        | Error (expected_args, err) -> Ok (Some (expected_args, err))
-        | Ok promotions -> Error (ftype, promotions) )
-    | _ -> Ok None in
+        let arg_types =
+          (calculate_autodifftype cf Functions ftype, ftype)
+          :: get_arg_types remaining_es in
+        SignatureMismatch.check_variadic_args true mandatory_args
+          mandatory_fun_args UReal arg_types
+        |> Result.map ~f:(fun p -> (ftype, p))
+    | _ -> Error None in
   match tes with
   | {expr= Variable fname; _} :: remaining_es -> (
     match
@@ -560,46 +553,33 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
   | _ -> fail ()
 
 and check_variadic_ode ~is_cond_dist loc cf tenv id tes =
+  let optional_tol_mandatory_args =
+    if Stan_math_signatures.variadic_ode_adjoint_fn = id.name then
+      Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
+    else if Stan_math_signatures.is_variadic_ode_nonadjoint_tol_fn id.name then
+      Stan_math_signatures.variadic_ode_tol_arg_types
+    else [] in
+  let mandatory_arg_types =
+    Stan_math_signatures.variadic_ode_mandatory_arg_types
+    @ optional_tol_mandatory_args in
   let fail () =
-    let optional_tol_mandatory_args =
-      if Stan_math_signatures.variadic_ode_adjoint_fn = id.name then
-        Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
-      else if Stan_math_signatures.is_variadic_ode_nonadjoint_tol_fn id.name
-      then Stan_math_signatures.variadic_ode_tol_arg_types
-      else [] in
-    let mandatory_arg_types =
-      Stan_math_signatures.variadic_ode_mandatory_arg_types
-      @ optional_tol_mandatory_args in
     let expected_args, err =
       SignatureMismatch.check_variadic_args false mandatory_arg_types
         Stan_math_signatures.variadic_ode_mandatory_fun_args
         Stan_math_signatures.variadic_ode_fun_return_type (get_arg_types tes)
-      |> Result.error |> Option.value_exn in
+      |> Result.error |> Option.value_exn |> Option.value_exn in
     Semantic_error.illtyped_variadic_ode loc id.name
       (List.map ~f:type_of_expr_typed tes)
       expected_args err
     |> error in
-  let matching remaining_es fn =
-    match fn with
-    | Env.{type_= ftype; _} -> (
-        let optional_tol_mandatory_args =
-          if Stan_math_signatures.variadic_ode_adjoint_fn = id.name then
-            Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
-          else if Stan_math_signatures.is_variadic_ode_nonadjoint_tol_fn id.name
-          then Stan_math_signatures.variadic_ode_tol_arg_types
-          else [] in
-        let mandatory_arg_types =
-          Stan_math_signatures.variadic_ode_mandatory_arg_types
-          @ optional_tol_mandatory_args in
-        match
-          SignatureMismatch.check_variadic_args false mandatory_arg_types
-            Stan_math_signatures.variadic_ode_mandatory_fun_args
-            Stan_math_signatures.variadic_ode_fun_return_type
-            ( (calculate_autodifftype cf Functions ftype, ftype)
-            :: get_arg_types remaining_es )
-        with
-        | Error (expected_args, err) -> Ok (Some (expected_args, err))
-        | Ok promotions -> Error (ftype, promotions) ) in
+  let matching remaining_es Env.{type_= ftype; _} =
+    let arg_types =
+      (calculate_autodifftype cf Functions ftype, ftype)
+      :: get_arg_types remaining_es in
+    SignatureMismatch.check_variadic_args false mandatory_arg_types
+      Stan_math_signatures.variadic_ode_mandatory_fun_args
+      Stan_math_signatures.variadic_ode_fun_return_type arg_types
+    |> Result.map ~f:(fun p -> (ftype, p)) in
   match tes with
   | {expr= Variable fname; _} :: remaining_es -> (
     match

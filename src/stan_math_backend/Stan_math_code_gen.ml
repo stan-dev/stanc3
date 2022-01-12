@@ -950,13 +950,13 @@ let is_fun_used_with_variadic_fn variadic_fn_test p =
   Program.fold find_functors_expr find_functors_stmt String.Set.empty p
 
 let collect_functors_functions p =
+  let reduce_sum_fns =
+    is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p in
+  let variadic_ode_fns =
+    is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_ode_fn p in
   let pp_fun_def_with_variadic_fn_list ppf fblock =
-    (hovbox ~indent:2 pp_fun_def)
-      ppf
-      ( fblock
-      , is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p
-      , is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_ode_fn p
-      ) in
+    (hovbox ~indent:2 pp_fun_def) ppf (fblock, reduce_sum_fns, variadic_ode_fns)
+  in
   str "@[<v>%a@]"
     (list ~sep:cut pp_fun_def_with_variadic_fn_list)
     p.functions_block
@@ -966,10 +966,6 @@ let pp_prog ppf (p : Program.Typed.t) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p, s = Locations.prepare_prog p in
   let fns_str = collect_functors_functions p in
-  let pp_functors ppf () =
-    Hashtbl.iter functors ~f:(fun data ->
-        List.iter data ~f:(fun {template; defn; _} ->
-            pf ppf "%s@ %s@." template defn ) ) in
   let pp_functor_decls ppf () =
     Hashtbl.iteri functors ~f:(fun ~key ~data ->
         pf ppf "%astruct %s {@,@[<hov 2>%aconst;@]@.};@."
@@ -978,6 +974,10 @@ let pp_prog ppf (p : Program.Typed.t) =
           key
           (list ~sep:(any "const;@,") text)
           (List.map ~f:(fun x -> x.signature) data) ) in
+  let pp_functors ppf () =
+    Hashtbl.iter functors ~f:(fun data ->
+        List.iter data ~f:(fun {template; defn; _} ->
+            pf ppf "%s@ %s@." template defn ) ) in
   pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %a@ %a@ %s@ %a@ %a@ }@ @]" version
     includes (namespace p) usings Locations.pp_globals s pp_functor_decls ()
     fns_str pp_functors ()

@@ -206,7 +206,7 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
   in
   let minimal_args =
     (UnsizedType.AutoDiffable, minimal_func_type) :: mandatory_arg_tys in
-  let wrap_err x = Error (minimal_args, ArgError (1, x)) in
+  let wrap_err x = Error (Some (minimal_args, ArgError (1, x))) in
   match args with
   | ( _
     , ( UnsizedType.UFun (fun_args, ReturnType return_type, suffix, _) as
@@ -231,10 +231,10 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
                 ((UnsizedType.AutoDiffable, func_type) :: mandatory_arg_tys)
                 @ variadic_arg_tys in
               check_compatible_arguments 0 expected_args args
-              |> Result.map_error ~f:(fun x -> (expected_args, x)) )
+              |> Result.map_error ~f:(fun x -> Some (expected_args, x)) )
       else wrap_func_error (SuffixMismatch (FnPlain, suffix))
   | (_, x) :: _ -> TypeMismatch (minimal_func_type, x, None) |> wrap_err
-  | [] -> Error ([], ArgNumMismatch (List.length mandatory_arg_tys, 0))
+  | [] -> Error (Some ([], ArgNumMismatch (List.length mandatory_arg_tys, 0)))
 
 let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
   let open Fmt in

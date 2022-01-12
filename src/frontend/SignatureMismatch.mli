@@ -50,7 +50,8 @@ val check_variadic_args :
   -> UnsizedType.t
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> ( promotions list
-     , (UnsizedType.autodifftype * UnsizedType.t) list * function_mismatch )
+     , ((UnsizedType.autodifftype * UnsizedType.t) list * function_mismatch)
+       option )
      result
 
 val pp_signature_mismatch :
