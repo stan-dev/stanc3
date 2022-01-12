@@ -30,6 +30,8 @@ let dump_opt_mir = ref false
 let dump_opt_mir_pretty = ref false
 let dump_stan_math_sigs = ref false
 let opt_lvl = ref Optimize.O0
+let no_soa_opt = ref false
+let soa_opt = ref false
 let output_file = ref ""
 let generate_data = ref false
 let warn_uninitialized = ref false
@@ -154,6 +156,12 @@ let options =
       , "\t(Experimental) Same as -Oexperimental. Apply all compiler \
          optimizations. Some of these are not thorougly tested and may not \
          always improve a programs performance." )
+    ; ( "-fno-soa"
+      , Arg.Unit (fun () -> no_soa_opt := true)
+      , "\tTurn off the Struct of Arrays optimization" )
+    ; ( "-fsoa"
+      , Arg.Unit (fun () -> soa_opt := true)
+      , "\tTurn on the Struct of Arrays optimization" )
     ; ( "--o"
       , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
@@ -282,9 +290,12 @@ let use_file filename =
     if !dump_tx_mir_pretty then Program.Typed.pp Format.std_formatter tx_mir ;
     let opt_mir =
       let opt =
-        Optimize.optimization_suite
-          ~settings:(Optimize.level_optimizations !opt_lvl)
-          tx_mir in
+        let set_optims =
+          let base_optims = Optimize.level_optimizations !opt_lvl in
+          if !no_soa_opt then {base_optims with optimize_soa= false}
+          else if !soa_opt then {base_optims with optimize_soa= true}
+          else base_optims in
+        Optimize.optimization_suite ~settings:set_optims tx_mir in
       if !dump_opt_mir then
         Sexp.pp_hum Format.std_formatter [%sexp (opt : Middle.Program.Typed.t)] ;
       if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt ;

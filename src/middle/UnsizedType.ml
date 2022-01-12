@@ -140,6 +140,12 @@ let rec is_autodiffable = function
   | UArray t -> is_autodiffable t
   | _ -> false
 
+let is_autodifftype possibly_adtype =
+  match possibly_adtype with DataOnly -> false | AutoDiffable -> true
+
+let is_dataonlytype possibly_adtype : bool =
+  not (is_autodifftype possibly_adtype)
+
 let is_scalar_type = function UReal | UInt -> true | _ -> false
 
 let rec is_int_type ut =
@@ -149,6 +155,27 @@ let is_eigen_type ut =
   match ut with UVector | URowVector | UMatrix -> true | _ -> false
 
 let is_fun_type = function UFun _ | UMathLibraryFunction -> true | _ -> false
+
+(** Detect if type contains an integer *)
+let rec contains_int ut =
+  match ut with UInt -> true | UArray ut -> contains_int ut | _ -> false
+
+let rec contains_eigen_type ut =
+  match ut with
+  | UInt | UComplex -> false
+  | UReal | UMathLibraryFunction | UFun (_, Void, _, _) -> false
+  | UVector | URowVector | UMatrix -> true
+  | UArray t | UFun (_, ReturnType t, _, _) -> contains_eigen_type t
+
+let rec is_container ut =
+  match ut with
+  | UVector | URowVector | UMatrix | UArray _ -> true
+  | UReal | UInt | UComplex | UFun (_, Void, _, _) -> false
+  | UFun (_, ReturnType t, _, _) -> is_container t
+  | UMathLibraryFunction -> false
+
+let return_contains_eigen_type ret =
+  match ret with ReturnType t -> contains_eigen_type t | Void -> false
 
 let rec is_indexing_matrix = function
   | UArray t, _ :: idcs -> is_indexing_matrix (t, idcs)
