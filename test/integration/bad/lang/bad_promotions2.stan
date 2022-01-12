@@ -1,8 +1,4 @@
 functions {
-   void printer(array[] real x){
-     print(x);
-   }
-
    real nested(array[,] complex zs){
      return num_elements(zs);
    }
@@ -10,6 +6,5 @@ functions {
 
 model {
   array[3] int d = {1,2,3};
-  printer(d);
-  print(nested({d,d}));
+  print(nested(d));
 }

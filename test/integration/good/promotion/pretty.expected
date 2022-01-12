@@ -3,132 +3,15 @@ functions {
   void printer(array[] real x) {
     print(x);
   }
+  
+  real nested(array[,] complex zs) {
+    return num_elements(zs);
+  }
 }
 model {
   array[3] int d = {1, 2, 3};
   printer(d);
-}
-
-  $ ../../../../../install/default/bin/stanc --auto-format bad_newton_x_r_type.stan
-functions {
-  vector algebra_system(vector y, vector theta, array[] real x_r,
-                        array[] int x_i) {
-    vector[2] f_y;
-    f_y[1] = y[1] - theta[1];
-    f_y[2] = y[2] - theta[2];
-    return f_y;
-  }
-}
-data {
-  
-}
-transformed data {
-  vector[2] y;
-  array[0] int x_r;
-  array[0] int x_i;
-}
-parameters {
-  vector[2] theta_p;
-  real dummy_parameter;
-}
-transformed parameters {
-  vector[2] y_s_p;
-  y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i);
-}
-model {
-  dummy_parameter ~ normal(0, 1);
-}
-
-  $ ../../../../../install/default/bin/stanc --auto-format bad_newton_x_r_type_control.stan
-functions {
-  vector algebra_system(vector y, vector theta, array[] real x_r,
-                        array[] int x_i) {
-    vector[2] f_y;
-    f_y[1] = y[1] - theta[1];
-    f_y[2] = y[2] - theta[2];
-    return f_y;
-  }
-}
-data {
-  
-}
-transformed data {
-  vector[2] y;
-  array[0] int x_r;
-  array[0] int x_i;
-}
-parameters {
-  vector[2] theta_p;
-  real dummy_parameter;
-}
-transformed parameters {
-  vector[2] y_s_p;
-  y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i, 0.01,
-                                0.01, 10);
-}
-model {
-  dummy_parameter ~ normal(0, 1);
-}
-
-  $ ../../../../../install/default/bin/stanc --auto-format bad_x_r_type.stan
-functions {
-  vector algebra_system(vector y, vector theta, array[] real x_r,
-                        array[] int x_i) {
-    vector[2] f_y;
-    f_y[1] = y[1] - theta[1];
-    f_y[2] = y[2] - theta[2];
-    return f_y;
-  }
-}
-data {
-  
-}
-transformed data {
-  vector[2] y;
-  array[0] int x_r;
-  array[0] int x_i;
-}
-parameters {
-  vector[2] theta_p;
-  real dummy_parameter;
-}
-transformed parameters {
-  vector[2] y_s_p;
-  y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i);
-}
-model {
-  dummy_parameter ~ normal(0, 1);
-}
-
-  $ ../../../../../install/default/bin/stanc --auto-format bad_x_r_type_control.stan
-functions {
-  vector algebra_system(vector y, vector theta, array[] real x_r,
-                        array[] int x_i) {
-    vector[2] f_y;
-    f_y[1] = y[1] - theta[1];
-    f_y[2] = y[2] - theta[2];
-    return f_y;
-  }
-}
-data {
-  
-}
-transformed data {
-  vector[2] y;
-  array[0] int x_r;
-  array[0] int x_i;
-}
-parameters {
-  vector[2] theta_p;
-  real dummy_parameter;
-}
-transformed parameters {
-  vector[2] y_s_p;
-  y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01,
-                         10);
-}
-model {
-  dummy_parameter ~ normal(0, 1);
+  print(nested({d, d}));
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format complex_functions.stan
@@ -163,8 +46,130 @@ generated quantities {
   promote_complex_array(xs);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format propto-bad1.stan
+  $ ../../../../../install/default/bin/stanc --auto-format newton_x_r_type.stan
+functions {
+  vector algebra_system(vector y, vector theta, array[] real x_r,
+                        array[] int x_i) {
+    vector[2] f_y;
+    f_y[1] = y[1] - theta[1];
+    f_y[2] = y[2] - theta[2];
+    return f_y;
+  }
+}
+data {
+  
+}
+transformed data {
+  vector[2] y;
+  array[0] int x_r;
+  array[0] int x_i;
+}
+parameters {
+  vector[2] theta_p;
+  real dummy_parameter;
+}
+transformed parameters {
+  vector[2] y_s_p;
+  y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i);
+}
+model {
+  dummy_parameter ~ normal(0, 1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format newton_x_r_type_control.stan
+functions {
+  vector algebra_system(vector y, vector theta, array[] real x_r,
+                        array[] int x_i) {
+    vector[2] f_y;
+    f_y[1] = y[1] - theta[1];
+    f_y[2] = y[2] - theta[2];
+    return f_y;
+  }
+}
+data {
+  
+}
+transformed data {
+  vector[2] y;
+  array[0] int x_r;
+  array[0] int x_i;
+}
+parameters {
+  vector[2] theta_p;
+  real dummy_parameter;
+}
+transformed parameters {
+  vector[2] y_s_p;
+  y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i, 0.01,
+                                0.01, 10);
+}
+model {
+  dummy_parameter ~ normal(0, 1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format propto.stan
 model {
   target += normal_lupdf(1 | {0}, 1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format x_r_type.stan
+functions {
+  vector algebra_system(vector y, vector theta, array[] real x_r,
+                        array[] int x_i) {
+    vector[2] f_y;
+    f_y[1] = y[1] - theta[1];
+    f_y[2] = y[2] - theta[2];
+    return f_y;
+  }
+}
+data {
+  
+}
+transformed data {
+  vector[2] y;
+  array[0] int x_r;
+  array[0] int x_i;
+}
+parameters {
+  vector[2] theta_p;
+  real dummy_parameter;
+}
+transformed parameters {
+  vector[2] y_s_p;
+  y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i);
+}
+model {
+  dummy_parameter ~ normal(0, 1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format x_r_type_control.stan
+functions {
+  vector algebra_system(vector y, vector theta, array[] real x_r,
+                        array[] int x_i) {
+    vector[2] f_y;
+    f_y[1] = y[1] - theta[1];
+    f_y[2] = y[2] - theta[2];
+    return f_y;
+  }
+}
+data {
+  
+}
+transformed data {
+  vector[2] y;
+  array[0] int x_r;
+  array[0] int x_i;
+}
+parameters {
+  vector[2] theta_p;
+  real dummy_parameter;
+}
+transformed parameters {
+  vector[2] y_s_p;
+  y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01,
+                         10);
+}
+model {
+  dummy_parameter ~ normal(0, 1);
 }
 
