@@ -772,6 +772,7 @@ let minimal_variables_fwd_transfer
       let gen = gen_variable flowgraph_to_mir l p in
       let kill =
         match mir_node with
+        (* This probably isn't necessary because Stan doesn't allow shadowing, right? *)
         | Decl {decl_id; decl_adtype= DataOnly; _} -> Set.Poly.singleton decl_id
         | _ -> Set.Poly.empty in
       transfer_gen_kill p gen kill end : TRANSFER_FUNCTION

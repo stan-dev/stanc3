@@ -188,14 +188,6 @@ type transform_action = Check | Constrain | Unconstrain | IgnoreTransform
 type decl_context =
   {transform_action: transform_action; dadlevel: UnsizedType.autodifftype}
 
-let constraint_forl = function
-  | Transformation.Identity | Offset _ | Multiplier _ | OffsetMultiplier _
-   |Lower _ | Upper _ | LowerUpper _ ->
-      Stmt.Helpers.for_scalar
-  | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
-   |CholeskyCov | Correlation | Covariance ->
-      Stmt.Helpers.for_eigen
-
 let same_shape decl_id decl_var id var meta =
   if UnsizedType.is_scalar_type (Expr.Typed.type_of var) then []
   else
@@ -292,16 +284,7 @@ let param_size transform sizedtype =
         (fun k -> Expr.Helpers.(binop k Plus (k_choose_2 k)))
         sizedtype
 
-let remove_possibly_exn pst action loc =
-  match pst with
-  | Type.Sized st -> st
-  | Unsized _ ->
-      Common.FatalError.fatal_error_msg
-        [%message
-          "Error extracting sizedtype" ~action ~loc:(loc : Location_span.t)]
-
 let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
-  let decl_type = remove_possibly_exn decl_type' "check" smeta in
   match decl_trans with
   | Transformation.LowerUpper (lb, ub) ->
       check_decl var decl_type' decl_id (Lower lb) smeta adlevel
@@ -313,7 +296,7 @@ let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
         Stmt.Helpers.internal_nrfunapp
           (FnCheck {trans= decl_trans; var_name; var= id})
           args smeta in
-      [(constraint_forl decl_trans) decl_type check_id var smeta]
+      [check_id var]
   | _ -> []
 
 let check_sizedtype name =
@@ -688,7 +671,7 @@ let trans_block ud_dists declc block prog =
                   check_transform_shape decl_id decl_var smeta.loc transform
               | Check ->
                   check_transform_shape decl_id decl_var smeta.loc transform
-                  @ check_decl decl_var (Sized type_) decl_id transform
+                  @ check_decl decl_var (Type.Sized type_) decl_id transform
                       smeta.loc declc.dadlevel
               | IgnoreTransform -> [] in
             (decl :: rhs_assignment) @ constrain_checks

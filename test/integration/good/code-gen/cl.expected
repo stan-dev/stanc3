@@ -288,14 +288,13 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
+      int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       current_statement__ = 176;
       context__.validate_dims("data initialization","k","int",
            std::vector<size_t>{});
       k = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 176;
       k = context__.vals_i("k")[(1 - 1)];
@@ -305,6 +304,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       context__.validate_dims("data initialization","n","int",
            std::vector<size_t>{});
       n = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 177;
       n = context__.vals_i("n")[(1 - 1)];
@@ -318,9 +318,11 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       context__.validate_dims("data initialization","X_d","double",
            std::vector<size_t>{static_cast<size_t>(n),
             static_cast<size_t>(k)});
-      X_d__ = Eigen::Matrix<double, -1, -1>(n, k);
+      X_d__ = 
+        Eigen::Matrix<double, -1, -1>::Constant(n, k,
+          std::numeric_limits<double>::quiet_NaN());
       new (&X_d) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d__.data(), n, k);
-      
+        
       
       {
         std::vector<local_scalar_t__> X_d_flat__;
@@ -349,7 +351,10 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       context__.validate_dims("data initialization","X_d_a","double",
            std::vector<size_t>{static_cast<size_t>(2),
             static_cast<size_t>(n), static_cast<size_t>(k)});
-      X_d_a = std::vector<Eigen::Matrix<double, -1, -1>>(2, Eigen::Matrix<double, -1, -1>(n, k));
+      X_d_a = 
+        std::vector<Eigen::Matrix<double, -1, -1>>(2, 
+          Eigen::Matrix<double, -1, -1>::Constant(n, k,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       {
@@ -380,9 +385,11 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 185;
       context__.validate_dims("data initialization","y_v_d","double",
            std::vector<size_t>{static_cast<size_t>(n)});
-      y_v_d__ = Eigen::Matrix<double, -1, 1>(n);
+      y_v_d__ = 
+        Eigen::Matrix<double, -1, 1>::Constant(n,
+          std::numeric_limits<double>::quiet_NaN());
       new (&y_v_d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_v_d__.data(), n);
-      
+        
       
       {
         std::vector<local_scalar_t__> y_v_d_flat__;
@@ -404,9 +411,11 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 187;
       context__.validate_dims("data initialization","X_rv_d","double",
            std::vector<size_t>{static_cast<size_t>(n)});
-      X_rv_d__ = Eigen::Matrix<double, 1, -1>(n);
+      X_rv_d__ = 
+        Eigen::Matrix<double, 1, -1>::Constant(n,
+          std::numeric_limits<double>::quiet_NaN());
       new (&X_rv_d) Eigen::Map<Eigen::Matrix<double, 1, -1>>(X_rv_d__.data(), n);
-      
+        
       
       {
         std::vector<local_scalar_t__> X_rv_d_flat__;
@@ -430,6 +439,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
            std::vector<size_t>{static_cast<size_t>(n)});
       y_vi_d = std::vector<int>(n, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 189;
       y_vi_d = context__.vals_i("y_vi_d");
       current_statement__ = 190;
@@ -439,12 +449,14 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
            std::vector<size_t>{static_cast<size_t>(n)});
       y2_vi_d = std::vector<int>(n, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 191;
       y2_vi_d = context__.vals_i("y2_vi_d");
       current_statement__ = 192;
       context__.validate_dims("data initialization","y_s_d","int",
            std::vector<size_t>{});
       y_s_d = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 192;
       y_s_d = context__.vals_i("y_s_d")[(1 - 1)];
@@ -453,52 +465,65 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
            std::vector<size_t>{});
       y_r_d = std::numeric_limits<double>::quiet_NaN();
       
+      
       current_statement__ = 193;
       y_r_d = context__.vals_r("y_r_d")[(1 - 1)];
       current_statement__ = 194;
       k_td = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 195;
       n_td = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 196;
       stan::math::validate_non_negative_index("X_d_td", "n", n);
       current_statement__ = 197;
       stan::math::validate_non_negative_index("X_d_td", "k", k);
       current_statement__ = 198;
-      X_d_td__ = Eigen::Matrix<double, -1, -1>(n, k);
+      X_d_td__ = 
+        Eigen::Matrix<double, -1, -1>::Constant(n, k,
+          std::numeric_limits<double>::quiet_NaN());
       new (&X_d_td) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d_td__.data(), n, k);
-      stan::math::fill(X_d_td, std::numeric_limits<double>::quiet_NaN());
+        
       
       current_statement__ = 199;
       stan::math::validate_non_negative_index("y_v_d_td", "n", n);
       current_statement__ = 200;
-      y_v_d_td__ = Eigen::Matrix<double, -1, 1>(n);
+      y_v_d_td__ = 
+        Eigen::Matrix<double, -1, 1>::Constant(n,
+          std::numeric_limits<double>::quiet_NaN());
       new (&y_v_d_td) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_v_d_td__.data(), n);
-      stan::math::fill(y_v_d_td, std::numeric_limits<double>::quiet_NaN());
+        
       
       current_statement__ = 201;
       stan::math::validate_non_negative_index("X_rv_d_td", "n", n);
       current_statement__ = 202;
-      X_rv_d_td__ = Eigen::Matrix<double, 1, -1>(n);
+      X_rv_d_td__ = 
+        Eigen::Matrix<double, 1, -1>::Constant(n,
+          std::numeric_limits<double>::quiet_NaN());
       new (&X_rv_d_td) Eigen::Map<Eigen::Matrix<double, 1, -1>>(X_rv_d_td__.data(), n);
-      stan::math::fill(X_rv_d_td, std::numeric_limits<double>::quiet_NaN());
+        
       
       current_statement__ = 203;
       stan::math::validate_non_negative_index("y_vi_d_td", "n", n);
       current_statement__ = 204;
       y_vi_d_td = std::vector<int>(n, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 205;
       stan::math::validate_non_negative_index("y2_vi_d_td", "n", n);
       current_statement__ = 206;
       y2_vi_d_td = std::vector<int>(n, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 207;
       y_s_d_td = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 208;
       y_r_d_td = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 194;
       stan::math::check_greater_or_equal(function__, "k_td", k_td, 1);
@@ -557,57 +582,39 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
-      alpha_v = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
-      stan::math::fill(alpha_v, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
       current_statement__ = 1;
       alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
-      Eigen::Matrix<local_scalar_t__, -1, 1> beta;
-      beta = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
-      stan::math::fill(beta, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> beta =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
       current_statement__ = 2;
       beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
-      Eigen::Matrix<local_scalar_t__, -1, 1> cuts;
-      cuts = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
-      stan::math::fill(cuts, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> cuts =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
       current_statement__ = 3;
       cuts = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
-      local_scalar_t__ sigma;
-      sigma = DUMMY_VAR__;
-      
+      local_scalar_t__ sigma = DUMMY_VAR__;
       current_statement__ = 4;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
-      local_scalar_t__ alpha;
-      alpha = DUMMY_VAR__;
-      
+      local_scalar_t__ alpha = DUMMY_VAR__;
       current_statement__ = 5;
       alpha = in__.template read<local_scalar_t__>();
-      local_scalar_t__ phi;
-      phi = DUMMY_VAR__;
-      
+      local_scalar_t__ phi = DUMMY_VAR__;
       current_statement__ = 6;
       phi = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
-      X_p = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
-      stan::math::fill(X_p, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> X_p =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(n, k, DUMMY_VAR__);
       current_statement__ = 7;
       X_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k);
-      Eigen::Matrix<local_scalar_t__, -1, -1> beta_m;
-      beta_m = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
-      stan::math::fill(beta_m, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> beta_m =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(n, k, DUMMY_VAR__);
       current_statement__ = 8;
       beta_m = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n,
                  k);
-      Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p;
-      X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>(n);
-      stan::math::fill(X_rv_p, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p =
+         Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(n, DUMMY_VAR__);
       current_statement__ = 9;
       X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
       {
@@ -1394,57 +1401,45 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      Eigen::Matrix<double, -1, 1> alpha_v;
-      alpha_v = Eigen::Matrix<double, -1, 1>(k);
-      stan::math::fill(alpha_v, std::numeric_limits<double>::quiet_NaN());
-      
+      Eigen::Matrix<double, -1, 1> alpha_v =
+         Eigen::Matrix<double, -1, 1>::Constant(k,
+           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
       alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
-      Eigen::Matrix<double, -1, 1> beta;
-      beta = Eigen::Matrix<double, -1, 1>(k);
-      stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
-      
+      Eigen::Matrix<double, -1, 1> beta =
+         Eigen::Matrix<double, -1, 1>::Constant(k,
+           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
-      Eigen::Matrix<double, -1, 1> cuts;
-      cuts = Eigen::Matrix<double, -1, 1>(k);
-      stan::math::fill(cuts, std::numeric_limits<double>::quiet_NaN());
-      
+      Eigen::Matrix<double, -1, 1> cuts =
+         Eigen::Matrix<double, -1, 1>::Constant(k,
+           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 3;
       cuts = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
-      double sigma;
-      sigma = std::numeric_limits<double>::quiet_NaN();
-      
+      double sigma = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 4;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
-      double alpha;
-      alpha = std::numeric_limits<double>::quiet_NaN();
-      
+      double alpha = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 5;
       alpha = in__.template read<local_scalar_t__>();
-      double phi;
-      phi = std::numeric_limits<double>::quiet_NaN();
-      
+      double phi = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 6;
       phi = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double, -1, -1> X_p;
-      X_p = Eigen::Matrix<double, -1, -1>(n, k);
-      stan::math::fill(X_p, std::numeric_limits<double>::quiet_NaN());
-      
+      Eigen::Matrix<double, -1, -1> X_p =
+         Eigen::Matrix<double, -1, -1>::Constant(n, k,
+           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 7;
       X_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k);
-      Eigen::Matrix<double, -1, -1> beta_m;
-      beta_m = Eigen::Matrix<double, -1, -1>(n, k);
-      stan::math::fill(beta_m, std::numeric_limits<double>::quiet_NaN());
-      
+      Eigen::Matrix<double, -1, -1> beta_m =
+         Eigen::Matrix<double, -1, -1>::Constant(n, k,
+           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 8;
       beta_m = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n,
                  k);
-      Eigen::Matrix<double, 1, -1> X_rv_p;
-      X_rv_p = Eigen::Matrix<double, 1, -1>(n);
-      stan::math::fill(X_rv_p, std::numeric_limits<double>::quiet_NaN());
-      
+      Eigen::Matrix<double, 1, -1> X_rv_p =
+         Eigen::Matrix<double, 1, -1>::Constant(n,
+           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 9;
       X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
       out__.write(alpha_v);
@@ -1482,56 +1477,40 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
-      int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
+      int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
-      alpha_v = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
-      stan::math::fill(alpha_v, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         stan::model::assign(alpha_v, in__.read<local_scalar_t__>(),
           "assigning variable alpha_v", stan::model::index_uni(sym1__));
       }
       out__.write(alpha_v);
-      Eigen::Matrix<local_scalar_t__, -1, 1> beta;
-      beta = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
-      stan::math::fill(beta, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> beta =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         stan::model::assign(beta, in__.read<local_scalar_t__>(),
           "assigning variable beta", stan::model::index_uni(sym1__));
       }
       out__.write(beta);
-      Eigen::Matrix<local_scalar_t__, -1, 1> cuts;
-      cuts = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
-      stan::math::fill(cuts, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> cuts =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         stan::model::assign(cuts, in__.read<local_scalar_t__>(),
           "assigning variable cuts", stan::model::index_uni(sym1__));
       }
       out__.write(cuts);
-      local_scalar_t__ sigma;
-      sigma = DUMMY_VAR__;
-      
+      local_scalar_t__ sigma = DUMMY_VAR__;
       sigma = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, sigma);
-      local_scalar_t__ alpha;
-      alpha = DUMMY_VAR__;
-      
+      local_scalar_t__ alpha = DUMMY_VAR__;
       alpha = in__.read<local_scalar_t__>();
       out__.write(alpha);
-      local_scalar_t__ phi;
-      phi = DUMMY_VAR__;
-      
+      local_scalar_t__ phi = DUMMY_VAR__;
       phi = in__.read<local_scalar_t__>();
       out__.write(phi);
-      Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
-      X_p = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
-      stan::math::fill(X_p, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> X_p =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(n, k, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
           stan::model::assign(X_p, in__.read<local_scalar_t__>(),
@@ -1540,10 +1519,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         }
       }
       out__.write(X_p);
-      Eigen::Matrix<local_scalar_t__, -1, -1> beta_m;
-      beta_m = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
-      stan::math::fill(beta_m, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> beta_m =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(n, k, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
           stan::model::assign(beta_m, in__.read<local_scalar_t__>(),
@@ -1552,10 +1529,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         }
       }
       out__.write(beta_m);
-      Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p;
-      X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>(n);
-      stan::math::fill(X_rv_p, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p =
+         Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(n, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         stan::model::assign(X_rv_p, in__.read<local_scalar_t__>(),
           "assigning variable X_rv_p", stan::model::index_uni(sym1__));

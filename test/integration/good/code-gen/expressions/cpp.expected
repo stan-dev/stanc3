@@ -199,14 +199,13 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
+      int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       current_statement__ = 1;
       context__.validate_dims("data initialization","N","int",
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 1;
       N = context__.vals_i("N")[(1 - 1)];
@@ -218,7 +217,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       context__.validate_dims("data initialization","m","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N)});
-      m__ = Eigen::Matrix<double, -1, -1>(N, N);
+      m__ = 
+        Eigen::Matrix<double, -1, -1>::Constant(N, N,
+          std::numeric_limits<double>::quiet_NaN());
       new (&m) Eigen::Map<Eigen::Matrix<double, -1, -1>>(m__.data(), N, N);
       
       {
@@ -324,9 +325,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
-      int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
+      int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -556,14 +555,13 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
+      int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       current_statement__ = 10;
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{});
       y = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 10;
       y = context__.vals_r("y")[(1 - 1)];
@@ -592,60 +590,47 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      Eigen::Matrix<local_scalar_t__, -1, 1> a;
-      a = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
-      stan::math::fill(a, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> a =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
       current_statement__ = 1;
       a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
-      Eigen::Matrix<local_scalar_t__, -1, 1> b;
-      b = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
-      stan::math::fill(b, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> b =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
       current_statement__ = 2;
       b = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
-      local_scalar_t__ r;
-      r = DUMMY_VAR__;
-      
+      local_scalar_t__ r = DUMMY_VAR__;
       current_statement__ = 3;
       r = in__.template read<local_scalar_t__>();
-      std::complex<local_scalar_t__> zp;
-      zp = std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
-      
+      std::complex<local_scalar_t__> zp =
+         std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
       current_statement__ = 4;
       zp = in__.template read<std::complex<local_scalar_t__>>();
-      Eigen::Matrix<local_scalar_t__, -1, 1> c;
-      c = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
-      stan::math::fill(c, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> c =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
       current_statement__ = 5;
       stan::model::assign(c,
         (stan::math::logical_gt(stan::math::sum(a), 1) ?
            stan::math::eval(stan::math::add(stan::math::multiply(2.0, a), b))
            : stan::math::eval(stan::math::multiply(2.0, a))),
         "assigning variable c");
-      Eigen::Matrix<local_scalar_t__, -1, 1> d;
-      d = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
-      stan::math::fill(d, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> d =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
       current_statement__ = 6;
       stan::model::assign(d,
         (stan::math::logical_gt(stan::math::sum(a), 1) ?
            stan::math::eval(stan::math::add(stan::math::multiply(2, a), b)) :
            stan::math::eval(stan::math::multiply(2, a))),
         "assigning variable d");
-      std::complex<local_scalar_t__> z;
-      z = std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
-      
+      std::complex<local_scalar_t__> z =
+         std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
       current_statement__ = 7;
       stan::model::assign(z,
         (1 ? stan::math::to_complex(0, 3) :
            stan::math::promote_scalar<std::complex<double>>(2)),
         "assigning variable z");
       {
-        std::complex<local_scalar_t__> z2;
-        z2 = std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
-        
+        std::complex<local_scalar_t__> z2 =
+           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
         current_statement__ = 8;
         z2 = (1 ? r : 2);
         current_statement__ = 9;
@@ -685,41 +670,33 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      Eigen::Matrix<double, -1, 1> a;
-      a = Eigen::Matrix<double, -1, 1>(2);
-      stan::math::fill(a, std::numeric_limits<double>::quiet_NaN());
-      
+      Eigen::Matrix<double, -1, 1> a =
+         Eigen::Matrix<double, -1, 1>::Constant(2,
+           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
       a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
-      Eigen::Matrix<double, -1, 1> b;
-      b = Eigen::Matrix<double, -1, 1>(2);
-      stan::math::fill(b, std::numeric_limits<double>::quiet_NaN());
-      
+      Eigen::Matrix<double, -1, 1> b =
+         Eigen::Matrix<double, -1, 1>::Constant(2,
+           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       b = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
-      double r;
-      r = std::numeric_limits<double>::quiet_NaN();
-      
+      double r = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
       r = in__.template read<local_scalar_t__>();
-      std::complex<double> zp;
-      zp = std::complex<double>(std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN());
-      
-      
+      std::complex<double> zp =
+         std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 4;
       zp = in__.template read<std::complex<local_scalar_t__>>();
-      Eigen::Matrix<double, -1, 1> c;
-      c = Eigen::Matrix<double, -1, 1>(2);
-      stan::math::fill(c, std::numeric_limits<double>::quiet_NaN());
-      
-      Eigen::Matrix<double, -1, 1> d;
-      d = Eigen::Matrix<double, -1, 1>(2);
-      stan::math::fill(d, std::numeric_limits<double>::quiet_NaN());
-      
-      std::complex<double> z;
-      z = std::complex<double>(std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN());
-      
-      
+      Eigen::Matrix<double, -1, 1> c =
+         Eigen::Matrix<double, -1, 1>::Constant(2,
+           std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, 1> d =
+         Eigen::Matrix<double, -1, 1>::Constant(2,
+           std::numeric_limits<double>::quiet_NaN());
+      std::complex<double> z =
+         std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+           std::numeric_limits<double>::quiet_NaN());
       out__.write(a);
       out__.write(b);
       out__.write(r);
@@ -772,36 +749,27 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
-      int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
+      int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      Eigen::Matrix<local_scalar_t__, -1, 1> a;
-      a = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
-      stan::math::fill(a, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> a =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         stan::model::assign(a, in__.read<local_scalar_t__>(),
           "assigning variable a", stan::model::index_uni(sym1__));
       }
       out__.write(a);
-      Eigen::Matrix<local_scalar_t__, -1, 1> b;
-      b = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
-      stan::math::fill(b, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> b =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         stan::model::assign(b, in__.read<local_scalar_t__>(),
           "assigning variable b", stan::model::index_uni(sym1__));
       }
       out__.write(b);
-      local_scalar_t__ r;
-      r = DUMMY_VAR__;
-      
+      local_scalar_t__ r = DUMMY_VAR__;
       r = in__.read<local_scalar_t__>();
       out__.write(r);
-      std::complex<local_scalar_t__> zp;
-      zp = std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
-      
+      std::complex<local_scalar_t__> zp =
+         std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
       stan::model::assign(zp, in__.read<local_scalar_t__>(),
         "assigning variable zp");
       out__.write(zp);
