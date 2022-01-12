@@ -161,15 +161,25 @@ let is_of_compatible_return_type rt1 srt2 =
 
 (* -- Expressions ------------------------------------------------- *)
 let check_ternary_if loc pe te fe =
+  let promote expr type_ ad_level =
+    if
+      (not (UnsizedType.equal expr.emeta.type_ type_))
+      || UnsizedType.compare_autodifftype expr.emeta.ad_level ad_level <> 0
+    then
+      { expr= Promotion (expr, UnsizedType.internal_scalar type_, ad_level)
+      ; emeta= {expr.emeta with type_; ad_level} }
+    else expr in
   match
-    (pe.emeta.type_, UnsizedType.common_type (te.emeta.type_, fe.emeta.type_))
+    ( pe.emeta.type_
+    , UnsizedType.common_type (te.emeta.type_, fe.emeta.type_)
+    , expr_ad_lub [pe; te; fe] )
   with
-  | UInt, Some type_ when not (UnsizedType.is_fun_type type_) ->
+  | UInt, Some type_, ad_level when not (UnsizedType.is_fun_type type_) ->
       mk_typed_expression
-        ~expr:(TernaryIf (pe, te, fe))
-        ~ad_level:(expr_ad_lub [pe; te; fe])
-        ~type_ ~loc
-  | _, _ ->
+        ~expr:
+          (TernaryIf (pe, promote te type_ ad_level, promote fe type_ ad_level))
+        ~ad_level ~type_ ~loc
+  | _, _, _ ->
       Semantic_error.illtyped_ternary_if loc pe.emeta.type_ te.emeta.type_
         fe.emeta.type_
       |> error
@@ -423,14 +433,16 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
       |> error
   | _ (* a function *) -> (
     match SignatureMismatch.returntype tenv id.name (get_arg_types es) with
-    | Ok (Void, _) ->
+    | Ok (Void, _, _) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
         |> error
-    | Ok (ReturnType ut, fnk) ->
+    | Ok (ReturnType ut, fnk, promotions) ->
         mk_typed_expression
           ~expr:
             (mk_fun_app ~is_cond_dist
-               (fnk (Fun_kind.suffix_from_name id.name), id, es) )
+               ( fnk (Fun_kind.suffix_from_name id.name)
+               , id
+               , SignatureMismatch.promote es promotions ) )
           ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
     | Error x ->
         es
@@ -439,7 +451,6 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
         |> error )
 
 (** Given a constraint function [matches], find any signature which exists
-
    If it [matches] is expected to return Error of the matching type if a valid
     function is found.
   Otherwise, return Ok with an optional error. This backwards style
@@ -500,7 +511,7 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
     let expected_args, err =
       SignatureMismatch.check_variadic_args true mandatory_args
         mandatory_fun_args UReal (get_arg_types tes)
-      |> Option.value_exn in
+      |> Result.error |> Option.value_exn in
     Semantic_error.illtyped_reduce_sum_generic loc id.name
       (List.map ~f:type_of_expr_typed tes)
       expected_args err
@@ -524,19 +535,21 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
             ( (calculate_autodifftype cf Functions ftype, ftype)
             :: get_arg_types es )
         with
-        | Some (expected_args, err) -> Ok (Some (expected_args, err))
-        | None -> Error ftype )
+        | Error (expected_args, err) -> Ok (Some (expected_args, err))
+        | Ok promotions -> Error (ftype, promotions) )
     | _ -> Ok None in
   match tes with
   | {expr= Variable fname; _} :: remaining_es -> (
     match
       find_matching_function_signature tenv (matching remaining_es) fname
     with
-    | Ok ftype ->
+    | Ok (ftype, promotions) ->
         (* a valid signature exists *)
         let tes = make_function_variable cf loc fname ftype :: remaining_es in
         mk_typed_expression
-          ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, tes))
+          ~expr:
+            (mk_fun_app ~is_cond_dist
+               (StanLib FnPlain, id, SignatureMismatch.promote tes promotions) )
           ~ad_level:(expr_ad_lub tes) ~type_:UnsizedType.UReal ~loc
     | Error (Some (expected_args, err)) ->
         Semantic_error.illtyped_reduce_sum loc id.name
@@ -561,7 +574,7 @@ and check_variadic_ode ~is_cond_dist loc cf tenv id tes =
       SignatureMismatch.check_variadic_args false mandatory_arg_types
         Stan_math_signatures.variadic_ode_mandatory_fun_args
         Stan_math_signatures.variadic_ode_fun_return_type (get_arg_types tes)
-      |> Option.value_exn in
+      |> Result.error |> Option.value_exn in
     Semantic_error.illtyped_variadic_ode loc id.name
       (List.map ~f:type_of_expr_typed tes)
       expected_args err
@@ -585,17 +598,19 @@ and check_variadic_ode ~is_cond_dist loc cf tenv id tes =
             ( (calculate_autodifftype cf Functions ftype, ftype)
             :: get_arg_types remaining_es )
         with
-        | Some (expected_args, err) -> Ok (Some (expected_args, err))
-        | None -> Error ftype ) in
+        | Error (expected_args, err) -> Ok (Some (expected_args, err))
+        | Ok promotions -> Error (ftype, promotions) ) in
   match tes with
   | {expr= Variable fname; _} :: remaining_es -> (
     match
       find_matching_function_signature tenv (matching remaining_es) fname
     with
-    | Ok ftype ->
+    | Ok (ftype, promotions) ->
         let tes = make_function_variable cf loc fname ftype :: remaining_es in
         mk_typed_expression
-          ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, tes))
+          ~expr:
+            (mk_fun_app ~is_cond_dist
+               (StanLib FnPlain, id, SignatureMismatch.promote tes promotions) )
           ~ad_level:(expr_ad_lub tes)
           ~type_:Stan_math_signatures.variadic_ode_return_type ~loc
     | Error (Some (expected_args, err)) ->
@@ -746,6 +761,10 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:false id
   | CondDistApp ((), id, es) ->
       es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:true id
+  | Promotion (e, _, _) ->
+      (* Should never happen: promotions are produced during typechecking *)
+      Common.FatalError.fatal_error_msg
+        [%message "Promotion in untyped AST" (e : Ast.untyped_expression)]
 
 and check_expression_of_int_type cf tenv e name =
   let te = check_expression cf tenv e in
@@ -788,11 +807,15 @@ let check_nrfn loc tenv id es =
       |> error
   | _ (* a function *) -> (
     match SignatureMismatch.returntype tenv id.name (get_arg_types es) with
-    | Ok (Void, fnk) ->
+    | Ok (Void, fnk, promotions) ->
         mk_typed_statement
-          ~stmt:(NRFunApp (fnk (Fun_kind.suffix_from_name id.name), id, es))
+          ~stmt:
+            (NRFunApp
+               ( fnk (Fun_kind.suffix_from_name id.name)
+               , id
+               , SignatureMismatch.promote es promotions ) )
           ~return_type:NoReturnType ~loc
-    | Ok (ReturnType _, _) ->
+    | Ok (ReturnType _, _, _) ->
         Semantic_error.nonreturning_fn_expected_returning_found loc id.name
         |> error
     | Error x ->

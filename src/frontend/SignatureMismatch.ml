@@ -110,37 +110,49 @@ let rec compare_errors e1 e2 =
       | SuffixMismatch _, _ | _, InputMismatch _ -> -1
       | InputMismatch _, _ | _, SuffixMismatch _ -> 1 ) )
 
+type promotions = None | RealPromotion | ComplexPromotion
+
 let rec check_same_type depth t1 t2 =
-  let wrap_func = Option.map ~f:(fun e -> TypeMismatch (t1, t2, Some e)) in
+  let wrap_func = Result.map_error ~f:(fun e -> TypeMismatch (t1, t2, Some e)) in
   match (t1, t2) with
-  | t1, t2 when t1 = t2 -> None
-  | UnsizedType.(UReal, UInt) when depth < 1 -> None
+  | t1, t2 when t1 = t2 -> Ok None
+  | UnsizedType.(UReal, UInt) when depth < 1 -> Ok RealPromotion
+  | UnsizedType.(UComplex, (UInt | UReal)) when depth < 1 -> Ok ComplexPromotion
+  (* Arrays: Try to recursively promote, but make sure the error is for these types,
+     not the recursive call *)
+  | UArray nt1, UArray nt2 ->
+      check_same_type depth nt1 nt2
+      |> Result.map_error ~f:(function
+           | TypeMismatch _ -> TypeMismatch (t1, t2, None)
+           | e -> e )
   | UFun (_, _, s1, _), UFun (_, _, s2, _)
     when Fun_kind.without_propto s1 <> Fun_kind.without_propto s2 ->
-      Some
+      Error
         (SuffixMismatch (Fun_kind.without_propto s1, Fun_kind.without_propto s2))
       |> wrap_func
   | UFun (_, rt1, _, _), UFun (_, rt2, _, _) when rt1 <> rt2 ->
-      Some (ReturnTypeMismatch (rt1, rt2)) |> wrap_func
-  | UFun (l1, _, _, _), UFun (l2, _, _, _) ->
-      check_compatible_arguments (depth + 1) l2 l1
-      |> Option.map ~f:(fun e -> InputMismatch e)
-      |> wrap_func
-  | t1, t2 -> Some (TypeMismatch (t1, t2, None))
+      Error (ReturnTypeMismatch (rt1, rt2)) |> wrap_func
+  | UFun (l1, _, _, _), UFun (l2, _, _, _) -> (
+    match check_compatible_arguments (depth + 1) l2 l1 with
+    | Ok _ -> Ok None
+    | Error e -> Error (InputMismatch e) |> wrap_func )
+  | t1, t2 -> Error (TypeMismatch (t1, t2, None))
 
-and check_compatible_arguments depth args1 args2 =
-  match List.zip args1 args2 with
+and check_compatible_arguments depth typs args2 :
+    (promotions list, function_mismatch) result =
+  match List.zip typs args2 with
   | List.Or_unequal_lengths.Unequal_lengths ->
-      Some (ArgNumMismatch (List.length args1, List.length args2))
+      Error (ArgNumMismatch (List.length typs, List.length args2))
   | Ok l ->
-      List.find_mapi l ~f:(fun i ((ad1, ut1), (ad2, ut2)) ->
+      List.mapi l ~f:(fun i ((ad1, ut1), (ad2, ut2)) ->
           match check_same_type depth ut1 ut2 with
-          | Some e -> Some (ArgError (i + 1, e))
-          | None ->
-              if ad1 = ad2 then None
+          | Error e -> Error (ArgError (i + 1, e))
+          | Ok p ->
+              if ad1 = ad2 then Ok p
               else if depth < 2 && UnsizedType.autodifftype_can_convert ad1 ad2
-              then None
-              else Some (ArgError (i + 1, DataOnlyError)) )
+              then Ok p
+              else Error (ArgError (i + 1, DataOnlyError)) )
+      |> Result.all
 
 let check_compatible_arguments_mod_conv = check_compatible_arguments 0
 let max_n_errors = 5
@@ -153,6 +165,20 @@ let extract_function_types f =
       Some (return, args, (fun x -> UserDefined x), mem)
   | _ -> None
 
+let promote es promotions =
+  List.map2_exn es promotions ~f:(fun (exp : Ast.typed_expression) prom ->
+      let open UnsizedType in
+      let emeta = exp.emeta in
+      match prom with
+      | RealPromotion when is_int_type emeta.type_ ->
+          Ast.
+            { expr= Ast.Promotion (exp, UReal, emeta.ad_level)
+            ; emeta= {emeta with type_= promote_array emeta.type_ UReal} }
+      | ComplexPromotion when not (is_complex_type emeta.type_) ->
+          { expr= Promotion (exp, UComplex, emeta.ad_level)
+          ; emeta= {emeta with type_= promote_array emeta.type_ UComplex} }
+      | _ -> exp )
+
 let returntype env name args =
   (* NB: Variadic arguments are special-cased in the typechecker and not handled here *)
   let name = Utils.stdlib_distribution_name name in
@@ -164,8 +190,8 @@ let returntype env name args =
   |> List.fold_until ~init:[]
        ~f:(fun errors (rt, tys, funkind_constructor, _) ->
          match check_compatible_arguments 0 tys args with
-         | None -> Stop (Ok (rt, funkind_constructor))
-         | Some e -> Continue (((rt, tys), e) :: errors) )
+         | Ok p -> Stop (Ok (rt, funkind_constructor, p))
+         | Error e -> Continue (((rt, tys), e) :: errors) )
        ~finish:(fun errors ->
          let errors =
            List.sort errors ~compare:(fun (_, e1) (_, e2) ->
@@ -180,7 +206,7 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
   in
   let minimal_args =
     (UnsizedType.AutoDiffable, minimal_func_type) :: mandatory_arg_tys in
-  let wrap_err x = Some (minimal_args, ArgError (1, x)) in
+  let wrap_err x = Error (minimal_args, ArgError (1, x)) in
   match args with
   | ( _
     , ( UnsizedType.UFun (fun_args, ReturnType return_type, suffix, _) as
@@ -193,22 +219,22 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
       let suffix = Fun_kind.without_propto suffix in
       if suffix = FnPlain || (allow_lpdf && suffix = FnLpdf ()) then
         match check_compatible_arguments 1 mandatory mandatory_fun_arg_tys with
-        | Some x -> wrap_func_error (InputMismatch x)
-        | None -> (
+        | Error x -> wrap_func_error (InputMismatch x)
+        | Ok _ -> (
           match check_same_type 1 return_type fun_return with
-          | Some _ ->
+          | Error _ ->
               wrap_func_error
                 (ReturnTypeMismatch
                    (ReturnType fun_return, ReturnType return_type) )
-          | None ->
+          | Ok _ ->
               let expected_args =
                 ((UnsizedType.AutoDiffable, func_type) :: mandatory_arg_tys)
                 @ variadic_arg_tys in
               check_compatible_arguments 0 expected_args args
-              |> Option.map ~f:(fun x -> (expected_args, x)) )
+              |> Result.map_error ~f:(fun x -> (expected_args, x)) )
       else wrap_func_error (SuffixMismatch (FnPlain, suffix))
   | (_, x) :: _ -> TypeMismatch (minimal_func_type, x, None) |> wrap_err
-  | [] -> Some ([], ArgNumMismatch (List.length mandatory_arg_tys, 0))
+  | [] -> Error ([], ArgNumMismatch (List.length mandatory_arg_tys, 0))
 
 let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
   let open Fmt in
