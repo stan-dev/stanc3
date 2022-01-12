@@ -24,6 +24,7 @@ let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t)
 let rec free_vars_expr (e : Expr.Typed.t) =
   match e.pattern with
   | Var x -> Set.Poly.singleton x
+  | Promotion (expr, _, _) -> free_vars_expr expr
   | Lit (_, _) -> Set.Poly.empty
   | FunApp (kind, l) -> free_vars_fnapp kind l
   | TernaryIf (e1, e2, e3) ->
@@ -133,15 +134,15 @@ let reverse (type l) (module F : FLOWGRAPH with type labels = l) =
     with type labels = l )
 
 (** Modify the end nodes of a flowgraph to depend on its inits
- * To force the monotone framework to run until the program never changes 
- *  this function modifies the input `Flowgraph` so that it's end nodes 
+ * To force the monotone framework to run until the program never changes
+ *  this function modifies the input `Flowgraph` so that it's end nodes
  *  depend on it's initial nodes. The inits of the reverse flowgraph are used
- *  for this since we normally have both the forward and reverse flowgraphs 
+ *  for this since we normally have both the forward and reverse flowgraphs
  *  available.
- * @tparam l Type of the label for each flowgraph, most commonly an int 
+ * @tparam l Type of the label for each flowgraph, most commonly an int
  * @param Flowgraph The flowgraph to modify
- * @param RevFlowgraph The same flowgraph as `Flowgraph` but reversed. 
- * 
+ * @param RevFlowgraph The same flowgraph as `Flowgraph` but reversed.
+ *
  *)
 let make_circular_flowgraph (type l)
     (module Flowgraph : FLOWGRAPH with type labels = l)
@@ -544,6 +545,7 @@ let rec used_subexpressions_expr (e : Expr.Typed.t) =
     (Expr.Typed.Set.singleton e)
     ( match e.pattern with
     | Var _ | Lit (_, _) -> Expr.Typed.Set.empty
+    | Promotion (expr, _, _) -> used_subexpressions_expr expr
     | FunApp (k, l) ->
         Expr.Typed.Set.union_list
           (List.map ~f:used_subexpressions_expr (l @ Fun_kind.collect_exprs k))
@@ -1011,14 +1013,14 @@ let lazy_expressions_mfp
   let used_not_latest_expressions_mfp = Mf4.mfp () in
   (latest_expr, used_not_latest_expressions_mfp)
 
-(** Run the minimal fixed point algorithm to deduce the smallest set of 
+(** Run the minimal fixed point algorithm to deduce the smallest set of
  *   variables that satisfy a set of conditions.
- * @param Flowgraph The set of nodes to analyze 
- * @param flowgraph_to_mir Map of nodes to their actual values in the MIR 
+ * @param Flowgraph The set of nodes to analyze
+ * @param flowgraph_to_mir Map of nodes to their actual values in the MIR
  * @param initial_variables The set of variables to start in the set
- * @param gen_variable Used in the transfer function to deduce variables 
+ * @param gen_variable Used in the transfer function to deduce variables
  *  that should be in the set
- * 
+ *
  *)
 let minimal_variables_mfp
     (module Circular_Fwd_Flowgraph : Monotone_framework_sigs.FLOWGRAPH

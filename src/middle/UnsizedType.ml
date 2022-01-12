@@ -148,8 +148,30 @@ let is_dataonlytype possibly_adtype : bool =
 
 let is_scalar_type = function UReal | UInt -> true | _ -> false
 
+let rec promote_array ut scalar =
+  match (ut, scalar) with
+  | (UInt | UReal), (UReal | UComplex) -> scalar
+  | UArray ut2, _ -> UArray (promote_array ut2 scalar)
+  | _, _ -> ut
+
 let rec is_int_type ut =
   match ut with UInt -> true | UArray ut -> is_int_type ut | _ -> false
+
+let rec is_complex_type ut =
+  match ut with
+  | UComplex -> true
+  | UArray ut -> is_complex_type ut
+  | _ -> false
+
+let rec internal_scalar ut =
+  match ut with
+  | UVector | UMatrix | URowVector | UReal -> UReal
+  | UInt -> UInt
+  | UComplex -> UComplex
+  | UArray ut -> internal_scalar ut
+  | _ ->
+      Common.FatalError.fatal_error_msg
+        [%message "Tried to get scalar type of " (ut : t)]
 
 let is_eigen_type ut =
   match ut with UVector | URowVector | UMatrix -> true | _ -> false

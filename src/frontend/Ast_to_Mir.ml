@@ -81,6 +81,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
       FunApp (CompilerInternal FnMakeRowVec, trans_exprs eles) |> ewrap
   | Indexed (lhs, indices) ->
       Indexed (trans_expr lhs, List.map ~f:trans_idx indices) |> ewrap
+  | Promotion (e, ty, ad) -> Promotion (trans_expr e, ty, ad) |> ewrap
 
 and trans_idx = function
   | Ast.All -> All

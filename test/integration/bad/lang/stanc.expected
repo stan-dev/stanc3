@@ -591,6 +591,66 @@ Syntax error in 'bad_periods_tparams.stan', line 2, column 7, lexing error:
    -------------------------------------------------
 
 Invalid character found.
+  $ ../../../../../install/default/bin/stanc bad_promotion1.stan
+Semantic error in 'bad_promotion1.stan', line 9, column 2 to column 13:
+   -------------------------------------------------
+     7:  model {
+     8:    array[3] int d = {1,2,3};
+     9:    printer(d);
+           ^
+    10:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'printer':
+(array[] int)
+Available signatures:
+(array[] vector) => void
+  The first argument must be array[] vector but got array[] int
+  $ ../../../../../install/default/bin/stanc bad_promotions2.stan
+Semantic error in 'bad_promotions2.stan', line 9, column 8 to column 17:
+   -------------------------------------------------
+     7:  model {
+     8:    array[3] int d = {1,2,3};
+     9:    print(nested(d));
+                 ^
+    10:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'nested':
+(array[] int)
+Available signatures:
+(array[,] complex) => real
+  The first argument must be array[,] complex but got array[] int
+  $ ../../../../../install/default/bin/stanc bad_promotions3.stan
+Semantic error in 'bad_promotions3.stan', line 9, column 2 to column 17:
+   -------------------------------------------------
+     7:  model {
+     8:    array[3] int d = {1,2,3};
+     9:    printer({d,d});
+           ^
+    10:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'printer':
+(array[,] int)
+Available signatures:
+(array[] real) => void
+  The first argument must be array[] real but got array[,] int
+  $ ../../../../../install/default/bin/stanc bad_promotions4.stan
+Semantic error in 'bad_promotions4.stan', line 9, column 2 to column 13:
+   -------------------------------------------------
+     7:  model {
+     8:    array[3] real d = {1,2.2,3};
+     9:    printer(d);
+           ^
+    10:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'printer':
+(array[] real)
+Available signatures:
+(array[] int) => void
+  The first argument must be array[] int but got array[] real
   $ ../../../../../install/default/bin/stanc good_all.stan
 Semantic error in 'good_all.stan', line 25, column 2 to column 8:
    -------------------------------------------------

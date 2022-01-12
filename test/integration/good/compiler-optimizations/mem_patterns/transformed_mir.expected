@@ -11165,8 +11165,12 @@
              ((pattern (Lit Int 0))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Var data_r))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern
+           (Promotion
+            ((pattern (Var data_r))
+             (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+            UReal AutoDiffable))
+          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
          ((pattern
            (FunApp (StanLib sum FnPlain SoA)
             (((pattern (Var soa_x))
@@ -11400,8 +11404,12 @@
              ((pattern (Lit Int 0))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Var data_r))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern
+           (Promotion
+            ((pattern (Var data_r))
+             (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+            UReal AutoDiffable))
+          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
          ((pattern
            (FunApp (StanLib sum FnPlain AoS)
             (((pattern (Var soa_x))

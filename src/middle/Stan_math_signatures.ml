@@ -340,6 +340,7 @@ let fst2 (a, _, _) = a
 let thrd (_, _, c) = c
 
 (* -- Querying stan_math_signatures -- *)
+(* TODO: Remove/prefer to use SignatureMismatch instead of UnsizedType *)
 let stan_math_returntype (name : string) (args : fun_arg list) =
   let name = Utils.stdlib_distribution_name name in
   let namematches = Hashtbl.find_multi stan_math_signatures name in
@@ -352,13 +353,12 @@ let stan_math_returntype (name : string) (args : fun_arg list) =
   | x when is_reduce_sum_fn x -> Some (UnsizedType.ReturnType UReal)
   | x when is_variadic_ode_fn x -> Some (UnsizedType.ReturnType (UArray UVector))
   | _ ->
-      if List.length filteredmatches = 0 then None
-        (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
-      else
-        Some
-          (List.hd_exn
-             (List.sort ~compare:UnsizedType.compare_returntype
-                (List.map ~f:fst2 filteredmatches) ) )
+      (* Return the least return type in case there are multiple options
+         (due to implicit UInt-UReal conversion), where UInt<UReal
+      *)
+      List.hd
+        (List.sort ~compare:UnsizedType.compare_returntype
+           (List.map ~f:fst2 filteredmatches) )
 
 let is_stan_math_function_name name =
   let name = Utils.stdlib_distribution_name name in

@@ -406,9 +406,15 @@
                         ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
                         (FunApp (StanLib rep_vector FnPlain AoS)
-                         (((pattern (Lit Int 0))
+                         (((pattern
+                            (Promotion
+                             ((pattern (Lit Int 0))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             UReal DataOnly))
                            (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                            ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern (Var N))
                            (meta
                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
