@@ -13,7 +13,9 @@ let rec matrix_set Expr.Fixed.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta
     match pattern with
     | Var s -> Set.Poly.singleton (Dataflow_types.VVar s, meta)
     | Lit _ -> Set.Poly.empty
-    | FunApp (_, exprs) -> union_recur exprs
+    | FunApp (_, exprs) ->
+        if UnsizedType.contains_eigen_type type_ then union_recur exprs
+        else Set.Poly.empty
     | TernaryIf (_, expr2, expr3) -> union_recur [expr2; expr3]
     | Indexed (expr, _) -> matrix_set expr
     | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
@@ -123,30 +125,38 @@ let is_fun_soa_supported name exprs =
  *   will be returned if the matrix or vector is accessed by single 
  *    cell indexing.
  *)
-let rec query_initial_demotable_expr (in_loop : bool) Expr.Fixed.{pattern; _} =
-  let query_expr = query_initial_demotable_expr in_loop in
+let rec query_initial_demotable_expr (in_loop : bool) ~(acc : string Set.Poly.t)
+    Expr.Fixed.{pattern; _} : string Set.Poly.t =
+  let query_expr (accum : string Set.Poly.t) =
+    query_initial_demotable_expr in_loop ~acc:accum in
   match pattern with
   | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
-      query_initial_demotable_funs in_loop kind exprs
+      query_initial_demotable_funs in_loop acc kind exprs
   | Indexed ((Expr.Fixed.{meta= {type_; _}; _} as expr), indexed) ->
       let index_set =
         Set.Poly.union_list
           (List.map
              ~f:
                (Index.apply ~default:Set.Poly.empty ~merge:Set.Poly.union
-                  query_expr )
+                  (query_expr acc) )
              indexed ) in
-      if is_uni_eigen_loop_indexing in_loop type_ indexed then
-        Set.Poly.union (query_var_eigen_names expr) index_set
-      else Set.Poly.union (query_expr expr) index_set
+      let index_demotes =
+        if is_uni_eigen_loop_indexing in_loop type_ indexed then
+          Set.Poly.union (query_var_eigen_names expr) index_set
+        else Set.Poly.union (query_expr acc expr) index_set in
+      Set.Poly.union acc index_demotes
   | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
-      Set.Poly.empty
+      acc
   | TernaryIf (predicate, texpr, fexpr) ->
+      let predicate_demotes = query_expr acc predicate in
       Set.Poly.union
-        (Set.Poly.union (query_expr predicate) (query_var_eigen_names texpr))
+        (Set.Poly.union predicate_demotes (query_var_eigen_names texpr))
         (query_var_eigen_names fexpr)
   | EAnd (lhs, rhs) | EOr (lhs, rhs) ->
-      Set.Poly.union (query_expr lhs) (query_expr rhs)
+      (*We need to get the demotes from both sides*)
+      let full_lhs_rhs =
+        Set.Poly.union (query_expr acc lhs) (query_expr acc rhs) in
+      Set.Poly.union (query_expr full_lhs_rhs lhs) (query_expr full_lhs_rhs rhs)
 
 (**
  * Query a function to detect if it or any of its used 
@@ -165,25 +175,28 @@ let rec query_initial_demotable_expr (in_loop : bool) Expr.Fixed.{pattern; _} =
  *  to the UDF.
  * exprs The expression list passed to the functions.
  *)
-and query_initial_demotable_funs (in_loop : bool) (kind : 'a Fun_kind.t)
-    (exprs : Typed.Meta.t Expr.Fixed.t list) : string Set.Poly.t =
-  let query_expr = query_initial_demotable_expr in_loop in
+and query_initial_demotable_funs (in_loop : bool) (acc : string Set.Poly.t)
+    (kind : 'a Fun_kind.t) (exprs : Typed.Meta.t Expr.Fixed.t list) :
+    string Set.Poly.t =
+  let query_expr accum = query_initial_demotable_expr in_loop ~acc:accum in
   let top_level_eigen_names =
     Set.Poly.union_list (List.map ~f:query_var_eigen_names exprs) in
-  let demoted_eigen_names = Set.Poly.union_list (List.map ~f:query_expr exprs) in
+  let demoted_eigen_names = List.fold ~init:acc ~f:query_expr exprs in
+  let demoted_and_top_level_names =
+    Set.Poly.union demoted_eigen_names top_level_eigen_names in
   match kind with
   | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
     match name with
-    | "check_matching_dims" -> Set.Poly.empty
+    | "check_matching_dims" -> acc
     | name -> (
       match is_fun_soa_supported name exprs with
-      | true -> demoted_eigen_names
-      | false -> Set.Poly.union demoted_eigen_names top_level_eigen_names ) )
+      | true -> Set.Poly.union acc demoted_eigen_names
+      | false -> Set.Poly.union acc demoted_and_top_level_names ) )
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) ->
-      Set.Poly.union demoted_eigen_names top_level_eigen_names
-  | CompilerInternal (_ : 'a Internal_fun.t) -> Set.Poly.empty
+      Set.Poly.union acc demoted_and_top_level_names
+  | CompilerInternal (_ : 'a Internal_fun.t) -> acc
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) ->
-      Set.Poly.union demoted_eigen_names top_level_eigen_names
+      Set.Poly.union acc demoted_and_top_level_names
 
 (**
  * Check whether any functions in the right hand side expression of an assignment
@@ -295,7 +308,8 @@ and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
  *
  * For assignments:
  *  We demote the LHS variable if any of the following are true:
- *  1. None of the RHS's functions are able to accept SoA matrices
+ *  1. None of the RHS's functions are able to accept SoA matrices 
+ *   and the rhs is not an internal compiler function.
  *  2. A single cell of the LHS is being assigned within a loop.
  *  3. The top level expression on the RHS is a combination of only 
  *   data matrices and scalar types. Operations on data matrix and
@@ -311,30 +325,31 @@ and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
  * @param in_loop A boolean to specify the logic of indexing expressions. See
  *  `query_initial_demotable_expr` for an explanation of the logic.
  *)
-let rec query_initial_demotable_stmt (in_loop : bool)
+let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
     (Stmt.Fixed.{pattern; _} :
       (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t ) :
     string Set.Poly.t =
-  let query_expr = query_initial_demotable_expr in_loop in
+  let query_expr (accum : string Set.Poly.t) =
+    query_initial_demotable_expr in_loop ~acc:accum in
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
       ( ((name : string), (ut : UnsizedType.t), idx)
       , (Expr.Fixed.{meta= Expr.Typed.Meta.{type_; adlevel; _}; _} as rhs) ) ->
+      let idx_list =
+        List.fold ~init:acc
+          ~f:(fun accum x ->
+            Index.folder accum
+              (fun acc -> query_initial_demotable_expr in_loop ~acc)
+              x )
+          idx in
       let idx_demotable =
-        let idx_list =
-          Set.Poly.union_list
-            (List.map
-               ~f:
-                 (Index.apply ~default:Set.Poly.empty ~merge:Set.Poly.union
-                    query_expr )
-               idx ) in
         (* RHS (2)*)
         match is_uni_eigen_loop_indexing in_loop ut idx with
         | true -> Set.Poly.add idx_list name
         | false -> idx_list in
-      let rhs_demotable = query_expr rhs in
+      let rhs_demotable_names = query_expr acc rhs in
       (* RHS (3)*)
-      let check_bad_assign =
+      let check_if_rhs_ad_real_data_matrix_expr =
         match (UnsizedType.contains_eigen_type type_, adlevel) with
         | true, UnsizedType.AutoDiffable ->
             is_any_ad_real_data_matrix_expr rhs
@@ -342,35 +357,53 @@ let rec query_initial_demotable_stmt (in_loop : bool)
         | _ -> false in
       (* RHS (1)*)
       let is_all_rhs_aos =
-        let all_eigen_names = query_var_eigen_names rhs in
-        is_nonzero_subset ~set:all_eigen_names ~subset:rhs_demotable in
-      if is_all_rhs_aos || check_bad_assign then
-        let base_set = Set.Poly.union idx_demotable rhs_demotable in
-        Set.Poly.add (Set.Poly.union base_set (query_var_eigen_names rhs)) name
-      else Set.Poly.union idx_demotable rhs_demotable
-  | NRFunApp (kind, exprs) -> query_initial_demotable_funs in_loop kind exprs
+        let all_rhs_eigen_names = query_var_eigen_names rhs in
+        is_nonzero_subset ~subset:all_rhs_eigen_names ~set:rhs_demotable_names
+      in
+      let is_not_supported_func =
+        match rhs.pattern with
+        | FunApp (CompilerInternal _, _) -> false
+        | FunApp (UserDefined _, _) -> true
+        | _ -> false in
+      let is_eigen_stmt = UnsizedType.contains_eigen_type rhs.meta.type_ in
+      let assign_demotes =
+        if
+          is_eigen_stmt
+          && ( is_all_rhs_aos || check_if_rhs_ad_real_data_matrix_expr
+             || is_not_supported_func )
+        then
+          let base_set = Set.Poly.union idx_demotable rhs_demotable_names in
+          Set.Poly.add
+            (Set.Poly.union base_set (query_var_eigen_names rhs))
+            name
+        else Set.Poly.union idx_demotable rhs_demotable_names in
+      Set.Poly.union acc assign_demotes
+  | NRFunApp (kind, exprs) ->
+      query_initial_demotable_funs in_loop acc kind exprs
   | IfElse (predicate, true_stmt, op_false_stmt) ->
-      let demotable_rhs =
-        Option.value_map
-          ~f:(query_initial_demotable_stmt in_loop)
-          ~default:Set.Poly.empty op_false_stmt in
-      Set.Poly.union_list
-        [ query_expr predicate; query_initial_demotable_stmt in_loop true_stmt
-        ; demotable_rhs ]
+      let predicate_acc = query_expr acc predicate in
+      Set.Poly.union acc
+        (Set.Poly.union_list
+           [ predicate_acc
+           ; query_initial_demotable_stmt in_loop predicate_acc true_stmt
+           ; Option.value_map
+               ~f:(query_initial_demotable_stmt in_loop predicate_acc)
+               ~default:Set.Poly.empty op_false_stmt ] )
   | Return optional_expr ->
-      Option.value_map ~f:query_expr ~default:Set.Poly.empty optional_expr
+      Option.value_map ~f:(query_expr acc) ~default:Set.Poly.empty optional_expr
   | SList lst | Profile (_, lst) | Block lst ->
       Set.Poly.union_list
-        (List.map ~f:(query_initial_demotable_stmt in_loop) lst)
-  | TargetPE expr -> query_expr expr
+        (List.map ~f:(query_initial_demotable_stmt in_loop acc) lst)
+  | TargetPE expr -> query_expr acc expr
   | For {lower; upper; body; _} ->
       Set.Poly.union
-        (Set.Poly.union (query_expr lower) (query_expr upper))
-        (query_initial_demotable_stmt true body)
+        (Set.Poly.union (query_expr acc lower) (query_expr acc upper))
+        (query_initial_demotable_stmt true acc body)
   | While (predicate, body) ->
-      Set.Poly.union (query_expr predicate)
-        (query_initial_demotable_stmt true body)
-  | Skip | Break | Continue | Decl _ -> Set.Poly.empty
+      Set.Poly.union_list
+        [ acc; query_expr acc predicate
+        ; query_initial_demotable_stmt true acc body ]
+  | Skip | Break | Continue | Decl _ -> acc
 
 (** Look through a statement to see whether the objects used in it need to be
  *  modified from SoA to AoS. Returns the set of object names that need demoted
@@ -403,14 +436,6 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
   | _ -> Set.Poly.empty
 
 (**
- * Search through an expression for the names of all types that hold matrices 
- *  and vectors.
- **)
-let query_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
-  let get_expr_names (Dataflow_types.VVar s, _) = Some s in
-  Set.Poly.filter_map ~f:get_expr_names (matrix_set expr)
-
-(**
  * Modify a function and it's subexpressions from SoA <-> AoS and vice versa.
  * This performs demotion for sub expressions recursively. The top level 
  *  expression and it's sub expressions are demoted to SoA if 
@@ -428,7 +453,8 @@ let query_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
 let rec modify_kind ?force_demotion:(force = false)
     (modifiable_set : string Set.Poly.t) (kind : 'a Fun_kind.t)
     (exprs : Expr.Typed.Meta.t Expr.Fixed.t list) =
-  let expr_names = Set.Poly.union_list (List.map ~f:query_eigen_names exprs) in
+  let expr_names =
+    Set.Poly.union_list (List.map ~f:query_var_eigen_names exprs) in
   let is_all_in_list =
     is_nonzero_subset ~set:modifiable_set ~subset:expr_names in
   match kind with

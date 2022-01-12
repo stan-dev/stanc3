@@ -31,7 +31,10 @@ transformed data {
   array[0] int x_i;
   array[0] real x_r;
   matrix[N, N] K = cov_exp_quad(x_quad, 1.0, 1.0);
-}
+  real idxs[5,5];
+  idxs[1][:] = idxs[1][:];
+  idxs[:][1] = idxs[:][2];
+ }
 parameters {
   real x;
   array[3] real theta;

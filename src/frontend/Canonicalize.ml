@@ -91,8 +91,28 @@ let rec replace_deprecated_expr
           ident expr in
   {expr; emeta}
 
-let replace_deprecated_lval deprecated_userdefined =
-  map_lval_with (replace_deprecated_expr deprecated_userdefined) ident
+let replace_deprecated_lval deprecated_userdefined {lval; lmeta} =
+  let is_multiindex = function
+    | Single {emeta= {type_= Middle.UnsizedType.UInt; _}; _} -> false
+    | _ -> true in
+  let rec flatten_multi = function
+    | LVariable id -> (LVariable id, None)
+    | LIndexed ({lval; lmeta}, idcs) -> (
+        let outer =
+          List.map idcs
+            ~f:(map_index (replace_deprecated_expr deprecated_userdefined))
+        in
+        let unwrap = Option.value_map ~default:[] ~f:fst in
+        match flatten_multi lval with
+        | lval, inner when List.exists ~f:is_multiindex outer ->
+            (lval, Some (unwrap inner @ outer, lmeta))
+        | lval, None -> (LIndexed ({lval; lmeta}, outer), None)
+        | lval, Some (inner, _) -> (lval, Some (inner @ outer, lmeta)) ) in
+  let lval =
+    match flatten_multi lval with
+    | lval, None -> lval
+    | lval, Some (idcs, lmeta) -> LIndexed ({lval; lmeta}, idcs) in
+  {lval; lmeta}
 
 let rec replace_deprecated_stmt
     (deprecated_userdefined : Middle.UnsizedType.t Core_kernel.String.Map.t)
