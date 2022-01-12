@@ -529,7 +529,6 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
           :: get_arg_types remaining_es in
         SignatureMismatch.check_variadic_args true mandatory_args
           mandatory_fun_args UReal arg_types
-        |> Result.map ~f:(fun p -> (ftype, p))
     | _ -> Error None in
   match tes with
   | {expr= Variable fname; _} :: remaining_es -> (
@@ -578,8 +577,7 @@ and check_variadic_ode ~is_cond_dist loc cf tenv id tes =
       :: get_arg_types remaining_es in
     SignatureMismatch.check_variadic_args false mandatory_arg_types
       Stan_math_signatures.variadic_ode_mandatory_fun_args
-      Stan_math_signatures.variadic_ode_fun_return_type arg_types
-    |> Result.map ~f:(fun p -> (ftype, p)) in
+      Stan_math_signatures.variadic_ode_fun_return_type arg_types in
   match tes with
   | {expr= Variable fname; _} :: remaining_es -> (
     match

@@ -231,6 +231,7 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
                 ((UnsizedType.AutoDiffable, func_type) :: mandatory_arg_tys)
                 @ variadic_arg_tys in
               check_compatible_arguments 0 expected_args args
+              |> Result.map ~f:(fun x -> (func_type, x))
               |> Result.map_error ~f:(fun x -> Some (expected_args, x)) )
       else wrap_func_error (SuffixMismatch (FnPlain, suffix))
   | (_, x) :: _ -> TypeMismatch (minimal_func_type, x, None) |> wrap_err

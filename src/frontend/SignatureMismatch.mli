@@ -49,10 +49,17 @@ val check_variadic_args :
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> UnsizedType.t
   -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> ( promotions list
+  -> ( UnsizedType.t * promotions list
      , ((UnsizedType.autodifftype * UnsizedType.t) list * function_mismatch)
        option )
      result
+(** Check variadic function arguments.
+      If a match is found, returns [Ok] of the function type and a list of promotions (see [promote])
+      If none is found, returns [Error] of the list of args and a function_mismatch.
+      Currently, this is always [Some].
+      This is to better support usage in
+      [Typechecker.find_matching_function_signature]
+     *)
 
 val pp_signature_mismatch :
      Format.formatter
