@@ -1226,7 +1226,7 @@ type optimization_level = O0 | O1 | Oexperimental
 
 let level_optimizations (lvl : optimization_level) : optimization_settings =
   match lvl with
-  | O0 -> {no_optimizations with optimize_soa= true}
+  | O0 -> no_optimizations
   | O1 ->
       { function_inlining= false
       ; static_loop_unrolling= false
