@@ -119,7 +119,8 @@ let verify_name_fresh_var loc tenv name =
 (** verify that the variable being declared is previous unused. *)
 let verify_name_fresh_udf loc tenv name =
   if
-    (* variadic functions are currently not in math sigs *)
+    (* variadic functions are currently not in math sigs and aren't
+       overloadable due to their separate typechecking *)
     Stan_math_signatures.is_reduce_sum_fn name
     || Stan_math_signatures.is_variadic_ode_fn name
   then Semantic_error.ident_is_stanmath_name loc name |> error

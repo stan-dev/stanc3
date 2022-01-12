@@ -1,3 +1,14 @@
+  $ ../../../../../../install/default/bin/stanc overload_reduce_sum.stan
+Semantic error in 'overload_reduce_sum.stan', line 2, column 7 to column 17:
+   -------------------------------------------------
+     1:  functions {
+     2:    real reduce_sum(real x){
+                ^
+     3:      return x;
+     4:    }
+   -------------------------------------------------
+
+Identifier 'reduce_sum' clashes with Stan Math library function.
   $ ../../../../../../install/default/bin/stanc redefine-ccdf-same.stan
 Semantic error in 'redefine-ccdf-same.stan', line 2, column 2 to line 4, column 3:
    -------------------------------------------------
