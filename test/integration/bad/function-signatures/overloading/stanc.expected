@@ -12,14 +12,13 @@ Ill-typed arguments supplied to function 'foo':
 (int, int)
 Available signatures:
 (real, int) => real
-  No unique minimum promotion found.
-  Overloaded functions must not have multiple valid promotion paths,
-  this function call has at least two:
+  No unique minimum promotion found. Overloaded functions must not have
+  multiple equally valid promotion paths this function call has at least two:
   [int_to_real, None]
   and
   [None, int_to_real]
-  Consider defining a new signature for the exact types needed
-  or re-thinking existing definitions.
+  Consider defining a new signature for the exact types needed or re-thinking
+  existing definitions.
 (Additional signatures omitted)
   $ ../../../../../../install/default/bin/stanc no_minimum_promotion2.stan
 Semantic error in 'no_minimum_promotion2.stan', line 12, column 9 to column 17:
@@ -35,14 +34,13 @@ Ill-typed arguments supplied to function 'foo':
 (int, int)
 Available signatures:
 (int, complex) => real
-  No unique minimum promotion found.
-  Overloaded functions must not have multiple valid promotion paths,
-  this function call has at least two:
+  No unique minimum promotion found. Overloaded functions must not have
+  multiple equally valid promotion paths this function call has at least two:
   [None, int_to_complex]
   and
   [int_to_real, int_to_real]
-  Consider defining a new signature for the exact types needed
-  or re-thinking existing definitions.
+  Consider defining a new signature for the exact types needed or re-thinking
+  existing definitions.
 (Additional signatures omitted)
   $ ../../../../../../install/default/bin/stanc overload_reduce_sum.stan
 Semantic error in 'overload_reduce_sum.stan', line 2, column 7 to column 17:

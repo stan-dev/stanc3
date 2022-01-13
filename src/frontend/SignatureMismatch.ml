@@ -364,16 +364,16 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
     | ArgNumMismatch (expected, found) ->
         pf ppf "Expected %d arguments but found %d arguments." expected found
     | PromotionConflict (p1, p2) ->
-        pf ppf
-          "@[<hov>No unique minimum promotion found.@ Overloaded functions \
-           must not have multiple valid promotion paths,@ this function call \
-           has at least two:@ @[<v>[%a]@ and@ [%a]@ @]Consider defining a new \
-           signature for the exact types needed@ or re-thinking existing \
-           definitions.@]"
+        pf ppf "@[<hov>%a:@ @[<v>[%a]@ and@ [%a]@ @]%a@]" text
+          "No unique minimum promotion found. Overloaded functions must not \
+           have multiple equally valid promotion paths this function call has \
+           at least two"
           (box @@ list ~sep:comma pp_promotion)
           p1
           (box @@ list ~sep:comma pp_promotion)
-          p2 in
+          p2 text
+          "Consider defining a new signature for the exact types needed or \
+           re-thinking existing definitions." in
   let pp_args =
     pp_with_where ctx (fun ppf ->
         pf ppf "(@[<hov>%a@])" (list ~sep:comma (pp_unsized_type ctx)) ) in
