@@ -1,26 +1,31 @@
 open Core_kernel
 open Middle
 
-type type_mismatch =
+type type_mismatch = private
   | DataOnlyError
   | TypeMismatch of UnsizedType.t * UnsizedType.t * details option
 
-and details =
+and details = private
   | SuffixMismatch of unit Fun_kind.suffix * unit Fun_kind.suffix
   | ReturnTypeMismatch of UnsizedType.returntype * UnsizedType.returntype
   | InputMismatch of function_mismatch
 
-and function_mismatch =
+(** Indicate a promotion by the resulting type *)
+and promotions = private
+  | None
+  | IntToRealPromotion
+  | IntToComplexPromotion
+  | RealToComplexPromotion
+
+and function_mismatch = private
   | ArgError of int * type_mismatch
   | ArgNumMismatch of int * int
+  | PromotionConflict of promotions list * promotions list
 [@@deriving sexp]
 
 type signature_error =
   (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
   * function_mismatch
-
-(** Indicate a promotion by the resulting type *)
-type promotions = private None | RealPromotion | ComplexPromotion
 
 val check_compatible_arguments_mod_conv :
      (UnsizedType.autodifftype * UnsizedType.t) list

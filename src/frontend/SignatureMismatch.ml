@@ -70,14 +70,34 @@ and details =
   | ReturnTypeMismatch of UnsizedType.returntype * UnsizedType.returntype
   | InputMismatch of function_mismatch
 
+and promotions =
+  | None
+  | IntToRealPromotion
+  | IntToComplexPromotion
+  | RealToComplexPromotion
+
 and function_mismatch =
   | ArgError of int * type_mismatch
   | ArgNumMismatch of int * int
+  | PromotionConflict of promotions list * promotions list
 [@@deriving sexp]
 
 type signature_error =
   (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
   * function_mismatch
+
+let pp_promotion ppf p =
+  match p with
+  | None -> Fmt.string ppf "None"
+  | IntToRealPromotion -> Fmt.string ppf "int_to_real"
+  | IntToComplexPromotion -> Fmt.string ppf "int_to_complex"
+  | RealToComplexPromotion -> Fmt.string ppf "real_to_complex"
+
+let promotion_cost p =
+  match p with
+  | None -> 0
+  | RealToComplexPromotion | IntToRealPromotion -> 1
+  | IntToComplexPromotion -> 2
 
 let rec compare_types t1 t2 =
   match (t1, t2) with
@@ -89,6 +109,9 @@ let rec compare_types t1 t2 =
 let rec compare_errors e1 e2 =
   match (e1, e2) with
   | ArgNumMismatch _, ArgNumMismatch _ -> 0
+  | PromotionConflict _, PromotionConflict _ -> 0
+  | PromotionConflict _, _ -> 1
+  | _, PromotionConflict _ -> -1
   | ArgError _, ArgNumMismatch _ -> -1
   | ArgNumMismatch _, ArgError _ -> 1
   | ArgError (x, _), ArgError (y, _) when x <> y -> compare y x
@@ -110,14 +133,13 @@ let rec compare_errors e1 e2 =
       | SuffixMismatch _, _ | _, InputMismatch _ -> -1
       | InputMismatch _, _ | _, SuffixMismatch _ -> 1 ) )
 
-type promotions = None | RealPromotion | ComplexPromotion
-
 let rec check_same_type depth t1 t2 =
   let wrap_func = Result.map_error ~f:(fun e -> TypeMismatch (t1, t2, Some e)) in
   match (t1, t2) with
   | t1, t2 when t1 = t2 -> Ok None
-  | UnsizedType.(UReal, UInt) when depth < 1 -> Ok RealPromotion
-  | UnsizedType.(UComplex, (UInt | UReal)) when depth < 1 -> Ok ComplexPromotion
+  | UnsizedType.(UReal, UInt) when depth < 1 -> Ok IntToRealPromotion
+  | UnsizedType.(UComplex, UInt) when depth < 1 -> Ok IntToComplexPromotion
+  | UnsizedType.(UComplex, UReal) when depth < 1 -> Ok RealToComplexPromotion
   (* Arrays: Try to recursively promote, but make sure the error is for these types,
      not the recursive call *)
   | UArray nt1, UArray nt2 ->
@@ -170,11 +192,12 @@ let promote es promotions =
       let open UnsizedType in
       let emeta = exp.emeta in
       match prom with
-      | RealPromotion when is_int_type emeta.type_ ->
+      | IntToRealPromotion when is_int_type emeta.type_ ->
           Ast.
             { expr= Ast.Promotion (exp, UReal, emeta.ad_level)
             ; emeta= {emeta with type_= promote_array emeta.type_ UReal} }
-      | ComplexPromotion when not (is_complex_type emeta.type_) ->
+      | (IntToComplexPromotion | RealToComplexPromotion)
+        when not (is_complex_type emeta.type_) ->
           { expr= Promotion (exp, UComplex, emeta.ad_level)
           ; emeta= {emeta with type_= promote_array emeta.type_ UComplex} }
       | _ -> exp )
@@ -182,22 +205,38 @@ let promote es promotions =
 let returntype env name args =
   (* NB: Variadic arguments are special-cased in the typechecker and not handled here *)
   let name = Utils.stdlib_distribution_name name in
-  Environment.find env name
-  |> List.filter_map ~f:extract_function_types
-  |> List.sort ~compare:(fun (x, _, _, _) (y, _, _, _) ->
-         UnsizedType.compare_returntype x y )
-  (* Check the least return type first in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
-  |> List.fold_until ~init:[]
-       ~f:(fun errors (rt, tys, funkind_constructor, _) ->
-         match check_compatible_arguments 0 tys args with
-         | Ok p -> Stop (Ok (rt, funkind_constructor, p))
-         | Error e -> Continue (((rt, tys), e) :: errors) )
-       ~finish:(fun errors ->
-         let errors =
-           List.sort errors ~compare:(fun (_, e1) (_, e2) ->
-               compare_errors e1 e2 ) in
-         let errors, omitted = List.split_n errors max_n_errors in
-         Error (errors, not (List.is_empty omitted)) )
+  let unique_minimum_promotion ps =
+    let size (_, _, p) =
+      List.fold ~init:0 ~f:(fun acc p -> acc + promotion_cost p) p in
+    let ps =
+      List.sort ~compare:(fun p1 p2 -> Int.compare (size p1) (size p2)) ps in
+    match ps with
+    | (((rt, tys), _, p1) as ans1) :: ((_, _, p2) as ans2) :: _ ->
+        if size ans1 <> 0 && size ans1 = size ans2 then
+          Error (Some ((rt, tys), PromotionConflict (p1, p2)))
+        else Ok ans1
+    | [ans] -> Ok ans
+    | [] -> Error None in
+  let function_types =
+    Environment.find env name
+    |> List.filter_map ~f:extract_function_types
+    |> List.sort ~compare:(fun (x, _, _, _) (y, _, _, _) ->
+           UnsizedType.compare_returntype x y ) in
+  let matches, errors =
+    List.partition_map function_types
+      ~f:(fun (rt, tys, funkind_constructor, _) ->
+        match check_compatible_arguments 0 tys args with
+        | Ok p -> Either.First ((rt, tys), funkind_constructor, p)
+        | Error e -> Second ((rt, tys), e) ) in
+  match unique_minimum_promotion matches with
+  | Ok ((rt, _), funkind_constructor, p) -> Ok (rt, funkind_constructor, p)
+  | Error (Some e) -> Error ([e], true)
+  | Error None ->
+      let errors =
+        List.sort errors ~compare:(fun (_, e1) (_, e2) -> compare_errors e1 e2)
+      in
+      let errors, omitted = List.split_n errors max_n_errors in
+      Error (errors, not (List.is_empty omitted))
 
 let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
     fun_return args =
@@ -283,7 +322,15 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
           expected (pp_fundef ctx) found
     | ArgNumMismatch (expected, found) ->
         pf ppf "One takes %d arguments but the other takes %d arguments."
-          expected found in
+          expected found
+    | PromotionConflict (p1, p2) ->
+        pf ppf
+          "@[<v>Overloaded functions must not have multiple valid promotion \
+           paths, this function call has at least two:@ [%a]@ and@ [%a]@]"
+          (box @@ list ~sep:comma pp_promotion)
+          p1
+          (box @@ list ~sep:comma pp_promotion)
+          p2 in
   let pp_explain ppf = function
     | ArgError (n, DataOnlyError) ->
         pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text
@@ -316,7 +363,17 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
           (pp_fundef ctx) expected (pp_fundef ctx) found
     | ArgNumMismatch (expected, found) ->
         pf ppf "Expected %d arguments but found %d arguments." expected found
-  in
+    | PromotionConflict (p1, p2) ->
+        pf ppf
+          "@[<hov>No unique minimum promotion found.@ Overloaded functions \
+           must not have multiple valid promotion paths,@ this function call \
+           has at least two:@ @[<v>[%a]@ and@ [%a]@ @]Consider defining a new \
+           signature for the exact types needed@ or re-thinking existing \
+           definitions.@]"
+          (box @@ list ~sep:comma pp_promotion)
+          p1
+          (box @@ list ~sep:comma pp_promotion)
+          p2 in
   let pp_args =
     pp_with_where ctx (fun ppf ->
         pf ppf "(@[<hov>%a@])" (list ~sep:comma (pp_unsized_type ctx)) ) in

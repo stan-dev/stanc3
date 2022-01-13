@@ -1943,15 +1943,15 @@ Semantic error in 'signature_function_known.stan', line 8, column 12 to column 4
 Ill-typed arguments supplied to function 'bernoulli_logit_lpmf':
 (vector, vector)
 Available signatures:
-(int, real) => real
-  The first argument must be int but got vector
-(int, array[] real) => real
+(int, row_vector) => real
   The first argument must be int but got vector
 (int, vector) => real
   The first argument must be int but got vector
-(int, row_vector) => real
+(int, array[] real) => real
   The first argument must be int but got vector
-(array[] int, real) => real
+(int, real) => real
+  The first argument must be int but got vector
+(array[] int, row_vector) => real
   The first argument must be array[] int but got vector
 (Additional signatures omitted)
   $ ../../../../install/default/bin/stanc signature_function_unknown.stan
