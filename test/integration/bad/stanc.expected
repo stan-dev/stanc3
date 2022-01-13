@@ -1823,6 +1823,42 @@ Semantic error in 'real_idx.stan', line 3, column 4 to column 7:
    -------------------------------------------------
 
 Index must be of type int or int[] or must be a range. Instead found type real.
+  $ ../../../../install/default/bin/stanc redefine-ccdf3.stan
+Semantic error in 'redefine-ccdf3.stan', line 5, column 2 to line 7, column 3:
+   -------------------------------------------------
+     3:      return -x^2;
+     4:    }
+     5:    real foo_ccdf_log(int n, real x) {
+           ^
+     6:      return -x^2;
+     7:    }
+   -------------------------------------------------
+
+Function 'foo_ccdf_log' has already been declared to for signature (int, real) => real
+  $ ../../../../install/default/bin/stanc redefine-cdf3.stan
+Semantic error in 'redefine-cdf3.stan', line 5, column 2 to line 7, column 3:
+   -------------------------------------------------
+     3:      return -x^2;
+     4:    }
+     5:    real foo_cdf_log(int n, real x) {
+           ^
+     6:      return -x^2;
+     7:    }
+   -------------------------------------------------
+
+Function 'foo_cdf_log' has already been declared to for signature (int, real) => real
+  $ ../../../../install/default/bin/stanc redefine-prob3.stan
+Semantic error in 'redefine-prob3.stan', line 5, column 2 to line 7, column 3:
+   -------------------------------------------------
+     3:      return -y^2;
+     4:    }
+     5:    real foo_lpmf(int y) {
+           ^
+     6:      return y^2 / 2;
+     7:    }
+   -------------------------------------------------
+
+Function 'foo_lpmf' has already been declared to for signature (int) => real
   $ ../../../../install/default/bin/stanc rng_loc1.stan
 Semantic error in 'rng_loc1.stan', line 3, column 11 to column 29:
    -------------------------------------------------

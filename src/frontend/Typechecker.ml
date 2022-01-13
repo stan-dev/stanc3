@@ -433,11 +433,13 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
             (Env.nearest_ident tenv id.name) )
       |> error
   | _ (* a function *) -> (
-    (* NB: At present, [SignatureMismatch.returntype] cannot handle overloaded function types.
+    (* NB: At present, [SignatureMismatch.matching_function] cannot handle overloaded function types.
        This is not needed until UDFs can be higher-order, as it is special cased for
        variadic functions
     *)
-    match SignatureMismatch.returntype tenv id.name (get_arg_types es) with
+    match
+      SignatureMismatch.matching_function tenv id.name (get_arg_types es)
+    with
     | Ok (Void, _, _) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
         |> error
@@ -458,7 +460,7 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
 (** Given a constraint function [matches], find any signature which exists
     Returns the first [Ok] if any exist, or else [Error]
 *)
-let find_matching_function_signature tenv
+let find_matching_first_order_fn tenv
     (matches : Env.info -> ('a, 'b option) result) fname =
   let any_ok l =
     let ok, errs = List.partition_map l ~f:Result.to_either in
@@ -533,9 +535,7 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
     | _ -> Error None in
   match tes with
   | {expr= Variable fname; _} :: remaining_es -> (
-    match
-      find_matching_function_signature tenv (matching remaining_es) fname
-    with
+    match find_matching_first_order_fn tenv (matching remaining_es) fname with
     | Ok (ftype, promotions) ->
         (* a valid signature exists *)
         let tes = make_function_variable cf loc fname ftype :: remaining_es in
@@ -581,9 +581,7 @@ and check_variadic_ode ~is_cond_dist loc cf tenv id tes =
       Stan_math_signatures.variadic_ode_fun_return_type arg_types in
   match tes with
   | {expr= Variable fname; _} :: remaining_es -> (
-    match
-      find_matching_function_signature tenv (matching remaining_es) fname
-    with
+    match find_matching_first_order_fn tenv (matching remaining_es) fname with
     | Ok (ftype, promotions) ->
         let tes = make_function_variable cf loc fname ftype :: remaining_es in
         mk_typed_expression
@@ -785,7 +783,9 @@ let check_nrfn loc tenv id es =
         (Env.nearest_ident tenv id.name)
       |> error
   | _ (* a function *) -> (
-    match SignatureMismatch.returntype tenv id.name (get_arg_types es) with
+    match
+      SignatureMismatch.matching_function tenv id.name (get_arg_types es)
+    with
     | Ok (Void, fnk, promotions) ->
         mk_typed_statement
           ~stmt:
@@ -966,15 +966,14 @@ let verify_sampling_distribution loc tenv id arguments =
     && name <> "binomial_coefficient"
     && name <> "multiply" in
   let is_name_w_suffix_udf_sampling_dist suffix =
-    let f = function
-      | Env.
-          { kind= `UserDefined | `UserDeclared _
-          ; type_= UFun (listedtypes, ReturnType UReal, FnLpdf _, _) }
-        when UnsizedType.check_compatible_arguments_mod_conv name listedtypes
-               argumenttypes ->
-          true
-      | _ -> false in
-    List.exists (Env.find tenv (name ^ suffix)) ~f in
+    match
+      SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes
+    with
+    | Ok (rt, f, _)
+      when rt = ReturnType UReal && f FnPlain = UserDefined FnPlain ->
+        true
+    | _ (* TODO don't throw away this information, improve errors *) -> false
+  in
   let is_udf_sampling_dist =
     List.exists ~f:is_name_w_suffix_udf_sampling_dist
       (Utils.distribution_suffices @ Utils.unnormalized_suffices) in
@@ -991,15 +990,11 @@ let is_cumulative_density_defined tenv id arguments =
     Stan_math_signatures.stan_math_returntype (name ^ suffix) argumenttypes
     |> Option.value_map ~default:false ~f:is_real_rt
   and valid_arg_types_for_suffix suffix =
-    let f = function
-      | Env.
-          { kind= `UserDefined | `UserDeclared _
-          ; type_= UFun (listedtypes, ReturnType UReal, FnPlain, _) }
-        when UnsizedType.check_compatible_arguments_mod_conv name listedtypes
-               argumenttypes ->
-          true
-      | _ -> false in
-    List.exists (Env.find tenv (name ^ suffix)) ~f in
+    match
+      SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes
+    with
+    | Ok (rt, _, _) when rt = ReturnType UReal -> true
+    | _ -> false in
   ( is_real_rt_for_suffix "_lcdf"
   || valid_arg_types_for_suffix "_lcdf"
   || is_real_rt_for_suffix "_cdf_log"
@@ -1360,15 +1355,20 @@ and check_var_decl loc cf tenv sized_ty trans id init is_global =
 
 (* function definitions *)
 and exists_matching_fn_declared tenv id arg_tys rt =
+  let options =
+    List.concat_map ~f:(Env.find tenv) (distribution_name_variants id.name)
+  in
   let f = function
     | Env.{kind= `UserDeclared _; type_= UFun (listedtypes, rt', _, _)}
       when arg_tys = listedtypes && rt = rt' ->
         true
     | _ -> false in
-  List.exists (Env.find tenv id.name) ~f
+  List.exists ~f options
 
 and verify_unique_signature tenv loc id arg_tys rt =
-  let existing = Env.find tenv id.name in
+  let existing =
+    List.concat_map ~f:(Env.find tenv) (distribution_name_variants id.name)
+  in
   let same_args = function
     | Env.{type_= UFun (listedtypes, _, _, _); _}
       when List.map ~f:snd arg_tys = List.map ~f:snd listedtypes ->

@@ -8942,7 +8942,6 @@ Display all Stan math signatures exposed in the language
   get_real(complex) => real
   gp_dot_prod_cov(array[] real, real) => matrix
   gp_dot_prod_cov(array[] real, array[] real, real) => matrix
-  gp_dot_prod_cov(array[] real, array[] real, real) => matrix
   gp_dot_prod_cov(array[] vector, real) => matrix
   gp_dot_prod_cov(array[] vector, array[] vector, real) => matrix
   gp_exp_quad_cov(array[] real, real, real) => matrix

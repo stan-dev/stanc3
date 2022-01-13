@@ -202,7 +202,7 @@ let promote es promotions =
           ; emeta= {emeta with type_= promote_array emeta.type_ UComplex} }
       | _ -> exp )
 
-let returntype env name args =
+let matching_function env name args =
   (* NB: Variadic arguments are special-cased in the typechecker and not handled here *)
   let name = Utils.stdlib_distribution_name name in
   let unique_minimum_promotion ps =
@@ -211,11 +211,10 @@ let returntype env name args =
     let ps =
       List.sort ~compare:(fun p1 p2 -> Int.compare (size p1) (size p2)) ps in
     match ps with
-    | (((rt, tys), _, p1) as ans1) :: ((_, _, p2) as ans2) :: _ ->
-        if size ans1 <> 0 && size ans1 = size ans2 then
-          Error (Some ((rt, tys), PromotionConflict (p1, p2)))
-        else Ok ans1
-    | [ans] -> Ok ans
+    | (((rt, tys), _, p1) as ans1) :: ((_, _, p2) as ans2) :: _
+      when size ans1 = size ans2 ->
+        Error (Some ((rt, tys), PromotionConflict (p1, p2)))
+    | ans :: _ -> Ok ans
     | [] -> Error None in
   let function_types =
     Environment.find env name

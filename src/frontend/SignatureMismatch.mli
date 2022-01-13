@@ -38,7 +38,7 @@ val promote :
   return a list of expressions which include the
   [Promotion] expression as appropiate *)
 
-val returntype :
+val matching_function :
      Environment.t
   -> string
   -> (UnsizedType.autodifftype * UnsizedType.t) list
