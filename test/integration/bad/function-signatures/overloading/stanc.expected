@@ -13,7 +13,8 @@ Ill-typed arguments supplied to function 'foo':
 Available signatures:
 (real, int) => real
   No unique minimum promotion found. Overloaded functions must not have
-  multiple equally valid promotion paths this function call has at least two:
+  multiple equally valid promotion paths, but this function call has at least
+  two:
   [int_to_real, None]
   and
   [None, int_to_real]
@@ -35,7 +36,8 @@ Ill-typed arguments supplied to function 'foo':
 Available signatures:
 (int, complex) => real
   No unique minimum promotion found. Overloaded functions must not have
-  multiple equally valid promotion paths this function call has at least two:
+  multiple equally valid promotion paths, but this function call has at least
+  two:
   [None, int_to_complex]
   and
   [int_to_real, int_to_real]
