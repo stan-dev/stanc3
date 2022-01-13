@@ -83,7 +83,8 @@ let%expect_test "combinations " =
 
 let missing_math_functions =
   String.Set.of_list
-    ["beta_proportion_cdf"; "loglogistic_lcdf"; "loglogistic_cdf_log"; "loglogistic_log"]
+    [ "beta_proportion_cdf"; "loglogistic_lcdf"; "loglogistic_cdf_log"
+    ; "loglogistic_log" ]
 
 let rng_return_type t lt =
   if List.for_all ~f:is_primitive lt then t else UnsizedType.UArray t
