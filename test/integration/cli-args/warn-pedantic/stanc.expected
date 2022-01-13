@@ -400,6 +400,10 @@ Warning: Parameter f has constraints that don't make sense. The lower bound
 Warning: Parameter e has constraints that don't make sense. The lower bound
     should be strictly less than the upper bound.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_false_alarm.stan
+Warning in 'jacobian_false_alarm.stan', line 67, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
 Warning in 'jacobian_false_alarm.stan', line 58, column 2: Left-hand side of
     sampling statement (~) may contain a non-linear transform of a parameter
     or local variable. If it does, you need to include a target += statement
@@ -407,6 +411,10 @@ Warning in 'jacobian_false_alarm.stan', line 58, column 2: Left-hand side of
 Warning in 'jacobian_false_alarm.stan', line 38, column 25: A multi_normal
     distribution is given parameter m as a covariance matrix (argument 2),
     but m was not constrained to be covariance.
+Warning in 'jacobian_false_alarm.stan', line 37, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
 Warning in 'jacobian_false_alarm.stan', line 37, column 2: It is suggested to
     reparameterize your model to replace lkj_corr with lkj_corr_cholesky, the
     Cholesky factor variant. lkj_corr tends to run slower, consume more
