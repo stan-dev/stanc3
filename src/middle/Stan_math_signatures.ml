@@ -140,7 +140,6 @@ let variadic_ode_mandatory_fun_args =
 let variadic_ode_fun_return_type = UnsizedType.UVector
 let variadic_ode_return_type = UnsizedType.UArray UnsizedType.UVector
 
-(* Variadic DAE *)
 let variadic_dae_tol_arg_types =
   [ (UnsizedType.DataOnly, UnsizedType.UReal); (DataOnly, UReal)
   ; (DataOnly, UInt) ]
@@ -157,7 +156,6 @@ let variadic_dae_mandatory_fun_args =
 
 let variadic_dae_fun_return_type = UnsizedType.UVector
 let variadic_dae_return_type = UnsizedType.UArray UnsizedType.UVector
-(* end of Variadic DAE *)
 
 let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
   let is_glm = String.is_suffix ~suffix:"_glm" name in
@@ -223,14 +221,12 @@ let is_variadic_ode_nonadjoint_tol_fn f =
   is_variadic_ode_nonadjoint_fn f
   && String.is_suffix f ~suffix:ode_tolerances_suffix
 
-(* dae *)
 let variadic_dae_fns = String.Set.of_list ["dae_tol"; "dae"]
 let dae_tolerances_suffix = "_tol"
 let is_variadic_dae_fn f = Set.mem variadic_dae_fns f
 
 let is_variadic_dae_tol_fn f =
   is_variadic_dae_fn f && String.is_suffix f ~suffix:dae_tolerances_suffix
-(* end of dae *)
 
 let distributions =
   [ ( full_lpmf
