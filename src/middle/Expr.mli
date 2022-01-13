@@ -15,6 +15,7 @@ module Fixed : sig
       | EAnd of 'a * 'a
       | EOr of 'a * 'a
       | Indexed of 'a * 'a Index.t list
+      | Promotion of 'a * UnsizedType.t * UnsizedType.autodifftype
     [@@deriving sexp, hash, compare]
 
     include Pattern.S with type 'a t := 'a t
@@ -51,6 +52,7 @@ module Typed : sig
   val type_of : t -> UnsizedType.t
   val loc_of : t -> Location_span.t
   val adlevel_of : t -> UnsizedType.autodifftype
+  val fun_arg : t -> UnsizedType.autodifftype * UnsizedType.t
 end
 
 module Labelled : sig

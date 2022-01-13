@@ -44,6 +44,7 @@ type ('e, 'f) expression =
   | ImagNumeral of string
   | FunApp of 'f * identifier * 'e list
   | CondDistApp of 'f * identifier * 'e list
+  | Promotion of 'e * UnsizedType.t * UnsizedType.autodifftype
   (* GetLP is deprecated *)
   | GetLP
   | GetTarget
@@ -250,9 +251,14 @@ type typed_program = typed_statement program [@@deriving sexp, compare, map]
 (** Forgetful function from typed to untyped expressions *)
 let rec untyped_expression_of_typed_expression ({expr; emeta} : typed_expression)
     : untyped_expression =
-  { expr=
-      map_expression untyped_expression_of_typed_expression (fun _ -> ()) expr
-  ; emeta= {loc= emeta.loc} }
+  match expr with
+  | Promotion (e, _, _) -> untyped_expression_of_typed_expression e
+  | _ ->
+      { expr=
+          map_expression untyped_expression_of_typed_expression
+            (fun _ -> ())
+            expr
+      ; emeta= {loc= emeta.loc} }
 
 let rec untyped_lvalue_of_typed_lvalue ({lval; lmeta} : typed_lval) :
     untyped_lval =
@@ -304,7 +310,11 @@ let rec id_of_lvalue {lval; _} =
 
 let rec get_loc_expr (e : untyped_expression) =
   match e.expr with
-  | TernaryIf (e, _, _) | BinOp (e, _, _) | PostfixOp (e, _) | Indexed (e, _) ->
+  | TernaryIf (e, _, _)
+   |BinOp (e, _, _)
+   |PostfixOp (e, _)
+   |Indexed (e, _)
+   |Promotion (e, _, _) ->
       get_loc_expr e
   | PrefixOp (_, e) | ArrayExpr (e :: _) | RowVectorExpr (e :: _) | Paren e ->
       e.emeta.loc.begin_loc

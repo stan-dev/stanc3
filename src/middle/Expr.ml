@@ -17,6 +17,7 @@ module Fixed = struct
       | EAnd of 'a * 'a
       | EOr of 'a * 'a
       | Indexed of 'a * 'a Index.t list
+      | Promotion of 'a * UnsizedType.t * UnsizedType.autodifftype
     [@@deriving sexp, hash, map, compare, fold]
 
     let pp pp_e ppf = function
@@ -42,6 +43,8 @@ module Fixed = struct
             indices
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
       | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
+      | Promotion (from, ut, _) ->
+          Fmt.pf ppf "%a -> %a" pp_e from UnsizedType.pp ut
 
     include Foldable.Make (struct
       type nonrec 'a t = 'a t
@@ -88,6 +91,7 @@ module Typed = struct
   let type_of Fixed.{meta= Meta.{type_; _}; _} = type_
   let loc_of Fixed.{meta= Meta.{loc; _}; _} = loc
   let adlevel_of Fixed.{meta= Meta.{adlevel; _}; _} = adlevel
+  let fun_arg Fixed.{meta= Meta.{type_; adlevel; _}; _} = (adlevel, type_)
 end
 
 (** Expressions with associated location, type and label *)
@@ -146,6 +150,8 @@ module Labelled = struct
         associate ~init:(associate ~init:(associate ~init:assocs e3) e2) e1
     | Indexed (e, idxs) ->
         List.fold idxs ~init:(associate ~init:assocs e) ~f:associate_index
+    (* Not sure?*)
+    | Promotion (e1, _, _) -> associate ~init:assocs e1
 
   and associate_index assocs = function
     | All -> assocs

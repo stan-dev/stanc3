@@ -1,0 +1,34 @@
+(rule
+ (targets cpp.output)
+ (deps
+  (package stanc)
+  (:stanfiles
+   (glob_files *.stan)))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run %{bin:run_bin_on_args} "%{bin:stanc} -fsoa --print-cpp" %{stanfiles}))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff cpp.expected cpp.output)))
+
+(rule
+ (targets transformed_mir.output)
+ (deps
+  (package stanc)
+  (:stanfiles
+   (glob_files *.stan)))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} -fsoa --debug-optimized-mir"
+    %{stanfiles}))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff transformed_mir.expected transformed_mir.output)))
