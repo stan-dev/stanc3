@@ -120,7 +120,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id diff_low_mid_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (diff_low_mid_flat__ (UArray UReal) ())
@@ -201,7 +201,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id diff_high_mid_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (diff_high_mid_flat__ (UArray UReal) ())
@@ -282,7 +282,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id mid_price_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (mid_price_flat__ (UArray UReal) ())
@@ -374,7 +374,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id X_all_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (X_all_flat__ (UArray UReal) ())
@@ -5969,7 +5969,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id dat_x_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (dat_x_flat__ (UArray UReal) ())
@@ -6075,7 +6075,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id y_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (y_flat__ (UArray UReal) ())

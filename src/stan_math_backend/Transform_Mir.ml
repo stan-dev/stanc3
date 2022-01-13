@@ -150,7 +150,7 @@ let data_read smeta (decl_id, st) =
             { decl_adtype= AutoDiffable
             ; decl_id
             ; decl_type= Unsized flat_type
-            ; initialize= true }
+            ; initialize= false }
           |> swrap
         , Assignment ((decl_id, flat_type, []), readfnapp decl_var) |> swrap
         , { Expr.Fixed.pattern= Var decl_id

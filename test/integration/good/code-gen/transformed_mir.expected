@@ -2839,7 +2839,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_int_3d_ar_flat__)
-          (decl_type (Unsized (UArray UInt))) (initialize true)))
+          (decl_type (Unsized (UArray UInt))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_int_3d_ar_flat__ (UArray UInt) ())
@@ -3091,7 +3091,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_real_3d_ar_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_real_3d_ar_flat__ (UArray UReal) ())
@@ -3222,7 +3222,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_vec_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_vec_flat__ (UArray UReal) ())
@@ -3315,7 +3315,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_1d_vec_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_1d_vec_flat__ (UArray UReal) ())
@@ -3458,7 +3458,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_3d_vec_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_3d_vec_flat__ (UArray UReal) ())
@@ -3613,7 +3613,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_row_vec_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_row_vec_flat__ (UArray UReal) ())
@@ -3706,7 +3706,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_1d_row_vec_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_1d_row_vec_flat__ (UArray UReal) ())
@@ -3850,7 +3850,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_3d_row_vec_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_3d_row_vec_flat__ (UArray UReal) ())
@@ -4006,7 +4006,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_ar_mat_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_ar_mat_flat__ (UArray UReal) ())
@@ -4194,7 +4194,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_simplex_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_simplex_flat__ (UArray UReal) ())
@@ -4296,7 +4296,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_1d_simplex_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_1d_simplex_flat__ (UArray UReal) ())
@@ -4448,7 +4448,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_3d_simplex_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_3d_simplex_flat__ (UArray UReal) ())
@@ -4608,7 +4608,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_cfcov_54_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_cfcov_54_flat__ (UArray UReal) ())
@@ -4716,7 +4716,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_cfcov_33_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_cfcov_33_flat__ (UArray UReal) ())
@@ -4836,7 +4836,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_cfcov_33_ar_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_cfcov_33_ar_flat__ (UArray UReal) ())
@@ -5021,7 +5021,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_int_array_2d_flat__)
-          (decl_type (Unsized (UArray UInt))) (initialize true)))
+          (decl_type (Unsized (UArray UInt))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_int_array_2d_flat__ (UArray UInt) ())
@@ -5135,7 +5135,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_int_array_3d_flat__)
-          (decl_type (Unsized (UArray UInt))) (initialize true)))
+          (decl_type (Unsized (UArray UInt))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_int_array_3d_flat__ (UArray UInt) ())
@@ -5313,7 +5313,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_real_array_2d_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_real_array_2d_flat__ (UArray UReal) ())
@@ -5427,7 +5427,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_real_array_3d_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_real_array_3d_flat__ (UArray UReal) ())
@@ -5569,7 +5569,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_matrix_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_matrix_flat__ (UArray UReal) ())
@@ -5698,7 +5698,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_matrix_array_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_matrix_array_flat__ (UArray UReal) ())
@@ -5853,7 +5853,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_matrix_array_2d_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_matrix_array_2d_flat__ (UArray UReal) ())
@@ -6038,7 +6038,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_matrix_array_3d_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_matrix_array_3d_flat__ (UArray UReal) ())
@@ -6230,7 +6230,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_vector_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_vector_flat__ (UArray UReal) ())
@@ -6323,7 +6323,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_vector_array_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_vector_array_flat__ (UArray UReal) ())
@@ -6445,7 +6445,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_vector_array_2d_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_vector_array_2d_flat__ (UArray UReal) ())
@@ -6595,7 +6595,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_vector_array_3d_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_vector_array_3d_flat__ (UArray UReal) ())
@@ -6751,7 +6751,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_row_vector_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_row_vector_flat__ (UArray UReal) ())
@@ -6844,7 +6844,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id d_row_vector_array_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_row_vector_array_flat__ (UArray UReal) ())
@@ -6968,7 +6968,7 @@
       (((pattern
          (Decl (decl_adtype AutoDiffable)
           (decl_id d_row_vector_array_2d_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_row_vector_array_2d_flat__ (UArray UReal) ())
@@ -7119,7 +7119,7 @@
       (((pattern
          (Decl (decl_adtype AutoDiffable)
           (decl_id d_row_vector_array_3d_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (d_row_vector_array_3d_flat__ (UArray UReal) ())

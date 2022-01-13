@@ -101,7 +101,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id y_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize true)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment (y_flat__ (UArray UReal) ())
