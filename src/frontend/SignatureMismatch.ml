@@ -86,19 +86,6 @@ type signature_error =
   (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
   * function_mismatch
 
-let pp_promotion ppf p =
-  match p with
-  | None -> Fmt.string ppf "None"
-  | IntToRealPromotion -> Fmt.string ppf "int_to_real"
-  | IntToComplexPromotion -> Fmt.string ppf "int_to_complex"
-  | RealToComplexPromotion -> Fmt.string ppf "real_to_complex"
-
-let promotion_cost p =
-  match p with
-  | None -> 0
-  | RealToComplexPromotion | IntToRealPromotion -> 1
-  | IntToComplexPromotion -> 2
-
 let rec compare_types t1 t2 =
   match (t1, t2) with
   | UnsizedType.(UArray t1, UArray t2) -> compare_types t1 t2
@@ -202,6 +189,12 @@ let promote es promotions =
           ; emeta= {emeta with type_= promote_array emeta.type_ UComplex} }
       | _ -> exp )
 
+let promotion_cost p =
+  match p with
+  | None -> 0
+  | RealToComplexPromotion | IntToRealPromotion -> 1
+  | IntToComplexPromotion -> 2
+
 let matching_function env name args =
   (* NB: Variadic arguments are special-cased in the typechecker and not handled here *)
   let name = Utils.stdlib_distribution_name name in
@@ -274,6 +267,13 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
       else wrap_func_error (SuffixMismatch (FnPlain, suffix))
   | (_, x) :: _ -> TypeMismatch (minimal_func_type, x, None) |> wrap_err
   | [] -> Error (Some ([], ArgNumMismatch (List.length mandatory_arg_tys, 0)))
+
+let pp_promotion ppf p =
+  match p with
+  | None -> Fmt.string ppf "None"
+  | IntToRealPromotion -> Fmt.string ppf "int_to_real"
+  | IntToComplexPromotion -> Fmt.string ppf "int_to_complex"
+  | RealToComplexPromotion -> Fmt.string ppf "real_to_complex"
 
 let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
   let open Fmt in
