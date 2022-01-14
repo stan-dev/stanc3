@@ -539,12 +539,14 @@ let check_variadic_dae ~is_cond_dist loc id es =
       Stan_math_signatures.variadic_dae_mandatory_fun_args
       Stan_math_signatures.variadic_dae_fun_return_type (get_arg_types es)
   with
-  | None ->
+  | Ok promotions ->
       mk_typed_expression
-        ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, es))
+        ~expr:
+          (mk_fun_app ~is_cond_dist
+             (StanLib FnPlain, id, SignatureMismatch.promote es promotions) )
         ~ad_level:(expr_ad_lub es)
         ~type_:Stan_math_signatures.variadic_dae_return_type ~loc
-  | Some (expected_args, err) ->
+  | Error (expected_args, err) ->
       Semantic_error.illtyped_variadic_dae loc id.name
         (List.map ~f:type_of_expr_typed es)
         expected_args err
