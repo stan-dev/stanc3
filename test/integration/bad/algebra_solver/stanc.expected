@@ -127,48 +127,6 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The 5th argument must be array[] int but got array[] real
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
-  $ ../../../../../install/default/bin/stanc bad_newton_x_r_type.stan
-Semantic error in 'bad_newton_x_r_type.stan', line 31, column 10 to column 69:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function 'algebra_solver_newton':
-(<F1>, vector, vector, array[] int, array[] int)
-where F1 = (vector, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The fourth argument must be array[] real but got array[] int
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-  Expected 8 arguments but found 5 arguments.
-  $ ../../../../../install/default/bin/stanc bad_newton_x_r_type_control.stan
-Semantic error in 'bad_newton_x_r_type_control.stan', line 31, column 10 to column 85:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function 'algebra_solver_newton':
-(<F1>, vector, vector, array[] int, array[] int, real, real, int)
-where F1 = (vector, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The fourth argument must be array[] real but got array[] int
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-  Expected 5 arguments but found 8 arguments.
   $ ../../../../../install/default/bin/stanc bad_newton_x_r_var_type.stan
 Semantic error in 'bad_newton_x_r_var_type.stan', line 31, column 10 to column 71:
    -------------------------------------------------
@@ -371,48 +329,6 @@ Available signatures:
  data real, data real) => vector
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The 5th argument must be array[] int but got array[] real
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-  Expected 5 arguments but found 8 arguments.
-  $ ../../../../../install/default/bin/stanc bad_x_r_type.stan
-Semantic error in 'bad_x_r_type.stan', line 31, column 10 to column 62:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function 'algebra_solver':
-(<F1>, vector, vector, array[] int, array[] int)
-where F1 = (vector, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The fourth argument must be array[] real but got array[] int
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-  Expected 8 arguments but found 5 arguments.
-  $ ../../../../../install/default/bin/stanc bad_x_r_type_control.stan
-Semantic error in 'bad_x_r_type_control.stan', line 31, column 10 to column 78:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function 'algebra_solver':
-(<F1>, vector, vector, array[] int, array[] int, real, real, int)
-where F1 = (vector, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The fourth argument must be array[] real but got array[] int
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
   $ ../../../../../install/default/bin/stanc bad_x_r_var_type.stan

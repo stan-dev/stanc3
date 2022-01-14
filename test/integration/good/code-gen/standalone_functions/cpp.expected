@@ -126,11 +126,9 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
     current_statement__ = 7;
     stan::math::validate_non_negative_index("result", "num_elements(x)",
                                             stan::math::num_elements(x));
-    Eigen::Matrix<local_scalar_t__, -1, 1> result;
-    result = Eigen::Matrix<local_scalar_t__, -1, 1>(stan::math::num_elements(
-                                                      x));
-    stan::math::fill(result, DUMMY_VAR__);
-    
+    Eigen::Matrix<local_scalar_t__, -1, 1> result =
+       Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
+         stan::math::num_elements(x), DUMMY_VAR__);
     current_statement__ = 8;
     stan::model::assign(result, stan::math::multiply(x, 5.0),
       "assigning variable result");
@@ -488,11 +486,9 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
     current_statement__ = 7;
     stan::math::validate_non_negative_index("result", "num_elements(x)",
                                             stan::math::num_elements(x));
-    Eigen::Matrix<local_scalar_t__, -1, 1> result;
-    result = Eigen::Matrix<local_scalar_t__, -1, 1>(stan::math::num_elements(
-                                                      x));
-    stan::math::fill(result, DUMMY_VAR__);
-    
+    Eigen::Matrix<local_scalar_t__, -1, 1> result =
+       Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
+         stan::math::num_elements(x), DUMMY_VAR__);
     current_statement__ = 8;
     stan::model::assign(result, stan::math::multiply(x, 5.0),
       "assigning variable result");
@@ -788,12 +784,9 @@ integrand_ode(const T0__& r, const std::vector<T1__>& f,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    std::vector<local_scalar_t__> df_dx;
-    df_dx = std::vector<local_scalar_t__>(1, DUMMY_VAR__);
-    
-    local_scalar_t__ x;
-    x = DUMMY_VAR__;
-    
+    std::vector<local_scalar_t__> df_dx =
+       std::vector<local_scalar_t__>(1, DUMMY_VAR__);
+    local_scalar_t__ x = DUMMY_VAR__;
     current_statement__ = 4;
     x = stan::math::logit(r);
     current_statement__ = 5;
@@ -829,9 +822,8 @@ ode_integrate(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    std::vector<int> x_i;
-    x_i = std::vector<int>(0, std::numeric_limits<int>::min());
-    
+    std::vector<int> x_i =
+       std::vector<int>(0, std::numeric_limits<int>::min());
     current_statement__ = 9;
     return stan::model::rvalue(
              stan::math::integrate_ode_bdf(integrand_ode_functor__(),

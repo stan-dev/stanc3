@@ -78,7 +78,8 @@ type optimization_settings =
   ; partial_evaluation: bool
   ; lazy_code_motion: bool
   ; optimize_ad_levels: bool
-  ; preserve_stability: bool }
+  ; preserve_stability: bool
+  ; optimize_soa: bool }
 
 val all_optimizations : optimization_settings
 val no_optimizations : optimization_settings

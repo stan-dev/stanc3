@@ -36,10 +36,18 @@ let bounds = function
  @param op a functor to run with inputs of inner exprs
  @param ind the Index.t to
  *)
-let apply ~default ~merge op ind =
+let apply ~default ~merge op (ind : 'a t) =
   match ind with
   | All -> default
   | Single ind_expr -> op ind_expr
   | Upfrom ind_expr -> op ind_expr
   | Between (expr_top, expr_bottom) -> merge (op expr_top) (op expr_bottom)
   | MultiIndex exprs -> op exprs
+
+let folder (acc : string Set.Poly.t) op (ind : 'a t) : string Set.Poly.t =
+  match ind with
+  | All -> acc
+  | Single ind_expr | Upfrom ind_expr | MultiIndex ind_expr -> op acc ind_expr
+  | Between (expr_top, expr_bottom) ->
+      let top_fold = op acc expr_top in
+      Set.Poly.union top_fold (op top_fold expr_bottom)

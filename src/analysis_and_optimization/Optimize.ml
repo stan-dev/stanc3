@@ -224,6 +224,9 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
   match pattern with
   | Var _ -> ([], [], e)
   | Lit (_, _) -> ([], [], e)
+  | Promotion (expr, ut, ad) ->
+      let d, sl, expr' = inline_function_expression propto adt fim expr in
+      (d, sl, {e with pattern= Promotion (expr', ut, ad)})
   | FunApp (kind, es) -> (
       let d_list, s_list, es =
         inline_list (inline_function_expression propto adt fim) es in
@@ -253,7 +256,7 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
                       { decl_adtype= adt
                       ; decl_id= x
                       ; decl_type= Option.value_exn rt
-                      ; initialize= false } ]
+                      ; initialize= true } ]
                   (* We should minimize the code that's having its variables
                      replaced to avoid conflict with the (two) new dummy
                      variables introduced by inlining *)
@@ -400,7 +403,10 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.{pattern; meta} =
                                ( [inline_function_statement propto adt fim body]
                                @ map_no_loc s_upper )
                          ; meta= Location_span.empty } ) } )
-        | Profile (_, l) | Block l ->
+        | Profile (name, l) ->
+            Profile
+              (name, List.map l ~f:(inline_function_statement propto adt fim))
+        | Block l ->
             Block (List.map l ~f:(inline_function_statement propto adt fim))
         | SList l ->
             SList (List.map l ~f:(inline_function_statement propto adt fim))
@@ -535,7 +541,7 @@ let unroll_loop_one_step_statement _ =
             ( Expr.Fixed.
                 { lower with
                   pattern=
-                    FunApp (StanLib ("Geq__", FnPlain, SoA), [upper; lower]) }
+                    FunApp (StanLib ("Geq__", FnPlain, AoS), [upper; lower]) }
             , { pattern=
                   (let body_unrolled =
                      subst_args_stmt [loopvar] [lower]
@@ -550,7 +556,7 @@ let unroll_loop_one_step_statement _ =
                                { lower with
                                  pattern=
                                    FunApp
-                                     ( StanLib ("Plus__", FnPlain, SoA)
+                                     ( StanLib ("Plus__", FnPlain, AoS)
                                      , [lower; Expr.Helpers.loop_bottom] ) } }
                      ; meta= Location_span.empty } in
                    match body_unrolled.pattern with
@@ -722,7 +728,10 @@ let dead_code_elimination (mir : Program.Typed.t) =
             && is_skip_break_continue body.pattern
           then Skip
           else For {loopvar; lower; upper; body}
-      | Profile (_, l) | Block l ->
+      | Profile (name, l) ->
+          let l' = List.filter ~f:(fun x -> x.pattern <> Skip) l in
+          if List.length l' = 0 then Skip else Profile (name, l')
+      | Block l ->
           let l' = List.filter ~f:(fun x -> x.pattern <> Skip) l in
           if List.length l' = 0 then Skip else Block l'
       | SList l ->
@@ -742,23 +751,11 @@ let partial_evaluation = Partial_evaluator.eval_prog
 let rec find_assignment_idx (name : string) Stmt.Fixed.{pattern; _} =
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
-      ((assign_name, (_ : UnsizedType.t), idx_lst), (_ : 'a Expr.Fixed.t))
-    when name = assign_name ->
+      ((assign_name, (_ : UnsizedType.t), idx_lst), (rhs : 'a Expr.Fixed.t))
+    when name = assign_name
+         && not (Set.Poly.mem (expr_var_names_set rhs) assign_name) ->
       Some idx_lst
-  | Assignment _ | Decl _ | TargetPE _ | NRFunApp _ | Break | Continue
-   |Return _ | Skip ->
-      None
-  | IfElse ((_ : 'a Expr.Fixed.t), true_stmt, op_false_stmt) -> (
-    match find_assignment_idx name true_stmt with
-    | Some _ as ret -> ret
-    | None -> (
-      match op_false_stmt with
-      | Some false_stmt -> find_assignment_idx name false_stmt
-      | None -> None ) )
-  | While ((_ : 'a Expr.Fixed.t), stmt) -> find_assignment_idx name stmt
-  | For {body; _} -> find_assignment_idx name body
-  | Profile ((_ : string), stmts) | Block stmts | SList stmts ->
-      List.find_map ~f:(find_assignment_idx name) stmts
+  | _ -> None
 
 (**
  * Given a list of Stmts, find Decls whose objects are fully assigned to
@@ -769,13 +766,14 @@ and unenforce_initialize
     (lst : (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t list) =
   let rec unenforce_initialize_patt (Stmt.Fixed.{pattern; _} as stmt) sub_lst =
     match pattern with
-    | Stmt.Fixed.Pattern.Decl ({decl_id; _} as patt) -> (
+    | Stmt.Fixed.Pattern.Decl ({decl_id; _} as decl_pat) -> (
       match List.hd sub_lst with
       | Some next_stmt -> (
         match find_assignment_idx decl_id next_stmt with
         | Some [] | Some [Index.All] | Some [Index.All; Index.All] ->
             { stmt with
-              pattern= Stmt.Fixed.Pattern.Decl {patt with initialize= false} }
+              pattern= Stmt.Fixed.Pattern.Decl {decl_pat with initialize= false}
+            }
         | None | Some _ -> stmt )
       | None -> stmt )
     | Block block_lst ->
@@ -823,8 +821,10 @@ let transform_mir_blocks (mir : (Expr.Typed.t, Stmt.Located.t) Program.t)
     List.map mir.functions_block ~f:(fun fs ->
         let new_body =
           match fs.fdbody with
-          | Some (Stmt.Fixed.{pattern= SList lst | Block lst; _} as stmt) ->
+          | Some (Stmt.Fixed.{pattern= SList lst; _} as stmt) ->
               Some {stmt with pattern= SList (transformer lst)}
+          | Some (Stmt.Fixed.{pattern= Block lst; _} as stmt) ->
+              Some {stmt with pattern= Block (transformer lst)}
           | alt -> alt in
         {fs with fdbody= new_body} ) in
   { Program.functions_block= transformed_functions
@@ -1024,8 +1024,8 @@ let block_fixing mir =
 (* TODO: add tests *)
 (* TODO: add pass to get rid of redundant declarations? *)
 
-(** 
- * A generic optimization pass for finding a minimal set of variables that 
+(**
+ * A generic optimization pass for finding a minimal set of variables that
  * are generated by some circumstance, and then updating the MIR with that set.
  * @param gen_variables: the variables that must be added to the set at
  *  the given statement
@@ -1118,6 +1118,64 @@ let optimize_ad_levels (mir : Program.Typed.t) =
       stmt in
   transform_program_blockwise mir transform
 
+(**
+  * Deduces whether types can be Structures of Arrays (SoA/fast) or
+  *  Arrays of Structs (AoS/slow). See the docs in
+  *  Mem_pattern.query_demote_stmt/exprs* functions for 
+  *  details on the rules surrounding when demotion from
+  *  SoA -> AoS needs to happen.
+  *
+  * This first does a simple iter over
+  * the log_prob portion of the MIR, finding the names of all matrices
+  * (and arrays of matrices) where either the Stan math function
+  * does not support SoA or the object is single cell accesed within a 
+  * For or While loop. These are the initial variables
+  * given to the monotone framework. Then log_prob has all matrix like objects
+  * and the functions that use them to SoA. After that the 
+  * Monotone framework is used to deduce assignment paths of AoS <-> SoA
+  * and vice versa which need to be demoted to AoS as well as updating 
+  * functions and objects after these assignment passes that then 
+  * also need to be AoS.
+  *
+  * @param mir: The program's whole MIR.
+  *)
+let optimize_soa (mir : Program.Typed.t) =
+  let gen_aos_variables
+      (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
+      (l : int) (aos_variables : string Set.Poly.t) =
+    let mir_node mir_idx = Map.find_exn flowgraph_to_mir mir_idx in
+    match (mir_node l).pattern with
+    | stmt -> Mem_pattern.query_demotable_stmt aos_variables stmt in
+  let initial_variables =
+    List.fold ~init:Set.Poly.empty
+      ~f:(Mem_pattern.query_initial_demotable_stmt false)
+      mir.log_prob in
+  (*
+  let print_set s = 
+    Set.Poly.iter ~f:print_endline s in
+  let () = print_set initial_variables in
+  *)
+  let mod_exprs aos_exits mod_expr =
+    Mir_utils.map_rec_expr (Mem_pattern.modify_expr_pattern aos_exits) mod_expr
+  in
+  let modify_stmt_patt stmt_pattern variable_set =
+    Mem_pattern.modify_stmt_pattern stmt_pattern variable_set in
+  let transform stmt =
+    optimize_minimal_variables ~gen_variables:gen_aos_variables
+      ~update_expr:mod_exprs ~update_stmt:modify_stmt_patt ~initial_variables
+      stmt ~extra_variables:(fun _ -> initial_variables) in
+  let transform' s =
+    match transform {pattern= SList s; meta= Location_span.empty} with
+    | { pattern=
+          SList (l : (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t list)
+      ; _ } ->
+        l
+    | _ ->
+        raise
+          (Failure "Something went wrong with program transformation packing!")
+  in
+  {mir with log_prob= transform' mir.log_prob}
+
 (* Apparently you need to completely copy/paste type definitions between
    ml and mli files?*)
 type optimization_settings =
@@ -1134,7 +1192,8 @@ type optimization_settings =
   ; partial_evaluation: bool
   ; lazy_code_motion: bool
   ; optimize_ad_levels: bool
-  ; preserve_stability: bool }
+  ; preserve_stability: bool
+  ; optimize_soa: bool }
 
 let settings_const b =
   { function_inlining= b
@@ -1150,7 +1209,8 @@ let settings_const b =
   ; partial_evaluation= b
   ; lazy_code_motion= b
   ; optimize_ad_levels= b
-  ; preserve_stability= not b }
+  ; preserve_stability= not b
+  ; optimize_soa= b }
 
 let all_optimizations : optimization_settings = settings_const true
 let no_optimizations : optimization_settings = settings_const false
@@ -1159,7 +1219,7 @@ type optimization_level = O0 | O1 | Oexperimental
 
 let level_optimizations (lvl : optimization_level) : optimization_settings =
   match lvl with
-  | O0 -> {no_optimizations with allow_uninitialized_decls= false}
+  | O0 -> no_optimizations
   | O1 ->
       { function_inlining= false
       ; static_loop_unrolling= false
@@ -1172,9 +1232,10 @@ let level_optimizations (lvl : optimization_level) : optimization_settings =
       ; dead_code_elimination= true
       ; partial_evaluation= true
       ; lazy_code_motion= false
-      ; allow_uninitialized_decls= false
+      ; allow_uninitialized_decls= true
       ; optimize_ad_levels= true
-      ; preserve_stability= false }
+      ; preserve_stability= false
+      ; optimize_soa= true }
   | Oexperimental -> all_optimizations
 
 let optimization_suite ?(settings = all_optimizations) mir =
@@ -1209,8 +1270,6 @@ let optimization_suite ?(settings = all_optimizations) mir =
     ; (constant_propagation ~preserve_stability, settings.constant_propagation)
       (* Book: Loop simplification *)
     ; (static_loop_unrolling, settings.static_loop_unrolling)
-      (*Remove decls immediately assigned to*)
-    ; (allow_uninitialized_decls, settings.allow_uninitialized_decls)
       (* Book: Dead-code elimination *)
       (* Matthijs: Everything < Dead-code elimination *)
     ; (dead_code_elimination, settings.dead_code_elimination)
@@ -1218,9 +1277,12 @@ let optimization_suite ?(settings = all_optimizations) mir =
     ; (list_collapsing, settings.list_collapsing)
       (* Book: Machine idioms and instruction combining *)
     ; (optimize_ad_levels, settings.optimize_ad_levels)
+      (*Remove decls immediately assigned to*)
+    ; (allow_uninitialized_decls, settings.allow_uninitialized_decls)
       (* Book: Machine idioms and instruction combining *)
       (* Matthijs: Everything < block_fixing *)
-    ; (block_fixing, settings.block_fixing) ] in
+    ; (block_fixing, settings.block_fixing)
+    ; (optimize_soa, settings.optimize_soa) ] in
   let optimizations =
     List.filter_map maybe_optimizations ~f:(fun (fn, flag) ->
         if flag then Some fn else None ) in
