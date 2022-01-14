@@ -130,10 +130,7 @@ module TypeError = struct
         SignatureMismatch.pp_signature_mismatch ppf
           ( name
           , arg_tys
-          , ( [ ( ( UnsizedType.ReturnType return_type
-                  , args )
-                , error ) ]
-            , false ) )
+          , ([((UnsizedType.ReturnType return_type, args), error)], false) )
     | NotIndexable (ut, nidcs) ->
         Fmt.pf ppf
           "Too many indexes, expression dimensions=%d, indexes found=%d."
@@ -518,12 +515,24 @@ let illtyped_reduce_sum_generic loc name arg_tys expected_args error =
     )
 
 let illtyped_variadic_ode loc name arg_tys args error =
-  TypeError (loc, TypeError.IllTypedVariadicDE (name, arg_tys, args,
-                                                error, Stan_math_signatures.variadic_ode_fun_return_type))
+  TypeError
+    ( loc
+    , TypeError.IllTypedVariadicDE
+        ( name
+        , arg_tys
+        , args
+        , error
+        , Stan_math_signatures.variadic_ode_fun_return_type ) )
 
 let illtyped_variadic_dae loc name arg_tys args error =
-  TypeError (loc, TypeError.IllTypedVariadicDE (name, arg_tys, args,
-                                                error, Stan_math_signatures.variadic_dae_fun_return_type))
+  TypeError
+    ( loc
+    , TypeError.IllTypedVariadicDE
+        ( name
+        , arg_tys
+        , args
+        , error
+        , Stan_math_signatures.variadic_dae_fun_return_type ) )
 
 let returning_fn_expected_nonfn_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonFnFound name)
