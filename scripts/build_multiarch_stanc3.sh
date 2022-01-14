@@ -25,8 +25,8 @@ SHA=$(skopeo inspect --raw docker://stanorg/stanc3:multiarch | jq '.manifests | 
 # Register QEMU translation binaries
 docker run --rm --privileged multiarch/qemu-user-static --reset
 
-# Run docker, inheriting mounted volumes from sibling container (including stanc3 directory), and build stanc3 # -u 990:986
-docker run --volumes-from=$(docker ps -qf "ancestor=stanorg/stanc3:staticfi"):rw stanorg/stanc3:multiarch@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static"
+# Run docker, inheriting mounted volumes from sibling container (including stanc3 directory), and build stanc3 #
+docker run -u 990:986 --group-add=987 --group-add=988 --volumes-from=$(docker ps -qf "ancestor=stanorg/stanc3:staticfi"):rw stanorg/stanc3:multiarch@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static"
 
 # Update ownership of build folders
 #chown -R opam: _build
