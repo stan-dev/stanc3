@@ -446,7 +446,7 @@ Semantic error in 'bad_userdefined_reduce_sum.stan', line 2, column 7 to column 
      4:    }
    -------------------------------------------------
 
-Identifier 'reduce_sum' clashes with Stan Math library function.
+Identifier 'reduce_sum' clashes with a non-overloadable Stan Math library function.
   $ ../../../../../install/default/bin/stanc bad_userdefined_reduce_sum_static.stan
 Semantic error in 'bad_userdefined_reduce_sum_static.stan', line 2, column 7 to column 24:
    -------------------------------------------------
@@ -457,4 +457,4 @@ Semantic error in 'bad_userdefined_reduce_sum_static.stan', line 2, column 7 to 
      4:    }
    -------------------------------------------------
 
-Identifier 'reduce_sum_static' clashes with Stan Math library function.
+Identifier 'reduce_sum_static' clashes with a non-overloadable Stan Math library function.

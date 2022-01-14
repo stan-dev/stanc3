@@ -1,0 +1,6 @@
+  $ ../../../../../../install/default/bin/stanc --auto-format --allow-undefined define-only.stan
+functions {
+  real bar(real x);
+  real bar(int x);
+}
+

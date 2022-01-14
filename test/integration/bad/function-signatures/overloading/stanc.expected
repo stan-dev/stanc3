@@ -77,7 +77,7 @@ Semantic error in 'overload_reduce_sum.stan', line 2, column 7 to column 17:
      4:    }
    -------------------------------------------------
 
-Identifier 'reduce_sum' clashes with Stan Math library function.
+Identifier 'reduce_sum' clashes with a non-overloadable Stan Math library function.
   $ ../../../../../../install/default/bin/stanc redefine-ccdf-same.stan
 Semantic error in 'redefine-ccdf-same.stan', line 2, column 2 to line 4, column 3:
    -------------------------------------------------

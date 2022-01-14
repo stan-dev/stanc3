@@ -241,7 +241,9 @@ module IdentifierError = struct
 
   let pp ppf = function
     | IsStanMathName name ->
-        Fmt.pf ppf "Identifier '%s' clashes with Stan Math library function."
+        Fmt.pf ppf
+          "Identifier '%s' clashes with a non-overloadable Stan Math library \
+           function."
           name
     | InUse name -> Fmt.pf ppf "Identifier '%s' is already in use." name
     | IsModelName name ->
