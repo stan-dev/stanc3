@@ -107,23 +107,23 @@ pipeline {
             post { always { runShell("rm -rf ./*") }}
         }
 
-        stage("Pull image ") {
-            agent {
-                label 'v100'
-            }
-            steps {
-                sh "docker pull stanorg/stanc3:staticfi"
-            }
-        }
+        // stage("Pull image ") {
+        //     agent {
+        //         label 'v100'
+        //     }
+        //     steps {
+        //         sh "docker pull stanorg/stanc3:staticfi"
+        //     }
+        // }
 
-        stage("Pull image 2") {
-            agent {
-                label 'triqs && linux'
-            }
-            steps {
-                sh "docker pull stanorg/stanc3:staticfi"
-            }
-        }
+        // stage("Pull image 2") {
+        //     agent {
+        //         label 'triqs && linux'
+        //     }
+        //     steps {
+        //         sh "docker pull stanorg/stanc3:staticfi"
+        //     }
+        // }
 
         // stage("Code formatting") {
         //     when {
@@ -615,37 +615,37 @@ pipeline {
 //                 }
 
                 // Cross compiling for windows on debian
-//                 stage("Build & test static Windows binary") {
-//                     when {
-//                         beforeAgent true
-//                         expression {
-//                             !skipRebuildingBinaries
-//                         }
-//                     }
-//                     agent {
-//                         docker {
-//                             image 'stanorg/stanc3:debian-windowsfi'
-//                             label 'linux'
-//                             //Forces image to ignore entrypoint
-//                             args "--entrypoint=\'\'"
-//                         }
-//                     }
-//                     steps {
-//
-//                         runShell("""
-//                             eval \$(opam env)
-//                             dune subst
-//                             dune build -x windows
-//                         """)
-//
-//                         sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
-//
-//                         stash name:'windows-exe', includes:'bin/*'
-//                     }
-//                     post {always { runShell("rm -rf ./*")}}
-//                 }
-//             }
+                // stage("Build & test static Windows binary") {
+                //     when {
+                //         beforeAgent true
+                //         expression {
+                //             !skipRebuildingBinaries
+                //         }
+                //     }
+                //     agent {
+                //         docker {
+                //             image 'stanorg/stanc3:debian-windowsfi'
+                //             label 'linux'
+                //             //Forces image to ignore entrypoint
+                //             args "--entrypoint=\'\'"
+                //         }
+                //     }
+                //     steps {
 
+                //         runShell("""
+                //             eval \$(opam env)
+                //             dune subst
+                //             dune build -x windows
+                //         """)
+
+                //         sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
+
+                //         stash name:'windows-exe', includes:'bin/*'
+                //     }
+                //     post {always { runShell("rm -rf ./*")}}
+                // }
+
+            }
         }
 
 //         stage("Release tag and publish binaries") {
