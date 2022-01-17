@@ -256,7 +256,7 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
                       { decl_adtype= adt
                       ; decl_id= x
                       ; decl_type= Option.value_exn rt
-                      ; initialize= false } ]
+                      ; initialize= true } ]
                   (* We should minimize the code that's having its variables
                      replaced to avoid conflict with the (two) new dummy
                      variables introduced by inlining *)
@@ -751,23 +751,11 @@ let partial_evaluation = Partial_evaluator.eval_prog
 let rec find_assignment_idx (name : string) Stmt.Fixed.{pattern; _} =
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
-      ((assign_name, (_ : UnsizedType.t), idx_lst), (_ : 'a Expr.Fixed.t))
-    when name = assign_name ->
+      ((assign_name, (_ : UnsizedType.t), idx_lst), (rhs : 'a Expr.Fixed.t))
+    when name = assign_name
+         && not (Set.Poly.mem (expr_var_names_set rhs) assign_name) ->
       Some idx_lst
-  | Assignment _ | Decl _ | TargetPE _ | NRFunApp _ | Break | Continue
-   |Return _ | Skip ->
-      None
-  | IfElse ((_ : 'a Expr.Fixed.t), true_stmt, op_false_stmt) -> (
-    match find_assignment_idx name true_stmt with
-    | Some _ as ret -> ret
-    | None -> (
-      match op_false_stmt with
-      | Some false_stmt -> find_assignment_idx name false_stmt
-      | None -> None ) )
-  | While ((_ : 'a Expr.Fixed.t), stmt) -> find_assignment_idx name stmt
-  | For {body; _} -> find_assignment_idx name body
-  | Profile ((_ : string), stmts) | Block stmts | SList stmts ->
-      List.find_map ~f:(find_assignment_idx name) stmts
+  | _ -> None
 
 (**
  * Given a list of Stmts, find Decls whose objects are fully assigned to
@@ -778,13 +766,14 @@ and unenforce_initialize
     (lst : (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t list) =
   let rec unenforce_initialize_patt (Stmt.Fixed.{pattern; _} as stmt) sub_lst =
     match pattern with
-    | Stmt.Fixed.Pattern.Decl ({decl_id; _} as patt) -> (
+    | Stmt.Fixed.Pattern.Decl ({decl_id; _} as decl_pat) -> (
       match List.hd sub_lst with
       | Some next_stmt -> (
         match find_assignment_idx decl_id next_stmt with
         | Some [] | Some [Index.All] | Some [Index.All; Index.All] ->
             { stmt with
-              pattern= Stmt.Fixed.Pattern.Decl {patt with initialize= false} }
+              pattern= Stmt.Fixed.Pattern.Decl {decl_pat with initialize= false}
+            }
         | None | Some _ -> stmt )
       | None -> stmt )
     | Block block_lst ->
@@ -832,8 +821,10 @@ let transform_mir_blocks (mir : (Expr.Typed.t, Stmt.Located.t) Program.t)
     List.map mir.functions_block ~f:(fun fs ->
         let new_body =
           match fs.fdbody with
-          | Some (Stmt.Fixed.{pattern= SList lst | Block lst; _} as stmt) ->
+          | Some (Stmt.Fixed.{pattern= SList lst; _} as stmt) ->
               Some {stmt with pattern= SList (transformer lst)}
+          | Some (Stmt.Fixed.{pattern= Block lst; _} as stmt) ->
+              Some {stmt with pattern= Block (transformer lst)}
           | alt -> alt in
         {fs with fdbody= new_body} ) in
   { Program.functions_block= transformed_functions
@@ -1241,7 +1232,7 @@ let level_optimizations (lvl : optimization_level) : optimization_settings =
       ; dead_code_elimination= true
       ; partial_evaluation= true
       ; lazy_code_motion= false
-      ; allow_uninitialized_decls= false
+      ; allow_uninitialized_decls= true
       ; optimize_ad_levels= true
       ; preserve_stability= false
       ; optimize_soa= true }
@@ -1279,8 +1270,6 @@ let optimization_suite ?(settings = all_optimizations) mir =
     ; (constant_propagation ~preserve_stability, settings.constant_propagation)
       (* Book: Loop simplification *)
     ; (static_loop_unrolling, settings.static_loop_unrolling)
-      (*Remove decls immediately assigned to*)
-    ; (allow_uninitialized_decls, settings.allow_uninitialized_decls)
       (* Book: Dead-code elimination *)
       (* Matthijs: Everything < Dead-code elimination *)
     ; (dead_code_elimination, settings.dead_code_elimination)
@@ -1288,6 +1277,8 @@ let optimization_suite ?(settings = all_optimizations) mir =
     ; (list_collapsing, settings.list_collapsing)
       (* Book: Machine idioms and instruction combining *)
     ; (optimize_ad_levels, settings.optimize_ad_levels)
+      (*Remove decls immediately assigned to*)
+    ; (allow_uninitialized_decls, settings.allow_uninitialized_decls)
       (* Book: Machine idioms and instruction combining *)
       (* Matthijs: Everything < block_fixing *)
     ; (block_fixing, settings.block_fixing)
