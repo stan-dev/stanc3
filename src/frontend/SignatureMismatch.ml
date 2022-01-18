@@ -70,21 +70,30 @@ and details =
   | ReturnTypeMismatch of UnsizedType.returntype * UnsizedType.returntype
   | InputMismatch of function_mismatch
 
-and promotions =
-  | None
-  | IntToRealPromotion
-  | IntToComplexPromotion
-  | RealToComplexPromotion
-
 and function_mismatch =
   | ArgError of int * type_mismatch
   | ArgNumMismatch of int * int
-  | PromotionConflict of promotions list * promotions list
 [@@deriving sexp]
 
 type signature_error =
   (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
   * function_mismatch
+
+type promotions =
+  | None
+  | IntToRealPromotion
+  | IntToComplexPromotion
+  | RealToComplexPromotion
+
+type match_result =
+  | UniqueMatch of
+      UnsizedType.returntype
+      * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
+      * promotions list
+  | AmbiguousMatch of
+      (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
+      list
+  | SignatureErrors of signature_error list * bool
 
 let rec compare_types t1 t2 =
   match (t1, t2) with
@@ -96,9 +105,6 @@ let rec compare_types t1 t2 =
 let rec compare_errors e1 e2 =
   match (e1, e2) with
   | ArgNumMismatch _, ArgNumMismatch _ -> 0
-  | PromotionConflict _, PromotionConflict _ -> 0
-  | PromotionConflict _, _ -> 1
-  | _, PromotionConflict _ -> -1
   | ArgError _, ArgNumMismatch _ -> -1
   | ArgNumMismatch _, ArgError _ -> 1
   | ArgError (x, _), ArgError (y, _) when x <> y -> compare y x
@@ -195,20 +201,25 @@ let promotion_cost p =
   | RealToComplexPromotion | IntToRealPromotion -> 1
   | IntToComplexPromotion -> 2
 
+let unique_minimum_promotion ps =
+  let size (_, p) =
+    List.fold ~init:0 ~f:(fun acc p -> acc + promotion_cost p) p in
+  let sizes = List.map ~f:size ps in
+  let min_promotions = List.min_elt ~compare:Int.compare sizes in
+  let ps = List.zip_exn sizes ps in
+  match min_promotions with
+  | Some n -> (
+    match
+      List.filter_map ~f:(fun (x, y) -> if x = n then Some y else None) ps
+    with
+    | [ans] -> Ok ans
+    | _ :: _ as lst -> Error (Some (List.map ~f:fst lst))
+    | [] -> Error None )
+  | _ -> Error None
+
 let matching_function env name args =
   (* NB: Variadic arguments are special-cased in the typechecker and not handled here *)
   let name = Utils.stdlib_distribution_name name in
-  let unique_minimum_promotion ps =
-    let size (_, _, p) =
-      List.fold ~init:0 ~f:(fun acc p -> acc + promotion_cost p) p in
-    let ps =
-      List.sort ~compare:(fun p1 p2 -> Int.compare (size p1) (size p2)) ps in
-    match ps with
-    | (((rt, tys), _, p1) as ans1) :: ((_, _, p2) as ans2) :: _
-      when size ans1 = size ans2 ->
-        Error (Some ((rt, tys), PromotionConflict (p1, p2)))
-    | ans :: _ -> Ok ans
-    | [] -> Error None in
   let function_types =
     Environment.find env name
     |> List.filter_map ~f:extract_function_types
@@ -218,17 +229,18 @@ let matching_function env name args =
     List.partition_map function_types
       ~f:(fun (rt, tys, funkind_constructor, _) ->
         match check_compatible_arguments 0 tys args with
-        | Ok p -> Either.First ((rt, tys), funkind_constructor, p)
+        | Ok p -> Either.First (((rt, tys), funkind_constructor), p)
         | Error e -> Second ((rt, tys), e) ) in
   match unique_minimum_promotion matches with
-  | Ok ((rt, _), funkind_constructor, p) -> Ok (rt, funkind_constructor, p)
-  | Error (Some e) -> Error ([e], true)
+  | Ok (((rt, _), funkind_constructor), p) ->
+      UniqueMatch (rt, funkind_constructor, p)
+  | Error (Some e) -> AmbiguousMatch (List.map ~f:fst e)
   | Error None ->
       let errors =
         List.sort errors ~compare:(fun (_, e1) (_, e2) -> compare_errors e1 e2)
       in
       let errors, omitted = List.split_n errors max_n_errors in
-      Error (errors, not (List.is_empty omitted))
+      SignatureErrors (errors, not (List.is_empty omitted))
 
 let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
     fun_return args =
@@ -267,13 +279,6 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
       else wrap_func_error (SuffixMismatch (FnPlain, suffix))
   | (_, x) :: _ -> TypeMismatch (minimal_func_type, x, None) |> wrap_err
   | [] -> Error (Some ([], ArgNumMismatch (List.length mandatory_arg_tys, 0)))
-
-let pp_promotion ppf p =
-  match p with
-  | None -> Fmt.string ppf "None"
-  | IntToRealPromotion -> Fmt.string ppf "int_to_real"
-  | IntToComplexPromotion -> Fmt.string ppf "int_to_complex"
-  | RealToComplexPromotion -> Fmt.string ppf "real_to_complex"
 
 let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
   let open Fmt in
@@ -321,15 +326,7 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
           expected (pp_fundef ctx) found
     | ArgNumMismatch (expected, found) ->
         pf ppf "One takes %d arguments but the other takes %d arguments."
-          expected found
-    | PromotionConflict (p1, p2) ->
-        pf ppf
-          "@[<v>Overloaded functions must not have multiple valid promotion \
-           paths, this function call has at least two:@ [%a]@ and@ [%a]@]"
-          (box @@ list ~sep:comma pp_promotion)
-          p1
-          (box @@ list ~sep:comma pp_promotion)
-          p2 in
+          expected found in
   let pp_explain ppf = function
     | ArgError (n, DataOnlyError) ->
         pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text
@@ -362,17 +359,7 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
           (pp_fundef ctx) expected (pp_fundef ctx) found
     | ArgNumMismatch (expected, found) ->
         pf ppf "Expected %d arguments but found %d arguments." expected found
-    | PromotionConflict (p1, p2) ->
-        pf ppf "@[<v>%a:@ [%a]@ and@ [%a]@ %a@]" (box text)
-          "No unique minimum promotion found. Overloaded functions must not \
-           have multiple equally valid promotion paths, but this function call \
-           has at least two"
-          (box @@ list ~sep:comma pp_promotion)
-          p1
-          (box @@ list ~sep:comma pp_promotion)
-          p2 (box text)
-          "Consider defining a new signature for the exact types needed or \
-           re-thinking existing definitions." in
+  in
   let pp_args =
     pp_with_where ctx (fun ppf ->
         pf ppf "(@[<hov>%a@])" (list ~sep:comma (pp_unsized_type ctx)) ) in

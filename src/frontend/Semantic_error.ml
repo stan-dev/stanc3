@@ -31,6 +31,12 @@ module TypeError = struct
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
         * SignatureMismatch.function_mismatch
+    | AmbiguousFunctionPromotion of
+        string
+        * UnsizedType.t list
+        * ( UnsizedType.returntype
+          * (UnsizedType.autodifftype * UnsizedType.t) list )
+          list
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string * string option
@@ -134,6 +140,22 @@ module TypeError = struct
                   , args )
                 , error ) ]
             , false ) )
+    | AmbiguousFunctionPromotion (s, arg_tys, signatures) ->
+        let pp_sig ppf (rt, args) =
+          Fmt.pf ppf "@[<hov>(@[<hov>%a@]) => %a@]"
+            Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
+            args UnsizedType.pp_returntype rt in
+        Fmt.pf ppf
+          "No unique minimum promotion found for function \"%s\".@ Overloaded \
+           functions must not have multiple equally valid promotion paths.@ \
+           For args @[(%a)@], this function has several:@ @[<v>%a@]@ Consider \
+           defining a new signature for the exact types needed or@ re-thinking \
+           existing definitions."
+          s
+          (Fmt.list ~sep:Fmt.comma UnsizedType.pp)
+          arg_tys
+          (Fmt.list ~sep:Fmt.cut pp_sig)
+          signatures
     | NotIndexable (ut, nidcs) ->
         Fmt.pf ppf
           "Too many indexes, expression dimensions=%d, indexes found=%d."
@@ -523,6 +545,10 @@ let illtyped_reduce_sum_generic loc name arg_tys expected_args error =
 
 let illtyped_variadic_ode loc name arg_tys args error =
   TypeError (loc, TypeError.IllTypedVariadicODE (name, arg_tys, args, error))
+
+let ambiguous_function_promotion loc name arg_tys signatures =
+  TypeError
+    (loc, TypeError.AmbiguousFunctionPromotion (name, arg_tys, signatures))
 
 let returning_fn_expected_nonfn_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonFnFound name)

@@ -8,19 +8,13 @@ Semantic error in 'no_minimum_promotion.stan', line 12, column 9 to column 17:
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'foo':
-(int, int)
-Available signatures:
+No unique minimum promotion found for function "foo".
+Overloaded functions must not have multiple equally valid promotion paths.
+For args (int, int), this function has several:
 (real, int) => real
-  No unique minimum promotion found. Overloaded functions must not have
-  multiple equally valid promotion paths, but this function call has at least
-  two:
-  [int_to_real, None]
-  and
-  [None, int_to_real]
-  Consider defining a new signature for the exact types needed or re-thinking
-  existing definitions.
-(Additional signatures omitted)
+(int, real) => real
+Consider defining a new signature for the exact types needed or
+re-thinking existing definitions.
   $ ../../../../../../install/default/bin/stanc no_minimum_promotion2.stan
 Semantic error in 'no_minimum_promotion2.stan', line 12, column 9 to column 17:
    -------------------------------------------------
@@ -31,19 +25,31 @@ Semantic error in 'no_minimum_promotion2.stan', line 12, column 9 to column 17:
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'foo':
-(int, int)
-Available signatures:
+No unique minimum promotion found for function "foo".
+Overloaded functions must not have multiple equally valid promotion paths.
+For args (int, int), this function has several:
 (int, complex) => real
-  No unique minimum promotion found. Overloaded functions must not have
-  multiple equally valid promotion paths, but this function call has at least
-  two:
-  [None, int_to_complex]
-  and
-  [int_to_real, int_to_real]
-  Consider defining a new signature for the exact types needed or re-thinking
-  existing definitions.
-(Additional signatures omitted)
+(real, real) => real
+Consider defining a new signature for the exact types needed or
+re-thinking existing definitions.
+  $ ../../../../../../install/default/bin/stanc no_minimum_promotion3.stan
+Semantic error in 'no_minimum_promotion3.stan', line 21, column 9 to column 20:
+   -------------------------------------------------
+    19:  
+    20:  model {
+    21:     print(foo3(1,2,3));
+                  ^
+    22:  }
+   -------------------------------------------------
+
+No unique minimum promotion found for function "foo3".
+Overloaded functions must not have multiple equally valid promotion paths.
+For args (int, int, int), this function has several:
+(int, int, real) => real
+(real, int, int) => real
+(int, real, int) => real
+Consider defining a new signature for the exact types needed or
+re-thinking existing definitions.
   $ ../../../../../../install/default/bin/stanc no_minimum_tilde.stan
 Semantic error in 'no_minimum_tilde.stan', line 12, column 3 to column 14:
    -------------------------------------------------
@@ -67,6 +73,26 @@ Semantic error in 'no_minimum_tilde2.stan', line 12, column 3 to column 16:
    -------------------------------------------------
 
 Ill-typed arguments to '~' statement. No distribution 'foo' was found with the correct signature.
+  $ ../../../../../../install/default/bin/stanc no_minimum_variadic.stan
+Semantic error in 'no_minimum_variadic.stan', line 82, column 37 to line 84, column 81:
+   -------------------------------------------------
+    80:                                                   gamma, xi, delta);
+    81:    // overloaded
+    82:    array[N_t] vector<lower=0>[4] y2 = ode_rk45_tol(simple_SIR, y0, t0, t, 1e-6,
+                                              ^
+    83:                                                  1e-6, 1000, beta, kappa,
+    84:                                                  gamma, xi, delta, unused, unused);
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'ode_rk45_tol':
+(<F1>, vector, real, array[] real, real, real, int, real, real, real, real,
+ real, int, int)
+where F1 = (real, vector, real, real, real, real, real, real, int) => vector
+Available signatures:
+(<F2>, vector, real, array[] real, data real, data real, data int, real,
+ real, real, real, real) => vector
+where F2 = (real, vector, real, real, real, real, real) => vector
+  Expected 12 arguments but found 14 arguments.
   $ ../../../../../../install/default/bin/stanc overload_reduce_sum.stan
 Semantic error in 'overload_reduce_sum.stan', line 2, column 7 to column 17:
    -------------------------------------------------

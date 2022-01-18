@@ -433,45 +433,52 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
             (Env.nearest_ident tenv id.name) )
       |> error
   | _ (* a function *) -> (
-    (* NB: At present, [SignatureMismatch.matching_function] cannot handle overloaded function types.
-       This is not needed until UDFs can be higher-order, as it is special cased for
-       variadic functions
-    *)
-    match
-      SignatureMismatch.matching_function tenv id.name (get_arg_types es)
-    with
-    | Ok (Void, _, _) ->
-        Semantic_error.returning_fn_expected_nonreturning_found loc id.name
-        |> error
-    | Ok (ReturnType ut, fnk, promotions) ->
-        mk_typed_expression
-          ~expr:
-            (mk_fun_app ~is_cond_dist
-               ( fnk (Fun_kind.suffix_from_name id.name)
-               , id
-               , SignatureMismatch.promote es promotions ) )
-          ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
-    | Error x ->
-        es
-        |> List.map ~f:(fun e -> e.emeta.type_)
-        |> Semantic_error.illtyped_fn_app loc id.name x
-        |> error )
+      let
+      (* NB: At present, [SignatureMismatch.matching_function] cannot handle overloaded function types.
+         This is not needed until UDFs can be higher-order, as it is special cased for
+         variadic functions
+      *)
+      open
+        SignatureMismatch in
+      match matching_function tenv id.name (get_arg_types es) with
+      | UniqueMatch (Void, _, _) ->
+          Semantic_error.returning_fn_expected_nonreturning_found loc id.name
+          |> error
+      | UniqueMatch (ReturnType ut, fnk, promotions) ->
+          mk_typed_expression
+            ~expr:
+              (mk_fun_app ~is_cond_dist
+                 ( fnk (Fun_kind.suffix_from_name id.name)
+                 , id
+                 , SignatureMismatch.promote es promotions ) )
+            ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
+      | AmbiguousMatch sigs ->
+          Semantic_error.ambiguous_function_promotion loc id.name
+            (List.map ~f:type_of_expr_typed es)
+            sigs
+          |> error
+      | SignatureErrors (l, b) ->
+          es
+          |> List.map ~f:(fun e -> e.emeta.type_)
+          |> Semantic_error.illtyped_fn_app loc id.name (l, b)
+          |> error )
 
 (** Given a constraint function [matches], find any signature which exists
     Returns the first [Ok] if any exist, or else [Error]
 *)
 let find_matching_first_order_fn tenv
     (matches : Env.info -> ('a, 'b option) result) fname =
-  let any_ok l =
-    let ok, errs = List.partition_map l ~f:Result.to_either in
-    match ok with
-    | a :: _ -> Ok a
-    | _ -> (
-      match List.hd (List.filter_opt errs) with
-      | Some s -> Error (Some s)
-      | _ -> Error None ) in
-  Utils.stdlib_distribution_name fname.name
-  |> Env.find tenv |> List.map ~f:matches |> any_ok
+  let candidates =
+    Utils.stdlib_distribution_name fname.name
+    |> Env.find tenv |> List.map ~f:matches in
+  let ok, errs = List.partition_map candidates ~f:Result.to_either in
+  match SignatureMismatch.unique_minimum_promotion ok with
+  | Ok a -> Ok a
+  (* TODO: Could improve this to give better errors when multiple signatures found *)
+  | _ -> (
+    match List.hd (List.filter_opt errs) with
+    | Some s -> Error (Some s)
+    | _ -> Error None )
 
 let make_function_variable cf loc id = function
   | UnsizedType.UFun (args, rt, FnLpdf _, mem_pattern) ->
@@ -786,7 +793,7 @@ let check_nrfn loc tenv id es =
     match
       SignatureMismatch.matching_function tenv id.name (get_arg_types es)
     with
-    | Ok (Void, fnk, promotions) ->
+    | UniqueMatch (Void, fnk, promotions) ->
         mk_typed_statement
           ~stmt:
             (NRFunApp
@@ -794,13 +801,18 @@ let check_nrfn loc tenv id es =
                , id
                , SignatureMismatch.promote es promotions ) )
           ~return_type:NoReturnType ~loc
-    | Ok (ReturnType _, _, _) ->
+    | UniqueMatch (ReturnType _, _, _) ->
         Semantic_error.nonreturning_fn_expected_returning_found loc id.name
         |> error
-    | Error x ->
+    | AmbiguousMatch sigs ->
+        Semantic_error.ambiguous_function_promotion loc id.name
+          (List.map ~f:type_of_expr_typed es)
+          sigs
+        |> error
+    | SignatureErrors (l, b) ->
         es
         |> List.map ~f:type_of_expr_typed
-        |> Semantic_error.illtyped_fn_app loc id.name x
+        |> Semantic_error.illtyped_fn_app loc id.name (l, b)
         |> error )
 
 let check_nr_fn_app loc cf tenv id es =
@@ -969,7 +981,7 @@ let verify_sampling_distribution loc tenv id arguments =
     match
       SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes
     with
-    | Ok (rt, f, _)
+    | UniqueMatch (rt, f, _)
       when rt = ReturnType UReal && f FnPlain = UserDefined FnPlain ->
         true
     | _ (* TODO don't throw away this information, improve errors *) -> false
@@ -993,7 +1005,7 @@ let is_cumulative_density_defined tenv id arguments =
     match
       SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes
     with
-    | Ok (rt, _, _) when rt = ReturnType UReal -> true
+    | UniqueMatch (rt, _, _) when rt = ReturnType UReal -> true
     | _ -> false in
   ( is_real_rt_for_suffix "_lcdf"
   || valid_arg_types_for_suffix "_lcdf"

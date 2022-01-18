@@ -66,6 +66,14 @@ val illtyped_variadic_ode :
   -> SignatureMismatch.function_mismatch
   -> t
 
+val ambiguous_function_promotion :
+     Location_span.t
+  -> string
+  -> UnsizedType.t list
+  -> (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
+     list
+  -> t
+
 val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
 val nonreturning_fn_expected_nonfn_found : Location_span.t -> string -> t
 

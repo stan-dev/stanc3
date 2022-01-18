@@ -10,22 +10,31 @@ and details = private
   | ReturnTypeMismatch of UnsizedType.returntype * UnsizedType.returntype
   | InputMismatch of function_mismatch
 
-(** Indicate a promotion by the resulting type *)
-and promotions = private
-  | None
-  | IntToRealPromotion
-  | IntToComplexPromotion
-  | RealToComplexPromotion
-
 and function_mismatch = private
   | ArgError of int * type_mismatch
   | ArgNumMismatch of int * int
-  | PromotionConflict of promotions list * promotions list
 [@@deriving sexp]
 
 type signature_error =
   (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
   * function_mismatch
+
+(** Indicate a promotion by the resulting type *)
+type promotions = private
+  | None
+  | IntToRealPromotion
+  | IntToComplexPromotion
+  | RealToComplexPromotion
+
+type match_result =
+  | UniqueMatch of
+      UnsizedType.returntype
+      * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
+      * promotions list
+  | AmbiguousMatch of
+      (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
+      list
+  | SignatureErrors of signature_error list * bool
 
 val check_compatible_arguments_mod_conv :
      (UnsizedType.autodifftype * UnsizedType.t) list
@@ -38,15 +47,14 @@ val promote :
   return a list of expressions which include the
   [Promotion] expression as appropiate *)
 
+val unique_minimum_promotion :
+  ('a * promotions list) list -> ('a * promotions list, 'a list option) result
+
 val matching_function :
      Environment.t
   -> string
   -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> ( UnsizedType.returntype
-       * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
-       * promotions list
-     , signature_error list * bool )
-     result
+  -> match_result
 
 val check_variadic_args :
      bool
