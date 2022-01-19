@@ -161,8 +161,6 @@ let functor_suffix_select hof =
       variadic_ode_functor_suffix
   | x when Stan_math_signatures.is_variadic_dae_fn x ->
       variadic_dae_functor_suffix
-  | x when Stan_math_signatures.is_variadic_dae_fn x ->
-      variadic_dae_functor_suffix
   | _ -> functor_suffix
 
 let constraint_to_string = function
