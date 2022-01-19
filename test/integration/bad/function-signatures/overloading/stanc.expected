@@ -1,3 +1,21 @@
+  $ ../../../../../../install/default/bin/stanc no_minimum_dae.stan
+Semantic error in 'no_minimum_dae.stan', line 38, column 12 to column 59:
+   -------------------------------------------------
+    36:    array[4] vector[3] y_hat;
+    37:    {
+    38:      y_hat = dae(chem_dae, yy0, yp0, t0, ts, theta, x, 0, 0);
+                     ^
+    39:    }
+    40:  
+   -------------------------------------------------
+
+No unique minimum promotion found for function "chem_dae".
+Overloaded functions must not have multiple equally valid promotion paths.
+This function has several:
+(real, vector, vector, array[] real, array[] real, real, int) => vector
+(real, vector, vector, array[] real, array[] real, int, real) => vector
+Consider defining a new signature for the exact types needed or
+re-thinking existing definitions.
   $ ../../../../../../install/default/bin/stanc no_minimum_promotion.stan
 Semantic error in 'no_minimum_promotion.stan', line 12, column 9 to column 17:
    -------------------------------------------------

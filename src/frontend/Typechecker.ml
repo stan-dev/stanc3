@@ -622,6 +622,16 @@ and check_variadic_dae ~is_cond_dist loc cf tenv id tes =
   let mandatory_arg_types =
     Stan_math_signatures.variadic_dae_mandatory_arg_types
     @ optional_tol_mandatory_args in
+  let fail () =
+    let expected_args, err =
+      SignatureMismatch.check_variadic_args false mandatory_arg_types
+        Stan_math_signatures.variadic_dae_mandatory_fun_args
+        Stan_math_signatures.variadic_dae_fun_return_type (get_arg_types tes)
+      |> Result.error |> Option.value_exn in
+    Semantic_error.illtyped_variadic_dae loc id.name
+      (List.map ~f:type_of_expr_typed tes)
+      expected_args err
+    |> error in
   let matching remaining_es Env.{type_= ftype; _} =
     let arg_types =
       (calculate_autodifftype cf Functions ftype, ftype)
@@ -648,7 +658,7 @@ and check_variadic_dae ~is_cond_dist loc cf tenv id tes =
           (List.map ~f:type_of_expr_typed tes)
           expected_args err
         |> error )
-  | _ -> failwith "TODO"
+  | _ -> fail ()
 
 and check_funapp loc cf tenv ~is_cond_dist id (es : Ast.typed_expression list) =
   let name_check =
