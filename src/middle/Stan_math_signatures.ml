@@ -81,7 +81,9 @@ let%expect_test "combinations " =
   [%expect
     {| ((1 3 5) (2 3 5) (1 4 5) (2 4 5) (1 3 6) (2 3 6) (1 4 6) (2 4 6)) |}]
 
-let missing_math_functions = String.Set.of_list ["beta_proportion_cdf"]
+let missing_math_functions =
+  String.Set.of_list
+    ["beta_proportion_cdf"; "loglogistic_lcdf"; "loglogistic_cdf_log"]
 
 let rng_return_type t lt =
   if List.for_all ~f:is_primitive lt then t else UnsizedType.UArray t
@@ -239,6 +241,7 @@ let distributions =
   ; ([Lpdf], "lkj_corr", [DMatrix; DReal], AoS)
   ; ([Lpdf], "lkj_corr_cholesky", [DMatrix; DReal], AoS)
   ; (full_lpdf, "logistic", [DVReal; DVReal; DVReal], SoA)
+  ; ([Lpdf; Rng; Cdf], "loglogistic", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf, "lognormal", [DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf], "multi_gp", [DMatrix; DMatrix; DVector], AoS)
   ; ([Lpdf], "multi_gp_cholesky", [DMatrix; DMatrix; DVector], AoS)
