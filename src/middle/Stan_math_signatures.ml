@@ -81,7 +81,9 @@ let%expect_test "combinations " =
   [%expect
     {| ((1 3 5) (2 3 5) (1 4 5) (2 4 5) (1 3 6) (2 3 6) (1 4 6) (2 4 6)) |}]
 
-let missing_math_functions = String.Set.of_list ["beta_proportion_cdf"]
+let missing_math_functions =
+  String.Set.of_list
+    ["beta_proportion_cdf"; "loglogistic_lcdf"; "loglogistic_cdf_log"]
 
 let rng_return_type t lt =
   if List.for_all ~f:is_primitive lt then t else UnsizedType.UArray t
@@ -212,12 +214,12 @@ let distributions =
   ; ([Lpdf; Ccdf; Cdf], "beta_proportion", [DVReal; DVReal; DIntAndReals], SoA)
   ; (full_lpmf, "bernoulli", [DVInt; DVReal], SoA)
   ; ([Lpmf; Rng], "bernoulli_logit", [DVInt; DVReal], SoA)
-  ; ([Lpmf], "bernoulli_logit_glm", [DVInt; DMatrix; DReal; DVector], AoS)
+  ; ([Lpmf], "bernoulli_logit_glm", [DVInt; DMatrix; DReal; DVector], SoA)
   ; (full_lpmf, "binomial", [DVInt; DVInt; DVReal], SoA)
   ; ([Lpmf], "binomial_logit", [DVInt; DVInt; DVReal], SoA)
   ; ([Lpmf], "categorical", [DVInt; DVector], AoS)
   ; ([Lpmf], "categorical_logit", [DVInt; DVector], AoS)
-  ; ([Lpmf], "categorical_logit_glm", [DVInt; DMatrix; DVector; DMatrix], AoS)
+  ; ([Lpmf], "categorical_logit_glm", [DVInt; DMatrix; DVector; DMatrix], SoA)
   ; (full_lpdf, "cauchy", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf, "chi_square", [DVReal; DVReal], SoA)
   ; ([Lpdf], "dirichlet", [DVectors; DVectors], SoA)
@@ -239,6 +241,7 @@ let distributions =
   ; ([Lpdf], "lkj_corr", [DMatrix; DReal], AoS)
   ; ([Lpdf], "lkj_corr_cholesky", [DMatrix; DReal], AoS)
   ; (full_lpdf, "logistic", [DVReal; DVReal; DVReal], SoA)
+  ; ([Lpdf; Rng; Cdf], "loglogistic", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf, "lognormal", [DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf], "multi_gp", [DMatrix; DMatrix; DVector], AoS)
   ; ([Lpdf], "multi_gp_cholesky", [DMatrix; DMatrix; DVector], AoS)
@@ -254,16 +257,16 @@ let distributions =
   ; ( [Lpmf]
     , "neg_binomial_2_log_glm"
     , [DVInt; DMatrix; DReal; DVector; DReal]
-    , AoS ); (full_lpdf, "normal", [DVReal; DVReal; DVReal], SoA)
-  ; ([Lpdf], "normal_id_glm", [DVector; DMatrix; DReal; DVector; DReal], AoS)
+    , SoA ); (full_lpdf, "normal", [DVReal; DVReal; DVReal], SoA)
+  ; ([Lpdf], "normal_id_glm", [DVector; DMatrix; DReal; DVector; DReal], SoA)
   ; ([Lpmf], "ordered_logistic", [DInt; DReal; DVector], SoA)
-  ; ([Lpmf], "ordered_logistic_glm", [DVInt; DMatrix; DVector; DVector], AoS)
+  ; ([Lpmf], "ordered_logistic_glm", [DVInt; DMatrix; DVector; DVector], SoA)
   ; ([Lpmf], "ordered_probit", [DInt; DReal; DVector], SoA)
   ; (full_lpdf, "pareto", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf, "pareto_type_2", [DVReal; DVReal; DVReal; DVReal], SoA)
   ; (full_lpmf, "poisson", [DVInt; DVReal], SoA)
   ; ([Lpmf; Rng], "poisson_log", [DVInt; DVReal], SoA)
-  ; ([Lpmf], "poisson_log_glm", [DVInt; DMatrix; DReal; DVector], AoS)
+  ; ([Lpmf], "poisson_log_glm", [DVInt; DMatrix; DReal; DVector], SoA)
   ; (full_lpdf, "rayleigh", [DVReal; DVReal], SoA)
   ; (full_lpdf, "scaled_inv_chi_square", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf, "skew_normal", [DVReal; DVReal; DVReal; DVReal], SoA)
@@ -936,22 +939,22 @@ let () =
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; UMatrix; UVector; UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
     , [UInt; UMatrix; UVector; UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; URowVector; UReal; UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; URowVector; UVector; UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "bernoulli_logit_glm_rng"
     , ReturnType (UArray UInt)
@@ -983,12 +986,12 @@ let () =
     ( "categorical_logit_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; URowVector; UVector; UMatrix]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "categorical_logit_glm_lpmf"
     , ReturnType UReal
     , [UInt; URowVector; UVector; UMatrix]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified ("append_col", ReturnType UMatrix, [UMatrix; UMatrix], AoS) ;
   add_unqualified ("append_col", ReturnType UMatrix, [UVector; UMatrix], AoS) ;
   add_unqualified ("append_col", ReturnType UMatrix, [UMatrix; UVector], AoS) ;
@@ -1661,69 +1664,69 @@ let () =
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; UMatrix; UVector; UVector; UReal]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType UReal
     , [UInt; UMatrix; UVector; UVector; UReal]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; URowVector; UReal; UVector; UReal]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; URowVector; UVector; UVector; UReal]
-    , AoS ) ;
+    , SoA ) ;
   add_nullary "negative_infinity" ;
   add_unqualified ("norm", ReturnType UReal, [UComplex], AoS) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
     , [UVector; UMatrix; UVector; UVector; UReal]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
     , [UReal; UMatrix; UReal; UVector; UReal]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
     , [UReal; UMatrix; UVector; UVector; UReal]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
     , [UReal; UMatrix; UReal; UVector; UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
     , [UReal; UMatrix; UVector; UVector; UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
     , [UVector; URowVector; UReal; UVector; UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
     , [UVector; URowVector; UVector; UVector; UReal]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
     , [UVector; URowVector; UVector; UVector; UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
     , [UVector; URowVector; UReal; UVector; UReal]
-    , AoS ) ;
+    , SoA ) ;
   add_nullary "not_a_number" ;
   add_unqualified ("num_elements", ReturnType UInt, [UMatrix], SoA) ;
   add_unqualified ("num_elements", ReturnType UInt, [UVector], SoA) ;
@@ -1750,32 +1753,32 @@ let () =
     ( "ordered_logistic_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; URowVector; UVector; UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "ordered_logistic_glm_lpmf"
     , ReturnType UReal
     , [UInt; URowVector; UVector; UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "ordered_logistic_log"
     , ReturnType UReal
     , [UArray UInt; UVector; UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "ordered_logistic_log"
     , ReturnType UReal
     , [UArray UInt; UVector; UArray UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "ordered_logistic_lpmf"
     , ReturnType UReal
     , [UArray UInt; UVector; UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "ordered_logistic_lpmf"
     , ReturnType UReal
     , [UArray UInt; UVector; UArray UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ("ordered_logistic_rng", ReturnType UInt, [UReal; UVector], AoS) ;
   add_unqualified
@@ -1818,22 +1821,22 @@ let () =
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; UMatrix; UVector; UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
     , [UInt; UMatrix; UVector; UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; URowVector; UReal; UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; URowVector; UVector; UVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified ("polar", ReturnType UComplex, [UReal; UReal], AoS) ;
   add_nullary "positive_infinity" ;
   add_binary_vec "pow" AoS ;
