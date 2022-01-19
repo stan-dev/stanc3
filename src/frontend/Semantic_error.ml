@@ -26,11 +26,12 @@ module TypeError = struct
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
         * SignatureMismatch.function_mismatch
-    | IllTypedVariadicODE of
+    | IllTypedVariadicDE of
         string
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
         * SignatureMismatch.function_mismatch
+        * UnsizedType.t
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string * string option
@@ -125,15 +126,11 @@ module TypeError = struct
     | IllTypedReduceSumGeneric (name, arg_tys, expected_args, error) ->
         SignatureMismatch.pp_signature_mismatch ppf
           (name, arg_tys, ([((ReturnType UReal, expected_args), error)], false))
-    | IllTypedVariadicODE (name, arg_tys, args, error) ->
+    | IllTypedVariadicDE (name, arg_tys, args, error, return_type) ->
         SignatureMismatch.pp_signature_mismatch ppf
           ( name
           , arg_tys
-          , ( [ ( ( UnsizedType.ReturnType
-                      Stan_math_signatures.variadic_ode_fun_return_type
-                  , args )
-                , error ) ]
-            , false ) )
+          , ([((UnsizedType.ReturnType return_type, args), error)], false) )
     | NotIndexable (ut, nidcs) ->
         Fmt.pf ppf
           "Too many indexes, expression dimensions=%d, indexes found=%d."
@@ -518,7 +515,24 @@ let illtyped_reduce_sum_generic loc name arg_tys expected_args error =
     )
 
 let illtyped_variadic_ode loc name arg_tys args error =
-  TypeError (loc, TypeError.IllTypedVariadicODE (name, arg_tys, args, error))
+  TypeError
+    ( loc
+    , TypeError.IllTypedVariadicDE
+        ( name
+        , arg_tys
+        , args
+        , error
+        , Stan_math_signatures.variadic_ode_fun_return_type ) )
+
+let illtyped_variadic_dae loc name arg_tys args error =
+  TypeError
+    ( loc
+    , TypeError.IllTypedVariadicDE
+        ( name
+        , arg_tys
+        , args
+        , error
+        , Stan_math_signatures.variadic_dae_fun_return_type ) )
 
 let returning_fn_expected_nonfn_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonFnFound name)
