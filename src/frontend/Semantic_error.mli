@@ -69,7 +69,7 @@ val illtyped_variadic_ode :
 val ambiguous_function_promotion :
      Location_span.t
   -> string
-  -> UnsizedType.t list
+  -> UnsizedType.t list option
   -> (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
      list
   -> t

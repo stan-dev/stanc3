@@ -454,7 +454,7 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
             ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
       | AmbiguousMatch sigs ->
           Semantic_error.ambiguous_function_promotion loc id.name
-            (List.map ~f:type_of_expr_typed es)
+            (Some (List.map ~f:type_of_expr_typed es))
             sigs
           |> error
       | SignatureErrors (l, b) ->
@@ -466,19 +466,19 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
 (** Given a constraint function [matches], find any signature which exists
     Returns the first [Ok] if any exist, or else [Error]
 *)
-let find_matching_first_order_fn tenv
-    (matches : Env.info -> ('a, 'b option) result) fname =
+let find_matching_first_order_fn tenv matches fname =
   let candidates =
     Utils.stdlib_distribution_name fname.name
     |> Env.find tenv |> List.map ~f:matches in
   let ok, errs = List.partition_map candidates ~f:Result.to_either in
   match SignatureMismatch.unique_minimum_promotion ok with
-  | Ok a -> Ok a
-  (* TODO: Could improve this to give better errors when multiple signatures found *)
-  | _ -> (
-    match List.hd (List.filter_opt errs) with
-    | Some s -> Error (Some s)
-    | _ -> Error None )
+  | Ok a -> SignatureMismatch.UniqueMatch a
+  | Error (Some promotions) ->
+      List.filter_map promotions ~f:(function
+        | UnsizedType.UFun (args, rt, _, _) -> Some (rt, args)
+        | _ -> None )
+      |> AmbiguousMatch
+  | Error None -> SignatureMismatch.SignatureErrors (List.hd_exn errs)
 
 let make_function_variable cf loc id = function
   | UnsizedType.UFun (args, rt, FnLpdf _, mem_pattern) ->
@@ -507,16 +507,17 @@ let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
   else check_normal_fn ~is_cond_dist loc tenv id tes
 
 and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
-  let fail () =
+  let basic_mismatch () =
     let mandatory_args =
       UnsizedType.[(AutoDiffable, UArray UReal); (AutoDiffable, UInt)] in
     let mandatory_fun_args =
       UnsizedType.
         [(AutoDiffable, UArray UReal); (DataOnly, UInt); (DataOnly, UInt)] in
+    SignatureMismatch.check_variadic_args true mandatory_args mandatory_fun_args
+      UReal (get_arg_types tes) in
+  let fail () =
     let expected_args, err =
-      SignatureMismatch.check_variadic_args true mandatory_args
-        mandatory_fun_args UReal (get_arg_types tes)
-      |> Result.error |> Option.value_exn |> Option.value_exn in
+      basic_mismatch () |> Result.error |> Option.value_exn in
     Semantic_error.illtyped_reduce_sum_generic loc id.name
       (List.map ~f:type_of_expr_typed tes)
       expected_args err
@@ -539,11 +540,11 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
           :: get_arg_types remaining_es in
         SignatureMismatch.check_variadic_args true mandatory_args
           mandatory_fun_args UReal arg_types
-    | _ -> Error None in
+    | _ -> basic_mismatch () in
   match tes with
   | {expr= Variable fname; _} :: remaining_es -> (
     match find_matching_first_order_fn tenv (matching remaining_es) fname with
-    | Ok (ftype, promotions) ->
+    | SignatureMismatch.UniqueMatch (ftype, promotions) ->
         (* a valid signature exists *)
         let tes = make_function_variable cf loc fname ftype :: remaining_es in
         mk_typed_expression
@@ -551,12 +552,14 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
             (mk_fun_app ~is_cond_dist
                (StanLib FnPlain, id, SignatureMismatch.promote tes promotions) )
           ~ad_level:(expr_ad_lub tes) ~type_:UnsizedType.UReal ~loc
-    | Error (Some (expected_args, err)) ->
+    | AmbiguousMatch ps ->
+        Semantic_error.ambiguous_function_promotion loc fname.name None ps
+        |> error
+    | SignatureErrors (expected_args, err) ->
         Semantic_error.illtyped_reduce_sum loc id.name
           (List.map ~f:type_of_expr_typed tes)
           expected_args err
-        |> error
-    | Error None -> fail () )
+        |> error )
   | _ -> fail ()
 
 and check_variadic_ode ~is_cond_dist loc cf tenv id tes =
@@ -574,7 +577,7 @@ and check_variadic_ode ~is_cond_dist loc cf tenv id tes =
       SignatureMismatch.check_variadic_args false mandatory_arg_types
         Stan_math_signatures.variadic_ode_mandatory_fun_args
         Stan_math_signatures.variadic_ode_fun_return_type (get_arg_types tes)
-      |> Result.error |> Option.value_exn |> Option.value_exn in
+      |> Result.error |> Option.value_exn in
     Semantic_error.illtyped_variadic_ode loc id.name
       (List.map ~f:type_of_expr_typed tes)
       expected_args err
@@ -589,7 +592,7 @@ and check_variadic_ode ~is_cond_dist loc cf tenv id tes =
   match tes with
   | {expr= Variable fname; _} :: remaining_es -> (
     match find_matching_first_order_fn tenv (matching remaining_es) fname with
-    | Ok (ftype, promotions) ->
+    | SignatureMismatch.UniqueMatch (ftype, promotions) ->
         let tes = make_function_variable cf loc fname ftype :: remaining_es in
         mk_typed_expression
           ~expr:
@@ -597,12 +600,14 @@ and check_variadic_ode ~is_cond_dist loc cf tenv id tes =
                (StanLib FnPlain, id, SignatureMismatch.promote tes promotions) )
           ~ad_level:(expr_ad_lub tes)
           ~type_:Stan_math_signatures.variadic_ode_return_type ~loc
-    | Error (Some (expected_args, err)) ->
+    | AmbiguousMatch ps ->
+        Semantic_error.ambiguous_function_promotion loc fname.name None ps
+        |> error
+    | SignatureErrors (expected_args, err) ->
         Semantic_error.illtyped_variadic_ode loc id.name
           (List.map ~f:type_of_expr_typed tes)
           expected_args err
-        |> error
-    | Error None -> fail () )
+        |> error )
   | _ -> fail ()
 
 and check_funapp loc cf tenv ~is_cond_dist id (es : Ast.typed_expression list) =
@@ -806,7 +811,7 @@ let check_nrfn loc tenv id es =
         |> error
     | AmbiguousMatch sigs ->
         Semantic_error.ambiguous_function_promotion loc id.name
-          (List.map ~f:type_of_expr_typed es)
+          (Some (List.map ~f:type_of_expr_typed es))
           sigs
         |> error
     | SignatureErrors (l, b) ->

@@ -26,15 +26,20 @@ type promotions = private
   | IntToComplexPromotion
   | RealToComplexPromotion
 
-type match_result =
-  | UniqueMatch of
-      UnsizedType.returntype
-      * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
-      * promotions list
+type ('unique, 'error) generic_match_result =
+  | UniqueMatch of 'unique
   | AmbiguousMatch of
       (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
       list
-  | SignatureErrors of signature_error list * bool
+  | SignatureErrors of 'error
+
+(** The match result for general (non-variadic) functions *)
+type match_result =
+  ( UnsizedType.returntype
+    * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
+    * promotions list
+  , signature_error list * bool )
+  generic_match_result
 
 val check_compatible_arguments_mod_conv :
      (UnsizedType.autodifftype * UnsizedType.t) list
@@ -63,15 +68,11 @@ val check_variadic_args :
   -> UnsizedType.t
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> ( UnsizedType.t * promotions list
-     , ((UnsizedType.autodifftype * UnsizedType.t) list * function_mismatch)
-       option )
+     , (UnsizedType.autodifftype * UnsizedType.t) list * function_mismatch )
      result
 (** Check variadic function arguments.
       If a match is found, returns [Ok] of the function type and a list of promotions (see [promote])
       If none is found, returns [Error] of the list of args and a function_mismatch.
-      Currently, this is always [Some].
-      This is to better support usage in
-      [Typechecker.find_matching_function_signature]
      *)
 
 val pp_signature_mismatch :

@@ -33,7 +33,7 @@ module TypeError = struct
         * SignatureMismatch.function_mismatch
     | AmbiguousFunctionPromotion of
         string
-        * UnsizedType.t list
+        * UnsizedType.t list option
         * ( UnsizedType.returntype
           * (UnsizedType.autodifftype * UnsizedType.t) list )
           list
@@ -147,12 +147,16 @@ module TypeError = struct
             args UnsizedType.pp_returntype rt in
         Fmt.pf ppf
           "No unique minimum promotion found for function \"%s\".@ Overloaded \
-           functions must not have multiple equally valid promotion paths.@ \
-           For args @[(%a)@], this function has several:@ @[<v>%a@]@ Consider \
-           defining a new signature for the exact types needed or@ re-thinking \
-           existing definitions."
+           functions must not have multiple equally valid promotion paths.@ %a \
+           function has several:@ @[<v>%a@]@ Consider defining a new signature \
+           for the exact types needed or@ re-thinking existing definitions."
           s
-          (Fmt.list ~sep:Fmt.comma UnsizedType.pp)
+          (Fmt.option
+             ~none:(fun ppf () -> Fmt.pf ppf "This")
+             (fun ppf tys ->
+               Fmt.pf ppf "For args @[(%a)@], this"
+                 (Fmt.list ~sep:Fmt.comma UnsizedType.pp)
+                 tys ) )
           arg_tys
           (Fmt.list ~sep:Fmt.cut pp_sig)
           signatures

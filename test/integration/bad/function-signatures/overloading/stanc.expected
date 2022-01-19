@@ -50,6 +50,24 @@ For args (int, int, int), this function has several:
 (int, real, int) => real
 Consider defining a new signature for the exact types needed or
 re-thinking existing definitions.
+  $ ../../../../../../install/default/bin/stanc no_minimum_reduce_sum.stan
+Semantic error in 'no_minimum_reduce_sum.stan', line 19, column 11 to column 50:
+   -------------------------------------------------
+    17:  transformed data {
+    18:  
+    19:    real x = reduce_sum(foo, {1,2,3,4,5,6}, 1, 2, 3);
+                    ^
+    20:  
+    21:  }
+   -------------------------------------------------
+
+No unique minimum promotion found for function "foo".
+Overloaded functions must not have multiple equally valid promotion paths.
+This function has several:
+(array[] real, int, int, int, real) => real
+(array[] real, int, int, real, int) => real
+Consider defining a new signature for the exact types needed or
+re-thinking existing definitions.
   $ ../../../../../../install/default/bin/stanc no_minimum_tilde.stan
 Semantic error in 'no_minimum_tilde.stan', line 12, column 3 to column 14:
    -------------------------------------------------
@@ -84,15 +102,13 @@ Semantic error in 'no_minimum_variadic.stan', line 82, column 37 to line 84, col
     84:                                                  gamma, xi, delta, unused, unused);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_rk45_tol':
-(<F1>, vector, real, array[] real, real, real, int, real, real, real, real,
- real, int, int)
-where F1 = (real, vector, real, real, real, real, real, real, int) => vector
-Available signatures:
-(<F2>, vector, real, array[] real, data real, data real, data int, real,
- real, real, real, real) => vector
-where F2 = (real, vector, real, real, real, real, real) => vector
-  Expected 12 arguments but found 14 arguments.
+No unique minimum promotion found for function "simple_SIR".
+Overloaded functions must not have multiple equally valid promotion paths.
+This function has several:
+(real, vector, real, real, real, real, real, real, int) => vector
+(real, vector, real, real, real, real, real, int, real) => vector
+Consider defining a new signature for the exact types needed or
+re-thinking existing definitions.
   $ ../../../../../../install/default/bin/stanc overload_reduce_sum.stan
 Semantic error in 'overload_reduce_sum.stan', line 2, column 7 to column 17:
    -------------------------------------------------
