@@ -26724,7 +26724,7 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 6> locations_array__ = 
 {" (found before start of program)",
- " (in 'overloaded-fn.stan', line 12, column 2 to column 22)",
+ " (in 'overloaded-fn.stan', line 13, column 2 to column 22)",
  " (in 'overloaded-fn.stan', line 3, column 5 to column 20)",
  " (in 'overloaded-fn.stan', line 2, column 20 to line 4, column 4)",
  " (in 'overloaded-fn.stan', line 7, column 5 to column 20)",
