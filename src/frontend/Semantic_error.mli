@@ -74,6 +74,14 @@ val ambiguous_function_promotion :
      list
   -> t
 
+val illtyped_variadic_dae :
+     Location_span.t
+  -> string
+  -> UnsizedType.t list
+  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> SignatureMismatch.function_mismatch
+  -> t
+
 val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
 val nonreturning_fn_expected_nonfn_found : Location_span.t -> string -> t
 

@@ -123,6 +123,8 @@ let verify_name_fresh_udf loc tenv name =
        overloadable due to their separate typechecking *)
     Stan_math_signatures.is_reduce_sum_fn name
     || Stan_math_signatures.is_variadic_ode_fn name
+    || Stan_math_signatures.is_variadic_dae_fn name
+    || Stan_math_signatures.is_variadic_dae_fn name
   then Semantic_error.ident_is_stanmath_name loc name |> error
   else if Utils.is_unnormalized_distribution name then
     Semantic_error.udf_is_unnormalized_fn loc name |> error
@@ -504,6 +506,8 @@ let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
     check_reduce_sum ~is_cond_dist loc cf tenv id tes
   else if Stan_math_signatures.is_variadic_ode_fn id.name then
     check_variadic_ode ~is_cond_dist loc cf tenv id tes
+  else if Stan_math_signatures.is_variadic_dae_fn id.name then
+    check_variadic_dae ~is_cond_dist loc cf tenv id tes
   else check_normal_fn ~is_cond_dist loc tenv id tes
 
 and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
@@ -609,6 +613,42 @@ and check_variadic_ode ~is_cond_dist loc cf tenv id tes =
           expected_args err
         |> error )
   | _ -> fail ()
+
+and check_variadic_dae ~is_cond_dist loc cf tenv id tes =
+  let optional_tol_mandatory_args =
+    if Stan_math_signatures.is_variadic_dae_tol_fn id.name then
+      Stan_math_signatures.variadic_dae_tol_arg_types
+    else [] in
+  let mandatory_arg_types =
+    Stan_math_signatures.variadic_dae_mandatory_arg_types
+    @ optional_tol_mandatory_args in
+  let matching remaining_es Env.{type_= ftype; _} =
+    let arg_types =
+      (calculate_autodifftype cf Functions ftype, ftype)
+      :: get_arg_types remaining_es in
+    SignatureMismatch.check_variadic_args false mandatory_arg_types
+      Stan_math_signatures.variadic_dae_mandatory_fun_args
+      Stan_math_signatures.variadic_dae_fun_return_type arg_types in
+  match tes with
+  | {expr= Variable fname; _} :: remaining_es -> (
+    match find_matching_first_order_fn tenv (matching remaining_es) fname with
+    | SignatureMismatch.UniqueMatch (ftype, promotions) ->
+        let tes = make_function_variable cf loc fname ftype :: remaining_es in
+        mk_typed_expression
+          ~expr:
+            (mk_fun_app ~is_cond_dist
+               (StanLib FnPlain, id, SignatureMismatch.promote tes promotions) )
+          ~ad_level:(expr_ad_lub tes)
+          ~type_:Stan_math_signatures.variadic_dae_return_type ~loc
+    | AmbiguousMatch ps ->
+        Semantic_error.ambiguous_function_promotion loc fname.name None ps
+        |> error
+    | SignatureErrors (expected_args, err) ->
+        Semantic_error.illtyped_variadic_dae loc id.name
+          (List.map ~f:type_of_expr_typed tes)
+          expected_args err
+        |> error )
+  | _ -> failwith "TODO"
 
 and check_funapp loc cf tenv ~is_cond_dist id (es : Ast.typed_expression list) =
   let name_check =

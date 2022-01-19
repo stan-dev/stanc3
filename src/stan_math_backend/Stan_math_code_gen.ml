@@ -206,7 +206,8 @@ let mk_extra_args templates args =
 let pp_fun_def ppf
     ( Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
     , funs_used_in_reduce_sum
-    , funs_used_in_variadic_ode ) =
+    , funs_used_in_variadic_ode
+    , funs_used_in_variadic_dae ) =
   let extra, extra_templates =
     match fdsuffix with
     | Fun_kind.FnTarget -> (["lp__"; "lp_accum__"], ["T_lp__"; "T_lp_accum__"])
@@ -245,6 +246,7 @@ let pp_fun_def ppf
       match variadic with
       | `ReduceSum -> List.split_n args 3
       | `VariadicODE -> List.split_n args 2
+      | `VariadicDAE -> List.split_n args 3
       | `None -> (args, []) in
     let arg_strs =
       args
@@ -262,7 +264,8 @@ let pp_fun_def ppf
           match variadic with
           | `None -> functor_suffix
           | `ReduceSum -> reduce_sum_functor_suffix
-          | `VariadicODE -> variadic_ode_functor_suffix in
+          | `VariadicODE -> variadic_ode_functor_suffix
+          | `VariadicDAE -> variadic_dae_functor_suffix in
         let functor_name = fdname ^ suffix in
         let template =
           match (fdsuffix, variadic) with
@@ -301,6 +304,10 @@ let pp_fun_def ppf
         (* Produces the variadic ode functors that has the pstream argument
            as the third and not last argument *)
         register_functor ([], fdargs, `VariadicODE)
+      else if String.Set.mem funs_used_in_variadic_dae fdname then
+        (* Produces the variadic DAE functors that has the pstream argument
+           as the fourth and not last argument *)
+        register_functor ([], fdargs, `VariadicDAE)
 
 (** Creates functions outside the model namespaces which only call the ones
    inside the namespaces *)
@@ -955,9 +962,12 @@ let collect_functors_functions p =
     is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p in
   let variadic_ode_fns =
     is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_ode_fn p in
+  let variadic_dae_fns =
+    is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_dae_fn p in
   let pp_fun_def_with_variadic_fn_list ppf fblock =
-    (hovbox ~indent:2 pp_fun_def) ppf (fblock, reduce_sum_fns, variadic_ode_fns)
-  in
+    (hovbox ~indent:2 pp_fun_def)
+      ppf
+      (fblock, reduce_sum_fns, variadic_ode_fns, variadic_dae_fns) in
   str "@[<v>%a@]"
     (list ~sep:cut pp_fun_def_with_variadic_fn_list)
     p.functions_block

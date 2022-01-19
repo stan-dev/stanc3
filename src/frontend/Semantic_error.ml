@@ -26,11 +26,12 @@ module TypeError = struct
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
         * SignatureMismatch.function_mismatch
-    | IllTypedVariadicODE of
+    | IllTypedVariadicDE of
         string
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
         * SignatureMismatch.function_mismatch
+        * UnsizedType.t
     | AmbiguousFunctionPromotion of
         string
         * UnsizedType.t list option
@@ -131,15 +132,11 @@ module TypeError = struct
     | IllTypedReduceSumGeneric (name, arg_tys, expected_args, error) ->
         SignatureMismatch.pp_signature_mismatch ppf
           (name, arg_tys, ([((ReturnType UReal, expected_args), error)], false))
-    | IllTypedVariadicODE (name, arg_tys, args, error) ->
+    | IllTypedVariadicDE (name, arg_tys, args, error, return_type) ->
         SignatureMismatch.pp_signature_mismatch ppf
           ( name
           , arg_tys
-          , ( [ ( ( UnsizedType.ReturnType
-                      Stan_math_signatures.variadic_ode_fun_return_type
-                  , args )
-                , error ) ]
-            , false ) )
+          , ([((UnsizedType.ReturnType return_type, args), error)], false) )
     | AmbiguousFunctionPromotion (s, arg_tys, signatures) ->
         let pp_sig ppf (rt, args) =
           Fmt.pf ppf "@[<hov>(@[<hov>%a@]) => %a@]"
@@ -548,7 +545,24 @@ let illtyped_reduce_sum_generic loc name arg_tys expected_args error =
     )
 
 let illtyped_variadic_ode loc name arg_tys args error =
-  TypeError (loc, TypeError.IllTypedVariadicODE (name, arg_tys, args, error))
+  TypeError
+    ( loc
+    , TypeError.IllTypedVariadicDE
+        ( name
+        , arg_tys
+        , args
+        , error
+        , Stan_math_signatures.variadic_ode_fun_return_type ) )
+
+let illtyped_variadic_dae loc name arg_tys args error =
+  TypeError
+    ( loc
+    , TypeError.IllTypedVariadicDE
+        ( name
+        , arg_tys
+        , args
+        , error
+        , Stan_math_signatures.variadic_dae_fun_return_type ) )
 
 let ambiguous_function_promotion loc name arg_tys signatures =
   TypeError
