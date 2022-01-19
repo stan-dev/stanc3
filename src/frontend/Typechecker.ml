@@ -124,7 +124,6 @@ let verify_name_fresh_udf loc tenv name =
     Stan_math_signatures.is_reduce_sum_fn name
     || Stan_math_signatures.is_variadic_ode_fn name
     || Stan_math_signatures.is_variadic_dae_fn name
-    || Stan_math_signatures.is_variadic_dae_fn name
   then Semantic_error.ident_is_stanmath_name loc name |> error
   else if Utils.is_unnormalized_distribution name then
     Semantic_error.udf_is_unnormalized_fn loc name |> error
