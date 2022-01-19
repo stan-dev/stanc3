@@ -51,14 +51,14 @@ For args (int, int, int), this function has several:
 Consider defining a new signature for the exact types needed or
 re-thinking existing definitions.
   $ ../../../../../../install/default/bin/stanc no_minimum_reduce_sum.stan
-Semantic error in 'no_minimum_reduce_sum.stan', line 19, column 11 to column 50:
+Semantic error in 'no_minimum_reduce_sum.stan', line 11, column 11 to column 55:
    -------------------------------------------------
-    17:  transformed data {
-    18:  
-    19:    real x = reduce_sum(foo, {1,2,3,4,5,6}, 1, 2, 3);
+     9:  }
+    10:  transformed data {
+    11:    real x = reduce_sum(foo, {1, 2, 3, 4, 5, 6}, 1, 2, 3);
                     ^
-    20:  
-    21:  }
+    12:  }
+    13:  
    -------------------------------------------------
 
 No unique minimum promotion found for function "foo".
