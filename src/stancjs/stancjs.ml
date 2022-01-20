@@ -169,4 +169,9 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
       (warnings @ pedantic_mode_warnings) in
   wrap_result ?printed_filename result ~warnings
 
-let () = Js.export "stanc" stan2cpp_wrapped
+let dump_stan_math_signatures () =
+  Js.string @@ Fmt.str "%a" Stan_math_signatures.pretty_print_all_math_sigs ()
+
+let () =
+  Js.export "dump_stan_math_signatures" dump_stan_math_signatures ;
+  Js.export "stanc" stan2cpp_wrapped
