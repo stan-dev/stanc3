@@ -27,7 +27,7 @@ docker run --rm --privileged multiarch/qemu-user-static --reset
 
 # Run docker, inheriting mounted volumes from sibling container (including stanc3 directory), and build stanc3 #
 # docker run -u 990:986 --group-add=987 --group-add=988 --volumes-from=$(docker ps -qf "ancestor=stanorg/stanc3:staticfi"):rw stanorg/stanc3:multiarchfi@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static"
-docker run -u 990:986 --group-add=987 --group-add=988 --volumes-from=$(docker ps -qf "ancestor=stanorg/stanc3:staticfi"):rw stanorg/stanc3:multiarchfi@$SHA /bin/bash -c "cd $(pwd) && ls -lhart && whoami $&& echo ${UID} && getent group sudo"
+docker run -u 990:986 --volumes-from=$(docker ps -qf "ancestor=stanorg/stanc3:staticfi"):rw stanorg/stanc3:multiarchfi@$SHA /bin/bash -c "tree /home/jenkins && ls -lhart && whoami $&& echo ${UID} && getent group sudo"
 
 # Update ownership of build folders
 #chown -R opam: _build
