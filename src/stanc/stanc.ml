@@ -301,7 +301,7 @@ let use_file filename =
       if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt ;
       opt in
     if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
-    let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
+    let cpp = Fmt.str "%a" Stan_math_code_gen.pp_prog opt_mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
 
