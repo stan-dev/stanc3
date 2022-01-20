@@ -784,6 +784,7 @@ static constexpr std::array<const char*, 771> locations_array__ =
 
 
 
+
 class distributions_model final : public model_base_crtp<distributions_model> {
 
  private:
@@ -7468,6 +7469,7 @@ static constexpr std::array<const char*, 40> locations_array__ =
  " (in 'restricted.stan', line 12, column 16 to column 21)",
  " (in 'restricted.stan', line 13, column 9 to column 14)",
  " (in 'restricted.stan', line 14, column 13 to column 18)"};
+
 
 
 

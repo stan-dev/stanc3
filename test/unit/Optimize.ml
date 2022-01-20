@@ -1823,7 +1823,7 @@ let%expect_test "partial evaluation" =
             int i;
             FnPrint__(3);
             FnPrint__((i + 3));
-            FnPrint__(log((1 - i) -> real));
+            FnPrint__(log1m(i));
           }
         }
       }
@@ -2219,7 +2219,7 @@ model {
           target += sqrt(34.);
           target += sqrt(34.);
           target += variance(x_vector);
-          target += sqrt(2 -> real);
+          target += sqrt2();
           target += squared_distance(x_vector, y_vector);
           target += trace(x_matrix);
           target += trace_gen_quad_form(x_matrix, z_matrix, y_matrix);

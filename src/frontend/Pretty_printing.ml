@@ -565,7 +565,7 @@ let pp_typed_expression ppf e =
 let pretty_print_program ?(bare_functions = false) ?(line_length = 78)
     ?(inline_includes = false) p =
   let result =
-    strf "%a" (pp_program ~bare_functions ~line_length ~inline_includes) p in
+    str "%a" (pp_program ~bare_functions ~line_length ~inline_includes) p in
   check_correctness ~bare_functions p result ;
   result
 

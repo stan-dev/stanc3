@@ -1,0 +1,325 @@
+  $ ../../../../../install/default/bin/stanc --auto-format dae_overloaded.stan
+functions {
+  vector chem_dae(real t, vector yy, vector yp, array[] real p,
+                  array[] real x, int unused1) {
+    vector[3] res;
+    res[1] = yp[1] + p[1] * yy[1] - p[2] * yy[2] * yy[3];
+    res[2] = yp[2] - p[1] * yy[1] + p[2] * yy[2] * yy[3]
+             + p[3] * yy[2] * yy[2];
+    res[3] = yy[1] + yy[2] + yy[3] - 1.0;
+    return res;
+  }
+  vector chem_dae(real t, vector yy, vector yp, array[] real p,
+                  array[] real x) {
+    vector[3] res;
+    res[1] = yp[1] + p[1] * yy[1] - p[2] * yy[2] * yy[3];
+    res[2] = yp[2] - p[1] * yy[1] + p[2] * yy[2] * yy[3]
+             + p[3] * yy[2] * yy[2];
+    res[3] = yy[1] + yy[2] + yy[3] - 1.0;
+    return res;
+  }
+}
+data {
+  vector[3] yy0;
+  vector[3] yp0;
+  real t0;
+  array[1] real x;
+  array[4] vector[3] y;
+}
+transformed data {
+  array[4] real ts;
+}
+parameters {
+  array[3] real theta;
+  vector[3] yy0_var;
+  vector[3] yp0_var;
+  real<lower=0> sigma;
+}
+transformed parameters {
+  array[4] vector[3] y_hat;
+  {
+    y_hat = dae(chem_dae, yy0, yp0, t0, ts, theta, x);
+  }
+  {
+    y_hat = dae(chem_dae, yy0, yp0, t0, ts, theta, x, 0);
+  }
+}
+model {
+  for (t in 1 : 4) 
+    y[t] ~ normal(y_hat[t], sigma); // independent normal noise
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format forward_decl.stan
+functions {
+  int is_real(int x);
+  int is_real(real x);
+  
+  int is_real(real x) {
+    return 1;
+  }
+  
+  int is_real(int x) {
+    return 0;
+  }
+}
+transformed data {
+  if (is_real(1.5)) {
+    print(is_real(0));
+  }
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format is_real.stan
+functions {
+  int is_real(real x) {
+    return 1;
+  }
+  
+  int is_real(int x) {
+    return 0;
+  }
+}
+transformed data {
+  if (is_real(1.5)) {
+    print(is_real(0));
+  }
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format minimum_promotion.stan
+functions {
+  real something(int x) {
+    return 1.0;
+  }
+  
+  real something(real x) {
+    return 2.0;
+  }
+  
+  real something(complex x) {
+    return 3.0;
+  }
+}
+model {
+  print(something(1));
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format multi_fun.stan
+functions {
+  int foo(int a) {
+    return a;
+  }
+  real foo(real b) {
+    return b;
+  }
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format num_args.stan
+functions {
+  real foo(real one) {
+    return 1.0;
+  }
+  
+  real foo(real one, real two) {
+    return 2.0;
+  }
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format redefine-prob1.stan
+functions {
+  real poisson_lpdf(real n, real x) {
+    return -x ^ 2;
+  }
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format reduce_sum_multiple.stan
+functions {
+  real fun(array[] real y_slice, int start, int end, real m) {
+    return sum(y_slice) * m;
+  }
+  
+  real fun(array[] real y_slice, int start, int end) {
+    return sum(y_slice);
+  }
+}
+transformed data {
+  int N = 100;
+  array[N] real data_y = ones_array(N);
+  
+  real sum_1 = reduce_sum(fun, data_y, 1);
+  print(sum_1);
+  real sum_2 = reduce_sum(fun, data_y, 1, 5);
+  print(sum_2);
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  array[N] real param_y = ones_array(N);
+  
+  real p_sum_1 = reduce_sum(fun, param_y, 1);
+  print(y, " - ", p_sum_1);
+  real p_sum_2 = reduce_sum(fun, param_y, 1, y);
+  print(y, " -- ", p_sum_2);
+}
+model {
+  y ~ std_normal();
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format reduce_sum_ordering.stan
+functions {
+  real s(array[] real y_slice, int start, int end) {
+    return reduce_sum(s, y_slice, 1);
+  }
+  real r() {
+    int N;
+    array[N] real y1d;
+    real ts = reduce_sum(s, y1d, 1);
+    return 0.0;
+  }
+}
+data {
+  int N;
+  array[N] real y1d;
+}
+transformed data {
+  real tsd = reduce_sum(s, y1d, 1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format sir_overloaded_odes.stan
+// Simple SIR model inspired by the presentation in
+// http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3380087/pdf/nihms372789.pdf
+
+functions {
+  vector simple_SIR(real t, vector y, real beta,
+                    // water contact rate
+                    real kappa, // C_{50}
+                    real gamma, // recovery rate
+                    real xi, // bacteria production rate
+                    real delta) {
+    // bacteria removal rate
+    vector[4] dydt;
+    
+    dydt[1] = -beta * y[4] / (y[4] + kappa) * y[1];
+    dydt[2] = beta * y[4] / (y[4] + kappa) * y[1] - gamma * y[2];
+    dydt[3] = gamma * y[2];
+    dydt[4] = xi * y[2] - delta * y[4];
+    
+    return dydt;
+  }
+  
+  vector simple_SIR(real t, vector y, real beta,
+                    // water contact rate
+                    real kappa, // C_{50}
+                    real gamma, // recovery rate
+                    real xi, // bacteria production rate
+                    real delta, // bacteria removal rate
+                    int unused // just for testing
+                    ) {
+    vector[4] dydt;
+    
+    print(unused);
+    dydt[1] = -beta * y[4] / (y[4] + kappa) * y[1];
+    dydt[2] = beta * y[4] / (y[4] + kappa) * y[1] - gamma * y[2];
+    dydt[3] = gamma * y[2];
+    dydt[4] = xi * y[2] - delta * y[4];
+    
+    return dydt;
+  }
+}
+data {
+  int<lower=0> N_t;
+  array[N_t] real t;
+  vector[4] y0;
+  array[N_t] int stoi;
+  array[N_t] real B;
+}
+transformed data {
+  real t0 = 0;
+  real<lower=0> kappa = 1000000;
+  int unused = 34;
+}
+parameters {
+  real<lower=0> beta;
+  real<lower=0> gamma;
+  real<lower=0> xi;
+  real<lower=0> delta;
+}
+transformed parameters {
+  array[N_t] vector<lower=0>[4] y = ode_rk45_tol(simple_SIR, y0, t0, t, 1e-6,
+                                                 1e-6, 1000, beta, kappa,
+                                                 gamma, xi, delta);
+  // overloaded
+  array[N_t] vector<lower=0>[4] y2 = ode_rk45_tol(simple_SIR, y0, t0, t,
+                                                  1e-6, 1e-6, 1000, beta,
+                                                  kappa, gamma, xi, delta,
+                                                  unused);
+}
+model {
+  vector[N_t] y_diff;
+  y_diff[1] = y0[1] - y[1, 1];
+  for (n in 2 : N_t) {
+    y_diff[n] = y[n - 1, 1] - y[n, 1];
+  }
+  
+  beta ~ cauchy(0, 2.5);
+  gamma ~ cauchy(0, 1);
+  xi ~ cauchy(0, 25);
+  delta ~ cauchy(0, 1);
+  
+  stoi ~ poisson(y_diff);
+  B ~ lognormal(log(y[ : , 4]), 0.15);
+  
+  vector[N_t] y2_diff;
+  y2_diff[1] = y0[1] - y2[1, 1];
+  for (n in 2 : N_t) {
+    y2_diff[n] = y2[n - 1, 1] - y2[n, 1];
+  }
+  
+  stoi ~ poisson(y2_diff);
+  B ~ lognormal(log(y2[ : , 4]), 0.15);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format stan_math.stan
+functions {
+  vector to_vector(real one, real two, real three) {
+    vector[3] r = [one, two, three]';
+    return r;
+  }
+  
+  void to_vector(int x) {
+    return;
+  }
+}
+transformed data {
+  vector[3] v1 = to_vector(1, 2, 3);
+  vector[3] v2 = to_vector({1, 2, 3});
+  to_vector(3);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tilde_resolve.stan
+// different than test/bad's no_minimum_tilde because of lpdf/lpmf checks
+
+functions {
+  real foo_lpdf(real x, int y) {
+    return y;
+  }
+  
+  real foo_lpmf(int x, real y) {
+    return x / y;
+  }
+}
+model {
+  1 ~ foo(3);
+}
+

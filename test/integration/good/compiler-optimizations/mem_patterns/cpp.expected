@@ -105,6 +105,7 @@ static constexpr std::array<const char*, 92> locations_array__ =
 
 
 
+
 class constraints_model final : public model_base_crtp<constraints_model> {
 
  private:
@@ -1875,6 +1876,7 @@ static constexpr std::array<const char*, 14> locations_array__ =
 
 
 
+
 class deep_dependence_model final : public model_base_crtp<deep_dependence_model> {
 
  private:
@@ -2600,61 +2602,63 @@ static constexpr std::array<const char*, 116> locations_array__ =
  " (in 'indexing.stan', line 6, column 4 to column 13)",
  " (in 'indexing.stan', line 5, column 27 to line 7, column 3)"};
 
-
-int
-mask_fun(const int& i, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
-  int current_statement__ = 0; 
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 112;
-    return i;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
-
 struct mask_fun_functor__ {
-int
-operator()(const int& i, std::ostream* pstream__)  const 
-{
-return mask_fun(i, pstream__);
-}
+  int
+  operator()(const int& i, std::ostream* pstream__) const;
 };
-
-template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
-udf_fun(const T0__& A_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
-  int current_statement__ = 0; 
-  const auto& A = stan::math::to_ref(A_arg__);
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 114;
-    return A;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
-
 struct udf_fun_functor__ {
-template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
-operator()(const T0__& A, std::ostream* pstream__)  const 
-{
-return udf_fun(A, pstream__);
-}
+  template <typename T0__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
+  operator()(const T0__& A, std::ostream* pstream__) const;
 };
 
-class indexing_model final : public model_base_crtp<indexing_model> {
+int mask_fun(const int& i, std::ostream* pstream__) {
+    using local_scalar_t__ = double;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 112;
+      return i;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
+  udf_fun(const T0__& A_arg__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
+    int current_statement__ = 0; 
+    const auto& A = stan::math::to_ref(A_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 114;
+      return A;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+
+int mask_fun_functor__::operator()(const int& i, std::ostream* pstream__) 
+const
+{
+  return mask_fun(i, pstream__);
+}
+
+
+template <typename T0__>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
+udf_fun_functor__::operator()(const T0__& A, std::ostream* pstream__)  const
+{
+  return udf_fun(A, pstream__);
+}
+
+ class indexing_model final : public model_base_crtp<indexing_model> {
 
  private:
   int N;
@@ -4340,10 +4344,7 @@ class indexing_model final : public model_base_crtp<indexing_model> {
      vars.resize(num_params_r__);
      transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
-    
-};
-}
-using stan_model = indexing_model_namespace::indexing_model;
+     }; } using stan_model = indexing_model_namespace::indexing_model;
 
 #ifndef USING_R
 
@@ -4393,6 +4394,7 @@ static constexpr std::array<const char*, 17> locations_array__ =
  " (in 'indexing2.stan', line 3, column 1 to column 7)",
  " (in 'indexing2.stan', line 4, column 7 to column 8)",
  " (in 'indexing2.stan', line 4, column 1 to column 18)"};
+
 
 
 
@@ -4827,66 +4829,71 @@ static constexpr std::array<const char*, 12> locations_array__ =
  " (in 'reductions_allowed.stan', line 7, column 8 to column 25)",
  " (in 'reductions_allowed.stan', line 6, column 48 to line 8, column 5)"};
 
-
-template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
-nono_func(const T0__& x_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
-  int current_statement__ = 0; 
-  const auto& x = stan::math::to_ref(x_arg__);
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 8;
-    return x;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
-
-struct nono_func_functor__ {
-template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
-operator()(const T0__& x, std::ostream* pstream__)  const 
-{
-return nono_func(x, pstream__);
-}
-};
-
-template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<T0__,
-stan::value_type_t<T1__>>, -1, -1>
-okay_reduction(const T0__& sum_x, const T1__& y_arg__,
-               std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__,
-          stan::value_type_t<T1__>>;
-  int current_statement__ = 0; 
-  const auto& y = stan::math::to_ref(y_arg__);
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 10;
-    return stan::math::add(sum_x, y);
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
-
 struct okay_reduction_functor__ {
-template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<T0__,
-stan::value_type_t<T1__>>, -1, -1>
-operator()(const T0__& sum_x, const T1__& y, std::ostream* pstream__)  const 
-{
-return okay_reduction(sum_x, y, pstream__);
-}
+  template <typename T0__, typename T1__>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>>, -1, -1>
+  operator()(const T0__& sum_x, const T1__& y, std::ostream* pstream__) const;
 };
+struct nono_func_functor__ {
+  template <typename T0__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
+  operator()(const T0__& x, std::ostream* pstream__) const;
+};
+
+template <typename T0__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
+  nono_func(const T0__& x_arg__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
+    int current_statement__ = 0; 
+    const auto& x = stan::math::to_ref(x_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 8;
+      return x;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__, typename T1__>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>>, -1, -1>
+  okay_reduction(const T0__& sum_x, const T1__& y_arg__,
+                 std::ostream* pstream__) {
+    using local_scalar_t__ =
+            stan::promote_args_t<T0__, stan::value_type_t<T1__>>;
+    int current_statement__ = 0; 
+    const auto& y = stan::math::to_ref(y_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 10;
+      return stan::math::add(sum_x, y);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+
+template <typename T0__, typename T1__>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>>, -1, -1>
+okay_reduction_functor__::operator()(const T0__& sum_x, const T1__& y,
+                                     std::ostream* pstream__)  const
+{
+  return okay_reduction(sum_x, y, pstream__);
+}
+
+
+template <typename T0__>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
+nono_func_functor__::operator()(const T0__& x, std::ostream* pstream__) 
+const
+{
+  return nono_func(x, pstream__);
+}
+
 
 class reductions_allowed_model final : public model_base_crtp<reductions_allowed_model> {
 
@@ -5388,10 +5395,7 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
      vars.resize(num_params_r__);
      transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
-    
-};
-}
-
+     }; } 
 using stan_model = reductions_allowed_model_namespace::reductions_allowed_model;
 
 #ifndef USING_R
@@ -5439,61 +5443,66 @@ static constexpr std::array<const char*, 13> locations_array__ =
  " (in 'return_types_and_udfs_demotes.stan', line 15, column 8 to column 17)",
  " (in 'return_types_and_udfs_demotes.stan', line 14, column 39 to line 16, column 5)"};
 
-
-Eigen::Matrix<double, -1, -1>
-empty_user_func(std::ostream* pstream__) {
-  using local_scalar_t__ = double;
-  int current_statement__ = 0; 
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    Eigen::Matrix<local_scalar_t__, -1, -1> some_mat =
-       Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10, DUMMY_VAR__);
-    current_statement__ = 9;
-    return some_mat;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
-
 struct empty_user_func_functor__ {
-Eigen::Matrix<double, -1, -1>
-operator()(std::ostream* pstream__)  const 
-{
-return empty_user_func(pstream__);
-}
+  Eigen::Matrix<double, -1, -1>
+  operator()(std::ostream* pstream__) const;
 };
-
-template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
-mat_ret_user_func(const T0__& A_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
-  int current_statement__ = 0; 
-  const auto& A = stan::math::to_ref(A_arg__);
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 11;
-    return A;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
-
 struct mat_ret_user_func_functor__ {
+  template <typename T0__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
+  operator()(const T0__& A, std::ostream* pstream__) const;
+};
+
+Eigen::Matrix<double, -1, -1> empty_user_func(std::ostream* pstream__) {
+    using local_scalar_t__ = double;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      Eigen::Matrix<local_scalar_t__, -1, -1> some_mat =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10,
+           DUMMY_VAR__);
+      current_statement__ = 9;
+      return some_mat;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
+  mat_ret_user_func(const T0__& A_arg__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
+    int current_statement__ = 0; 
+    const auto& A = stan::math::to_ref(A_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 11;
+      return A;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+
+Eigen::Matrix<double, -1, -1>
+empty_user_func_functor__::operator()(std::ostream* pstream__)  const
+{
+  return empty_user_func(pstream__);
+}
+
+
 template <typename T0__>
 Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
-operator()(const T0__& A, std::ostream* pstream__)  const 
+mat_ret_user_func_functor__::operator()(const T0__& A,
+                                        std::ostream* pstream__)  const
 {
-return mat_ret_user_func(A, pstream__);
+  return mat_ret_user_func(A, pstream__);
 }
-};
+
 
 class return_types_and_udfs_demotes_model final : public model_base_crtp<return_types_and_udfs_demotes_model> {
 
@@ -6045,10 +6054,7 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
      vars.resize(num_params_r__);
      transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
-    
-};
-}
-
+     }; } 
 using stan_model = return_types_and_udfs_demotes_model_namespace::return_types_and_udfs_demotes_model;
 
 #ifndef USING_R
@@ -6090,6 +6096,7 @@ static constexpr std::array<const char*, 8> locations_array__ =
  " (in 'single_indexing.stan', line 16, column 7 to column 77)",
  " (in 'single_indexing.stan', line 12, column 21 to line 17, column 6)",
  " (in 'single_indexing.stan', line 12, column 5 to line 17, column 6)"};
+
 
 
 
@@ -6559,68 +6566,72 @@ static constexpr std::array<const char*, 10> locations_array__ =
  " (in 'tp_reused.stan', line 7, column 8 to column 25)",
  " (in 'tp_reused.stan', line 6, column 48 to line 8, column 5)"};
 
-
-template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
-nono_func(const T0__& x_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
-  int current_statement__ = 0; 
-  const auto& x = stan::math::to_ref(x_arg__);
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 6;
-    return x;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
-
-struct nono_func_functor__ {
-template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
-operator()(const T0__& x, std::ostream* pstream__)  const 
-{
-return nono_func(x, pstream__);
-}
-};
-
-template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<T0__,
-stan::value_type_t<T1__>>, -1, -1>
-okay_reduction(const T0__& sum_x, const T1__& y_arg__,
-               std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__,
-          stan::value_type_t<T1__>>;
-  int current_statement__ = 0; 
-  const auto& y = stan::math::to_ref(y_arg__);
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 8;
-    return stan::math::add(sum_x, y);
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-  
-}
-
 struct okay_reduction_functor__ {
-template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<T0__,
-stan::value_type_t<T1__>>, -1, -1>
-operator()(const T0__& sum_x, const T1__& y, std::ostream* pstream__)  const 
-{
-return okay_reduction(sum_x, y, pstream__);
-}
+  template <typename T0__, typename T1__>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>>, -1, -1>
+  operator()(const T0__& sum_x, const T1__& y, std::ostream* pstream__) const;
+};
+struct nono_func_functor__ {
+  template <typename T0__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
+  operator()(const T0__& x, std::ostream* pstream__) const;
 };
 
-class tp_reused_model final : public model_base_crtp<tp_reused_model> {
+template <typename T0__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
+  nono_func(const T0__& x_arg__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
+    int current_statement__ = 0; 
+    const auto& x = stan::math::to_ref(x_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 6;
+      return x;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__, typename T1__>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>>, -1, -1>
+  okay_reduction(const T0__& sum_x, const T1__& y_arg__,
+                 std::ostream* pstream__) {
+    using local_scalar_t__ =
+            stan::promote_args_t<T0__, stan::value_type_t<T1__>>;
+    int current_statement__ = 0; 
+    const auto& y = stan::math::to_ref(y_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 8;
+      return stan::math::add(sum_x, y);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+
+template <typename T0__, typename T1__>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>>, -1, -1>
+okay_reduction_functor__::operator()(const T0__& sum_x, const T1__& y,
+                                     std::ostream* pstream__)  const
+{
+  return okay_reduction(sum_x, y, pstream__);
+}
+
+
+template <typename T0__>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
+nono_func_functor__::operator()(const T0__& x, std::ostream* pstream__) 
+const
+{
+  return nono_func(x, pstream__);
+}
+
+ class tp_reused_model final : public model_base_crtp<tp_reused_model> {
 
  private:
   double data_r; 
@@ -7024,10 +7035,7 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model> {
      vars.resize(num_params_r__);
      transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
-    
-};
-}
-using stan_model = tp_reused_model_namespace::tp_reused_model;
+     }; } using stan_model = tp_reused_model_namespace::tp_reused_model;
 
 #ifndef USING_R
 

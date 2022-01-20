@@ -66,6 +66,14 @@ val illtyped_variadic_ode :
   -> SignatureMismatch.function_mismatch
   -> t
 
+val ambiguous_function_promotion :
+     Location_span.t
+  -> string
+  -> UnsizedType.t list option
+  -> (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
+     list
+  -> t
+
 val illtyped_variadic_dae :
      Location_span.t
   -> string
@@ -127,8 +135,15 @@ val non_int_bounds : Location_span.t -> t
 val complex_transform : Location_span.t -> t
 val transformed_params_int : Location_span.t -> t
 
-val mismatched_fn_def_decl :
-  Location_span.t -> string -> UnsizedType.t option -> t
+val fn_overload_rt_only :
+     Location_span.t
+  -> string
+  -> UnsizedType.returntype
+  -> UnsizedType.returntype
+  -> t
+
+val fn_decl_redefined :
+  Location_span.t -> string -> stan_math:bool -> UnsizedType.t -> t
 
 val fn_decl_exists : Location_span.t -> string -> t
 val fn_decl_without_def : Location_span.t -> t

@@ -1187,11 +1187,6 @@ let () =
     , [UArray UReal; UArray UReal; UReal]
     , AoS ) ;
   add_unqualified
-    ( "gp_dot_prod_cov"
-    , ReturnType UMatrix
-    , [UArray UReal; UArray UReal; UReal]
-    , AoS ) ;
-  add_unqualified
     ("gp_dot_prod_cov", ReturnType UMatrix, [UArray UVector; UReal], AoS) ;
   add_unqualified
     ( "gp_dot_prod_cov"
