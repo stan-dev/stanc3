@@ -140,19 +140,18 @@ let%expect_test "inline functions" =
         {
           data int inline_sym1__;
           inline_sym1__ = 0;
-          for(inline_sym2__ in 1:1) {
+          {
             FnPrint__(3);
             FnPrint__(FnMakeRowVec__(FnMakeRowVec__(3, 2), FnMakeRowVec__(4, 6)));
           }
-          real inline_sym3__;
-          data int inline_sym4__;
-          inline_sym4__ = 0;
-          for(inline_sym5__ in 1:1) {
-            inline_sym4__ = 1;
-            inline_sym3__ = (53 ^ 2);
-            break;
+          real inline_sym2__;
+          data int inline_sym3__;
+          inline_sym3__ = 0;
+          {
+            inline_sym3__ = 1;
+            inline_sym2__ = (53 ^ 2);
           }
-          FnReject__(inline_sym3__);
+          FnReject__(inline_sym2__);
         }
       }
 
@@ -206,15 +205,14 @@ let%expect_test "inline functions 2" =
         }
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
-        data int inline_sym7__;
-        inline_sym7__ = 0;
-        for(inline_sym8__ in 1:1) {
-          data int inline_sym5__;
-          inline_sym5__ = 0;
-          for(inline_sym6__ in 1:1) {
+        data int inline_sym4__;
+        inline_sym4__ = 0;
+        {
+          data int inline_sym3__;
+          inline_sym3__ = 0;
+          {
 
           }
-          if(inline_sym7__) break;
         }
       } |}]
 
@@ -291,99 +289,73 @@ let%expect_test "list collapsing" =
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
             (meta <opaque>))
            ((pattern
-             (For (loopvar inline_sym2__)
-              (lower
-               ((pattern (Lit Int 1))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (upper
-               ((pattern (Lit Int 1))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (body
+             (Block
+              (((pattern
+                 (NRFunApp (CompilerInternal FnPrint)
+                  (((pattern (Lit Int 3))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                (meta <opaque>))
                ((pattern
-                 (Block
+                 (NRFunApp (CompilerInternal FnPrint)
                   (((pattern
-                     (NRFunApp (CompilerInternal FnPrint)
-                      (((pattern (Lit Int 3))
-                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                    (meta <opaque>))
-                   ((pattern
-                     (NRFunApp (CompilerInternal FnPrint)
+                     (FunApp (CompilerInternal FnMakeRowVec)
                       (((pattern
                          (FunApp (CompilerInternal FnMakeRowVec)
-                          (((pattern
-                             (FunApp (CompilerInternal FnMakeRowVec)
-                              (((pattern (Lit Int 3))
-                                (meta
-                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                               ((pattern (Lit Int 2))
-                                (meta
-                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                          (((pattern (Lit Int 3))
                             (meta
-                             ((type_ URowVector) (loc <opaque>)
-                              (adlevel DataOnly))))
-                           ((pattern
-                             (FunApp (CompilerInternal FnMakeRowVec)
-                              (((pattern (Lit Int 4))
-                                (meta
-                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                               ((pattern (Lit Int 6))
-                                (meta
-                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                           ((pattern (Lit Int 2))
                             (meta
-                             ((type_ URowVector) (loc <opaque>)
-                              (adlevel DataOnly)))))))
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                         (meta
-                         ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
-                    (meta <opaque>)))))
+                         ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))
+                       ((pattern
+                         (FunApp (CompilerInternal FnMakeRowVec)
+                          (((pattern (Lit Int 4))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                           ((pattern (Lit Int 6))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (meta
+                         ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
                 (meta <opaque>)))))
             (meta <opaque>))
            ((pattern
-             (Decl (decl_adtype AutoDiffable) (decl_id inline_sym3__)
+             (Decl (decl_adtype AutoDiffable) (decl_id inline_sym2__)
               (decl_type (Unsized UReal)) (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Decl (decl_adtype DataOnly) (decl_id inline_sym4__)
+             (Decl (decl_adtype DataOnly) (decl_id inline_sym3__)
               (decl_type (Sized SInt)) (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Assignment (inline_sym4__ UInt ())
+             (Assignment (inline_sym3__ UInt ())
               ((pattern (Lit Int 0))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
             (meta <opaque>))
            ((pattern
-             (For (loopvar inline_sym5__)
-              (lower
-               ((pattern (Lit Int 1))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (upper
-               ((pattern (Lit Int 1))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (body
+             (Block
+              (((pattern
+                 (Assignment (inline_sym3__ UInt ())
+                  ((pattern (Lit Int 1))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
                ((pattern
-                 (Block
-                  (((pattern
-                     (Assignment (inline_sym4__ UInt ())
-                      ((pattern (Lit Int 1))
-                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-                    (meta <opaque>))
-                   ((pattern
-                     (Assignment (inline_sym3__ UReal ())
-                      ((pattern
-                        (FunApp (StanLib Pow__ FnPlain AoS)
-                         (((pattern (Lit Int 53))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 2))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
-                    (meta <opaque>))
-                   ((pattern Break) (meta <opaque>)))))
+                 (Assignment (inline_sym2__ UReal ())
+                  ((pattern
+                    (FunApp (StanLib Pow__ FnPlain AoS)
+                     (((pattern (Lit Int 53))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 2))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>)))))
             (meta <opaque>))
            ((pattern
              (NRFunApp (CompilerInternal FnReject)
-              (((pattern (Var inline_sym3__))
+              (((pattern (Var inline_sym2__))
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta <opaque>)))))
         (meta <opaque>))))
@@ -510,34 +482,31 @@ let%expect_test "inline function in for loop" =
       log_prob {
         {
           int inline_sym1__;
-          int inline_sym4__;
+          int inline_sym3__;
           data int inline_sym2__;
           inline_sym2__ = 0;
-          for(inline_sym3__ in 1:1) {
+          {
             FnPrint__("f");
             inline_sym2__ = 1;
             inline_sym1__ = 42;
-            break;
           }
-          data int inline_sym5__;
-          inline_sym5__ = 0;
-          for(inline_sym6__ in 1:1) {
+          data int inline_sym4__;
+          inline_sym4__ = 0;
+          {
             FnPrint__("g");
-            inline_sym5__ = 1;
-            inline_sym4__ = (3 + 24);
-            break;
+            inline_sym4__ = 1;
+            inline_sym3__ = (3 + 24);
           }
-          for(i in inline_sym1__:inline_sym4__) {
+          for(i in inline_sym1__:inline_sym3__) {
             {
               FnPrint__("body");
             }
-            data int inline_sym5__;
-            inline_sym5__ = 0;
-            for(inline_sym6__ in 1:1) {
+            data int inline_sym4__;
+            inline_sym4__ = 0;
+            {
               FnPrint__("g");
-              inline_sym5__ = 1;
-              inline_sym4__ = (3 + 24);
-              break;
+              inline_sym4__ = 1;
+              inline_sym3__ = (3 + 24);
             }
           }
         }
@@ -595,55 +564,48 @@ let%expect_test "inline function in for loop 2" =
 
       log_prob {
         {
+          int inline_sym5__;
           int inline_sym7__;
-          int inline_sym10__;
-          data int inline_sym8__;
-          inline_sym8__ = 0;
-          for(inline_sym9__ in 1:1) {
+          data int inline_sym6__;
+          inline_sym6__ = 0;
+          {
             FnPrint__("f");
-            inline_sym8__ = 1;
-            inline_sym7__ = 42;
-            break;
+            inline_sym6__ = 1;
+            inline_sym5__ = 42;
           }
-          data int inline_sym14__;
-          inline_sym14__ = 0;
-          for(inline_sym15__ in 1:1) {
+          data int inline_sym10__;
+          inline_sym10__ = 0;
+          {
             FnPrint__("g");
-            int inline_sym11__;
-            data int inline_sym12__;
-            inline_sym12__ = 0;
-            for(inline_sym13__ in 1:1) {
+            int inline_sym8__;
+            data int inline_sym9__;
+            inline_sym9__ = 0;
+            {
               FnPrint__("f");
-              inline_sym12__ = 1;
-              inline_sym11__ = 42;
-              break;
+              inline_sym9__ = 1;
+              inline_sym8__ = 42;
             }
-            if(inline_sym14__) break;
-            inline_sym14__ = 1;
-            inline_sym10__ = (inline_sym11__ + 24);
-            break;
+            inline_sym10__ = 1;
+            inline_sym7__ = (inline_sym8__ + 24);
           }
-          for(i in inline_sym7__:inline_sym10__) {
+          for(i in inline_sym5__:inline_sym7__) {
             {
               FnPrint__("body");
             }
-            data int inline_sym14__;
-            inline_sym14__ = 0;
-            for(inline_sym15__ in 1:1) {
+            data int inline_sym10__;
+            inline_sym10__ = 0;
+            {
               FnPrint__("g");
-              int inline_sym11__;
-              data int inline_sym12__;
-              inline_sym12__ = 0;
-              for(inline_sym13__ in 1:1) {
+              int inline_sym8__;
+              data int inline_sym9__;
+              inline_sym9__ = 0;
+              {
                 FnPrint__("f");
-                inline_sym12__ = 1;
-                inline_sym11__ = 42;
-                break;
+                inline_sym9__ = 1;
+                inline_sym8__ = 42;
               }
-              if(inline_sym14__) break;
-              inline_sym14__ = 1;
-              inline_sym10__ = (inline_sym11__ + 24);
-              break;
+              inline_sym10__ = 1;
+              inline_sym7__ = (inline_sym8__ + 24);
             }
           }
         }
@@ -702,21 +664,19 @@ let%expect_test "inline function in while loop" =
           int inline_sym1__;
           data int inline_sym2__;
           inline_sym2__ = 0;
-          for(inline_sym3__ in 1:1) {
+          {
             FnPrint__("g");
             inline_sym2__ = 1;
             inline_sym1__ = (3 + 24);
-            break;
           }
           while(inline_sym1__) {
             FnPrint__("body");
             data int inline_sym2__;
             inline_sym2__ = 0;
-            for(inline_sym3__ in 1:1) {
+            {
               FnPrint__("g");
               inline_sym2__ = 1;
               inline_sym1__ = (3 + 24);
-              break;
             }
           }
         }
@@ -775,11 +735,10 @@ let%expect_test "inline function in if then else" =
           int inline_sym1__;
           data int inline_sym2__;
           inline_sym2__ = 0;
-          for(inline_sym3__ in 1:1) {
+          {
             FnPrint__("g");
             inline_sym2__ = 1;
             inline_sym1__ = (3 + 24);
-            break;
           }
           if(inline_sym1__) FnPrint__("body");
         }
@@ -848,36 +807,33 @@ let%expect_test "inline function in ternary if " =
       log_prob {
         {
           int inline_sym1__;
-          int inline_sym4__;
-          int inline_sym7__;
+          int inline_sym3__;
+          int inline_sym5__;
           data int inline_sym2__;
           inline_sym2__ = 0;
-          for(inline_sym3__ in 1:1) {
+          {
             FnPrint__("f");
             inline_sym2__ = 1;
             inline_sym1__ = 42;
-            break;
           }
           if(inline_sym1__) {
-            data int inline_sym5__;
-            inline_sym5__ = 0;
-            for(inline_sym6__ in 1:1) {
+            data int inline_sym4__;
+            inline_sym4__ = 0;
+            {
               FnPrint__("g");
-              inline_sym5__ = 1;
-              inline_sym4__ = (3 + 24);
-              break;
+              inline_sym4__ = 1;
+              inline_sym3__ = (3 + 24);
             }
           } else {
-            data int inline_sym8__;
-            inline_sym8__ = 0;
-            for(inline_sym9__ in 1:1) {
+            data int inline_sym6__;
+            inline_sym6__ = 0;
+            {
               FnPrint__("h");
-              inline_sym8__ = 1;
-              inline_sym7__ = (4 + 4);
-              break;
+              inline_sym6__ = 1;
+              inline_sym5__ = (4 + 4);
             }
           }
-          FnPrint__(inline_sym1__ ?inline_sym4__: inline_sym7__);
+          FnPrint__(inline_sym1__ ?inline_sym3__: inline_sym5__);
         }
       }
 
@@ -987,25 +943,23 @@ let%expect_test "inline function indices " =
       log_prob {
         {
           array[array[int, 2], 2] a;
-          int inline_sym4__;
+          int inline_sym3__;
           int inline_sym1__;
-          data int inline_sym5__;
-          inline_sym5__ = 0;
-          for(inline_sym6__ in 1:1) {
+          data int inline_sym4__;
+          inline_sym4__ = 0;
+          {
             FnPrint__(2);
-            inline_sym5__ = 1;
-            inline_sym4__ = 42;
-            break;
+            inline_sym4__ = 1;
+            inline_sym3__ = 42;
           }
           data int inline_sym2__;
           inline_sym2__ = 0;
-          for(inline_sym3__ in 1:1) {
+          {
             FnPrint__(1);
             inline_sym2__ = 1;
             inline_sym1__ = 42;
-            break;
           }
-          FnPrint__(a[inline_sym1__, inline_sym4__]);
+          FnPrint__(a[inline_sym1__, inline_sym3__]);
         }
       }
 
@@ -1051,26 +1005,24 @@ let%expect_test "inline function and " =
       log_prob {
         {
           int inline_sym1__;
-          int inline_sym4__;
+          int inline_sym3__;
           data int inline_sym2__;
           inline_sym2__ = 0;
-          for(inline_sym3__ in 1:1) {
+          {
             FnPrint__(1);
             inline_sym2__ = 1;
             inline_sym1__ = 42;
-            break;
           }
           if(inline_sym1__) {
-            data int inline_sym5__;
-            inline_sym5__ = 0;
-            for(inline_sym6__ in 1:1) {
+            data int inline_sym4__;
+            inline_sym4__ = 0;
+            {
               FnPrint__(2);
-              inline_sym5__ = 1;
-              inline_sym4__ = 42;
-              break;
+              inline_sym4__ = 1;
+              inline_sym3__ = 42;
             }
           }
-          FnPrint__(inline_sym1__ && inline_sym4__);
+          FnPrint__(inline_sym1__ && inline_sym3__);
         }
       }
 
@@ -1115,26 +1067,24 @@ let%expect_test "inline function or " =
       log_prob {
         {
           int inline_sym1__;
-          int inline_sym4__;
+          int inline_sym3__;
           data int inline_sym2__;
           inline_sym2__ = 0;
-          for(inline_sym3__ in 1:1) {
+          {
             FnPrint__(1);
             inline_sym2__ = 1;
             inline_sym1__ = 42;
-            break;
           }
           if(inline_sym1__) ; else {
-            data int inline_sym5__;
-            inline_sym5__ = 0;
-            for(inline_sym6__ in 1:1) {
+            data int inline_sym4__;
+            inline_sym4__ = 0;
+            {
               FnPrint__(2);
-              inline_sym5__ = 1;
-              inline_sym4__ = 42;
-              break;
+              inline_sym4__ = 1;
+              inline_sym3__ = 42;
             }
           }
-          FnPrint__(inline_sym1__ || inline_sym4__);
+          FnPrint__(inline_sym1__ || inline_sym3__);
         }
       }
 

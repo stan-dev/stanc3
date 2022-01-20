@@ -106,6 +106,17 @@ let subst_args_stmt args es =
   let m = Map.Poly.of_alist_exn (List.zip_exn args es) in
   subst_stmt m
 
+let rec count_returns (acc : int) Stmt.Fixed.{pattern; _} =
+  match pattern with
+  | Return _ -> acc + 1
+  | IfElse (_, a, b) ->
+      count_returns acc a + Option.value_map ~default:0 ~f:(count_returns acc) b
+  | While (_, b) -> count_returns acc b
+  | For {body; _} -> count_returns acc body
+  | Block lst | SList lst | Profile (_, lst) ->
+      List.fold ~init:acc ~f:count_returns lst
+  | _ -> acc
+
 (* TODO: only handle early returns if that's necessary *)
 (* The strategy here is to wrap the function body in a dummy loop, then replace
    returns with breaks. One issue is early return from internal loops - in
@@ -116,28 +127,47 @@ let subst_args_stmt args es =
    the dummy loop. *)
 let handle_early_returns opt_var b =
   let returned = Gensym.generate ~prefix:"inline_" () in
-  let f = function
+  let f num_returns stmt_pattern =
+    match stmt_pattern with
     | Stmt.Fixed.Pattern.Return opt_ret -> (
       match (opt_var, opt_ret) with
       | None, None -> Stmt.Fixed.Pattern.Break
       | Some name, Some e ->
-          SList
-            [ Stmt.Fixed.
-                { pattern=
-                    Assignment
-                      ( (returned, UInt, [])
-                      , Expr.Fixed.
-                          { pattern= Lit (Int, "1")
-                          ; meta=
-                              Expr.Typed.Meta.
-                                { type_= UInt
-                                ; adlevel= DataOnly
-                                ; loc= Location_span.empty } } )
-                ; meta= Location_span.empty }
-            ; Stmt.Fixed.
-                { pattern= Assignment ((name, Expr.Typed.type_of e, []), e)
-                ; meta= Location_span.empty }
-            ; {pattern= Break; meta= Location_span.empty} ]
+          if num_returns > 1 then
+            SList
+              [ Stmt.Fixed.
+                  { pattern=
+                      Assignment
+                        ( (returned, UInt, [])
+                        , Expr.Fixed.
+                            { pattern= Lit (Int, "1")
+                            ; meta=
+                                Expr.Typed.Meta.
+                                  { type_= UInt
+                                  ; adlevel= DataOnly
+                                  ; loc= Location_span.empty } } )
+                  ; meta= Location_span.empty }
+              ; Stmt.Fixed.
+                  { pattern= Assignment ((name, Expr.Typed.type_of e, []), e)
+                  ; meta= Location_span.empty }
+              ; {pattern= Break; meta= Location_span.empty} ]
+          else
+            SList
+              [ Stmt.Fixed.
+                  { pattern=
+                      Assignment
+                        ( (returned, UInt, [])
+                        , Expr.Fixed.
+                            { pattern= Lit (Int, "1")
+                            ; meta=
+                                Expr.Typed.Meta.
+                                  { type_= UInt
+                                  ; adlevel= DataOnly
+                                  ; loc= Location_span.empty } } )
+                  ; meta= Location_span.empty }
+              ; Stmt.Fixed.
+                  { pattern= Assignment ((name, Expr.Typed.type_of e, []), e)
+                  ; meta= Location_span.empty } ]
       | Some _, None ->
           Common.FatalError.fatal_error_msg
             [%message
@@ -151,22 +181,47 @@ let handle_early_returns opt_var b =
                  statement."
                 : string )] )
     | Stmt.Fixed.Pattern.For _ as loop ->
-        Stmt.Fixed.Pattern.SList
-          [ Stmt.Fixed.{pattern= loop; meta= Location_span.empty}
-          ; Stmt.Fixed.
-              { pattern=
-                  IfElse
-                    ( Expr.Fixed.
-                        { pattern= Var returned
-                        ; meta=
-                            Expr.Typed.Meta.
-                              { type_= UInt
-                              ; adlevel= DataOnly
-                              ; loc= Location_span.empty } }
-                    , {pattern= Break; meta= Location_span.empty}
-                    , None )
-              ; meta= Location_span.empty } ]
+        if num_returns > 1 then
+          Stmt.Fixed.Pattern.SList
+            [ Stmt.Fixed.{pattern= loop; meta= Location_span.empty}
+            ; Stmt.Fixed.
+                { pattern=
+                    IfElse
+                      ( Expr.Fixed.
+                          { pattern= Var returned
+                          ; meta=
+                              Expr.Typed.Meta.
+                                { type_= UInt
+                                ; adlevel= DataOnly
+                                ; loc= Location_span.empty } }
+                      , {pattern= Break; meta= Location_span.empty}
+                      , None )
+                ; meta= Location_span.empty } ]
+        else loop
     | x -> x in
+  let num_returns = count_returns 0 b in
+  let final_stmt =
+    if num_returns > 1 then
+      Stmt.Fixed.
+        { pattern=
+            Stmt.Fixed.Pattern.For
+              { loopvar= Gensym.generate ~prefix:"inline_" ()
+              ; lower=
+                  Expr.Fixed.
+                    { pattern= Lit (Int, "1")
+                    ; meta=
+                        Expr.Typed.Meta.
+                          { type_= UInt
+                          ; adlevel= DataOnly
+                          ; loc= Location_span.empty } }
+              ; upper=
+                  { pattern= Lit (Int, "1")
+                  ; meta=
+                      {type_= UInt; adlevel= DataOnly; loc= Location_span.empty}
+                  }
+              ; body= map_rec_stmt_loc (f num_returns) b }
+        ; meta= Location_span.empty }
+    else map_rec_stmt_loc (f num_returns) b in
   Stmt.Fixed.Pattern.SList
     [ Stmt.Fixed.
         { pattern=
@@ -187,26 +242,7 @@ let handle_early_returns opt_var b =
                         { type_= UInt
                         ; adlevel= DataOnly
                         ; loc= Location_span.empty } } )
-        ; meta= Location_span.empty }
-    ; Stmt.Fixed.
-        { pattern=
-            Stmt.Fixed.Pattern.For
-              { loopvar= Gensym.generate ~prefix:"inline_" ()
-              ; lower=
-                  Expr.Fixed.
-                    { pattern= Lit (Int, "1")
-                    ; meta=
-                        Expr.Typed.Meta.
-                          { type_= UInt
-                          ; adlevel= DataOnly
-                          ; loc= Location_span.empty } }
-              ; upper=
-                  { pattern= Lit (Int, "1")
-                  ; meta=
-                      {type_= UInt; adlevel= DataOnly; loc= Location_span.empty}
-                  }
-              ; body= map_rec_stmt_loc f b }
-        ; meta= Location_span.empty } ]
+        ; meta= Location_span.empty }; final_stmt ]
 
 let inline_list f es =
   let dse_list = List.map ~f es in
