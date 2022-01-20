@@ -531,12 +531,12 @@ let%expect_test "inline function in for loop 2" =
           }
           {
             FnPrint__("g");
-            int inline_sym8__;
+            int inline_g_inline_f_return_sym3___sym8__;
             {
               FnPrint__("f");
-              inline_sym8__ = 42;
+              inline_g_inline_f_return_sym3___sym8__ = 42;
             }
-            inline_g_return_sym7__ = (inline_sym8__ + 24);
+            inline_g_return_sym7__ = (inline_g_inline_f_return_sym3___sym8__ + 24);
           }
           for(i in inline_f_return_sym5__:inline_g_return_sym7__) {
             {
@@ -544,12 +544,12 @@ let%expect_test "inline function in for loop 2" =
             }
             {
               FnPrint__("g");
-              int inline_sym8__;
+              int inline_g_inline_f_return_sym3___sym8__;
               {
                 FnPrint__("f");
-                inline_sym8__ = 42;
+                inline_g_inline_f_return_sym3___sym8__ = 42;
               }
-              inline_g_return_sym7__ = (inline_sym8__ + 24);
+              inline_g_return_sym7__ = (inline_g_inline_f_return_sym3___sym8__ + 24);
             }
           }
         }
@@ -813,7 +813,7 @@ let%expect_test "inline function multiple returns " =
           int inline_f_return_sym1__;
           data int inline_f_early_ret_check_sym2__;
           inline_f_early_ret_check_sym2__ = 0;
-          for(inline_sym3__ in 1:1) {
+          for(inline_f_iterator_sym3__ in 1:1) {
             if(2) {
               FnPrint__("f");
               inline_f_early_ret_check_sym2__ = 1;

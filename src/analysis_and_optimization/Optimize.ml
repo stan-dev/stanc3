@@ -75,13 +75,16 @@ let block_no_loc l = Stmt.Fixed.Pattern.Block (map_no_loc l)
 let slist_concat_no_loc l stmt =
   match l with [] -> stmt | l -> slist_no_loc (l @ [stmt])
 
-let replace_fresh_local_vars s' =
+let replace_fresh_local_vars (fname : string) s' =
   let f m = function
     | Stmt.Fixed.Pattern.Decl {decl_adtype; decl_type; decl_id; initialize} ->
         let new_name =
           match Map.Poly.find m decl_id with
           | Some existing -> existing
-          | None -> Gensym.generate ~prefix:"inline_" () in
+          | None ->
+              Gensym.generate
+                ~prefix:("inline_" ^ fname ^ "_" ^ decl_id ^ "_")
+                () in
         ( Stmt.Fixed.Pattern.Decl
             {decl_adtype; decl_id= new_name; decl_type; initialize}
         , Map.Poly.set m ~key:decl_id ~data:new_name )
@@ -89,7 +92,10 @@ let replace_fresh_local_vars s' =
         let new_name =
           match Map.Poly.find m loopvar with
           | Some existing -> existing
-          | None -> Gensym.generate ~prefix:"inline_" () in
+          | None ->
+              Gensym.generate
+                ~prefix:("inline_" ^ fname ^ "_" ^ loopvar ^ "_")
+                () in
         ( Stmt.Fixed.Pattern.For {loopvar= new_name; lower; upper; body}
         , Map.Poly.set m ~key:loopvar ~data:new_name )
     | Assignment ((var_name, ut, l), e) ->
@@ -213,7 +219,10 @@ let handle_early_returns (fname : string) opt_var stmt =
       ; Stmt.Fixed.
           { pattern=
               Stmt.Fixed.Pattern.For
-                { loopvar= Gensym.generate ~prefix:"inline_" ()
+                { loopvar=
+                    Gensym.generate
+                      ~prefix:("inline_" ^ fname ^ "_iterator_")
+                      ()
                 ; lower=
                     Expr.Fixed.
                       { pattern= Lit (Int, "1")
@@ -287,7 +296,9 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
                   (* We should minimize the code that's having its variables
                      replaced to avoid conflict with the (two) new dummy
                      variables introduced by inlining *)
-                , [handle (replace_fresh_local_vars (subst_args_stmt args es b))]
+                , [ handle
+                      (replace_fresh_local_vars fname
+                         (subst_args_stmt args es b) ) ]
                 , { pattern= Var x
                   ; meta=
                       Expr.Typed.Meta.
@@ -378,7 +389,7 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.{pattern; meta} =
                 match Map.find fim s with
                 | None -> NRFunApp (kind, es)
                 | Some (_, args, b) ->
-                    let b = replace_fresh_local_vars b in
+                    let b = replace_fresh_local_vars s b in
                     let b = handle_early_returns s None b in
                     (subst_args_stmt args es
                        {pattern= b; meta= Location_span.empty} )
