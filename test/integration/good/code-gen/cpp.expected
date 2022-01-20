@@ -1218,61 +1218,53 @@ static constexpr std::array<const char*, 427> locations_array__ =
  " (in 'complex_scalar.stan', line 33, column 45 to line 35, column 3)"};
 
 struct foo8_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<std::vector<std::complex<T0__>>>& z,
              std::ostream* pstream__) const;
 };
 struct foo1_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::complex<T0__>& z, std::ostream* pstream__) const;
 };
 struct foo4_functor__ {
-std::vector<std::complex<double>>
+  std::vector<std::complex<double>>
   operator()(std::ostream* pstream__) const;
 };
 struct foo6_functor__ {
-template <typename
-  T0__>
+  template <typename T0__>
   std::vector<std::complex<stan::promote_args_t<T0__>>>
   operator()(const T0__& r, std::ostream* pstream__) const;
 };
 struct foo10_functor__ {
-template <typename
-  T0__>
+  template <typename T0__>
   std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
   operator()(const std::vector<std::vector<std::complex<T0__>>>& z,
              std::ostream* pstream__) const;
 };
 struct foo2_functor__ {
-template <typename T0__>
-  std::complex<stan::promote_args_t<T0__>>
+  template <typename T0__> std::complex<stan::promote_args_t<T0__>>
   operator()(const T0__& r, std::ostream* pstream__) const;
 };
 struct foo9_functor__ {
-template <typename
-  T0__>
+  template <typename T0__>
   std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
   operator()(const T0__& r, std::ostream* pstream__) const;
 };
 struct foo3_functor__ {
-template <typename T0__>
-  std::complex<stan::promote_args_t<T0__>>
+  template <typename T0__> std::complex<stan::promote_args_t<T0__>>
   operator()(const std::complex<T0__>& z, std::ostream* pstream__) const;
 };
 struct foo7_functor__ {
-template <typename
-  T0__>
+  template <typename T0__>
   std::vector<std::complex<stan::promote_args_t<T0__>>>
-  operator()(const std::vector<std::complex<T0__>>& z, std::ostream*
-  pstream__) const;
+  operator()(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) const;
 };
 struct foo5_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
-  operator()(const std::vector<std::complex<T0__>>& z, std::ostream*
-  pstream__) const;
+  template <typename T0__> stan::promote_args_t<T0__>
+  operator()(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) const;
 };
 struct foo_functor__ {
-std::complex<double>
+  std::complex<double>
   operator()(std::ostream* pstream__) const;
 };
 
@@ -3738,55 +3730,55 @@ static constexpr std::array<const char*, 75> locations_array__ =
  " (in 'cpp-reserved-words.stan', line 14, column 17 to column 19)"};
 
 struct _stan_asm_functor__ {
-template <typename T0__> void
+  template <typename T0__> void
   operator()(const T0__& _stan_class, std::ostream* pstream__) const;
 };
 struct _stan_char16_t_functor__ {
-void
+  void
   operator()(std::ostream* pstream__) const;
 };
 struct _stan_bitor_functor__ {
-void
+  void
   operator()(std::ostream* pstream__) const;
 };
 struct _stan_bitand_functor__ {
-void
+  void
   operator()(const int& _stan_constexpr, std::ostream* pstream__) const;
 };
 struct _stan_catch_functor__ {
-void
+  void
   operator()(std::ostream* pstream__) const;
 };
 struct _stan_alignas_functor__ {
-void
+  void
   operator()(const int& _stan_asm, std::ostream* pstream__) const;
 };
 struct _stan_alignof_functor__ {
-void
+  void
   operator()(const int& _stan_char, std::ostream* pstream__) const;
 };
 struct _stan_and_eq_functor__ {
-template <typename T0__> void
+  template <typename T0__> void
   operator()(const T0__& _stan_STAN_MINOR, std::ostream* pstream__) const;
 };
 struct _stan_and_functor__ {
-void
+  void
   operator()(const int& _stan_STAN_MAJOR, std::ostream* pstream__) const;
 };
 struct _stan_char_functor__ {
-void
+  void
   operator()(std::ostream* pstream__) const;
 };
 struct _stan_char32_t_functor__ {
-void
+  void
   operator()(std::ostream* pstream__) const;
 };
 struct _stan_bool_functor__ {
-void
+  void
   operator()(std::ostream* pstream__) const;
 };
 struct _stan_case_functor__ {
-void
+  void
   operator()(std::ostream* pstream__) const;
 };
 
@@ -6475,21 +6467,15 @@ static constexpr std::array<const char*, 787> locations_array__ =
  " (in 'mother.stan', line 345, column 41 to line 349, column 3)"};
 
 struct foo_five_args_lp_functor__ {
-template <bool propto__, typename T0__, typename T1__, typename T2__,
-           typename T3__, typename T4__, typename T5__, typename T_lp__,
-           typename T_lp_accum__>
-  stan::promote_args_t<T0__, T1__, T2__, T3__, T4__,
-  stan::promote_args_t<T5__>>
+  template <bool propto__, typename T0__, typename T1__, typename T2__, typename T3__, typename T4__, typename T5__, typename T_lp__, typename T_lp_accum__>
+  stan::promote_args_t<T0__, T1__, T2__, T3__, T4__, stan::promote_args_t<T5__>>
   operator()(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
              const T4__& x5, const T5__& x6, T_lp__& lp__,
              T_lp_accum__& lp_accum__, std::ostream* pstream__) const;
 };
 struct f5_functor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-           typename T7__, typename T8__, typename T9__, typename T10__,
-           typename T11__>
-  std::vector<stan::promote_args_t<T3__, T4__, T5__,
-  stan::value_type_t<T6__>, T7__,
+  template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+  std::vector<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                        stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                             T10__, T11__>>>
   operator()(const int& a1, const std::vector<int>& a2,
@@ -6500,47 +6486,39 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
              const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
              const T9__& a10,
              const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>&
-  a12,
+             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
              std::ostream* pstream__) const;
 };
 struct foo_lcdf_functor__ {
-template <typename T1__> stan::promote_args_t<T1__>
-  operator()(const int& y, const T1__& lambda, std::ostream* pstream__)
-  const;
+  template <typename T1__> stan::promote_args_t<T1__>
+  operator()(const int& y, const T1__& lambda, std::ostream* pstream__) const;
 };
 struct covsqrt2corsqrt_functor__ {
-template <typename
-  T0__>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1,
-  -1>
-  operator()(const T0__& mat, const int& invert, std::ostream* pstream__)
-  const;
+  template <typename T0__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
+  operator()(const T0__& mat, const int& invert, std::ostream* pstream__) const;
 };
 struct foo_1_functor__ {
-int
+  int
   operator()(const int& a, std::ostream* pstream__) const;
 };
 struct unit_normal_lp_functor__ {
-template <bool propto__, typename T0__, typename T_lp__,
-           typename T_lp_accum__> void
+  template <bool propto__, typename T0__, typename T_lp__, typename T_lp_accum__>
+  void
   operator()(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
              std::ostream* pstream__) const;
 };
 struct foo_bar0_functor__ {
-double
+  double
   operator()(std::ostream* pstream__) const;
 };
 struct vecfoo_functor__ {
-Eigen::Matrix<double, -1, 1>
+  Eigen::Matrix<double, -1, 1>
   operator()(std::ostream* pstream__) const;
 };
 struct f6_functor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-           typename T7__, typename T8__, typename T9__, typename T10__,
-           typename T11__>
-  std::vector<std::vector<stan::promote_args_t<T3__, T4__, T5__,
-  stan::value_type_t<T6__>, T7__,
+  template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+  std::vector<std::vector<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                        stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                             T10__, T11__>>>>
   operator()(const int& a1, const std::vector<int>& a2,
@@ -6551,25 +6529,22 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
              const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
              const T9__& a10,
              const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>&
-  a12,
+             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
              std::ostream* pstream__) const;
 };
 struct foo_five_args_functor__ {
-template <typename T0__, typename T1__, typename T2__, typename T3__,
-           typename T4__> stan::promote_args_t<T0__, T1__, T2__, T3__,
-  T4__>
+  template <typename T0__, typename T1__, typename T2__, typename T3__, typename T4__>
+  stan::promote_args_t<T0__, T1__, T2__, T3__, T4__>
   operator()(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
              const T4__& x5, std::ostream* pstream__) const;
 };
 struct foo_2_functor__ {
-int
+  int
   operator()(const int& a, std::ostream* pstream__) const;
 };
 struct f3_functor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-           typename T7__, typename T8__, typename T9__, typename T10__,
-           typename T11__> std::vector<std::vector<int>>
+  template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+  std::vector<std::vector<int>>
   operator()(const int& a1, const std::vector<int>& a2,
              const std::vector<std::vector<int>>& a3, const T3__& a4,
              const std::vector<T4__>& a5,
@@ -6578,23 +6553,18 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
              const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
              const T9__& a10,
              const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>&
-  a12,
+             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
              std::ostream* pstream__) const;
 };
 struct foo_4_functor__ {
-template <typename T0__> void
+  template <typename T0__> void
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
 struct f7_functor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-           typename T7__, typename T8__, typename T9__, typename T10__,
-           typename T11__>
-  Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__,
-  stan::value_type_t<T6__>, T7__,
+  template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+  Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                        stan::promote_args_t<T8__, stan::value_type_t<T9__>,
-                                            T10__, T11__>>, -1,
-  1>
+                                            T10__, T11__>>, -1, 1>
   operator()(const int& a1, const std::vector<int>& a2,
              const std::vector<std::vector<int>>& a3, const T3__& a4,
              const std::vector<T4__>& a5,
@@ -6603,20 +6573,14 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
              const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
              const T9__& a10,
              const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>&
-  a12,
+             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
              std::ostream* pstream__) const;
 };
 struct f11_functor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-           typename T7__, typename T8__, typename T9__, typename T10__,
-           typename
-  T11__>
-  std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__,
-  stan::value_type_t<T6__>, T7__,
+  template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+  std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                        stan::promote_args_t<T8__, stan::value_type_t<T9__>,
-                                            T10__, T11__>>, -1,
-  -1>>
+                                            T10__, T11__>>, -1, -1>>
   operator()(const int& a1, const std::vector<int>& a2,
              const std::vector<std::vector<int>>& a3, const T3__& a4,
              const std::vector<T4__>& a5,
@@ -6625,20 +6589,14 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
              const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
              const T9__& a10,
              const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>&
-  a12,
+             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
              std::ostream* pstream__) const;
 };
 struct f12_functor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-           typename T7__, typename T8__, typename T9__, typename T10__,
-           typename
-  T11__>
-  std::vector<std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__,
-  T5__, stan::value_type_t<T6__>, T7__,
+  template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+  std::vector<std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                        stan::promote_args_t<T8__, stan::value_type_t<T9__>,
-                                            T10__, T11__>>, -1,
-  -1>>>
+                                            T10__, T11__>>, -1, -1>>>
   operator()(const int& a1, const std::vector<int>& a2,
              const std::vector<std::vector<int>>& a3, const T3__& a4,
              const std::vector<T4__>& a5,
@@ -6647,59 +6605,49 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
              const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
              const T9__& a10,
              const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>&
-  a12,
+             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
              std::ostream* pstream__) const;
 };
 struct sho_functor__ {
-template <typename T0__, typename T1__, typename
-  T2__>
+  template <typename T0__, typename T1__, typename T2__>
   std::vector<stan::promote_args_t<T0__, T1__, T2__>>
   operator()(const T0__& t, const std::vector<T1__>& y,
              const std::vector<T2__>& theta, const std::vector<double>& x,
              const std::vector<int>& x_int, std::ostream* pstream__) const;
 };
 struct foo_bar2_functor__ {
-template <typename T0__, typename T1__> stan::promote_args_t<T0__,
-  T1__>
+  template <typename T0__, typename T1__> stan::promote_args_t<T0__, T1__>
   operator()(const T0__& x, const T1__& y, std::ostream* pstream__) const;
 };
 struct matfoo_functor__ {
-Eigen::Matrix<double, -1, -1>
+  Eigen::Matrix<double, -1, -1>
   operator()(std::ostream* pstream__) const;
 };
 struct algebra_system_functor__ {
-template <typename T0__, typename T1__, typename
-  T2__>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-  stan::value_type_t<T1__>, T2__>, -1, 1>
+  template <typename T0__, typename T1__, typename T2__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>, T2__>, -1, 1>
   operator()(const T0__& x, const T1__& y, const std::vector<T2__>& dat,
              const std::vector<int>& dat_int, std::ostream* pstream__) const;
 };
 struct foo_rng_functor__ {
-template <typename T0__, typename T1__, typename
-  RNG>
+  template <typename T0__, typename T1__, typename RNG>
   stan::promote_args_t<T0__, T1__>
   operator()(const T0__& mu, const T1__& sigma, RNG& base_rng__,
              std::ostream* pstream__) const;
 };
 struct relative_diff_functor__ {
-template <typename T0__, typename T1__, typename T2__, typename
-  T3__>
+  template <typename T0__, typename T1__, typename T2__, typename T3__>
   stan::promote_args_t<T0__, T1__, T2__, T3__>
-  operator()(const T0__& x, const T1__& y, const T2__& max_, const T3__&
-  min_,
+  operator()(const T0__& x, const T1__& y, const T2__& max_, const T3__& min_,
              std::ostream* pstream__) const;
 };
 struct vecmubar_functor__ {
-template <typename T0__> Eigen::Matrix<stan::promote_args_t<T0__>, -1,
-  1>
+  template <typename T0__> Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
   operator()(const T0__& mu, std::ostream* pstream__) const;
 };
 struct f0_functor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-           typename T7__, typename T8__, typename T9__, typename T10__,
-           typename T11__> void
+  template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+  void
   operator()(const int& a1, const std::vector<int>& a2,
              const std::vector<std::vector<int>>& a3, const T3__& a4,
              const std::vector<T4__>& a5,
@@ -6708,30 +6656,22 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
              const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
              const T9__& a10,
              const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>&
-  a12,
+             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
              std::ostream* pstream__) const;
 };
 struct foo_lpmf_functor__ {
-template <bool propto__, typename T1__>
-  stan::promote_args_t<T1__>
-  operator()(const int& y, const T1__& lambda, std::ostream* pstream__)
-  const;
+  template <bool propto__, typename T1__> stan::promote_args_t<T1__>
+  operator()(const int& y, const T1__& lambda, std::ostream* pstream__) const;
 };
 struct foo_5_functor__ {
-template <typename T0__, typename
-  T1__>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-  stan::value_type_t<T1__>>, -1, 1>
+  template <typename T0__, typename T1__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, 1>
   operator()(const T0__& shared_params, const T1__& job_params,
-             const std::vector<double>& data_r, const std::vector<int>&
-  data_i,
+             const std::vector<double>& data_r, const std::vector<int>& data_i,
              std::ostream* pstream__) const;
 };
 struct f4_functor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-           typename T7__, typename T8__, typename T9__, typename T10__,
-           typename T11__>
+  template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
   stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                        stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                             T10__, T11__>>
@@ -6743,19 +6683,14 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
              const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
              const T9__& a10,
              const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>&
-  a12,
+             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
              std::ostream* pstream__) const;
 };
 struct f10_functor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-           typename T7__, typename T8__, typename T9__, typename T10__,
-           typename T11__>
-  Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__,
-  stan::value_type_t<T6__>, T7__,
+  template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+  Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                        stan::promote_args_t<T8__, stan::value_type_t<T9__>,
-                                            T10__, T11__>>, -1,
-  -1>
+                                            T10__, T11__>>, -1, -1>
   operator()(const int& a1, const std::vector<int>& a2,
              const std::vector<std::vector<int>>& a3, const T3__& a4,
              const std::vector<T4__>& a5,
@@ -6764,14 +6699,12 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
              const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
              const T9__& a10,
              const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>&
-  a12,
+             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
              std::ostream* pstream__) const;
 };
 struct f2_functor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-           typename T7__, typename T8__, typename T9__, typename T10__,
-           typename T11__> std::vector<int>
+  template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+  std::vector<int>
   operator()(const int& a1, const std::vector<int>& a2,
              const std::vector<std::vector<int>>& a3, const T3__& a4,
              const std::vector<T4__>& a5,
@@ -6780,20 +6713,14 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
              const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
              const T9__& a10,
              const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>&
-  a12,
+             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
              std::ostream* pstream__) const;
 };
 struct f9_functor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-           typename T7__, typename T8__, typename T9__, typename T10__,
-           typename
-  T11__>
-  std::vector<std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__,
-  T5__, stan::value_type_t<T6__>, T7__,
+  template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+  std::vector<std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                        stan::promote_args_t<T8__, stan::value_type_t<T9__>,
-                                            T10__, T11__>>, -1,
-  1>>>
+                                            T10__, T11__>>, -1, 1>>>
   operator()(const int& a1, const std::vector<int>& a2,
              const std::vector<std::vector<int>>& a3, const T3__& a4,
              const std::vector<T4__>& a5,
@@ -6802,20 +6729,14 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
              const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
              const T9__& a10,
              const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>&
-  a12,
+             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
              std::ostream* pstream__) const;
 };
 struct f8_functor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-           typename T7__, typename T8__, typename T9__, typename T10__,
-           typename
-  T11__>
-  std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__,
-  stan::value_type_t<T6__>, T7__,
+  template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+  std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                        stan::promote_args_t<T8__, stan::value_type_t<T9__>,
-                                            T10__, T11__>>, -1,
-  1>>
+                                            T10__, T11__>>, -1, 1>>
   operator()(const int& a1, const std::vector<int>& a2,
              const std::vector<std::vector<int>>& a3, const T3__& a4,
              const std::vector<T4__>& a5,
@@ -6824,52 +6745,45 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
              const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
              const T9__& a10,
              const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>&
-  a12,
+             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
              std::ostream* pstream__) const;
 };
 struct foo_lccdf_functor__ {
-template <typename T1__> stan::promote_args_t<T1__>
-  operator()(const int& y, const T1__& lambda, std::ostream* pstream__)
-  const;
+  template <typename T1__> stan::promote_args_t<T1__>
+  operator()(const int& y, const T1__& lambda, std::ostream* pstream__) const;
 };
 struct vecmufoo_functor__ {
-template <typename T0__> Eigen::Matrix<stan::promote_args_t<T0__>, -1,
-  1>
+  template <typename T0__> Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
   operator()(const T0__& mu, std::ostream* pstream__) const;
 };
 struct foo_lp_functor__ {
-template <bool propto__, typename T0__, typename T_lp__,
-           typename T_lp_accum__> stan::promote_args_t<T0__>
+  template <bool propto__, typename T0__, typename T_lp__, typename T_lp_accum__>
+  stan::promote_args_t<T0__>
   operator()(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
              std::ostream* pstream__) const;
 };
 struct foo_3_functor__ {
-template <typename T0__>
-  std::vector<stan::promote_args_t<T0__>>
+  template <typename T0__> std::vector<stan::promote_args_t<T0__>>
   operator()(const T0__& t, const int& n, std::ostream* pstream__) const;
 };
 struct foo_6_functor__ {
-void
+  void
   operator()(std::ostream* pstream__) const;
 };
 struct binomialf_functor__ {
-template <typename T0__, typename
-  T1__>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-  stan::value_type_t<T1__>>, -1, 1>
+  template <typename T0__, typename T1__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, 1>
   operator()(const T0__& phi, const T1__& theta,
              const std::vector<double>& x_r, const std::vector<int>& x_i,
              std::ostream* pstream__) const;
 };
 struct foo_bar1_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
 struct f1_functor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-           typename T7__, typename T8__, typename T9__, typename T10__,
-           typename T11__> int
+  template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+  int
   operator()(const int& a1, const std::vector<int>& a2,
              const std::vector<std::vector<int>>& a3, const T3__& a4,
              const std::vector<T4__>& a5,
@@ -6878,12 +6792,11 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
              const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
              const T9__& a10,
              const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>&
-  a12,
+             const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
              std::ostream* pstream__) const;
 };
 struct foo_functor__ {
-int
+  int
   operator()(const int& n, std::ostream* pstream__) const;
 };
 
@@ -7046,8 +6959,8 @@ template <typename T0__, typename T1__, typename RNG>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <bool propto__, typename T0__, typename T_lp__,
-         typename T_lp_accum__> void
+template <bool propto__, typename T0__, typename T_lp__, typename T_lp_accum__>
+  void
   unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
                  std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -7329,8 +7242,8 @@ template <typename T0__> std::vector<stan::promote_args_t<T0__>>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <bool propto__, typename T0__, typename T_lp__,
-         typename T_lp_accum__> stan::promote_args_t<T0__>
+template <bool propto__, typename T0__, typename T_lp__, typename T_lp_accum__>
+  stan::promote_args_t<T0__>
   foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
          std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -7413,8 +7326,9 @@ template <typename T0__, typename T1__>
   foo_5(const T0__& shared_params_arg__, const T1__& job_params_arg__,
         const std::vector<double>& data_r, const std::vector<int>& data_i,
         std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-                                                  stan::value_type_t<T1__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<stan::value_type_t<T0__>,
+                                 stan::value_type_t<T1__>>;
     int current_statement__ = 0; 
     const auto& shared_params = stan::math::to_ref(shared_params_arg__);
     const auto& job_params = stan::math::to_ref(job_params_arg__);
@@ -7429,12 +7343,12 @@ template <typename T0__, typename T1__>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, typename T1__, typename T2__, typename T3__,
-         typename T4__> stan::promote_args_t<T0__, T1__, T2__, T3__, T4__>
+template <typename T0__, typename T1__, typename T2__, typename T3__, typename T4__>
+  stan::promote_args_t<T0__, T1__, T2__, T3__, T4__>
   foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3,
                 const T3__& x4, const T4__& x5, std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__,
-                                                  T4__>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T0__, T1__, T2__, T3__, T4__>;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
@@ -7447,18 +7361,15 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <bool propto__, typename T0__, typename T1__, typename T2__,
-         typename T3__, typename T4__, typename T5__, typename T_lp__,
-         typename T_lp_accum__>
+template <bool propto__, typename T0__, typename T1__, typename T2__, typename T3__, typename T4__, typename T5__, typename T_lp__, typename T_lp_accum__>
   stan::promote_args_t<T0__, T1__, T2__, T3__, T4__, stan::promote_args_t<T5__>>
   foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
                    const T3__& x4, const T4__& x5, const T5__& x6,
                    T_lp__& lp__, T_lp_accum__& lp_accum__,
                    std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__,
-                                                  T4__,
-                                                  stan::promote_args_t<
-                                                  T5__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T0__, T1__, T2__, T3__, T4__,
+                                 stan::promote_args_t<T5__>>;
     int current_statement__ = 0; 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -7508,9 +7419,8 @@ template <typename T0__>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__> void
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+  void
   f0(const int& a1, const std::vector<int>& a2,
      const std::vector<std::vector<int>>& a3, const T3__& a4,
      const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -7520,13 +7430,12 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
      const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
      const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
      std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T3__, T4__, T5__,
-                                                  stan::value_type_t<T6__>,
-                                                  T7__,
-                                                  stan::promote_args_t<
-                                                  T8__,
-                                                  stan::value_type_t<T9__>,
-                                                  T10__, T11__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
+                                 T7__,
+                                 stan::promote_args_t<T8__,
+                                                      stan::value_type_t<T9__>,
+                                                      T10__, T11__>>;
     int current_statement__ = 0; 
     const auto& a7 = stan::math::to_ref(a7_arg__);
     const auto& a10 = stan::math::to_ref(a10_arg__);
@@ -7544,9 +7453,8 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__> int
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+  int
   f1(const int& a1, const std::vector<int>& a2,
      const std::vector<std::vector<int>>& a3, const T3__& a4,
      const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -7556,13 +7464,12 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
      const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
      const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
      std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T3__, T4__, T5__,
-                                                  stan::value_type_t<T6__>,
-                                                  T7__,
-                                                  stan::promote_args_t<
-                                                  T8__,
-                                                  stan::value_type_t<T9__>,
-                                                  T10__, T11__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
+                                 T7__,
+                                 stan::promote_args_t<T8__,
+                                                      stan::value_type_t<T9__>,
+                                                      T10__, T11__>>;
     int current_statement__ = 0; 
     const auto& a7 = stan::math::to_ref(a7_arg__);
     const auto& a10 = stan::math::to_ref(a10_arg__);
@@ -7577,9 +7484,8 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__> std::vector<int>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+  std::vector<int>
   f2(const int& a1, const std::vector<int>& a2,
      const std::vector<std::vector<int>>& a3, const T3__& a4,
      const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -7589,13 +7495,12 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
      const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
      const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
      std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T3__, T4__, T5__,
-                                                  stan::value_type_t<T6__>,
-                                                  T7__,
-                                                  stan::promote_args_t<
-                                                  T8__,
-                                                  stan::value_type_t<T9__>,
-                                                  T10__, T11__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
+                                 T7__,
+                                 stan::promote_args_t<T8__,
+                                                      stan::value_type_t<T9__>,
+                                                      T10__, T11__>>;
     int current_statement__ = 0; 
     const auto& a7 = stan::math::to_ref(a7_arg__);
     const auto& a10 = stan::math::to_ref(a10_arg__);
@@ -7610,9 +7515,8 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__> std::vector<std::vector<int>>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+  std::vector<std::vector<int>>
   f3(const int& a1, const std::vector<int>& a2,
      const std::vector<std::vector<int>>& a3, const T3__& a4,
      const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -7622,13 +7526,12 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
      const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
      const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
      std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T3__, T4__, T5__,
-                                                  stan::value_type_t<T6__>,
-                                                  T7__,
-                                                  stan::promote_args_t<
-                                                  T8__,
-                                                  stan::value_type_t<T9__>,
-                                                  T10__, T11__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
+                                 T7__,
+                                 stan::promote_args_t<T8__,
+                                                      stan::value_type_t<T9__>,
+                                                      T10__, T11__>>;
     int current_statement__ = 0; 
     const auto& a7 = stan::math::to_ref(a7_arg__);
     const auto& a10 = stan::math::to_ref(a10_arg__);
@@ -7643,9 +7546,7 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
   stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>
@@ -7658,13 +7559,12 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
      const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
      const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
      std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T3__, T4__, T5__,
-                                                  stan::value_type_t<T6__>,
-                                                  T7__,
-                                                  stan::promote_args_t<
-                                                  T8__,
-                                                  stan::value_type_t<T9__>,
-                                                  T10__, T11__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
+                                 T7__,
+                                 stan::promote_args_t<T8__,
+                                                      stan::value_type_t<T9__>,
+                                                      T10__, T11__>>;
     int current_statement__ = 0; 
     const auto& a7 = stan::math::to_ref(a7_arg__);
     const auto& a10 = stan::math::to_ref(a10_arg__);
@@ -7679,9 +7579,7 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
   std::vector<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>>
@@ -7694,13 +7592,12 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
      const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
      const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
      std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T3__, T4__, T5__,
-                                                  stan::value_type_t<T6__>,
-                                                  T7__,
-                                                  stan::promote_args_t<
-                                                  T8__,
-                                                  stan::value_type_t<T9__>,
-                                                  T10__, T11__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
+                                 T7__,
+                                 stan::promote_args_t<T8__,
+                                                      stan::value_type_t<T9__>,
+                                                      T10__, T11__>>;
     int current_statement__ = 0; 
     const auto& a7 = stan::math::to_ref(a7_arg__);
     const auto& a10 = stan::math::to_ref(a10_arg__);
@@ -7715,9 +7612,7 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
   std::vector<std::vector<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>>>
@@ -7730,13 +7625,12 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
      const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
      const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
      std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T3__, T4__, T5__,
-                                                  stan::value_type_t<T6__>,
-                                                  T7__,
-                                                  stan::promote_args_t<
-                                                  T8__,
-                                                  stan::value_type_t<T9__>,
-                                                  T10__, T11__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
+                                 T7__,
+                                 stan::promote_args_t<T8__,
+                                                      stan::value_type_t<T9__>,
+                                                      T10__, T11__>>;
     int current_statement__ = 0; 
     const auto& a7 = stan::math::to_ref(a7_arg__);
     const auto& a10 = stan::math::to_ref(a10_arg__);
@@ -7751,9 +7645,7 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
   Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>, -1, 1>
@@ -7766,13 +7658,12 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
      const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
      const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
      std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T3__, T4__, T5__,
-                                                  stan::value_type_t<T6__>,
-                                                  T7__,
-                                                  stan::promote_args_t<
-                                                  T8__,
-                                                  stan::value_type_t<T9__>,
-                                                  T10__, T11__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
+                                 T7__,
+                                 stan::promote_args_t<T8__,
+                                                      stan::value_type_t<T9__>,
+                                                      T10__, T11__>>;
     int current_statement__ = 0; 
     const auto& a7 = stan::math::to_ref(a7_arg__);
     const auto& a10 = stan::math::to_ref(a10_arg__);
@@ -7787,9 +7678,7 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
   std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>, -1, 1>>
@@ -7802,13 +7691,12 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
      const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
      const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
      std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T3__, T4__, T5__,
-                                                  stan::value_type_t<T6__>,
-                                                  T7__,
-                                                  stan::promote_args_t<
-                                                  T8__,
-                                                  stan::value_type_t<T9__>,
-                                                  T10__, T11__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
+                                 T7__,
+                                 stan::promote_args_t<T8__,
+                                                      stan::value_type_t<T9__>,
+                                                      T10__, T11__>>;
     int current_statement__ = 0; 
     const auto& a7 = stan::math::to_ref(a7_arg__);
     const auto& a10 = stan::math::to_ref(a10_arg__);
@@ -7823,9 +7711,7 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
   std::vector<std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>, -1, 1>>>
@@ -7838,13 +7724,12 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
      const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
      const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
      std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T3__, T4__, T5__,
-                                                  stan::value_type_t<T6__>,
-                                                  T7__,
-                                                  stan::promote_args_t<
-                                                  T8__,
-                                                  stan::value_type_t<T9__>,
-                                                  T10__, T11__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
+                                 T7__,
+                                 stan::promote_args_t<T8__,
+                                                      stan::value_type_t<T9__>,
+                                                      T10__, T11__>>;
     int current_statement__ = 0; 
     const auto& a7 = stan::math::to_ref(a7_arg__);
     const auto& a10 = stan::math::to_ref(a10_arg__);
@@ -7859,9 +7744,7 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
   Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>, -1, -1>
@@ -7875,13 +7758,12 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
       const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
       const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
       std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T3__, T4__, T5__,
-                                                  stan::value_type_t<T6__>,
-                                                  T7__,
-                                                  stan::promote_args_t<
-                                                  T8__,
-                                                  stan::value_type_t<T9__>,
-                                                  T10__, T11__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
+                                 T7__,
+                                 stan::promote_args_t<T8__,
+                                                      stan::value_type_t<T9__>,
+                                                      T10__, T11__>>;
     int current_statement__ = 0; 
     const auto& a7 = stan::math::to_ref(a7_arg__);
     const auto& a10 = stan::math::to_ref(a10_arg__);
@@ -7896,9 +7778,7 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
   std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>, -1, -1>>
@@ -7912,13 +7792,12 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
       const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
       const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
       std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T3__, T4__, T5__,
-                                                  stan::value_type_t<T6__>,
-                                                  T7__,
-                                                  stan::promote_args_t<
-                                                  T8__,
-                                                  stan::value_type_t<T9__>,
-                                                  T10__, T11__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
+                                 T7__,
+                                 stan::promote_args_t<T8__,
+                                                      stan::value_type_t<T9__>,
+                                                      T10__, T11__>>;
     int current_statement__ = 0; 
     const auto& a7 = stan::math::to_ref(a7_arg__);
     const auto& a10 = stan::math::to_ref(a10_arg__);
@@ -7933,9 +7812,7 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
   std::vector<std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>, -1, -1>>>
@@ -7949,13 +7826,12 @@ template <typename T3__, typename T4__, typename T5__, typename T6__,
       const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
       const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
       std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T3__, T4__, T5__,
-                                                  stan::value_type_t<T6__>,
-                                                  T7__,
-                                                  stan::promote_args_t<
-                                                  T8__,
-                                                  stan::value_type_t<T9__>,
-                                                  T10__, T11__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
+                                 T7__,
+                                 stan::promote_args_t<T8__,
+                                                      stan::value_type_t<T9__>,
+                                                      T10__, T11__>>;
     int current_statement__ = 0; 
     const auto& a7 = stan::math::to_ref(a7_arg__);
     const auto& a10 = stan::math::to_ref(a10_arg__);
@@ -8079,9 +7955,9 @@ template <typename T0__, typename T1__, typename T2__>
   algebra_system(const T0__& x_arg__, const T1__& y_arg__,
                  const std::vector<T2__>& dat,
                  const std::vector<int>& dat_int, std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-                                                  stan::value_type_t<T1__>,
-                                                  T2__>;
+    using local_scalar_t__ =
+            stan::promote_args_t<stan::value_type_t<T0__>,
+                                 stan::value_type_t<T1__>, T2__>;
     int current_statement__ = 0; 
     const auto& x = stan::math::to_ref(x_arg__);
     const auto& y = stan::math::to_ref(y_arg__);
@@ -8113,8 +7989,9 @@ template <typename T0__, typename T1__>
   binomialf(const T0__& phi_arg__, const T1__& theta_arg__,
             const std::vector<double>& x_r, const std::vector<int>& x_i,
             std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-                                                  stan::value_type_t<T1__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<stan::value_type_t<T0__>,
+                                 stan::value_type_t<T1__>>;
     int current_statement__ = 0; 
     const auto& phi = stan::math::to_ref(phi_arg__);
     const auto& theta = stan::math::to_ref(theta_arg__);
@@ -8135,9 +8012,7 @@ template <typename T0__, typename T1__>
     }
     }
 
-template <bool propto__, typename T0__, typename T1__, typename T2__,
-         typename T3__, typename T4__, typename T5__, typename T_lp__,
-         typename T_lp_accum__>
+template <bool propto__, typename T0__, typename T1__, typename T2__, typename T3__, typename T4__, typename T5__, typename T_lp__, typename T_lp_accum__>
 stan::promote_args_t<T0__, T1__, T2__, T3__, T4__, stan::promote_args_t<T5__>>
 foo_five_args_lp_functor__::operator()(const T0__& x1, const T1__& x2,
                                        const T2__& x3, const T3__& x4,
@@ -8151,9 +8026,7 @@ foo_five_args_lp_functor__::operator()(const T0__& x1, const T1__& x2,
 }
 
 
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>>
@@ -8196,8 +8069,8 @@ int foo_1_functor__::operator()(const int& a, std::ostream* pstream__)  const
 }
 
 
-template <bool propto__, typename T0__, typename T_lp__,
-         typename T_lp_accum__> void
+template <bool propto__, typename T0__, typename T_lp__, typename T_lp_accum__>
+void
 unit_normal_lp_functor__::operator()(const T0__& u, T_lp__& lp__,
                                      T_lp_accum__& lp_accum__,
                                      std::ostream* pstream__)  const
@@ -8219,9 +8092,7 @@ vecfoo_functor__::operator()(std::ostream* pstream__)  const
 }
 
 
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<std::vector<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>>>
@@ -8241,8 +8112,8 @@ f6_functor__::operator()(const int& a1, const std::vector<int>& a2,
 }
 
 
-template <typename T0__, typename T1__, typename T2__, typename T3__,
-         typename T4__> stan::promote_args_t<T0__, T1__, T2__, T3__, T4__>
+template <typename T0__, typename T1__, typename T2__, typename T3__, typename T4__>
+stan::promote_args_t<T0__, T1__, T2__, T3__, T4__>
 foo_five_args_functor__::operator()(const T0__& x1, const T1__& x2,
                                     const T2__& x3, const T3__& x4,
                                     const T4__& x5, std::ostream* pstream__) 
@@ -8258,9 +8129,8 @@ int foo_2_functor__::operator()(const int& a, std::ostream* pstream__)  const
 }
 
 
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__> std::vector<std::vector<int>>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+std::vector<std::vector<int>>
 f3_functor__::operator()(const int& a1, const std::vector<int>& a2,
                          const std::vector<std::vector<int>>& a3,
                          const T3__& a4, const std::vector<T4__>& a5,
@@ -8284,9 +8154,7 @@ foo_4_functor__::operator()(const T0__& x, std::ostream* pstream__)  const
 }
 
 
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>, -1, 1>
@@ -8306,9 +8174,7 @@ f7_functor__::operator()(const int& a1, const std::vector<int>& a2,
 }
 
 
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>, -1, -1>>
@@ -8328,9 +8194,7 @@ f11_functor__::operator()(const int& a1, const std::vector<int>& a2,
 }
 
 
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>, -1, -1>>>
@@ -8416,9 +8280,8 @@ const
 }
 
 
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__> void
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+void
 f0_functor__::operator()(const int& a1, const std::vector<int>& a2,
                          const std::vector<std::vector<int>>& a3,
                          const T3__& a4, const std::vector<T4__>& a5,
@@ -8455,9 +8318,7 @@ foo_5_functor__::operator()(const T0__& shared_params,
 }
 
 
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>
@@ -8477,9 +8338,7 @@ f4_functor__::operator()(const int& a1, const std::vector<int>& a2,
 }
 
 
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>, -1, -1>
@@ -8499,9 +8358,8 @@ f10_functor__::operator()(const int& a1, const std::vector<int>& a2,
 }
 
 
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__> std::vector<int>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+std::vector<int>
 f2_functor__::operator()(const int& a1, const std::vector<int>& a2,
                          const std::vector<std::vector<int>>& a3,
                          const T3__& a4, const std::vector<T4__>& a5,
@@ -8518,9 +8376,7 @@ f2_functor__::operator()(const int& a1, const std::vector<int>& a2,
 }
 
 
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>, -1, 1>>>
@@ -8540,9 +8396,7 @@ f9_functor__::operator()(const int& a1, const std::vector<int>& a2,
 }
 
 
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__>
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>, T7__,
                      stan::promote_args_t<T8__, stan::value_type_t<T9__>,
                                           T10__, T11__>>, -1, 1>>
@@ -8578,8 +8432,8 @@ const
 }
 
 
-template <bool propto__, typename T0__, typename T_lp__,
-         typename T_lp_accum__> stan::promote_args_t<T0__>
+template <bool propto__, typename T0__, typename T_lp__, typename T_lp_accum__>
+stan::promote_args_t<T0__>
 foo_lp_functor__::operator()(const T0__& x, T_lp__& lp__,
                              T_lp_accum__& lp_accum__,
                              std::ostream* pstream__)  const
@@ -8620,9 +8474,8 @@ foo_bar1_functor__::operator()(const T0__& x, std::ostream* pstream__)  const
 }
 
 
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T8__, typename T9__, typename T10__,
-         typename T11__> int
+template <typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
+int
 f1_functor__::operator()(const int& a1, const std::vector<int>& a2,
                          const std::vector<std::vector<int>>& a3,
                          const T3__& a4, const std::vector<T4__>& a5,
@@ -14828,49 +14681,41 @@ static constexpr std::array<const char*, 158> locations_array__ =
  " (in 'motherHOF.stan', line 25, column 45 to line 30, column 3)"};
 
 struct sho_functor__ {
-template <typename T0__, typename T1__, typename T2__, typename
-  T3__>
+  template <typename T0__, typename T1__, typename T2__, typename T3__>
   std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
   operator()(const T0__& t, const std::vector<T1__>& y,
              const std::vector<T2__>& theta, const std::vector<T3__>& x,
              const std::vector<int>& x_int, std::ostream* pstream__) const;
 };
 struct algebra_system_functor__ {
-template <typename T0__, typename T1__, typename
-  T2__>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-  stan::value_type_t<T1__>, T2__>, -1, 1>
+  template <typename T0__, typename T1__, typename T2__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>, T2__>, -1, 1>
   operator()(const T0__& x, const T1__& y, const std::vector<T2__>& dat,
              const std::vector<int>& dat_int, std::ostream* pstream__) const;
 };
 struct integrand_functor__ {
-template <typename T0__, typename T1__, typename T2__, typename
-  T3__>
+  template <typename T0__, typename T1__, typename T2__, typename T3__>
   stan::promote_args_t<T0__, T1__, T2__, T3__>
   operator()(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
              const std::vector<T3__>& x_r, const std::vector<int>& x_i,
              std::ostream* pstream__) const;
 };
 struct foo_functor__ {
-template <typename T0__, typename T1__, typename
-  T2__>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-  stan::value_type_t<T1__>, T2__>, -1, 1>
+  template <typename T0__, typename T1__, typename T2__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>, T2__>, -1, 1>
   operator()(const T0__& shared_params, const T1__& job_params,
              const std::vector<T2__>& data_r, const std::vector<int>& data_i,
              std::ostream* pstream__) const;
 };
 struct goo_functor__ {
-template <typename T0__, typename T1__, typename
-  T2__>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-  stan::value_type_t<T1__>, T2__>, -1, 1>
+  template <typename T0__, typename T1__, typename T2__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>, T2__>, -1, 1>
   operator()(const T0__& shared_params, const T1__& job_params,
              const std::vector<T2__>& data_r, const std::vector<int>& data_i,
              std::ostream* pstream__) const;
 };
 struct map_rectfake_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
 
@@ -14927,9 +14772,9 @@ template <typename T0__, typename T1__, typename T2__>
   foo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
       const std::vector<T2__>& data_r, const std::vector<int>& data_i,
       std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-                                                  stan::value_type_t<T1__>,
-                                                  T2__>;
+    using local_scalar_t__ =
+            stan::promote_args_t<stan::value_type_t<T0__>,
+                                 stan::value_type_t<T1__>, T2__>;
     int current_statement__ = 0; 
     const auto& shared_params = stan::math::to_ref(shared_params_arg__);
     const auto& job_params = stan::math::to_ref(job_params_arg__);
@@ -14949,9 +14794,9 @@ template <typename T0__, typename T1__, typename T2__>
   goo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
       const std::vector<T2__>& data_r, const std::vector<int>& data_i,
       std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-                                                  stan::value_type_t<T1__>,
-                                                  T2__>;
+    using local_scalar_t__ =
+            stan::promote_args_t<stan::value_type_t<T0__>,
+                                 stan::value_type_t<T1__>, T2__>;
     int current_statement__ = 0; 
     const auto& shared_params = stan::math::to_ref(shared_params_arg__);
     const auto& job_params = stan::math::to_ref(job_params_arg__);
@@ -14986,9 +14831,9 @@ template <typename T0__, typename T1__, typename T2__>
   algebra_system(const T0__& x_arg__, const T1__& y_arg__,
                  const std::vector<T2__>& dat,
                  const std::vector<int>& dat_int, std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-                                                  stan::value_type_t<T1__>,
-                                                  T2__>;
+    using local_scalar_t__ =
+            stan::promote_args_t<stan::value_type_t<T0__>,
+                                 stan::value_type_t<T1__>, T2__>;
     int current_statement__ = 0; 
     const auto& x = stan::math::to_ref(x_arg__);
     const auto& y = stan::math::to_ref(y_arg__);
@@ -17318,16 +17163,14 @@ static constexpr std::array<const char*, 630> locations_array__ =
  " (in 'new_integrate_interface.stan', line 2, column 47 to line 4, column 3)"};
 
 struct f_functor__ {
-template <typename T0__, typename T1__, typename T2__, typename
-  T3__>
+  template <typename T0__, typename T1__, typename T2__, typename T3__>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>, T2__,
                        stan::value_type_t<T3__>>, -1, 1>
   operator()(const T0__& t, const T1__& z, const T2__& a, const T3__& b,
              std::ostream* pstream__) const;
 };
 struct f_odefunctor__ {
-template <typename T0__, typename T1__, typename T2__, typename
-  T3__>
+  template <typename T0__, typename T1__, typename T2__, typename T3__>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>, T2__,
                        stan::value_type_t<T3__>>, -1, 1>
   operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
@@ -17339,10 +17182,9 @@ template <typename T0__, typename T1__, typename T2__, typename T3__>
                      stan::value_type_t<T3__>>, -1, 1>
   f(const T0__& t, const T1__& z_arg__, const T2__& a, const T3__& b_arg__,
     std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T0__,
-                                                  stan::value_type_t<T1__>,
-                                                  T2__,
-                                                  stan::value_type_t<T3__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T0__, stan::value_type_t<T1__>, T2__,
+                                 stan::value_type_t<T3__>>;
     int current_statement__ = 0; 
     const auto& z = stan::math::to_ref(z_arg__);
     const auto& b = stan::math::to_ref(b_arg__);
@@ -21154,8 +20996,7 @@ static constexpr std::array<const char*, 35> locations_array__ =
  " (in 'old_integrate_interface.stan', line 7, column 38 to line 19, column 3)"};
 
 struct dz_dt_functor__ {
-template <typename T0__, typename T1__, typename T2__, typename
-  T3__>
+  template <typename T0__, typename T1__, typename T2__, typename T3__>
   std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
   operator()(const T0__& t, const std::vector<T1__>& z,
              const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
@@ -24252,12 +24093,11 @@ static constexpr std::array<const char*, 9> locations_array__ =
  " (in 'promotion.stan', line 6, column 28 to line 8, column 4)"};
 
 struct foo_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<T0__>& zs, std::ostream* pstream__) const;
 };
 struct ident_functor__ {
-template <typename T0__>
-  std::complex<stan::promote_args_t<T0__>>
+  template <typename T0__> std::complex<stan::promote_args_t<T0__>>
   operator()(const std::complex<T0__>& x, std::ostream* pstream__) const;
 };
 
@@ -24677,36 +24517,33 @@ static constexpr std::array<const char*, 26> locations_array__ =
  " (in 'reduce_sum_m1.stan', line 16, column 58 to line 18, column 3)"};
 
 template <bool propto__> struct foo_lpdf_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__) const;
 };
 struct foo_lpdf_functor__ {
-template <bool propto__, typename T0__>
-  stan::promote_args_t<T0__>
+  template <bool propto__, typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__) const;
 };
 struct g_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__) const;
 };
 struct h_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__,
              const std::vector<T3__>& a) const;
 };
 struct g_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__) const;
 };
 struct h_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, const std::vector<T3__>& a,
              std::ostream* pstream__) const;
@@ -25413,212 +25250,173 @@ static constexpr std::array<const char*, 180> locations_array__ =
  " (in 'reduce_sum_m2.stan', line 113, column 65 to line 121, column 3)"};
 
 struct g6_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>&
-  y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+  template <typename T0__> stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct h6_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y, const int& start, const int& end,
              const std::vector<std::vector<Eigen::Matrix<T3__, -1, 1>>>& a,
              std::ostream* pstream__) const;
 };
 struct h6_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y, const int& start, const int& end,
              std::ostream* pstream__,
-             const std::vector<std::vector<Eigen::Matrix<T3__, -1, 1>>>& a)
-  const;
+             const std::vector<std::vector<Eigen::Matrix<T3__, -1, 1>>>& a) const;
 };
 struct h8_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y, const int& start, const int& end,
              const std::vector<std::vector<Eigen::Matrix<T3__, -1, -1>>>& a,
              std::ostream* pstream__) const;
 };
 struct h7_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y, const int& start, const int& end,
              const std::vector<std::vector<Eigen::Matrix<T3__, 1, -1>>>& a,
              std::ostream* pstream__) const;
 };
 struct h8_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y, const int& start, const int& end,
              std::ostream* pstream__,
-             const std::vector<std::vector<Eigen::Matrix<T3__, -1, -1>>>& a)
-  const;
+             const std::vector<std::vector<Eigen::Matrix<T3__, -1, -1>>>& a) const;
 };
 struct h2_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y, const int& start, const int& end,
              const std::vector<Eigen::Matrix<T3__, -1, 1>>& a,
              std::ostream* pstream__) const;
 };
 struct g8_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>&
-  y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+  template <typename T0__> stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct h2_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y, const int& start, const int& end,
              std::ostream* pstream__,
              const std::vector<Eigen::Matrix<T3__, -1, 1>>& a) const;
 };
 struct g1_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__) const;
 };
 struct g2_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct g2_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct g3_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct h5_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y, const int& start, const int& end,
-             std::ostream* pstream__, const std::vector<std::vector<T3__>>&
-  a) const;
+             std::ostream* pstream__, const std::vector<std::vector<T3__>>& a) const;
 };
 struct g1_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__) const;
 };
 struct h1_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y, const int& start, const int& end,
              const std::vector<T3__>& a, std::ostream* pstream__) const;
 };
 struct g7_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>&
-  y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+  template <typename T0__> stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct g5_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<std::vector<T0__>>& y_slice, const int& start,
              const int& end, std::ostream* pstream__) const;
 };
 struct g5_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<std::vector<T0__>>& y_slice, const int& start,
              const int& end, std::ostream* pstream__) const;
 };
 struct g6_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>&
-  y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+  template <typename T0__> stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct g4_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct h4_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y, const int& start, const int& end,
              std::ostream* pstream__,
              const std::vector<Eigen::Matrix<T3__, -1, -1>>& a) const;
 };
 struct g4_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct g7_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>&
-  y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+  template <typename T0__> stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct h5_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y, const int& start, const int& end,
-             const std::vector<std::vector<T3__>>& a, std::ostream*
-  pstream__) const;
+             const std::vector<std::vector<T3__>>& a, std::ostream* pstream__) const;
 };
 struct g8_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>&
-  y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+  template <typename T0__> stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct g3_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct h3_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y, const int& start, const int& end,
              std::ostream* pstream__,
              const std::vector<Eigen::Matrix<T3__, 1, -1>>& a) const;
 };
 struct h7_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y, const int& start, const int& end,
              std::ostream* pstream__,
-             const std::vector<std::vector<Eigen::Matrix<T3__, 1, -1>>>& a)
-  const;
+             const std::vector<std::vector<Eigen::Matrix<T3__, 1, -1>>>& a) const;
 };
 struct h1_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y, const int& start, const int& end,
              std::ostream* pstream__, const std::vector<T3__>& a) const;
 };
 struct h3_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y, const int& start, const int& end,
              const std::vector<Eigen::Matrix<T3__, 1, -1>>& a,
              std::ostream* pstream__) const;
 };
 struct h4_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y, const int& start, const int& end,
              const std::vector<Eigen::Matrix<T3__, -1, -1>>& a,
              std::ostream* pstream__) const;
@@ -28133,22 +27931,17 @@ static constexpr std::array<const char*, 342> locations_array__ =
  " (in 'reduce_sum_m3.stan', line 86, column 11 to line 149, column 3)"};
 
 struct f1a_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__) const;
 };
 struct s_rsfunctor__ {
-template <typename T0__, typename T4__, typename T5__, typename T6__,
-           typename T7__, typename T9__, typename T10__, typename T11__,
-           typename T12__, typename T14__, typename T15__, typename T16__,
-           typename T17__, typename T19__>
+  template <typename T0__, typename T4__, typename T5__, typename T6__, typename T7__, typename T9__, typename T10__, typename T11__, typename T12__, typename T14__, typename T15__, typename T16__, typename T17__, typename T19__>
   stan::promote_args_t<T0__, T4__, stan::value_type_t<T5__>,
                        stan::value_type_t<T6__>, stan::value_type_t<T7__>,
                        stan::promote_args_t<T9__, T10__, T11__, T12__, T14__,
-                                            stan::promote_args_t<T15__,
-  T16__,
-                                                                 T17__,
-  T19__>>>
+                                            stan::promote_args_t<T15__, T16__,
+                                                                 T17__, T19__>>>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__, const int& a,
              const T4__& b, const T5__& c, const T6__& d, const T7__& e,
@@ -28165,242 +27958,202 @@ template <typename T0__, typename T4__, typename T5__, typename T6__,
              const std::vector<std::vector<std::vector<T19__>>>& q) const;
 };
 struct f4_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct g12_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__,
-             const std::vector<std::vector<Eigen::Matrix<T3__, -1, -1>>>& a)
-  const;
+             const std::vector<std::vector<Eigen::Matrix<T3__, -1, -1>>>& a) const;
 };
 struct f5_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<std::vector<T0__>>& y_slice, const int& start,
              const int& end, std::ostream* pstream__) const;
 };
 struct f8_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>&
-  y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+  template <typename T0__> stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct g8_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
-             const int& end, const std::vector<Eigen::Matrix<T3__, -1, -1>>&
-  a,
+             const int& end, const std::vector<Eigen::Matrix<T3__, -1, -1>>& a,
              std::ostream* pstream__) const;
 };
 struct f1a_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__) const;
 };
 struct g10_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__,
-             const std::vector<std::vector<Eigen::Matrix<T3__, -1, 1>>>& a)
-  const;
+             const std::vector<std::vector<Eigen::Matrix<T3__, -1, 1>>>& a) const;
 };
 struct r_functor__ {
-double
+  double
   operator()(std::ostream* pstream__) const;
 };
 struct g1_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, const T3__& a, std::ostream* pstream__) const;
 };
 struct g2_rsfunctor__ {
-template <typename T0__, typename T3__>
+  template <typename T0__, typename T3__>
   stan::promote_args_t<T0__, stan::value_type_t<T3__>>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__, const T3__& a) const;
 };
 struct f6_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>&
-  y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+  template <typename T0__> stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct g12_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end,
              const std::vector<std::vector<Eigen::Matrix<T3__, -1, -1>>>& a,
              std::ostream* pstream__) const;
 };
 struct f2_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct f3_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct f6_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>&
-  y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+  template <typename T0__> stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct f12_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<std::vector<std::vector<T0__>>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct g9_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__,
              const std::vector<std::vector<T3__>>& a) const;
 };
 struct g11_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end,
              const std::vector<std::vector<Eigen::Matrix<T3__, 1, -1>>>& a,
              std::ostream* pstream__) const;
 };
 struct f3_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct f1_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__) const;
 };
 struct f7_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>&
-  y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+  template <typename T0__> stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct g11_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__,
-             const std::vector<std::vector<Eigen::Matrix<T3__, 1, -1>>>& a)
-  const;
+             const std::vector<std::vector<Eigen::Matrix<T3__, 1, -1>>>& a) const;
 };
 struct g9_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, const std::vector<std::vector<T3__>>& a,
              std::ostream* pstream__) const;
 };
 struct g4_functor__ {
-template <typename T0__, typename T3__>
+  template <typename T0__, typename T3__>
   stan::promote_args_t<T0__, stan::value_type_t<T3__>>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, const T3__& a, std::ostream* pstream__) const;
 };
 struct g4_rsfunctor__ {
-template <typename T0__, typename T3__>
+  template <typename T0__, typename T3__>
   stan::promote_args_t<T0__, stan::value_type_t<T3__>>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__, const T3__& a) const;
 };
 struct f11_functor__ {
-double
+  double
   operator()(const std::vector<std::vector<std::vector<int>>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct f12_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<std::vector<std::vector<T0__>>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct g3_functor__ {
-template <typename T0__, typename T3__>
+  template <typename T0__, typename T3__>
   stan::promote_args_t<T0__, stan::value_type_t<T3__>>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, const T3__& a, std::ostream* pstream__) const;
 };
 struct f11_rsfunctor__ {
-double
+  double
   operator()(const std::vector<std::vector<std::vector<int>>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct g6_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
-             const int& end, const std::vector<Eigen::Matrix<T3__, -1, 1>>&
-  a,
+             const int& end, const std::vector<Eigen::Matrix<T3__, -1, 1>>& a,
              std::ostream* pstream__) const;
 };
 struct f7_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>&
-  y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+  template <typename T0__> stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct f9_rsfunctor__ {
-double
-  operator()(const std::vector<int>& y_slice, const int& start, const int&
-  end,
+  double
+  operator()(const std::vector<int>& y_slice, const int& start, const int& end,
              std::ostream* pstream__) const;
 };
 struct f4_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct g2_functor__ {
-template <typename T0__, typename T3__>
+  template <typename T0__, typename T3__>
   stan::promote_args_t<T0__, stan::value_type_t<T3__>>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, const T3__& a, std::ostream* pstream__) const;
 };
 struct f10_functor__ {
-double
+  double
   operator()(const std::vector<std::vector<int>>& y_slice, const int& start,
              const int& end, std::ostream* pstream__) const;
 };
 struct s_functor__ {
-template <typename T0__, typename T4__, typename T5__, typename T6__,
-           typename T7__, typename T9__, typename T10__, typename T11__,
-           typename T12__, typename T14__, typename T15__, typename T16__,
-           typename T17__, typename T19__>
+  template <typename T0__, typename T4__, typename T5__, typename T6__, typename T7__, typename T9__, typename T10__, typename T11__, typename T12__, typename T14__, typename T15__, typename T16__, typename T17__, typename T19__>
   stan::promote_args_t<T0__, T4__, stan::value_type_t<T5__>,
                        stan::value_type_t<T6__>, stan::value_type_t<T7__>,
                        stan::promote_args_t<T9__, T10__, T11__, T12__, T14__,
-                                            stan::promote_args_t<T15__,
-  T16__,
-                                                                 T17__,
-  T19__>>>
+                                            stan::promote_args_t<T15__, T16__,
+                                                                 T17__, T19__>>>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, const int& a, const T4__& b, const T5__& c,
              const T6__& d, const T7__& e, const std::vector<int>& f,
@@ -28418,97 +28171,84 @@ template <typename T0__, typename T4__, typename T5__, typename T6__,
              std::ostream* pstream__) const;
 };
 struct f2_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct g3_rsfunctor__ {
-template <typename T0__, typename T3__>
+  template <typename T0__, typename T3__>
   stan::promote_args_t<T0__, stan::value_type_t<T3__>>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__, const T3__& a) const;
 };
 struct f9_functor__ {
-double
-  operator()(const std::vector<int>& y_slice, const int& start, const int&
-  end,
+  double
+  operator()(const std::vector<int>& y_slice, const int& start, const int& end,
              std::ostream* pstream__) const;
 };
 struct f8_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>&
-  y_slice,
-             const int& start, const int& end, std::ostream* pstream__)
-  const;
+  template <typename T0__> stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
+             const int& start, const int& end, std::ostream* pstream__) const;
 };
 struct g1_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__, const T3__& a) const;
 };
 struct g7_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
-             const int& end, const std::vector<Eigen::Matrix<T3__, 1, -1>>&
-  a,
+             const int& end, const std::vector<Eigen::Matrix<T3__, 1, -1>>& a,
              std::ostream* pstream__) const;
 };
 struct g5_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, const std::vector<T3__>& a,
              std::ostream* pstream__) const;
 };
 struct g5_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__,
              const std::vector<T3__>& a) const;
 };
 struct f5_rsfunctor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<std::vector<T0__>>& y_slice, const int& start,
              const int& end, std::ostream* pstream__) const;
 };
 struct g6_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__,
              const std::vector<Eigen::Matrix<T3__, -1, 1>>& a) const;
 };
 struct g7_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__,
              const std::vector<Eigen::Matrix<T3__, 1, -1>>& a) const;
 };
 struct g8_rsfunctor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__,
              const std::vector<Eigen::Matrix<T3__, -1, -1>>& a) const;
 };
 struct f10_rsfunctor__ {
-double
+  double
   operator()(const std::vector<std::vector<int>>& y_slice, const int& start,
              const int& end, std::ostream* pstream__) const;
 };
 struct f1_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end, std::ostream* pstream__) const;
 };
 struct g10_functor__ {
-template <typename T0__, typename T3__> stan::promote_args_t<T0__,
-  T3__>
+  template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
              const int& end,
              const std::vector<std::vector<Eigen::Matrix<T3__, -1, 1>>>& a,
@@ -28743,8 +28483,8 @@ template <typename T0__, typename T3__>
   stan::promote_args_t<T0__, stan::value_type_t<T3__>>
   g2(const std::vector<T0__>& y_slice, const int& start, const int& end,
      const T3__& a_arg__, std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T0__,
-                                                  stan::value_type_t<T3__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T0__, stan::value_type_t<T3__>>;
     int current_statement__ = 0; 
     const auto& a = stan::math::to_ref(a_arg__);
     static constexpr bool propto__ = true;
@@ -28762,8 +28502,8 @@ template <typename T0__, typename T3__>
   stan::promote_args_t<T0__, stan::value_type_t<T3__>>
   g3(const std::vector<T0__>& y_slice, const int& start, const int& end,
      const T3__& a_arg__, std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T0__,
-                                                  stan::value_type_t<T3__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T0__, stan::value_type_t<T3__>>;
     int current_statement__ = 0; 
     const auto& a = stan::math::to_ref(a_arg__);
     static constexpr bool propto__ = true;
@@ -28781,8 +28521,8 @@ template <typename T0__, typename T3__>
   stan::promote_args_t<T0__, stan::value_type_t<T3__>>
   g4(const std::vector<T0__>& y_slice, const int& start, const int& end,
      const T3__& a_arg__, std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T0__,
-                                                  stan::value_type_t<T3__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T0__, stan::value_type_t<T3__>>;
     int current_statement__ = 0; 
     const auto& a = stan::math::to_ref(a_arg__);
     static constexpr bool propto__ = true;
@@ -28930,10 +28670,7 @@ template <typename T0__, typename T3__> stan::promote_args_t<T0__, T3__>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T9__, typename T10__, typename T11__,
-         typename T12__, typename T14__, typename T15__, typename T16__,
-         typename T17__, typename T19__>
+template <typename T0__, typename T4__, typename T5__, typename T6__, typename T7__, typename T9__, typename T10__, typename T11__, typename T12__, typename T14__, typename T15__, typename T16__, typename T17__, typename T19__>
   stan::promote_args_t<T0__, T4__, stan::value_type_t<T5__>,
                      stan::value_type_t<T6__>, stan::value_type_t<T7__>,
                      stan::promote_args_t<T9__, T10__, T11__, T12__, T14__,
@@ -28954,15 +28691,15 @@ template <typename T0__, typename T4__, typename T5__, typename T6__,
     const std::vector<std::vector<std::vector<int>>>& p,
     const std::vector<std::vector<std::vector<T19__>>>& q,
     std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T0__, T4__,
-                                                  stan::value_type_t<T5__>,
-                                                  stan::value_type_t<T6__>,
-                                                  stan::value_type_t<T7__>,
-                                                  stan::promote_args_t<
-                                                  T9__, T10__, T11__, T12__,
-                                                  T14__,
-                                                  stan::promote_args_t<
-                                                  T15__, T16__, T17__, T19__>>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T0__, T4__, stan::value_type_t<T5__>,
+                                 stan::value_type_t<T6__>,
+                                 stan::value_type_t<T7__>,
+                                 stan::promote_args_t<T9__, T10__, T11__,
+                                                      T12__, T14__,
+                                                      stan::promote_args_t<
+                                                      T15__, T16__, T17__,
+                                                      T19__>>>;
     int current_statement__ = 0; 
     const auto& c = stan::math::to_ref(c_arg__);
     const auto& d = stan::math::to_ref(d_arg__);
@@ -29293,10 +29030,7 @@ f1a_rsfunctor__::operator()(const std::vector<T0__>& y_slice,
 }
 
 
-template <typename T0__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T9__, typename T10__, typename T11__,
-         typename T12__, typename T14__, typename T15__, typename T16__,
-         typename T17__, typename T19__>
+template <typename T0__, typename T4__, typename T5__, typename T6__, typename T7__, typename T9__, typename T10__, typename T11__, typename T12__, typename T14__, typename T15__, typename T16__, typename T17__, typename T19__>
 stan::promote_args_t<T0__, T4__, stan::value_type_t<T5__>,
                      stan::value_type_t<T6__>, stan::value_type_t<T7__>,
                      stan::promote_args_t<T9__, T10__, T11__, T12__, T14__,
@@ -29652,10 +29386,7 @@ f10_functor__::operator()(const std::vector<std::vector<int>>& y_slice,
 }
 
 
-template <typename T0__, typename T4__, typename T5__, typename T6__,
-         typename T7__, typename T9__, typename T10__, typename T11__,
-         typename T12__, typename T14__, typename T15__, typename T16__,
-         typename T17__, typename T19__>
+template <typename T0__, typename T4__, typename T5__, typename T6__, typename T7__, typename T9__, typename T10__, typename T11__, typename T12__, typename T14__, typename T15__, typename T16__, typename T17__, typename T19__>
 stan::promote_args_t<T0__, T4__, stan::value_type_t<T5__>,
                      stan::value_type_t<T6__>, stan::value_type_t<T7__>,
                      stan::promote_args_t<T9__, T10__, T11__, T12__, T14__,
@@ -31839,18 +31570,14 @@ static constexpr std::array<const char*, 52> locations_array__ =
  " (in 'shadowing.stan', line 2, column 43 to line 6, column 3)"};
 
 struct rhs_odefunctor__ {
-template <typename T0__, typename T1__, typename
-  T2__>
-  Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>, T2__>,
-  -1, 1>
+  template <typename T0__, typename T1__, typename T2__>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>, T2__>, -1, 1>
   operator()(const T0__& t, const T1__& y, std::ostream* pstream__,
              const T2__& alpha) const;
 };
 struct rhs_functor__ {
-template <typename T0__, typename T1__, typename
-  T2__>
-  Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>, T2__>,
-  -1, 1>
+  template <typename T0__, typename T1__, typename T2__>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>, T2__>, -1, 1>
   operator()(const T0__& t, const T1__& y, const T2__& alpha,
              std::ostream* pstream__) const;
 };
@@ -31859,9 +31586,8 @@ template <typename T0__, typename T1__, typename T2__>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>, T2__>, -1, 1>
   rhs(const T0__& t, const T1__& y_arg__, const T2__& alpha,
       std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T0__,
-                                                  stan::value_type_t<T1__>,
-                                                  T2__>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T0__, stan::value_type_t<T1__>, T2__>;
     int current_statement__ = 0; 
     const auto& y = stan::math::to_ref(y_arg__);
     static constexpr bool propto__ = true;
@@ -32863,32 +32589,29 @@ static constexpr std::array<const char*, 13> locations_array__ =
  " (in 'single-argument-lpmf.stan', line 17, column 23 to line 19, column 3)"};
 
 struct foo4_lp_functor__ {
-template <bool propto__, typename T_lp__, typename T_lp_accum__>
-  double
+  template <bool propto__, typename T_lp__, typename T_lp_accum__> double
   operator()(const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
              std::ostream* pstream__) const;
 };
 struct foo0_lpmf_functor__ {
-template <bool propto__> double
+  template <bool propto__> double
   operator()(const int& y, std::ostream* pstream__) const;
 };
 struct foo1_lpmf_functor__ {
-template <bool propto__> double
+  template <bool propto__> double
   operator()(const int& y, std::ostream* pstream__) const;
 };
 struct foo2_lpdf_functor__ {
-template <bool propto__, typename T0__>
-  stan::promote_args_t<T0__>
+  template <bool propto__, typename T0__> stan::promote_args_t<T0__>
   operator()(const T0__& y, std::ostream* pstream__) const;
 };
 struct foo3_lpdf_functor__ {
-template <bool propto__, typename T0__>
-  stan::promote_args_t<T0__>
+  template <bool propto__, typename T0__> stan::promote_args_t<T0__>
   operator()(const T0__& y, std::ostream* pstream__) const;
 };
 struct foo5_lp_functor__ {
-template <bool propto__, typename T0__, typename T_lp__,
-           typename T_lp_accum__> stan::promote_args_t<T0__>
+  template <bool propto__, typename T0__, typename T_lp__, typename T_lp_accum__>
+  stan::promote_args_t<T0__>
   operator()(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
              std::ostream* pstream__) const;
 };
@@ -32959,8 +32682,8 @@ template <bool propto__, typename T0__> stan::promote_args_t<T0__>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <bool propto__, typename T0__, typename T_lp__,
-         typename T_lp_accum__> stan::promote_args_t<T0__>
+template <bool propto__, typename T0__, typename T_lp__, typename T_lp_accum__>
+  stan::promote_args_t<T0__>
   foo5_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
           std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -33014,8 +32737,8 @@ const
 }
 
 
-template <bool propto__, typename T0__, typename T_lp__,
-         typename T_lp_accum__> stan::promote_args_t<T0__>
+template <bool propto__, typename T0__, typename T_lp__, typename T_lp_accum__>
+stan::promote_args_t<T0__>
 foo5_lp_functor__::operator()(const T0__& y, T_lp__& lp__,
                               T_lp_accum__& lp_accum__,
                               std::ostream* pstream__)  const
@@ -36846,7 +36569,7 @@ static constexpr std::array<const char*, 5> locations_array__ =
  " (in 'udf_tilde_stmt_conflict.stan', line 2, column 22 to line 4, column 3)"};
 
 struct normal_functor__ {
-template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__> stan::promote_args_t<T0__>
   operator()(const T0__& a, std::ostream* pstream__) const;
 };
 
@@ -37193,8 +36916,7 @@ static constexpr std::array<const char*, 5> locations_array__ =
  " (in 'user_constrain.stan', line 2, column 36 to line 4, column 3)"};
 
 struct lb_constrain_functor__ {
-template <typename T0__, typename T1__> stan::promote_args_t<T0__,
-  T1__>
+  template <typename T0__, typename T1__> stan::promote_args_t<T0__, T1__>
   operator()(const T0__& x, const T1__& y, std::ostream* pstream__) const;
 };
 

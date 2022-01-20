@@ -2603,14 +2603,12 @@ static constexpr std::array<const char*, 116> locations_array__ =
  " (in 'indexing.stan', line 5, column 27 to line 7, column 3)"};
 
 struct mask_fun_functor__ {
-int
+  int
   operator()(const int& i, std::ostream* pstream__) const;
 };
 struct udf_fun_functor__ {
-template <typename
-  T0__>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1,
-  1>
+  template <typename T0__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
   operator()(const T0__& A, std::ostream* pstream__) const;
 };
 
@@ -4832,18 +4830,13 @@ static constexpr std::array<const char*, 12> locations_array__ =
  " (in 'reductions_allowed.stan', line 6, column 48 to line 8, column 5)"};
 
 struct okay_reduction_functor__ {
-template <typename T0__, typename
-  T1__>
-  Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>>, -1,
-  -1>
-  operator()(const T0__& sum_x, const T1__& y, std::ostream* pstream__)
-  const;
+  template <typename T0__, typename T1__>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>>, -1, -1>
+  operator()(const T0__& sum_x, const T1__& y, std::ostream* pstream__) const;
 };
 struct nono_func_functor__ {
-template <typename
-  T0__>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1,
-  -1>
+  template <typename T0__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
 
@@ -4868,8 +4861,8 @@ template <typename T0__, typename T1__>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>>, -1, -1>
   okay_reduction(const T0__& sum_x, const T1__& y_arg__,
                  std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T0__,
-                                                  stan::value_type_t<T1__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T0__, stan::value_type_t<T1__>>;
     int current_statement__ = 0; 
     const auto& y = stan::math::to_ref(y_arg__);
     static constexpr bool propto__ = true;
@@ -5451,14 +5444,12 @@ static constexpr std::array<const char*, 13> locations_array__ =
  " (in 'return_types_and_udfs_demotes.stan', line 14, column 39 to line 16, column 5)"};
 
 struct empty_user_func_functor__ {
-Eigen::Matrix<double, -1, -1>
+  Eigen::Matrix<double, -1, -1>
   operator()(std::ostream* pstream__) const;
 };
 struct mat_ret_user_func_functor__ {
-template <typename
-  T0__>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1,
-  -1>
+  template <typename T0__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
   operator()(const T0__& A, std::ostream* pstream__) const;
 };
 
@@ -6576,18 +6567,13 @@ static constexpr std::array<const char*, 10> locations_array__ =
  " (in 'tp_reused.stan', line 6, column 48 to line 8, column 5)"};
 
 struct okay_reduction_functor__ {
-template <typename T0__, typename
-  T1__>
-  Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>>, -1,
-  -1>
-  operator()(const T0__& sum_x, const T1__& y, std::ostream* pstream__)
-  const;
+  template <typename T0__, typename T1__>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>>, -1, -1>
+  operator()(const T0__& sum_x, const T1__& y, std::ostream* pstream__) const;
 };
 struct nono_func_functor__ {
-template <typename
-  T0__>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1,
-  -1>
+  template <typename T0__>
+  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
 
@@ -6612,8 +6598,8 @@ template <typename T0__, typename T1__>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>>, -1, -1>
   okay_reduction(const T0__& sum_x, const T1__& y_arg__,
                  std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T0__,
-                                                  stan::value_type_t<T1__>>;
+    using local_scalar_t__ =
+            stan::promote_args_t<T0__, stan::value_type_t<T1__>>;
     int current_statement__ = 0; 
     const auto& y = stan::math::to_ref(y_arg__);
     static constexpr bool propto__ = true;

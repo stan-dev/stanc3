@@ -99,8 +99,8 @@ let pp_promoted_scalar ppf args =
         match args with
         | [] -> pf ppf "double"
         | hd :: tl ->
-            pf ppf "stan::promote_args_t<@[%a%a@]>" (list ~sep:comma string) hd
-              go tl in
+            pf ppf "@[stan::promote_args_t<@[%a%a@]>@]" (list ~sep:comma string)
+              hd go tl in
       promote_args_chunked ppf
         List.(chunks_of ~length:5 (filter_opt (return_arg_types args)))
 
@@ -191,7 +191,7 @@ let get_templates_and_args exprs fdargs =
 let pp_template_decorator ppf = function
   | [] -> ()
   | templates ->
-      pf ppf "template @[<hov><%a>@]@ " (list ~sep:comma string) templates
+      pf ppf "@[template <@[<h 8>%a>@]@]@ " (list ~sep:comma string) templates
 
 let mk_extra_args templates args =
   List.map ~f:(fun (t, v) -> t ^ "& " ^ v) (List.zip_exn templates args)
@@ -213,7 +213,7 @@ let pp_fun_def ppf
     | FnRng -> (["base_rng__"], ["RNG"])
     | FnLpdf _ | FnPlain -> ([], []) in
   let pp_body ppf (Stmt.Fixed.{pattern; _} as fdbody) =
-    pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," pp_promoted_scalar fdargs ;
+    pf ppf "@[<hv 8>using local_scalar_t__ =@ %a;@]@," pp_promoted_scalar fdargs ;
     pf ppf "int current_statement__ = 0; @ " ;
     if List.exists ~f:(fun (_, _, t) -> UnsizedType.is_eigen_type t) fdargs then
       pp_eigen_arg_to_ref ppf fdargs ;
@@ -233,6 +233,7 @@ let pp_fun_def ppf
     pp_located_error ppf (pp_statement, blocked_fdbody) ;
     pf ppf "@ " in
   let pp_sig ppf (name, exprs, variadic) =
+    Format.open_vbox 2 ;
     let argtypetemplates, args = get_templates_and_args exprs fdargs in
     let templates =
       List.(map ~f:typename (argtypetemplates @ extra_templates)) in
@@ -252,7 +253,8 @@ let pp_fun_def ppf
       @ mk_extra_args extra_templates extra
       @ ["std::ostream* pstream__"]
       @ variadic_args in
-    pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs in
+    pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs ;
+    Format.close_box () in
   pp_sig ppf (fdname, true, `None) ;
   match fdbody with
   | None -> pf ppf ";@ "
@@ -981,11 +983,11 @@ let pp_prog ppf (p : Program.Typed.t) =
   let fns_str, functors = collect_functors_functions p in
   let pp_functor_decls ppf tbl =
     Hashtbl.iteri tbl ~f:(fun ~key ~data ->
-        pf ppf "%astruct %s {@,@[<hov 2>%aconst;@]@.};@."
+        pf ppf "@[<v 2>%astruct %s {@,%aconst;@]@,};@."
           (Fmt.option (fun ppf o -> pf ppf "%s" o))
           (Option.map ~f:(fun x -> x.template) (List.hd data))
           key
-          (list ~sep:(any "const;@,") text)
+          (list ~sep:(any "const;@,") (hbox text))
           (List.map ~f:(fun x -> x.signature) data) ) in
   let pp_functors ppf tbl =
     Hashtbl.iter tbl ~f:(fun data ->

@@ -37,8 +37,9 @@ let%expect_test "udf" =
     template <typename T0__, typename T1__>
     void
     sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
-      using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-                                                    stan::value_type_t<T1__>>;
+      using local_scalar_t__ =
+              stan::promote_args_t<stan::value_type_t<T0__>,
+                                   stan::value_type_t<T1__>>;
       int current_statement__ = 0;
       const auto& x = stan::math::to_ref(x_arg__);
       const auto& y = stan::math::to_ref(y_arg__);
@@ -84,10 +85,10 @@ let%expect_test "udf-expressions" =
     sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,
          const std::vector<Eigen::Matrix<T3__, -1, -1>>& w,
          std::ostream* pstream__) {
-      using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-                                                    stan::value_type_t<T1__>,
-                                                    stan::value_type_t<T2__>,
-                                                    T3__>;
+      using local_scalar_t__ =
+              stan::promote_args_t<stan::value_type_t<T0__>,
+                                   stan::value_type_t<T1__>,
+                                   stan::value_type_t<T2__>, T3__>;
       int current_statement__ = 0;
       const auto& x = stan::math::to_ref(x_arg__);
       const auto& y = stan::math::to_ref(y_arg__);
