@@ -2720,7 +2720,7 @@ static constexpr std::array<const char*, 68> locations_array__ =
  " (in 'copy_fail.stan', line 29, column 6 to line 43, column 7)",
  " (in 'copy_fail.stan', line 27, column 24 to line 44, column 5)",
  " (in 'copy_fail.stan', line 27, column 4 to line 44, column 5)",
- " (in 'copy_fail.stan', line 24, column 74 to line 46, column 3)",
+ " (in 'copy_fail.stan', line 45, column 4 to column 15)",
  " (in 'copy_fail.stan', line 100, column 8 to column 37)",
  " (in 'copy_fail.stan', line 101, column 8 to column 41)",
  " (in 'copy_fail.stan', line 99, column 42 to line 102, column 7)",
@@ -2762,7 +2762,7 @@ static constexpr std::array<const char*, 68> locations_array__ =
  " (in 'copy_fail.stan', line 74, column 33 to column 44)",
  " (in 'copy_fail.stan', line 9, column 4 to column 13)",
  " (in 'copy_fail.stan', line 21, column 4 to column 13)",
- " (in 'copy_fail.stan', line 45, column 4 to column 15)"};
+ " (in 'copy_fail.stan', line 24, column 74 to line 46, column 3)"};
 
 
 int
@@ -3011,7 +3011,7 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
           } 
         }
       } 
-      current_statement__ = 67;
+      current_statement__ = 25;
       return chi;
     }
   } catch (const std::exception& e) {
@@ -3633,8 +3633,6 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
         }
       } 
       Eigen::Matrix<local_scalar_t__, -1, -1> inline_prob_uncaptured_return_sym8__;
-      int inline_prob_uncaptured_early_ret_check_sym14__ =
-         std::numeric_limits<int>::min();
       {
         current_statement__ = 14;
         stan::math::validate_non_negative_index("chi", "nind", nind);
@@ -3761,6 +3759,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
             } 
           }
         } 
+        current_statement__ = 25;
         stan::model::assign(inline_prob_uncaptured_return_sym8__,
           inline_sym9__,
           "assigning variable inline_prob_uncaptured_return_sym8__");
@@ -4077,8 +4076,6 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
         }
       } 
       Eigen::Matrix<double, -1, -1> inline_prob_uncaptured_return_sym1__;
-      int inline_prob_uncaptured_early_ret_check_sym7__ =
-         std::numeric_limits<int>::min();
       {
         current_statement__ = 14;
         stan::math::validate_non_negative_index("chi", "nind", nind);
@@ -4204,6 +4201,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
             } 
           }
         } 
+        current_statement__ = 25;
         stan::model::assign(inline_prob_uncaptured_return_sym1__,
           inline_sym2__,
           "assigning variable inline_prob_uncaptured_return_sym1__");
@@ -9258,7 +9256,7 @@ static constexpr std::array<const char*, 70> locations_array__ =
  " (in 'expr-prop-fail5.stan', line 29, column 6 to line 45, column 7)",
  " (in 'expr-prop-fail5.stan', line 27, column 24 to line 46, column 5)",
  " (in 'expr-prop-fail5.stan', line 27, column 4 to line 46, column 5)",
- " (in 'expr-prop-fail5.stan', line 24, column 74 to line 48, column 3)",
+ " (in 'expr-prop-fail5.stan', line 47, column 4 to column 15)",
  " (in 'expr-prop-fail5.stan', line 118, column 2 to column 23)",
  " (in 'expr-prop-fail5.stan', line 104, column 2 to column 29)",
  " (in 'expr-prop-fail5.stan', line 110, column 8 to column 37)",
@@ -9299,7 +9297,7 @@ static constexpr std::array<const char*, 70> locations_array__ =
  " (in 'expr-prop-fail5.stan', line 78, column 33 to column 44)",
  " (in 'expr-prop-fail5.stan', line 9, column 4 to column 13)",
  " (in 'expr-prop-fail5.stan', line 21, column 4 to column 13)",
- " (in 'expr-prop-fail5.stan', line 47, column 4 to column 15)"};
+ " (in 'expr-prop-fail5.stan', line 24, column 74 to line 48, column 3)"};
 
 
 int
@@ -9548,7 +9546,7 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
           } 
         }
       } 
-      current_statement__ = 69;
+      current_statement__ = 28;
       return chi;
     }
   } catch (const std::exception& e) {
@@ -10086,8 +10084,6 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
         }
       } 
       Eigen::Matrix<local_scalar_t__, -1, -1> inline_prob_uncaptured_return_sym8__;
-      int inline_prob_uncaptured_early_ret_check_sym14__ =
-         std::numeric_limits<int>::min();
       {
         current_statement__ = 17;
         stan::math::validate_non_negative_index("chi", "nind", nind);
@@ -10214,6 +10210,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
             } 
           }
         } 
+        current_statement__ = 28;
         stan::model::assign(inline_prob_uncaptured_return_sym8__,
           inline_sym9__,
           "assigning variable inline_prob_uncaptured_return_sym8__");
@@ -10534,8 +10531,6 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
         }
       } 
       Eigen::Matrix<double, -1, -1> inline_prob_uncaptured_return_sym1__;
-      int inline_prob_uncaptured_early_ret_check_sym7__ =
-         std::numeric_limits<int>::min();
       {
         current_statement__ = 17;
         stan::math::validate_non_negative_index("chi", "nind", nind);
@@ -10661,6 +10656,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
             } 
           }
         } 
+        current_statement__ = 28;
         stan::model::assign(inline_prob_uncaptured_return_sym1__,
           inline_sym2__,
           "assigning variable inline_prob_uncaptured_return_sym1__");
@@ -11021,7 +11017,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 146> locations_array__ = 
+static constexpr std::array<const char*, 147> locations_array__ = 
 {" (found before start of program)",
  " (in 'expr-prop-fail6.stan', line 160, column 2 to column 34)",
  " (in 'expr-prop-fail6.stan', line 161, column 2 to column 32)",
@@ -11056,7 +11052,7 @@ static constexpr std::array<const char*, 146> locations_array__ =
  " (in 'expr-prop-fail6.stan', line 55, column 6 to line 62, column 7)",
  " (in 'expr-prop-fail6.stan', line 53, column 25 to line 63, column 5)",
  " (in 'expr-prop-fail6.stan', line 53, column 4 to line 63, column 5)",
- " (in 'expr-prop-fail6.stan', line 48, column 47 to line 65, column 3)",
+ " (in 'expr-prop-fail6.stan', line 64, column 4 to column 15)",
  " (in 'expr-prop-fail6.stan', line 212, column 2 to column 23)",
  " (in 'expr-prop-fail6.stan', line 213, column 2 to column 22)",
  " (in 'expr-prop-fail6.stan', line 214, column 2 to column 36)",
@@ -11132,7 +11128,7 @@ static constexpr std::array<const char*, 146> locations_array__ =
  " (in 'expr-prop-fail6.stan', line 89, column 20 to line 125, column 7)",
  " (in 'expr-prop-fail6.stan', line 86, column 25 to line 142, column 5)",
  " (in 'expr-prop-fail6.stan', line 86, column 4 to line 142, column 5)",
- " (in 'expr-prop-fail6.stan', line 81, column 74 to line 143, column 3)",
+ " (in 'expr-prop-fail6.stan', line 209, column 2 to column 52)",
  " (in 'expr-prop-fail6.stan', line 146, column 2 to column 17)",
  " (in 'expr-prop-fail6.stan', line 147, column 2 to column 27)",
  " (in 'expr-prop-fail6.stan', line 148, column 8 to column 9)",
@@ -11167,7 +11163,8 @@ static constexpr std::array<const char*, 146> locations_array__ =
  " (in 'expr-prop-fail6.stan', line 216, column 11 to column 22)",
  " (in 'expr-prop-fail6.stan', line 18, column 4 to column 13)",
  " (in 'expr-prop-fail6.stan', line 35, column 4 to column 13)",
- " (in 'expr-prop-fail6.stan', line 64, column 4 to column 15)"};
+ " (in 'expr-prop-fail6.stan', line 48, column 47 to line 65, column 3)",
+ " (in 'expr-prop-fail6.stan', line 81, column 74 to line 143, column 3)"};
 
 
 int
@@ -11423,7 +11420,7 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
           } 
         }
       } 
-      current_statement__ = 145;
+      current_statement__ = 34;
       return chi;
     }
   } catch (const std::exception& e) {
@@ -12549,8 +12546,6 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
           "assigning variable nu", stan::model::index_uni(n_occasions));
       }
       Eigen::Matrix<local_scalar_t__, -1, -1> inline_prob_uncaptured_return_sym14__;
-      int inline_prob_uncaptured_early_ret_check_sym22__ =
-         std::numeric_limits<int>::min();
       {
         int inline_sym15__ = std::numeric_limits<int>::min();
         lcm_sym240__ = stan::math::rows(p);
@@ -12681,6 +12676,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             } 
           }
         } 
+        current_statement__ = 34;
         stan::model::assign(inline_prob_uncaptured_return_sym14__,
           inline_sym17__,
           "assigning variable inline_prob_uncaptured_return_sym14__");
@@ -12714,8 +12710,6 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon, 0, sigma));
         current_statement__ = 78;
         lp_accum__.add(stan::math::gamma_lpdf<propto__>(beta, 1, 1));
-        int inline_js_super_lp_early_ret_check_sym30__ =
-           std::numeric_limits<int>::min();
         {
           int inline_sym23__ = std::numeric_limits<int>::min();
           lcm_sym246__ = stan::model::rvalue(stan::math::dims(y), "dims(y)",
@@ -13444,8 +13438,6 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
           "assigning variable nu", stan::model::index_uni(n_occasions));
       }
       Eigen::Matrix<double, -1, -1> inline_prob_uncaptured_return_sym1__;
-      int inline_prob_uncaptured_early_ret_check_sym9__ =
-         std::numeric_limits<int>::min();
       {
         int inline_sym2__ = std::numeric_limits<int>::min();
         lcm_sym154__ = stan::math::rows(p);
@@ -13576,6 +13568,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             } 
           }
         } 
+        current_statement__ = 34;
         stan::model::assign(inline_prob_uncaptured_return_sym1__,
           inline_sym4__,
           "assigning variable inline_prob_uncaptured_return_sym1__");
@@ -16086,7 +16079,7 @@ static constexpr std::array<const char*, 68> locations_array__ =
  " (in 'fails-test.stan', line 29, column 6 to line 43, column 7)",
  " (in 'fails-test.stan', line 27, column 24 to line 44, column 5)",
  " (in 'fails-test.stan', line 27, column 4 to line 44, column 5)",
- " (in 'fails-test.stan', line 24, column 74 to line 46, column 3)",
+ " (in 'fails-test.stan', line 45, column 4 to column 15)",
  " (in 'fails-test.stan', line 100, column 8 to column 37)",
  " (in 'fails-test.stan', line 101, column 8 to column 41)",
  " (in 'fails-test.stan', line 99, column 42 to line 102, column 7)",
@@ -16128,7 +16121,7 @@ static constexpr std::array<const char*, 68> locations_array__ =
  " (in 'fails-test.stan', line 74, column 33 to column 44)",
  " (in 'fails-test.stan', line 9, column 4 to column 13)",
  " (in 'fails-test.stan', line 21, column 4 to column 13)",
- " (in 'fails-test.stan', line 45, column 4 to column 15)"};
+ " (in 'fails-test.stan', line 24, column 74 to line 46, column 3)"};
 
 
 int
@@ -16377,7 +16370,7 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
           } 
         }
       } 
-      current_statement__ = 67;
+      current_statement__ = 25;
       return chi;
     }
   } catch (const std::exception& e) {
@@ -16999,8 +16992,6 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
         }
       } 
       Eigen::Matrix<local_scalar_t__, -1, -1> inline_prob_uncaptured_return_sym8__;
-      int inline_prob_uncaptured_early_ret_check_sym14__ =
-         std::numeric_limits<int>::min();
       {
         current_statement__ = 14;
         stan::math::validate_non_negative_index("chi", "nind", nind);
@@ -17127,6 +17118,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
             } 
           }
         } 
+        current_statement__ = 25;
         stan::model::assign(inline_prob_uncaptured_return_sym8__,
           inline_sym9__,
           "assigning variable inline_prob_uncaptured_return_sym8__");
@@ -17443,8 +17435,6 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
         }
       } 
       Eigen::Matrix<double, -1, -1> inline_prob_uncaptured_return_sym1__;
-      int inline_prob_uncaptured_early_ret_check_sym7__ =
-         std::numeric_limits<int>::min();
       {
         current_statement__ = 14;
         stan::math::validate_non_negative_index("chi", "nind", nind);
@@ -17570,6 +17560,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
             } 
           }
         } 
+        current_statement__ = 25;
         stan::model::assign(inline_prob_uncaptured_return_sym1__,
           inline_sym2__,
           "assigning variable inline_prob_uncaptured_return_sym1__");
@@ -17899,7 +17890,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 144> locations_array__ = 
+static constexpr std::array<const char*, 145> locations_array__ = 
 {" (found before start of program)",
  " (in 'inlining-fail2.stan', line 175, column 2 to column 34)",
  " (in 'inlining-fail2.stan', line 176, column 2 to column 32)",
@@ -17925,7 +17916,7 @@ static constexpr std::array<const char*, 144> locations_array__ =
  " (in 'inlining-fail2.stan', line 55, column 6 to line 62, column 7)",
  " (in 'inlining-fail2.stan', line 53, column 25 to line 63, column 5)",
  " (in 'inlining-fail2.stan', line 53, column 4 to line 63, column 5)",
- " (in 'inlining-fail2.stan', line 48, column 47 to line 65, column 3)",
+ " (in 'inlining-fail2.stan', line 64, column 4 to column 15)",
  " (in 'inlining-fail2.stan', line 208, column 2 to column 14)",
  " (in 'inlining-fail2.stan', line 209, column 2 to column 11)",
  " (in 'inlining-fail2.stan', line 210, column 2 to column 24)",
@@ -17952,7 +17943,7 @@ static constexpr std::array<const char*, 144> locations_array__ =
  " (in 'inlining-fail2.stan', line 154, column 6 to column 55)",
  " (in 'inlining-fail2.stan', line 153, column 21 to line 156, column 5)",
  " (in 'inlining-fail2.stan', line 153, column 4 to line 156, column 5)",
- " (in 'inlining-fail2.stan', line 148, column 33 to line 158, column 3)",
+ " (in 'inlining-fail2.stan', line 157, column 4 to column 26)",
  " (in 'inlining-fail2.stan', line 232, column 10 to column 11)",
  " (in 'inlining-fail2.stan', line 232, column 13 to column 24)",
  " (in 'inlining-fail2.stan', line 232, column 4 to column 69)",
@@ -18008,7 +17999,7 @@ static constexpr std::array<const char*, 144> locations_array__ =
  " (in 'inlining-fail2.stan', line 87, column 20 to line 119, column 7)",
  " (in 'inlining-fail2.stan', line 84, column 25 to line 136, column 5)",
  " (in 'inlining-fail2.stan', line 84, column 4 to line 136, column 5)",
- " (in 'inlining-fail2.stan', line 79, column 70 to line 137, column 3)",
+ " (in 'inlining-fail2.stan', line 205, column 2 to column 53)",
  " (in 'inlining-fail2.stan', line 161, column 2 to column 17)",
  " (in 'inlining-fail2.stan', line 162, column 2 to column 27)",
  " (in 'inlining-fail2.stan', line 163, column 8 to column 9)",
@@ -18042,8 +18033,9 @@ static constexpr std::array<const char*, 144> locations_array__ =
  " (in 'inlining-fail2.stan', line 214, column 11 to column 22)",
  " (in 'inlining-fail2.stan', line 18, column 4 to column 13)",
  " (in 'inlining-fail2.stan', line 35, column 4 to column 13)",
- " (in 'inlining-fail2.stan', line 64, column 4 to column 15)",
- " (in 'inlining-fail2.stan', line 157, column 4 to column 26)"};
+ " (in 'inlining-fail2.stan', line 48, column 47 to line 65, column 3)",
+ " (in 'inlining-fail2.stan', line 79, column 70 to line 137, column 3)",
+ " (in 'inlining-fail2.stan', line 148, column 33 to line 158, column 3)"};
 
 
 int
@@ -18299,7 +18291,7 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
           } 
         }
       } 
-      current_statement__ = 142;
+      current_statement__ = 25;
       return chi;
     }
   } catch (const std::exception& e) {
@@ -18932,7 +18924,7 @@ seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
                                     stan::model::index_uni(n))));
         }
       } 
-      current_statement__ = 143;
+      current_statement__ = 52;
       return stan::math::exp(log_cprob);
     }
   } catch (const std::exception& e) {
@@ -19461,8 +19453,6 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         "assigning variable lcm_sym255__");
       stan::model::assign(p, lcm_sym255__, "assigning variable p");
       Eigen::Matrix<local_scalar_t__, -1, -1> inline_prob_uncaptured_return_sym20__;
-      int inline_prob_uncaptured_early_ret_check_sym28__ =
-         std::numeric_limits<int>::min();
       {
         int inline_sym21__ = std::numeric_limits<int>::min();
         lcm_sym256__ = stan::math::rows(lcm_sym255__);
@@ -19593,6 +19583,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             } 
           }
         } 
+        current_statement__ = 25;
         stan::model::assign(inline_prob_uncaptured_return_sym20__,
           inline_sym23__,
           "assigning variable inline_prob_uncaptured_return_sym20__");
@@ -19618,8 +19609,6 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       {
         current_statement__ = 77;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon, 0, sigma));
-        int inline_jolly_seber_lp_early_ret_check_sym36__ =
-           std::numeric_limits<int>::min();
         {
           int inline_sym29__ = std::numeric_limits<int>::min();
           lcm_sym262__ = stan::model::rvalue(stan::math::dims(y), "dims(y)",
@@ -20317,8 +20306,6 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         "assigning variable lcm_sym173__");
       stan::model::assign(p, lcm_sym173__, "assigning variable p");
       Eigen::Matrix<double, -1, -1> inline_prob_uncaptured_return_sym1__;
-      int inline_prob_uncaptured_early_ret_check_sym9__ =
-         std::numeric_limits<int>::min();
       {
         int inline_sym2__ = std::numeric_limits<int>::min();
         lcm_sym175__ = stan::math::rows(lcm_sym173__);
@@ -20449,6 +20436,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             } 
           }
         } 
+        current_statement__ = 25;
         stan::model::assign(inline_prob_uncaptured_return_sym1__,
           inline_sym4__,
           "assigning variable inline_prob_uncaptured_return_sym1__");
@@ -20606,8 +20594,6 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
            Eigen::Matrix<double, -1, 1>::Constant(n_occasions,
              std::numeric_limits<double>::quiet_NaN());
         Eigen::Matrix<double, -1, 1> inline_seq_cprob_return_sym10__;
-        int inline_seq_cprob_early_ret_check_sym15__ =
-           std::numeric_limits<int>::min();
         {
           int inline_sym11__ = std::numeric_limits<int>::min();
           lcm_sym174__ = stan::math::rows(gamma);
@@ -20640,6 +20626,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                                    gamma[(inline_sym14__ - 1)]));
             }
           } 
+          current_statement__ = 52;
           stan::model::assign(inline_seq_cprob_return_sym10__,
             stan::math::exp(inline_sym12__),
             "assigning variable inline_seq_cprob_return_sym10__");
@@ -22313,7 +22300,7 @@ static constexpr std::array<const char*, 64> locations_array__ =
  " (in 'lcm-fails2.stan', line 29, column 6 to line 43, column 7)",
  " (in 'lcm-fails2.stan', line 27, column 24 to line 44, column 5)",
  " (in 'lcm-fails2.stan', line 27, column 4 to line 44, column 5)",
- " (in 'lcm-fails2.stan', line 24, column 74 to line 46, column 3)",
+ " (in 'lcm-fails2.stan', line 45, column 4 to column 15)",
  " (in 'lcm-fails2.stan', line 98, column 8 to column 37)",
  " (in 'lcm-fails2.stan', line 99, column 8 to column 41)",
  " (in 'lcm-fails2.stan', line 97, column 42 to line 100, column 7)",
@@ -22351,7 +22338,7 @@ static constexpr std::array<const char*, 64> locations_array__ =
  " (in 'lcm-fails2.stan', line 72, column 33 to column 44)",
  " (in 'lcm-fails2.stan', line 9, column 4 to column 13)",
  " (in 'lcm-fails2.stan', line 21, column 4 to column 13)",
- " (in 'lcm-fails2.stan', line 45, column 4 to column 15)"};
+ " (in 'lcm-fails2.stan', line 24, column 74 to line 46, column 3)"};
 
 
 int
@@ -22600,7 +22587,7 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
           } 
         }
       } 
-      current_statement__ = 63;
+      current_statement__ = 25;
       return chi;
     }
   } catch (const std::exception& e) {
@@ -23115,8 +23102,6 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
         }
       } 
       Eigen::Matrix<local_scalar_t__, -1, -1> inline_prob_uncaptured_return_sym8__;
-      int inline_prob_uncaptured_early_ret_check_sym14__ =
-         std::numeric_limits<int>::min();
       {
         current_statement__ = 14;
         stan::math::validate_non_negative_index("chi", "nind", nind);
@@ -23243,6 +23228,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
             } 
           }
         } 
+        current_statement__ = 25;
         stan::model::assign(inline_prob_uncaptured_return_sym8__,
           inline_sym9__,
           "assigning variable inline_prob_uncaptured_return_sym8__");
@@ -23538,8 +23524,6 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
         }
       } 
       Eigen::Matrix<double, -1, -1> inline_prob_uncaptured_return_sym1__;
-      int inline_prob_uncaptured_early_ret_check_sym7__ =
-         std::numeric_limits<int>::min();
       {
         current_statement__ = 14;
         stan::math::validate_non_negative_index("chi", "nind", nind);
@@ -23665,6 +23649,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
             } 
           }
         } 
+        current_statement__ = 25;
         stan::model::assign(inline_prob_uncaptured_return_sym1__,
           inline_sym2__,
           "assigning variable inline_prob_uncaptured_return_sym1__");
@@ -23977,16 +23962,16 @@ static constexpr std::array<const char*, 13> locations_array__ =
 {" (found before start of program)",
  " (in 'lupdf-inlining.stan', line 16, column 4 to column 12)",
  " (in 'lupdf-inlining.stan', line 19, column 4 to column 32)",
- " (in 'lupdf-inlining.stan', line 2, column 35 to line 4, column 5)",
  " (in 'lupdf-inlining.stan', line 26, column 4 to column 30)",
- " (in 'lupdf-inlining.stan', line 8, column 26 to line 10, column 5)",
  " (in 'lupdf-inlining.stan', line 27, column 4 to column 31)",
- " (in 'lupdf-inlining.stan', line 5, column 34 to line 7, column 5)",
  " (in 'lupdf-inlining.stan', line 22, column 4 to column 29)",
  " (in 'lupdf-inlining.stan', line 13, column 4 to column 10)",
  " (in 'lupdf-inlining.stan', line 3, column 8 to column 36)",
+ " (in 'lupdf-inlining.stan', line 2, column 35 to line 4, column 5)",
  " (in 'lupdf-inlining.stan', line 6, column 8 to column 35)",
- " (in 'lupdf-inlining.stan', line 9, column 8 to column 32)"};
+ " (in 'lupdf-inlining.stan', line 5, column 34 to line 7, column 5)",
+ " (in 'lupdf-inlining.stan', line 9, column 8 to column 32)",
+ " (in 'lupdf-inlining.stan', line 8, column 26 to line 10, column 5)"};
 
 
 template <bool propto__, typename T0__, typename T1__>
@@ -23998,9 +23983,9 @@ foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    double lcm_sym25__;
+    double lcm_sym23__;
     {
-      current_statement__ = 10;
+      current_statement__ = 7;
       return stan::math::normal_lpdf<propto__>(x, mu, 1);
     }
   } catch (const std::exception& e) {
@@ -24027,9 +24012,9 @@ bar_lpmf(const int& n, const T1__& mu, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    double lcm_sym26__;
+    double lcm_sym24__;
     {
-      current_statement__ = 11;
+      current_statement__ = 9;
       return stan::math::poisson_lpmf<propto__>(n, mu);
     }
   } catch (const std::exception& e) {
@@ -24055,9 +24040,9 @@ baz_lpdf(const T0__& x, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    double lcm_sym27__;
+    double lcm_sym25__;
     {
-      current_statement__ = 12;
+      current_statement__ = 11;
       return foo_lpdf<propto__>(x, 0.5, pstream__);
     }
   } catch (const std::exception& e) {
@@ -24106,13 +24091,13 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     try {
       int pos__;
       pos__ = 1;
-      current_statement__ = 9;
+      current_statement__ = 6;
       context__.validate_dims("data initialization","n","int",
            std::vector<size_t>{});
       n = std::numeric_limits<int>::min();
       
       
-      current_statement__ = 9;
+      current_statement__ = 6;
       n = context__.vals_i("n")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -24139,39 +24124,32 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     (void) function__;  // suppress unused var warning
     
     try {
-      local_scalar_t__ lcm_sym35__;
-      local_scalar_t__ lcm_sym34__;
       local_scalar_t__ lcm_sym33__;
+      local_scalar_t__ lcm_sym32__;
+      local_scalar_t__ lcm_sym31__;
       local_scalar_t__ mu;
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
       local_scalar_t__ tp = DUMMY_VAR__;
-      double inline_foo_lpdf_return_sym17__;
-      int inline_foo_lpdf_early_ret_check_sym18__ =
-         std::numeric_limits<int>::min();
+      double inline_foo_lpdf_return_sym16__;
       {
-        lcm_sym33__ = stan::math::normal_lpdf<false>(mu, 1.0, 1);
+        lcm_sym31__ = stan::math::normal_lpdf<false>(mu, 1.0, 1);
       }
-      tp = lcm_sym33__;
+      tp = lcm_sym31__;
       {
-        double inline_baz_lpdf_return_sym19__;
-        int inline_baz_lpdf_early_ret_check_sym22__ =
-           std::numeric_limits<int>::min();
+        double inline_baz_lpdf_return_sym18__;
         {
-          double inline_sym20__;
-          int inline_sym21__ = std::numeric_limits<int>::min();
+          double inline_sym19__;
           {
-            lcm_sym34__ = stan::math::normal_lpdf<propto__>(mu, 0.5, 1);
+            lcm_sym32__ = stan::math::normal_lpdf<propto__>(mu, 0.5, 1);
           }
         }
-        lp_accum__.add(lcm_sym34__);
-        double inline_bar_lpmf_return_sym23__;
-        int inline_bar_lpmf_early_ret_check_sym24__ =
-           std::numeric_limits<int>::min();
+        lp_accum__.add(lcm_sym32__);
+        double inline_bar_lpmf_return_sym21__;
         {
-          lcm_sym35__ = stan::math::poisson_lpmf<propto__>(n, mu);
+          lcm_sym33__ = stan::math::poisson_lpmf<propto__>(n, mu);
         }
-        lp_accum__.add(lcm_sym35__);
+        lp_accum__.add(lcm_sym33__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -24205,11 +24183,11 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     (void) function__;  // suppress unused var warning
     
     try {
-      double lcm_sym32__;
-      double lcm_sym31__;
       double lcm_sym30__;
-      int lcm_sym29__;
-      int lcm_sym28__;
+      double lcm_sym29__;
+      double lcm_sym28__;
+      int lcm_sym27__;
+      int lcm_sym26__;
       double mu;
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
@@ -24221,40 +24199,33 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
         return ;
       } 
       double inline_foo_lpdf_return_sym9__;
-      int inline_foo_lpdf_early_ret_check_sym10__ =
-         std::numeric_limits<int>::min();
       {
-        lcm_sym31__ = stan::math::normal_lpdf<false>(mu, 1.0, 1);
+        lcm_sym29__ = stan::math::normal_lpdf<false>(mu, 1.0, 1);
       }
-      tp = lcm_sym31__;
+      tp = lcm_sym29__;
       if (emit_transformed_parameters__) {
-        out__.write(lcm_sym31__);
+        out__.write(lcm_sym29__);
       } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       } 
       double lbaz = std::numeric_limits<double>::quiet_NaN();
       double inline_baz_lpdf_return_sym11__;
-      int inline_baz_lpdf_early_ret_check_sym14__ =
-         std::numeric_limits<int>::min();
       {
         double inline_sym12__;
-        int inline_sym13__ = std::numeric_limits<int>::min();
         {
-          lcm_sym30__ = stan::math::normal_lpdf<false>(mu, 0.5, 1);
+          lcm_sym28__ = stan::math::normal_lpdf<false>(mu, 0.5, 1);
         }
       }
-      lbaz = lcm_sym30__;
+      lbaz = lcm_sym28__;
       double lbar = std::numeric_limits<double>::quiet_NaN();
-      double inline_bar_lpmf_return_sym15__;
-      int inline_bar_lpmf_early_ret_check_sym16__ =
-         std::numeric_limits<int>::min();
+      double inline_bar_lpmf_return_sym14__;
       {
-        lcm_sym32__ = stan::math::poisson_lpmf<false>(n, mu);
+        lcm_sym30__ = stan::math::poisson_lpmf<false>(n, mu);
       }
-      lbar = lcm_sym32__;
+      lbar = lcm_sym30__;
+      out__.write(lcm_sym28__);
       out__.write(lcm_sym30__);
-      out__.write(lcm_sym32__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -26184,7 +26155,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 93> locations_array__ = 
+static constexpr std::array<const char*, 95> locations_array__ = 
 {" (found before start of program)",
  " (in 'optimizations.stan', line 20, column 4 to column 15)",
  " (in 'optimizations.stan', line 21, column 4 to column 13)",
@@ -26195,10 +26166,11 @@ static constexpr std::array<const char*, 93> locations_array__ =
  " (in 'optimizations.stan', line 4, column 10 to column 17)",
  " (in 'optimizations.stan', line 3, column 8 to line 4, column 17)",
  " (in 'optimizations.stan', line 5, column 8 to column 20)",
- " (in 'optimizations.stan', line 2, column 33 to line 6, column 5)",
+ " (in 'optimizations.stan', line 28, column 4 to column 19)",
  " (in 'optimizations.stan', line 9, column 8 to line 10, column 26)",
  " (in 'optimizations.stan', line 8, column 20 to line 12, column 5)",
  " (in 'optimizations.stan', line 30, column 17 to column 28)",
+ " (in 'optimizations.stan', line 33, column 6 to column 22)",
  " (in 'optimizations.stan', line 31, column 33 to line 34, column 5)",
  " (in 'optimizations.stan', line 36, column 8 to column 21)",
  " (in 'optimizations.stan', line 35, column 4 to line 37, column 5)",
@@ -26247,7 +26219,6 @@ static constexpr std::array<const char*, 93> locations_array__ =
  " (in 'optimizations.stan', line 90, column 11 to column 23)",
  " (in 'optimizations.stan', line 90, column 4 to column 23)",
  " (in 'optimizations.stan', line 15, column 8 to column 20)",
- " (in 'optimizations.stan', line 14, column 18 to line 17, column 5)",
  " (in 'optimizations.stan', line 97, column 20 to column 26)",
  " (in 'optimizations.stan', line 98, column 22 to column 28)",
  " (in 'optimizations.stan', line 100, column 6 to column 15)",
@@ -26275,9 +26246,11 @@ static constexpr std::array<const char*, 93> locations_array__ =
  " (in 'optimizations.stan', line 146, column 6 to column 28)",
  " (in 'optimizations.stan', line 145, column 4 to line 146, column 28)",
  " (in 'optimizations.stan', line 147, column 4 to column 23)",
+ " (in 'optimizations.stan', line 2, column 33 to line 6, column 5)",
  " (in 'optimizations.stan', line 10, column 12 to column 26)",
  " (in 'optimizations.stan', line 11, column 8 to column 21)",
- " (in 'optimizations.stan', line 16, column 8 to column 18)"};
+ " (in 'optimizations.stan', line 16, column 8 to column 18)",
+ " (in 'optimizations.stan', line 14, column 18 to line 17, column 5)"};
 
 
 template <bool propto__, typename T0__, typename T_lp__,
@@ -26332,10 +26305,10 @@ rfun(const int& y, std::ostream* pstream__) {
     {
       current_statement__ = 11;
       if (stan::math::logical_gt(y, 2)) {
-        current_statement__ = 90;
+        current_statement__ = 91;
         return (y + 24);
       } 
-      current_statement__ = 91;
+      current_statement__ = 92;
       return (y + 2);
     }
   } catch (const std::exception& e) {
@@ -26361,9 +26334,9 @@ rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     {
-      current_statement__ = 61;
+      current_statement__ = 62;
       lp_accum__.add(2);
-      current_statement__ = 92;
+      current_statement__ = 93;
       return 24;
     }
   } catch (const std::exception& e) {
@@ -26478,8 +26451,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                 2);
       {
         double x = std::numeric_limits<double>::quiet_NaN();
-        int inline_nrfun_lp_early_ret_check_sym1__ =
-           std::numeric_limits<int>::min();
         {
           current_statement__ = 8;
           if (stan::math::logical_gt(4, 342)) {
@@ -26559,8 +26530,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
               break;
             }
             lp_accum__.add(inline_rfun_return_sym14__);
-            int inline_nrfun_lp_early_ret_check_sym17__ =
-               std::numeric_limits<int>::min();
             {
               current_statement__ = 8;
               if (stan::math::logical_gt(34, 342)) {
@@ -26582,32 +26551,32 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           }
         }
         {
-          current_statement__ = 15;
+          current_statement__ = 16;
           lp_accum__.add(53);
           {
-            current_statement__ = 15;
+            current_statement__ = 16;
             lp_accum__.add(53);
           }
           {
-            current_statement__ = 15;
+            current_statement__ = 16;
             lp_accum__.add(53);
           }
           {
-            current_statement__ = 15;
+            current_statement__ = 16;
             lp_accum__.add(53);
           }
           {
-            current_statement__ = 15;
+            current_statement__ = 16;
             lp_accum__.add(53);
           }
         }
         {
           {
             {
-              current_statement__ = 17;
+              current_statement__ = 18;
               lp_accum__.add(53);
               {
-                current_statement__ = 17;
+                current_statement__ = 18;
                 lp_accum__.add(53);
               }
             }
@@ -26617,7 +26586,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                 lcm_sym44__ = (2 + 1);
                 lp_accum__.add(53);
                 for (int k = lcm_sym44__; k <= lcm_sym46__; ++k) {
-                  current_statement__ = 17;
+                  current_statement__ = 18;
                   lp_accum__.add(53);
                 }
               } 
@@ -26628,7 +26597,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                 lcm_sym44__ = (3 + 1);
                 lp_accum__.add(53);
                 for (int k = lcm_sym44__; k <= lcm_sym46__; ++k) {
-                  current_statement__ = 17;
+                  current_statement__ = 18;
                   lp_accum__.add(53);
                 }
               } 
@@ -26643,7 +26612,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                   lcm_sym42__ = (2 + 1);
                   lp_accum__.add(53);
                   for (int k = lcm_sym42__; k <= lcm_sym45__; ++k) {
-                    current_statement__ = 17;
+                    current_statement__ = 18;
                     lp_accum__.add(53);
                   }
                 }
@@ -26656,7 +26625,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                   lcm_sym44__ = (j + 1);
                   lp_accum__.add(53);
                   for (int k = lcm_sym44__; k <= lcm_sym46__; ++k) {
-                    current_statement__ = 17;
+                    current_statement__ = 18;
                     lp_accum__.add(53);
                   }
                 } 
@@ -26672,7 +26641,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                   lcm_sym42__ = (3 + 1);
                   lp_accum__.add(53);
                   for (int k = lcm_sym42__; k <= lcm_sym45__; ++k) {
-                    current_statement__ = 17;
+                    current_statement__ = 18;
                     lp_accum__.add(53);
                   }
                 }
@@ -26685,7 +26654,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                   lcm_sym44__ = (j + 1);
                   lp_accum__.add(53);
                   for (int k = lcm_sym44__; k <= lcm_sym46__; ++k) {
-                    current_statement__ = 17;
+                    current_statement__ = 18;
                     lp_accum__.add(53);
                   }
                 } 
@@ -26701,7 +26670,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                   lcm_sym42__ = (4 + 1);
                   lp_accum__.add(53);
                   for (int k = lcm_sym42__; k <= lcm_sym45__; ++k) {
-                    current_statement__ = 17;
+                    current_statement__ = 18;
                     lp_accum__.add(53);
                   }
                 }
@@ -26714,7 +26683,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                   lcm_sym44__ = (j + 1);
                   lp_accum__.add(53);
                   for (int k = lcm_sym44__; k <= lcm_sym46__; ++k) {
-                    current_statement__ = 17;
+                    current_statement__ = 18;
                     lp_accum__.add(53);
                   }
                 } 
@@ -26730,7 +26699,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                   lcm_sym42__ = (5 + 1);
                   lp_accum__.add(53);
                   for (int k = lcm_sym42__; k <= lcm_sym45__; ++k) {
-                    current_statement__ = 17;
+                    current_statement__ = 18;
                     lp_accum__.add(53);
                   }
                 }
@@ -26743,7 +26712,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                   lcm_sym44__ = (j + 1);
                   lp_accum__.add(53);
                   for (int k = lcm_sym44__; k <= lcm_sym46__; ++k) {
-                    current_statement__ = 17;
+                    current_statement__ = 18;
                     lp_accum__.add(53);
                   }
                 } 
@@ -26751,90 +26720,88 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             } 
           }
         }
-        current_statement__ = 25;
+        current_statement__ = 26;
         for (int i = 1; i <= 5; ++i) {
-          current_statement__ = 22;
+          current_statement__ = 23;
           if (stan::math::logical_gt(i, 4)) {
             break;
           } 
-          current_statement__ = 23;
+          current_statement__ = 24;
           lp_accum__.add(2);
         }
-        current_statement__ = 30;
+        current_statement__ = 31;
         for (int i = 1; i <= 5; ++i) {
-          current_statement__ = 27;
-          if (stan::math::logical_gt(i, 4)) {
-            continue;
-          } 
           current_statement__ = 28;
-          lp_accum__.add(2);
-        }
-        current_statement__ = 35;
-        for (int i = 1; i <= 5; ++i) {
-          current_statement__ = 32;
           if (stan::math::logical_gt(i, 4)) {
             continue;
           } 
-          current_statement__ = 33;
+          current_statement__ = 29;
           lp_accum__.add(2);
         }
         current_statement__ = 36;
-        x = 3;
+        for (int i = 1; i <= 5; ++i) {
+          current_statement__ = 33;
+          if (stan::math::logical_gt(i, 4)) {
+            continue;
+          } 
+          current_statement__ = 34;
+          lp_accum__.add(2);
+        }
         current_statement__ = 37;
+        x = 3;
+        current_statement__ = 38;
         lp_accum__.add(3);
-        current_statement__ = 39;
+        current_statement__ = 40;
         if (stan::math::logical_gt(theta, 2)) {
-          current_statement__ = 38;
+          current_statement__ = 39;
           x = 2;
         } 
-        current_statement__ = 40;
-        lp_accum__.add(x);
         current_statement__ = 41;
-        lp_accum__.add(247);
+        lp_accum__.add(x);
         current_statement__ = 42;
-        x = 576;
+        lp_accum__.add(247);
         current_statement__ = 43;
+        x = 576;
+        current_statement__ = 44;
         lp_accum__.add(576);
         lcm_sym39__ = stan::math::logical_gt(theta, 46);
         if (lcm_sym39__) {
-          current_statement__ = 44;
+          current_statement__ = 45;
           x = 5880;
         } 
-        current_statement__ = 45;
+        current_statement__ = 46;
         lp_accum__.add(x);
         double z;
-        current_statement__ = 47;
-        z = x;
         current_statement__ = 48;
+        z = x;
+        current_statement__ = 49;
         lp_accum__.add(x);
-        current_statement__ = 50;
+        current_statement__ = 51;
         if (lcm_sym39__) {
-          current_statement__ = 49;
+          current_statement__ = 50;
           z = x;
         } 
-        current_statement__ = 51;
-        lp_accum__.add(z);
         current_statement__ = 52;
+        lp_accum__.add(z);
+        current_statement__ = 53;
         lp_accum__.add(2);
         {
           double y = std::numeric_limits<double>::quiet_NaN();
-          current_statement__ = 54;
+          current_statement__ = 55;
           lp_accum__.add(24);
         }
         {
           double y = std::numeric_limits<double>::quiet_NaN();
-          current_statement__ = 57;
+          current_statement__ = 58;
           lp_accum__.add(245);
         }
         {
-          current_statement__ = 59;
+          current_statement__ = 60;
           lp_accum__.add(2);
         }
         int inline_rfun_lp_return_sym18__;
-        int inline_rfun_lp_early_ret_check_sym19__ =
-           std::numeric_limits<int>::min();
         {
-          current_statement__ = 61;
+          current_statement__ = 62;
           lp_accum__.add(2);
         }
         current_statement__ = 63;
@@ -26842,20 +26809,16 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           break;
         }
         int inline_rfun_lp_return_sym20__;
-        int inline_rfun_lp_early_ret_check_sym21__ =
-           std::numeric_limits<int>::min();
         {
-          current_statement__ = 61;
+          current_statement__ = 62;
           lp_accum__.add(2);
         }
         while (24) {
           {
             break;
           }
-          int inline_rfun_lp_early_ret_check_sym21__ =
-             std::numeric_limits<int>::min();
           {
-            current_statement__ = 61;
+            current_statement__ = 62;
             lp_accum__.add(2);
           }
         }
@@ -26864,26 +26827,20 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         current_statement__ = 68;
         for (int i = 31; i <= 225; ++i) { break;}
         int inline_rfun_lp_return_sym22__;
-        int inline_rfun_lp_early_ret_check_sym23__ =
-           std::numeric_limits<int>::min();
         {
-          current_statement__ = 61;
+          current_statement__ = 62;
           lp_accum__.add(2);
         }
         for (int i = 24; i <= 225; ++i) { continue;}
         int inline_rfun_lp_return_sym24__;
-        int inline_rfun_lp_early_ret_check_sym25__ =
-           std::numeric_limits<int>::min();
         {
-          current_statement__ = 61;
+          current_statement__ = 62;
           lp_accum__.add(2);
         }
         for (int i = 24; i <= 225; ++i) { break;}
         int inline_rfun_lp_return_sym26__;
-        int inline_rfun_lp_early_ret_check_sym27__ =
-           std::numeric_limits<int>::min();
         {
-          current_statement__ = 61;
+          current_statement__ = 62;
           lp_accum__.add(2);
         }
         {
