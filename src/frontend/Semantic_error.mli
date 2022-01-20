@@ -142,7 +142,9 @@ val fn_overload_rt_only :
   -> UnsizedType.returntype
   -> t
 
-val fn_decl_redefined : Location_span.t -> string -> UnsizedType.t -> t
+val fn_decl_redefined :
+  Location_span.t -> string -> stan_math:bool -> UnsizedType.t -> t
+
 val fn_decl_exists : Location_span.t -> string -> t
 val fn_decl_without_def : Location_span.t -> t
 val fn_decl_needs_block : Location_span.t -> t

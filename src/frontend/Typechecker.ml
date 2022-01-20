@@ -434,35 +434,34 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
             (Env.nearest_ident tenv id.name) )
       |> error
   | _ (* a function *) -> (
-      let
-      (* NB: At present, [SignatureMismatch.matching_function] cannot handle overloaded function types.
-         This is not needed until UDFs can be higher-order, as it is special cased for
-         variadic functions
-      *)
-      open
-        SignatureMismatch in
-      match matching_function tenv id.name (get_arg_types es) with
-      | UniqueMatch (Void, _, _) ->
-          Semantic_error.returning_fn_expected_nonreturning_found loc id.name
-          |> error
-      | UniqueMatch (ReturnType ut, fnk, promotions) ->
-          mk_typed_expression
-            ~expr:
-              (mk_fun_app ~is_cond_dist
-                 ( fnk (Fun_kind.suffix_from_name id.name)
-                 , id
-                 , SignatureMismatch.promote es promotions ) )
-            ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
-      | AmbiguousMatch sigs ->
-          Semantic_error.ambiguous_function_promotion loc id.name
-            (Some (List.map ~f:type_of_expr_typed es))
-            sigs
-          |> error
-      | SignatureErrors (l, b) ->
-          es
-          |> List.map ~f:(fun e -> e.emeta.type_)
-          |> Semantic_error.illtyped_fn_app loc id.name (l, b)
-          |> error )
+    (* NB: At present, [SignatureMismatch.matching_function] cannot handle overloaded function types.
+       This is not needed until UDFs can be higher-order, as it is special cased for
+       variadic functions
+    *)
+    match
+      SignatureMismatch.matching_function tenv id.name (get_arg_types es)
+    with
+    | UniqueMatch (Void, _, _) ->
+        Semantic_error.returning_fn_expected_nonreturning_found loc id.name
+        |> error
+    | UniqueMatch (ReturnType ut, fnk, promotions) ->
+        mk_typed_expression
+          ~expr:
+            (mk_fun_app ~is_cond_dist
+               ( fnk (Fun_kind.suffix_from_name id.name)
+               , id
+               , SignatureMismatch.promote es promotions ) )
+          ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
+    | AmbiguousMatch sigs ->
+        Semantic_error.ambiguous_function_promotion loc id.name
+          (Some (List.map ~f:type_of_expr_typed es))
+          sigs
+        |> error
+    | SignatureErrors (l, b) ->
+        es
+        |> List.map ~f:(fun e -> e.emeta.type_)
+        |> Semantic_error.illtyped_fn_app loc id.name (l, b)
+        |> error )
 
 (** Given a constraint function [matches], find any signature which exists
     Returns the first [Ok] if any exist, or else [Error]
@@ -1444,8 +1443,9 @@ and verify_unique_signature tenv loc id arg_tys rt =
   | [] -> ()
   | {type_= UFun (_, rt', _, _); _} :: _ when rt <> rt' ->
       Semantic_error.fn_overload_rt_only loc id.name rt rt' |> error
-  | _ ->
+  | {kind; _} :: _ ->
       Semantic_error.fn_decl_redefined loc id.name
+        ~stan_math:(kind = `StanMath)
         (UnsizedType.UFun (arg_tys, rt, Fun_kind.suffix_from_name id.name, AoS))
       |> error
 

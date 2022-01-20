@@ -60,6 +60,10 @@ val matching_function :
   -> string
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> match_result
+(** Searches for a function of the given name which can
+    support the required argument types.
+    Requires a unique minimum option under type promotion
+*)
 
 val check_variadic_args :
      bool

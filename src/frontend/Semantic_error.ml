@@ -137,17 +137,17 @@ module TypeError = struct
           ( name
           , arg_tys
           , ([((UnsizedType.ReturnType return_type, args), error)], false) )
-    | AmbiguousFunctionPromotion (s, arg_tys, signatures) ->
+    | AmbiguousFunctionPromotion (name, arg_tys, signatures) ->
         let pp_sig ppf (rt, args) =
           Fmt.pf ppf "@[<hov>(@[<hov>%a@]) => %a@]"
             Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
             args UnsizedType.pp_returntype rt in
         Fmt.pf ppf
-          "No unique minimum promotion found for function \"%s\".@ Overloaded \
+          "No unique minimum promotion found for function '%s'.@ Overloaded \
            functions must not have multiple equally valid promotion paths.@ %a \
            function has several:@ @[<v>%a@]@ Consider defining a new signature \
            for the exact types needed or@ re-thinking existing definitions."
-          s
+          name
           (Fmt.option
              ~none:(fun ppf () -> Fmt.pf ppf "This")
              (fun ppf tys ->
@@ -362,7 +362,7 @@ module StatementError = struct
     | TransformedParamsInt
     | FuncOverloadRtOnly of
         string * UnsizedType.returntype * UnsizedType.returntype
-    | FuncDeclRedefined of string * UnsizedType.t
+    | FuncDeclRedefined of string * UnsizedType.t * bool
     | FunDeclExists of string
     | FunDeclNoDefn
     | FunDeclNeedsBlock
@@ -436,9 +436,11 @@ module StatementError = struct
           "Function '%s' cannot be overloaded by return type only. Previously \
            used return type %a"
           name UnsizedType.pp_returntype rt'
-    | FuncDeclRedefined (name, ut) ->
-        Fmt.pf ppf "Function '%s' has already been declared to for signature %a"
-          name UnsizedType.pp ut
+    | FuncDeclRedefined (name, ut, stan_math) ->
+        Fmt.pf ppf "Function '%s' %s signature %a" name
+          ( if stan_math then "is already declared in the Stan Math library with"
+          else "has already been declared to for" )
+          UnsizedType.pp ut
     | FunDeclExists name ->
         Fmt.pf ppf
           "Function '%s' has already been declared. A definition is expected."
@@ -701,8 +703,8 @@ let transformed_params_int loc =
 let fn_overload_rt_only loc name rt1 rt2 =
   StatementError (loc, StatementError.FuncOverloadRtOnly (name, rt1, rt2))
 
-let fn_decl_redefined loc name ut =
-  StatementError (loc, StatementError.FuncDeclRedefined (name, ut))
+let fn_decl_redefined loc name ~stan_math ut =
+  StatementError (loc, StatementError.FuncDeclRedefined (name, ut, stan_math))
 
 let fn_decl_exists loc name =
   StatementError (loc, StatementError.FunDeclExists name)

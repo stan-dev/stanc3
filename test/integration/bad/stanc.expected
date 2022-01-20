@@ -1056,7 +1056,8 @@ Semantic error in 'functions-bad16.stan', line 2, column 2 to line 4, column 3:
      4:    }
    -------------------------------------------------
 
-Function 'square' has already been declared to for signature (real) => real
+Function 'square' is already declared in the Stan Math library with signature 
+(real) => real
   $ ../../../../install/default/bin/stanc functions-bad17.stan
 Semantic error in 'functions-bad17.stan', line 2, column 2 to line 4, column 3:
    -------------------------------------------------

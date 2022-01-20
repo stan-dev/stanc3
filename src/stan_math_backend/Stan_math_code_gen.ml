@@ -23,11 +23,9 @@ open Fmt
 open Expression_gen
 open Statement_gen
 
-let standalone_functions = ref false
-
 type found_functor = {template: string; signature: string; defn: string}
 
-let (functors : (string, found_functor list) Hashtbl.t) = String.Table.create ()
+let standalone_functions = ref false
 
 let stanc_args_to_print =
   let sans_model_and_hpp_paths x =
@@ -205,6 +203,7 @@ let mk_extra_args templates args =
 *)
 let pp_fun_def ppf
     ( Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
+    , functors
     , funs_used_in_reduce_sum
     , funs_used_in_variadic_ode
     , funs_used_in_variadic_dae ) =
@@ -957,7 +956,8 @@ let is_fun_used_with_variadic_fn variadic_fn_test p =
   Program.fold find_functors_expr find_functors_stmt String.Set.empty p
 
 let collect_functors_functions p =
-  Hashtbl.clear functors ;
+  let (functors : (string, found_functor list) Hashtbl.t) =
+    String.Table.create () in
   let reduce_sum_fns =
     is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p in
   let variadic_ode_fns =
@@ -967,16 +967,18 @@ let collect_functors_functions p =
   let pp_fun_def_with_variadic_fn_list ppf fblock =
     (hovbox ~indent:2 pp_fun_def)
       ppf
-      (fblock, reduce_sum_fns, variadic_ode_fns, variadic_dae_fns) in
-  str "@[<v>%a@]"
-    (list ~sep:cut pp_fun_def_with_variadic_fn_list)
-    p.functions_block
+      (fblock, functors, reduce_sum_fns, variadic_ode_fns, variadic_dae_fns)
+  in
+  ( str "@[<v>%a@]"
+      (list ~sep:cut pp_fun_def_with_variadic_fn_list)
+      p.functions_block
+  , functors )
 
 (** Print the full C++ for the stan program. *)
 let pp_prog ppf (p : Program.Typed.t) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p, s = Locations.prepare_prog p in
-  let fns_str = collect_functors_functions p in
+  let fns_str, functors = collect_functors_functions p in
   let pp_functor_decls ppf tbl =
     Hashtbl.iteri tbl ~f:(fun ~key ~data ->
         pf ppf "%astruct %s {@,@[<hov 2>%aconst;@]@.};@."

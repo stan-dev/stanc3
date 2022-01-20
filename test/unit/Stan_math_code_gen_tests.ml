@@ -4,12 +4,18 @@ open Core_kernel
 open Fmt
 open Stan_math_code_gen
 
+let pp_fun_def_w_rs a b =
+  pp_fun_def a
+    ( b
+    , String.Table.create ()
+    , String.Set.empty
+    , String.Set.empty
+    , String.Set.empty )
+
 let%expect_test "udf" =
   let with_no_loc stmt =
     Stmt.Fixed.{pattern= stmt; meta= Locations.no_span_num} in
   let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
-  let pp_fun_def_w_rs a b =
-    pp_fun_def a (b, String.Set.empty, String.Set.empty, String.Set.empty) in
   { fdrt= None
   ; fdname= "sars"
   ; fdsuffix= FnPlain
@@ -52,8 +58,6 @@ let%expect_test "udf-expressions" =
   let with_no_loc stmt =
     Stmt.Fixed.{pattern= stmt; meta= Locations.no_span_num} in
   let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
-  let pp_fun_def_w_rs a b =
-    pp_fun_def a (b, String.Set.empty, String.Set.empty, String.Set.empty) in
   { fdrt= Some UMatrix
   ; fdname= "sars"
   ; fdsuffix= FnPlain

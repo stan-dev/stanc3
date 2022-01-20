@@ -305,119 +305,114 @@ and gen_functionals fname suffix es mem_pattern =
   let is_hof_call = List.exists ~f:contains_hof_vars es in
   if not is_hof_call then None
   else
-    Some
-      (fun ppf es ->
-        let convert_hof_vars = function
-          | { Expr.Fixed.pattern= Var name
-            ; meta= {Expr.Typed.Meta.type_= UFun _; _} } as e ->
-              { e with
-                pattern=
-                  FunApp
-                    ( StanLib
-                        ( name ^ functor_suffix_select fname
-                        , FnPlain
-                        , mem_pattern )
-                    , [] ) }
-          | e -> e in
-        let converted_es = List.map ~f:convert_hof_vars es in
-        let msgs = "pstream__" |> to_var in
-        (* Here, because these signatures are written in C++ such that they
-           wanted to have optional arguments and piggyback on C++ default
-           arguments and not write the necessary overloads, we have to
-           reorder the arguments as pstream__ does not always come last
-           in a way that is specific to the function name. If you are a C++
-           developer please don't add more of these - just add the
-           overloads.
-        *)
-        let fname, args =
-          match (fname, converted_es) with
-          | "algebra_solver", f :: x :: y :: dat :: datint :: tl
-           |"algebra_solver_newton", f :: x :: y :: dat :: datint :: tl ->
-              (fname, f :: x :: y :: dat :: datint :: msgs :: tl)
-          | "integrate_1d", f :: a :: b :: theta :: x_r :: x_i :: tl ->
-              (fname, f :: a :: b :: theta :: x_r :: x_i :: msgs :: tl)
-          | ( "integrate_ode_bdf"
-            , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl )
-           |( "integrate_ode_adams"
-            , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl )
-           |( "integrate_ode_rk45"
-            , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl ) ->
-              (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
-          | ( x
-            , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
-              :: grainsize :: container :: tl )
-            when Stan_math_signatures.is_reduce_sum_fn x ->
-              let chop_functor_suffix =
-                String.chop_suffix_exn ~suffix:reduce_sum_functor_suffix in
-              let propto_template =
-                if Utils.is_distribution_name (chop_functor_suffix f) then
-                  if Utils.is_unnormalized_distribution (chop_functor_suffix f)
-                  then "<propto__>"
-                  else "<false>"
-                else "" in
-              let normalized_dist_functor =
-                Utils.stdlib_distribution_name (chop_functor_suffix f)
-                ^ reduce_sum_functor_suffix in
-              ( strf "%s<%s%s>" fname normalized_dist_functor propto_template
-              , grainsize :: container :: msgs :: tl )
-          | x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
-            when Stan_math_signatures.is_variadic_ode_fn x
-                 && String.is_suffix fname
-                      ~suffix:Stan_math_signatures.ode_tolerances_suffix
-                 && not (Stan_math_signatures.variadic_ode_adjoint_fn = x) ->
-              ( fname
-              , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: msgs
-                :: tl )
-          | x, f :: y0 :: t0 :: ts :: tl
-            when Stan_math_signatures.is_variadic_ode_fn x
-                 && not (Stan_math_signatures.variadic_ode_adjoint_fn = x) ->
-              (fname, f :: y0 :: t0 :: ts :: msgs :: tl)
-          | ( x
-            , f
-              :: y0
-                 :: t0
-                    :: ts
-                       :: rel_tol
-                          :: abs_tol
-                             :: rel_tol_b
-                                :: abs_tol_b
-                                   :: rel_tol_q
-                                      :: abs_tol_q
-                                         :: max_num_steps
-                                            :: num_checkpoints
-                                               :: interpolation_polynomial
-                                                  :: solver_f :: solver_b :: tl
-            )
-            when Stan_math_signatures.variadic_ode_adjoint_fn = x ->
-              ( fname
-              , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: rel_tol_b
-                :: abs_tol_b :: rel_tol_q :: abs_tol_q :: max_num_steps
-                :: num_checkpoints :: interpolation_polynomial :: solver_f
-                :: solver_b :: msgs :: tl )
-          | ( x
-            , f
-              :: yy0 :: yp0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
-            )
-            when Stan_math_signatures.is_variadic_dae_fn x
-                 && String.is_suffix fname
-                      ~suffix:Stan_math_signatures.dae_tolerances_suffix ->
-              ( fname
-              , f :: yy0 :: yp0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps
-                :: msgs :: tl )
-          | x, f :: yy0 :: yp0 :: t0 :: ts :: tl
-            when Stan_math_signatures.is_variadic_dae_fn x ->
-              (fname, f :: yy0 :: yp0 :: t0 :: ts :: msgs :: tl)
-          | ( "map_rect"
-            , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
-              :: tl ) ->
-              let next_map_rect_id = Hashtbl.length map_rect_calls + 1 in
-              Hashtbl.add_exn map_rect_calls ~key:next_map_rect_id ~data:f ;
-              (strf "%s<%d, %s>" fname next_map_rect_id f, tl @ [msgs])
-          | _, args -> (fname, args @ [msgs]) in
-        let fname =
-          stan_namespace_qualify fname
-          |> demangle_unnormalized_name false suffix in
-        pp_call ppf (fname, pp_expr, args) )
+    let pp_hof_variables ppf es =
+      let convert_hof_vars = function
+        | { Expr.Fixed.pattern= Var name
+          ; meta= {Expr.Typed.Meta.type_= UFun _; _} } as e ->
+            { e with
+              pattern=
+                FunApp
+                  ( StanLib
+                      (name ^ functor_suffix_select fname, FnPlain, mem_pattern)
+                  , [] ) }
+        | e -> e in
+      let converted_es = List.map ~f:convert_hof_vars es in
+      let msgs = "pstream__" |> to_var in
+      (* Here, because these signatures are written in C++ such that they
+         wanted to have optional arguments and piggyback on C++ default
+         arguments and not write the necessary overloads, we have to
+         reorder the arguments as pstream__ does not always come last
+         in a way that is specific to the function name. If you are a C++
+         developer please don't add more of these - just add the
+         overloads.
+      *)
+      let fname, args =
+        match (fname, converted_es) with
+        | "algebra_solver", f :: x :: y :: dat :: datint :: tl
+         |"algebra_solver_newton", f :: x :: y :: dat :: datint :: tl ->
+            (fname, f :: x :: y :: dat :: datint :: msgs :: tl)
+        | "integrate_1d", f :: a :: b :: theta :: x_r :: x_i :: tl ->
+            (fname, f :: a :: b :: theta :: x_r :: x_i :: msgs :: tl)
+        | "integrate_ode_bdf", f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl
+         |( "integrate_ode_adams"
+          , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl )
+         |"integrate_ode_rk45", f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl
+          ->
+            (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
+        | ( x
+          , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
+            :: grainsize :: container :: tl )
+          when Stan_math_signatures.is_reduce_sum_fn x ->
+            let chop_functor_suffix =
+              String.chop_suffix_exn ~suffix:reduce_sum_functor_suffix in
+            let propto_template =
+              if Utils.is_distribution_name (chop_functor_suffix f) then
+                if Utils.is_unnormalized_distribution (chop_functor_suffix f)
+                then "<propto__>"
+                else "<false>"
+              else "" in
+            let normalized_dist_functor =
+              Utils.stdlib_distribution_name (chop_functor_suffix f)
+              ^ reduce_sum_functor_suffix in
+            ( strf "%s<%s%s>" fname normalized_dist_functor propto_template
+            , grainsize :: container :: msgs :: tl )
+        | x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
+          when Stan_math_signatures.is_variadic_ode_fn x
+               && String.is_suffix fname
+                    ~suffix:Stan_math_signatures.ode_tolerances_suffix
+               && not (Stan_math_signatures.variadic_ode_adjoint_fn = x) ->
+            ( fname
+            , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: msgs
+              :: tl )
+        | x, f :: y0 :: t0 :: ts :: tl
+          when Stan_math_signatures.is_variadic_ode_fn x
+               && not (Stan_math_signatures.variadic_ode_adjoint_fn = x) ->
+            (fname, f :: y0 :: t0 :: ts :: msgs :: tl)
+        | ( x
+          , f
+            :: y0
+               :: t0
+                  :: ts
+                     :: rel_tol
+                        :: abs_tol
+                           :: rel_tol_b
+                              :: abs_tol_b
+                                 :: rel_tol_q
+                                    :: abs_tol_q
+                                       :: max_num_steps
+                                          :: num_checkpoints
+                                             :: interpolation_polynomial
+                                                :: solver_f :: solver_b :: tl )
+          when Stan_math_signatures.variadic_ode_adjoint_fn = x ->
+            ( fname
+            , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: rel_tol_b
+              :: abs_tol_b :: rel_tol_q :: abs_tol_q :: max_num_steps
+              :: num_checkpoints :: interpolation_polynomial :: solver_f
+              :: solver_b :: msgs :: tl )
+        | ( x
+          , f :: yy0 :: yp0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
+          )
+          when Stan_math_signatures.is_variadic_dae_fn x
+               && String.is_suffix fname
+                    ~suffix:Stan_math_signatures.dae_tolerances_suffix ->
+            ( fname
+            , f :: yy0 :: yp0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps
+              :: msgs :: tl )
+        | x, f :: yy0 :: yp0 :: t0 :: ts :: tl
+          when Stan_math_signatures.is_variadic_dae_fn x ->
+            (fname, f :: yy0 :: yp0 :: t0 :: ts :: msgs :: tl)
+        | ( "map_rect"
+          , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
+            :: tl ) ->
+            let next_map_rect_id = Hashtbl.length map_rect_calls + 1 in
+            Hashtbl.add_exn map_rect_calls ~key:next_map_rect_id ~data:f ;
+            (strf "%s<%d, %s>" fname next_map_rect_id f, tl @ [msgs])
+        | _, args -> (fname, args @ [msgs]) in
+      let fname =
+        stan_namespace_qualify fname |> demangle_unnormalized_name false suffix
+      in
+      pp_call ppf (fname, pp_expr, args) in
+    Some pp_hof_variables
 
 and read_data ut ppf es =
   let i_or_r_or_c =

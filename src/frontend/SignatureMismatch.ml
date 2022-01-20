@@ -205,16 +205,19 @@ let promotion_cost p =
   | RealToComplexPromotion | IntToRealPromotion -> 1
   | IntToComplexPromotion -> 2
 
-let unique_minimum_promotion ps =
+let unique_minimum_promotion promotion_options =
   let size (_, p) =
     List.fold ~init:0 ~f:(fun acc p -> acc + promotion_cost p) p in
-  let sizes = List.map ~f:size ps in
-  let min_promotions = List.min_elt ~compare:Int.compare sizes in
-  let ps = List.zip_exn sizes ps in
-  match min_promotions with
-  | Some n -> (
+  let sizes = List.map ~f:size promotion_options in
+  let min_promotion = List.min_elt ~compare:Int.compare sizes in
+  let sizes_and_promotons = List.zip_exn sizes promotion_options in
+  match min_promotion with
+  | Some min_depth -> (
     match
-      List.filter_map ~f:(fun (x, y) -> if x = n then Some y else None) ps
+      List.filter_map
+        ~f:(fun (depth, promotion) ->
+          if depth = min_depth then Some promotion else None )
+        sizes_and_promotons
     with
     | [ans] -> Ok ans
     | _ :: _ as lst -> Error (Some (List.map ~f:fst lst))
@@ -227,8 +230,8 @@ let matching_function env name args =
   let function_types =
     Environment.find env name
     |> List.filter_map ~f:extract_function_types
-    |> List.sort ~compare:(fun (x, _, _, _) (y, _, _, _) ->
-           UnsizedType.compare_returntype x y ) in
+    |> List.sort ~compare:(fun (ret1, _, _, _) (ret2, _, _, _) ->
+           UnsizedType.compare_returntype ret1 ret2 ) in
   let matches, errors =
     List.partition_map function_types
       ~f:(fun (rt, tys, funkind_constructor, _) ->
@@ -238,7 +241,9 @@ let matching_function env name args =
   match unique_minimum_promotion matches with
   | Ok (((rt, _), funkind_constructor), p) ->
       UniqueMatch (rt, funkind_constructor, p)
-  | Error (Some e) -> AmbiguousMatch (List.map ~f:fst e)
+  | Error (Some e) ->
+      AmbiguousMatch (List.map ~f:fst e)
+      (* return the return types and argument types of ambiguous matches *)
   | Error None ->
       let errors =
         List.sort errors ~compare:(fun (_, e1) (_, e2) -> compare_errors e1 e2)
