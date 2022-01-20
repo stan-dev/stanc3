@@ -99,6 +99,8 @@ pipeline {
                 runShell("""
                     eval \$(opam env)
                     dune build @install
+                    ls -lhart
+                    ls -lhart bin
                 """)
 
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
@@ -446,7 +448,7 @@ pipeline {
                         docker {
                             image 'stanorg/stanc3:staticfi'
                             //Forces image to ignore entrypoint
-                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                            args "--group-add=987 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock" // --group-add=988
                             label 'linux'
                         }
                     }
