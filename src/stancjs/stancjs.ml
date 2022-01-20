@@ -7,7 +7,6 @@ open Middle
 open Js_of_ocaml
 
 let version = "%%NAME%% %%VERSION%%"
-let opt_lvl = ref Optimize.O0
 
 let warn_uninitialized_msgs (uninit_vars : (Location_span.t * string) Set.Poly.t)
     =
@@ -86,18 +85,22 @@ let stan2cpp model_name model_string is_flag_set flag_val =
                 (Sexp.to_string_hum [%sexp (mir : Middle.Program.Typed.t)])
             , warnings
             , [] ) ;
+        if is_flag_set "debug-mir-pretty" then
+          r.return (Result.Ok (Fmt.str "%a" Program.Typed.pp mir), warnings, []) ;
         if is_flag_set "debug-generate-data" then
           r.return
             ( Result.Ok (Debug_data_generation.print_data_prog typed_ast)
             , warnings
             , [] ) ;
         let opt_mir =
-          if is_flag_set "O0" then opt_lvl := Optimize.O0
-          else if is_flag_set "O1" then opt_lvl := Optimize.O1
-          else if is_flag_set "Oexperimental" || is_flag_set "O" then
-            opt_lvl := Optimize.Oexperimental ;
+          let opt_lvl =
+            if is_flag_set "O0" then Optimize.O0
+            else if is_flag_set "O1" then Optimize.O1
+            else if is_flag_set "Oexperimental" || is_flag_set "O" then
+              Optimize.Oexperimental
+            else Optimize.O0 in
           Optimize.optimization_suite
-            ~settings:(Optimize.level_optimizations !opt_lvl)
+            ~settings:(Optimize.level_optimizations opt_lvl)
             tx_mir in
         if is_flag_set "debug-optimized-mir" then
           r.return
@@ -105,16 +108,18 @@ let stan2cpp model_name model_string is_flag_set flag_val =
                 (Sexp.to_string_hum [%sexp (opt_mir : Middle.Program.Typed.t)])
             , warnings
             , [] ) ;
+        if is_flag_set "debug-optimized-mir-pretty" then
+          r.return
+            (Result.Ok (Fmt.str "%a" Program.Typed.pp opt_mir), warnings, []) ;
         if is_flag_set "debug-transformed-mir" then
           r.return
             ( Result.Ok
                 (Sexp.to_string_hum [%sexp (tx_mir : Middle.Program.Typed.t)])
             , warnings
             , [] ) ;
-        if is_flag_set "dump-stan-math-signatures" then (
-          Stan_math_signatures.pretty_print_all_math_sigs Format.str_formatter
-            () ;
-          r.return (Result.Ok "", warnings, []) ) ;
+        if is_flag_set "debug-transformed-mir-pretty" then
+          r.return
+            (Result.Ok (Fmt.str "%a" Program.Typed.pp tx_mir), warnings, []) ;
         let cpp = Fmt.str "%a" Stan_math_code_gen.pp_prog opt_mir in
         let uninit_warnings =
           if is_flag_set "warn-uninitialized" then
