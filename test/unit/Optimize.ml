@@ -138,20 +138,20 @@ let%expect_test "inline functions" =
 
       log_prob {
         {
-          data int inline_sym1__;
-          inline_sym1__ = 0;
+          data int inline_f_early_ret_check_sym1__;
+          inline_f_early_ret_check_sym1__ = 0;
           {
             FnPrint__(3);
             FnPrint__(FnMakeRowVec__(FnMakeRowVec__(3, 2), FnMakeRowVec__(4, 6)));
           }
-          real inline_sym2__;
-          data int inline_sym3__;
-          inline_sym3__ = 0;
+          real inline_g_return_sym2__;
+          data int inline_g_early_ret_check_sym3__;
+          inline_g_early_ret_check_sym3__ = 0;
           {
-            inline_sym3__ = 1;
-            inline_sym2__ = (53 ^ 2);
+            inline_g_early_ret_check_sym3__ = 1;
+            inline_g_return_sym2__ = (53 ^ 2);
           }
-          FnReject__(inline_sym2__);
+          FnReject__(inline_g_return_sym2__);
         }
       }
 
@@ -205,8 +205,8 @@ let%expect_test "inline functions 2" =
         }
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
-        data int inline_sym4__;
-        inline_sym4__ = 0;
+        data int inline_g_early_ret_check_sym4__;
+        inline_g_early_ret_check_sym4__ = 0;
         {
           data int inline_sym3__;
           inline_sym3__ = 0;
@@ -280,11 +280,12 @@ let%expect_test "list collapsing" =
       (((pattern
          (Block
           (((pattern
-             (Decl (decl_adtype DataOnly) (decl_id inline_sym1__)
-              (decl_type (Sized SInt)) (initialize true)))
+             (Decl (decl_adtype DataOnly)
+              (decl_id inline_f_early_ret_check_sym1__) (decl_type (Sized SInt))
+              (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Assignment (inline_sym1__ UInt ())
+             (Assignment (inline_f_early_ret_check_sym1__ UInt ())
               ((pattern (Lit Int 0))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
             (meta <opaque>))
@@ -323,27 +324,28 @@ let%expect_test "list collapsing" =
                 (meta <opaque>)))))
             (meta <opaque>))
            ((pattern
-             (Decl (decl_adtype AutoDiffable) (decl_id inline_sym2__)
+             (Decl (decl_adtype AutoDiffable) (decl_id inline_g_return_sym2__)
               (decl_type (Unsized UReal)) (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Decl (decl_adtype DataOnly) (decl_id inline_sym3__)
-              (decl_type (Sized SInt)) (initialize true)))
+             (Decl (decl_adtype DataOnly)
+              (decl_id inline_g_early_ret_check_sym3__) (decl_type (Sized SInt))
+              (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Assignment (inline_sym3__ UInt ())
+             (Assignment (inline_g_early_ret_check_sym3__ UInt ())
               ((pattern (Lit Int 0))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
             (meta <opaque>))
            ((pattern
              (Block
               (((pattern
-                 (Assignment (inline_sym3__ UInt ())
+                 (Assignment (inline_g_early_ret_check_sym3__ UInt ())
                   ((pattern (Lit Int 1))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
-                 (Assignment (inline_sym2__ UReal ())
+                 (Assignment (inline_g_return_sym2__ UReal ())
                   ((pattern
                     (FunApp (StanLib Pow__ FnPlain AoS)
                      (((pattern (Lit Int 53))
@@ -355,7 +357,7 @@ let%expect_test "list collapsing" =
             (meta <opaque>))
            ((pattern
              (NRFunApp (CompilerInternal FnReject)
-              (((pattern (Var inline_sym2__))
+              (((pattern (Var inline_g_return_sym2__))
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta <opaque>)))))
         (meta <opaque>))))
@@ -481,32 +483,32 @@ let%expect_test "inline function in for loop" =
 
       log_prob {
         {
-          int inline_sym1__;
-          int inline_sym3__;
-          data int inline_sym2__;
-          inline_sym2__ = 0;
+          int inline_f_return_sym1__;
+          int inline_g_return_sym3__;
+          data int inline_f_early_ret_check_sym2__;
+          inline_f_early_ret_check_sym2__ = 0;
           {
             FnPrint__("f");
-            inline_sym2__ = 1;
-            inline_sym1__ = 42;
+            inline_f_early_ret_check_sym2__ = 1;
+            inline_f_return_sym1__ = 42;
           }
-          data int inline_sym4__;
-          inline_sym4__ = 0;
+          data int inline_g_early_ret_check_sym4__;
+          inline_g_early_ret_check_sym4__ = 0;
           {
             FnPrint__("g");
-            inline_sym4__ = 1;
-            inline_sym3__ = (3 + 24);
+            inline_g_early_ret_check_sym4__ = 1;
+            inline_g_return_sym3__ = (3 + 24);
           }
-          for(i in inline_sym1__:inline_sym3__) {
+          for(i in inline_f_return_sym1__:inline_g_return_sym3__) {
             {
               FnPrint__("body");
             }
-            data int inline_sym4__;
-            inline_sym4__ = 0;
+            data int inline_g_early_ret_check_sym4__;
+            inline_g_early_ret_check_sym4__ = 0;
             {
               FnPrint__("g");
-              inline_sym4__ = 1;
-              inline_sym3__ = (3 + 24);
+              inline_g_early_ret_check_sym4__ = 1;
+              inline_g_return_sym3__ = (3 + 24);
             }
           }
         }
@@ -564,17 +566,17 @@ let%expect_test "inline function in for loop 2" =
 
       log_prob {
         {
-          int inline_sym5__;
-          int inline_sym7__;
-          data int inline_sym6__;
-          inline_sym6__ = 0;
+          int inline_f_return_sym5__;
+          int inline_g_return_sym7__;
+          data int inline_f_early_ret_check_sym6__;
+          inline_f_early_ret_check_sym6__ = 0;
           {
             FnPrint__("f");
-            inline_sym6__ = 1;
-            inline_sym5__ = 42;
+            inline_f_early_ret_check_sym6__ = 1;
+            inline_f_return_sym5__ = 42;
           }
-          data int inline_sym10__;
-          inline_sym10__ = 0;
+          data int inline_g_early_ret_check_sym10__;
+          inline_g_early_ret_check_sym10__ = 0;
           {
             FnPrint__("g");
             int inline_sym8__;
@@ -585,15 +587,15 @@ let%expect_test "inline function in for loop 2" =
               inline_sym9__ = 1;
               inline_sym8__ = 42;
             }
-            inline_sym10__ = 1;
-            inline_sym7__ = (inline_sym8__ + 24);
+            inline_g_early_ret_check_sym10__ = 1;
+            inline_g_return_sym7__ = (inline_sym8__ + 24);
           }
-          for(i in inline_sym5__:inline_sym7__) {
+          for(i in inline_f_return_sym5__:inline_g_return_sym7__) {
             {
               FnPrint__("body");
             }
-            data int inline_sym10__;
-            inline_sym10__ = 0;
+            data int inline_g_early_ret_check_sym10__;
+            inline_g_early_ret_check_sym10__ = 0;
             {
               FnPrint__("g");
               int inline_sym8__;
@@ -604,8 +606,8 @@ let%expect_test "inline function in for loop 2" =
                 inline_sym9__ = 1;
                 inline_sym8__ = 42;
               }
-              inline_sym10__ = 1;
-              inline_sym7__ = (inline_sym8__ + 24);
+              inline_g_early_ret_check_sym10__ = 1;
+              inline_g_return_sym7__ = (inline_sym8__ + 24);
             }
           }
         }
@@ -661,22 +663,22 @@ let%expect_test "inline function in while loop" =
 
       log_prob {
         {
-          int inline_sym1__;
-          data int inline_sym2__;
-          inline_sym2__ = 0;
+          int inline_g_return_sym1__;
+          data int inline_g_early_ret_check_sym2__;
+          inline_g_early_ret_check_sym2__ = 0;
           {
             FnPrint__("g");
-            inline_sym2__ = 1;
-            inline_sym1__ = (3 + 24);
+            inline_g_early_ret_check_sym2__ = 1;
+            inline_g_return_sym1__ = (3 + 24);
           }
-          while(inline_sym1__) {
+          while(inline_g_return_sym1__) {
             FnPrint__("body");
-            data int inline_sym2__;
-            inline_sym2__ = 0;
+            data int inline_g_early_ret_check_sym2__;
+            inline_g_early_ret_check_sym2__ = 0;
             {
               FnPrint__("g");
-              inline_sym2__ = 1;
-              inline_sym1__ = (3 + 24);
+              inline_g_early_ret_check_sym2__ = 1;
+              inline_g_return_sym1__ = (3 + 24);
             }
           }
         }
@@ -732,15 +734,15 @@ let%expect_test "inline function in if then else" =
 
       log_prob {
         {
-          int inline_sym1__;
-          data int inline_sym2__;
-          inline_sym2__ = 0;
+          int inline_g_return_sym1__;
+          data int inline_g_early_ret_check_sym2__;
+          inline_g_early_ret_check_sym2__ = 0;
           {
             FnPrint__("g");
-            inline_sym2__ = 1;
-            inline_sym1__ = (3 + 24);
+            inline_g_early_ret_check_sym2__ = 1;
+            inline_g_return_sym1__ = (3 + 24);
           }
-          if(inline_sym1__) FnPrint__("body");
+          if(inline_g_return_sym1__) FnPrint__("body");
         }
       }
 
@@ -806,34 +808,35 @@ let%expect_test "inline function in ternary if " =
 
       log_prob {
         {
-          int inline_sym1__;
-          int inline_sym3__;
-          int inline_sym5__;
-          data int inline_sym2__;
-          inline_sym2__ = 0;
+          int inline_f_return_sym1__;
+          int inline_g_return_sym3__;
+          int inline_h_return_sym5__;
+          data int inline_f_early_ret_check_sym2__;
+          inline_f_early_ret_check_sym2__ = 0;
           {
             FnPrint__("f");
-            inline_sym2__ = 1;
-            inline_sym1__ = 42;
+            inline_f_early_ret_check_sym2__ = 1;
+            inline_f_return_sym1__ = 42;
           }
-          if(inline_sym1__) {
-            data int inline_sym4__;
-            inline_sym4__ = 0;
+          if(inline_f_return_sym1__) {
+            data int inline_g_early_ret_check_sym4__;
+            inline_g_early_ret_check_sym4__ = 0;
             {
               FnPrint__("g");
-              inline_sym4__ = 1;
-              inline_sym3__ = (3 + 24);
+              inline_g_early_ret_check_sym4__ = 1;
+              inline_g_return_sym3__ = (3 + 24);
             }
           } else {
-            data int inline_sym6__;
-            inline_sym6__ = 0;
+            data int inline_h_early_ret_check_sym6__;
+            inline_h_early_ret_check_sym6__ = 0;
             {
               FnPrint__("h");
-              inline_sym6__ = 1;
-              inline_sym5__ = (4 + 4);
+              inline_h_early_ret_check_sym6__ = 1;
+              inline_h_return_sym5__ = (4 + 4);
             }
           }
-          FnPrint__(inline_sym1__ ?inline_sym3__: inline_sym5__);
+          FnPrint__(inline_f_return_sym1__ ?inline_g_return_sym3__:
+                    inline_h_return_sym5__);
         }
       }
 
@@ -883,21 +886,21 @@ let%expect_test "inline function multiple returns " =
 
       log_prob {
         {
-          int inline_sym1__;
-          data int inline_sym2__;
-          inline_sym2__ = 0;
+          int inline_f_return_sym1__;
+          data int inline_f_early_ret_check_sym2__;
+          inline_f_early_ret_check_sym2__ = 0;
           for(inline_sym3__ in 1:1) {
             if(2) {
               FnPrint__("f");
-              inline_sym2__ = 1;
-              inline_sym1__ = 42;
+              inline_f_early_ret_check_sym2__ = 1;
+              inline_f_return_sym1__ = 42;
               break;
             }
-            inline_sym2__ = 1;
-            inline_sym1__ = 6;
+            inline_f_early_ret_check_sym2__ = 1;
+            inline_f_return_sym1__ = 6;
             break;
           }
-          FnPrint__(inline_sym1__);
+          FnPrint__(inline_f_return_sym1__);
         }
       }
 
@@ -943,23 +946,23 @@ let%expect_test "inline function indices " =
       log_prob {
         {
           array[array[int, 2], 2] a;
-          int inline_sym3__;
-          int inline_sym1__;
-          data int inline_sym4__;
-          inline_sym4__ = 0;
+          int inline_f_return_sym3__;
+          int inline_f_return_sym1__;
+          data int inline_f_early_ret_check_sym4__;
+          inline_f_early_ret_check_sym4__ = 0;
           {
             FnPrint__(2);
-            inline_sym4__ = 1;
-            inline_sym3__ = 42;
+            inline_f_early_ret_check_sym4__ = 1;
+            inline_f_return_sym3__ = 42;
           }
-          data int inline_sym2__;
-          inline_sym2__ = 0;
+          data int inline_f_early_ret_check_sym2__;
+          inline_f_early_ret_check_sym2__ = 0;
           {
             FnPrint__(1);
-            inline_sym2__ = 1;
-            inline_sym1__ = 42;
+            inline_f_early_ret_check_sym2__ = 1;
+            inline_f_return_sym1__ = 42;
           }
-          FnPrint__(a[inline_sym1__, inline_sym3__]);
+          FnPrint__(a[inline_f_return_sym1__, inline_f_return_sym3__]);
         }
       }
 
@@ -1004,25 +1007,25 @@ let%expect_test "inline function and " =
 
       log_prob {
         {
-          int inline_sym1__;
-          int inline_sym3__;
-          data int inline_sym2__;
-          inline_sym2__ = 0;
+          int inline_f_return_sym1__;
+          int inline_f_return_sym3__;
+          data int inline_f_early_ret_check_sym2__;
+          inline_f_early_ret_check_sym2__ = 0;
           {
             FnPrint__(1);
-            inline_sym2__ = 1;
-            inline_sym1__ = 42;
+            inline_f_early_ret_check_sym2__ = 1;
+            inline_f_return_sym1__ = 42;
           }
-          if(inline_sym1__) {
-            data int inline_sym4__;
-            inline_sym4__ = 0;
+          if(inline_f_return_sym1__) {
+            data int inline_f_early_ret_check_sym4__;
+            inline_f_early_ret_check_sym4__ = 0;
             {
               FnPrint__(2);
-              inline_sym4__ = 1;
-              inline_sym3__ = 42;
+              inline_f_early_ret_check_sym4__ = 1;
+              inline_f_return_sym3__ = 42;
             }
           }
-          FnPrint__(inline_sym1__ && inline_sym3__);
+          FnPrint__(inline_f_return_sym1__ && inline_f_return_sym3__);
         }
       }
 
@@ -1066,25 +1069,25 @@ let%expect_test "inline function or " =
 
       log_prob {
         {
-          int inline_sym1__;
-          int inline_sym3__;
-          data int inline_sym2__;
-          inline_sym2__ = 0;
+          int inline_f_return_sym1__;
+          int inline_f_return_sym3__;
+          data int inline_f_early_ret_check_sym2__;
+          inline_f_early_ret_check_sym2__ = 0;
           {
             FnPrint__(1);
-            inline_sym2__ = 1;
-            inline_sym1__ = 42;
+            inline_f_early_ret_check_sym2__ = 1;
+            inline_f_return_sym1__ = 42;
           }
-          if(inline_sym1__) ; else {
-            data int inline_sym4__;
-            inline_sym4__ = 0;
+          if(inline_f_return_sym1__) ; else {
+            data int inline_f_early_ret_check_sym4__;
+            inline_f_early_ret_check_sym4__ = 0;
             {
               FnPrint__(2);
-              inline_sym4__ = 1;
-              inline_sym3__ = 42;
+              inline_f_early_ret_check_sym4__ = 1;
+              inline_f_return_sym3__ = 42;
             }
           }
-          FnPrint__(inline_sym1__ || inline_sym3__);
+          FnPrint__(inline_f_return_sym1__ || inline_f_return_sym3__);
         }
       }
 

@@ -106,13 +106,15 @@ let subst_args_stmt args es =
   let m = Map.Poly.of_alist_exn (List.zip_exn args es) in
   subst_stmt m
 
-let rec count_returns (acc : int) Stmt.Fixed.{pattern; _} =
+(**
+ * Count the number of returns that happen in a statement
+ *)
+let rec count_returns (acc : int) Stmt.Fixed.{pattern; _} : int =
   match pattern with
   | Return _ -> acc + 1
   | IfElse (_, a, b) ->
       count_returns acc a + Option.value_map ~default:0 ~f:(count_returns acc) b
-  | While (_, b) -> count_returns acc b
-  | For {body; _} -> count_returns acc body
+  | While (_, body) | For {body; _} -> count_returns acc body
   | Block lst | SList lst | Profile (_, lst) ->
       List.fold ~init:acc ~f:count_returns lst
   | _ -> acc
@@ -125,9 +127,10 @@ let rec count_returns (acc : int) Stmt.Fixed.{pattern; _} =
    then to check if that flag is set after each loop. Then, if a 'return' break
    is called from an inner loop, there's a cascade of breaks all the way out of
    the dummy loop. *)
-let handle_early_returns opt_var b =
-  let returned = Gensym.generate ~prefix:"inline_" () in
-  let f num_returns stmt_pattern =
+let handle_early_returns (fname : string) opt_var b =
+  let returned =
+    Gensym.generate ~prefix:("inline_" ^ fname ^ "_early_ret_check_") () in
+  let generate_inner_breaks num_returns stmt_pattern =
     match stmt_pattern with
     | Stmt.Fixed.Pattern.Return opt_ret -> (
       match (opt_var, opt_ret) with
@@ -219,9 +222,9 @@ let handle_early_returns opt_var b =
                   ; meta=
                       {type_= UInt; adlevel= DataOnly; loc= Location_span.empty}
                   }
-              ; body= map_rec_stmt_loc (f num_returns) b }
+              ; body= map_rec_stmt_loc (generate_inner_breaks num_returns) b }
         ; meta= Location_span.empty }
-    else map_rec_stmt_loc (f num_returns) b in
+    else map_rec_stmt_loc (generate_inner_breaks num_returns) b in
   Stmt.Fixed.Pattern.SList
     [ Stmt.Fixed.
         { pattern=
@@ -285,8 +288,10 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
                 | _ -> StanLib (fname, suffix, AoS) in
               (d_list, s_list, {e with pattern= FunApp (fun_kind, es)})
           | Some (rt, args, b) ->
-              let x = Gensym.generate ~prefix:"inline_" () in
-              let handle = handle_early_returns (Some x) in
+              let x =
+                Gensym.generate ~prefix:("inline_" ^ fname ^ "_return_") ()
+              in
+              let handle = handle_early_returns fname (Some x) in
               let d_list2, s_list2, (e : Expr.Typed.t) =
                 ( [ Stmt.Fixed.Pattern.Decl
                       { decl_adtype= adt
@@ -388,7 +393,7 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.{pattern; meta} =
                 | None -> NRFunApp (kind, es)
                 | Some (_, args, b) ->
                     let b = replace_fresh_local_vars b in
-                    let b = handle_early_returns None b in
+                    let b = handle_early_returns s None b in
                     (subst_args_stmt args es
                        {pattern= b; meta= Location_span.empty} )
                       .pattern ) )
