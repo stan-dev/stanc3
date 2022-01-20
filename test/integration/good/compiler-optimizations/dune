@@ -29,6 +29,7 @@
    expr-prop-fail.stan
    ad-level-failing.stan
    ad-level-deep-dependence.stan
+   overloaded-fn.stan
    lupdf-inlining.stan
    unenforce-initialize.stan))
  (action

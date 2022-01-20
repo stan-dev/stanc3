@@ -23,6 +23,8 @@ open Fmt
 open Expression_gen
 open Statement_gen
 
+type found_functor = {template: string; signature: string; defn: string}
+
 let standalone_functions = ref false
 
 let stanc_args_to_print =
@@ -92,25 +94,25 @@ let pp_promoted_scalar ppf args =
   | _ ->
       let rec promote_args_chunked ppf args =
         let go ppf tl =
-          match tl with [] -> () | _ -> pf ppf ", %a" promote_args_chunked tl
+          match tl with [] -> () | _ -> pf ppf ",@ %a" promote_args_chunked tl
         in
         match args with
         | [] -> pf ppf "double"
         | hd :: tl ->
-            pf ppf "stan::promote_args_t<%a%a>" (list ~sep:comma string) hd go
-              tl in
+            pf ppf "@[stan::promote_args_t<@[%a%a@]>@]" (list ~sep:comma string)
+              hd go tl in
       promote_args_chunked ppf
         List.(chunks_of ~length:5 (filter_opt (return_arg_types args)))
 
 (** Pretty-prints a function's return-type, taking into account templated argument
     promotion.*)
 let pp_returntype ppf arg_types rt =
-  let scalar = str "%a" pp_promoted_scalar arg_types in
+  let scalar = str "@[%a@]" pp_promoted_scalar arg_types in
   match rt with
   | Some ut when UnsizedType.is_int_type ut ->
-      pf ppf "%a@," pp_unsizedtype_custom_scalar ("int", ut)
-  | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
-  | None -> pf ppf "void@,"
+      pf ppf "%a@ " pp_unsizedtype_custom_scalar ("int", ut)
+  | Some ut -> pf ppf "%a@ " pp_unsizedtype_custom_scalar (scalar, ut)
+  | None -> pf ppf "void@ "
 
 let pp_eigen_arg_to_ref ppf arg_types =
   let pp_ref ppf name =
@@ -189,7 +191,7 @@ let get_templates_and_args exprs fdargs =
 let pp_template_decorator ppf = function
   | [] -> ()
   | templates ->
-      pf ppf "template @[<hov><%a>@]@ " (list ~sep:comma string) templates
+      pf ppf "@[template <@[<h 8>%a>@]@]@ " (list ~sep:comma string) templates
 
 let mk_extra_args templates args =
   List.map ~f:(fun (t, v) -> t ^ "& " ^ v) (List.zip_exn templates args)
@@ -199,16 +201,19 @@ let mk_extra_args templates args =
   Refactor this please - one idea might be to have different functions for
    printing user defined distributions vs rngs vs regular functions.
 *)
-let pp_fun_def ppf Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
-    funs_used_in_reduce_sum funs_used_in_variadic_ode funs_used_in_variadic_dae
-    =
+let pp_fun_def ppf
+    ( Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
+    , functors
+    , funs_used_in_reduce_sum
+    , funs_used_in_variadic_ode
+    , funs_used_in_variadic_dae ) =
   let extra, extra_templates =
     match fdsuffix with
     | Fun_kind.FnTarget -> (["lp__"; "lp_accum__"], ["T_lp__"; "T_lp_accum__"])
     | FnRng -> (["base_rng__"], ["RNG"])
     | FnLpdf _ | FnPlain -> ([], []) in
   let pp_body ppf (Stmt.Fixed.{pattern; _} as fdbody) =
-    pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," pp_promoted_scalar fdargs ;
+    pf ppf "@[<hv 8>using local_scalar_t__ =@ %a;@]@," pp_promoted_scalar fdargs ;
     pf ppf "int current_statement__ = 0; @ " ;
     if List.exists ~f:(fun (_, _, t) -> UnsizedType.is_eigen_type t) fdargs then
       pp_eigen_arg_to_ref ppf fdargs ;
@@ -228,6 +233,7 @@ let pp_fun_def ppf Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
     pp_located_error ppf (pp_statement, blocked_fdbody) ;
     pf ppf "@ " in
   let pp_sig ppf (name, exprs, variadic) =
+    Format.open_vbox 2 ;
     let argtypetemplates, args = get_templates_and_args exprs fdargs in
     let templates =
       List.(map ~f:typename (argtypetemplates @ extra_templates)) in
@@ -247,40 +253,49 @@ let pp_fun_def ppf Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
       @ mk_extra_args extra_templates extra
       @ ["std::ostream* pstream__"]
       @ variadic_args in
-    pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs in
+    pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs ;
+    Format.close_box () in
   pp_sig ppf (fdname, true, `None) ;
   match fdbody with
   | None -> pf ppf ";@ "
   | Some fdbody ->
       pp_block ppf (pp_body, fdbody) ;
-      let pp_functor ppf (str_args, args, variadic) =
+      let register_functor (str_args, args, variadic) =
         let suffix =
           match variadic with
           | `None -> functor_suffix
           | `ReduceSum -> reduce_sum_functor_suffix
           | `VariadicODE -> variadic_ode_functor_suffix
           | `VariadicDAE -> variadic_dae_functor_suffix in
-        let pp_template_propto ppf () =
+        let functor_name = fdname ^ suffix in
+        let template =
           match (fdsuffix, variadic) with
-          | FnLpdf _, `ReduceSum -> pf ppf "template <bool propto__>@ "
-          | _ -> pf ppf "" in
-        pf ppf "@,@,%astruct %s%s {@,%a const @,{@,return %a;@,}@,};@,"
-          pp_template_propto () fdname suffix pp_sig
-          ("operator()", false, variadic)
-          pp_call_str
-          ( ( match fdsuffix with
-            | FnLpdf _ | FnTarget -> fdname ^ "<propto__>"
-            | _ -> fdname )
-          , str_args
-            @ List.map ~f:(fun (_, name, _) -> name) args
-            @ extra @ ["pstream__"] ) in
-      pp_functor ppf ([], fdargs, `None) ;
+          | FnLpdf _, `ReduceSum -> "template <bool propto__> "
+          | _ -> "" in
+        let signature = str "%a" pp_sig ("operator()", false, variadic) in
+        let defn =
+          str "%a@ const@,{@.  return %a;@.}@." pp_sig
+            ( functor_name
+              ^ (if template <> "" then "<propto__>" else "")
+              ^ "::operator()"
+            , false
+            , variadic )
+            pp_call_str
+            ( ( match fdsuffix with
+              | FnLpdf _ | FnTarget -> fdname ^ "<propto__>"
+              | _ -> fdname )
+            , str_args
+              @ List.map ~f:(fun (_, name, _) -> name) args
+              @ extra @ ["pstream__"] ) in
+        Hashtbl.add_multi functors ~key:functor_name
+          ~data:{template; signature; defn} in
+      register_functor ([], fdargs, `None) ;
       if String.Set.mem funs_used_in_reduce_sum fdname then
         (* Produces the reduce_sum functors that has the pstream argument
            as the third and not last argument *)
         match fdargs with
         | (_, slice, _) :: (_, start, _) :: (_, end_, _) :: rest ->
-            pp_functor ppf
+            register_functor
               ([slice; start ^ " + 1"; end_ ^ " + 1"], rest, `ReduceSum)
         | _ ->
             Common.FatalError.fatal_error_msg
@@ -289,11 +304,11 @@ let pp_fun_def ppf Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
       else if String.Set.mem funs_used_in_variadic_ode fdname then
         (* Produces the variadic ode functors that has the pstream argument
            as the third and not last argument *)
-        pp_functor ppf ([], fdargs, `VariadicODE)
+        register_functor ([], fdargs, `VariadicODE)
       else if String.Set.mem funs_used_in_variadic_dae fdname then
         (* Produces the variadic DAE functors that has the pstream argument
            as the fourth and not last argument *)
-        pp_functor ppf ([], fdargs, `VariadicDAE)
+        register_functor ([], fdargs, `VariadicDAE)
 
 (** Creates functions outside the model namespaces which only call the ones
    inside the namespaces *)
@@ -942,29 +957,45 @@ let is_fun_used_with_variadic_fn variadic_fn_test p =
   in
   Program.fold find_functors_expr find_functors_stmt String.Set.empty p
 
+let collect_functors_functions p =
+  let (functors : (string, found_functor list) Hashtbl.t) =
+    String.Table.create () in
+  let reduce_sum_fns =
+    is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p in
+  let variadic_ode_fns =
+    is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_ode_fn p in
+  let variadic_dae_fns =
+    is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_dae_fn p in
+  let pp_fun_def_with_variadic_fn_list ppf fblock =
+    (hovbox ~indent:2 pp_fun_def)
+      ppf
+      (fblock, functors, reduce_sum_fns, variadic_ode_fns, variadic_dae_fns)
+  in
+  ( str "@[<v>%a@]"
+      (list ~sep:cut pp_fun_def_with_variadic_fn_list)
+      p.functions_block
+  , functors )
+
 (** Print the full C++ for the stan program. *)
 let pp_prog ppf (p : Program.Typed.t) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p, s = Locations.prepare_prog p in
-  let pp_fun_def_with_variadic_fn_list ppf fblock =
-    pp_fun_def ppf fblock
-      (is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p)
-      (is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_ode_fn p)
-      (is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_dae_fn p)
-  in
-  let reduce_sum_struct_decls =
-    String.Set.map
-      ~f:(fun x ->
-        if Utils.is_distribution_name x then
-          "template <bool propto__>\nstruct " ^ x ^ reduce_sum_functor_suffix
-          ^ ";"
-        else "struct " ^ x ^ reduce_sum_functor_suffix ^ ";" )
-      (is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p)
-    |> Set.elements |> String.concat ~sep:"\n" in
-  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
-    includes (namespace p) usings Locations.pp_globals s reduce_sum_struct_decls
-    (list ~sep:cut pp_fun_def_with_variadic_fn_list)
-    p.functions_block
+  let fns_str, functors = collect_functors_functions p in
+  let pp_functor_decls ppf tbl =
+    Hashtbl.iteri tbl ~f:(fun ~key ~data ->
+        pf ppf "@[<v 2>%astruct %s {@,%aconst;@]@,};@."
+          (Fmt.option (fun ppf o -> pf ppf "%s" o))
+          (Option.map ~f:(fun x -> x.template) (List.hd data))
+          key
+          (list ~sep:(any "const;@,") (hbox text))
+          (List.map ~f:(fun x -> x.signature) data) ) in
+  let pp_functors ppf tbl =
+    Hashtbl.iter tbl ~f:(fun data ->
+        List.iter data ~f:(fun {template; defn; _} ->
+            pf ppf "%s@ %s@." template defn ) ) in
+  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %a@ %a@ %s@ %a@ %a@ }@ @]" version
+    includes (namespace p) usings Locations.pp_globals s pp_functor_decls
+    functors fns_str pp_functors functors
     (if !standalone_functions then fun _ _ -> () else pp_model)
     p ;
   if !standalone_functions then

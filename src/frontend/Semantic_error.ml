@@ -32,6 +32,12 @@ module TypeError = struct
         * (UnsizedType.autodifftype * UnsizedType.t) list
         * SignatureMismatch.function_mismatch
         * UnsizedType.t
+    | AmbiguousFunctionPromotion of
+        string
+        * UnsizedType.t list option
+        * ( UnsizedType.returntype
+          * (UnsizedType.autodifftype * UnsizedType.t) list )
+          list
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string * string option
@@ -131,6 +137,26 @@ module TypeError = struct
           ( name
           , arg_tys
           , ([((UnsizedType.ReturnType return_type, args), error)], false) )
+    | AmbiguousFunctionPromotion (name, arg_tys, signatures) ->
+        let pp_sig ppf (rt, args) =
+          Fmt.pf ppf "@[<hov>(@[<hov>%a@]) => %a@]"
+            Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
+            args UnsizedType.pp_returntype rt in
+        Fmt.pf ppf
+          "No unique minimum promotion found for function '%s'.@ Overloaded \
+           functions must not have multiple equally valid promotion paths.@ %a \
+           function has several:@ @[<v>%a@]@ Consider defining a new signature \
+           for the exact types needed or@ re-thinking existing definitions."
+          name
+          (Fmt.option
+             ~none:(fun ppf () -> Fmt.pf ppf "This")
+             (fun ppf tys ->
+               Fmt.pf ppf "For args @[(%a)@], this"
+                 (Fmt.list ~sep:Fmt.comma UnsizedType.pp)
+                 tys ) )
+          arg_tys
+          (Fmt.list ~sep:Fmt.cut pp_sig)
+          signatures
     | NotIndexable (ut, nidcs) ->
         Fmt.pf ppf
           "Too many indexes, expression dimensions=%d, indexes found=%d."
@@ -238,7 +264,9 @@ module IdentifierError = struct
 
   let pp ppf = function
     | IsStanMathName name ->
-        Fmt.pf ppf "Identifier '%s' clashes with Stan Math library function."
+        Fmt.pf ppf
+          "Identifier '%s' clashes with a non-overloadable Stan Math library \
+           function."
           name
     | InUse name -> Fmt.pf ppf "Identifier '%s' is already in use." name
     | IsModelName name ->
@@ -332,7 +360,9 @@ module StatementError = struct
     | NonIntBounds
     | ComplexTransform
     | TransformedParamsInt
-    | MismatchFunDefDecl of string * UnsizedType.t option
+    | FuncOverloadRtOnly of
+        string * UnsizedType.returntype * UnsizedType.returntype
+    | FuncDeclRedefined of string * UnsizedType.t * bool
     | FunDeclExists of string
     | FunDeclNoDefn
     | FunDeclNeedsBlock
@@ -401,14 +431,16 @@ module StatementError = struct
         Fmt.pf ppf "Complex types do not support transformations."
     | TransformedParamsInt ->
         Fmt.pf ppf "(Transformed) Parameters cannot be integers."
-    | MismatchFunDefDecl (name, Some ut) ->
-        Fmt.pf ppf "Function '%s' has already been declared to have type %a"
-          name UnsizedType.pp ut
-    | MismatchFunDefDecl (name, None) ->
+    | FuncOverloadRtOnly (name, _, rt') ->
         Fmt.pf ppf
-          "Function '%s' has already been declared but type cannot be \
-           determined."
-          name
+          "Function '%s' cannot be overloaded by return type only. Previously \
+           used return type %a"
+          name UnsizedType.pp_returntype rt'
+    | FuncDeclRedefined (name, ut, stan_math) ->
+        Fmt.pf ppf "Function '%s' %s signature %a" name
+          ( if stan_math then "is already declared in the Stan Math library with"
+          else "has already been declared to for" )
+          UnsizedType.pp ut
     | FunDeclExists name ->
         Fmt.pf ppf
           "Function '%s' has already been declared. A definition is expected."
@@ -533,6 +565,10 @@ let illtyped_variadic_dae loc name arg_tys args error =
         , args
         , error
         , Stan_math_signatures.variadic_dae_fun_return_type ) )
+
+let ambiguous_function_promotion loc name arg_tys signatures =
+  TypeError
+    (loc, TypeError.AmbiguousFunctionPromotion (name, arg_tys, signatures))
 
 let returning_fn_expected_nonfn_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonFnFound name)
@@ -664,8 +700,11 @@ let complex_transform loc = StatementError (loc, StatementError.ComplexTransform
 let transformed_params_int loc =
   StatementError (loc, StatementError.TransformedParamsInt)
 
-let mismatched_fn_def_decl loc name ut_opt =
-  StatementError (loc, StatementError.MismatchFunDefDecl (name, ut_opt))
+let fn_overload_rt_only loc name rt1 rt2 =
+  StatementError (loc, StatementError.FuncOverloadRtOnly (name, rt1, rt2))
+
+let fn_decl_redefined loc name ~stan_math ut =
+  StatementError (loc, StatementError.FuncDeclRedefined (name, ut, stan_math))
 
 let fn_decl_exists loc name =
   StatementError (loc, StatementError.FunDeclExists name)

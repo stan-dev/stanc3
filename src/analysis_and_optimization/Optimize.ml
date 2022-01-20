@@ -423,7 +423,10 @@ let create_function_inline_map adt l =
      definitions), because that would replace the function call with a Skip.
   *)
   let f (accum, visited) Program.{fdname; fdargs; fdbody; fdrt; _} =
-    if Set.mem visited fdname then (accum, visited)
+    (* If we see a function more than once,
+       remove it to prevent inlining of overloaded functions
+    *)
+    if Set.mem visited fdname then (Map.remove accum fdname, visited)
     else
       let accum' =
         match fdbody with
@@ -1121,20 +1124,20 @@ let optimize_ad_levels (mir : Program.Typed.t) =
 (**
   * Deduces whether types can be Structures of Arrays (SoA/fast) or
   *  Arrays of Structs (AoS/slow). See the docs in
-  *  Mem_pattern.query_demote_stmt/exprs* functions for 
+  *  Mem_pattern.query_demote_stmt/exprs* functions for
   *  details on the rules surrounding when demotion from
   *  SoA -> AoS needs to happen.
   *
   * This first does a simple iter over
   * the log_prob portion of the MIR, finding the names of all matrices
   * (and arrays of matrices) where either the Stan math function
-  * does not support SoA or the object is single cell accesed within a 
+  * does not support SoA or the object is single cell accesed within a
   * For or While loop. These are the initial variables
   * given to the monotone framework. Then log_prob has all matrix like objects
-  * and the functions that use them to SoA. After that the 
+  * and the functions that use them to SoA. After that the
   * Monotone framework is used to deduce assignment paths of AoS <-> SoA
-  * and vice versa which need to be demoted to AoS as well as updating 
-  * functions and objects after these assignment passes that then 
+  * and vice versa which need to be demoted to AoS as well as updating
+  * functions and objects after these assignment passes that then
   * also need to be AoS.
   *
   * @param mir: The program's whole MIR.
@@ -1151,7 +1154,7 @@ let optimize_soa (mir : Program.Typed.t) =
       ~f:(Mem_pattern.query_initial_demotable_stmt false)
       mir.log_prob in
   (*
-  let print_set s = 
+  let print_set s =
     Set.Poly.iter ~f:print_endline s in
   let () = print_set initial_variables in
   *)
