@@ -140,20 +140,20 @@ let options =
       , Arg.Set_string Typechecker.model_name
       , " Take a string to set the model name (default = \
          \"$model_filename_model\")" )
-    ; ( "-O0"
+    ; ( "--O0"
       , Arg.Unit (fun () -> opt_lvl := Optimize.O0)
       , "\t(Default) Do not apply optimizations to the Stan code." )
-    ; ( "-O1"
+    ; ( "--O1"
       , Arg.Unit (fun () -> opt_lvl := Optimize.O1)
       , "\tApply level 1 compiler optimizations (only basic optimizations)." )
-    ; ( "-Oexperimental"
+    ; ( "--Oexperimental"
       , Arg.Unit (fun () -> opt_lvl := Optimize.Oexperimental)
       , "\t(Experimental) Apply all compiler optimizations. Some of these are \
          not thorougly tested and may not always improve a programs \
          performance." )
     ; ( "--O"
       , Arg.Unit (fun () -> opt_lvl := Optimize.Oexperimental)
-      , "\t(Experimental) Same as -Oexperimental. Apply all compiler \
+      , "\t(Experimental) Same as --Oexperimental. Apply all compiler \
          optimizations. Some of these are not thorougly tested and may not \
          always improve a programs performance." )
     ; ( "-fno-soa"
