@@ -126,7 +126,6 @@ let rec count_returns (acc : int) Stmt.Fixed.{pattern; _} : int =
       List.fold ~init:acc ~f:count_returns lst
   | _ -> acc
 
-(* TODO: only handle early returns if that's necessary *)
 (* The strategy here is to wrap the function body in a dummy loop, then replace
    returns with breaks. One issue is early return from internal loops - in
    those cases, a break would only break out of the inner loop. The solution is
@@ -141,34 +140,34 @@ let handle_early_returns (fname : string) opt_var stmt =
     match stmt_pattern with
     | Stmt.Fixed.Pattern.Return opt_ret -> (
       match (opt_var, opt_ret) with
-      | None, None -> Stmt.Fixed.Pattern.Break
+      | None, None when num_returns > 1 -> Stmt.Fixed.Pattern.Break
+      | None, None -> Stmt.Fixed.Pattern.Block []
+      | Some name, Some e when num_returns > 1 ->
+          SList
+            [ Stmt.Fixed.
+                { pattern=
+                    Assignment
+                      ( (returned, UInt, [])
+                      , Expr.Fixed.
+                          { pattern= Lit (Int, "1")
+                          ; meta=
+                              Expr.Typed.Meta.
+                                { type_= UInt
+                                ; adlevel= DataOnly
+                                ; loc= Location_span.empty } } )
+                ; meta= Location_span.empty }
+            ; Stmt.Fixed.
+                { pattern= Assignment ((name, Expr.Typed.type_of e, []), e)
+                ; meta= Location_span.empty }
+            ; {pattern= Break; meta= Location_span.empty} ]
       | Some name, Some e ->
-          if num_returns > 1 then
-            SList
-              [ Stmt.Fixed.
-                  { pattern=
-                      Assignment
-                        ( (returned, UInt, [])
-                        , Expr.Fixed.
-                            { pattern= Lit (Int, "1")
-                            ; meta=
-                                Expr.Typed.Meta.
-                                  { type_= UInt
-                                  ; adlevel= DataOnly
-                                  ; loc= Location_span.empty } } )
-                  ; meta= Location_span.empty }
-              ; Stmt.Fixed.
-                  { pattern= Assignment ((name, Expr.Typed.type_of e, []), e)
-                  ; meta= Location_span.empty }
-              ; {pattern= Break; meta= Location_span.empty} ]
-          else
-            let conditional_move_expr =
-              let e_type = Expr.Typed.type_of e in
-              if UnsizedType.is_container e_type then
-                Expr.Fixed.
-                  {pattern= FunApp (CompilerInternal FnMove, [e]); meta= e.meta}
-              else e in
-            Assignment ((name, Expr.Typed.type_of e, []), conditional_move_expr)
+          let conditional_move_expr =
+            let e_type = Expr.Typed.type_of e in
+            if UnsizedType.is_container e_type then
+              Expr.Fixed.
+                {pattern= FunApp (CompilerInternal FnMove, [e]); meta= e.meta}
+            else e in
+          Assignment ((name, Expr.Typed.type_of e, []), conditional_move_expr)
       | Some _, None ->
           Common.FatalError.fatal_error_msg
             [%message
@@ -181,24 +180,22 @@ let handle_early_returns (fname : string) opt_var stmt =
               ( "Expected a void function but found a non-empty return \
                  statement."
                 : string )] )
-    | Stmt.Fixed.Pattern.For _ as loop ->
-        if num_returns > 1 then
-          Stmt.Fixed.Pattern.SList
-            [ Stmt.Fixed.{pattern= loop; meta= Location_span.empty}
-            ; Stmt.Fixed.
-                { pattern=
-                    IfElse
-                      ( Expr.Fixed.
-                          { pattern= Var returned
-                          ; meta=
-                              Expr.Typed.Meta.
-                                { type_= UInt
-                                ; adlevel= DataOnly
-                                ; loc= Location_span.empty } }
-                      , {pattern= Break; meta= Location_span.empty}
-                      , None )
-                ; meta= Location_span.empty } ]
-        else loop
+    | Stmt.Fixed.Pattern.For _ as loop when num_returns > 1 ->
+        Stmt.Fixed.Pattern.SList
+          [ Stmt.Fixed.{pattern= loop; meta= Location_span.empty}
+          ; Stmt.Fixed.
+              { pattern=
+                  IfElse
+                    ( Expr.Fixed.
+                        { pattern= Var returned
+                        ; meta=
+                            Expr.Typed.Meta.
+                              { type_= UInt
+                              ; adlevel= DataOnly
+                              ; loc= Location_span.empty } }
+                    , {pattern= Break; meta= Location_span.empty}
+                    , None )
+              ; meta= Location_span.empty } ]
     | x -> x in
   let num_returns = count_returns 0 stmt in
   if num_returns > 1 then
