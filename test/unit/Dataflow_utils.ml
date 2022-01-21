@@ -186,7 +186,7 @@ let%expect_test "Statement label map example" =
         (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt))
          (initialize true)))
        (4
-        (Assignment (i UInt ())
+        (Assignment (LVariable i) UInt
          ((pattern (Lit Int 0))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
        (5

@@ -277,6 +277,8 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
     match l with
     | [] -> pf ppf "%a" pp_expression e
     | l -> pf ppf "%a[%a]" pp_expression e pp_list_of_indices l )
+  | IndexedTuple (e, i) -> pf ppf "%a.%d" pp_expression e i
+  | TupleExpr es -> pf ppf "(@[%a@])" pp_list_of_expression (es, loc)
 
 and pp_list_of_expression ppf es =
   let loc_of (x : untyped_expression) = x.emeta.loc in
@@ -303,7 +305,7 @@ let pp_printable ppf = function
 
 let pp_list_of_printables ppf l = (hovbox @@ list ~sep:comma pp_printable) ppf l
 
-let pp_sizedtype ppf = function
+let rec pp_sizedtype ppf = function
   | Middle.SizedType.SInt -> pf ppf "int"
   | SReal -> pf ppf "real"
   | SComplex -> pf ppf "complex"
@@ -311,8 +313,14 @@ let pp_sizedtype ppf = function
   | SRowVector (_, e) -> pf ppf "row_vector[%a]" pp_expression e
   | SMatrix (_, e1, e2) ->
       pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
-  | SArray _ ->
-      Common.FatalError.fatal_error_msg [%message "Error printing array type"]
+  | STuple ts -> pf ppf "(@[%a@])" (list ~sep:comma pp_sizedtype) ts
+  | SArray _ as arr ->
+      let ty, ixs = unwind_sized_array_type arr in
+      pf ppf "array[@[%a@]@ %a"
+        (list ~sep:comma pp_expression)
+        (List.rev ixs)
+        (fun ppf st -> pp_sizedtype ppf st)
+        ty
 
 let pp_transformation ppf = function
   | Middle.Transformation.Lower e -> pf ppf "<@[lower=%a@]>" pp_expression e
@@ -324,21 +332,32 @@ let pp_transformation ppf = function
   | OffsetMultiplier (e1, e2) ->
       pf ppf "<@[offset=%a,@ multiplier=%a@]>" pp_expression e1 pp_expression e2
   | Identity | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
-   |CholeskyCov | Correlation | Covariance ->
+   |CholeskyCov | Correlation | Covariance | TupleTransformation _
+  (* tuple transformations are handled in pp_transformed_type *) ->
       ()
 
-let pp_transformed_type ppf (pst, trans) =
+(* Comment from rybern:
+ * This seems like a mess to me. Why are we "discarding" arrays instead of just using
+   unwind_sized_array_type to group them when they're printed? It seems like
+   unwind_sized_array_type is called multiple times on the same input. Should sized types,
+   unsized types, and transformations really be handled in the same function?
+   Why split off pp_transformed if we're already matching on the transformation here? *)
+let rec pp_transformed_type ppf (pst, trans) =
   let rec discard_arrays pst =
+    (* Flatten arrays of arrays into arrays *)
     match pst with
     | Middle.Type.Sized st ->
         Middle.Type.Sized (Fn.compose fst unwind_sized_array_type st)
     | Unsized (UArray t) -> discard_arrays (Unsized t)
     | Unsized ut -> Unsized ut in
   let pst = discard_arrays pst in
+  (* This makes the assumption that we should use unsized printing if the top-level type isn't an array *)
   let unsizedtype_fmt =
     match pst with
     | Middle.Type.Sized (SArray _ as st) ->
         const pp_sizedtype (Fn.compose fst unwind_sized_array_type st)
+        (* If the type is a container, don't remove its sizes *)
+    | Middle.Type.Sized (STuple _ as st) -> Fmt.const pp_sizedtype st
     | _ -> const pp_unsizedtype (Middle.Type.to_unsized pst) in
   let sizes_fmt =
     match pst with
@@ -350,7 +369,10 @@ let pp_transformed_type ppf (pst, trans) =
      |Unsized _
      |Sized Middle.SizedType.SInt
      |Sized SReal
-     |Sized SComplex ->
+     |Sized SComplex
+     |Sized (STuple _) ->
+        (* TUPLE MAYBE
+           Not clear on the purpose here, do tuples need to be recursive? *)
         nop in
   let cov_sizes_fmt =
     match pst with
@@ -373,6 +395,10 @@ let pp_transformed_type ppf (pst, trans) =
   | CholeskyCov -> pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
   | Correlation -> pf ppf "corr_matrix%a" cov_sizes_fmt ()
   | Covariance -> pf ppf "cov_matrix%a" cov_sizes_fmt ()
+  | TupleTransformation _ as trans ->
+      (* TUPLES TODO: This is all we need to do for tuples, skip the rest *)
+      let transTypes = Middle.TupleUtils.zip_tuple_trans_exn pst trans in
+      pf ppf "(@[%a@])" (list ~sep:comma pp_transformed_type) transTypes
 
 let pp_array_dims ppf = function
   | [] -> ()

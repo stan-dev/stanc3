@@ -56,12 +56,14 @@ let context block =
   ; in_udf_dist_def= false
   ; loop_depth= 0 }
 
-let calculate_autodifftype cf origin ut =
-  match origin with
-  | Env.(Param | TParam | Model | Functions)
+let rec calculate_autodifftype cf origin ut =
+  match (origin, ut) with
+  | _, UnsizedType.UTuple ts ->
+      UnsizedType.TupleAD (List.map ~f:(calculate_autodifftype cf origin) ts)
+  | Env.(Param | TParam | Model | Functions), _
     when not (UnsizedType.is_int_type ut || cf.current_block = GQuant) ->
       UnsizedType.AutoDiffable
-  | _ -> DataOnly
+  | _, _ -> DataOnly
 
 let arg_type x = (x.emeta.ad_level, x.emeta.type_)
 let get_arg_types = List.map ~f:arg_type
@@ -322,7 +324,8 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
     | UMatrix, [`Multi; `Single] -> UnsizedType.UVector
     | UMatrix, _ :: _ :: _ :: _
      |(UVector | URowVector), _ :: _ :: _
-     |(UInt | UReal | UComplex | UFun _ | UMathLibraryFunction), _ :: _ ->
+     |( (UTuple _ | UInt | UReal | UComplex | UFun _ | UMathLibraryFunction)
+      , _ :: _ ) ->
         Semantic_error.not_indexable loc ut (List.length indices) |> error in
   aux ut (List.map ~f:indexing_type indices)
 
@@ -794,6 +797,40 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       mk_typed_expression ~expr:(Paren te) ~ad_level:te.emeta.ad_level
         ~type_:te.emeta.type_ ~loc
   | Indexed (e, indices) -> check_indexed loc cf tenv e indices
+  | IndexedTuple (e, i) -> (
+      let te = ce e in
+      match (te.emeta.type_, te.emeta.ad_level) with
+      | UTuple ts, TupleAD ads -> (
+        match (List.nth ts (i - 1), List.nth ads (i - 1)) with
+        | Some t, Some ad ->
+            mk_typed_expression
+              ~expr:(IndexedTuple (te, i))
+              ~ad_level:ad ~type_:t ~loc:emeta.loc
+        | None, None ->
+            Semantic_error.tuple_index_invalid_index emeta.loc (List.length ts)
+              i
+            |> error
+        | _ ->
+            raise_s
+              [%message
+                "Error in internal representation: tuple types don't match AD"]
+        )
+      | UTuple _, ad ->
+          Common.FatalError.fatal_error_msg
+            [%message
+              "Error in internal representation: tuple doesn't have tupleAD"
+                (ad : UnsizedType.autodifftype)]
+      | _, _ ->
+          Semantic_error.tuple_index_not_tuple emeta.loc te.emeta.type_ |> error
+      )
+  | TupleExpr es ->
+      let tes = List.map ~f:ce es in
+      if List.is_empty tes then Semantic_error.empty_tuple emeta.loc |> error
+      else
+        mk_typed_expression ~expr:(TupleExpr tes)
+          ~ad_level:(TupleAD (List.map ~f:(fun e -> e.emeta.ad_level) tes))
+          ~type_:(UTuple (List.map ~f:(fun e -> e.emeta.type_) tes))
+          ~loc:emeta.loc
   | FunApp ((), id, es) ->
       es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:false id
   | CondDistApp ((), id, es) ->
@@ -904,11 +941,28 @@ let verify_assignment_operator loc assop lhs rhs =
       in
       match return_type with Some Void -> () | _ -> err op |> error )
 
-let check_lvalue cf tenv = function
+let rec check_lvalue cf tenv = function
   | {lval= LVariable id; lmeta= ({loc} : located_meta)} ->
       verify_identifier id ;
       let ad_level, type_ = check_id cf loc tenv id in
       {lval= LVariable id; lmeta= {ad_level; type_; loc}}
+  | {lval= LIndexedTuple (lval, idx); lmeta= ({loc} : located_meta)} -> (
+      let tlval = check_lvalue cf tenv lval in
+      match (tlval.lmeta.type_, tlval.lmeta.ad_level) with
+      | UTuple tys, TupleAD ads -> (
+        match (List.nth tys idx, List.nth ads idx) with
+        | Some type_, Some ad_level ->
+            {lval= LIndexedTuple (tlval, idx); lmeta= {ad_level; type_; loc}}
+        | None, None ->
+            Semantic_error.tuple_index_invalid_index loc (List.length tys) idx
+            |> error
+        | _ ->
+            raise_s
+              [%message
+                "Error in internal representation: tuple types don't match AD"]
+        )
+      | _, _ ->
+          Semantic_error.tuple_index_not_tuple loc tlval.lmeta.type_ |> error )
   | {lval= LIndexed (lval, idcs); lmeta= {loc}} ->
       let rec check_inner = function
         | {lval= LVariable id; lmeta= ({loc} : located_meta)} ->
@@ -925,7 +979,8 @@ let check_lvalue cf tenv = function
               inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in
             ( {lval= LIndexed (lval, idcs); lmeta= {ad_level; type_; loc}}
             , var
-            , flat @ idcs ) in
+            , flat @ idcs )
+        | _ -> failwith "TUPLE TODO - nested array indexing check" in
       let lval, var, flat = check_inner lval in
       let idcs = List.map ~f:(check_index cf tenv) idcs in
       let ad_level = inferred_ad_type_of_indexed lval.lmeta.ad_level idcs in
@@ -1358,6 +1413,9 @@ and check_sizedtype cf tenv sizedty =
       let tst = check_sizedtype cf tenv st in
       let te = check e "Array sizes" in
       SizedType.SArray (tst, te)
+  | STuple sts ->
+      let tsts = List.map ~f:(check_sizedtype cf tenv) sts in
+      SizedType.STuple tsts
 
 and check_var_decl_initial_value loc cf tenv id init_val_opt =
   match init_val_opt with
@@ -1394,6 +1452,12 @@ and check_transformation cf tenv ut trans =
   | CholeskyCov -> CholeskyCov
   | Correlation -> Correlation
   | Covariance -> Covariance
+  | TupleTransformation _ ->
+      let typesTrans = TupleUtils.zip_utuple_trans_exn ut trans in
+      let tes =
+        List.map typesTrans ~f:(fun (ut, tm) ->
+            check_transformation cf tenv ut tm ) in
+      TupleTransformation tes
 
 and check_var_decl loc cf tenv sized_ty trans id init is_global =
   let checked_type =
@@ -1544,7 +1608,10 @@ and check_fundef loc cf tenv return_ty id args body =
     List.map
       ~f:(function
         | UnsizedType.DataOnly, ut -> (Env.Data, ut)
-        | AutoDiffable, ut -> (Param, ut) )
+        | AutoDiffable, ut -> (Param, ut)
+        | TupleAD _, _ ->
+            Common.FatalError.fatal_error_msg
+              [%message "Validate fundef tupleAD TUPLES STUB"] )
       arg_types in
   let tenv_body =
     List.fold2_exn arg_names arg_types_internal ~init:tenv

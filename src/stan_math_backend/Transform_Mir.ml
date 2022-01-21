@@ -24,8 +24,9 @@ let rec change_kwrds_stmts s =
     | Decl e -> Decl {e with decl_id= add_prefix_to_kwrds e.decl_id}
     | NRFunApp (UserDefined (s, sfx), e) ->
         NRFunApp (UserDefined (add_prefix_to_kwrds s, sfx), e)
-    | Assignment ((s, t, e1), e2) ->
-        Assignment ((add_prefix_to_kwrds s, t, e1), e2)
+    | Assignment (lhs, t, e2) ->
+        Assignment
+          (TupleUtils.map_lhs_variable ~f:add_prefix_to_kwrds lhs, t, e2)
     | For e -> For {e with loopvar= add_prefix_to_kwrds e.loopvar}
     | x -> map Fn.id change_kwrds_stmts x in
   {s with pattern}
@@ -133,13 +134,21 @@ let data_read smeta (decl_id, st) =
   match unsized with
   | UInt | UReal | UComplex ->
       [ Assignment
-          ( (decl_id, unsized, [])
+          ( LVariable decl_id
+          , unsized
           , { Expr.Fixed.pattern=
                 Indexed (readfnapp decl_var, [Single Expr.Helpers.loop_bottom])
             ; meta= {decl_var.meta with type_= unsized} } )
         |> swrap ]
   | UArray UInt | UArray UReal ->
-      [Assignment ((decl_id, flat_type, []), readfnapp decl_var) |> swrap]
+      [Assignment (LVariable decl_id, flat_type, readfnapp decl_var) |> swrap]
+  | UTuple _ ->
+      (* TUPLE STUB
+         Data read from tuples
+         There seems to be dispatch to a FnReadData function, could foist to C++
+      *)
+      []
+      (* raise_s [%message "Reading from tuples not implemented."] *)
   | UFun _ | UMathLibraryFunction ->
       Common.FatalError.fatal_error_msg
         [%message "Cannot read a function type."]
@@ -152,14 +161,15 @@ let data_read smeta (decl_id, st) =
             ; decl_type= Unsized flat_type
             ; initialize= false }
           |> swrap
-        , Assignment ((decl_id, flat_type, []), readfnapp decl_var) |> swrap
+        , Assignment (LVariable decl_id, flat_type, readfnapp decl_var) |> swrap
         , { Expr.Fixed.pattern= Var decl_id
           ; meta=
               Expr.Typed.Meta.{loc= smeta; type_= flat_type; adlevel= DataOnly}
           } ) in
-      let bodyfn var =
+      let bodyfn _ var =
         let pos_increment =
-          [ Assignment ((pos, UInt, []), Expr.Helpers.(binop pos_var Plus one))
+          [ Assignment
+              (LVariable pos, UInt, Expr.Helpers.(binop pos_var Plus one))
             |> swrap ] in
         let read_indexed _ =
           { Expr.Fixed.pattern= Indexed (flat_var, [Single pos_var])
@@ -170,7 +180,8 @@ let data_read smeta (decl_id, st) =
           :: pos_increment )
         |> swrap in
       let pos_reset =
-        Stmt.Fixed.Pattern.Assignment ((pos, UInt, []), Expr.Helpers.loop_bottom)
+        Stmt.Fixed.Pattern.Assignment
+          (LVariable pos, UInt, Expr.Helpers.loop_bottom)
         |> swrap in
       [ Block
           [ decl; assign; pos_reset
@@ -190,7 +201,8 @@ let read_constrain_dims constrain_transform st =
     | SizedType.SInt | SReal | SComplex -> []
     | SVector (_, d) | SRowVector (_, d) -> [d]
     | SMatrix (_, _, dim2) -> [dim2]
-    | SArray (t, dim) -> dim :: constrain_get_dims t in
+    | SArray (t, dim) -> dim :: constrain_get_dims t
+    | STuple _ -> failwith "TUPLE TODO read_param/read_constrain_dims" in
   match constrain_transform with
   | Transformation.CholeskyCorr | Correlation | Covariance ->
       constrain_get_dims st
@@ -223,7 +235,8 @@ let param_read smeta
             []
             Typed.Meta.{emeta with type_= ut})) in
     [ Stmt.Fixed.
-        {pattern= Pattern.Assignment ((decl_id, ut, []), read); meta= smeta} ]
+        {pattern= Pattern.Assignment (LVariable decl_id, ut, read); meta= smeta}
+    ]
 
 let escape_name str =
   str
@@ -329,7 +342,7 @@ let gen_write ?(unconstrain = false)
  *)
 let gen_unconstrained_write (decl_id, Program.{out_constrained_st; _}) =
   if SizedType.is_recursive_container out_constrained_st then
-    let bodyfn var =
+    let bodyfn _ var =
       Stmt.Helpers.internal_nrfunapp
         (FnWriteParam {unconstrain_opt= None; var})
         [var] Location_span.empty in
@@ -369,10 +382,11 @@ let data_unconstrain_transform smeta (decl_id, outvar) =
            { meta= smeta
            ; pattern=
                Assignment
-                 ( ( decl_id
-                   , SizedType.to_unsized nonarray_st
-                   , List.map ~f:(fun e -> Index.Single e) (List.rev loopvars)
-                   )
+                 ( LIndexed
+                     ( LVariable decl_id
+                     , List.map ~f:(fun e -> Index.Single e) (List.rev loopvars)
+                     )
+                 , SizedType.to_unsized nonarray_st
                  , data_serializer_read smeta nonarray_st ) } )
        smeta ); gen_write ~unconstrain:true (decl_id, outvar) ]
 
@@ -480,7 +494,7 @@ let trans_prog (p : Program.Typed.t) =
         ; decl_id= pos
         ; decl_type= Sized SInt
         ; initialize= true }
-    ; Assignment ((pos, UInt, []), Expr.Helpers.loop_bottom) ]
+    ; Assignment (LVariable pos, UInt, Expr.Helpers.loop_bottom) ]
     |> List.map ~f:(fun pattern ->
            Stmt.Fixed.{pattern; meta= Location_span.empty} ) in
   let param_writes, tparam_writes, gq_writes =
@@ -581,7 +595,8 @@ let trans_prog (p : Program.Typed.t) =
             ; meta= Location_span.empty }
         ; { pattern=
               Assignment
-                ( (vident, type_of_input_var, [])
+                ( LVariable vident
+                , type_of_input_var
                 , to_matrix_cl
                     { pattern= Var vident_sans_opencl
                     ; meta= Expr.Typed.Meta.empty } )

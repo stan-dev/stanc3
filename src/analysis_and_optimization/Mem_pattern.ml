@@ -17,7 +17,8 @@ let rec matrix_set Expr.Fixed.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta
         if UnsizedType.contains_eigen_type type_ then union_recur exprs
         else Set.Poly.empty
     | TernaryIf (_, expr2, expr3) -> union_recur [expr2; expr3]
-    | Indexed (expr, _) | Promotion (expr, _, _) -> matrix_set expr
+    | Indexed (expr, _) | Promotion (expr, _, _) | IndexedTuple (expr, _) ->
+        (* TUPLE MAYBE *) matrix_set expr
     | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
   else Set.Poly.empty
 
@@ -62,6 +63,7 @@ let rec count_single_idx_exprs (acc : int) Expr.Fixed.{pattern; _} : int =
       acc
       + count_single_idx_exprs 0 idx_expr
       + List.fold_left ~init:0 ~f:count_single_idx indexed
+  | IndexedTuple (expr, _) -> count_single_idx_exprs acc expr (* TUPLE MAYBE *)
   | Promotion (expr, _, _) -> count_single_idx_exprs acc expr
   | EAnd (lhs, rhs) ->
       acc + count_single_idx_exprs 0 lhs + count_single_idx_exprs 0 rhs
@@ -149,6 +151,7 @@ let rec query_initial_demotable_expr (in_loop : bool) ~(acc : string Set.Poly.t)
   | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
       acc
   | Promotion (expr, _, _) -> query_expr acc expr
+  | IndexedTuple (expr, _) -> query_expr acc expr (* TUPLE STUB *)
   | TernaryIf (predicate, texpr, fexpr) ->
       let predicate_demotes = query_expr acc predicate in
       Set.Poly.union
@@ -215,7 +218,8 @@ let rec is_any_soa_supported_expr
     | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
         is_any_soa_supported_fun_expr kind exprs
     | Indexed (expr, (_ : Typed.Meta.t Fixed.t Index.t list))
-     |Promotion (expr, _, _) ->
+     |Promotion (expr, _, _)
+     |IndexedTuple (expr, _) ->
         is_any_soa_supported_expr expr
     | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
         true
@@ -251,7 +255,7 @@ let rec is_any_ad_real_data_matrix_expr
     match pattern with
     | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
         is_any_ad_real_data_matrix_expr_fun kind exprs
-    | Indexed (expr, _) | Promotion (expr, _, _) ->
+    | Indexed (expr, _) | Promotion (expr, _, _) | IndexedTuple (expr, _) ->
         is_any_ad_real_data_matrix_expr expr
     | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
         false
@@ -337,8 +341,11 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
     query_initial_demotable_expr in_loop ~acc:accum in
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
-      ( ((name : string), (ut : UnsizedType.t), idx)
+      ( lval
+      , (ut : UnsizedType.t)
       , (Expr.Fixed.{meta= Expr.Typed.Meta.{type_; adlevel; _}; _} as rhs) ) ->
+      let name = TupleUtils.lhs_variable lval in
+      let idx = TupleUtils.lhs_indices lval in
       let idx_list =
         List.fold ~init:acc
           ~f:(fun accum x ->
@@ -425,10 +432,8 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
     (pattern : (Typed.t, int) Stmt.Fixed.Pattern.t) : string Set.Poly.t =
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
-      ( ( (assign_name : string)
-        , (_ : UnsizedType.t)
-        , (_ : Expr.Typed.t Index.t list) )
-      , (rhs : Expr.Typed.t) ) -> (
+      (lval, (_ : UnsizedType.t), (rhs : Expr.Typed.t)) -> (
+      let assign_name = TupleUtils.lhs_variable lval in
       let all_rhs_eigen_names = query_var_eigen_names rhs in
       if Set.Poly.mem aos_exits assign_name then
         Set.Poly.add all_rhs_eigen_names assign_name
@@ -521,6 +526,7 @@ and modify_expr_pattern ?force_demotion:(force = false)
       Indexed
         ( mod_expr idx_expr
         , List.map ~f:(Index.map (mod_expr ~force_demotion:force)) indexed )
+  | IndexedTuple (idx_expr, idx) -> IndexedTuple (mod_expr idx_expr, idx)
   | EAnd (lhs, rhs) -> EAnd (mod_expr lhs, mod_expr rhs)
   | EOr (lhs, rhs) -> EOr (mod_expr lhs, mod_expr rhs)
   | Promotion (expr, type_, ad_level) ->
@@ -576,13 +582,17 @@ let rec modify_stmt_pattern
   | NRFunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
       let kind', exprs' = modify_kind modifiable_set kind exprs in
       NRFunApp (kind', exprs')
+      (* TUPLE MAYBE - lhs changes may have affected this code? *)
   | Assignment
-      ( (name, ut, lhs)
+      ( lval
+      , ut
       , ( {pattern= FunApp (CompilerInternal (FnReadParam read_param), args); _}
         as assigner ) ) ->
+      let name = TupleUtils.lhs_variable lval in
       if Set.Poly.mem modifiable_set name then
         Assignment
-          ( (name, ut, List.map ~f:(Index.map (mod_expr false)) lhs)
+          ( lval
+          , ut
           , { assigner with
               pattern=
                 FunApp
@@ -591,23 +601,20 @@ let rec modify_stmt_pattern
                   , List.map ~f:(mod_expr true) args ) } )
       else
         Assignment
-          ( (name, ut, List.map ~f:(Index.map (mod_expr false)) lhs)
+          ( lval
+          , ut
           , { assigner with
               pattern=
                 FunApp
                   ( CompilerInternal
                       (FnReadParam {read_param with mem_pattern= SoA})
                   , List.map ~f:(mod_expr false) args ) } )
-  | Assignment (((name : string), (ut : UnsizedType.t), idx), rhs) ->
+  | Assignment (lval, (ut : UnsizedType.t), rhs) ->
+      let name = TupleUtils.lhs_variable lval in
       if Set.Poly.mem modifiable_set name then
         (*If assignee is in bad set, force demotion of rhs functions*)
-        Assignment
-          ( (name, ut, List.map ~f:(Index.map (mod_expr false)) idx)
-          , mod_expr true rhs )
-      else
-        Assignment
-          ( (name, ut, List.map ~f:(Index.map (mod_expr false)) idx)
-          , (mod_expr false) rhs )
+        Assignment (lval, ut, mod_expr true rhs)
+      else Assignment (lval, ut, (mod_expr false) rhs)
   | IfElse (predicate, true_stmt, op_false_stmt) ->
       IfElse
         ( (mod_expr false) predicate

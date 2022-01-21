@@ -33,6 +33,7 @@ let rec free_vars_expr (e : Expr.Typed.t) =
       Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
   | EAnd (e1, e2) | EOr (e1, e2) ->
       Set.Poly.union_list (List.map ~f:free_vars_expr [e1; e2])
+  | IndexedTuple (e, _) -> free_vars_expr e
 
 (** Calculate the free (non-bound) variables in an index*)
 and free_vars_idx (i : Expr.Typed.t Index.t) =
@@ -52,9 +53,11 @@ and free_vars_fnapp kind l =
 let rec free_vars_stmt (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
     =
   match s with
-  | Assignment ((_, _, []), e) | Return (Some e) | TargetPE e ->
+  | Assignment ((LVariable _ | LIndexedTuple _), _, e)
+   |Return (Some e)
+   |TargetPE e ->
       free_vars_expr e
-  | Assignment ((_, _, l), e) ->
+  | Assignment (LIndexed (_, l), _, e) ->
       Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
   | NRFunApp (kind, l) -> free_vars_fnapp kind l
   | IfElse (e, b1, Some b2) ->
@@ -324,15 +327,17 @@ let constant_propagation_transfer ?(preserve_stability = false)
             ( match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
                We could do the same for matrix and array expressions if we wanted. *)
-            | Assignment ((s, t, []), e) -> (
+            (* TODO: We could propagate tuple elements if we make the map more flexible *)
+            | Assignment (LVariable s, t, e) -> (
               match Partial_evaluator.try_eval_expr (subst_expr m e) with
               | {pattern= Lit (_, _); _} as e'
                 when not (preserve_stability && UnsizedType.is_autodiffable t)
                 ->
                   Map.set m ~key:s ~data:e'
               | _ -> Map.remove m s )
-            | Decl {decl_id= s; _} | Assignment ((s, _, _ :: _), _) ->
-                Map.remove m s
+            | Decl {decl_id= s; _} -> Map.remove m s
+            | Assignment (lhs, _, _) ->
+                Map.remove m (Middle.TupleUtils.lhs_variable lhs)
             | TargetPE _
              |NRFunApp (_, _)
              |Break | Continue | Return _ | Skip
@@ -372,7 +377,7 @@ let expression_propagation_transfer ?(preserve_stability = false)
             ( match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
                We could do the same for matrix and array expressions if we wanted. *)
-            | Middle.Stmt.Fixed.Pattern.Assignment ((s, t, []), e) ->
+            | Middle.Stmt.Fixed.Pattern.Assignment (LVariable s, t, e) ->
                 let m' = kill_var m s in
                 if
                   can_side_effect_expr e
@@ -380,8 +385,9 @@ let expression_propagation_transfer ?(preserve_stability = false)
                   || (preserve_stability && UnsizedType.is_autodiffable t)
                 then m'
                 else Map.set m ~key:s ~data:(subst_expr m e)
-            | Decl {decl_id= s; _} | Assignment ((s, _, _ :: _), _) ->
-                kill_var m s
+            | Decl {decl_id= s; _} -> kill_var m s
+            | Assignment (lhs, _, _) ->
+                kill_var m (Middle.TupleUtils.lhs_variable lhs)
             | Profile (_, b) | Block b ->
                 let kills =
                   Set.Poly.union_list
@@ -414,11 +420,13 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
                 not (key = v || data.pattern = Var v) ) in
           Some
             ( match mir_node with
-            | Assignment ((s, _, []), {pattern= Var t; meta}) ->
+            | Assignment (LVariable s, _, {pattern= Var t; meta}) ->
                 let m' = kill_var m s in
                 if Set.Poly.mem globals s then m'
                 else Map.set m' ~key:s ~data:Expr.Fixed.{pattern= Var t; meta}
-            | Decl {decl_id= s; _} | Assignment ((s, _, _), _) -> kill_var m s
+            | Decl {decl_id= s; _} -> kill_var m s
+            | Assignment (lhs, _, _) ->
+                kill_var m (Middle.TupleUtils.lhs_variable lhs)
             | Profile (_, b) | Block b ->
                 let kills =
                   Set.Poly.union_list
@@ -442,7 +450,8 @@ let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
 (** Calculate the set of variables that a statement can assign to *)
 let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t) =
   match s with
-  | Assignment ((x, _, _), _) -> Set.Poly.singleton x
+  | Assignment (lhs, _, _) ->
+      Set.Poly.singleton (Middle.TupleUtils.lhs_variable lhs)
   | TargetPE _ -> Set.Poly.singleton "target"
   | NRFunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _) ->
       Set.Poly.singleton "target"
@@ -481,8 +490,9 @@ let reaching_definitions_transfer
           (assigned_or_declared_vars_stmt mir_node) in
       let kill =
         match mir_node with
-        | Decl {decl_id= x; _} | Assignment ((x, _, []), _) | For {loopvar= x; _}
-          ->
+        | Decl {decl_id= x; _}
+         |Assignment (LVariable x, _, _)
+         |For {loopvar= x; _} ->
             Set.filter p ~f:(fun (y, _) -> y = x)
         | TargetPE _ -> Set.filter p ~f:(fun (y, _) -> y = "target")
         | NRFunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _)
@@ -524,7 +534,7 @@ let live_variables_transfer (never_kill : string Set.Poly.t)
       let gen = top_free_vars_stmt flowgraph_to_mir mir_node in
       let kill =
         match mir_node with
-        | Assignment ((x, _, []), _) | Decl {decl_id= x; _} ->
+        | Assignment (LVariable x, _, _) | Decl {decl_id= x; _} ->
             Set.Poly.singleton x
         | TargetPE _
          |NRFunApp (_, _)
@@ -532,7 +542,7 @@ let live_variables_transfer (never_kill : string Set.Poly.t)
          |IfElse (_, _, _)
          |While (_, _)
          |For _ | Profile _ | Block _ | SList _
-         |Assignment ((_, _, _ :: _), _) ->
+         |Assignment (_, _, _) ->
             Set.Poly.empty in
       transfer_gen_kill p gen (Set.Poly.diff kill never_kill) end
   : TRANSFER_FUNCTION
@@ -558,6 +568,7 @@ let rec used_subexpressions_expr (e : Expr.Typed.t) =
           ( used_subexpressions_expr e
           :: List.map ~f:(used_expressions_idx_help used_subexpressions_expr) l
           )
+    | IndexedTuple (e, _) -> used_subexpressions_expr e
     | EAnd (e1, e2) | EOr (e1, e2) ->
         Expr.Typed.Set.union_list
           [used_subexpressions_expr e1; used_subexpressions_expr e2] )
@@ -574,8 +585,11 @@ let used_expressions_expr e = Expr.Typed.Set.singleton e
 let rec used_expressions_stmt_help f
     (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
   match s with
-  | Assignment ((_, _, []), e) | TargetPE e | Return (Some e) -> f e
-  | Assignment ((_, _, l), e) ->
+  | Assignment ((LVariable _ | LIndexedTuple _), _, e)
+   |TargetPE e
+   |Return (Some e) ->
+      f e
+  | Assignment (LIndexed (_, l), _, e) ->
       Expr.Typed.Set.union (f e)
         (Expr.Typed.Set.union_list
            (List.map ~f:(used_expressions_idx_help f) l) )
@@ -611,8 +625,11 @@ let used_expressions_stmt = used_expressions_stmt_help used_expressions_expr
 let top_used_expressions_stmt_help f
     (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
   match s with
-  | Assignment ((_, _, []), e) | TargetPE e | Return (Some e) -> f e
-  | Assignment ((_, _, l), e) ->
+  | Assignment ((LVariable _ | LIndexedTuple _), _, e)
+   |TargetPE e
+   |Return (Some e) ->
+      f e
+  | Assignment (LIndexed (_, l), _, e) ->
       Expr.Typed.Set.union (f e)
         (Expr.Typed.Set.union_list
            (List.map ~f:(used_expressions_idx_help f) l) )
@@ -839,7 +856,7 @@ let rec declared_variables_stmt
     (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
   match s with
   | Decl {decl_id= x; _} -> Set.Poly.singleton x
-  | Assignment (_, _)
+  | Assignment (_, _, _)
    |TargetPE _
    |NRFunApp (_, _)
    |Break | Continue | Return _ | Skip ->

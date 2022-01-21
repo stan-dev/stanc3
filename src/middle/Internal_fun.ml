@@ -5,6 +5,7 @@ open Core_kernel
 type 'expr t =
   | FnLength
   | FnMakeArray
+  | FnMakeTuple
   | FnMakeRowVec
   | FnNegInf
   (* In AST_to_MIR being used as StanLib *)
@@ -56,7 +57,7 @@ let can_side_effect = function
    |FnReadWriteEventsOpenCL _ ->
       true
   | FnLength | FnMakeArray | FnMakeRowVec | FnNegInf | FnPrint | FnReject
-   |FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _ ->
+   |FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _ | FnMakeTuple ->
       false
 
 let collect_exprs fn = fold (fun accum e -> e :: accum) [] fn

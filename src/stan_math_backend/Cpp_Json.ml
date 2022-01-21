@@ -19,6 +19,13 @@ let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
       `Assoc
         [ ("name", `String "array"); ("length", `String (emit_cpp_expr d))
         ; ("element_type", sizedtype_to_json st) ]
+  | STuple _ ->
+      (* TUPLE STUB
+         Writing to JSON
+         See https://github.com/stan-dev/stanc3/issues/820
+      *)
+      Common.FatalError.fatal_error_msg
+        [%message "Writing tuples to JSON is not implemented."]
 
 let out_var_json (name, st, block) : Yojson.Basic.t =
   `Assoc

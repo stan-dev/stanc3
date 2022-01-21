@@ -1,5 +1,4 @@
 (** A type which unifies [SizedTypes] and [UnsizedTypes] for declarations *)
-
 open Common
 
 type 'a t = Sized of 'a SizedType.t | Unsized of UnsizedType.t

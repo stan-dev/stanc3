@@ -286,7 +286,7 @@ let%expect_test "list collapsing" =
               (decl_type (Sized SInt)) (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Assignment (inline_sym1__ UInt ())
+             (Assignment (LVariable inline_sym1__) UInt
               ((pattern (Lit Int 0))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
             (meta <opaque>))
@@ -346,7 +346,7 @@ let%expect_test "list collapsing" =
               (decl_type (Sized SInt)) (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Assignment (inline_sym4__ UInt ())
+             (Assignment (LVariable inline_sym4__) UInt
               ((pattern (Lit Int 0))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
             (meta <opaque>))
@@ -362,12 +362,12 @@ let%expect_test "list collapsing" =
                ((pattern
                  (Block
                   (((pattern
-                     (Assignment (inline_sym4__ UInt ())
+                     (Assignment (LVariable inline_sym4__) UInt
                       ((pattern (Lit Int 1))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                     (meta <opaque>))
                    ((pattern
-                     (Assignment (inline_sym3__ UReal ())
+                     (Assignment (LVariable inline_sym3__) UReal
                       ((pattern
                         (FunApp (StanLib Pow__ FnPlain AoS)
                          (((pattern (Lit Int 53))
@@ -3318,7 +3318,7 @@ let%expect_test "adlevel_optimization expressions" =
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (Assignment (y UReal ())
+                (Assignment (LVariable y) UReal
                  ((pattern
                    (FunApp (StanLib Plus__ FnPlain AoS)
                     (((pattern (Var y))
@@ -3328,7 +3328,7 @@ let%expect_test "adlevel_optimization expressions" =
                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                (meta <opaque>))
               (((pattern
-                 (Assignment (y UReal ())
+                 (Assignment (LVariable y) UReal
                   ((pattern
                     (FunApp (StanLib Plus__ FnPlain AoS)
                      (((pattern (Var y))
@@ -3348,7 +3348,7 @@ let%expect_test "adlevel_optimization expressions" =
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (Assignment (z UReal ())
+                (Assignment (LVariable z) UReal
                  ((pattern (Var y))
                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                (meta <opaque>))
@@ -3364,7 +3364,7 @@ let%expect_test "adlevel_optimization expressions" =
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (Assignment (z_data UReal ())
+                (Assignment (LVariable z_data) UReal
                  ((pattern (Var x))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                (meta <opaque>))

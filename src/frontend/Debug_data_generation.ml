@@ -279,6 +279,11 @@ let rec generate_value m st t =
   | SArray (st, e) ->
       let element () = generate_value m st t in
       gen_array element (unwrap_int_exn m e) t
+  | STuple _ ->
+      (* TUPLE STUB
+         This should be easy when literals are implemented *)
+      Common.FatalError.fatal_error_msg
+        [%message "Generating tuples not implemented."]
 
 let rec pp_value_json ppf e =
   match e.expr with

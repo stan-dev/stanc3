@@ -97,6 +97,9 @@ let replace_deprecated_lval deprecated_userdefined {lval; lmeta} =
     | _ -> true in
   let rec flatten_multi = function
     | LVariable id -> (LVariable id, None)
+    | LIndexedTuple (lval, idx) ->
+        (* TUPLE MAYBE - might need some recursion or change function type? *)
+        (LIndexedTuple (lval, idx), None)
     | LIndexed ({lval; lmeta}, idcs) -> (
         let outer =
           List.map idcs
@@ -162,7 +165,11 @@ let rec no_parens {expr; emeta} =
                   | i -> map_index keep_parens i )
                 l )
       ; emeta }
-  | ArrayExpr _ | RowVectorExpr _ | FunApp _ | CondDistApp _ | Promotion _ ->
+  | IndexedTuple (e, i) ->
+      {expr= (* TUPLE MAYBE *)
+             IndexedTuple (keep_parens e, i); emeta}
+  | ArrayExpr _ | RowVectorExpr _ | FunApp _ | CondDistApp _ | TupleExpr _
+   |Promotion _ ->
       {expr= map_expression no_parens ident expr; emeta}
 
 and keep_parens {expr; emeta} =

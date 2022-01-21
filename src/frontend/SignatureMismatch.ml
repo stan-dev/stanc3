@@ -17,7 +17,7 @@ let pp_unsized_type ctx ppf =
   let rec pp ppf ty =
     match ty with
     | UnsizedType.UInt | UReal | UVector | URowVector | UMatrix | UComplex
-     |UMathLibraryFunction ->
+     |UMathLibraryFunction | UTuple _ ->
         UnsizedType.pp ppf ty
     | UArray ut ->
         let ut2, d = UnsizedType.unwind_array_type ut in
@@ -33,7 +33,7 @@ let pp_fundef ctx ppf =
   let pp_fun_arg ppf (ad, ty) =
     match ad with
     | UnsizedType.DataOnly -> Fmt.pf ppf "data %a" (pp_unsized_type ctx) ty
-    | AutoDiffable -> pp_unsized_type ctx ppf ty in
+    | AutoDiffable | TupleAD _ -> pp_unsized_type ctx ppf ty in
   function
   | UnsizedType.UFun (args, rt, _, _) ->
       Fmt.pf ppf "@[<hov>(@[<hov>%a@]) => %a@]"

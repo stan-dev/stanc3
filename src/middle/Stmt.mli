@@ -6,7 +6,7 @@ open Label
 module Fixed : sig
   module Pattern : sig
     type ('a, 'b) t =
-      | Assignment of 'a lvalue * 'a
+      | Assignment of 'a lvalue * UnsizedType.t * 'a
       | TargetPE of 'a
       | NRFunApp of 'a Fun_kind.t * 'a list
       | Break
@@ -26,7 +26,10 @@ module Fixed : sig
           ; initialize: bool }
     [@@deriving sexp, hash, compare]
 
-    and 'a lvalue = string * UnsizedType.t * 'a Index.t list
+    and 'e lvalue =
+      | LVariable of string
+      | LIndexed of 'e lvalue * 'e Index.t list
+      | LIndexedTuple of 'e lvalue * int
     [@@deriving sexp, hash, map, compare, fold]
 
     include Pattern.S2 with type ('a, 'b) t := ('a, 'b) t
@@ -154,21 +157,21 @@ module Helpers : sig
 
   val for_scalar :
        Expr.Typed.t SizedType.t
-    -> (Expr.Typed.t -> Located.t)
+    -> (Expr.Typed.t SizedType.t -> Expr.Typed.t -> Located.t)
     -> Expr.Typed.t
     -> Location_span.t
     -> Located.t
 
   val for_scalar_inv :
        Expr.Typed.t SizedType.t
-    -> (Expr.Typed.t -> Located.t)
+    -> (Expr.Typed.t SizedType.t -> Expr.Typed.t -> Located.t)
     -> Expr.Typed.t
     -> Location_span.t
     -> Located.t
 
   val for_eigen :
        Expr.Typed.t SizedType.t
-    -> (Expr.Typed.t -> Located.t)
+    -> (Expr.Typed.t SizedType.t -> Expr.Typed.t -> Located.t)
     -> Expr.Typed.t
     -> Location_span.t
     -> Located.t

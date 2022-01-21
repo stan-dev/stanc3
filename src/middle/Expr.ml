@@ -18,6 +18,7 @@ module Fixed = struct
       | EOr of 'a * 'a
       | Indexed of 'a * 'a Index.t list
       | Promotion of 'a * UnsizedType.t * UnsizedType.autodifftype
+      | IndexedTuple of 'a * int
     [@@deriving sexp, hash, map, compare, fold]
 
     let pp pp_e ppf = function
@@ -41,6 +42,16 @@ module Fixed = struct
             ( if List.is_empty indices then fun _ _ -> ()
             else Fmt.(list (Index.pp pp_e) ~sep:comma |> brackets) )
             indices
+      | IndexedTuple (expr, ix) ->
+          (* TUPLE DESIGN pp parens
+             Do I need the extra parens here?
+             ((1,2)).1
+             only if there might be tuple operators, like
+             (1,1) + (2,2)
+             needs parens
+             Defaulting to no parens
+          *)
+          Fmt.pf ppf "@[%a.%d@]" pp_e expr ix
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
       | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
       | Promotion (from, ut, _) ->
@@ -152,6 +163,7 @@ module Labelled = struct
         List.fold idxs ~init:(associate ~init:assocs e) ~f:associate_index
     (* Not sure?*)
     | Promotion (e1, _, _) -> associate ~init:assocs e1
+    | IndexedTuple (e, _) -> associate ~init:assocs e
 
   and associate_index assocs = function
     | All -> assocs
@@ -225,11 +237,27 @@ module Helpers = struct
       | Var _ -> Fixed.Pattern.Indexed (e, [i])
       | Indexed (e, indices) -> Indexed (e, indices @ [i])
       | _ ->
-          (* These should go away with Ryan's LHS *)
+          (* rybern: shouldn't we also handle adding an index to e.g. container literals? *)
           Common.FatalError.fatal_error_msg
             [%message
               "Expected Var or Indexed but found " (e : Typed.Meta.t Fixed.t)]
     in
+    Fixed.{meta; pattern}
+
+  (** [add_index expression index] returns an expression that (additionally)
+      indexes into the input [expression] by [index].*)
+  let add_tuple_index e i =
+    let mtype =
+      match Typed.(type_of e) with
+      | UTuple ts -> List.nth_exn ts (i - 1)
+      | t ->
+          Common.FatalError.fatal_error_msg
+            [%message
+              "Internal error: Attempted to apply tuple index to a non-tuple \
+               type:"
+                (t : UnsizedType.t)] in
+    let meta = Typed.Meta.{e.meta with type_= mtype} in
+    let pattern = Fixed.Pattern.IndexedTuple (e, i) in
     Fixed.{meta; pattern}
 
   (** TODO: Make me tail recursive *)

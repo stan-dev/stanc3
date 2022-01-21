@@ -28,7 +28,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos__ UInt ())
+     (Assignment (LVariable pos__) UInt
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -37,7 +37,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (N UInt ())
+     (Assignment (LVariable N) UInt
       ((pattern
         (Indexed
          ((pattern
@@ -70,7 +70,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (K UInt ())
+     (Assignment (LVariable K) UInt
       ((pattern
         (Indexed
          ((pattern
@@ -123,7 +123,7 @@
           (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
-         (Assignment (diff_low_mid_flat__ (UArray UReal) ())
+         (Assignment (LVariable diff_low_mid_flat__) (UArray UReal)
           ((pattern
             (FunApp (CompilerInternal FnReadData)
              (((pattern (Lit Str diff_low_mid))
@@ -131,7 +131,7 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Assignment (pos__ UInt ())
+         (Assignment (LVariable pos__) UInt
           ((pattern (Lit Int 1))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
@@ -148,10 +148,11 @@
              (Block
               (((pattern
                  (Assignment
-                  (diff_low_mid UVector
+                  (LIndexed (LVariable diff_low_mid)
                    ((Single
                      ((pattern (Var sym1__))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  UVector
                   ((pattern
                     (Indexed
                      ((pattern (Var diff_low_mid_flat__))
@@ -165,7 +166,7 @@
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
-                 (Assignment (pos__ UInt ())
+                 (Assignment (LVariable pos__) UInt
                   ((pattern
                     (FunApp (StanLib Plus__ FnPlain AoS)
                      (((pattern (Var pos__))
@@ -204,7 +205,7 @@
           (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
-         (Assignment (diff_high_mid_flat__ (UArray UReal) ())
+         (Assignment (LVariable diff_high_mid_flat__) (UArray UReal)
           ((pattern
             (FunApp (CompilerInternal FnReadData)
              (((pattern (Lit Str diff_high_mid))
@@ -212,7 +213,7 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Assignment (pos__ UInt ())
+         (Assignment (LVariable pos__) UInt
           ((pattern (Lit Int 1))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
@@ -229,10 +230,11 @@
              (Block
               (((pattern
                  (Assignment
-                  (diff_high_mid UVector
+                  (LIndexed (LVariable diff_high_mid)
                    ((Single
                      ((pattern (Var sym1__))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  UVector
                   ((pattern
                     (Indexed
                      ((pattern (Var diff_high_mid_flat__))
@@ -246,7 +248,7 @@
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
-                 (Assignment (pos__ UInt ())
+                 (Assignment (LVariable pos__) UInt
                   ((pattern
                     (FunApp (StanLib Plus__ FnPlain AoS)
                      (((pattern (Var pos__))
@@ -285,7 +287,7 @@
           (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
-         (Assignment (mid_price_flat__ (UArray UReal) ())
+         (Assignment (LVariable mid_price_flat__) (UArray UReal)
           ((pattern
             (FunApp (CompilerInternal FnReadData)
              (((pattern (Lit Str mid_price))
@@ -293,7 +295,7 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Assignment (pos__ UInt ())
+         (Assignment (LVariable pos__) UInt
           ((pattern (Lit Int 1))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
@@ -310,10 +312,11 @@
              (Block
               (((pattern
                  (Assignment
-                  (mid_price UVector
+                  (LIndexed (LVariable mid_price)
                    ((Single
                      ((pattern (Var sym1__))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  UVector
                   ((pattern
                     (Indexed
                      ((pattern (Var mid_price_flat__))
@@ -327,7 +330,7 @@
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
-                 (Assignment (pos__ UInt ())
+                 (Assignment (LVariable pos__) UInt
                   ((pattern
                     (FunApp (StanLib Plus__ FnPlain AoS)
                      (((pattern (Var pos__))
@@ -377,7 +380,7 @@
           (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
-         (Assignment (X_all_flat__ (UArray UReal) ())
+         (Assignment (LVariable X_all_flat__) (UArray UReal)
           ((pattern
             (FunApp (CompilerInternal FnReadData)
              (((pattern (Lit Str X_all))
@@ -385,7 +388,7 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Assignment (pos__ UInt ())
+         (Assignment (LVariable pos__) UInt
           ((pattern (Lit Int 1))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
@@ -413,7 +416,7 @@
                      (Block
                       (((pattern
                          (Assignment
-                          (X_all UMatrix
+                          (LIndexed (LVariable X_all)
                            ((Single
                              ((pattern (Var sym2__))
                               (meta
@@ -424,6 +427,7 @@
                               (meta
                                ((type_ UInt) (loc <opaque>)
                                 (adlevel DataOnly)))))))
+                          UMatrix
                           ((pattern
                             (Indexed
                              ((pattern (Var X_all_flat__))
@@ -439,7 +443,7 @@
                             ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                         (meta <opaque>))
                        ((pattern
-                         (Assignment (pos__ UInt ())
+                         (Assignment (LVariable pos__) UInt
                           ((pattern
                             (FunApp (StanLib Plus__ FnPlain AoS)
                              (((pattern (Var pos__))
@@ -463,7 +467,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (phi_prior_a UReal ())
+     (Assignment (LVariable phi_prior_a) UReal
       ((pattern
         (Indexed
          ((pattern
@@ -496,7 +500,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (phi_prior_b UReal ())
+     (Assignment (LVariable phi_prior_b) UReal
       ((pattern
         (Indexed
          ((pattern
@@ -529,7 +533,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (mu_prior_mu UReal ())
+     (Assignment (LVariable mu_prior_mu) UReal
       ((pattern
         (Indexed
          ((pattern
@@ -547,7 +551,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (mu_prior_sigma UReal ())
+     (Assignment (LVariable mu_prior_sigma) UReal
       ((pattern
         (Indexed
          ((pattern
@@ -580,7 +584,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (sigma_prior_shape UReal ())
+     (Assignment (LVariable sigma_prior_shape) UReal
       ((pattern
         (Indexed
          ((pattern
@@ -613,7 +617,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (sigma_prior_rate UReal ())
+     (Assignment (LVariable sigma_prior_rate) UReal
       ((pattern
         (Indexed
          ((pattern
@@ -646,7 +650,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (Nr UInt ())
+     (Assignment (LVariable Nr) UInt
       ((pattern
         (FunApp (StanLib Minus__ FnPlain AoS)
          (((pattern (Var N))
@@ -920,7 +924,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (high_low_est UVector ())
+     (Assignment (LVariable high_low_est) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -974,7 +978,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (b UVector ())
+     (Assignment (LVariable b) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -996,7 +1000,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (h UVector ())
+     (Assignment (LVariable h) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1018,7 +1022,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (ar UVector ())
+     (Assignment (LVariable ar) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1035,7 +1039,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (ma UReal ())
+     (Assignment (LVariable ma) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1048,7 +1052,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (phi_beta UReal ())
+     (Assignment (LVariable phi_beta) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1068,7 +1072,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (sigma2 UReal ())
+     (Assignment (LVariable sigma2) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1086,7 +1090,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (Intercept UReal ())
+     (Assignment (LVariable Intercept) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1104,7 +1108,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (mean_price UVector ())
+     (Assignment (LVariable mean_price) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1126,7 +1130,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (sigma_price UVector ())
+     (Assignment (LVariable sigma_price) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1147,7 +1151,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (theta UReal ())
+     (Assignment (LVariable theta) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1165,7 +1169,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (upper_test UVector ())
+     (Assignment (LVariable upper_test) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1191,7 +1195,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (lower_upper_test UVector ())
+     (Assignment (LVariable lower_upper_test) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1245,7 +1249,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (row_vec_lower_upper_test URowVector ())
+     (Assignment (LVariable row_vec_lower_upper_test) URowVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1315,7 +1319,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (offset_mult_test UVector ())
+     (Assignment (LVariable offset_mult_test) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1369,7 +1373,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (ordered_test UVector ())
+     (Assignment (LVariable ordered_test) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1391,7 +1395,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (unit_vec_test UVector ())
+     (Assignment (LVariable unit_vec_test) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1413,7 +1417,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos_ordered_test UVector ())
+     (Assignment (LVariable pos_ordered_test) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1437,7 +1441,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (corr_matrix_test UMatrix ())
+     (Assignment (LVariable corr_matrix_test) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1461,7 +1465,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (cov_matrix_test UMatrix ())
+     (Assignment (LVariable cov_matrix_test) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1485,7 +1489,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (chol_fac_cov_test UMatrix ())
+     (Assignment (LVariable chol_fac_cov_test) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1511,7 +1515,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (chol_fac_corr_test UMatrix ())
+     (Assignment (LVariable chol_fac_corr_test) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -1528,7 +1532,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (phi UReal ())
+     (Assignment (LVariable phi) UReal
       ((pattern
         (FunApp (StanLib fma FnPlain SoA)
          (((pattern (Var phi_beta))
@@ -1547,7 +1551,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (sigma UReal ())
+     (Assignment (LVariable sigma) UReal
       ((pattern
         (FunApp (StanLib sqrt FnPlain SoA)
          (((pattern (Var sigma2))
@@ -1564,7 +1568,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (prices UVector ())
+     (Assignment (LVariable prices) UVector
       ((pattern
         (FunApp (StanLib Plus__ FnPlain SoA)
          (((pattern (Var mid_price))
@@ -1583,7 +1587,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (prices_diff UVector ())
+     (Assignment (LVariable prices_diff) UVector
       ((pattern
         (FunApp (StanLib Minus__ FnPlain SoA)
          (((pattern
@@ -1623,7 +1627,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (mu UVector ())
+     (Assignment (LVariable mu) UVector
       ((pattern
         (FunApp (StanLib Plus__ FnPlain SoA)
          (((pattern (Var Intercept))
@@ -1647,7 +1651,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (err UVector ())
+     (Assignment (LVariable err) UVector
       ((pattern
         (FunApp (StanLib Minus__ FnPlain SoA)
          (((pattern (Var prices_diff))
@@ -1658,12 +1662,13 @@
     (meta <opaque>))
    ((pattern
      (Assignment
-      (mu UVector
+      (LIndexed (LVariable mu)
        ((Between
          ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var Nr))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern
         (FunApp (StanLib Plus__ FnPlain SoA)
          (((pattern
@@ -1748,12 +1753,13 @@
     (meta <opaque>))
    ((pattern
      (Assignment
-      (mu UVector
+      (LIndexed (LVariable mu)
        ((Between
          ((pattern (Lit Int 3))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var Nr))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern
         (FunApp (StanLib Plus__ FnPlain SoA)
          (((pattern
@@ -1799,7 +1805,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (err UVector ())
+     (Assignment (LVariable err) UVector
       ((pattern
         (FunApp (StanLib Minus__ FnPlain SoA)
          (((pattern (Var prices_diff))
@@ -1828,19 +1834,21 @@
     (meta <opaque>))
    ((pattern
      (Assignment
-      (h_i_mean UVector
+      (LIndexed (LVariable h_i_mean)
        ((Single
          ((pattern (Lit Int 1))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern (Lit Real 0.0))
        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Assignment
-      (h_i_sigma UVector
+      (LIndexed (LVariable h_i_sigma)
        ((Single
          ((pattern (Lit Int 1))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern
         (FunApp (StanLib pow FnPlain AoS)
          (((pattern
@@ -1863,12 +1871,13 @@
     (meta <opaque>))
    ((pattern
      (Assignment
-      (h_i_sigma UVector
+      (LIndexed (LVariable h_i_sigma)
        ((Between
          ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var Nr))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern
         (FunApp (StanLib rep_vector FnPlain SoA)
          (((pattern (Lit Real 1.0))
@@ -1884,12 +1893,13 @@
     (meta <opaque>))
    ((pattern
      (Assignment
-      (h_i_mean UVector
+      (LIndexed (LVariable h_i_mean)
        ((Between
          ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var Nr))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern
         (FunApp (StanLib Plus__ FnPlain SoA)
          (((pattern
@@ -1957,7 +1967,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (h_sigma UVector ())
+     (Assignment (LVariable h_sigma) UVector
       ((pattern
         (FunApp (StanLib Plus__ FnPlain SoA)
          (((pattern
@@ -2219,7 +2229,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (high_low_est UVector ())
+     (Assignment (LVariable high_low_est) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2273,7 +2283,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (b UVector ())
+     (Assignment (LVariable b) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2295,7 +2305,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (h UVector ())
+     (Assignment (LVariable h) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2317,7 +2327,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (ar UVector ())
+     (Assignment (LVariable ar) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2334,7 +2344,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (ma UReal ())
+     (Assignment (LVariable ma) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2347,7 +2357,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (phi_beta UReal ())
+     (Assignment (LVariable phi_beta) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2367,7 +2377,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (sigma2 UReal ())
+     (Assignment (LVariable sigma2) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2385,7 +2395,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (Intercept UReal ())
+     (Assignment (LVariable Intercept) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2403,7 +2413,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (mean_price UVector ())
+     (Assignment (LVariable mean_price) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2425,7 +2435,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (sigma_price UVector ())
+     (Assignment (LVariable sigma_price) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2446,7 +2456,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (theta UReal ())
+     (Assignment (LVariable theta) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2464,7 +2474,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (upper_test UVector ())
+     (Assignment (LVariable upper_test) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2490,7 +2500,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (lower_upper_test UVector ())
+     (Assignment (LVariable lower_upper_test) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2544,7 +2554,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (row_vec_lower_upper_test URowVector ())
+     (Assignment (LVariable row_vec_lower_upper_test) URowVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2614,7 +2624,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (offset_mult_test UVector ())
+     (Assignment (LVariable offset_mult_test) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2668,7 +2678,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (ordered_test UVector ())
+     (Assignment (LVariable ordered_test) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2690,7 +2700,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (unit_vec_test UVector ())
+     (Assignment (LVariable unit_vec_test) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2712,7 +2722,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos_ordered_test UVector ())
+     (Assignment (LVariable pos_ordered_test) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2736,7 +2746,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (corr_matrix_test UMatrix ())
+     (Assignment (LVariable corr_matrix_test) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2760,7 +2770,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (cov_matrix_test UMatrix ())
+     (Assignment (LVariable cov_matrix_test) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2784,7 +2794,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (chol_fac_cov_test UMatrix ())
+     (Assignment (LVariable chol_fac_cov_test) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -2810,7 +2820,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (chol_fac_corr_test UMatrix ())
+     (Assignment (LVariable chol_fac_corr_test) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -3108,7 +3118,7 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Assignment (phi UReal ())
+     (Assignment (LVariable phi) UReal
       ((pattern
         (FunApp (StanLib fma FnPlain AoS)
          (((pattern (Var phi_beta))
@@ -3123,7 +3133,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (sigma UReal ())
+     (Assignment (LVariable sigma) UReal
       ((pattern
         (FunApp (StanLib sqrt FnPlain AoS)
          (((pattern (Var sigma2))
@@ -3131,7 +3141,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (prices UVector ())
+     (Assignment (LVariable prices) UVector
       ((pattern
         (FunApp (StanLib Plus__ FnPlain AoS)
          (((pattern (Var mid_price))
@@ -3141,7 +3151,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (prices_diff UVector ())
+     (Assignment (LVariable prices_diff) UVector
       ((pattern
         (FunApp (StanLib Minus__ FnPlain AoS)
          (((pattern
@@ -3172,7 +3182,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (mu UVector ())
+     (Assignment (LVariable mu) UVector
       ((pattern
         (FunApp (StanLib Plus__ FnPlain AoS)
          (((pattern (Var Intercept))
@@ -3187,7 +3197,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (err UVector ())
+     (Assignment (LVariable err) UVector
       ((pattern
         (FunApp (StanLib Minus__ FnPlain AoS)
          (((pattern (Var prices_diff))
@@ -3198,12 +3208,13 @@
     (meta <opaque>))
    ((pattern
      (Assignment
-      (mu UVector
+      (LIndexed (LVariable mu)
        ((Between
          ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var Nr))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern
         (FunApp (StanLib Plus__ FnPlain AoS)
          (((pattern
@@ -3288,12 +3299,13 @@
     (meta <opaque>))
    ((pattern
      (Assignment
-      (mu UVector
+      (LIndexed (LVariable mu)
        ((Between
          ((pattern (Lit Int 3))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var Nr))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern
         (FunApp (StanLib Plus__ FnPlain AoS)
          (((pattern
@@ -3339,7 +3351,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (err UVector ())
+     (Assignment (LVariable err) UVector
       ((pattern
         (FunApp (StanLib Minus__ FnPlain AoS)
          (((pattern (Var prices_diff))
@@ -3350,19 +3362,21 @@
     (meta <opaque>))
    ((pattern
      (Assignment
-      (h_i_mean UVector
+      (LIndexed (LVariable h_i_mean)
        ((Single
          ((pattern (Lit Int 1))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern (Lit Real 0.0))
        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Assignment
-      (h_i_sigma UVector
+      (LIndexed (LVariable h_i_sigma)
        ((Single
          ((pattern (Lit Int 1))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern
         (FunApp (StanLib pow FnPlain AoS)
          (((pattern
@@ -3385,12 +3399,13 @@
     (meta <opaque>))
    ((pattern
      (Assignment
-      (h_i_sigma UVector
+      (LIndexed (LVariable h_i_sigma)
        ((Between
          ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var Nr))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern
         (FunApp (StanLib rep_vector FnPlain AoS)
          (((pattern (Lit Real 1.0))
@@ -3406,12 +3421,13 @@
     (meta <opaque>))
    ((pattern
      (Assignment
-      (h_i_mean UVector
+      (LIndexed (LVariable h_i_mean)
        ((Between
          ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var Nr))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern
         (FunApp (StanLib Plus__ FnPlain AoS)
          (((pattern
@@ -3470,7 +3486,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (h_sigma UVector ())
+     (Assignment (LVariable h_sigma) UVector
       ((pattern
         (FunApp (StanLib Plus__ FnPlain AoS)
          (((pattern
@@ -3686,7 +3702,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos__ UInt ())
+     (Assignment (LVariable pos__) UInt
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -3712,10 +3728,11 @@
          (Block
           (((pattern
              (Assignment
-              (high_low_est UVector
+              (LIndexed (LVariable high_low_est)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var N))
@@ -3761,10 +3778,11 @@
          (Block
           (((pattern
              (Assignment
-              (b UVector
+              (LIndexed (LVariable b)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var K))
@@ -3804,10 +3822,11 @@
          (Block
           (((pattern
              (Assignment
-              (h UVector
+              (LIndexed (LVariable h)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var Nr))
@@ -3847,10 +3866,11 @@
          (Block
           (((pattern
              (Assignment
-              (ar UVector
+              (LIndexed (LVariable ar)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Lit Int 2))
@@ -3873,7 +3893,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (ma UReal ())
+     (Assignment (LIndexed (LVariable ma) ()) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -3891,7 +3911,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (phi_beta UReal ())
+     (Assignment (LIndexed (LVariable phi_beta) ()) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -3915,7 +3935,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (sigma2 UReal ())
+     (Assignment (LIndexed (LVariable sigma2) ()) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -3937,7 +3957,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (Intercept UReal ())
+     (Assignment (LIndexed (LVariable Intercept) ()) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -3972,10 +3992,11 @@
          (Block
           (((pattern
              (Assignment
-              (mean_price UVector
+              (LIndexed (LVariable mean_price)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var N))
@@ -4015,10 +4036,11 @@
          (Block
           (((pattern
              (Assignment
-              (sigma_price UVector
+              (LIndexed (LVariable sigma_price)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var N))
@@ -4045,7 +4067,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (theta UReal ())
+     (Assignment (LIndexed (LVariable theta) ()) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -4080,10 +4102,11 @@
          (Block
           (((pattern
              (Assignment
-              (upper_test UVector
+              (LIndexed (LVariable upper_test)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var N))
@@ -4127,10 +4150,11 @@
          (Block
           (((pattern
              (Assignment
-              (lower_upper_test UVector
+              (LIndexed (LVariable lower_upper_test)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var N))
@@ -4176,10 +4200,11 @@
          (Block
           (((pattern
              (Assignment
-              (row_vec_lower_upper_test URowVector
+              (LIndexed (LVariable row_vec_lower_upper_test)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              URowVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var N))
@@ -4234,10 +4259,11 @@
          (Block
           (((pattern
              (Assignment
-              (offset_mult_test UVector
+              (LIndexed (LVariable offset_mult_test)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var N))
@@ -4283,10 +4309,11 @@
          (Block
           (((pattern
              (Assignment
-              (ordered_test UVector
+              (LIndexed (LVariable ordered_test)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var N))
@@ -4326,10 +4353,11 @@
          (Block
           (((pattern
              (Assignment
-              (unit_vec_test UVector
+              (LIndexed (LVariable unit_vec_test)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var N))
@@ -4369,10 +4397,11 @@
          (Block
           (((pattern
              (Assignment
-              (pos_ordered_test UVector
+              (LIndexed (LVariable pos_ordered_test)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var N))
@@ -4425,7 +4454,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (corr_matrix_test UMatrix
+                      (LIndexed (LVariable corr_matrix_test)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -4434,6 +4463,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Var N))
@@ -4494,7 +4524,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (cov_matrix_test UMatrix
+                      (LIndexed (LVariable cov_matrix_test)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -4503,6 +4533,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Var N))
@@ -4563,7 +4594,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (chol_fac_cov_test UMatrix
+                      (LIndexed (LVariable chol_fac_cov_test)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -4572,6 +4603,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Var K))
@@ -4632,7 +4664,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (chol_fac_corr_test UMatrix
+                      (LIndexed (LVariable chol_fac_corr_test)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -4641,6 +4673,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Var K))
@@ -5101,7 +5134,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos__ UInt ())
+     (Assignment (LVariable pos__) UInt
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
@@ -5118,7 +5151,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (X_p UMatrix ())
+     (Assignment (LVariable X_p) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -5144,7 +5177,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (X_tp1 UMatrix ())
+     (Assignment (LVariable X_tp1) UMatrix
       ((pattern
         (FunApp (StanLib exp FnPlain AoS)
          (((pattern (Var X_p))
@@ -5163,7 +5196,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (X_tp2 UMatrix ())
+     (Assignment (LVariable X_tp2) UMatrix
       ((pattern
         (FunApp (StanLib exp FnPlain AoS)
          (((pattern (Var X_tp1))
@@ -5182,7 +5215,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (X_tp3 UMatrix ())
+     (Assignment (LVariable X_tp3) UMatrix
       ((pattern
         (FunApp (StanLib exp FnPlain AoS)
          (((pattern (Var X_tp2))
@@ -5201,7 +5234,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (X_tp4 UMatrix ())
+     (Assignment (LVariable X_tp4) UMatrix
       ((pattern
         (FunApp (StanLib exp FnPlain AoS)
          (((pattern (Var X_tp3))
@@ -5220,7 +5253,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (X_tp5 UMatrix ())
+     (Assignment (LVariable X_tp5) UMatrix
       ((pattern
         (FunApp (StanLib exp FnPlain AoS)
          (((pattern (Var X_tp4))
@@ -5239,7 +5272,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (X_tp6 UMatrix ())
+     (Assignment (LVariable X_tp6) UMatrix
       ((pattern
         (FunApp (StanLib exp FnPlain AoS)
          (((pattern (Var X_tp5))
@@ -5258,7 +5291,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (X_tp7 UMatrix ())
+     (Assignment (LVariable X_tp7) UMatrix
       ((pattern
         (FunApp (StanLib exp FnPlain AoS)
          (((pattern (Var X_tp6))
@@ -5289,7 +5322,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (X_tp7 UMatrix
+                      (LIndexed (LVariable X_tp7)
                        ((Single
                          ((pattern (Var i))
                           (meta
@@ -5298,6 +5331,7 @@
                          ((pattern (Var j))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (StanLib exp FnPlain AoS)
                          (((pattern
@@ -5339,7 +5373,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (X_p UMatrix ())
+     (Assignment (LVariable X_p) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -5456,7 +5490,7 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Assignment (X_tp1 UMatrix ())
+     (Assignment (LVariable X_tp1) UMatrix
       ((pattern
         (FunApp (StanLib exp FnPlain AoS)
          (((pattern (Var X_p))
@@ -5464,7 +5498,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (X_tp2 UMatrix ())
+     (Assignment (LVariable X_tp2) UMatrix
       ((pattern
         (FunApp (StanLib exp FnPlain AoS)
          (((pattern (Var X_tp1))
@@ -5472,7 +5506,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (X_tp3 UMatrix ())
+     (Assignment (LVariable X_tp3) UMatrix
       ((pattern
         (FunApp (StanLib exp FnPlain AoS)
          (((pattern (Var X_tp2))
@@ -5480,7 +5514,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (X_tp4 UMatrix ())
+     (Assignment (LVariable X_tp4) UMatrix
       ((pattern
         (FunApp (StanLib exp FnPlain AoS)
          (((pattern (Var X_tp3))
@@ -5488,7 +5522,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (X_tp5 UMatrix ())
+     (Assignment (LVariable X_tp5) UMatrix
       ((pattern
         (FunApp (StanLib exp FnPlain AoS)
          (((pattern (Var X_tp4))
@@ -5496,7 +5530,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (X_tp6 UMatrix ())
+     (Assignment (LVariable X_tp6) UMatrix
       ((pattern
         (FunApp (StanLib exp FnPlain AoS)
          (((pattern (Var X_tp5))
@@ -5504,7 +5538,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (X_tp7 UMatrix ())
+     (Assignment (LVariable X_tp7) UMatrix
       ((pattern
         (FunApp (StanLib exp FnPlain AoS)
          (((pattern (Var X_tp6))
@@ -5535,7 +5569,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (X_tp7 UMatrix
+                      (LIndexed (LVariable X_tp7)
                        ((Single
                          ((pattern (Var i))
                           (meta
@@ -5544,6 +5578,7 @@
                          ((pattern (Var j))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (StanLib exp FnPlain AoS)
                          (((pattern
@@ -5661,7 +5696,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos__ UInt ())
+     (Assignment (LVariable pos__) UInt
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -5700,7 +5735,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (X_p UMatrix
+                      (LIndexed (LVariable X_p)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -5709,6 +5744,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Lit Int 10))
@@ -5896,7 +5932,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos__ UInt ())
+     (Assignment (LVariable pos__) UInt
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -5905,7 +5941,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (N UInt ())
+     (Assignment (LVariable N) UInt
       ((pattern
         (Indexed
          ((pattern
@@ -5923,7 +5959,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (M UInt ())
+     (Assignment (LVariable M) UInt
       ((pattern
         (Indexed
          ((pattern
@@ -5972,7 +6008,7 @@
           (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
-         (Assignment (dat_x_flat__ (UArray UReal) ())
+         (Assignment (LVariable dat_x_flat__) (UArray UReal)
           ((pattern
             (FunApp (CompilerInternal FnReadData)
              (((pattern (Lit Str dat_x))
@@ -5980,7 +6016,7 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Assignment (pos__ UInt ())
+         (Assignment (LVariable pos__) UInt
           ((pattern (Lit Int 1))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
@@ -6008,7 +6044,7 @@
                      (Block
                       (((pattern
                          (Assignment
-                          (dat_x UMatrix
+                          (LIndexed (LVariable dat_x)
                            ((Single
                              ((pattern (Var sym2__))
                               (meta
@@ -6019,6 +6055,7 @@
                               (meta
                                ((type_ UInt) (loc <opaque>)
                                 (adlevel DataOnly)))))))
+                          UMatrix
                           ((pattern
                             (Indexed
                              ((pattern (Var dat_x_flat__))
@@ -6034,7 +6071,7 @@
                             ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                         (meta <opaque>))
                        ((pattern
-                         (Assignment (pos__ UInt ())
+                         (Assignment (LVariable pos__) UInt
                           ((pattern
                             (FunApp (StanLib Plus__ FnPlain AoS)
                              (((pattern (Var pos__))
@@ -6078,7 +6115,7 @@
           (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
-         (Assignment (y_flat__ (UArray UReal) ())
+         (Assignment (LVariable y_flat__) (UArray UReal)
           ((pattern
             (FunApp (CompilerInternal FnReadData)
              (((pattern (Lit Str y))
@@ -6086,7 +6123,7 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Assignment (pos__ UInt ())
+         (Assignment (LVariable pos__) UInt
           ((pattern (Lit Int 1))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
@@ -6103,10 +6140,11 @@
              (Block
               (((pattern
                  (Assignment
-                  (y UVector
+                  (LIndexed (LVariable y)
                    ((Single
                      ((pattern (Var sym1__))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  UVector
                   ((pattern
                     (Indexed
                      ((pattern (Var y_flat__))
@@ -6120,7 +6158,7 @@
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
-                 (Assignment (pos__ UInt ())
+                 (Assignment (LVariable pos__) UInt
                   ((pattern
                     (FunApp (StanLib Plus__ FnPlain AoS)
                      (((pattern (Var pos__))
@@ -6153,7 +6191,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (idx_tester (UArray UInt) ())
+     (Assignment (LVariable idx_tester) (UArray UInt)
       ((pattern
         (FunApp (CompilerInternal FnReadData)
          (((pattern (Lit Str idx_tester))
@@ -6472,7 +6510,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (alpha UReal ())
+     (Assignment (LVariable alpha) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6490,7 +6528,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_vec_v UVector ())
+     (Assignment (LVariable p_soa_vec_v) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6514,7 +6552,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_mat UMatrix ())
+     (Assignment (LVariable p_soa_mat) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6541,7 +6579,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_arr_vec_v (UArray UVector) ())
+     (Assignment (LVariable p_soa_arr_vec_v) (UArray UVector)
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6568,7 +6606,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_mat_uni_col_idx UMatrix ())
+     (Assignment (LVariable p_soa_mat_uni_col_idx) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6592,7 +6630,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_vec_uni_idx UVector ())
+     (Assignment (LVariable p_soa_vec_uni_idx) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6616,7 +6654,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_loop_mat_uni_col_idx UMatrix ())
+     (Assignment (LVariable p_soa_loop_mat_uni_col_idx) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6640,7 +6678,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_lhs_loop_mul URowVector ())
+     (Assignment (LVariable p_soa_lhs_loop_mul) URowVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6662,7 +6700,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_rhs_loop_mul UVector ())
+     (Assignment (LVariable p_soa_rhs_loop_mul) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6685,7 +6723,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_used_with_aos_in_excluded_fun UVector ())
+     (Assignment (LVariable p_soa_used_with_aos_in_excluded_fun) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6710,7 +6748,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_loop_mat_multi_uni_uni_idx UMatrix ())
+     (Assignment (LVariable p_soa_loop_mat_multi_uni_uni_idx) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6734,7 +6772,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_vec_v_assign_to_aos UVector ())
+     (Assignment (LVariable p_aos_vec_v_assign_to_aos) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6756,7 +6794,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_vec_v_tp_fails_func UVector ())
+     (Assignment (LVariable p_aos_vec_v_tp_fails_func) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6778,7 +6816,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_loop_vec_v_uni_idx UVector ())
+     (Assignment (LVariable p_aos_loop_vec_v_uni_idx) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6801,7 +6839,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_fail_assign_from_top_idx UVector ())
+     (Assignment (LVariable p_aos_fail_assign_from_top_idx) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6825,7 +6863,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_loop_mat_uni_uni_idx UMatrix ())
+     (Assignment (LVariable p_aos_loop_mat_uni_uni_idx) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6851,7 +6889,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_mat UMatrix ())
+     (Assignment (LVariable p_aos_mat) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6878,7 +6916,8 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_mat_pass_func_outer_single_indexed1 UMatrix ())
+     (Assignment (LVariable p_aos_mat_pass_func_outer_single_indexed1)
+      UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6905,7 +6944,8 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_mat_pass_func_outer_single_indexed2 UMatrix ())
+     (Assignment (LVariable p_aos_mat_pass_func_outer_single_indexed2)
+      UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6931,7 +6971,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_mat_fail_uni_uni_idx1 UMatrix ())
+     (Assignment (LVariable p_aos_mat_fail_uni_uni_idx1) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6957,7 +6997,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_mat_fail_uni_uni_idx2 UMatrix ())
+     (Assignment (LVariable p_aos_mat_fail_uni_uni_idx2) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -6976,7 +7016,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_real_from_aos UReal ())
+     (Assignment (LVariable tp_real_from_aos) UReal
       ((pattern
         (Indexed
          ((pattern (Var p_soa_vec_v))
@@ -6996,7 +7036,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_aos_vec_v UVector ())
+     (Assignment (LVariable tp_aos_vec_v) UVector
       ((pattern
         (FunApp (UserDefined udf_fun FnPlain)
          (((pattern (Var p_aos_vec_v_assign_to_aos))
@@ -7014,21 +7054,23 @@
     (meta <opaque>))
    ((pattern
      (Assignment
-      (tp_soa_single_idx_uninit UVector
+      (LIndexed (LVariable tp_soa_single_idx_uninit)
        ((Single
          ((pattern (Lit Int 1))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern (Var tp_real_from_aos))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (Assignment
-      (tp_soa_single_idx_uninit UVector
+      (LIndexed (LVariable tp_soa_single_idx_uninit)
        ((Between
          ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern
         (FunApp (StanLib rep_vector FnPlain SoA)
          (((pattern (Var tp_real_from_aos))
@@ -7052,16 +7094,17 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_aos_fail_func_vec_v UVector ())
+     (Assignment (LVariable tp_aos_fail_func_vec_v) UVector
       ((pattern (Var p_aos_vec_v_tp_fails_func))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (Assignment
-      (tp_aos_fail_func_vec_v UVector
+      (LIndexed (LVariable tp_aos_fail_func_vec_v)
        ((Single
          ((pattern (Lit Int 1))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern
         (Indexed
          ((pattern (Var p_soa_vec_v))
@@ -7083,10 +7126,11 @@
     (meta <opaque>))
    ((pattern
      (Assignment
-      (tp_aos_fail_assign_from_top_idx UVector
+      (LIndexed (LVariable tp_aos_fail_assign_from_top_idx)
        ((Upfrom
          ((pattern (Lit Int 1))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern
         (Indexed
          ((pattern (Var p_aos_fail_assign_from_top_idx))
@@ -7118,7 +7162,7 @@
           (initialize true)))
         (meta <opaque>))
        ((pattern
-         (Assignment (tp_soa_used_with_aos_in_excluded_fun UVector ())
+         (Assignment (LVariable tp_soa_used_with_aos_in_excluded_fun) UVector
           ((pattern
             (FunApp (StanLib Times__ FnPlain SoA)
              (((pattern (Var p_soa_used_with_aos_in_excluded_fun))
@@ -7410,10 +7454,11 @@
         (meta <opaque>))
        ((pattern
          (Assignment
-          (tp_soa_single_assign UVector
+          (LIndexed (LVariable tp_soa_single_assign)
            ((Single
              ((pattern (Lit Int 1))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          UVector
           ((pattern (Lit Real 2.0))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
@@ -7438,10 +7483,11 @@
         (meta <opaque>))
        ((pattern
          (Assignment
-          (tp_soa_single_assign_from_soa UVector
+          (LIndexed (LVariable tp_soa_single_assign_from_soa)
            ((Single
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          UVector
           ((pattern
             (FunApp (StanLib multiply FnPlain SoA)
              (((pattern (Var p_soa_lhs_loop_mul))
@@ -7961,10 +8007,11 @@
              (Block
               (((pattern
                  (Assignment
-                  (tp_aos_loop_vec_v_uni_idx UVector
+                  (LIndexed (LVariable tp_aos_loop_vec_v_uni_idx)
                    ((Single
                      ((pattern (Var i))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  UVector
                   ((pattern
                     (FunApp (StanLib multiply FnPlain AoS)
                      (((pattern (Var p_soa_lhs_loop_mul))
@@ -7980,7 +8027,7 @@
                 (meta <opaque>))
                ((pattern
                  (Assignment
-                  (tp_aos_loop_vec_v_multi_uni_idx UVector
+                  (LIndexed (LVariable tp_aos_loop_vec_v_multi_uni_idx)
                    ((Single
                      ((pattern
                        (Indexed
@@ -7993,6 +8040,7 @@
                            (meta
                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  UVector
                   ((pattern
                     (FunApp (StanLib multiply FnPlain AoS)
                      (((pattern (Var p_soa_lhs_loop_mul))
@@ -8179,7 +8227,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (alpha UReal ())
+     (Assignment (LVariable alpha) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8197,7 +8245,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_vec_v UVector ())
+     (Assignment (LVariable p_soa_vec_v) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8221,7 +8269,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_mat UMatrix ())
+     (Assignment (LVariable p_soa_mat) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8248,7 +8296,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_arr_vec_v (UArray UVector) ())
+     (Assignment (LVariable p_soa_arr_vec_v) (UArray UVector)
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8275,7 +8323,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_mat_uni_col_idx UMatrix ())
+     (Assignment (LVariable p_soa_mat_uni_col_idx) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8299,7 +8347,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_vec_uni_idx UVector ())
+     (Assignment (LVariable p_soa_vec_uni_idx) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8323,7 +8371,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_loop_mat_uni_col_idx UMatrix ())
+     (Assignment (LVariable p_soa_loop_mat_uni_col_idx) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8347,7 +8395,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_lhs_loop_mul URowVector ())
+     (Assignment (LVariable p_soa_lhs_loop_mul) URowVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8369,7 +8417,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_rhs_loop_mul UVector ())
+     (Assignment (LVariable p_soa_rhs_loop_mul) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8392,7 +8440,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_used_with_aos_in_excluded_fun UVector ())
+     (Assignment (LVariable p_soa_used_with_aos_in_excluded_fun) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8416,7 +8464,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_soa_loop_mat_multi_uni_uni_idx UMatrix ())
+     (Assignment (LVariable p_soa_loop_mat_multi_uni_uni_idx) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8440,7 +8488,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_vec_v_assign_to_aos UVector ())
+     (Assignment (LVariable p_aos_vec_v_assign_to_aos) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8462,7 +8510,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_vec_v_tp_fails_func UVector ())
+     (Assignment (LVariable p_aos_vec_v_tp_fails_func) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8484,7 +8532,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_loop_vec_v_uni_idx UVector ())
+     (Assignment (LVariable p_aos_loop_vec_v_uni_idx) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8506,7 +8554,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_fail_assign_from_top_idx UVector ())
+     (Assignment (LVariable p_aos_fail_assign_from_top_idx) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8530,7 +8578,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_loop_mat_uni_uni_idx UMatrix ())
+     (Assignment (LVariable p_aos_loop_mat_uni_uni_idx) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8556,7 +8604,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_mat UMatrix ())
+     (Assignment (LVariable p_aos_mat) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8583,7 +8631,8 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_mat_pass_func_outer_single_indexed1 UMatrix ())
+     (Assignment (LVariable p_aos_mat_pass_func_outer_single_indexed1)
+      UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8610,7 +8659,8 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_mat_pass_func_outer_single_indexed2 UMatrix ())
+     (Assignment (LVariable p_aos_mat_pass_func_outer_single_indexed2)
+      UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8636,7 +8686,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_mat_fail_uni_uni_idx1 UMatrix ())
+     (Assignment (LVariable p_aos_mat_fail_uni_uni_idx1) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8662,7 +8712,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_mat_fail_uni_uni_idx2 UMatrix ())
+     (Assignment (LVariable p_aos_mat_fail_uni_uni_idx2) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -8981,7 +9031,7 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_real_from_aos UReal ())
+     (Assignment (LVariable tp_real_from_aos) UReal
       ((pattern
         (Indexed
          ((pattern (Var p_soa_vec_v))
@@ -8992,7 +9042,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_aos_vec_v UVector ())
+     (Assignment (LVariable tp_aos_vec_v) UVector
       ((pattern
         (FunApp (UserDefined udf_fun FnPlain)
          (((pattern (Var p_aos_vec_v_assign_to_aos))
@@ -9001,21 +9051,23 @@
     (meta <opaque>))
    ((pattern
      (Assignment
-      (tp_soa_single_idx_uninit UVector
+      (LIndexed (LVariable tp_soa_single_idx_uninit)
        ((Single
          ((pattern (Lit Int 1))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern (Var tp_real_from_aos))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (Assignment
-      (tp_soa_single_idx_uninit UVector
+      (LIndexed (LVariable tp_soa_single_idx_uninit)
        ((Between
          ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern
         (FunApp (StanLib rep_vector FnPlain AoS)
          (((pattern (Var tp_real_from_aos))
@@ -9030,16 +9082,17 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_aos_fail_func_vec_v UVector ())
+     (Assignment (LVariable tp_aos_fail_func_vec_v) UVector
       ((pattern (Var p_aos_vec_v_tp_fails_func))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (Assignment
-      (tp_aos_fail_func_vec_v UVector
+      (LIndexed (LVariable tp_aos_fail_func_vec_v)
        ((Single
          ((pattern (Lit Int 1))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern
         (Indexed
          ((pattern (Var p_soa_vec_v))
@@ -9051,10 +9104,11 @@
     (meta <opaque>))
    ((pattern
      (Assignment
-      (tp_aos_fail_assign_from_top_idx UVector
+      (LIndexed (LVariable tp_aos_fail_assign_from_top_idx)
        ((Upfrom
          ((pattern (Lit Int 1))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      UVector
       ((pattern
         (Indexed
          ((pattern (Var p_aos_fail_assign_from_top_idx))
@@ -9135,7 +9189,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos__ UInt ())
+     (Assignment (LVariable pos__) UInt
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -9144,7 +9198,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (alpha UReal ())
+     (Assignment (LIndexed (LVariable alpha) ()) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -9179,10 +9233,11 @@
          (Block
           (((pattern
              (Assignment
-              (p_soa_vec_v UVector
+              (LIndexed (LVariable p_soa_vec_v)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var M))
@@ -9235,7 +9290,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (p_soa_mat UMatrix
+                      (LIndexed (LVariable p_soa_mat)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -9244,6 +9299,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Var N))
@@ -9305,7 +9361,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (p_soa_arr_vec_v UVector
+                      (LIndexed (LVariable p_soa_arr_vec_v)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -9314,6 +9370,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UVector
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Var N))
@@ -9371,7 +9428,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (p_soa_mat_uni_col_idx UMatrix
+                      (LIndexed (LVariable p_soa_mat_uni_col_idx)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -9380,6 +9437,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Var N))
@@ -9427,10 +9485,11 @@
          (Block
           (((pattern
              (Assignment
-              (p_soa_vec_uni_idx UVector
+              (LIndexed (LVariable p_soa_vec_uni_idx)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var N))
@@ -9483,7 +9542,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (p_soa_loop_mat_uni_col_idx UMatrix
+                      (LIndexed (LVariable p_soa_loop_mat_uni_col_idx)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -9492,6 +9551,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Var N))
@@ -9539,10 +9599,11 @@
          (Block
           (((pattern
              (Assignment
-              (p_soa_lhs_loop_mul URowVector
+              (LIndexed (LVariable p_soa_lhs_loop_mul)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              URowVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var N))
@@ -9583,10 +9644,11 @@
          (Block
           (((pattern
              (Assignment
-              (p_soa_rhs_loop_mul UVector
+              (LIndexed (LVariable p_soa_rhs_loop_mul)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var N))
@@ -9627,10 +9689,11 @@
          (Block
           (((pattern
              (Assignment
-              (p_soa_used_with_aos_in_excluded_fun UVector
+              (LIndexed (LVariable p_soa_used_with_aos_in_excluded_fun)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var N))
@@ -9684,7 +9747,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (p_soa_loop_mat_multi_uni_uni_idx UMatrix
+                      (LIndexed (LVariable p_soa_loop_mat_multi_uni_uni_idx)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -9693,6 +9756,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Var N))
@@ -9740,10 +9804,11 @@
          (Block
           (((pattern
              (Assignment
-              (p_aos_vec_v_assign_to_aos UVector
+              (LIndexed (LVariable p_aos_vec_v_assign_to_aos)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var M))
@@ -9783,10 +9848,11 @@
          (Block
           (((pattern
              (Assignment
-              (p_aos_vec_v_tp_fails_func UVector
+              (LIndexed (LVariable p_aos_vec_v_tp_fails_func)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var M))
@@ -9826,10 +9892,11 @@
          (Block
           (((pattern
              (Assignment
-              (p_aos_loop_vec_v_uni_idx UVector
+              (LIndexed (LVariable p_aos_loop_vec_v_uni_idx)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var M))
@@ -9870,10 +9937,11 @@
          (Block
           (((pattern
              (Assignment
-              (p_aos_fail_assign_from_top_idx UVector
+              (LIndexed (LVariable p_aos_fail_assign_from_top_idx)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Var M))
@@ -9926,7 +9994,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (p_aos_loop_mat_uni_uni_idx UMatrix
+                      (LIndexed (LVariable p_aos_loop_mat_uni_uni_idx)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -9935,6 +10003,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Var N))
@@ -9995,7 +10064,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (p_aos_mat UMatrix
+                      (LIndexed (LVariable p_aos_mat)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -10004,6 +10073,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Var N))
@@ -10065,7 +10135,8 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (p_aos_mat_pass_func_outer_single_indexed1 UMatrix
+                      (LIndexed
+                       (LVariable p_aos_mat_pass_func_outer_single_indexed1)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -10074,6 +10145,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Var N))
@@ -10135,7 +10207,8 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (p_aos_mat_pass_func_outer_single_indexed2 UMatrix
+                      (LIndexed
+                       (LVariable p_aos_mat_pass_func_outer_single_indexed2)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -10144,6 +10217,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Var N))
@@ -10204,7 +10278,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (p_aos_mat_fail_uni_uni_idx1 UMatrix
+                      (LIndexed (LVariable p_aos_mat_fail_uni_uni_idx1)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -10213,6 +10287,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Var N))
@@ -10273,7 +10348,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (p_aos_mat_fail_uni_uni_idx2 UMatrix
+                      (LIndexed (LVariable p_aos_mat_fail_uni_uni_idx2)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -10282,6 +10357,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Var N))
@@ -10615,7 +10691,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos__ UInt ())
+     (Assignment (LVariable pos__) UInt
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -10624,7 +10700,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (N UInt ())
+     (Assignment (LVariable N) UInt
       ((pattern
         (Indexed
          ((pattern
@@ -10642,7 +10718,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (M UInt ())
+     (Assignment (LVariable M) UInt
       ((pattern
         (Indexed
          ((pattern
@@ -10674,7 +10750,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (Idx (UArray UInt) ())
+     (Assignment (LVariable Idx) (UArray UInt)
       ((pattern
         (FunApp (CompilerInternal FnReadData)
          (((pattern (Lit Str Idx))
@@ -10687,7 +10763,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (alpha UReal ())
+     (Assignment (LVariable alpha) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -10705,7 +10781,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_loop_single_idx UVector ())
+     (Assignment (LVariable p_aos_loop_single_idx) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -10739,7 +10815,7 @@
           (initialize true)))
         (meta <opaque>))
        ((pattern
-         (Assignment (tp_soa_multi_idx_assign_in_loop UVector ())
+         (Assignment (LVariable tp_soa_multi_idx_assign_in_loop) UVector
           ((pattern
             (FunApp (StanLib rep_vector FnPlain SoA)
              (((pattern (Var alpha))
@@ -10760,7 +10836,8 @@
            ((pattern
              (Block
               (((pattern
-                 (Assignment (tp_soa_multi_idx_assign_in_loop UVector ())
+                 (Assignment (LVariable tp_soa_multi_idx_assign_in_loop)
+                  UVector
                   ((pattern
                     (FunApp (StanLib Times__ FnPlain SoA)
                      (((pattern (Var tp_soa_multi_idx_assign_in_loop))
@@ -10815,7 +10892,8 @@
            ((pattern
              (Block
               (((pattern
-                 (Assignment (tp_soa_single_idx_in_upfrom_idx UVector ())
+                 (Assignment (LVariable tp_soa_single_idx_in_upfrom_idx)
+                  UVector
                   ((pattern
                     (Indexed
                      ((pattern (Var tp_soa_multi_idx_assign_in_loop))
@@ -10848,7 +10926,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (alpha UReal ())
+     (Assignment (LVariable alpha) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -10866,7 +10944,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_aos_loop_single_idx UVector ())
+     (Assignment (LVariable p_aos_loop_single_idx) UVector
       ((pattern
         (FunApp
          (CompilerInternal
@@ -10929,7 +11007,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos__ UInt ())
+     (Assignment (LVariable pos__) UInt
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -10938,7 +11016,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (alpha UReal ())
+     (Assignment (LIndexed (LVariable alpha) ()) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -10973,10 +11051,11 @@
          (Block
           (((pattern
              (Assignment
-              (p_aos_loop_single_idx UVector
+              (LIndexed (LVariable p_aos_loop_single_idx)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              UVector
               ((pattern
                 (FunApp (CompilerInternal FnReadDataSerializer)
                  (((pattern (Lit Int 10))
@@ -11049,7 +11128,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos__ UInt ())
+     (Assignment (LVariable pos__) UInt
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -11058,7 +11137,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (data_r UReal ())
+     (Assignment (LVariable data_r) UReal
       ((pattern
         (Indexed
          ((pattern
@@ -11084,7 +11163,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (soa_x UMatrix ())
+     (Assignment (LVariable soa_x) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -11110,7 +11189,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (aos_x UMatrix ())
+     (Assignment (LVariable aos_x) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -11136,7 +11215,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (aos_y UMatrix ())
+     (Assignment (LVariable aos_y) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -11155,7 +11234,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_real_from_soa UReal ())
+     (Assignment (LVariable tp_real_from_soa) UReal
       ((pattern
         (TernaryIf
          ((pattern
@@ -11190,7 +11269,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_matrix_aos_from_mix UMatrix ())
+     (Assignment (LVariable tp_matrix_aos_from_mix) UMatrix
       ((pattern
         (TernaryIf
          ((pattern
@@ -11233,7 +11312,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_matrix_from_udf_reduced_soa UMatrix ())
+     (Assignment (LVariable tp_matrix_from_udf_reduced_soa) UMatrix
       ((pattern
         (FunApp (UserDefined okay_reduction FnPlain)
          (((pattern
@@ -11258,7 +11337,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (soa_x UMatrix ())
+     (Assignment (LVariable soa_x) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -11284,7 +11363,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (aos_x UMatrix ())
+     (Assignment (LVariable aos_x) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -11310,7 +11389,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (aos_y UMatrix ())
+     (Assignment (LVariable aos_y) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -11394,7 +11473,7 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_real_from_soa UReal ())
+     (Assignment (LVariable tp_real_from_soa) UReal
       ((pattern
         (TernaryIf
          ((pattern
@@ -11418,7 +11497,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_matrix_aos_from_mix UMatrix ())
+     (Assignment (LVariable tp_matrix_aos_from_mix) UMatrix
       ((pattern
         (TernaryIf
          ((pattern
@@ -11449,7 +11528,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_matrix_from_udf_reduced_soa UMatrix ())
+     (Assignment (LVariable tp_matrix_from_udf_reduced_soa) UMatrix
       ((pattern
         (FunApp (UserDefined okay_reduction FnPlain)
          (((pattern
@@ -11514,7 +11593,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos__ UInt ())
+     (Assignment (LVariable pos__) UInt
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -11553,7 +11632,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (soa_x UMatrix
+                      (LIndexed (LVariable soa_x)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -11562,6 +11641,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Lit Int 5))
@@ -11622,7 +11702,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (aos_x UMatrix
+                      (LIndexed (LVariable aos_x)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -11631,6 +11711,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Lit Int 5))
@@ -11691,7 +11772,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (aos_y UMatrix
+                      (LIndexed (LVariable aos_y)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -11700,6 +11781,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Lit Int 5))
@@ -11843,7 +11925,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos__ UInt ())
+     (Assignment (LVariable pos__) UInt
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
@@ -11860,7 +11942,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (row_soa UMatrix ())
+     (Assignment (LVariable row_soa) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -11886,7 +11968,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (udf_input_aos UMatrix ())
+     (Assignment (LVariable udf_input_aos) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -11912,7 +11994,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (user_func_aos UMatrix ())
+     (Assignment (LVariable user_func_aos) UMatrix
       ((pattern
         (FunApp (UserDefined mat_ret_user_func FnPlain)
          (((pattern (Var udf_input_aos))
@@ -11931,7 +12013,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (empty_user_func_aos UMatrix ())
+     (Assignment (LVariable empty_user_func_aos) UMatrix
       ((pattern (FunApp (UserDefined empty_user_func FnPlain) ()))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -11947,7 +12029,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (inner_empty_user_func_aos UMatrix ())
+     (Assignment (LVariable inner_empty_user_func_aos) UMatrix
       ((pattern
         (FunApp (StanLib multiply FnPlain AoS)
          (((pattern (Var udf_input_aos))
@@ -11968,7 +12050,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (int_aos_mul_aos UMatrix ())
+     (Assignment (LVariable int_aos_mul_aos) UMatrix
       ((pattern
         (FunApp (StanLib Times__ FnPlain AoS)
          (((pattern
@@ -11992,7 +12074,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (mul_two_aos UMatrix ())
+     (Assignment (LVariable mul_two_aos) UMatrix
       ((pattern
         (FunApp (StanLib Times__ FnPlain AoS)
          (((pattern
@@ -12027,7 +12109,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (row_soa UMatrix ())
+     (Assignment (LVariable row_soa) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -12053,7 +12135,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (udf_input_aos UMatrix ())
+     (Assignment (LVariable udf_input_aos) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -12157,7 +12239,7 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Assignment (user_func_aos UMatrix ())
+     (Assignment (LVariable user_func_aos) UMatrix
       ((pattern
         (FunApp (UserDefined mat_ret_user_func FnPlain)
          (((pattern (Var udf_input_aos))
@@ -12165,12 +12247,12 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (empty_user_func_aos UMatrix ())
+     (Assignment (LVariable empty_user_func_aos) UMatrix
       ((pattern (FunApp (UserDefined empty_user_func FnPlain) ()))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (inner_empty_user_func_aos UMatrix ())
+     (Assignment (LVariable inner_empty_user_func_aos) UMatrix
       ((pattern
         (FunApp (StanLib multiply FnPlain AoS)
          (((pattern (Var udf_input_aos))
@@ -12180,7 +12262,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (int_aos_mul_aos UMatrix ())
+     (Assignment (LVariable int_aos_mul_aos) UMatrix
       ((pattern
         (FunApp (StanLib Times__ FnPlain AoS)
          (((pattern
@@ -12193,7 +12275,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (mul_two_aos UMatrix ())
+     (Assignment (LVariable mul_two_aos) UMatrix
       ((pattern
         (FunApp (StanLib Times__ FnPlain AoS)
          (((pattern
@@ -12286,7 +12368,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos__ UInt ())
+     (Assignment (LVariable pos__) UInt
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -12325,7 +12407,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (row_soa UMatrix
+                      (LIndexed (LVariable row_soa)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -12334,6 +12416,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Lit Int 10))
@@ -12394,7 +12477,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (udf_input_aos UMatrix
+                      (LIndexed (LVariable udf_input_aos)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -12403,6 +12486,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Lit Int 10))
@@ -12537,7 +12621,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos__ UInt ())
+     (Assignment (LVariable pos__) UInt
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
@@ -12554,7 +12638,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (aos_p UMatrix ())
+     (Assignment (LVariable aos_p) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -12580,7 +12664,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (soa_p UMatrix ())
+     (Assignment (LVariable soa_p) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -12599,7 +12683,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_real_from_soa UReal ())
+     (Assignment (LVariable tp_real_from_soa) UReal
       ((pattern
         (Indexed
          ((pattern (Var soa_p))
@@ -12634,7 +12718,7 @@
               (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Assignment (tp_row_vector_from_soa_loop URowVector ())
+             (Assignment (LVariable tp_row_vector_from_soa_loop) URowVector
               ((pattern
                 (FunApp (StanLib multiply FnPlain SoA)
                  (((pattern
@@ -12669,7 +12753,7 @@
               (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Assignment (tp_matrix_from_soa_loop UMatrix ())
+             (Assignment (LVariable tp_matrix_from_soa_loop) UMatrix
               ((pattern
                 (FunApp (StanLib multiply FnPlain SoA)
                  (((pattern
@@ -12708,7 +12792,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (aos_p UMatrix ())
+     (Assignment (LVariable aos_p) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -12734,7 +12818,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (soa_p UMatrix ())
+     (Assignment (LVariable soa_p) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -12787,7 +12871,7 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_real_from_soa UReal ())
+     (Assignment (LVariable tp_real_from_soa) UReal
       ((pattern
         (Indexed
          ((pattern (Var soa_p))
@@ -12822,7 +12906,7 @@
               (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Assignment (tp_row_vector_from_soa_loop URowVector ())
+             (Assignment (LVariable tp_row_vector_from_soa_loop) URowVector
               ((pattern
                 (FunApp (StanLib multiply FnPlain AoS)
                  (((pattern
@@ -12856,7 +12940,7 @@
               (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Assignment (tp_matrix_from_soa_loop UMatrix ())
+             (Assignment (LVariable tp_matrix_from_soa_loop) UMatrix
               ((pattern
                 (FunApp (StanLib multiply FnPlain AoS)
                  (((pattern
@@ -12917,7 +13001,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos__ UInt ())
+     (Assignment (LVariable pos__) UInt
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -12956,7 +13040,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (aos_p UMatrix
+                      (LIndexed (LVariable aos_p)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -12965,6 +13049,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Lit Int 10))
@@ -13025,7 +13110,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (soa_p UMatrix
+                      (LIndexed (LVariable soa_p)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -13034,6 +13119,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Lit Int 10))
@@ -13132,7 +13218,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos__ UInt ())
+     (Assignment (LVariable pos__) UInt
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -13141,7 +13227,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (data_r UReal ())
+     (Assignment (LVariable data_r) UReal
       ((pattern
         (Indexed
          ((pattern
@@ -13167,7 +13253,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (first_pass_soa_x UMatrix ())
+     (Assignment (LVariable first_pass_soa_x) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -13193,7 +13279,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (aos_x UMatrix ())
+     (Assignment (LVariable aos_x) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -13219,12 +13305,12 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_matrix_aos UMatrix ())
+     (Assignment (LVariable tp_matrix_aos) UMatrix
       ((pattern (Var first_pass_soa_x))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_matrix_aos UMatrix ())
+     (Assignment (LVariable tp_matrix_aos) UMatrix
       ((pattern
         (FunApp (UserDefined nono_func FnPlain)
          (((pattern (Var aos_x))
@@ -13244,7 +13330,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (first_pass_soa_x UMatrix ())
+     (Assignment (LVariable first_pass_soa_x) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -13270,7 +13356,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (aos_x UMatrix ())
+     (Assignment (LVariable aos_x) UMatrix
       ((pattern
         (FunApp
          (CompilerInternal
@@ -13330,12 +13416,12 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_matrix_aos UMatrix ())
+     (Assignment (LVariable tp_matrix_aos) UMatrix
       ((pattern (Var first_pass_soa_x))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (tp_matrix_aos UMatrix ())
+     (Assignment (LVariable tp_matrix_aos) UMatrix
       ((pattern
         (FunApp (UserDefined nono_func FnPlain)
          (((pattern (Var aos_x))
@@ -13377,7 +13463,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos__ UInt ())
+     (Assignment (LVariable pos__) UInt
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -13416,7 +13502,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (first_pass_soa_x UMatrix
+                      (LIndexed (LVariable first_pass_soa_x)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -13425,6 +13511,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Lit Int 5))
@@ -13485,7 +13572,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (aos_x UMatrix
+                      (LIndexed (LVariable aos_x)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -13494,6 +13581,7 @@
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
                       ((pattern
                         (FunApp (CompilerInternal FnReadDataSerializer)
                          (((pattern (Lit Int 5))

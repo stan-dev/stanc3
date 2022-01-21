@@ -15,6 +15,9 @@ let build_id id loc =
   grammar_logger ("identifier " ^ id);
   {name=id; id_loc=Location_span.of_positions_exn loc}
 
+let build_expr expr loc =
+  {expr; emeta={loc=Location_span.of_positions_exn loc}}
+
 let rec iterate_n f x = function
   | 0 -> x
   | n -> iterate_n f (f x) (n - 1)
@@ -23,8 +26,9 @@ let nest_unsized_array basic_type n =
 
 (* $sloc and $symbolstartpos generates code using !=, which
     Core_kernel considers to be an error.
- *)
 let (!=) = Stdlib.(!=)
+ *)
+
 %}
 
 (* Token definitions. The quoted strings are aliases, used in the examples generated in
@@ -46,7 +50,7 @@ let (!=) = Stdlib.(!=)
        CORRMATRIX "corr_matrix" COVMATRIX "cov_matrix"
 %token LOWER "lower" UPPER "upper" OFFSET "offset" MULTIPLIER "multiplier"
 %token <string> INTNUMERAL "24"
-%token <string> REALNUMERAL "3.1415"
+%token <string> REALNUMERAL "3.1415" REALNUMERALDOT ".2"
 %token <string> IMAGNUMERAL "1i"
 %token <string> STRINGLITERAL "\"hello world\""
 %token <string> IDENTIFIER "foo"
@@ -85,6 +89,7 @@ let (!=) = Stdlib.(!=)
 %left LBRACK
 %nonassoc below_ELSE
 %nonassoc ELSE
+
 
 (* Top level rule *)
 %start <Ast.untyped_program> program functions_only
@@ -253,15 +258,23 @@ arg_decl:
        match od with None -> (UnsizedType.AutoDiffable, ut, id) | _ -> (DataOnly, ut, id)  }
 
 unsized_type:
-  | ARRAY n=unsized_dims bt=basic_type
-      {  grammar_logger "unsized_type";
-       nest_unsized_array bt n
+  | ARRAY n=unsized_dims t=basic_type
+  | ARRAY n=unsized_dims t=unsized_tuple_type
+    {  grammar_logger "unsized_type";
+        nest_unsized_array t n
     }
   | bt=basic_type n_opt=option(unsized_dims)
     {  grammar_logger "unsized_type";
        if Option.is_some n_opt then
         Input_warnings.array_syntax ~unsized:true $loc;
        nest_unsized_array bt (Option.value n_opt ~default:0)
+    }
+  | t=unsized_tuple_type
+    { t }
+
+%inline unsized_tuple_type:
+  | LPAREN ts=separated_nonempty_list(COMMA, unsized_type) RPAREN
+    {  UnsizedType.UTuple ts
     }
 
 basic_type:
@@ -344,25 +357,48 @@ decl(type_rule, rhs):
    *)
   (* Note that the array dimensions option must be inlined with ioption, else
      it will conflict with first rule. *)
-  | dims_opt=ioption(arr_dims) ty=type_rule
-     vs=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs)) SEMICOLON
+  | ty=higher_type(type_rule)
+    vs=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs)) SEMICOLON
     { (fun ~is_global ->
-      let dims = Option.value ~default:[] dims_opt
-      in
+    (* map over each variable in vs (often only one), assigning each the same
+        type. *)
       List.map vs ~f:(fun (id, rhs_opt) ->
-          { stmt=
-              VarDecl {
-                  decl_type= Sized (reducearray (fst ty, dims))
-                ; transformation= snd ty
-                ; identifier= id
-                ; initial_value= rhs_opt
-                ; is_global
-                }
-          ; smeta= {
-              loc= Location_span.of_positions_exn $sloc
-            }
-          })
-    )}
+        { stmt=
+          VarDecl { decl_type= Sized (fst ty)
+                  ; transformation= snd ty
+                  ; identifier= id
+                  ; initial_value= rhs_opt
+                  ; is_global
+                  }
+        ; smeta= { loc=Location_span.of_positions_exn $sloc }
+        })
+  )}
+
+(* Take a type matched by type_rule and produce that type or any (possibly nested) container of that type *)
+(* Can't do the fully recursive array_type(higher_type) because arrays can't hold arrays *)
+%inline higher_type(type_rule):
+  | ty=array_type(type_rule)
+  | ty=tuple_type(type_rule)
+  | ty=type_rule
+  { grammar_logger "higher_type" ;
+    ty
+  }
+
+array_type(type_rule):
+  | dims=arr_dims ty=type_rule
+  | dims=arr_dims ty=tuple_type(type_rule)
+  { grammar_logger "array_type" ;
+    let (type_, trans) = ty in
+    ((reducearray (type_, dims)), trans)
+  }
+
+tuple_type(type_rule):
+  | LPAREN head=higher_type(type_rule) COMMA rest=separated_nonempty_list(COMMA, higher_type(type_rule)) RPAREN
+  { grammar_logger "tuple_type" ;
+    let ts = head::rest in
+    let types, trans = List.unzip ts in
+    (SizedType.STuple types, TupleTransformation trans)
+  }
 
 var_decl:
   | d_fn=decl(sized_basic_type, expression)
@@ -478,87 +514,146 @@ arr_dims:
   | ARRAY LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
     { grammar_logger "array dims" ; l  }
 
+ (* It's a bit of a hack that "array[x,y,z]" is matched with a lhs rule and
+     then narrowed down by throwing errors. This is done to avoid reserving
+     "array" as a keyword, while also avoiding the reduce-reduce conflict that
+     would occur if "array[x,y,z]" were its own rule without reserving the
+     keyword. *)
+%inline arr_dims:
+  | dims_lhs=indexed(lhs)
+    { grammar_logger "array dims" ;
+      let int_ix ix = match ix with
+      | Single e -> Some e
+      | _ -> None
+      in
+      let int_ixs ixs =
+        List.fold_left
+        ~init:(Some [])
+        ~f:(Option.map2 ~f:(fun ixs ix -> ix::ixs))
+        (List.map ~f:int_ix
+         (List.rev ixs))
+      in
+      let error message =
+        pp_syntax_error
+        Fmt.stderr
+        (Parsing (message, Location_span.of_positions_exn $loc ));
+        exit 1
+      in
+      match dims_lhs with
+      | ({expr= Indexed ({expr= Variable {name="array"; _}; _}, ixs); _}) ->
+          Input_warnings.drop_array_future () ;
+         (match int_ixs ixs with
+          | Some sizes -> sizes
+          | None -> error "Dimensions should be expressions, not multiple or range indexing.")
+      | _ -> error "Found a declaration following an expression."
+    }
+
+
 dims:
   | LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
     { grammar_logger "dims" ; l  }
 
-(* expressions *)
+(* General expressions (that can't be used in constraints declarations) *)
 %inline expression:
   | l=lhs
-    {
-      grammar_logger "lhs_expression" ;
+    { grammar_logger "lhs_expression" ;
       l
     }
   | e=non_lhs
     { grammar_logger "non_lhs_expression" ;
-      {expr=e;
-       emeta={loc= Location_span.of_positions_exn $loc}}}
+      e
+    }
 
+(* L-values *)
+lhs:
+  | id=identifier
+    {  grammar_logger "lhs_identifier" ;
+       {expr=Variable id
+       ;emeta = {loc=id.id_loc}}
+    }
+  | v=indexed(lhs) { v }
+  | l=lhs ix_str=REALNUMERALDOT
+    { grammar_logger "lhs_tuple_index" ;
+      match int_of_string_opt (String.drop_prefix ix_str 1) with
+      | None ->
+         raise (Failure ("Could not parse integer from string " ^ ix_str
+                         ^ " in from tuple index. This should never happen,"
+                         ^ " please file a bug."))
+      | Some ix ->
+         build_expr (IndexedTuple (l, ix)) $loc
+    }
+
+
+(* This is separated so that it can be reused, e.g. to match array[ixs] type syntax *)
+%inline indexed(expr_type):
+  | l=expr_type LBRACK indices=indexes RBRACK
+    {  grammar_logger "lhs_index" ;
+       build_expr (Indexed (l, indices)) $loc
+    }
+
+(* General expressions (that can't be used in constraints declarations)
+   that can't be assigned to
+ *)
 non_lhs:
   | e1=expression  QMARK e2=expression COLON e3=expression
-    { grammar_logger "ifthenelse_expr" ; TernaryIf (e1, e2, e3) }
+    { grammar_logger "ifthenelse_expr" ; build_expr (TernaryIf (e1, e2, e3)) $loc }
   | e1=expression op=infixOp e2=expression
-    { grammar_logger "infix_expr" ; BinOp (e1, op, e2)  }
+    { grammar_logger "infix_expr" ; build_expr (BinOp (e1, op, e2)) $loc  }
   | op=prefixOp e=expression %prec unary_over_binary
-    { grammar_logger "prefix_expr" ; PrefixOp (op, e) }
+    { grammar_logger "prefix_expr" ; build_expr (PrefixOp (op, e)) $loc }
   | e=expression op=postfixOp
-    { grammar_logger "postfix_expr" ; PostfixOp (e, op)}
-  | ue=non_lhs LBRACK i=indexes RBRACK
-    {  grammar_logger "expression_indexed" ;
-       Indexed ({expr=ue;
-                 emeta={loc= Location_span.of_positions_exn $loc(ue)}}, i)}
+    { grammar_logger "postfix_expr" ; build_expr (PostfixOp (e, op)) $loc}
+  | e=indexed(non_lhs)
+    { e }
   | e=common_expression
-    { grammar_logger "common_expr" ; e }
+    { grammar_logger "common_expr" ; build_expr e $loc }
 
 (* TODO: why do we not simply disallow greater than in constraints? No need to disallow all logical operations, right? *)
 constr_expression:
   | e1=constr_expression op=arithmeticBinOp e2=constr_expression
     {
       grammar_logger "constr_expression_arithmetic" ;
-      {expr=BinOp (e1, op, e2);
-       emeta={loc=Location_span.of_positions_exn $loc}
-      }
+      build_expr (BinOp (e1, op, e2)) $loc
     }
   | op=prefixOp e=constr_expression %prec unary_over_binary
     {
       grammar_logger "constr_expression_prefixOp" ;
-      {expr=PrefixOp (op, e);
-       emeta={loc=Location_span.of_positions_exn $loc}}
+      build_expr (PrefixOp (op, e)) $loc
     }
   | e=constr_expression op=postfixOp
     {
       grammar_logger "constr_expression_postfix" ;
-      {expr=PostfixOp (e, op);
-       emeta={loc=Location_span.of_positions_exn $loc}}
+      build_expr (PostfixOp (e, op)) $loc
     }
-  | e=constr_expression LBRACK i=indexes RBRACK
+  | e=indexed(constr_expression)
     {
       grammar_logger "constr_expression_indexed" ;
-      {expr=Indexed (e, i);
-       emeta={loc=Location_span.of_positions_exn $loc}}
+      e
     }
   | e=common_expression
     {
       grammar_logger "constr_expression_common_expr" ;
-      {expr=e;
-       emeta={loc= Location_span.of_positions_exn $loc}}
+      build_expr e $loc
     }
   | id=identifier
     {
       grammar_logger "constr_expression_identifier" ;
-      {expr=Variable id;
-       emeta={loc=Location_span.of_positions_exn $loc}}
+      build_expr (Variable id) $loc
     }
 
 common_expression:
   | i=INTNUMERAL
     {  grammar_logger ("intnumeral " ^ i) ; IntNumeral i }
   | r=REALNUMERAL
+  | r=REALNUMERALDOT
     {  grammar_logger ("realnumeral " ^ r) ; RealNumeral r }
   | z=IMAGNUMERAL
     {  grammar_logger ("imagnumeral " ^ z) ; ImagNumeral (String.drop_suffix z 1) }
   | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE
     {  grammar_logger "array_expression" ; ArrayExpr xs  }
+  (* TUPLE MAYBE - bmw: is this preventing length-1 tuples? Do we feel the need to do that? *)
+   | LPAREN x_head=expression COMMA xs=separated_nonempty_list(COMMA, expression) RPAREN
+    {  grammar_logger "tuple_expression" ; TupleExpr (x_head::xs)  }
   | LBRACK xs=separated_list(COMMA, expression) RBRACK
     {  grammar_logger "row_vector_expression" ; RowVectorExpr xs }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN
@@ -577,6 +672,16 @@ common_expression:
     {  grammar_logger "conditional_dist_app" ; CondDistApp ((), id, e :: args) }
   | LPAREN e=expression RPAREN
     { grammar_logger "extra_paren" ; Paren e }
+  | e=common_expression ix_str=REALNUMERALDOT
+    {  grammar_logger "common_expression_tuple_index" ;
+       match int_of_string_opt (String.drop_prefix ix_str 1) with
+       | None ->
+          raise (Failure ("Could not parse integer from string " ^ ix_str
+                          ^ " in from tuple index. This should never happen,"
+                          ^ " please file a bug."))
+       | Some ix ->
+          IndexedTuple (build_expr e $loc, ix)
+    }
 
 %inline prefixOp:
   | BANG
@@ -638,7 +743,6 @@ common_expression:
   | GEQ
     {   grammar_logger "infix_geq" ; Operator.Geq }
 
-
 indexes:
   | (* nothing *)
     {   grammar_logger "index_nothing" ; [All] }
@@ -662,18 +766,6 @@ printables:
     {  grammar_logger "printable string" ; [PString s] }
   | p1=printables COMMA p2=printables
     { grammar_logger "printables" ; p1 @ p2 }
-
-(* L-values *)
-lhs:
-  | id=identifier
-    {  grammar_logger "lhs_identifier" ;
-       {expr=Variable id
-       ;emeta = {loc=id.id_loc}}
-    }
-  | l=lhs LBRACK indices=indexes RBRACK
-    {  grammar_logger "lhs_index" ;
-      {expr=Indexed (l, indices)
-      ;emeta = { loc=Location_span.of_positions_exn $loc}}}
 
 (* statements *)
 statement:

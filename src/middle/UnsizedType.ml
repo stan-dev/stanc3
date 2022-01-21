@@ -12,20 +12,29 @@ type t =
   | URowVector
   | UMatrix
   | UArray of t
+  | UTuple of t list
   | UFun of
       (autodifftype * t) list
       * returntype
       * bool Fun_kind.suffix
       * Common.Helpers.mem_pattern
   | UMathLibraryFunction
+[@@deriving compare, hash, sexp]
 
-and autodifftype = DataOnly | AutoDiffable
+and autodifftype = DataOnly | AutoDiffable | TupleAD of autodifftype list
+[@@deriving compare, hash, sexp]
 
 and returntype = Void | ReturnType of t [@@deriving compare, hash, sexp]
 
 let pp_autodifftype ppf = function
   | DataOnly -> pp_keyword ppf "data "
   | AutoDiffable -> ()
+  (* TUPLE STUB tuplead print
+     bmw: does this mean void foo(data (real, int) x){...} is impossible?
+  *)
+  | TupleAD _ ->
+      Common.FatalError.fatal_error_msg
+        [%message "Shouldn't be trying to print tuple adlevel."]
 
 let unsized_array_depth unsized_ty =
   let rec aux depth = function
@@ -56,6 +65,7 @@ let rec pp ppf = function
       let ut2, d = unwind_array_type ut in
       let array_str = "[" ^ String.make d ',' ^ "]" in
       Fmt.pf ppf "array%s %a" array_str pp ut2
+  | UTuple ts -> Fmt.pf ppf "(@[%a@])" Fmt.(list ~sep:comma pp) ts
   | UFun (argtypes, rt, _, _) ->
       Fmt.pf ppf {|@[<h>(%a) => %a@]|}
         Fmt.(list pp_fun_arg ~sep:comma)
@@ -140,8 +150,11 @@ let rec is_autodiffable = function
   | UArray t -> is_autodiffable t
   | _ -> false
 
-let is_autodifftype possibly_adtype =
-  match possibly_adtype with DataOnly -> false | AutoDiffable -> true
+let rec is_autodifftype possibly_adtype =
+  match possibly_adtype with
+  | DataOnly -> false
+  | AutoDiffable -> true
+  | TupleAD ads -> List.exists ~f:is_autodifftype ads
 
 let is_dataonlytype possibly_adtype : bool =
   not (is_autodifftype possibly_adtype)
@@ -180,7 +193,11 @@ let is_fun_type = function UFun _ | UMathLibraryFunction -> true | _ -> false
 
 (** Detect if type contains an integer *)
 let rec contains_int ut =
-  match ut with UInt -> true | UArray ut -> contains_int ut | _ -> false
+  match ut with
+  | UInt -> true
+  | UArray ut -> contains_int ut
+  | UTuple ts -> List.exists ~f:contains_int ts
+  | _ -> false
 
 let rec contains_eigen_type ut =
   match ut with
@@ -188,10 +205,11 @@ let rec contains_eigen_type ut =
   | UReal | UMathLibraryFunction | UFun (_, Void, _, _) -> false
   | UVector | URowVector | UMatrix -> true
   | UArray t | UFun (_, ReturnType t, _, _) -> contains_eigen_type t
+  | UTuple ts -> List.exists ~f:contains_eigen_type ts
 
 let rec is_container ut =
   match ut with
-  | UVector | URowVector | UMatrix | UArray _ -> true
+  | UVector | URowVector | UMatrix | UArray _ | UTuple _ -> true
   | UReal | UInt | UComplex | UFun (_, Void, _, _) -> false
   | UFun (_, ReturnType t, _, _) -> is_container t
   | UMathLibraryFunction -> false

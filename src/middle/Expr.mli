@@ -16,6 +16,7 @@ module Fixed : sig
       | EOr of 'a * 'a
       | Indexed of 'a * 'a Index.t list
       | Promotion of 'a * UnsizedType.t * UnsizedType.autodifftype
+      | IndexedTuple of 'a * int
     [@@deriving sexp, hash, compare]
 
     include Pattern.S with type 'a t := 'a t
@@ -99,5 +100,6 @@ module Helpers : sig
 
   val infer_type_of_indexed : UnsizedType.t -> 'a Index.t list -> UnsizedType.t
   val add_int_index : Typed.t -> Typed.t Index.t -> Typed.t
+  val add_tuple_index : Typed.t -> int -> Typed.t
   val collect_indices : 'a Fixed.t -> 'a Fixed.t Index.t list
 end

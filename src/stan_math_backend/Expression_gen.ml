@@ -34,6 +34,8 @@ let rec local_scalar ut ad =
   | UnsizedType.UArray t, _ -> local_scalar t ad
   | _, UnsizedType.DataOnly | UInt, AutoDiffable -> stantype_prim_str ut
   | _, AutoDiffable -> "local_scalar_t__"
+  (* TUPLE MAYBE error on local scalar with tuple ad *)
+  | _, TupleAD _ -> raise_s [%message "Attempting to make a local scalar tuple"]
 
 let minus_one e =
   { e with
@@ -88,6 +90,14 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
   | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
+  | UTuple ts ->
+      (* TUPLE STUB c++ scalar of type
+         Unclear what a scalar of tuple type would be, either semantic error or depend on usage
+         This appears to be used as the type for variable initialization, so I'm guessing it should be recursive for tuples because initialization is (currently) recursive for tuples
+      *)
+      pf ppf "std::tuple<%a>"
+        (list ~sep:comma pp_unsizedtype_custom_scalar)
+        (List.map ~f:(fun t -> (scalar, t)) ts)
   | UMathLibraryFunction | UFun _ ->
       Common.FatalError.fatal_error_msg
         [%message "Function types not implemented"]
@@ -100,13 +110,31 @@ let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   | UArray t ->
       (* Expressions are not accepted for arrays of Eigen::Matrix *)
       pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
+  | UTuple ts ->
+      (* TUPLE STUB c++ scalar of type
+         Unclear what a scalar of tuple type would be, either semantic error or depend on usage
+         This appears to be used as the type for variable initialization, so I'm guessing it should be recursive for tuples because initialization is (currently) recursive for tuples
+      *)
+      pf ppf "std::tuple<%a>"
+        (list ~sep:comma pp_unsizedtype_custom_scalar)
+        (List.map ~f:(fun t -> (scalar, t)) ts)
   | UMathLibraryFunction | UFun _ ->
       Common.FatalError.fatal_error_msg
         [%message "Function types not implemented"]
 
-let pp_unsizedtype_local ppf (adtype, ut) =
-  let s = local_scalar ut adtype in
-  pp_unsizedtype_custom_scalar ppf (s, ut)
+let rec pp_unsizedtype_local ppf (adtype, ut) =
+  match (adtype, ut) with
+  (* TUPLE MAYBE - i think this is what is necessary to handle different AD types*)
+  | UnsizedType.TupleAD ads, UnsizedType.UTuple ts ->
+      pf ppf "std::tuple<@[%a@]>"
+        (list ~sep:comma pp_unsizedtype_local)
+        (List.zip_exn ads ts)
+  | UnsizedType.TupleAD _, _ | _, UnsizedType.UTuple _ ->
+      Common.FatalError.fatal_error_msg
+        [%message "Tuple and Tuple AD type not matching!"]
+  | _, _ ->
+      let s = local_scalar ut adtype in
+      pp_unsizedtype_custom_scalar ppf (s, ut)
 
 let pp_expr_type ppf e =
   pp_unsizedtype_local ppf Expr.Typed.(adlevel_of e, type_of e)
@@ -125,7 +153,9 @@ let rec pp_possibly_var_decl ppf (adtype, ut, mem_pattern) =
         (adtype, t, mem_pattern)
   | UMatrix | UVector | URowVector -> pf ppf "%a" pp_var_decl ut
   | UReal | UInt | UComplex -> pf ppf "%a" pp_unsizedtype_local (adtype, ut)
-  | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
+  | x ->
+      Common.FatalError.fatal_error_msg
+        [%message (x : UnsizedType.t) "not implemented yet"]
 
 let suffix_args = function
   | Fun_kind.FnRng -> ["base_rng__"]
@@ -177,6 +207,10 @@ let constraint_to_string = function
   | LowerUpper _ -> Some "lub"
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> Some "offset_multiplier"
   | Identity -> None
+  | TupleTransformation _ ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Cannot generate tuple transformation directly; should not be called"]
 
 let check_to_string = function
   | Transformation.Lower _ -> Some "greater_or_equal"
@@ -421,7 +455,7 @@ and read_data ut ppf es =
     | UArray UReal -> "r"
     | UArray UComplex -> "c"
     | UInt | UReal | UComplex | UVector | URowVector | UMatrix | UArray _
-     |UFun _ | UMathLibraryFunction ->
+     |UTuple _ | UFun _ | UMathLibraryFunction ->
         Common.FatalError.fatal_error_msg
           [%message "Can't ReadData of " (ut : UnsizedType.t)] in
   pf ppf "context__.vals_%s(%a)" i_or_r_or_c pp_expr (List.hd_exn es)
@@ -534,26 +568,26 @@ and pp_indexed ppf (vident, indices, pretty) =
   pf ppf "@[<hov 2>stan::model::rvalue(@,%s,@ %S,@ %a)@]" vident pretty
     pp_indexes indices
 
-and pp_indexed_simple ppf (obj, idcs) =
+and pp_indices_simple ppf (msg_name, idcs) =
   let idx_minus_one = function
     | Index.Single e -> minus_one e
     | MultiIndex e | Between (e, _) | Upfrom e ->
         Common.FatalError.fatal_error_msg
           [%message
-            "No non-Single indices allowed" ~obj
+            "No non-Single indices allowed" ~msg_name
               (idcs : Expr.Typed.t Index.t list)
               (Expr.Typed.loc_of e : Location_span.t)]
     | All ->
         Common.FatalError.fatal_error_msg
           [%message
-            "No non-Single indices allowed" ~obj
+            "No non-Single indices allowed" ~msg_name
               (idcs : Expr.Typed.t Index.t list)] in
-  pf ppf "%s%a" obj
-    (fun ppf idcs ->
-      match idcs with
-      | [] -> ()
-      | idcs -> pf ppf "[%a]" (list ~sep:(const string "][") pp_expr) idcs )
-    (List.map ~f:idx_minus_one idcs)
+  match List.map ~f:idx_minus_one idcs with
+  | [] -> ()
+  | idcs -> pf ppf "[%a]" (list ~sep:(const string "][") pp_expr) idcs
+
+and pp_indexed_simple ppf (obj, idcs) =
+  pf ppf "%s%a" obj pp_indices_simple (obj, idcs)
 
 and pp_expr ppf Expr.Fixed.{pattern; meta} =
   match pattern with
@@ -605,6 +639,11 @@ and pp_expr ppf Expr.Fixed.{pattern; meta} =
       ->
         pp_indexed_simple ppf (str "%a" pp_expr e, idx)
     | _ -> pp_indexed ppf (str "%a" pp_expr e, idx, pretty_print e) )
+  (* TUPLE MAYBE c++ indexing
+       from https://en.cppreference.com/w/cpp/utility/tuple
+       Index std::tuple with std::get
+  *)
+  | IndexedTuple (t, ix) -> pf ppf "std::get<%d>(%a)" (ix - 1) pp_expr t
 
 (* these functions are just for testing *)
 let dummy_locate pattern =

@@ -11,6 +11,7 @@ type 'a t =
   | SRowVector of Common.Helpers.mem_pattern * 'a
   | SMatrix of Common.Helpers.mem_pattern * 'a * 'a
   | SArray of 'a t * 'a
+  | STuple of 'a t list
 [@@deriving sexp, compare, map, hash, fold]
 
 let rec pp pp_e ppf = function
@@ -27,13 +28,15 @@ let rec pp pp_e ppf = function
       Fmt.pf ppf {|array%a|}
         Fmt.(pair ~sep:comma (fun ppf st -> pp pp_e ppf st) pp_e |> brackets)
         (st, expr)
+  | STuple ts -> Fmt.pf ppf "(@[%a@])" Fmt.(list ~sep:comma (pp pp_e)) ts
 
 let collect_exprs st =
   let rec aux accu = function
     | SInt | SReal | SComplex -> List.rev accu
     | SVector (_, e) | SRowVector (_, e) -> List.rev @@ (e :: accu)
     | SMatrix (_, e1, e2) -> List.rev @@ (e1 :: e2 :: accu)
-    | SArray (inner, e) -> aux (e :: accu) inner in
+    | SArray (inner, e) -> aux (e :: accu) inner
+    | STuple ts -> List.fold ~init:accu ~f:aux ts in
   aux [] st
 
 let rec to_unsized = function
@@ -44,6 +47,7 @@ let rec to_unsized = function
   | SRowVector _ -> URowVector
   | SMatrix _ -> UMatrix
   | SArray (t, _) -> UArray (to_unsized t)
+  | STuple ts -> UTuple (List.map ~f:to_unsized ts)
 
 let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
   | SInt | SReal | SComplex -> assocs
@@ -52,6 +56,8 @@ let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
       Expr.Labelled.(associate ~init:(associate ~init:assocs e1) e2)
   | SArray (st, e) ->
       associate ~init:(Expr.Labelled.associate ~init:assocs e) st
+  | STuple ts ->
+      List.fold ~init:assocs ~f:(fun assocs t -> associate ~init:assocs t) ts
 
 let rec inner_type st = match st with SArray (t, _) -> inner_type t | t -> t
 
@@ -66,7 +72,15 @@ let rec dims_of st =
   | SArray (t, _) -> dims_of t
   | SMatrix (_, d1, d2) -> [d1; d2]
   | SRowVector (_, dim) | SVector (_, dim) -> [dim]
-  | SInt | SReal | SComplex -> []
+  | SInt | SReal | SComplex | STuple _ ->
+      (* TUPLE STUB dims_of
+         How should tuples be expected to behave in this function?
+         What does it mean for tuples to have dimensions?
+         I think dims are used to emit parameter names
+         But this is the only non-rectangular container
+         Defaulting to 'no dimensions'
+      *)
+      []
 
 (**
  Get the dimensions with respect to sizes needed for IO.
@@ -75,7 +89,12 @@ let rec dims_of st =
  *)
 let rec get_dims_io st =
   match st with
-  | SInt | SReal -> []
+  (* TUPLE STUB get_dims_io
+     How should tuples be expected to behave in this function?
+     Same as above?
+     Although this one seems to have a sense of recursion
+  *)
+  | STuple _ | SInt | SReal -> []
   | SComplex -> [Expr.Helpers.int 2]
   | SVector (_, d) | SRowVector (_, d) -> [d]
   | SMatrix (_, dim1, dim2) -> [dim1; dim2]
@@ -83,7 +102,12 @@ let rec get_dims_io st =
 
 let rec get_dims st =
   match st with
-  | SInt | SReal | SComplex -> []
+  (* TUPLE STUB get_dims
+     How should tuples be expected to behave in this function?
+     Same as above?
+     Although this one seems to have a sense of recursion
+  *)
+  | STuple _ | SInt | SReal | SComplex -> []
   | SVector (_, d) | SRowVector (_, d) -> [d]
   | SMatrix (_, dim1, dim2) -> [dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t
@@ -97,11 +121,12 @@ let is_recursive_container st =
    |SArray ((SInt | SReal), _) ->
       false
   | SArray _ -> true
+  | STuple _ -> true
 
 (** Return a type's array dimensions and the type inside the (possibly nested) array *)
 let rec get_array_dims st =
   match st with
-  | SInt | SReal | SComplex -> (st, [])
+  | SInt | SReal | SComplex | STuple _ -> (st, [])
   | SVector (_, d) | SRowVector (_, d) -> (st, [d])
   | SMatrix (_, d1, d2) -> (st, [d1; d2])
   | SArray (st, dim) ->
@@ -134,6 +159,7 @@ let rec contains_eigen_type st =
   | SInt | SReal | SComplex -> false
   | SVector _ | SRowVector _ | SMatrix _ -> true
   | SArray (t, _) -> contains_eigen_type t
+  | STuple ts -> List.exists ~f:contains_eigen_type ts
 
 (**
  * Return true if SizedType contains a type tagged SoA
@@ -143,6 +169,7 @@ let rec contains_soa st =
   | SInt | SReal | SComplex -> false
   | SVector (SoA, _) | SRowVector (SoA, _) | SMatrix (SoA, _, _) -> true
   | SVector (AoS, _) | SRowVector (AoS, _) | SMatrix (AoS, _, _) -> false
+  | STuple ts -> List.exists ~f:contains_soa ts
   | SArray (t, _) -> contains_soa t
 
 (**
@@ -150,7 +177,7 @@ let rec contains_soa st =
  *)
 let rec get_mem_pattern st =
   match st with
-  | SInt | SReal | SComplex -> Common.Helpers.AoS
+  | SInt | SReal | SComplex | STuple _ -> (* TUPLE MAYBE *) Common.Helpers.AoS
   | SVector (SoA, _) | SRowVector (SoA, _) | SMatrix (SoA, _, _) -> SoA
   | SVector (AoS, _) | SRowVector (AoS, _) | SMatrix (AoS, _, _) -> AoS
   | SArray (t, _) -> get_mem_pattern t
@@ -167,11 +194,11 @@ let rec demote_sizedtype_mem st =
   | SVector (SoA, dim) -> SVector (AoS, dim)
   | SRowVector (SoA, dim) -> SRowVector (AoS, dim)
   | SMatrix (SoA, dim1, dim2) -> SMatrix (AoS, dim1, dim2)
+  | STuple ts -> STuple (List.map ~f:demote_sizedtype_mem ts)
 
 (*Given a sizedtype, promote it's mem pattern from AoS to SoA*)
 let rec promote_sizedtype_mem st =
   match st with
-  | (SInt | SReal | SComplex) as ret -> ret
   | SVector (AoS, dim) -> SVector (SoA, dim)
   | SRowVector (AoS, dim) -> SRowVector (SoA, dim)
   | SMatrix (AoS, dim1, dim2) -> SMatrix (SoA, dim1, dim2)

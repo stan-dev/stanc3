@@ -17,6 +17,7 @@ let pp_profile ppf (pp_body, name, body) =
 
 let rec contains_eigen (ut : UnsizedType.t) : bool =
   match ut with
+  | UnsizedType.UTuple ts -> List.exists ~f:contains_eigen ts
   | UnsizedType.UArray t -> contains_eigen t
   | UMatrix | URowVector | UVector -> true
   | UInt | UReal | UComplex | UMathLibraryFunction | UFun _ -> false
@@ -45,13 +46,16 @@ let nan_type (st, adtype) =
   match (adtype, st) with
   | UnsizedType.AutoDiffable, _ -> "DUMMY_VAR__"
   | DataOnly, _ -> "std::numeric_limits<double>::quiet_NaN()"
+  | TupleAD _, _ ->
+      Common.FatalError.fatal_error_msg [%message "pp_set_size TUPLES STUB"]
 
 (*Pretty printer for the right hand side of expressions to initialize objects.
  * For scalar types this sets the value to NaN and for containers initializes the memory.
  *)
 let rec pp_initialize ppf (st, adtype) =
   let init_nan = nan_type (st, adtype) in
-  if adtype = UnsizedType.DataOnly then
+  match adtype with
+  | UnsizedType.DataOnly -> (
     match st with
     | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
     | SReal -> pf ppf "%s" init_nan
@@ -67,36 +71,59 @@ let rec pp_initialize ppf (st, adtype) =
     | SArray (t, d) ->
         pf ppf "@[<hov 2>%a(@,%a,@ @,%a)@]" pp_st (st, adtype) pp_expr d
           pp_initialize (t, adtype)
-  else
-    let ut = SizedType.to_unsized st in
+    | STuple _ ->
+        Common.FatalError.fatal_error_msg
+          [%message "Tuple without Tuple AD type in codegen"] )
+  | AutoDiffable -> (
+      let ut = SizedType.to_unsized st in
+      match st with
+      | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
+      | SReal -> pf ppf "%s" init_nan
+      | SComplex ->
+          let scalar = local_scalar (SizedType.to_unsized st) adtype in
+          pf ppf "std::complex<%s>(%s, %s)" scalar init_nan init_nan
+      | SVector (AoS, size) | SRowVector (AoS, size) ->
+          pf ppf "@[<hov 2>%a::Constant(@,%a,@ %s)@]" pp_st (st, adtype) pp_expr
+            size init_nan
+      | SMatrix (AoS, d1, d2) ->
+          pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %s)@]" pp_st (st, adtype)
+            pp_expr d1 pp_expr d2 init_nan
+      | SVector (SoA, size) ->
+          pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
+            pp_initialize
+            (SizedType.SVector (AoS, size), DataOnly)
+      | SRowVector (SoA, size) ->
+          pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
+            pp_initialize
+            (SizedType.SRowVector (AoS, size), DataOnly)
+      | SMatrix (SoA, d1, d2) ->
+          pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
+            pp_initialize
+            (SizedType.SMatrix (AoS, d1, d2), DataOnly)
+      | SArray (t, d) ->
+          pf ppf "@[<hov 2>%a(@,%a,@ @,%a)@]" pp_possibly_var_decl
+            (adtype, SizedType.to_unsized st, SizedType.get_mem_pattern t)
+            pp_expr d pp_initialize (t, adtype)
+      | STuple _ ->
+          Common.FatalError.fatal_error_msg
+            [%message "Tuple without Tuple AD type in codegen"] )
+  | TupleAD ads -> (
     match st with
-    | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
-    | SReal -> pf ppf "%s" init_nan
-    | SComplex ->
-        let scalar = local_scalar (SizedType.to_unsized st) adtype in
-        pf ppf "std::complex<%s>(%s, %s)" scalar init_nan init_nan
-    | SVector (AoS, size) | SRowVector (AoS, size) ->
-        pf ppf "@[<hov 2>%a::Constant(@,%a,@ %s)@]" pp_st (st, adtype) pp_expr
-          size init_nan
-    | SMatrix (AoS, d1, d2) ->
-        pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %s)@]" pp_st (st, adtype)
-          pp_expr d1 pp_expr d2 init_nan
-    | SVector (SoA, size) ->
-        pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
-          pp_initialize
-          (SizedType.SVector (AoS, size), DataOnly)
-    | SRowVector (SoA, size) ->
-        pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
-          pp_initialize
-          (SizedType.SRowVector (AoS, size), DataOnly)
-    | SMatrix (SoA, d1, d2) ->
-        pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
-          pp_initialize
-          (SizedType.SMatrix (AoS, d1, d2), DataOnly)
-    | SArray (t, d) ->
-        pf ppf "@[<hov 2>%a(@,%a,@ @,%a)@]" pp_possibly_var_decl
-          (adtype, SizedType.to_unsized st, SizedType.get_mem_pattern t)
-          pp_expr d pp_initialize (t, adtype)
+    (* TUPLE MAYBE
+       bmw: this changed a lot since original PR
+          c++ initialization
+          This is setting the initial value, which is filling the size if eigen
+          Should be recursive
+          From https://en.cppreference.com/w/cpp/utility/tuple:
+          std::tuple<type,..>{value,..};
+    *)
+    | STuple ts ->
+        pf ppf "std::tuple<%a>{@%a@}" pp_st (st, adtype)
+          (list ~sep:(Fmt.unit ", ") pp_initialize)
+          (List.zip_exn ts ads)
+    | _ ->
+        Common.FatalError.fatal_error_msg
+          [%message "Tuple AD without tuple type"] )
 
 (*Initialize an object of a given size.*)
 let pp_assign_sized ppf (st, adtype, initialize) =
@@ -148,7 +175,8 @@ let pp_assign_data ppf
   let pp_underlying ppf (decl_id, st) =
     match st with
     | SizedType.SVector _ | SRowVector _ | SMatrix _ -> pf ppf "%s__" decl_id
-    | SInt | SReal | SComplex | SArray _ -> pf ppf "%s" decl_id in
+    | SInt | SReal | SComplex | SArray _ | STuple _ ->
+        (* TUPLE MAYBE *) pf ppf "%s" decl_id in
   pf ppf "@[<hov 2>%a = @,%a;@]@,@[<hov 2>%a@]@," pp_underlying (decl_id, st)
     pp_assign_sized (st, DataOnly, true) pp_placement_new (decl_id, st)
 
@@ -299,6 +327,31 @@ let trans_math_fn f =
   Option.(
     value ~default:(Internal_fun.to_string f, []) (math_fn_translations f))
 
+let rec pp_nonrange_lvalue ppf lvalue =
+  match lvalue with
+  | Stmt.Fixed.Pattern.LVariable v -> Fmt.string ppf v
+  | LIndexedTuple (lv, ix) ->
+      Fmt.pf ppf "std::get<%d>(%a)" ix pp_nonrange_lvalue lv
+  | LIndexed (lv, idcs) when List.for_all ~f:is_single_index idcs ->
+      pf ppf "%a%a" pp_nonrange_lvalue lv pp_indices_simple ("", idcs)
+  | LIndexed (_, _) ->
+      raise_s [%message "Multi-index must be the last (rightmost) index."]
+
+(* True if expr has a 'shallow' overlap with the lhs, for the purpose of checking if expr needs to be deep copied when it's assigned to the lhs.
+   This is 'shallow' in the sense that it doesn't recurse into expressions *)
+let expr_overlaps_lhs_ref (lhs_base_ref : 'e Stmt.Fixed.Pattern.lvalue)
+    (expr : 'a Expr.Fixed.t) : bool =
+  Option.value_map
+    (* Convert the expression to an lvalue to get rid of everything but variables and indices *)
+    (TupleUtils.lvalue_of_expr_opt expr)
+    (* If we can't, this expression can't be deep copied *)
+    ~default:
+      false
+      (* If we can, then find it's base reference and see if it overlaps with the LHS *)
+    ~f:(fun expr_lv ->
+      let expr_base_ref = TupleUtils.lvalue_base_reference expr_lv in
+      expr_base_ref = lhs_base_ref )
+
 let pp_bool_expr ppf expr =
   match Expr.Typed.type_of expr with
   | UReal -> pp_call ppf ("stan::math::as_bool", pp_expr, [expr])
@@ -311,43 +364,55 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
   | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
   | _ -> Locations.pp_smeta ppf meta ) ;
   match pattern with
+  (* Use = for any scalar-valued assignment without LHS indices *)
   | Assignment
-      ( (vident, _, [])
-      , ( {pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _); _}
-        as rhs ) ) ->
-      pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
-  | Assignment
-      ((vident, _, []), ({meta= Expr.Typed.Meta.{type_= UInt; _}; _} as rhs))
-   |Assignment ((vident, _, []), ({meta= {type_= UReal; _}; _} as rhs)) ->
-      pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
-  | Assignment ((assignee, UInt, idcs), rhs)
-   |Assignment ((assignee, UReal, idcs), rhs)
+      ( ((LVariable _ | LIndexedTuple _ | LIndexed (_, [])) as lhs)
+      , _
+      , ( ( {meta= {Expr.Typed.Meta.type_= UInt | UReal; _}; _}
+          | { pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _)
+            ; _ } ) as rhs ) ) ->
+      pf ppf "@[<hov 4>%a = %a;@]" pp_nonrange_lvalue lhs pp_expr rhs
+  (* TUPLE MAYBE assigning to tuples
+     We've decided to delegate this to `assign()` in C++
+  *)
+  | Assignment (LIndexed (LVariable assignee, idcs), UInt, rhs)
+   |Assignment (LIndexed (LVariable assignee, idcs), UReal, rhs)
     when List.for_all ~f:is_single_index idcs ->
       pf ppf "@[<hov 4>%a = %a;@]" pp_indexed_simple (assignee, idcs) pp_expr
         rhs
-  | Assignment ((assignee, _, idcs), rhs) ->
+  | Assignment (lhs, _, rhs) ->
+      (* Assignments of arrays, vectors etc. need to use `assign()` and worry about deep copies *)
       (* XXX I think in general we don't need to do a deepcopy if e is nested
          inside some function call - the function should get its own copy
          (in all cases???) *)
+      let lhs_ref = TupleUtils.lvalue_base_reference lhs in
       let rec maybe_deep_copy e =
-        let recurse (e : 'a Expr.Fixed.t) =
-          { e with
-            Expr.Fixed.pattern= Expr.Fixed.Pattern.map maybe_deep_copy e.pattern
-          } in
-        match e.pattern with
+        match e.Expr.Fixed.pattern with
+        (* Never need to copy a scalar type *)
         | _ when UnsizedType.is_scalar_type (Expr.Typed.type_of e) -> e
+        (* Never need to copy exprs inside a compiler FunApp *)
         | FunApp (CompilerInternal _, _) -> e
-        | (Indexed ({Expr.Fixed.pattern= Var v; _}, _) | Var v)
-          when v = assignee ->
+        (* When the expression overlaps with the LHS, *)
+        | _ when expr_overlaps_lhs_ref lhs_ref e ->
+            (* then wrap it in a deep copy. *)
             { e with
               Expr.Fixed.pattern= FunApp (CompilerInternal FnDeepCopy, [e]) }
-        | _ -> recurse e in
+        | _ ->
+            (* Otherwise recurse on subexpressions *)
+            { e with
+              Expr.Fixed.pattern=
+                Expr.Fixed.Pattern.map maybe_deep_copy e.pattern } in
       let rhs = maybe_deep_copy rhs in
-      pf ppf "@[<hov 2>stan::model::assign(@,%s,@ %a,@ %S%s%a@]);" assignee
-        pp_expr rhs
-        (str "assigning variable %s" assignee)
-        (if List.length idcs = 0 then "" else ", ")
-        pp_indexes idcs
+      (* Split up the top-level lvalue to fit in the assign call *)
+      let lhs_base, lhs_idcs =
+        match lhs with LIndexed (lv, idcs) -> (lv, idcs) | _ -> (lhs, []) in
+      pf ppf "@[<hov 2>stan::model::assign(@,%a,@ %a,@ %S%s%a@]);"
+        pp_nonrange_lvalue lhs_base pp_expr rhs
+        (strf "assigning variable %a" pp_nonrange_lvalue
+           lhs_base
+           (* (list ~sep:comma (Pretty.pp_index Pretty.pp_expr_typed_located)) idcs *) )
+        (if List.length lhs_idcs = 0 then "" else ", ")
+        pp_indexes lhs_idcs
   | TargetPE e -> pf ppf "@[<hov 2>lp_accum__.add(@,%a@]);" pp_expr e
   | NRFunApp (CompilerInternal FnPrint, args) ->
       let pp_arg ppf a =
@@ -412,7 +477,9 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
       { body=
           { pattern=
               Assignment
-                (_, {pattern= FunApp (CompilerInternal (FnReadParam _), _); _})
+                ( _
+                , _
+                , {pattern= FunApp (CompilerInternal (FnReadParam _), _); _} )
           ; _ } as body
       ; _ } ->
       pp_statement ppf body
