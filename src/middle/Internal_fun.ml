@@ -25,7 +25,7 @@ type 'expr t =
   | FnResizeToMatch
   | FnNaN
   | FnDeepCopy
-  | FnMove 
+  | FnMove
   | FnReadWriteEventsOpenCL of string
 [@@deriving sexp, hash, compare, map, fold]
 

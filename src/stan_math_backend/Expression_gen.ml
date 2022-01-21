@@ -512,8 +512,9 @@ and pp_compiler_internal_fn ad ut f ppf es =
   | FnDeepCopy ->
       gen_fun_app FnPlain ppf "stan::model::deep_copy" es Common.Helpers.AoS
         (Some UnsizedType.Void)
-  | FnMove ->       gen_fun_app FnPlain ppf "std::move" es Common.Helpers.AoS
-  (Some UnsizedType.Void)
+  | FnMove ->
+      gen_fun_app FnPlain ppf "std::move" es Common.Helpers.AoS
+        (Some UnsizedType.Void)
   | _ ->
       gen_fun_app FnPlain ppf (Internal_fun.to_string f) es Common.Helpers.AoS
         (Some UnsizedType.Void)
