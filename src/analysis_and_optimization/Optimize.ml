@@ -161,7 +161,14 @@ let handle_early_returns (fname : string) opt_var stmt =
                   { pattern= Assignment ((name, Expr.Typed.type_of e, []), e)
                   ; meta= Location_span.empty }
               ; {pattern= Break; meta= Location_span.empty} ]
-          else Assignment ((name, Expr.Typed.type_of e, []), e)
+          else
+            let conditional_move_expr = 
+              let e_type = Expr.Typed.type_of e in 
+              if UnsizedType.is_container e_type then
+                Expr.Fixed.{pattern=FunApp (CompilerInternal FnMove, [e]); meta=e.meta} else 
+                e 
+                in
+            Assignment ((name, Expr.Typed.type_of e, []), conditional_move_expr)
       | Some _, None ->
           Common.FatalError.fatal_error_msg
             [%message
