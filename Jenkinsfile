@@ -100,7 +100,8 @@ pipeline {
                     eval \$(opam env)
                     dune build @install
                     ls -lhart
-                    ls -lhart bin
+                    echo \${UID}
+                    getent group jenkins
                 """)
 
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
