@@ -449,7 +449,7 @@ pipeline {
                         docker {
                             image 'stanorg/stanc3:staticfi'
                             //Forces image to ignore entrypoint
-                            args "--group-add=987 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock" // --group-add=988
+                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                             label 'linux'
                         }
                     }
