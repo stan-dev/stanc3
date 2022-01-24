@@ -25,10 +25,15 @@ SHA=$(skopeo inspect --raw docker://stanorg/stanc3:multiarchfi | jq '.manifests 
 # Register QEMU translation binaries
 docker run --rm --privileged multiarch/qemu-user-static --reset
 
+whoami
+echo "$ID"
+id -G
+id -Gn
+
 # Run docker, inheriting mounted volumes from sibling container (including stanc3 directory), and build stanc3 #
 # docker run -u 990:986 --group-add=987 --group-add=988 --volumes-from=$(docker ps -qf "ancestor=stanorg/stanc3:staticfi"):rw stanorg/stanc3:multiarchfi@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static"
 # docker run -t -d -u 990:986 --entrypoint= -w /home/jenkins/workspace/Stan_Stanc3_PR-1087 -v /home/jenkins/workspace/Stan_Stanc3_PR-1087:/home/jenkins/workspace/Stan_Stanc3_PR-1087:rw,z -v /home/jenkins/workspace/Stan_Stanc3_PR-1087@tmp:/home/jenkins/workspace/Stan_Stanc3_PR-1087@tmp:rw,z
-docker run -u 990:986 -w $(pwd) -v $(pwd):$(pwd):rw stanorg/stanc3:multiarchfi@$SHA /bin/bash -c "ls -lhart && whoami $&& echo \${UID} && getent group jenkins"
+docker run -u 990:986 -w $(pwd) -v $(pwd):$(pwd):rw stanorg/stanc3:multiarchfi@$SHA /bin/bash -c "echo 'a'"
 
 # Update ownership of build folders
 #chown -R opam: _build

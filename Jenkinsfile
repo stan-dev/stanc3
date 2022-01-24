@@ -75,6 +75,8 @@ pipeline {
 //                     def sourceCodePaths = ['src'].join(" ")
 //                     skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths)
 
+
+
                     if (buildingTag()) {
                         buildingAgentARM = "arm-ec2"
                     }
