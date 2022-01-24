@@ -25,8 +25,8 @@ SHA=$(skopeo inspect --raw docker://stanorg/stanc3:multiarchfi | jq '.manifests 
 # Register QEMU translation binaries
 docker run --rm --privileged multiarch/qemu-user-static --reset
 
-whoami
-echo "$ID"
+id -u
+id -un
 id -G
 id -Gn
 
