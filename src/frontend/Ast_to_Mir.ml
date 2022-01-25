@@ -382,12 +382,13 @@ let trans_decl {transform_action; dadlevel} smeta decl_type transform identifier
   let decl_id = identifier.Ast.name in
   let rhs = Option.map ~f:trans_expr initial_value in
   let size_checks, dt = check_sizedtype identifier.name decl_type in
-  let decl_adtype = dadlevel in
+  let decl_adtype =
+    UnsizedType.fill_adtype_for_type dadlevel (Type.to_unsized decl_type) in
   let decl_var =
     Expr.
       { Fixed.pattern= Var decl_id
       ; meta=
-          Typed.Meta.create ~adlevel:dadlevel ~loc:smeta
+          Typed.Meta.create ~adlevel:decl_adtype ~loc:smeta
             ~type_:(Type.to_unsized decl_type)
             () } in
   let decl =
@@ -405,8 +406,8 @@ let trans_decl {transform_action; dadlevel} smeta decl_type transform identifier
     |> Option.to_list in
   if Utils.is_user_ident decl_id then
     size_checks @ (decl :: rhs_assignment)
-    @ var_constrain_check_stmts (Some transform_action) smeta dadlevel decl_id
-        decl_var transform dt
+    @ var_constrain_check_stmts (Some transform_action) smeta decl_adtype
+        decl_id decl_var transform dt
   else size_checks @ (decl :: rhs_assignment)
 
 let unwrap_block_or_skip = function

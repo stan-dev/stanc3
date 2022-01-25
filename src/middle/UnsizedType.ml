@@ -223,6 +223,15 @@ let rec is_indexing_matrix = function
   | UMatrix, _ -> true
   | _ -> false
 
+(** In some places (e.g. code generation) we need to instantiate an AD type.
+    Previously we would just say DataOnly or AutoDiffable, however this breaks
+    the invariant that a Tuple always has TupleAD as it's autodifftype *)
+let rec fill_adtype_for_type ad ut =
+  match ut with
+  | UArray t -> fill_adtype_for_type ad t
+  | UTuple ts -> TupleAD (List.map ~f:(fill_adtype_for_type ad) ts)
+  | _ -> ad
+
 module Comparator = Comparator.Make (struct
   type nonrec t = t
 

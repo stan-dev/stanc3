@@ -217,9 +217,9 @@ rule token = parse
                                 Parser.INTNUMERAL (lexeme lexbuf) }
   | real_constant as r        { lexer_logger ("real_constant " ^ r) ;
                                 Parser.REALNUMERAL (lexeme lexbuf) }
-  | real_constant_dot as r        { lexer_logger ("real_constant_dot " ^ r) ;
+  | real_constant_dot as r    { lexer_logger ("real_constant_dot " ^ r) ;
                                 (* Seperated out because ".1" could be a number or a tuple projection *)
-                                Parser.REALNUMERALDOT (lexeme lexbuf) }
+                                Parser.DOTNUMERAL (lexeme lexbuf) }
   | imag_constant as z        { lexer_logger ("imag_constant " ^ z) ;
                                 Parser.IMAGNUMERAL (lexeme lexbuf) }
   | "target"                  { lexer_logger "target" ; Parser.TARGET } (* NB: the stanc2 parser allows variables to be named target. I think it's a bad idea and have disallowed it. *)

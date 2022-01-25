@@ -110,17 +110,26 @@ let rec pp_initialize ppf (st, adtype) =
   | TupleAD ads -> (
     match st with
     (* TUPLE MAYBE
-       bmw: this changed a lot since original PR
-          c++ initialization
-          This is setting the initial value, which is filling the size if eigen
-          Should be recursive
-          From https://en.cppreference.com/w/cpp/utility/tuple:
-          std::tuple<type,..>{value,..};
+        bmw: this changed a lot since original PR
+
+       We seem to be using ADlevel for a lot more, and TupleAD is a headache.
+
+           c++ initialization
+           This is setting the initial value, which is filling the size if eigen
+           Should be recursive
+           From https://en.cppreference.com/w/cpp/utility/tuple:
+           std::tuple<type,..>{value,..};
     *)
     | STuple ts ->
         pf ppf "std::tuple<%a>{@%a@}" pp_st (st, adtype)
           (list ~sep:(Fmt.unit ", ") pp_initialize)
           (List.zip_exn ts ads)
+    (* TUPLE TODO - it is also possible that an array of tuples has ADType TupleAD
+       need to recursively handle
+    *)
+    | SArray (t, d) ->
+        pf ppf "@[<hov 2>%a(@,%a,@ @,%a)@]" pp_st (st, adtype) pp_expr d
+          pp_initialize (t, adtype)
     | _ ->
         Common.FatalError.fatal_error_msg
           [%message "Tuple AD without tuple type"] )
@@ -178,7 +187,12 @@ let pp_assign_data ppf
     | SInt | SReal | SComplex | SArray _ | STuple _ ->
         (* TUPLE MAYBE *) pf ppf "%s" decl_id in
   pf ppf "@[<hov 2>%a = @,%a;@]@,@[<hov 2>%a@]@," pp_underlying (decl_id, st)
-    pp_assign_sized (st, DataOnly, true) pp_placement_new (decl_id, st)
+    pp_assign_sized
+    ( st
+    , UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
+        (SizedType.to_unsized st)
+    , true )
+    pp_placement_new (decl_id, st)
 
 let%expect_test "set size map int array no initialize" =
   let int = Expr.Helpers.int in
@@ -253,8 +267,14 @@ let pp_data_decl ppf (vident, ut) =
     match ut with
     | UnsizedType.URowVector | UVector | UMatrix ->
         pf ppf "%a %s__;" pp_type (DataOnly, ut) vident
-    | _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident )
-  | (true, _), _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident
+    | _ ->
+        pf ppf "%a %s;" pp_type
+          (UnsizedType.fill_adtype_for_type DataOnly ut, ut)
+          vident )
+  | (true, _), _ ->
+      pf ppf "%a %s;" pp_type
+        (UnsizedType.fill_adtype_for_type DataOnly ut, ut)
+        vident
 
 (** Create string representations for [vars__.emplace_back] *)
 let pp_emplace_var ppf var =

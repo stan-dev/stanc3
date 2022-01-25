@@ -930,6 +930,7 @@ let verify_assignment_operator loc assop lhs rhs =
   match assop with
   | Assign | ArrowAssign ->
       if
+        (* Tuple Todo - replace with some notion of promotion *)
         UnsizedType.check_of_same_type_mod_array_conv "" lhs.lmeta.type_
           rhs.emeta.type_
       then ()

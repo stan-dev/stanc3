@@ -50,7 +50,7 @@ let (!=) = Stdlib.(!=)
        CORRMATRIX "corr_matrix" COVMATRIX "cov_matrix"
 %token LOWER "lower" UPPER "upper" OFFSET "offset" MULTIPLIER "multiplier"
 %token <string> INTNUMERAL "24"
-%token <string> REALNUMERAL "3.1415" REALNUMERALDOT ".2"
+%token <string> REALNUMERAL "3.1415" DOTNUMERAL ".2"
 %token <string> IMAGNUMERAL "1i"
 %token <string> STRINGLITERAL "\"hello world\""
 %token <string> IDENTIFIER "foo"
@@ -85,7 +85,7 @@ let (!=) = Stdlib.(!=)
 %nonassoc unary_over_binary
 %right HAT ELTPOW
 %left TRANSPOSE
-%nonassoc ARRAY (* resolves shift-reduce with array keyword in declarations *)
+%nonassoc ARRAY
 %left LBRACK
 %nonassoc below_ELSE
 %nonassoc ELSE
@@ -393,7 +393,7 @@ array_type(type_rule):
   }
 
 tuple_type(type_rule):
-  | LPAREN head=higher_type(type_rule) COMMA rest=separated_nonempty_list(COMMA, higher_type(type_rule)) RPAREN
+  | LPAREN head=higher_type(type_rule) COMMA rest=separated_list(COMMA, higher_type(type_rule)) RPAREN
   { grammar_logger "tuple_type" ;
     let ts = head::rest in
     let types, trans = List.unzip ts in
@@ -510,44 +510,9 @@ offset_mult:
   | MULTIPLIER ASSIGN e=constr_expression
     { grammar_logger "multiplier" ; Multiplier e }
 
-arr_dims:
-  | ARRAY LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
-    { grammar_logger "array dims" ; l  }
-
- (* It's a bit of a hack that "array[x,y,z]" is matched with a lhs rule and
-     then narrowed down by throwing errors. This is done to avoid reserving
-     "array" as a keyword, while also avoiding the reduce-reduce conflict that
-     would occur if "array[x,y,z]" were its own rule without reserving the
-     keyword. *)
-%inline arr_dims:
-  | dims_lhs=indexed(lhs)
-    { grammar_logger "array dims" ;
-      let int_ix ix = match ix with
-      | Single e -> Some e
-      | _ -> None
-      in
-      let int_ixs ixs =
-        List.fold_left
-        ~init:(Some [])
-        ~f:(Option.map2 ~f:(fun ixs ix -> ix::ixs))
-        (List.map ~f:int_ix
-         (List.rev ixs))
-      in
-      let error message =
-        pp_syntax_error
-        Fmt.stderr
-        (Parsing (message, Location_span.of_positions_exn $loc ));
-        exit 1
-      in
-      match dims_lhs with
-      | ({expr= Indexed ({expr= Variable {name="array"; _}; _}, ixs); _}) ->
-          Input_warnings.drop_array_future () ;
-         (match int_ixs ixs with
-          | Some sizes -> sizes
-          | None -> error "Dimensions should be expressions, not multiple or range indexing.")
-      | _ -> error "Found a declaration following an expression."
-    }
-
+ arr_dims:
+    | ARRAY LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
+                 { grammar_logger "array dims" ; l  }
 
 dims:
   | LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
@@ -572,7 +537,7 @@ lhs:
        ;emeta = {loc=id.id_loc}}
     }
   | v=indexed(lhs) { v }
-  | l=lhs ix_str=REALNUMERALDOT
+  | l=lhs ix_str=DOTNUMERAL
     { grammar_logger "lhs_tuple_index" ;
       match int_of_string_opt (String.drop_prefix ix_str 1) with
       | None ->
@@ -645,14 +610,13 @@ common_expression:
   | i=INTNUMERAL
     {  grammar_logger ("intnumeral " ^ i) ; IntNumeral i }
   | r=REALNUMERAL
-  | r=REALNUMERALDOT
+  | r=DOTNUMERAL
     {  grammar_logger ("realnumeral " ^ r) ; RealNumeral r }
   | z=IMAGNUMERAL
     {  grammar_logger ("imagnumeral " ^ z) ; ImagNumeral (String.drop_suffix z 1) }
   | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE
     {  grammar_logger "array_expression" ; ArrayExpr xs  }
-  (* TUPLE MAYBE - bmw: is this preventing length-1 tuples? Do we feel the need to do that? *)
-   | LPAREN x_head=expression COMMA xs=separated_nonempty_list(COMMA, expression) RPAREN
+   | LPAREN x_head=expression COMMA xs=separated_list(COMMA, expression) RPAREN
     {  grammar_logger "tuple_expression" ; TupleExpr (x_head::xs)  }
   | LBRACK xs=separated_list(COMMA, expression) RBRACK
     {  grammar_logger "row_vector_expression" ; RowVectorExpr xs }
@@ -670,9 +634,7 @@ common_expression:
   | id=identifier LPAREN e=expression BAR args=separated_list(COMMA, expression)
     RPAREN
     {  grammar_logger "conditional_dist_app" ; CondDistApp ((), id, e :: args) }
-  | LPAREN e=expression RPAREN
-    { grammar_logger "extra_paren" ; Paren e }
-  | e=common_expression ix_str=REALNUMERALDOT
+  | e=common_expression ix_str=DOTNUMERAL
     {  grammar_logger "common_expression_tuple_index" ;
        match int_of_string_opt (String.drop_prefix ix_str 1) with
        | None ->
@@ -680,8 +642,10 @@ common_expression:
                           ^ " in from tuple index. This should never happen,"
                           ^ " please file a bug."))
        | Some ix ->
-          TupleProjection (build_expr e $loc, ix)
+          TupleProjection (build_expr e $loc, ix - 1)
     }
+  | LPAREN e=expression RPAREN
+    { grammar_logger "extra_paren" ; Paren e }
 
 %inline prefixOp:
   | BANG

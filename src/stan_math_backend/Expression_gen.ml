@@ -34,7 +34,9 @@ let rec local_scalar ut ad =
   | UnsizedType.UArray t, _ -> local_scalar t ad
   | _, UnsizedType.DataOnly | UInt, AutoDiffable -> stantype_prim_str ut
   | _, AutoDiffable -> "local_scalar_t__"
-  (* TUPLE MAYBE error on local scalar with tuple ad *)
+  (* TUPLE MAYBE error on local scalar with tuple ad
+     The issue is an array can be an array of tuples
+  *)
   | _, TupleAD _ -> raise_s [%message "Attempting to make a local scalar tuple"]
 
 let minus_one e =
@@ -129,9 +131,12 @@ let rec pp_unsizedtype_local ppf (adtype, ut) =
       pf ppf "std::tuple<@[%a@]>"
         (list ~sep:comma pp_unsizedtype_local)
         (List.zip_exn ads ts)
-  | UnsizedType.TupleAD _, _ | _, UnsizedType.UTuple _ ->
+  | _, UnsizedType.UTuple _ ->
       Common.FatalError.fatal_error_msg
-        [%message "Tuple and Tuple AD type not matching!"]
+        [%message
+          "Tuple and Tuple AD type not matching!"
+            (ut : UnsizedType.t)
+            (adtype : UnsizedType.autodifftype)]
   | _, _ ->
       let s = local_scalar ut adtype in
       pp_unsizedtype_custom_scalar ppf (s, ut)
@@ -493,6 +498,8 @@ and pp_compiler_internal_fn ad ut f ppf es =
     pf ppf "std::vector<%a>{@,%a}" pp_unsizedtype_local (ad, ut)
       (list ~sep:comma (pp_promoted ad ut))
       es in
+  let pp_tuple_literal ppf es =
+    pf ppf "std::make_tuple(@[%a@])" (list ~sep:comma pp_expr) es in
   match f with
   | Internal_fun.FnMakeArray ->
       let ut =
@@ -546,6 +553,7 @@ and pp_compiler_internal_fn ad ut f ppf es =
   | FnDeepCopy ->
       gen_fun_app FnPlain ppf "stan::model::deep_copy" es Common.Helpers.AoS
         (Some UnsizedType.Void)
+  | FnMakeTuple -> pp_tuple_literal ppf es
   | _ ->
       gen_fun_app FnPlain ppf (Internal_fun.to_string f) es Common.Helpers.AoS
         (Some UnsizedType.Void)
