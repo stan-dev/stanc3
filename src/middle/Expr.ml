@@ -18,7 +18,7 @@ module Fixed = struct
       | EOr of 'a * 'a
       | Indexed of 'a * 'a Index.t list
       | Promotion of 'a * UnsizedType.t * UnsizedType.autodifftype
-      | IndexedTuple of 'a * int
+      | TupleProjection of 'a * int
     [@@deriving sexp, hash, map, compare, fold]
 
     let pp pp_e ppf = function
@@ -42,7 +42,7 @@ module Fixed = struct
             ( if List.is_empty indices then fun _ _ -> ()
             else Fmt.(list (Index.pp pp_e) ~sep:comma |> brackets) )
             indices
-      | IndexedTuple (expr, ix) ->
+      | TupleProjection (expr, ix) ->
           (* TUPLE DESIGN pp parens
              Do I need the extra parens here?
              ((1,2)).1
@@ -163,7 +163,7 @@ module Labelled = struct
         List.fold idxs ~init:(associate ~init:assocs e) ~f:associate_index
     (* Not sure?*)
     | Promotion (e1, _, _) -> associate ~init:assocs e1
-    | IndexedTuple (e, _) -> associate ~init:assocs e
+    | TupleProjection (e, _) -> associate ~init:assocs e
 
   and associate_index assocs = function
     | All -> assocs
@@ -257,7 +257,7 @@ module Helpers = struct
                type:"
                 (t : UnsizedType.t)] in
     let meta = Typed.Meta.{e.meta with type_= mtype} in
-    let pattern = Fixed.Pattern.IndexedTuple (e, i) in
+    let pattern = Fixed.Pattern.TupleProjection (e, i) in
     Fixed.{meta; pattern}
 
   (** TODO: Make me tail recursive *)

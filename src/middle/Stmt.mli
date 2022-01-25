@@ -29,7 +29,7 @@ module Fixed : sig
     and 'e lvalue =
       | LVariable of string
       | LIndexed of 'e lvalue * 'e Index.t list
-      | LIndexedTuple of 'e lvalue * int
+      | LTupleProjection of 'e lvalue * int
     [@@deriving sexp, hash, map, compare, fold]
 
     include Pattern.S2 with type ('a, 'b) t := ('a, 'b) t

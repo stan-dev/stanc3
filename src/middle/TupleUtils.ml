@@ -49,9 +49,9 @@ let rec lvalue_of_expr_opt (expr : 'e Expr.Fixed.t) :
   | Indexed (l, i) ->
       Option.( >>= ) (lvalue_of_expr_opt l) (fun lv ->
           Some (Stmt.Fixed.Pattern.LIndexed (lv, i)) )
-  | IndexedTuple (l, i) ->
+  | TupleProjection (l, i) ->
       Option.( >>= ) (lvalue_of_expr_opt l) (fun lv ->
-          Some (Stmt.Fixed.Pattern.LIndexedTuple (lv, i)) )
+          Some (Stmt.Fixed.Pattern.LTupleProjection (lv, i)) )
   | _ -> None
 
 let rec expr_of_lvalue (lhs : 'e Expr.Fixed.t Stmt.Fixed.Pattern.lvalue)
@@ -60,7 +60,8 @@ let rec expr_of_lvalue (lhs : 'e Expr.Fixed.t Stmt.Fixed.Pattern.lvalue)
     match lhs with
     | LVariable v -> Expr.Fixed.Pattern.Var v
     | LIndexed (lv, ix) -> Indexed (expr_of_lvalue ~meta lv, ix)
-    | LIndexedTuple (lv, ix) -> IndexedTuple (expr_of_lvalue ~meta lv, ix) in
+    | LTupleProjection (lv, ix) -> TupleProjection (expr_of_lvalue ~meta lv, ix)
+  in
   {pattern; meta}
 
 let rec map_lhs_variable ~(f : string -> string)
@@ -68,18 +69,18 @@ let rec map_lhs_variable ~(f : string -> string)
   match lhs with
   | LVariable v -> LVariable (f v)
   | LIndexed (lv, ix) -> LIndexed (map_lhs_variable ~f lv, ix)
-  | LIndexedTuple (lv, ix) -> LIndexedTuple (map_lhs_variable ~f lv, ix)
+  | LTupleProjection (lv, ix) -> LTupleProjection (map_lhs_variable ~f lv, ix)
 
 let rec lhs_indices (lhs : 'e Stmt.Fixed.Pattern.lvalue) : 'e Index.t list =
   match lhs with
   | LVariable _ -> []
   | LIndexed (lv, idcs) -> idcs @ lhs_indices lv
-  | LIndexedTuple (lv, _) -> lhs_indices lv
+  | LTupleProjection (lv, _) -> lhs_indices lv
 
 let rec lhs_variable (lhs : 'e Stmt.Fixed.Pattern.lvalue) : string =
   match lhs with
   | LVariable v -> v
-  | LIndexed (lv, _) | LIndexedTuple (lv, _) -> lhs_variable lv
+  | LIndexed (lv, _) | LTupleProjection (lv, _) -> lhs_variable lv
 
 (* Reduce an lvalue down to its "base reference", which is a variable with maximum tuple indices after it.
    For example:
@@ -90,8 +91,8 @@ let rec lhs_variable (lhs : 'e Stmt.Fixed.Pattern.lvalue) : string =
 let lvalue_base_reference (lvalue : 'e Stmt.Fixed.Pattern.lvalue) =
   let rec go (lv : 'e Stmt.Fixed.Pattern.lvalue) wrap =
     match lv with
-    | LVariable _ | LIndexedTuple (LVariable _, _) -> wrap lv
+    | LVariable _ | LTupleProjection (LVariable _, _) -> wrap lv
     | LIndexed (lv, _) -> go lv Fn.id
-    | LIndexedTuple (lv, ix) -> go lv (fun lv -> wrap (LIndexedTuple (lv, ix)))
-  in
+    | LTupleProjection (lv, ix) ->
+        go lv (fun lv -> wrap (LTupleProjection (lv, ix))) in
   go lvalue Fn.id

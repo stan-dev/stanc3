@@ -81,7 +81,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
       FunApp (CompilerInternal FnMakeRowVec, trans_exprs eles) |> ewrap
   | Indexed (lhs, indices) ->
       Indexed (trans_expr lhs, List.map ~f:trans_idx indices) |> ewrap
-  | IndexedTuple (lhs, i) -> IndexedTuple (trans_expr lhs, i) |> ewrap
+  | TupleProjection (lhs, i) -> TupleProjection (trans_expr lhs, i) |> ewrap
   | TupleExpr eles ->
       FunApp (CompilerInternal FnMakeTuple, trans_exprs eles) |> ewrap
   | Promotion (e, ty, ad) -> Promotion (trans_expr e, ty, ad) |> ewrap
@@ -437,8 +437,9 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
         | LVariable _ ->
             if List.is_empty carry_idcs then lv
             else {lv with lval= LIndexed (lv, carry_idcs)}
-        | LIndexedTuple (lv', ix) ->
-            let lv'' = {lv with lval= LIndexedTuple (group_lvalue [] lv', ix)} in
+        | LTupleProjection (lv', ix) ->
+            let lv'' =
+              {lv with lval= LTupleProjection (group_lvalue [] lv', ix)} in
             if List.is_empty carry_idcs then lv''
             else {lv with lval= LIndexed (lv'', carry_idcs)}
         | LIndexed (lv', idcs) ->
@@ -450,8 +451,8 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       let rec trans_lvalue lv =
         match lv.Ast.lval with
         | LVariable v -> Middle.Stmt.Fixed.Pattern.LVariable v.name
-        | LIndexedTuple (lv, ix) ->
-            Middle.Stmt.Fixed.Pattern.LIndexedTuple (trans_lvalue lv, ix)
+        | LTupleProjection (lv, ix) ->
+            Middle.Stmt.Fixed.Pattern.LTupleProjection (trans_lvalue lv, ix)
         | LIndexed (lv, idcs) ->
             Middle.Stmt.Fixed.Pattern.LIndexed
               (trans_lvalue lv, List.map ~f:trans_idx idcs) in
@@ -462,7 +463,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       *)
       let unindexed_type =
         match grouped_lhs.Ast.lval with
-        | LVariable _ | LIndexedTuple _ -> grouped_lhs.Ast.lmeta.type_
+        | LVariable _ | LTupleProjection _ -> grouped_lhs.Ast.lmeta.type_
         | LIndexed (lv, _) -> lv.Ast.lmeta.type_ in
       let rhs =
         match assign_op with

@@ -33,7 +33,7 @@ let rec free_vars_expr (e : Expr.Typed.t) =
       Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
   | EAnd (e1, e2) | EOr (e1, e2) ->
       Set.Poly.union_list (List.map ~f:free_vars_expr [e1; e2])
-  | IndexedTuple (e, _) -> free_vars_expr e
+  | TupleProjection (e, _) -> free_vars_expr e
 
 (** Calculate the free (non-bound) variables in an index*)
 and free_vars_idx (i : Expr.Typed.t Index.t) =
@@ -53,7 +53,7 @@ and free_vars_fnapp kind l =
 let rec free_vars_stmt (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
     =
   match s with
-  | Assignment ((LVariable _ | LIndexedTuple _), _, e)
+  | Assignment ((LVariable _ | LTupleProjection _), _, e)
    |Return (Some e)
    |TargetPE e ->
       free_vars_expr e
@@ -568,7 +568,7 @@ let rec used_subexpressions_expr (e : Expr.Typed.t) =
           ( used_subexpressions_expr e
           :: List.map ~f:(used_expressions_idx_help used_subexpressions_expr) l
           )
-    | IndexedTuple (e, _) -> used_subexpressions_expr e
+    | TupleProjection (e, _) -> used_subexpressions_expr e
     | EAnd (e1, e2) | EOr (e1, e2) ->
         Expr.Typed.Set.union_list
           [used_subexpressions_expr e1; used_subexpressions_expr e2] )
@@ -585,7 +585,7 @@ let used_expressions_expr e = Expr.Typed.Set.singleton e
 let rec used_expressions_stmt_help f
     (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
   match s with
-  | Assignment ((LVariable _ | LIndexedTuple _), _, e)
+  | Assignment ((LVariable _ | LTupleProjection _), _, e)
    |TargetPE e
    |Return (Some e) ->
       f e
@@ -625,7 +625,7 @@ let used_expressions_stmt = used_expressions_stmt_help used_expressions_expr
 let top_used_expressions_stmt_help f
     (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
   match s with
-  | Assignment ((LVariable _ | LIndexedTuple _), _, e)
+  | Assignment ((LVariable _ | LTupleProjection _), _, e)
    |TargetPE e
    |Return (Some e) ->
       f e

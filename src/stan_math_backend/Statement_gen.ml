@@ -330,7 +330,7 @@ let trans_math_fn f =
 let rec pp_nonrange_lvalue ppf lvalue =
   match lvalue with
   | Stmt.Fixed.Pattern.LVariable v -> Fmt.string ppf v
-  | LIndexedTuple (lv, ix) ->
+  | LTupleProjection (lv, ix) ->
       Fmt.pf ppf "std::get<%d>(%a)" ix pp_nonrange_lvalue lv
   | LIndexed (lv, idcs) when List.for_all ~f:is_single_index idcs ->
       pf ppf "%a%a" pp_nonrange_lvalue lv pp_indices_simple ("", idcs)
@@ -366,7 +366,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
   match pattern with
   (* Use = for any scalar-valued assignment without LHS indices *)
   | Assignment
-      ( ((LVariable _ | LIndexedTuple _ | LIndexed (_, [])) as lhs)
+      ( ((LVariable _ | LTupleProjection _ | LIndexed (_, [])) as lhs)
       , _
       , ( ( {meta= {Expr.Typed.Meta.type_= UInt | UReal; _}; _}
           | { pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _)

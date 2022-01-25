@@ -797,14 +797,14 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       mk_typed_expression ~expr:(Paren te) ~ad_level:te.emeta.ad_level
         ~type_:te.emeta.type_ ~loc
   | Indexed (e, indices) -> check_indexed loc cf tenv e indices
-  | IndexedTuple (e, i) -> (
+  | TupleProjection (e, i) -> (
       let te = ce e in
       match (te.emeta.type_, te.emeta.ad_level) with
       | UTuple ts, TupleAD ads -> (
         match (List.nth ts (i - 1), List.nth ads (i - 1)) with
         | Some t, Some ad ->
             mk_typed_expression
-              ~expr:(IndexedTuple (te, i))
+              ~expr:(TupleProjection (te, i))
               ~ad_level:ad ~type_:t ~loc:emeta.loc
         | None, None ->
             Semantic_error.tuple_index_invalid_index emeta.loc (List.length ts)
@@ -946,13 +946,13 @@ let rec check_lvalue cf tenv = function
       verify_identifier id ;
       let ad_level, type_ = check_id cf loc tenv id in
       {lval= LVariable id; lmeta= {ad_level; type_; loc}}
-  | {lval= LIndexedTuple (lval, idx); lmeta= ({loc} : located_meta)} -> (
+  | {lval= LTupleProjection (lval, idx); lmeta= ({loc} : located_meta)} -> (
       let tlval = check_lvalue cf tenv lval in
       match (tlval.lmeta.type_, tlval.lmeta.ad_level) with
       | UTuple tys, TupleAD ads -> (
         match (List.nth tys idx, List.nth ads idx) with
         | Some type_, Some ad_level ->
-            {lval= LIndexedTuple (tlval, idx); lmeta= {ad_level; type_; loc}}
+            {lval= LTupleProjection (tlval, idx); lmeta= {ad_level; type_; loc}}
         | None, None ->
             Semantic_error.tuple_index_invalid_index loc (List.length tys) idx
             |> error

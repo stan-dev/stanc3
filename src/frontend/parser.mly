@@ -580,7 +580,7 @@ lhs:
                          ^ " in from tuple index. This should never happen,"
                          ^ " please file a bug."))
       | Some ix ->
-         build_expr (IndexedTuple (l, ix)) $loc
+         build_expr (TupleProjection (l, ix)) $loc
     }
 
 
@@ -680,7 +680,7 @@ common_expression:
                           ^ " in from tuple index. This should never happen,"
                           ^ " please file a bug."))
        | Some ix ->
-          IndexedTuple (build_expr e $loc, ix)
+          TupleProjection (build_expr e $loc, ix)
     }
 
 %inline prefixOp:

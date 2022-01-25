@@ -31,7 +31,7 @@ module Fixed = struct
     and 'e lvalue =
       | LVariable of string
       | LIndexed of 'e lvalue * 'e Index.t list
-      | LIndexedTuple of 'e lvalue * int
+      | LTupleProjection of 'e lvalue * int
     [@@deriving sexp, hash, map, compare, fold]
 
     let pp pp_e pp_s ppf = function

@@ -17,7 +17,7 @@ let rec matrix_set Expr.Fixed.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta
         if UnsizedType.contains_eigen_type type_ then union_recur exprs
         else Set.Poly.empty
     | TernaryIf (_, expr2, expr3) -> union_recur [expr2; expr3]
-    | Indexed (expr, _) | Promotion (expr, _, _) | IndexedTuple (expr, _) ->
+    | Indexed (expr, _) | Promotion (expr, _, _) | TupleProjection (expr, _) ->
         (* TUPLE MAYBE *) matrix_set expr
     | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
   else Set.Poly.empty
@@ -63,7 +63,8 @@ let rec count_single_idx_exprs (acc : int) Expr.Fixed.{pattern; _} : int =
       acc
       + count_single_idx_exprs 0 idx_expr
       + List.fold_left ~init:0 ~f:count_single_idx indexed
-  | IndexedTuple (expr, _) -> count_single_idx_exprs acc expr (* TUPLE MAYBE *)
+  | TupleProjection (expr, _) ->
+      count_single_idx_exprs acc expr (* TUPLE MAYBE *)
   | Promotion (expr, _, _) -> count_single_idx_exprs acc expr
   | EAnd (lhs, rhs) ->
       acc + count_single_idx_exprs 0 lhs + count_single_idx_exprs 0 rhs
@@ -151,7 +152,7 @@ let rec query_initial_demotable_expr (in_loop : bool) ~(acc : string Set.Poly.t)
   | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
       acc
   | Promotion (expr, _, _) -> query_expr acc expr
-  | IndexedTuple (expr, _) -> query_expr acc expr (* TUPLE STUB *)
+  | TupleProjection (expr, _) -> query_expr acc expr (* TUPLE STUB *)
   | TernaryIf (predicate, texpr, fexpr) ->
       let predicate_demotes = query_expr acc predicate in
       Set.Poly.union
@@ -219,7 +220,7 @@ let rec is_any_soa_supported_expr
         is_any_soa_supported_fun_expr kind exprs
     | Indexed (expr, (_ : Typed.Meta.t Fixed.t Index.t list))
      |Promotion (expr, _, _)
-     |IndexedTuple (expr, _) ->
+     |TupleProjection (expr, _) ->
         is_any_soa_supported_expr expr
     | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
         true
@@ -255,7 +256,7 @@ let rec is_any_ad_real_data_matrix_expr
     match pattern with
     | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
         is_any_ad_real_data_matrix_expr_fun kind exprs
-    | Indexed (expr, _) | Promotion (expr, _, _) | IndexedTuple (expr, _) ->
+    | Indexed (expr, _) | Promotion (expr, _, _) | TupleProjection (expr, _) ->
         is_any_ad_real_data_matrix_expr expr
     | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
         false
@@ -526,7 +527,7 @@ and modify_expr_pattern ?force_demotion:(force = false)
       Indexed
         ( mod_expr idx_expr
         , List.map ~f:(Index.map (mod_expr ~force_demotion:force)) indexed )
-  | IndexedTuple (idx_expr, idx) -> IndexedTuple (mod_expr idx_expr, idx)
+  | TupleProjection (idx_expr, idx) -> TupleProjection (mod_expr idx_expr, idx)
   | EAnd (lhs, rhs) -> EAnd (mod_expr lhs, mod_expr rhs)
   | EOr (lhs, rhs) -> EOr (mod_expr lhs, mod_expr rhs)
   | Promotion (expr, type_, ad_level) ->

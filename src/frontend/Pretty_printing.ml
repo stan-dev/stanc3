@@ -277,7 +277,7 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
     match l with
     | [] -> pf ppf "%a" pp_expression e
     | l -> pf ppf "%a[%a]" pp_expression e pp_list_of_indices l )
-  | IndexedTuple (e, i) -> pf ppf "%a.%d" pp_expression e i
+  | TupleProjection (e, i) -> pf ppf "%a.%d" pp_expression e i
   | TupleExpr es -> pf ppf "(@[%a@])" pp_list_of_expression (es, loc)
 
 and pp_list_of_expression ppf es =

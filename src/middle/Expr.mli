@@ -16,7 +16,7 @@ module Fixed : sig
       | EOr of 'a * 'a
       | Indexed of 'a * 'a Index.t list
       | Promotion of 'a * UnsizedType.t * UnsizedType.autodifftype
-      | IndexedTuple of 'a * int
+      | TupleProjection of 'a * int
     [@@deriving sexp, hash, compare]
 
     include Pattern.S with type 'a t := 'a t

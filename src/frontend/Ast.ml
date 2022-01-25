@@ -52,7 +52,7 @@ type ('e, 'f) expression =
   | RowVectorExpr of 'e list
   | Paren of 'e
   | Indexed of 'e * 'e index list
-  | IndexedTuple of 'e * int
+  | TupleProjection of 'e * int
   | TupleExpr of 'e list
 [@@deriving sexp, hash, compare, map, fold]
 
@@ -115,7 +115,7 @@ type 'e printable = PString of string | PExpr of 'e
 type ('l, 'e) lvalue =
   | LVariable of identifier
   | LIndexed of 'l * 'e index list
-  | LIndexedTuple of 'l * int
+  | LTupleProjection of 'l * int
 [@@deriving sexp, hash, compare, map, fold]
 
 type ('e, 'm) lval_with = {lval: (('e, 'm) lval_with, 'e) lvalue; lmeta: 'm}
@@ -288,7 +288,7 @@ let rec expr_of_lvalue {lval; lmeta} =
       ( match lval with
       | LVariable s -> Variable s
       | LIndexed (l, i) -> Indexed (expr_of_lvalue l, i)
-      | LIndexedTuple (l, i) -> IndexedTuple (expr_of_lvalue l, i) )
+      | LTupleProjection (l, i) -> TupleProjection (expr_of_lvalue l, i) )
   ; emeta= lmeta }
 
 let rec lvalue_of_expr_opt {expr; emeta} =
@@ -298,9 +298,9 @@ let rec lvalue_of_expr_opt {expr; emeta} =
     | Indexed (l, i) ->
         Option.( >>= ) (lvalue_of_expr_opt l) (fun lv ->
             Some (LIndexed (lv, i)) )
-    | IndexedTuple (l, i) ->
+    | TupleProjection (l, i) ->
         Option.( >>= ) (lvalue_of_expr_opt l) (fun lv ->
-            Some (LIndexedTuple (lv, i)) )
+            Some (LTupleProjection (lv, i)) )
     | _ -> None in
   Option.map lval_opt ~f:(fun lval -> {lval; lmeta= emeta})
 
@@ -315,7 +315,7 @@ let rec id_of_lvalue {lval; _} =
   (* TUPLE MAYBE id_of_lvalue
    * What does this function do?
    *)
-  | LIndexedTuple (l, _) -> id_of_lvalue l
+  | LTupleProjection (l, _) -> id_of_lvalue l
 
 (* XXX: the parser produces inaccurate locations: smeta.loc.begin_loc is the last
         token before the current statement and all the whitespace between two statements
@@ -332,7 +332,7 @@ let rec get_loc_expr (e : untyped_expression) =
    |PostfixOp (e, _)
    |Indexed (e, _)
    |Promotion (e, _, _)
-   |IndexedTuple (e, _) ->
+   |TupleProjection (e, _) ->
       get_loc_expr e
   | PrefixOp (_, e)
    |ArrayExpr (e :: _)

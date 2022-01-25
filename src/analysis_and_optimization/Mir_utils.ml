@@ -253,7 +253,7 @@ let rec expr_var_set Expr.Fixed.{pattern; meta} =
   | Indexed (expr, ix) ->
       Set.Poly.union_list (expr_var_set expr :: List.map ix ~f:index_var_set)
   | Promotion (expr, _, _) -> expr_var_set expr
-  | IndexedTuple (expr, _) -> expr_var_set expr
+  | TupleProjection (expr, _) -> expr_var_set expr
   | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
 
 and index_var_set ix =
@@ -383,7 +383,7 @@ let rec expr_depth Expr.Fixed.{pattern; _} =
       1
       + Option.value ~default:0
           (List.max_elt ~compare:compare_int (List.map ~f:expr_depth [e1; e2]))
-  | IndexedTuple (e, _) -> 1 + expr_depth e
+  | TupleProjection (e, _) -> 1 + expr_depth e
 
 and idx_depth i =
   match i with
@@ -437,7 +437,7 @@ let rec update_expr_ad_levels autodiffable_variables
           { e.meta with
             adlevel= ad_level_sup (e :: List.concat_map ~f:Index.bounds i_list)
           } }
-  | IndexedTuple (e, ix) ->
+  | TupleProjection (e, ix) ->
       (* TUPLE TODO
          For the purposes of program analysis, tuples should be treated as n Vars
          So for example, autodiffable_variables should possibly include tuple.1
@@ -445,7 +445,7 @@ let rec update_expr_ad_levels autodiffable_variables
          Make the whole thing AD when any part is?
       *)
       let e' = update_expr_ad_levels autodiffable_variables e in
-      { pattern= IndexedTuple (e', ix)
+      { pattern= TupleProjection (e', ix)
       ; meta= {e.meta with adlevel= e'.meta.adlevel} }
 
 and update_idx_ad_levels autodiffable_variables =

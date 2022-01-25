@@ -643,7 +643,7 @@ and pp_expr ppf Expr.Fixed.{pattern; meta} =
        from https://en.cppreference.com/w/cpp/utility/tuple
        Index std::tuple with std::get
   *)
-  | IndexedTuple (t, ix) -> pf ppf "std::get<%d>(%a)" (ix - 1) pp_expr t
+  | TupleProjection (t, ix) -> pf ppf "std::get<%d>(%a)" (ix - 1) pp_expr t
 
 (* these functions are just for testing *)
 let dummy_locate pattern =
