@@ -28,9 +28,9 @@ docker run --rm --privileged multiarch/qemu-user-static --reset
 # Run docker, inheriting mounted volumes from sibling container (including stanc3 directory), and build stanc3 #
 # docker run -u 990:986 --group-add=987 --group-add=988 --volumes-from=$(docker ps -qf "ancestor=stanorg/stanc3:staticfi"):rw stanorg/stanc3:multiarchfi@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static"
 # docker run -t -d -u 990:986 --entrypoint= -w /home/jenkins/workspace/Stan_Stanc3_PR-1087 -v /home/jenkins/workspace/Stan_Stanc3_PR-1087:/home/jenkins/workspace/Stan_Stanc3_PR-1087:rw,z -v /home/jenkins/workspace/Stan_Stanc3_PR-1087@tmp:/home/jenkins/workspace/Stan_Stanc3_PR-1087@tmp:rw,z
-# -w $(pwd) -v $(pwd):$(pwd):rw
+#
 # docker run -u 990:986 --group-add=987 --group-add=988 stanorg/stanc3:multiarch@$SHA
-docker run -u 990:986 --group-add=987 --group-add=988 --volumes-from=$(docker ps -qf "ancestor=stanorg/stanc3:static"):rw stanorg/stanc3:multiarch@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static"
+docker run -u 990:986 --group-add=987 --group-add=988 -w $(pwd) -v $(pwd):$(pwd):rw,z stanorg/stanc3:multiarch@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static"
 
 # Update ownership of build folders
 #chown -R opam: _build
