@@ -1,15 +1,15 @@
   $ ../../../../install/default/bin/stanc array-expr-decl-bad1.stan
-Syntax error in 'array-expr-decl-bad1.stan', line 2, column 2 to column 16, parsing error:
+Syntax error in 'array-expr-decl-bad1.stan', line 2, column 9 to column 10, parsing error:
    -------------------------------------------------
      1:  data {
      2:    array[1:2,2,:] real x;
-           ^
+                  ^
      3:  }
    -------------------------------------------------
 
-Dimensions should be expressions, not multiple or range indexing.
+Ill-formed phrase. Found an expression. This can be followed by a ",", a "}", a ")", a "]", a "[" or an infix or postfix operator.
   $ ../../../../install/default/bin/stanc array-expr-decl-bad2.stan
-Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 15, parsing error:
+Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 10, parsing error:
    -------------------------------------------------
      1:  data {
      2:    blahblah[1,2] real x;
@@ -17,7 +17,11 @@ Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 15, pars
      3:  }
    -------------------------------------------------
 
-Found a declaration following an expression.
+Invalid type in declaration. Valid types:
+  int, real, vector, row_vector, matrix,
+  unit_vector, simplex, ordered, positive_ordered,
+  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov
+optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc array-expr-decl-bad3.stan
 Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
@@ -27,7 +31,11 @@ Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsi
      3:  }
    -------------------------------------------------
 
-Found a declaration following an expression.
+Invalid type in declaration. Valid types:
+  int, real, vector, row_vector, matrix,
+  unit_vector, simplex, ordered, positive_ordered,
+  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov
+optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc array-multi-decl-bad.stan
 Syntax error in 'array-multi-decl-bad.stan', line 2, column 11 to column 12, parsing error:
    -------------------------------------------------
@@ -560,11 +568,11 @@ Syntax error in 'err-decl-double-params.stan', line 4, column 0 to column 1, par
 
 Ill-formed phrase. Found L-value. This can be completed in many ways.
   $ ../../../../install/default/bin/stanc err-decl-double.stan
-Syntax error in 'err-decl-double.stan', line 2, column 9 to column 10, parsing error:
+Syntax error in 'err-decl-double.stan', line 2, column 2 to column 8, parsing error:
    -------------------------------------------------
      1:  data {
      2:    double y;
-                  ^
+           ^
      3:  }
      4:  model {
    -------------------------------------------------
@@ -2243,9 +2251,6 @@ Syntax error in 'validate_array_expr_bad3.stan', line 6, column 14 to column 15,
 
 Expression expected after "{" in array expression.
   $ ../../../../install/default/bin/stanc validate_array_expr_bad3a.stan
-Warning in 'validate_array_expr_bad3a.stan', line 5, column 2: Variable name
-    'array' will be a reserved word starting in Stan 2.32.0. Please rename
-    it!
 Syntax error in 'validate_array_expr_bad3a.stan', line 5, column 36 to column 37, parsing error:
    -------------------------------------------------
      3:  }

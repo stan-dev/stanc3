@@ -5,7 +5,6 @@ open Core_kernel
 open Middle
 open Ast
 open Debugging
-open Errors
 
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
@@ -82,6 +81,7 @@ let (!=) = Stdlib.(!=)
 %nonassoc unary_over_binary
 %right HAT ELTPOW
 %left TRANSPOSE
+%nonassoc ARRAY (* resolves shift-reduce with array keyword in declarations *)
 %left LBRACK
 %nonassoc below_ELSE
 %nonassoc ELSE
@@ -187,7 +187,8 @@ future_keyword:
   | MULTIPLIER { build_id "multiplier" $loc, "2.32.0" }
   | LOWER { build_id "lower" $loc, "2.32.0" }
   | UPPER { build_id "upper" $loc, "2.32.0" }
-  | ARRAY { build_id "array" $loc, "2.32.0" }
+  | ARRAY
+    { build_id "array" $loc, "2.32.0" }
 
 decl_identifier:
   | id=identifier { id }
@@ -343,39 +344,10 @@ decl(type_rule, rhs):
    *)
   (* Note that the array dimensions option must be inlined with ioption, else
      it will conflict with first rule. *)
-  (* It's a bit of a hack that "array[x,y,z]" is matched with a lhs rule and
-     then narrowed down by throwing errors. This is done to avoid reserving
-     "array" as a keyword, while also avoiding the reduce-reduce conflict that
-     would occur if "array[x,y,z]" were its own rule without reserving the
-     keyword. *)
-  | dims_opt=ioption(lhs) ty=type_rule
+  | dims_opt=ioption(arr_dims) ty=type_rule
      vs=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs)) SEMICOLON
     { (fun ~is_global ->
-      let int_ix ix = match ix with
-        | Single e -> Some e
-        | _ -> None
-      in
-      let int_ixs ixs =
-        List.fold_left
-          ~init:(Some [])
-          ~f:(Option.map2 ~f:(fun ixs ix -> ix::ixs))
-          (List.map ~f:int_ix
-             (List.rev ixs))
-      in
-      let error message =
-        pp_syntax_error
-          Fmt.stderr
-          (Parsing (message, Location_span.of_positions_exn $loc(dims_opt) ));
-        exit 1
-      in
-      let dims = match dims_opt with
-        | Some ({expr= Indexed ({expr= Variable {name="array"; _}; _}, ixs); _}) ->
-            Input_warnings.drop_array_future () ;
-           (match int_ixs ixs with
-            | Some sizes -> sizes
-            | None -> error "Dimensions should be expressions, not multiple or range indexing.")
-        | None -> []
-        | _ -> error "Found a declaration following an expression."
+      let dims = Option.value ~default:[] dims_opt
       in
       List.map vs ~f:(fun (id, rhs_opt) ->
           { stmt=
@@ -502,9 +474,9 @@ offset_mult:
   | MULTIPLIER ASSIGN e=constr_expression
     { grammar_logger "multiplier" ; Multiplier e }
 
-(* arr_dims:
- *   | ARRAY LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
- *                { grammar_logger "array dims" ; l  } *)
+arr_dims:
+  | ARRAY LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
+    { grammar_logger "array dims" ; l  }
 
 dims:
   | LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
