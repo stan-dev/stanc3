@@ -25,25 +25,4 @@ SHA=$(skopeo inspect --raw docker://stanorg/stanc3:multiarch | jq '.manifests | 
 # Register QEMU translation binaries
 docker run --rm --privileged multiarch/qemu-user-static --reset
 
-# Run docker, inheriting mounted volumes from sibling container (including stanc3 directory), and build stanc3 #
-# docker run -u 990:986 --group-add=987 --group-add=988 --volumes-from=$(docker ps -qf "ancestor=stanorg/stanc3:staticfi"):rw stanorg/stanc3:multiarchfi@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static"
-# docker run -t -d -u 990:986 --entrypoint= -w /home/jenkins/workspace/Stan_Stanc3_PR-1087 -v /home/jenkins/workspace/Stan_Stanc3_PR-1087:/home/jenkins/workspace/Stan_Stanc3_PR-1087:rw,z -v /home/jenkins/workspace/Stan_Stanc3_PR-1087@tmp:/home/jenkins/workspace/Stan_Stanc3_PR-1087@tmp:rw,z
-#
-# docker run -u 990:986 --group-add=987 --group-add=988 stanorg/stanc3:multiarch@$SHA
-# docker run -u 990:986 --group-add=987 --group-add=988 -w $(pwd) -v $(pwd):$(pwd):rw,z stanorg/stanc3:multiarchfi@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static"
-
-docker run --privileged -v $(pwd):$(pwd):rw,z stanorg/stanc3:multiarch@$SHA /bin/bash -c "cd $(pwd) && id && id -u && id -un && id -G && id -Gn && chmod -R 777 _build  && chmod -R 777 src && chmod -R 777 test" # && eval \$(opam env) && dune build @install --profile static
-
-# Update ownership of build folders
-chown -R jenkins: _build
-chown -R jenkins: src
-chown -R jenkins: test
-
-# docker buildx build -t stanorg/stanc3:multiarchfi --platform linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/mips64le,linux/s390x --no-cache --progress=plain --build-arg PUID=990 --build-arg PGID=986 --build-arg DOCKER_GID=987 --build-arg DOCKERROOT_GID=988 --push .
-
-# docker run -v $(pwd):/home/jenkins stanorg/stanc3:multiarchfi@sha256:f5098ad99b4245da5f811e329af326bf241e46c67789e16906da7364b3fb9db1 /bin/bash -c 'which opam && eval $(opam env) && dune build @install --profile static'
-
-# docker run -e PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' stanorg/stanc3:multiarchfi@sha256:9c65132ebb1b920a68a171fb07427d7e4992ee438b377b9f2ab71a29b01cbc7d /bin/bash -c "echo hi"
-
-#docker run stanorg/stanc3:multiarchfi@sha256:9c65132ebb1b920a68a171fb07427d7e4992ee438b377b9f2ab71a29b01cbc7d qemu-mips64el-static
-#docker run stanorg/stanc3:multiarchfi@sha256:9c65132ebb1b920a68a171fb07427d7e4992ee438b377b9f2ab71a29b01cbc7d /bin/bash
+docker run --privileged -v $(pwd):$(pwd):rw,z stanorg/stanc3:multiarch@$SHA /bin/bash -c "cd $(pwd) && id && id -u && id -un && id -G && id -Gn && eval \$(opam env) && dune build @install --profile static && chmod -R 777 _build  && chmod -R 777 src && chmod -R 777 test"
