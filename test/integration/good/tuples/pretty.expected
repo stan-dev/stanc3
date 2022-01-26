@@ -36,7 +36,7 @@ parameters {
 }
 model {
   ds.1 ~ bernoulli(ps.1);
-
+  
   target += ps.2 + ds.2.1[1] + ds.2.2[2];
 }
 

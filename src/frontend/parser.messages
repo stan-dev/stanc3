@@ -6961,24 +6961,6 @@ functions_only: VOID ARRAY LPAREN RPAREN SEMICOLON RBRACE
 
 Only function definitions/declarations are expected in '.stanfunctions' file
 
-program: MODELBLOCK LBRACE ARRAY LBRACK ARRAY RBRACK WHILE
-## Concrete syntax: model { array [ array ] while
-program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK ARRAY RBRACK WHILE
-## Concrete syntax: transformed data { array [ array ] while
-program: DATABLOCK LBRACE ARRAY LBRACK WHILE
-##
-## Concrete syntax: data { array [ while
-##
-## Ends in an error in state: 361.
-##
-## arr_dims -> ARRAY LBRACK . separated_nonempty_list(COMMA,expression) RBRACK [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL POSITIVEORDERED ORDERED MATRIX LPAREN INT COVMATRIX CORRMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
-##
-## The known suffix of the stack is as follows:
-## ARRAY LBRACK
-##
-
-Expected expressions for size of array.
-
 functions_only: ARRAY IDENTIFIER
 ## Concrete syntax: array foo
 program: DATABLOCK LBRACE ARRAY IDENTIFIER
@@ -13905,3 +13887,35 @@ program: TRANSFORMEDDATABLOCK LBRACE DOTNUMERAL WHILE
 ##
 
 Ill-formed expression. Found part of an expression, expected either an operator or the end of the expression.
+
+program: MODELBLOCK LBRACE ARRAY LBRACK INTNUMERAL RBRACK IDENTIFIER
+## Concrete syntax: model { array [ 24 ] foo
+program: DATABLOCK LBRACE ARRAY LBRACK INTNUMERAL RBRACK IDENTIFIER
+##
+## Concrete syntax: data { array [ 24 ] foo
+##
+## Ends in an error in state: 739.
+##
+## array_type(top_var_type) -> arr_dims . top_var_type [ WHILE VOID VECTOR UPPER UNITVECTOR TRUNCATE TARGET SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER INT IN IF IDENTIFIER GETLP FUNCTIONBLOCK FOR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
+## array_type(top_var_type) -> arr_dims . tuple_type(top_var_type) [ WHILE VOID VECTOR UPPER UNITVECTOR TRUNCATE TARGET SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER INT IN IF IDENTIFIER GETLP FUNCTIONBLOCK FOR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
+##
+## The known suffix of the stack is as follows:
+## arr_dims
+##
+
+Expected non-array type after "array" declaration.
+
+program: DATABLOCK LBRACE ARRAY LBRACK SEMICOLON
+##
+## Concrete syntax: data { array [ ;
+##
+## Ends in an error in state: 361.
+##
+## arr_dims -> ARRAY LBRACK . separated_nonempty_list(COMMA,expression) RBRACK [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL POSITIVEORDERED ORDERED MATRIX LPAREN INT COVMATRIX CORRMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
+##
+## The known suffix of the stack is as follows:
+## ARRAY LBRACK
+##
+
+Expected expressions for size of array.
+
