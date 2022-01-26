@@ -32,7 +32,7 @@ docker run --rm --privileged multiarch/qemu-user-static --reset
 # docker run -u 990:986 --group-add=987 --group-add=988 stanorg/stanc3:multiarch@$SHA
 # docker run -u 990:986 --group-add=987 --group-add=988 -w $(pwd) -v $(pwd):$(pwd):rw,z stanorg/stanc3:multiarchfi@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static"
 
-docker run --privileged -v $(pwd):$(pwd):rw,z stanorg/stanc3:multiarch@$SHA /bin/bash -c "cd $(pwd) && id && id -u && id -un && id -G && id -Gn && eval \$(opam env) && dune build @install --profile static"
+docker run --privileged -v $(pwd):$(pwd):rw,z stanorg/stanc3:multiarch@$SHA /bin/bash -c "cd $(pwd) && id && id -u && id -un && id -G && id -Gn" # && eval \$(opam env) && dune build @install --profile static
 
 # Update ownership of build folders
 chown -R jenkins: _build
