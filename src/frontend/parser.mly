@@ -642,7 +642,7 @@ common_expression:
                           ^ " in from tuple index. This should never happen,"
                           ^ " please file a bug."))
        | Some ix ->
-          TupleProjection (build_expr e $loc, ix - 1)
+          TupleProjection (build_expr e $loc, ix)
     }
   | LPAREN e=expression RPAREN
     { grammar_logger "extra_paren" ; Paren e }

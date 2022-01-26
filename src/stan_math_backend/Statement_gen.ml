@@ -53,28 +53,29 @@ let nan_type (st, adtype) =
  * For scalar types this sets the value to NaN and for containers initializes the memory.
  *)
 let rec pp_initialize ppf (st, adtype) =
-  let init_nan = nan_type (st, adtype) in
   match adtype with
   | UnsizedType.DataOnly -> (
-    match st with
-    | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
-    | SReal -> pf ppf "%s" init_nan
-    | SComplex ->
-        let scalar = local_scalar (SizedType.to_unsized st) adtype in
-        pf ppf "@[<hov 2>std::complex<%s>(%s,@ %s)@]" scalar init_nan init_nan
-    | SVector (_, size) | SRowVector (_, size) ->
-        pf ppf "@[<hov 2>%a::Constant(@,%a,@ %s)@]" pp_st (st, adtype) pp_expr
-          size init_nan
-    | SMatrix (_, d1, d2) ->
-        pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %s)@]" pp_st (st, adtype)
-          pp_expr d1 pp_expr d2 init_nan
-    | SArray (t, d) ->
-        pf ppf "@[<hov 2>%a(@,%a,@ @,%a)@]" pp_st (st, adtype) pp_expr d
-          pp_initialize (t, adtype)
-    | STuple _ ->
-        Common.FatalError.fatal_error_msg
-          [%message "Tuple without Tuple AD type in codegen"] )
+      let init_nan = nan_type (st, adtype) in
+      match st with
+      | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
+      | SReal -> pf ppf "%s" init_nan
+      | SComplex ->
+          let scalar = local_scalar (SizedType.to_unsized st) adtype in
+          pf ppf "@[<hov 2>std::complex<%s>(%s,@ %s)@]" scalar init_nan init_nan
+      | SVector (_, size) | SRowVector (_, size) ->
+          pf ppf "@[<hov 2>%a::Constant(@,%a,@ %s)@]" pp_st (st, adtype) pp_expr
+            size init_nan
+      | SMatrix (_, d1, d2) ->
+          pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %s)@]" pp_st (st, adtype)
+            pp_expr d1 pp_expr d2 init_nan
+      | SArray (t, d) ->
+          pf ppf "@[<hov 2>%a(@,%a,@ @,%a)@]" pp_st (st, adtype) pp_expr d
+            pp_initialize (t, adtype)
+      | STuple _ ->
+          Common.FatalError.fatal_error_msg
+            [%message "Tuple without Tuple AD type in codegen"] )
   | AutoDiffable -> (
+      let init_nan = nan_type (st, adtype) in
       let ut = SizedType.to_unsized st in
       match st with
       | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
@@ -124,9 +125,6 @@ let rec pp_initialize ppf (st, adtype) =
         pf ppf "std::tuple<%a>{@%a@}" pp_st (st, adtype)
           (list ~sep:(Fmt.unit ", ") pp_initialize)
           (List.zip_exn ts ads)
-    (* TUPLE TODO - it is also possible that an array of tuples has ADType TupleAD
-       need to recursively handle
-    *)
     | SArray (t, d) ->
         pf ppf "@[<hov 2>%a(@,%a,@ @,%a)@]" pp_st (st, adtype) pp_expr d
           pp_initialize (t, adtype)

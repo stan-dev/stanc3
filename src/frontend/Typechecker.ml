@@ -329,18 +329,20 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
         Semantic_error.not_indexable loc ut (List.length indices) |> error in
   aux ut (List.map ~f:indexing_type indices)
 
-let inferred_ad_type_of_indexed at uindices =
-  UnsizedType.lub_ad_type
-    ( at
-    :: List.map
-         ~f:(function
-           | All -> UnsizedType.DataOnly
-           | Single ue1 | Upfrom ue1 | Downfrom ue1 ->
-               UnsizedType.lub_ad_type [at; ue1.emeta.ad_level]
-           | Between (ue1, ue2) ->
-               UnsizedType.lub_ad_type
-                 [at; ue1.emeta.ad_level; ue2.emeta.ad_level] )
-         uindices )
+let inferred_ad_type_of_indexed at ut uindices =
+  UnsizedType.fill_adtype_for_type
+    (UnsizedType.lub_ad_type
+       ( at
+       :: List.map
+            ~f:(function
+              | All -> UnsizedType.DataOnly
+              | Single ue1 | Upfrom ue1 | Downfrom ue1 ->
+                  UnsizedType.lub_ad_type [at; ue1.emeta.ad_level]
+              | Between (ue1, ue2) ->
+                  UnsizedType.lub_ad_type
+                    [at; ue1.emeta.ad_level; ue2.emeta.ad_level] )
+            uindices ) )
+    ut
 
 (* function checking *)
 
@@ -675,8 +677,8 @@ and check_funapp loc cf tenv ~is_cond_dist id (es : Ast.typed_expression list) =
 and check_indexed loc cf tenv e indices =
   let tindices = List.map ~f:(check_index cf tenv) indices in
   let te = check_expression cf tenv e in
-  let ad_level = inferred_ad_type_of_indexed te.emeta.ad_level tindices in
   let type_ = inferred_unsizedtype_of_indexed ~loc te.emeta.type_ tindices in
+  let ad_level = inferred_ad_type_of_indexed te.emeta.ad_level type_ tindices in
   mk_typed_expression ~expr:(Indexed (te, tindices)) ~ad_level ~type_ ~loc
 
 and check_index cf tenv = function
@@ -974,18 +976,19 @@ let rec check_lvalue cf tenv = function
         | {lval= LIndexed (lval, idcs); lmeta= {loc}} ->
             let lval, var, flat = check_inner lval in
             let idcs = List.map ~f:(check_index cf tenv) idcs in
-            let ad_level =
-              inferred_ad_type_of_indexed lval.lmeta.ad_level idcs in
             let type_ =
               inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in
+            let ad_level =
+              inferred_ad_type_of_indexed lval.lmeta.ad_level type_ idcs in
             ( {lval= LIndexed (lval, idcs); lmeta= {ad_level; type_; loc}}
             , var
             , flat @ idcs )
         | _ -> failwith "TUPLE TODO - nested array indexing check" in
       let lval, var, flat = check_inner lval in
       let idcs = List.map ~f:(check_index cf tenv) idcs in
-      let ad_level = inferred_ad_type_of_indexed lval.lmeta.ad_level idcs in
       let type_ = inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in
+      let ad_level =
+        inferred_ad_type_of_indexed lval.lmeta.ad_level type_ idcs in
       if List.exists ~f:is_multiindex flat then (
         add_warning loc
           "Nested multi-indexing on the left hand side of assignment does not \
@@ -1391,7 +1394,7 @@ and verify_transformed_param_ty loc cf is_global unsized_ty =
   if
     is_global
     && (cf.current_block = Param || cf.current_block = TParam)
-    && UnsizedType.is_int_type unsized_ty
+    && UnsizedType.contains_int unsized_ty
   then Semantic_error.transformed_params_int loc |> error
 
 and check_sizedtype cf tenv sizedty =

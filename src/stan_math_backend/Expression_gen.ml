@@ -137,6 +137,9 @@ let rec pp_unsizedtype_local ppf (adtype, ut) =
           "Tuple and Tuple AD type not matching!"
             (ut : UnsizedType.t)
             (adtype : UnsizedType.autodifftype)]
+      (* TUPLE MAYBE handle tupleAD, Array here? *)
+  | UnsizedType.TupleAD _, UnsizedType.UArray t ->
+      pf ppf "std::vector<%a>" pp_unsizedtype_local (adtype, t)
   | _, _ ->
       let s = local_scalar ut adtype in
       pp_unsizedtype_custom_scalar ppf (s, ut)
