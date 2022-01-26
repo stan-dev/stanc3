@@ -625,7 +625,7 @@ Syntax error in 'err-decl-vector-2.stan', line 2, column 10 to column 11, parsin
      4:  model {
    -------------------------------------------------
 
-"[" expression "]" expected for vector size.
+Expected "[" expression "]" for vector size.
   $ ../../../../install/default/bin/stanc err-decl-vector.stan
 Syntax error in 'err-decl-vector.stan', line 2, column 9 to column 10, parsing error:
    -------------------------------------------------
@@ -735,7 +735,7 @@ Syntax error in 'err-if-else.stan', line 3, column 8 to column 9, parsing error:
      5:  model {
    -------------------------------------------------
 
-Expected ")" after test expression of conditional control flow construct.
+Ill-formed expression. Found part of an expression, expected either an operator or the end of the expression.
   $ ../../../../install/default/bin/stanc err-integrate-ode-comma.stan
 Syntax error in 'err-integrate-ode-comma.stan', line 9, column 46 to column 51, parsing error:
    -------------------------------------------------
@@ -796,7 +796,7 @@ Syntax error in 'err-nested-parens.stan', line 3, column 12 to column 13, parsin
      4:  }
    -------------------------------------------------
 
-Expression expected after "(".
+Expression or comma seperated list of expressions expected after "(".
   $ ../../../../install/default/bin/stanc err-no-cond-else-if.stan
 Syntax error in 'err-no-cond-else-if.stan', line 5, column 12 to column 13, parsing error:
    -------------------------------------------------

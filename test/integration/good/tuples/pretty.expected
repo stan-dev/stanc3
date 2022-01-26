@@ -1,0 +1,5 @@
+  $ ../../../../../install/default/bin/stanc --auto-format tuples-simple.stan
+transformed data {
+  (real, int) y = (1.0, 2);
+  real x = y.1;
+}

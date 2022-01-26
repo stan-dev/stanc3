@@ -147,7 +147,7 @@ Syntax error in 'bad_bounds1.stan', line 2, column 15 to column 17, parsing erro
      4:  parameters {
    -------------------------------------------------
 
-">" or ", upper = expression>" (with expression not containing binary logical operators) expected after specifying lower bound for type.
+Ill-formed expression. Expected expression (not containing binary logical operators).
   $ ../../../../../install/default/bin/stanc bad_bounds2.stan
 Semantic error in 'bad_bounds2.stan', line 2, column 2 to column 31:
    -------------------------------------------------
@@ -702,7 +702,7 @@ Syntax error in 'incomplete2.stan', line 2, column 15 to column 20, parsing erro
      3:  }
    -------------------------------------------------
 
-Found a expression where we expected a statement. Is there a missing semi-colon here?
+Found an ill-formed expression where we expected a statement. Is there a missing semi-colon here?
 Or did you mean to use the preceding expression in:
 * a function call
 * a sampling statement
@@ -727,7 +727,7 @@ Syntax error in 'incomplete4.stan', line 2, column 13 to column 14, parsing erro
      3:  }
    -------------------------------------------------
 
-Found a expression where we expected a statement. Is there a missing semi-colon here?
+Found an ill-formed expression where we expected a statement. Is there a missing semi-colon here?
 Or did you mean to use the preceding expression in:
 * a function call
 * a sampling statement
