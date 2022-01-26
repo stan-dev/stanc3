@@ -94,7 +94,7 @@ pipeline {
                 docker {
                     image 'stanorg/stanc3:debianfi'
                     //Forces image to ignore entrypoint
-                    args "--entrypoint=\'\'"
+                    args "--privileged --entrypoint=\'\'"
                 }
             }
             steps {
