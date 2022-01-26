@@ -481,7 +481,7 @@ pipeline {
                         docker {
                             image 'stanorg/stanc3:staticfi'
                             //Forces image to ignore entrypoint
-                            args "--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                             label 'linux'
                         }
                     }
@@ -511,7 +511,7 @@ pipeline {
                         docker {
                             image 'stanorg/stanc3:staticfi'
                             //Forces image to ignore entrypoint
-                            args "--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                             label 'linux'
                         }
                     }
@@ -542,7 +542,7 @@ pipeline {
                             image 'stanorg/stanc3:staticfi'
                             //Forces image to ignore entrypoint
                             label 'linux'
-                            args "--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
                     }
                     steps {
@@ -572,7 +572,7 @@ pipeline {
                             image 'stanorg/stanc3:staticfi'
                             //Forces image to ignore entrypoint
                             label 'linux'
-                            args "--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
                     }
                     steps {
@@ -602,7 +602,7 @@ pipeline {
                             image 'stanorg/stanc3:staticfi'
                             //Forces image to ignore entrypoint
                             label 'linux'
-                            args "--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
                     }
                     steps {
