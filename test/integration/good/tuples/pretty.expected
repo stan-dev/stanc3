@@ -1,5 +1,81 @@
-  $ ../../../../../install/default/bin/stanc --auto-format tuples-simple.stan
+  $ ../../../../../install/default/bin/stanc --auto-format simple.stan
 transformed data {
-  (real, int) y = (1.0, 2);
-  real x = y.1;
+  (real, int) x = (3.14, 2);
+  print(x.1);
 }
+
+  $ ../../../../../install/default/bin/stanc --auto-format simple2.stan
+transformed data {
+  (array[2] real, int) x = ({1.01, 3.14}, 2);
+  print(x.1[2]);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format simple3.stan
+transformed data {
+  (array[2, 3] real, int) x = ({{1.01, 3.14}, {1.01, 3.14}, {1.01, 3.14}}, 2);
+  print(x.1[2]);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-constraints.stan
+data {
+  (int<lower=0>, real<lower=1>) y;
+  //(int<lower=0>, real<lower=1>, simplex[2]) x;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-constraints2.stan
+data {
+  (int<lower=0>, (real<lower=1>, int<upper=2>)) y;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-full.stan
+data {
+  (int<lower=0, upper=1>, (array[2] int, array[2] int)) ds;
+}
+parameters {
+  (real<lower=0>, real<lower=0>) ps;
+}
+model {
+  ds.1 ~ bernoulli(ps.1);
+
+  target += ps.2 + ds.2.1[1] + ds.2.2[2];
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-ix-assign.stan
+transformed data {
+  (int, int) x;
+  x.1 = 5;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-ix-assign2.stan
+Semantic error in 'tuple-ix-assign2.stan', line 3, column 2 to column 8:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    (array[10] int, int) x;
+     3:    x.1[1] = 5;
+           ^
+     4:  }
+   -------------------------------------------------
+
+Too many indexes, expression dimensions=0, indexes found=1.
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-ix-assign3.stan
+transformed data {
+  array[10] (int, int) x;
+  x[1].1 = 5;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-ix-assign4.stan
+Semantic error in 'tuple-ix-assign4.stan', line 3, column 2 to column 8:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    (array[10] (int, array[100] real), int) x;
+     3:    x.1[1].1 = 5;
+           ^
+     4:  }
+   -------------------------------------------------
+
+Too many indexes, expression dimensions=0, indexes found=1.
+  $ ../../../../../install/default/bin/stanc --auto-format tuples-constraints.stan
+data {
+  (int<lower=0>, real<lower=1>) x;
+}
+
