@@ -498,7 +498,7 @@ pipeline {
 //                     }
 //                     post {always { runShell("rm -rf ./*")}}
 //                 }
-//
+
 //                 stage("Build & test a static Linux s390x binary") {
 // //                     when {
 // //                         beforeAgent true
@@ -528,7 +528,7 @@ pipeline {
 //                     }
 //                     post {always { runShell("rm -rf ./*")}}
 //                 }
-//
+
 //                 stage("Build & test a static Linux arm64 binary") {
 // //                     when {
 // //                         beforeAgent true
@@ -558,7 +558,7 @@ pipeline {
 //                     }
 //                     post {always { runShell("rm -rf ./*")}}
 //                 }
-//
+
 //                 stage("Build & test a static Linux armhf binary") {
 // //                     when {
 // //                         beforeAgent true
@@ -588,7 +588,7 @@ pipeline {
 //                     }
 //                     post {always { runShell("rm -rf ./*")}}
 //                 }
-//
+
 //                 stage("Build & test a static Linux armel binary") {
 // //                     when {
 // //                         beforeAgent true
@@ -618,8 +618,8 @@ pipeline {
 //                     }
 //                     post {always { runShell("rm -rf ./*")}}
 //                 }
-//
-//                 // Cross compiling for windows on debian
+
+                // Cross compiling for windows on debian
 //                 stage("Build & test static Windows binary") {
 //                     when {
 //                         beforeAgent true
@@ -649,8 +649,8 @@ pipeline {
 //                     }
 //                     post {always { runShell("rm -rf ./*")}}
 //                 }
-//
-//             }
+
+            }
         }
 
 //         stage("Release tag and publish binaries") {
