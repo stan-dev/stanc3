@@ -35,9 +35,9 @@ docker run --rm --privileged multiarch/qemu-user-static --reset
 docker run --privileged -v $(pwd):$(pwd):rw,z stanorg/stanc3:multiarch@$SHA /bin/bash -c "cd $(pwd) && id && id -u && id -un && id -G && id -Gn && eval \$(opam env) && dune build @install --profile static"
 
 # Update ownership of build folders
-#chown -R opam: _build
-#chown -R opam: src
-#chown -R opam: test
+chown -R jenkins: _build
+chown -R jenkins: src
+chown -R jenkins: test
 
 # docker buildx build -t stanorg/stanc3:multiarchfi --platform linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/mips64le,linux/s390x --no-cache --progress=plain --build-arg PUID=990 --build-arg PGID=986 --build-arg DOCKER_GID=987 --build-arg DOCKERROOT_GID=988 --push .
 
