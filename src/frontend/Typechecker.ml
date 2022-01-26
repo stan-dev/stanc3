@@ -968,12 +968,7 @@ let rec check_lvalue cf tenv = function
           Semantic_error.tuple_index_not_tuple loc tlval.lmeta.type_ |> error )
   | {lval= LIndexed (lval, idcs); lmeta= {loc}} ->
       let rec check_inner = function
-        | {lval= LVariable id; lmeta= ({loc} : located_meta)} ->
-            verify_identifier id ;
-            let ad_level, type_ = check_id cf loc tenv id in
-            let var = {lval= LVariable id; lmeta= {ad_level; type_; loc}} in
-            (var, var, [])
-        | {lval= LIndexed (lval, idcs); lmeta= {loc}} ->
+        | {lval= LIndexed (lval, idcs); lmeta= ({loc} : located_meta)} ->
             let lval, var, flat = check_inner lval in
             let idcs = List.map ~f:(check_index cf tenv) idcs in
             let type_ =
@@ -983,7 +978,10 @@ let rec check_lvalue cf tenv = function
             ( {lval= LIndexed (lval, idcs); lmeta= {ad_level; type_; loc}}
             , var
             , flat @ idcs )
-        | _ -> failwith "TUPLE TODO - nested array indexing check" in
+        | lval ->
+            (* TUPLE MAYBE: I think the right thing to do here is treat tuples like variables *)
+            let tval = check_lvalue cf tenv lval in
+            (tval, tval, []) in
       let lval, var, flat = check_inner lval in
       let idcs = List.map ~f:(check_index cf tenv) idcs in
       let type_ = inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in

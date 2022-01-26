@@ -312,9 +312,6 @@ let rec id_of_lvalue {lval; _} =
   match lval with
   | LVariable s -> s
   | LIndexed (l, _) -> id_of_lvalue l
-  (* TUPLE MAYBE id_of_lvalue
-   * What does this function do?
-   *)
   | LTupleProjection (l, _) -> id_of_lvalue l
 
 (* XXX: the parser produces inaccurate locations: smeta.loc.begin_loc is the last
