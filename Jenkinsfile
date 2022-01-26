@@ -83,34 +83,35 @@ pipeline {
                 }
             }
         }
-        stage("Build") {
-            when {
-                beforeAgent true
-                expression {
-                    !skipRemainingStages
-                }
-            }
-            agent {
-                docker {
-                    image 'stanorg/stanc3:debianfi'
-                    //Forces image to ignore entrypoint
-                    args "--privileged --entrypoint=\'\'"
-                }
-            }
-            steps {
-                runShell("""
-                    eval \$(opam env)
-                    dune build @install
-                    ls -lhart
-                    echo \${UID}
-                    getent group jenkins
-                """)
 
-                sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
-                stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
-            }
-            post { always { runShell("rm -rf ./*") }}
-        }
+//         stage("Build") {
+//             when {
+//                 beforeAgent true
+//                 expression {
+//                     !skipRemainingStages
+//                 }
+//             }
+//             agent {
+//                 docker {
+//                     image 'stanorg/stanc3:debianfi'
+//                     //Forces image to ignore entrypoint
+//                     args "--entrypoint=\'\'"
+//                 }
+//             }
+//             steps {
+//                 runShell("""
+//                     eval \$(opam env)
+//                     dune build @install
+//                     ls -lhart
+//                     echo \${UID}
+//                     getent group jenkins
+//                 """)
+//
+//                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
+//                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
+//             }
+//             post { always { runShell("rm -rf ./*") }}
+//         }
 
         // stage("Pull image ") {
         //     agent {
