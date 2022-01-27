@@ -173,6 +173,7 @@ and check_compatible_arguments depth typs args2 :
               else Error (ArgError (i + 1, DataOnlyError)) )
       |> Result.all
 
+let check_of_same_type_mod_conv = check_same_type 0
 let check_compatible_arguments_mod_conv = check_compatible_arguments 0
 let max_n_errors = 5
 
@@ -184,20 +185,21 @@ let extract_function_types f =
       Some (return, args, (fun x -> UserDefined x), mem)
   | _ -> None
 
-let promote es promotions =
-  List.map2_exn es promotions ~f:(fun (exp : Ast.typed_expression) prom ->
-      let open UnsizedType in
-      let emeta = exp.emeta in
-      match prom with
-      | IntToRealPromotion when is_int_type emeta.type_ ->
-          Ast.
-            { expr= Ast.Promotion (exp, UReal, emeta.ad_level)
-            ; emeta= {emeta with type_= promote_array emeta.type_ UReal} }
-      | (IntToComplexPromotion | RealToComplexPromotion)
-        when not (is_complex_type emeta.type_) ->
-          { expr= Promotion (exp, UComplex, emeta.ad_level)
-          ; emeta= {emeta with type_= promote_array emeta.type_ UComplex} }
-      | _ -> exp )
+let promote (exp : Ast.typed_expression) prom =
+  let open UnsizedType in
+  let emeta = exp.emeta in
+  match prom with
+  | IntToRealPromotion when is_int_type emeta.type_ ->
+      Ast.
+        { expr= Ast.Promotion (exp, UReal, emeta.ad_level)
+        ; emeta= {emeta with type_= promote_array emeta.type_ UReal} }
+  | (IntToComplexPromotion | RealToComplexPromotion)
+    when not (is_complex_type emeta.type_) ->
+      { expr= Promotion (exp, UComplex, emeta.ad_level)
+      ; emeta= {emeta with type_= promote_array emeta.type_ UComplex} }
+  | _ -> exp
+
+let promote_list es promotions = List.map2_exn es promotions ~f:promote
 
 let promotion_cost p =
   match p with

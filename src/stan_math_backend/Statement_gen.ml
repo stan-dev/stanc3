@@ -318,6 +318,8 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
       pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
   | Assignment
       ((vident, _, []), ({meta= Expr.Typed.Meta.{type_= UInt; _}; _} as rhs))
+   |Assignment
+      ((vident, _, []), ({meta= Expr.Typed.Meta.{type_= UComplex; _}; _} as rhs))
    |Assignment ((vident, _, []), ({meta= {type_= UReal; _}; _} as rhs)) ->
       pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
   | Assignment ((assignee, UInt, idcs), rhs)

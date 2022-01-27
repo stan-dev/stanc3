@@ -457,8 +457,7 @@ and pp_user_defined_fun ppf (f, suffix, es) =
 and pp_compiler_internal_fn ad ut f ppf es =
   let pp_array_literal ut ppf es =
     pf ppf "std::vector<%a>{@,%a}" pp_unsizedtype_local (ad, ut)
-      (list ~sep:comma (pp_promoted ad ut))
-      es in
+      (list ~sep:comma pp_expr) es in
   match f with
   | Internal_fun.FnMakeArray ->
       let ut =
@@ -515,20 +514,6 @@ and pp_compiler_internal_fn ad ut f ppf es =
   | _ ->
       gen_fun_app FnPlain ppf (Internal_fun.to_string f) es Common.Helpers.AoS
         (Some UnsizedType.Void)
-
-and pp_promoted ad ut ppf e =
-  match e with
-  | Expr.{Fixed.meta= {Typed.Meta.type_; adlevel; _}; _}
-    when type_ = ut && adlevel = ad ->
-      pp_expr ppf e
-  | {pattern= FunApp (CompilerInternal Internal_fun.FnMakeArray, es); _} ->
-      pp_compiler_internal_fn ad ut Internal_fun.FnMakeArray ppf es
-  | _ -> (
-    match ut with
-    | UnsizedType.UComplex -> pf ppf "@[<hov>%a@]" pp_expr e
-    | _ ->
-        pf ppf "stan::math::promote_scalar<%s>(@[<hov>%a@])"
-          (local_scalar ut ad) pp_expr e )
 
 and pp_indexed ppf (vident, indices, pretty) =
   pf ppf "@[<hov 2>stan::model::rvalue(@,%s,@ %S,@ %a)@]" vident pretty

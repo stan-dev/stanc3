@@ -41,12 +41,17 @@ type match_result =
   , signature_error list * bool )
   generic_match_result
 
+val check_of_same_type_mod_conv :
+  UnsizedType.t -> UnsizedType.t -> (promotions, type_mismatch) result
+
 val check_compatible_arguments_mod_conv :
      (UnsizedType.autodifftype * UnsizedType.t) list
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> (promotions list, function_mismatch) result
 
-val promote :
+val promote : Ast.typed_expression -> promotions -> Ast.typed_expression
+
+val promote_list :
   Ast.typed_expression list -> promotions list -> Ast.typed_expression list
 (** Given a list of expressions (arguments) and a list of [promotions],
   return a list of expressions which include the

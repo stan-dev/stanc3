@@ -18,6 +18,9 @@ data {
 
 transformed parameters {
    array[2,2] real zs = {{2,3},{7,0.5}};
+   array[2] complex z1 = {1,3};
+   array[2] complex z2 = {1,3.5};
+   array[2] complex z3 = {1,3.5i};
 }
 
 model {

@@ -450,7 +450,7 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
             (mk_fun_app ~is_cond_dist
                ( fnk (Fun_kind.suffix_from_name id.name)
                , id
-               , SignatureMismatch.promote es promotions ) )
+               , SignatureMismatch.promote_list es promotions ) )
           ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
     | AmbiguousMatch sigs ->
         Semantic_error.ambiguous_function_promotion loc id.name
@@ -552,7 +552,9 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
         mk_typed_expression
           ~expr:
             (mk_fun_app ~is_cond_dist
-               (StanLib FnPlain, id, SignatureMismatch.promote tes promotions) )
+               ( StanLib FnPlain
+               , id
+               , SignatureMismatch.promote_list tes promotions ) )
           ~ad_level:(expr_ad_lub tes) ~type_:UnsizedType.UReal ~loc
     | AmbiguousMatch ps ->
         Semantic_error.ambiguous_function_promotion loc fname.name None ps
@@ -599,7 +601,9 @@ and check_variadic_ode ~is_cond_dist loc cf tenv id tes =
         mk_typed_expression
           ~expr:
             (mk_fun_app ~is_cond_dist
-               (StanLib FnPlain, id, SignatureMismatch.promote tes promotions) )
+               ( StanLib FnPlain
+               , id
+               , SignatureMismatch.promote_list tes promotions ) )
           ~ad_level:(expr_ad_lub tes)
           ~type_:Stan_math_signatures.variadic_ode_return_type ~loc
     | AmbiguousMatch ps ->
@@ -645,7 +649,9 @@ and check_variadic_dae ~is_cond_dist loc cf tenv id tes =
         mk_typed_expression
           ~expr:
             (mk_fun_app ~is_cond_dist
-               (StanLib FnPlain, id, SignatureMismatch.promote tes promotions) )
+               ( StanLib FnPlain
+               , id
+               , SignatureMismatch.promote_list tes promotions ) )
           ~ad_level:(expr_ad_lub tes)
           ~type_:Stan_math_signatures.variadic_dae_return_type ~loc
     | AmbiguousMatch ps ->
@@ -852,7 +858,7 @@ let check_nrfn loc tenv id es =
             (NRFunApp
                ( fnk (Fun_kind.suffix_from_name id.name)
                , id
-               , SignatureMismatch.promote es promotions ) )
+               , SignatureMismatch.promote_list es promotions ) )
           ~return_type:NoReturnType ~loc
     | UniqueMatch (ReturnType _, _, _) ->
         Semantic_error.nonreturning_fn_expected_returning_found loc id.name
@@ -886,23 +892,24 @@ let verify_assignment_global loc cf block is_global id =
   if (not is_global) || block = cf.current_block then ()
   else Semantic_error.cannot_assign_to_global loc id.name |> error
 
-let verify_assignment_operator loc assop lhs rhs =
+let check_assignment_operator loc assop lhs rhs =
   let err op =
     Semantic_error.illtyped_assignment loc op lhs.lmeta.type_ rhs.emeta.type_
   in
   match assop with
-  | Assign | ArrowAssign ->
-      if
-        UnsizedType.check_of_same_type_mod_array_conv "" lhs.lmeta.type_
-          rhs.emeta.type_
-      then ()
-      else err Operator.Equals |> error
+  | Assign | ArrowAssign -> (
+    match
+      SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_
+        rhs.emeta.type_
+    with
+    | Ok promotion -> SignatureMismatch.promote rhs promotion
+    | Error _ -> err Operator.Equals |> error )
   | OperatorAssign op -> (
       let args = List.map ~f:arg_type [Ast.expr_of_lvalue lhs; rhs] in
       let return_type =
         Stan_math_signatures.assignmentoperator_stan_math_return_type op args
       in
-      match return_type with Some Void -> () | _ -> err op |> error )
+      match return_type with Some Void -> rhs | _ -> err op |> error )
 
 let check_lvalue cf tenv = function
   | {lval= LVariable id; lmeta= ({loc} : located_meta)} ->
@@ -969,7 +976,7 @@ let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
         |> error in
   verify_assignment_global loc cf block global assign_id ;
   verify_assignment_read_only loc readonly assign_id ;
-  verify_assignment_operator loc assign_op lhs rhs ;
+  let rhs = check_assignment_operator loc assign_op lhs rhs in
   mk_typed_statement ~return_type:NoReturnType ~loc
     ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs})
 
@@ -1361,17 +1368,18 @@ and check_sizedtype cf tenv sizedty =
 
 and check_var_decl_initial_value loc cf tenv id init_val_opt =
   match init_val_opt with
-  | Some e ->
+  | Some e -> (
       let lhs = check_lvalue cf tenv {lval= LVariable id; lmeta= {loc}} in
       let rhs = check_expression cf tenv e in
-      if
-        UnsizedType.check_of_same_type_mod_array_conv "" lhs.lmeta.type_
+      match
+        SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_
           rhs.emeta.type_
-      then Some rhs
-      else
-        Semantic_error.illtyped_assignment loc Equals lhs.lmeta.type_
-          rhs.emeta.type_
-        |> error
+      with
+      | Ok promotion -> Some (SignatureMismatch.promote rhs promotion)
+      | Error _ ->
+          Semantic_error.illtyped_assignment loc Equals lhs.lmeta.type_
+            rhs.emeta.type_
+          |> error )
   | None -> None
 
 and check_transformation cf tenv ut trans =

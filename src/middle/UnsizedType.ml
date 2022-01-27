@@ -102,12 +102,6 @@ let check_of_same_type_mod_conv name t1 t2 =
         | Unequal_lengths -> false )
     | _ -> t1 = t2
 
-let rec check_of_same_type_mod_array_conv name t1 t2 =
-  match (t1, t2) with
-  | UArray t1elt, UArray t2elt ->
-      check_of_same_type_mod_array_conv name t1elt t2elt
-  | _ -> check_of_same_type_mod_conv name t1 t2
-
 let check_compatible_arguments_mod_conv name args1 args2 =
   match
     List.for_all2

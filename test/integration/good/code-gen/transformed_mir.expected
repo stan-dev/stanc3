@@ -751,9 +751,15 @@
                                       (meta <opaque>))
                                      ((pattern
                                        (Assignment (z UReal ())
-                                        ((pattern (Lit Int 0))
+                                        ((pattern
+                                          (Promotion
+                                           ((pattern (Lit Int 0))
+                                            (meta
+                                             ((type_ UInt) (loc <opaque>)
+                                              (adlevel DataOnly))))
+                                           UReal DataOnly))
                                          (meta
-                                          ((type_ UInt) (loc <opaque>)
+                                          ((type_ UReal) (loc <opaque>)
                                            (adlevel DataOnly))))))
                                       (meta <opaque>))
                                      ((pattern Break) (meta <opaque>)))))
@@ -917,9 +923,15 @@
                               (meta <opaque>))
                              ((pattern
                                (Assignment (z UReal ())
-                                ((pattern (Lit Int 0))
+                                ((pattern
+                                  (Promotion
+                                   ((pattern (Lit Int 0))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>)
+                                      (adlevel DataOnly))))
+                                   UReal DataOnly))
                                  (meta
-                                  ((type_ UInt) (loc <opaque>)
+                                  ((type_ UReal) (loc <opaque>)
                                    (adlevel DataOnly))))))
                               (meta <opaque>))
                              ((pattern Break) (meta <opaque>)))))
@@ -1043,9 +1055,15 @@
                               (meta <opaque>))
                              ((pattern
                                (Assignment (z UReal ())
-                                ((pattern (Lit Int 0))
+                                ((pattern
+                                  (Promotion
+                                   ((pattern (Lit Int 0))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>)
+                                      (adlevel DataOnly))))
+                                   UReal DataOnly))
                                  (meta
-                                  ((type_ UInt) (loc <opaque>)
+                                  ((type_ UReal) (loc <opaque>)
                                    (adlevel DataOnly))))))
                               (meta <opaque>))
                              ((pattern Break) (meta <opaque>)))))
@@ -7951,9 +7969,14 @@
                     (meta <opaque>))
                    ((pattern
                      (Assignment (z UReal ())
-                      ((pattern (Lit Int 0))
+                      ((pattern
+                        (Promotion
+                         ((pattern (Lit Int 0))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         UReal DataOnly))
                        (meta
-                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -8042,9 +8065,15 @@
                         (meta <opaque>))
                        ((pattern
                          (Assignment (z UReal ())
-                          ((pattern (Var i))
+                          ((pattern
+                            (Promotion
+                             ((pattern (Var i))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             UReal DataOnly))
                            (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                            ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                         (meta <opaque>)))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
@@ -8143,14 +8172,18 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (x_mul_ind (UArray UInt) ())
+     (Assignment (x_mul_ind (UArray UReal) ())
       ((pattern
-        (FunApp (CompilerInternal FnMakeArray)
-         (((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Lit Int 2))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
+        (Promotion
+         ((pattern
+           (FunApp (CompilerInternal FnMakeArray)
+            (((pattern (Lit Int 1))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
+         UReal DataOnly))
+       (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id transformed_data_real)
