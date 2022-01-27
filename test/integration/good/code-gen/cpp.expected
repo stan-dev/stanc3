@@ -1692,17 +1692,17 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       
       
       current_statement__ = 354;
-      td_complex = stan::math::promote_scalar<std::complex<double>>(td_i);
+      td_complex = td_i;
       current_statement__ = 355;
-      td_complex = stan::math::promote_scalar<std::complex<double>>(td_r);
+      td_complex = td_r;
       current_statement__ = 356;
-      td_complex = stan::math::promote_scalar<std::complex<double>>(d_i);
+      td_complex = d_i;
       current_statement__ = 357;
-      td_complex = stan::math::promote_scalar<std::complex<double>>(d_r);
+      td_complex = d_r;
       current_statement__ = 358;
-      td_complex = stan::math::promote_scalar<std::complex<double>>(1);
+      td_complex = 1;
       current_statement__ = 359;
-      td_complex = stan::math::promote_scalar<std::complex<double>>(1.1);
+      td_complex = 1.1;
       current_statement__ = 360;
       td_complex = d_complex;
       current_statement__ = 361;
@@ -1750,8 +1750,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         "assigning variable td_complex_array_2d", stan::model::index_uni(1),
                                                     stan::model::index_uni(1));
       current_statement__ = 375;
-      stan::model::assign(td_complex_array_2d,
-        stan::math::promote_scalar<std::complex<double>>(1),
+      stan::model::assign(td_complex_array_2d, 1,
         "assigning variable td_complex_array_2d", stan::model::index_uni(1),
                                                     stan::model::index_uni(1));
       current_statement__ = 376;
@@ -1909,17 +1908,17 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
            std::vector<std::complex<local_scalar_t__>>(3, 
              std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
       current_statement__ = 9;
-      tp_complex = stan::math::promote_scalar<std::complex<local_scalar_t__>>(tp_r);
+      tp_complex = tp_r;
       current_statement__ = 10;
-      tp_complex = stan::math::promote_scalar<std::complex<double>>(d_i);
+      tp_complex = d_i;
       current_statement__ = 11;
-      tp_complex = stan::math::promote_scalar<std::complex<double>>(d_r);
+      tp_complex = d_r;
       current_statement__ = 12;
-      tp_complex = stan::math::promote_scalar<std::complex<local_scalar_t__>>(p_r);
+      tp_complex = p_r;
       current_statement__ = 13;
-      tp_complex = stan::math::promote_scalar<std::complex<double>>(1);
+      tp_complex = 1;
       current_statement__ = 14;
-      tp_complex = stan::math::promote_scalar<std::complex<double>>(1.1);
+      tp_complex = 1.1;
       current_statement__ = 15;
       tp_complex = d_complex;
       current_statement__ = 16;
@@ -1978,8 +1977,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         "assigning variable tp_complex_array_2d", stan::model::index_uni(1),
                                                     stan::model::index_uni(1));
       current_statement__ = 34;
-      stan::model::assign(tp_complex_array_2d,
-        stan::math::promote_scalar<std::complex<double>>(1),
+      stan::model::assign(tp_complex_array_2d, 1,
         "assigning variable tp_complex_array_2d", stan::model::index_uni(1),
                                                     stan::model::index_uni(1));
       current_statement__ = 35;
@@ -2175,17 +2173,17 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       current_statement__ = 5;
       tp_r = 1.1;
       current_statement__ = 9;
-      tp_complex = stan::math::promote_scalar<std::complex<local_scalar_t__>>(tp_r);
+      tp_complex = tp_r;
       current_statement__ = 10;
-      tp_complex = stan::math::promote_scalar<std::complex<double>>(d_i);
+      tp_complex = d_i;
       current_statement__ = 11;
-      tp_complex = stan::math::promote_scalar<std::complex<double>>(d_r);
+      tp_complex = d_r;
       current_statement__ = 12;
-      tp_complex = stan::math::promote_scalar<std::complex<local_scalar_t__>>(p_r);
+      tp_complex = p_r;
       current_statement__ = 13;
-      tp_complex = stan::math::promote_scalar<std::complex<double>>(1);
+      tp_complex = 1;
       current_statement__ = 14;
-      tp_complex = stan::math::promote_scalar<std::complex<double>>(1.1);
+      tp_complex = 1.1;
       current_statement__ = 15;
       tp_complex = d_complex;
       current_statement__ = 16;
@@ -2244,8 +2242,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         "assigning variable tp_complex_array_2d", stan::model::index_uni(1),
                                                     stan::model::index_uni(1));
       current_statement__ = 34;
-      stan::model::assign(tp_complex_array_2d,
-        stan::math::promote_scalar<std::complex<double>>(1),
+      stan::model::assign(tp_complex_array_2d, 1,
         "assigning variable tp_complex_array_2d", stan::model::index_uni(1),
                                                     stan::model::index_uni(1));
       current_statement__ = 35;
@@ -2373,19 +2370,19 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
              std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
                std::numeric_limits<double>::quiet_NaN())));
       current_statement__ = 67;
-      gq_complex = stan::math::promote_scalar<std::complex<double>>(gq_i);
+      gq_complex = gq_i;
       current_statement__ = 68;
-      gq_complex = stan::math::promote_scalar<std::complex<double>>(gq_r);
+      gq_complex = gq_r;
       current_statement__ = 69;
-      gq_complex = stan::math::promote_scalar<std::complex<double>>(d_i);
+      gq_complex = d_i;
       current_statement__ = 70;
-      gq_complex = stan::math::promote_scalar<std::complex<double>>(d_r);
+      gq_complex = d_r;
       current_statement__ = 71;
-      gq_complex = stan::math::promote_scalar<std::complex<double>>(p_r);
+      gq_complex = p_r;
       current_statement__ = 72;
-      gq_complex = stan::math::promote_scalar<std::complex<double>>(1);
+      gq_complex = 1;
       current_statement__ = 73;
-      gq_complex = stan::math::promote_scalar<std::complex<double>>(1.1);
+      gq_complex = 1.1;
       current_statement__ = 74;
       gq_complex = d_complex;
       current_statement__ = 75;
@@ -2444,8 +2441,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         "assigning variable gq_complex_array_2d", stan::model::index_uni(1),
                                                     stan::model::index_uni(1));
       current_statement__ = 93;
-      stan::model::assign(gq_complex_array_2d,
-        stan::math::promote_scalar<std::complex<double>>(1),
+      stan::model::assign(gq_complex_array_2d, 1,
         "assigning variable gq_complex_array_2d", stan::model::index_uni(1),
                                                     stan::model::index_uni(1));
       current_statement__ = 94;
@@ -2676,17 +2672,17 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       current_statement__ = 185;
       gq_complex = -z;
       current_statement__ = 186;
-      gq_complex = stan::math::promote_scalar<std::complex<double>>(-gq_r);
+      gq_complex = -gq_r;
       current_statement__ = 187;
-      gq_complex = stan::math::promote_scalar<std::complex<double>>(-gq_i);
+      gq_complex = -gq_i;
       current_statement__ = 188;
       gq_complex = -d_complex;
       current_statement__ = 189;
-      gq_complex = stan::math::promote_scalar<std::complex<double>>(-d_r);
+      gq_complex = -d_r;
       current_statement__ = 190;
       gq_complex = -p_complex;
       current_statement__ = 191;
-      gq_complex = stan::math::promote_scalar<std::complex<double>>(-p_r);
+      gq_complex = -p_r;
       current_statement__ = 192;
       gq_complex = (gq_i ? z : y);
       current_statement__ = 193;
@@ -5076,14 +5072,16 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
          std::vector<std::vector<local_scalar_t__>>(3, 
            std::vector<local_scalar_t__>(3, DUMMY_VAR__));
       current_statement__ = 2;
-      stan::model::assign(y, std::vector<std::vector<local_scalar_t__>>{x,
-        xx, xx}, "assigning variable y");
+      stan::model::assign(y, std::vector<std::vector<local_scalar_t__>>{
+        stan::math::promote_scalar<local_scalar_t__>(x), xx, xx},
+        "assigning variable y");
       std::vector<std::vector<local_scalar_t__>> w =
          std::vector<std::vector<local_scalar_t__>>(3, 
            std::vector<local_scalar_t__>(3, DUMMY_VAR__));
       current_statement__ = 3;
       stan::model::assign(w, std::vector<std::vector<local_scalar_t__>>{
-        std::vector<double>{1.0, 2, 3}, xx, xx}, "assigning variable w");
+        stan::math::promote_scalar<local_scalar_t__>(std::vector<double>{1.0,
+        2, 3}), xx, xx}, "assigning variable w");
       std::vector<std::vector<local_scalar_t__>> td_arr33 =
          std::vector<std::vector<local_scalar_t__>>(3, 
            std::vector<local_scalar_t__>(3, DUMMY_VAR__));
@@ -5144,11 +5142,13 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
         return ;
       } 
       current_statement__ = 2;
-      stan::model::assign(y, std::vector<std::vector<local_scalar_t__>>{x,
-        xx, xx}, "assigning variable y");
+      stan::model::assign(y, std::vector<std::vector<local_scalar_t__>>{
+        stan::math::promote_scalar<local_scalar_t__>(x), xx, xx},
+        "assigning variable y");
       current_statement__ = 3;
       stan::model::assign(w, std::vector<std::vector<local_scalar_t__>>{
-        std::vector<double>{1.0, 2, 3}, xx, xx}, "assigning variable w");
+        stan::math::promote_scalar<local_scalar_t__>(std::vector<double>{1.0,
+        2, 3}), xx, xx}, "assigning variable w");
       current_statement__ = 4;
       stan::model::assign(td_arr33, std::vector<std::vector<double>>{
         stan::math::promote_scalar<double>(std::vector<int>{1, 2, 3}),
@@ -9978,8 +9978,7 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       
       
       current_statement__ = 363;
-      stan::model::assign(x_mul_ind,
-        stan::math::promote_scalar<double>(std::vector<int>{1, 2}),
+      stan::model::assign(x_mul_ind, std::vector<int>{1, 2},
         "assigning variable x_mul_ind");
       current_statement__ = 364;
       transformed_data_real = std::numeric_limits<double>::quiet_NaN();

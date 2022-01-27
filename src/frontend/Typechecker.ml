@@ -257,12 +257,13 @@ let check_variable cf loc tenv id =
   mk_typed_expression ~expr:(Variable id) ~ad_level ~type_ ~loc
 
 let get_consistent_types ad_level type_ es =
-  let rec promotion ty ty2 =
+  let rec promotion (ad, ty) (ad2, ty2) =
     match (ty, ty2) with
-    | UnsizedType.(UReal, UInt) -> Promotion.IntToRealPromotion
+    | UnsizedType.(UReal, UReal) when ad <> ad2 -> Promotion.RealToVarPromotion
+    | UnsizedType.(UReal, UInt) -> IntToRealPromotion
     | UnsizedType.(UComplex, UInt) -> IntToComplexPromotion
     | UnsizedType.(UComplex, UReal) -> RealToComplexPromotion
-    | UArray nt1, UArray nt2 -> promotion nt1 nt2
+    | UArray nt1, UArray nt2 -> promotion (ad, nt1) (ad2, nt2)
     | t1, t2 when t1 = t2 -> NoPromotion
     (* should be guaranteed to never happen by the below fold *)
     | _, _ -> NoPromotion in
@@ -279,7 +280,7 @@ let get_consistent_types ad_level type_ es =
         | None -> Error (ty, e.emeta) ) in
   List.fold ~init:(Ok (ad_level, type_)) ~f es
   |> Result.map ~f:(fun (ad, ty) ->
-         (ad, ty, List.map ~f:(promotion ty) (List.map ~f:type_of_expr_typed es)) )
+         (ad, ty, List.map ~f:(promotion (ad, ty)) (get_arg_types es)) )
 
 let check_array_expr loc es =
   match es with
