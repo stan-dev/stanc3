@@ -93,7 +93,8 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
     pattern=
       ( match e.pattern with
       | Var _ | Lit (_, _) -> e.pattern
-      | Promotion (expr, ut, ad) -> Promotion (eval_expr expr, ut, ad)
+      | Promotion (expr, ut, ad) ->
+          Promotion (eval_expr ~preserve_stability expr, ut, ad)
       | FunApp (kind, l) -> (
           let l = List.map ~f:(eval_expr ~preserve_stability) l in
           match kind with
