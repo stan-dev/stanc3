@@ -257,6 +257,15 @@ let check_variable cf loc tenv id =
   mk_typed_expression ~expr:(Variable id) ~ad_level ~type_ ~loc
 
 let get_consistent_types ad_level type_ es =
+  let rec promotion ty ty2 =
+    match (ty, ty2) with
+    | UnsizedType.(UReal, UInt) -> SignatureMismatch.IntToRealPromotion
+    | UnsizedType.(UComplex, UInt) -> IntToComplexPromotion
+    | UnsizedType.(UComplex, UReal) -> RealToComplexPromotion
+    | UArray nt1, UArray nt2 -> promotion nt1 nt2
+    | t1, t2 when t1 = t2 -> None
+    (* should be guaranteed to never happen by the below fold *)
+    | _, _ -> None in
   let f state e =
     match state with
     | Error e -> Error e
@@ -269,32 +278,38 @@ let get_consistent_types ad_level type_ es =
         | Some ty -> Ok (ad, ty)
         | None -> Error (ty, e.emeta) ) in
   List.fold ~init:(Ok (ad_level, type_)) ~f es
+  |> Result.map ~f:(fun (ad, ty) ->
+         (ad, ty, List.map ~f:(promotion ty) (List.map ~f:type_of_expr_typed es)) )
 
 let check_array_expr loc es =
   match es with
   | [] -> Semantic_error.empty_array loc |> error
-  | {emeta= {ad_level; type_; _}; _} :: elements -> (
-    match get_consistent_types ad_level type_ elements with
+  | {emeta= {ad_level; type_; _}; _} :: _ -> (
+    match get_consistent_types ad_level type_ es with
     | Error (ty, meta) ->
         Semantic_error.mismatched_array_types meta.loc ty meta.type_ |> error
-    | Ok (ad_level, type_) ->
+    | Ok (ad_level, type_, promotions) ->
         let type_ = UnsizedType.UArray type_ in
-        mk_typed_expression ~expr:(ArrayExpr es) ~ad_level ~type_ ~loc )
+        mk_typed_expression
+          ~expr:(ArrayExpr (SignatureMismatch.promote_list es promotions))
+          ~ad_level ~type_ ~loc )
 
 let check_rowvector loc es =
   match es with
-  | {emeta= {ad_level; type_= UnsizedType.URowVector; _}; _} :: elements -> (
-    match get_consistent_types ad_level URowVector elements with
-    | Ok (ad_level, _) ->
-        mk_typed_expression ~expr:(RowVectorExpr es) ~ad_level ~type_:UMatrix
-          ~loc
+  | {emeta= {ad_level; type_= UnsizedType.URowVector; _}; _} :: _ -> (
+    match get_consistent_types ad_level URowVector es with
+    | Ok (ad_level, _, promotions) ->
+        mk_typed_expression
+          ~expr:(RowVectorExpr (SignatureMismatch.promote_list es promotions))
+          ~ad_level ~type_:UMatrix ~loc
     | Error (_, meta) ->
         Semantic_error.invalid_matrix_types meta.loc meta.type_ |> error )
   | _ -> (
     match get_consistent_types DataOnly UReal es with
-    | Ok (ad_level, _) ->
-        mk_typed_expression ~expr:(RowVectorExpr es) ~ad_level ~type_:URowVector
-          ~loc
+    | Ok (ad_level, _, promotions) ->
+        mk_typed_expression
+          ~expr:(RowVectorExpr (SignatureMismatch.promote_list es promotions))
+          ~ad_level ~type_:URowVector ~loc
     | Error (_, meta) ->
         Semantic_error.invalid_row_vector_types meta.loc meta.type_ |> error )
 

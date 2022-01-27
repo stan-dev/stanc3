@@ -142,7 +142,9 @@ let%expect_test "inline functions" =
           inline_sym1__ = 0;
           for(inline_sym2__ in 1:1) {
             FnPrint__(3);
-            FnPrint__(FnMakeRowVec__(FnMakeRowVec__(3, 2), FnMakeRowVec__(4, 6)));
+            FnPrint__(FnMakeRowVec__(FnMakeRowVec__(promote(3, real),
+                      promote(2, real)), FnMakeRowVec__(promote(4, real),
+                      promote(6, real))));
           }
           real inline_sym3__;
           data int inline_sym4__;
@@ -312,23 +314,51 @@ let%expect_test "list collapsing" =
                          (FunApp (CompilerInternal FnMakeRowVec)
                           (((pattern
                              (FunApp (CompilerInternal FnMakeRowVec)
-                              (((pattern (Lit Int 3))
+                              (((pattern
+                                 (Promotion
+                                  ((pattern (Lit Int 3))
+                                   (meta
+                                    ((type_ UInt) (loc <opaque>)
+                                     (adlevel DataOnly))))
+                                  UReal DataOnly))
                                 (meta
-                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                               ((pattern (Lit Int 2))
+                                 ((type_ UReal) (loc <opaque>)
+                                  (adlevel DataOnly))))
+                               ((pattern
+                                 (Promotion
+                                  ((pattern (Lit Int 2))
+                                   (meta
+                                    ((type_ UInt) (loc <opaque>)
+                                     (adlevel DataOnly))))
+                                  UReal DataOnly))
                                 (meta
-                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                 ((type_ UReal) (loc <opaque>)
+                                  (adlevel DataOnly)))))))
                             (meta
                              ((type_ URowVector) (loc <opaque>)
                               (adlevel DataOnly))))
                            ((pattern
                              (FunApp (CompilerInternal FnMakeRowVec)
-                              (((pattern (Lit Int 4))
+                              (((pattern
+                                 (Promotion
+                                  ((pattern (Lit Int 4))
+                                   (meta
+                                    ((type_ UInt) (loc <opaque>)
+                                     (adlevel DataOnly))))
+                                  UReal DataOnly))
                                 (meta
-                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                               ((pattern (Lit Int 6))
+                                 ((type_ UReal) (loc <opaque>)
+                                  (adlevel DataOnly))))
+                               ((pattern
+                                 (Promotion
+                                  ((pattern (Lit Int 6))
+                                   (meta
+                                    ((type_ UInt) (loc <opaque>)
+                                     (adlevel DataOnly))))
+                                  UReal DataOnly))
                                 (meta
-                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                 ((type_ UReal) (loc <opaque>)
+                                  (adlevel DataOnly)))))))
                             (meta
                              ((type_ URowVector) (loc <opaque>)
                               (adlevel DataOnly)))))))

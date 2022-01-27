@@ -20,7 +20,7 @@ type signature_error =
   * function_mismatch
 
 (** Indicate a promotion by the resulting type *)
-type promotions = private
+type promotions =
   | None
   | IntToRealPromotion
   | IntToComplexPromotion
