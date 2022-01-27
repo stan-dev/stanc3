@@ -259,13 +259,13 @@ let check_variable cf loc tenv id =
 let get_consistent_types ad_level type_ es =
   let rec promotion ty ty2 =
     match (ty, ty2) with
-    | UnsizedType.(UReal, UInt) -> SignatureMismatch.IntToRealPromotion
+    | UnsizedType.(UReal, UInt) -> Promotion.IntToRealPromotion
     | UnsizedType.(UComplex, UInt) -> IntToComplexPromotion
     | UnsizedType.(UComplex, UReal) -> RealToComplexPromotion
     | UArray nt1, UArray nt2 -> promotion nt1 nt2
-    | t1, t2 when t1 = t2 -> None
+    | t1, t2 when t1 = t2 -> NoPromotion
     (* should be guaranteed to never happen by the below fold *)
-    | _, _ -> None in
+    | _, _ -> NoPromotion in
   let f state e =
     match state with
     | Error e -> Error e
@@ -291,7 +291,7 @@ let check_array_expr loc es =
     | Ok (ad_level, type_, promotions) ->
         let type_ = UnsizedType.UArray type_ in
         mk_typed_expression
-          ~expr:(ArrayExpr (SignatureMismatch.promote_list es promotions))
+          ~expr:(ArrayExpr (Promotion.promote_list es promotions))
           ~ad_level ~type_ ~loc )
 
 let check_rowvector loc es =
@@ -300,7 +300,7 @@ let check_rowvector loc es =
     match get_consistent_types ad_level URowVector es with
     | Ok (ad_level, _, promotions) ->
         mk_typed_expression
-          ~expr:(RowVectorExpr (SignatureMismatch.promote_list es promotions))
+          ~expr:(RowVectorExpr (Promotion.promote_list es promotions))
           ~ad_level ~type_:UMatrix ~loc
     | Error (_, meta) ->
         Semantic_error.invalid_matrix_types meta.loc meta.type_ |> error )
@@ -308,7 +308,7 @@ let check_rowvector loc es =
     match get_consistent_types DataOnly UReal es with
     | Ok (ad_level, _, promotions) ->
         mk_typed_expression
-          ~expr:(RowVectorExpr (SignatureMismatch.promote_list es promotions))
+          ~expr:(RowVectorExpr (Promotion.promote_list es promotions))
           ~ad_level ~type_:URowVector ~loc
     | Error (_, meta) ->
         Semantic_error.invalid_row_vector_types meta.loc meta.type_ |> error )
@@ -465,7 +465,7 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
             (mk_fun_app ~is_cond_dist
                ( fnk (Fun_kind.suffix_from_name id.name)
                , id
-               , SignatureMismatch.promote_list es promotions ) )
+               , Promotion.promote_list es promotions ) )
           ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
     | AmbiguousMatch sigs ->
         Semantic_error.ambiguous_function_promotion loc id.name
@@ -567,9 +567,7 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
         mk_typed_expression
           ~expr:
             (mk_fun_app ~is_cond_dist
-               ( StanLib FnPlain
-               , id
-               , SignatureMismatch.promote_list tes promotions ) )
+               (StanLib FnPlain, id, Promotion.promote_list tes promotions) )
           ~ad_level:(expr_ad_lub tes) ~type_:UnsizedType.UReal ~loc
     | AmbiguousMatch ps ->
         Semantic_error.ambiguous_function_promotion loc fname.name None ps
@@ -616,9 +614,7 @@ and check_variadic_ode ~is_cond_dist loc cf tenv id tes =
         mk_typed_expression
           ~expr:
             (mk_fun_app ~is_cond_dist
-               ( StanLib FnPlain
-               , id
-               , SignatureMismatch.promote_list tes promotions ) )
+               (StanLib FnPlain, id, Promotion.promote_list tes promotions) )
           ~ad_level:(expr_ad_lub tes)
           ~type_:Stan_math_signatures.variadic_ode_return_type ~loc
     | AmbiguousMatch ps ->
@@ -664,9 +660,7 @@ and check_variadic_dae ~is_cond_dist loc cf tenv id tes =
         mk_typed_expression
           ~expr:
             (mk_fun_app ~is_cond_dist
-               ( StanLib FnPlain
-               , id
-               , SignatureMismatch.promote_list tes promotions ) )
+               (StanLib FnPlain, id, Promotion.promote_list tes promotions) )
           ~ad_level:(expr_ad_lub tes)
           ~type_:Stan_math_signatures.variadic_dae_return_type ~loc
     | AmbiguousMatch ps ->
@@ -873,7 +867,7 @@ let check_nrfn loc tenv id es =
             (NRFunApp
                ( fnk (Fun_kind.suffix_from_name id.name)
                , id
-               , SignatureMismatch.promote_list es promotions ) )
+               , Promotion.promote_list es promotions ) )
           ~return_type:NoReturnType ~loc
     | UniqueMatch (ReturnType _, _, _) ->
         Semantic_error.nonreturning_fn_expected_returning_found loc id.name
@@ -917,7 +911,7 @@ let check_assignment_operator loc assop lhs rhs =
       SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_
         rhs.emeta.type_
     with
-    | Ok promotion -> SignatureMismatch.promote rhs promotion
+    | Ok promotion -> Promotion.promote rhs promotion
     | Error _ -> err Operator.Equals |> error )
   | OperatorAssign op -> (
       let args = List.map ~f:arg_type [Ast.expr_of_lvalue lhs; rhs] in
@@ -1390,7 +1384,7 @@ and check_var_decl_initial_value loc cf tenv id init_val_opt =
         SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_
           rhs.emeta.type_
       with
-      | Ok promotion -> Some (SignatureMismatch.promote rhs promotion)
+      | Ok promotion -> Some (Promotion.promote rhs promotion)
       | Error _ ->
           Semantic_error.illtyped_assignment loc Equals lhs.lmeta.type_
             rhs.emeta.type_
