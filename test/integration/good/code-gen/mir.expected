@@ -5042,15 +5042,19 @@
    ((pattern
      (Assignment (x_mul_ind (UArray UReal) ())
       ((pattern
-        (Promotion
-         ((pattern
-           (FunApp (CompilerInternal FnMakeArray)
-            (((pattern (Lit Int 1))
+        (FunApp (CompilerInternal FnMakeArray)
+         (((pattern
+            (Promotion
+             ((pattern (Lit Int 1))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             UReal DataOnly))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern
+            (Promotion
              ((pattern (Lit Int 2))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
-         UReal DataOnly))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             UReal DataOnly))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern

@@ -257,16 +257,6 @@ let check_variable cf loc tenv id =
   mk_typed_expression ~expr:(Variable id) ~ad_level ~type_ ~loc
 
 let get_consistent_types ad_level type_ es =
-  let rec promotion (ad, ty) (ad2, ty2) =
-    match (ty, ty2) with
-    | UnsizedType.(UReal, UReal) when ad <> ad2 -> Promotion.RealToVarPromotion
-    | UnsizedType.(UReal, UInt) -> IntToRealPromotion
-    | UnsizedType.(UComplex, UInt) -> IntToComplexPromotion
-    | UnsizedType.(UComplex, UReal) -> RealToComplexPromotion
-    | UArray nt1, UArray nt2 -> promotion (ad, nt1) (ad2, nt2)
-    | t1, t2 when t1 = t2 -> NoPromotion
-    (* should be guaranteed to never happen by the below fold *)
-    | _, _ -> NoPromotion in
   let f state e =
     match state with
     | Error e -> Error e
@@ -280,7 +270,10 @@ let get_consistent_types ad_level type_ es =
         | None -> Error (ty, e.emeta) ) in
   List.fold ~init:(Ok (ad_level, type_)) ~f es
   |> Result.map ~f:(fun (ad, ty) ->
-         (ad, ty, List.map ~f:(promotion (ad, ty)) (get_arg_types es)) )
+         let promotions =
+           List.map (get_arg_types es)
+             ~f:(Promotion.get_type_promotion_exn (ad, ty)) in
+         (ad, ty, promotions) )
 
 let check_array_expr loc es =
   match es with
@@ -912,7 +905,7 @@ let check_assignment_operator loc assop lhs rhs =
       SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_
         rhs.emeta.type_
     with
-    | Ok promotion -> Promotion.promote rhs promotion
+    | Ok p -> Promotion.promote rhs p
     | Error _ -> err Operator.Equals |> error )
   | OperatorAssign op -> (
       let args = List.map ~f:arg_type [Ast.expr_of_lvalue lhs; rhs] in
@@ -1385,7 +1378,7 @@ and check_var_decl_initial_value loc cf tenv id init_val_opt =
         SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_
           rhs.emeta.type_
       with
-      | Ok promotion -> Some (Promotion.promote rhs promotion)
+      | Ok p -> Some (Promotion.promote rhs p)
       | Error _ ->
           Semantic_error.illtyped_assignment loc Equals lhs.lmeta.type_
             rhs.emeta.type_

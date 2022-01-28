@@ -306,10 +306,9 @@ let pp_bool_expr ppf expr =
 
 let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
   (* ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) = *)
-  let rec remove_promotions (e : 'a Expr.Fixed.t) =
-    (* assignment handles promotion internally, don't do it twice *)
-    match e.pattern with Promotion (e, _, _) -> remove_promotions e | _ -> e
-  in
+  let remove_promotions (e : 'a Expr.Fixed.t) =
+    (* assignment handles one level of promotion internally, don't do it twice *)
+    match e.pattern with Promotion (e, _, _) -> e | _ -> e in
   let pp_stmt_list = list ~sep:cut pp_statement in
   ( match pattern with
   | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()

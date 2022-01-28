@@ -128,9 +128,9 @@ let rec check_same_type depth t1 t2 =
   let wrap_func = Result.map_error ~f:(fun e -> TypeMismatch (t1, t2, Some e)) in
   match (t1, t2) with
   | t1, t2 when t1 = t2 -> Ok Promotion.NoPromotion
-  | UnsizedType.(UReal, UInt) when depth < 1 -> Ok IntToRealPromotion
-  | UnsizedType.(UComplex, UInt) when depth < 1 -> Ok IntToComplexPromotion
-  | UnsizedType.(UComplex, UReal) when depth < 1 -> Ok RealToComplexPromotion
+  | UnsizedType.(UReal, UInt) when depth < 1 -> Ok IntToReal
+  | UnsizedType.(UComplex, UInt) when depth < 1 -> Ok IntToComplex
+  | UnsizedType.(UComplex, UReal) when depth < 1 -> Ok RealToComplex
   (* Arrays: Try to recursively promote, but make sure the error is for these types,
      not the recursive call *)
   | UArray nt1, UArray nt2 ->
