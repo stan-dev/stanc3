@@ -1,11 +1,11 @@
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined bernoulli.stan
-#include </pre/Columbia_copyright.stan>
-#include </pre/license.stan>
+#include /pre/Columbia_copyright.stan
+#include /pre/license.stan
 
 // GLM for a Bernoulli outcome
 functions {
-  #include </functions/common_functions.stan>
-  #include </functions/bernoulli_likelihoods.stan>
+  #include /functions/common_functions.stan
+  #include /functions/bernoulli_likelihoods.stan
 }
 data {
   // dimensions
@@ -32,7 +32,7 @@ data {
   // where the non-zeros start in each row of X1
   array[dense_X ? 0 : N[2] + 1] int<lower=0, upper=rows(w_X1) + 1> u_X1;
   // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept
-  #include </data/data_glm.stan>
+  #include /data/data_glm.stan
   
   int<lower=0> K_smooth;
   matrix[N[1], K_smooth] S0;
@@ -52,10 +52,10 @@ data {
   vector[has_offset ? N[2] : 0] offset1;
   
   // declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_{mean, scale, df}_for_aux
-  #include </data/hyperparameters.stan>
+  #include /data/hyperparameters.stan
   
   // declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization
-  #include </data/glmer_stuff.stan>
+  #include /data/glmer_stuff.stan
   
   // more glmer stuff
   array[2] int<lower=0> num_non_zero; // number of non-zero elements in the Z matrices
@@ -82,7 +82,7 @@ transformed data {
   array[clogit ? J : 0] int<lower=0> failures;
   array[clogit ? J : 0] int<lower=0> observations;
   // defines hs, len_z_T, len_var_group, delta, pos
-  #include </tdata/tdata_glm.stan>
+  #include /tdata/tdata_glm.stan
   
   for (j in 1 : J) {
     successes[j] = 0;
@@ -100,11 +100,11 @@ transformed data {
 parameters {
   array[has_intercept] real<upper=(link == 4 ? 0.0 : positive_infinity())> gamma;
   // declares z_beta, global, local, z_b, z_T, rho, zeta, tau
-  #include </parameters/parameters_glm.stan>
+  #include /parameters/parameters_glm.stan
 }
 transformed parameters {
   // defines beta, b, theta_L
-  #include </tparameters/tparameters_glm.stan>
+  #include /tparameters/tparameters_glm.stan
   
   if (t > 0) {
     if (special_case) {
@@ -126,7 +126,7 @@ transformed parameters {
 }
 model {
   // defines eta0, eta1
-  #include </model/make_eta_bern.stan>
+  #include /model/make_eta_bern.stan
   
   if (has_intercept == 1) {
     if (link != 4) {
@@ -149,7 +149,7 @@ model {
     target += dot_product(weights1, pw_bern(1, eta1, link));
   }
   
-  #include </model/priors_glm.stan>
+  #include /model/priors_glm.stan
   
   if (t > 0) {
     real dummy = decov_lp(z_b, z_T, rho, zeta, tau, regularization, delta,
@@ -171,7 +171,7 @@ generated quantities {
     vector[N[1]] pi0;
     vector[N[2]] pi1;
     // defines eta0, eta1
-    #include </model/make_eta_bern.stan>
+    #include /model/make_eta_bern.stan
     
     if (has_intercept == 1) {
       if (link != 4) {
@@ -201,35 +201,35 @@ generated quantities {
 }
 
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined binomial.stan
-#include </pre/Columbia_copyright.stan>
-#include </pre/license.stan>
+#include /pre/Columbia_copyright.stan
+#include /pre/license.stan
 
 // GLM for a binomial outcome
 functions {
-  #include </functions/common_functions.stan>
-  #include </functions/binomial_likelihoods.stan>
+  #include /functions/common_functions.stan
+  #include /functions/binomial_likelihoods.stan
 }
 data {
   // declares N, K, X, xbar, dense_X, nnz_x, w_x, v_x, u_x
-  #include </data/NKX.stan>
+  #include /data/NKX.stan
   
   array[N] int<lower=0> y; // outcome: number of successes
   array[N] int<lower=0> trials; // number of trials
   // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept
-  #include </data/data_glm.stan>
+  #include /data/data_glm.stan
   
   // declares has_weights, weights, has_offset, offset_
-  #include </data/weights_offset.stan>
+  #include /data/weights_offset.stan
   
   int<lower=5, upper=5> family;
   // declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_scale_{mean, scale, df}_for_aux
-  #include </data/hyperparameters.stan>
+  #include /data/hyperparameters.stan
   
   // declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization
-  #include </data/glmer_stuff.stan>
+  #include /data/glmer_stuff.stan
   
   // declares num_not_zero, w, v, u
-  #include </data/glmer_stuff2.stan>
+  #include /data/glmer_stuff2.stan
 }
 transformed data {
   real aux = not_a_number();
@@ -237,16 +237,16 @@ transformed data {
                                                          special_case ? t : 0,
                                                          v);
   // defines hs, len_z_T, len_var_group, delta, pos
-  #include </tdata/tdata_glm.stan>
+  #include /tdata/tdata_glm.stan
 }
 parameters {
   array[has_intercept] real<upper=(link == 4 ? 0.0 : positive_infinity())> gamma;
   // declares z_beta, global, local, z_b, z_T, rho, zeta, tau
-  #include </parameters/parameters_glm.stan>
+  #include /parameters/parameters_glm.stan
 }
 transformed parameters {
   // defines beta, b, theta_L
-  #include </tparameters/tparameters_glm.stan>
+  #include /tparameters/tparameters_glm.stan
   
   if (t > 0) {
     if (special_case == 1) {
@@ -267,10 +267,10 @@ transformed parameters {
   }
 }
 model {
-  #include </model/make_eta.stan>
+  #include /model/make_eta.stan
   
   if (t > 0) {
-    #include </model/eta_add_Zb.stan>
+    #include /model/eta_add_Zb.stan
   }
   if (has_intercept == 1) {
     if (link != 4) 
@@ -278,7 +278,7 @@ model {
     else 
       eta += gamma[1] - max(eta);
   } else {
-    #include </model/eta_no_intercept.stan>
+    #include /model/eta_no_intercept.stan
   }
   
   // Log-likelihood
@@ -288,7 +288,7 @@ model {
   } else if (prior_PD == 0) 
     target += dot_product(weights, pw_binom(y, trials, eta, link));
   
-  #include </model/priors_glm.stan>
+  #include /model/priors_glm.stan
   
   if (t > 0) {
     real dummy = decov_lp(z_b, z_T, rho, zeta, tau, regularization, delta,
@@ -308,10 +308,10 @@ generated quantities {
   
   if (compute_mean_PPD) {
     vector[N] pi;
-    #include </model/make_eta.stan>
+    #include /model/make_eta.stan
     
     if (t > 0) {
-      #include </model/eta_add_Zb.stan>
+      #include /model/eta_add_Zb.stan
     }
     if (has_intercept == 1) {
       if (link != 4) 
@@ -322,7 +322,7 @@ generated quantities {
         alpha[1] -= shift;
       }
     } else {
-      #include </model/eta_no_intercept.stan>
+      #include /model/eta_no_intercept.stan
     }
     
     pi = linkinv_binom(eta, link);
@@ -333,15 +333,15 @@ generated quantities {
 }
 
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined continuous.stan
-#include </pre/Columbia_copyright.stan>
-#include </pre/license.stan>
+#include /pre/Columbia_copyright.stan
+#include /pre/license.stan
 
 // GLM for a Gaussian, Gamma, inverse Gaussian, or Beta outcome
 functions {
-  #include </functions/common_functions.stan>
-  #include </functions/continuous_likelihoods.stan>
+  #include /functions/common_functions.stan
+  #include /functions/continuous_likelihoods.stan
   
-  #include </functions/SSfunctions.stan>
+  #include /functions/SSfunctions.stan
   
   /** 
   * test function for csr_matrix_times_vector
@@ -361,7 +361,7 @@ functions {
 }
 data {
   // declares N, K, X, xbar, dense_X, nnz_x, w_x, v_x, u_x
-  #include </data/NKX.stan>
+  #include /data/NKX.stan
   
   int<lower=0> len_y; // length of y
   real lb_y; // lower bound on y
@@ -369,20 +369,20 @@ data {
   vector<lower=lb_y, upper=ub_y>[len_y] y; // continuous outcome
   int<lower=1, upper=4> family; // 1 gaussian, 2 gamma, 3 inv-gaussian, 4 beta
   // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept
-  #include </data/data_glm.stan>
+  #include /data/data_glm.stan
   
   // declares has_weights, weights, has_offset, offset_
-  #include </data/weights_offset.stan>
+  #include /data/weights_offset.stan
   
   // declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_{mean, scale, df}_for_aux
-  #include </data/hyperparameters.stan>
+  #include /data/hyperparameters.stan
   
   // declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization
-  #include </data/glmer_stuff.stan>
+  #include /data/glmer_stuff.stan
   
   // declares num_not_zero, w, v, u
-  #include </data/glmer_stuff2.stan>
-  #include </data/data_betareg.stan>
+  #include /data/glmer_stuff2.stan
+  #include /data/data_betareg.stan
   
   int<lower=0, upper=10> SSfun; // nonlinear function indicator, 0 for identity
   vector[SSfun > 0 ? len_y : 0] input;
@@ -397,10 +397,10 @@ transformed data {
                                                              : 0, v);
   int<lower=0> hs_z; // for tdata_betareg.stan
   // defines hs, len_z_T, len_var_group, delta, is_continuous, pos
-  #include </tdata/tdata_glm.stan>
+  #include /tdata/tdata_glm.stan
   
   // defines hs_z
-  #include </tdata/tdata_betareg.stan>
+  #include /tdata/tdata_betareg.stan
   
   is_continuous = 1;
   
@@ -413,10 +413,10 @@ parameters {
   array[has_intercept] real<lower=make_lower(family, link),
                             upper=make_upper(family, link)> gamma;
   // declares z_beta, global, local, z_b, z_T, rho, zeta, tau
-  #include </parameters/parameters_glm.stan>
+  #include /parameters/parameters_glm.stan
   
   real<lower=0> aux_unscaled; // interpretation depends on family!
-  #include </parameters/parameters_betareg.stan>
+  #include /parameters/parameters_betareg.stan
 }
 transformed parameters {
   // aux has to be defined first in the hs case
@@ -427,8 +427,8 @@ transformed parameters {
   
   vector[z_dim] omega; // used in tparameters_betareg.stan
   // defines beta, b, theta_L
-  #include </tparameters/tparameters_glm.stan>
-  #include </tparameters/tparameters_betareg.stan>
+  #include /tparameters/tparameters_glm.stan
+  #include /tparameters/tparameters_betareg.stan
   
   if (prior_dist_for_aux == 0)  // none
     aux = aux_unscaled;
@@ -458,10 +458,10 @@ transformed parameters {
 }
 model {
   vector[N] eta_z; // beta regression linear predictor for phi
-  #include </model/make_eta.stan>
+  #include /model/make_eta.stan
   
   if (t > 0) {
-    #include </model/eta_add_Zb.stan>
+    #include /model/eta_add_Zb.stan
   }
   if (has_intercept == 1) {
     if ((family == 1 || link == 2) || (family == 4 && link != 5)) 
@@ -471,7 +471,7 @@ model {
     else 
       eta += gamma[1] - min(eta);
   } else {
-    #include </model/eta_no_intercept.stan>
+    #include /model/eta_no_intercept.stan
   }
   
   if (SSfun > 0) {
@@ -509,7 +509,7 @@ model {
     }
   } else if (has_weights == 0 && prior_PD == 0) {
     // unweighted log-likelihoods
-    #include </model/make_eta_z.stan>
+    #include /model/make_eta_z.stan
     
     // adjust eta_z according to links
     if (has_intercept_z == 1) {
@@ -520,7 +520,7 @@ model {
       }
     } else {
       // has_intercept_z == 0
-      #include </model/eta_z_no_intercept.stan>
+      #include /model/eta_z_no_intercept.stan
     }
     if (family == 1) {
       if (link == 1) 
@@ -575,8 +575,8 @@ model {
       target += exponential_lpdf(aux_unscaled | 1);
   }
   
-  #include </model/priors_glm.stan>
-  #include </model/priors_betareg.stan>
+  #include /model/priors_glm.stan
+  #include /model/priors_betareg.stan
   
   if (t > 0) {
     real dummy = decov_lp(z_b, z_T, rho, zeta, tau, regularization, delta,
@@ -600,10 +600,10 @@ generated quantities {
   
   if (compute_mean_PPD) {
     vector[N] eta_z;
-    #include </model/make_eta.stan>
+    #include /model/make_eta.stan
     
     if (t > 0) {
-      #include </model/eta_add_Zb.stan>
+      #include /model/eta_add_Zb.stan
     }
     if (has_intercept == 1) {
       if (make_lower(family, link) == negative_infinity()
@@ -619,9 +619,9 @@ generated quantities {
         eta += gamma[1] - min_eta;
       }
     } else {
-      #include </model/eta_no_intercept.stan>
+      #include /model/eta_no_intercept.stan
     }
-    #include </model/make_eta_z.stan>
+    #include /model/make_eta_z.stan
     
     // adjust eta_z according to links
     if (has_intercept_z == 1) {
@@ -633,7 +633,7 @@ generated quantities {
       }
     } else {
       // has_intercept_z == 0
-      #include </model/eta_z_no_intercept.stan>
+      #include /model/eta_z_no_intercept.stan
     }
     
     if (SSfun > 0) {
@@ -712,34 +712,34 @@ generated quantities {
 }
 
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined count.stan
-#include </pre/Columbia_copyright.stan>
-#include </pre/license.stan>
+#include /pre/Columbia_copyright.stan
+#include /pre/license.stan
 
 // GLM for a count outcome
 functions {
-  #include </functions/common_functions.stan>
-  #include </functions/count_likelihoods.stan>
+  #include /functions/common_functions.stan
+  #include /functions/count_likelihoods.stan
 }
 data {
   // declares N, K, X, xbar, dense_X, nnz_x, w_x, v_x, u_x
-  #include </data/NKX.stan>
+  #include /data/NKX.stan
   
   array[N] int<lower=0> y; // count outcome
   // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept
-  #include </data/data_glm.stan>
+  #include /data/data_glm.stan
   
   // declares has_weights, weights, has_offset, offset_
-  #include </data/weights_offset.stan>
+  #include /data/weights_offset.stan
   
   int<lower=6, upper=7> family; // 6 poisson, 7 neg-binom, (8 poisson with gamma noise at some point?)
   // declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_{mean, scale, df}_for_aux
-  #include </data/hyperparameters.stan>
+  #include /data/hyperparameters.stan
   
   // declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization
-  #include </data/glmer_stuff.stan>
+  #include /data/glmer_stuff.stan
   
   // declares num_not_zero, w, v, u
-  #include </data/glmer_stuff2.stan>
+  #include /data/glmer_stuff2.stan
 }
 transformed data {
   real poisson_max = pow(2.0, 30.0);
@@ -747,12 +747,12 @@ transformed data {
                                                          special_case ? t : 0,
                                                          v);
   // defines hs, len_z_T, len_var_group, delta, pos
-  #include </tdata/tdata_glm.stan>
+  #include /tdata/tdata_glm.stan
 }
 parameters {
   array[has_intercept] real<lower=(link == 1 ? negative_infinity() : 0.0)> gamma;
   // declares z_beta, global, local, z_b, z_T, rho, zeta, tau
-  #include </parameters/parameters_glm.stan>
+  #include /parameters/parameters_glm.stan
   
   array[family > 6] real<lower=0> aux_unscaled;
   array[family == 8] vector<lower=0>[N] noise; // do not store this
@@ -760,7 +760,7 @@ parameters {
 transformed parameters {
   real aux = negative_infinity(); // be careful with this in the family = 6 case
   // defines beta, b, theta_L
-  #include </tparameters/tparameters_glm.stan>
+  #include /tparameters/tparameters_glm.stan
   
   if (family > 6 && (prior_dist_for_aux == 0 || prior_scale_for_aux <= 0)) 
     aux = aux_unscaled[1];
@@ -794,10 +794,10 @@ transformed parameters {
   }
 }
 model {
-  #include </model/make_eta.stan>
+  #include /model/make_eta.stan
   
   if (t > 0) {
-    #include </model/eta_add_Zb.stan>
+    #include /model/eta_add_Zb.stan
   }
   if (has_intercept == 1) {
     if (link == 1) 
@@ -805,7 +805,7 @@ model {
     else 
       eta += gamma[1] - min(eta);
   } else {
-    #include </model/eta_no_intercept.stan>
+    #include /model/eta_no_intercept.stan
   }
   
   if (family == 8) {
@@ -849,7 +849,7 @@ model {
       target += exponential_lpdf(aux_unscaled | 1);
   }
   
-  #include </model/priors_glm.stan>
+  #include /model/priors_glm.stan
   
   // Log-prior for noise
   if (family == 8) 
@@ -873,10 +873,10 @@ generated quantities {
   
   if (compute_mean_PPD) {
     vector[N] nu;
-    #include </model/make_eta.stan>
+    #include /model/make_eta.stan
     
     if (t > 0) {
-      #include </model/eta_add_Zb.stan>
+      #include /model/eta_add_Zb.stan
     }
     if (has_intercept == 1) {
       if (link == 1) 
@@ -887,7 +887,7 @@ generated quantities {
         alpha[1] -= shift;
       }
     } else {
-      #include </model/eta_no_intercept.stan>
+      #include /model/eta_no_intercept.stan
     }
     
     if (family == 8) {
@@ -924,41 +924,41 @@ generated quantities {
 }
 
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined jm.stan
-#include </pre/Columbia_copyright.stan>
-#include </pre/Brilleman_copyright.stan>
-#include </pre/license.stan>
+#include /pre/Columbia_copyright.stan
+#include /pre/Brilleman_copyright.stan
+#include /pre/license.stan
 
 // Shared parameter joint model
 functions {
-  #include </functions/common_functions.stan>
-  #include </functions/bernoulli_likelihoods.stan>
+  #include /functions/common_functions.stan
+  #include /functions/bernoulli_likelihoods.stan
   
-  #include </functions/binomial_likelihoods.stan>
+  #include /functions/binomial_likelihoods.stan
   
-  #include </functions/continuous_likelihoods.stan>
+  #include /functions/continuous_likelihoods.stan
   
-  #include </functions/count_likelihoods.stan>
+  #include /functions/count_likelihoods.stan
   
-  #include </functions/mvmer_functions.stan>
+  #include /functions/mvmer_functions.stan
   
-  #include </functions/jm_functions.stan>
+  #include /functions/jm_functions.stan
 }
 data {
   // declares: M, has_aux, has_weights, resp_type, intercept_type,
   //   yNobs, yNeta, yK, t, p, l, q, len_theta_L, bN1, bK1, bK1_len
   //   bK1_idx, bN2, bK2, bK2_len, bK2_idx
-  #include </data/dimensions_mvmer.stan>
+  #include /data/dimensions_mvmer.stan
   
   // declares: yInt{1,2,3}, yReal{1,2,3}, yX{1,2,3}, yXbar{1,2,3},
   //   family, link, y{1,2,3}_Z{1,2}, y{1,2,3}_Z{1,2}_id,
   //   y_prior_dist{_for_intercept,_for_aux,_for_cov}, prior_PD
-  #include </data/data_mvmer.stan>
+  #include /data/data_mvmer.stan
   
   // declares: e_prior_dist{_for_intercept,_for_aux},
   //   Npat, Nevents, qnodes, Npat_times_qnodes, qwts,
   //   basehaz_{type,df,X}, nrow_e_Xq, e_has_intercept, nrow_e_Xq,
   //   e_{K,Xq,times,xbar,weights,weights_rep}
-  #include </data/data_event.stan>
+  #include /data/data_event.stan
   
   // declares: a_{K,xbar}, a_prior_dist, assoc, assoc_uses, has_assoc,
   //   {sum_}size_which_b, which_b_zindex, {sum_}size_which_coef,
@@ -967,15 +967,15 @@ data {
   //   nrow_y_Xq{_auc}, auc_{qnodes,qwts}, has_grp, grp_assoc, grp_idx,
   //   y{1,2,3}_xq_{eta,eps,auc}, y{1,2,3}_z{1,2}q_{eta,eps,auc},
   //   y{1,2,3}_z{1,2}q_id_{eta,eps,auc}
-  #include </data/data_assoc.stan>
+  #include /data/data_assoc.stan
   
   // declares: e_prior_{mean,scale,df}{_for_intercept,for_aux},
   //   e_global_prior_{scale,df}
-  #include </data/hyperparameters_mvmer.stan>
-  #include </data/hyperparameters_event.stan>
+  #include /data/hyperparameters_mvmer.stan
+  #include /data/hyperparameters_event.stan
   
   // declares: a_prior_{mean,scale,df}, a_global_prior_{scale,df}
-  #include </data/hyperparameters_assoc.stan>
+  #include /data/hyperparameters_assoc.stan
 }
 transformed data {
   int<lower=0> e_hs = get_nvars_for_hs(e_prior_dist);
@@ -983,20 +983,20 @@ transformed data {
   
   // declares: yHs{1,2,3}, len_{z_T,var_group,rho}, pos, delta,
   //   bCov{1,2}_idx, {sqrt,log,sum_log}_y{1,2,3},
-  #include </tdata/tdata_mvmer.stan>
+  #include /tdata/tdata_mvmer.stan
 }
 parameters {
   // declares: yGamma{1,2,3}, z_yBeta{1,2,3}, z_b, z_T, rho,
   //   zeta, tau, bSd{1,2}, z_bMat{1,2}, bCholesky{1,2},
   //   yAux{1,2,3}_unscaled, yGlobal{1,2,3}, yLocal{1,2,3},
   //   yOol{1,2,3}, yMix{1,2,3}
-  #include </parameters/parameters_mvmer.stan>
+  #include /parameters/parameters_mvmer.stan
   
   // declares e_{gamma,z_beta,aux_unscaled,global,local,mix,ool}
-  #include </parameters/parameters_event.stan>
+  #include /parameters/parameters_event.stan
   
   // declares a_{z_beta,global,local,mix,ool}
-  #include </parameters/parameters_assoc.stan>
+  #include /parameters/parameters_assoc.stan
 }
 transformed parameters {
   vector[e_K] e_beta; // log hazard ratios
@@ -1007,7 +1007,7 @@ transformed parameters {
   
   // declares and defines: yBeta{1,2,3}, yAux{1,2,3}, yAuxMaximum,
   //   theta_L, bMat{1,2}
-  #include </tparameters/tparameters_mvmer.stan>
+  #include /tparameters/tparameters_mvmer.stan
   
   //---- Parameters for event submodel
   e_beta = make_beta(e_z_beta, e_prior_dist, e_prior_mean, e_prior_scale,
@@ -1023,7 +1023,7 @@ transformed parameters {
 }
 model {
   //---- Log likelihoods for longitudinal submodels
-  #include </model/mvmer_lp.stan>
+  #include /model/mvmer_lp.stan
   
   {
     //---- Log likelihood for event submodel (GK quadrature)
@@ -1038,19 +1038,19 @@ model {
     if (assoc == 1) {
       // declares y_eta_q{_eps,_lag,_auc}, y_eta_qwide{_eps,_lag,_auc},
       //   y_q_wide{_eps,_lag,_auc}, mark{2,3}
-      #include </model/assoc_evaluate.stan>
+      #include /model/assoc_evaluate.stan
     }
     
     {
       // declares log_basehaz, log_{haz_q,haz_etimes,surv_etimes,event}
       // increments target with event log-lik
-      #include </model/event_lp.stan>
+      #include /model/event_lp.stan
     }
   }
   
   //---- Log priors
   // increments target with mvmer priors
-  #include </model/priors_mvmer.stan>
+  #include /model/priors_mvmer.stan
   
   beta_lp(e_z_beta, e_prior_dist, e_prior_scale, e_prior_df,
           e_global_prior_df, e_local, e_global, e_mix, e_ool, e_slab_df,
@@ -1069,7 +1069,7 @@ generated quantities {
   real e_alpha; // transformed intercept for event submodel
   
   // declares and defines: mean_PPD, yAlpha{1,2,3}, b{1,2}, bCov{1,2}
-  #include </gqs/gen_quantities_mvmer.stan>
+  #include /gqs/gen_quantities_mvmer.stan
   
   // norm_const is a constant shift in log baseline hazard
   if (e_has_intercept == 1) 
@@ -1081,8 +1081,8 @@ generated quantities {
 }
 
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined lm.stan
-#include </pre/Columbia_copyright.stan>
-#include </pre/license.stan>
+#include /pre/Columbia_copyright.stan
+#include /pre/license.stan
 
 // GLM for a Gaussian outcome with no link function
 functions {
@@ -1211,74 +1211,74 @@ generated quantities {
 }
 
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined mvmer.stan
-#include </pre/Columbia_copyright.stan>
-#include </pre/Brilleman_copyright.stan>
-#include </pre/license.stan>
+#include /pre/Columbia_copyright.stan
+#include /pre/Brilleman_copyright.stan
+#include /pre/license.stan
 
 // Multivariate GLM with correlated group-specific terms
 functions {
-  #include </functions/common_functions.stan>
-  #include </functions/bernoulli_likelihoods.stan>
+  #include /functions/common_functions.stan
+  #include /functions/bernoulli_likelihoods.stan
   
-  #include </functions/binomial_likelihoods.stan>
+  #include /functions/binomial_likelihoods.stan
   
-  #include </functions/continuous_likelihoods.stan>
+  #include /functions/continuous_likelihoods.stan
   
-  #include </functions/count_likelihoods.stan>
+  #include /functions/count_likelihoods.stan
   
-  #include </functions/mvmer_functions.stan>
+  #include /functions/mvmer_functions.stan
 }
 data {
   // declares: M, has_aux, has_weights, resp_type, intercept_type,
   //   yNobs, yNeta, yK, t, p, l, q, len_theta_L, bN1, bK1, bK1_len
   //   bK1_idx, bN2, bK2, bK2_len, bK2_idx
-  #include </data/dimensions_mvmer.stan>
+  #include /data/dimensions_mvmer.stan
   
   // declares: yInt{1,2,3}, yReal{1,2,3}, yX{1,2,3}, yXbar{1,2,3},
   //   family, link, y{1,2,3}_Z{1,2}, y{1,2,3}_Z{1,2}_id,
   //   y_prior_dist{_for_intercept,_for_aux,_for_cov}, prior_PD
-  #include </data/data_mvmer.stan>
+  #include /data/data_mvmer.stan
   
   // declares: y_prior_{mean,scale,df}{1,2,3,_for_intercept,_for_aux}, 
   //   y_global_prior_{df,scale}, len_{concentration,regularization},
   //   b_prior_{shape,scale,concentration,regularization},
   //   b{1,2}_prior_{scale,df,regularization}
-  #include </data/hyperparameters_mvmer.stan>
+  #include /data/hyperparameters_mvmer.stan
 }
 transformed data {
   // declares: yHs{1,2,3}, len_{z_T,var_group,rho}, pos, delta,
   //   bCov{1,2}_idx, {sqrt,log,sum_log}_y{1,2,3},
-  #include </tdata/tdata_mvmer.stan>
+  #include /tdata/tdata_mvmer.stan
 }
 parameters {
   // declares: yGamma{1,2,3}, z_yBeta{1,2,3}, z_b, z_T, rho,
   //   zeta, tau, bSd{1,2}, z_bMat{1,2}, bCholesky{1,2},
   //   yAux{1,2,3}_unscaled, yGlobal{1,2,3}, yLocal{1,2,3}, 
   //   yOol{1,2,3}, yMix{1,2,3}
-  #include </parameters/parameters_mvmer.stan>
+  #include /parameters/parameters_mvmer.stan
 }
 transformed parameters {
   // declares and defines: yBeta{1,2,3}, yAux{1,2,3}, yAuxMaximum, 
   //   theta_L, bMat{1,2}
-  #include </tparameters/tparameters_mvmer.stan>
+  #include /tparameters/tparameters_mvmer.stan
 }
 model {
   // Log likelihoods
   // increments target with mvmer log liks
-  #include </model/mvmer_lp.stan>
+  #include /model/mvmer_lp.stan
   
   // Log priors
   // increments target with mvmer priors
-  #include </model/priors_mvmer.stan>
+  #include /model/priors_mvmer.stan
 }
 generated quantities {
   // declares and defines: mean_PPD, yAlpha{1,2,3}, b{1,2}, bCov{1,2}
-  #include </gqs/gen_quantities_mvmer.stan>
+  #include /gqs/gen_quantities_mvmer.stan
 }
 
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined polr.stan
-#include </pre/Columbia_copyright.stan>
-#include </pre/license.stan>
+#include /pre/Columbia_copyright.stan
+#include /pre/license.stan
 
 // GLM for an ordinal outcome with coherent priors
 functions {
@@ -1442,15 +1442,15 @@ functions {
 }
 data {
   // declares N, K, X, xbar, dense_X, nnz_x, w_x, v_x, u_x
-  #include </data/NKX.stan>
+  #include /data/NKX.stan
   
   int<lower=2> J; // number of outcome categories, which typically is > 2
   array[N] int<lower=1, upper=J> y; // ordinal outcome
   // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept
-  #include </data/data_glm.stan>
+  #include /data/data_glm.stan
   
   // declares has_weights, weights, has_offset, offset_
-  #include </data/weights_offset.stan>
+  #include /data/weights_offset.stan
   
   // hyperparameter values
   real<lower=0> regularization;
@@ -1491,7 +1491,7 @@ transformed parameters {
   }
 }
 model {
-  #include </model/make_eta.stan>
+  #include /model/make_eta.stan
   
   if (has_weights == 0 && prior_PD == 0) {
     // unweighted log-likelihoods
@@ -1534,7 +1534,7 @@ generated quantities {
   if (J == 2) 
     zeta *= -1.0;
   {
-    #include </model/make_eta.stan>
+    #include /model/make_eta.stan
     
     for (n in 1 : N) {
       int y_tilde;

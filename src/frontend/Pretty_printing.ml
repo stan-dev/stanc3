@@ -125,7 +125,7 @@ let pp_comment ppf
   match style with
   | `Block -> pf ppf "/*@[<v -2>%a@]*/" (list string) (trim_tail col_num lines)
   | `Line -> pf ppf "//%s" (List.hd_exn lines)
-  | `Include -> pf ppf "@[#include <%s>@]" (List.hd_exn lines)
+  | `Include -> pf ppf "@[#include %s@]" (List.hd_exn lines)
 
 let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
   let newline =
