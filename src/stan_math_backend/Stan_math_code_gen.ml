@@ -1036,7 +1036,9 @@ let pp_prog ppf (p : Program.Typed.t) =
   let pp_functor_decls ppf tbl =
     Hashtbl.iteri tbl ~f:(fun ~key ~data ->
         pf ppf "@[<v 2>%astruct %s {@,%aconst;@]@,};@."
-          (Fmt.option (Fmt.option pp_template_defaults))
+          (option
+             (option (fun ppf t ->
+                  pf ppf "template <%a>@ " pp_template_defaults t ) ) )
           (Option.map ~f:(fun x -> x.struct_template) (List.hd data))
           key
           (list ~sep:(any "const;@,") (fun ppf (ts, sign) ->
@@ -1048,7 +1050,9 @@ let pp_prog ppf (p : Program.Typed.t) =
   let pp_functors ppf tbl =
     Hashtbl.iter tbl ~f:(fun data ->
         List.iter data ~f:(fun {struct_template; defn; arg_templates; _} ->
-            pf ppf "%a%a%s@." (Fmt.option pp_template) struct_template
+            pf ppf "%a%a%s@."
+              (option (fun ppf t -> pf ppf "template <%a>@ " pp_template t))
+              struct_template
               (pp_templates ~defaults:false)
               arg_templates defn ) ) in
   pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %a@ %a@ %s@ %a@ %a@ }@ @]" version

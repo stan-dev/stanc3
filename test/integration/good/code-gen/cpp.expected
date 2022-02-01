@@ -25778,7 +25778,8 @@ static constexpr std::array<const char*, 26> locations_array__ =
  " (in 'reduce_sum_m1.stan', line 17, column 4 to column 39)",
  " (in 'reduce_sum_m1.stan', line 16, column 58 to line 18, column 3)"};
 
-bool propto__struct foo_lpdf_rsfunctor__ {
+template <bool propto__>
+  struct foo_lpdf_rsfunctor__ {
   template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
   stan::promote_args_t<T0__>
   operator()(const std::vector<T0__>& y_slice, const int& start,
@@ -25888,7 +25889,8 @@ template <bool propto__, typename T0__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-bool propto__template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <bool propto__>
+template <typename T0__, stan::require_stan_scalar_t<T0__>*>
 stan::promote_args_t<T0__>
 foo_lpdf_rsfunctor__<propto__>::operator()(const std::vector<T0__>& y_slice,
                                            const int& start, const int& end,
