@@ -304,7 +304,7 @@ let pp_fun_def ppf
     pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs ;
     Format.close_box () in
   let templates, templated_args = get_templates true `None in
-  pp_templates ~defaults:true ppf templates ;
+  pp_templates ~defaults:(Option.is_some fdbody) ppf templates ;
   pp_sig ppf (fdname, templated_args, `None) ;
   match fdbody with
   | None -> pf ppf ";@ "

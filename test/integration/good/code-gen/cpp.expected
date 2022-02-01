@@ -6992,9 +6992,9 @@ int foo(const int& n, std::ostream* pstream__) {
     }
     }
 template <typename T0__, typename T1__, typename T2__,
-          stan::require_stan_scalar_t<T0__>* = nullptr,
-          stan::require_stan_scalar_t<T1__>* = nullptr,
-          stan::require_stan_scalar_t<T2__>* = nullptr>
+          stan::require_stan_scalar_t<T0__>*,
+          stan::require_stan_scalar_t<T1__>*,
+          stan::require_stan_scalar_t<T2__>*>
   std::vector<stan::promote_args_t<T0__, T1__, T2__>>
   sho(const T0__& t, const std::vector<T1__>& y,
       const std::vector<T2__>& theta, const std::vector<double>& x,
