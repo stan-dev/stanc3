@@ -6,7 +6,7 @@ void foo(real x) {
 }
 // another line comment a
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. b.stanfunctions
-#include <a.stanfunctions> //include other functions
+#include a.stanfunctions //include other functions
 
 // line comment b
 /*weird block b*/
@@ -27,19 +27,19 @@ int baz(real z) {
 }
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. main.stan
 functions {
-  #include <b.stanfunctions>
-  #include <c.stanfunctions>
+  #include b.stanfunctions
+  #include c.stanfunctions
 }
 data {
   /* ... declarations ... */
 }
-#include <tdata.stan>
+#include tdata.stan
 model {
   x ~ bernoulli(0);
   if (1) {
     
   } else {
-    #include <tildes.inc>
+    #include tildes.inc
   }
 }
 generated quantities {
@@ -47,11 +47,11 @@ generated quantities {
   if (1) {
     
   } else {
-    #include <statements1.inc>
+    #include statements1.inc
   }
   
   if (1) {
-    #include <statements2.inc>
+    #include statements2.inc
   }
 }
 
