@@ -71,6 +71,20 @@ let maybe_templated_arg_types (args : Program.fun_arg_decl) =
       | true -> Some (sprintf "T%d__" i)
       | false -> None )
 
+let maybe_require_templates (names : string option list)
+    (args : Program.fun_arg_decl) =
+  let require_for_arg arg =
+    match trd3 arg with
+    | UnsizedType.URowVector -> "stan::require_row_vector_t"
+    | UVector -> "stan::require_col_vector_t"
+    | UMatrix -> "stan::require_eigen_matrix_dynamic_t"
+    (* NB: Not unwinding array types due to the way arrays of eigens are printed *)
+    | _ -> "stan::require_stan_scalar_t" in
+  List.map2_exn names args ~f:(fun name a ->
+      match name with
+      | Some t -> Some (str "%s<%s>* = nullptr" (require_for_arg a) t)
+      | None -> None )
+
 let return_arg_types (args : Program.fun_arg_decl) =
   List.mapi args ~f:(fun i ((_, _, ut) as a) ->
       if UnsizedType.is_eigen_type ut && arg_needs_template a then
@@ -175,7 +189,9 @@ let typename = ( ^ ) "typename "
   *)
 let get_templates_and_args exprs fdargs =
   let argtypetemplates = maybe_templated_arg_types fdargs in
+  let requireargtemplates = maybe_require_templates argtypetemplates fdargs in
   ( List.filter_opt argtypetemplates
+  , List.filter_opt requireargtemplates
   , if not exprs then
       List.map
         ~f:(fun a -> str "%a" pp_arg a)
@@ -234,9 +250,11 @@ let pp_fun_def ppf
     pf ppf "@ " in
   let pp_sig ppf (name, exprs, variadic) =
     Format.open_vbox 2 ;
-    let argtypetemplates, args = get_templates_and_args exprs fdargs in
+    let argtypetemplates, require_templates, args =
+      get_templates_and_args exprs fdargs in
     let templates =
-      List.(map ~f:typename (argtypetemplates @ extra_templates)) in
+      List.(map ~f:typename (argtypetemplates @ extra_templates))
+      @ require_templates in
     ( match (fdsuffix, variadic) with
     | (FnLpdf _ | FnTarget), `None ->
         pp_template_decorator ppf ("bool propto__" :: templates)
