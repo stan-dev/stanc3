@@ -547,7 +547,8 @@ and pp_expr ppf Expr.Fixed.{pattern; meta} =
   | Lit (Imaginary, s) -> pf ppf "stan::math::to_complex(0, %s)" s
   | Lit ((Real | Int), s) -> pf ppf "%s" s
   | Promotion (expr, UReal, _) when is_scalar expr -> pp_expr ppf expr
-  | Promotion (expr, UComplex, _) when is_scalar expr ->
+  | Promotion (expr, UComplex, DataOnly) when is_scalar expr ->
+      (* this is in principle a little better than promote_scalar since it is constexpr *)
       pf ppf "stan::math::to_complex(%a, 0)" pp_expr expr
   | Promotion (expr, ut, ad) ->
       pf ppf "stan::math::promote_scalar<%a>(%a)" pp_unsizedtype_local (ad, ut)

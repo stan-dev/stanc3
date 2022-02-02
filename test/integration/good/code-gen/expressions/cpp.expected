@@ -670,7 +670,9 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
         current_statement__ = 8;
         z2 = (1 ? r : 2);
         current_statement__ = 9;
-        z2 = (1 ? stan::math::to_complex(0, 0) : zp);
+        z2 = (1 ?
+                stan::math::promote_scalar<std::complex<local_scalar_t__>>(0)
+                : zp);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
