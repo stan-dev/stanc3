@@ -546,11 +546,12 @@ and pp_expr ppf Expr.Fixed.{pattern; meta} =
   | Lit (Str, s) -> pf ppf "\"%s\"" (Cpp_str.escaped s)
   | Lit (Imaginary, s) -> pf ppf "stan::math::to_complex(0, %s)" s
   | Lit ((Real | Int), s) -> pf ppf "%s" s
+  | Promotion (expr, UReal, _) when is_scalar expr -> pp_expr ppf expr
+  | Promotion (expr, UComplex, _) when is_scalar expr ->
+      pf ppf "stan::math::to_complex(%a, 0)" pp_expr expr
   | Promotion (expr, ut, ad) ->
-      if is_scalar expr && ut = UReal then pp_expr ppf expr
-      else
-        pf ppf "stan::math::promote_scalar<%a>(%a)" pp_unsizedtype_local
-          (ad, ut) pp_expr expr
+      pf ppf "stan::math::promote_scalar<%a>(%a)" pp_unsizedtype_local (ad, ut)
+        pp_expr expr
   | FunApp
       ( StanLib (op, _, _)
       , [ { meta= {type_= URowVector; _}
