@@ -2610,7 +2610,7 @@ struct mask_fun_functor__ {
 struct udf_fun_functor__ {
   template <typename TA__, stan::require_all_t<stan::is_col_vector<TA__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<TA__>, -1, 1>
-  operator()(const TA__& A, std::ostream* pstream__) const;
+  operator()(const TA__& A_arg__, std::ostream* pstream__) const;
 };
 
 template <typename Ti__, stan::require_all_t<std::is_integral<Ti__>>* = nullptr>
@@ -2654,7 +2654,8 @@ mask_fun_functor__::operator()(const Ti__& i, std::ostream* pstream__)  const
 
 template <typename TA__, stan::require_all_t<stan::is_col_vector<TA__>>*>
 inline Eigen::Matrix<stan::return_type_t<TA__>, -1, 1>
-udf_fun_functor__::operator()(const TA__& A, std::ostream* pstream__)  const
+udf_fun_functor__::operator()(const TA__& A_arg__, std::ostream* pstream__) 
+const
 {
   return udf_fun(A, pstream__);
 }
@@ -4835,12 +4836,13 @@ struct okay_reduction_functor__ {
             typename Ty__, stan::require_all_t<stan::is_stan_scalar<Tsum_x__>,
             stan::is_eigen_matrix_dynamic<Ty__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tsum_x__, Ty__>, -1, -1>
-  operator()(const Tsum_x__& sum_x, const Ty__& y, std::ostream* pstream__) const;
+  operator()(const Tsum_x__& sum_x, const Ty__& y_arg__,
+             std::ostream* pstream__) const;
 };
 struct nono_func_functor__ {
   template <typename Tx__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tx__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, -1>
-  operator()(const Tx__& x, std::ostream* pstream__) const;
+  operator()(const Tx__& x_arg__, std::ostream* pstream__) const;
 };
 
 template <typename Tx__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tx__>>* = nullptr>
@@ -4884,7 +4886,8 @@ template <typename Tsum_x__,
           typename Ty__, stan::require_all_t<stan::is_stan_scalar<Tsum_x__>,
           stan::is_eigen_matrix_dynamic<Ty__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tsum_x__, Ty__>, -1, -1>
-okay_reduction_functor__::operator()(const Tsum_x__& sum_x, const Ty__& y,
+okay_reduction_functor__::operator()(const Tsum_x__& sum_x,
+                                     const Ty__& y_arg__,
                                      std::ostream* pstream__)  const
 {
   return okay_reduction(sum_x, y, pstream__);
@@ -4892,7 +4895,7 @@ okay_reduction_functor__::operator()(const Tsum_x__& sum_x, const Ty__& y,
 
 template <typename Tx__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tx__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, -1>
-nono_func_functor__::operator()(const Tx__& x, std::ostream* pstream__) 
+nono_func_functor__::operator()(const Tx__& x_arg__, std::ostream* pstream__) 
 const
 {
   return nono_func(x, pstream__);
@@ -5454,7 +5457,7 @@ struct empty_user_func_functor__ {
 struct mat_ret_user_func_functor__ {
   template <typename TA__, stan::require_all_t<stan::is_eigen_matrix_dynamic<TA__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<TA__>, -1, -1>
-  operator()(const TA__& A, std::ostream* pstream__) const;
+  operator()(const TA__& A_arg__, std::ostream* pstream__) const;
 };
 
 inline Eigen::Matrix<double, -1, -1>
@@ -5500,7 +5503,7 @@ empty_user_func_functor__::operator()(std::ostream* pstream__)  const
 
 template <typename TA__, stan::require_all_t<stan::is_eigen_matrix_dynamic<TA__>>*>
 inline Eigen::Matrix<stan::return_type_t<TA__>, -1, -1>
-mat_ret_user_func_functor__::operator()(const TA__& A,
+mat_ret_user_func_functor__::operator()(const TA__& A_arg__,
                                         std::ostream* pstream__)  const
 {
   return mat_ret_user_func(A, pstream__);
@@ -6574,12 +6577,13 @@ struct okay_reduction_functor__ {
             typename Ty__, stan::require_all_t<stan::is_stan_scalar<Tsum_x__>,
             stan::is_eigen_matrix_dynamic<Ty__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tsum_x__, Ty__>, -1, -1>
-  operator()(const Tsum_x__& sum_x, const Ty__& y, std::ostream* pstream__) const;
+  operator()(const Tsum_x__& sum_x, const Ty__& y_arg__,
+             std::ostream* pstream__) const;
 };
 struct nono_func_functor__ {
   template <typename Tx__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tx__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, -1>
-  operator()(const Tx__& x, std::ostream* pstream__) const;
+  operator()(const Tx__& x_arg__, std::ostream* pstream__) const;
 };
 
 template <typename Tx__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tx__>>* = nullptr>
@@ -6623,7 +6627,8 @@ template <typename Tsum_x__,
           typename Ty__, stan::require_all_t<stan::is_stan_scalar<Tsum_x__>,
           stan::is_eigen_matrix_dynamic<Ty__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tsum_x__, Ty__>, -1, -1>
-okay_reduction_functor__::operator()(const Tsum_x__& sum_x, const Ty__& y,
+okay_reduction_functor__::operator()(const Tsum_x__& sum_x,
+                                     const Ty__& y_arg__,
                                      std::ostream* pstream__)  const
 {
   return okay_reduction(sum_x, y, pstream__);
@@ -6631,7 +6636,7 @@ okay_reduction_functor__::operator()(const Tsum_x__& sum_x, const Ty__& y,
 
 template <typename Tx__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tx__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, -1>
-nono_func_functor__::operator()(const Tx__& x, std::ostream* pstream__) 
+nono_func_functor__::operator()(const Tx__& x_arg__, std::ostream* pstream__) 
 const
 {
   return nono_func(x, pstream__);

@@ -69,7 +69,7 @@ struct my_log1p_exp_functor__ {
 struct my_vector_mul_by_5_functor__ {
   template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, 1>
-  operator()(const Tx__& x, std::ostream* pstream__) const;
+  operator()(const Tx__& x_arg__, std::ostream* pstream__) const;
 };
 struct test_lpdf_functor__ {
   template <bool propto__, typename Ta__,
@@ -296,7 +296,7 @@ const
 
 template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, 1>
-my_vector_mul_by_5_functor__::operator()(const Tx__& x,
+my_vector_mul_by_5_functor__::operator()(const Tx__& x_arg__,
                                          std::ostream* pstream__)  const
 {
   return my_vector_mul_by_5(x, pstream__);
@@ -465,7 +465,7 @@ struct my_log1p_exp_functor__ {
 struct my_vector_mul_by_5_functor__ {
   template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, 1>
-  operator()(const Tx__& x, std::ostream* pstream__) const;
+  operator()(const Tx__& x_arg__, std::ostream* pstream__) const;
 };
 struct test_lpdf_functor__ {
   template <bool propto__, typename Ta__,
@@ -692,7 +692,7 @@ const
 
 template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, 1>
-my_vector_mul_by_5_functor__::operator()(const Tx__& x,
+my_vector_mul_by_5_functor__::operator()(const Tx__& x_arg__,
                                          std::ostream* pstream__)  const
 {
   return my_vector_mul_by_5(x, pstream__);
@@ -832,7 +832,7 @@ struct ode_integrate_functor__ {
 struct integrand_functor__ {
   template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, 1>
-  operator()(const Tx__& x, std::ostream* pstream__) const;
+  operator()(const Tx__& x_arg__, std::ostream* pstream__) const;
 };
 
 template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>* = nullptr>
@@ -929,7 +929,7 @@ const
 
 template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, 1>
-integrand_functor__::operator()(const Tx__& x, std::ostream* pstream__) 
+integrand_functor__::operator()(const Tx__& x_arg__, std::ostream* pstream__) 
 const
 {
   return integrand(x, pstream__);

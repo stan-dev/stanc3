@@ -3726,7 +3726,7 @@ static constexpr std::array<const char*, 75> locations_array__ =
 struct _stan_asm_functor__ {
   template <typename T_stan_class__, stan::require_all_t<stan::is_col_vector<T_stan_class__>>* = nullptr>
   inline void
-  operator()(const T_stan_class__& _stan_class, std::ostream* pstream__) const;
+  operator()(const T_stan_class__& _stan_class_arg__, std::ostream* pstream__) const;
 };
 struct _stan_char16_t_functor__ {
   inline void
@@ -3971,7 +3971,7 @@ inline void _stan_char32_t(std::ostream* pstream__) {
     }
 template <typename T_stan_class__, stan::require_all_t<stan::is_col_vector<T_stan_class__>>*>
 inline void
-_stan_asm_functor__::operator()(const T_stan_class__& _stan_class,
+_stan_asm_functor__::operator()(const T_stan_class__& _stan_class_arg__,
                                 std::ostream* pstream__)  const
 {
   return _stan_asm(_stan_class, pstream__);
@@ -6510,8 +6510,8 @@ struct f5_functor__ {
                                           stan::return_type_t<Ta11__, Ta12__>>>>
   operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
              const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-             const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-             const Ta10__& a10, const Ta11__& a11, const Ta12__& a12,
+             const Ta7__& a7_arg__, const Ta8__& a8, const Ta9__& a9,
+             const Ta10__& a10_arg__, const Ta11__& a11, const Ta12__& a12,
              std::ostream* pstream__) const;
 };
 struct foo_lcdf_functor__ {
@@ -6526,7 +6526,7 @@ struct covsqrt2corsqrt_functor__ {
             typename Tinvert__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tmat__>,
             std::is_integral<Tinvert__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tmat__, Tinvert__>, -1, -1>
-  operator()(const Tmat__& mat, const Tinvert__& invert,
+  operator()(const Tmat__& mat_arg__, const Tinvert__& invert,
              std::ostream* pstream__) const;
 };
 struct foo_1_functor__ {
@@ -6570,8 +6570,8 @@ struct f6_functor__ {
                                           stan::return_type_t<Ta11__, Ta12__>>>>>
   operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
              const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-             const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-             const Ta10__& a10, const Ta11__& a11, const Ta12__& a12,
+             const Ta7__& a7_arg__, const Ta8__& a8, const Ta9__& a9,
+             const Ta10__& a10_arg__, const Ta11__& a11, const Ta12__& a12,
              std::ostream* pstream__) const;
 };
 struct foo_five_args_functor__ {
@@ -6608,8 +6608,8 @@ struct f3_functor__ {
   inline std::vector<std::vector<int>>
   operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
              const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-             const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-             const Ta10__& a10, const Ta11__& a11, const Ta12__& a12,
+             const Ta7__& a7_arg__, const Ta8__& a8, const Ta9__& a9,
+             const Ta10__& a10_arg__, const Ta11__& a11, const Ta12__& a12,
              std::ostream* pstream__) const;
 };
 struct foo_4_functor__ {
@@ -6638,8 +6638,8 @@ struct f7_functor__ {
                                           stan::return_type_t<Ta11__, Ta12__>>>, -1, 1>
   operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
              const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-             const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-             const Ta10__& a10, const Ta11__& a11, const Ta12__& a12,
+             const Ta7__& a7_arg__, const Ta8__& a8, const Ta9__& a9,
+             const Ta10__& a10_arg__, const Ta11__& a11, const Ta12__& a12,
              std::ostream* pstream__) const;
 };
 struct f11_functor__ {
@@ -6663,8 +6663,8 @@ struct f11_functor__ {
                                           stan::return_type_t<Ta11__, Ta12__>>>, -1, -1>>
   operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
              const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-             const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-             const Ta10__& a10, const Ta11__& a11, const Ta12__& a12,
+             const Ta7__& a7_arg__, const Ta8__& a8, const Ta9__& a9,
+             const Ta10__& a10_arg__, const Ta11__& a11, const Ta12__& a12,
              std::ostream* pstream__) const;
 };
 struct f12_functor__ {
@@ -6688,8 +6688,8 @@ struct f12_functor__ {
                                           stan::return_type_t<Ta11__, Ta12__>>>, -1, -1>>>
   operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
              const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-             const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-             const Ta10__& a10, const Ta11__& a11, const Ta12__& a12,
+             const Ta7__& a7_arg__, const Ta8__& a8, const Ta9__& a9,
+             const Ta10__& a10_arg__, const Ta11__& a11, const Ta12__& a12,
              std::ostream* pstream__) const;
 };
 struct sho_functor__ {
@@ -6721,7 +6721,7 @@ struct algebra_system_functor__ {
             stan::is_std_vector<Tdat__>, stan::is_stan_scalar<stan::value_type_t<Tdat__>>,
             stan::is_std_vector<Tdat_int__>, std::is_integral<stan::value_type_t<Tdat_int__>>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tx__, Ty__, Tdat__, Tdat_int__>, -1, 1>
-  operator()(const Tx__& x, const Ty__& y, const Tdat__& dat,
+  operator()(const Tx__& x_arg__, const Ty__& y_arg__, const Tdat__& dat,
              const Tdat_int__& dat_int, std::ostream* pstream__) const;
 };
 struct foo_rng_functor__ {
@@ -6765,8 +6765,8 @@ struct f0_functor__ {
   inline void
   operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
              const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-             const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-             const Ta10__& a10, const Ta11__& a11, const Ta12__& a12,
+             const Ta7__& a7_arg__, const Ta8__& a8, const Ta9__& a9,
+             const Ta10__& a10_arg__, const Ta11__& a11, const Ta12__& a12,
              std::ostream* pstream__) const;
 };
 struct foo_lpmf_functor__ {
@@ -6784,8 +6784,8 @@ struct foo_5_functor__ {
             stan::is_std_vector<Tdata_r__>, stan::is_stan_scalar<stan::value_type_t<Tdata_r__>>,
             stan::is_std_vector<Tdata_i__>, std::is_integral<stan::value_type_t<Tdata_i__>>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tshared_params__, Tjob_params__, Tdata_r__, Tdata_i__>, -1, 1>
-  operator()(const Tshared_params__& shared_params,
-             const Tjob_params__& job_params, const Tdata_r__& data_r,
+  operator()(const Tshared_params__& shared_params_arg__,
+             const Tjob_params__& job_params_arg__, const Tdata_r__& data_r,
              const Tdata_i__& data_i, std::ostream* pstream__) const;
 };
 struct f4_functor__ {
@@ -6809,8 +6809,8 @@ struct f4_functor__ {
                                           stan::return_type_t<Ta11__, Ta12__>>>
   operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
              const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-             const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-             const Ta10__& a10, const Ta11__& a11, const Ta12__& a12,
+             const Ta7__& a7_arg__, const Ta8__& a8, const Ta9__& a9,
+             const Ta10__& a10_arg__, const Ta11__& a11, const Ta12__& a12,
              std::ostream* pstream__) const;
 };
 struct f10_functor__ {
@@ -6834,8 +6834,8 @@ struct f10_functor__ {
                                           stan::return_type_t<Ta11__, Ta12__>>>, -1, -1>
   operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
              const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-             const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-             const Ta10__& a10, const Ta11__& a11, const Ta12__& a12,
+             const Ta7__& a7_arg__, const Ta8__& a8, const Ta9__& a9,
+             const Ta10__& a10_arg__, const Ta11__& a11, const Ta12__& a12,
              std::ostream* pstream__) const;
 };
 struct f2_functor__ {
@@ -6857,8 +6857,8 @@ struct f2_functor__ {
   inline std::vector<int>
   operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
              const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-             const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-             const Ta10__& a10, const Ta11__& a11, const Ta12__& a12,
+             const Ta7__& a7_arg__, const Ta8__& a8, const Ta9__& a9,
+             const Ta10__& a10_arg__, const Ta11__& a11, const Ta12__& a12,
              std::ostream* pstream__) const;
 };
 struct f9_functor__ {
@@ -6882,8 +6882,8 @@ struct f9_functor__ {
                                           stan::return_type_t<Ta11__, Ta12__>>>, -1, 1>>>
   operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
              const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-             const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-             const Ta10__& a10, const Ta11__& a11, const Ta12__& a12,
+             const Ta7__& a7_arg__, const Ta8__& a8, const Ta9__& a9,
+             const Ta10__& a10_arg__, const Ta11__& a11, const Ta12__& a12,
              std::ostream* pstream__) const;
 };
 struct f8_functor__ {
@@ -6907,8 +6907,8 @@ struct f8_functor__ {
                                           stan::return_type_t<Ta11__, Ta12__>>>, -1, 1>>
   operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
              const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-             const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-             const Ta10__& a10, const Ta11__& a11, const Ta12__& a12,
+             const Ta7__& a7_arg__, const Ta8__& a8, const Ta9__& a9,
+             const Ta10__& a10_arg__, const Ta11__& a11, const Ta12__& a12,
              std::ostream* pstream__) const;
 };
 struct foo_lccdf_functor__ {
@@ -6948,8 +6948,8 @@ struct binomialf_functor__ {
             stan::is_std_vector<Tx_r__>, stan::is_stan_scalar<stan::value_type_t<Tx_r__>>,
             stan::is_std_vector<Tx_i__>, std::is_integral<stan::value_type_t<Tx_i__>>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tphi__, Ttheta__, Tx_r__, Tx_i__>, -1, 1>
-  operator()(const Tphi__& phi, const Ttheta__& theta, const Tx_r__& x_r,
-             const Tx_i__& x_i, std::ostream* pstream__) const;
+  operator()(const Tphi__& phi_arg__, const Ttheta__& theta_arg__,
+             const Tx_r__& x_r, const Tx_i__& x_i, std::ostream* pstream__) const;
 };
 struct foo_bar1_functor__ {
   template <typename Tx__, stan::require_all_t<stan::is_stan_scalar<Tx__>>* = nullptr>
@@ -6975,8 +6975,8 @@ struct f1_functor__ {
   inline int
   operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
              const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-             const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-             const Ta10__& a10, const Ta11__& a11, const Ta12__& a12,
+             const Ta7__& a7_arg__, const Ta8__& a8, const Ta9__& a9,
+             const Ta10__& a10_arg__, const Ta11__& a11, const Ta12__& a12,
              std::ostream* pstream__) const;
 };
 struct foo_functor__ {
@@ -8410,9 +8410,10 @@ inline std::vector<stan::return_type_t<Ta1__, Ta2__, Ta3__, Ta4__, Ta5__,
                                         stan::return_type_t<Ta11__, Ta12__>>>>
 f5_functor__::operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
                          const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-                         const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-                         const Ta10__& a10, const Ta11__& a11,
-                         const Ta12__& a12, std::ostream* pstream__)  const
+                         const Ta7__& a7_arg__, const Ta8__& a8,
+                         const Ta9__& a9, const Ta10__& a10_arg__,
+                         const Ta11__& a11, const Ta12__& a12,
+                         std::ostream* pstream__)  const
 {
   return f5(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -8431,7 +8432,7 @@ template <typename Tmat__,
           typename Tinvert__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tmat__>,
           std::is_integral<Tinvert__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tmat__, Tinvert__>, -1, -1>
-covsqrt2corsqrt_functor__::operator()(const Tmat__& mat,
+covsqrt2corsqrt_functor__::operator()(const Tmat__& mat_arg__,
                                       const Tinvert__& invert,
                                       std::ostream* pstream__)  const
 {
@@ -8486,9 +8487,10 @@ inline std::vector<std::vector<stan::return_type_t<Ta1__, Ta2__, Ta3__, Ta4__, T
                                         stan::return_type_t<Ta11__, Ta12__>>>>>
 f6_functor__::operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
                          const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-                         const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-                         const Ta10__& a10, const Ta11__& a11,
-                         const Ta12__& a12, std::ostream* pstream__)  const
+                         const Ta7__& a7_arg__, const Ta8__& a8,
+                         const Ta9__& a9, const Ta10__& a10_arg__,
+                         const Ta11__& a11, const Ta12__& a12,
+                         std::ostream* pstream__)  const
 {
   return f6(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -8531,9 +8533,10 @@ template <typename Ta1__, typename Ta2__, typename Ta3__, typename Ta4__,
 inline std::vector<std::vector<int>>
 f3_functor__::operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
                          const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-                         const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-                         const Ta10__& a10, const Ta11__& a11,
-                         const Ta12__& a12, std::ostream* pstream__)  const
+                         const Ta7__& a7_arg__, const Ta8__& a8,
+                         const Ta9__& a9, const Ta10__& a10_arg__,
+                         const Ta11__& a11, const Ta12__& a12,
+                         std::ostream* pstream__)  const
 {
   return f3(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -8565,9 +8568,10 @@ inline Eigen::Matrix<stan::return_type_t<Ta1__, Ta2__, Ta3__, Ta4__, Ta5__,
                                         stan::return_type_t<Ta11__, Ta12__>>>, -1, 1>
 f7_functor__::operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
                          const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-                         const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-                         const Ta10__& a10, const Ta11__& a11,
-                         const Ta12__& a12, std::ostream* pstream__)  const
+                         const Ta7__& a7_arg__, const Ta8__& a8,
+                         const Ta9__& a9, const Ta10__& a10_arg__,
+                         const Ta11__& a11, const Ta12__& a12,
+                         std::ostream* pstream__)  const
 {
   return f7(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -8592,9 +8596,10 @@ inline std::vector<Eigen::Matrix<stan::return_type_t<Ta1__, Ta2__, Ta3__, Ta4__,
                                         stan::return_type_t<Ta11__, Ta12__>>>, -1, -1>>
 f11_functor__::operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
                           const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-                          const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-                          const Ta10__& a10, const Ta11__& a11,
-                          const Ta12__& a12, std::ostream* pstream__)  const
+                          const Ta7__& a7_arg__, const Ta8__& a8,
+                          const Ta9__& a9, const Ta10__& a10_arg__,
+                          const Ta11__& a11, const Ta12__& a12,
+                          std::ostream* pstream__)  const
 {
   return f11(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -8619,9 +8624,10 @@ inline std::vector<std::vector<Eigen::Matrix<stan::return_type_t<Ta1__, Ta2__, T
                                         stan::return_type_t<Ta11__, Ta12__>>>, -1, -1>>>
 f12_functor__::operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
                           const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-                          const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-                          const Ta10__& a10, const Ta11__& a11,
-                          const Ta12__& a12, std::ostream* pstream__)  const
+                          const Ta7__& a7_arg__, const Ta8__& a8,
+                          const Ta9__& a9, const Ta10__& a10_arg__,
+                          const Ta11__& a11, const Ta12__& a12,
+                          std::ostream* pstream__)  const
 {
   return f12(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -8663,8 +8669,8 @@ template <typename Tx__, typename Ty__, typename Tdat__,
           stan::is_std_vector<Tdat__>, stan::is_stan_scalar<stan::value_type_t<Tdat__>>,
           stan::is_std_vector<Tdat_int__>, std::is_integral<stan::value_type_t<Tdat_int__>>>*>
 inline Eigen::Matrix<stan::return_type_t<Tx__, Ty__, Tdat__, Tdat_int__>, -1, 1>
-algebra_system_functor__::operator()(const Tx__& x, const Ty__& y,
-                                     const Tdat__& dat,
+algebra_system_functor__::operator()(const Tx__& x_arg__,
+                                     const Ty__& y_arg__, const Tdat__& dat,
                                      const Tdat_int__& dat_int,
                                      std::ostream* pstream__)  const
 {
@@ -8720,9 +8726,10 @@ template <typename Ta1__, typename Ta2__, typename Ta3__, typename Ta4__,
 inline void
 f0_functor__::operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
                          const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-                         const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-                         const Ta10__& a10, const Ta11__& a11,
-                         const Ta12__& a12, std::ostream* pstream__)  const
+                         const Ta7__& a7_arg__, const Ta8__& a8,
+                         const Ta9__& a9, const Ta10__& a10_arg__,
+                         const Ta11__& a11, const Ta12__& a12,
+                         std::ostream* pstream__)  const
 {
   return f0(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -8744,8 +8751,8 @@ template <typename Tshared_params__, typename Tjob_params__,
           stan::is_std_vector<Tdata_r__>, stan::is_stan_scalar<stan::value_type_t<Tdata_r__>>,
           stan::is_std_vector<Tdata_i__>, std::is_integral<stan::value_type_t<Tdata_i__>>>*>
 inline Eigen::Matrix<stan::return_type_t<Tshared_params__, Tjob_params__, Tdata_r__, Tdata_i__>, -1, 1>
-foo_5_functor__::operator()(const Tshared_params__& shared_params,
-                            const Tjob_params__& job_params,
+foo_5_functor__::operator()(const Tshared_params__& shared_params_arg__,
+                            const Tjob_params__& job_params_arg__,
                             const Tdata_r__& data_r, const Tdata_i__& data_i,
                             std::ostream* pstream__)  const
 {
@@ -8772,9 +8779,10 @@ inline stan::return_type_t<Ta1__, Ta2__, Ta3__, Ta4__, Ta5__,
                                         stan::return_type_t<Ta11__, Ta12__>>>
 f4_functor__::operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
                          const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-                         const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-                         const Ta10__& a10, const Ta11__& a11,
-                         const Ta12__& a12, std::ostream* pstream__)  const
+                         const Ta7__& a7_arg__, const Ta8__& a8,
+                         const Ta9__& a9, const Ta10__& a10_arg__,
+                         const Ta11__& a11, const Ta12__& a12,
+                         std::ostream* pstream__)  const
 {
   return f4(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -8799,9 +8807,10 @@ inline Eigen::Matrix<stan::return_type_t<Ta1__, Ta2__, Ta3__, Ta4__, Ta5__,
                                         stan::return_type_t<Ta11__, Ta12__>>>, -1, -1>
 f10_functor__::operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
                           const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-                          const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-                          const Ta10__& a10, const Ta11__& a11,
-                          const Ta12__& a12, std::ostream* pstream__)  const
+                          const Ta7__& a7_arg__, const Ta8__& a8,
+                          const Ta9__& a9, const Ta10__& a10_arg__,
+                          const Ta11__& a11, const Ta12__& a12,
+                          std::ostream* pstream__)  const
 {
   return f10(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -8824,9 +8833,10 @@ template <typename Ta1__, typename Ta2__, typename Ta3__, typename Ta4__,
 inline std::vector<int>
 f2_functor__::operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
                          const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-                         const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-                         const Ta10__& a10, const Ta11__& a11,
-                         const Ta12__& a12, std::ostream* pstream__)  const
+                         const Ta7__& a7_arg__, const Ta8__& a8,
+                         const Ta9__& a9, const Ta10__& a10_arg__,
+                         const Ta11__& a11, const Ta12__& a12,
+                         std::ostream* pstream__)  const
 {
   return f2(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -8851,9 +8861,10 @@ inline std::vector<std::vector<Eigen::Matrix<stan::return_type_t<Ta1__, Ta2__, T
                                         stan::return_type_t<Ta11__, Ta12__>>>, -1, 1>>>
 f9_functor__::operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
                          const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-                         const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-                         const Ta10__& a10, const Ta11__& a11,
-                         const Ta12__& a12, std::ostream* pstream__)  const
+                         const Ta7__& a7_arg__, const Ta8__& a8,
+                         const Ta9__& a9, const Ta10__& a10_arg__,
+                         const Ta11__& a11, const Ta12__& a12,
+                         std::ostream* pstream__)  const
 {
   return f9(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -8878,9 +8889,10 @@ inline std::vector<Eigen::Matrix<stan::return_type_t<Ta1__, Ta2__, Ta3__, Ta4__,
                                         stan::return_type_t<Ta11__, Ta12__>>>, -1, 1>>
 f8_functor__::operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
                          const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-                         const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-                         const Ta10__& a10, const Ta11__& a11,
-                         const Ta12__& a12, std::ostream* pstream__)  const
+                         const Ta7__& a7_arg__, const Ta8__& a8,
+                         const Ta9__& a9, const Ta10__& a10_arg__,
+                         const Ta11__& a11, const Ta12__& a12,
+                         std::ostream* pstream__)  const
 {
   return f8(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -8934,7 +8946,8 @@ template <typename Tphi__, typename Ttheta__, typename Tx_r__,
           stan::is_std_vector<Tx_r__>, stan::is_stan_scalar<stan::value_type_t<Tx_r__>>,
           stan::is_std_vector<Tx_i__>, std::is_integral<stan::value_type_t<Tx_i__>>>*>
 inline Eigen::Matrix<stan::return_type_t<Tphi__, Ttheta__, Tx_r__, Tx_i__>, -1, 1>
-binomialf_functor__::operator()(const Tphi__& phi, const Ttheta__& theta,
+binomialf_functor__::operator()(const Tphi__& phi_arg__,
+                                const Ttheta__& theta_arg__,
                                 const Tx_r__& x_r, const Tx_i__& x_i,
                                 std::ostream* pstream__)  const
 {
@@ -8966,9 +8979,10 @@ template <typename Ta1__, typename Ta2__, typename Ta3__, typename Ta4__,
 inline int
 f1_functor__::operator()(const Ta1__& a1, const Ta2__& a2, const Ta3__& a3,
                          const Ta4__& a4, const Ta5__& a5, const Ta6__& a6,
-                         const Ta7__& a7, const Ta8__& a8, const Ta9__& a9,
-                         const Ta10__& a10, const Ta11__& a11,
-                         const Ta12__& a12, std::ostream* pstream__)  const
+                         const Ta7__& a7_arg__, const Ta8__& a8,
+                         const Ta9__& a9, const Ta10__& a10_arg__,
+                         const Ta11__& a11, const Ta12__& a12,
+                         std::ostream* pstream__)  const
 {
   return f1(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -15181,7 +15195,7 @@ struct algebra_system_functor__ {
             stan::is_std_vector<Tdat__>, stan::is_stan_scalar<stan::value_type_t<Tdat__>>,
             stan::is_std_vector<Tdat_int__>, std::is_integral<stan::value_type_t<Tdat_int__>>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tx__, Ty__, Tdat__, Tdat_int__>, -1, 1>
-  operator()(const Tx__& x, const Ty__& y, const Tdat__& dat,
+  operator()(const Tx__& x_arg__, const Ty__& y_arg__, const Tdat__& dat,
              const Tdat_int__& dat_int, std::ostream* pstream__) const;
 };
 struct integrand_functor__ {
@@ -15204,8 +15218,8 @@ struct foo_functor__ {
             stan::is_std_vector<Tdata_r__>, stan::is_stan_scalar<stan::value_type_t<Tdata_r__>>,
             stan::is_std_vector<Tdata_i__>, std::is_integral<stan::value_type_t<Tdata_i__>>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tshared_params__, Tjob_params__, Tdata_r__, Tdata_i__>, -1, 1>
-  operator()(const Tshared_params__& shared_params,
-             const Tjob_params__& job_params, const Tdata_r__& data_r,
+  operator()(const Tshared_params__& shared_params_arg__,
+             const Tjob_params__& job_params_arg__, const Tdata_r__& data_r,
              const Tdata_i__& data_i, std::ostream* pstream__) const;
 };
 struct goo_functor__ {
@@ -15216,8 +15230,8 @@ struct goo_functor__ {
             stan::is_std_vector<Tdata_r__>, stan::is_stan_scalar<stan::value_type_t<Tdata_r__>>,
             stan::is_std_vector<Tdata_i__>, std::is_integral<stan::value_type_t<Tdata_i__>>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tshared_params__, Tjob_params__, Tdata_r__, Tdata_i__>, -1, 1>
-  operator()(const Tshared_params__& shared_params,
-             const Tjob_params__& job_params, const Tdata_r__& data_r,
+  operator()(const Tshared_params__& shared_params_arg__,
+             const Tjob_params__& job_params_arg__, const Tdata_r__& data_r,
              const Tdata_i__& data_i, std::ostream* pstream__) const;
 };
 struct map_rectfake_functor__ {
@@ -15411,8 +15425,8 @@ template <typename Tx__, typename Ty__, typename Tdat__,
           stan::is_std_vector<Tdat__>, stan::is_stan_scalar<stan::value_type_t<Tdat__>>,
           stan::is_std_vector<Tdat_int__>, std::is_integral<stan::value_type_t<Tdat_int__>>>*>
 inline Eigen::Matrix<stan::return_type_t<Tx__, Ty__, Tdat__, Tdat_int__>, -1, 1>
-algebra_system_functor__::operator()(const Tx__& x, const Ty__& y,
-                                     const Tdat__& dat,
+algebra_system_functor__::operator()(const Tx__& x_arg__,
+                                     const Ty__& y_arg__, const Tdat__& dat,
                                      const Tdat_int__& dat_int,
                                      std::ostream* pstream__)  const
 {
@@ -15441,8 +15455,8 @@ template <typename Tshared_params__, typename Tjob_params__,
           stan::is_std_vector<Tdata_r__>, stan::is_stan_scalar<stan::value_type_t<Tdata_r__>>,
           stan::is_std_vector<Tdata_i__>, std::is_integral<stan::value_type_t<Tdata_i__>>>*>
 inline Eigen::Matrix<stan::return_type_t<Tshared_params__, Tjob_params__, Tdata_r__, Tdata_i__>, -1, 1>
-foo_functor__::operator()(const Tshared_params__& shared_params,
-                          const Tjob_params__& job_params,
+foo_functor__::operator()(const Tshared_params__& shared_params_arg__,
+                          const Tjob_params__& job_params_arg__,
                           const Tdata_r__& data_r, const Tdata_i__& data_i,
                           std::ostream* pstream__)  const
 {
@@ -15456,8 +15470,8 @@ template <typename Tshared_params__, typename Tjob_params__,
           stan::is_std_vector<Tdata_r__>, stan::is_stan_scalar<stan::value_type_t<Tdata_r__>>,
           stan::is_std_vector<Tdata_i__>, std::is_integral<stan::value_type_t<Tdata_i__>>>*>
 inline Eigen::Matrix<stan::return_type_t<Tshared_params__, Tjob_params__, Tdata_r__, Tdata_i__>, -1, 1>
-goo_functor__::operator()(const Tshared_params__& shared_params,
-                          const Tjob_params__& job_params,
+goo_functor__::operator()(const Tshared_params__& shared_params_arg__,
+                          const Tjob_params__& job_params_arg__,
                           const Tdata_r__& data_r, const Tdata_i__& data_i,
                           std::ostream* pstream__)  const
 {
@@ -17715,8 +17729,8 @@ struct f_functor__ {
             stan::is_col_vector<Tz__>, stan::is_stan_scalar<Ta__>,
             stan::is_col_vector<Tb__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tt__, Tz__, Ta__, Tb__>, -1, 1>
-  operator()(const Tt__& t, const Tz__& z, const Ta__& a, const Tb__& b,
-             std::ostream* pstream__) const;
+  operator()(const Tt__& t, const Tz__& z_arg__, const Ta__& a,
+             const Tb__& b_arg__, std::ostream* pstream__) const;
 };
 struct f_odefunctor__ {
   template <typename Tt__, typename Tz__, typename Ta__,
@@ -17724,8 +17738,8 @@ struct f_odefunctor__ {
             stan::is_col_vector<Tz__>, stan::is_stan_scalar<Ta__>,
             stan::is_col_vector<Tb__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tt__, Tz__, Ta__, Tb__>, -1, 1>
-  operator()(const Tt__& t, const Tz__& z, std::ostream* pstream__,
-             const Ta__& a, const Tb__& b) const;
+  operator()(const Tt__& t, const Tz__& z_arg__, std::ostream* pstream__,
+             const Ta__& a, const Tb__& b_arg__) const;
 };
 
 template <typename Tt__, typename Tz__, typename Ta__,
@@ -17755,8 +17769,8 @@ template <typename Tt__, typename Tz__, typename Ta__,
           stan::is_col_vector<Tz__>, stan::is_stan_scalar<Ta__>,
           stan::is_col_vector<Tb__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tt__, Tz__, Ta__, Tb__>, -1, 1>
-f_functor__::operator()(const Tt__& t, const Tz__& z, const Ta__& a,
-                        const Tb__& b, std::ostream* pstream__)  const
+f_functor__::operator()(const Tt__& t, const Tz__& z_arg__, const Ta__& a,
+                        const Tb__& b_arg__, std::ostream* pstream__)  const
 {
   return f(t, z, a, b, pstream__);
 }
@@ -17766,9 +17780,9 @@ template <typename Tt__, typename Tz__, typename Ta__,
           stan::is_col_vector<Tz__>, stan::is_stan_scalar<Ta__>,
           stan::is_col_vector<Tb__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tt__, Tz__, Ta__, Tb__>, -1, 1>
-f_odefunctor__::operator()(const Tt__& t, const Tz__& z,
+f_odefunctor__::operator()(const Tt__& t, const Tz__& z_arg__,
                            std::ostream* pstream__, const Ta__& a,
-                           const Tb__& b)  const
+                           const Tb__& b_arg__)  const
 {
   return f(t, z, a, b, pstream__);
 }
@@ -23942,13 +23956,13 @@ struct foo_functor__ {
   operator()(const Tp__& p, std::ostream* pstream__) const;
   template <typename Tp__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tp__>>* = nullptr>
   inline stan::return_type_t<Tp__>
-  operator()(const Tp__& p, std::ostream* pstream__) const;
+  operator()(const Tp__& p_arg__, std::ostream* pstream__) const;
   template <typename Tp__, stan::require_all_t<stan::is_col_vector<Tp__>>* = nullptr>
   inline stan::return_type_t<Tp__>
-  operator()(const Tp__& p, std::ostream* pstream__) const;
+  operator()(const Tp__& p_arg__, std::ostream* pstream__) const;
   template <typename Tp__, stan::require_all_t<stan::is_row_vector<Tp__>>* = nullptr>
   inline stan::return_type_t<Tp__>
-  operator()(const Tp__& p, std::ostream* pstream__) const;
+  operator()(const Tp__& p_arg__, std::ostream* pstream__) const;
   template <typename Tp__, stan::require_all_t<stan::is_stan_scalar<Tp__>>* = nullptr>
   inline stan::return_type_t<Tp__>
   operator()(const Tp__& p, std::ostream* pstream__) const;
@@ -24184,21 +24198,24 @@ foo_functor__::operator()(const Tp__& p, std::ostream* pstream__)  const
 
 template <typename Tp__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tp__>>*>
 inline stan::return_type_t<Tp__>
-foo_functor__::operator()(const Tp__& p, std::ostream* pstream__)  const
+foo_functor__::operator()(const Tp__& p_arg__, std::ostream* pstream__) 
+const
 {
   return foo(p, pstream__);
 }
 
 template <typename Tp__, stan::require_all_t<stan::is_col_vector<Tp__>>*>
 inline stan::return_type_t<Tp__>
-foo_functor__::operator()(const Tp__& p, std::ostream* pstream__)  const
+foo_functor__::operator()(const Tp__& p_arg__, std::ostream* pstream__) 
+const
 {
   return foo(p, pstream__);
 }
 
 template <typename Tp__, stan::require_all_t<stan::is_row_vector<Tp__>>*>
 inline stan::return_type_t<Tp__>
-foo_functor__::operator()(const Tp__& p, std::ostream* pstream__)  const
+foo_functor__::operator()(const Tp__& p_arg__, std::ostream* pstream__) 
+const
 {
   return foo(p, pstream__);
 }
@@ -29506,10 +29523,11 @@ struct s_rsfunctor__ {
                                                               Tp__, Tq__>>>>
   operator()(const Ty_slice__& y_slice, const Tstart__& start,
              const Tend__& end, std::ostream* pstream__, const Ta__& a,
-             const Tb__& b, const Tc__& c, const Td__& d, const Te__& e,
-             const Tf__& f, const Tg__& g, const Th__& h, const Ti__& i,
-             const Tj__& j, const Tk__& k, const Tl__& l, const Tm__& m,
-             const Tn__& n, const To__& o, const Tp__& p, const Tq__& q) const;
+             const Tb__& b, const Tc__& c_arg__, const Td__& d_arg__,
+             const Te__& e_arg__, const Tf__& f, const Tg__& g, const Th__& h,
+             const Ti__& i, const Tj__& j, const Tk__& k, const Tl__& l,
+             const Tm__& m, const Tn__& n, const To__& o, const Tp__& p,
+             const Tq__& q) const;
 };
 struct f4_rsfunctor__ {
   template <typename Ty_slice__, typename Tstart__,
@@ -29590,7 +29608,7 @@ struct g2_rsfunctor__ {
             stan::is_col_vector<Ta__>>* = nullptr>
   inline stan::return_type_t<Ty_slice__, Tstart__, Tend__, Ta__>
   operator()(const Ty_slice__& y_slice, const Tstart__& start,
-             const Tend__& end, std::ostream* pstream__, const Ta__& a) const;
+             const Tend__& end, std::ostream* pstream__, const Ta__& a_arg__) const;
 };
 struct f6_rsfunctor__ {
   template <typename Ty_slice__, typename Tstart__,
@@ -29708,7 +29726,7 @@ struct g4_functor__ {
             stan::is_eigen_matrix_dynamic<Ta__>>* = nullptr>
   inline stan::return_type_t<Ty_slice__, Tstart__, Tend__, Ta__>
   operator()(const Ty_slice__& y_slice, const Tstart__& start,
-             const Tend__& end, const Ta__& a, std::ostream* pstream__) const;
+             const Tend__& end, const Ta__& a_arg__, std::ostream* pstream__) const;
 };
 struct g4_rsfunctor__ {
   template <typename Ty_slice__, typename Tstart__, typename Tend__,
@@ -29717,7 +29735,7 @@ struct g4_rsfunctor__ {
             stan::is_eigen_matrix_dynamic<Ta__>>* = nullptr>
   inline stan::return_type_t<Ty_slice__, Tstart__, Tend__, Ta__>
   operator()(const Ty_slice__& y_slice, const Tstart__& start,
-             const Tend__& end, std::ostream* pstream__, const Ta__& a) const;
+             const Tend__& end, std::ostream* pstream__, const Ta__& a_arg__) const;
 };
 struct f11_functor__ {
   template <typename Ty_slice__, typename Tstart__,
@@ -29742,7 +29760,7 @@ struct g3_functor__ {
             stan::is_row_vector<Ta__>>* = nullptr>
   inline stan::return_type_t<Ty_slice__, Tstart__, Tend__, Ta__>
   operator()(const Ty_slice__& y_slice, const Tstart__& start,
-             const Tend__& end, const Ta__& a, std::ostream* pstream__) const;
+             const Tend__& end, const Ta__& a_arg__, std::ostream* pstream__) const;
 };
 struct f11_rsfunctor__ {
   template <typename Ty_slice__, typename Tstart__,
@@ -29792,7 +29810,7 @@ struct g2_functor__ {
             stan::is_col_vector<Ta__>>* = nullptr>
   inline stan::return_type_t<Ty_slice__, Tstart__, Tend__, Ta__>
   operator()(const Ty_slice__& y_slice, const Tstart__& start,
-             const Tend__& end, const Ta__& a, std::ostream* pstream__) const;
+             const Tend__& end, const Ta__& a_arg__, std::ostream* pstream__) const;
 };
 struct f10_functor__ {
   template <typename Ty_slice__, typename Tstart__,
@@ -29833,11 +29851,12 @@ struct s_functor__ {
                                                               Tm__, Tn__, To__,
                                                               Tp__, Tq__>>>>
   operator()(const Ty_slice__& y_slice, const Tstart__& start,
-             const Tend__& end, const Ta__& a, const Tb__& b, const Tc__& c,
-             const Td__& d, const Te__& e, const Tf__& f, const Tg__& g,
-             const Th__& h, const Ti__& i, const Tj__& j, const Tk__& k,
-             const Tl__& l, const Tm__& m, const Tn__& n, const To__& o,
-             const Tp__& p, const Tq__& q, std::ostream* pstream__) const;
+             const Tend__& end, const Ta__& a, const Tb__& b,
+             const Tc__& c_arg__, const Td__& d_arg__, const Te__& e_arg__,
+             const Tf__& f, const Tg__& g, const Th__& h, const Ti__& i,
+             const Tj__& j, const Tk__& k, const Tl__& l, const Tm__& m,
+             const Tn__& n, const To__& o, const Tp__& p, const Tq__& q,
+             std::ostream* pstream__) const;
 };
 struct f2_functor__ {
   template <typename Ty_slice__, typename Tstart__,
@@ -29854,7 +29873,7 @@ struct g3_rsfunctor__ {
             stan::is_row_vector<Ta__>>* = nullptr>
   inline stan::return_type_t<Ty_slice__, Tstart__, Tend__, Ta__>
   operator()(const Ty_slice__& y_slice, const Tstart__& start,
-             const Tend__& end, std::ostream* pstream__, const Ta__& a) const;
+             const Tend__& end, std::ostream* pstream__, const Ta__& a_arg__) const;
 };
 struct f9_functor__ {
   template <typename Ty_slice__, typename Tstart__,
@@ -30891,12 +30910,12 @@ inline stan::return_type_t<Ty_slice__, Tstart__, Tend__, Ta__, Tb__,
                                                             Tp__, Tq__>>>>
 s_rsfunctor__::operator()(const Ty_slice__& y_slice, const Tstart__& start,
                           const Tend__& end, std::ostream* pstream__,
-                          const Ta__& a, const Tb__& b, const Tc__& c,
-                          const Td__& d, const Te__& e, const Tf__& f,
-                          const Tg__& g, const Th__& h, const Ti__& i,
-                          const Tj__& j, const Tk__& k, const Tl__& l,
-                          const Tm__& m, const Tn__& n, const To__& o,
-                          const Tp__& p, const Tq__& q)  const
+                          const Ta__& a, const Tb__& b, const Tc__& c_arg__,
+                          const Td__& d_arg__, const Te__& e_arg__,
+                          const Tf__& f, const Tg__& g, const Th__& h,
+                          const Ti__& i, const Tj__& j, const Tk__& k,
+                          const Tl__& l, const Tm__& m, const Tn__& n,
+                          const To__& o, const Tp__& p, const Tq__& q)  const
 {
   return s(y_slice, start + 1, end + 1, a, b, c, d, e, f, g, h, i, j, k, l,
            m, n, o, p, q, pstream__);
@@ -31002,7 +31021,7 @@ template <typename Ty_slice__, typename Tstart__, typename Tend__,
 inline stan::return_type_t<Ty_slice__, Tstart__, Tend__, Ta__>
 g2_rsfunctor__::operator()(const Ty_slice__& y_slice, const Tstart__& start,
                            const Tend__& end, std::ostream* pstream__,
-                           const Ta__& a)  const
+                           const Ta__& a_arg__)  const
 {
   return g2(y_slice, start + 1, end + 1, a, pstream__);
 }
@@ -31154,7 +31173,7 @@ template <typename Ty_slice__, typename Tstart__, typename Tend__,
           stan::is_eigen_matrix_dynamic<Ta__>>*>
 inline stan::return_type_t<Ty_slice__, Tstart__, Tend__, Ta__>
 g4_functor__::operator()(const Ty_slice__& y_slice, const Tstart__& start,
-                         const Tend__& end, const Ta__& a,
+                         const Tend__& end, const Ta__& a_arg__,
                          std::ostream* pstream__)  const
 {
   return g4(y_slice, start, end, a, pstream__);
@@ -31167,7 +31186,7 @@ template <typename Ty_slice__, typename Tstart__, typename Tend__,
 inline stan::return_type_t<Ty_slice__, Tstart__, Tend__, Ta__>
 g4_rsfunctor__::operator()(const Ty_slice__& y_slice, const Tstart__& start,
                            const Tend__& end, std::ostream* pstream__,
-                           const Ta__& a)  const
+                           const Ta__& a_arg__)  const
 {
   return g4(y_slice, start + 1, end + 1, a, pstream__);
 }
@@ -31198,7 +31217,7 @@ template <typename Ty_slice__, typename Tstart__, typename Tend__,
           stan::is_row_vector<Ta__>>*>
 inline stan::return_type_t<Ty_slice__, Tstart__, Tend__, Ta__>
 g3_functor__::operator()(const Ty_slice__& y_slice, const Tstart__& start,
-                         const Tend__& end, const Ta__& a,
+                         const Tend__& end, const Ta__& a_arg__,
                          std::ostream* pstream__)  const
 {
   return g3(y_slice, start, end, a, pstream__);
@@ -31263,7 +31282,7 @@ template <typename Ty_slice__, typename Tstart__, typename Tend__,
           stan::is_col_vector<Ta__>>*>
 inline stan::return_type_t<Ty_slice__, Tstart__, Tend__, Ta__>
 g2_functor__::operator()(const Ty_slice__& y_slice, const Tstart__& start,
-                         const Tend__& end, const Ta__& a,
+                         const Tend__& end, const Ta__& a_arg__,
                          std::ostream* pstream__)  const
 {
   return g2(y_slice, start, end, a, pstream__);
@@ -31310,12 +31329,12 @@ inline stan::return_type_t<Ty_slice__, Tstart__, Tend__, Ta__, Tb__,
                                                             Tp__, Tq__>>>>
 s_functor__::operator()(const Ty_slice__& y_slice, const Tstart__& start,
                         const Tend__& end, const Ta__& a, const Tb__& b,
-                        const Tc__& c, const Td__& d, const Te__& e,
-                        const Tf__& f, const Tg__& g, const Th__& h,
-                        const Ti__& i, const Tj__& j, const Tk__& k,
-                        const Tl__& l, const Tm__& m, const Tn__& n,
-                        const To__& o, const Tp__& p, const Tq__& q,
-                        std::ostream* pstream__)  const
+                        const Tc__& c_arg__, const Td__& d_arg__,
+                        const Te__& e_arg__, const Tf__& f, const Tg__& g,
+                        const Th__& h, const Ti__& i, const Tj__& j,
+                        const Tk__& k, const Tl__& l, const Tm__& m,
+                        const Tn__& n, const To__& o, const Tp__& p,
+                        const Tq__& q, std::ostream* pstream__)  const
 {
   return s(y_slice, start, end, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o,
            p, q, pstream__);
@@ -31338,7 +31357,7 @@ template <typename Ty_slice__, typename Tstart__, typename Tend__,
 inline stan::return_type_t<Ty_slice__, Tstart__, Tend__, Ta__>
 g3_rsfunctor__::operator()(const Ty_slice__& y_slice, const Tstart__& start,
                            const Tend__& end, std::ostream* pstream__,
-                           const Ta__& a)  const
+                           const Ta__& a_arg__)  const
 {
   return g3(y_slice, start + 1, end + 1, a, pstream__);
 }
@@ -33509,7 +33528,7 @@ struct rhs_odefunctor__ {
             stan::is_col_vector<Ty__>,
             stan::is_stan_scalar<Talpha__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tt__, Ty__, Talpha__>, -1, 1>
-  operator()(const Tt__& t, const Ty__& y, std::ostream* pstream__,
+  operator()(const Tt__& t, const Ty__& y_arg__, std::ostream* pstream__,
              const Talpha__& alpha) const;
 };
 struct rhs_functor__ {
@@ -33518,7 +33537,7 @@ struct rhs_functor__ {
             stan::is_col_vector<Ty__>,
             stan::is_stan_scalar<Talpha__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tt__, Ty__, Talpha__>, -1, 1>
-  operator()(const Tt__& t, const Ty__& y, const Talpha__& alpha,
+  operator()(const Tt__& t, const Ty__& y_arg__, const Talpha__& alpha,
              std::ostream* pstream__) const;
 };
 
@@ -33552,7 +33571,7 @@ template <typename Tt__, typename Ty__,
           typename Talpha__, stan::require_all_t<stan::is_stan_scalar<Tt__>,
           stan::is_col_vector<Ty__>, stan::is_stan_scalar<Talpha__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tt__, Ty__, Talpha__>, -1, 1>
-rhs_odefunctor__::operator()(const Tt__& t, const Ty__& y,
+rhs_odefunctor__::operator()(const Tt__& t, const Ty__& y_arg__,
                              std::ostream* pstream__, const Talpha__& alpha) 
 const
 {
@@ -33563,7 +33582,7 @@ template <typename Tt__, typename Ty__,
           typename Talpha__, stan::require_all_t<stan::is_stan_scalar<Tt__>,
           stan::is_col_vector<Ty__>, stan::is_stan_scalar<Talpha__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tt__, Ty__, Talpha__>, -1, 1>
-rhs_functor__::operator()(const Tt__& t, const Ty__& y,
+rhs_functor__::operator()(const Tt__& t, const Ty__& y_arg__,
                           const Talpha__& alpha, std::ostream* pstream__) 
 const
 {
