@@ -298,7 +298,7 @@ let check_rowvector loc es =
     | Error (_, meta) ->
         Semantic_error.invalid_matrix_types meta.loc meta.type_ |> error )
   | _ -> (
-    match get_consistent_types UnsizedType.DataOnly UReal es with
+    match get_consistent_types DataOnly UReal es with
     | Ok (ad_level, _, promotions) ->
         mk_typed_expression
           ~expr:(RowVectorExpr (Promotion.promote_list es promotions))
