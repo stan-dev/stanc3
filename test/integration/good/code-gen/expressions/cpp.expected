@@ -26,49 +26,47 @@ static constexpr std::array<const char*, 13> locations_array__ =
 
 struct foo1_functor__ {
   template <typename Ta__, typename Tb__, typename Tc__, typename Td__,
-            typename Te__, typename Tf__,
-            stan::require_t<stan::is_stan_scalar<Ta__>>* = nullptr,
-            stan::require_t<std::is_integral<Tb__>>* = nullptr,
-            stan::require_all_t<stan::is_std_vector<Tc__>, stan::is_stan_scalar<value_type_t<Tc__>>>* = nullptr,
-            stan::require_t<stan::is_col_vector<Td__>>* = nullptr,
-            stan::require_t<stan::is_eigen_matrix_dynamic<Te__>>* = nullptr,
-            stan::require_t<stan::is_row_vector<Tf__>>* = nullptr>
+            typename Te__,
+            typename Tf__, stan::require_all_t<stan::is_stan_scalar<Ta__>,
+            std::is_integral<Tb__>,
+            stan::is_std_vector<Tc__>, stan::is_stan_scalar<value_type_t<Tc__>>,
+            stan::is_col_vector<Td__>, stan::is_eigen_matrix_dynamic<Te__>,
+            stan::is_row_vector<Tf__>>* = nullptr>
   inline stan::return_type_t<Ta__, Tb__, Tc__, Td__, Te__, stan::return_type_t<Tf__>>
   operator()(const Ta__& a, const Tb__& b, const Tc__& c, const Td__& d,
              const Te__& e, const Tf__& f, std::ostream* pstream__) const;
 };
 struct foo2_functor__ {
-  template <typename Ta__, typename Tb__, typename Tc__,
-            stan::require_t<stan::is_col_vector<Ta__>>* = nullptr,
-            stan::require_all_t<stan::is_std_vector<Tb__>, stan::is_eigen_matrix_dynamic<value_type_t<Tb__>>>* = nullptr,
-            stan::require_all_t<stan::is_std_vector<Tc__>, stan::is_row_vector<value_type_t<Tc__>>>* = nullptr>
+  template <typename Ta__, typename Tb__,
+            typename Tc__, stan::require_all_t<stan::is_col_vector<Ta__>,
+            stan::is_std_vector<Tb__>, stan::is_eigen_matrix_dynamic<value_type_t<Tb__>>,
+            stan::is_std_vector<Tc__>, stan::is_row_vector<value_type_t<Tc__>>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Ta__, Tb__, Tc__>, -1, 1>
   operator()(const Ta__& a, const Tb__& b, const Tc__& c,
              std::ostream* pstream__) const;
 };
 struct foo3_functor__ {
-  template <typename Ta__, typename Tb__,
-            stan::require_t<stan::is_col_vector<Ta__>>* = nullptr,
-            stan::require_t<stan::is_eigen_matrix_dynamic<Tb__>>* = nullptr>
+  template <typename Ta__,
+            typename Tb__, stan::require_all_t<stan::is_col_vector<Ta__>,
+            stan::is_eigen_matrix_dynamic<Tb__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Ta__, Tb__>, -1, -1>
   operator()(const Ta__& a, const Tb__& b, std::ostream* pstream__) const;
 };
 struct add_udf_functor__ {
-  template <typename Ta__, typename Tb__,
-            stan::require_t<stan::is_eigen_matrix_dynamic<Ta__>>* = nullptr,
-            stan::require_t<stan::is_eigen_matrix_dynamic<Tb__>>* = nullptr>
+  template <typename Ta__,
+            typename Tb__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Ta__>,
+            stan::is_eigen_matrix_dynamic<Tb__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Ta__, Tb__>, -1, -1>
   operator()(const Ta__& a, const Tb__& b, std::ostream* pstream__) const;
 };
 
 template <typename Ta__, typename Tb__, typename Tc__, typename Td__,
-          typename Te__, typename Tf__,
-          stan::require_t<stan::is_stan_scalar<Ta__>>* = nullptr,
-          stan::require_t<std::is_integral<Tb__>>* = nullptr,
-          stan::require_all_t<stan::is_std_vector<Tc__>, stan::is_stan_scalar<value_type_t<Tc__>>>* = nullptr,
-          stan::require_t<stan::is_col_vector<Td__>>* = nullptr,
-          stan::require_t<stan::is_eigen_matrix_dynamic<Te__>>* = nullptr,
-          stan::require_t<stan::is_row_vector<Tf__>>* = nullptr>
+          typename Te__,
+          typename Tf__, stan::require_all_t<stan::is_stan_scalar<Ta__>,
+          std::is_integral<Tb__>,
+          stan::is_std_vector<Tc__>, stan::is_stan_scalar<value_type_t<Tc__>>,
+          stan::is_col_vector<Td__>, stan::is_eigen_matrix_dynamic<Te__>,
+          stan::is_row_vector<Tf__>>* = nullptr>
   inline stan::return_type_t<Ta__, Tb__, Tc__, Td__, Te__, stan::return_type_t<Tf__>>
   foo1(const Ta__& a, const Tb__& b, const Tc__& c, const Td__& d,
        const Te__& e, const Tf__& f, std::ostream* pstream__) {
@@ -90,10 +88,10 @@ template <typename Ta__, typename Tb__, typename Tc__, typename Td__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename Ta__, typename Tb__, typename Tc__,
-          stan::require_t<stan::is_col_vector<Ta__>>* = nullptr,
-          stan::require_all_t<stan::is_std_vector<Tb__>, stan::is_eigen_matrix_dynamic<value_type_t<Tb__>>>* = nullptr,
-          stan::require_all_t<stan::is_std_vector<Tc__>, stan::is_row_vector<value_type_t<Tc__>>>* = nullptr>
+template <typename Ta__, typename Tb__,
+          typename Tc__, stan::require_all_t<stan::is_col_vector<Ta__>,
+          stan::is_std_vector<Tb__>, stan::is_eigen_matrix_dynamic<value_type_t<Tb__>>,
+          stan::is_std_vector<Tc__>, stan::is_row_vector<value_type_t<Tc__>>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Ta__, Tb__, Tc__>, -1, 1>
   foo2(const Ta__& a, const Tb__& b, const Tc__& c, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Ta__, Tb__, Tc__>;
@@ -110,9 +108,9 @@ template <typename Ta__, typename Tb__, typename Tc__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename Ta__, typename Tb__,
-          stan::require_t<stan::is_col_vector<Ta__>>* = nullptr,
-          stan::require_t<stan::is_eigen_matrix_dynamic<Tb__>>* = nullptr>
+template <typename Ta__,
+          typename Tb__, stan::require_all_t<stan::is_col_vector<Ta__>,
+          stan::is_eigen_matrix_dynamic<Tb__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Ta__, Tb__>, -1, -1>
   foo3(const Ta__& a, const Tb__& b, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Ta__, Tb__>;
@@ -130,9 +128,9 @@ template <typename Ta__, typename Tb__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename Ta__, typename Tb__,
-          stan::require_t<stan::is_eigen_matrix_dynamic<Ta__>>* = nullptr,
-          stan::require_t<stan::is_eigen_matrix_dynamic<Tb__>>* = nullptr>
+template <typename Ta__,
+          typename Tb__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Ta__>,
+          stan::is_eigen_matrix_dynamic<Tb__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Ta__, Tb__>, -1, -1>
   add_udf(const Ta__& a, const Tb__& b, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Ta__, Tb__>;
@@ -151,13 +149,12 @@ template <typename Ta__, typename Tb__,
     }
     }
 template <typename Ta__, typename Tb__, typename Tc__, typename Td__,
-          typename Te__, typename Tf__,
-          stan::require_t<stan::is_stan_scalar<Ta__>>*,
-          stan::require_t<std::is_integral<Tb__>>*,
-          stan::require_all_t<stan::is_std_vector<Tc__>, stan::is_stan_scalar<value_type_t<Tc__>>>*,
-          stan::require_t<stan::is_col_vector<Td__>>*,
-          stan::require_t<stan::is_eigen_matrix_dynamic<Te__>>*,
-          stan::require_t<stan::is_row_vector<Tf__>>*>
+          typename Te__,
+          typename Tf__, stan::require_all_t<stan::is_stan_scalar<Ta__>,
+          std::is_integral<Tb__>,
+          stan::is_std_vector<Tc__>, stan::is_stan_scalar<value_type_t<Tc__>>,
+          stan::is_col_vector<Td__>, stan::is_eigen_matrix_dynamic<Te__>,
+          stan::is_row_vector<Tf__>>*>
 inline stan::return_type_t<Ta__, Tb__, Tc__, Td__, Te__, stan::return_type_t<Tf__>>
 foo1_functor__::operator()(const Ta__& a, const Tb__& b, const Tc__& c,
                            const Td__& d, const Te__& e, const Tf__& f,
@@ -166,10 +163,10 @@ foo1_functor__::operator()(const Ta__& a, const Tb__& b, const Tc__& c,
   return foo1(a, b, c, d, e, f, pstream__);
 }
 
-template <typename Ta__, typename Tb__, typename Tc__,
-          stan::require_t<stan::is_col_vector<Ta__>>*,
-          stan::require_all_t<stan::is_std_vector<Tb__>, stan::is_eigen_matrix_dynamic<value_type_t<Tb__>>>*,
-          stan::require_all_t<stan::is_std_vector<Tc__>, stan::is_row_vector<value_type_t<Tc__>>>*>
+template <typename Ta__, typename Tb__,
+          typename Tc__, stan::require_all_t<stan::is_col_vector<Ta__>,
+          stan::is_std_vector<Tb__>, stan::is_eigen_matrix_dynamic<value_type_t<Tb__>>,
+          stan::is_std_vector<Tc__>, stan::is_row_vector<value_type_t<Tc__>>>*>
 inline Eigen::Matrix<stan::return_type_t<Ta__, Tb__, Tc__>, -1, 1>
 foo2_functor__::operator()(const Ta__& a, const Tb__& b, const Tc__& c,
                            std::ostream* pstream__)  const
@@ -177,9 +174,9 @@ foo2_functor__::operator()(const Ta__& a, const Tb__& b, const Tc__& c,
   return foo2(a, b, c, pstream__);
 }
 
-template <typename Ta__, typename Tb__,
-          stan::require_t<stan::is_col_vector<Ta__>>*,
-          stan::require_t<stan::is_eigen_matrix_dynamic<Tb__>>*>
+template <typename Ta__,
+          typename Tb__, stan::require_all_t<stan::is_col_vector<Ta__>,
+          stan::is_eigen_matrix_dynamic<Tb__>>*>
 inline Eigen::Matrix<stan::return_type_t<Ta__, Tb__>, -1, -1>
 foo3_functor__::operator()(const Ta__& a, const Tb__& b,
                            std::ostream* pstream__)  const
@@ -187,9 +184,9 @@ foo3_functor__::operator()(const Ta__& a, const Tb__& b,
   return foo3(a, b, pstream__);
 }
 
-template <typename Ta__, typename Tb__,
-          stan::require_t<stan::is_eigen_matrix_dynamic<Ta__>>*,
-          stan::require_t<stan::is_eigen_matrix_dynamic<Tb__>>*>
+template <typename Ta__,
+          typename Tb__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Ta__>,
+          stan::is_eigen_matrix_dynamic<Tb__>>*>
 inline Eigen::Matrix<stan::return_type_t<Ta__, Tb__>, -1, -1>
 add_udf_functor__::operator()(const Ta__& a, const Tb__& b,
                               std::ostream* pstream__)  const

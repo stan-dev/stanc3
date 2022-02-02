@@ -36,8 +36,7 @@ let pp_template ppf template =
   | Require ((require_list : string list), (name : string)) ->
       let full_require_length = List.length require_list - 1 in
       if full_require_length = 0 then
-        pf ppf "stan::require_t<%s>*"
-          ((List.nth_exn require_list) 0 ^ "<" ^ name ^ ">")
+        pf ppf "%s" ((List.nth_exn require_list) 0 ^ "<" ^ name ^ ">")
       else
         let rec repper (s : string) (n : int) : string =
           match n with 1 -> s | _ -> s ^ repper s (n - 1) in
@@ -54,21 +53,36 @@ let pp_template ppf template =
               if full_require_length = depth then next_bool_expr
               else next_bool_expr ^ ", " in
         let multi_bool_expr = List.foldi ~f:mappy require_list ~init:"" in
-        pf ppf "stan::require_all_t<%s>*" multi_bool_expr
+        pf ppf "%s" multi_bool_expr
 
 let pp_template_defaults ppf template =
   match template with
   | Require _ -> pf ppf "%a = nullptr" pp_template template
   | _ -> pp_template ppf template
 
+let pp_template_requires ppf template_lst =
+  pf ppf "stan::require_all_t<%a>*" (list ~sep:comma pp_template) template_lst
+
+let pp_template_requires_defaults ppf (template : template list) =
+  pf ppf "%a = nullptr" pp_template_requires template
+
 let pp_templates ~defaults ppf templates =
-  match templates with
+  let find_requires default_val template =
+    match template with Require _ -> default_val | _ -> not default_val in
+  let templates' = List.filter ~f:(find_requires false) templates in
+  let require_templates =
+    List.filter ~f:(fun x -> find_requires true x) templates in
+  let template_printer =
+    if defaults then pp_template_defaults else pp_template in
+  let template_require_printer =
+    if defaults then pp_template_requires_defaults else pp_template_requires
+  in
+  match templates' with
   | [] -> ()
   | _ ->
-      pf ppf "template <@[%a@]>@ "
-        (list ~sep:comma
-           (if defaults then pp_template_defaults else pp_template) )
-        templates
+      pf ppf "template <@[%a, %a@]>@ "
+        (list ~sep:comma template_printer)
+        templates' template_require_printer require_templates
 
 type found_functor =
   { struct_template: template option
