@@ -80,9 +80,14 @@ let pp_templates ~defaults ppf templates =
   match templates' with
   | [] -> ()
   | _ ->
-      pf ppf "template <@[%a, %a@]>@ "
-        (list ~sep:comma template_printer)
-        templates' template_require_printer require_templates
+      if List.length require_templates > 0 then
+        pf ppf "template <@[%a, %a@]>@ "
+          (list ~sep:comma template_printer)
+          templates' template_require_printer require_templates
+      else
+        pf ppf "template <@[%a@]>@ "
+          (list ~sep:comma template_printer)
+          templates'
 
 type found_functor =
   { struct_template: template option
@@ -161,7 +166,7 @@ let%expect_test "arg types templated correctly" =
   [(AutoDiffable, "xreal", UReal); (DataOnly, "yint", UInt)]
   |> maybe_templated_arg_types |> List.filter_opt |> String.concat ~sep:","
   |> print_endline ;
-  [%expect {| Txreal__,Tyint__ |}]
+  [%expect {| Txreal__ |}]
 
 (** Print the code for promoting stan real types
  @param ppf A pretty printer

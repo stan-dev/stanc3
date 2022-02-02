@@ -33,11 +33,8 @@ static constexpr std::array<const char*, 21> locations_array__ =
  " (in 'basic.stan', line 36, column 33 to line 38, column 3)"};
 
 struct int_only_multiplication_functor__ {
-  template <typename Ta__,
-            typename Tb__, stan::require_all_t<std::is_integral<Ta__>,
-            std::is_integral<Tb__>>* = nullptr>
   inline int
-  operator()(const Ta__& a, const Tb__& b, std::ostream* pstream__) const;
+  operator()(const int a, const int b, std::ostream* pstream__) const;
 };
 struct test_lgamma_functor__ {
   template <typename Tx__, stan::require_all_t<stan::is_stan_scalar<Tx__>>* = nullptr>
@@ -52,9 +49,8 @@ struct test_lp_functor__ {
              std::ostream* pstream__) const;
 };
 struct int_array_fun_functor__ {
-  template <typename Ta__, stan::require_all_t<stan::is_std_vector<Ta__>, std::is_integral<stan::value_type_t<Ta__>>>* = nullptr>
-  inline stan::return_type_t<Ta__>
-  operator()(const Ta__& a, std::ostream* pstream__) const;
+  inline double
+  operator()(const std::vector<int>& a, std::ostream* pstream__) const;
 };
 struct array_fun_functor__ {
   template <typename Ta__, stan::require_all_t<stan::is_std_vector<Ta__>, stan::is_stan_scalar<stan::value_type_t<Ta__>>>* = nullptr>
@@ -117,10 +113,9 @@ template <typename Ta__, stan::require_all_t<stan::is_std_vector<Ta__>, stan::is
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename Ta__, stan::require_all_t<stan::is_std_vector<Ta__>, std::is_integral<stan::value_type_t<Ta__>>>* = nullptr>
-  inline stan::return_type_t<Ta__>
-  int_array_fun(const Ta__& a, std::ostream* pstream__) {
-    using local_scalar_t__ = stan::return_type_t<Ta__>;
+inline double
+  int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
+    using local_scalar_t__ = double;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
@@ -159,12 +154,9 @@ template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>* = nullp
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename Ta__,
-          typename Tb__, stan::require_all_t<std::is_integral<Ta__>,
-          std::is_integral<Tb__>>* = nullptr> inline int
-  int_only_multiplication(const Ta__& a, const Tb__& b,
-                          std::ostream* pstream__) {
-    using local_scalar_t__ = stan::return_type_t<Ta__, Tb__>;
+inline int
+  int_only_multiplication(const int a, const int b, std::ostream* pstream__) {
+    using local_scalar_t__ = double;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
@@ -242,11 +234,8 @@ template <bool propto__, typename Ta__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename Ta__,
-          typename Tb__, stan::require_all_t<std::is_integral<Ta__>,
-          std::is_integral<Tb__>>*>
 inline int
-int_only_multiplication_functor__::operator()(const Ta__& a, const Tb__& b,
+int_only_multiplication_functor__::operator()(const int a, const int b,
                                               std::ostream* pstream__)  const
 {
   return int_only_multiplication(a, b, pstream__);
@@ -270,10 +259,9 @@ test_lp_functor__::operator()(const Ta__& a, T_lp__& lp__,
   return test_lp<propto__>(a, lp__, lp_accum__, pstream__);
 }
 
-template <typename Ta__, stan::require_all_t<stan::is_std_vector<Ta__>, std::is_integral<stan::value_type_t<Ta__>>>*>
-inline stan::return_type_t<Ta__>
-int_array_fun_functor__::operator()(const Ta__& a, std::ostream* pstream__) 
-const
+inline double
+int_array_fun_functor__::operator()(const std::vector<int>& a,
+                                    std::ostream* pstream__)  const
 {
   return int_array_fun(a, pstream__);
 }
@@ -429,11 +417,8 @@ static constexpr std::array<const char*, 21> locations_array__ =
  " (in 'basic.stanfunctions', line 35, column 31 to line 37, column 1)"};
 
 struct int_only_multiplication_functor__ {
-  template <typename Ta__,
-            typename Tb__, stan::require_all_t<std::is_integral<Ta__>,
-            std::is_integral<Tb__>>* = nullptr>
   inline int
-  operator()(const Ta__& a, const Tb__& b, std::ostream* pstream__) const;
+  operator()(const int a, const int b, std::ostream* pstream__) const;
 };
 struct test_lgamma_functor__ {
   template <typename Tx__, stan::require_all_t<stan::is_stan_scalar<Tx__>>* = nullptr>
@@ -448,9 +433,8 @@ struct test_lp_functor__ {
              std::ostream* pstream__) const;
 };
 struct int_array_fun_functor__ {
-  template <typename Ta__, stan::require_all_t<stan::is_std_vector<Ta__>, std::is_integral<stan::value_type_t<Ta__>>>* = nullptr>
-  inline stan::return_type_t<Ta__>
-  operator()(const Ta__& a, std::ostream* pstream__) const;
+  inline double
+  operator()(const std::vector<int>& a, std::ostream* pstream__) const;
 };
 struct array_fun_functor__ {
   template <typename Ta__, stan::require_all_t<stan::is_std_vector<Ta__>, stan::is_stan_scalar<stan::value_type_t<Ta__>>>* = nullptr>
@@ -513,10 +497,9 @@ template <typename Ta__, stan::require_all_t<stan::is_std_vector<Ta__>, stan::is
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename Ta__, stan::require_all_t<stan::is_std_vector<Ta__>, std::is_integral<stan::value_type_t<Ta__>>>* = nullptr>
-  inline stan::return_type_t<Ta__>
-  int_array_fun(const Ta__& a, std::ostream* pstream__) {
-    using local_scalar_t__ = stan::return_type_t<Ta__>;
+inline double
+  int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
+    using local_scalar_t__ = double;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
@@ -555,12 +538,9 @@ template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>* = nullp
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename Ta__,
-          typename Tb__, stan::require_all_t<std::is_integral<Ta__>,
-          std::is_integral<Tb__>>* = nullptr> inline int
-  int_only_multiplication(const Ta__& a, const Tb__& b,
-                          std::ostream* pstream__) {
-    using local_scalar_t__ = stan::return_type_t<Ta__, Tb__>;
+inline int
+  int_only_multiplication(const int a, const int b, std::ostream* pstream__) {
+    using local_scalar_t__ = double;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
@@ -638,11 +618,8 @@ template <bool propto__, typename Ta__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename Ta__,
-          typename Tb__, stan::require_all_t<std::is_integral<Ta__>,
-          std::is_integral<Tb__>>*>
 inline int
-int_only_multiplication_functor__::operator()(const Ta__& a, const Tb__& b,
+int_only_multiplication_functor__::operator()(const int a, const int b,
                                               std::ostream* pstream__)  const
 {
   return int_only_multiplication(a, b, pstream__);
@@ -666,10 +643,9 @@ test_lp_functor__::operator()(const Ta__& a, T_lp__& lp__,
   return test_lp<propto__>(a, lp__, lp_accum__, pstream__);
 }
 
-template <typename Ta__, stan::require_all_t<stan::is_std_vector<Ta__>, std::is_integral<stan::value_type_t<Ta__>>>*>
-inline stan::return_type_t<Ta__>
-int_array_fun_functor__::operator()(const Ta__& a, std::ostream* pstream__) 
-const
+inline double
+int_array_fun_functor__::operator()(const std::vector<int>& a,
+                                    std::ostream* pstream__)  const
 {
   return int_array_fun(a, pstream__);
 }
@@ -815,15 +791,15 @@ static constexpr std::array<const char*, 11> locations_array__ =
  " (in 'integrate.stan', line 14, column 23 to line 24, column 3)"};
 
 struct integrand_ode_functor__ {
-  template <typename Tr__, typename Tf__, typename Ttheta__, typename Tx_r__,
-            typename Tx_i__, stan::require_all_t<stan::is_stan_scalar<Tr__>,
+  template <typename Tr__, typename Tf__, typename Ttheta__,
+            typename Tx_r__, stan::require_all_t<stan::is_stan_scalar<Tr__>,
             stan::is_std_vector<Tf__>, stan::is_stan_scalar<stan::value_type_t<Tf__>>,
             stan::is_std_vector<Ttheta__>, stan::is_stan_scalar<stan::value_type_t<Ttheta__>>,
-            stan::is_std_vector<Tx_r__>, stan::is_stan_scalar<stan::value_type_t<Tx_r__>>,
-            stan::is_std_vector<Tx_i__>, std::is_integral<stan::value_type_t<Tx_i__>>>* = nullptr>
-  inline std::vector<stan::return_type_t<Tr__, Tf__, Ttheta__, Tx_r__, Tx_i__>>
+            stan::is_std_vector<Tx_r__>, stan::is_stan_scalar<stan::value_type_t<Tx_r__>>>* = nullptr>
+  inline std::vector<stan::return_type_t<Tr__, Tf__, Ttheta__, Tx_r__>>
   operator()(const Tr__& r, const Tf__& f, const Ttheta__& theta,
-             const Tx_r__& x_r, const Tx_i__& x_i, std::ostream* pstream__) const;
+             const Tx_r__& x_r, const std::vector<int>& x_i,
+             std::ostream* pstream__) const;
 };
 struct ode_integrate_functor__ {
   inline double
@@ -852,17 +828,17 @@ template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>* = nullp
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename Tr__, typename Tf__, typename Ttheta__, typename Tx_r__,
-          typename Tx_i__, stan::require_all_t<stan::is_stan_scalar<Tr__>,
+template <typename Tr__, typename Tf__, typename Ttheta__,
+          typename Tx_r__, stan::require_all_t<stan::is_stan_scalar<Tr__>,
           stan::is_std_vector<Tf__>, stan::is_stan_scalar<stan::value_type_t<Tf__>>,
           stan::is_std_vector<Ttheta__>, stan::is_stan_scalar<stan::value_type_t<Ttheta__>>,
-          stan::is_std_vector<Tx_r__>, stan::is_stan_scalar<stan::value_type_t<Tx_r__>>,
-          stan::is_std_vector<Tx_i__>, std::is_integral<stan::value_type_t<Tx_i__>>>* = nullptr>
-  inline std::vector<stan::return_type_t<Tr__, Tf__, Ttheta__, Tx_r__, Tx_i__>>
+          stan::is_std_vector<Tx_r__>, stan::is_stan_scalar<stan::value_type_t<Tx_r__>>>* = nullptr>
+  inline std::vector<stan::return_type_t<Tr__, Tf__, Ttheta__, Tx_r__>>
   integrand_ode(const Tr__& r, const Tf__& f, const Ttheta__& theta,
-                const Tx_r__& x_r, const Tx_i__& x_i, std::ostream* pstream__) {
+                const Tx_r__& x_r, const std::vector<int>& x_i,
+                std::ostream* pstream__) {
     using local_scalar_t__ =
-            stan::return_type_t<Tr__, Tf__, Ttheta__, Tx_r__, Tx_i__>;
+            stan::return_type_t<Tr__, Tf__, Ttheta__, Tx_r__>;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
@@ -906,16 +882,15 @@ inline double ode_integrate(std::ostream* pstream__) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename Tr__, typename Tf__, typename Ttheta__, typename Tx_r__,
-          typename Tx_i__, stan::require_all_t<stan::is_stan_scalar<Tr__>,
+template <typename Tr__, typename Tf__, typename Ttheta__,
+          typename Tx_r__, stan::require_all_t<stan::is_stan_scalar<Tr__>,
           stan::is_std_vector<Tf__>, stan::is_stan_scalar<stan::value_type_t<Tf__>>,
           stan::is_std_vector<Ttheta__>, stan::is_stan_scalar<stan::value_type_t<Ttheta__>>,
-          stan::is_std_vector<Tx_r__>, stan::is_stan_scalar<stan::value_type_t<Tx_r__>>,
-          stan::is_std_vector<Tx_i__>, std::is_integral<stan::value_type_t<Tx_i__>>>*>
-inline std::vector<stan::return_type_t<Tr__, Tf__, Ttheta__, Tx_r__, Tx_i__>>
+          stan::is_std_vector<Tx_r__>, stan::is_stan_scalar<stan::value_type_t<Tx_r__>>>*>
+inline std::vector<stan::return_type_t<Tr__, Tf__, Ttheta__, Tx_r__>>
 integrand_ode_functor__::operator()(const Tr__& r, const Tf__& f,
                                     const Ttheta__& theta, const Tx_r__& x_r,
-                                    const Tx_i__& x_i,
+                                    const std::vector<int>& x_i,
                                     std::ostream* pstream__)  const
 {
   return integrand_ode(r, f, theta, x_r, x_i, pstream__);

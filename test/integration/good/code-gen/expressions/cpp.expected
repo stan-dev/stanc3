@@ -25,15 +25,13 @@ static constexpr std::array<const char*, 13> locations_array__ =
  " (in 'simple_function.stan', line 11, column 37 to line 13, column 3)"};
 
 struct foo1_functor__ {
-  template <typename Ta__, typename Tb__, typename Tc__, typename Td__,
-            typename Te__,
+  template <typename Ta__, typename Tc__, typename Td__, typename Te__,
             typename Tf__, stan::require_all_t<stan::is_stan_scalar<Ta__>,
-            std::is_integral<Tb__>,
             stan::is_std_vector<Tc__>, stan::is_stan_scalar<stan::value_type_t<Tc__>>,
             stan::is_col_vector<Td__>, stan::is_eigen_matrix_dynamic<Te__>,
             stan::is_row_vector<Tf__>>* = nullptr>
-  inline stan::return_type_t<Ta__, Tb__, Tc__, Td__, Te__, stan::return_type_t<Tf__>>
-  operator()(const Ta__& a, const Tb__& b, const Tc__& c, const Td__& d,
+  inline stan::return_type_t<Ta__, Tc__, Td__, Te__, Tf__>
+  operator()(const Ta__& a, const int b, const Tc__& c, const Td__& d,
              const Te__& e, const Tf__& f, std::ostream* pstream__) const;
 };
 struct foo2_functor__ {
@@ -60,19 +58,16 @@ struct add_udf_functor__ {
   operator()(const Ta__& a, const Tb__& b, std::ostream* pstream__) const;
 };
 
-template <typename Ta__, typename Tb__, typename Tc__, typename Td__,
-          typename Te__,
+template <typename Ta__, typename Tc__, typename Td__, typename Te__,
           typename Tf__, stan::require_all_t<stan::is_stan_scalar<Ta__>,
-          std::is_integral<Tb__>,
           stan::is_std_vector<Tc__>, stan::is_stan_scalar<stan::value_type_t<Tc__>>,
           stan::is_col_vector<Td__>, stan::is_eigen_matrix_dynamic<Te__>,
           stan::is_row_vector<Tf__>>* = nullptr>
-  inline stan::return_type_t<Ta__, Tb__, Tc__, Td__, Te__, stan::return_type_t<Tf__>>
-  foo1(const Ta__& a, const Tb__& b, const Tc__& c, const Td__& d_arg__,
+  inline stan::return_type_t<Ta__, Tc__, Td__, Te__, Tf__>
+  foo1(const Ta__& a, const int b, const Tc__& c, const Td__& d_arg__,
        const Te__& e_arg__, const Tf__& f_arg__, std::ostream* pstream__) {
     using local_scalar_t__ =
-            stan::return_type_t<Ta__, Tb__, Tc__, Td__, Te__,
-                                stan::return_type_t<Tf__>>;
+            stan::return_type_t<Ta__, Tc__, Td__, Te__, Tf__>;
     int current_statement__ = 0; 
     const auto& d = stan::math::to_ref(d_arg__);
     const auto& e = stan::math::to_ref(e_arg__);
@@ -149,15 +144,13 @@ template <typename Ta__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename Ta__, typename Tb__, typename Tc__, typename Td__,
-          typename Te__,
+template <typename Ta__, typename Tc__, typename Td__, typename Te__,
           typename Tf__, stan::require_all_t<stan::is_stan_scalar<Ta__>,
-          std::is_integral<Tb__>,
           stan::is_std_vector<Tc__>, stan::is_stan_scalar<stan::value_type_t<Tc__>>,
           stan::is_col_vector<Td__>, stan::is_eigen_matrix_dynamic<Te__>,
           stan::is_row_vector<Tf__>>*>
-inline stan::return_type_t<Ta__, Tb__, Tc__, Td__, Te__, stan::return_type_t<Tf__>>
-foo1_functor__::operator()(const Ta__& a, const Tb__& b, const Tc__& c,
+inline stan::return_type_t<Ta__, Tc__, Td__, Te__, Tf__>
+foo1_functor__::operator()(const Ta__& a, const int b, const Tc__& c,
                            const Td__& d, const Te__& e, const Tf__& f,
                            std::ostream* pstream__)  const
 {

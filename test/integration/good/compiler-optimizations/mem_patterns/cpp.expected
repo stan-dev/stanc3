@@ -2603,9 +2603,8 @@ static constexpr std::array<const char*, 116> locations_array__ =
  " (in 'indexing.stan', line 5, column 27 to line 7, column 3)"};
 
 struct mask_fun_functor__ {
-  template <typename Ti__, stan::require_all_t<std::is_integral<Ti__>>* = nullptr>
   inline int
-  operator()(const Ti__& i, std::ostream* pstream__) const;
+  operator()(const int i, std::ostream* pstream__) const;
 };
 struct udf_fun_functor__ {
   template <typename TA__, stan::require_all_t<stan::is_col_vector<TA__>>* = nullptr>
@@ -2613,9 +2612,8 @@ struct udf_fun_functor__ {
   operator()(const TA__& A, std::ostream* pstream__) const;
 };
 
-template <typename Ti__, stan::require_all_t<std::is_integral<Ti__>>* = nullptr>
-  inline int mask_fun(const Ti__& i, std::ostream* pstream__) {
-    using local_scalar_t__ = stan::return_type_t<Ti__>;
+inline int mask_fun(const int i, std::ostream* pstream__) {
+    using local_scalar_t__ = double;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
@@ -2645,9 +2643,8 @@ template <typename TA__, stan::require_all_t<stan::is_col_vector<TA__>>* = nullp
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename Ti__, stan::require_all_t<std::is_integral<Ti__>>*>
 inline int
-mask_fun_functor__::operator()(const Ti__& i, std::ostream* pstream__)  const
+mask_fun_functor__::operator()(const int i, std::ostream* pstream__)  const
 {
   return mask_fun(i, pstream__);
 }
