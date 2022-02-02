@@ -142,11 +142,14 @@ let is_dataonlytype possibly_adtype : bool =
 
 let is_scalar_type = function UReal | UInt -> true | _ -> false
 
-let rec promote_array ut scalar =
-  match (ut, scalar) with
-  | (UInt | UReal), (UReal | UComplex) -> scalar
-  | UArray ut2, _ -> UArray (promote_array ut2 scalar)
-  | _, _ -> ut
+let promote_array ut scalar =
+  let scalar = fst (unwind_array_type scalar) in
+  let rec loop ut =
+    match (ut, scalar) with
+    | (UInt | UReal), (UReal | UComplex) -> scalar
+    | UArray ut2, _ -> UArray (loop ut2)
+    | _, _ -> ut in
+  loop ut
 
 let rec is_int_type ut =
   match ut with UInt -> true | UArray ut -> is_int_type ut | _ -> false

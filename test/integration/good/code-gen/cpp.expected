@@ -24098,14 +24098,11 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
         current_statement__ = 10;
         lp_accum__.add(
           stan::math::normal_lpdf<propto__>(y,
-            foo(std::vector<double>{stan::math::promote_scalar<double>(
-              1), 2.3}, pstream__), 1));
+            foo(std::vector<double>{1, 2.3}, pstream__), 1));
         current_statement__ = 11;
         lp_accum__.add(
           stan::math::normal_lpdf<propto__>(std::vector<double>{5.5, 6.5},
-            foo(std::vector<local_scalar_t__>{z,
-              stan::math::promote_scalar<local_scalar_t__>(2.3)}, pstream__),
-            1));
+            foo(std::vector<local_scalar_t__>{z, 2.3}, pstream__), 1));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
