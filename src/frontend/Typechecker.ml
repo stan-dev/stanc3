@@ -257,19 +257,18 @@ let check_variable cf loc tenv id =
   mk_typed_expression ~expr:(Variable id) ~ad_level ~type_ ~loc
 
 let get_consistent_types ad_level type_ es =
+  let ad =
+    UnsizedType.lub_ad_type
+      (ad_level :: List.map ~f:(fun e -> e.emeta.ad_level) es) in
   let f state e =
     match state with
     | Error e -> Error e
-    | Ok (ad, ty) -> (
-        let ad =
-          if UnsizedType.autodifftype_can_convert e.emeta.ad_level ad then
-            e.emeta.ad_level
-          else ad in
-        match UnsizedType.common_type (ty, e.emeta.type_) with
-        | Some ty -> Ok (ad, ty)
-        | None -> Error (ty, e.emeta) ) in
-  List.fold ~init:(Ok (ad_level, type_)) ~f es
-  |> Result.map ~f:(fun (ad, ty) ->
+    | Ok ty -> (
+      match UnsizedType.common_type (ty, e.emeta.type_) with
+      | Some ty -> Ok ty
+      | None -> Error (ty, e.emeta) ) in
+  List.fold ~init:(Ok type_) ~f es
+  |> Result.map ~f:(fun ty ->
          let promotions =
            List.map (get_arg_types es)
              ~f:(Promotion.get_type_promotion_exn (ad, ty)) in
@@ -299,7 +298,7 @@ let check_rowvector loc es =
     | Error (_, meta) ->
         Semantic_error.invalid_matrix_types meta.loc meta.type_ |> error )
   | _ -> (
-    match get_consistent_types DataOnly UReal es with
+    match get_consistent_types UnsizedType.DataOnly UReal es with
     | Ok (ad_level, _, promotions) ->
         mk_typed_expression
           ~expr:(RowVectorExpr (Promotion.promote_list es promotions))
