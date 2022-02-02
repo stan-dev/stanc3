@@ -1376,8 +1376,7 @@ struct prob_uncaptured_functor__ {
             stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
   operator()(const Tnind__& nind, const Tn_occasions__& n_occasions,
-             const Tp__& p_arg__, const Tphi__& phi_arg__,
-             std::ostream* pstream__) const;
+             const Tp__& p, const Tphi__& phi, std::ostream* pstream__) const;
 };
 struct last_capture_functor__ {
   template <typename Ty_i__, stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<stan::value_type_t<Ty_i__>>>* = nullptr>
@@ -1441,7 +1440,8 @@ template <typename Tnind__, typename Tn_occasions__, typename Tp__,
           stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
   prob_uncaptured(const Tnind__& nind, const Tn_occasions__& n_occasions,
-                  const Tp__& p, const Tphi__& phi, std::ostream* pstream__) {
+                  const Tp__& p_arg__, const Tphi__& phi_arg__,
+                  std::ostream* pstream__) {
     using local_scalar_t__ =
             stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>;
     int current_statement__ = 0; 
@@ -1514,8 +1514,7 @@ template <typename Tnind__, typename Tn_occasions__, typename Tp__,
 inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
 prob_uncaptured_functor__::operator()(const Tnind__& nind,
                                       const Tn_occasions__& n_occasions,
-                                      const Tp__& p_arg__,
-                                      const Tphi__& phi_arg__,
+                                      const Tp__& p, const Tphi__& phi,
                                       std::ostream* pstream__)  const
 {
   return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
@@ -6583,8 +6582,7 @@ struct prob_uncaptured_functor__ {
             stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
   operator()(const Tnind__& nind, const Tn_occasions__& n_occasions,
-             const Tp__& p_arg__, const Tphi__& phi_arg__,
-             std::ostream* pstream__) const;
+             const Tp__& p, const Tphi__& phi, std::ostream* pstream__) const;
 };
 struct last_capture_functor__ {
   template <typename Ty_i__, stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<stan::value_type_t<Ty_i__>>>* = nullptr>
@@ -6648,7 +6646,8 @@ template <typename Tnind__, typename Tn_occasions__, typename Tp__,
           stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
   prob_uncaptured(const Tnind__& nind, const Tn_occasions__& n_occasions,
-                  const Tp__& p, const Tphi__& phi, std::ostream* pstream__) {
+                  const Tp__& p_arg__, const Tphi__& phi_arg__,
+                  std::ostream* pstream__) {
     using local_scalar_t__ =
             stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>;
     int current_statement__ = 0; 
@@ -6721,8 +6720,7 @@ template <typename Tnind__, typename Tn_occasions__, typename Tp__,
 inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
 prob_uncaptured_functor__::operator()(const Tnind__& nind,
                                       const Tn_occasions__& n_occasions,
-                                      const Tp__& p_arg__,
-                                      const Tphi__& phi_arg__,
+                                      const Tp__& p, const Tphi__& phi,
                                       std::ostream* pstream__)  const
 {
   return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
@@ -7652,8 +7650,7 @@ struct prob_uncaptured_functor__ {
             typename Tphi__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tp__>,
             stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tp__, Tphi__>, -1, -1>
-  operator()(const Tp__& p_arg__, const Tphi__& phi_arg__,
-             std::ostream* pstream__) const;
+  operator()(const Tp__& p, const Tphi__& phi, std::ostream* pstream__) const;
 };
 struct last_capture_functor__ {
   template <typename Ty_i__, stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<stan::value_type_t<Ty_i__>>>* = nullptr>
@@ -7674,8 +7671,8 @@ struct js_super_lp_functor__ {
             stan::is_eigen_matrix_dynamic<Tchi__>>* = nullptr>
   inline void
   operator()(const Ty__& y, const Tfirst__& first, const Tlast__& last,
-             const Tp__& p_arg__, const Tphi__& phi_arg__, const Tpsi__& psi,
-             const Tnu__& nu_arg__, const Tchi__& chi_arg__, T_lp__& lp__,
+             const Tp__& p, const Tphi__& phi, const Tpsi__& psi,
+             const Tnu__& nu, const Tchi__& chi, T_lp__& lp__,
              T_lp_accum__& lp_accum__, std::ostream* pstream__) const;
 };
 
@@ -7732,7 +7729,8 @@ template <typename Tp__,
           typename Tphi__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tp__>,
           stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tp__, Tphi__>, -1, -1>
-  prob_uncaptured(const Tp__& p, const Tphi__& phi, std::ostream* pstream__) {
+  prob_uncaptured(const Tp__& p_arg__, const Tphi__& phi_arg__,
+                  std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Tp__, Tphi__>;
     int current_statement__ = 0; 
     const auto& p = stan::math::to_ref(p_arg__);
@@ -7804,8 +7802,9 @@ template <bool propto__, typename Ty__, typename Tfirst__, typename Tlast__,
           stan::is_stan_scalar<Tpsi__>, stan::is_col_vector<Tnu__>,
           stan::is_eigen_matrix_dynamic<Tchi__>>* = nullptr> inline void
   js_super_lp(const Ty__& y, const Tfirst__& first, const Tlast__& last,
-              const Tp__& p, const Tphi__& phi, const Tpsi__& psi,
-              const Tnu__& nu, const Tchi__& chi, T_lp__& lp__,
+              const Tp__& p_arg__, const Tphi__& phi_arg__,
+              const Tpsi__& psi, const Tnu__& nu_arg__,
+              const Tchi__& chi_arg__, T_lp__& lp__,
               T_lp_accum__& lp_accum__, std::ostream* pstream__) {
     using local_scalar_t__ =
             stan::return_type_t<Ty__, Tfirst__, Tlast__, Tp__, Tphi__,
@@ -8051,8 +8050,7 @@ template <typename Tp__,
           typename Tphi__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tp__>,
           stan::is_eigen_matrix_dynamic<Tphi__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tp__, Tphi__>, -1, -1>
-prob_uncaptured_functor__::operator()(const Tp__& p_arg__,
-                                      const Tphi__& phi_arg__,
+prob_uncaptured_functor__::operator()(const Tp__& p, const Tphi__& phi,
                                       std::ostream* pstream__)  const
 {
   return prob_uncaptured(p, phi, pstream__);
@@ -8078,11 +8076,10 @@ template <bool propto__, typename Ty__, typename Tfirst__, typename Tlast__,
           stan::is_eigen_matrix_dynamic<Tchi__>>*>
 inline void
 js_super_lp_functor__::operator()(const Ty__& y, const Tfirst__& first,
-                                  const Tlast__& last, const Tp__& p_arg__,
-                                  const Tphi__& phi_arg__, const Tpsi__& psi,
-                                  const Tnu__& nu_arg__,
-                                  const Tchi__& chi_arg__, T_lp__& lp__,
-                                  T_lp_accum__& lp_accum__,
+                                  const Tlast__& last, const Tp__& p,
+                                  const Tphi__& phi, const Tpsi__& psi,
+                                  const Tnu__& nu, const Tchi__& chi,
+                                  T_lp__& lp__, T_lp_accum__& lp_accum__,
                                   std::ostream* pstream__)  const
 {
   return js_super_lp<propto__>(y, first, last, p, phi, psi, nu, chi, lp__,
@@ -10458,8 +10455,7 @@ struct prob_uncaptured_functor__ {
             stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
   operator()(const Tnind__& nind, const Tn_occasions__& n_occasions,
-             const Tp__& p_arg__, const Tphi__& phi_arg__,
-             std::ostream* pstream__) const;
+             const Tp__& p, const Tphi__& phi, std::ostream* pstream__) const;
 };
 struct last_capture_functor__ {
   template <typename Ty_i__, stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<stan::value_type_t<Ty_i__>>>* = nullptr>
@@ -10523,7 +10519,8 @@ template <typename Tnind__, typename Tn_occasions__, typename Tp__,
           stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
   prob_uncaptured(const Tnind__& nind, const Tn_occasions__& n_occasions,
-                  const Tp__& p, const Tphi__& phi, std::ostream* pstream__) {
+                  const Tp__& p_arg__, const Tphi__& phi_arg__,
+                  std::ostream* pstream__) {
     using local_scalar_t__ =
             stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>;
     int current_statement__ = 0; 
@@ -10596,8 +10593,7 @@ template <typename Tnind__, typename Tn_occasions__, typename Tp__,
 inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
 prob_uncaptured_functor__::operator()(const Tnind__& nind,
                                       const Tn_occasions__& n_occasions,
-                                      const Tp__& p_arg__,
-                                      const Tphi__& phi_arg__,
+                                      const Tp__& p, const Tphi__& phi,
                                       std::ostream* pstream__)  const
 {
   return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
@@ -11523,9 +11519,9 @@ struct jolly_seber_lp_functor__ {
             stan::is_eigen_matrix_dynamic<Tchi__>>* = nullptr>
   inline void
   operator()(const Ty__& y, const Tfirst__& first, const Tlast__& last,
-             const Tp__& p_arg__, const Tphi__& phi_arg__,
-             const Tgamma__& gamma_arg__, const Tchi__& chi_arg__,
-             T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) const;
+             const Tp__& p, const Tphi__& phi, const Tgamma__& gamma,
+             const Tchi__& chi, T_lp__& lp__, T_lp_accum__& lp_accum__,
+             std::ostream* pstream__) const;
 };
 struct last_capture_functor__ {
   template <typename Ty_i__, stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<stan::value_type_t<Ty_i__>>>* = nullptr>
@@ -11535,7 +11531,7 @@ struct last_capture_functor__ {
 struct seq_cprob_functor__ {
   template <typename Tgamma__, stan::require_all_t<stan::is_col_vector<Tgamma__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tgamma__>, -1, 1>
-  operator()(const Tgamma__& gamma_arg__, std::ostream* pstream__) const;
+  operator()(const Tgamma__& gamma, std::ostream* pstream__) const;
 };
 struct first_capture_functor__ {
   template <typename Ty_i__, stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<stan::value_type_t<Ty_i__>>>* = nullptr>
@@ -11547,8 +11543,7 @@ struct prob_uncaptured_functor__ {
             typename Tphi__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tp__>,
             stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tp__, Tphi__>, -1, -1>
-  operator()(const Tp__& p_arg__, const Tphi__& phi_arg__,
-             std::ostream* pstream__) const;
+  operator()(const Tp__& p, const Tphi__& phi, std::ostream* pstream__) const;
 };
 
 template <typename Ty_i__, stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<stan::value_type_t<Ty_i__>>>* = nullptr>
@@ -11604,7 +11599,8 @@ template <typename Tp__,
           typename Tphi__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tp__>,
           stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tp__, Tphi__>, -1, -1>
-  prob_uncaptured(const Tp__& p, const Tphi__& phi, std::ostream* pstream__) {
+  prob_uncaptured(const Tp__& p_arg__, const Tphi__& phi_arg__,
+                  std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Tp__, Tphi__>;
     int current_statement__ = 0; 
     const auto& p = stan::math::to_ref(p_arg__);
@@ -11676,8 +11672,9 @@ template <bool propto__, typename Ty__, typename Tfirst__, typename Tlast__,
           stan::is_col_vector<Tgamma__>,
           stan::is_eigen_matrix_dynamic<Tchi__>>* = nullptr> inline void
   jolly_seber_lp(const Ty__& y, const Tfirst__& first, const Tlast__& last,
-                 const Tp__& p, const Tphi__& phi, const Tgamma__& gamma,
-                 const Tchi__& chi, T_lp__& lp__, T_lp_accum__& lp_accum__,
+                 const Tp__& p_arg__, const Tphi__& phi_arg__,
+                 const Tgamma__& gamma_arg__, const Tchi__& chi_arg__,
+                 T_lp__& lp__, T_lp_accum__& lp_accum__,
                  std::ostream* pstream__) {
     using local_scalar_t__ =
             stan::return_type_t<Ty__, Tfirst__, Tlast__, Tp__, Tphi__,
@@ -11911,7 +11908,7 @@ template <bool propto__, typename Ty__, typename Tfirst__, typename Tlast__,
     }
 template <typename Tgamma__, stan::require_all_t<stan::is_col_vector<Tgamma__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tgamma__>, -1, 1>
-  seq_cprob(const Tgamma__& gamma, std::ostream* pstream__) {
+  seq_cprob(const Tgamma__& gamma_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Tgamma__>;
     int current_statement__ = 0; 
     const auto& gamma = stan::math::to_ref(gamma_arg__);
@@ -11962,11 +11959,10 @@ template <bool propto__, typename Ty__, typename Tfirst__, typename Tlast__,
           stan::is_eigen_matrix_dynamic<Tchi__>>*>
 inline void
 jolly_seber_lp_functor__::operator()(const Ty__& y, const Tfirst__& first,
-                                     const Tlast__& last,
-                                     const Tp__& p_arg__,
-                                     const Tphi__& phi_arg__,
-                                     const Tgamma__& gamma_arg__,
-                                     const Tchi__& chi_arg__, T_lp__& lp__,
+                                     const Tlast__& last, const Tp__& p,
+                                     const Tphi__& phi,
+                                     const Tgamma__& gamma,
+                                     const Tchi__& chi, T_lp__& lp__,
                                      T_lp_accum__& lp_accum__,
                                      std::ostream* pstream__)  const
 {
@@ -11984,7 +11980,7 @@ const
 
 template <typename Tgamma__, stan::require_all_t<stan::is_col_vector<Tgamma__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tgamma__>, -1, 1>
-seq_cprob_functor__::operator()(const Tgamma__& gamma_arg__,
+seq_cprob_functor__::operator()(const Tgamma__& gamma,
                                 std::ostream* pstream__)  const
 {
   return seq_cprob(gamma, pstream__);
@@ -12002,8 +11998,7 @@ template <typename Tp__,
           typename Tphi__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tp__>,
           stan::is_eigen_matrix_dynamic<Tphi__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tp__, Tphi__>, -1, -1>
-prob_uncaptured_functor__::operator()(const Tp__& p_arg__,
-                                      const Tphi__& phi_arg__,
+prob_uncaptured_functor__::operator()(const Tp__& p, const Tphi__& phi,
                                       std::ostream* pstream__)  const
 {
   return prob_uncaptured(p, phi, pstream__);
@@ -14047,8 +14042,7 @@ struct prob_uncaptured_functor__ {
             stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
   operator()(const Tnind__& nind, const Tn_occasions__& n_occasions,
-             const Tp__& p_arg__, const Tphi__& phi_arg__,
-             std::ostream* pstream__) const;
+             const Tp__& p, const Tphi__& phi, std::ostream* pstream__) const;
 };
 struct last_capture_functor__ {
   template <typename Ty_i__, stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<stan::value_type_t<Ty_i__>>>* = nullptr>
@@ -14112,7 +14106,8 @@ template <typename Tnind__, typename Tn_occasions__, typename Tp__,
           stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
   prob_uncaptured(const Tnind__& nind, const Tn_occasions__& n_occasions,
-                  const Tp__& p, const Tphi__& phi, std::ostream* pstream__) {
+                  const Tp__& p_arg__, const Tphi__& phi_arg__,
+                  std::ostream* pstream__) {
     using local_scalar_t__ =
             stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>;
     int current_statement__ = 0; 
@@ -14185,8 +14180,7 @@ template <typename Tnind__, typename Tn_occasions__, typename Tp__,
 inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
 prob_uncaptured_functor__::operator()(const Tnind__& nind,
                                       const Tn_occasions__& n_occasions,
-                                      const Tp__& p_arg__,
-                                      const Tphi__& phi_arg__,
+                                      const Tp__& p, const Tphi__& phi,
                                       std::ostream* pstream__)  const
 {
   return prob_uncaptured(nind, n_occasions, p, phi, pstream__);

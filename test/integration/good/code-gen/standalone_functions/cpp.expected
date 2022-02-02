@@ -69,7 +69,7 @@ struct my_log1p_exp_functor__ {
 struct my_vector_mul_by_5_functor__ {
   template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, 1>
-  operator()(const Tx__& x_arg__, std::ostream* pstream__) const;
+  operator()(const Tx__& x, std::ostream* pstream__) const;
 };
 struct test_lpdf_functor__ {
   template <bool propto__, typename Ta__,
@@ -135,7 +135,7 @@ template <typename Ta__, stan::require_all_t<stan::is_std_vector<Ta__>, std::is_
     }
 template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, 1>
-  my_vector_mul_by_5(const Tx__& x, std::ostream* pstream__) {
+  my_vector_mul_by_5(const Tx__& x_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Tx__>;
     int current_statement__ = 0; 
     const auto& x = stan::math::to_ref(x_arg__);
@@ -296,7 +296,7 @@ const
 
 template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, 1>
-my_vector_mul_by_5_functor__::operator()(const Tx__& x_arg__,
+my_vector_mul_by_5_functor__::operator()(const Tx__& x,
                                          std::ostream* pstream__)  const
 {
   return my_vector_mul_by_5(x, pstream__);
@@ -465,7 +465,7 @@ struct my_log1p_exp_functor__ {
 struct my_vector_mul_by_5_functor__ {
   template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, 1>
-  operator()(const Tx__& x_arg__, std::ostream* pstream__) const;
+  operator()(const Tx__& x, std::ostream* pstream__) const;
 };
 struct test_lpdf_functor__ {
   template <bool propto__, typename Ta__,
@@ -531,7 +531,7 @@ template <typename Ta__, stan::require_all_t<stan::is_std_vector<Ta__>, std::is_
     }
 template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, 1>
-  my_vector_mul_by_5(const Tx__& x, std::ostream* pstream__) {
+  my_vector_mul_by_5(const Tx__& x_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Tx__>;
     int current_statement__ = 0; 
     const auto& x = stan::math::to_ref(x_arg__);
@@ -692,7 +692,7 @@ const
 
 template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, 1>
-my_vector_mul_by_5_functor__::operator()(const Tx__& x_arg__,
+my_vector_mul_by_5_functor__::operator()(const Tx__& x,
                                          std::ostream* pstream__)  const
 {
   return my_vector_mul_by_5(x, pstream__);
@@ -832,12 +832,12 @@ struct ode_integrate_functor__ {
 struct integrand_functor__ {
   template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, 1>
-  operator()(const Tx__& x_arg__, std::ostream* pstream__) const;
+  operator()(const Tx__& x, std::ostream* pstream__) const;
 };
 
 template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, 1>
-  integrand(const Tx__& x, std::ostream* pstream__) {
+  integrand(const Tx__& x_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Tx__>;
     int current_statement__ = 0; 
     const auto& x = stan::math::to_ref(x_arg__);
@@ -929,7 +929,7 @@ const
 
 template <typename Tx__, stan::require_all_t<stan::is_col_vector<Tx__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tx__>, -1, 1>
-integrand_functor__::operator()(const Tx__& x_arg__, std::ostream* pstream__) 
+integrand_functor__::operator()(const Tx__& x, std::ostream* pstream__) 
 const
 {
   return integrand(x, pstream__);

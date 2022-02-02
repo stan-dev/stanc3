@@ -224,12 +224,8 @@ let pp_arg ppf (custom_scalar_opt, (_, name, ut)) =
     | Some scalar -> scalar
     | None -> stantype_prim_str ut in
   (* we add the _arg suffix for any Eigen types *)
-  if UnsizedType.is_eigen_type ut then
-    pf ppf "const %a& %s_arg__" pp_unsizedtype_custom_scalar_eigen_exprs
-      (scalar, ut) name
-  else
-    pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
-      name
+  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
+    name
 
 let pp_arg_eigen_suffix ppf (custom_scalar_opt, (_, name, ut)) =
   let scalar =
@@ -237,11 +233,8 @@ let pp_arg_eigen_suffix ppf (custom_scalar_opt, (_, name, ut)) =
     | Some scalar -> scalar
     | None -> stantype_prim_str ut in
   (* we add the _arg suffix for any Eigen types *)
-  (*
   let opt_arg_suffix =
     if UnsizedType.is_eigen_type ut then name ^ "_arg__" else name in
-    *)
-  let opt_arg_suffix = name in
   pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
     opt_arg_suffix
 

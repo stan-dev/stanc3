@@ -38,7 +38,7 @@ let%expect_test "udf" =
               typename Ty__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tx__>,
               stan::is_row_vector<Ty__>>* = nullptr>
     inline void
-    sars(const Tx__& x, const Ty__& y, std::ostream* pstream__) {
+    sars(const Tx__& x_arg__, const Ty__& y_arg__, std::ostream* pstream__) {
       using local_scalar_t__ = stan::return_type_t<Tx__, Ty__>;
       int current_statement__ = 0;
       const auto& x = stan::math::to_ref(x_arg__);
@@ -84,8 +84,8 @@ let%expect_test "udf-expressions" =
               stan::is_row_vector<Ty__>, stan::is_row_vector<Tz__>,
               stan::is_std_vector<Tw__>, stan::is_eigen_matrix_dynamic<stan::value_type_t<Tw__>>>* = nullptr>
     inline Eigen::Matrix<stan::return_type_t<Tx__, Ty__, Tz__, Tw__>, -1, -1>
-    sars(const Tx__& x, const Ty__& y, const Tz__& z, const Tw__& w,
-         std::ostream* pstream__) {
+    sars(const Tx__& x_arg__, const Ty__& y_arg__, const Tz__& z_arg__,
+         const Tw__& w, std::ostream* pstream__) {
       using local_scalar_t__ = stan::return_type_t<Tx__, Ty__, Tz__, Tw__>;
       int current_statement__ = 0;
       const auto& x = stan::math::to_ref(x_arg__);
