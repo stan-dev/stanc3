@@ -2603,8 +2603,7 @@ static constexpr std::array<const char*, 116> locations_array__ =
  " (in 'indexing.stan', line 5, column 27 to line 7, column 3)"};
 
 struct mask_fun_functor__ {
-  template <typename Ti__,
-            stan::require_t<stan::is_stan_scalar_t<Ti__>>* = nullptr>
+  template <typename Ti__, stan::require_t<std::is_integral<Ti__>>* = nullptr>
   inline int
   operator()(const Ti__& i, std::ostream* pstream__) const;
 };
@@ -2615,8 +2614,7 @@ struct udf_fun_functor__ {
   operator()(const TA__& A, std::ostream* pstream__) const;
 };
 
-template <typename Ti__,
-          stan::require_t<stan::is_stan_scalar_t<Ti__>>* = nullptr>
+template <typename Ti__, stan::require_t<std::is_integral<Ti__>>* = nullptr>
   inline int mask_fun(const Ti__& i, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Ti__>;
     int current_statement__ = 0; 
@@ -2649,7 +2647,7 @@ template <typename TA__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename Ti__, stan::require_t<stan::is_stan_scalar_t<Ti__>>*>
+template <typename Ti__, stan::require_t<std::is_integral<Ti__>>*>
 inline int
 mask_fun_functor__::operator()(const Ti__& i, std::ostream* pstream__)  const
 {
@@ -4836,7 +4834,7 @@ static constexpr std::array<const char*, 12> locations_array__ =
 
 struct okay_reduction_functor__ {
   template <typename Tsum_x__, typename Ty__,
-            stan::require_t<stan::is_stan_scalar_t<Tsum_x__>>* = nullptr,
+            stan::require_t<stan::is_stan_scalar<Tsum_x__>>* = nullptr,
             stan::require_t<stan::is_eigen_matrix_dynamic<Ty__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tsum_x__, Ty__>, -1, -1>
   operator()(const Tsum_x__& sum_x, const Ty__& y, std::ostream* pstream__) const;
@@ -4867,7 +4865,7 @@ template <typename Tx__,
     }
     }
 template <typename Tsum_x__, typename Ty__,
-          stan::require_t<stan::is_stan_scalar_t<Tsum_x__>>* = nullptr,
+          stan::require_t<stan::is_stan_scalar<Tsum_x__>>* = nullptr,
           stan::require_t<stan::is_eigen_matrix_dynamic<Ty__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tsum_x__, Ty__>, -1, -1>
   okay_reduction(const Tsum_x__& sum_x, const Ty__& y,
@@ -4887,7 +4885,7 @@ template <typename Tsum_x__, typename Ty__,
     }
     }
 template <typename Tsum_x__, typename Ty__,
-          stan::require_t<stan::is_stan_scalar_t<Tsum_x__>>*,
+          stan::require_t<stan::is_stan_scalar<Tsum_x__>>*,
           stan::require_t<stan::is_eigen_matrix_dynamic<Ty__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tsum_x__, Ty__>, -1, -1>
 okay_reduction_functor__::operator()(const Tsum_x__& sum_x, const Ty__& y,
@@ -6581,7 +6579,7 @@ static constexpr std::array<const char*, 10> locations_array__ =
 
 struct okay_reduction_functor__ {
   template <typename Tsum_x__, typename Ty__,
-            stan::require_t<stan::is_stan_scalar_t<Tsum_x__>>* = nullptr,
+            stan::require_t<stan::is_stan_scalar<Tsum_x__>>* = nullptr,
             stan::require_t<stan::is_eigen_matrix_dynamic<Ty__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tsum_x__, Ty__>, -1, -1>
   operator()(const Tsum_x__& sum_x, const Ty__& y, std::ostream* pstream__) const;
@@ -6612,7 +6610,7 @@ template <typename Tx__,
     }
     }
 template <typename Tsum_x__, typename Ty__,
-          stan::require_t<stan::is_stan_scalar_t<Tsum_x__>>* = nullptr,
+          stan::require_t<stan::is_stan_scalar<Tsum_x__>>* = nullptr,
           stan::require_t<stan::is_eigen_matrix_dynamic<Ty__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tsum_x__, Ty__>, -1, -1>
   okay_reduction(const Tsum_x__& sum_x, const Ty__& y,
@@ -6632,7 +6630,7 @@ template <typename Tsum_x__, typename Ty__,
     }
     }
 template <typename Tsum_x__, typename Ty__,
-          stan::require_t<stan::is_stan_scalar_t<Tsum_x__>>*,
+          stan::require_t<stan::is_stan_scalar<Tsum_x__>>*,
           stan::require_t<stan::is_eigen_matrix_dynamic<Ty__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tsum_x__, Ty__>, -1, -1>
 okay_reduction_functor__::operator()(const Tsum_x__& sum_x, const Ty__& y,

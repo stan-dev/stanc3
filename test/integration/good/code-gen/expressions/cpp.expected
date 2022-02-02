@@ -27,9 +27,9 @@ static constexpr std::array<const char*, 13> locations_array__ =
 struct foo1_functor__ {
   template <typename Ta__, typename Tb__, typename Tc__, typename Td__,
             typename Te__, typename Tf__,
-            stan::require_t<stan::is_stan_scalar_t<Ta__>>* = nullptr,
-            stan::require_t<stan::is_stan_scalar_t<Tb__>>* = nullptr,
-            stan::require_all_t<stan::is_std_vector<Tc__>, stan::is_stan_scalar_t<value_type_t<Tc__>>>* = nullptr,
+            stan::require_t<stan::is_stan_scalar<Ta__>>* = nullptr,
+            stan::require_t<std::is_integral<Tb__>>* = nullptr,
+            stan::require_all_t<stan::is_std_vector<Tc__>, stan::is_stan_scalar<value_type_t<Tc__>>>* = nullptr,
             stan::require_t<stan::is_col_vector<Td__>>* = nullptr,
             stan::require_t<stan::is_eigen_matrix_dynamic<Te__>>* = nullptr,
             stan::require_t<stan::is_row_vector<Tf__>>* = nullptr>
@@ -63,9 +63,9 @@ struct add_udf_functor__ {
 
 template <typename Ta__, typename Tb__, typename Tc__, typename Td__,
           typename Te__, typename Tf__,
-          stan::require_t<stan::is_stan_scalar_t<Ta__>>* = nullptr,
-          stan::require_t<stan::is_stan_scalar_t<Tb__>>* = nullptr,
-          stan::require_all_t<stan::is_std_vector<Tc__>, stan::is_stan_scalar_t<value_type_t<Tc__>>>* = nullptr,
+          stan::require_t<stan::is_stan_scalar<Ta__>>* = nullptr,
+          stan::require_t<std::is_integral<Tb__>>* = nullptr,
+          stan::require_all_t<stan::is_std_vector<Tc__>, stan::is_stan_scalar<value_type_t<Tc__>>>* = nullptr,
           stan::require_t<stan::is_col_vector<Td__>>* = nullptr,
           stan::require_t<stan::is_eigen_matrix_dynamic<Te__>>* = nullptr,
           stan::require_t<stan::is_row_vector<Tf__>>* = nullptr>
@@ -152,9 +152,9 @@ template <typename Ta__, typename Tb__,
     }
 template <typename Ta__, typename Tb__, typename Tc__, typename Td__,
           typename Te__, typename Tf__,
-          stan::require_t<stan::is_stan_scalar_t<Ta__>>*,
-          stan::require_t<stan::is_stan_scalar_t<Tb__>>*,
-          stan::require_all_t<stan::is_std_vector<Tc__>, stan::is_stan_scalar_t<value_type_t<Tc__>>>*,
+          stan::require_t<stan::is_stan_scalar<Ta__>>*,
+          stan::require_t<std::is_integral<Tb__>>*,
+          stan::require_all_t<stan::is_std_vector<Tc__>, stan::is_stan_scalar<value_type_t<Tc__>>>*,
           stan::require_t<stan::is_col_vector<Td__>>*,
           stan::require_t<stan::is_eigen_matrix_dynamic<Te__>>*,
           stan::require_t<stan::is_row_vector<Tf__>>*>

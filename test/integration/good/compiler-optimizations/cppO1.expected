@@ -671,11 +671,11 @@ static constexpr std::array<const char*, 37> locations_array__ =
 struct simple_SIR_functor__ {
   template <typename Tt__, typename Ty__, typename Ttheta__, typename Tx_r__,
             typename Tx_i__,
-            stan::require_t<stan::is_stan_scalar_t<Tt__>>* = nullptr,
-            stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_stan_scalar_t<value_type_t<Ty__>>>* = nullptr,
-            stan::require_all_t<stan::is_std_vector<Ttheta__>, stan::is_stan_scalar_t<value_type_t<Ttheta__>>>* = nullptr,
-            stan::require_all_t<stan::is_std_vector<Tx_r__>, stan::is_stan_scalar_t<value_type_t<Tx_r__>>>* = nullptr,
-            stan::require_all_t<stan::is_std_vector<Tx_i__>, stan::is_stan_scalar_t<value_type_t<Tx_i__>>>* = nullptr>
+            stan::require_t<stan::is_stan_scalar<Tt__>>* = nullptr,
+            stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_stan_scalar<value_type_t<Ty__>>>* = nullptr,
+            stan::require_all_t<stan::is_std_vector<Ttheta__>, stan::is_stan_scalar<value_type_t<Ttheta__>>>* = nullptr,
+            stan::require_all_t<stan::is_std_vector<Tx_r__>, stan::is_stan_scalar<value_type_t<Tx_r__>>>* = nullptr,
+            stan::require_all_t<stan::is_std_vector<Tx_i__>, std::is_integral<value_type_t<Tx_i__>>>* = nullptr>
   inline std::vector<stan::return_type_t<Tt__, Ty__, Ttheta__, Tx_r__, Tx_i__>>
   operator()(const Tt__& t, const Ty__& y, const Ttheta__& theta,
              const Tx_r__& x_r, const Tx_i__& x_i, std::ostream* pstream__) const;
@@ -683,11 +683,11 @@ struct simple_SIR_functor__ {
 
 template <typename Tt__, typename Ty__, typename Ttheta__, typename Tx_r__,
           typename Tx_i__,
-          stan::require_t<stan::is_stan_scalar_t<Tt__>>* = nullptr,
-          stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_stan_scalar_t<value_type_t<Ty__>>>* = nullptr,
-          stan::require_all_t<stan::is_std_vector<Ttheta__>, stan::is_stan_scalar_t<value_type_t<Ttheta__>>>* = nullptr,
-          stan::require_all_t<stan::is_std_vector<Tx_r__>, stan::is_stan_scalar_t<value_type_t<Tx_r__>>>* = nullptr,
-          stan::require_all_t<stan::is_std_vector<Tx_i__>, stan::is_stan_scalar_t<value_type_t<Tx_i__>>>* = nullptr>
+          stan::require_t<stan::is_stan_scalar<Tt__>>* = nullptr,
+          stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_stan_scalar<value_type_t<Ty__>>>* = nullptr,
+          stan::require_all_t<stan::is_std_vector<Ttheta__>, stan::is_stan_scalar<value_type_t<Ttheta__>>>* = nullptr,
+          stan::require_all_t<stan::is_std_vector<Tx_r__>, stan::is_stan_scalar<value_type_t<Tx_r__>>>* = nullptr,
+          stan::require_all_t<stan::is_std_vector<Tx_i__>, std::is_integral<value_type_t<Tx_i__>>>* = nullptr>
   inline std::vector<stan::return_type_t<Tt__, Ty__, Ttheta__, Tx_r__, Tx_i__>>
   simple_SIR(const Tt__& t, const Ty__& y, const Ttheta__& theta,
              const Tx_r__& x_r, const Tx_i__& x_i, std::ostream* pstream__) {
@@ -738,11 +738,11 @@ template <typename Tt__, typename Ty__, typename Ttheta__, typename Tx_r__,
     }
     }
 template <typename Tt__, typename Ty__, typename Ttheta__, typename Tx_r__,
-          typename Tx_i__, stan::require_t<stan::is_stan_scalar_t<Tt__>>*,
-          stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_stan_scalar_t<value_type_t<Ty__>>>*,
-          stan::require_all_t<stan::is_std_vector<Ttheta__>, stan::is_stan_scalar_t<value_type_t<Ttheta__>>>*,
-          stan::require_all_t<stan::is_std_vector<Tx_r__>, stan::is_stan_scalar_t<value_type_t<Tx_r__>>>*,
-          stan::require_all_t<stan::is_std_vector<Tx_i__>, stan::is_stan_scalar_t<value_type_t<Tx_i__>>>*>
+          typename Tx_i__, stan::require_t<stan::is_stan_scalar<Tt__>>*,
+          stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_stan_scalar<value_type_t<Ty__>>>*,
+          stan::require_all_t<stan::is_std_vector<Ttheta__>, stan::is_stan_scalar<value_type_t<Ttheta__>>>*,
+          stan::require_all_t<stan::is_std_vector<Tx_r__>, stan::is_stan_scalar<value_type_t<Tx_r__>>>*,
+          stan::require_all_t<stan::is_std_vector<Tx_i__>, std::is_integral<value_type_t<Tx_i__>>>*>
 inline std::vector<stan::return_type_t<Tt__, Ty__, Ttheta__, Tx_r__, Tx_i__>>
 simple_SIR_functor__::operator()(const Tt__& t, const Ty__& y,
                                  const Ttheta__& theta, const Tx_r__& x_r,
@@ -1367,15 +1367,15 @@ static constexpr std::array<const char*, 76> locations_array__ =
 
 struct first_capture_functor__ {
   template <typename Ty_i__,
-            stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+            stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int
   operator()(const Ty_i__& y_i, std::ostream* pstream__) const;
 };
 struct prob_uncaptured_functor__ {
   template <typename Tnind__, typename Tn_occasions__, typename Tp__,
             typename Tphi__,
-            stan::require_t<stan::is_stan_scalar_t<Tnind__>>* = nullptr,
-            stan::require_t<stan::is_stan_scalar_t<Tn_occasions__>>* = nullptr,
+            stan::require_t<std::is_integral<Tnind__>>* = nullptr,
+            stan::require_t<std::is_integral<Tn_occasions__>>* = nullptr,
             stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>* = nullptr,
             stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
@@ -1384,13 +1384,13 @@ struct prob_uncaptured_functor__ {
 };
 struct last_capture_functor__ {
   template <typename Ty_i__,
-            stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+            stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int
   operator()(const Ty_i__& y_i, std::ostream* pstream__) const;
 };
 
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int first_capture(const Ty_i__& y_i, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Ty_i__>;
     int current_statement__ = 0; 
@@ -1414,7 +1414,7 @@ template <typename Ty_i__,
     }
     }
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int last_capture(const Ty_i__& y_i, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Ty_i__>;
     int current_statement__ = 0; 
@@ -1442,8 +1442,8 @@ template <typename Ty_i__,
     }
 template <typename Tnind__, typename Tn_occasions__, typename Tp__,
           typename Tphi__,
-          stan::require_t<stan::is_stan_scalar_t<Tnind__>>* = nullptr,
-          stan::require_t<stan::is_stan_scalar_t<Tn_occasions__>>* = nullptr,
+          stan::require_t<std::is_integral<Tnind__>>* = nullptr,
+          stan::require_t<std::is_integral<Tn_occasions__>>* = nullptr,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>* = nullptr,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
@@ -1506,7 +1506,7 @@ template <typename Tnind__, typename Tn_occasions__, typename Tp__,
     }
     }
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>*>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>*>
 inline int
 first_capture_functor__::operator()(const Ty_i__& y_i,
                                     std::ostream* pstream__)  const
@@ -1515,8 +1515,8 @@ first_capture_functor__::operator()(const Ty_i__& y_i,
 }
 
 template <typename Tnind__, typename Tn_occasions__, typename Tp__,
-          typename Tphi__, stan::require_t<stan::is_stan_scalar_t<Tnind__>>*,
-          stan::require_t<stan::is_stan_scalar_t<Tn_occasions__>>*,
+          typename Tphi__, stan::require_t<std::is_integral<Tnind__>>*,
+          stan::require_t<std::is_integral<Tn_occasions__>>*,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>*,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
@@ -1529,7 +1529,7 @@ prob_uncaptured_functor__::operator()(const Tnind__& nind,
 }
 
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>*>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>*>
 inline int
 last_capture_functor__::operator()(const Ty_i__& y_i, std::ostream* pstream__) 
 const
@@ -6580,15 +6580,15 @@ static constexpr std::array<const char*, 81> locations_array__ =
 
 struct first_capture_functor__ {
   template <typename Ty_i__,
-            stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+            stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int
   operator()(const Ty_i__& y_i, std::ostream* pstream__) const;
 };
 struct prob_uncaptured_functor__ {
   template <typename Tnind__, typename Tn_occasions__, typename Tp__,
             typename Tphi__,
-            stan::require_t<stan::is_stan_scalar_t<Tnind__>>* = nullptr,
-            stan::require_t<stan::is_stan_scalar_t<Tn_occasions__>>* = nullptr,
+            stan::require_t<std::is_integral<Tnind__>>* = nullptr,
+            stan::require_t<std::is_integral<Tn_occasions__>>* = nullptr,
             stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>* = nullptr,
             stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
@@ -6597,13 +6597,13 @@ struct prob_uncaptured_functor__ {
 };
 struct last_capture_functor__ {
   template <typename Ty_i__,
-            stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+            stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int
   operator()(const Ty_i__& y_i, std::ostream* pstream__) const;
 };
 
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int first_capture(const Ty_i__& y_i, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Ty_i__>;
     int current_statement__ = 0; 
@@ -6627,7 +6627,7 @@ template <typename Ty_i__,
     }
     }
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int last_capture(const Ty_i__& y_i, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Ty_i__>;
     int current_statement__ = 0; 
@@ -6655,8 +6655,8 @@ template <typename Ty_i__,
     }
 template <typename Tnind__, typename Tn_occasions__, typename Tp__,
           typename Tphi__,
-          stan::require_t<stan::is_stan_scalar_t<Tnind__>>* = nullptr,
-          stan::require_t<stan::is_stan_scalar_t<Tn_occasions__>>* = nullptr,
+          stan::require_t<std::is_integral<Tnind__>>* = nullptr,
+          stan::require_t<std::is_integral<Tn_occasions__>>* = nullptr,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>* = nullptr,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
@@ -6719,7 +6719,7 @@ template <typename Tnind__, typename Tn_occasions__, typename Tp__,
     }
     }
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>*>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>*>
 inline int
 first_capture_functor__::operator()(const Ty_i__& y_i,
                                     std::ostream* pstream__)  const
@@ -6728,8 +6728,8 @@ first_capture_functor__::operator()(const Ty_i__& y_i,
 }
 
 template <typename Tnind__, typename Tn_occasions__, typename Tp__,
-          typename Tphi__, stan::require_t<stan::is_stan_scalar_t<Tnind__>>*,
-          stan::require_t<stan::is_stan_scalar_t<Tn_occasions__>>*,
+          typename Tphi__, stan::require_t<std::is_integral<Tnind__>>*,
+          stan::require_t<std::is_integral<Tn_occasions__>>*,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>*,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
@@ -6742,7 +6742,7 @@ prob_uncaptured_functor__::operator()(const Tnind__& nind,
 }
 
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>*>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>*>
 inline int
 last_capture_functor__::operator()(const Ty_i__& y_i, std::ostream* pstream__) 
 const
@@ -7658,7 +7658,7 @@ static constexpr std::array<const char*, 158> locations_array__ =
 
 struct first_capture_functor__ {
   template <typename Ty_i__,
-            stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+            stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int
   operator()(const Ty_i__& y_i, std::ostream* pstream__) const;
 };
@@ -7671,7 +7671,7 @@ struct prob_uncaptured_functor__ {
 };
 struct last_capture_functor__ {
   template <typename Ty_i__,
-            stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+            stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int
   operator()(const Ty_i__& y_i, std::ostream* pstream__) const;
 };
@@ -7680,12 +7680,12 @@ struct js_super_lp_functor__ {
             typename Tlast__, typename Tp__, typename Tphi__,
             typename Tpsi__, typename Tnu__, typename Tchi__,
             typename T_lp__, typename T_lp_accum__,
-            stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_std_vector<value_type_t<Ty__>>, stan::is_stan_scalar_t<value_type_t<value_type_t<Ty__>>>>* = nullptr,
-            stan::require_all_t<stan::is_std_vector<Tfirst__>, stan::is_stan_scalar_t<value_type_t<Tfirst__>>>* = nullptr,
-            stan::require_all_t<stan::is_std_vector<Tlast__>, stan::is_stan_scalar_t<value_type_t<Tlast__>>>* = nullptr,
+            stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_std_vector<value_type_t<Ty__>>, std::is_integral<value_type_t<value_type_t<Ty__>>>>* = nullptr,
+            stan::require_all_t<stan::is_std_vector<Tfirst__>, std::is_integral<value_type_t<Tfirst__>>>* = nullptr,
+            stan::require_all_t<stan::is_std_vector<Tlast__>, std::is_integral<value_type_t<Tlast__>>>* = nullptr,
             stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>* = nullptr,
             stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr,
-            stan::require_t<stan::is_stan_scalar_t<Tpsi__>>* = nullptr,
+            stan::require_t<stan::is_stan_scalar<Tpsi__>>* = nullptr,
             stan::require_t<stan::is_col_vector<Tnu__>>* = nullptr,
             stan::require_t<stan::is_eigen_matrix_dynamic<Tchi__>>* = nullptr>
   inline void
@@ -7696,7 +7696,7 @@ struct js_super_lp_functor__ {
 };
 
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int first_capture(const Ty_i__& y_i, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Ty_i__>;
     int current_statement__ = 0; 
@@ -7720,7 +7720,7 @@ template <typename Ty_i__,
     }
     }
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int last_capture(const Ty_i__& y_i, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Ty_i__>;
     int current_statement__ = 0; 
@@ -7814,12 +7814,12 @@ template <typename Tp__, typename Tphi__,
 template <bool propto__, typename Ty__, typename Tfirst__, typename Tlast__,
           typename Tp__, typename Tphi__, typename Tpsi__, typename Tnu__,
           typename Tchi__, typename T_lp__, typename T_lp_accum__,
-          stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_std_vector<value_type_t<Ty__>>, stan::is_stan_scalar_t<value_type_t<value_type_t<Ty__>>>>* = nullptr,
-          stan::require_all_t<stan::is_std_vector<Tfirst__>, stan::is_stan_scalar_t<value_type_t<Tfirst__>>>* = nullptr,
-          stan::require_all_t<stan::is_std_vector<Tlast__>, stan::is_stan_scalar_t<value_type_t<Tlast__>>>* = nullptr,
+          stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_std_vector<value_type_t<Ty__>>, std::is_integral<value_type_t<value_type_t<Ty__>>>>* = nullptr,
+          stan::require_all_t<stan::is_std_vector<Tfirst__>, std::is_integral<value_type_t<Tfirst__>>>* = nullptr,
+          stan::require_all_t<stan::is_std_vector<Tlast__>, std::is_integral<value_type_t<Tlast__>>>* = nullptr,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>* = nullptr,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr,
-          stan::require_t<stan::is_stan_scalar_t<Tpsi__>>* = nullptr,
+          stan::require_t<stan::is_stan_scalar<Tpsi__>>* = nullptr,
           stan::require_t<stan::is_col_vector<Tnu__>>* = nullptr,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tchi__>>* = nullptr>
   inline void
@@ -8060,7 +8060,7 @@ template <bool propto__, typename Ty__, typename Tfirst__, typename Tlast__,
     }
     }
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>*>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>*>
 inline int
 first_capture_functor__::operator()(const Ty_i__& y_i,
                                     std::ostream* pstream__)  const
@@ -8079,7 +8079,7 @@ prob_uncaptured_functor__::operator()(const Tp__& p, const Tphi__& phi,
 }
 
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>*>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>*>
 inline int
 last_capture_functor__::operator()(const Ty_i__& y_i, std::ostream* pstream__) 
 const
@@ -8090,12 +8090,12 @@ const
 template <bool propto__, typename Ty__, typename Tfirst__, typename Tlast__,
           typename Tp__, typename Tphi__, typename Tpsi__, typename Tnu__,
           typename Tchi__, typename T_lp__, typename T_lp_accum__,
-          stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_std_vector<value_type_t<Ty__>>, stan::is_stan_scalar_t<value_type_t<value_type_t<Ty__>>>>*,
-          stan::require_all_t<stan::is_std_vector<Tfirst__>, stan::is_stan_scalar_t<value_type_t<Tfirst__>>>*,
-          stan::require_all_t<stan::is_std_vector<Tlast__>, stan::is_stan_scalar_t<value_type_t<Tlast__>>>*,
+          stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_std_vector<value_type_t<Ty__>>, std::is_integral<value_type_t<value_type_t<Ty__>>>>*,
+          stan::require_all_t<stan::is_std_vector<Tfirst__>, std::is_integral<value_type_t<Tfirst__>>>*,
+          stan::require_all_t<stan::is_std_vector<Tlast__>, std::is_integral<value_type_t<Tlast__>>>*,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>*,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>*,
-          stan::require_t<stan::is_stan_scalar_t<Tpsi__>>*,
+          stan::require_t<stan::is_stan_scalar<Tpsi__>>*,
           stan::require_t<stan::is_col_vector<Tnu__>>*,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tchi__>>*>
 inline void
@@ -10468,15 +10468,15 @@ static constexpr std::array<const char*, 76> locations_array__ =
 
 struct first_capture_functor__ {
   template <typename Ty_i__,
-            stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+            stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int
   operator()(const Ty_i__& y_i, std::ostream* pstream__) const;
 };
 struct prob_uncaptured_functor__ {
   template <typename Tnind__, typename Tn_occasions__, typename Tp__,
             typename Tphi__,
-            stan::require_t<stan::is_stan_scalar_t<Tnind__>>* = nullptr,
-            stan::require_t<stan::is_stan_scalar_t<Tn_occasions__>>* = nullptr,
+            stan::require_t<std::is_integral<Tnind__>>* = nullptr,
+            stan::require_t<std::is_integral<Tn_occasions__>>* = nullptr,
             stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>* = nullptr,
             stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
@@ -10485,13 +10485,13 @@ struct prob_uncaptured_functor__ {
 };
 struct last_capture_functor__ {
   template <typename Ty_i__,
-            stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+            stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int
   operator()(const Ty_i__& y_i, std::ostream* pstream__) const;
 };
 
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int first_capture(const Ty_i__& y_i, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Ty_i__>;
     int current_statement__ = 0; 
@@ -10515,7 +10515,7 @@ template <typename Ty_i__,
     }
     }
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int last_capture(const Ty_i__& y_i, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Ty_i__>;
     int current_statement__ = 0; 
@@ -10543,8 +10543,8 @@ template <typename Ty_i__,
     }
 template <typename Tnind__, typename Tn_occasions__, typename Tp__,
           typename Tphi__,
-          stan::require_t<stan::is_stan_scalar_t<Tnind__>>* = nullptr,
-          stan::require_t<stan::is_stan_scalar_t<Tn_occasions__>>* = nullptr,
+          stan::require_t<std::is_integral<Tnind__>>* = nullptr,
+          stan::require_t<std::is_integral<Tn_occasions__>>* = nullptr,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>* = nullptr,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
@@ -10607,7 +10607,7 @@ template <typename Tnind__, typename Tn_occasions__, typename Tp__,
     }
     }
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>*>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>*>
 inline int
 first_capture_functor__::operator()(const Ty_i__& y_i,
                                     std::ostream* pstream__)  const
@@ -10616,8 +10616,8 @@ first_capture_functor__::operator()(const Ty_i__& y_i,
 }
 
 template <typename Tnind__, typename Tn_occasions__, typename Tp__,
-          typename Tphi__, stan::require_t<stan::is_stan_scalar_t<Tnind__>>*,
-          stan::require_t<stan::is_stan_scalar_t<Tn_occasions__>>*,
+          typename Tphi__, stan::require_t<std::is_integral<Tnind__>>*,
+          stan::require_t<std::is_integral<Tn_occasions__>>*,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>*,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
@@ -10630,7 +10630,7 @@ prob_uncaptured_functor__::operator()(const Tnind__& nind,
 }
 
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>*>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>*>
 inline int
 last_capture_functor__::operator()(const Ty_i__& y_i, std::ostream* pstream__) 
 const
@@ -11542,9 +11542,9 @@ struct jolly_seber_lp_functor__ {
             typename Tlast__, typename Tp__, typename Tphi__,
             typename Tgamma__, typename Tchi__, typename T_lp__,
             typename T_lp_accum__,
-            stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_std_vector<value_type_t<Ty__>>, stan::is_stan_scalar_t<value_type_t<value_type_t<Ty__>>>>* = nullptr,
-            stan::require_all_t<stan::is_std_vector<Tfirst__>, stan::is_stan_scalar_t<value_type_t<Tfirst__>>>* = nullptr,
-            stan::require_all_t<stan::is_std_vector<Tlast__>, stan::is_stan_scalar_t<value_type_t<Tlast__>>>* = nullptr,
+            stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_std_vector<value_type_t<Ty__>>, std::is_integral<value_type_t<value_type_t<Ty__>>>>* = nullptr,
+            stan::require_all_t<stan::is_std_vector<Tfirst__>, std::is_integral<value_type_t<Tfirst__>>>* = nullptr,
+            stan::require_all_t<stan::is_std_vector<Tlast__>, std::is_integral<value_type_t<Tlast__>>>* = nullptr,
             stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>* = nullptr,
             stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr,
             stan::require_t<stan::is_col_vector<Tgamma__>>* = nullptr,
@@ -11557,7 +11557,7 @@ struct jolly_seber_lp_functor__ {
 };
 struct last_capture_functor__ {
   template <typename Ty_i__,
-            stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+            stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int
   operator()(const Ty_i__& y_i, std::ostream* pstream__) const;
 };
@@ -11569,7 +11569,7 @@ struct seq_cprob_functor__ {
 };
 struct first_capture_functor__ {
   template <typename Ty_i__,
-            stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+            stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int
   operator()(const Ty_i__& y_i, std::ostream* pstream__) const;
 };
@@ -11582,7 +11582,7 @@ struct prob_uncaptured_functor__ {
 };
 
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int first_capture(const Ty_i__& y_i, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Ty_i__>;
     int current_statement__ = 0; 
@@ -11606,7 +11606,7 @@ template <typename Ty_i__,
     }
     }
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int last_capture(const Ty_i__& y_i, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Ty_i__>;
     int current_statement__ = 0; 
@@ -11700,9 +11700,9 @@ template <typename Tp__, typename Tphi__,
 template <bool propto__, typename Ty__, typename Tfirst__, typename Tlast__,
           typename Tp__, typename Tphi__, typename Tgamma__, typename Tchi__,
           typename T_lp__, typename T_lp_accum__,
-          stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_std_vector<value_type_t<Ty__>>, stan::is_stan_scalar_t<value_type_t<value_type_t<Ty__>>>>* = nullptr,
-          stan::require_all_t<stan::is_std_vector<Tfirst__>, stan::is_stan_scalar_t<value_type_t<Tfirst__>>>* = nullptr,
-          stan::require_all_t<stan::is_std_vector<Tlast__>, stan::is_stan_scalar_t<value_type_t<Tlast__>>>* = nullptr,
+          stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_std_vector<value_type_t<Ty__>>, std::is_integral<value_type_t<value_type_t<Ty__>>>>* = nullptr,
+          stan::require_all_t<stan::is_std_vector<Tfirst__>, std::is_integral<value_type_t<Tfirst__>>>* = nullptr,
+          stan::require_all_t<stan::is_std_vector<Tlast__>, std::is_integral<value_type_t<Tlast__>>>* = nullptr,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>* = nullptr,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr,
           stan::require_t<stan::is_col_vector<Tgamma__>>* = nullptr,
@@ -11987,9 +11987,9 @@ template <typename Tgamma__,
 template <bool propto__, typename Ty__, typename Tfirst__, typename Tlast__,
           typename Tp__, typename Tphi__, typename Tgamma__, typename Tchi__,
           typename T_lp__, typename T_lp_accum__,
-          stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_std_vector<value_type_t<Ty__>>, stan::is_stan_scalar_t<value_type_t<value_type_t<Ty__>>>>*,
-          stan::require_all_t<stan::is_std_vector<Tfirst__>, stan::is_stan_scalar_t<value_type_t<Tfirst__>>>*,
-          stan::require_all_t<stan::is_std_vector<Tlast__>, stan::is_stan_scalar_t<value_type_t<Tlast__>>>*,
+          stan::require_all_t<stan::is_std_vector<Ty__>, stan::is_std_vector<value_type_t<Ty__>>, std::is_integral<value_type_t<value_type_t<Ty__>>>>*,
+          stan::require_all_t<stan::is_std_vector<Tfirst__>, std::is_integral<value_type_t<Tfirst__>>>*,
+          stan::require_all_t<stan::is_std_vector<Tlast__>, std::is_integral<value_type_t<Tlast__>>>*,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>*,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>*,
           stan::require_t<stan::is_col_vector<Tgamma__>>*,
@@ -12008,7 +12008,7 @@ jolly_seber_lp_functor__::operator()(const Ty__& y, const Tfirst__& first,
 }
 
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>*>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>*>
 inline int
 last_capture_functor__::operator()(const Ty_i__& y_i, std::ostream* pstream__) 
 const
@@ -12025,7 +12025,7 @@ seq_cprob_functor__::operator()(const Tgamma__& gamma,
 }
 
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>*>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>*>
 inline int
 first_capture_functor__::operator()(const Ty_i__& y_i,
                                     std::ostream* pstream__)  const
@@ -14070,15 +14070,15 @@ static constexpr std::array<const char*, 71> locations_array__ =
 
 struct first_capture_functor__ {
   template <typename Ty_i__,
-            stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+            stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int
   operator()(const Ty_i__& y_i, std::ostream* pstream__) const;
 };
 struct prob_uncaptured_functor__ {
   template <typename Tnind__, typename Tn_occasions__, typename Tp__,
             typename Tphi__,
-            stan::require_t<stan::is_stan_scalar_t<Tnind__>>* = nullptr,
-            stan::require_t<stan::is_stan_scalar_t<Tn_occasions__>>* = nullptr,
+            stan::require_t<std::is_integral<Tnind__>>* = nullptr,
+            stan::require_t<std::is_integral<Tn_occasions__>>* = nullptr,
             stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>* = nullptr,
             stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
@@ -14087,13 +14087,13 @@ struct prob_uncaptured_functor__ {
 };
 struct last_capture_functor__ {
   template <typename Ty_i__,
-            stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+            stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int
   operator()(const Ty_i__& y_i, std::ostream* pstream__) const;
 };
 
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int first_capture(const Ty_i__& y_i, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Ty_i__>;
     int current_statement__ = 0; 
@@ -14117,7 +14117,7 @@ template <typename Ty_i__,
     }
     }
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>* = nullptr>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>* = nullptr>
   inline int last_capture(const Ty_i__& y_i, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Ty_i__>;
     int current_statement__ = 0; 
@@ -14145,8 +14145,8 @@ template <typename Ty_i__,
     }
 template <typename Tnind__, typename Tn_occasions__, typename Tp__,
           typename Tphi__,
-          stan::require_t<stan::is_stan_scalar_t<Tnind__>>* = nullptr,
-          stan::require_t<stan::is_stan_scalar_t<Tn_occasions__>>* = nullptr,
+          stan::require_t<std::is_integral<Tnind__>>* = nullptr,
+          stan::require_t<std::is_integral<Tn_occasions__>>* = nullptr,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>* = nullptr,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>* = nullptr>
   inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
@@ -14209,7 +14209,7 @@ template <typename Tnind__, typename Tn_occasions__, typename Tp__,
     }
     }
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>*>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>*>
 inline int
 first_capture_functor__::operator()(const Ty_i__& y_i,
                                     std::ostream* pstream__)  const
@@ -14218,8 +14218,8 @@ first_capture_functor__::operator()(const Ty_i__& y_i,
 }
 
 template <typename Tnind__, typename Tn_occasions__, typename Tp__,
-          typename Tphi__, stan::require_t<stan::is_stan_scalar_t<Tnind__>>*,
-          stan::require_t<stan::is_stan_scalar_t<Tn_occasions__>>*,
+          typename Tphi__, stan::require_t<std::is_integral<Tnind__>>*,
+          stan::require_t<std::is_integral<Tn_occasions__>>*,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tp__>>*,
           stan::require_t<stan::is_eigen_matrix_dynamic<Tphi__>>*>
 inline Eigen::Matrix<stan::return_type_t<Tnind__, Tn_occasions__, Tp__, Tphi__>, -1, -1>
@@ -14232,7 +14232,7 @@ prob_uncaptured_functor__::operator()(const Tnind__& nind,
 }
 
 template <typename Ty_i__,
-          stan::require_all_t<stan::is_std_vector<Ty_i__>, stan::is_stan_scalar_t<value_type_t<Ty_i__>>>*>
+          stan::require_all_t<stan::is_std_vector<Ty_i__>, std::is_integral<value_type_t<Ty_i__>>>*>
 inline int
 last_capture_functor__::operator()(const Ty_i__& y_i, std::ostream* pstream__) 
 const
@@ -14919,28 +14919,28 @@ static constexpr std::array<const char*, 14> locations_array__ =
 
 struct baz_lpdf_functor__ {
   template <bool propto__, typename Tx__,
-            stan::require_t<stan::is_stan_scalar_t<Tx__>>* = nullptr>
+            stan::require_t<stan::is_stan_scalar<Tx__>>* = nullptr>
   inline stan::return_type_t<Tx__>
   operator()(const Tx__& x, std::ostream* pstream__) const;
 };
 struct bar_lpmf_functor__ {
   template <bool propto__, typename Tn__, typename Tmu__,
-            stan::require_t<stan::is_stan_scalar_t<Tn__>>* = nullptr,
-            stan::require_t<stan::is_stan_scalar_t<Tmu__>>* = nullptr>
+            stan::require_t<std::is_integral<Tn__>>* = nullptr,
+            stan::require_t<stan::is_stan_scalar<Tmu__>>* = nullptr>
   inline stan::return_type_t<Tn__, Tmu__>
   operator()(const Tn__& n, const Tmu__& mu, std::ostream* pstream__) const;
 };
 struct foo_lpdf_functor__ {
   template <bool propto__, typename Tx__, typename Tmu__,
-            stan::require_t<stan::is_stan_scalar_t<Tx__>>* = nullptr,
-            stan::require_t<stan::is_stan_scalar_t<Tmu__>>* = nullptr>
+            stan::require_t<stan::is_stan_scalar<Tx__>>* = nullptr,
+            stan::require_t<stan::is_stan_scalar<Tmu__>>* = nullptr>
   inline stan::return_type_t<Tx__, Tmu__>
   operator()(const Tx__& x, const Tmu__& mu, std::ostream* pstream__) const;
 };
 
 template <bool propto__, typename Tx__, typename Tmu__,
-          stan::require_t<stan::is_stan_scalar_t<Tx__>>* = nullptr,
-          stan::require_t<stan::is_stan_scalar_t<Tmu__>>* = nullptr>
+          stan::require_t<stan::is_stan_scalar<Tx__>>* = nullptr,
+          stan::require_t<stan::is_stan_scalar<Tmu__>>* = nullptr>
   inline stan::return_type_t<Tx__, Tmu__>
   foo_lpdf(const Tx__& x, const Tmu__& mu, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Tx__, Tmu__>;
@@ -14955,8 +14955,8 @@ template <bool propto__, typename Tx__, typename Tmu__,
     }
     }
 template <bool propto__, typename Tn__, typename Tmu__,
-          stan::require_t<stan::is_stan_scalar_t<Tn__>>* = nullptr,
-          stan::require_t<stan::is_stan_scalar_t<Tmu__>>* = nullptr>
+          stan::require_t<std::is_integral<Tn__>>* = nullptr,
+          stan::require_t<stan::is_stan_scalar<Tmu__>>* = nullptr>
   inline stan::return_type_t<Tn__, Tmu__>
   bar_lpmf(const Tn__& n, const Tmu__& mu, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Tn__, Tmu__>;
@@ -14971,7 +14971,7 @@ template <bool propto__, typename Tn__, typename Tmu__,
     }
     }
 template <bool propto__, typename Tx__,
-          stan::require_t<stan::is_stan_scalar_t<Tx__>>* = nullptr>
+          stan::require_t<stan::is_stan_scalar<Tx__>>* = nullptr>
   inline stan::return_type_t<Tx__>
   baz_lpdf(const Tx__& x, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Tx__>;
@@ -14986,7 +14986,7 @@ template <bool propto__, typename Tx__,
     }
     }
 template <bool propto__, typename Tx__,
-          stan::require_t<stan::is_stan_scalar_t<Tx__>>*>
+          stan::require_t<stan::is_stan_scalar<Tx__>>*>
 inline stan::return_type_t<Tx__>
 baz_lpdf_functor__::operator()(const Tx__& x, std::ostream* pstream__)  const
 {
@@ -14994,8 +14994,8 @@ baz_lpdf_functor__::operator()(const Tx__& x, std::ostream* pstream__)  const
 }
 
 template <bool propto__, typename Tn__, typename Tmu__,
-          stan::require_t<stan::is_stan_scalar_t<Tn__>>*,
-          stan::require_t<stan::is_stan_scalar_t<Tmu__>>*>
+          stan::require_t<std::is_integral<Tn__>>*,
+          stan::require_t<stan::is_stan_scalar<Tmu__>>*>
 inline stan::return_type_t<Tn__, Tmu__>
 bar_lpmf_functor__::operator()(const Tn__& n, const Tmu__& mu,
                                std::ostream* pstream__)  const
@@ -15004,8 +15004,8 @@ bar_lpmf_functor__::operator()(const Tn__& n, const Tmu__& mu,
 }
 
 template <bool propto__, typename Tx__, typename Tmu__,
-          stan::require_t<stan::is_stan_scalar_t<Tx__>>*,
-          stan::require_t<stan::is_stan_scalar_t<Tmu__>>*>
+          stan::require_t<stan::is_stan_scalar<Tx__>>*,
+          stan::require_t<stan::is_stan_scalar<Tmu__>>*>
 inline stan::return_type_t<Tx__, Tmu__>
 foo_lpdf_functor__::operator()(const Tx__& x, const Tmu__& mu,
                                std::ostream* pstream__)  const
@@ -16898,8 +16898,7 @@ static constexpr std::array<const char*, 109> locations_array__ =
  " (in 'optimizations.stan', line 14, column 18 to line 17, column 5)"};
 
 struct rfun_functor__ {
-  template <typename Ty__,
-            stan::require_t<stan::is_stan_scalar_t<Ty__>>* = nullptr>
+  template <typename Ty__, stan::require_t<std::is_integral<Ty__>>* = nullptr>
   inline int
   operator()(const Ty__& y, std::ostream* pstream__) const;
 };
@@ -16911,8 +16910,8 @@ struct rfun_lp_functor__ {
 struct nrfun_lp_functor__ {
   template <bool propto__, typename Tx__, typename Ty__, typename T_lp__,
             typename T_lp_accum__,
-            stan::require_t<stan::is_stan_scalar_t<Tx__>>* = nullptr,
-            stan::require_t<stan::is_stan_scalar_t<Ty__>>* = nullptr>
+            stan::require_t<stan::is_stan_scalar<Tx__>>* = nullptr,
+            stan::require_t<std::is_integral<Ty__>>* = nullptr>
   inline void
   operator()(const Tx__& x, const Ty__& y, T_lp__& lp__,
              T_lp_accum__& lp_accum__, std::ostream* pstream__) const;
@@ -16920,9 +16919,8 @@ struct nrfun_lp_functor__ {
 
 template <bool propto__, typename Tx__, typename Ty__, typename T_lp__,
           typename T_lp_accum__,
-          stan::require_t<stan::is_stan_scalar_t<Tx__>>* = nullptr,
-          stan::require_t<stan::is_stan_scalar_t<Ty__>>* = nullptr>
-  inline void
+          stan::require_t<stan::is_stan_scalar<Tx__>>* = nullptr,
+          stan::require_t<std::is_integral<Ty__>>* = nullptr> inline void
   nrfun_lp(const Tx__& x, const Ty__& y, T_lp__& lp__,
            T_lp_accum__& lp_accum__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Tx__, Ty__>;
@@ -16941,8 +16939,7 @@ template <bool propto__, typename Tx__, typename Ty__, typename T_lp__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename Ty__,
-          stan::require_t<stan::is_stan_scalar_t<Ty__>>* = nullptr>
+template <typename Ty__, stan::require_t<std::is_integral<Ty__>>* = nullptr>
   inline int rfun(const Ty__& y, std::ostream* pstream__) {
     using local_scalar_t__ = stan::return_type_t<Ty__>;
     int current_statement__ = 0; 
@@ -16977,7 +16974,7 @@ template <bool propto__, typename T_lp__, typename T_lp_accum__> inline int
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename Ty__, stan::require_t<stan::is_stan_scalar_t<Ty__>>*>
+template <typename Ty__, stan::require_t<std::is_integral<Ty__>>*>
 inline int
 rfun_functor__::operator()(const Ty__& y, std::ostream* pstream__)  const
 {
@@ -16994,8 +16991,8 @@ rfun_lp_functor__::operator()(T_lp__& lp__, T_lp_accum__& lp_accum__,
 
 template <bool propto__, typename Tx__, typename Ty__, typename T_lp__,
           typename T_lp_accum__,
-          stan::require_t<stan::is_stan_scalar_t<Tx__>>*,
-          stan::require_t<stan::is_stan_scalar_t<Ty__>>*>
+          stan::require_t<stan::is_stan_scalar<Tx__>>*,
+          stan::require_t<std::is_integral<Ty__>>*>
 inline void
 nrfun_lp_functor__::operator()(const Tx__& x, const Ty__& y, T_lp__& lp__,
                                T_lp_accum__& lp_accum__,

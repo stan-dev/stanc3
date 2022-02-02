@@ -128,7 +128,8 @@ let maybe_require_templates (names : string option list)
       | UArray ut_arr ->
           List.concat [["stan::is_std_vector"]; get_requires ut_arr]
       (* NB: Not unwinding array types due to the way arrays of eigens are printed *)
-      | UReal | UInt -> ["stan::is_stan_scalar_t"]
+      | UReal -> ["stan::is_stan_scalar"]
+      | UInt -> ["std::is_integral"]
       | _ -> [] in
     get_requires (trd3 arg) in
   List.map2_exn names args ~f:(fun name a ->
