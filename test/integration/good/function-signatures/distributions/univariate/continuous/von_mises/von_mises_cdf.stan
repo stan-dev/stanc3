@@ -133,7 +133,6 @@ transformed data {
   transformed_data_real = von_mises_cdf(d_row_vector | d_row_vector, d_real_array);
   transformed_data_real = von_mises_cdf(d_row_vector | d_row_vector, d_vector);
   transformed_data_real = von_mises_cdf(d_row_vector | d_row_vector, d_row_vector);
-   transformed_data_real = von_mises_cdf([d_row_vector, d_row_vector] | d_row_vector, d_row_vector);
 }
 parameters {
   real p_real;
