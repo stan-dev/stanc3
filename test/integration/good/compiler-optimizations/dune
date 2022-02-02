@@ -31,7 +31,8 @@
    ad-level-deep-dependence.stan
    overloaded-fn.stan
    lupdf-inlining.stan
-   unenforce-initialize.stan))
+   unenforce-initialize.stan
+   partial_eval_multiply.stan))
  (action
   (with-stdout-to
    %{targets}
@@ -74,7 +75,8 @@
    ad-level-failing.stan
    ad-level-deep-dependence.stan
    lupdf-inlining.stan
-   unenforce-initialize.stan))
+   unenforce-initialize.stan
+   partial_eval_multiply.stan))
  (action
   (with-stdout-to
    %{targets}
