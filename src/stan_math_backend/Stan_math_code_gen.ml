@@ -121,14 +121,17 @@ let pp_located ppf _ =
     {|stan::lang::rethrow_located(e, locations_array__[current_statement__]);|}
 
 (** Detect if argument requires C++ template *)
-let arg_needs_template = function _ -> true
+let arg_needs_template = function
+  | _, _, t when UnsizedType.is_int_type t -> false
+  | _ -> true
 
 (** Print template arguments for C++ functions that need templates
   @param args A pack of [Program.fun_arg_decl] containing functions to detect templates.
   @return A list of arguments with template parameter names added.
  *)
 let maybe_templated_arg_types (args : Program.fun_arg_decl) =
-  List.mapi args ~f:(fun _ (_, name, _) -> Some (sprintf "T%s__" name))
+  List.map args ~f:(fun ((_, name, _) as arg) ->
+      if arg_needs_template arg then Some (sprintf "T%s__" name) else None )
 
 let maybe_require_templates (names : string option list)
     (args : Program.fun_arg_decl) =
@@ -143,7 +146,6 @@ let maybe_require_templates (names : string option list)
           List.concat [["stan::is_std_vector"]; get_requires ut_arr]
       (* NB: Not unwinding array types due to the way arrays of eigens are printed *)
       | UReal -> ["stan::is_stan_scalar"]
-      | UInt -> ["std::is_integral"]
       | _ -> [] in
     get_requires (trd3 arg) in
   List.map2_exn names args ~f:(fun name a ->
@@ -152,7 +154,8 @@ let maybe_require_templates (names : string option list)
       | None -> None )
 
 let return_arg_types (args : Program.fun_arg_decl) =
-  List.map args ~f:(fun (_, name, _) -> Some (sprintf "T%s__" name))
+  List.map args ~f:(fun ((_, name, _) as arg) ->
+      if arg_needs_template arg then Some (sprintf "T%s__" name) else None )
 
 let%expect_test "arg types templated correctly" =
   [(AutoDiffable, "xreal", UReal); (DataOnly, "yint", UInt)]
@@ -223,9 +226,9 @@ let pp_arg ppf (custom_scalar_opt, (_, name, ut)) =
     match custom_scalar_opt with
     | Some scalar -> scalar
     | None -> stantype_prim_str ut in
-  (* we add the _arg suffix for any Eigen types *)
-  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
-    name
+  let use_ref = if UnsizedType.UInt = ut then "" else "&" in
+  pf ppf "const %a%s %s" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
+    use_ref name
 
 let pp_arg_eigen_suffix ppf (custom_scalar_opt, (_, name, ut)) =
   let scalar =
@@ -233,10 +236,11 @@ let pp_arg_eigen_suffix ppf (custom_scalar_opt, (_, name, ut)) =
     | Some scalar -> scalar
     | None -> stantype_prim_str ut in
   (* we add the _arg suffix for any Eigen types *)
+  let use_ref = if UnsizedType.UInt = ut then "" else "&" in
   let opt_arg_suffix =
     if UnsizedType.is_eigen_type ut then name ^ "_arg__" else name in
-  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
-    opt_arg_suffix
+  pf ppf "const %a%s %s" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
+    use_ref opt_arg_suffix
 
 (** [pp_located_error_b] automatically adds a Block wrapper *)
 let pp_located_error_b ppf body_stmts =
