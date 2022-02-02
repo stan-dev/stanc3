@@ -82,7 +82,7 @@ let%expect_test "udf-expressions" =
     template <typename Tx__, typename Ty__, typename Tz__,
               typename Tw__, stan::require_all_t<stan::is_eigen_matrix_dynamic<Tx__>,
               stan::is_row_vector<Ty__>, stan::is_row_vector<Tz__>,
-              stan::is_std_vector<Tw__>, stan::is_eigen_matrix_dynamic<value_type_t<Tw__>>>* = nullptr>
+              stan::is_std_vector<Tw__>, stan::is_eigen_matrix_dynamic<stan::value_type_t<Tw__>>>* = nullptr>
     inline Eigen::Matrix<stan::return_type_t<Tx__, Ty__, Tz__, Tw__>, -1, -1>
     sars(const Tx__& x, const Ty__& y, const Tz__& z, const Tw__& w,
          std::ostream* pstream__) {

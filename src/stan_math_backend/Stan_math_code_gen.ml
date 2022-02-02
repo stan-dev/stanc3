@@ -48,7 +48,7 @@ let pp_template ppf template =
           | _ ->
               let next_bool_expr =
                 acc ^ require ^ "<"
-                ^ repper "value_type_t<" depth
+                ^ repper "stan::value_type_t<" depth
                 ^ name ^ repper ">" depth ^ ">" in
               if full_require_length = depth then next_bool_expr
               else next_bool_expr ^ ", " in
