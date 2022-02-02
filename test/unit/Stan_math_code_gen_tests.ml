@@ -34,14 +34,12 @@ let%expect_test "udf" =
   |> print_endline ;
   [%expect
     {|
-    template <typename T0__, typename T1__,
-              stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
-              stan::require_row_vector_t<T1__>* = nullptr>
-    void
-    sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
-      using local_scalar_t__ =
-              stan::promote_args_t<stan::value_type_t<T0__>,
-                                   stan::value_type_t<T1__>>;
+    template <typename Tx__, typename Ty__,
+              stan::require_t<stan::is_eigen_matrix_dynamic<Tx__>>* = nullptr,
+              stan::require_t<stan::is_row_vector<Ty__>>* = nullptr>
+    inline void
+    sars(const Tx__& x, const Ty__& y, std::ostream* pstream__) {
+      using local_scalar_t__ = stan::return_type_t<Tx__, Ty__>;
       int current_statement__ = 0;
       const auto& x = stan::math::to_ref(x_arg__);
       const auto& y = stan::math::to_ref(y_arg__);
@@ -81,20 +79,15 @@ let%expect_test "udf-expressions" =
   |> print_endline ;
   [%expect
     {|
-    template <typename T0__, typename T1__, typename T2__, typename T3__,
-              stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
-              stan::require_row_vector_t<T1__>* = nullptr,
-              stan::require_row_vector_t<T2__>* = nullptr,
-              stan::require_stan_scalar_t<T3__>* = nullptr>
-    Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-                         stan::value_type_t<T2__>, T3__>, -1, -1>
-    sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,
-         const std::vector<Eigen::Matrix<T3__, -1, -1>>& w,
+    template <typename Tx__, typename Ty__, typename Tz__, typename Tw__,
+              stan::require_t<stan::is_eigen_matrix_dynamic<Tx__>>* = nullptr,
+              stan::require_t<stan::is_row_vector<Ty__>>* = nullptr,
+              stan::require_t<stan::is_row_vector<Tz__>>* = nullptr,
+              stan::require_all_t<stan::is_std_vector<Tw__>, stan::is_eigen_matrix_dynamic<value_type_t<Tw__>>>* = nullptr>
+    inline Eigen::Matrix<stan::return_type_t<Tx__, Ty__, Tz__, Tw__>, -1, -1>
+    sars(const Tx__& x, const Ty__& y, const Tz__& z, const Tw__& w,
          std::ostream* pstream__) {
-      using local_scalar_t__ =
-              stan::promote_args_t<stan::value_type_t<T0__>,
-                                   stan::value_type_t<T1__>,
-                                   stan::value_type_t<T2__>, T3__>;
+      using local_scalar_t__ = stan::return_type_t<Tx__, Ty__, Tz__, Tw__>;
       int current_statement__ = 0;
       const auto& x = stan::math::to_ref(x_arg__);
       const auto& y = stan::math::to_ref(y_arg__);

@@ -94,12 +94,15 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
 
 let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   match ut with
-  | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector ->
+  | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector | UComplex
+   |UArray _ ->
       string ppf scalar
-  | UComplex -> pf ppf "std::complex<%s>" scalar
+      (*
+  | UComplex -> pf ppf "%s" scalar
   | UArray t ->
       (* Expressions are not accepted for arrays of Eigen::Matrix *)
       pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
+      *)
   | UMathLibraryFunction | UFun _ ->
       Common.FatalError.fatal_error_msg
         [%message "Function types not implemented"]

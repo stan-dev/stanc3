@@ -26,14 +26,35 @@ open Statement_gen
 (* TODO: move to seperate file and code gen more like this with a structured type *)
 type template =
   | Typename of string
-  | Require of string * string
+  | Require of string list * string
   | Bool of string
 
 let pp_template ppf template =
   match template with
   | Typename t -> pf ppf "typename %s" t
-  | Require (r, t) -> pf ppf "%s<%s>*" r t
   | Bool s -> pf ppf "bool %s" s
+  | Require ((require_list : string list), (name : string)) ->
+      let full_require_length = List.length require_list - 1 in
+      if full_require_length = 0 then
+        pf ppf "stan::require_t<%s>*"
+          ((List.nth_exn require_list) 0 ^ "<" ^ name ^ ">")
+      else
+        let rec repper (s : string) (n : int) : string =
+          match n with 1 -> s | _ -> s ^ repper s (n - 1) in
+        (* Why can't I just use | full_require_length here?*)
+        let mappy (depth : int) (acc : string) (require : string) =
+          let base_req = acc ^ require ^ "<" ^ name ^ ">" in
+          match depth with
+          | 0 -> base_req ^ ", "
+          | _ ->
+              let next_bool_expr =
+                acc ^ require ^ "<"
+                ^ repper "value_type_t<" depth
+                ^ name ^ repper ">" depth ^ ">" in
+              if full_require_length = depth then next_bool_expr
+              else next_bool_expr ^ ", " in
+        let multi_bool_expr = List.foldi ~f:mappy require_list ~init:"" in
+        pf ppf "stan::require_all_t<%s>*" multi_bool_expr
 
 let pp_template_defaults ppf template =
   match template with
@@ -86,47 +107,43 @@ let pp_located ppf _ =
     {|stan::lang::rethrow_located(e, locations_array__[current_statement__]);|}
 
 (** Detect if argument requires C++ template *)
-let arg_needs_template = function
-  | UnsizedType.DataOnly, _, t -> UnsizedType.is_eigen_type t
-  | _, _, t when UnsizedType.is_int_type t -> false
-  | _ -> true
+let arg_needs_template = function _ -> true
 
 (** Print template arguments for C++ functions that need templates
   @param args A pack of [Program.fun_arg_decl] containing functions to detect templates.
   @return A list of arguments with template parameter names added.
  *)
 let maybe_templated_arg_types (args : Program.fun_arg_decl) =
-  List.mapi args ~f:(fun i a ->
-      match arg_needs_template a with
-      | true -> Some (sprintf "T%d__" i)
-      | false -> None )
+  List.mapi args ~f:(fun _ (_, name, _) -> Some (sprintf "T%s__" name))
 
 let maybe_require_templates (names : string option list)
     (args : Program.fun_arg_decl) =
   let require_for_arg arg =
-    match trd3 arg with
-    | UnsizedType.URowVector -> "stan::require_row_vector_t"
-    | UVector -> "stan::require_col_vector_t"
-    | UMatrix -> "stan::require_eigen_matrix_dynamic_t"
-    (* NB: Not unwinding array types due to the way arrays of eigens are printed *)
-    | _ -> "stan::require_stan_scalar_t" in
+    let rec get_requires ut =
+      match ut with
+      | UnsizedType.URowVector -> ["stan::is_row_vector"]
+      | UVector -> ["stan::is_col_vector"]
+      | UMatrix -> ["stan::is_eigen_matrix_dynamic"]
+      | UComplex -> ["stan::is_complex"]
+      | UArray ut_arr ->
+          List.concat [["stan::is_std_vector"]; get_requires ut_arr]
+      (* NB: Not unwinding array types due to the way arrays of eigens are printed *)
+      | UReal | UInt -> ["stan::is_stan_scalar_t"]
+      | _ -> [] in
+    get_requires (trd3 arg) in
   List.map2_exn names args ~f:(fun name a ->
       match name with
       | Some t -> Some (Require (require_for_arg a, t))
       | None -> None )
 
 let return_arg_types (args : Program.fun_arg_decl) =
-  List.mapi args ~f:(fun i ((_, _, ut) as a) ->
-      if UnsizedType.is_eigen_type ut && arg_needs_template a then
-        Some (sprintf "stan::value_type_t<T%d__>" i)
-      else if arg_needs_template a then Some (sprintf "T%d__" i)
-      else None )
+  List.map args ~f:(fun (_, name, _) -> Some (sprintf "T%s__" name))
 
 let%expect_test "arg types templated correctly" =
   [(AutoDiffable, "xreal", UReal); (DataOnly, "yint", UInt)]
   |> maybe_templated_arg_types |> List.filter_opt |> String.concat ~sep:","
   |> print_endline ;
-  [%expect {| T0__ |}]
+  [%expect {| Txreal__,Tyint__ |}]
 
 (** Print the code for promoting stan real types
  @param ppf A pretty printer
@@ -143,20 +160,20 @@ let pp_promoted_scalar ppf args =
         match args with
         | [] -> pf ppf "double"
         | hd :: tl ->
-            pf ppf "@[stan::promote_args_t<@[%a%a@]>@]" (list ~sep:comma string)
+            pf ppf "@[stan::return_type_t<@[%a%a@]>@]" (list ~sep:comma string)
               hd go tl in
       promote_args_chunked ppf
         List.(chunks_of ~length:5 (filter_opt (return_arg_types args)))
 
 (** Pretty-prints a function's return-type, taking into account templated argument
-    promotion.*)
+    promotion. *)
 let pp_returntype ppf arg_types rt =
   let scalar = str "@[%a@]" pp_promoted_scalar arg_types in
   match rt with
   | Some ut when UnsizedType.is_int_type ut ->
-      pf ppf "%a@ " pp_unsizedtype_custom_scalar ("int", ut)
-  | Some ut -> pf ppf "%a@ " pp_unsizedtype_custom_scalar (scalar, ut)
-  | None -> pf ppf "void@ "
+      pf ppf "inline %a@ " pp_unsizedtype_custom_scalar ("int", ut)
+  | Some ut -> pf ppf "inline %a@ " pp_unsizedtype_custom_scalar (scalar, ut)
+  | None -> pf ppf "inline void@ "
 
 let pp_eigen_arg_to_ref ppf arg_types =
   let pp_ref ppf name =
@@ -201,8 +218,11 @@ let pp_arg_eigen_suffix ppf (custom_scalar_opt, (_, name, ut)) =
     | Some scalar -> scalar
     | None -> stantype_prim_str ut in
   (* we add the _arg suffix for any Eigen types *)
+  (*
   let opt_arg_suffix =
     if UnsizedType.is_eigen_type ut then name ^ "_arg__" else name in
+    *)
+  let opt_arg_suffix = name in
   pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
     opt_arg_suffix
 
@@ -217,12 +237,12 @@ let typename t = Typename t
 (** Construct an object with it's needed templates for function signatures.
  @param fdargs A sexp list of strings representing C++ types.
   *)
-let get_templates_and_args exprs fdargs =
+let get_templates_and_args (is_exprs : bool) fdargs =
   let argtypetemplates = maybe_templated_arg_types fdargs in
   let requireargtemplates = maybe_require_templates argtypetemplates fdargs in
   ( List.filter_opt argtypetemplates
   , List.filter_opt requireargtemplates
-  , if not exprs then
+  , if not is_exprs then
       List.map
         ~f:(fun a -> str "%a" pp_arg a)
         (List.zip_exn argtypetemplates fdargs)
@@ -278,9 +298,9 @@ let pp_fun_def ppf
       | _ -> {fdbody with pattern= Block [fdbody]} in
     pp_located_error ppf (pp_statement, blocked_fdbody) ;
     pf ppf "@ " in
-  let get_templates exprs variadic =
+  let get_templates is_expr variadic =
     let argtypetemplates, require_templates, args =
-      get_templates_and_args exprs fdargs in
+      get_templates_and_args is_expr fdargs in
     let templates =
       List.(map ~f:typename (argtypetemplates @ extra_templates))
       @ require_templates in
