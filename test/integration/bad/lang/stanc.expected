@@ -249,7 +249,7 @@ Available signatures:
   The first argument must be array[] real but got array[] vector
 (array[] row_vector, array[] row_vector, real, real) => matrix
   The first argument must be array[] row_vector but got array[] vector
-(array[] row_vector, real, real) => matrix
+(array[] real, real, real) => matrix
   Expected 3 arguments but found 4 arguments.
 (array[] vector, real, real) => matrix
   Expected 3 arguments but found 4 arguments.
@@ -334,7 +334,7 @@ Available signatures:
   The first argument must be array[] vector but got row_vector
 (array[] row_vector, real, real) => matrix
   The first argument must be array[] row_vector but got row_vector
-(array[] row_vector, array[] row_vector, real, real) => matrix
+(array[] real, array[] real, real, real) => matrix
   Expected 4 arguments but found 3 arguments.
 (array[] vector, array[] vector, real, real) => matrix
   Expected 4 arguments but found 3 arguments.
@@ -359,7 +359,7 @@ Available signatures:
   The first argument must be array[] real but got array[] row_vector
 (array[] vector, array[] vector, real, real) => matrix
   The first argument must be array[] vector but got array[] row_vector
-(array[] row_vector, real, real) => matrix
+(array[] real, real, real) => matrix
   Expected 3 arguments but found 4 arguments.
 (array[] vector, real, real) => matrix
   Expected 3 arguments but found 4 arguments.
@@ -396,7 +396,7 @@ Available signatures:
   The first argument must be array[] real but got array[] vector
 (array[] row_vector, array[] row_vector, real, real) => matrix
   The first argument must be array[] row_vector but got array[] vector
-(array[] row_vector, real, real) => matrix
+(array[] real, real, real) => matrix
   Expected 3 arguments but found 4 arguments.
 (array[] vector, real, real) => matrix
   Expected 3 arguments but found 4 arguments.
@@ -481,7 +481,7 @@ Available signatures:
   The first argument must be array[] vector but got vector
 (array[] row_vector, real, real) => matrix
   The first argument must be array[] row_vector but got vector
-(array[] row_vector, array[] row_vector, real, real) => matrix
+(array[] real, array[] real, real, real) => matrix
   Expected 4 arguments but found 3 arguments.
 (array[] vector, array[] vector, real, real) => matrix
   Expected 4 arguments but found 3 arguments.
@@ -506,7 +506,7 @@ Available signatures:
   The first argument must be array[] real but got array[] vector
 (array[] row_vector, array[] row_vector, real, real) => matrix
   The first argument must be array[] row_vector but got array[] vector
-(array[] row_vector, real, real) => matrix
+(array[] real, real, real) => matrix
   Expected 3 arguments but found 4 arguments.
 (array[] vector, real, real) => matrix
   Expected 3 arguments but found 4 arguments.
@@ -523,6 +523,26 @@ Syntax error in 'bad_cov_exp_quad_vec_rvec_param.stan', line 17, column 0 to col
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
+  $ ../../../../../install/default/bin/stanc bad_decl1.stan
+Syntax error in 'bad_decl1.stan', line 2, column 14 to column 15, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    real x, int y;
+                       ^
+     3:  }
+   -------------------------------------------------
+
+Expected identifier. Multiple declarations must have the same type.
+  $ ../../../../../install/default/bin/stanc bad_decl2.stan
+Syntax error in 'bad_decl2.stan', line 2, column 13 to column 14, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    array[3,3] x;
+                      ^
+     3:  }
+   -------------------------------------------------
+
+Expected non-array type after "array" declaration.
   $ ../../../../../install/default/bin/stanc bad_periods_data.stan
 Syntax error in 'bad_periods_data.stan', line 2, column 7, lexing error:
    -------------------------------------------------

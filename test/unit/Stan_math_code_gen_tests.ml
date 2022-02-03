@@ -4,11 +4,18 @@ open Core_kernel
 open Fmt
 open Stan_math_code_gen
 
+let pp_fun_def_w_rs a b =
+  pp_fun_def a
+    ( b
+    , String.Table.create ()
+    , String.Set.empty
+    , String.Set.empty
+    , String.Set.empty )
+
 let%expect_test "udf" =
   let with_no_loc stmt =
     Stmt.Fixed.{pattern= stmt; meta= Locations.no_span_num} in
   let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
-  let pp_fun_def_w_rs a b = pp_fun_def a b String.Set.empty String.Set.empty in
   { fdrt= None
   ; fdname= "sars"
   ; fdsuffix= FnPlain
@@ -27,11 +34,14 @@ let%expect_test "udf" =
   |> print_endline ;
   [%expect
     {|
-    template <typename T0__, typename T1__>
+    template <typename T0__, typename T1__,
+              stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
+              stan::require_row_vector_t<T1__>* = nullptr>
     void
     sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
-      using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-              stan::value_type_t<T1__>>;
+      using local_scalar_t__ =
+              stan::promote_args_t<stan::value_type_t<T0__>,
+                                   stan::value_type_t<T1__>>;
       int current_statement__ = 0;
       const auto& x = stan::math::to_ref(x_arg__);
       const auto& y = stan::math::to_ref(y_arg__);
@@ -45,22 +55,12 @@ let%expect_test "udf" =
         stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       }
 
-    }
-
-    struct sars_functor__ {
-    template <typename T0__, typename T1__>
-    void
-    operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const
-    {
-    return sars(x, y, pstream__);
-    }
-    }; |}]
+    } |}]
 
 let%expect_test "udf-expressions" =
   let with_no_loc stmt =
     Stmt.Fixed.{pattern= stmt; meta= Locations.no_span_num} in
   let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
-  let pp_fun_def_w_rs a b = pp_fun_def a b String.Set.empty String.Set.empty in
   { fdrt= Some UMatrix
   ; fdname= "sars"
   ; fdsuffix= FnPlain
@@ -81,17 +81,20 @@ let%expect_test "udf-expressions" =
   |> print_endline ;
   [%expect
     {|
-    template <typename T0__, typename T1__, typename T2__, typename T3__>
+    template <typename T0__, typename T1__, typename T2__, typename T3__,
+              stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
+              stan::require_row_vector_t<T1__>* = nullptr,
+              stan::require_row_vector_t<T2__>* = nullptr,
+              stan::require_stan_scalar_t<T3__>* = nullptr>
     Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-    stan::value_type_t<T2__>,
-    T3__>, -1, -1>
+                         stan::value_type_t<T2__>, T3__>, -1, -1>
     sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,
          const std::vector<Eigen::Matrix<T3__, -1, -1>>& w,
          std::ostream* pstream__) {
-      using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-              stan::value_type_t<T1__>,
-              stan::value_type_t<T2__>,
-              T3__>;
+      using local_scalar_t__ =
+              stan::promote_args_t<stan::value_type_t<T0__>,
+                                   stan::value_type_t<T1__>,
+                                   stan::value_type_t<T2__>, T3__>;
       int current_statement__ = 0;
       const auto& x = stan::math::to_ref(x_arg__);
       const auto& y = stan::math::to_ref(y_arg__);
@@ -106,17 +109,4 @@ let%expect_test "udf-expressions" =
         stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       }
 
-    }
-
-    struct sars_functor__ {
-    template <typename T0__, typename T1__, typename T2__, typename T3__>
-    Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-    stan::value_type_t<T2__>,
-    T3__>, -1, -1>
-    operator()(const T0__& x, const T1__& y, const T2__& z,
-               const std::vector<Eigen::Matrix<T3__, -1, -1>>& w,
-               std::ostream* pstream__)  const
-    {
-    return sars(x, y, z, w, pstream__);
-    }
-    }; |}]
+    } |}]

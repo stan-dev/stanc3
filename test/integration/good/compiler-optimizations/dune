@@ -29,7 +29,10 @@
    expr-prop-fail.stan
    ad-level-failing.stan
    ad-level-deep-dependence.stan
-   lupdf-inlining.stan))
+   overloaded-fn.stan
+   lupdf-inlining.stan
+   unenforce-initialize.stan
+   partial_eval_multiply.stan))
  (action
   (with-stdout-to
    %{targets}
@@ -71,13 +74,31 @@
    expr-prop-fail.stan
    ad-level-failing.stan
    ad-level-deep-dependence.stan
-   lupdf-inlining.stan))
+   lupdf-inlining.stan
+   unenforce-initialize.stan
+   partial_eval_multiply.stan))
  (action
   (with-stdout-to
    %{targets}
-   (run %{bin:run_bin_on_args} "%{bin:stanc} -O1 --print-cpp" %{stanfiles}))))
+   (run %{bin:run_bin_on_args} "%{bin:stanc} --O1 --print-cpp" %{stanfiles}))))
 
 (rule
  (alias runtest)
  (action
   (diff cppO1.expected cppO1.output)))
+
+(rule
+ (targets cppO0.output)
+ (deps
+  (package stanc)
+  (:stanfiles
+   (glob_files *.stan)))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run %{bin:run_bin_on_args} "%{bin:stanc} --print-cpp --O0" %{stanfiles}))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff cppO0.expected cppO0.output)))

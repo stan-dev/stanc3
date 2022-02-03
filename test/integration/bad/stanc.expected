@@ -1,15 +1,15 @@
   $ ../../../../install/default/bin/stanc array-expr-decl-bad1.stan
-Syntax error in 'array-expr-decl-bad1.stan', line 2, column 2 to column 16, parsing error:
+Syntax error in 'array-expr-decl-bad1.stan', line 2, column 9 to column 10, parsing error:
    -------------------------------------------------
      1:  data {
      2:    array[1:2,2,:] real x;
-           ^
+                  ^
      3:  }
    -------------------------------------------------
 
-Dimensions should be expressions, not multiple or range indexing.
+Ill-formed phrase. Found an expression. This can be followed by a ",", a "}", a ")", a "]", a "[" or an infix or postfix operator.
   $ ../../../../install/default/bin/stanc array-expr-decl-bad2.stan
-Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 15, parsing error:
+Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 10, parsing error:
    -------------------------------------------------
      1:  data {
      2:    blahblah[1,2] real x;
@@ -17,7 +17,11 @@ Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 15, pars
      3:  }
    -------------------------------------------------
 
-Found a declaration following an expression.
+Invalid type in declaration. Valid types:
+  int, real, vector, row_vector, matrix,
+  unit_vector, simplex, ordered, positive_ordered,
+  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov
+optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc array-expr-decl-bad3.stan
 Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
@@ -27,7 +31,11 @@ Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsi
      3:  }
    -------------------------------------------------
 
-Found a declaration following an expression.
+Invalid type in declaration. Valid types:
+  int, real, vector, row_vector, matrix,
+  unit_vector, simplex, ordered, positive_ordered,
+  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov
+optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc array-multi-decl-bad.stan
 Syntax error in 'array-multi-decl-bad.stan', line 2, column 11 to column 12, parsing error:
    -------------------------------------------------
@@ -560,11 +568,11 @@ Syntax error in 'err-decl-double-params.stan', line 4, column 0 to column 1, par
 
 Ill-formed phrase. Found L-value. This can be completed in many ways.
   $ ../../../../install/default/bin/stanc err-decl-double.stan
-Syntax error in 'err-decl-double.stan', line 2, column 9 to column 10, parsing error:
+Syntax error in 'err-decl-double.stan', line 2, column 2 to column 8, parsing error:
    -------------------------------------------------
      1:  data {
      2:    double y;
-                  ^
+           ^
      3:  }
      4:  model {
    -------------------------------------------------
@@ -976,17 +984,17 @@ Syntax error in 'functions-bad0.stan', line 2, column 11 to column 15, parsing e
 
 An argument declaration (unsized and unconstrained type followed by identifier) is expected.
   $ ../../../../install/default/bin/stanc functions-bad1.stan
-Semantic error in 'functions-bad1.stan', line 6, column 7 to column 11:
+Semantic error in 'functions-bad1.stan', line 6, column 2 to column 20:
    -------------------------------------------------
      4:      return x;
      5:    }
      6:    real flib(real x); // error redeclaring function
-                ^
+           ^
      7:  }
      8:  parameters {
    -------------------------------------------------
 
-Identifier 'flib' is already in use.
+Function 'flib' has already been declared to for signature (real) => real
   $ ../../../../install/default/bin/stanc functions-bad11.stan
 Semantic error in 'functions-bad11.stan', line 3, column 4 to column 20:
    -------------------------------------------------
@@ -1024,17 +1032,17 @@ Semantic error in 'functions-bad13.stan', line 3, column 4 to column 10:
 
 Cannot assign to function argument or loop identifier 'x'.
   $ ../../../../install/default/bin/stanc functions-bad14.stan
-Semantic error in 'functions-bad14.stan', line 5, column 6 to column 9:
+Semantic error in 'functions-bad14.stan', line 5, column 2 to line 7, column 3:
    -------------------------------------------------
      3:      return x;
      4:    }
      5:    int abc(real x) {  // illegal redeclaration with same args
-               ^
+           ^
      6:      return 1;
      7:    }
    -------------------------------------------------
 
-Identifier 'abc' is already in use.
+Function 'abc' cannot be overloaded by return type only. Previously used return type real
   $ ../../../../install/default/bin/stanc functions-bad15.stan
 Semantic error in 'functions-bad15.stan', line 10, column 12 to column 29:
    -------------------------------------------------
@@ -1047,16 +1055,17 @@ Semantic error in 'functions-bad15.stan', line 10, column 12 to column 29:
 
 A returning function was expected but a non-returning function 'unit_normal_lp' was supplied.
   $ ../../../../install/default/bin/stanc functions-bad16.stan
-Semantic error in 'functions-bad16.stan', line 2, column 7 to column 13:
+Semantic error in 'functions-bad16.stan', line 2, column 2 to line 4, column 3:
    -------------------------------------------------
      1:  functions {
      2:    real square(real x) {
-                ^
+           ^
      3:      return x * x;
      4:    }
    -------------------------------------------------
 
-Identifier 'square' clashes with Stan Math library function.
+Function 'square' is already declared in the Stan Math library with signature 
+(real) => real
   $ ../../../../install/default/bin/stanc functions-bad17.stan
 Semantic error in 'functions-bad17.stan', line 2, column 2 to line 4, column 3:
    -------------------------------------------------
@@ -1091,7 +1100,7 @@ Semantic error in 'functions-bad19.stan', line 4, column 2 to line 6, column 3:
      6:    }
    -------------------------------------------------
 
-Function 'my_fun3' has already been declared to have type (data real) => real
+Function 'my_fun3' has already been declared to for signature (real) => real
   $ ../../../../install/default/bin/stanc functions-bad2.stan
 Semantic error in 'functions-bad2.stan', line 8, column 7 to column 13:
    -------------------------------------------------
@@ -1115,7 +1124,7 @@ Semantic error in 'functions-bad20.stan', line 4, column 2 to line 6, column 3:
      6:    }
    -------------------------------------------------
 
-Function 'my_fun3' has already been declared to have type (real) => real
+Function 'my_fun3' has already been declared to for signature (data real) => real
   $ ../../../../install/default/bin/stanc functions-bad21.stan
 Semantic error in 'functions-bad21.stan', line 13, column 11 to column 21:
    -------------------------------------------------
@@ -1424,18 +1433,6 @@ Syntax error in 'matrix_expr_bad4.stan', line 2, column 44 to column 45, parsing
    -------------------------------------------------
 
 Ill-formed phrase. Found an expression. This can be followed by a ",", a "}", a ")", a "]", a "[" or an infix or postfix operator.
-  $ ../../../../install/default/bin/stanc multi_fun.stan
-Semantic error in 'multi_fun.stan', line 5, column 7 to column 10:
-   -------------------------------------------------
-     3:      return a;
-     4:    }
-     5:    real foo(real b) {
-                ^
-     6:      return b;
-     7:    }
-   -------------------------------------------------
-
-Identifier 'foo' is already in use.
   $ ../../../../install/default/bin/stanc multiply_sample.stan
 Semantic error in 'multiply_sample.stan', line 5, column 2 to column 18:
    -------------------------------------------------
@@ -1835,108 +1832,42 @@ Semantic error in 'real_idx.stan', line 3, column 4 to column 7:
    -------------------------------------------------
 
 Index must be of type int or int[] or must be a range. Instead found type real.
-  $ ../../../../install/default/bin/stanc redefine-ccdf1.stan
-Semantic error in 'redefine-ccdf1.stan', line 2, column 7 to column 20:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_lccdf(int n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_lccdf' clashes with Stan Math library function.
-  $ ../../../../install/default/bin/stanc redefine-ccdf2.stan
-Semantic error in 'redefine-ccdf2.stan', line 2, column 7 to column 20:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_lccdf(int n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_lccdf' clashes with Stan Math library function.
   $ ../../../../install/default/bin/stanc redefine-ccdf3.stan
-Semantic error in 'redefine-ccdf3.stan', line 5, column 7 to column 19:
+Semantic error in 'redefine-ccdf3.stan', line 5, column 2 to line 7, column 3:
    -------------------------------------------------
      3:      return -x^2;
      4:    }
      5:    real foo_ccdf_log(int n, real x) {
-                ^
+           ^
      6:      return -x^2;
      7:    }
    -------------------------------------------------
 
-Identifier 'foo_lccdf' is already in use.
-  $ ../../../../install/default/bin/stanc redefine-cdf1.stan
-Semantic error in 'redefine-cdf1.stan', line 2, column 7 to column 19:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_lcdf(int n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_lcdf' clashes with Stan Math library function.
-  $ ../../../../install/default/bin/stanc redefine-cdf2.stan
-Semantic error in 'redefine-cdf2.stan', line 2, column 7 to column 19:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_lcdf(int n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_lcdf' clashes with Stan Math library function.
+Function 'foo_ccdf_log' has already been declared to for signature (int, real) => real
   $ ../../../../install/default/bin/stanc redefine-cdf3.stan
-Semantic error in 'redefine-cdf3.stan', line 5, column 7 to column 18:
+Semantic error in 'redefine-cdf3.stan', line 5, column 2 to line 7, column 3:
    -------------------------------------------------
      3:      return -x^2;
      4:    }
      5:    real foo_cdf_log(int n, real x) {
-                ^
+           ^
      6:      return -x^2;
      7:    }
    -------------------------------------------------
 
-Identifier 'foo_lcdf' is already in use.
-  $ ../../../../install/default/bin/stanc redefine-prob1.stan
-Semantic error in 'redefine-prob1.stan', line 2, column 7 to column 19:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_lpdf(real n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_lpmf' clashes with Stan Math library function.
-  $ ../../../../install/default/bin/stanc redefine-prob2.stan
-Semantic error in 'redefine-prob2.stan', line 2, column 7 to column 19:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_lpmf(int n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_lpmf' clashes with Stan Math library function.
+Function 'foo_cdf_log' has already been declared to for signature (int, real) => real
   $ ../../../../install/default/bin/stanc redefine-prob3.stan
-Semantic error in 'redefine-prob3.stan', line 5, column 7 to column 15:
+Semantic error in 'redefine-prob3.stan', line 5, column 2 to line 7, column 3:
    -------------------------------------------------
      3:      return -y^2;
      4:    }
      5:    real foo_lpmf(int y) {
-                ^
+           ^
      6:      return y^2 / 2;
      7:    }
    -------------------------------------------------
 
-Identifier 'foo_log' is already in use.
+Function 'foo_lpmf' has already been declared to for signature (int) => real
   $ ../../../../install/default/bin/stanc rng_loc1.stan
 Semantic error in 'rng_loc1.stan', line 3, column 11 to column 29:
    -------------------------------------------------
@@ -2034,16 +1965,16 @@ Semantic error in 'row_vector_expr_bad2.stan', line 5, column 25 to column 26:
 
 Row_vector expression must have all int or real entries. Found type row_vector.
   $ ../../../../install/default/bin/stanc shadow.stan
-Semantic error in 'shadow.stan', line 2, column 7 to column 12:
+Semantic error in 'shadow.stan', line 2, column 3 to line 4, column 4:
    -------------------------------------------------
      1:  functions {
      2:     int log10(int x) {
-                ^
+            ^
      3:      return 1;
      4:     }
    -------------------------------------------------
 
-Identifier 'log10' clashes with Stan Math library function.
+Function 'log10' cannot be overloaded by return type only. Previously used return type real
   $ ../../../../install/default/bin/stanc signature_function_known.stan
 Semantic error in 'signature_function_known.stan', line 8, column 12 to column 42:
    -------------------------------------------------
@@ -2057,15 +1988,15 @@ Semantic error in 'signature_function_known.stan', line 8, column 12 to column 4
 Ill-typed arguments supplied to function 'bernoulli_logit_lpmf':
 (vector, vector)
 Available signatures:
-(int, real) => real
-  The first argument must be int but got vector
-(int, array[] real) => real
+(int, row_vector) => real
   The first argument must be int but got vector
 (int, vector) => real
   The first argument must be int but got vector
-(int, row_vector) => real
+(int, array[] real) => real
   The first argument must be int but got vector
-(array[] int, real) => real
+(int, real) => real
+  The first argument must be int but got vector
+(array[] int, row_vector) => real
   The first argument must be array[] int but got vector
 (Additional signatures omitted)
   $ ../../../../install/default/bin/stanc signature_function_unknown.stan
@@ -2320,9 +2251,6 @@ Syntax error in 'validate_array_expr_bad3.stan', line 6, column 14 to column 15,
 
 Expression expected after "{" in array expression.
   $ ../../../../install/default/bin/stanc validate_array_expr_bad3a.stan
-Warning in 'validate_array_expr_bad3a.stan', line 5, column 2: Variable name
-    'array' will be a reserved word starting in Stan 2.32.0. Please rename
-    it!
 Syntax error in 'validate_array_expr_bad3a.stan', line 5, column 36 to column 37, parsing error:
    -------------------------------------------------
      3:  }

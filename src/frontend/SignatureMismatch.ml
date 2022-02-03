@@ -79,6 +79,26 @@ type signature_error =
   (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
   * function_mismatch
 
+type promotions =
+  | None
+  | IntToRealPromotion
+  | IntToComplexPromotion
+  | RealToComplexPromotion
+
+type ('unique, 'error) generic_match_result =
+  | UniqueMatch of 'unique
+  | AmbiguousMatch of
+      (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
+      list
+  | SignatureErrors of 'error
+
+type match_result =
+  ( UnsizedType.returntype
+    * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
+    * promotions list
+  , signature_error list * bool )
+  generic_match_result
+
 let rec compare_types t1 t2 =
   match (t1, t2) with
   | UnsizedType.(UArray t1, UArray t2) -> compare_types t1 t2
@@ -110,14 +130,13 @@ let rec compare_errors e1 e2 =
       | SuffixMismatch _, _ | _, InputMismatch _ -> -1
       | InputMismatch _, _ | _, SuffixMismatch _ -> 1 ) )
 
-type promotions = None | RealPromotion | ComplexPromotion
-
 let rec check_same_type depth t1 t2 =
   let wrap_func = Result.map_error ~f:(fun e -> TypeMismatch (t1, t2, Some e)) in
   match (t1, t2) with
   | t1, t2 when t1 = t2 -> Ok None
-  | UnsizedType.(UReal, UInt) when depth < 1 -> Ok RealPromotion
-  | UnsizedType.(UComplex, (UInt | UReal)) when depth < 1 -> Ok ComplexPromotion
+  | UnsizedType.(UReal, UInt) when depth < 1 -> Ok IntToRealPromotion
+  | UnsizedType.(UComplex, UInt) when depth < 1 -> Ok IntToComplexPromotion
+  | UnsizedType.(UComplex, UReal) when depth < 1 -> Ok RealToComplexPromotion
   (* Arrays: Try to recursively promote, but make sure the error is for these types,
      not the recursive call *)
   | UArray nt1, UArray nt2 ->
@@ -170,34 +189,67 @@ let promote es promotions =
       let open UnsizedType in
       let emeta = exp.emeta in
       match prom with
-      | RealPromotion when is_int_type emeta.type_ ->
+      | IntToRealPromotion when is_int_type emeta.type_ ->
           Ast.
             { expr= Ast.Promotion (exp, UReal, emeta.ad_level)
             ; emeta= {emeta with type_= promote_array emeta.type_ UReal} }
-      | ComplexPromotion when not (is_complex_type emeta.type_) ->
+      | (IntToComplexPromotion | RealToComplexPromotion)
+        when not (is_complex_type emeta.type_) ->
           { expr= Promotion (exp, UComplex, emeta.ad_level)
           ; emeta= {emeta with type_= promote_array emeta.type_ UComplex} }
       | _ -> exp )
 
-let returntype env name args =
+let promotion_cost p =
+  match p with
+  | None -> 0
+  | RealToComplexPromotion | IntToRealPromotion -> 1
+  | IntToComplexPromotion -> 2
+
+let unique_minimum_promotion promotion_options =
+  let size (_, p) =
+    List.fold ~init:0 ~f:(fun acc p -> acc + promotion_cost p) p in
+  let sizes = List.map ~f:size promotion_options in
+  let min_promotion = List.min_elt ~compare:Int.compare sizes in
+  let sizes_and_promotons = List.zip_exn sizes promotion_options in
+  match min_promotion with
+  | Some min_depth -> (
+    match
+      List.filter_map
+        ~f:(fun (depth, promotion) ->
+          if depth = min_depth then Some promotion else None )
+        sizes_and_promotons
+    with
+    | [ans] -> Ok ans
+    | _ :: _ as lst -> Error (Some (List.map ~f:fst lst))
+    | [] -> Error None )
+  | None -> Error None
+
+let matching_function env name args =
   (* NB: Variadic arguments are special-cased in the typechecker and not handled here *)
   let name = Utils.stdlib_distribution_name name in
-  Environment.find env name
-  |> List.filter_map ~f:extract_function_types
-  |> List.sort ~compare:(fun (x, _, _, _) (y, _, _, _) ->
-         UnsizedType.compare_returntype x y )
-  (* Check the least return type first in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
-  |> List.fold_until ~init:[]
-       ~f:(fun errors (rt, tys, funkind_constructor, _) ->
-         match check_compatible_arguments 0 tys args with
-         | Ok p -> Stop (Ok (rt, funkind_constructor, p))
-         | Error e -> Continue (((rt, tys), e) :: errors) )
-       ~finish:(fun errors ->
-         let errors =
-           List.sort errors ~compare:(fun (_, e1) (_, e2) ->
-               compare_errors e1 e2 ) in
-         let errors, omitted = List.split_n errors max_n_errors in
-         Error (errors, not (List.is_empty omitted)) )
+  let function_types =
+    Environment.find env name
+    |> List.filter_map ~f:extract_function_types
+    |> List.sort ~compare:(fun (ret1, _, _, _) (ret2, _, _, _) ->
+           UnsizedType.compare_returntype ret1 ret2 ) in
+  let matches, errors =
+    List.partition_map function_types
+      ~f:(fun (rt, tys, funkind_constructor, _) ->
+        match check_compatible_arguments 0 tys args with
+        | Ok p -> Either.First (((rt, tys), funkind_constructor), p)
+        | Error e -> Second ((rt, tys), e) ) in
+  match unique_minimum_promotion matches with
+  | Ok (((rt, _), funkind_constructor), p) ->
+      UniqueMatch (rt, funkind_constructor, p)
+  | Error (Some e) ->
+      AmbiguousMatch (List.map ~f:fst e)
+      (* return the return types and argument types of ambiguous matches *)
+  | Error None ->
+      let errors =
+        List.sort errors ~compare:(fun (_, e1) (_, e2) -> compare_errors e1 e2)
+      in
+      let errors, omitted = List.split_n errors max_n_errors in
+      SignatureErrors (errors, not (List.is_empty omitted))
 
 let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
     fun_return args =
@@ -231,6 +283,7 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
                 ((UnsizedType.AutoDiffable, func_type) :: mandatory_arg_tys)
                 @ variadic_arg_tys in
               check_compatible_arguments 0 expected_args args
+              |> Result.map ~f:(fun x -> (func_type, x))
               |> Result.map_error ~f:(fun x -> (expected_args, x)) )
       else wrap_func_error (SuffixMismatch (FnPlain, suffix))
   | (_, x) :: _ -> TypeMismatch (minimal_func_type, x, None) |> wrap_err

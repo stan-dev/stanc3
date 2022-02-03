@@ -140,20 +140,20 @@ let options =
       , Arg.Set_string Typechecker.model_name
       , " Take a string to set the model name (default = \
          \"$model_filename_model\")" )
-    ; ( "-O0"
+    ; ( "--O0"
       , Arg.Unit (fun () -> opt_lvl := Optimize.O0)
       , "\t(Default) Do not apply optimizations to the Stan code." )
-    ; ( "-O1"
+    ; ( "--O1"
       , Arg.Unit (fun () -> opt_lvl := Optimize.O1)
       , "\tApply level 1 compiler optimizations (only basic optimizations)." )
-    ; ( "-Oexperimental"
+    ; ( "--Oexperimental"
       , Arg.Unit (fun () -> opt_lvl := Optimize.Oexperimental)
       , "\t(Experimental) Apply all compiler optimizations. Some of these are \
          not thorougly tested and may not always improve a programs \
          performance." )
     ; ( "--O"
       , Arg.Unit (fun () -> opt_lvl := Optimize.Oexperimental)
-      , "\t(Experimental) Same as -Oexperimental. Apply all compiler \
+      , "\t(Experimental) Same as --Oexperimental. Apply all compiler \
          optimizations. Some of these are not thorougly tested and may not \
          always improve a programs performance." )
     ; ( "-fno-soa"
@@ -301,7 +301,7 @@ let use_file filename =
       if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt ;
       opt in
     if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
-    let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
+    let cpp = Fmt.str "%a" Stan_math_code_gen.pp_prog opt_mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
 

@@ -1,0 +1,224 @@
+  $ ../../../../../../install/default/bin/stanc no_minimum_dae.stan
+Semantic error in 'no_minimum_dae.stan', line 38, column 12 to column 59:
+   -------------------------------------------------
+    36:    array[4] vector[3] y_hat;
+    37:    {
+    38:      y_hat = dae(chem_dae, yy0, yp0, t0, ts, theta, x, 0, 0);
+                     ^
+    39:    }
+    40:  
+   -------------------------------------------------
+
+No unique minimum promotion found for function 'chem_dae'.
+Overloaded functions must not have multiple equally valid promotion paths.
+This function has several:
+(real, vector, vector, array[] real, array[] real, real, int) => vector
+(real, vector, vector, array[] real, array[] real, int, real) => vector
+Consider defining a new signature for the exact types needed or
+re-thinking existing definitions.
+  $ ../../../../../../install/default/bin/stanc no_minimum_promotion.stan
+Semantic error in 'no_minimum_promotion.stan', line 12, column 9 to column 17:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:     print(foo(1,2));
+                  ^
+    13:  }
+   -------------------------------------------------
+
+No unique minimum promotion found for function 'foo'.
+Overloaded functions must not have multiple equally valid promotion paths.
+For args (int, int), this function has several:
+(real, int) => real
+(int, real) => real
+Consider defining a new signature for the exact types needed or
+re-thinking existing definitions.
+  $ ../../../../../../install/default/bin/stanc no_minimum_promotion2.stan
+Semantic error in 'no_minimum_promotion2.stan', line 12, column 9 to column 17:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:     print(foo(1,2));
+                  ^
+    13:  }
+   -------------------------------------------------
+
+No unique minimum promotion found for function 'foo'.
+Overloaded functions must not have multiple equally valid promotion paths.
+For args (int, int), this function has several:
+(int, complex) => real
+(real, real) => real
+Consider defining a new signature for the exact types needed or
+re-thinking existing definitions.
+  $ ../../../../../../install/default/bin/stanc no_minimum_promotion3.stan
+Semantic error in 'no_minimum_promotion3.stan', line 21, column 9 to column 20:
+   -------------------------------------------------
+    19:  
+    20:  model {
+    21:     print(foo3(1,2,3));
+                  ^
+    22:  }
+   -------------------------------------------------
+
+No unique minimum promotion found for function 'foo3'.
+Overloaded functions must not have multiple equally valid promotion paths.
+For args (int, int, int), this function has several:
+(int, int, real) => real
+(real, int, int) => real
+(int, real, int) => real
+Consider defining a new signature for the exact types needed or
+re-thinking existing definitions.
+  $ ../../../../../../install/default/bin/stanc no_minimum_reduce_sum.stan
+Semantic error in 'no_minimum_reduce_sum.stan', line 11, column 11 to column 55:
+   -------------------------------------------------
+     9:  }
+    10:  transformed data {
+    11:    real x = reduce_sum(foo, {1, 2, 3, 4, 5, 6}, 1, 2, 3);
+                    ^
+    12:  }
+    13:  
+   -------------------------------------------------
+
+No unique minimum promotion found for function 'foo'.
+Overloaded functions must not have multiple equally valid promotion paths.
+This function has several:
+(array[] real, int, int, int, real) => real
+(array[] real, int, int, real, int) => real
+Consider defining a new signature for the exact types needed or
+re-thinking existing definitions.
+  $ ../../../../../../install/default/bin/stanc no_minimum_tilde.stan
+Semantic error in 'no_minimum_tilde.stan', line 12, column 3 to column 14:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:     1 ~ foo(3);
+            ^
+    13:    //  target += foo_log(1,3);
+    14:  }
+   -------------------------------------------------
+
+Ill-typed arguments to '~' statement. No distribution 'foo' was found with the correct signature.
+  $ ../../../../../../install/default/bin/stanc no_minimum_tilde2.stan
+Semantic error in 'no_minimum_tilde2.stan', line 12, column 3 to column 16:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:     1 ~ foo(2,3);
+            ^
+    13:  }
+   -------------------------------------------------
+
+Ill-typed arguments to '~' statement. No distribution 'foo' was found with the correct signature.
+  $ ../../../../../../install/default/bin/stanc no_minimum_variadic.stan
+Semantic error in 'no_minimum_variadic.stan', line 82, column 37 to line 84, column 81:
+   -------------------------------------------------
+    80:                                                   gamma, xi, delta);
+    81:    // overloaded
+    82:    array[N_t] vector<lower=0>[4] y2 = ode_rk45_tol(simple_SIR, y0, t0, t, 1e-6,
+                                              ^
+    83:                                                  1e-6, 1000, beta, kappa,
+    84:                                                  gamma, xi, delta, unused, unused);
+   -------------------------------------------------
+
+No unique minimum promotion found for function 'simple_SIR'.
+Overloaded functions must not have multiple equally valid promotion paths.
+This function has several:
+(real, vector, real, real, real, real, real, real, int) => vector
+(real, vector, real, real, real, real, real, int, real) => vector
+Consider defining a new signature for the exact types needed or
+re-thinking existing definitions.
+  $ ../../../../../../install/default/bin/stanc overload_reduce_sum.stan
+Semantic error in 'overload_reduce_sum.stan', line 2, column 7 to column 17:
+   -------------------------------------------------
+     1:  functions {
+     2:    real reduce_sum(real x){
+                ^
+     3:      return x;
+     4:    }
+   -------------------------------------------------
+
+Identifier 'reduce_sum' clashes with a non-overloadable Stan Math library function.
+  $ ../../../../../../install/default/bin/stanc redefine-ccdf-same.stan
+Semantic error in 'redefine-ccdf-same.stan', line 2, column 2 to line 4, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real poisson_lccdf(int n, real x) {
+           ^
+     3:      return -x^2;
+     4:    }
+   -------------------------------------------------
+
+Function 'poisson_lccdf' is already declared in the Stan Math library with signature 
+(int, real) => real
+  $ ../../../../../../install/default/bin/stanc redefine-ccdf-same2.stan
+Semantic error in 'redefine-ccdf-same2.stan', line 2, column 2 to line 4, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real poisson_lccdf(int n, real x) {
+           ^
+     3:      return -x^2;
+     4:    }
+   -------------------------------------------------
+
+Function 'poisson_lccdf' is already declared in the Stan Math library with signature 
+(int, real) => real
+  $ ../../../../../../install/default/bin/stanc redefine-cdf-same.stan
+Semantic error in 'redefine-cdf-same.stan', line 2, column 2 to line 4, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real poisson_lcdf(int n, real x) {
+           ^
+     3:      return -x^2;
+     4:    }
+   -------------------------------------------------
+
+Function 'poisson_lcdf' is already declared in the Stan Math library with signature 
+(int, real) => real
+  $ ../../../../../../install/default/bin/stanc redefine-cdf-same2.stan
+Semantic error in 'redefine-cdf-same2.stan', line 2, column 2 to line 4, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real poisson_lcdf(int n, real x) {
+           ^
+     3:      return -x^2;
+     4:    }
+   -------------------------------------------------
+
+Function 'poisson_lcdf' is already declared in the Stan Math library with signature 
+(int, real) => real
+  $ ../../../../../../install/default/bin/stanc redefine-prob-same.stan
+Semantic error in 'redefine-prob-same.stan', line 2, column 2 to line 4, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real poisson_lpmf(int n, real x) {
+           ^
+     3:      return -x^2;
+     4:    }
+   -------------------------------------------------
+
+Function 'poisson_lpmf' is already declared in the Stan Math library with signature 
+(int, real) => real
+  $ ../../../../../../install/default/bin/stanc redefinition.stan
+Semantic error in 'redefinition.stan', line 6, column 3 to line 8, column 4:
+   -------------------------------------------------
+     4:     }
+     5:  
+     6:     int foo(real x){
+            ^
+     7:       return 2;
+     8:     }
+   -------------------------------------------------
+
+Function 'foo' has already been declared to for signature (real) => int
+  $ ../../../../../../install/default/bin/stanc returntype_issues.stan
+Semantic error in 'returntype_issues.stan', line 6, column 3 to line 8, column 4:
+   -------------------------------------------------
+     4:     }
+     5:  
+     6:     int foo(int x){
+            ^
+     7:       return 1;
+     8:     }
+   -------------------------------------------------
+
+Function 'foo' cannot be overloaded by return type only. Previously used return type real

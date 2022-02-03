@@ -66,6 +66,8 @@ let stan2cpp model_name model_string is_flag_set flag_val =
           flag_val "max-line-length"
           |> Option.map ~f:int_of_string
           |> Option.value ~default:78 in
+        let mir = Ast_to_Mir.trans_prog model_name typed_ast in
+        let tx_mir = Transform_Mir.trans_prog mir in
         if is_flag_set "auto-format" || is_flag_set "print-canonical" then
           r.return
             ( Result.Ok
@@ -77,16 +79,47 @@ let stan2cpp model_name model_string is_flag_set flag_val =
                       canonicalizer_settings ) )
             , warnings
             , [] ) ;
+        if is_flag_set "debug-mir" then
+          r.return
+            ( Result.Ok
+                (Sexp.to_string_hum [%sexp (mir : Middle.Program.Typed.t)])
+            , warnings
+            , [] ) ;
+        if is_flag_set "debug-mir-pretty" then
+          r.return (Result.Ok (Fmt.str "%a" Program.Typed.pp mir), warnings, []) ;
         if is_flag_set "debug-generate-data" then
           r.return
             ( Result.Ok (Debug_data_generation.print_data_prog typed_ast)
             , warnings
             , [] ) ;
-        let mir = Ast_to_Mir.trans_prog model_name typed_ast in
-        let tx_mir = Transform_Mir.trans_prog mir in
         let opt_mir =
-          if is_flag_set "O" then Optimize.optimization_suite tx_mir else tx_mir
-        in
+          let opt_lvl =
+            if is_flag_set "O0" then Optimize.O0
+            else if is_flag_set "O1" then Optimize.O1
+            else if is_flag_set "Oexperimental" || is_flag_set "O" then
+              Optimize.Oexperimental
+            else Optimize.O0 in
+          Optimize.optimization_suite
+            ~settings:(Optimize.level_optimizations opt_lvl)
+            tx_mir in
+        if is_flag_set "debug-optimized-mir" then
+          r.return
+            ( Result.Ok
+                (Sexp.to_string_hum [%sexp (opt_mir : Middle.Program.Typed.t)])
+            , warnings
+            , [] ) ;
+        if is_flag_set "debug-optimized-mir-pretty" then
+          r.return
+            (Result.Ok (Fmt.str "%a" Program.Typed.pp opt_mir), warnings, []) ;
+        if is_flag_set "debug-transformed-mir" then
+          r.return
+            ( Result.Ok
+                (Sexp.to_string_hum [%sexp (tx_mir : Middle.Program.Typed.t)])
+            , warnings
+            , [] ) ;
+        if is_flag_set "debug-transformed-mir-pretty" then
+          r.return
+            (Result.Ok (Fmt.str "%a" Program.Typed.pp tx_mir), warnings, []) ;
         let cpp = Fmt.str "%a" Stan_math_code_gen.pp_prog opt_mir in
         let uninit_warnings =
           if is_flag_set "warn-uninitialized" then
@@ -141,4 +174,9 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
       (warnings @ pedantic_mode_warnings) in
   wrap_result ?printed_filename result ~warnings
 
-let () = Js.export "stanc" stan2cpp_wrapped
+let dump_stan_math_signatures () =
+  Js.string @@ Fmt.str "%a" Stan_math_signatures.pretty_print_all_math_sigs ()
+
+let () =
+  Js.export "dump_stan_math_signatures" dump_stan_math_signatures ;
+  Js.export "stanc" stan2cpp_wrapped
