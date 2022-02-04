@@ -788,10 +788,40 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                   , [ { pattern=
                           FunApp (StanLib ("Times__", FnPlain, mem), [x; y])
                       ; _ }; z ] )
-                 |( "Plus__"
+                  when (not preserve_stability)
+                       && not
+                            ( UnsizedType.is_eigen_type x.meta.type_
+                            && UnsizedType.is_eigen_type y.meta.type_ ) ->
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp (StanLib ("fma", suffix, lub_mem), [x; y; z])
+                | ( "Plus__"
                   , [ z
                     ; { pattern=
                           FunApp (StanLib ("Times__", FnPlain, mem), [x; y])
+                      ; _ } ] )
+                  when (not preserve_stability)
+                       && not
+                            ( UnsizedType.is_eigen_type x.meta.type_
+                            && UnsizedType.is_eigen_type y.meta.type_ ) ->
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp (StanLib ("fma", suffix, lub_mem), [x; y; z])
+                | ( "Plus__"
+                  , [ { pattern=
+                          FunApp
+                            ( StanLib
+                                (("elt_multiply" | "EltTimes__"), FnPlain, mem)
+                            , [x; y] )
+                      ; _ }; z ] )
+                  when not preserve_stability ->
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp (StanLib ("fma", suffix, lub_mem), [x; y; z])
+                | ( "Plus__"
+                  , [ z
+                    ; { pattern=
+                          FunApp
+                            ( StanLib
+                                (("elt_multiply" | "EltTimes__"), FnPlain, mem)
+                            , [x; y] )
                       ; _ } ] )
                   when not preserve_stability ->
                     let lub_mem = lub_mem_pat [mem] in
