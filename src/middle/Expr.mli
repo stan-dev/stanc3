@@ -83,6 +83,7 @@ end
 module Helpers : sig
   val int : int -> Typed.t
   val float : float -> Typed.t
+  val complex : (float * float) -> Typed.t
   val str : string -> Typed.t
   val variable : string -> Typed.t
   val zero : Typed.t
@@ -94,6 +95,9 @@ module Helpers : sig
   val vector : float list -> Typed.t
   val matrix : float list list -> Typed.t
   val matrix_from_rows : Typed.t list -> Typed.t
+  val complex_row_vector : (float * float) list -> Typed.t
+  val complex_vector : (float * float) list -> Typed.t
+  val complex_matrix_from_rows : Typed.t list -> Typed.t
   val array_expr : Typed.t list -> Typed.t
   val try_unpack : Typed.t -> Typed.t list option
   val loop_bottom : Typed.t

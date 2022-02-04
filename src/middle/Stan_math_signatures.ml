@@ -2063,6 +2063,11 @@ let () =
   add_unqualified ("transpose", ReturnType URowVector, [UVector], SoA) ;
   add_unqualified ("transpose", ReturnType UVector, [URowVector], SoA) ;
   add_unqualified ("transpose", ReturnType UMatrix, [UMatrix], SoA) ;
+  add_unqualified
+    ("transpose", ReturnType UComplexRowVector, [UComplexVector], SoA) ;
+  add_unqualified
+    ("transpose", ReturnType UComplexVector, [UComplexRowVector], SoA) ;
+  add_unqualified ("transpose", ReturnType UComplexMatrix, [UComplexMatrix], SoA) ;
   add_unqualified ("uniform_simplex", ReturnType UVector, [UInt], SoA) ;
   add_unqualified ("variance", ReturnType UReal, [UArray UReal], SoA) ;
   add_unqualified ("variance", ReturnType UReal, [UVector], SoA) ;

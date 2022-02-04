@@ -1758,6 +1758,9 @@ Ill-typed arguments supplied to postfix operator '. Available signatures:
 (row_vector) => vector
 (vector) => row_vector
 (matrix) => matrix
+(complex_row_vector) => complex_vector
+(complex_vector) => complex_row_vector
+(complex_matrix) => complex_matrix
 Instead supplied argument of incompatible type: array[] int.
   $ ../../../../install/default/bin/stanc print-void.stan
 Semantic error in 'print-void.stan', line 8, column 8 to column 14:

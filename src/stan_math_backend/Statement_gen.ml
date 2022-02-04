@@ -15,12 +15,6 @@ let pp_profile ppf (pp_body, name, body) =
       name in
   pf ppf "{@;<1 2>@[<v>%a@;@;%a@]@,}" profile name pp_body body
 
-let rec contains_eigen (ut : UnsizedType.t) : bool =
-  match ut with
-  | UnsizedType.UArray t -> contains_eigen t
-  | UMatrix | URowVector | UVector -> true
-  | UInt | UReal | UComplex | UMathLibraryFunction | UFun _ -> false
-
 (*Fill only needs to happen for containers
   * Note: This should probably be moved into its own function as data
   * does not need to be filled as we are promised user input data has the correct
@@ -28,7 +22,7 @@ let rec contains_eigen (ut : UnsizedType.t) : bool =
   * to elements of objects in transform data not being set by the user.
 *)
 let pp_filler ppf (decl_id, st, nan_type, needs_filled) =
-  match (needs_filled, contains_eigen (SizedType.to_unsized st)) with
+  match (needs_filled, SizedType.contains_eigen_type st) with
   | true, true ->
       pf ppf "@[<hov 2>stan::math::initialize_fill(%s, %s);@]@," decl_id
         nan_type
@@ -58,10 +52,13 @@ let rec pp_initialize ppf (st, adtype) =
     | SComplex ->
         let scalar = local_scalar (SizedType.to_unsized st) adtype in
         pf ppf "@[<hov 2>std::complex<%s>(%s,@ %s)@]" scalar init_nan init_nan
-    | SVector (_, size) | SRowVector (_, size) ->
+    | SComplexVector (_, size)
+     |SComplexRowVector (_, size)
+     |SVector (_, size)
+     |SRowVector (_, size) ->
         pf ppf "@[<hov 2>%a::Constant(@,%a,@ %s)@]" pp_st (st, adtype) pp_expr
           size init_nan
-    | SMatrix (_, d1, d2) ->
+    | SMatrix (_, d1, d2) | SComplexMatrix (_, d1, d2) ->
         pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %s)@]" pp_st (st, adtype)
           pp_expr d1 pp_expr d2 init_nan
     | SArray (t, d) ->
@@ -75,10 +72,13 @@ let rec pp_initialize ppf (st, adtype) =
     | SComplex ->
         let scalar = local_scalar (SizedType.to_unsized st) adtype in
         pf ppf "std::complex<%s>(%s, %s)" scalar init_nan init_nan
-    | SVector (AoS, size) | SRowVector (AoS, size) ->
+    | SVector (AoS, size)
+     |SRowVector (AoS, size)
+     |SComplexVector (AoS, size)
+     |SComplexRowVector (AoS, size) ->
         pf ppf "@[<hov 2>%a::Constant(@,%a,@ %s)@]" pp_st (st, adtype) pp_expr
           size init_nan
-    | SMatrix (AoS, d1, d2) ->
+    | SMatrix (AoS, d1, d2) | SComplexMatrix (AoS, d1, d2) ->
         pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %s)@]" pp_st (st, adtype)
           pp_expr d1 pp_expr d2 init_nan
     | SVector (SoA, size) ->
@@ -93,6 +93,18 @@ let rec pp_initialize ppf (st, adtype) =
         pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
           pp_initialize
           (SizedType.SMatrix (AoS, d1, d2), DataOnly)
+    | SComplexVector (SoA, size) ->
+        pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
+          pp_initialize
+          (SizedType.SComplexVector (AoS, size), DataOnly)
+    | SComplexRowVector (SoA, size) ->
+        pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
+          pp_initialize
+          (SizedType.SComplexRowVector (AoS, size), DataOnly)
+    | SComplexMatrix (SoA, d1, d2) ->
+        pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
+          pp_initialize
+          (SizedType.SComplexMatrix (AoS, d1, d2), DataOnly)
     | SArray (t, d) ->
         pf ppf "@[<hov 2>%a(@,%a,@ @,%a)@]" pp_possibly_var_decl
           (adtype, SizedType.to_unsized st, SizedType.get_mem_pattern t)
@@ -138,16 +150,21 @@ let pp_assign_data ppf
     ((decl_id, st, _) : string * Expr.Typed.t SizedType.t * bool) =
   let pp_placement_new ppf (decl_id, st) =
     match st with
-    | SizedType.SVector (_, d) | SRowVector (_, d) ->
+    | SizedType.SVector (_, d)
+     |SRowVector (_, d)
+     |SComplexVector (_, d)
+     |SComplexRowVector (_, d) ->
         pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a);@]@," decl_id
           pp_st (st, DataOnly) decl_id pp_expr d
-    | SMatrix (_, d1, d2) ->
+    | SMatrix (_, d1, d2) | SComplexMatrix (_, d1, d2) ->
         pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a, %a);@]@,"
           decl_id pp_st (st, DataOnly) decl_id pp_expr d1 pp_expr d2
     | _ -> () in
   let pp_underlying ppf (decl_id, st) =
     match st with
-    | SizedType.SVector _ | SRowVector _ | SMatrix _ -> pf ppf "%s__" decl_id
+    | SizedType.SVector _ | SRowVector _ | SMatrix _ | SComplexVector _
+     |SComplexRowVector _ | SComplexMatrix _ ->
+        pf ppf "%s__" decl_id
     | SInt | SReal | SComplex | SArray _ -> pf ppf "%s" decl_id in
   pf ppf "@[<hov 2>%a = @,%a;@]@,@[<hov 2>%a@]@," pp_underlying (decl_id, st)
     pp_assign_sized (st, DataOnly, true) pp_placement_new (decl_id, st)
@@ -223,18 +240,11 @@ let pp_data_decl ppf (vident, ut) =
   match (opencl_check, ut) with
   | (false, _), ut -> (
     match ut with
-    | UnsizedType.URowVector | UVector | UMatrix ->
+    | UnsizedType.URowVector | UVector | UMatrix | UComplexRowVector
+     |UComplexVector | UComplexMatrix ->
         pf ppf "%a %s__;" pp_type (DataOnly, ut) vident
     | _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident )
   | (true, _), _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident
-
-(** Create string representations for [vars__.emplace_back] *)
-let pp_emplace_var ppf var =
-  match Expr.Typed.type_of var with
-  | UnsizedType.UComplex ->
-      pf ppf "@[<hov 2>vars__.emplace_back(%a.real());@]@," pp_expr var ;
-      pf ppf "@[<hov 2>vars__.emplace_back(%a.imag());@]" pp_expr var
-  | _ -> pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
 
 (** Create strings representing maps of Eigen types*)
 let pp_map_decl ppf (vident, ut) =
@@ -250,6 +260,18 @@ let pp_map_decl ppf (vident, ut) =
   | UVector ->
       pf ppf "Eigen::Map<Eigen::Matrix<%s, -1, 1>> %s{nullptr, 0};" scalar
         vident
+  | UComplexMatrix ->
+      pf ppf
+        "Eigen::Map<Eigen::Matrix<std::complex<%s>, -1, -1>> %s{nullptr, 0, 0};"
+        scalar vident
+  | UComplexRowVector ->
+      pf ppf
+        "Eigen::Map<Eigen::Matrix<std::complex<%s>, 1, -1>> %s{nullptr, 0};"
+        scalar vident
+  | UComplexVector ->
+      pf ppf
+        "Eigen::Map<Eigen::Matrix<std::complex<%s>, -1, 1>> %s{nullptr, 0};"
+        scalar vident
   | x ->
       Common.FatalError.fatal_error_msg
         [%message

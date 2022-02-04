@@ -26378,6 +26378,9 @@ Display all Stan math signatures exposed in the language
   transpose(row_vector) => vector
   transpose(vector) => row_vector
   transpose(matrix) => matrix
+  transpose(complex_row_vector) => complex_vector
+  transpose(complex_vector) => complex_row_vector
+  transpose(complex_matrix) => complex_matrix
   trigamma(int) => real
   trigamma(real) => real
   trigamma(vector) => vector

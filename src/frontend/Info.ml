@@ -8,7 +8,9 @@ let rec sized_basetype_dims t =
   | SReal -> ("real", 0)
   | SComplex -> ("complex", 0)
   | SVector _ | SRowVector _ -> ("real", 1)
+  | SComplexVector _ | SComplexRowVector _ -> ("complex", 1)
   | SMatrix _ -> ("real", 2)
+  | SComplexMatrix _ -> ("complex", 2)
   | SArray (t, _) ->
       let bt, n = sized_basetype_dims t in
       (bt, n + 1)
@@ -19,7 +21,9 @@ let rec unsized_basetype_dims t =
   | UReal -> ("real", 0)
   | UComplex -> ("complex", 0)
   | UVector | URowVector -> ("real", 1)
+  | UComplexVector | UComplexRowVector -> ("complex", 1)
   | UMatrix -> ("real", 2)
+  | UComplexMatrix -> ("complex", 2)
   | UArray t ->
       let bt, n = unsized_basetype_dims t in
       (bt, n + 1)
