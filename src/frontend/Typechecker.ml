@@ -1398,8 +1398,7 @@ and verify_valid_transformation_for_type loc is_global sized_ty trans =
     Semantic_error.non_int_bounds loc |> error ;
   let is_transformation =
     match trans with Transformation.Identity -> false | _ -> true in
-  if
-    is_global && SizedType.(inner_type sized_ty = SComplex) && is_transformation
+  if is_global && SizedType.(contains_complex sized_ty) && is_transformation
   then Semantic_error.complex_transform loc |> error
 
 and verify_transformed_param_ty loc cf is_global unsized_ty =
