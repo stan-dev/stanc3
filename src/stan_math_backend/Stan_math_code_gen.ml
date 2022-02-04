@@ -101,19 +101,35 @@ let maybe_templated_arg_types (args : Program.fun_arg_decl) =
       | true -> Some (sprintf "T%d__" i)
       | false -> None )
 
-let maybe_require_templates (names : string option list)
-    (args : Program.fun_arg_decl) =
-  let require_for_arg arg =
-    match trd3 arg with
-    | UnsizedType.URowVector -> "stan::require_row_vector_t"
-    | UVector -> "stan::require_col_vector_t"
-    | UMatrix -> "stan::require_eigen_matrix_dynamic_t"
-    (* NB: Not unwinding array types due to the way arrays of eigens are printed *)
-    | _ -> "stan::require_stan_scalar_t" in
-  List.map2_exn names args ~f:(fun name a ->
-      match name with
-      | Some t -> Some (Require (require_for_arg a, t))
-      | None -> None )
+let require_templates (names : string option list) (args : Program.fun_arg_decl)
+    =
+  let require_for_arg arg t =
+    let value_type t = "stan::value_type_t<" ^ t ^ ">" in
+    let requires arg =
+      match arg with
+      (* TODO this is not working right now*)
+      | UnsizedType.URowVector ->
+          [ Require ("stan::require_row_vector_t", t)
+          ; Require ("stan::require_not_complex_t", value_type t) ]
+      | UComplexRowVector ->
+          [ Require ("stan::require_row_vector_t", t)
+          ; Require ("stan::require_complex_t", value_type t) ]
+      | UVector ->
+          [ Require ("stan::require_col_vector_t", t)
+          ; Require ("stan::require_not_complex_t", value_type t) ]
+      | UComplexVector ->
+          [ Require ("stan::require_col_vector_t", t)
+          ; Require ("stan::require_complex_t", value_type t) ]
+      | UMatrix ->
+          [ Require ("stan::require_eigen_matrix_dynamic_t", t)
+          ; Require ("stan::require_not_complex_t", value_type t) ]
+      | UComplexMatrix ->
+          [ Require ("stan::require_eigen_matrix_dynamic_t", t)
+          ; Require ("stan::require_complex_t", value_type t) ]
+      | _ -> [Require ("stan::require_stan_scalar_t", t)] in
+    requires (trd3 arg) in
+  List.concat_map (List.zip_exn names args) ~f:(fun (name, a) ->
+      match name with Some t -> require_for_arg a t | None -> [] )
 
 let return_arg_types (args : Program.fun_arg_decl) =
   List.mapi args ~f:(fun i ((_, _, ut) as a) ->
@@ -219,9 +235,9 @@ let typename t = Typename t
   *)
 let get_templates_and_args exprs fdargs =
   let argtypetemplates = maybe_templated_arg_types fdargs in
-  let requireargtemplates = maybe_require_templates argtypetemplates fdargs in
+  let requireargtemplates = require_templates argtypetemplates fdargs in
   ( List.filter_opt argtypetemplates
-  , List.filter_opt requireargtemplates
+  , requireargtemplates
   , if not exprs then
       List.map
         ~f:(fun a -> str "%a" pp_arg a)
