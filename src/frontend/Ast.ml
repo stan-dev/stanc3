@@ -332,9 +332,9 @@ let get_loc_dt (t : untyped_expression Type.t) =
       ( SVector (_, e)
       | SRowVector (_, e)
       | SMatrix (_, e, _)
-      | SComplexVector (_, e)
-      | SComplexRowVector (_, e)
-      | SComplexMatrix (_, e, _)
+      | SComplexVector e
+      | SComplexRowVector e
+      | SComplexMatrix (e, _)
       | SArray (_, e) ) ->
       Some e.emeta.loc.begin_loc
 

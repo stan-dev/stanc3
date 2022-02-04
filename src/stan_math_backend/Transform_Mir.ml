@@ -192,10 +192,10 @@ let read_constrain_dims constrain_transform st =
     | SizedType.SInt | SReal | SComplex -> []
     | SVector (_, d)
      |SRowVector (_, d)
-     |SComplexVector (_, d)
-     |SComplexRowVector (_, d) ->
+     |SComplexVector d
+     |SComplexRowVector d ->
         [d]
-    | SMatrix (_, _, dim2) | SComplexMatrix (_, _, dim2) -> [dim2]
+    | SMatrix (_, _, dim2) | SComplexMatrix (_, dim2) -> [dim2]
     | SArray (t, dim) -> dim :: constrain_get_dims t in
   match constrain_transform with
   | Transformation.CholeskyCorr | Correlation | Covariance ->

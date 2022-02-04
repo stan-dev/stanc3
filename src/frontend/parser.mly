@@ -413,11 +413,11 @@ sized_basic_type:
   | MATRIX LBRACK e1=expression COMMA e2=expression RBRACK
     { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (AoS, e1, e2), Identity) }
   | COMPLEXVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "COMPLEXVECTOR_var_type" ; (SizedType.SComplexVector (Common.Helpers.AoS, e), Identity) }
+    { grammar_logger "COMPLEXVECTOR_var_type" ; (SizedType.SComplexVector e, Identity) }
   | COMPLEXROWVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "COMPLEXROWVECTOR_var_type" ; (SizedType.SComplexRowVector (AoS, e) , Identity) }
+    { grammar_logger "COMPLEXROWVECTOR_var_type" ; (SizedType.SComplexRowVector e , Identity) }
   | COMPLEXMATRIX LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "COMPLEXMATRIX_var_type" ; (SizedType.SComplexMatrix (AoS, e1, e2), Identity) }
+    { grammar_logger "COMPLEXMATRIX_var_type" ; (SizedType.SComplexMatrix (e1, e2), Identity) }
 
 top_var_type:
   | INT r=range_constraint
@@ -433,11 +433,11 @@ top_var_type:
   | MATRIX c=type_constraint LBRACK e1=expression COMMA e2=expression RBRACK
     { grammar_logger "MATRIX_top_var_type" ; (SMatrix (AoS, e1, e2), c) }
   | COMPLEXVECTOR c=type_constraint LBRACK e=expression RBRACK
-    { grammar_logger "COMPLEXVECTOR_top_var_type" ; (SComplexVector (AoS, e), c) }
+    { grammar_logger "COMPLEXVECTOR_top_var_type" ; (SComplexVector e, c) }
   | COMPLEXROWVECTOR c=type_constraint LBRACK e=expression RBRACK
-    { grammar_logger "COMPLEXROWVECTOR_top_var_type" ; (SComplexRowVector (AoS, e), c) }
+    { grammar_logger "COMPLEXROWVECTOR_top_var_type" ; (SComplexRowVector e, c) }
   | COMPLEXMATRIX c=type_constraint LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "COMPLEXMATRIX_top_var_type" ; (SComplexMatrix (AoS, e1, e2), c) }
+    { grammar_logger "COMPLEXMATRIX_top_var_type" ; (SComplexMatrix (e1, e2), c) }
   | ORDERED LBRACK e=expression RBRACK
     { grammar_logger "ORDERED_top_var_type" ; (SVector (AoS, e), Ordered) }
   | POSITIVEORDERED LBRACK e=expression RBRACK

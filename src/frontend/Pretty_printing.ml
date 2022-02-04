@@ -319,9 +319,9 @@ let rec pp_sizedtype ppf = function
   | SRowVector (_, e) -> pf ppf "row_vector[%a]" pp_expression e
   | SMatrix (_, e1, e2) ->
       pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
-  | SComplexVector (_, e) -> pf ppf "complex_vector[%a]" pp_expression e
-  | SComplexRowVector (_, e) -> pf ppf "complex_row_vector[%a]" pp_expression e
-  | SComplexMatrix (_, e1, e2) ->
+  | SComplexVector e -> pf ppf "complex_vector[%a]" pp_expression e
+  | SComplexRowVector e -> pf ppf "complex_row_vector[%a]" pp_expression e
+  | SComplexMatrix (e1, e2) ->
       pf ppf "complex_matrix[%a, %a]" pp_expression e1 pp_expression e2
   | SArray _ as arr ->
       let ty, ixs = unwind_sized_array_type arr in
@@ -354,10 +354,10 @@ let pp_transformed_type ppf (pst, trans) =
           match st with
           | SizedType.SVector (_, e)
            |SRowVector (_, e)
-           |SComplexRowVector (_, e)
-           |SComplexVector (_, e) ->
+           |SComplexVector e
+           |SComplexRowVector e ->
               const (fun ppf -> pf ppf "[%a]" pp_expression) e
-          | SMatrix (_, e1, e2) | SComplexMatrix (_, e1, e2) ->
+          | SMatrix (_, e1, e2) | SComplexMatrix (e1, e2) ->
               const
                 (fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression)
                 e2

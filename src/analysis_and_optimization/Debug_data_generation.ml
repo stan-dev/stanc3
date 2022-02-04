@@ -273,9 +273,9 @@ and generate_value m st t =
   | SRowVector (_, e) -> gen_row_vector m (unwrap_int_exn m e) t
   | SMatrix (_, e1, e2) ->
       gen_matrix m (unwrap_int_exn m e1) (unwrap_int_exn m e2) t
-  | SComplexVector (_, e) -> gen_complex_vector (unwrap_int_exn m e)
-  | SComplexRowVector (_, e) -> gen_complex_row_vector (unwrap_int_exn m e)
-  | SComplexMatrix (_, e1, e2) ->
+  | SComplexVector e -> gen_complex_vector (unwrap_int_exn m e)
+  | SComplexRowVector e -> gen_complex_row_vector (unwrap_int_exn m e)
+  | SComplexMatrix (e1, e2) ->
       gen_complex_matrix (unwrap_int_exn m e1) (unwrap_int_exn m e2)
   | SArray (st, e) -> gen_array m st (unwrap_int_exn m e) t
 

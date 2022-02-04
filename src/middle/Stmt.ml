@@ -346,17 +346,16 @@ module Helpers = struct
     | SizedType.SInt | SReal | SComplex -> bodyfn var
     | SVector (_, d)
      |SRowVector (_, d)
-     |SComplexVector (_, d)
-     |SComplexRowVector (_, d) ->
+     |SComplexVector d
+     |SComplexRowVector d ->
         mk_for_iteratee d bodyfn var smeta
     | SMatrix (mem_pattern, d1, d2) ->
         mk_for_iteratee d1
           (fun e -> for_scalar (SRowVector (mem_pattern, d2)) bodyfn e smeta)
           var smeta
-    | SComplexMatrix (mem_pattern, d1, d2) ->
+    | SComplexMatrix (d1, d2) ->
         mk_for_iteratee d1
-          (fun e ->
-            for_scalar (SComplexRowVector (mem_pattern, d2)) bodyfn e smeta )
+          (fun e -> for_scalar (SComplexRowVector d2) bodyfn e smeta)
           var smeta
     | SArray (t, d) ->
         mk_for_iteratee d (fun e -> for_scalar t bodyfn e smeta) var smeta

@@ -52,13 +52,13 @@ let rec pp_initialize ppf (st, adtype) =
     | SComplex ->
         let scalar = local_scalar (SizedType.to_unsized st) adtype in
         pf ppf "@[<hov 2>std::complex<%s>(%s,@ %s)@]" scalar init_nan init_nan
-    | SComplexVector (_, size)
-     |SComplexRowVector (_, size)
+    | SComplexVector size
+     |SComplexRowVector size
      |SVector (_, size)
      |SRowVector (_, size) ->
         pf ppf "@[<hov 2>%a::Constant(@,%a,@ %s)@]" pp_st (st, adtype) pp_expr
           size init_nan
-    | SMatrix (_, d1, d2) | SComplexMatrix (_, d1, d2) ->
+    | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) ->
         pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %s)@]" pp_st (st, adtype)
           pp_expr d1 pp_expr d2 init_nan
     | SArray (t, d) ->
@@ -74,11 +74,11 @@ let rec pp_initialize ppf (st, adtype) =
         pf ppf "std::complex<%s>(%s, %s)" scalar init_nan init_nan
     | SVector (AoS, size)
      |SRowVector (AoS, size)
-     |SComplexVector (AoS, size)
-     |SComplexRowVector (AoS, size) ->
+     |SComplexVector size
+     |SComplexRowVector size ->
         pf ppf "@[<hov 2>%a::Constant(@,%a,@ %s)@]" pp_st (st, adtype) pp_expr
           size init_nan
-    | SMatrix (AoS, d1, d2) | SComplexMatrix (AoS, d1, d2) ->
+    | SMatrix (AoS, d1, d2) | SComplexMatrix (d1, d2) ->
         pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %s)@]" pp_st (st, adtype)
           pp_expr d1 pp_expr d2 init_nan
     | SVector (SoA, size) ->
@@ -93,18 +93,6 @@ let rec pp_initialize ppf (st, adtype) =
         pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
           pp_initialize
           (SizedType.SMatrix (AoS, d1, d2), DataOnly)
-    | SComplexVector (SoA, size) ->
-        pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
-          pp_initialize
-          (SizedType.SComplexVector (AoS, size), DataOnly)
-    | SComplexRowVector (SoA, size) ->
-        pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
-          pp_initialize
-          (SizedType.SComplexRowVector (AoS, size), DataOnly)
-    | SComplexMatrix (SoA, d1, d2) ->
-        pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
-          pp_initialize
-          (SizedType.SComplexMatrix (AoS, d1, d2), DataOnly)
     | SArray (t, d) ->
         pf ppf "@[<hov 2>%a(@,%a,@ @,%a)@]" pp_possibly_var_decl
           (adtype, SizedType.to_unsized st, SizedType.get_mem_pattern t)
@@ -152,11 +140,11 @@ let pp_assign_data ppf
     match st with
     | SizedType.SVector (_, d)
      |SRowVector (_, d)
-     |SComplexVector (_, d)
-     |SComplexRowVector (_, d) ->
+     |SComplexVector d
+     |SComplexRowVector d ->
         pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a);@]@," decl_id
           pp_st (st, DataOnly) decl_id pp_expr d
-    | SMatrix (_, d1, d2) | SComplexMatrix (_, d1, d2) ->
+    | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) ->
         pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a, %a);@]@,"
           decl_id pp_st (st, DataOnly) decl_id pp_expr d1 pp_expr d2
     | _ -> () in

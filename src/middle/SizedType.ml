@@ -10,9 +10,9 @@ type 'a t =
   | SVector of Common.Helpers.mem_pattern * 'a
   | SRowVector of Common.Helpers.mem_pattern * 'a
   | SMatrix of Common.Helpers.mem_pattern * 'a * 'a
-  | SComplexVector of Common.Helpers.mem_pattern * 'a
-  | SComplexRowVector of Common.Helpers.mem_pattern * 'a
-  | SComplexMatrix of Common.Helpers.mem_pattern * 'a * 'a
+  | SComplexVector of 'a
+  | SComplexRowVector of 'a
+  | SComplexMatrix of 'a * 'a
   | SArray of 'a t * 'a
 [@@deriving sexp, compare, map, hash, fold]
 
@@ -22,15 +22,15 @@ let rec pp pp_e ppf = function
   | SComplex -> Fmt.string ppf "complex"
   | SVector (_, expr) -> Fmt.pf ppf {|vector%a|} (Fmt.brackets pp_e) expr
   | SRowVector (_, expr) -> Fmt.pf ppf {|row_vector%a|} (Fmt.brackets pp_e) expr
-  | SComplexVector (_, expr) ->
+  | SComplexVector expr ->
       Fmt.pf ppf {|complex_vector%a|} (Fmt.brackets pp_e) expr
-  | SComplexRowVector (_, expr) ->
+  | SComplexRowVector expr ->
       Fmt.pf ppf {|complex_row_vector%a|} (Fmt.brackets pp_e) expr
   | SMatrix (_, d1_expr, d2_expr) ->
       Fmt.pf ppf {|matrix%a|}
         Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
         (d1_expr, d2_expr)
-  | SComplexMatrix (_, d1_expr, d2_expr) ->
+  | SComplexMatrix (d1_expr, d2_expr) ->
       Fmt.pf ppf {|complex_matrix%a|}
         Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
         (d1_expr, d2_expr)
@@ -44,10 +44,10 @@ let collect_exprs st =
     | SInt | SReal | SComplex -> List.rev accu
     | SVector (_, e)
      |SRowVector (_, e)
-     |SComplexVector (_, e)
-     |SComplexRowVector (_, e) ->
+     |SComplexVector e
+     |SComplexRowVector e ->
         List.rev @@ (e :: accu)
-    | SMatrix (_, e1, e2) | SComplexMatrix (_, e1, e2) ->
+    | SMatrix (_, e1, e2) | SComplexMatrix (e1, e2) ->
         List.rev @@ (e1 :: e2 :: accu)
     | SArray (inner, e) -> aux (e :: accu) inner in
   aux [] st
@@ -66,12 +66,10 @@ let rec to_unsized = function
 
 let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
   | SInt | SReal | SComplex -> assocs
-  | SVector (_, e)
-   |SRowVector (_, e)
-   |SComplexVector (_, e)
-   |SComplexRowVector (_, e) ->
+  | SVector (_, e) | SRowVector (_, e) | SComplexVector e | SComplexRowVector e
+    ->
       Expr.Labelled.associate ~init:assocs e
-  | SMatrix (_, e1, e2) | SComplexMatrix (_, e1, e2) ->
+  | SMatrix (_, e1, e2) | SComplexMatrix (e1, e2) ->
       Expr.Labelled.(associate ~init:(associate ~init:assocs e1) e2)
   | SArray (st, e) ->
       associate ~init:(Expr.Labelled.associate ~init:assocs e) st
@@ -87,11 +85,11 @@ let rec contains_complex st =
 let rec dims_of st =
   match st with
   | SArray (t, _) -> dims_of t
-  | SMatrix (_, d1, d2) | SComplexMatrix (_, d1, d2) -> [d1; d2]
+  | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) -> [d1; d2]
   | SRowVector (_, dim)
    |SVector (_, dim)
-   |SComplexRowVector (_, dim)
-   |SComplexVector (_, dim) ->
+   |SComplexRowVector dim
+   |SComplexVector dim ->
       [dim]
   | SInt | SReal | SComplex -> []
 
@@ -107,18 +105,18 @@ let rec get_dims_io st =
   | SComplex -> [two]
   | SVector (_, d) | SRowVector (_, d) -> [d]
   | SMatrix (_, dim1, dim2) -> [dim1; dim2]
-  | SComplexVector (_, d) | SComplexRowVector (_, d) -> [d; two]
-  | SComplexMatrix (_, dim1, dim2) -> [dim1; dim2; two]
+  | SComplexVector d | SComplexRowVector d -> [d; two]
+  | SComplexMatrix (dim1, dim2) -> [dim1; dim2; two]
   | SArray (t, dim) -> dim :: get_dims_io t
 
 let rec get_dims st =
   match st with
   | SInt | SReal | SComplex -> []
-  | SMatrix (_, d1, d2) | SComplexMatrix (_, d1, d2) -> [d1; d2]
+  | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) -> [d1; d2]
   | SRowVector (_, dim)
    |SVector (_, dim)
-   |SComplexRowVector (_, dim)
-   |SComplexVector (_, dim) ->
+   |SComplexRowVector dim
+   |SComplexVector dim ->
       [dim]
   | SArray (t, dim) -> dim :: get_dims t
 
@@ -137,12 +135,10 @@ let is_recursive_container st =
 let rec get_array_dims st =
   match st with
   | SInt | SReal | SComplex -> (st, [])
-  | SVector (_, d)
-   |SRowVector (_, d)
-   |SComplexVector (_, d)
-   |SComplexRowVector (_, d) ->
+  | SVector (_, d) | SRowVector (_, d) | SComplexVector d | SComplexRowVector d
+    ->
       (st, [d])
-  | SMatrix (_, d1, d2) | SComplexMatrix (_, d1, d2) -> (st, [d1; d2])
+  | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) -> (st, [d1; d2])
   | SArray (st, dim) ->
       let st', dims = get_array_dims st in
       (st', dim :: dims)
@@ -181,14 +177,10 @@ let rec contains_eigen_type st =
  *)
 let rec get_mem_pattern st =
   match st with
-  | SInt | SReal | SComplex -> Common.Helpers.AoS
-  | SVector (mem, _)
-   |SRowVector (mem, _)
-   |SMatrix (mem, _, _)
-   |SComplexVector (mem, _)
-   |SComplexRowVector (mem, _)
-   |SComplexMatrix (mem, _, _) ->
-      mem
+  | SInt | SReal | SComplex | SComplexVector _ | SComplexRowVector _
+   |SComplexMatrix _ ->
+      Common.Helpers.AoS
+  | SVector (mem, _) | SRowVector (mem, _) | SMatrix (mem, _, _) -> mem
   | SArray (t, _) -> get_mem_pattern t
 
 (**
@@ -204,17 +196,13 @@ let rec demote_sizedtype_mem st =
     | SVector (AoS, _)
     | SRowVector (AoS, _)
     | SMatrix (AoS, _, _)
-    | SComplexVector (AoS, _)
-    | SComplexRowVector (AoS, _)
-    | SComplexMatrix (AoS, _, _) ) as ret ->
+    | SComplexVector _ | SComplexRowVector _
+    | SComplexMatrix (_, _) ) as ret ->
       ret
   | SArray (inner_type, dim) -> SArray (demote_sizedtype_mem inner_type, dim)
   | SVector (SoA, dim) -> SVector (AoS, dim)
   | SRowVector (SoA, dim) -> SRowVector (AoS, dim)
   | SMatrix (SoA, dim1, dim2) -> SMatrix (AoS, dim1, dim2)
-  | SComplexVector (SoA, dim) -> SComplexVector (AoS, dim)
-  | SComplexRowVector (SoA, dim) -> SComplexRowVector (AoS, dim)
-  | SComplexMatrix (SoA, dim1, dim2) -> SComplexMatrix (AoS, dim1, dim2)
 
 (*Given a sizedtype, promote it's mem pattern from AoS to SoA*)
 let rec promote_sizedtype_mem st =
@@ -223,9 +211,6 @@ let rec promote_sizedtype_mem st =
   | SVector (AoS, dim) -> SVector (SoA, dim)
   | SRowVector (AoS, dim) -> SRowVector (SoA, dim)
   | SMatrix (AoS, dim1, dim2) -> SMatrix (SoA, dim1, dim2)
-  | SComplexVector (AoS, dim) -> SComplexVector (SoA, dim)
-  | SComplexRowVector (AoS, dim) -> SComplexRowVector (SoA, dim)
-  | SComplexMatrix (AoS, dim1, dim2) -> SComplexMatrix (SoA, dim1, dim2)
   | SArray (inner_type, dim) -> SArray (promote_sizedtype_mem inner_type, dim)
   | _ -> st
 

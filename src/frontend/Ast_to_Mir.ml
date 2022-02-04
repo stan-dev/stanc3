@@ -310,16 +310,16 @@ let check_sizedtype name =
         let er = trans_expr r in
         let ec = trans_expr c in
         (check r er @ check c ec, SizedType.SMatrix (mem_pattern, er, ec))
-    | SComplexVector (mem_pattern, s) ->
+    | SComplexVector s ->
         let e = trans_expr s in
-        (check s e, SizedType.SComplexVector (mem_pattern, e))
-    | SComplexRowVector (mem_pattern, s) ->
+        (check s e, SizedType.SComplexVector e)
+    | SComplexRowVector s ->
         let e = trans_expr s in
-        (check s e, SizedType.SComplexRowVector (mem_pattern, e))
-    | SComplexMatrix (mem_pattern, r, c) ->
+        (check s e, SizedType.SComplexRowVector e)
+    | SComplexMatrix (r, c) ->
         let er = trans_expr r in
         let ec = trans_expr c in
-        (check r er @ check c ec, SizedType.SComplexMatrix (mem_pattern, er, ec))
+        (check r er @ check c ec, SizedType.SComplexMatrix (er, ec))
     | SArray (t, s) ->
         let e = trans_expr s in
         let ll, t = sizedtype t in
@@ -593,12 +593,12 @@ let trans_sizedtype_decl declc tr name =
     | SRowVector (mem_pattern, s) ->
         let l, s = grab_size FnValidateSize n s in
         (l, SizedType.SRowVector (mem_pattern, s))
-    | SComplexRowVector (mem_pattern, s) ->
+    | SComplexRowVector s ->
         let l, s = grab_size FnValidateSize n s in
-        (l, SizedType.SComplexRowVector (mem_pattern, s))
-    | SComplexVector (mem_pattern, s) ->
+        (l, SizedType.SComplexRowVector s)
+    | SComplexVector s ->
         let l, s = grab_size FnValidateSize n s in
-        (l, SizedType.SComplexVector (mem_pattern, s))
+        (l, SizedType.SComplexVector s)
     | SMatrix (mem_pattern, r, c) ->
         let l1, r = grab_size FnValidateSize n r in
         let l2, c = grab_size FnValidateSize (n + 1) c in
@@ -616,10 +616,10 @@ let trans_sizedtype_decl declc tr name =
                 ; meta= r.Expr.Fixed.meta.Expr.Typed.Meta.loc } ]
           | _ -> [] in
         (l1 @ l2 @ cf_cov, SizedType.SMatrix (mem_pattern, r, c))
-    | SComplexMatrix (mem_pattern, r, c) ->
+    | SComplexMatrix (r, c) ->
         let l1, r = grab_size FnValidateSize n r in
         let l2, c = grab_size FnValidateSize (n + 1) c in
-        (l1 @ l2, SizedType.SComplexMatrix (mem_pattern, r, c))
+        (l1 @ l2, SizedType.SComplexMatrix (r, c))
     | SArray (t, s) ->
         let l, s = grab_size FnValidateSize n s in
         let ll, t = go (n + 1) t in
