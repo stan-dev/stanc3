@@ -69,39 +69,45 @@ let list_multi_tildes (mir : Program.Typed.t) :
 (** These functions are linear if all of their arguments are *)
 let linear_fnames =
   Operator.([Plus; PPlus; Minus; PMinus] |> List.map ~f:to_string)
-  @ [ "block"; "col"; "cols"; "row"; "rows"; "diagonal"; "head"; "tail"
-    ; "negative_infinity"; "not_a_number"; "rep_matrix"; "positive_infinity"
-    ; "segment"; "sum"; "to_vector" ]
+  @ [ "add"; "append_block"; "append_row"; "append_col"; "block"; "col"; "cols"
+    ; "row"; "rows"; "diagonal"; "head"; "tail"; "minus"; "negative_infinity"
+    ; "not_a_number"; "rep_matrix"; "rep_vector"; "rep_row_vector"
+    ; "positive_infinity"; "segment"; "subtract"; "sum"; "to_vector"
+    ; "to_row_vector"; "to_matrix"; "to_array_1d"; "to_array_2d"; "transpose"
+    ; "Plus__"; "PPlus__"; "PMinus__"; "Minus__"; "PNot__"; "Transpose__" ]
   |> String.Set.of_list
 
 let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
     =
   (* Collect statements of the form "target += Dist(param, ...)" *)
   let rec is_linear_function allow_var name (args : 'a Expr.Fixed.t list) =
-    if Set.mem linear_fnames name then
-      List.for_all ~f:(fun {pattern; _} -> is_linear allow_var pattern) args
-      (* A function of all constants is fine *)
-    else if List.for_all ~f:(fun {pattern; _} -> is_linear false pattern) args
-    then true
-    else
-      match (name, args) with
-      (* We require at least one of these operands to be a constant *)
-      | ("Times__" | "Divide__" | "IntDivide__"), [a; b] ->
-          (is_linear allow_var a.pattern && is_linear false b.pattern)
-          || (is_linear false a.pattern && is_linear allow_var b.pattern)
-          (* Transpose of transpose is fine *)
-      | ( "Transpose__"
-        , [{pattern= FunApp (StanLib ("Transpose__", _, _), [a]); _}] ) ->
-          is_linear allow_var a.pattern
-      | _ -> false
-  and is_linear allow_var = function
+    match (name, args) with
+    | _, _ when Set.mem linear_fnames name ->
+        List.for_all ~f:(is_linear allow_var) args
+    | _, _ when List.for_all ~f:(is_linear false) args ->
+        (* A function of all constants is fine *) true
+    (* We require at least one of these operands to be a constant *)
+    | ("Times__" | "Divide__" | "IntDivide__"), [a; b] ->
+        (is_linear allow_var a && is_linear false b)
+        || (is_linear false a && is_linear allow_var b)
+        (* Partial evaluation can create fmas where the user wrote Times*)
+    | "fma", [a; b; c] ->
+        is_linear allow_var c
+        && ( (is_linear allow_var a && is_linear false b)
+           || (is_linear false a && is_linear allow_var b) )
+    | _ -> false
+  and is_linear allow_var Expr.Fixed.{pattern; _} =
+    match pattern with
     | Expr.Fixed.Pattern.Var _ -> allow_var
     | Lit _ -> true
-    | Indexed (Expr.Fixed.{pattern; _}, _) -> is_linear allow_var pattern
+    | Indexed (e, _) | Promotion (e, _, _) -> is_linear allow_var e
+    | TernaryIf (e1, e2, e3) ->
+        is_linear allow_var e1 && is_linear allow_var e2
+        && is_linear allow_var e3
     | FunApp (StanLib (name, _, _), args) ->
         is_linear_function allow_var name args
     | FunApp (CompilerInternal (FnMakeArray | FnMakeRowVec), args) ->
-        List.for_all ~f:(fun {pattern; _} -> is_linear allow_var pattern) args
+        List.for_all ~f:(is_linear allow_var) args
     | _ -> false in
   let collect_transformed_tilde_stmt (stmt : Stmt.Located.t) :
       Location_span.t Set.Poly.t =
@@ -109,10 +115,9 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
     | Stmt.Fixed.Pattern.TargetPE
         { pattern=
             Expr.Fixed.Pattern.FunApp
-              ( (StanLib (_, FnLpdf _, _) | UserDefined (_, FnLpdf _))
-              , {pattern; _} :: _ )
+              ((StanLib (_, FnLpdf _, _) | UserDefined (_, FnLpdf _)), e :: _)
         ; _ }
-      when not (is_linear true pattern) ->
+      when not (is_linear true e) ->
         Set.Poly.singleton stmt.meta
     | _ -> Set.Poly.empty in
   let tildes =

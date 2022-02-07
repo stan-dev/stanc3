@@ -5,7 +5,7 @@ data {
 parameters {
   vector[3] v;
   array[4,5] real a;
-  matrix[6,6] m;
+  cholesky_factor_corr[6] m;
   real y;
   real z;
 }
@@ -20,22 +20,22 @@ model {
   y ~ normal(0,1);
 
   // fun
-  m ~ lkj_corr(2.0);
-  (m + m) ~ lkj_corr(2.0);
-  (m - m) ~ lkj_corr(2.0);
-  (v + v) ~ multi_normal(v,m);
-  (v - v) ~ multi_normal(v,m);
-  block(m,1,1,1,1) ~ lkj_corr(2.0);
+  m ~ lkj_corr_cholesky(2.0);
+  (m + m) ~ lkj_corr_cholesky(2.0);
+  (m - m) ~ lkj_corr_cholesky(2.0);
+  (v + v) ~ normal(0,1);
+  (v - v) ~ normal(0,1);
+  block(m,1,1,1,1) ~ lkj_corr_cholesky(2.0);
   col(m,1) ~ normal(0,1);
   cols(m) ~ normal(0,1);
   row(m,1) ~ normal(0,1);
   rows(m) ~ normal(0,1);
-  diagonal(m) ~ multi_normal(v,m);
-  head(v,2) ~ multi_normal(v,m);
+  diagonal(m) ~ normal(0,1);
+  head(v,2) ~ normal(0,1);
   negative_infinity() ~ normal(0,1);
   not_a_number() ~ normal(0,1);
-  rep_matrix(1,3,3) ~ lkj_corr(2.0);
-  (v')' ~ multi_normal(v,m);
+  rep_matrix(1,3,3) ~ lkj_corr_cholesky(2.0);
+  (v')' ~ normal(0,1);
   positive_infinity() ~ normal(0,1);
   segment(v,2,4) ~ normal(0,1);
   sum(v) ~ normal(0,1);
@@ -64,6 +64,7 @@ model {
 
   // literals
   [1] ~ normal(0,1);
+  [y + y] ~ normal(0,1);
   to_vector({1}) ~ normal(0,1);
 
 }
