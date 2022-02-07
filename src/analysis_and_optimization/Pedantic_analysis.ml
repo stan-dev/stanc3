@@ -66,37 +66,25 @@ let list_multi_tildes (mir : Program.Typed.t) :
     ~f:(fun ~key ~data s -> Set.add s (key, data))
     multi_tildes
 
-(** These functions are linear if all of their arguments are *)
-let linear_fnames =
-  Operator.([Plus; PPlus; Minus; PMinus] |> List.map ~f:to_string)
-  @ [ "add"; "append_block"; "append_row"; "append_col"; "block"; "col"; "cols"
-    ; "row"; "rows"; "diagonal"; "head"; "tail"; "minus"; "negative_infinity"
-    ; "not_a_number"; "rep_matrix"; "rep_vector"; "rep_row_vector"
-    ; "positive_infinity"; "segment"; "subtract"; "sum"; "to_vector"
-    ; "to_row_vector"; "to_matrix"; "to_array_1d"; "to_array_2d"; "transpose"
-    ; "Plus__"; "PPlus__"; "PMinus__"; "Minus__"; "PNot__"; "Transpose__" ]
-  |> String.Set.of_list
-
+(**  Collect statements of the form "target += Dist(param, ...)" where param
+  has possibly been transformed non-linearly *)
 let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
     =
-  (* Collect statements of the form "target += Dist(param, ...)" *)
-  let rec is_linear_function allow_var name (args : 'a Expr.Fixed.t list) =
-    match (name, args) with
-    | _, _ when Set.mem linear_fnames name ->
-        List.for_all ~f:(is_linear allow_var) args
-    | _, _ when List.for_all ~f:(is_linear false) args ->
-        (* A function of all constants is fine *) true
-    (* We require at least one of these operands to be a constant *)
-    | ("Times__" | "Divide__" | "IntDivide__"), [a; b] ->
-        (is_linear allow_var a && is_linear false b)
-        || (is_linear false a && is_linear allow_var b)
-        (* Partial evaluation can create fmas where the user wrote Times*)
-    | "fma", [a; b; c] ->
-        is_linear allow_var c
-        && ( (is_linear allow_var a && is_linear false b)
-           || (is_linear false a && is_linear allow_var b) )
-    | _ -> false
-  and is_linear allow_var Expr.Fixed.{pattern; _} =
+  (* These functions are linear if all of their arguments are *)
+  let linear_fnames =
+    Operator.([Plus; PPlus; Minus; PMinus] |> List.map ~f:to_string)
+    @ [ "add"; "append_block"; "append_row"; "append_col"; "block"; "col"; "cols"
+      ; "row"; "rows"; "diagonal"; "head"; "tail"; "minus"; "negative_infinity"
+      ; "not_a_number"; "rep_matrix"; "rep_vector"; "rep_row_vector"
+      ; "positive_infinity"; "segment"; "subtract"; "sum"; "to_vector"
+      ; "to_row_vector"; "to_matrix"; "to_array_1d"; "to_array_2d"; "transpose"
+      ; "Plus__"; "PPlus__"; "PMinus__"; "Minus__"; "PNot__"; "Transpose__" ]
+    |> String.Set.of_list in
+  (* A simple check of linearity of an expression.
+     allow_var is used for expressions like a*b, where at most one
+     of a and b can be a variable
+  *)
+  let rec is_linear allow_var Expr.Fixed.{pattern; _} =
     match pattern with
     | Expr.Fixed.Pattern.Var _ -> allow_var
     | Lit _ -> true
@@ -108,10 +96,27 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
         is_linear_function allow_var name args
     | FunApp (CompilerInternal (FnMakeArray | FnMakeRowVec), args) ->
         List.for_all ~f:(is_linear allow_var) args
+    | _ -> false
+  and is_linear_function allow_var name (args : 'a Expr.Fixed.t list) =
+    match (name, args) with
+    | _, _ when Set.mem linear_fnames name ->
+        List.for_all ~f:(is_linear allow_var) args
+    | _, _ when List.for_all ~f:(is_linear false) args ->
+        (* A function of all constants is fine *) true
+    | ("Times__" | "Divide__" | "IntDivide__"), [a; b] ->
+        (* We require at least one of these operands to be a constant *)
+        (is_linear allow_var a && is_linear false b)
+        || (is_linear false a && is_linear allow_var b)
+    | "fma", [a; b; c] ->
+        (* Similar to above.
+           Partial evaluation can create fmas where the user wrote Times *)
+        is_linear allow_var c
+        && ( (is_linear allow_var a && is_linear false b)
+           || (is_linear false a && is_linear allow_var b) )
     | _ -> false in
-  let collect_transformed_tilde_stmt (stmt : Stmt.Located.t) :
-      Location_span.t Set.Poly.t =
+  let maybe_nonlinear_tilde (stmt : Stmt.Located.t) =
     match stmt.pattern with
+    (* a ~ foo(...) gets translated to target += foo_lpdf(a, ...) *)
     | Stmt.Fixed.Pattern.TargetPE
         { pattern=
             Expr.Fixed.Pattern.FunApp
@@ -120,12 +125,12 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
       when not (is_linear true e) ->
         Set.Poly.singleton stmt.meta
     | _ -> Set.Poly.empty in
-  let tildes =
+  let bad_tildes =
     fold_stmts
-      ~take_stmt:(fun m s -> Set.Poly.union m (collect_transformed_tilde_stmt s))
+      ~take_stmt:(fun m s -> Set.Poly.union m (maybe_nonlinear_tilde s))
       ~take_expr:(fun m _ -> m)
       ~init:Set.Poly.empty mir.log_prob in
-  tildes
+  bad_tildes
 
 (* Find all of the targets which are dependencies for a given label *)
 let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
