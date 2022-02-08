@@ -72,13 +72,14 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
     =
   (* These functions are linear if all of their arguments are *)
   let linear_fnames =
-    Operator.([Plus; PPlus; Minus; PMinus] |> List.map ~f:to_string)
+    Operator.(
+      [Plus; PPlus; Minus; PMinus; PNot; Transpose] |> List.map ~f:to_string)
     @ [ "add"; "append_block"; "append_row"; "append_col"; "block"; "col"; "cols"
       ; "row"; "rows"; "diagonal"; "head"; "tail"; "minus"; "negative_infinity"
       ; "not_a_number"; "rep_matrix"; "rep_vector"; "rep_row_vector"
       ; "positive_infinity"; "segment"; "subtract"; "sum"; "to_vector"
       ; "to_row_vector"; "to_matrix"; "to_array_1d"; "to_array_2d"; "transpose"
-      ; "Plus__"; "PPlus__"; "PMinus__"; "Minus__"; "PNot__"; "Transpose__" ]
+      ]
     |> String.Set.of_list in
   (* A simple check of linearity of an expression.
      allow_var is used for expressions like a*b, where at most one
