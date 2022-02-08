@@ -321,7 +321,7 @@ let rec pp_sizedtype ppf = function
         (list ~sep:comma pp_expression)
         ixs pp_sizedtype ty
 
-let pp_transformation ppf = function
+let pp_bracketed_transform ppf = function
   | Middle.Transformation.Lower e -> pf ppf "<@[lower=%a@]>" pp_expression e
   | Upper e -> pf ppf "<@[upper=%a@]>" pp_expression e
   | LowerUpper (e1, e2) ->
@@ -341,7 +341,7 @@ let pp_transformed_type ppf (pst, trans) =
       (* unsized types are untransformed *)
       pf ppf "%a" pp_unsizedtype ust
   | Type.Sized st -> (
-      let pp_trans ppf (st, trans) =
+      let pp_possibly_transformed_type ppf (st, trans) =
         let sizes_fmt =
           match st with
           | SizedType.SVector (_, e) | SRowVector (_, e) ->
@@ -365,7 +365,7 @@ let pp_transformed_type ppf (pst, trans) =
         | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
          |OffsetMultiplier _ ->
             pf ppf "%a%a%a" pp_unsizedtype (SizedType.to_unsized st)
-              pp_transformation trans sizes_fmt ()
+              pp_bracketed_transform trans sizes_fmt ()
         | Ordered -> pf ppf "ordered%a" sizes_fmt ()
         | PositiveOrdered -> pf ppf "positive_ordered%a" sizes_fmt ()
         | Simplex -> pf ppf "simplex%a" sizes_fmt ()
@@ -380,8 +380,8 @@ let pp_transformed_type ppf (pst, trans) =
           let ty, ixs = unwind_sized_array_type st in
           pf ppf "array[@[%a@]]@ %a"
             (list ~sep:comma pp_expression)
-            ixs pp_trans (ty, trans)
-      | _ -> pf ppf "%a" pp_trans (st, trans) )
+            ixs pp_possibly_transformed_type (ty, trans)
+      | _ -> pf ppf "%a" pp_possibly_transformed_type (st, trans) )
 
 let rec pp_indent_unless_block ppf ((s : untyped_statement), loc) =
   match s.stmt with
