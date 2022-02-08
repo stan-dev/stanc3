@@ -678,14 +678,22 @@ static constexpr std::array<const char*, 37> locations_array__ =
  " (in 'ad-level-failing.stan', line 11, column 61 to line 20, column 3)"};
 
 struct simple_SIR_functor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__>
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_stan_scalar_t<T0__>* = nullptr,
+            stan::require_stan_scalar_t<T1__>* = nullptr,
+            stan::require_stan_scalar_t<T2__>* = nullptr,
+            stan::require_stan_scalar_t<T3__>* = nullptr>
   std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
   operator()(const T0__& t, const std::vector<T1__>& y,
              const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
              const std::vector<int>& x_i, std::ostream* pstream__) const;
 };
 
-template <typename T0__, typename T1__, typename T2__, typename T3__>
+template <typename T0__, typename T1__, typename T2__, typename T3__,
+          stan::require_stan_scalar_t<T0__>* = nullptr,
+          stan::require_stan_scalar_t<T1__>* = nullptr,
+          stan::require_stan_scalar_t<T2__>* = nullptr,
+          stan::require_stan_scalar_t<T3__>* = nullptr>
   std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
   simple_SIR(const T0__& t, const std::vector<T1__>& y,
              const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
@@ -735,8 +743,11 @@ template <typename T0__, typename T1__, typename T2__, typename T3__>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-
-template <typename T0__, typename T1__, typename T2__, typename T3__>
+template <typename T0__, typename T1__, typename T2__, typename T3__,
+          stan::require_stan_scalar_t<T0__>*,
+          stan::require_stan_scalar_t<T1__>*,
+          stan::require_stan_scalar_t<T2__>*,
+          stan::require_stan_scalar_t<T3__>*>
 std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
 simple_SIR_functor__::operator()(const T0__& t, const std::vector<T1__>& y,
                                  const std::vector<T2__>& theta,
@@ -1821,7 +1832,9 @@ struct first_capture_functor__ {
   operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
 };
 struct prob_uncaptured_functor__ {
-  template <typename T2__, typename T3__>
+  template <typename T2__, typename T3__,
+            stan::require_eigen_matrix_dynamic_t<T2__>* = nullptr,
+            stan::require_eigen_matrix_dynamic_t<T3__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
   operator()(const int& nind, const int& n_occasions, const T2__& p,
              const T3__& phi, std::ostream* pstream__) const;
@@ -1878,7 +1891,9 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T2__, typename T3__>
+template <typename T2__, typename T3__,
+          stan::require_eigen_matrix_dynamic_t<T2__>* = nullptr,
+          stan::require_eigen_matrix_dynamic_t<T3__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
   prob_uncaptured(const int& nind, const int& n_occasions,
                   const T2__& p_arg__, const T3__& phi_arg__,
@@ -1941,7 +1956,6 @@ template <typename T2__, typename T3__>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-
 int
 first_capture_functor__::operator()(const std::vector<int>& y_i,
                                     std::ostream* pstream__)  const
@@ -1949,8 +1963,9 @@ first_capture_functor__::operator()(const std::vector<int>& y_i,
   return first_capture(y_i, pstream__);
 }
 
-
-template <typename T2__, typename T3__>
+template <typename T2__, typename T3__,
+          stan::require_eigen_matrix_dynamic_t<T2__>*,
+          stan::require_eigen_matrix_dynamic_t<T3__>*>
 Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
 prob_uncaptured_functor__::operator()(const int& nind,
                                       const int& n_occasions, const T2__& p,
@@ -1959,7 +1974,6 @@ prob_uncaptured_functor__::operator()(const int& nind,
 {
   return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
 }
-
 
 int
 last_capture_functor__::operator()(const std::vector<int>& y_i,
@@ -7056,7 +7070,9 @@ struct first_capture_functor__ {
   operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
 };
 struct prob_uncaptured_functor__ {
-  template <typename T2__, typename T3__>
+  template <typename T2__, typename T3__,
+            stan::require_eigen_matrix_dynamic_t<T2__>* = nullptr,
+            stan::require_eigen_matrix_dynamic_t<T3__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
   operator()(const int& nind, const int& n_occasions, const T2__& p,
              const T3__& phi, std::ostream* pstream__) const;
@@ -7113,7 +7129,9 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T2__, typename T3__>
+template <typename T2__, typename T3__,
+          stan::require_eigen_matrix_dynamic_t<T2__>* = nullptr,
+          stan::require_eigen_matrix_dynamic_t<T3__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
   prob_uncaptured(const int& nind, const int& n_occasions,
                   const T2__& p_arg__, const T3__& phi_arg__,
@@ -7180,7 +7198,6 @@ template <typename T2__, typename T3__>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-
 int
 first_capture_functor__::operator()(const std::vector<int>& y_i,
                                     std::ostream* pstream__)  const
@@ -7188,8 +7205,9 @@ first_capture_functor__::operator()(const std::vector<int>& y_i,
   return first_capture(y_i, pstream__);
 }
 
-
-template <typename T2__, typename T3__>
+template <typename T2__, typename T3__,
+          stan::require_eigen_matrix_dynamic_t<T2__>*,
+          stan::require_eigen_matrix_dynamic_t<T3__>*>
 Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
 prob_uncaptured_functor__::operator()(const int& nind,
                                       const int& n_occasions, const T2__& p,
@@ -7198,7 +7216,6 @@ prob_uncaptured_functor__::operator()(const int& nind,
 {
   return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
 }
-
 
 int
 last_capture_functor__::operator()(const std::vector<int>& y_i,
@@ -8121,7 +8138,9 @@ struct first_capture_functor__ {
   operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
 };
 struct prob_uncaptured_functor__ {
-  template <typename T0__, typename T1__>
+  template <typename T0__, typename T1__,
+            stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
+            stan::require_eigen_matrix_dynamic_t<T1__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
   operator()(const T0__& p, const T1__& phi, std::ostream* pstream__) const;
 };
@@ -8130,7 +8149,14 @@ struct last_capture_functor__ {
   operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
 };
 struct js_super_lp_functor__ {
-  template <bool propto__, typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T_lp__, typename T_lp_accum__>
+  template <bool propto__, typename T3__, typename T4__, typename T5__,
+            typename T6__, typename T7__, typename T_lp__,
+            typename T_lp_accum__,
+            stan::require_eigen_matrix_dynamic_t<T3__>* = nullptr,
+            stan::require_eigen_matrix_dynamic_t<T4__>* = nullptr,
+            stan::require_stan_scalar_t<T5__>* = nullptr,
+            stan::require_col_vector_t<T6__>* = nullptr,
+            stan::require_eigen_matrix_dynamic_t<T7__>* = nullptr>
   void
   operator()(const std::vector<std::vector<int>>& y,
              const std::vector<int>& first, const std::vector<int>& last,
@@ -8186,7 +8212,9 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, typename T1__>
+template <typename T0__, typename T1__,
+          stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
+          stan::require_eigen_matrix_dynamic_t<T1__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
   prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
                   std::ostream* pstream__) {
@@ -8254,8 +8282,14 @@ template <typename T0__, typename T1__>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <bool propto__, typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T_lp__, typename T_lp_accum__>
-  void
+template <bool propto__, typename T3__, typename T4__, typename T5__,
+          typename T6__, typename T7__, typename T_lp__,
+          typename T_lp_accum__,
+          stan::require_eigen_matrix_dynamic_t<T3__>* = nullptr,
+          stan::require_eigen_matrix_dynamic_t<T4__>* = nullptr,
+          stan::require_stan_scalar_t<T5__>* = nullptr,
+          stan::require_col_vector_t<T6__>* = nullptr,
+          stan::require_eigen_matrix_dynamic_t<T7__>* = nullptr> void
   js_super_lp(const std::vector<std::vector<int>>& y,
               const std::vector<int>& first, const std::vector<int>& last,
               const T3__& p_arg__, const T4__& phi_arg__, const T5__& psi,
@@ -8499,7 +8533,6 @@ template <bool propto__, typename T3__, typename T4__, typename T5__, typename T
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-
 int
 first_capture_functor__::operator()(const std::vector<int>& y_i,
                                     std::ostream* pstream__)  const
@@ -8507,15 +8540,15 @@ first_capture_functor__::operator()(const std::vector<int>& y_i,
   return first_capture(y_i, pstream__);
 }
 
-
-template <typename T0__, typename T1__>
+template <typename T0__, typename T1__,
+          stan::require_eigen_matrix_dynamic_t<T0__>*,
+          stan::require_eigen_matrix_dynamic_t<T1__>*>
 Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
 prob_uncaptured_functor__::operator()(const T0__& p, const T1__& phi,
                                       std::ostream* pstream__)  const
 {
   return prob_uncaptured(p, phi, pstream__);
 }
-
 
 int
 last_capture_functor__::operator()(const std::vector<int>& y_i,
@@ -8524,8 +8557,13 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
   return last_capture(y_i, pstream__);
 }
 
-
-template <bool propto__, typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T_lp__, typename T_lp_accum__>
+template <bool propto__, typename T3__, typename T4__, typename T5__,
+          typename T6__, typename T7__, typename T_lp__,
+          typename T_lp_accum__, stan::require_eigen_matrix_dynamic_t<T3__>*,
+          stan::require_eigen_matrix_dynamic_t<T4__>*,
+          stan::require_stan_scalar_t<T5__>*,
+          stan::require_col_vector_t<T6__>*,
+          stan::require_eigen_matrix_dynamic_t<T7__>*>
 void
 js_super_lp_functor__::operator()(const std::vector<std::vector<int>>& y,
                                   const std::vector<int>& first,
@@ -10918,7 +10956,9 @@ struct first_capture_functor__ {
   operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
 };
 struct prob_uncaptured_functor__ {
-  template <typename T2__, typename T3__>
+  template <typename T2__, typename T3__,
+            stan::require_eigen_matrix_dynamic_t<T2__>* = nullptr,
+            stan::require_eigen_matrix_dynamic_t<T3__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
   operator()(const int& nind, const int& n_occasions, const T2__& p,
              const T3__& phi, std::ostream* pstream__) const;
@@ -10975,7 +11015,9 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T2__, typename T3__>
+template <typename T2__, typename T3__,
+          stan::require_eigen_matrix_dynamic_t<T2__>* = nullptr,
+          stan::require_eigen_matrix_dynamic_t<T3__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
   prob_uncaptured(const int& nind, const int& n_occasions,
                   const T2__& p_arg__, const T3__& phi_arg__,
@@ -11038,7 +11080,6 @@ template <typename T2__, typename T3__>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-
 int
 first_capture_functor__::operator()(const std::vector<int>& y_i,
                                     std::ostream* pstream__)  const
@@ -11046,8 +11087,9 @@ first_capture_functor__::operator()(const std::vector<int>& y_i,
   return first_capture(y_i, pstream__);
 }
 
-
-template <typename T2__, typename T3__>
+template <typename T2__, typename T3__,
+          stan::require_eigen_matrix_dynamic_t<T2__>*,
+          stan::require_eigen_matrix_dynamic_t<T3__>*>
 Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
 prob_uncaptured_functor__::operator()(const int& nind,
                                       const int& n_occasions, const T2__& p,
@@ -11056,7 +11098,6 @@ prob_uncaptured_functor__::operator()(const int& nind,
 {
   return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
 }
-
 
 int
 last_capture_functor__::operator()(const std::vector<int>& y_i,
@@ -11969,7 +12010,12 @@ static constexpr std::array<const char*, 158> locations_array__ =
  " (in 'inlining-fail2.stan', line 148, column 33 to line 158, column 3)"};
 
 struct jolly_seber_lp_functor__ {
-  template <bool propto__, typename T3__, typename T4__, typename T5__, typename T6__, typename T_lp__, typename T_lp_accum__>
+  template <bool propto__, typename T3__, typename T4__, typename T5__,
+            typename T6__, typename T_lp__, typename T_lp_accum__,
+            stan::require_eigen_matrix_dynamic_t<T3__>* = nullptr,
+            stan::require_eigen_matrix_dynamic_t<T4__>* = nullptr,
+            stan::require_col_vector_t<T5__>* = nullptr,
+            stan::require_eigen_matrix_dynamic_t<T6__>* = nullptr>
   void
   operator()(const std::vector<std::vector<int>>& y,
              const std::vector<int>& first, const std::vector<int>& last,
@@ -11982,7 +12028,7 @@ struct last_capture_functor__ {
   operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
 };
 struct seq_cprob_functor__ {
-  template <typename T0__>
+  template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
   operator()(const T0__& gamma, std::ostream* pstream__) const;
 };
@@ -11991,7 +12037,9 @@ struct first_capture_functor__ {
   operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
 };
 struct prob_uncaptured_functor__ {
-  template <typename T0__, typename T1__>
+  template <typename T0__, typename T1__,
+            stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
+            stan::require_eigen_matrix_dynamic_t<T1__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
   operator()(const T0__& p, const T1__& phi, std::ostream* pstream__) const;
 };
@@ -12043,7 +12091,9 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, typename T1__>
+template <typename T0__, typename T1__,
+          stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
+          stan::require_eigen_matrix_dynamic_t<T1__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
   prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
                   std::ostream* pstream__) {
@@ -12111,8 +12161,12 @@ template <typename T0__, typename T1__>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <bool propto__, typename T3__, typename T4__, typename T5__, typename T6__, typename T_lp__, typename T_lp_accum__>
-  void
+template <bool propto__, typename T3__, typename T4__, typename T5__,
+          typename T6__, typename T_lp__, typename T_lp_accum__,
+          stan::require_eigen_matrix_dynamic_t<T3__>* = nullptr,
+          stan::require_eigen_matrix_dynamic_t<T4__>* = nullptr,
+          stan::require_col_vector_t<T5__>* = nullptr,
+          stan::require_eigen_matrix_dynamic_t<T6__>* = nullptr> void
   jolly_seber_lp(const std::vector<std::vector<int>>& y,
                  const std::vector<int>& first, const std::vector<int>& last,
                  const T3__& p_arg__, const T4__& phi_arg__,
@@ -12355,7 +12409,7 @@ template <bool propto__, typename T3__, typename T4__, typename T5__, typename T
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__>
+template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
   seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
@@ -12397,8 +12451,12 @@ template <typename T0__>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-
-template <bool propto__, typename T3__, typename T4__, typename T5__, typename T6__, typename T_lp__, typename T_lp_accum__>
+template <bool propto__, typename T3__, typename T4__, typename T5__,
+          typename T6__, typename T_lp__, typename T_lp_accum__,
+          stan::require_eigen_matrix_dynamic_t<T3__>*,
+          stan::require_eigen_matrix_dynamic_t<T4__>*,
+          stan::require_col_vector_t<T5__>*,
+          stan::require_eigen_matrix_dynamic_t<T6__>*>
 void
 jolly_seber_lp_functor__::operator()(const std::vector<std::vector<int>>& y,
                                      const std::vector<int>& first,
@@ -12412,7 +12470,6 @@ jolly_seber_lp_functor__::operator()(const std::vector<std::vector<int>>& y,
            lp_accum__, pstream__);
 }
 
-
 int
 last_capture_functor__::operator()(const std::vector<int>& y_i,
                                    std::ostream* pstream__)  const
@@ -12420,15 +12477,13 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
   return last_capture(y_i, pstream__);
 }
 
-
-template <typename T0__>
+template <typename T0__, stan::require_col_vector_t<T0__>*>
 Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 seq_cprob_functor__::operator()(const T0__& gamma, std::ostream* pstream__) 
 const
 {
   return seq_cprob(gamma, pstream__);
 }
-
 
 int
 first_capture_functor__::operator()(const std::vector<int>& y_i,
@@ -12437,8 +12492,9 @@ first_capture_functor__::operator()(const std::vector<int>& y_i,
   return first_capture(y_i, pstream__);
 }
 
-
-template <typename T0__, typename T1__>
+template <typename T0__, typename T1__,
+          stan::require_eigen_matrix_dynamic_t<T0__>*,
+          stan::require_eigen_matrix_dynamic_t<T1__>*>
 Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
 prob_uncaptured_functor__::operator()(const T0__& p, const T1__& phi,
                                       std::ostream* pstream__)  const
@@ -14491,7 +14547,9 @@ struct first_capture_functor__ {
   operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
 };
 struct prob_uncaptured_functor__ {
-  template <typename T2__, typename T3__>
+  template <typename T2__, typename T3__,
+            stan::require_eigen_matrix_dynamic_t<T2__>* = nullptr,
+            stan::require_eigen_matrix_dynamic_t<T3__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
   operator()(const int& nind, const int& n_occasions, const T2__& p,
              const T3__& phi, std::ostream* pstream__) const;
@@ -14548,7 +14606,9 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T2__, typename T3__>
+template <typename T2__, typename T3__,
+          stan::require_eigen_matrix_dynamic_t<T2__>* = nullptr,
+          stan::require_eigen_matrix_dynamic_t<T3__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
   prob_uncaptured(const int& nind, const int& n_occasions,
                   const T2__& p_arg__, const T3__& phi_arg__,
@@ -14611,7 +14671,6 @@ template <typename T2__, typename T3__>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-
 int
 first_capture_functor__::operator()(const std::vector<int>& y_i,
                                     std::ostream* pstream__)  const
@@ -14619,8 +14678,9 @@ first_capture_functor__::operator()(const std::vector<int>& y_i,
   return first_capture(y_i, pstream__);
 }
 
-
-template <typename T2__, typename T3__>
+template <typename T2__, typename T3__,
+          stan::require_eigen_matrix_dynamic_t<T2__>*,
+          stan::require_eigen_matrix_dynamic_t<T3__>*>
 Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>, stan::value_type_t<T3__>>, -1, -1>
 prob_uncaptured_functor__::operator()(const int& nind,
                                       const int& n_occasions, const T2__& p,
@@ -14629,7 +14689,6 @@ prob_uncaptured_functor__::operator()(const int& nind,
 {
   return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
 }
-
 
 int
 last_capture_functor__::operator()(const std::vector<int>& y_i,
@@ -15316,20 +15375,28 @@ static constexpr std::array<const char*, 14> locations_array__ =
  " (in 'lupdf-inlining.stan', line 8, column 26 to line 10, column 5)"};
 
 struct baz_lpdf_functor__ {
-  template <bool propto__, typename T0__> stan::promote_args_t<T0__>
+  template <bool propto__, typename T0__,
+            stan::require_stan_scalar_t<T0__>* = nullptr>
+  stan::promote_args_t<T0__>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
 struct bar_lpmf_functor__ {
-  template <bool propto__, typename T1__> stan::promote_args_t<T1__>
+  template <bool propto__, typename T1__,
+            stan::require_stan_scalar_t<T1__>* = nullptr>
+  stan::promote_args_t<T1__>
   operator()(const int& n, const T1__& mu, std::ostream* pstream__) const;
 };
 struct foo_lpdf_functor__ {
-  template <bool propto__, typename T0__, typename T1__>
+  template <bool propto__, typename T0__, typename T1__,
+            stan::require_stan_scalar_t<T0__>* = nullptr,
+            stan::require_stan_scalar_t<T1__>* = nullptr>
   stan::promote_args_t<T0__, T1__>
   operator()(const T0__& x, const T1__& mu, std::ostream* pstream__) const;
 };
 
-template <bool propto__, typename T0__, typename T1__>
+template <bool propto__, typename T0__, typename T1__,
+          stan::require_stan_scalar_t<T0__>* = nullptr,
+          stan::require_stan_scalar_t<T1__>* = nullptr>
   stan::promote_args_t<T0__, T1__>
   foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
@@ -15343,7 +15410,9 @@ template <bool propto__, typename T0__, typename T1__>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <bool propto__, typename T1__> stan::promote_args_t<T1__>
+template <bool propto__, typename T1__,
+          stan::require_stan_scalar_t<T1__>* = nullptr>
+  stan::promote_args_t<T1__>
   bar_lpmf(const int& n, const T1__& mu, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T1__>;
     int current_statement__ = 0; 
@@ -15356,7 +15425,9 @@ template <bool propto__, typename T1__> stan::promote_args_t<T1__>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <bool propto__, typename T0__> stan::promote_args_t<T0__>
+template <bool propto__, typename T0__,
+          stan::require_stan_scalar_t<T0__>* = nullptr>
+  stan::promote_args_t<T0__>
   baz_lpdf(const T0__& x, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
     int current_statement__ = 0; 
@@ -15369,23 +15440,24 @@ template <bool propto__, typename T0__> stan::promote_args_t<T0__>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-
-template <bool propto__, typename T0__> stan::promote_args_t<T0__>
+template <bool propto__, typename T0__, stan::require_stan_scalar_t<T0__>*>
+stan::promote_args_t<T0__>
 baz_lpdf_functor__::operator()(const T0__& x, std::ostream* pstream__)  const
 {
   return baz_lpdf<propto__>(x, pstream__);
 }
 
-
-template <bool propto__, typename T1__> stan::promote_args_t<T1__>
+template <bool propto__, typename T1__, stan::require_stan_scalar_t<T1__>*>
+stan::promote_args_t<T1__>
 bar_lpmf_functor__::operator()(const int& n, const T1__& mu,
                                std::ostream* pstream__)  const
 {
   return bar_lpmf<propto__>(n, mu, pstream__);
 }
 
-
-template <bool propto__, typename T0__, typename T1__>
+template <bool propto__, typename T0__, typename T1__,
+          stan::require_stan_scalar_t<T0__>*,
+          stan::require_stan_scalar_t<T1__>*>
 stan::promote_args_t<T0__, T1__>
 foo_lpdf_functor__::operator()(const T0__& x, const T1__& mu,
                                std::ostream* pstream__)  const
@@ -17330,17 +17402,21 @@ struct rfun_functor__ {
   operator()(const int& y, std::ostream* pstream__) const;
 };
 struct rfun_lp_functor__ {
-  template <bool propto__, typename T_lp__, typename T_lp_accum__> int
+  template <bool propto__, typename T_lp__, typename T_lp_accum__>
+  int
   operator()(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) const;
 };
 struct nrfun_lp_functor__ {
-  template <bool propto__, typename T0__, typename T_lp__, typename T_lp_accum__>
+  template <bool propto__, typename T0__, typename T_lp__,
+            typename T_lp_accum__,
+            stan::require_stan_scalar_t<T0__>* = nullptr>
   void
   operator()(const T0__& x, const int& y, T_lp__& lp__,
              T_lp_accum__& lp_accum__, std::ostream* pstream__) const;
 };
 
-template <bool propto__, typename T0__, typename T_lp__, typename T_lp_accum__>
+template <bool propto__, typename T0__, typename T_lp__,
+          typename T_lp_accum__, stan::require_stan_scalar_t<T0__>* = nullptr>
   void
   nrfun_lp(const T0__& x, const int& y, T_lp__& lp__,
            T_lp_accum__& lp_accum__, std::ostream* pstream__) {
@@ -17394,22 +17470,21 @@ template <bool propto__, typename T_lp__, typename T_lp_accum__> int
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-
 int rfun_functor__::operator()(const int& y, std::ostream* pstream__)  const
 {
   return rfun(y, pstream__);
 }
 
-
-template <bool propto__, typename T_lp__, typename T_lp_accum__> int
+template <bool propto__, typename T_lp__, typename T_lp_accum__>
+int
 rfun_lp_functor__::operator()(T_lp__& lp__, T_lp_accum__& lp_accum__,
                               std::ostream* pstream__)  const
 {
   return rfun_lp<propto__>(lp__, lp_accum__, pstream__);
 }
 
-
-template <bool propto__, typename T0__, typename T_lp__, typename T_lp_accum__>
+template <bool propto__, typename T0__, typename T_lp__,
+          typename T_lp_accum__, stan::require_stan_scalar_t<T0__>*>
 void
 nrfun_lp_functor__::operator()(const T0__& x, const int& y, T_lp__& lp__,
                                T_lp_accum__& lp_accum__,
@@ -18130,12 +18205,13 @@ static constexpr std::array<const char*, 6> locations_array__ =
 struct dumb_functor__ {
   double
   operator()(const int& x, std::ostream* pstream__) const;
-  template <typename T0__> stan::promote_args_t<T0__>
+  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  stan::promote_args_t<T0__>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
 
-template <typename T0__> stan::promote_args_t<T0__>
-  dumb(const T0__& x, std::ostream* pstream__) {
+template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  stan::promote_args_t<T0__> dumb(const T0__& x, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
@@ -18163,15 +18239,14 @@ double dumb(const int& x, std::ostream* pstream__) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-
 double dumb_functor__::operator()(const int& x, std::ostream* pstream__) 
 const
 {
   return dumb(x, pstream__);
 }
 
-
-template <typename T0__> stan::promote_args_t<T0__>
+template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+stan::promote_args_t<T0__>
 dumb_functor__::operator()(const T0__& x, std::ostream* pstream__)  const
 {
   return dumb(x, pstream__);
@@ -19081,6 +19156,522 @@ stan::model::model_base& new_model(
 
 stan::math::profile_map& get_stan_profile_data() {
   return partial_eval_model_namespace::profiles__;
+}
+
+#endif
+
+
+
+  $ ../../../../../install/default/bin/stanc --print-cpp --O0 partial_eval_multiply.stan
+
+// Code generated by %%NAME%% %%VERSION%%
+#include <stan/model/model_header.hpp>
+namespace partial_eval_multiply_model_namespace {
+
+using stan::model::model_base_crtp;
+using namespace stan::math;
+
+
+stan::math::profile_map profiles__;
+static constexpr std::array<const char*, 11> locations_array__ = 
+{" (found before start of program)",
+ " (in 'partial_eval_multiply.stan', line 8, column 2 to column 20)",
+ " (in 'partial_eval_multiply.stan', line 9, column 2 to column 20)",
+ " (in 'partial_eval_multiply.stan', line 12, column 2 to column 52)",
+ " (in 'partial_eval_multiply.stan', line 13, column 2 to column 36)",
+ " (in 'partial_eval_multiply.stan', line 14, column 2 to column 36)",
+ " (in 'partial_eval_multiply.stan', line 15, column 2 to column 40)",
+ " (in 'partial_eval_multiply.stan', line 2, column 2 to column 20)",
+ " (in 'partial_eval_multiply.stan', line 3, column 2 to column 20)",
+ " (in 'partial_eval_multiply.stan', line 4, column 2 to column 20)",
+ " (in 'partial_eval_multiply.stan', line 5, column 2 to column 20)"};
+
+
+
+
+class partial_eval_multiply_model final : public model_base_crtp<partial_eval_multiply_model> {
+
+ private:
+  Eigen::Matrix<double, -1, -1> m1__;
+  Eigen::Matrix<double, -1, -1> m4__;
+  std::vector<int> idx;
+  std::vector<int> idy; 
+  Eigen::Map<Eigen::Matrix<double, -1, -1>> m1{nullptr, 0, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, -1>> m4{nullptr, 0, 0};
+ 
+ public:
+  ~partial_eval_multiply_model() { }
+  
+  inline std::string model_name() const final { return "partial_eval_multiply_model"; }
+
+  inline std::vector<std::string> model_compile_info() const noexcept {
+    return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp --O0"};
+  }
+  
+  
+  partial_eval_multiply_model(stan::io::var_context& context__,
+                              unsigned int random_seed__ = 0,
+                              std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
+    using local_scalar_t__ = double ;
+    boost::ecuyer1988 base_rng__ = 
+        stan::services::util::create_rng(random_seed__, 0);
+    (void) base_rng__;  // suppress unused var warning
+    static constexpr const char* function__ = "partial_eval_multiply_model_namespace::partial_eval_multiply_model";
+    (void) function__;  // suppress unused var warning
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+      current_statement__ = 7;
+      context__.validate_dims("data initialization","m1","double",
+           std::vector<size_t>{static_cast<size_t>(10),
+            static_cast<size_t>(10)});
+      m1__ = 
+        Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+          std::numeric_limits<double>::quiet_NaN());
+      new (&m1) Eigen::Map<Eigen::Matrix<double, -1, -1>>(m1__.data(), 10, 10);
+        
+      
+      {
+        std::vector<local_scalar_t__> m1_flat__;
+        current_statement__ = 7;
+        m1_flat__ = context__.vals_r("m1");
+        current_statement__ = 7;
+        pos__ = 1;
+        current_statement__ = 7;
+        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+          current_statement__ = 7;
+          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+            current_statement__ = 7;
+            stan::model::assign(m1, m1_flat__[(pos__ - 1)],
+              "assigning variable m1", stan::model::index_uni(sym2__),
+                                         stan::model::index_uni(sym1__));
+            current_statement__ = 7;
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
+      current_statement__ = 8;
+      context__.validate_dims("data initialization","m4","double",
+           std::vector<size_t>{static_cast<size_t>(10),
+            static_cast<size_t>(10)});
+      m4__ = 
+        Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+          std::numeric_limits<double>::quiet_NaN());
+      new (&m4) Eigen::Map<Eigen::Matrix<double, -1, -1>>(m4__.data(), 10, 10);
+        
+      
+      {
+        std::vector<local_scalar_t__> m4_flat__;
+        current_statement__ = 8;
+        m4_flat__ = context__.vals_r("m4");
+        current_statement__ = 8;
+        pos__ = 1;
+        current_statement__ = 8;
+        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+          current_statement__ = 8;
+          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+            current_statement__ = 8;
+            stan::model::assign(m4, m4_flat__[(pos__ - 1)],
+              "assigning variable m4", stan::model::index_uni(sym2__),
+                                         stan::model::index_uni(sym1__));
+            current_statement__ = 8;
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
+      current_statement__ = 9;
+      context__.validate_dims("data initialization","idx","int",
+           std::vector<size_t>{static_cast<size_t>(10)});
+      idx = std::vector<int>(10, std::numeric_limits<int>::min());
+      
+      
+      current_statement__ = 9;
+      idx = context__.vals_i("idx");
+      current_statement__ = 10;
+      context__.validate_dims("data initialization","idy","int",
+           std::vector<size_t>{static_cast<size_t>(10)});
+      idy = std::vector<int>(10, std::numeric_limits<int>::min());
+      
+      
+      current_statement__ = 10;
+      idy = context__.vals_i("idy");
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    num_params_r__ = (10 * 10) + (10 * 10);
+    
+  }
+  
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
+                                                 VecI& params_i__,
+                                                 std::ostream* pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    static constexpr const char* function__ = "partial_eval_multiply_model_namespace::log_prob";
+    (void) function__;  // suppress unused var warning
+    
+    try {
+      Eigen::Matrix<local_scalar_t__, -1, -1> m2 =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10,
+           DUMMY_VAR__);
+      current_statement__ = 1;
+      m2 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(10,
+             10);
+      Eigen::Matrix<local_scalar_t__, -1, -1> m3 =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10,
+           DUMMY_VAR__);
+      current_statement__ = 2;
+      m3 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(10,
+             10);
+      {
+        Eigen::Matrix<local_scalar_t__, -1, -1> m5 =
+           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10,
+             DUMMY_VAR__);
+        current_statement__ = 3;
+        stan::model::assign(m5,
+          stan::math::add(
+            stan::math::multiply(m1,
+              stan::math::elt_multiply(m2,
+                stan::model::rvalue(m3, "m3",
+                  stan::model::index_multi(idx),
+                    stan::model::index_multi(idy)))), m4),
+          "assigning variable m5");
+        Eigen::Matrix<local_scalar_t__, -1, -1> m6 =
+           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10,
+             DUMMY_VAR__);
+        current_statement__ = 4;
+        stan::model::assign(m6,
+          stan::math::add(stan::math::elt_multiply(m1, m2), m4),
+          "assigning variable m6");
+        Eigen::Matrix<local_scalar_t__, -1, -1> m7 =
+           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10,
+             DUMMY_VAR__);
+        current_statement__ = 5;
+        stan::model::assign(m7,
+          stan::math::add(m4, stan::math::elt_multiply(m1, m2)),
+          "assigning variable m7");
+        current_statement__ = 6;
+        lp_accum__.add(
+          ((stan::math::sum(m5) + stan::math::sum(m6)) + stan::math::sum(m7)));
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+    } // log_prob_impl() 
+    
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
+                               VecI& params_i__, VecVar& vars__,
+                               const bool emit_transformed_parameters__ = true,
+                               const bool emit_generated_quantities__ = true,
+                               std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    double lp__ = 0.0;
+    (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
+    stan::math::accumulator<double> lp_accum__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    constexpr bool jacobian__ = false;
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    static constexpr const char* function__ = "partial_eval_multiply_model_namespace::write_array";
+    (void) function__;  // suppress unused var warning
+    
+    try {
+      Eigen::Matrix<double, -1, -1> m2 =
+         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+           std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 1;
+      m2 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(10,
+             10);
+      Eigen::Matrix<double, -1, -1> m3 =
+         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+           std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 2;
+      m3 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(10,
+             10);
+      out__.write(m2);
+      out__.write(m3);
+      if (stan::math::logical_negation((stan::math::primitive_value(
+            emit_transformed_parameters__) || stan::math::primitive_value(
+            emit_generated_quantities__)))) {
+        return ;
+      } 
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      } 
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    } // write_array_impl() 
+    
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
+                                   std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+      Eigen::Matrix<local_scalar_t__, -1, -1> m2 =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10,
+           DUMMY_VAR__);
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          stan::model::assign(m2, in__.read<local_scalar_t__>(),
+            "assigning variable m2", stan::model::index_uni(sym2__),
+                                       stan::model::index_uni(sym1__));
+        }
+      }
+      out__.write(m2);
+      Eigen::Matrix<local_scalar_t__, -1, -1> m3 =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10,
+           DUMMY_VAR__);
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          stan::model::assign(m3, in__.read<local_scalar_t__>(),
+            "assigning variable m3", stan::model::index_uni(sym2__),
+                                       stan::model::index_uni(sym1__));
+        }
+      }
+      out__.write(m3);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    } // transform_inits_impl() 
+    
+  inline void get_param_names(std::vector<std::string>& names__) const {
+    
+    names__ = std::vector<std::string>{"m2", "m3"};
+    
+    } // get_param_names() 
+    
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
+                                                                   static_cast<size_t>(10)
+                                                                   ,
+                                                                   static_cast<size_t>(10)
+                                                                   },
+      std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)}};
+    
+    } // get_dims() 
+    
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const
+    final {
+    
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          {
+            param_names__.emplace_back(std::string() + "m2" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          } 
+        }
+      } 
+    }
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          {
+            param_names__.emplace_back(std::string() + "m3" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          } 
+        }
+      } 
+    }
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // constrained_param_names() 
+    
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const
+    final {
+    
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          {
+            param_names__.emplace_back(std::string() + "m2" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          } 
+        }
+      } 
+    }
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          {
+            param_names__.emplace_back(std::string() + "m3" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          } 
+        }
+      } 
+    }
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // unconstrained_param_names() 
+    
+  inline std::string get_constrained_sizedtypes() const {
+    
+    return std::string("[{\"name\":\"m2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"m3\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"}]");
+    
+    } // get_constrained_sizedtypes() 
+    
+  inline std::string get_unconstrained_sizedtypes() const {
+    
+    return std::string("[{\"name\":\"m2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"m3\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"}]");
+    
+    } // get_unconstrained_sizedtypes() 
+    
+  
+    // Begin method overload boilerplate
+    template <typename RNG>
+    inline void write_array(RNG& base_rng,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                            const bool emit_transformed_parameters = true,
+                            const bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      const size_t num_params__ = 
+  ((10 * 10) + (10 * 10));
+      const size_t num_transformed = 0;
+      const size_t num_gen_quantities = 0;
+      std::vector<double> vars_vec(num_params__
+       + (emit_transformed_parameters * num_transformed)
+       + (emit_generated_quantities * num_gen_quantities));
+      std::vector<int> params_i;
+      write_array_impl(base_rng, params_r, params_i, vars_vec,
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
+        vars_vec.data(), vars_vec.size());
+    }
+
+    template <typename RNG>
+    inline void write_array(RNG& base_rng, std::vector<double>& params_r,
+                            std::vector<int>& params_i,
+                            std::vector<double>& vars,
+                            bool emit_transformed_parameters = true,
+                            bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      const size_t num_params__ = 
+  ((10 * 10) + (10 * 10));
+      const size_t num_transformed = 0;
+      const size_t num_gen_quantities = 0;
+      vars.resize(num_params__
+        + (emit_transformed_parameters * num_transformed)
+        + (emit_generated_quantities * num_gen_quantities));
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+    }
+
+    template <bool propto__, bool jacobian__, typename T_>
+    inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+                       std::ostream* pstream = nullptr) const {
+      Eigen::Matrix<int, -1, 1> params_i;
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+    }
+
+    template <bool propto__, bool jacobian__, typename T__>
+    inline T__ log_prob(std::vector<T__>& params_r,
+                        std::vector<int>& params_i,
+                        std::ostream* pstream = nullptr) const {
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+    }
+
+
+    inline void transform_inits(const stan::io::var_context& context,
+                         Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
+                         std::ostream* pstream = nullptr) const final {
+      std::vector<double> params_r_vec(params_r.size());
+      std::vector<int> params_i;
+      transform_inits(context, params_i, params_r_vec, pstream);
+      params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
+        params_r_vec.data(), params_r_vec.size());
+    }
+
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+     constexpr std::array<const char*, 2> names__{"m2", "m3"};
+      const std::array<Eigen::Index, 2> constrain_param_sizes__{(10 * 10),
+       (10 * 10)};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
+    
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
+       }
+       ++size_iter__;
+     }
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
+};
+}
+
+using stan_model = partial_eval_multiply_model_namespace::partial_eval_multiply_model;
+
+#ifndef USING_R
+
+// Boilerplate
+stan::model::model_base& new_model(
+        stan::io::var_context& data_context,
+        unsigned int seed,
+        std::ostream* msg_stream) {
+  stan_model* m = new stan_model(data_context, seed, msg_stream);
+  return *m;
+}
+
+stan::math::profile_map& get_stan_profile_data() {
+  return partial_eval_multiply_model_namespace::profiles__;
 }
 
 #endif
