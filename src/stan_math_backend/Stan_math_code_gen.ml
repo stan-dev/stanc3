@@ -635,6 +635,7 @@ let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body) =
           pf ppf "@[%a @]" pp_block
             (pp_for_loop_iteratee ~index_ids:idcs, (i, dims, pp_body)) )
 
+(* TUPLE TODO - need to handle emit_names/pp_*_param_names *)
 let emit_name ppf (name, idcs) =
   let name = Mangle.remove_prefix name in
   let to_string = fmt "std::to_string(%s)" in

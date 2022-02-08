@@ -162,6 +162,7 @@ let rec pp_possibly_var_decl ppf (adtype, ut, mem_pattern) =
   | UMatrix | UVector | URowVector -> pf ppf "%a" pp_var_decl ut
   | UReal | UInt | UComplex -> pf ppf "%a" pp_unsizedtype_local (adtype, ut)
   | x ->
+      (* TUPLE TODO *)
       Common.FatalError.fatal_error_msg
         [%message (x : UnsizedType.t) "not implemented yet"]
 
@@ -332,7 +333,9 @@ and gen_misc_special_math_app (f : string)
               match List.exists ~f:is_autodiffable es with
               | true ->
                   pf ppf "%s<%a>(@,%a)" f pp_possibly_var_decl
-                    (UnsizedType.AutoDiffable, t, mem_pattern)
+                    ( UnsizedType.(fill_adtype_for_type AutoDiffable t)
+                    , t
+                    , mem_pattern )
                     (list ~sep:comma pp_expr) es
               | false -> pf ppf "%s(@,%a)" f (list ~sep:comma pp_expr) es )
       | Some Void -> None
@@ -538,7 +541,7 @@ and pp_compiler_internal_fn ad ut f ppf es =
       | None ->
           pf ppf "@[<hov 2>in__.template read<@,%a>(@,%a)@]"
             pp_possibly_var_decl
-            (UnsizedType.AutoDiffable, ut, mem_pattern)
+            (UnsizedType.(fill_adtype_for_type AutoDiffable ut), ut, mem_pattern)
             (list ~sep:comma pp_expr) dims
       | Some constraint_string ->
           let constraint_args = transform_args constrain in
@@ -551,7 +554,7 @@ and pp_compiler_internal_fn ad ut f ppf es =
              jacobian__>(@,\
              %a)@]"
             constraint_string pp_possibly_var_decl
-            (UnsizedType.AutoDiffable, ut, mem_pattern)
+            (UnsizedType.(fill_adtype_for_type AutoDiffable ut), ut, mem_pattern)
             (list ~sep:comma pp_expr) args )
   | FnDeepCopy ->
       gen_fun_app FnPlain ppf "stan::model::deep_copy" es Common.Helpers.AoS
