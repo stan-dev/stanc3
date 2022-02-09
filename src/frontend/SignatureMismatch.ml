@@ -171,11 +171,11 @@ let check_of_same_type_mod_conv = check_same_type 0
 let check_compatible_arguments_mod_conv = check_compatible_arguments 0
 let max_n_errors = 5
 
-let extract_function_types ?(allow_udf = true) f =
+let extract_function_types f =
   match f with
   | Environment.{type_= UFun (args, return, _, mem); kind= `StanMath} ->
       Some (return, args, (fun x -> Ast.StanLib x), mem)
-  | {type_= UFun (args, return, _, mem); _} when allow_udf ->
+  | {type_= UFun (args, return, _, mem); _} ->
       Some (return, args, (fun x -> UserDefined x), mem)
   | _ -> None
 
@@ -219,17 +219,17 @@ let find_compatible_rt function_types args =
       let errors, omitted = List.split_n errors max_n_errors in
       SignatureErrors (errors, not (List.is_empty omitted))
 
-let matching_function_internal ~allow_udf env name args =
+let matching_function env name args =
   let name = Utils.stdlib_distribution_name name in
   let function_types =
     Environment.find env name
-    |> List.filter_map ~f:(extract_function_types ~allow_udf)
+    |> List.filter_map ~f:extract_function_types
     |> List.sort ~compare:(fun (ret1, _, _, _) (ret2, _, _, _) ->
            UnsizedType.compare_returntype ret1 ret2 ) in
   find_compatible_rt function_types args
 
-let matching_function = matching_function_internal ~allow_udf:true
-let matching_stanlib_function = matching_function_internal ~allow_udf:false
+let matching_stanlib_function =
+  matching_function Environment.stan_math_environment
 
 let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
     fun_return args =

@@ -186,10 +186,53 @@ let check_ternary_if loc pe te fe =
         fe.emeta.type_
       |> error
 
+let match_to_rt_option = function
+  | SignatureMismatch.UniqueMatch (rt, _, _) -> Some rt
+  | _ -> None
+
+let stan_math_return_type name arg_tys =
+  match name with
+  | x when Stan_math_signatures.is_reduce_sum_fn x ->
+      Some (UnsizedType.ReturnType UReal)
+  | x when Stan_math_signatures.is_variadic_ode_fn x ->
+      Some (UnsizedType.ReturnType (UArray UVector))
+  | x when Stan_math_signatures.is_variadic_dae_fn x ->
+      Some (UnsizedType.ReturnType (UArray UVector))
+  | _ ->
+      SignatureMismatch.matching_stanlib_function name arg_tys
+      |> match_to_rt_option
+
+let operator_stan_math_return_type op arg_tys =
+  match (op, arg_tys) with
+  | Operator.IntDivide, [(_, UnsizedType.UInt); (_, UInt)] ->
+      Some UnsizedType.(ReturnType UInt)
+  | IntDivide, _ -> None
+  | _ ->
+      Stan_math_signatures.operator_to_stan_math_fns op
+      |> List.filter_map ~f:(fun name ->
+             SignatureMismatch.matching_stanlib_function name arg_tys
+             |> match_to_rt_option )
+      |> List.hd
+
+let assignmentoperator_stan_math_return_type assop arg_tys =
+  ( match assop with
+  | Operator.Divide ->
+      SignatureMismatch.matching_stanlib_function "divide" arg_tys
+      |> match_to_rt_option
+  | Plus | Minus | Times | EltTimes | EltDivide ->
+      operator_stan_math_return_type assop arg_tys
+  | _ -> None )
+  |> Option.bind ~f:(function
+       | ReturnType rtype
+         when rtype = snd (List.hd_exn arg_tys)
+              && not
+                   ( (assop = Operator.EltTimes || assop = Operator.EltDivide)
+                   && UnsizedType.is_scalar_type rtype ) ->
+           Some UnsizedType.Void
+       | _ -> None )
+
 let check_binop loc op le re =
-  let rt =
-    [le; re] |> get_arg_types
-    |> Stan_math_signatures.operator_stan_math_return_type op in
+  let rt = [le; re] |> get_arg_types |> operator_stan_math_return_type op in
   match rt with
   | Some (ReturnType type_) ->
       mk_typed_expression
@@ -201,8 +244,7 @@ let check_binop loc op le re =
       |> error
 
 let check_prefixop loc op te =
-  let rt =
-    Stan_math_signatures.operator_stan_math_return_type op [arg_type te] in
+  let rt = operator_stan_math_return_type op [arg_type te] in
   match rt with
   | Some (ReturnType type_) ->
       mk_typed_expression
@@ -212,8 +254,7 @@ let check_prefixop loc op te =
   | _ -> Semantic_error.illtyped_prefix_op loc op te.emeta.type_ |> error
 
 let check_postfixop loc op te =
-  let rt =
-    Stan_math_signatures.operator_stan_math_return_type op [arg_type te] in
+  let rt = operator_stan_math_return_type op [arg_type te] in
   match rt with
   | Some (ReturnType type_) ->
       mk_typed_expression
@@ -908,9 +949,7 @@ let check_assignment_operator loc assop lhs rhs =
     | Error _ -> err Operator.Equals |> error )
   | OperatorAssign op -> (
       let args = List.map ~f:arg_type [Ast.expr_of_lvalue lhs; rhs] in
-      let return_type =
-        Stan_math_signatures.assignmentoperator_stan_math_return_type op args
-      in
+      let return_type = assignmentoperator_stan_math_return_type op args in
       match return_type with Some Void -> rhs | _ -> err op |> error )
 
 let check_lvalue cf tenv = function
@@ -1026,14 +1065,14 @@ let verify_valid_sampling_pos loc cf =
   else Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
 
 let verify_sampling_distribution loc tenv id arguments =
-  let name = id.name
-  and argumenttypes = List.map ~f:arg_type arguments
-  and is_real_rt = function
-    | UnsizedType.ReturnType UReal -> true
-    | _ -> false in
+  let name = id.name in
+  let argumenttypes = List.map ~f:arg_type arguments in
   let is_name_w_suffix_sampling_dist suffix =
-    Stan_math_signatures.stan_math_returntype (name ^ suffix) argumenttypes
-    |> Option.value_map ~default:false ~f:is_real_rt in
+    match
+      SignatureMismatch.matching_stanlib_function (name ^ suffix) argumenttypes
+    with
+    | UniqueMatch (ReturnType UReal, _, _) -> true
+    | _ -> false in
   let is_sampling_dist_in_math =
     List.exists ~f:is_name_w_suffix_sampling_dist
       (Utils.distribution_suffices @ Utils.unnormalized_suffices)
@@ -1055,15 +1094,15 @@ let verify_sampling_distribution loc tenv id arguments =
   else Semantic_error.invalid_sampling_no_such_dist loc name |> error
 
 let is_cumulative_density_defined tenv id arguments =
-  let name = id.name
-  and argumenttypes = List.map ~f:arg_type arguments
-  and is_real_rt = function
-    | UnsizedType.ReturnType UReal -> true
-    | _ -> false in
+  let name = id.name in
+  let argumenttypes = List.map ~f:arg_type arguments in
   let is_real_rt_for_suffix suffix =
-    Stan_math_signatures.stan_math_returntype (name ^ suffix) argumenttypes
-    |> Option.value_map ~default:false ~f:is_real_rt
-  and valid_arg_types_for_suffix suffix =
+    match
+      SignatureMismatch.matching_stanlib_function (name ^ suffix) argumenttypes
+    with
+    | UniqueMatch (ReturnType UReal, _, _) -> true
+    | _ -> false in
+  let valid_arg_types_for_suffix suffix =
     match
       SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes
     with
@@ -1675,7 +1714,7 @@ let check_program_exn
       ; comments } as ast ) =
   warnings := [] ;
   (* create a new type environment which has only stan-math functions *)
-  let tenv = Env.create () in
+  let tenv = Env.stan_math_environment in
   let tenv, typed_fb = check_toplevel_block Functions tenv fb in
   verify_functions_have_defn tenv typed_fb ;
   let tenv, typed_db = check_toplevel_block Data tenv db in

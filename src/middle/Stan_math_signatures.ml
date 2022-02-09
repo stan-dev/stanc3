@@ -362,32 +362,6 @@ let all_declarative_sigs = distributions @ math_sigs
 let declarative_fnsigs =
   List.concat_map ~f:mk_declarative_sig all_declarative_sigs
 
-let snd2 (_, b, _) = b
-let fst2 (a, _, _) = a
-let thrd (_, _, c) = c
-
-(* -- Querying stan_math_signatures -- *)
-(* TODO: Remove/prefer to use SignatureMismatch instead of UnsizedType *)
-let stan_math_returntype (name : string) (args : fun_arg list) =
-  let name = Utils.stdlib_distribution_name name in
-  let namematches = Hashtbl.find_multi stan_math_signatures name in
-  let filteredmatches =
-    List.filter
-      ~f:(fun x ->
-        UnsizedType.check_compatible_arguments_mod_conv name (snd2 x) args )
-      namematches in
-  match name with
-  | x when is_reduce_sum_fn x -> Some (UnsizedType.ReturnType UReal)
-  | x when is_variadic_ode_fn x -> Some (UnsizedType.ReturnType (UArray UVector))
-  | x when is_variadic_dae_fn x -> Some (UnsizedType.ReturnType (UArray UVector))
-  | _ ->
-      (* Return the least return type in case there are multiple options
-         (due to implicit UInt-UReal conversion), where UInt<UReal
-      *)
-      List.hd
-        (List.sort ~compare:UnsizedType.compare_returntype
-           (List.map ~f:fst2 filteredmatches) )
-
 let is_stan_math_function_name name =
   let name = Utils.stdlib_distribution_name name in
   Hashtbl.mem stan_math_signatures name
@@ -451,36 +425,11 @@ let int_divide_type =
     , [(AutoDiffable, UInt); (AutoDiffable, UInt)]
     , Common.Helpers.AoS )
 
-let operator_stan_math_return_type op arg_tys =
-  match (op, arg_tys) with
-  | Operator.IntDivide, [(_, UnsizedType.UInt); (_, UInt)] ->
-      Some UnsizedType.(ReturnType UInt)
-  | IntDivide, _ -> None
-  | _ ->
-      operator_to_stan_math_fns op
-      |> List.filter_map ~f:(fun name -> stan_math_returntype name arg_tys)
-      |> List.hd
-
-let assignmentoperator_stan_math_return_type assop arg_tys =
-  ( match assop with
-  | Operator.Divide -> stan_math_returntype "divide" arg_tys
-  | Plus | Minus | Times | EltTimes | EltDivide ->
-      operator_stan_math_return_type assop arg_tys
-  | _ -> None )
-  |> Option.bind ~f:(function
-       | ReturnType rtype
-         when rtype = snd (List.hd_exn arg_tys)
-              && not
-                   ( (assop = Operator.EltTimes || assop = Operator.EltDivide)
-                   && UnsizedType.is_scalar_type rtype ) ->
-           Some UnsizedType.Void
-       | _ -> None )
-
 let get_sigs name =
   let name = Utils.stdlib_distribution_name name in
   Hashtbl.find_multi stan_math_signatures name |> List.sort ~compare
 
-let make_assigmentoperator_stan_math_signatures assop =
+let make_assignmentoperator_stan_math_signatures assop =
   ( match assop with
   | Operator.Divide -> ["divide"]
   | assop -> operator_to_stan_math_fns assop )
@@ -533,35 +482,6 @@ let string_operator_to_stan_math_fns str =
   | _ -> str
 
 (* -- Querying stan_math_signatures -- *)
-let query_stan_math_mem_pattern_support (name : string) (args : fun_arg list) =
-  let name =
-    string_operator_to_stan_math_fns (Utils.stdlib_distribution_name name) in
-  let namematches = Hashtbl.find_multi stan_math_signatures name in
-  let filteredmatches =
-    List.filter
-      ~f:(fun x ->
-        UnsizedType.check_compatible_arguments_mod_conv name (snd2 x) args )
-      namematches in
-  match name with
-  | x when is_reduce_sum_fn x -> false
-  | x when is_variadic_ode_fn x -> false
-  | x when is_variadic_dae_fn x -> false
-  | _ -> (
-    (*    let printer intro s = Set.Poly.iter ~f:(printf intro) s in*)
-    match List.length filteredmatches = 0 with
-    | true ->
-        false
-        (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
-    | false -> (
-        let is_soa ((_ : UnsizedType.returntype), (_ : fun_arg list), mem) =
-          mem = Common.Helpers.SoA in
-        let blah = List.exists ~f:is_soa filteredmatches in
-        match blah with
-        | true ->
-            (*printer "\n%s is supported\n" (Set.Poly.singleton name);*) true
-        | false ->
-            (*printer "\n%s is not supported\n" (Set.Poly.singleton name);*)
-            false ) )
 
 let pretty_print_all_math_sigs ppf () =
   let open Fmt in
@@ -587,7 +507,7 @@ let pretty_print_math_lib_assignmentoperator_sigs op =
       Some
         (Fmt.str "@[<v>@,%a@]"
            (Fmt.list ~sep:Fmt.cut pp_math_sig)
-           (make_assigmentoperator_stan_math_signatures op) )
+           (make_assignmentoperator_stan_math_signatures op) )
   | _ -> None
 
 (* -- Some helper definitions to populate stan_math_signatures -- *)

@@ -1,4 +1,5 @@
 open Core_kernel
+open Core_kernel.Poly
 open Middle
 open Middle.Expr
 
@@ -111,10 +112,33 @@ let rec is_uni_eigen_loop_indexing in_loop (ut : UnsizedType.t)
         | None -> false )
       | _ -> false )
 
+let query_stan_math_mem_pattern_support (name : string)
+    (args : (UnsizedType.autodifftype * UnsizedType.t) list) =
+  let open Stan_math_signatures in
+  match name with
+  | x when is_reduce_sum_fn x -> false
+  | x when is_variadic_ode_fn x -> false
+  | x when is_variadic_dae_fn x -> false
+  | _ ->
+      let name =
+        string_operator_to_stan_math_fns (Utils.stdlib_distribution_name name)
+      in
+      let namematches = Hashtbl.find_multi stan_math_signatures name in
+      let filteredmatches =
+        List.filter
+          ~f:(fun x ->
+            Frontend.SignatureMismatch.check_compatible_arguments_mod_conv
+              (snd3 x) args
+            |> Result.is_ok )
+          namematches in
+      let is_soa ((_ : UnsizedType.returntype), _, mem) =
+        mem = Common.Helpers.SoA in
+      List.exists ~f:is_soa filteredmatches
+
 (*Validate whether a function can support SoA matrices*)
 let is_fun_soa_supported name exprs =
   let fun_args = List.map ~f:Expr.Typed.fun_arg exprs in
-  Stan_math_signatures.query_stan_math_mem_pattern_support name fun_args
+  query_stan_math_mem_pattern_support name fun_args
 
 (**
  * Query to find the initial set of objects that cannot be SoA.

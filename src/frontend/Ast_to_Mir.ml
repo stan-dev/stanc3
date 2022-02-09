@@ -2,13 +2,6 @@ open Core_kernel
 open Core_kernel.Poly
 open Middle
 
-(* XXX fix exn *)
-let unwrap_return_exn = function
-  | Some (UnsizedType.ReturnType ut) -> ut
-  | x ->
-      Common.FatalError.fatal_error_msg
-        [%message "Unexpected return type " (x : UnsizedType.returntype option)]
-
 let trans_fn_kind kind name =
   let fname = Utils.stdlib_distribution_name name in
   match kind with
@@ -36,14 +29,9 @@ let%expect_test "format_number1" =
   format_number ".123_456" |> print_endline ;
   [%expect ".123456"]
 
-let rec op_to_funapp op args =
-  let argtypes =
-    List.map ~f:(fun x -> (x.Ast.emeta.Ast.ad_level, x.emeta.type_)) args in
-  let type_ =
-    Stan_math_signatures.operator_stan_math_return_type op argtypes
-    |> unwrap_return_exn
-  and loc = Ast.expr_loc_lub args
-  and adlevel = Ast.expr_ad_lub args in
+let rec op_to_funapp op args type_ =
+  let loc = Ast.expr_loc_lub args in
+  let adlevel = Ast.expr_ad_lub args in
   Expr.
     { Fixed.pattern=
         FunApp (StanLib (Operator.to_string op, FnPlain, AoS), trans_exprs args)
@@ -61,8 +49,8 @@ and trans_expr {Ast.expr; Ast.emeta} =
   | Ast.Paren x -> trans_expr x
   | BinOp (lhs, And, rhs) -> EAnd (trans_expr lhs, trans_expr rhs) |> ewrap
   | BinOp (lhs, Or, rhs) -> EOr (trans_expr lhs, trans_expr rhs) |> ewrap
-  | BinOp (lhs, op, rhs) -> op_to_funapp op [lhs; rhs]
-  | PrefixOp (op, e) | Ast.PostfixOp (e, op) -> op_to_funapp op [e]
+  | BinOp (lhs, op, rhs) -> op_to_funapp op [lhs; rhs] emeta.type_
+  | PrefixOp (op, e) | Ast.PostfixOp (e, op) -> op_to_funapp op [e] emeta.type_
   | Ast.TernaryIf (cond, ifb, elseb) ->
       Expr.Fixed.Pattern.TernaryIf
         (trans_expr cond, trans_expr ifb, trans_expr elseb)
@@ -127,12 +115,12 @@ let truncate_dist ud_dists (id : Ast.identifier) ast_obs ast_args t =
     { Stmt.Fixed.meta= smeta
     ; pattern=
         IfElse
-          ( op_to_funapp cond_op [ast_obs; x]
+          ( op_to_funapp cond_op [ast_obs; x] UInt
           , {Stmt.Fixed.meta= smeta; pattern= TargetPE neg_inf}
           , Some y ) } in
   let targetme loc e =
-    {Stmt.Fixed.meta= loc; pattern= TargetPE (op_to_funapp Operator.PMinus [e])}
-  in
+    { Stmt.Fixed.meta= loc
+    ; pattern= TargetPE (op_to_funapp Operator.PMinus [e] e.emeta.type_) } in
   let funapp meta kind name args =
     { Ast.emeta= meta
     ; expr= Ast.FunApp (kind, {name; id_loc= Location_span.empty}, args) } in
@@ -418,7 +406,8 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       let rhs =
         match assign_op with
         | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
-        | Ast.OperatorAssign op -> op_to_funapp op [assignee; assign_rhs] in
+        | Ast.OperatorAssign op ->
+            op_to_funapp op [assignee; assign_rhs] assignee.emeta.type_ in
       Assignment
         ( ( assign_identifier.Ast.name
           , id_type_

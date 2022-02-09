@@ -107,10 +107,10 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                 Operator.of_string_opt name
                 |> Option.value_map
                      ~f:(fun op ->
-                       Stan_math_signatures.operator_stan_math_return_type op
+                       Frontend.Typechecker.operator_stan_math_return_type op
                          argument_types )
                      ~default:
-                       (Stan_math_signatures.stan_math_returntype name
+                       (Frontend.Typechecker.stan_math_return_type name
                           argument_types ) in
               let try_partially_evaluate_stanlib e =
                 Expr.Fixed.Pattern.(

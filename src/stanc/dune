@@ -1,6 +1,6 @@
 (executable
  (name stanc)
- (libraries frontend stan_math_backend)
+ (libraries frontend middle stan_math_backend analysis_and_optimization)
  (modules Stanc)
  (public_name stanc)
  (preprocess

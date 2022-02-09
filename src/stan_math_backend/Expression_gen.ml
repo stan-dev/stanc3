@@ -564,8 +564,7 @@ and pp_expr ppf Expr.Fixed.{pattern; meta} =
         pf ppf "(Eigen::Matrix<%s,-1,1>(%d) <<@ %a).finished()" st
           (List.length es) (list ~sep:comma pp_expr) es
   | FunApp (StanLib (f, suffix, mem_pattern), es) ->
-      let fun_args = List.map ~f:Expr.Typed.fun_arg es in
-      let ret_type = Stan_math_signatures.stan_math_returntype f fun_args in
+      let ret_type = Some (UnsizedType.ReturnType meta.type_) in
       gen_fun_app suffix ppf f es mem_pattern ret_type
   | FunApp (CompilerInternal f, es) ->
       pp_compiler_internal_fn meta.adlevel meta.type_ f ppf es
