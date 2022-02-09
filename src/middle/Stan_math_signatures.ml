@@ -2058,7 +2058,6 @@ let () =
   List.iter
     ~f:(fun x -> add_unqualified ("subtract", ReturnType x, [x; x], SoA))
     bare_types ;
-  add_unqualified ("subtract", ReturnType UComplex, [UComplex; UComplex], AoS) ;
   add_unqualified ("subtract", ReturnType UVector, [UVector; UReal], SoA) ;
   add_unqualified ("subtract", ReturnType URowVector, [URowVector; UReal], SoA) ;
   add_unqualified ("subtract", ReturnType UMatrix, [UMatrix; UReal], SoA) ;

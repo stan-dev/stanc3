@@ -26163,7 +26163,6 @@ Display all Stan math signatures exposed in the language
   subtract(vector, real) => vector
   subtract(vector, vector) => vector
   subtract(complex, complex) => complex
-  subtract(complex, complex) => complex
   subtract(real, row_vector) => row_vector
   subtract(row_vector, real) => row_vector
   subtract(row_vector, row_vector) => row_vector
