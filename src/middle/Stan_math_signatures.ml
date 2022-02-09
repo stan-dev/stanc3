@@ -1065,6 +1065,21 @@ let () =
   add_unqualified
     ("elt_multiply", ReturnType URowVector, [URowVector; URowVector], SoA) ;
   add_unqualified ("elt_multiply", ReturnType UMatrix, [UMatrix; UMatrix], SoA) ;
+  add_unqualified
+    ( "elt_multiply"
+    , ReturnType UComplexVector
+    , [UComplexVector; UComplexVector]
+    , SoA ) ;
+  add_unqualified
+    ( "elt_multiply"
+    , ReturnType UComplexRowVector
+    , [UComplexRowVector; UComplexRowVector]
+    , SoA ) ;
+  add_unqualified
+    ( "elt_multiply"
+    , ReturnType UComplexMatrix
+    , [UComplexMatrix; UComplexMatrix]
+    , SoA ) ;
   add_unqualified ("exp", ReturnType UComplex, [UComplex], AoS) ;
   add_binary_vec_int_int "falling_factorial" SoA ;
   add_binary_vec_real_int "falling_factorial" SoA ;
@@ -1590,6 +1605,12 @@ let () =
   add_unqualified ("multiply", ReturnType UVector, [UReal; UVector], SoA) ;
   add_unqualified ("multiply", ReturnType URowVector, [UReal; URowVector], SoA) ;
   add_unqualified ("multiply", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
+  (* TODO more complex overloads *)
+  add_unqualified
+    ( "multiply"
+    , ReturnType UComplexMatrix
+    , [UComplexMatrix; UComplexMatrix]
+    , SoA ) ;
   add_binary_vec "multiply_log" SoA ;
   add_unqualified
     ("multiply_lower_tri_self_transpose", ReturnType UMatrix, [UMatrix], SoA) ;

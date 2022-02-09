@@ -4430,6 +4430,9 @@ Display all Stan math signatures exposed in the language
   elt_multiply(vector, vector) => vector
   elt_multiply(row_vector, row_vector) => row_vector
   elt_multiply(matrix, matrix) => matrix
+  elt_multiply(complex_vector, complex_vector) => complex_vector
+  elt_multiply(complex_row_vector, complex_row_vector) => complex_row_vector
+  elt_multiply(complex_matrix, complex_matrix) => complex_matrix
   erf(int) => real
   erf(real) => real
   erf(vector) => vector
@@ -14524,6 +14527,7 @@ Display all Stan math signatures exposed in the language
   multiply(vector, row_vector) => matrix
   multiply(matrix, real) => matrix
   multiply(matrix, matrix) => matrix
+  multiply(complex_matrix, complex_matrix) => complex_matrix
   multiply_log(int, int) => real
   multiply_log(int, real) => real
   multiply_log(real, int) => real

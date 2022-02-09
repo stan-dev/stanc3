@@ -44,6 +44,7 @@ let pp_templates ~defaults ppf templates =
   match templates with
   | [] -> ()
   | _ ->
+      (* TODO collate requires into one require_all *)
       pf ppf "template <@[%a@]>@ "
         (list ~sep:comma
            (if defaults then pp_template_defaults else pp_template) )
@@ -106,7 +107,6 @@ let require_templates (names : string option list) (args : Program.fun_arg_decl)
   let require_for_arg arg t =
     let requires arg =
       match arg with
-      (* TODO this is not working right now*)
       | UnsizedType.URowVector ->
           [ Require ("stan::require_row_vector_t", t)
           ; Require ("stan::require_not_vt_complex", t) ]

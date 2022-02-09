@@ -1579,6 +1579,9 @@ Ill-typed arguments supplied to infix operator .*. Available signatures:
 (vector, vector) => vector
 (row_vector, row_vector) => row_vector
 (matrix, matrix) => matrix
+(complex_vector, complex_vector) => complex_vector
+(complex_row_vector, complex_row_vector) => complex_row_vector
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_intdivide_bad.stan
 Semantic error in 'op_intdivide_bad.stan', line 7, column 6 to column 13:
@@ -1719,6 +1722,7 @@ Ill-typed arguments supplied to infix operator *. Available signatures:
 (vector, row_vector) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_subtraction_bad.stan
 Semantic error in 'op_subtraction_bad.stan', line 7, column 6 to column 11:
