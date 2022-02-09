@@ -378,9 +378,13 @@ let pp_transformed_type ppf (pst, trans) =
       (* array goes before something like cov_matrix *)
       | Middle.SizedType.SArray _ ->
           let ty, ixs = unwind_sized_array_type st in
-          pf ppf "array[@[%a@]]@ %a"
-            (list ~sep:comma pp_expression)
-            ixs pp_possibly_transformed_type (ty, trans)
+          let ({emeta= {loc= {end_loc; _}; _}; _} : untyped_expression) =
+            List.last_exn ixs in
+          let ({emeta= {loc= {begin_loc; _}; _}; _} : untyped_expression) =
+            List.hd_exn ixs in
+          pf ppf "array[@[%a@]]@ %a" pp_list_of_expression
+            (ixs, {begin_loc; end_loc})
+            pp_possibly_transformed_type (ty, trans)
       | _ -> pf ppf "%a" pp_possibly_transformed_type (st, trans) )
 
 let rec pp_indent_unless_block ppf ((s : untyped_statement), loc) =
