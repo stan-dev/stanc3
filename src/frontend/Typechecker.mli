@@ -32,7 +32,7 @@ val check_program :
 val operator_stan_math_return_type :
      Middle.Operator.t
   -> (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t) list
-  -> Middle.UnsizedType.returntype option
+  -> (Middle.UnsizedType.returntype * Promotion.t list) option
 
 val stan_math_return_type :
      string

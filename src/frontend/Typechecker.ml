@@ -205,13 +205,15 @@ let stan_math_return_type name arg_tys =
 let operator_stan_math_return_type op arg_tys =
   match (op, arg_tys) with
   | Operator.IntDivide, [(_, UnsizedType.UInt); (_, UInt)] ->
-      Some UnsizedType.(ReturnType UInt)
+      Some (UnsizedType.(ReturnType UInt), [Promotion.NoPromotion; NoPromotion])
   | IntDivide, _ -> None
   | _ ->
       Stan_math_signatures.operator_to_stan_math_fns op
       |> List.filter_map ~f:(fun name ->
              SignatureMismatch.matching_stanlib_function name arg_tys
-             |> match_to_rt_option )
+             |> function
+             | SignatureMismatch.UniqueMatch (rt, _, p) -> Some (rt, p)
+             | _ -> None )
       |> List.hd
 
 let assignmentoperator_stan_math_return_type assop arg_tys =
@@ -220,7 +222,7 @@ let assignmentoperator_stan_math_return_type assop arg_tys =
       SignatureMismatch.matching_stanlib_function "divide" arg_tys
       |> match_to_rt_option
   | Plus | Minus | Times | EltTimes | EltDivide ->
-      operator_stan_math_return_type assop arg_tys
+      operator_stan_math_return_type assop arg_tys |> Option.map ~f:fst
   | _ -> None )
   |> Option.bind ~f:(function
        | ReturnType rtype
@@ -234,9 +236,9 @@ let assignmentoperator_stan_math_return_type assop arg_tys =
 let check_binop loc op le re =
   let rt = [le; re] |> get_arg_types |> operator_stan_math_return_type op in
   match rt with
-  | Some (ReturnType type_) ->
+  | Some (ReturnType type_, [p1; p2]) ->
       mk_typed_expression
-        ~expr:(BinOp (le, op, re))
+        ~expr:(BinOp (Promotion.promote le p1, op, Promotion.promote re p2))
         ~ad_level:(expr_ad_lub [le; re])
         ~type_ ~loc
   | _ ->
@@ -246,7 +248,7 @@ let check_binop loc op le re =
 let check_prefixop loc op te =
   let rt = operator_stan_math_return_type op [arg_type te] in
   match rt with
-  | Some (ReturnType type_) ->
+  | Some (ReturnType type_, _) ->
       mk_typed_expression
         ~expr:(PrefixOp (op, te))
         ~ad_level:(expr_ad_lub [te])
@@ -256,7 +258,7 @@ let check_prefixop loc op te =
 let check_postfixop loc op te =
   let rt = operator_stan_math_return_type op [arg_type te] in
   match rt with
-  | Some (ReturnType type_) ->
+  | Some (ReturnType type_, _) ->
       mk_typed_expression
         ~expr:(PostfixOp (te, op))
         ~ad_level:(expr_ad_lub [te])
