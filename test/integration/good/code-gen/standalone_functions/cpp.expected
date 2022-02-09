@@ -65,7 +65,7 @@ struct my_log1p_exp_functor__ {
 };
 struct my_vector_mul_by_5_functor__ {
   template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-            stan::require_not_complex_t<stan::value_type_t<T0__>>* = nullptr>
+            stan::require_not_vt_complex<T0__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
@@ -130,7 +130,7 @@ double int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
     }
     }
 template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-          stan::require_not_complex_t<stan::value_type_t<T0__>>* = nullptr>
+          stan::require_not_vt_complex<T0__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
   my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
@@ -285,7 +285,7 @@ const
 }
 
 template <typename T0__, stan::require_col_vector_t<T0__>*,
-          stan::require_not_complex_t<stan::value_type_t<T0__>>*>
+          stan::require_not_vt_complex<T0__>*>
 Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 my_vector_mul_by_5_functor__::operator()(const T0__& x,
                                          std::ostream* pstream__)  const
@@ -451,7 +451,7 @@ struct my_log1p_exp_functor__ {
 };
 struct my_vector_mul_by_5_functor__ {
   template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-            stan::require_not_complex_t<stan::value_type_t<T0__>>* = nullptr>
+            stan::require_not_vt_complex<T0__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
@@ -516,7 +516,7 @@ double int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
     }
     }
 template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-          stan::require_not_complex_t<stan::value_type_t<T0__>>* = nullptr>
+          stan::require_not_vt_complex<T0__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
   my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
@@ -671,7 +671,7 @@ const
 }
 
 template <typename T0__, stan::require_col_vector_t<T0__>*,
-          stan::require_not_complex_t<stan::value_type_t<T0__>>*>
+          stan::require_not_vt_complex<T0__>*>
 Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 my_vector_mul_by_5_functor__::operator()(const T0__& x,
                                          std::ostream* pstream__)  const
@@ -811,13 +811,13 @@ struct ode_integrate_functor__ {
 };
 struct integrand_functor__ {
   template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-            stan::require_not_complex_t<stan::value_type_t<T0__>>* = nullptr>
+            stan::require_not_vt_complex<T0__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
 
 template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-          stan::require_not_complex_t<stan::value_type_t<T0__>>* = nullptr>
+          stan::require_not_vt_complex<T0__>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
   integrand(const T0__& x_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
@@ -909,7 +909,7 @@ double ode_integrate_functor__::operator()(std::ostream* pstream__)  const
 }
 
 template <typename T0__, stan::require_col_vector_t<T0__>*,
-          stan::require_not_complex_t<stan::value_type_t<T0__>>*>
+          stan::require_not_vt_complex<T0__>*>
 Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 integrand_functor__::operator()(const T0__& x, std::ostream* pstream__) 
 const

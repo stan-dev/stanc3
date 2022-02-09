@@ -104,28 +104,27 @@ let maybe_templated_arg_types (args : Program.fun_arg_decl) =
 let require_templates (names : string option list) (args : Program.fun_arg_decl)
     =
   let require_for_arg arg t =
-    let value_type t = "stan::value_type_t<" ^ t ^ ">" in
     let requires arg =
       match arg with
       (* TODO this is not working right now*)
       | UnsizedType.URowVector ->
           [ Require ("stan::require_row_vector_t", t)
-          ; Require ("stan::require_not_complex_t", value_type t) ]
+          ; Require ("stan::require_not_vt_complex", t) ]
       | UComplexRowVector ->
           [ Require ("stan::require_row_vector_t", t)
-          ; Require ("stan::require_complex_t", value_type t) ]
+          ; Require ("stan::require_vt_complex", t) ]
       | UVector ->
           [ Require ("stan::require_col_vector_t", t)
-          ; Require ("stan::require_not_complex_t", value_type t) ]
+          ; Require ("stan::require_not_vt_complex", t) ]
       | UComplexVector ->
           [ Require ("stan::require_col_vector_t", t)
-          ; Require ("stan::require_complex_t", value_type t) ]
+          ; Require ("stan::require_vt_complex", t) ]
       | UMatrix ->
           [ Require ("stan::require_eigen_matrix_dynamic_t", t)
-          ; Require ("stan::require_not_complex_t", value_type t) ]
+          ; Require ("stan::require_not_vt_complex", t) ]
       | UComplexMatrix ->
           [ Require ("stan::require_eigen_matrix_dynamic_t", t)
-          ; Require ("stan::require_complex_t", value_type t) ]
+          ; Require ("stan::require_vt_complex", t) ]
       | _ -> [Require ("stan::require_stan_scalar_t", t)] in
     requires (trd3 arg) in
   List.concat_map (List.zip_exn names args) ~f:(fun (name, a) ->
@@ -134,7 +133,9 @@ let require_templates (names : string option list) (args : Program.fun_arg_decl)
 let return_arg_types (args : Program.fun_arg_decl) =
   List.mapi args ~f:(fun i ((_, _, ut) as a) ->
       if UnsizedType.is_eigen_type ut && arg_needs_template a then
-        Some (sprintf "stan::value_type_t<T%d__>" i)
+        if UnsizedType.is_complex_type ut then
+          Some (sprintf "stan::value_type_t<T%d__>" i)
+        else Some (sprintf "stan::value_type_t<T%d__>" i)
       else if arg_needs_template a then Some (sprintf "T%d__" i)
       else None )
 
@@ -171,7 +172,7 @@ let pp_returntype ppf arg_types rt =
   match rt with
   | Some ut when UnsizedType.is_int_type ut ->
       pf ppf "%a@ " pp_unsizedtype_custom_scalar ("int", ut)
-  | Some ut -> pf ppf "%a@ " pp_unsizedtype_custom_scalar (scalar, ut)
+  | Some ut -> pf ppf "%a@ " pp_unsizedtype_custom_scalar_rt (scalar, ut)
   | None -> pf ppf "void@ "
 
 let pp_eigen_arg_to_ref ppf arg_types =
