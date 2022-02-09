@@ -93,9 +93,10 @@ let rec common_type = function
   | UReal, UInt | UInt, UReal -> Some UReal
   | UComplex, UInt | UInt, UComplex | UComplex, UReal | UReal, UComplex ->
       Some UComplex
-  | UComplexVector, UVector -> Some UComplexVector
-  | UComplexRowVector, URowVector -> Some UComplexRowVector
-  | UComplexMatrix, UMatrix -> Some UComplexMatrix
+  | UComplexVector, UVector | UVector, UComplexVector -> Some UComplexVector
+  | UComplexRowVector, URowVector | URowVector, UComplexRowVector ->
+      Some UComplexRowVector
+  | UComplexMatrix, UMatrix | UMatrix, UComplexMatrix -> Some UComplexMatrix
   | UArray t1, UArray t2 ->
       common_type (t1, t2) |> Option.map ~f:(fun t -> UArray t)
   | t1, t2 when t1 = t2 -> Some t1
