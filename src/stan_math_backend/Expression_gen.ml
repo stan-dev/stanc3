@@ -230,7 +230,8 @@ and pp_scalar_binary ppf op fn es =
 
 and gen_operator_app op ppf es =
   let remove_basic_promotion (e : 'a Expr.Fixed.t) =
-    match e.pattern with Promotion (e, UReal, _) -> e | _ -> e in
+    match e.pattern with Promotion (e, _, _) when is_scalar e -> e | _ -> e
+  in
   let es = List.map ~f:remove_basic_promotion es in
   match op with
   | Operator.Plus -> pp_scalar_binary ppf "+" "stan::math::add" es
