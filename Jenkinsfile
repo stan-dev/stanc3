@@ -83,6 +83,33 @@ pipeline {
                 }
             }
         }
+
+        stage("Directory cleanup triqs") {
+            agent {
+                docker {
+                    image 'stanorg/stanc3:staticfi'
+                    args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                    label 'triqs'
+                }
+            }
+            steps {
+                sh 'docker run --privileged -v $(pwd):$(pwd):rw,z alpine /bin/sh -c "rm -rf $(pwd)/_build && rm -rf $(pwd)/src && rm -rf $(pwd)/test && rm -rf $(pwd)/*"'
+            }
+        }
+
+        stage("Directory cleanup v100") {
+            agent {
+                docker {
+                    image 'stanorg/stanc3:staticfi'
+                    args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                    label 'v100'
+                }
+            }
+            steps {
+                sh 'docker run --privileged -v $(pwd):$(pwd):rw,z alpine /bin/sh -c "rm -rf $(pwd)/_build && rm -rf $(pwd)/src && rm -rf $(pwd)/test && rm -rf $(pwd)/*"'
+            }
+        }
+
         stage("Build") {
             when {
                 beforeAgent true
@@ -419,13 +446,13 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux mips64el binary") {
-//                     when {
-//                         beforeAgent true
-//                         allOf {
-//                             expression { !skipRebuildingBinaries }
-//                             anyOf { buildingTag(); branch 'master' }
-//                         }
-//                     }
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRebuildingBinaries }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
                     agent {
                         docker {
                             image 'stanorg/stanc3:staticfi'
@@ -449,13 +476,13 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux ppc64el binary") {
-//                     when {
-//                         beforeAgent true
-//                         allOf {
-//                             expression { !skipRebuildingBinaries }
-//                             anyOf { buildingTag(); branch 'master' }
-//                         }
-//                     }
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRebuildingBinaries }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
                     agent {
                         docker {
                             image 'stanorg/stanc3:staticfi'
@@ -479,13 +506,13 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux s390x binary") {
-//                     when {
-//                         beforeAgent true
-//                         allOf {
-//                             expression { !skipRebuildingBinaries }
-//                             anyOf { buildingTag(); branch 'master' }
-//                         }
-//                     }
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRebuildingBinaries }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
                     agent {
                         docker {
                             image 'stanorg/stanc3:staticfi'
@@ -509,13 +536,13 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux arm64 binary") {
-//                     when {
-//                         beforeAgent true
-//                         allOf {
-//                             expression { !skipRebuildingBinaries }
-//                             anyOf { buildingTag(); branch 'master' }
-//                         }
-//                     }
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRebuildingBinaries }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
                     agent {
                         docker {
                             image 'stanorg/stanc3:staticfi'
@@ -539,13 +566,13 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux armhf binary") {
-//                     when {
-//                         beforeAgent true
-//                         allOf {
-//                             expression { !skipRebuildingBinaries }
-//                             anyOf { buildingTag(); branch 'master' }
-//                         }
-//                     }
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRebuildingBinaries }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
                     agent {
                         docker {
                             image 'stanorg/stanc3:staticfi'
@@ -569,13 +596,13 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux armel binary") {
-//                     when {
-//                         beforeAgent true
-//                         allOf {
-//                             expression { !skipRebuildingBinaries }
-//                             anyOf { buildingTag(); branch 'master' }
-//                         }
-//                     }
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRebuildingBinaries }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
                     agent {
                         docker {
                             image 'stanorg/stanc3:staticfi'
@@ -632,110 +659,110 @@ pipeline {
             }
         }
 
-//         stage("Release tag and publish binaries") {
-//             when {
-//                 beforeAgent true
-//                 allOf {
-//                     expression { !skipRemainingStages }
-//                     expression { !skipRebuildingBinaries }
-//                     anyOf { buildingTag(); branch 'master' }
-//                 }
-//             }
-//             agent {
-//                 docker {
-//                     image 'stanorg/ci:gpu'
-//                     label 'linux'
-//                 }
-//             }
-//             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
-//             steps {
-//                 unstash 'windows-exe'
-//                 unstash 'linux-exe'
-//                 unstash 'mac-exe'
-//                 unstash 'linux-mips64el-exe'
-//                 unstash 'linux-ppc64el-exe'
-//                 unstash 'linux-s390x-exe'
-//                 unstash 'linux-arm64-exe'
-//                 unstash 'linux-armhf-exe'
-//                 unstash 'linux-armel-exe'
-//                 unstash 'js-exe'
-//                 runShell("""
-//                     wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
-//                     tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
-//                     ./ghr_v0.12.1_linux_amd64/ghr -recreate ${tagName()} bin/
-//                 """)
-//             }
-//         }
+        stage("Release tag and publish binaries") {
+            when {
+                beforeAgent true
+                allOf {
+                    expression { !skipRemainingStages }
+                    expression { !skipRebuildingBinaries }
+                    anyOf { buildingTag(); branch 'master' }
+                }
+            }
+            agent {
+                docker {
+                    image 'stanorg/ci:gpu'
+                    label 'linux'
+                }
+            }
+            environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
+            steps {
+                unstash 'windows-exe'
+                unstash 'linux-exe'
+                unstash 'mac-exe'
+                unstash 'linux-mips64el-exe'
+                unstash 'linux-ppc64el-exe'
+                unstash 'linux-s390x-exe'
+                unstash 'linux-arm64-exe'
+                unstash 'linux-armhf-exe'
+                unstash 'linux-armel-exe'
+                unstash 'js-exe'
+                runShell("""
+                    wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
+                    tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
+                    ./ghr_v0.12.1_linux_amd64/ghr -recreate ${tagName()} bin/
+                """)
+            }
+        }
 
-//         stage('Upload odoc') {
-//             when {
-//                 beforeAgent true
-//                 anyOf { buildingTag(); branch 'master' }
-//             }
-//             options { skipDefaultCheckout(true) }
-//             agent {
-//                 docker {
-//                     image 'stanorg/stanc3:staticfi'
-//                     label 'linux'
-//                     //Forces image to ignore entrypoint
-//                     args "--entrypoint=\'\'"
-//                 }
-//             }
-//             steps {
-//                 retry(3) {
-//                     checkout([$class: 'GitSCM',
-//                         branches: [],
-//                         doGenerateSubmoduleConfigurations: false,
-//                         extensions: [],
-//                         submoduleCfg: [],
-//                         userRemoteConfigs: [[url: "https://github.com/stan-dev/stanc3.git", credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b']]]
-//                     )
-//                 }
-//
-//                 // Install odoc and git-subtree
-//                 runShell("opam install odoc -y")
-//
-//                 // Checkout gh-pages as a test so we build docs from this branch
-//                 runShell("""
-//                     git remote set-branches --add origin gh-pages
-//                     git checkout --track  origin/gh-pages
-//                     git checkout master
-//                 """)
-//
-//                 // Build docs
-//                 runShell("""
-//                      eval \$(opam env)
-//                      dune build @doc
-//                 """)
-//
-//                 // Copy static assets to doc
-//                 runShell("""
-//                     mkdir -p doc
-//                     cp -r ./_build/default/_doc/_html/* doc/
-//                 """)
-//
-//                 // Commit changes to the repository gh-pages branch
-//                 withCredentials([usernamePassword(credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-//                     sh """#!/bin/bash
-//                         set -e
-//
-//                         git config --global user.email "mc.stanislaw@gmail.com"
-//                         git config --global user.name "Stan Jenkins"
-//
-//                         git checkout --detach
-//                         git branch -D gh-pages
-//                         git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git :gh-pages
-//
-//                         git checkout --orphan gh-pages
-//                         git add -f doc
-//                         git commit -m "auto generated docs from Jenkins"
-//                         git subtree push --prefix doc/ https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git gh-pages
-//                         ls -A1 | xargs rm -rf
-//                     """
-//                 }
-//
-//             }
-//         }
+        stage('Upload odoc') {
+            when {
+                beforeAgent true
+                anyOf { buildingTag(); branch 'master' }
+            }
+            options { skipDefaultCheckout(true) }
+            agent {
+                docker {
+                    image 'stanorg/stanc3:staticfi'
+                    label 'linux'
+                    //Forces image to ignore entrypoint
+                    args "--entrypoint=\'\'"
+                }
+            }
+            steps {
+                retry(3) {
+                    checkout([$class: 'GitSCM',
+                        branches: [],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[url: "https://github.com/stan-dev/stanc3.git", credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b']]]
+                    )
+                }
+
+                // Install odoc and git-subtree
+                // runShell("opam install odoc -y")
+
+                // Checkout gh-pages as a test so we build docs from this branch
+                runShell("""
+                    git remote set-branches --add origin gh-pages
+                    git checkout --track  origin/gh-pages
+                    git checkout master
+                """)
+
+                // Build docs
+                runShell("""
+                     eval \$(opam env)
+                     dune build @doc
+                """)
+
+                // Copy static assets to doc
+                runShell("""
+                    mkdir -p doc
+                    cp -r ./_build/default/_doc/_html/* doc/
+                """)
+
+                // Commit changes to the repository gh-pages branch
+                withCredentials([usernamePassword(credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                    sh """#!/bin/bash
+                        set -e
+
+                        git config --global user.email "mc.stanislaw@gmail.com"
+                        git config --global user.name "Stan Jenkins"
+
+                        git checkout --detach
+                        git branch -D gh-pages
+                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git :gh-pages
+
+                        git checkout --orphan gh-pages
+                        git add -f doc
+                        git commit -m "auto generated docs from Jenkins"
+                        git subtree push --prefix doc/ https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git gh-pages
+                        ls -A1 | xargs rm -rf
+                    """
+                }
+
+            }
+        }
 
     }
 // Below lines are commented to avoid spamming emails during migration/debug
