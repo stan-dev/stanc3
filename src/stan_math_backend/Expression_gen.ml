@@ -600,6 +600,17 @@ and pp_expr ppf Expr.Fixed.{pattern; meta} =
       else
         pf ppf "(Eigen::Matrix<%s,-1,1>(%d) <<@ %a).finished()" st
           (List.length es) (list ~sep:comma pp_expr) es
+  | FunApp
+      ( StanLib (op, _, _)
+      , [ { meta= {type_= UComplexRowVector; _}
+          ; pattern= FunApp (CompilerInternal FnMakeRowVec, es) } ] )
+    when Operator.(Some Transpose = of_string_opt op) ->
+      let st = local_scalar UComplexVector (promote_adtype es) in
+      if List.is_empty es then
+        pf ppf "Eigen::Matrix<std::complex<%s>,-1,1>(0)" st
+      else
+        pf ppf "(Eigen::Matrix<std::complex<%s>,-1,1>(%d) <<@ %a).finished()" st
+          (List.length es) (list ~sep:comma pp_expr) es
   | FunApp (StanLib (f, suffix, mem_pattern), es) ->
       let ret_type = Some (UnsizedType.ReturnType meta.type_) in
       gen_fun_app suffix ppf f es mem_pattern ret_type
