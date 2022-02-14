@@ -20,6 +20,7 @@ let warn_uninitialized_msgs (uninit_vars : (Location_span.t * string) Set.Poly.t
   Set.Poly.(to_list (map filtered_uninit_vars ~f:show_var_info))
 
 let stan2cpp model_name model_string is_flag_set flag_val =
+  Common.Gensym.reset_danger_use_cautiously () ;
   Typechecker.model_name := model_name ;
   Typechecker.check_that_all_functions_have_definition :=
     not (is_flag_set "allow_undefined" || is_flag_set "allow-undefined") ;

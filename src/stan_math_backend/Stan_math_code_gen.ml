@@ -1030,6 +1030,7 @@ let collect_functors_functions p =
 
 (** Print the full C++ for the stan program. *)
 let pp_prog ppf (p : Program.Typed.t) =
+  Hashtbl.clear Expression_gen.map_rect_calls ;
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p, s = Locations.prepare_prog p in
   let fns_str, functors = collect_functors_functions p in
