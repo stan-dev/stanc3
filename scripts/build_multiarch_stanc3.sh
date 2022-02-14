@@ -25,4 +25,4 @@ SHA=$(skopeo inspect --raw docker://stanorg/stanc3:multiarch | jq '.manifests | 
 # Register QEMU translation binaries
 docker run --rm --privileged multiarch/qemu-user-static --reset
 
-docker run --privileged -u 990:986 -v $(pwd):$(pwd):rw,z stanorg/stanc3:multiarch@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && runuser -u \$(getent passwd \"990\" | cut -d: -f1) -g 986 -- dune build @install --profile static && chmod -R 777 _build  && chmod -R 777 src && chmod -R 777 test"
+docker run --privileged -u 990:986 -v $(pwd):$(pwd):rw,z stanorg/stanc3:multiarch@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static && chmod -R 777 _build  && chmod -R 777 src && chmod -R 777 test"
