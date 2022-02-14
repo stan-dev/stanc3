@@ -16,6 +16,7 @@ let included_files : string list ref = ref []
 let size () = Stack.length include_stack
 
 let init buf =
+  included_files := [] ;
   Stack.clear include_stack ;
   Stack.push include_stack buf
 

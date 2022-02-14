@@ -1663,6 +1663,7 @@ let check_program_exn
       ; modelblock= mb
       ; generatedquantitiesblock= gqb
       ; comments } as ast ) =
+  warnings := [] ;
   (* create a new type environment which has only stan-math functions *)
   let tenv = Env.create () in
   let tenv, typed_fb = check_toplevel_block Functions tenv fb in
