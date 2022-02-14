@@ -35,6 +35,7 @@ FEATURES
  - Added Differential-Algebraic Equation solver (`dae`, `dae_tol`). (#1092)
  - Added `von_mises_cdf`, `von_mises_lcdf`, von_mises_lccdf`. (#1085)
  - Added `loglogistic_lpdf`, `loglogistic_log`, `loglogistic_rng` and `loglogistic_cdf`. (#1094)
+ - Clean up more mutable state in the Javascript interface (#1118)
 
 DEPRECATIONS
  - Added a warning for `matrix^scalar` that points users to `.^` and `matrix_power()`. (#1026)
