@@ -200,3 +200,4 @@ $ node version.js
 %%NAME%% %%VERSION%%
 $ node warnings.js
 ["Warning in 'string', line 4, column 4: Comments beginning with # are\n    deprecated and this syntax will be removed in Stan 2.32.0. Use // to\n    begin line comments; this can be done automatically using the auto-format\n    flag to stanc"]
+["Warning in 'string', line 10, column 11: Found int division:\n      x / w\n    Values will be rounded towards zero. If rounding is not desired you can\n    write\n    the division as\n      x * 1.0 / w\n    If rounding is intended please use the integer division operator %/%."]
