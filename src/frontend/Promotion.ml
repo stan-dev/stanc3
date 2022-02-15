@@ -12,8 +12,6 @@ type t =
   | ToComplexVar (* used in arrays, not functions *)
   | IntToComplex
   | RealToComplex
-(* One day:
-   | TuplePromotion of t list *)
 
 let promote_inner (exp : Ast.typed_expression) prom =
   let emeta = exp.emeta in
