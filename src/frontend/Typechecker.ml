@@ -978,9 +978,9 @@ let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
         |> error in
   verify_assignment_global loc cf block global assign_id ;
   verify_assignment_read_only loc readonly assign_id ;
-  let rhs = check_assignment_operator loc assign_op lhs rhs in
+  let rhs' = check_assignment_operator loc assign_op lhs rhs in
   mk_typed_statement ~return_type:NoReturnType ~loc
-    ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs})
+    ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})
 
 (* target plus-equals / increment log-prob *)
 

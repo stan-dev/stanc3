@@ -4,7 +4,7 @@ module UnsizedType = Middle.UnsizedType
 
 (** Type to represent promotions in the typechecker.
   This can be used to return information about how to promote
-  expressions for use in [Ast.Promotion]*)
+  expressions for use in [Ast.Promotion] *)
 type t =
   | NoPromotion
   | IntToReal
