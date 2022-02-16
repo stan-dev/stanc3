@@ -7,7 +7,6 @@ def skipExpressionTests = false
 def skipRemainingStages = false
 def skipCompileTests = false
 def skipRebuildingBinaries = false
-def buildingAgentARM = "linux"
 
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
@@ -61,25 +60,19 @@ pipeline {
             steps {
                 script {
                     retry(3) { checkout scm }
-//                     sh 'git clean -xffd'
+                    sh 'git clean -xffd'
 
-//                     def stanMathSigs = ['test/integration/signatures/stan_math_signatures.t'].join(" ")
-//                     skipExpressionTests = utils.verifyChanges(stanMathSigs)
-//
-//                     def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
-//                     skipRemainingStages = utils.verifyChanges(runTestPaths)
-//
-//                     def compileTests = ['test/integration/good'].join(" ")
-//                     skipCompileTests = utils.verifyChanges(compileTests)
-//
-//                     def sourceCodePaths = ['src'].join(" ")
-//                     skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths)
+                    def stanMathSigs = ['test/integration/signatures/stan_math_signatures.t'].join(" ")
+                    skipExpressionTests = utils.verifyChanges(stanMathSigs)
 
+                    def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
+                    skipRemainingStages = utils.verifyChanges(runTestPaths)
 
+                    def compileTests = ['test/integration/good'].join(" ")
+                    skipCompileTests = utils.verifyChanges(compileTests)
 
-                    if (buildingTag()) {
-                        buildingAgentARM = "arm-ec2"
-                    }
+                    def sourceCodePaths = ['src'].join(" ")
+                    skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths)
                 }
             }
         }
@@ -388,12 +381,12 @@ pipeline {
         }
 
         stage("Build & test a static Linux binary") {
-            // when {
-            //     beforeAgent true
-            //     expression {
-            //         !skipRebuildingBinaries
-            //     }
-            // }
+            when {
+                beforeAgent true
+                expression {
+                    !skipRebuildingBinaries
+                }
+            }
             agent {
                 docker {
                     image 'stanorg/stanc3:staticfi'
@@ -415,13 +408,13 @@ pipeline {
         }
 
         stage("Build & test a static Linux mips64el binary") {
-            // when {
-            //     beforeAgent true
-            //     allOf {
-            //         expression { !skipRebuildingBinaries }
-            //         anyOf { buildingTag(); branch 'master' }
-            //     }
-            // }
+            when {
+                beforeAgent true
+                allOf {
+                    expression { !skipRebuildingBinaries }
+                    anyOf { buildingTag(); branch 'master' }
+                }
+            }
             agent {
                 docker {
                     image 'stanorg/stanc3:staticfi'
@@ -445,13 +438,13 @@ pipeline {
         }
 
         stage("Build & test a static Linux ppc64el binary") {
-            // when {
-            //     beforeAgent true
-            //     allOf {
-            //         expression { !skipRebuildingBinaries }
-            //         anyOf { buildingTag(); branch 'master' }
-            //     }
-            // }
+            when {
+                beforeAgent true
+                allOf {
+                    expression { !skipRebuildingBinaries }
+                    anyOf { buildingTag(); branch 'master' }
+                }
+            }
             agent {
                 docker {
                     image 'stanorg/stanc3:staticfi'
@@ -473,13 +466,13 @@ pipeline {
         }
 
         stage("Build & test a static Linux s390x binary") {
-            // when {
-            //     beforeAgent true
-            //     allOf {
-            //         expression { !skipRebuildingBinaries }
-            //         anyOf { buildingTag(); branch 'master' }
-            //     }
-            // }
+            when {
+                beforeAgent true
+                allOf {
+                    expression { !skipRebuildingBinaries }
+                    anyOf { buildingTag(); branch 'master' }
+                }
+            }
             agent {
                 docker {
                     image 'stanorg/stanc3:staticfi'
@@ -501,13 +494,13 @@ pipeline {
         }
 
         stage("Build & test a static Linux arm64 binary") {
-            // when {
-            //     beforeAgent true
-            //     allOf {
-            //         expression { !skipRebuildingBinaries }
-            //         anyOf { buildingTag(); branch 'master' }
-            //     }
-            // }
+            when {
+                beforeAgent true
+                allOf {
+                    expression { !skipRebuildingBinaries }
+                    anyOf { buildingTag(); branch 'master' }
+                }
+            }
             agent {
                 docker {
                     image 'stanorg/stanc3:staticfi'
@@ -529,13 +522,13 @@ pipeline {
         }
 
         stage("Build & test a static Linux armhf binary") {
-            // when {
-            //     beforeAgent true
-            //     allOf {
-            //         expression { !skipRebuildingBinaries }
-            //         anyOf { buildingTag(); branch 'master' }
-            //     }
-            // }
+            when {
+                beforeAgent true
+                allOf {
+                    expression { !skipRebuildingBinaries }
+                    anyOf { buildingTag(); branch 'master' }
+                }
+            }
             agent {
                 docker {
                     image 'stanorg/stanc3:staticfi'
@@ -557,13 +550,13 @@ pipeline {
         }
 
         stage("Build & test a static Linux armel binary") {
-            // when {
-            //     beforeAgent true
-            //     allOf {
-            //         expression { !skipRebuildingBinaries }
-            //         anyOf { buildingTag(); branch 'master' }
-            //     }
-            // }
+            when {
+                beforeAgent true
+                allOf {
+                    expression { !skipRebuildingBinaries }
+                    anyOf { buildingTag(); branch 'master' }
+                }
+            }
             agent {
                 docker {
                     image 'stanorg/stanc3:staticfi'
@@ -586,12 +579,12 @@ pipeline {
 
         // Cross compiling for windows on debian
         stage("Build & test static Windows binary") {
-            // when {
-            //     beforeAgent true
-            //     expression {
-            //         !skipRebuildingBinaries
-            //     }
-            // }
+            when {
+                beforeAgent true
+                expression {
+                    !skipRebuildingBinaries
+                }
+            }
             agent {
                 docker {
                     image 'stanorg/stanc3:debian-windowsfi'
@@ -672,15 +665,12 @@ pipeline {
                     )
                 }
 
-                // Install odoc and git-subtree
-                // runShell("opam install odoc -y")
-
                 // Checkout gh-pages as a test so we build docs from this branch
                 runShell("""
-                    git remote set-branches --add origin gh-pages
-                    git checkout --track origin/gh-pages
-                    git remote set-branches --add origin master
-                    git checkout origin/master
+                    git remote set-branches --add origin gh-pages || true
+                    git checkout --track origin/gh-pages || true
+                    git remote set-branches --add origin master || true
+                    git checkout origin/master || true
                 """)
 
                 // Build docs
@@ -719,10 +709,9 @@ pipeline {
         }
 
     }
-// Below lines are commented to avoid spamming emails during migration/debug
-//     post {
-//        always {
-//           script {utils.mailBuildResults()}
-//         }
-//     }
+    post {
+       always {
+          script {utils.mailBuildResults()}
+        }
+    }
 }
