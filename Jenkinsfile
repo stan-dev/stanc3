@@ -650,7 +650,7 @@ pipeline {
         stage('Upload odoc') {
             when {
                 beforeAgent true
-                anyOf { buildingTag(); branch 'master' }
+                anyOf { branch 'master' }
             }
             options { skipDefaultCheckout(true) }
             agent {
@@ -664,7 +664,7 @@ pipeline {
             steps {
                 retry(3) {
                     checkout([$class: 'GitSCM',
-                        branches: [],
+                        branches: ["master", "gh-pages"],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [],
                         submoduleCfg: [],
@@ -678,8 +678,9 @@ pipeline {
                 // Checkout gh-pages as a test so we build docs from this branch
                 runShell("""
                     git remote set-branches --add origin gh-pages
-                    git checkout --track  origin/gh-pages
-                    git checkout master
+                    git checkout --track origin/gh-pages
+                    git remote set-branches --add origin master
+                    git checkout origin/master
                 """)
 
                 // Build docs
