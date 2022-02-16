@@ -642,7 +642,7 @@ pipeline {
         stage('Upload odoc') {
             when {
                 beforeAgent true
-                anyOf { branch 'master' }
+                branch 'master'
             }
             options { skipDefaultCheckout(true) }
             agent {
@@ -656,7 +656,7 @@ pipeline {
             steps {
                 retry(3) {
                     checkout([$class: 'GitSCM',
-                        branches: ["master", "gh-pages"],
+                        branches: [[name: '*/master'], [name: '*/gh-pages']],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [],
                         submoduleCfg: [],
