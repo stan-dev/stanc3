@@ -27,7 +27,6 @@ def tagName() {
 pipeline {
     agent none
     parameters {
-        booleanParam(name:"compile_all", defaultValue: false, description:"Try compiling all models in test/integration/good")
         booleanParam(name:"skip_end_to_end", defaultValue: false, description:"Skip end-to-end tests ")
         string(defaultValue: 'develop', name: 'cmdstan_pr',
                description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
@@ -194,7 +193,7 @@ pipeline {
                         script {
                             unstash 'ubuntu-exe'
                             sh """
-                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan -b move-ci-to-flatiron-institute --single-branch
+                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                             """
 
                             writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
@@ -246,7 +245,7 @@ pipeline {
                         script {
                             unstash 'ubuntu-exe'
                             sh """
-                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan -b move-ci-to-flatiron-institute --single-branch
+                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                             """
                             utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
                             utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
