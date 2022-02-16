@@ -183,7 +183,7 @@ model {
     x ~ normal_log(0, 1);
     x ~ normal_log(0, 1);
     target += normal_log_lpdf(x | 1, 2);
-    target += std_normal_lpdf(x | );
+    target += std_normal_lpdf(x);
   } else {
     x ~ exponential(1);
     x ~ exponential(1);
