@@ -205,7 +205,7 @@ pipeline {
                         cd performance-tests-cmdstan
                         mkdir cmdstan/bin
                         cp ../bin/stanc cmdstan/bin/linux-stanc
-                        cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..
+                        cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ../..
                     """
 
                     stash "CompileTestSetup"
