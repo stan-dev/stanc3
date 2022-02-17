@@ -306,6 +306,9 @@ let pp_bool_expr ppf expr =
 
 let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
   (* ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) = *)
+  let remove_promotions (e : 'a Expr.Fixed.t) =
+    (* assignment handles one level of promotion internally, don't do it twice *)
+    match e.pattern with Promotion (e, _, _) -> e | _ -> e in
   let pp_stmt_list = list ~sep:cut pp_statement in
   ( match pattern with
   | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
@@ -318,8 +321,10 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
       pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
   | Assignment
       ((vident, _, []), ({meta= Expr.Typed.Meta.{type_= UInt; _}; _} as rhs))
+   |Assignment
+      ((vident, _, []), ({meta= Expr.Typed.Meta.{type_= UComplex; _}; _} as rhs))
    |Assignment ((vident, _, []), ({meta= {type_= UReal; _}; _} as rhs)) ->
-      pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
+      pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr (remove_promotions rhs)
   | Assignment ((assignee, UInt, idcs), rhs)
    |Assignment ((assignee, UReal, idcs), rhs)
     when List.for_all ~f:is_single_index idcs ->
@@ -342,7 +347,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
             { e with
               Expr.Fixed.pattern= FunApp (CompilerInternal FnDeepCopy, [e]) }
         | _ -> recurse e in
-      let rhs = maybe_deep_copy rhs in
+      let rhs = maybe_deep_copy (remove_promotions rhs) in
       pf ppf "@[<hov 2>stan::model::assign(@,%s,@ %a,@ %S%s%a@]);" assignee
         pp_expr rhs
         (str "assigning variable %s" assignee)

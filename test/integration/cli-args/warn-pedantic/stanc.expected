@@ -431,9 +431,6 @@ Warning in 'param-depend-control.stan', line 13, column 2: A control flow
 Warning in 'param-depend-control.stan', line 8, column 2: A control flow
     statement depends on parameter(s): a.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  unbounded-sigma.stan
-Warning in 'unbounded-sigma.stan', line 15, column 11: A normal distribution
-    is given value -1 as a scale parameter (argument 2), but a scale
-    parameter is not strictly positive.
 Warning in 'unbounded-sigma.stan', line 12, column 17: A normal distribution
     is given parameter sigma_c as a scale parameter (argument 2), but sigma_c
     was not constrained to be strictly positive.
