@@ -919,9 +919,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
         std::vector<local_scalar_t__> theta =
            std::vector<local_scalar_t__>(5, DUMMY_VAR__);
         current_statement__ = 6;
-        stan::model::assign(theta, std::vector<local_scalar_t__>{beta,
-          stan::math::promote_scalar<local_scalar_t__>(kappa), gamma, xi,
-          delta}, "assigning variable theta");
+        stan::model::assign(theta, std::vector<local_scalar_t__>{beta, kappa,
+          gamma, xi, delta}, "assigning variable theta");
         current_statement__ = 7;
         stan::model::assign(y,
           stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0, t0, t,
@@ -1029,9 +1028,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
         std::vector<double> theta =
            std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 6;
-        stan::model::assign(theta, std::vector<local_scalar_t__>{beta,
-          stan::math::promote_scalar<local_scalar_t__>(kappa), gamma, xi,
-          delta}, "assigning variable theta");
+        stan::model::assign(theta, std::vector<local_scalar_t__>{beta, kappa,
+          gamma, xi, delta}, "assigning variable theta");
         current_statement__ = 7;
         stan::model::assign(y,
           stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0, t0, t,

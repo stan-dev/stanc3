@@ -34,6 +34,10 @@ let unwrap_num_exn m e =
   let m = Map.Poly.map m ~f:Ast_to_Mir.trans_expr in
   let e = Analysis_and_optimization.Mir_utils.subst_expr m e in
   let e = Analysis_and_optimization.Partial_evaluator.eval_expr e in
+  let rec strip_promotions (e : Middle.Expr.Typed.t) =
+    match e.pattern with Promotion (e, _, _) -> strip_promotions e | _ -> e
+  in
+  let e = strip_promotions e in
   match e.pattern with
   | Lit (_, s) -> Float.of_string s
   | _ ->

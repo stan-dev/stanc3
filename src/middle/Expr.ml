@@ -44,7 +44,7 @@ module Fixed = struct
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
       | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
       | Promotion (from, ut, _) ->
-          Fmt.pf ppf "%a -> %a" pp_e from UnsizedType.pp ut
+          Fmt.pf ppf "promote(@[%a,@ %a@])" pp_e from UnsizedType.pp ut
 
     include Foldable.Make (struct
       type nonrec 'a t = 'a t

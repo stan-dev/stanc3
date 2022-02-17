@@ -79,12 +79,6 @@ type signature_error =
   (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
   * function_mismatch
 
-type promotions =
-  | None
-  | IntToRealPromotion
-  | IntToComplexPromotion
-  | RealToComplexPromotion
-
 type ('unique, 'error) generic_match_result =
   | UniqueMatch of 'unique
   | AmbiguousMatch of
@@ -95,7 +89,7 @@ type ('unique, 'error) generic_match_result =
 type match_result =
   ( UnsizedType.returntype
     * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
-    * promotions list
+    * Promotion.t list
   , signature_error list * bool )
   generic_match_result
 
@@ -133,10 +127,10 @@ let rec compare_errors e1 e2 =
 let rec check_same_type depth t1 t2 =
   let wrap_func = Result.map_error ~f:(fun e -> TypeMismatch (t1, t2, Some e)) in
   match (t1, t2) with
-  | t1, t2 when t1 = t2 -> Ok None
-  | UnsizedType.(UReal, UInt) when depth < 1 -> Ok IntToRealPromotion
-  | UnsizedType.(UComplex, UInt) when depth < 1 -> Ok IntToComplexPromotion
-  | UnsizedType.(UComplex, UReal) when depth < 1 -> Ok RealToComplexPromotion
+  | t1, t2 when t1 = t2 -> Ok Promotion.NoPromotion
+  | UnsizedType.(UReal, UInt) when depth < 1 -> Ok IntToReal
+  | UnsizedType.(UComplex, UInt) when depth < 1 -> Ok IntToComplex
+  | UnsizedType.(UComplex, UReal) when depth < 1 -> Ok RealToComplex
   (* Arrays: Try to recursively promote, but make sure the error is for these types,
      not the recursive call *)
   | UArray nt1, UArray nt2 ->
@@ -153,12 +147,12 @@ let rec check_same_type depth t1 t2 =
       Error (ReturnTypeMismatch (rt1, rt2)) |> wrap_func
   | UFun (l1, _, _, _), UFun (l2, _, _, _) -> (
     match check_compatible_arguments (depth + 1) l2 l1 with
-    | Ok _ -> Ok None
+    | Ok _ -> Ok NoPromotion
     | Error e -> Error (InputMismatch e) |> wrap_func )
   | t1, t2 -> Error (TypeMismatch (t1, t2, None))
 
 and check_compatible_arguments depth typs args2 :
-    (promotions list, function_mismatch) result =
+    (Promotion.t list, function_mismatch) result =
   match List.zip typs args2 with
   | List.Or_unequal_lengths.Unequal_lengths ->
       Error (ArgNumMismatch (List.length typs, List.length args2))
@@ -173,6 +167,7 @@ and check_compatible_arguments depth typs args2 :
               else Error (ArgError (i + 1, DataOnlyError)) )
       |> Result.all
 
+let check_of_same_type_mod_conv = check_same_type 0
 let check_compatible_arguments_mod_conv = check_compatible_arguments 0
 let max_n_errors = 5
 
@@ -184,30 +179,9 @@ let extract_function_types f =
       Some (return, args, (fun x -> UserDefined x), mem)
   | _ -> None
 
-let promote es promotions =
-  List.map2_exn es promotions ~f:(fun (exp : Ast.typed_expression) prom ->
-      let open UnsizedType in
-      let emeta = exp.emeta in
-      match prom with
-      | IntToRealPromotion when is_int_type emeta.type_ ->
-          Ast.
-            { expr= Ast.Promotion (exp, UReal, emeta.ad_level)
-            ; emeta= {emeta with type_= promote_array emeta.type_ UReal} }
-      | (IntToComplexPromotion | RealToComplexPromotion)
-        when not (is_complex_type emeta.type_) ->
-          { expr= Promotion (exp, UComplex, emeta.ad_level)
-          ; emeta= {emeta with type_= promote_array emeta.type_ UComplex} }
-      | _ -> exp )
-
-let promotion_cost p =
-  match p with
-  | None -> 0
-  | RealToComplexPromotion | IntToRealPromotion -> 1
-  | IntToComplexPromotion -> 2
-
 let unique_minimum_promotion promotion_options =
   let size (_, p) =
-    List.fold ~init:0 ~f:(fun acc p -> acc + promotion_cost p) p in
+    List.fold ~init:0 ~f:(fun acc p -> acc + Promotion.promotion_cost p) p in
   let sizes = List.map ~f:size promotion_options in
   let min_promotion = List.min_elt ~compare:Int.compare sizes in
   let sizes_and_promotons = List.zip_exn sizes promotion_options in

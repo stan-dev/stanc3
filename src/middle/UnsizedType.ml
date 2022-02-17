@@ -102,12 +102,6 @@ let check_of_same_type_mod_conv name t1 t2 =
         | Unequal_lengths -> false )
     | _ -> t1 = t2
 
-let rec check_of_same_type_mod_array_conv name t1 t2 =
-  match (t1, t2) with
-  | UArray t1elt, UArray t2elt ->
-      check_of_same_type_mod_array_conv name t1elt t2elt
-  | _ -> check_of_same_type_mod_conv name t1 t2
-
 let check_compatible_arguments_mod_conv name args1 args2 =
   match
     List.for_all2
@@ -148,11 +142,14 @@ let is_dataonlytype possibly_adtype : bool =
 
 let is_scalar_type = function UReal | UInt -> true | _ -> false
 
-let rec promote_array ut scalar =
-  match (ut, scalar) with
-  | (UInt | UReal), (UReal | UComplex) -> scalar
-  | UArray ut2, _ -> UArray (promote_array ut2 scalar)
-  | _, _ -> ut
+let promote_array ut scalar =
+  let scalar = fst (unwind_array_type scalar) in
+  let rec loop ut =
+    match (ut, scalar) with
+    | (UInt | UReal), (UReal | UComplex) -> scalar
+    | UArray ut2, _ -> UArray (loop ut2)
+    | _, _ -> ut in
+  loop ut
 
 let rec is_int_type ut =
   match ut with UInt -> true | UArray ut -> is_int_type ut | _ -> false
