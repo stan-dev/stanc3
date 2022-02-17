@@ -38,7 +38,7 @@ pipeline {
     options {parallelsAlwaysFailFast()}
     environment {
         CXX = 'clang++-6.0'
-        PARALLEL = 8
+        PARALLEL = 4 // There are ~4 cores/executor
     }
     stages {
         stage('Kill previous builds') {
@@ -176,7 +176,8 @@ pipeline {
         }
         stage("CmdStan & Math tests") {
             parallel {
-                stage("Compile tests") {
+
+                stage("Prepare - Compile tests") {
                     when {
                         beforeAgent true
                         expression {
@@ -192,12 +193,12 @@ pipeline {
                     steps {
                         script {
                             unstash 'ubuntu-exe'
+
                             sh """
                                 git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                             """
 
-                            writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
-                                    text:"O=0\nCXX=${CXX}")
+                            writeFile(file:"performance-tests-cmdstan/cmdstan/make/local", text:"O=0\nCXX=${CXX}")
 
                             utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
                             utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
@@ -208,9 +209,34 @@ pipeline {
                                 mkdir cmdstan/bin
                                 cp ../bin/stanc cmdstan/bin/linux-stanc
                                 cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..
+                            """
+
+                            stash "CompileTestSetup"
+                        }
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+
+                stage("Compile tests - good") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipCompileTests
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/ci:gpu'
+                            label 'linux'
+                        }
+                    }
+                    steps {
+                        script {
+                            unstash 'CompileTestSetup'
+                            sh """
+                                cd performance-tests-cmdstan
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../test/integration/good
-                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
-                                """
+                            """
                         }
 
                         xunit([GoogleTest(
@@ -223,6 +249,40 @@ pipeline {
                     }
                     post { always { runShell("rm -rf ./*") }}
                 }
+
+                stage("Compile tests - example-models") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipCompileTests
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/ci:gpu'
+                            label 'linux'
+                        }
+                    }
+                    steps {
+                        script {
+                            unstash 'CompileTestSetup'
+                            sh """
+                                cd performance-tests-cmdstan
+                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
+                            """
+                        }
+
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)
+                        ])
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+
                 stage("Model end-to-end tests") {
                     when {
                         beforeAgent true
