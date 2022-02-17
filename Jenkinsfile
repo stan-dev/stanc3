@@ -1,7 +1,7 @@
 @Library('StanUtils')
 import org.stan.Utils
 
-def utils = new org.stan.Utils()
+utils = new org.stan.Utils()
 
 def skipExpressionTests = false
 def skipRemainingStages = false
@@ -22,6 +22,28 @@ def tagName() {
     } else {
         'unknown-tag'
     }
+}
+
+def runPerformanceTests(String testsPath){
+    unstash 'ubuntu-exe'
+
+    sh """
+        git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+    """
+
+    writeFile(file:"performance-tests-cmdstan/cmdstan/make/local", text:"O=0\nCXX=${CXX}")
+
+    utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
+    utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
+    utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
+
+    sh """
+        cd performance-tests-cmdstan
+        mkdir cmdstan/bin
+        cp ../bin/stanc cmdstan/bin/linux-stanc
+        cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..
+        ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}
+    """
 }
 
 pipeline {
@@ -174,45 +196,6 @@ pipeline {
                 }
             }
         }
-        stage("Prepare - Compile tests") {
-            when {
-                beforeAgent true
-                expression {
-                    !skipCompileTests
-                }
-            }
-            agent {
-                docker {
-                    image 'stanorg/ci:gpu'
-                    label 'linux'
-                }
-            }
-            steps {
-                script {
-                    unstash 'ubuntu-exe'
-
-                    sh """
-                        git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                    """
-
-                    writeFile(file:"performance-tests-cmdstan/cmdstan/make/local", text:"O=0\nCXX=${CXX}")
-
-                    utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
-                    utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
-                    utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
-
-                    sh """
-                        cd performance-tests-cmdstan
-                        mkdir cmdstan/bin
-                        cp ../bin/stanc cmdstan/bin/linux-stanc
-                        cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ../..
-                    """
-
-                    stash "CompileTestSetup"
-                }
-            }
-            post { always { runShell("rm -rf ./*") }}
-        }
         stage("CmdStan & Math tests") {
             parallel {
 
@@ -231,11 +214,7 @@ pipeline {
                     }
                     steps {
                         script {
-                            unstash 'CompileTestSetup'
-                            sh """
-                                cd performance-tests-cmdstan
-                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../test/integration/good
-                            """
+                            runPerformanceTests("../test/integration/good")
                         }
 
                         xunit([GoogleTest(
@@ -264,11 +243,7 @@ pipeline {
                     }
                     steps {
                         script {
-                            unstash 'CompileTestSetup'
-                            sh """
-                                cd performance-tests-cmdstan
-                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
-                            """
+                            runPerformanceTests("example-models")
                         }
 
                         xunit([GoogleTest(
