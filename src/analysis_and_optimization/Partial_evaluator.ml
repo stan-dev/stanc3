@@ -6,12 +6,10 @@ open Middle
 
 exception Rejected of Location_span.t * string
 
-let rec is_int i Expr.Fixed.{pattern; _} =
-  let nums = List.map ~f:(fun s -> string_of_int i ^ s) [""; "."; ".0"] in
+let rec is_int query Expr.Fixed.{pattern; _} =
   match pattern with
-  | (Lit (Int, i) | Lit (Real, i)) when List.mem nums i ~equal:String.equal ->
-      true
-  | Promotion (e, _, _) -> is_int i e
+  | Lit (Int, i) | Lit (Real, i) -> float_of_string i = float_of_int query
+  | Promotion (e, _, _) -> is_int query e
   | _ -> false
 
 let apply_prefix_operator_int (op : string) i =

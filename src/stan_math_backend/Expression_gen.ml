@@ -228,11 +228,11 @@ and pp_scalar_binary ppf op fn es =
   if is_scalar (first es) && is_scalar (second es) then pp_binary_op ppf op es
   else pp_binary_f ppf fn es
 
-and gen_operator_app op ppf es =
+and gen_operator_app op ppf es_in =
   let remove_basic_promotion (e : 'a Expr.Fixed.t) =
     match e.pattern with Promotion (e, _, _) when is_scalar e -> e | _ -> e
   in
-  let es = List.map ~f:remove_basic_promotion es in
+  let es = List.map ~f:remove_basic_promotion es_in in
   match op with
   | Operator.Plus -> pp_scalar_binary ppf "+" "stan::math::add" es
   | PMinus ->
@@ -253,7 +253,13 @@ and gen_operator_app op ppf es =
         is_matrix (second es)
         && (is_matrix (first es) || is_row_vector (first es))
       then pp_binary_f ppf "stan::math::mdivide_right" es
-      else pp_scalar_binary ppf "/" "stan::math::divide" es
+      else
+        let f e = Expr.Typed.type_of e = UInt in
+        (* NB: Not stripping promotions due to semantics of int / int *)
+        let es' =
+          if List.for_all ~f es && not (List.for_all ~f es_in) then es_in
+          else es in
+        pp_scalar_binary ppf "/" "stan::math::divide" es'
   | Modulo -> pp_binary_f ppf "stan::math::modulus" es
   | LDivide -> pp_binary_f ppf "stan::math::mdivide_left" es
   | And | Or ->

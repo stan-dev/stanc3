@@ -481,8 +481,6 @@ let string_operator_to_stan_math_fns str =
   | "Transpose__" -> "transpose"
   | _ -> str
 
-(* -- Querying stan_math_signatures -- *)
-
 let pretty_print_all_math_sigs ppf () =
   let open Fmt in
   let pp_sig ppf (name, (rt, args, _)) =
