@@ -207,7 +207,9 @@ pipeline {
                                 cd performance-tests-cmdstan
                                 mkdir cmdstan/bin
                                 cp ../bin/stanc cmdstan/bin/linux-stanc
-                                cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..
+                                cd cmdstan; make clean-all;
+                                echo 'O=0' >> make/local
+                                make -j${env.PARALLEL} build; cd ..
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../test/integration/good
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
                                 """
