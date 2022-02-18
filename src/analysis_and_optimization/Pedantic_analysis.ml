@@ -66,6 +66,73 @@ let list_multi_tildes (mir : Program.Typed.t) :
     ~f:(fun ~key ~data s -> Set.add s (key, data))
     multi_tildes
 
+(**  Collect statements of the form "target += Dist(param, ...)" where param
+  has possibly been transformed non-linearly *)
+let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
+    =
+  (* These functions are linear if all of their arguments are *)
+  let linear_fnames =
+    Operator.(
+      [Plus; PPlus; Minus; PMinus; PNot; Transpose] |> List.map ~f:to_string)
+    @ [ "add"; "append_block"; "append_row"; "append_col"; "block"; "col"; "cols"
+      ; "row"; "rows"; "diagonal"; "head"; "tail"; "minus"; "negative_infinity"
+      ; "not_a_number"; "rep_matrix"; "rep_vector"; "rep_row_vector"
+      ; "positive_infinity"; "segment"; "subtract"; "sum"; "to_vector"
+      ; "to_row_vector"; "to_matrix"; "to_array_1d"; "to_array_2d"; "transpose"
+      ]
+    |> String.Set.of_list in
+  (* A simple check of linearity of an expression.
+     allow_var is used for expressions like a*b, where at most one
+     of a and b can be a variable
+  *)
+  let rec is_linear allow_var Expr.Fixed.{pattern; _} =
+    match pattern with
+    | Expr.Fixed.Pattern.Var _ -> allow_var
+    | Lit _ -> true
+    | Indexed (e, _) | Promotion (e, _, _) -> is_linear allow_var e
+    | TernaryIf (e1, e2, e3) ->
+        is_linear allow_var e1 && is_linear allow_var e2
+        && is_linear allow_var e3
+    | FunApp (StanLib (name, _, _), args) ->
+        is_linear_function allow_var name args
+    | FunApp (CompilerInternal (FnMakeArray | FnMakeRowVec), args) ->
+        List.for_all ~f:(is_linear allow_var) args
+    | _ -> false
+  and is_linear_function allow_var name (args : 'a Expr.Fixed.t list) =
+    match (name, args) with
+    | _, _ when Set.mem linear_fnames name ->
+        List.for_all ~f:(is_linear allow_var) args
+    | _, _ when List.for_all ~f:(is_linear false) args ->
+        (* A function of all constants is fine *) true
+    | ("Times__" | "Divide__" | "IntDivide__"), [a; b] ->
+        (* We require at least one of these operands to be a constant *)
+        (is_linear allow_var a && is_linear false b)
+        || (is_linear false a && is_linear allow_var b)
+    | "fma", [a; b; c] ->
+        (* Similar to above.
+           Partial evaluation can create fmas where the user wrote Times *)
+        is_linear allow_var c
+        && ( (is_linear allow_var a && is_linear false b)
+           || (is_linear false a && is_linear allow_var b) )
+    | _ -> false in
+  let maybe_nonlinear_tilde (stmt : Stmt.Located.t) =
+    match stmt.pattern with
+    (* a ~ foo(...) gets translated to target += foo_lpdf(a, ...) *)
+    | Stmt.Fixed.Pattern.TargetPE
+        { pattern=
+            Expr.Fixed.Pattern.FunApp
+              ((StanLib (_, FnLpdf _, _) | UserDefined (_, FnLpdf _)), e :: _)
+        ; _ }
+      when not (is_linear true e) ->
+        Set.Poly.singleton stmt.meta
+    | _ -> Set.Poly.empty in
+  let bad_tildes =
+    fold_stmts
+      ~take_stmt:(fun m s -> Set.Poly.union m (maybe_nonlinear_tilde s))
+      ~take_expr:(fun m _ -> m)
+      ~init:Set.Poly.empty mir.log_prob in
+  bad_tildes
+
 (* Find all of the targets which are dependencies for a given label *)
 let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
     (targets : string Set.Poly.t) : string Set.Poly.t =
@@ -130,7 +197,7 @@ let list_arg_dependant_fundef_cf (mir : Program.Typed.t)
                 Option.value_exn
                   ~message:
                     "INTERNAL ERROR: Pedantic mode found CF dependent on an \
-                     arg,but the arg is mismatched. Please report a bug.\n"
+                     arg, but the arg is mismatched. Please report a bug.\n"
                   (List.findi args ~f:(fun _ arg -> arg = name)) in
               (loc, ix, name) ) ) )
 
@@ -320,6 +387,17 @@ let hard_constrained_warnings (mir : Program.Typed.t) =
           (Location_span.empty, nonsense_constrained_message pname) )
     pnames
 
+let maybe_jacobian_adjustment_warnings (mir : Program.Typed.t) =
+  let locations = list_possible_nonlinear mir in
+  Set.Poly.map
+    ~f:(fun loc ->
+      ( loc
+      , "Left-hand side of sampling statement (~) may contain a non-linear \
+         transform of a parameter or local variable. If it does, you need to \
+         include a target += statement with the log absolute determinant of \
+         the Jacobian of the transform." ) )
+    locations
+
 let multi_tildes_message (vname : string) : string =
   Printf.sprintf
     "The parameter %s is on the left-hand side of more than one tilde \
@@ -421,9 +499,9 @@ let warn_pedantic (mir_unopt : Program.Typed.t) =
   let factor_graph = prog_factor_graph mir in
   Set.Poly.union_list
     [ uninitialized_warnings mir; unscaled_constants_warnings distributions_info
-    ; multi_tildes_warnings mir; hard_constrained_warnings mir
-    ; unused_params_warnings factor_graph mir; param_dependant_cf_warnings mir
-    ; param_dependant_fundef_cf_warnings mir
+    ; multi_tildes_warnings mir; maybe_jacobian_adjustment_warnings mir
+    ; hard_constrained_warnings mir; unused_params_warnings factor_graph mir
+    ; param_dependant_cf_warnings mir; param_dependant_fundef_cf_warnings mir
     ; non_one_priors_warnings factor_graph mir
     ; distribution_warnings distributions_info ]
   |> to_list
