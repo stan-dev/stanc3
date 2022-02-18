@@ -1341,8 +1341,12 @@
                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                   (meta
                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-                 ((pattern (Lit Int 2))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                 ((pattern
+                   (Promotion
+                    ((pattern (Lit Int 2))
+                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                    UReal DataOnly))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
            (meta <opaque>))
           ((pattern
@@ -7615,8 +7619,12 @@
      (Assignment (td_b UReal ())
       ((pattern
         (FunApp (StanLib Times__ FnPlain AoS)
-         (((pattern (Var N))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         (((pattern
+            (Promotion
+             ((pattern (Var N))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             UReal DataOnly))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var J))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
@@ -7961,8 +7969,12 @@
                 (FunApp (StanLib Divide__ FnPlain AoS)
                  (((pattern (Lit Real 1.0))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                  ((pattern (Var N))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  ((pattern
+                    (Promotion
+                     ((pattern (Var N))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     UReal DataOnly))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
             (meta <opaque>))
            ((pattern
@@ -7992,9 +8004,15 @@
                          (((pattern (Lit Real 1.0))
                            (meta
                             ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Var N))
+                          ((pattern
+                            (Promotion
+                             ((pattern (Var N))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             UReal DataOnly))
                            (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                            ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                     (meta <opaque>))
@@ -8057,9 +8075,15 @@
                                            (meta
                                             ((type_ UReal) (loc <opaque>)
                                              (adlevel DataOnly))))
-                                          ((pattern (Var N))
+                                          ((pattern
+                                            (Promotion
+                                             ((pattern (Var N))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly))))
+                                             UReal DataOnly))
                                            (meta
-                                            ((type_ UInt) (loc <opaque>)
+                                            ((type_ UReal) (loc <opaque>)
                                              (adlevel DataOnly)))))))
                                        (meta
                                         ((type_ UReal) (loc <opaque>)

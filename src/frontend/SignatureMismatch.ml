@@ -198,14 +198,8 @@ let unique_minimum_promotion promotion_options =
     | [] -> Error None )
   | None -> Error None
 
-let matching_function env name args =
+let find_compatible_rt function_types args =
   (* NB: Variadic arguments are special-cased in the typechecker and not handled here *)
-  let name = Utils.stdlib_distribution_name name in
-  let function_types =
-    Environment.find env name
-    |> List.filter_map ~f:extract_function_types
-    |> List.sort ~compare:(fun (ret1, _, _, _) (ret2, _, _, _) ->
-           UnsizedType.compare_returntype ret1 ret2 ) in
   let matches, errors =
     List.partition_map function_types
       ~f:(fun (rt, tys, funkind_constructor, _) ->
@@ -224,6 +218,18 @@ let matching_function env name args =
       in
       let errors, omitted = List.split_n errors max_n_errors in
       SignatureErrors (errors, not (List.is_empty omitted))
+
+let matching_function env name args =
+  let name = Utils.stdlib_distribution_name name in
+  let function_types =
+    Environment.find env name
+    |> List.filter_map ~f:extract_function_types
+    |> List.sort ~compare:(fun (ret1, _, _, _) (ret2, _, _, _) ->
+           UnsizedType.compare_returntype ret1 ret2 ) in
+  find_compatible_rt function_types args
+
+let matching_stanlib_function =
+  matching_function Environment.stan_math_environment
 
 let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
     fun_return args =

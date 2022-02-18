@@ -163,7 +163,8 @@ let rec no_parens {expr; emeta} =
 
 and keep_parens {expr; emeta} =
   match expr with
-  | Paren {expr= Paren e; _} -> keep_parens e
+  | Promotion (e, ut, ad) -> {expr= Promotion (keep_parens e, ut, ad); emeta}
+  | Paren ({expr= Paren _; _} as e) -> keep_parens e
   | Paren ({expr= BinOp _; _} as e)
    |Paren ({expr= PrefixOp _; _} as e)
    |Paren ({expr= PostfixOp _; _} as e)

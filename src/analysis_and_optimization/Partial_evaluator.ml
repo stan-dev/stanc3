@@ -6,11 +6,10 @@ open Middle
 
 exception Rejected of Location_span.t * string
 
-let is_int i Expr.Fixed.{pattern; _} =
-  let nums = List.map ~f:(fun s -> string_of_int i ^ s) [""; "."; ".0"] in
+let rec is_int query Expr.Fixed.{pattern; _} =
   match pattern with
-  | (Lit (Int, i) | Lit (Real, i)) when List.mem nums i ~equal:String.equal ->
-      true
+  | Lit (Int, i) | Lit (Real, i) -> float_of_string i = float_of_int query
+  | Promotion (e, _, _) -> is_int query e
   | _ -> false
 
 let apply_prefix_operator_int (op : string) i =
@@ -107,10 +106,11 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                 Operator.of_string_opt name
                 |> Option.value_map
                      ~f:(fun op ->
-                       Stan_math_signatures.operator_stan_math_return_type op
-                         argument_types )
+                       Frontend.Typechecker.operator_stan_math_return_type op
+                         argument_types
+                       |> Option.map ~f:fst )
                      ~default:
-                       (Stan_math_signatures.stan_math_returntype name
+                       (Frontend.Typechecker.stan_math_return_type name
                           argument_types ) in
               let try_partially_evaluate_stanlib e =
                 Expr.Fixed.Pattern.(
