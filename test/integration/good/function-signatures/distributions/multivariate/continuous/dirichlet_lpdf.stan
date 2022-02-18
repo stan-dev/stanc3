@@ -4,7 +4,7 @@ data {
   row_vector[d_int] d_row_vector;
   array[d_int] vector[d_int] d_vector_arr;
   array[d_int] row_vector[d_int] d_row_vector_arr;
-}
+} 
 transformed data {
   real transformed_data_real;
   transformed_data_real = dirichlet_lpdf(d_vector | d_vector);
