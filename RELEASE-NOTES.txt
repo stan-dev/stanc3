@@ -1,6 +1,65 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v2.29.0 (14 February 2022)
+======================================================================
+
+FEATURES
+ - Allow most reserved words in C++ (e.g., `public`) to appear in a stan program; they will be changed by the compiler to `_stan_<reserved word>` in the generated C++. (#962)
+ - User defined functions can now be overloaded. Multiple definitions of the same function name are allowed if the arguments are different in each definition.(#1027)
+ - Improved error messages for incorrect variable declarations. (#1099)
+ - When an unknown identifier is encountered Stan will suggest nearby known names you might have meant (#1024)
+ - Extra semicolons in `data` or `parameters` no longer produce syntax errors. (#988)
+ - Improved error messages for incomplete probability library calls. (#1021)
+ - Added nicer error message when a comment is unterminated at end of input. (#1025)
+ - All internal compiler errors now include a link to the stanc3 issues page. (#1028)
+ - Improve error messages when a user tries to declare a function argument as a constrained type. (#1030)
+ - Replaced the use of the word twiddle with tilde in pedantic warning messages. (#1050)
+ - Allow user-defined densities over complex arguments and deeply nested arguments. (#1046)
+ - Added optimization layers `--O0` (default), `--O1`, and `--Oexperimental`
+ - Turn back on allowing immediately assigned to decls not be NaN initialized at `O1` (#1029)
+ - Allows `log_prob_impl` to use Struct of Arrays type for reverse mode autodiff at `O1` (#955)
+ - Issue a warning when a user has a model with unreachable statements, such as code following a `return` statement. (#1063)
+ - The compiler can now compile or format standalone function definitions in a `.stanfunctions` file. These are compiled as if a normal Stan program was compiled with `stanc3 --standalone-functions` and can be used with `#include` statements in the `functions` block (#1022)
+ - The canonicalizer can now have each part enabled seperately. This can be done with commands like `stanc --auto-format --canonicalize=braces,deprecations <model>`. Current options are `deprecations`, `braces`, and `parenthesis`. (#1058)
+ - Ensure the canonicalizer properly prints nested if-else statements. (#1055)
+ - `--auto-format` no longer prints code which originated from an `#include` directive. This can be re-enabled by using `canonicalize=includes`. (#1069)
+ - When using `--auto-format`, the user can now pass `--max-line-length=#` to set the column number at which the formatter will try to break lines. (#1068)
+ - Tweak pretty-printing of if-else blocks. (#1008)
+ - Canonicalizer now adds brackets around single statements in if-else/for/while. (#1003)
+ - Expose `bernoulli_logit_glm_rng` functions. (#1034)
+ - lchoose now has the same signatures as binomial_coefficient_log. (#1010)
+ - Added `ordered_probit_lpmf(array[] int, real, vector) => real` and `ordered_probit_lpmf(array[] int, real, array[] vector) => real`. (#1073)
+ - Added additional `normal_id_glm` signatures. (#1084)
+ - Added signatures for `inv_erfc` function. (#1090)
+ - Added Differential-Algebraic Equation solver (`dae`, `dae_tol`). (#1092)
+ - Added `von_mises_cdf`, `von_mises_lcdf`, von_mises_lccdf`. (#1085)
+ - Added `loglogistic_lpdf`, `loglogistic_log`, `loglogistic_rng` and `loglogistic_cdf`. (#1094)
+ - Clean up more mutable state in the Javascript interface (#1118)
+
+DEPRECATIONS
+ - Added a warning for `matrix^scalar` that points users to `.^` and `matrix_power()`. (#1026)
+ - Warn about the following identifiers being reserved in a future version: `array`, `upper`, `lower`, `offset`, `multiplier`. (#1048)
+ - The old form of declaring arrays like `real a[5]`, which has been deprecated since 2.26, now issues a warning. (#1072)
+ - Marked existing syntax deprecations (e.g., `<-`) as expiring in Stan 2.32.0. (#1044)
+ - Deprecate nested multi-indexing on lvalues as it is inconsistent with rvalues.(#1059)
+
+BUGFIXES
+ - Fixed an issue that arose during C++ compilation of models that used a variable with the same name as a Stan library function and called that function. (#1011)
+ - Fixed a bug where the lexer was allowing illegal variable names which began with an underscore. (#962)
+ - Fixed an issue with parser errors 'sticking around' on subsequent runs, which primarily affected the Javascript compiler. (#1074)
+
+DEVELOPER
+ - Updated OCaml and build dependencies. (#1019)
+ - Create internal developer documentation at https://mc-stan.org/stanc3/stanc/. (#1006)
+ - stan2tfp now lives in a seperate repo at stan-dev/stan2tfp. (#1040)
+ - Refactored Stan typechecker. (#995)
+ - Replaces all references to Docker Hub for andrjohns images with stanorg. (#1017)
+ - Move docker to ci-scripts repository. (#1020)
+ - Refactored when logic for binaries builds and release. (#1018)
+ - Added optimization level flags, debug-* and dump-math-signatures flags to stancjs. (#1082)
+ - Compile Tests and Model end-to-end tests run now optionally only when test/integration/good has changed. (#1018)
+
 v2.28.1 (21 October 2021)
 ======================================================================
 

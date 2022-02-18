@@ -177,10 +177,14 @@ let indented_box ?(offset = 0) pp_v ppf v =
 let pp_unsizedtype = Middle.UnsizedType.pp
 let pp_autodifftype = Middle.UnsizedType.pp_autodifftype
 
-let rec unwind_sized_array_type = function
-  | Middle.SizedType.SArray (st, e) -> (
-    match unwind_sized_array_type st with st2, es -> (st2, es @ [e]) )
-  | st -> (st, [])
+let rec unwind_sized_array_type st =
+  match st with
+  | Middle.SizedType.SInt | SReal | SComplex | SVector _ | SRowVector _
+   |SMatrix _ ->
+      (st, [])
+  | SArray (st, dim) ->
+      let st', dims = unwind_sized_array_type st in
+      (st', dim :: dims)
 
 let pp_returntype ppf = function
   | Middle.UnsizedType.ReturnType x -> pp_unsizedtype ppf x
@@ -303,7 +307,7 @@ let pp_printable ppf = function
 
 let pp_list_of_printables ppf l = (hovbox @@ list ~sep:comma pp_printable) ppf l
 
-let pp_sizedtype ppf = function
+let rec pp_sizedtype ppf = function
   | Middle.SizedType.SInt -> pf ppf "int"
   | SReal -> pf ppf "real"
   | SComplex -> pf ppf "complex"
@@ -311,10 +315,13 @@ let pp_sizedtype ppf = function
   | SRowVector (_, e) -> pf ppf "row_vector[%a]" pp_expression e
   | SMatrix (_, e1, e2) ->
       pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
-  | SArray _ ->
-      Common.FatalError.fatal_error_msg [%message "Error printing array type"]
+  | SArray _ as arr ->
+      let ty, ixs = unwind_sized_array_type arr in
+      pf ppf "array[@[%a@]]@ %a"
+        (list ~sep:comma pp_expression)
+        ixs pp_sizedtype ty
 
-let pp_transformation ppf = function
+let pp_bracketed_transform ppf = function
   | Middle.Transformation.Lower e -> pf ppf "<@[lower=%a@]>" pp_expression e
   | Upper e -> pf ppf "<@[upper=%a@]>" pp_expression e
   | LowerUpper (e1, e2) ->
@@ -328,61 +335,57 @@ let pp_transformation ppf = function
       ()
 
 let pp_transformed_type ppf (pst, trans) =
-  let rec discard_arrays pst =
-    match pst with
-    | Middle.Type.Sized st ->
-        Middle.Type.Sized (Fn.compose fst unwind_sized_array_type st)
-    | Unsized (UArray t) -> discard_arrays (Unsized t)
-    | Unsized ut -> Unsized ut in
-  let pst = discard_arrays pst in
-  let unsizedtype_fmt =
-    match pst with
-    | Middle.Type.Sized (SArray _ as st) ->
-        const pp_sizedtype (Fn.compose fst unwind_sized_array_type st)
-    | _ -> const pp_unsizedtype (Middle.Type.to_unsized pst) in
-  let sizes_fmt =
-    match pst with
-    | Sized (SVector (_, e)) | Sized (SRowVector (_, e)) ->
-        const (fun ppf -> pf ppf "[%a]" pp_expression) e
-    | Sized (SMatrix (_, e1, e2)) ->
-        const (fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression) e2
-    | Sized (SArray _)
-     |Unsized _
-     |Sized Middle.SizedType.SInt
-     |Sized SReal
-     |Sized SComplex ->
-        nop in
-  let cov_sizes_fmt =
-    match pst with
-    | Sized (SMatrix (_, e1, e2)) ->
-        if e1 = e2 then const (fun ppf -> pf ppf "[%a]" pp_expression) e1
-        else
-          const (fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression) e2
-    | _ -> nop in
-  match trans with
-  | Middle.Transformation.Identity ->
-      pf ppf "%a%a" unsizedtype_fmt () sizes_fmt ()
-  | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
-   |OffsetMultiplier _ ->
-      pf ppf "%a%a%a" unsizedtype_fmt () pp_transformation trans sizes_fmt ()
-  | Ordered -> pf ppf "ordered%a" sizes_fmt ()
-  | PositiveOrdered -> pf ppf "positive_ordered%a" sizes_fmt ()
-  | Simplex -> pf ppf "simplex%a" sizes_fmt ()
-  | UnitVector -> pf ppf "unit_vector%a" sizes_fmt ()
-  | CholeskyCorr -> pf ppf "cholesky_factor_corr%a" cov_sizes_fmt ()
-  | CholeskyCov -> pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
-  | Correlation -> pf ppf "corr_matrix%a" cov_sizes_fmt ()
-  | Covariance -> pf ppf "cov_matrix%a" cov_sizes_fmt ()
-
-let pp_array_dims ppf = function
-  | [] -> ()
-  | es ->
-      let ({emeta= {loc= {end_loc; _}; _}; _} : untyped_expression) =
-        List.hd_exn es in
-      let es = List.rev es in
-      let ({emeta= {loc= {begin_loc; _}; _}; _} : untyped_expression) =
-        List.hd_exn es in
-      pf ppf "array[@[%a]@] " pp_list_of_expression (es, {begin_loc; end_loc})
+  let open Middle in
+  match pst with
+  | Type.Unsized ust ->
+      (* unsized types are untransformed *)
+      pf ppf "%a" pp_unsizedtype ust
+  | Type.Sized st -> (
+      let pp_possibly_transformed_type ppf (st, trans) =
+        let sizes_fmt =
+          match st with
+          | SizedType.SVector (_, e) | SRowVector (_, e) ->
+              const (fun ppf -> pf ppf "[%a]" pp_expression) e
+          | SMatrix (_, e1, e2) ->
+              const
+                (fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression)
+                e2
+          | SArray _ | SInt | SReal | SComplex -> nop in
+        let cov_sizes_fmt =
+          match st with
+          | SMatrix (_, e1, e2) ->
+              if e1 = e2 then const (fun ppf -> pf ppf "[%a]" pp_expression) e1
+              else
+                const
+                  (fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression)
+                  e2
+          | _ -> nop in
+        match trans with
+        | Transformation.Identity -> pf ppf "%a" pp_sizedtype st
+        | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
+         |OffsetMultiplier _ ->
+            pf ppf "%a%a%a" pp_unsizedtype (SizedType.to_unsized st)
+              pp_bracketed_transform trans sizes_fmt ()
+        | Ordered -> pf ppf "ordered%a" sizes_fmt ()
+        | PositiveOrdered -> pf ppf "positive_ordered%a" sizes_fmt ()
+        | Simplex -> pf ppf "simplex%a" sizes_fmt ()
+        | UnitVector -> pf ppf "unit_vector%a" sizes_fmt ()
+        | CholeskyCorr -> pf ppf "cholesky_factor_corr%a" cov_sizes_fmt ()
+        | CholeskyCov -> pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
+        | Correlation -> pf ppf "corr_matrix%a" cov_sizes_fmt ()
+        | Covariance -> pf ppf "cov_matrix%a" cov_sizes_fmt () in
+      match st with
+      (* array goes before something like cov_matrix *)
+      | Middle.SizedType.SArray _ ->
+          let ty, ixs = unwind_sized_array_type st in
+          let ({emeta= {loc= {end_loc; _}; _}; _} : untyped_expression) =
+            List.last_exn ixs in
+          let ({emeta= {loc= {begin_loc; _}; _}; _} : untyped_expression) =
+            List.hd_exn ixs in
+          pf ppf "array[@[%a@]]@ %a" pp_list_of_expression
+            (ixs, {begin_loc; end_loc})
+            pp_possibly_transformed_type (ty, trans)
+      | _ -> pf ppf "%a" pp_possibly_transformed_type (st, trans) )
 
 let rec pp_indent_unless_block ppf ((s : untyped_statement), loc) =
   match s.stmt with
@@ -459,12 +462,8 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
       let pp_init ppf init =
         match init with None -> () | Some e -> pf ppf " = %a" pp_expression e
       in
-      let es =
-        match pst with
-        | Sized st -> Fn.compose snd unwind_sized_array_type st
-        | Unsized _ -> [] in
-      pf ppf "@[<h>%a%a %a%a;@]" pp_array_dims es pp_transformed_type
-        (pst, trans) pp_identifier id pp_init init
+      pf ppf "@[<h>%a %a%a;@]" pp_transformed_type (pst, trans) pp_identifier id
+        pp_init init
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
       let loc_of (_, _, id) = id.id_loc in
       pf ppf "%a %a(%a" pp_returntype rt pp_identifier id

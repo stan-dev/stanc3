@@ -30,3 +30,30 @@ model {
 }
 `
 var test_no_stderr = stanc.stanc("no_stderr", test_no_stderr_model, ["warn-uninitialized"]);
+
+
+var tc_warn = `
+parameters {
+    real y;
+}
+model {
+    y ~ normal(0,1);
+}
+generated quantities {
+    int x, w;
+   int z = x / w;
+}
+`
+var typechecker_test = stanc.stanc("deprecated", tc_warn);
+console.log(JSON.stringify(typechecker_test.warnings))
+
+var tc_no_warn = `
+parameters {
+    real y;
+}
+model {
+    y ~ normal(0,1);
+}
+`
+var typechecker_test2 = stanc.stanc("deprecated", tc_no_warn);
+console.assert(typechecker_test2.warnings.length == 0, "Typechecker remembered a warning!")

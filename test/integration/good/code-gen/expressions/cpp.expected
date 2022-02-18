@@ -663,19 +663,16 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
       std::complex<local_scalar_t__> z =
          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
       current_statement__ = 7;
-      stan::model::assign(z,
-        (1 ? stan::math::to_complex(0, 3) :
-           stan::math::promote_scalar<std::complex<double>>(2)),
-        "assigning variable z");
+      z = (1 ? stan::math::to_complex(0, 3) : stan::math::to_complex(2, 0));
       {
         std::complex<local_scalar_t__> z2 =
            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
         current_statement__ = 8;
         z2 = (1 ? r : 2);
         current_statement__ = 9;
-        stan::model::assign(z2,
-          (1 ? stan::math::promote_scalar<std::complex<local_scalar_t__>>(0)
-             : zp), "assigning variable z2");
+        z2 = (1 ?
+                stan::math::promote_scalar<std::complex<local_scalar_t__>>(0)
+                : zp);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -758,10 +755,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
            stan::math::eval(stan::math::multiply(2, a))),
         "assigning variable d");
       current_statement__ = 7;
-      stan::model::assign(z,
-        (1 ? stan::math::to_complex(0, 3) :
-           stan::math::promote_scalar<std::complex<double>>(2)),
-        "assigning variable z");
+      z = (1 ? stan::math::to_complex(0, 3) : stan::math::to_complex(2, 0));
       if (emit_transformed_parameters__) {
         out__.write(c);
         out__.write(d);
@@ -809,8 +803,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
       out__.write(r);
       std::complex<local_scalar_t__> zp =
          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
-      stan::model::assign(zp, in__.read<local_scalar_t__>(),
-        "assigning variable zp");
+      zp = in__.read<local_scalar_t__>();
       out__.write(zp);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

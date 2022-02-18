@@ -1115,7 +1115,6 @@ let () =
   add_unqualified ("distance", ReturnType UReal, [URowVector; URowVector], SoA) ;
   add_unqualified ("distance", ReturnType UReal, [UVector; URowVector], SoA) ;
   add_unqualified ("distance", ReturnType UReal, [URowVector; UVector], SoA) ;
-  add_unqualified ("divide", ReturnType UComplex, [UComplex; UReal], AoS) ;
   add_unqualified ("divide", ReturnType UComplex, [UComplex; UComplex], AoS) ;
   add_unqualified ("divide", ReturnType UInt, [UInt; UInt], SoA) ;
   add_unqualified ("divide", ReturnType UReal, [UReal; UReal], SoA) ;
@@ -1668,7 +1667,6 @@ let () =
     ("multinomial_logit_rng", ReturnType (UArray UInt), [UVector; UInt], AoS) ;
   add_unqualified
     ("multinomial_rng", ReturnType (UArray UInt), [UVector; UInt], AoS) ;
-  add_unqualified ("multiply", ReturnType UComplex, [UComplex; UReal], AoS) ;
   add_unqualified ("multiply", ReturnType UComplex, [UComplex; UComplex], AoS) ;
   add_unqualified ("multiply", ReturnType UInt, [UInt; UInt], SoA) ;
   add_unqualified ("multiply", ReturnType UReal, [UReal; UReal], SoA) ;
@@ -2058,15 +2056,8 @@ let () =
   add_unqualified
     ("sub_row", ReturnType URowVector, [UMatrix; UInt; UInt; UInt], SoA) ;
   List.iter
-    ~f:(fun i ->
-      add_unqualified
-        ( "subtract"
-        , ReturnType (List.nth_exn bare_types i)
-        , [List.nth_exn bare_types i; List.nth_exn bare_types i]
-        , SoA ) )
-    (List.range 0 bare_types_size) ;
-  add_unqualified ("subtract", ReturnType UComplex, [UComplex; UReal], AoS) ;
-  add_unqualified ("subtract", ReturnType UComplex, [UComplex; UComplex], AoS) ;
+    ~f:(fun x -> add_unqualified ("subtract", ReturnType x, [x; x], SoA))
+    bare_types ;
   add_unqualified ("subtract", ReturnType UVector, [UVector; UReal], SoA) ;
   add_unqualified ("subtract", ReturnType URowVector, [URowVector; UReal], SoA) ;
   add_unqualified ("subtract", ReturnType UMatrix, [UMatrix; UReal], SoA) ;

@@ -17,3 +17,9 @@
 data {
   //nothing here either
 }
+
+transformed data {
+    int N;
+      array[N/*test1*/ , //test1.5
+    N/*test2*/] real arr;
+}
