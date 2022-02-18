@@ -146,7 +146,7 @@ let rec no_parens {expr; emeta} =
   | Variable _ | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetLP
    |GetTarget ->
       {expr; emeta}
-  | TernaryIf _ | BinOp _ | PrefixOp _ | PostfixOp _ | Promotion _ ->
+  | TernaryIf _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
       {expr= map_expression keep_parens ident expr; emeta}
   | Indexed (e, l) ->
       { expr=
@@ -158,12 +158,13 @@ let rec no_parens {expr; emeta} =
                   | i -> map_index keep_parens i )
                 l )
       ; emeta }
-  | ArrayExpr _ | RowVectorExpr _ | FunApp _ | CondDistApp _ ->
+  | ArrayExpr _ | RowVectorExpr _ | FunApp _ | CondDistApp _ | Promotion _ ->
       {expr= map_expression no_parens ident expr; emeta}
 
 and keep_parens {expr; emeta} =
   match expr with
-  | Paren {expr= Paren e; _} -> keep_parens e
+  | Promotion (e, ut, ad) -> {expr= Promotion (keep_parens e, ut, ad); emeta}
+  | Paren ({expr= Paren _; _} as e) -> keep_parens e
   | Paren ({expr= BinOp _; _} as e)
    |Paren ({expr= PrefixOp _; _} as e)
    |Paren ({expr= PostfixOp _; _} as e)
