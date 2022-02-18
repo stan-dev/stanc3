@@ -1352,6 +1352,13 @@ generated quantities {
 data {
   //nothing here either
 }
+transformed data {
+  int N;
+  array[N /*test1*/, //test1.5
+        N] real arr;
+  
+  /* ^^^:test2*/
+}
 
   $ ../../../../install/default/bin/stanc --auto-format conditional_condition_good.stan
 parameters {
