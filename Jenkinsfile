@@ -31,7 +31,7 @@ def runPerformanceTests(String testsPath){
         git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
     """
 
-    writeFile(file:"performance-tests-cmdstan/cmdstan/make/local", text:"O=0\nCXX=${CXX}")
+    writeFile(file:"performance-tests-cmdstan/cmdstan/make/local", text:"CXX=${CXX}")
 
     utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
     utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
@@ -41,7 +41,9 @@ def runPerformanceTests(String testsPath){
         cd performance-tests-cmdstan
         mkdir cmdstan/bin
         cp ../bin/stanc cmdstan/bin/linux-stanc
-        cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..
+        cd cmdstan; make clean-all;
+        echo 'O=0' >> make/local
+        make -j${env.PARALLEL} build; cd ..
         ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}
     """
 }
