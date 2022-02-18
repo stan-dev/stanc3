@@ -17763,16 +17763,14 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, y_hat, sigma_y));
         std::complex<double> z;
         current_statement__ = 13;
-        stan::model::assign(z, stan::math::to_complex(7, 5),
-          "assigning variable z");
+        z = stan::math::to_complex(7, 5);
         current_statement__ = 14;
         if (pstream__) {
           stan::math::stan_print(pstream__, z);
           stan::math::stan_print(pstream__, "\n");
         }
         current_statement__ = 15;
-        stan::model::assign(z, stan::math::to_complex(5, 4),
-          "assigning variable z");
+        z = stan::math::to_complex(5, 4);
         current_statement__ = 16;
         lp_accum__.add(stan::math::get_real(z));
       }

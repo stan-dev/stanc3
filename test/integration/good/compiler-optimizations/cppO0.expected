@@ -18820,16 +18820,14 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         std::complex<local_scalar_t__> z =
            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
         current_statement__ = 13;
-        stan::model::assign(z, ((3 + 4) + stan::math::to_complex(0, 5)),
-          "assigning variable z");
+        z = ((3 + 4) + stan::math::to_complex(0, 5));
         current_statement__ = 14;
         if (pstream__) {
           stan::math::stan_print(pstream__, z);
           stan::math::stan_print(pstream__, "\n");
         }
         current_statement__ = 15;
-        stan::model::assign(z, (stan::math::to_complex(0, 4) + 5),
-          "assigning variable z");
+        z = (stan::math::to_complex(0, 4) + 5);
         current_statement__ = 16;
         lp_accum__.add(stan::math::get_real(z));
       }

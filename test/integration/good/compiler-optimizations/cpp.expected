@@ -27489,15 +27489,13 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         std::complex<double> z =
            std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
              std::numeric_limits<double>::quiet_NaN());
-        stan::model::assign(lcm_sym16__, stan::math::to_complex(7, 5),
-          "assigning variable lcm_sym16__");
+        lcm_sym16__ = stan::math::to_complex(7, 5);
         current_statement__ = 14;
         if (pstream__) {
           stan::math::stan_print(pstream__, lcm_sym16__);
           stan::math::stan_print(pstream__, "\n");
         }
-        stan::model::assign(lcm_sym15__, stan::math::to_complex(5, 4),
-          "assigning variable lcm_sym15__");
+        lcm_sym15__ = stan::math::to_complex(5, 4);
         current_statement__ = 15;
         lp_accum__.add(stan::math::get_real(lcm_sym15__));
       }
