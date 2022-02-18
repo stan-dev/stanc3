@@ -377,6 +377,9 @@ let pp_bool_expr ppf expr =
 
 let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
   (* ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) = *)
+  let remove_promotions (e : 'a Expr.Fixed.t) =
+    (* assignment handles one level of promotion internally, don't do it twice *)
+    match e.pattern with Promotion (e, _, _) -> e | _ -> e in
   let pp_stmt_list = list ~sep:cut pp_statement in
   ( match pattern with
   | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
@@ -386,15 +389,15 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
   | Assignment
       ( ((LVariable _ | LTupleProjection _ | LIndexed (_, [])) as lhs)
       , _
-      , ( ( {meta= {Expr.Typed.Meta.type_= UInt | UReal; _}; _}
+      , ( ( {meta= {Expr.Typed.Meta.type_= UInt | UReal | UComplex; _}; _}
           | { pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _)
             ; _ } ) as rhs ) ) ->
       pf ppf "@[<hov 4>%a = %a;@]" pp_nonrange_lvalue lhs pp_expr rhs
   (* TUPLE MAYBE assigning to tuples
      We've decided to delegate this to `assign()` in C++
   *)
-  | Assignment (LIndexed (LVariable assignee, idcs), UInt, rhs)
-   |Assignment (LIndexed (LVariable assignee, idcs), UReal, rhs)
+  | Assignment
+      (LIndexed (LVariable assignee, idcs), (UInt | UReal | UComplex), rhs)
     when List.for_all ~f:is_single_index idcs ->
       pf ppf "@[<hov 4>%a = %a;@]" pp_indexed_simple (assignee, idcs) pp_expr
         rhs
@@ -420,7 +423,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
             { e with
               Expr.Fixed.pattern=
                 Expr.Fixed.Pattern.map maybe_deep_copy e.pattern } in
-      let rhs = maybe_deep_copy rhs in
+      let rhs = maybe_deep_copy (remove_promotions rhs) in
       (* Split up the top-level lvalue to fit in the assign call *)
       let lhs_base, lhs_idcs =
         match lhs with LIndexed (lv, idcs) -> (lv, idcs) | _ -> (lhs, []) in

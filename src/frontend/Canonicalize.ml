@@ -3,11 +3,7 @@ open Ast
 open Deprecation_analysis
 
 type canonicalizer_settings =
-  { deprecations: bool
-  ; parentheses: bool
-  ; braces: bool
-  ; (* TODO: NYI. Really for the pretty printer but it makes sense to live here *)
-    inline_includes: bool }
+  {deprecations: bool; parentheses: bool; braces: bool; inline_includes: bool}
 
 let all =
   {deprecations= true; parentheses= true; inline_includes= true; braces= true}

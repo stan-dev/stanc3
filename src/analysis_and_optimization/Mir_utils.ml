@@ -27,6 +27,8 @@ let fold_stmts ~take_expr ~take_stmt ~(init : 'c) (stmts : Stmt.Located.t List.t
 
 let rec num_expr_value (v : Expr.Typed.t) : (float * string) option =
   match v with
+  (* internal type promotions should be ignored *)
+  | {pattern= Fixed.Pattern.Promotion (e, _, _); _} -> num_expr_value e
   | {pattern= Fixed.Pattern.Lit (Real, str); _}
    |{pattern= Fixed.Pattern.Lit (Int, str); _} ->
       Some (float_of_string str, str)

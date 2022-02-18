@@ -330,7 +330,9 @@ let constant_propagation_transfer ?(preserve_stability = false)
             (* TODO: We could propagate tuple elements if we make the map more flexible *)
             | Assignment (LVariable s, t, e) -> (
               match Partial_evaluator.try_eval_expr (subst_expr m e) with
-              | {pattern= Lit (_, _); _} as e'
+              | { pattern=
+                    Promotion ({pattern= Lit (_, _); _}, _, _) | Lit (_, _)
+                ; _ } as e'
                 when not (preserve_stability && UnsizedType.is_autodiffable t)
                 ->
                   Map.set m ~key:s ~data:e'
