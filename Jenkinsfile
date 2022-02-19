@@ -132,236 +132,236 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*") }}
         }
-//         stage("OCaml tests") {
-//             when {
-//                 beforeAgent true
-//                 expression {
-//                     !skipRemainingStages
-//                 }
-//             }
-//             parallel {
-//                 stage("Dune tests") {
-//                     agent {
-//                         docker {
-//                             image 'stanorg/stanc3:debianfi'
-//                             //Forces image to ignore entrypoint
-//                             args "--entrypoint=\'\'"
-//                         }
-//                     }
-//                     steps {
-//                         runShell("""
-//                             eval \$(opam env)
-//                             dune runtest
-//                         """)
-//                     }
-//                     post { always { runShell("rm -rf ./*") }}
-//                 }
-//                 stage("stancjs tests") {
-//                     agent {
-//                         docker {
-//                             image 'stanorg/stanc3:debianfi'
-//                             //Forces image to ignore entrypoint
-//                             args "--entrypoint=\'\'"
-//                         }
-//                     }
-//                     steps {
-//                         runShell("""
-//                             eval \$(opam env)
-//                             dune build @runjstest
-//                         """)
-//                     }
-//                     post { always { runShell("rm -rf ./*") }}
-//                 }
-//             }
-//         }
-//         stage("CmdStan & Math tests") {
-//             parallel {
-//                 stage("Compile tests") {
-//                     when {
-//                         beforeAgent true
-//                         expression {
-//                             !skipCompileTests
-//                         }
-//                     }
-//                     agent {
-//                         docker {
-//                             image 'stanorg/ci:gpu'
-//                             label 'linux'
-//                         }
-//                     }
-//                     steps {
-//                         script {
-//                             unstash 'ubuntu-exe'
-//                             sh """
-//                                 git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-//                             """
-//
-//                             writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
-//                                     text:"O=0\nCXX=${CXX}")
-//
-//                             utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
-//                             utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
-//                             utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
-//
-//                             sh """
-//                                 cd performance-tests-cmdstan
-//                                 mkdir cmdstan/bin
-//                                 cp ../bin/stanc cmdstan/bin/linux-stanc
-//                                 cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..
-//                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../test/integration/good
-//                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
-//                                 """
-//                         }
-//
-//                         xunit([GoogleTest(
-//                             deleteOutputFiles: false,
-//                             failIfNotNew: true,
-//                             pattern: 'performance-tests-cmdstan/performance.xml',
-//                             skipNoTestFiles: false,
-//                             stopProcessingIfError: false)
-//                         ])
-//                     }
-//                     post { always { runShell("rm -rf ./*") }}
-//                 }
-//                 stage("Model end-to-end tests") {
-//                     when {
-//                         beforeAgent true
-//                         allOf {
-//                          expression {
-//                             !skipCompileTests
-//                          }
-//                          expression {
-//                             !params.skip_end_to_end
-//                          }
-//                         }
-//                     }
-//                     agent {
-//                         docker {
-//                             image 'stanorg/ci:gpu'
-//                             label 'linux'
-//                         }
-//                     }
-//                     steps {
-//                         script {
-//                             unstash 'ubuntu-exe'
-//                             sh """
-//                                 git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-//                             """
-//                             utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
-//                             utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
-//                             utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
-//                             sh """
-//                                 cd performance-tests-cmdstan
-//                                 git show HEAD --stat
-//                                 echo "example-models/regression_tests/mother.stan" > all.tests
-//                                 cat known_good_perf_all.tests >> all.tests
-//                                 echo "" >> all.tests
-//                                 cat shotgun_perf_all.tests >> all.tests
-//                                 cat all.tests
-//                                 echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-//                                 echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
-//                                 cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-//                                 CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
-//                             """
-//                         }
-//
-//                         xunit([GoogleTest(
-//                             deleteOutputFiles: false,
-//                             failIfNotNew: true,
-//                             pattern: 'performance-tests-cmdstan/performance.xml',
-//                             skipNoTestFiles: false,
-//                             stopProcessingIfError: false)
-//                         ])
-//
-//                         archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-//
-//                         perfReport modePerformancePerTestCase: true,
-//                             sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-//                             modeThroughput: false,
-//                             excludeResponseTime: true,
-//                             errorFailedThreshold: 100,
-//                             errorUnstableThreshold: 100
-//                     }
-//                     post { always { runShell("rm -rf ./*") }}
-//                 }
-//                 stage('Math functions expressions test') {
-//                     when {
-//                         beforeAgent true
-//                         expression {
-//                             !skipExpressionTests
-//                         }
-//                     }
-//                     agent {
-//                         docker {
-//                             image 'stanorg/ci:gpu'
-//                             label 'linux'
-//                         }
-//                     }
-//                     steps {
-//
-//                         unstash 'ubuntu-exe'
-//
-//                         script {
-//                             sh """
-//                                 git clone --recursive https://github.com/stan-dev/math.git
-//                             """
-//                             utils.checkout_pr("math", "math", params.math_pr)
-//                             sh """
-//                                 cp bin/stanc math/test/expressions/stanc
-//                             """
-//
-//                             dir("math") {
-//                                 sh """
-//                                     echo O=0 >> make/local
-//                                     echo "CXX=${env.CXX} -Werror " >> make/local
-//                                 """
-//                                 withEnv(['PATH+TBB=./lib/tbb']) {
-//                                     try { sh "./runTests.py -j${env.PARALLEL} test/expressions" }
-//                                     finally { junit 'test/**/*.xml' }
-//                                 }
-//                             }
-//                         }
-//                     }
-//                     post { always { deleteDir() } }
-//                 }
-//             }
-//         }
+        stage("OCaml tests") {
+            when {
+                beforeAgent true
+                expression {
+                    !skipRemainingStages
+                }
+            }
+            parallel {
+                stage("Dune tests") {
+                    agent {
+                        docker {
+                            image 'stanorg/stanc3:debianfi'
+                            //Forces image to ignore entrypoint
+                            args "--entrypoint=\'\'"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune runtest
+                        """)
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+                stage("stancjs tests") {
+                    agent {
+                        docker {
+                            image 'stanorg/stanc3:debianfi'
+                            //Forces image to ignore entrypoint
+                            args "--entrypoint=\'\'"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune build @runjstest
+                        """)
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+            }
+        }
+        stage("CmdStan & Math tests") {
+            parallel {
+                stage("Compile tests") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipCompileTests
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/ci:gpu'
+                            label 'linux'
+                        }
+                    }
+                    steps {
+                        script {
+                            unstash 'ubuntu-exe'
+                            sh """
+                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                            """
+
+                            writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
+                                    text:"O=0\nCXX=${CXX}")
+
+                            utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
+                            utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
+                            utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
+
+                            sh """
+                                cd performance-tests-cmdstan
+                                mkdir cmdstan/bin
+                                cp ../bin/stanc cmdstan/bin/linux-stanc
+                                cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..
+                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../test/integration/good
+                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
+                                """
+                        }
+
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)
+                        ])
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+                stage("Model end-to-end tests") {
+                    when {
+                        beforeAgent true
+                        allOf {
+                         expression {
+                            !skipCompileTests
+                         }
+                         expression {
+                            !params.skip_end_to_end
+                         }
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/ci:gpu'
+                            label 'linux'
+                        }
+                    }
+                    steps {
+                        script {
+                            unstash 'ubuntu-exe'
+                            sh """
+                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                            """
+                            utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
+                            utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
+                            utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
+                            sh """
+                                cd performance-tests-cmdstan
+                                git show HEAD --stat
+                                echo "example-models/regression_tests/mother.stan" > all.tests
+                                cat known_good_perf_all.tests >> all.tests
+                                echo "" >> all.tests
+                                cat shotgun_perf_all.tests >> all.tests
+                                cat all.tests
+                                echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+                                echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
+                                cd cmdstan; make clean-all; git show HEAD --stat; cd ..
+                                CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
+                            """
+                        }
+
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)
+                        ])
+
+                        archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+
+                        perfReport modePerformancePerTestCase: true,
+                            sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                            modeThroughput: false,
+                            excludeResponseTime: true,
+                            errorFailedThreshold: 100,
+                            errorUnstableThreshold: 100
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+                stage('Math functions expressions test') {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipExpressionTests
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/ci:gpu'
+                            label 'linux'
+                        }
+                    }
+                    steps {
+
+                        unstash 'ubuntu-exe'
+
+                        script {
+                            sh """
+                                git clone --recursive https://github.com/stan-dev/math.git
+                            """
+                            utils.checkout_pr("math", "math", params.math_pr)
+                            sh """
+                                cp bin/stanc math/test/expressions/stanc
+                            """
+
+                            dir("math") {
+                                sh """
+                                    echo O=0 >> make/local
+                                    echo "CXX=${env.CXX} -Werror " >> make/local
+                                """
+                                withEnv(['PATH+TBB=./lib/tbb']) {
+                                    try { sh "./runTests.py -j${env.PARALLEL} test/expressions" }
+                                    finally { junit 'test/**/*.xml' }
+                                }
+                            }
+                        }
+                    }
+                    post { always { deleteDir() } }
+                }
+            }
+        }
 
         // Builds on Flatiron osx - 11.2
-//         stage("Build & test Mac OS X binary - develop") {
-//             when {
-//                 beforeAgent true
-//                 allOf {
-//                     expression { !skipRebuildingBinaries }
-//                     anyOf { branch 'develop'; changeRequest() }
-//                 }
-//             }
-//             agent { label 'osx' }
-//             steps {
-//                 runShell("""
-//                     export PATH=/Users/jenkins/brew/bin:\$PATH
-//                     opam switch 4.12.0
-//                     eval \$(opam env --switch=4.12.0)
-//                     opam update || true
-//                     bash -x scripts/install_build_deps.sh
-//                     dune subst
-//                     dune build @install
-//                 """)
-//                 sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
-//                 stash name:'mac-exe', includes:'bin/*'
-//             }
-//             post { always { runShell("rm -rf ./*") }}
-//         }
+        stage("Build & test Mac OS X binary - develop") {
+            when {
+                beforeAgent true
+                allOf {
+                    expression { !skipRebuildingBinaries }
+                    anyOf { branch 'develop'; changeRequest() }
+                }
+            }
+            agent { label 'osx' }
+            steps {
+                runShell("""
+                    export PATH=/Users/jenkins/brew/bin:\$PATH
+                    opam switch 4.12.0
+                    eval \$(opam env --switch=4.12.0)
+                    opam update || true
+                    bash -x scripts/install_build_deps.sh
+                    dune subst
+                    dune build @install
+                """)
+                sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
+                stash name:'mac-exe', includes:'bin/*'
+            }
+            post { always { runShell("rm -rf ./*") }}
+        }
 
         // Builds on gelman max osx - 10.13
         stage("Build & test Mac OS X binary - release") {
-//             when {
-//                 beforeAgent true
-//                 allOf {
-//                     expression { !skipRebuildingBinaries }
-//                     anyOf { buildingTag(); branch 'master' }
-//                 }
-//             }
+            when {
+                beforeAgent true
+                allOf {
+                    expression { !skipRebuildingBinaries }
+                    anyOf { buildingTag(); branch 'master' }
+                }
+            }
             agent { label 'gg-osx' }
             steps {
                 runShell("""
