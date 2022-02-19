@@ -353,7 +353,7 @@ pipeline {
             post { always { runShell("rm -rf ./*") }}
         }
 
-        // Builds on gelman max osx - 10.13
+        // Builds on gelman max osx - 10.11.6
         stage("Build & test Mac OS X binary - release") {
             when {
                 beforeAgent true
