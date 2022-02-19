@@ -3,6 +3,8 @@ open Core_kernel
 open Frontend
 open Debug_data_generation
 
+let print_data_prog ast = print_data_prog (Ast_to_Mir.trans_data ast)
+
 let%expect_test "whole program data generation check" =
   let ast =
     Frontend_utils.typed_ast_of_string_exn
