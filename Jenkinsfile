@@ -327,7 +327,7 @@ pipeline {
             }
         }
 
-        // Builds on FlatIron osx - 11.2
+        // Builds on Flatiron osx - 11.2
         stage("Build & test Mac OS X binary - develop") {
             when {
                 beforeAgent true
@@ -354,6 +354,7 @@ pipeline {
             post { always { runShell("rm -rf ./*") }}
         }
 
+        // Builds on gelman max osx - 10.13
         stage("Build & test Mac OS X binary - release") {
             when {
                 beforeAgent true
