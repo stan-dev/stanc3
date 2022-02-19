@@ -62,7 +62,7 @@ pipeline {
     options {parallelsAlwaysFailFast()}
     environment {
         CXX = 'clang++-6.0'
-        PARALLEL = 4 // There are ~4 cores/executor
+        PARALLEL = 8
     }
     stages {
         stage('Kill previous builds') {
