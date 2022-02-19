@@ -210,7 +210,6 @@ module Helpers = struct
     ; pattern= FunApp (CompilerInternal FnMakeArray, l) }
 
   let try_unpack e =
-    (* FIXME: what about matrices? *)
     match e.Fixed.pattern with
     | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l) -> Some l
     | FunApp

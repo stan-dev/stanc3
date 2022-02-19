@@ -73,56 +73,53 @@ let rec repeat n e =
 let rec repeat_th n f =
   match n with n when n <= 0 -> [] | m -> f () :: repeat_th (m - 1) f
 
+let gen_bounded m gen e =
+  match Expr.Helpers.try_unpack (eval_expr m e) with
+  | Some unpacked_e -> List.map ~f:gen unpacked_e
+  | None ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Bad bounded (upper OR lower) expr: "
+            (e : Expr.Typed.Meta.t Expr.Fixed.t)]
+
+let gen_ul_bounded m gen e1 e2 =
+  let create_bounds l u =
+    List.map2_exn ~f:(fun x y -> gen (Transformation.LowerUpper (x, y))) l u
+  in
+  let e1, e2 = (eval_expr m e1, eval_expr m e2) in
+  match Expr.Helpers.(try_unpack e1, try_unpack e2) with
+  | Some unpacked_e1, Some unpacked_e2 -> create_bounds unpacked_e1 unpacked_e2
+  | None, Some unpacked_e2 ->
+      create_bounds
+        (List.init (List.length unpacked_e2) ~f:(fun _ -> e1))
+        unpacked_e2
+  | Some unpacked_e1, None ->
+      create_bounds unpacked_e1
+        (List.init (List.length unpacked_e1) ~f:(fun _ -> e2))
+  | _ ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Bad bounded upper and lower expr: "
+            (e1 : Expr.Typed.t)
+            " and "
+            (e2 : Expr.Typed.t)]
+
 let gen_row_vector m n t =
-  let gen_bounded t e =
-    match Expr.Helpers.try_unpack e with
-    | Some unpacked_e ->
-        Expr.Helpers.row_vector
-          (List.map ~f:(fun x -> gen_num_real m (t x)) unpacked_e)
-    | None ->
-        Common.FatalError.fatal_error_msg
-          [%message
-            "Bad bounded (upper OR lower) expr: "
-              (e : Expr.Typed.Meta.t Expr.Fixed.t)] in
-  let gen_ul_bounded e1 e2 =
-    let create_bounds l u =
-      Expr.Helpers.row_vector
-        (List.map2_exn
-           ~f:(fun x y -> gen_num_real m (Transformation.LowerUpper (x, y)))
-           l u ) in
-    match Expr.Helpers.(try_unpack e1, try_unpack e2) with
-    | Some unpacked_e1, Some unpacked_e2 ->
-        create_bounds unpacked_e1 unpacked_e2
-    | None, Some unpacked_e2 ->
-        create_bounds
-          (List.init (List.length unpacked_e2) ~f:(fun _ -> e1))
-          unpacked_e2
-    | Some unpacked_e1, None ->
-        create_bounds unpacked_e1
-          (List.init (List.length unpacked_e1) ~f:(fun _ -> e2))
-    | _ ->
-        Common.FatalError.fatal_error_msg
-          [%message
-            "Bad bounded upper and lower expr: "
-              (e1 : Expr.Typed.t)
-              " and "
-              (e2 : Expr.Typed.t)] in
   match (t : Expr.Typed.t Transformation.t) with
   | Transformation.Lower ({meta= {type_= UVector | URowVector; _}; _} as e) ->
-      gen_bounded (fun x -> Transformation.Lower x) (eval_expr m e)
+      gen_bounded m (fun x -> gen_num_real m (Transformation.Lower x)) e
+      |> Expr.Helpers.row_vector
   | Transformation.Upper ({meta= {type_= UVector | URowVector; _}; _} as e) ->
-      gen_bounded (fun x -> Transformation.Upper x) (eval_expr m e)
+      gen_bounded m (fun x -> gen_num_real m (Transformation.Upper x)) e
+      |> Expr.Helpers.row_vector
   | Transformation.LowerUpper
       ( ({meta= {type_= UVector | URowVector | UReal | UInt; _}; _} as e1)
       , ({meta= {type_= UVector | URowVector; _}; _} as e2) )
    |Transformation.LowerUpper
       ( ({meta= {type_= UVector | URowVector; _}; _} as e1)
       , ({meta= {type_= UReal | UInt; _}; _} as e2) ) ->
-      gen_ul_bounded (eval_expr m e1) (eval_expr m e2)
-  | _ ->
-      let e =
-        Expr.Helpers.row_vector (repeat_th n (fun _ -> gen_num_real m t)) in
-      {e with meta= {e.meta with type_= UMatrix}}
+      gen_ul_bounded m (gen_num_real m) e1 e2 |> Expr.Helpers.row_vector
+  | _ -> Expr.Helpers.row_vector (repeat_th n (fun _ -> gen_num_real m t))
 
 let gen_vector m n t =
   let gen_ordered n =
@@ -218,18 +215,40 @@ let gen_corr_matrix n =
   wrap_real_mat (matprod corr_chol (transpose corr_chol))
 
 let gen_matrix mm m n t =
-  match t with
-  | Transformation.Covariance -> gen_cov_matrix m
+  match (t : Expr.Typed.t Transformation.t) with
+  | Covariance -> gen_cov_matrix m
   | Correlation -> gen_corr_matrix m
   | CholeskyCov -> gen_cov_cholesky m n
   | CholeskyCorr -> gen_corr_cholesky m
+  | Lower ({meta= {type_= UMatrix; _}; _} as e) ->
+      Expr.Helpers.matrix_from_rows
+        (gen_bounded mm (fun x -> gen_row_vector mm n (Lower x)) e)
+  | Upper ({meta= {type_= UMatrix; _}; _} as e) ->
+      Expr.Helpers.matrix_from_rows
+        (gen_bounded mm (fun x -> gen_row_vector mm n (Upper x)) e)
+  | LowerUpper (({meta= {type_= UMatrix; _}; _} as e1), e2)
+   |LowerUpper (e1, ({meta= {type_= UMatrix; _}; _} as e2)) ->
+      Expr.Helpers.matrix_from_rows
+        (gen_ul_bounded mm (gen_row_vector mm n) e1 e2)
   | _ ->
       Expr.Helpers.matrix_from_rows
         (repeat_th m (fun () -> gen_row_vector mm n t))
 
-let gen_array elt n _ = Expr.Helpers.array_expr (repeat_th n elt)
+let rec gen_array m st n t =
+  let elt () = generate_value m st t in
+  match (t : Expr.Typed.t Transformation.t) with
+  | Lower ({meta= {type_= UArray _; _}; _} as e) ->
+      Expr.Helpers.array_expr
+        (gen_bounded m (fun x -> generate_value m st (Lower x)) e)
+  | Upper ({meta= {type_= UArray _; _}; _} as e) ->
+      Expr.Helpers.array_expr
+        (gen_bounded m (fun x -> generate_value m st (Upper x)) e)
+  | LowerUpper (({meta= {type_= UArray _; _}; _} as e1), e2)
+   |LowerUpper (e1, ({meta= {type_= UArray _; _}; _} as e2)) ->
+      Expr.Helpers.array_expr (gen_ul_bounded m (generate_value m st) e1 e2)
+  | _ -> Expr.Helpers.array_expr (repeat_th n elt)
 
-let rec generate_value m st t =
+and generate_value m st t =
   match st with
   | SizedType.SInt -> Expr.Helpers.int (gen_num_int m t)
   | SReal -> Expr.Helpers.float (gen_num_real m t)
@@ -240,9 +259,7 @@ let rec generate_value m st t =
   | SRowVector (_, e) -> gen_row_vector m (unwrap_int_exn m e) t
   | SMatrix (_, e1, e2) ->
       gen_matrix m (unwrap_int_exn m e1) (unwrap_int_exn m e2) t
-  | SArray (st, e) ->
-      let element () = generate_value m st t in
-      gen_array element (unwrap_int_exn m e) t
+  | SArray (st, e) -> gen_array m st (unwrap_int_exn m e) t
 
 let rec pp_value_json ppf e =
   match e.Expr.Fixed.pattern with
