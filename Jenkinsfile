@@ -333,8 +333,10 @@ pipeline {
                 beforeAgent true
                 allOf {
                     expression { !skipRebuildingBinaries }
-                    branch 'develop'
-                    changeRequest()
+                    anyOf {
+                        branch 'develop'
+                        changeRequest()
+                    }
                 }
             }
             agent { label 'osx' }
