@@ -1,4 +1,4 @@
-@Library('StanUtils@add-ci-skip')
+@Library('StanUtils')
 import org.stan.Utils
 
 utils = new org.stan.Utils()
