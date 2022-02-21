@@ -679,7 +679,7 @@ let migrate_checks_to_end_of_block stmts =
   let checks, not_checks = List.partition_tf ~f:stmt_contains_check stmts in
   not_checks @ checks
 
-let trans_data (p : Ast.typed_program) =
+let gather_data (p : Ast.typed_program) =
   let data = Ast.get_stmts p.datablock in
   List.filter_map data ~f:(function
     | { stmt=

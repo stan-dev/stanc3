@@ -213,9 +213,8 @@ module Helpers = struct
     match e.Fixed.pattern with
     | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l) -> Some l
     | FunApp
-        ( StanLib (transpose, FnPlain, _)
-        , [{pattern= FunApp (CompilerInternal FnMakeRowVec, l); _}] )
-      when String.equal transpose (Operator.to_string Transpose) ->
+        ( StanLib ("Transpose__", FnPlain, _)
+        , [{pattern= FunApp (CompilerInternal FnMakeRowVec, l); _}] ) ->
         Some l
     | _ -> None
 

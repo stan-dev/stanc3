@@ -92,7 +92,7 @@ let stan2cpp model_name model_string is_flag_set flag_val =
           r.return
             ( Result.Ok
                 (Debug_data_generation.print_data_prog
-                   (Ast_to_Mir.trans_data typed_ast) )
+                   (Ast_to_Mir.gather_data typed_ast) )
             , warnings
             , [] ) ;
         let opt_mir =
