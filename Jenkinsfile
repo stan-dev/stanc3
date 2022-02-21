@@ -327,17 +327,44 @@ pipeline {
             }
         }
 
-        stage("Build & test Mac OS X binary") {
+        // Builds on Flatiron macOS - recent macOS version
+        stage("Build & test Mac OS X binary - develop") {
             when {
                 beforeAgent true
-                expression {
-                    !skipRebuildingBinaries
+                allOf {
+                    expression { !skipRebuildingBinaries }
+                    anyOf { branch 'develop'; changeRequest() }
                 }
             }
             agent { label 'osx' }
             steps {
                 runShell("""
                     export PATH=/Users/jenkins/brew/bin:\$PATH
+                    opam switch 4.12.0
+                    eval \$(opam env --switch=4.12.0)
+                    opam update || true
+                    bash -x scripts/install_build_deps.sh
+                    dune subst
+                    dune build @install
+                """)
+                sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
+                stash name:'mac-exe', includes:'bin/*'
+            }
+            post { always { runShell("rm -rf ./*") }}
+        }
+
+        // Builds on gelman macOS - version 10.11.6
+        stage("Build & test Mac OS X binary - release") {
+            when {
+                beforeAgent true
+                allOf {
+                    expression { !skipRebuildingBinaries }
+                    anyOf { buildingTag(); branch 'master' }
+                }
+            }
+            agent { label 'gg-osx' }
+            steps {
+                runShell("""
                     opam switch 4.12.0
                     eval \$(opam env --switch=4.12.0)
                     opam update || true
