@@ -3043,7 +3043,8 @@ parameters {
 }
 model {
   mu ~ n();
-  target += n_lpdf(mu | ); // check both instantiations
+  target += n_lpdf(mu /*check*/// both instantiations
+            );
 }
 
   $ ../../../../install/default/bin/stanc --auto-format functions-fwd-ref.stan
@@ -3150,8 +3151,8 @@ transformed data {
   c = foo2(2, b);
   c = foo2(2, 3);
   
-  a = foo0_lpmf(2 | );
-  b = foo1_lpdf(N[6] | );
+  a = foo0_lpmf(2);
+  b = foo1_lpdf(N[6]);
   c = foo2_lpdf(a | b);
   c = foo2_lpdf(a | 1);
   c = foo2_lpdf(2 | b);
@@ -3209,11 +3210,11 @@ transformed parameters {
   
   //   phi3 = foo2_lp(phi1,phi2);
   
-  phi1 = foo0_lpmf(3 | );
+  phi1 = foo0_lpmf(3);
   
-  phi2 = foo1_lpdf(1 | );
-  phi2 = foo1_lpdf(2.0 | );
-  phi2 = foo1_lpdf(phi1 | );
+  phi2 = foo1_lpdf(1);
+  phi2 = foo1_lpdf(2.0);
+  phi2 = foo1_lpdf(phi1);
   
   phi3 = foo2_lpdf(1.0 | 2.0);
   phi3 = foo2_lpdf(1.0 | 2);
@@ -3269,10 +3270,10 @@ model {
   
   psi3 = foo2_lp(psi1, psi2);
   
-  psi1 = foo0_lpmf(3 | );
-  psi2 = foo1_lpdf(1 | );
-  psi2 = foo1_lpdf(2.0 | );
-  psi2 = foo1_lpdf(psi1 | );
+  psi1 = foo0_lpmf(3);
+  psi2 = foo1_lpdf(1);
+  psi2 = foo1_lpdf(2.0);
+  psi2 = foo1_lpdf(psi1);
   
   psi3 = foo2_lpdf(1.0 | 2.0);
   psi3 = foo2_lpdf(1.0 | 2);
@@ -3304,9 +3305,9 @@ generated quantities {
   z = foo2(x, 2);
   z = foo2(1, 2);
   
-  x = foo0_lpmf(3 | );
-  y = foo1_lpdf(x | );
-  y = foo1_lpdf(1 | );
+  x = foo0_lpmf(3);
+  y = foo1_lpdf(x);
+  y = foo1_lpdf(1);
   z = foo2_lpdf(x | y);
   z = foo2_lpdf(1 | y);
   z = foo2_lpdf(x | 2);
@@ -3434,7 +3435,7 @@ parameters {
   real y;
 }
 model {
-  target += unit_normal_lpdf(y | );
+  target += unit_normal_lpdf(y);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format funs5.stan
@@ -4689,16 +4690,16 @@ parameters {
   real x;
 }
 model {
-  target += std_normal_lpdf(x | );
-  target += std_normal_lpdf(x | );
-  target += std_normal_lupdf(x | );
-  target += std_normal_lupdf(x | );
-  target += foo_lpdf(x | );
-  target += foo_lpdf(x | );
-  target += goo_lpmf(y | );
-  target += goo_lpmf(y | );
-  target += goo_lupmf(y | );
-  target += goo_lupmf(y | );
+  target += std_normal_lpdf(x);
+  target += std_normal_lpdf(x);
+  target += std_normal_lupdf(x);
+  target += std_normal_lupdf(x);
+  target += foo_lpdf(x);
+  target += foo_lpdf(x);
+  target += goo_lpmf(y);
+  target += goo_lpmf(y);
+  target += goo_lupmf(y);
+  target += goo_lupmf(y);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format stanc_helper.stan
@@ -4848,7 +4849,7 @@ functions {
     r += rayleigh_lupdf(y1 | y2);
     r += scaled_inv_chi_square_lupdf(y1 | y2, y2);
     r += skew_normal_lupdf(y1 | y2, y2, y2);
-    r += std_normal_lupdf(y1 | );
+    r += std_normal_lupdf(y1);
     r += student_t_lupdf(y1 | y2, y2, y2);
     r += uniform_lupdf(y1 | y2, y2);
     r += von_mises_lupdf(y1 | y2, y2);
@@ -4902,7 +4903,7 @@ model {
   r += rayleigh_lupdf(y1 | y2);
   r += scaled_inv_chi_square_lupdf(y1 | y2, y2);
   r += skew_normal_lupdf(y1 | y2, y2, y2);
-  r += std_normal_lupdf(y1 | );
+  r += std_normal_lupdf(y1);
   r += student_t_lupdf(y1 | y2, y2, y2);
   r += uniform_lupdf(y1 | y2, y2);
   r += von_mises_lupdf(y1 | y2, y2);
