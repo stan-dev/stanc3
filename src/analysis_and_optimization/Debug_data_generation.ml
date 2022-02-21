@@ -78,9 +78,7 @@ let gen_bounded m gen e =
   | Some unpacked_e -> List.map ~f:gen unpacked_e
   | None ->
       Common.FatalError.fatal_error_msg
-        [%message
-          "Bad bounded (upper OR lower) expr: "
-            (e : Expr.Typed.Meta.t Expr.Fixed.t)]
+        [%message "Bad bounded (upper OR lower) expr: " (e : Expr.Typed.t)]
 
 let gen_ul_bounded m gen e1 e2 =
   let create_bounds l u =

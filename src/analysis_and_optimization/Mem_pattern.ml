@@ -1,7 +1,6 @@
 open Core_kernel
 open Core_kernel.Poly
 open Middle
-open Middle.Expr
 
 (**
  * Return a Var expression of the name for each type
@@ -26,8 +25,7 @@ let rec matrix_set Expr.Fixed.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta
  * Return a set of all types containing autodiffable Eigen matrices
  *  in an expression.
  *)
-let query_var_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t
-    =
+let query_var_eigen_names (expr : Expr.Typed.t) : string Set.Poly.t =
   let get_expr_eigen_names
       (Dataflow_types.VVar s, Expr.Typed.Meta.{adlevel; type_; _}) =
     if
@@ -52,7 +50,7 @@ let is_nonzero_subset ~set ~subset =
  *)
 let rec count_single_idx_exprs (acc : int) Expr.Fixed.{pattern; _} : int =
   match pattern with
-  | Expr.Fixed.Pattern.FunApp (_, (exprs : Typed.Meta.t Expr.Fixed.t list)) ->
+  | Expr.Fixed.Pattern.FunApp (_, (exprs : Expr.Typed.t list)) ->
       List.fold_left ~init:acc ~f:count_single_idx_exprs exprs
   | TernaryIf (predicate, texpr, fexpr) ->
       acc
@@ -79,8 +77,7 @@ let rec count_single_idx_exprs (acc : int) Expr.Fixed.{pattern; _} : int =
  *  for a Single index. All and Between cannot be Single cell access
  *  and so pass acc along.
  *)
-and count_single_idx (acc : int) (idx : Expr.Typed.Meta.t Expr.Fixed.t Index.t)
-    =
+and count_single_idx (acc : int) (idx : Expr.Typed.t Index.t) =
   match idx with
   | Index.All | Between _ | Upfrom _ | MultiIndex _ -> acc
   | Single _ -> acc + 1
@@ -96,7 +93,7 @@ and count_single_idx (acc : int) (idx : Expr.Typed.Meta.t Expr.Fixed.t Index.t)
  *  either at the top level or within the `Index` types of the list.
  *)
 let rec is_uni_eigen_loop_indexing in_loop (ut : UnsizedType.t)
-    (index : Typed.Meta.t Expr.Fixed.t Index.t list) =
+    (index : Expr.Typed.t Index.t list) =
   match in_loop with
   | false -> false
   | true -> (
@@ -155,7 +152,7 @@ let rec query_initial_demotable_expr (in_loop : bool) ~(acc : string Set.Poly.t)
   let query_expr (accum : string Set.Poly.t) =
     query_initial_demotable_expr in_loop ~acc:accum in
   match pattern with
-  | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
+  | FunApp (kind, (exprs : Expr.Typed.t list)) ->
       query_initial_demotable_funs in_loop acc kind exprs
   | Indexed ((Expr.Fixed.{meta= {type_; _}; _} as expr), indexed) ->
       let index_set =
@@ -202,8 +199,7 @@ let rec query_initial_demotable_expr (in_loop : bool) ~(acc : string Set.Poly.t)
  * exprs The expression list passed to the functions.
  *)
 and query_initial_demotable_funs (in_loop : bool) (acc : string Set.Poly.t)
-    (kind : 'a Fun_kind.t) (exprs : Typed.Meta.t Expr.Fixed.t list) :
-    string Set.Poly.t =
+    (kind : 'a Fun_kind.t) (exprs : Expr.Typed.t list) : string Set.Poly.t =
   let query_expr accum = query_initial_demotable_expr in_loop ~acc:accum in
   let top_level_eigen_names =
     Set.Poly.union_list (List.map ~f:query_var_eigen_names exprs) in
@@ -236,10 +232,10 @@ let rec is_any_soa_supported_expr
   then true
   else
     match pattern with
-    | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
+    | FunApp (kind, (exprs : Expr.Typed.t list)) ->
         is_any_soa_supported_fun_expr kind exprs
-    | Indexed (expr, (_ : Typed.Meta.t Fixed.t Index.t list))
-     |Promotion (expr, _, _) ->
+    | Indexed (expr, (_ : Expr.Typed.t Index.t list)) | Promotion (expr, _, _)
+      ->
         is_any_soa_supported_expr expr
     | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
         true
@@ -252,7 +248,7 @@ let rec is_any_soa_supported_expr
  * Return false if the `Fun_kind.t` does not support `SoA`
  *)
 and is_any_soa_supported_fun_expr (kind : 'a Fun_kind.t)
-    (exprs : Typed.Meta.t Expr.Fixed.t list) : bool =
+    (exprs : Expr.Typed.t list) : bool =
   match kind with
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) -> false
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> false
@@ -273,7 +269,7 @@ let rec is_any_ad_real_data_matrix_expr
   if UnsizedType.is_dataonlytype adlevel then false
   else
     match pattern with
-    | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
+    | FunApp (kind, (exprs : Expr.Typed.t list)) ->
         is_any_ad_real_data_matrix_expr_fun kind exprs
     | Indexed (expr, _) | Promotion (expr, _, _) ->
         is_any_ad_real_data_matrix_expr expr
@@ -291,7 +287,7 @@ let rec is_any_ad_real_data_matrix_expr
  *  combinations of AutoDiffable Reals and Data Matrices
  *)
 and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
-    (exprs : Typed.Meta.t Expr.Fixed.t list) : bool =
+    (exprs : Expr.Typed.t list) : bool =
   match kind with
   | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
     match name with
@@ -354,9 +350,7 @@ and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
  *  `query_initial_demotable_expr` for an explanation of the logic.
  *)
 let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
-    (Stmt.Fixed.{pattern; _} :
-      (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t ) :
-    string Set.Poly.t =
+    (Stmt.Fixed.{pattern; _} : Stmt.Located.t) : string Set.Poly.t =
   let query_expr (accum : string Set.Poly.t) =
     query_initial_demotable_expr in_loop ~acc:accum in
   match pattern with
@@ -446,7 +440,7 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
  * @param pattern The Stmt pattern to query.
  *)
 let query_demotable_stmt (aos_exits : string Set.Poly.t)
-    (pattern : (Typed.t, int) Stmt.Fixed.Pattern.t) : string Set.Poly.t =
+    (pattern : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) : string Set.Poly.t =
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
       ( ( (assign_name : string)
@@ -480,7 +474,7 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
  **)
 let rec modify_kind ?force_demotion:(force = false)
     (modifiable_set : string Set.Poly.t) (kind : 'a Fun_kind.t)
-    (exprs : Expr.Typed.Meta.t Expr.Fixed.t list) =
+    (exprs : Expr.Typed.t list) =
   let expr_names =
     Set.Poly.union_list (List.map ~f:query_var_eigen_names exprs) in
   let is_all_in_list =
@@ -518,12 +512,11 @@ let rec modify_kind ?force_demotion:(force = false)
  *)
 and modify_expr_pattern ?force_demotion:(force = false)
     (modifiable_set : string Set.Poly.t)
-    (pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t) =
+    (pattern : Expr.Typed.t Expr.Fixed.Pattern.t) =
   let mod_expr ?force_demotion:(forced = false) =
     modify_expr ~force_demotion:forced modifiable_set in
   match pattern with
-  | Expr.Fixed.Pattern.FunApp
-      (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
+  | Expr.Fixed.Pattern.FunApp (kind, (exprs : Expr.Typed.t list)) ->
       let kind', expr' =
         modify_kind ~force_demotion:force modifiable_set kind exprs in
       Expr.Fixed.Pattern.FunApp (kind', expr')
@@ -578,10 +571,8 @@ and modify_expr ?force_demotion:(force = false)
 * @param modifiable_set The name of the variable we are searching for.
 *)
 let rec modify_stmt_pattern
-    (pattern :
-      ( Expr.Typed.Meta.t Expr.Fixed.t
-      , (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t )
-      Stmt.Fixed.Pattern.t ) (modifiable_set : string Core_kernel.Set.Poly.t) =
+    (pattern : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
+    (modifiable_set : string Core_kernel.Set.Poly.t) =
   let mod_expr force = modify_expr ~force_demotion:force modifiable_set in
   let mod_stmt stmt = modify_stmt stmt modifiable_set in
   match pattern with
@@ -597,7 +588,7 @@ let rec modify_stmt_pattern
           { decl with
             decl_type=
               Type.Sized (SizedType.modify_sizedtype_mem SoA sized_type) }
-  | NRFunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
+  | NRFunApp (kind, (exprs : Expr.Typed.t list)) ->
       let kind', exprs' = modify_kind modifiable_set kind exprs in
       NRFunApp (kind', exprs')
   | Assignment
