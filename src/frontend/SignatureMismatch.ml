@@ -365,3 +365,26 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
     name pp_args arg_tys
     (list ~sep:cut pp_signature)
     sigs pp_omitted ()
+
+let pp_math_lib_assignmentoperator_sigs ppf (lt, op) =
+  let signatures =
+    let errors =
+      Stan_math_signatures.make_assignmentoperator_stan_math_signatures op in
+    let errors =
+      List.filter
+        ~f:(fun (_, args, _) ->
+          Result.is_ok (check_same_type 0 lt (snd (List.hd_exn args))) )
+        errors in
+    match List.split_n errors max_n_errors with
+    | [], _ -> None
+    | errors, [] -> Some (errors, false)
+    | errors, _ -> Some (errors, true) in
+  let pp_sigs ppf (signatures, omitted) =
+    Fmt.pf ppf "@[<v>%a%a@]"
+      (Fmt.list ~sep:Fmt.cut Stan_math_signatures.pp_math_sig)
+      signatures
+      (if omitted then Fmt.pf else Fmt.nop)
+      "@ (Additional signatures omitted)" in
+  Fmt.pf ppf "%a"
+    (Fmt.option ~none:(Fmt.any "No matching signatures") pp_sigs)
+    signatures

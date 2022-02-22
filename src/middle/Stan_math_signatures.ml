@@ -499,15 +499,6 @@ let pretty_print_math_lib_operator_sigs op =
     [Fmt.str "@[<v>@,%a@]" pp_math_sig int_divide_type]
   else operator_to_stan_math_fns op |> List.map ~f:pretty_print_math_sigs
 
-let pretty_print_math_lib_assignmentoperator_sigs op =
-  match op with
-  | Operator.Plus | Minus | Times | Divide | EltTimes | EltDivide ->
-      Some
-        (Fmt.str "@[<v>@,%a@]"
-           (Fmt.list ~sep:Fmt.cut pp_math_sig)
-           (make_assignmentoperator_stan_math_signatures op) )
-  | _ -> None
-
 (* -- Some helper definitions to populate stan_math_signatures -- *)
 let bare_types =
   [UnsizedType.UInt; UReal; UComplex; UVector; URowVector; UMatrix]
