@@ -1,7 +1,5 @@
 open Core_kernel
 open Middle
-open Frontend
-open Ast
 
 let rec transpose = function
   | [] :: _ -> []
@@ -30,15 +28,16 @@ let rec vect_to_mat l m =
     let hd, tl = List.split_n l m in
     hd :: vect_to_mat tl m
 
-let unwrap_num_exn m e =
-  let e = Ast_to_Mir.trans_expr e in
-  let m = Map.Poly.map m ~f:Ast_to_Mir.trans_expr in
+let eval_expr m e =
   let e = Mir_utils.subst_expr m e in
   let e = Partial_evaluator.eval_expr e in
   let rec strip_promotions (e : Middle.Expr.Typed.t) =
     match e.pattern with Promotion (e, _, _) -> strip_promotions e | _ -> e
   in
-  let e = strip_promotions e in
+  strip_promotions e
+
+let unwrap_num_exn m e =
+  let e = eval_expr m e in
   match e.pattern with
   | Lit (_, s) -> Float.of_string s
   | _ ->
@@ -74,92 +73,51 @@ let rec repeat n e =
 let rec repeat_th n f =
   match n with n when n <= 0 -> [] | m -> f () :: repeat_th (m - 1) f
 
-let wrap_int n =
-  { expr= IntNumeral (Int.to_string n)
-  ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= UInt} }
+let gen_bounded m gen e =
+  match Expr.Helpers.try_unpack (eval_expr m e) with
+  | Some unpacked_e -> List.map ~f:gen unpacked_e
+  | None ->
+      Common.FatalError.fatal_error_msg
+        [%message "Bad bounded (upper OR lower) expr: " (e : Expr.Typed.t)]
 
-let int_two = wrap_int 2
-
-let wrap_real r =
-  { expr= RealNumeral (Float.to_string r)
-  ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= UReal} }
-
-let wrap_row_vector l =
-  { expr= RowVectorExpr l
-  ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= URowVector} }
-
-let wrap_vector l =
-  { expr= PostfixOp (wrap_row_vector l, Transpose)
-  ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= UVector} }
-
-let gen_int m t = wrap_int (gen_num_int m t)
-let gen_real m t = wrap_real (gen_num_real m t)
+let gen_ul_bounded m gen e1 e2 =
+  let create_bounds l u =
+    List.map2_exn ~f:(fun x y -> gen (Transformation.LowerUpper (x, y))) l u
+  in
+  let e1, e2 = (eval_expr m e1, eval_expr m e2) in
+  match Expr.Helpers.(try_unpack e1, try_unpack e2) with
+  | Some unpacked_e1, Some unpacked_e2 -> create_bounds unpacked_e1 unpacked_e2
+  | None, Some unpacked_e2 ->
+      create_bounds
+        (List.init (List.length unpacked_e2) ~f:(fun _ -> e1))
+        unpacked_e2
+  | Some unpacked_e1, None ->
+      create_bounds unpacked_e1
+        (List.init (List.length unpacked_e1) ~f:(fun _ -> e2))
+  | _ ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Bad bounded upper and lower expr: "
+            (e1 : Expr.Typed.t)
+            " and "
+            (e2 : Expr.Typed.t)]
 
 let gen_row_vector m n t =
-  let extract_var e =
-    match e with {expr= Variable x; _} -> Map.find_exn m x.name | _ -> e in
-  let gen_bounded t e =
-    match e with
-    | {expr= RowVectorExpr unpacked_e; _}
-     |{expr= ArrayExpr unpacked_e; _}
-     |{expr= PostfixOp ({expr= RowVectorExpr unpacked_e; _}, Transpose); _} ->
-        wrap_row_vector (List.map ~f:(fun x -> gen_real m (t x)) unpacked_e)
-    | _ ->
-        Common.FatalError.fatal_error_msg
-          [%message
-            "Bad bounded (upper OR lower) expr: "
-              (e : (typed_expr_meta, fun_kind) expr_with)] in
-  let gen_ul_bounded e1 e2 =
-    let create_bounds l u =
-      wrap_row_vector
-        (List.map2_exn
-           ~f:(fun x y -> gen_real m (Transformation.LowerUpper (x, y)))
-           l u ) in
-    match (e1, e2) with
-    | ( ( {expr= RowVectorExpr unpacked_e1 | ArrayExpr unpacked_e1; _}
-        | {expr= PostfixOp ({expr= RowVectorExpr unpacked_e1; _}, Transpose); _}
-          )
-      , ( {expr= RowVectorExpr unpacked_e2 | ArrayExpr unpacked_e2; _}
-        | {expr= PostfixOp ({expr= RowVectorExpr unpacked_e2; _}, Transpose); _}
-          ) ) ->
-        (* | {expr= ArrayExpr unpacked_e1; _}, {expr= ArrayExpr unpacked_e2; _} -> *)
-        create_bounds unpacked_e1 unpacked_e2
-    | ( ({expr= RealNumeral _; _} | {expr= IntNumeral _; _})
-      , ( {expr= RowVectorExpr unpacked_e2; _}
-        | {expr= ArrayExpr unpacked_e2; _}
-        | {expr= PostfixOp ({expr= RowVectorExpr unpacked_e2; _}, Transpose); _}
-          ) ) ->
-        create_bounds
-          (List.init (List.length unpacked_e2) ~f:(fun _ -> e1))
-          unpacked_e2
-    | ( ( {expr= RowVectorExpr unpacked_e1; _}
-        | {expr= PostfixOp ({expr= RowVectorExpr unpacked_e1; _}, Transpose); _}
-        | {expr= ArrayExpr unpacked_e1; _} )
-      , ({expr= RealNumeral _; _} | {expr= IntNumeral _; _}) ) ->
-        create_bounds unpacked_e1
-          (List.init (List.length unpacked_e1) ~f:(fun _ -> e2))
-    | _ ->
-        Common.FatalError.fatal_error_msg
-          [%message
-            "Bad bounded upper and lower expr: "
-              (e1 : (typed_expr_meta, fun_kind) expr_with)
-              " and "
-              (e2 : (typed_expr_meta, fun_kind) expr_with)] in
-  match t with
-  | Transformation.Lower ({emeta= {type_= UVector | URowVector; _}; _} as e) ->
-      gen_bounded (fun x -> Transformation.Lower x) (extract_var e)
-  | Transformation.Upper ({emeta= {type_= UVector | URowVector; _}; _} as e) ->
-      gen_bounded (fun x -> Transformation.Upper x) (extract_var e)
+  match (t : Expr.Typed.t Transformation.t) with
+  | Transformation.Lower ({meta= {type_= UVector | URowVector; _}; _} as e) ->
+      gen_bounded m (fun x -> gen_num_real m (Transformation.Lower x)) e
+      |> Expr.Helpers.row_vector
+  | Transformation.Upper ({meta= {type_= UVector | URowVector; _}; _} as e) ->
+      gen_bounded m (fun x -> gen_num_real m (Transformation.Upper x)) e
+      |> Expr.Helpers.row_vector
   | Transformation.LowerUpper
-      ( ({emeta= {type_= UVector | URowVector | UReal | UInt; _}; _} as e1)
-      , ({emeta= {type_= UVector | URowVector; _}; _} as e2) )
+      ( ({meta= {type_= UVector | URowVector | UReal | UInt; _}; _} as e1)
+      , ({meta= {type_= UVector | URowVector; _}; _} as e2) )
    |Transformation.LowerUpper
-      ( ({emeta= {type_= UVector | URowVector; _}; _} as e1)
-      , ({emeta= {type_= UReal | UInt; _}; _} as e2) ) ->
-      gen_ul_bounded (extract_var e1) (extract_var e2)
-  | _ ->
-      { expr= RowVectorExpr (repeat_th n (fun _ -> gen_real m t))
-      ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= UMatrix} }
+      ( ({meta= {type_= UVector | URowVector; _}; _} as e1)
+      , ({meta= {type_= UReal | UInt; _}; _} as e2) ) ->
+      gen_ul_bounded m (gen_num_real m) e1 e2 |> Expr.Helpers.row_vector
+  | _ -> Expr.Helpers.row_vector (repeat_th n (fun _ -> gen_num_real m t))
 
 let gen_vector m n t =
   let gen_ordered n =
@@ -173,18 +131,18 @@ let gen_vector m n t =
       let l = repeat_th n (fun _ -> Random.float 1.) in
       let sum = List.fold l ~init:0. ~f:(fun accum elt -> accum +. elt) in
       let l = List.map l ~f:(fun x -> x /. sum) in
-      wrap_vector (List.map ~f:wrap_real l)
+      Expr.Helpers.vector l
   | Ordered ->
       let l = gen_ordered n in
       let halfmax =
         Option.value_exn (List.max_elt l ~compare:compare_float) /. 2. in
       let l = List.map l ~f:(fun x -> (x -. halfmax) /. halfmax) in
-      wrap_vector (List.map ~f:wrap_real l)
+      Expr.Helpers.vector l
   | PositiveOrdered ->
       let l = gen_ordered n in
       let max = Option.value_exn (List.max_elt l ~compare:compare_float) in
       let l = List.map l ~f:(fun x -> x /. max) in
-      wrap_vector (List.map ~f:wrap_real l)
+      Expr.Helpers.vector l
   | UnitVector ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
       let sum =
@@ -192,19 +150,17 @@ let gen_vector m n t =
           (List.fold l ~init:0. ~f:(fun accum elt -> accum +. (elt ** 2.)))
       in
       let l = List.map l ~f:(fun x -> x /. sum) in
-      wrap_vector (List.map ~f:wrap_real l)
-  | _ -> {int_two with expr= PostfixOp (gen_row_vector m n t, Transpose)}
+      Expr.Helpers.vector l
+  | _ ->
+      let v = Expr.Helpers.unary_op Transpose (gen_row_vector m n t) in
+      {v with meta= {v.meta with type_= UVector}}
 
 let gen_cov_unwrapped n =
   let l = repeat_th (n * n) (fun _ -> Random.float 2.) in
   let l_mat = vect_to_mat l n in
   matprod l_mat (transpose l_mat)
 
-let wrap_real_mat m =
-  let mat_wrapped =
-    List.map ~f:wrap_row_vector
-      (List.map ~f:(fun x -> List.map ~f:wrap_real x) m) in
-  {int_two with expr= RowVectorExpr mat_wrapped}
+let wrap_real_mat m = Expr.Helpers.matrix m
 
 let gen_diag_mat l =
   let n = List.length l in
@@ -257,57 +213,70 @@ let gen_corr_matrix n =
   wrap_real_mat (matprod corr_chol (transpose corr_chol))
 
 let gen_matrix mm m n t =
-  match t with
-  | Transformation.Covariance -> gen_cov_matrix m
+  match (t : Expr.Typed.t Transformation.t) with
+  | Covariance -> gen_cov_matrix m
   | Correlation -> gen_corr_matrix m
   | CholeskyCov -> gen_cov_cholesky m n
   | CholeskyCorr -> gen_corr_cholesky m
+  | Lower ({meta= {type_= UMatrix; _}; _} as e) ->
+      Expr.Helpers.matrix_from_rows
+        (gen_bounded mm (fun x -> gen_row_vector mm n (Lower x)) e)
+  | Upper ({meta= {type_= UMatrix; _}; _} as e) ->
+      Expr.Helpers.matrix_from_rows
+        (gen_bounded mm (fun x -> gen_row_vector mm n (Upper x)) e)
+  | LowerUpper (({meta= {type_= UMatrix; _}; _} as e1), e2)
+   |LowerUpper (e1, ({meta= {type_= UMatrix; _}; _} as e2)) ->
+      Expr.Helpers.matrix_from_rows
+        (gen_ul_bounded mm (gen_row_vector mm n) e1 e2)
   | _ ->
-      { int_two with
-        expr= RowVectorExpr (repeat_th m (fun () -> gen_row_vector mm n t)) }
+      Expr.Helpers.matrix_from_rows
+        (repeat_th m (fun () -> gen_row_vector mm n t))
 
-(* TODO: do some proper random generation of these special matrices *)
+let rec gen_array m st n t =
+  let elt () = generate_value m st t in
+  match (t : Expr.Typed.t Transformation.t) with
+  | Lower ({meta= {type_= UArray _; _}; _} as e) ->
+      Expr.Helpers.array_expr
+        (gen_bounded m (fun x -> generate_value m st (Lower x)) e)
+  | Upper ({meta= {type_= UArray _; _}; _} as e) ->
+      Expr.Helpers.array_expr
+        (gen_bounded m (fun x -> generate_value m st (Upper x)) e)
+  | LowerUpper (({meta= {type_= UArray _; _}; _} as e1), e2)
+   |LowerUpper (e1, ({meta= {type_= UArray _; _}; _} as e2)) ->
+      Expr.Helpers.array_expr (gen_ul_bounded m (generate_value m st) e1 e2)
+  | _ -> Expr.Helpers.array_expr (repeat_th n elt)
 
-let gen_array elt n _ = {int_two with expr= ArrayExpr (repeat_th n elt)}
-
-let rec generate_value m st t =
+and generate_value m st t =
   match st with
-  | SizedType.SInt -> gen_int m t
-  | SReal -> gen_real m t
+  | SizedType.SInt -> Expr.Helpers.int (gen_num_int m t)
+  | SReal -> Expr.Helpers.float (gen_num_real m t)
   | SComplex ->
       (* when serialzied, a complex number looks just like a 2-array of reals *)
-      generate_value m (SArray (SReal, wrap_int 2)) t
+      generate_value m (SArray (SReal, Expr.Helpers.int 2)) t
   | SVector (_, e) -> gen_vector m (unwrap_int_exn m e) t
   | SRowVector (_, e) -> gen_row_vector m (unwrap_int_exn m e) t
   | SMatrix (_, e1, e2) ->
       gen_matrix m (unwrap_int_exn m e1) (unwrap_int_exn m e2) t
-  | SArray (st, e) ->
-      let element () = generate_value m st t in
-      gen_array element (unwrap_int_exn m e) t
+  | SArray (st, e) -> gen_array m st (unwrap_int_exn m e) t
 
 let rec pp_value_json ppf e =
-  match e.expr with
-  | PostfixOp (e, Transpose) -> pp_value_json ppf e
-  | IntNumeral s | RealNumeral s -> Fmt.string ppf s
-  | ArrayExpr l | RowVectorExpr l ->
+  match e.Expr.Fixed.pattern with
+  | Lit ((Int | Real), s) -> Fmt.string ppf s
+  | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l) ->
       Fmt.(pf ppf "[@[<hov 1>%a@]]" (list ~sep:comma pp_value_json) l)
+  | FunApp (StanLib (transpose, _, _), [e])
+    when String.equal transpose (Operator.to_string Transpose) ->
+      pp_value_json ppf e
   | _ ->
       Common.FatalError.fatal_error_msg
-        [%message "Could not evaluate expression " (e : typed_expression)]
+        [%message "Could not evaluate expression " (e : Expr.Typed.t)]
 
 let print_data_prog s =
-  let data = Ast.get_stmts s.datablock in
   let l, _ =
-    List.fold data ~init:([], Map.Poly.empty) ~f:(fun (l, m) decl ->
-        match decl.stmt with
-        | VarDecl
-            { decl_type= Sized sizedtype
-            ; transformation
-            ; identifier= {name; _}
-            ; _ } ->
-            let value = generate_value m sizedtype transformation in
-            ((name, value) :: l, Map.set m ~key:name ~data:value)
-        | _ -> (l, m) ) in
+    List.fold s ~init:([], Map.Poly.empty)
+      ~f:(fun (l, m) (sizedtype, transformation, name) ->
+        let value = generate_value m sizedtype transformation in
+        ((name, value) :: l, Map.set m ~key:name ~data:value) ) in
   let pp ppf (id, value) =
     Fmt.pf ppf {|@[<hov 2>"%s":@ %a@]|} id pp_value_json value in
   Fmt.(str "{@ @[<hov>%a@]@ }" (list ~sep:comma pp) (List.rev l))

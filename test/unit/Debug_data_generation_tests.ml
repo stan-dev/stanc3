@@ -3,6 +3,8 @@ open Core_kernel
 open Frontend
 open Debug_data_generation
 
+let print_data_prog ast = print_data_prog (Ast_to_Mir.gather_data ast)
+
 let%expect_test "whole program data generation check" =
   let ast =
     Frontend_utils.typed_ast_of_string_exn
@@ -339,6 +341,9 @@ let%expect_test "whole program data generation check" =
           row_vector<lower=[1,2,3,4,5],upper=[2,3,4,5,6]>[5] y_row_lu_given_bound;
           row_vector<lower=x_row_vect,upper=x_row_vect_up>[5] y_row_lu_vector_bound;
           row_vector<lower=[1,2,3,4,5],upper=x_row_vect_up>[5] y_row_lu_vector_bound_mixed;
+
+          matrix<upper=2.0>[2,2] upper_matrix;
+          matrix<lower=upper_matrix, upper=5>[2,2] lower_upper_matrix;
         }
       |}
   in
@@ -424,7 +429,13 @@ let%expect_test "whole program data generation check" =
     \n    19.572734365483463, 12.348137644499662],\
     \n\"y_row_lu_vector_bound_mixed\":\
     \n  [23.68117004588095, 21.859463377110153, 16.93731450392735,\
-    \n    19.994339965018462, 16.065041740638126]\
+    \n    19.994339965018462, 16.065041740638126],\
+    \n\"upper_matrix\":\
+    \n  [[1.0341237330520263, 1.5089128377972285],\
+    \n    [-2.334114450641863, 1.2726909686498331]],\
+    \n\"lower_upper_matrix\":\
+    \n  [[2.700035909998304, 3.3701108882979232],\
+    \n    [4.412857964089933, 1.5133491301453186]]\
     \n}" |}]
 
 let%expect_test "whole program data generation check" =

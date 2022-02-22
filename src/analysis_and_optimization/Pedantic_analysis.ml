@@ -206,9 +206,7 @@ let expr_collect_exprs (expr : Expr.Typed.t) ~f : 'a Set.Poly.t =
     match f expr with Some a -> Set.Poly.add s a | _ -> s in
   fold_expr ~init:Set.Poly.empty ~take_expr:(fun s e -> collect_expr s e) expr
 
-let stmts_collect_exprs
-    (stmts : (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t List.t) ~f :
-    'a Set.Poly.t =
+let stmts_collect_exprs (stmts : Stmt.Located.t List.t) ~f : 'a Set.Poly.t =
   let collect_expr s (expr : Expr.Typed.t) =
     match f expr with Some a -> Set.Poly.add s a | _ -> s in
   fold_stmts ~init:Set.Poly.empty

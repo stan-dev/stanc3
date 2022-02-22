@@ -12,7 +12,7 @@ let rec fold_expr ~take_expr ~(init : 'c) (expr : Expr.Typed.t) : 'c =
 
 let fold_stmts ~take_expr ~take_stmt ~(init : 'c) (stmts : Stmt.Located.t List.t)
     : 'c =
-  (* let rec fold_expr (state : 'c) (expr : Expr.Typed.Meta.t Expr.Fixed.t) =
+  (* let rec fold_expr (state : 'c) (expr : Expr.t) =
    *   Expr.Fixed.Pattern.fold_left
    *     ~f:(fun a e -> fold_expr (take_expr a e) e)
    *     ~init:state
@@ -313,7 +313,7 @@ let rec fn_subst_expr m e =
   match m e with
   | Some e' ->
       (* let print_expr (e:Expr.Typed.t) = *)
-      (* [%sexp (e.pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t)] |> Sexp.to_string *)
+      (* [%sexp (e.pattern : Expr.Typed.t Expr.Fixed.Pattern.t)] |> Sexp.to_string *)
       (* in *)
       (* let _ = print_endline ("Replaced expr: " ^ print_expr e ^ " -> " ^ print_expr e') in *)
       e'

@@ -1,5 +1,4 @@
 open Core_kernel
-open Core_kernel.Poly
 open Common
 open Helpers
 
@@ -163,12 +162,17 @@ module Helpers = struct
   let int i = {Fixed.meta= Typed.Meta.empty; pattern= Lit (Int, string_of_int i)}
 
   let float i =
-    {Fixed.meta= Typed.Meta.empty; pattern= Lit (Real, string_of_float i)}
+    { Fixed.meta= {Typed.Meta.empty with type_= UReal}
+    ; pattern= Lit (Real, Float.to_string i) }
 
   let str i = {Fixed.meta= Typed.Meta.empty; pattern= Lit (Str, i)}
   let variable v = {Fixed.meta= Typed.Meta.empty; pattern= Var v}
   let zero = int 0
   let one = int 1
+
+  let unary_op op e =
+    { Fixed.meta= Typed.Meta.empty
+    ; pattern= FunApp (StanLib (Operator.to_string op, FnPlain, AoS), [e]) }
 
   let binop e1 op e2 =
     { Fixed.meta= Typed.Meta.empty
@@ -180,6 +184,39 @@ module Helpers = struct
     | [] -> default
     | head :: rest ->
         List.fold ~init:head ~f:(fun accum next -> binop accum op next) rest
+
+  let row_vector l =
+    { Fixed.meta= {Typed.Meta.empty with type_= URowVector}
+    ; pattern= FunApp (CompilerInternal FnMakeRowVec, List.map ~f:float l) }
+
+  let vector l =
+    let v = unary_op Transpose (row_vector l) in
+    {v with meta= {Typed.Meta.empty with type_= UVector}}
+
+  let matrix l =
+    { Fixed.meta= {Typed.Meta.empty with type_= UMatrix}
+    ; pattern= FunApp (CompilerInternal FnMakeRowVec, List.map ~f:row_vector l)
+    }
+
+  let matrix_from_rows l =
+    { Fixed.meta= {Typed.Meta.empty with type_= UMatrix}
+    ; pattern= FunApp (CompilerInternal FnMakeRowVec, l) }
+
+  let array_expr l =
+    let type_ =
+      List.hd l |> Option.value_map ~f:Typed.type_of ~default:UnsizedType.UReal
+    in
+    { Fixed.meta= {Typed.Meta.empty with type_= UArray type_}
+    ; pattern= FunApp (CompilerInternal FnMakeArray, l) }
+
+  let try_unpack e =
+    match e.Fixed.pattern with
+    | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l) -> Some l
+    | FunApp
+        ( StanLib ("Transpose__", FnPlain, _)
+        , [{pattern= FunApp (CompilerInternal FnMakeRowVec, l); _}] ) ->
+        Some l
+    | _ -> None
 
   let loop_bottom = one
 
@@ -197,7 +234,9 @@ module Helpers = struct
 
   let%test "expr contains fn" =
     internal_funapp FnReadData [] ()
-    |> contains_fn_kind (fun kind -> kind = CompilerInternal FnReadData)
+    |> contains_fn_kind (function
+         | CompilerInternal FnReadData -> true
+         | _ -> false )
 
   let rec infer_type_of_indexed ut indices =
     match (ut, indices) with
@@ -227,9 +266,7 @@ module Helpers = struct
       | _ ->
           (* These should go away with Ryan's LHS *)
           Common.FatalError.fatal_error_msg
-            [%message
-              "Expected Var or Indexed but found " (e : Typed.Meta.t Fixed.t)]
-    in
+            [%message "Expected Var or Indexed but found " (e : Typed.t)] in
     Fixed.{meta; pattern}
 
   (** TODO: Make me tail recursive *)

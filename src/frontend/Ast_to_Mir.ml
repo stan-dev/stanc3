@@ -679,6 +679,22 @@ let migrate_checks_to_end_of_block stmts =
   let checks, not_checks = List.partition_tf ~f:stmt_contains_check stmts in
   not_checks @ checks
 
+let gather_data (p : Ast.typed_program) =
+  let data = Ast.get_stmts p.datablock in
+  List.filter_map data ~f:(function
+    | { stmt=
+          VarDecl
+            { decl_type= Sized sizedtype
+            ; transformation
+            ; identifier= {name; _}
+            ; _ }
+      ; _ } ->
+        Some
+          ( SizedType.map trans_expr sizedtype
+          , Transformation.map trans_expr transformation
+          , name )
+    | _ -> None )
+
 let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   let {Ast.functionblock; datablock; transformeddatablock; modelblock; _} = p in
   let map f list_op =

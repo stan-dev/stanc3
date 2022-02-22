@@ -90,7 +90,9 @@ let stan2cpp model_name model_string is_flag_set flag_val =
           r.return (Result.Ok (Fmt.str "%a" Program.Typed.pp mir), warnings, []) ;
         if is_flag_set "debug-generate-data" then
           r.return
-            ( Result.Ok (Debug_data_generation.print_data_prog typed_ast)
+            ( Result.Ok
+                (Debug_data_generation.print_data_prog
+                   (Ast_to_Mir.gather_data typed_ast) )
             , warnings
             , [] ) ;
         let opt_mir =
