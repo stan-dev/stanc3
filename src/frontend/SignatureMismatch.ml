@@ -124,6 +124,17 @@ let rec compare_errors e1 e2 =
       | SuffixMismatch _, _ | _, InputMismatch _ -> -1
       | InputMismatch _, _ | _, SuffixMismatch _ -> 1 ) )
 
+let compare_match_results e1 e2 =
+  (* Prefer informative errors *)
+  match (e1, e2) with
+  | AmbiguousMatch _, _ -> 1
+  | _, AmbiguousMatch _ -> -1
+  | SignatureErrors (l1, _), SignatureErrors (l2, _) ->
+      Int.compare (List.length l1) (List.length l2)
+  | SignatureErrors _, _ -> 1
+  | _, SignatureErrors _ -> -1
+  | _, _ -> 0
+
 let rec check_same_type depth t1 t2 =
   let wrap_func = Result.map_error ~f:(fun e -> TypeMismatch (t1, t2, Some e)) in
   match (t1, t2) with

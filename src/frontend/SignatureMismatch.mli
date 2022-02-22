@@ -87,3 +87,4 @@ val pp_signature_mismatch :
   -> unit
 
 val compare_errors : function_mismatch -> function_mismatch -> int
+val compare_match_results : match_result -> match_result -> int
