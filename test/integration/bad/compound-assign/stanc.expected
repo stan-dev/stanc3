@@ -112,7 +112,6 @@ Available signatures for given lhs:
 (matrix, int) => void
 (matrix, real) => void
 (matrix, matrix) => void
-
   $ ../../../../../install/default/bin/stanc plus_equals_matrix_shape_mismatch.stan
 Syntax error in 'plus_equals_matrix_shape_mismatch.stan', line 4, column 10 to column 11, parsing error:
    -------------------------------------------------
@@ -167,7 +166,6 @@ Available signatures for given lhs:
 (vector, int) => void
 (vector, real) => void
 (vector, vector) => void
-
   $ ../../../../../install/default/bin/stanc plus_equals_type_mismatch.stan
 Semantic error in 'plus_equals_type_mismatch.stan', line 4, column 2 to column 9:
    -------------------------------------------------
@@ -181,7 +179,6 @@ Semantic error in 'plus_equals_type_mismatch.stan', line 4, column 2 to column 9
 Ill-typed arguments supplied to assignment operator +=: lhs has type int and rhs has type real.
 Available signatures for given lhs:
 (int, int) => void
-
   $ ../../../../../install/default/bin/stanc plus_equals_type_mismatch2.stan
 Semantic error in 'plus_equals_type_mismatch2.stan', line 4, column 2 to column 9:
    -------------------------------------------------
@@ -197,7 +194,6 @@ Available signatures for given lhs:
 (int, int) => void
 (real, int) => void
 (real, real) => void
-
   $ ../../../../../install/default/bin/stanc plus_equals_vector_array.stan
 Semantic error in 'plus_equals_vector_array.stan', line 5, column 2 to column 9:
    -------------------------------------------------
@@ -227,4 +223,3 @@ Available signatures for given lhs:
 (row_vector, int) => void
 (row_vector, real) => void
 (row_vector, matrix) => void
-

@@ -378,17 +378,17 @@ let pp_math_lib_assignmentoperator_sigs ppf (lt, op) =
             ~f:(fun (_, args, _) ->
               Result.is_ok (check_same_type 0 lt (snd (List.hd_exn args))) )
             errors in
-        match List.split_n errors 10 with
+        match List.split_n errors max_n_errors with
         | [], _ -> None
         | errors, [] -> Some (errors, false)
         | errors, _ -> Some (errors, true) )
     | _ -> None in
   let pp_sigs ppf (signatures, omitted) =
-    Fmt.pf ppf "@[<v>%a@ %a@]"
+    Fmt.pf ppf "@[<v>%a%a@]"
       (Fmt.list ~sep:Fmt.cut Stan_math_signatures.pp_math_sig)
       signatures
-      (if omitted then Fmt.string else Fmt.nop)
-      "(Additional signatures omitted)" in
+      (if omitted then Fmt.pf else Fmt.nop)
+      "@ (Additional signatures omitted)" in
   Fmt.pf ppf "%a"
     (Fmt.option ~none:(Fmt.any "No matching signatures") pp_sigs)
     signatures
