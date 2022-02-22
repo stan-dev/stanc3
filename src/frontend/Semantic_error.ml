@@ -405,7 +405,7 @@ module StatementError = struct
     | InvalidSamplingNoSuchDistribution name ->
         Fmt.pf ppf
           "Ill-typed arguments to '~' statement. No distribution '%s' was \
-           found with the correct signature."
+           found."
           name
     | InvalidTruncationCDForCCDF ->
         Fmt.pf ppf
