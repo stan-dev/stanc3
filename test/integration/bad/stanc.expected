@@ -649,7 +649,7 @@ Syntax error in 'err-decl-vector-2.stan', line 2, column 10 to column 11, parsin
      4:  model {
    -------------------------------------------------
 
-"[" expression "]" expected for vector size.
+Expected "[" expression "]" for vector size.
   $ ../../../../install/default/bin/stanc err-decl-vector.stan
 Syntax error in 'err-decl-vector.stan', line 2, column 9 to column 10, parsing error:
    -------------------------------------------------
@@ -660,7 +660,7 @@ Syntax error in 'err-decl-vector.stan', line 2, column 9 to column 10, parsing e
      4:  model {
    -------------------------------------------------
 
-"[" expression "]" expected for vector size.
+Expected "[" expression "]" for vector size.
   $ ../../../../install/default/bin/stanc err-double-dims.stan
 Semantic error in 'err-double-dims.stan', line 2, column 8 to column 11:
    -------------------------------------------------
@@ -1341,7 +1341,7 @@ Syntax error in 'local_var_constraint.stan', line 5, column 12 to column 13, par
      7:  }
    -------------------------------------------------
 
-"[" expression"]" expected after "row_vector" in local (or model block) variable declaration. (No transformations/constraints allowed.)
+Expected "[" expression "]" for row vector size.
   $ ../../../../install/default/bin/stanc local_var_constraint2.stan
 Syntax error in 'local_var_constraint2.stan', line 5, column 8 to column 9, parsing error:
    -------------------------------------------------
@@ -1353,7 +1353,7 @@ Syntax error in 'local_var_constraint2.stan', line 5, column 8 to column 9, pars
      7:  }
    -------------------------------------------------
 
-"[" expression  "]" expected after "vector" in local (or model block) variable declaration. (No transformations/constraints allowed.)
+Expected "[" expression "]" for vector size.
   $ ../../../../install/default/bin/stanc local_var_constraint3.stan
 Syntax error in 'local_var_constraint3.stan', line 5, column 8 to column 9, parsing error:
    -------------------------------------------------
@@ -1365,7 +1365,7 @@ Syntax error in 'local_var_constraint3.stan', line 5, column 8 to column 9, pars
      7:  }
    -------------------------------------------------
 
-"[" expression "," expression "]" expected after "matrix" in local (or model block) variable declaration. (No transformations/constraints allowed.)
+Expected "[" expression "," expression "]" for sizes of matrix.
   $ ../../../../install/default/bin/stanc local_var_constraint4.stan
 Syntax error in 'local_var_constraint4.stan', line 5, column 6 to column 7, parsing error:
    -------------------------------------------------
@@ -1473,7 +1473,7 @@ Syntax error in 'oneline-error.stan', line 1, column 20 to column 21, parsing er
                              ^
    -------------------------------------------------
 
-"[" expression "]" expected for vector size.
+Expected "[" expression "]" for vector size.
   $ ../../../../install/default/bin/stanc op_addition_bad.stan
 Semantic error in 'op_addition_bad.stan', line 7, column 6 to column 11:
    -------------------------------------------------

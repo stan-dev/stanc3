@@ -13,10 +13,10 @@ data {
 generated quantities {
   complex_matrix[N,N] gq_c_matrix;
   gq_c_matrix = cmat * cmat;
-  gq_c_matrix = multiply(cmat, mat);
-  gq_c_matrix = multiply(mat, cmat);
+  gq_c_matrix = cmat * mat;
+  gq_c_matrix = mat * cmat;
   gq_c_matrix = cmat .* cmat;
-  gq_c_matrix = elt_multiply(cmat, mat);
-  gq_c_matrix = elt_multiply(mat,cmat);
-  // todo more here
+  gq_c_matrix = cmat .* mat;
+  gq_c_matrix = mat .* cmat;
+  // TODO more here
 }
