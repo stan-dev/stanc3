@@ -937,6 +937,15 @@ let verify_assignment_global loc cf block is_global id =
   if (not is_global) || block = cf.current_block then ()
   else Semantic_error.cannot_assign_to_global loc id.name |> error
 
+(* Until function types are added to the user language, we
+   disallow assignments to function values
+*)
+let verify_assignment_non_function loc ut id =
+  match ut with
+  | UnsizedType.UFun _ | UMathLibraryFunction ->
+      Semantic_error.cannot_assign_function loc ut id.name |> error
+  | _ -> ()
+
 let check_assignment_operator loc assop lhs rhs =
   let err op =
     Semantic_error.illtyped_assignment loc op lhs.lmeta.type_ rhs.emeta.type_
@@ -1019,6 +1028,7 @@ let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
         |> error in
   verify_assignment_global loc cf block global assign_id ;
   verify_assignment_read_only loc readonly assign_id ;
+  verify_assignment_non_function loc rhs.emeta.type_ assign_id ;
   let rhs' = check_assignment_operator loc assign_op lhs rhs in
   mk_typed_statement ~return_type:NoReturnType ~loc
     ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})
