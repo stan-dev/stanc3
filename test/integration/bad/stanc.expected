@@ -79,6 +79,18 @@ Semantic error in 'array_expr_bad2.stan', line 2, column 40 to column 41:
    -------------------------------------------------
 
 Array expression must have entries of consistent type. Expected array[] int but found int.
+  $ ../../../../install/default/bin/stanc assigment-to-function-stanmath.stan
+Semantic error in 'assigment-to-function-stanmath.stan', line 8, column 5 to column 15:
+   -------------------------------------------------
+     6:     void baz(){
+     7:       // NB: putting this in later blocks produce an error due to assigning to a global variable
+     8:       foo = pow;
+              ^
+     9:     }
+    10:  }
+   -------------------------------------------------
+
+Cannot assign a function type '<Stan Math function>' to variable 'foo'.
   $ ../../../../install/default/bin/stanc assign_real_to_int.stan
 Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 8:
    -------------------------------------------------
@@ -90,6 +102,18 @@ Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 8:
    -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator =: lhs has type int and rhs has type real
+  $ ../../../../install/default/bin/stanc assignment-to-function.stan
+Semantic error in 'assignment-to-function.stan', line 12, column 5 to column 15:
+   -------------------------------------------------
+    10:     void baz(){
+    11:       // NB: putting this in later blocks produce an error due to assigning to a global variable
+    12:       foo = bar;
+              ^
+    13:     }
+    14:  }
+   -------------------------------------------------
+
+Cannot assign a function type '(int) => real' to variable 'foo'.
   $ ../../../../install/default/bin/stanc bad_fundef_returntypes1.stan
 Semantic error in 'bad_fundef_returntypes1.stan', line 2, column 13 to line 6, column 3:
    -------------------------------------------------
