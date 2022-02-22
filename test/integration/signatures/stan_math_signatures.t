@@ -14585,6 +14585,8 @@ Display all Stan math signatures exposed in the language
   multiply(vector, row_vector) => matrix
   multiply(matrix, real) => matrix
   multiply(matrix, matrix) => matrix
+  multiply(complex, complex_matrix) => complex_matrix
+  multiply(complex_matrix, complex) => complex_matrix
   multiply(complex_matrix, complex_matrix) => complex_matrix
   multiply_log(int, int) => real
   multiply_log(int, real) => real

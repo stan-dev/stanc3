@@ -1728,6 +1728,8 @@ Ill-typed arguments supplied to infix operator *. Available signatures:
 (vector, row_vector) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex, complex_matrix) => complex_matrix
+(complex_matrix, complex) => complex_matrix
 (complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_subtraction_bad.stan

@@ -9,21 +9,27 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 31> locations_array__ =
+static constexpr std::array<const char*, 39> locations_array__ = 
 {" (found before start of program)",
- " (in 'basic_operations.stan', line 14, column 2 to column 34)",
- " (in 'basic_operations.stan', line 15, column 2 to column 28)",
- " (in 'basic_operations.stan', line 16, column 2 to column 27)",
- " (in 'basic_operations.stan', line 17, column 2 to column 27)",
- " (in 'basic_operations.stan', line 18, column 2 to column 29)",
+ " (in 'basic_operations.stan', line 16, column 2 to column 34)",
  " (in 'basic_operations.stan', line 19, column 2 to column 28)",
- " (in 'basic_operations.stan', line 20, column 2 to column 28)",
- " (in 'basic_operations.stan', line 22, column 2 to column 28)",
- " (in 'basic_operations.stan', line 23, column 2 to column 27)",
- " (in 'basic_operations.stan', line 24, column 2 to column 27)",
- " (in 'basic_operations.stan', line 25, column 2 to column 28)",
- " (in 'basic_operations.stan', line 26, column 2 to column 27)",
- " (in 'basic_operations.stan', line 27, column 2 to column 27)",
+ " (in 'basic_operations.stan', line 20, column 2 to column 27)",
+ " (in 'basic_operations.stan', line 21, column 2 to column 27)",
+ " (in 'basic_operations.stan', line 22, column 2 to column 29)",
+ " (in 'basic_operations.stan', line 23, column 2 to column 28)",
+ " (in 'basic_operations.stan', line 24, column 2 to column 28)",
+ " (in 'basic_operations.stan', line 27, column 2 to column 25)",
+ " (in 'basic_operations.stan', line 28, column 2 to column 25)",
+ " (in 'basic_operations.stan', line 29, column 2 to column 25)",
+ " (in 'basic_operations.stan', line 30, column 2 to column 25)",
+ " (in 'basic_operations.stan', line 31, column 2 to column 24)",
+ " (in 'basic_operations.stan', line 32, column 2 to column 24)",
+ " (in 'basic_operations.stan', line 35, column 2 to column 28)",
+ " (in 'basic_operations.stan', line 36, column 2 to column 27)",
+ " (in 'basic_operations.stan', line 37, column 2 to column 27)",
+ " (in 'basic_operations.stan', line 38, column 2 to column 28)",
+ " (in 'basic_operations.stan', line 39, column 2 to column 27)",
+ " (in 'basic_operations.stan', line 40, column 2 to column 27)",
  " (in 'basic_operations.stan', line 2, column 2 to column 8)",
  " (in 'basic_operations.stan', line 3, column 17 to column 18)",
  " (in 'basic_operations.stan', line 3, column 19 to column 20)",
@@ -32,15 +38,17 @@ static constexpr std::array<const char*, 31> locations_array__ =
  " (in 'basic_operations.stan', line 4, column 2 to column 25)",
  " (in 'basic_operations.stan', line 5, column 21 to column 22)",
  " (in 'basic_operations.stan', line 5, column 2 to column 32)",
- " (in 'basic_operations.stan', line 7, column 9 to column 10)",
- " (in 'basic_operations.stan', line 7, column 11 to column 12)",
- " (in 'basic_operations.stan', line 7, column 2 to column 18)",
+ " (in 'basic_operations.stan', line 6, column 2 to column 12)",
  " (in 'basic_operations.stan', line 8, column 9 to column 10)",
- " (in 'basic_operations.stan', line 8, column 2 to column 16)",
- " (in 'basic_operations.stan', line 9, column 13 to column 14)",
- " (in 'basic_operations.stan', line 9, column 2 to column 23)",
- " (in 'basic_operations.stan', line 14, column 17 to column 18)",
- " (in 'basic_operations.stan', line 14, column 19 to column 20)"};
+ " (in 'basic_operations.stan', line 8, column 11 to column 12)",
+ " (in 'basic_operations.stan', line 8, column 2 to column 18)",
+ " (in 'basic_operations.stan', line 9, column 9 to column 10)",
+ " (in 'basic_operations.stan', line 9, column 2 to column 16)",
+ " (in 'basic_operations.stan', line 10, column 13 to column 14)",
+ " (in 'basic_operations.stan', line 10, column 2 to column 23)",
+ " (in 'basic_operations.stan', line 11, column 2 to column 9)",
+ " (in 'basic_operations.stan', line 16, column 17 to column 18)",
+ " (in 'basic_operations.stan', line 16, column 19 to column 20)"};
 
 
 
@@ -52,32 +60,34 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
   Eigen::Matrix<std::complex<double>, -1, -1> cmat__;
   Eigen::Matrix<std::complex<double>, -1, 1> cvec__;
   Eigen::Matrix<std::complex<double>, 1, -1> crowvec__;
+  std::complex<double> z;
   Eigen::Matrix<double, -1, -1> mat__;
   Eigen::Matrix<double, -1, 1> vec__;
   Eigen::Matrix<double, 1, -1> rowvec__;
+  double r; 
   Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>> cmat{nullptr, 0, 0};
   Eigen::Map<Eigen::Matrix<std::complex<double>, -1, 1>> cvec{nullptr, 0};
   Eigen::Map<Eigen::Matrix<std::complex<double>, 1, -1>> crowvec{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, -1>> mat{nullptr, 0, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> vec{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, 1, -1>> rowvec{nullptr, 0};
-
+ 
  public:
   ~basic_operations_model() { }
-
+  
   inline std::string model_name() const final { return "basic_operations_model"; }
 
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
-
-
+  
+  
   basic_operations_model(stan::io::var_context& context__,
                          unsigned int random_seed__ = 0,
                          std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
-    boost::ecuyer1988 base_rng__ =
+    boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
     static constexpr const char* function__ = "basic_operations_model_namespace::basic_operations_model";
@@ -87,199 +97,217 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 14;
+      current_statement__ = 20;
       context__.validate_dims("data initialization","N","int",
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-
-
-      current_statement__ = 14;
+      
+      
+      current_statement__ = 20;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 15;
+      current_statement__ = 21;
       stan::math::validate_non_negative_index("cmat", "N", N);
-      current_statement__ = 16;
+      current_statement__ = 22;
       stan::math::validate_non_negative_index("cmat", "N", N);
-      current_statement__ = 17;
+      current_statement__ = 23;
       context__.validate_dims("data initialization","cmat","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N), static_cast<size_t>(2)});
-      cmat__ =
+      cmat__ = 
         Eigen::Matrix<std::complex<double>, -1, -1>::Constant(N, N,
           std::numeric_limits<double>::quiet_NaN());
       new (&cmat) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>>(cmat__.data(), N, N);
-
-
+        
+      
       {
         std::vector<std::complex<local_scalar_t__>> cmat_flat__;
-        current_statement__ = 17;
+        current_statement__ = 23;
         cmat_flat__ = context__.vals_c("cmat");
-        current_statement__ = 17;
+        current_statement__ = 23;
         pos__ = 1;
-        current_statement__ = 17;
+        current_statement__ = 23;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 17;
+          current_statement__ = 23;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 17;
+            current_statement__ = 23;
             stan::model::assign(cmat, cmat_flat__[(pos__ - 1)],
               "assigning variable cmat", stan::model::index_uni(sym2__),
                                            stan::model::index_uni(sym1__));
-            current_statement__ = 17;
+            current_statement__ = 23;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 18;
+      current_statement__ = 24;
       stan::math::validate_non_negative_index("cvec", "N", N);
-      current_statement__ = 19;
+      current_statement__ = 25;
       context__.validate_dims("data initialization","cvec","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(2)});
-      cvec__ =
+      cvec__ = 
         Eigen::Matrix<std::complex<double>, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
       new (&cvec) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, 1>>(cvec__.data(), N);
-
-
+        
+      
       {
         std::vector<std::complex<local_scalar_t__>> cvec_flat__;
-        current_statement__ = 19;
+        current_statement__ = 25;
         cvec_flat__ = context__.vals_c("cvec");
-        current_statement__ = 19;
+        current_statement__ = 25;
         pos__ = 1;
-        current_statement__ = 19;
+        current_statement__ = 25;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 19;
+          current_statement__ = 25;
           stan::model::assign(cvec, cvec_flat__[(pos__ - 1)],
             "assigning variable cvec", stan::model::index_uni(sym1__));
-          current_statement__ = 19;
+          current_statement__ = 25;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 20;
+      current_statement__ = 26;
       stan::math::validate_non_negative_index("crowvec", "N", N);
-      current_statement__ = 21;
+      current_statement__ = 27;
       context__.validate_dims("data initialization","crowvec","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(2)});
-      crowvec__ =
+      crowvec__ = 
         Eigen::Matrix<std::complex<double>, 1, -1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
       new (&crowvec) Eigen::Map<Eigen::Matrix<std::complex<double>, 1, -1>>(crowvec__.data(), N);
-
-
+        
+      
       {
         std::vector<std::complex<local_scalar_t__>> crowvec_flat__;
-        current_statement__ = 21;
+        current_statement__ = 27;
         crowvec_flat__ = context__.vals_c("crowvec");
-        current_statement__ = 21;
+        current_statement__ = 27;
         pos__ = 1;
-        current_statement__ = 21;
+        current_statement__ = 27;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 21;
+          current_statement__ = 27;
           stan::model::assign(crowvec, crowvec_flat__[(pos__ - 1)],
             "assigning variable crowvec", stan::model::index_uni(sym1__));
-          current_statement__ = 21;
+          current_statement__ = 27;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 22;
+      current_statement__ = 28;
+      context__.validate_dims("data initialization","z","double",
+           std::vector<size_t>{static_cast<size_t>(2)});
+      z = 
+        std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+          std::numeric_limits<double>::quiet_NaN());
+      
+      
+      current_statement__ = 28;
+      z = context__.vals_c("z")[(1 - 1)];
+      current_statement__ = 29;
       stan::math::validate_non_negative_index("mat", "N", N);
-      current_statement__ = 23;
+      current_statement__ = 30;
       stan::math::validate_non_negative_index("mat", "N", N);
-      current_statement__ = 24;
+      current_statement__ = 31;
       context__.validate_dims("data initialization","mat","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N)});
-      mat__ =
+      mat__ = 
         Eigen::Matrix<double, -1, -1>::Constant(N, N,
           std::numeric_limits<double>::quiet_NaN());
       new (&mat) Eigen::Map<Eigen::Matrix<double, -1, -1>>(mat__.data(), N, N);
-
-
+        
+      
       {
         std::vector<local_scalar_t__> mat_flat__;
-        current_statement__ = 24;
+        current_statement__ = 31;
         mat_flat__ = context__.vals_r("mat");
-        current_statement__ = 24;
+        current_statement__ = 31;
         pos__ = 1;
-        current_statement__ = 24;
+        current_statement__ = 31;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 24;
+          current_statement__ = 31;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 24;
+            current_statement__ = 31;
             stan::model::assign(mat, mat_flat__[(pos__ - 1)],
               "assigning variable mat", stan::model::index_uni(sym2__),
                                           stan::model::index_uni(sym1__));
-            current_statement__ = 24;
+            current_statement__ = 31;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 25;
+      current_statement__ = 32;
       stan::math::validate_non_negative_index("vec", "N", N);
-      current_statement__ = 26;
+      current_statement__ = 33;
       context__.validate_dims("data initialization","vec","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      vec__ =
+      vec__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
       new (&vec) Eigen::Map<Eigen::Matrix<double, -1, 1>>(vec__.data(), N);
-
+      
       {
         std::vector<local_scalar_t__> vec_flat__;
-        current_statement__ = 26;
+        current_statement__ = 33;
         vec_flat__ = context__.vals_r("vec");
-        current_statement__ = 26;
+        current_statement__ = 33;
         pos__ = 1;
-        current_statement__ = 26;
+        current_statement__ = 33;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 26;
+          current_statement__ = 33;
           stan::model::assign(vec, vec_flat__[(pos__ - 1)],
             "assigning variable vec", stan::model::index_uni(sym1__));
-          current_statement__ = 26;
+          current_statement__ = 33;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 27;
+      current_statement__ = 34;
       stan::math::validate_non_negative_index("rowvec", "N", N);
-      current_statement__ = 28;
+      current_statement__ = 35;
       context__.validate_dims("data initialization","rowvec","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      rowvec__ =
+      rowvec__ = 
         Eigen::Matrix<double, 1, -1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
       new (&rowvec) Eigen::Map<Eigen::Matrix<double, 1, -1>>(rowvec__.data(), N);
-
-
+        
+      
       {
         std::vector<local_scalar_t__> rowvec_flat__;
-        current_statement__ = 28;
+        current_statement__ = 35;
         rowvec_flat__ = context__.vals_r("rowvec");
-        current_statement__ = 28;
+        current_statement__ = 35;
         pos__ = 1;
-        current_statement__ = 28;
+        current_statement__ = 35;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 28;
+          current_statement__ = 35;
           stan::model::assign(rowvec, rowvec_flat__[(pos__ - 1)],
             "assigning variable rowvec", stan::model::index_uni(sym1__));
-          current_statement__ = 28;
+          current_statement__ = 35;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 29;
+      current_statement__ = 36;
+      context__.validate_dims("data initialization","r","double",
+           std::vector<size_t>{});
+      r = std::numeric_limits<double>::quiet_NaN();
+      
+      
+      current_statement__ = 36;
+      r = context__.vals_r("r")[(1 - 1)];
+      current_statement__ = 37;
       stan::math::validate_non_negative_index("gq_c_matrix", "N", N);
-      current_statement__ = 30;
+      current_statement__ = 38;
       stan::math::validate_non_negative_index("gq_c_matrix", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     num_params_r__ = 0U;
-
+    
   }
-
-  template <bool propto__, bool jacobian__ , typename VecR, typename VecI,
-  stan::require_vector_like_t<VecR>* = nullptr,
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -293,20 +321,20 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "basic_operations_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
-
+    
     try {
-
+      
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
-    } // log_prob_impl()
-
-  template <typename RNG, typename VecR, typename VecI, typename VecVar,
-  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr,
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+    } // log_prob_impl() 
+    
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -319,23 +347,23 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     constexpr bool jacobian__ = false;
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "basic_operations_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-
+    
     try {
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
         return ;
-      }
+      } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
-      }
+      } 
       Eigen::Matrix<std::complex<double>, -1, -1> gq_c_matrix =
          Eigen::Matrix<std::complex<double>, -1, -1>::Constant(N, N,
            std::numeric_limits<double>::quiet_NaN());
@@ -366,27 +394,49 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
           stan::math::promote_scalar<std::complex<double>>(mat), cmat),
         "assigning variable gq_c_matrix");
       current_statement__ = 8;
-      stan::model::assign(gq_c_matrix, stan::math::add(cmat, cmat),
+      stan::model::assign(gq_c_matrix, stan::math::multiply(cmat, z),
         "assigning variable gq_c_matrix");
       current_statement__ = 9;
+      stan::model::assign(gq_c_matrix, stan::math::multiply(z, cmat),
+        "assigning variable gq_c_matrix");
+      current_statement__ = 10;
+      stan::model::assign(gq_c_matrix, stan::math::multiply(r, cmat),
+        "assigning variable gq_c_matrix");
+      current_statement__ = 11;
+      stan::model::assign(gq_c_matrix, stan::math::multiply(cmat, r),
+        "assigning variable gq_c_matrix");
+      current_statement__ = 12;
+      stan::model::assign(gq_c_matrix,
+        stan::math::multiply(
+          stan::math::promote_scalar<std::complex<double>>(mat), z),
+        "assigning variable gq_c_matrix");
+      current_statement__ = 13;
+      stan::model::assign(gq_c_matrix,
+        stan::math::multiply(z,
+          stan::math::promote_scalar<std::complex<double>>(mat)),
+        "assigning variable gq_c_matrix");
+      current_statement__ = 14;
+      stan::model::assign(gq_c_matrix, stan::math::add(cmat, cmat),
+        "assigning variable gq_c_matrix");
+      current_statement__ = 15;
       stan::model::assign(gq_c_matrix,
         stan::math::add(cmat,
           stan::math::promote_scalar<std::complex<double>>(mat)),
         "assigning variable gq_c_matrix");
-      current_statement__ = 10;
+      current_statement__ = 16;
       stan::model::assign(gq_c_matrix,
         stan::math::add(
           stan::math::promote_scalar<std::complex<double>>(mat), cmat),
         "assigning variable gq_c_matrix");
-      current_statement__ = 11;
+      current_statement__ = 17;
       stan::model::assign(gq_c_matrix, stan::math::subtract(cmat, cmat),
         "assigning variable gq_c_matrix");
-      current_statement__ = 12;
+      current_statement__ = 18;
       stan::model::assign(gq_c_matrix,
         stan::math::subtract(cmat,
           stan::math::promote_scalar<std::complex<double>>(mat)),
         "assigning variable gq_c_matrix");
-      current_statement__ = 13;
+      current_statement__ = 19;
       stan::model::assign(gq_c_matrix,
         stan::math::subtract(
           stan::math::promote_scalar<std::complex<double>>(mat), cmat),
@@ -395,11 +445,11 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    } // write_array_impl()
-
-  template <typename VecVar, typename VecI,
-  stan::require_std_vector_t<VecVar>* = nullptr,
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+    } // write_array_impl() 
+    
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -408,23 +458,23 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-
+    
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    } // transform_inits_impl()
-
+    } // transform_inits_impl() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
-
+    
     names__ = std::vector<std::string>{"gq_c_matrix"};
-
-    } // get_param_names()
-
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-
+    
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
                                                                    static_cast<size_t>(N)
                                                                    ,
@@ -432,20 +482,20 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
                                                                    ,
                                                                    static_cast<size_t>(2)
                                                                    }};
-
-    } // get_dims()
-
+    
+    } // get_dims() 
+    
   inline void constrained_param_names(
                                       std::vector<std::string>& param_names__,
                                       bool emit_transformed_parameters__ = true,
                                       bool emit_generated_quantities__ = true) const
     final {
-
-
+    
+    
     if (emit_transformed_parameters__) {
-
+      
     }
-
+    
     if (emit_generated_quantities__) {
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
@@ -453,25 +503,25 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
             {
               param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
-            }
+            } 
           }
-        }
+        } 
       }
     }
-
-    } // constrained_param_names()
-
+    
+    } // constrained_param_names() 
+    
   inline void unconstrained_param_names(
                                         std::vector<std::string>& param_names__,
                                         bool emit_transformed_parameters__ = true,
                                         bool emit_generated_quantities__ = true) const
     final {
-
-
+    
+    
     if (emit_transformed_parameters__) {
-
+      
     }
-
+    
     if (emit_generated_quantities__) {
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
@@ -479,27 +529,27 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
             {
               param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
-            }
+            } 
           }
-        }
+        } 
       }
     }
-
-    } // unconstrained_param_names()
-
+    
+    } // unconstrained_param_names() 
+    
   inline std::string get_constrained_sizedtypes() const {
-
+    
     return std::string("[{\"name\":\"gq_c_matrix\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"generated_quantities\"}]");
-
-    } // get_constrained_sizedtypes()
-
+    
+    } // get_constrained_sizedtypes() 
+    
   inline std::string get_unconstrained_sizedtypes() const {
-
+    
     return std::string("[{\"name\":\"gq_c_matrix\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"generated_quantities\"}]");
-
-    } // get_unconstrained_sizedtypes()
-
-
+    
+    } // get_unconstrained_sizedtypes() 
+    
+  
     // Begin method overload boilerplate
     template <typename RNG>
     inline void write_array(RNG& base_rng,
@@ -510,7 +560,7 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 0;
       const size_t num_transformed = 0;
-      const size_t num_gen_quantities =
+      const size_t num_gen_quantities = 
   ((N * N) * 2);
       std::vector<double> vars_vec(num_params__
        + (emit_transformed_parameters * num_transformed)
@@ -531,7 +581,7 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 0;
       const size_t num_transformed = 0;
-      const size_t num_gen_quantities =
+      const size_t num_gen_quantities = 
   ((N * N) * 2);
       vars.resize(num_params__
         + (emit_transformed_parameters * num_transformed)
@@ -572,7 +622,7 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       const std::array<Eigen::Index, 0> constrain_param_sizes__{};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
-
+    
      std::vector<double> params_r_flat__(num_constrained_params__);
      Eigen::Index size_iter__ = 0;
      Eigen::Index flat_iter__ = 0;
@@ -586,8 +636,8 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
      }
      vars.resize(num_params_r__);
      transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
-    } // transform_inits()
-
+    } // transform_inits() 
+    
 };
 }
 using stan_model = basic_operations_model_namespace::basic_operations_model;
@@ -622,7 +672,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 23> locations_array__ =
+static constexpr std::array<const char*, 23> locations_array__ = 
 {" (found before start of program)",
  " (in 'complex_data.stan', line 2, column 2 to column 8)",
  " (in 'complex_data.stan', line 3, column 2 to column 12)",
@@ -662,27 +712,27 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
   std::vector<std::complex<double>> z4;
   std::vector<Eigen::Matrix<std::complex<double>, -1, 1>> z5;
   std::vector<Eigen::Matrix<std::complex<double>, 1, -1>> z6;
-  std::vector<Eigen::Matrix<std::complex<double>, -1, -1>> z7;
+  std::vector<Eigen::Matrix<std::complex<double>, -1, -1>> z7; 
   Eigen::Map<Eigen::Matrix<std::complex<double>, -1, 1>> z1{nullptr, 0};
   Eigen::Map<Eigen::Matrix<std::complex<double>, 1, -1>> z2{nullptr, 0};
   Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>> z3{nullptr, 0, 0};
-
+ 
  public:
   ~complex_data_model() { }
-
+  
   inline std::string model_name() const final { return "complex_data_model"; }
 
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
-
-
+  
+  
   complex_data_model(stan::io::var_context& context__,
                      unsigned int random_seed__ = 0,
                      std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
-    boost::ecuyer1988 base_rng__ =
+    boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
     static constexpr const char* function__ = "complex_data_model_namespace::complex_data_model";
@@ -696,18 +746,18 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       context__.validate_dims("data initialization","N","int",
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-
-
+      
+      
       current_statement__ = 1;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 2;
       context__.validate_dims("data initialization","z","double",
            std::vector<size_t>{static_cast<size_t>(2)});
-      z =
+      z = 
         std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
           std::numeric_limits<double>::quiet_NaN());
-
-
+      
+      
       current_statement__ = 2;
       z = context__.vals_c("z")[(1 - 1)];
       current_statement__ = 3;
@@ -716,12 +766,12 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       context__.validate_dims("data initialization","z1","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(2)});
-      z1__ =
+      z1__ = 
         Eigen::Matrix<std::complex<double>, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
       new (&z1) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, 1>>(z1__.data(), N);
-
-
+        
+      
       {
         std::vector<std::complex<local_scalar_t__>> z1_flat__;
         current_statement__ = 4;
@@ -743,12 +793,12 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       context__.validate_dims("data initialization","z2","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(2)});
-      z2__ =
+      z2__ = 
         Eigen::Matrix<std::complex<double>, 1, -1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
       new (&z2) Eigen::Map<Eigen::Matrix<std::complex<double>, 1, -1>>(z2__.data(), N);
-
-
+        
+      
       {
         std::vector<std::complex<local_scalar_t__>> z2_flat__;
         current_statement__ = 6;
@@ -772,12 +822,12 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       context__.validate_dims("data initialization","z3","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N), static_cast<size_t>(2)});
-      z3__ =
+      z3__ = 
         Eigen::Matrix<std::complex<double>, -1, -1>::Constant(N, N,
           std::numeric_limits<double>::quiet_NaN());
       new (&z3) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>>(z3__.data(), N, N);
-
-
+        
+      
       {
         std::vector<std::complex<local_scalar_t__>> z3_flat__;
         current_statement__ = 9;
@@ -801,8 +851,8 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       context__.validate_dims("data initialization","M","int",
            std::vector<size_t>{});
       M = std::numeric_limits<int>::min();
-
-
+      
+      
       current_statement__ = 10;
       M = context__.vals_i("M")[(1 - 1)];
       current_statement__ = 11;
@@ -811,12 +861,12 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       context__.validate_dims("data initialization","z4","double",
            std::vector<size_t>{static_cast<size_t>(M),
             static_cast<size_t>(2)});
-      z4 =
-        std::vector<std::complex<double>>(M,
+      z4 = 
+        std::vector<std::complex<double>>(M, 
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::quiet_NaN()));
-
-
+      
+      
       {
         std::vector<std::complex<local_scalar_t__>> z4_flat__;
         current_statement__ = 12;
@@ -840,12 +890,12 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       context__.validate_dims("data initialization","z5","double",
            std::vector<size_t>{static_cast<size_t>(M),
             static_cast<size_t>(N), static_cast<size_t>(2)});
-      z5 =
-        std::vector<Eigen::Matrix<std::complex<double>, -1, 1>>(M,
+      z5 = 
+        std::vector<Eigen::Matrix<std::complex<double>, -1, 1>>(M, 
           Eigen::Matrix<std::complex<double>, -1, 1>::Constant(N,
             std::numeric_limits<double>::quiet_NaN()));
-
-
+      
+      
       {
         std::vector<std::complex<local_scalar_t__>> z5_flat__;
         current_statement__ = 15;
@@ -873,12 +923,12 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       context__.validate_dims("data initialization","z6","double",
            std::vector<size_t>{static_cast<size_t>(M),
             static_cast<size_t>(N), static_cast<size_t>(2)});
-      z6 =
-        std::vector<Eigen::Matrix<std::complex<double>, 1, -1>>(M,
+      z6 = 
+        std::vector<Eigen::Matrix<std::complex<double>, 1, -1>>(M, 
           Eigen::Matrix<std::complex<double>, 1, -1>::Constant(N,
             std::numeric_limits<double>::quiet_NaN()));
-
-
+      
+      
       {
         std::vector<std::complex<local_scalar_t__>> z6_flat__;
         current_statement__ = 18;
@@ -909,12 +959,12 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
            std::vector<size_t>{static_cast<size_t>(M),
             static_cast<size_t>(N), static_cast<size_t>(N),
             static_cast<size_t>(2)});
-      z7 =
-        std::vector<Eigen::Matrix<std::complex<double>, -1, -1>>(M,
+      z7 = 
+        std::vector<Eigen::Matrix<std::complex<double>, -1, -1>>(M, 
           Eigen::Matrix<std::complex<double>, -1, -1>::Constant(N, N,
             std::numeric_limits<double>::quiet_NaN()));
-
-
+      
+      
       {
         std::vector<std::complex<local_scalar_t__>> z7_flat__;
         current_statement__ = 22;
@@ -942,12 +992,12 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     num_params_r__ = 0U;
-
+    
   }
-
-  template <bool propto__, bool jacobian__ , typename VecR, typename VecI,
-  stan::require_vector_like_t<VecR>* = nullptr,
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -961,20 +1011,20 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "complex_data_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
-
+    
     try {
-
+      
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
-    } // log_prob_impl()
-
-  template <typename RNG, typename VecR, typename VecI, typename VecVar,
-  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr,
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+    } // log_prob_impl() 
+    
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -987,31 +1037,31 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
     (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     constexpr bool jacobian__ = false;
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "complex_data_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-
+    
     try {
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
         return ;
-      }
+      } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
-      }
+      } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    } // write_array_impl()
-
-  template <typename VecVar, typename VecI,
-  stan::require_std_vector_t<VecVar>* = nullptr,
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+    } // write_array_impl() 
+    
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -1020,74 +1070,74 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-
+    
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    } // transform_inits_impl()
-
+    } // transform_inits_impl() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
-
+    
     names__ = std::vector<std::string>{};
-
-    } // get_param_names()
-
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-
+    
     dimss__ = std::vector<std::vector<size_t>>{};
-
-    } // get_dims()
-
+    
+    } // get_dims() 
+    
   inline void constrained_param_names(
                                       std::vector<std::string>& param_names__,
                                       bool emit_transformed_parameters__ = true,
                                       bool emit_generated_quantities__ = true) const
     final {
-
-
+    
+    
     if (emit_transformed_parameters__) {
-
+      
     }
-
+    
     if (emit_generated_quantities__) {
-
+      
     }
-
-    } // constrained_param_names()
-
+    
+    } // constrained_param_names() 
+    
   inline void unconstrained_param_names(
                                         std::vector<std::string>& param_names__,
                                         bool emit_transformed_parameters__ = true,
                                         bool emit_generated_quantities__ = true) const
     final {
-
-
+    
+    
     if (emit_transformed_parameters__) {
-
+      
     }
-
+    
     if (emit_generated_quantities__) {
-
+      
     }
-
-    } // unconstrained_param_names()
-
+    
+    } // unconstrained_param_names() 
+    
   inline std::string get_constrained_sizedtypes() const {
-
+    
     return std::string("[]");
-
-    } // get_constrained_sizedtypes()
-
+    
+    } // get_constrained_sizedtypes() 
+    
   inline std::string get_unconstrained_sizedtypes() const {
-
+    
     return std::string("[]");
-
-    } // get_unconstrained_sizedtypes()
-
-
+    
+    } // get_unconstrained_sizedtypes() 
+    
+  
     // Begin method overload boilerplate
     template <typename RNG>
     inline void write_array(RNG& base_rng,
@@ -1158,7 +1208,7 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       const std::array<Eigen::Index, 0> constrain_param_sizes__{};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
-
+    
      std::vector<double> params_r_flat__(num_constrained_params__);
      Eigen::Index size_iter__ = 0;
      Eigen::Index flat_iter__ = 0;
@@ -1172,8 +1222,8 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
      }
      vars.resize(num_params_r__);
      transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
-    } // transform_inits()
-
+    } // transform_inits() 
+    
 };
 }
 using stan_model = complex_data_model_namespace::complex_data_model;
@@ -1208,7 +1258,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 427> locations_array__ =
+static constexpr std::array<const char*, 427> locations_array__ = 
 {" (found before start of program)",
  " (in 'complex_scalar.stan', line 111, column 2 to column 11)",
  " (in 'complex_scalar.stan', line 112, column 2 to column 20)",
@@ -1695,7 +1745,7 @@ struct foo_functor__ {
 
 std::complex<double> foo(std::ostream* pstream__) {
     using local_scalar_t__ = double;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1711,7 +1761,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
   stan::promote_args_t<T0__>
   foo1(const std::complex<T0__>& z, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1727,7 +1777,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
   std::complex<stan::promote_args_t<T0__>>
   foo2(const T0__& r, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1743,7 +1793,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
   std::complex<stan::promote_args_t<T0__>>
   foo3(const std::complex<T0__>& z, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1757,7 +1807,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     }
 std::vector<std::complex<double>> foo4(std::ostream* pstream__) {
     using local_scalar_t__ = double;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1774,7 +1824,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
   stan::promote_args_t<T0__>
   foo5(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1790,7 +1840,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
   std::vector<std::complex<stan::promote_args_t<T0__>>>
   foo6(const T0__& r, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1807,7 +1857,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
   std::vector<std::complex<stan::promote_args_t<T0__>>>
   foo7(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1824,7 +1874,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
   foo8(const std::vector<std::vector<std::complex<T0__>>>& z,
        std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1840,7 +1890,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
   std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
   foo9(const T0__& r, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1863,7 +1913,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
   foo10(const std::vector<std::vector<std::complex<T0__>>>& z,
         std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1950,7 +2000,7 @@ foo5_functor__::operator()(const std::vector<std::complex<T0__>>& z,
   return foo5(z, pstream__);
 }
 
-std::complex<double> foo_functor__::operator()(std::ostream* pstream__)
+std::complex<double> foo_functor__::operator()(std::ostream* pstream__) 
 const
 {
   return foo(pstream__);
@@ -1969,25 +2019,25 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
   double td_r;
   std::complex<double> td_complex;
   std::vector<std::complex<double>> td_complex_array;
-  std::vector<std::vector<std::complex<double>>> td_complex_array_2d;
-
-
+  std::vector<std::vector<std::complex<double>>> td_complex_array_2d; 
+  
+ 
  public:
   ~complex_scalar_model() { }
-
+  
   inline std::string model_name() const final { return "complex_scalar_model"; }
 
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
-
-
+  
+  
   complex_scalar_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
-    boost::ecuyer1988 base_rng__ =
+    boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
     static constexpr const char* function__ = "complex_scalar_model_namespace::complex_scalar_model";
@@ -2001,26 +2051,26 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       context__.validate_dims("data initialization","d_i","int",
            std::vector<size_t>{});
       d_i = std::numeric_limits<int>::min();
-
-
+      
+      
       current_statement__ = 344;
       d_i = context__.vals_i("d_i")[(1 - 1)];
       current_statement__ = 345;
       context__.validate_dims("data initialization","d_r","double",
            std::vector<size_t>{});
       d_r = std::numeric_limits<double>::quiet_NaN();
-
-
+      
+      
       current_statement__ = 345;
       d_r = context__.vals_r("d_r")[(1 - 1)];
       current_statement__ = 346;
       context__.validate_dims("data initialization","d_complex","double",
            std::vector<size_t>{static_cast<size_t>(2)});
-      d_complex =
+      d_complex = 
         std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
           std::numeric_limits<double>::quiet_NaN());
-
-
+      
+      
       current_statement__ = 346;
       d_complex = context__.vals_c("d_complex")[(1 - 1)];
       current_statement__ = 347;
@@ -2028,12 +2078,12 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
           "double",
            std::vector<size_t>{static_cast<size_t>(2),
             static_cast<size_t>(2)});
-      d_complex_array =
-        std::vector<std::complex<double>>(2,
+      d_complex_array = 
+        std::vector<std::complex<double>>(2, 
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::quiet_NaN()));
-
-
+      
+      
       {
         std::vector<std::complex<local_scalar_t__>> d_complex_array_flat__;
         current_statement__ = 347;
@@ -2055,13 +2105,13 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
           "double",
            std::vector<size_t>{static_cast<size_t>(2),
             static_cast<size_t>(3), static_cast<size_t>(2)});
-      d_complex_array_2d =
-        std::vector<std::vector<std::complex<double>>>(2,
-          std::vector<std::complex<double>>(3,
+      d_complex_array_2d = 
+        std::vector<std::vector<std::complex<double>>>(2, 
+          std::vector<std::complex<double>>(3, 
             std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
               std::numeric_limits<double>::quiet_NaN())));
-
-
+      
+      
       {
         std::vector<std::complex<local_scalar_t__>> d_complex_array_2d_flat__;
         current_statement__ = 348;
@@ -2084,37 +2134,37 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       }
       current_statement__ = 349;
       td_i = std::numeric_limits<int>::min();
-
-
+      
+      
       current_statement__ = 349;
       td_i = 1;
       current_statement__ = 350;
       td_r = std::numeric_limits<double>::quiet_NaN();
-
-
+      
+      
       current_statement__ = 350;
       td_r = 1.1;
       current_statement__ = 351;
-      td_complex =
+      td_complex = 
         std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
           std::numeric_limits<double>::quiet_NaN());
-
-
+      
+      
       current_statement__ = 352;
-      td_complex_array =
-        std::vector<std::complex<double>>(2,
+      td_complex_array = 
+        std::vector<std::complex<double>>(2, 
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::quiet_NaN()));
-
-
+      
+      
       current_statement__ = 353;
-      td_complex_array_2d =
-        std::vector<std::vector<std::complex<double>>>(2,
-          std::vector<std::complex<double>>(3,
+      td_complex_array_2d = 
+        std::vector<std::vector<std::complex<double>>>(2, 
+          std::vector<std::complex<double>>(3, 
             std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
               std::numeric_limits<double>::quiet_NaN())));
-
-
+      
+      
       current_statement__ = 354;
       td_complex = td_i;
       current_statement__ = 355;
@@ -2274,12 +2324,12 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + 2 + (2 * 2) + (2 * 3 * 2);
-
+    
   }
-
-  template <bool propto__, bool jacobian__ , typename VecR, typename VecI,
-  stan::require_vector_like_t<VecR>* = nullptr,
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -2293,7 +2343,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "complex_scalar_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
-
+    
     try {
       local_scalar_t__ p_r = DUMMY_VAR__;
       current_statement__ = 1;
@@ -2303,14 +2353,14 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       current_statement__ = 2;
       p_complex = in__.template read<std::complex<local_scalar_t__>>();
       std::vector<std::complex<local_scalar_t__>> p_complex_array =
-         std::vector<std::complex<local_scalar_t__>>(2,
+         std::vector<std::complex<local_scalar_t__>>(2, 
            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       current_statement__ = 3;
       p_complex_array = in__.template read<
                           std::vector<std::complex<local_scalar_t__>>>(2);
       std::vector<std::vector<std::complex<local_scalar_t__>>> p_complex_array_2d =
-         std::vector<std::vector<std::complex<local_scalar_t__>>>(2,
-           std::vector<std::complex<local_scalar_t__>>(3,
+         std::vector<std::vector<std::complex<local_scalar_t__>>>(2, 
+           std::vector<std::complex<local_scalar_t__>>(3, 
              std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
       current_statement__ = 4;
       p_complex_array_2d = in__.template read<
@@ -2323,11 +2373,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       std::complex<local_scalar_t__> tp_complex =
          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
       std::vector<std::complex<local_scalar_t__>> tp_complex_array =
-         std::vector<std::complex<local_scalar_t__>>(2,
+         std::vector<std::complex<local_scalar_t__>>(2, 
            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       std::vector<std::vector<std::complex<local_scalar_t__>>> tp_complex_array_2d =
-         std::vector<std::vector<std::complex<local_scalar_t__>>>(2,
-           std::vector<std::complex<local_scalar_t__>>(3,
+         std::vector<std::vector<std::complex<local_scalar_t__>>>(2, 
+           std::vector<std::complex<local_scalar_t__>>(3, 
              std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
       current_statement__ = 9;
       tp_complex = tp_r;
@@ -2506,11 +2556,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         std::complex<local_scalar_t__> m_complex =
            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
         std::vector<std::complex<local_scalar_t__>> m_complex_array =
-           std::vector<std::complex<local_scalar_t__>>(2,
+           std::vector<std::complex<local_scalar_t__>>(2, 
              std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
         std::vector<std::vector<std::complex<local_scalar_t__>>> m_complex_array_2d =
-           std::vector<std::vector<std::complex<local_scalar_t__>>>(2,
-             std::vector<std::complex<local_scalar_t__>>(3,
+           std::vector<std::vector<std::complex<local_scalar_t__>>>(2, 
+             std::vector<std::complex<local_scalar_t__>>(3, 
                std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
         current_statement__ = 343;
         lp_accum__.add(
@@ -2521,12 +2571,12 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
-    } // log_prob_impl()
-
-  template <typename RNG, typename VecR, typename VecI, typename VecVar,
-  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr,
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+    } // log_prob_impl() 
+    
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -2539,14 +2589,14 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     constexpr bool jacobian__ = false;
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "complex_scalar_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-
+    
     try {
       double p_r = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
@@ -2557,15 +2607,15 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       current_statement__ = 2;
       p_complex = in__.template read<std::complex<local_scalar_t__>>();
       std::vector<std::complex<double>> p_complex_array =
-         std::vector<std::complex<double>>(2,
+         std::vector<std::complex<double>>(2, 
            std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
              std::numeric_limits<double>::quiet_NaN()));
       current_statement__ = 3;
       p_complex_array = in__.template read<
                           std::vector<std::complex<local_scalar_t__>>>(2);
       std::vector<std::vector<std::complex<double>>> p_complex_array_2d =
-         std::vector<std::vector<std::complex<double>>>(2,
-           std::vector<std::complex<double>>(3,
+         std::vector<std::vector<std::complex<double>>>(2, 
+           std::vector<std::complex<double>>(3, 
              std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
                std::numeric_limits<double>::quiet_NaN())));
       current_statement__ = 4;
@@ -2578,12 +2628,12 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
            std::numeric_limits<double>::quiet_NaN());
       std::vector<std::complex<double>> tp_complex_array =
-         std::vector<std::complex<double>>(2,
+         std::vector<std::complex<double>>(2, 
            std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
              std::numeric_limits<double>::quiet_NaN()));
       std::vector<std::vector<std::complex<double>>> tp_complex_array_2d =
-         std::vector<std::vector<std::complex<double>>>(2,
-           std::vector<std::complex<double>>(3,
+         std::vector<std::vector<std::complex<double>>>(2, 
+           std::vector<std::complex<double>>(3, 
              std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
                std::numeric_limits<double>::quiet_NaN())));
       out__.write(p_r);
@@ -2600,7 +2650,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
         return ;
-      }
+      } 
       current_statement__ = 5;
       tp_r = 1.1;
       current_statement__ = 9;
@@ -2787,10 +2837,10 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
             out__.write(tp_complex_array_2d[(sym2__ - 1)][(sym1__ - 1)]);
           }
         }
-      }
+      } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
-      }
+      } 
       int gq_i = std::numeric_limits<int>::min();
       current_statement__ = 62;
       gq_i = 1;
@@ -2801,12 +2851,12 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
            std::numeric_limits<double>::quiet_NaN());
       std::vector<std::complex<double>> gq_complex_array =
-         std::vector<std::complex<double>>(2,
+         std::vector<std::complex<double>>(2, 
            std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
              std::numeric_limits<double>::quiet_NaN()));
       std::vector<std::vector<std::complex<double>>> gq_complex_array_2d =
-         std::vector<std::vector<std::complex<double>>>(2,
-           std::vector<std::complex<double>>(3,
+         std::vector<std::vector<std::complex<double>>>(2, 
+           std::vector<std::complex<double>>(3, 
              std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
                std::numeric_limits<double>::quiet_NaN())));
       current_statement__ = 67;
@@ -3471,11 +3521,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    } // write_array_impl()
-
-  template <typename VecVar, typename VecI,
-  stan::require_std_vector_t<VecVar>* = nullptr,
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+    } // write_array_impl() 
+    
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -3484,7 +3534,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-
+    
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
@@ -3496,7 +3546,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       p_complex = in__.read<local_scalar_t__>();
       out__.write(p_complex);
       std::vector<std::complex<local_scalar_t__>> p_complex_array =
-         std::vector<std::complex<local_scalar_t__>>(2,
+         std::vector<std::complex<local_scalar_t__>>(2, 
            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         stan::model::assign(p_complex_array, in__.read<local_scalar_t__>(),
@@ -3504,8 +3554,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       }
       out__.write(p_complex_array);
       std::vector<std::vector<std::complex<local_scalar_t__>>> p_complex_array_2d =
-         std::vector<std::vector<std::complex<local_scalar_t__>>>(2,
-           std::vector<std::complex<local_scalar_t__>>(3,
+         std::vector<std::vector<std::complex<local_scalar_t__>>>(2, 
+           std::vector<std::complex<local_scalar_t__>>(3, 
              std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
@@ -3519,20 +3569,20 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    } // transform_inits_impl()
-
+    } // transform_inits_impl() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
-
+    
     names__ = std::vector<std::string>{"p_r", "p_complex", "p_complex_array",
       "p_complex_array_2d", "tp_r", "tp_complex", "tp_complex_array",
       "tp_complex_array_2d", "gq_i", "gq_r", "gq_complex",
       "gq_complex_array", "gq_complex_array_2d", "z", "y", "i_arr",
       "i_arr_1", "zi", "yi", "x"};
-
-    } // get_param_names()
-
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-
+    
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
       std::vector<size_t>{static_cast<size_t>(2)},
       std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(2)},
@@ -3553,15 +3603,15 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       std::vector<size_t>{static_cast<size_t>(2)},
       std::vector<size_t>{static_cast<size_t>(2)}, std::vector<size_t>{
       }};
-
-    } // get_dims()
-
+    
+    } // get_dims() 
+    
   inline void constrained_param_names(
                                       std::vector<std::string>& param_names__,
                                       bool emit_transformed_parameters__ = true,
                                       bool emit_generated_quantities__ = true) const
     final {
-
+    
     param_names__.emplace_back(std::string() + "p_r");
     param_names__.emplace_back(std::string() + "p_complex" + '.' + "real");
     param_names__.emplace_back(std::string() + "p_complex" + '.' + "imag");
@@ -3569,7 +3619,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       {
         param_names__.emplace_back(std::string() + "p_complex_array" + '.' + std::to_string(sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "p_complex_array" + '.' + std::to_string(sym1__) + '.' + "imag");
-      }
+      } 
     }
     for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
       {
@@ -3577,9 +3627,9 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
           {
             param_names__.emplace_back(std::string() + "p_complex_array_2d" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
             param_names__.emplace_back(std::string() + "p_complex_array_2d" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
-          }
+          } 
         }
-      }
+      } 
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "tp_r");
@@ -3589,7 +3639,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         {
           param_names__.emplace_back(std::string() + "tp_complex_array" + '.' + std::to_string(sym1__) + '.' + "real");
           param_names__.emplace_back(std::string() + "tp_complex_array" + '.' + std::to_string(sym1__) + '.' + "imag");
-        }
+        } 
       }
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         {
@@ -3597,12 +3647,12 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
             {
               param_names__.emplace_back(std::string() + "tp_complex_array_2d" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "tp_complex_array_2d" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
-            }
+            } 
           }
-        }
+        } 
       }
     }
-
+    
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "gq_i");
       param_names__.emplace_back(std::string() + "gq_r");
@@ -3612,7 +3662,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         {
           param_names__.emplace_back(std::string() + "gq_complex_array" + '.' + std::to_string(sym1__) + '.' + "real");
           param_names__.emplace_back(std::string() + "gq_complex_array" + '.' + std::to_string(sym1__) + '.' + "imag");
-        }
+        } 
       }
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         {
@@ -3620,9 +3670,9 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
             {
               param_names__.emplace_back(std::string() + "gq_complex_array_2d" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "gq_complex_array_2d" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
-            }
+            } 
           }
-        }
+        } 
       }
       param_names__.emplace_back(std::string() + "z" + '.' + "real");
       param_names__.emplace_back(std::string() + "z" + '.' + "imag");
@@ -3631,12 +3681,12 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       for (int sym1__ = 1; sym1__ <= 0; ++sym1__) {
         {
           param_names__.emplace_back(std::string() + "i_arr" + '.' + std::to_string(sym1__));
-        }
+        } 
       }
       for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
         {
           param_names__.emplace_back(std::string() + "i_arr_1" + '.' + std::to_string(sym1__));
-        }
+        } 
       }
       param_names__.emplace_back(std::string() + "zi" + '.' + "real");
       param_names__.emplace_back(std::string() + "zi" + '.' + "imag");
@@ -3644,15 +3694,15 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       param_names__.emplace_back(std::string() + "yi" + '.' + "imag");
       param_names__.emplace_back(std::string() + "x");
     }
-
-    } // constrained_param_names()
-
+    
+    } // constrained_param_names() 
+    
   inline void unconstrained_param_names(
                                         std::vector<std::string>& param_names__,
                                         bool emit_transformed_parameters__ = true,
                                         bool emit_generated_quantities__ = true) const
     final {
-
+    
     param_names__.emplace_back(std::string() + "p_r");
     param_names__.emplace_back(std::string() + "p_complex" + '.' + "real");
     param_names__.emplace_back(std::string() + "p_complex" + '.' + "imag");
@@ -3660,7 +3710,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       {
         param_names__.emplace_back(std::string() + "p_complex_array" + '.' + std::to_string(sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "p_complex_array" + '.' + std::to_string(sym1__) + '.' + "imag");
-      }
+      } 
     }
     for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
       {
@@ -3668,9 +3718,9 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
           {
             param_names__.emplace_back(std::string() + "p_complex_array_2d" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
             param_names__.emplace_back(std::string() + "p_complex_array_2d" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
-          }
+          } 
         }
-      }
+      } 
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "tp_r");
@@ -3680,7 +3730,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         {
           param_names__.emplace_back(std::string() + "tp_complex_array" + '.' + std::to_string(sym1__) + '.' + "real");
           param_names__.emplace_back(std::string() + "tp_complex_array" + '.' + std::to_string(sym1__) + '.' + "imag");
-        }
+        } 
       }
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         {
@@ -3688,12 +3738,12 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
             {
               param_names__.emplace_back(std::string() + "tp_complex_array_2d" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "tp_complex_array_2d" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
-            }
+            } 
           }
-        }
+        } 
       }
     }
-
+    
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "gq_i");
       param_names__.emplace_back(std::string() + "gq_r");
@@ -3703,7 +3753,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         {
           param_names__.emplace_back(std::string() + "gq_complex_array" + '.' + std::to_string(sym1__) + '.' + "real");
           param_names__.emplace_back(std::string() + "gq_complex_array" + '.' + std::to_string(sym1__) + '.' + "imag");
-        }
+        } 
       }
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         {
@@ -3711,9 +3761,9 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
             {
               param_names__.emplace_back(std::string() + "gq_complex_array_2d" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "gq_complex_array_2d" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
-            }
+            } 
           }
-        }
+        } 
       }
       param_names__.emplace_back(std::string() + "z" + '.' + "real");
       param_names__.emplace_back(std::string() + "z" + '.' + "imag");
@@ -3722,12 +3772,12 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       for (int sym1__ = 1; sym1__ <= 0; ++sym1__) {
         {
           param_names__.emplace_back(std::string() + "i_arr" + '.' + std::to_string(sym1__));
-        }
+        } 
       }
       for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
         {
           param_names__.emplace_back(std::string() + "i_arr_1" + '.' + std::to_string(sym1__));
-        }
+        } 
       }
       param_names__.emplace_back(std::string() + "zi" + '.' + "real");
       param_names__.emplace_back(std::string() + "zi" + '.' + "imag");
@@ -3735,22 +3785,22 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       param_names__.emplace_back(std::string() + "yi" + '.' + "imag");
       param_names__.emplace_back(std::string() + "x");
     }
-
-    } // unconstrained_param_names()
-
+    
+    } // unconstrained_param_names() 
+    
   inline std::string get_constrained_sizedtypes() const {
-
+    
     return std::string("[{\"name\":\"p_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"p_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"parameters\"},{\"name\":\"p_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"parameters\"},{\"name\":\"tp_r\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_i\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"i_arr\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(0) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"i_arr_1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"zi\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"yi\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
-
-    } // get_constrained_sizedtypes()
-
+    
+    } // get_constrained_sizedtypes() 
+    
   inline std::string get_unconstrained_sizedtypes() const {
-
+    
     return std::string("[{\"name\":\"p_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"p_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"parameters\"},{\"name\":\"p_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"parameters\"},{\"name\":\"tp_r\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_i\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"i_arr\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(0) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"i_arr_1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"zi\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"yi\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
-
-    } // get_unconstrained_sizedtypes()
-
-
+    
+    } // get_unconstrained_sizedtypes() 
+    
+  
     // Begin method overload boilerplate
     template <typename RNG>
     inline void write_array(RNG& base_rng,
@@ -3759,11 +3809,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      const size_t num_params__ =
+      const size_t num_params__ = 
   (((1 + 2) + (2 * 2)) + ((2 * 3) * 2));
-      const size_t num_transformed =
+      const size_t num_transformed = 
   (((1 + 2) + (2 * 2)) + ((2 * 3) * 2));
-      const size_t num_gen_quantities =
+      const size_t num_gen_quantities = 
   (((((((((((1 + 1) + 2) + (2 * 2)) + ((2 * 3) * 2)) + 2) + 2) + 0) + 1) + 2)
      + 2) + 1);
       std::vector<double> vars_vec(num_params__
@@ -3783,11 +3833,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      const size_t num_params__ =
+      const size_t num_params__ = 
   (((1 + 2) + (2 * 2)) + ((2 * 3) * 2));
-      const size_t num_transformed =
+      const size_t num_transformed = 
   (((1 + 2) + (2 * 2)) + ((2 * 3) * 2));
-      const size_t num_gen_quantities =
+      const size_t num_gen_quantities = 
   (((((((((((1 + 1) + 2) + (2 * 2)) + ((2 * 3) * 2)) + 2) + 2) + 0) + 1) + 2)
      + 2) + 1);
       vars.resize(num_params__
@@ -3827,11 +3877,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 4> names__{"p_r", "p_complex",
       "p_complex_array", "p_complex_array_2d"};
-      const std::array<Eigen::Index, 4> constrain_param_sizes__{1, 2,
+      const std::array<Eigen::Index, 4> constrain_param_sizes__{1, 2, 
        (2 * 2), (2 * 3 * 2)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
-
+    
      std::vector<double> params_r_flat__(num_constrained_params__);
      Eigen::Index size_iter__ = 0;
      Eigen::Index flat_iter__ = 0;
@@ -3845,8 +3895,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
      }
      vars.resize(num_params_r__);
      transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
-    } // transform_inits()
-     }; }
+    } // transform_inits() 
+     }; } 
 using stan_model = complex_scalar_model_namespace::complex_scalar_model;
 
 #ifndef USING_R
@@ -3879,7 +3929,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 5> locations_array__ =
+static constexpr std::array<const char*, 5> locations_array__ = 
 {" (found before start of program)",
  " (in 'complex_vectors.stan', line 4, column 3 to column 37)",
  " (in 'complex_vectors.stan', line 5, column 3 to column 42)",
@@ -3892,25 +3942,25 @@ static constexpr std::array<const char*, 5> locations_array__ =
 class complex_vectors_model final : public model_base_crtp<complex_vectors_model> {
 
  private:
-
-
-
+   
+  
+ 
  public:
   ~complex_vectors_model() { }
-
+  
   inline std::string model_name() const final { return "complex_vectors_model"; }
 
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
-
-
+  
+  
   complex_vectors_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
-    boost::ecuyer1988 base_rng__ =
+    boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
     static constexpr const char* function__ = "complex_vectors_model_namespace::complex_vectors_model";
@@ -3924,12 +3974,12 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     num_params_r__ = 0U;
-
+    
   }
-
-  template <bool propto__, bool jacobian__ , typename VecR, typename VecI,
-  stan::require_vector_like_t<VecR>* = nullptr,
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -3943,7 +3993,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "complex_vectors_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
-
+    
     try {
       Eigen::Matrix<std::complex<local_scalar_t__>, -1, 1> z =
          Eigen::Matrix<std::complex<local_scalar_t__>, -1, 1>::Constant(3,
@@ -3979,12 +4029,12 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
-    } // log_prob_impl()
-
-  template <typename RNG, typename VecR, typename VecI, typename VecVar,
-  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr,
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+    } // log_prob_impl() 
+    
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -3997,14 +4047,14 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     constexpr bool jacobian__ = false;
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "complex_vectors_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-
+    
     try {
       Eigen::Matrix<std::complex<double>, -1, 1> z =
          Eigen::Matrix<std::complex<double>, -1, 1>::Constant(3,
@@ -4022,7 +4072,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
         return ;
-      }
+      } 
       current_statement__ = 1;
       stan::model::assign(z, (Eigen::Matrix<std::complex<double>,-1,1>(3) <<
         stan::math::to_complex(3, 0), stan::math::to_complex(0, 4),
@@ -4046,18 +4096,18 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
         out__.write(zs);
         out__.write(x);
         out__.write(zx);
-      }
+      } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
-      }
+      } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    } // write_array_impl()
-
-  template <typename VecVar, typename VecI,
-  stan::require_std_vector_t<VecVar>* = nullptr,
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+    } // write_array_impl() 
+    
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -4066,23 +4116,23 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-
+    
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    } // transform_inits_impl()
-
+    } // transform_inits_impl() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
-
+    
     names__ = std::vector<std::string>{"z", "zs", "x", "zx"};
-
-    } // get_param_names()
-
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-
+    
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
                                                                    static_cast<size_t>(3)
                                                                    ,
@@ -4092,22 +4142,22 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
                           static_cast<size_t>(2)},
       std::vector<size_t>{static_cast<size_t>(2)},
       std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(2)}};
-
-    } // get_dims()
-
+    
+    } // get_dims() 
+    
   inline void constrained_param_names(
                                       std::vector<std::string>& param_names__,
                                       bool emit_transformed_parameters__ = true,
                                       bool emit_generated_quantities__ = true) const
     final {
-
-
+    
+    
     if (emit_transformed_parameters__) {
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         {
           param_names__.emplace_back(std::string() + "z" + '.' + std::to_string(sym1__) + '.' + "real");
           param_names__.emplace_back(std::string() + "z" + '.' + std::to_string(sym1__) + '.' + "imag");
-        }
+        } 
       }
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         {
@@ -4115,42 +4165,42 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
             {
               param_names__.emplace_back(std::string() + "zs" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "zs" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
-            }
+            } 
           }
-        }
+        } 
       }
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         {
           param_names__.emplace_back(std::string() + "x" + '.' + std::to_string(sym1__));
-        }
+        } 
       }
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         {
           param_names__.emplace_back(std::string() + "zx" + '.' + std::to_string(sym1__) + '.' + "real");
           param_names__.emplace_back(std::string() + "zx" + '.' + std::to_string(sym1__) + '.' + "imag");
-        }
+        } 
       }
     }
-
+    
     if (emit_generated_quantities__) {
-
+      
     }
-
-    } // constrained_param_names()
-
+    
+    } // constrained_param_names() 
+    
   inline void unconstrained_param_names(
                                         std::vector<std::string>& param_names__,
                                         bool emit_transformed_parameters__ = true,
                                         bool emit_generated_quantities__ = true) const
     final {
-
-
+    
+    
     if (emit_transformed_parameters__) {
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         {
           param_names__.emplace_back(std::string() + "z" + '.' + std::to_string(sym1__) + '.' + "real");
           param_names__.emplace_back(std::string() + "z" + '.' + std::to_string(sym1__) + '.' + "imag");
-        }
+        } 
       }
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         {
@@ -4158,42 +4208,42 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
             {
               param_names__.emplace_back(std::string() + "zs" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "zs" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
-            }
+            } 
           }
-        }
+        } 
       }
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         {
           param_names__.emplace_back(std::string() + "x" + '.' + std::to_string(sym1__));
-        }
+        } 
       }
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         {
           param_names__.emplace_back(std::string() + "zx" + '.' + std::to_string(sym1__) + '.' + "real");
           param_names__.emplace_back(std::string() + "zx" + '.' + std::to_string(sym1__) + '.' + "imag");
-        }
+        } 
       }
     }
-
+    
     if (emit_generated_quantities__) {
-
+      
     }
-
-    } // unconstrained_param_names()
-
+    
+    } // unconstrained_param_names() 
+    
   inline std::string get_constrained_sizedtypes() const {
-
+    
     return std::string("[{\"name\":\"z\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zs\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zx\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"}]");
-
-    } // get_constrained_sizedtypes()
-
+    
+    } // get_constrained_sizedtypes() 
+    
   inline std::string get_unconstrained_sizedtypes() const {
-
+    
     return std::string("[{\"name\":\"z\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zs\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zx\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"}]");
-
-    } // get_unconstrained_sizedtypes()
-
-
+    
+    } // get_unconstrained_sizedtypes() 
+    
+  
     // Begin method overload boilerplate
     template <typename RNG>
     inline void write_array(RNG& base_rng,
@@ -4203,7 +4253,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 0;
-      const size_t num_transformed =
+      const size_t num_transformed = 
   ((((3 * 2) + ((2 * 2) * 2)) + 2) + (2 * 2));
       const size_t num_gen_quantities = 0;
       std::vector<double> vars_vec(num_params__
@@ -4224,7 +4274,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 0;
-      const size_t num_transformed =
+      const size_t num_transformed = 
   ((((3 * 2) + ((2 * 2) * 2)) + 2) + (2 * 2));
       const size_t num_gen_quantities = 0;
       vars.resize(num_params__
@@ -4266,7 +4316,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
       const std::array<Eigen::Index, 0> constrain_param_sizes__{};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
-
+    
      std::vector<double> params_r_flat__(num_constrained_params__);
      Eigen::Index size_iter__ = 0;
      Eigen::Index flat_iter__ = 0;
@@ -4280,8 +4330,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
      }
      vars.resize(num_params_r__);
      transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
-    } // transform_inits()
-
+    } // transform_inits() 
+    
 };
 }
 using stan_model = complex_vectors_model_namespace::complex_vectors_model;
@@ -4316,7 +4366,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 31> locations_array__ =
+static constexpr std::array<const char*, 31> locations_array__ = 
 {" (found before start of program)",
  " (in 'user_function_templating.stan', line 32, column 17 to column 18)",
  " (in 'user_function_templating.stan', line 32, column 19 to column 20)",
@@ -4392,7 +4442,7 @@ template <typename T0__,
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
   foo(const T0__& Z_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     const auto& Z = stan::math::to_ref(Z_arg__);
     static constexpr bool propto__ = true;
     (void) propto__;
@@ -4411,7 +4461,7 @@ template <typename T0__,
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
   foo(const T0__& A_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     const auto& A = stan::math::to_ref(A_arg__);
     static constexpr bool propto__ = true;
     (void) propto__;
@@ -4431,7 +4481,7 @@ template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
   foo(const T0__& Z_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     const auto& Z = stan::math::to_ref(Z_arg__);
     static constexpr bool propto__ = true;
     (void) propto__;
@@ -4449,7 +4499,7 @@ template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
   foo(const T0__& A_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     const auto& A = stan::math::to_ref(A_arg__);
     static constexpr bool propto__ = true;
     (void) propto__;
@@ -4469,7 +4519,7 @@ template <typename T0__, stan::require_row_vector_t<T0__>* = nullptr,
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, 1, -1>
   foo(const T0__& Z_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     const auto& Z = stan::math::to_ref(Z_arg__);
     static constexpr bool propto__ = true;
     (void) propto__;
@@ -4487,7 +4537,7 @@ template <typename T0__, stan::require_row_vector_t<T0__>* = nullptr,
   Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, 1, -1>
   foo(const T0__& A_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     const auto& A = stan::math::to_ref(A_arg__);
     static constexpr bool propto__ = true;
     (void) propto__;
@@ -4507,7 +4557,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
   foo(const std::vector<Eigen::Matrix<std::complex<T0__>, -1, -1>>& Z,
       std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -4524,7 +4574,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
   foo(const std::vector<Eigen::Matrix<T0__, -1, -1>>& A,
       std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -4606,25 +4656,25 @@ foo_functor__::operator()(const T0__& Z, std::ostream* pstream__)  const
 class user_function_templating_model final : public model_base_crtp<user_function_templating_model> {
 
  private:
-  int N;
-
-
+  int N; 
+  
+ 
  public:
   ~user_function_templating_model() { }
-
+  
   inline std::string model_name() const final { return "user_function_templating_model"; }
 
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
-
-
+  
+  
   user_function_templating_model(stan::io::var_context& context__,
                                  unsigned int random_seed__ = 0,
                                  std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
-    boost::ecuyer1988 base_rng__ =
+    boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
     static constexpr const char* function__ = "user_function_templating_model_namespace::user_function_templating_model";
@@ -4636,20 +4686,20 @@ class user_function_templating_model final : public model_base_crtp<user_functio
       pos__ = 1;
       current_statement__ = 14;
       N = std::numeric_limits<int>::min();
-
-
+      
+      
       current_statement__ = 14;
       N = 3;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     num_params_r__ = 0U;
-
+    
   }
-
-  template <bool propto__, bool jacobian__ , typename VecR, typename VecI,
-  stan::require_vector_like_t<VecR>* = nullptr,
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -4663,7 +4713,7 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "user_function_templating_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
-
+    
     try {
       {
         current_statement__ = 1;
@@ -4698,7 +4748,7 @@ class user_function_templating_model final : public model_base_crtp<user_functio
         stan::math::validate_non_negative_index("w", "N", N);
         std::vector<Eigen::Matrix<std::complex<local_scalar_t__>, -1, -1>> w =
            std::vector<Eigen::Matrix<std::complex<local_scalar_t__>, -1, -1>>(
-             2,
+             2, 
              Eigen::Matrix<std::complex<local_scalar_t__>, -1, -1>::Constant(
                N, N, DUMMY_VAR__));
         current_statement__ = 13;
@@ -4712,12 +4762,12 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
-    } // log_prob_impl()
-
-  template <typename RNG, typename VecR, typename VecI, typename VecVar,
-  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr,
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+    } // log_prob_impl() 
+    
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -4730,31 +4780,31 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
-    int current_statement__ = 0;
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     constexpr bool jacobian__ = false;
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "user_function_templating_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-
+    
     try {
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
         return ;
-      }
+      } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
-      }
+      } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    } // write_array_impl()
-
-  template <typename VecVar, typename VecI,
-  stan::require_std_vector_t<VecVar>* = nullptr,
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+    } // write_array_impl() 
+    
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -4763,74 +4813,74 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-
+    
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    } // transform_inits_impl()
-
+    } // transform_inits_impl() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
-
+    
     names__ = std::vector<std::string>{};
-
-    } // get_param_names()
-
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-
+    
     dimss__ = std::vector<std::vector<size_t>>{};
-
-    } // get_dims()
-
+    
+    } // get_dims() 
+    
   inline void constrained_param_names(
                                       std::vector<std::string>& param_names__,
                                       bool emit_transformed_parameters__ = true,
                                       bool emit_generated_quantities__ = true) const
     final {
-
-
+    
+    
     if (emit_transformed_parameters__) {
-
+      
     }
-
+    
     if (emit_generated_quantities__) {
-
+      
     }
-
-    } // constrained_param_names()
-
+    
+    } // constrained_param_names() 
+    
   inline void unconstrained_param_names(
                                         std::vector<std::string>& param_names__,
                                         bool emit_transformed_parameters__ = true,
                                         bool emit_generated_quantities__ = true) const
     final {
-
-
+    
+    
     if (emit_transformed_parameters__) {
-
+      
     }
-
+    
     if (emit_generated_quantities__) {
-
+      
     }
-
-    } // unconstrained_param_names()
-
+    
+    } // unconstrained_param_names() 
+    
   inline std::string get_constrained_sizedtypes() const {
-
+    
     return std::string("[]");
-
-    } // get_constrained_sizedtypes()
-
+    
+    } // get_constrained_sizedtypes() 
+    
   inline std::string get_unconstrained_sizedtypes() const {
-
+    
     return std::string("[]");
-
-    } // get_unconstrained_sizedtypes()
-
-
+    
+    } // get_unconstrained_sizedtypes() 
+    
+  
     // Begin method overload boilerplate
     template <typename RNG>
     inline void write_array(RNG& base_rng,
@@ -4901,7 +4951,7 @@ class user_function_templating_model final : public model_base_crtp<user_functio
       const std::array<Eigen::Index, 0> constrain_param_sizes__{};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
-
+    
      std::vector<double> params_r_flat__(num_constrained_params__);
      Eigen::Index size_iter__ = 0;
      Eigen::Index flat_iter__ = 0;
@@ -4915,8 +4965,8 @@ class user_function_templating_model final : public model_base_crtp<user_functio
      }
      vars.resize(num_params_r__);
      transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
-    } // transform_inits()
-     }; }
+    } // transform_inits() 
+     }; } 
 using stan_model = user_function_templating_model_namespace::user_function_templating_model;
 
 #ifndef USING_R
@@ -4935,3 +4985,6 @@ stan::math::profile_map& get_stan_profile_data() {
 }
 
 #endif
+
+
+

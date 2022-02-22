@@ -1612,6 +1612,10 @@ let () =
     , ReturnType UComplexMatrix
     , [UComplexMatrix; UComplexMatrix]
     , SoA ) ;
+  add_unqualified
+    ("multiply", ReturnType UComplexMatrix, [UComplexMatrix; UComplex], SoA) ;
+  add_unqualified
+    ("multiply", ReturnType UComplexMatrix, [UComplex; UComplexMatrix], SoA) ;
   add_binary_vec "multiply_log" SoA ;
   add_unqualified
     ("multiply_lower_tri_self_transpose", ReturnType UMatrix, [UMatrix], SoA) ;
