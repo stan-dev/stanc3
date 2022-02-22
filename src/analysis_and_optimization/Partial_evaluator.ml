@@ -771,7 +771,22 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                     ; ({pattern= Lit ((Real | Int), _); _} as r) ] )
                  |( ("Plus__" | "add")
                   , [ ({pattern= Lit ((Real | Int), _); _} as r)
-                    ; ({pattern= Lit (Imaginary, i); _} as im) ] ) ->
+                    ; ({pattern= Lit (Imaginary, i); _} as im) ] )
+                 |( ("Plus__" | "add")
+                  , [ ({pattern= Lit (Imaginary, i); _} as im)
+                    ; { pattern=
+                          Promotion
+                            ( ({pattern= Lit ((Real | Int), _); _} as r)
+                            , UComplex
+                            , _ )
+                      ; _ } ] )
+                 |( ("Plus__" | "add")
+                  , [ { pattern=
+                          Promotion
+                            ( ({pattern= Lit ((Real | Int), _); _} as r)
+                            , UComplex
+                            , _ )
+                      ; _ }; ({pattern= Lit (Imaginary, i); _} as im) ] ) ->
                     let im_part =
                       Expr.Fixed.
                         { pattern= Lit (Real, i)
