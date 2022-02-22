@@ -83,7 +83,7 @@ end
 module Helpers : sig
   val int : int -> Typed.t
   val float : float -> Typed.t
-  val complex : (float * float) -> Typed.t
+  val complex : float * float -> Typed.t
   val str : string -> Typed.t
   val variable : string -> Typed.t
   val zero : Typed.t
