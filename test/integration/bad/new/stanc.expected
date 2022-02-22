@@ -3704,6 +3704,16 @@ Syntax error in 'type-size-bad61.stan', line 1, column 16 to column 21, parsing 
    -------------------------------------------------
 
 Expected "[" expression "]" for vector size.
+  $ ../../../../../install/default/bin/stanc type-size-bad62.stan
+Syntax error in 'type-size-bad62.stan', line 3, column 0 to column 1, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:     complex_vector[foo
+     3:  }
+         ^
+   -------------------------------------------------
+
+Expected "[" expression "]" for vector size.
   $ ../../../../../install/default/bin/stanc type-size-bad7.stan
 Syntax error in 'type-size-bad7.stan', line 1, column 27 to column 28, parsing error:
    -------------------------------------------------

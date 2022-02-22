@@ -501,7 +501,8 @@ let pretty_print_math_lib_operator_sigs op =
 
 (* -- Some helper definitions to populate stan_math_signatures -- *)
 let bare_types =
-  [UnsizedType.UInt; UReal; UComplex; UVector; URowVector; UMatrix]
+  [ UnsizedType.UInt; UReal; UComplex; UVector; URowVector; UMatrix
+  ; UComplexVector; UComplexRowVector; UComplexMatrix ]
 
 let bare_types_size = List.length bare_types
 let vector_types = [UnsizedType.UReal; UArray UReal; UVector; URowVector]

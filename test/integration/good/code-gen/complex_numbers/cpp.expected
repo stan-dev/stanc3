@@ -9,7 +9,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 25> locations_array__ =
+static constexpr std::array<const char*, 31> locations_array__ =
 {" (found before start of program)",
  " (in 'basic_operations.stan', line 14, column 2 to column 34)",
  " (in 'basic_operations.stan', line 15, column 2 to column 28)",
@@ -18,6 +18,12 @@ static constexpr std::array<const char*, 25> locations_array__ =
  " (in 'basic_operations.stan', line 18, column 2 to column 29)",
  " (in 'basic_operations.stan', line 19, column 2 to column 28)",
  " (in 'basic_operations.stan', line 20, column 2 to column 28)",
+ " (in 'basic_operations.stan', line 22, column 2 to column 28)",
+ " (in 'basic_operations.stan', line 23, column 2 to column 27)",
+ " (in 'basic_operations.stan', line 24, column 2 to column 27)",
+ " (in 'basic_operations.stan', line 25, column 2 to column 28)",
+ " (in 'basic_operations.stan', line 26, column 2 to column 27)",
+ " (in 'basic_operations.stan', line 27, column 2 to column 27)",
  " (in 'basic_operations.stan', line 2, column 2 to column 8)",
  " (in 'basic_operations.stan', line 3, column 17 to column 18)",
  " (in 'basic_operations.stan', line 3, column 19 to column 20)",
@@ -81,19 +87,19 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 8;
+      current_statement__ = 14;
       context__.validate_dims("data initialization","N","int",
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
 
 
-      current_statement__ = 8;
+      current_statement__ = 14;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 9;
+      current_statement__ = 15;
       stan::math::validate_non_negative_index("cmat", "N", N);
-      current_statement__ = 10;
+      current_statement__ = 16;
       stan::math::validate_non_negative_index("cmat", "N", N);
-      current_statement__ = 11;
+      current_statement__ = 17;
       context__.validate_dims("data initialization","cmat","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N), static_cast<size_t>(2)});
@@ -105,26 +111,26 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
 
       {
         std::vector<std::complex<local_scalar_t__>> cmat_flat__;
-        current_statement__ = 11;
+        current_statement__ = 17;
         cmat_flat__ = context__.vals_c("cmat");
-        current_statement__ = 11;
+        current_statement__ = 17;
         pos__ = 1;
-        current_statement__ = 11;
+        current_statement__ = 17;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 11;
+          current_statement__ = 17;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 11;
+            current_statement__ = 17;
             stan::model::assign(cmat, cmat_flat__[(pos__ - 1)],
               "assigning variable cmat", stan::model::index_uni(sym2__),
                                            stan::model::index_uni(sym1__));
-            current_statement__ = 11;
+            current_statement__ = 17;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 12;
+      current_statement__ = 18;
       stan::math::validate_non_negative_index("cvec", "N", N);
-      current_statement__ = 13;
+      current_statement__ = 19;
       context__.validate_dims("data initialization","cvec","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(2)});
@@ -136,22 +142,22 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
 
       {
         std::vector<std::complex<local_scalar_t__>> cvec_flat__;
-        current_statement__ = 13;
+        current_statement__ = 19;
         cvec_flat__ = context__.vals_c("cvec");
-        current_statement__ = 13;
+        current_statement__ = 19;
         pos__ = 1;
-        current_statement__ = 13;
+        current_statement__ = 19;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 13;
+          current_statement__ = 19;
           stan::model::assign(cvec, cvec_flat__[(pos__ - 1)],
             "assigning variable cvec", stan::model::index_uni(sym1__));
-          current_statement__ = 13;
+          current_statement__ = 19;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 14;
+      current_statement__ = 20;
       stan::math::validate_non_negative_index("crowvec", "N", N);
-      current_statement__ = 15;
+      current_statement__ = 21;
       context__.validate_dims("data initialization","crowvec","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(2)});
@@ -163,24 +169,24 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
 
       {
         std::vector<std::complex<local_scalar_t__>> crowvec_flat__;
-        current_statement__ = 15;
+        current_statement__ = 21;
         crowvec_flat__ = context__.vals_c("crowvec");
-        current_statement__ = 15;
+        current_statement__ = 21;
         pos__ = 1;
-        current_statement__ = 15;
+        current_statement__ = 21;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 15;
+          current_statement__ = 21;
           stan::model::assign(crowvec, crowvec_flat__[(pos__ - 1)],
             "assigning variable crowvec", stan::model::index_uni(sym1__));
-          current_statement__ = 15;
+          current_statement__ = 21;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 16;
+      current_statement__ = 22;
       stan::math::validate_non_negative_index("mat", "N", N);
-      current_statement__ = 17;
+      current_statement__ = 23;
       stan::math::validate_non_negative_index("mat", "N", N);
-      current_statement__ = 18;
+      current_statement__ = 24;
       context__.validate_dims("data initialization","mat","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N)});
@@ -192,26 +198,26 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
 
       {
         std::vector<local_scalar_t__> mat_flat__;
-        current_statement__ = 18;
+        current_statement__ = 24;
         mat_flat__ = context__.vals_r("mat");
-        current_statement__ = 18;
+        current_statement__ = 24;
         pos__ = 1;
-        current_statement__ = 18;
+        current_statement__ = 24;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 18;
+          current_statement__ = 24;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 18;
+            current_statement__ = 24;
             stan::model::assign(mat, mat_flat__[(pos__ - 1)],
               "assigning variable mat", stan::model::index_uni(sym2__),
                                           stan::model::index_uni(sym1__));
-            current_statement__ = 18;
+            current_statement__ = 24;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 19;
+      current_statement__ = 25;
       stan::math::validate_non_negative_index("vec", "N", N);
-      current_statement__ = 20;
+      current_statement__ = 26;
       context__.validate_dims("data initialization","vec","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       vec__ =
@@ -221,22 +227,22 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
 
       {
         std::vector<local_scalar_t__> vec_flat__;
-        current_statement__ = 20;
+        current_statement__ = 26;
         vec_flat__ = context__.vals_r("vec");
-        current_statement__ = 20;
+        current_statement__ = 26;
         pos__ = 1;
-        current_statement__ = 20;
+        current_statement__ = 26;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 20;
+          current_statement__ = 26;
           stan::model::assign(vec, vec_flat__[(pos__ - 1)],
             "assigning variable vec", stan::model::index_uni(sym1__));
-          current_statement__ = 20;
+          current_statement__ = 26;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 21;
+      current_statement__ = 27;
       stan::math::validate_non_negative_index("rowvec", "N", N);
-      current_statement__ = 22;
+      current_statement__ = 28;
       context__.validate_dims("data initialization","rowvec","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       rowvec__ =
@@ -247,22 +253,22 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
 
       {
         std::vector<local_scalar_t__> rowvec_flat__;
-        current_statement__ = 22;
+        current_statement__ = 28;
         rowvec_flat__ = context__.vals_r("rowvec");
-        current_statement__ = 22;
+        current_statement__ = 28;
         pos__ = 1;
-        current_statement__ = 22;
+        current_statement__ = 28;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 22;
+          current_statement__ = 28;
           stan::model::assign(rowvec, rowvec_flat__[(pos__ - 1)],
             "assigning variable rowvec", stan::model::index_uni(sym1__));
-          current_statement__ = 22;
+          current_statement__ = 28;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 23;
+      current_statement__ = 29;
       stan::math::validate_non_negative_index("gq_c_matrix", "N", N);
-      current_statement__ = 24;
+      current_statement__ = 30;
       stan::math::validate_non_negative_index("gq_c_matrix", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -357,6 +363,32 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       current_statement__ = 7;
       stan::model::assign(gq_c_matrix,
         stan::math::elt_multiply(
+          stan::math::promote_scalar<std::complex<double>>(mat), cmat),
+        "assigning variable gq_c_matrix");
+      current_statement__ = 8;
+      stan::model::assign(gq_c_matrix, stan::math::add(cmat, cmat),
+        "assigning variable gq_c_matrix");
+      current_statement__ = 9;
+      stan::model::assign(gq_c_matrix,
+        stan::math::add(cmat,
+          stan::math::promote_scalar<std::complex<double>>(mat)),
+        "assigning variable gq_c_matrix");
+      current_statement__ = 10;
+      stan::model::assign(gq_c_matrix,
+        stan::math::add(
+          stan::math::promote_scalar<std::complex<double>>(mat), cmat),
+        "assigning variable gq_c_matrix");
+      current_statement__ = 11;
+      stan::model::assign(gq_c_matrix, stan::math::subtract(cmat, cmat),
+        "assigning variable gq_c_matrix");
+      current_statement__ = 12;
+      stan::model::assign(gq_c_matrix,
+        stan::math::subtract(cmat,
+          stan::math::promote_scalar<std::complex<double>>(mat)),
+        "assigning variable gq_c_matrix");
+      current_statement__ = 13;
+      stan::model::assign(gq_c_matrix,
+        stan::math::subtract(
           stan::math::promote_scalar<std::complex<double>>(mat), cmat),
         "assigning variable gq_c_matrix");
       out__.write(gq_c_matrix);

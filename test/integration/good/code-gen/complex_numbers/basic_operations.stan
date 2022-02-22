@@ -18,5 +18,12 @@ generated quantities {
   gq_c_matrix = cmat .* cmat;
   gq_c_matrix = cmat .* mat;
   gq_c_matrix = mat .* cmat;
+
+  gq_c_matrix = cmat + cmat;
+  gq_c_matrix = cmat + mat;
+  gq_c_matrix = mat + cmat;
+  gq_c_matrix = cmat - cmat;
+  gq_c_matrix = cmat - mat;
+  gq_c_matrix = mat - cmat;
   // TODO more here
 }

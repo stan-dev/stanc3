@@ -796,6 +796,9 @@ Ill-typed arguments supplied to infix operator -. Available signatures:
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex_vector, complex_vector) => complex_vector
+(complex_row_vector, complex_row_vector) => complex_row_vector
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: vector, matrix.
   $ ../../../../install/default/bin/stanc err-nested-parens-close.stan
 Syntax error in 'err-nested-parens-close.stan', line 3, column 12 to column 13, parsing error:
@@ -1497,6 +1500,9 @@ Ill-typed arguments supplied to infix operator +. Available signatures:
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex_vector, complex_vector) => complex_vector
+(complex_row_vector, complex_row_vector) => complex_row_vector
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: matrix, vector.
   $ ../../../../install/default/bin/stanc op_divide_bad.stan
 Semantic error in 'op_divide_bad.stan', line 7, column 6 to column 11:
@@ -1747,6 +1753,9 @@ Ill-typed arguments supplied to infix operator -. Available signatures:
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex_vector, complex_vector) => complex_vector
+(complex_row_vector, complex_row_vector) => complex_row_vector
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: vector, matrix.
   $ ../../../../install/default/bin/stanc op_transpose_bad.stan
 Semantic error in 'op_transpose_bad.stan', line 7, column 6 to column 8:
