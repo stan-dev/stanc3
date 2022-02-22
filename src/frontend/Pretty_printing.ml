@@ -260,6 +260,10 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
     | [] ->
         Common.FatalError.fatal_error_msg
           [%message "CondDistApp with no arguments: " id.name]
+    | [e] ->
+        pf ppf "@[<h>%a(%a%a)@]" pp_identifier id pp_expression e
+          (pp_comments_spacing true get_comments)
+          loc.end_loc
     | e :: es' ->
         let begin_loc =
           List.hd es'

@@ -305,7 +305,6 @@ let pp_bool_expr ppf expr =
   | _ -> pp_expr ppf expr
 
 let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
-  (* ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) = *)
   let remove_promotions (e : 'a Expr.Fixed.t) =
     (* assignment handles one level of promotion internally, don't do it twice *)
     match e.pattern with Promotion (e, _, _) -> e | _ -> e in

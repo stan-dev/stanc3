@@ -20778,7 +20778,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
       z = std::numeric_limits<double>::quiet_NaN();
       
       
-      current_statement__ = 2;
+      lcm_sym4__ = 1;
       z = 1;
       current_statement__ = 3;
       x = std::numeric_limits<double>::quiet_NaN();
@@ -23882,17 +23882,17 @@ static constexpr std::array<const char*, 52> locations_array__ =
  " (in 'off-dce.stan', line 54, column 2 to column 13)",
  " (in 'off-dce.stan', line 55, column 2 to column 24)",
  " (in 'off-dce.stan', line 56, column 2 to column 17)",
- " (in 'off-dce.stan', line 68, column 6 to column 21)",
  " (in 'off-dce.stan', line 69, column 6 to column 15)",
  " (in 'off-dce.stan', line 66, column 11 to line 70, column 5)",
  " (in 'off-dce.stan', line 61, column 6 to column 41)",
  " (in 'off-dce.stan', line 62, column 13 to column 14)",
  " (in 'off-dce.stan', line 62, column 6 to column 44)",
  " (in 'off-dce.stan', line 63, column 6 to column 29)",
- " (in 'off-dce.stan', line 64, column 6 to column 55)",
  " (in 'off-dce.stan', line 65, column 6 to column 39)",
  " (in 'off-dce.stan', line 59, column 23 to line 66, column 5)",
  " (in 'off-dce.stan', line 59, column 4 to line 70, column 5)",
+ " (in 'off-dce.stan', line 68, column 6 to column 21)",
+ " (in 'off-dce.stan', line 64, column 6 to column 55)",
  " (in 'off-dce.stan', line 58, column 19 to line 71, column 3)",
  " (in 'off-dce.stan', line 58, column 2 to line 71, column 3)",
  " (in 'off-dce.stan', line 46, column 6 to line 49, column 68)",
@@ -24390,7 +24390,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
          std::vector<int>(R, std::numeric_limits<int>::min());
       current_statement__ = 22;
       if (stan::math::logical_gte(R, 1)) {
-        current_statement__ = 20;
+        current_statement__ = 18;
         if (stan::math::logical_eq(
               stan::model::rvalue(sum_y, "sum_y", stan::model::index_uni(1)),
               0)) {
@@ -24398,7 +24398,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
           lcm_sym14__ = stan::math::inv_logit(
                           stan::model::rvalue(lcm_sym12__, "lcm_sym12__",
                             stan::model::index_uni(1)));
-          current_statement__ = 14;
+          current_statement__ = 13;
           stan::math::validate_non_negative_index("q", "T", T);
           Eigen::Matrix<double, -1, 1> q =
              Eigen::Matrix<double, -1, 1>::Constant(T,
@@ -24412,27 +24412,25 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
             "assigning variable lcm_sym9__");
           double qT = std::numeric_limits<double>::quiet_NaN();
           lcm_sym16__ = stan::math::prod(lcm_sym9__);
-          current_statement__ = 17;
           stan::model::assign(psi_con,
             ((lcm_sym14__ * lcm_sym16__) /
               stan::math::fma(lcm_sym14__, lcm_sym16__, (1 - lcm_sym14__))),
             "assigning variable psi_con", stan::model::index_uni(1));
-          current_statement__ = 18;
+          current_statement__ = 16;
           stan::model::assign(z,
             stan::math::bernoulli_rng(
               stan::model::rvalue(psi_con, "psi_con",
                 stan::model::index_uni(1)), base_rng__),
             "assigning variable z", stan::model::index_uni(1));
         } else {
-          current_statement__ = 10;
           stan::model::assign(psi_con, 1,
             "assigning variable psi_con", stan::model::index_uni(1));
-          current_statement__ = 11;
+          current_statement__ = 10;
           stan::model::assign(z, 1,
             "assigning variable z", stan::model::index_uni(1));
         }
         for (int i = 2; i <= R; ++i) {
-          current_statement__ = 20;
+          current_statement__ = 18;
           if (stan::math::logical_eq(
                 stan::model::rvalue(sum_y, "sum_y",
                   stan::model::index_uni(i)), 0)) {
@@ -24440,7 +24438,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
             lcm_sym13__ = stan::math::inv_logit(
                             stan::model::rvalue(lcm_sym12__, "lcm_sym12__",
                               stan::model::index_uni(i)));
-            current_statement__ = 14;
+            current_statement__ = 13;
             stan::math::validate_non_negative_index("q", "T", T);
             Eigen::Matrix<double, -1, 1> q =
                Eigen::Matrix<double, -1, 1>::Constant(T,
@@ -24454,22 +24452,22 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
               "assigning variable lcm_sym8__");
             double qT = std::numeric_limits<double>::quiet_NaN();
             lcm_sym15__ = stan::math::prod(lcm_sym8__);
-            current_statement__ = 17;
+            current_statement__ = 20;
             stan::model::assign(psi_con,
               ((lcm_sym13__ * lcm_sym15__) /
                 stan::math::fma(lcm_sym13__, lcm_sym15__, (1 - lcm_sym13__))),
               "assigning variable psi_con", stan::model::index_uni(i));
-            current_statement__ = 18;
+            current_statement__ = 16;
             stan::model::assign(z,
               stan::math::bernoulli_rng(
                 stan::model::rvalue(psi_con, "psi_con",
                   stan::model::index_uni(i)), base_rng__),
               "assigning variable z", stan::model::index_uni(i));
           } else {
-            current_statement__ = 10;
+            current_statement__ = 19;
             stan::model::assign(psi_con, 1,
               "assigning variable psi_con", stan::model::index_uni(i));
-            current_statement__ = 11;
+            current_statement__ = 10;
             stan::model::assign(z, 1,
               "assigning variable z", stan::model::index_uni(i));
           }
@@ -25031,9 +25029,9 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       double lcm_sym16__;
       double lcm_sym15__;
       double lcm_sym14__;
-      double lcm_sym13__;
+      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym13__;
       double lcm_sym12__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym11__;
+      double lcm_sym11__;
       Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym10__;
       int lcm_sym9__;
       local_scalar_t__ beta;
@@ -25069,20 +25067,20 @@ class off_small_model final : public model_base_crtp<off_small_model> {
          Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(J, DUMMY_VAR__);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat =
          Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
-      stan::model::assign(lcm_sym10__,
+      stan::model::assign(lcm_sym13__,
         stan::math::fma(10, mu_a1, stan::math::multiply(sigma_a1, eta1)),
-        "assigning variable lcm_sym10__");
-      stan::model::assign(a1, lcm_sym10__, "assigning variable a1");
-      stan::model::assign(lcm_sym11__,
+        "assigning variable lcm_sym13__");
+      stan::model::assign(a1, lcm_sym13__, "assigning variable a1");
+      stan::model::assign(lcm_sym10__,
         stan::math::fma(0.1, mu_a2, stan::math::multiply(sigma_a2, eta2)),
-        "assigning variable lcm_sym11__");
-      stan::model::assign(a2, lcm_sym11__, "assigning variable a2");
+        "assigning variable lcm_sym10__");
+      stan::model::assign(a2, lcm_sym10__, "assigning variable a2");
       current_statement__ = 13;
       if (stan::math::logical_gte(N, 1)) {
         current_statement__ = 12;
         stan::model::assign(y_hat,
           stan::math::fma(
-            stan::model::rvalue(lcm_sym11__, "lcm_sym11__",
+            stan::model::rvalue(lcm_sym10__, "lcm_sym10__",
               stan::model::index_uni(stan::model::rvalue(person, "person",
                                        stan::model::index_uni(1)))),
             stan::model::rvalue(time, "time", stan::model::index_uni(1)),
@@ -25091,7 +25089,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                 stan::model::rvalue(time, "time", stan::model::index_uni(1))),
               stan::model::rvalue(treatment, "treatment",
                 stan::model::index_uni(1)),
-              stan::model::rvalue(lcm_sym10__, "lcm_sym10__",
+              stan::model::rvalue(lcm_sym13__, "lcm_sym13__",
                 stan::model::index_uni(stan::model::rvalue(person, "person",
                                          stan::model::index_uni(1)))))),
           "assigning variable y_hat", stan::model::index_uni(1));
@@ -25099,7 +25097,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
           current_statement__ = 12;
           stan::model::assign(y_hat,
             stan::math::fma(
-              stan::model::rvalue(lcm_sym11__, "lcm_sym11__",
+              stan::model::rvalue(lcm_sym10__, "lcm_sym10__",
                 stan::model::index_uni(stan::model::rvalue(person, "person",
                                          stan::model::index_uni(i)))),
               stan::model::rvalue(time, "time", stan::model::index_uni(i)),
@@ -25109,7 +25107,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                     stan::model::index_uni(i))),
                 stan::model::rvalue(treatment, "treatment",
                   stan::model::index_uni(i)),
-                stan::model::rvalue(lcm_sym10__, "lcm_sym10__",
+                stan::model::rvalue(lcm_sym13__, "lcm_sym13__",
                   stan::model::index_uni(stan::model::rvalue(person,
                                            "person",
                                            stan::model::index_uni(i)))))),
@@ -25162,9 +25160,9 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      double lcm_sym8__;
+      Eigen::Matrix<double, -1, 1> lcm_sym8__;
       double lcm_sym7__;
-      Eigen::Matrix<double, -1, 1> lcm_sym6__;
+      double lcm_sym6__;
       Eigen::Matrix<double, -1, 1> lcm_sym5__;
       int lcm_sym4__;
       int lcm_sym3__;
@@ -25218,20 +25216,20 @@ class off_small_model final : public model_base_crtp<off_small_model> {
             emit_generated_quantities__)))) {
         return ;
       } 
-      stan::model::assign(lcm_sym5__,
+      stan::model::assign(lcm_sym8__,
         stan::math::fma(10, mu_a1, stan::math::multiply(sigma_a1, eta1)),
-        "assigning variable lcm_sym5__");
-      stan::model::assign(a1, lcm_sym5__, "assigning variable a1");
-      stan::model::assign(lcm_sym6__,
+        "assigning variable lcm_sym8__");
+      stan::model::assign(a1, lcm_sym8__, "assigning variable a1");
+      stan::model::assign(lcm_sym5__,
         stan::math::fma(0.1, mu_a2, stan::math::multiply(sigma_a2, eta2)),
-        "assigning variable lcm_sym6__");
-      stan::model::assign(a2, lcm_sym6__, "assigning variable a2");
+        "assigning variable lcm_sym5__");
+      stan::model::assign(a2, lcm_sym5__, "assigning variable a2");
       current_statement__ = 13;
       if (stan::math::logical_gte(N, 1)) {
         current_statement__ = 12;
         stan::model::assign(y_hat,
           stan::math::fma(
-            stan::model::rvalue(lcm_sym6__, "lcm_sym6__",
+            stan::model::rvalue(lcm_sym5__, "lcm_sym5__",
               stan::model::index_uni(stan::model::rvalue(person, "person",
                                        stan::model::index_uni(1)))),
             stan::model::rvalue(time, "time", stan::model::index_uni(1)),
@@ -25240,7 +25238,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                 stan::model::rvalue(time, "time", stan::model::index_uni(1))),
               stan::model::rvalue(treatment, "treatment",
                 stan::model::index_uni(1)),
-              stan::model::rvalue(lcm_sym5__, "lcm_sym5__",
+              stan::model::rvalue(lcm_sym8__, "lcm_sym8__",
                 stan::model::index_uni(stan::model::rvalue(person, "person",
                                          stan::model::index_uni(1)))))),
           "assigning variable y_hat", stan::model::index_uni(1));
@@ -25248,7 +25246,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
           current_statement__ = 12;
           stan::model::assign(y_hat,
             stan::math::fma(
-              stan::model::rvalue(lcm_sym6__, "lcm_sym6__",
+              stan::model::rvalue(lcm_sym5__, "lcm_sym5__",
                 stan::model::index_uni(stan::model::rvalue(person, "person",
                                          stan::model::index_uni(i)))),
               stan::model::rvalue(time, "time", stan::model::index_uni(i)),
@@ -25258,7 +25256,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                     stan::model::index_uni(i))),
                 stan::model::rvalue(treatment, "treatment",
                   stan::model::index_uni(i)),
-                stan::model::rvalue(lcm_sym5__, "lcm_sym5__",
+                stan::model::rvalue(lcm_sym8__, "lcm_sym8__",
                   stan::model::index_uni(stan::model::rvalue(person,
                                            "person",
                                            stan::model::index_uni(i)))))),
@@ -25266,8 +25264,8 @@ class off_small_model final : public model_base_crtp<off_small_model> {
         }
       } 
       if (emit_transformed_parameters__) {
+        out__.write(lcm_sym8__);
         out__.write(lcm_sym5__);
-        out__.write(lcm_sym6__);
         out__.write(y_hat);
       } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {

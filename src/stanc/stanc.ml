@@ -271,7 +271,8 @@ let use_file filename =
     Warnings.pp_warnings Fmt.stderr ?printed_filename
       (Deprecation_analysis.collect_warnings typed_ast) ;
   if !generate_data then
-    print_endline (Debug_data_generation.print_data_prog typed_ast) ;
+    print_endline
+      (Debug_data_generation.print_data_prog (Ast_to_Mir.gather_data typed_ast)) ;
   Debugging.typed_ast_logger typed_ast ;
   if not !pretty_print_program then (
     let mir = Ast_to_Mir.trans_prog filename typed_ast in

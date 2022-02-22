@@ -765,8 +765,7 @@ let rec find_assignment_idx (name : string) Stmt.Fixed.{pattern; _} =
  *  in their first assignment and mark them as not needing to be
  *  initialized.
  *)
-and unenforce_initialize
-    (lst : (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t list) =
+and unenforce_initialize (lst : Stmt.Located.t list) =
   let rec unenforce_initialize_patt (Stmt.Fixed.{pattern; _} as stmt) sub_lst =
     match pattern with
     | Stmt.Fixed.Pattern.Decl ({decl_id; _} as decl_pat) -> (
@@ -817,9 +816,8 @@ and unenforce_initialize
  *    Stmts.
  *)
 let transform_mir_blocks (mir : (Expr.Typed.t, Stmt.Located.t) Program.t)
-    (transformer :
-         (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t list
-      -> Stmt.Located.t list ) : (Expr.Typed.t, Stmt.Located.t) Program.t =
+    (transformer : Stmt.Located.t list -> Stmt.Located.t list) :
+    (Expr.Typed.t, Stmt.Located.t) Program.t =
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
         let new_body =
@@ -1049,11 +1047,11 @@ let optimize_minimal_variables
        -> string Set.Poly.t )
     ~(update_expr : string Set.Poly.t -> Expr.Typed.t -> Expr.Typed.t)
     ~(update_stmt :
-          ( Expr.Typed.Meta.t Expr.Fixed.t
+          ( Expr.Typed.t
           , (Expr.Typed.Meta.t, 'a) Stmt.Fixed.t )
           Stmt.Fixed.Pattern.t
        -> string Core_kernel.Set.Poly.t
-       -> ( Expr.Typed.Meta.t Expr.Fixed.t
+       -> ( Expr.Typed.t
           , (Expr.Typed.Meta.t, 'a) Stmt.Fixed.t )
           Stmt.Fixed.Pattern.t )
     ~(extra_variables : string -> string Set.Poly.t)
@@ -1169,10 +1167,7 @@ let optimize_soa (mir : Program.Typed.t) =
       stmt ~extra_variables:(fun _ -> initial_variables) in
   let transform' s =
     match transform {pattern= SList s; meta= Location_span.empty} with
-    | { pattern=
-          SList (l : (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t list)
-      ; _ } ->
-        l
+    | {pattern= SList (l : Stmt.Located.t list); _} -> l
     | _ ->
         raise
           (Failure "Something went wrong with program transformation packing!")
