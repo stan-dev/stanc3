@@ -119,7 +119,13 @@ generated quantities {
   gq_c = crowvec * vec;
   gq_c = rowvec * cvec;
 
+  // reductions
+  gq_c = sum(to_array_1d(cvec));
 
   // TODO ldivide, pow, matrix_power
+
+  // transformations
+  array[N,N] complex carray;
+  carray = to_array_2d(cmat);
 
 }

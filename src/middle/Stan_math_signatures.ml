@@ -2011,6 +2011,11 @@ let () =
   add_unqualified ("sum", ReturnType UReal, [UVector], SoA) ;
   add_unqualified ("sum", ReturnType UReal, [URowVector], SoA) ;
   add_unqualified ("sum", ReturnType UReal, [UMatrix], SoA) ;
+  add_unqualified ("sum", ReturnType UComplex, [UArray UComplex], SoA) ;
+  (* TODO:  *)
+  (* add_unqualified ("sum", ReturnType UComplex, [UComplexVector], SoA) ;
+     add_unqualified ("sum", ReturnType UComplex, [UComplexRowVector], SoA) ;
+     add_unqualified ("sum", ReturnType UComplex, [UComplexMatrix], SoA) ; *)
   add_unqualified ("svd_U", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("svd_V", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified
@@ -2034,6 +2039,12 @@ let () =
   add_unqualified ("to_array_1d", ReturnType (UArray UReal), [UMatrix], AoS) ;
   add_unqualified ("to_array_1d", ReturnType (UArray UReal), [UVector], AoS) ;
   add_unqualified ("to_array_1d", ReturnType (UArray UReal), [URowVector], AoS) ;
+  add_unqualified
+    ("to_array_1d", ReturnType (UArray UComplex), [UComplexMatrix], AoS) ;
+  add_unqualified
+    ("to_array_1d", ReturnType (UArray UComplex), [UComplexVector], AoS) ;
+  add_unqualified
+    ("to_array_1d", ReturnType (UArray UComplex), [UComplexRowVector], AoS) ;
   List.iter
     ~f:(fun i ->
       add_unqualified
@@ -2049,6 +2060,11 @@ let () =
     (List.range 1 10) ;
   add_unqualified
     ("to_array_2d", ReturnType (bare_array_type (UReal, 2)), [UMatrix], AoS) ;
+  add_unqualified
+    ( "to_array_2d"
+    , ReturnType (bare_array_type (UComplex, 2))
+    , [UComplexMatrix]
+    , AoS ) ;
   add_unqualified ("to_complex", ReturnType UComplex, [], AoS) ;
   add_unqualified ("to_complex", ReturnType UComplex, [UReal; UReal], AoS) ;
   add_unqualified ("to_complex", ReturnType UComplex, [UReal], AoS) ;

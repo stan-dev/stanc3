@@ -26365,6 +26365,7 @@ Display all Stan math signatures exposed in the language
   sum(row_vector) => real
   sum(matrix) => real
   sum(array[] real) => real
+  sum(array[] complex) => complex
   svd_U(matrix) => matrix
   svd_V(matrix) => matrix
   symmetrize_from_lower_tri(matrix) => matrix
@@ -26541,7 +26542,11 @@ Display all Stan math signatures exposed in the language
   to_array_1d(array[,,,,,,] real) => array[] real
   to_array_1d(array[,,,,,,,] real) => array[] real
   to_array_1d(array[,,,,,,,,] real) => array[] real
+  to_array_1d(complex_vector) => array[] complex
+  to_array_1d(complex_row_vector) => array[] complex
+  to_array_1d(complex_matrix) => array[] complex
   to_array_2d(matrix) => array[,] real
+  to_array_2d(complex_matrix) => array[,] complex
   to_complex() => complex
   to_complex(real) => complex
   to_complex(real, real) => complex
