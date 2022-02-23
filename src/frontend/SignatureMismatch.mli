@@ -90,3 +90,4 @@ val pp_math_lib_assignmentoperator_sigs :
   Format.formatter -> UnsizedType.t * Operator.t -> unit
 
 val compare_errors : function_mismatch -> function_mismatch -> int
+val compare_match_results : match_result -> match_result -> int

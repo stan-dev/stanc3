@@ -1079,54 +1079,48 @@ let verify_valid_sampling_pos loc cf =
 let verify_sampling_distribution loc tenv id arguments =
   let name = id.name in
   let argumenttypes = List.map ~f:arg_type arguments in
-  let is_name_w_suffix_sampling_dist suffix =
-    match
-      SignatureMismatch.matching_stanlib_function (name ^ suffix) argumenttypes
-    with
-    | UniqueMatch (ReturnType UReal, _, _) -> true
-    | _ -> false in
-  let is_sampling_dist_in_math =
-    List.exists ~f:is_name_w_suffix_sampling_dist
-      (Utils.distribution_suffices @ Utils.unnormalized_suffices)
+  let name_w_suffix_sampling_dist suffix =
+    SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes in
+  let sampling_dists =
+    List.map ~f:name_w_suffix_sampling_dist Utils.distribution_suffices in
+  let is_sampling_dist_defined =
+    List.exists
+      ~f:(function UniqueMatch (ReturnType UReal, _, _) -> true | _ -> false)
+      sampling_dists
     && name <> "binomial_coefficient"
     && name <> "multiply" in
-  let is_name_w_suffix_udf_sampling_dist suffix =
+  if is_sampling_dist_defined then ()
+  else
     match
-      SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes
+      List.max_elt sampling_dists
+        ~compare:SignatureMismatch.compare_match_results
     with
-    | UniqueMatch (rt, f, _)
-      when rt = ReturnType UReal && f FnPlain = UserDefined FnPlain ->
-        true
-    | _ (* TODO don't throw away this information, improve errors *) -> false
-  in
-  let is_udf_sampling_dist =
-    List.exists ~f:is_name_w_suffix_udf_sampling_dist
-      (Utils.distribution_suffices @ Utils.unnormalized_suffices) in
-  if is_sampling_dist_in_math || is_udf_sampling_dist then ()
-  else Semantic_error.invalid_sampling_no_such_dist loc name |> error
+    | None | Some (UniqueMatch _) | Some (SignatureErrors ([], _)) ->
+        (* Either non-existant or a very odd case,
+           output the old non-informative error *)
+        Semantic_error.invalid_sampling_no_such_dist loc name |> error
+    | Some (AmbiguousMatch sigs) ->
+        Semantic_error.ambiguous_function_promotion loc id.name
+          (Some (List.map ~f:type_of_expr_typed arguments))
+          sigs
+        |> error
+    | Some (SignatureErrors (l, b)) ->
+        arguments
+        |> List.map ~f:(fun e -> e.emeta.type_)
+        |> Semantic_error.illtyped_fn_app loc id.name (l, b)
+        |> error
 
 let is_cumulative_density_defined tenv id arguments =
   let name = id.name in
   let argumenttypes = List.map ~f:arg_type arguments in
-  let is_real_rt_for_suffix suffix =
-    match
-      SignatureMismatch.matching_stanlib_function (name ^ suffix) argumenttypes
-    with
-    | UniqueMatch (ReturnType UReal, _, _) -> true
-    | _ -> false in
   let valid_arg_types_for_suffix suffix =
     match
       SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes
     with
-    | UniqueMatch (rt, _, _) when rt = ReturnType UReal -> true
+    | UniqueMatch (ReturnType UReal, _, _) -> true
     | _ -> false in
-  ( is_real_rt_for_suffix "_lcdf"
-  || valid_arg_types_for_suffix "_lcdf"
-  || is_real_rt_for_suffix "_cdf_log"
-  || valid_arg_types_for_suffix "_cdf_log" )
-  && ( is_real_rt_for_suffix "_lccdf"
-     || valid_arg_types_for_suffix "_lccdf"
-     || is_real_rt_for_suffix "_ccdf_log"
+  (valid_arg_types_for_suffix "_lcdf" || valid_arg_types_for_suffix "_cdf_log")
+  && ( valid_arg_types_for_suffix "_lccdf"
      || valid_arg_types_for_suffix "_ccdf_log" )
 
 let verify_can_truncate_distribution loc (arg : typed_expression) = function
