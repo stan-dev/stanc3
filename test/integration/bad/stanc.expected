@@ -1562,12 +1562,16 @@ Ill-typed arguments supplied to infix operator ./. Available signatures:
 (real, vector) => vector
 (vector, real) => vector
 (vector, vector) => vector
+(complex, complex) => complex
 (real, row_vector) => row_vector
 (row_vector, real) => row_vector
 (row_vector, row_vector) => row_vector
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex_vector, complex_vector) => complex_vector
+(complex_row_vector, complex_row_vector) => complex_row_vector
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_elt_multiply_bad.stan
 Semantic error in 'op_elt_multiply_bad.stan', line 7, column 6 to column 12:
@@ -1583,6 +1587,7 @@ Ill-typed arguments supplied to infix operator .*. Available signatures:
 (int, int) => int
 (real, real) => real
 (vector, vector) => vector
+(complex, complex) => complex
 (row_vector, row_vector) => row_vector
 (matrix, matrix) => matrix
 (complex_vector, complex_vector) => complex_vector
@@ -1689,6 +1694,9 @@ Ill-typed arguments supplied to prefix operator -. Available signatures:
 (complex) => complex
 (row_vector) => row_vector
 (matrix) => matrix
+(complex_vector) => complex_vector
+(complex_row_vector) => complex_row_vector
+(complex_matrix) => complex_matrix
 Instead supplied argument of incompatible type: array[] int.
   $ ../../../../install/default/bin/stanc op_modulus_bad.stan
 Semantic error in 'op_modulus_bad.stan', line 7, column 6 to column 11:
@@ -1721,6 +1729,7 @@ Ill-typed arguments supplied to infix operator *. Available signatures:
 (vector, real) => vector
 (matrix, vector) => vector
 (complex, complex) => complex
+(complex_row_vector, complex_vector) => complex
 (real, row_vector) => row_vector
 (row_vector, real) => row_vector
 (row_vector, matrix) => row_vector
@@ -1728,7 +1737,14 @@ Ill-typed arguments supplied to infix operator *. Available signatures:
 (vector, row_vector) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
+(complex_matrix, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
+(complex_row_vector, complex_matrix) => complex_row_vector
 (complex, complex_matrix) => complex_matrix
+(complex_vector, complex_row_vector) => complex_matrix
 (complex_matrix, complex) => complex_matrix
 (complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.

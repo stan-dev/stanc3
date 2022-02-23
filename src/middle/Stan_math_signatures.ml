@@ -1048,39 +1048,18 @@ let () =
   add_unqualified ("qr_R", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("qr_thin_Q", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("qr_thin_R", ReturnType UMatrix, [UMatrix], AoS) ;
-  add_unqualified ("elt_divide", ReturnType UInt, [UInt; UInt], SoA) ;
-  add_unqualified ("elt_divide", ReturnType UReal, [UReal; UReal], SoA) ;
-  add_unqualified ("elt_divide", ReturnType UVector, [UVector; UVector], SoA) ;
-  add_unqualified
-    ("elt_divide", ReturnType URowVector, [URowVector; URowVector], SoA) ;
-  add_unqualified ("elt_divide", ReturnType UMatrix, [UMatrix; UMatrix], SoA) ;
+  List.iter
+    ~f:(fun x -> add_unqualified ("elt_divide", ReturnType x, [x; x], SoA))
+    bare_types ;
   add_unqualified ("elt_divide", ReturnType UVector, [UVector; UReal], SoA) ;
   add_unqualified ("elt_divide", ReturnType URowVector, [URowVector; UReal], SoA) ;
   add_unqualified ("elt_divide", ReturnType UMatrix, [UMatrix; UReal], SoA) ;
   add_unqualified ("elt_divide", ReturnType UVector, [UReal; UVector], SoA) ;
   add_unqualified ("elt_divide", ReturnType URowVector, [UReal; URowVector], SoA) ;
   add_unqualified ("elt_divide", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
-  add_unqualified ("elt_multiply", ReturnType UInt, [UInt; UInt], SoA) ;
-  add_unqualified ("elt_multiply", ReturnType UReal, [UReal; UReal], SoA) ;
-  add_unqualified ("elt_multiply", ReturnType UVector, [UVector; UVector], SoA) ;
-  add_unqualified
-    ("elt_multiply", ReturnType URowVector, [URowVector; URowVector], SoA) ;
-  add_unqualified ("elt_multiply", ReturnType UMatrix, [UMatrix; UMatrix], SoA) ;
-  add_unqualified
-    ( "elt_multiply"
-    , ReturnType UComplexVector
-    , [UComplexVector; UComplexVector]
-    , SoA ) ;
-  add_unqualified
-    ( "elt_multiply"
-    , ReturnType UComplexRowVector
-    , [UComplexRowVector; UComplexRowVector]
-    , SoA ) ;
-  add_unqualified
-    ( "elt_multiply"
-    , ReturnType UComplexMatrix
-    , [UComplexMatrix; UComplexMatrix]
-    , SoA ) ;
+  List.iter
+    ~f:(fun x -> add_unqualified ("elt_multiply", ReturnType x, [x; x], SoA))
+    bare_types ;
   add_unqualified ("exp", ReturnType UComplex, [UComplex], AoS) ;
   add_binary_vec_int_int "falling_factorial" SoA ;
   add_binary_vec_real_int "falling_factorial" SoA ;
@@ -1534,12 +1513,9 @@ let () =
   add_unqualified ("min", ReturnType UReal, [URowVector], AoS) ;
   add_unqualified ("min", ReturnType UReal, [UMatrix], AoS) ;
   add_unqualified ("min", ReturnType UInt, [UInt; UInt], AoS) ;
-  add_unqualified ("minus", ReturnType UComplex, [UComplex], AoS) ;
-  add_unqualified ("minus", ReturnType UInt, [UInt], SoA) ;
-  add_unqualified ("minus", ReturnType UReal, [UReal], SoA) ;
-  add_unqualified ("minus", ReturnType UVector, [UVector], SoA) ;
-  add_unqualified ("minus", ReturnType URowVector, [URowVector], SoA) ;
-  add_unqualified ("minus", ReturnType UMatrix, [UMatrix], SoA) ;
+  List.iter
+    ~f:(fun x -> add_unqualified ("minus", ReturnType x, [x], SoA))
+    bare_types ;
   add_binary_vec_int_real "modified_bessel_first_kind" AoS ;
   add_binary_vec_int_real "modified_bessel_second_kind" AoS ;
   add_unqualified ("modulus", ReturnType UInt, [UInt; UInt], AoS) ;
@@ -1616,6 +1592,37 @@ let () =
     ("multiply", ReturnType UComplexMatrix, [UComplexMatrix; UComplex], SoA) ;
   add_unqualified
     ("multiply", ReturnType UComplexMatrix, [UComplex; UComplexMatrix], SoA) ;
+  add_unqualified
+    ( "multiply"
+    , ReturnType UComplexMatrix
+    , [UComplexVector; UComplexRowVector]
+    , SoA ) ;
+  add_unqualified
+    ("multiply", ReturnType UComplex, [UComplexRowVector; UComplexVector], SoA) ;
+  add_unqualified
+    ( "multiply"
+    , ReturnType UComplexVector
+    , [UComplexMatrix; UComplexVector]
+    , SoA ) ;
+  add_unqualified
+    ("multiply", ReturnType UComplexVector, [UComplexVector; UComplex], SoA) ;
+  add_unqualified
+    ("multiply", ReturnType UComplexVector, [UComplex; UComplexVector], SoA) ;
+  add_unqualified
+    ( "multiply"
+    , ReturnType UComplexRowVector
+    , [UComplexRowVector; UComplex]
+    , SoA ) ;
+  add_unqualified
+    ( "multiply"
+    , ReturnType UComplexRowVector
+    , [UComplex; UComplexRowVector]
+    , SoA ) ;
+  add_unqualified
+    ( "multiply"
+    , ReturnType UComplexRowVector
+    , [UComplexRowVector; UComplexMatrix]
+    , SoA ) ;
   add_binary_vec "multiply_log" SoA ;
   add_unqualified
     ("multiply_lower_tri_self_transpose", ReturnType UMatrix, [UMatrix], SoA) ;
