@@ -95,15 +95,6 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
       Common.FatalError.fatal_error_msg
         [%message "Function types not implemented"]
 
-(** When creating a return type that uses value_type_t internally,
-    we don't want to add another layer of std::complex *)
-let pp_unsizedtype_custom_scalar_rt ppf (scalar, ut) =
-  match ut with
-  | UnsizedType.UComplexMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
-  | UComplexRowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
-  | UComplexVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
-  | _ -> pp_unsizedtype_custom_scalar ppf (scalar, ut)
-
 let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   match ut with
   | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector | UComplexVector

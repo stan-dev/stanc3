@@ -133,7 +133,7 @@ let require_templates (names : string option list) (args : Program.fun_arg_decl)
 let return_arg_types (args : Program.fun_arg_decl) =
   List.mapi args ~f:(fun i ((_, _, ut) as a) ->
       if UnsizedType.is_eigen_type ut && arg_needs_template a then
-        Some (sprintf "stan::value_type_t<T%d__>" i)
+        Some (sprintf "stan::base_type_t<T%d__>" i)
       else if arg_needs_template a then Some (sprintf "T%d__" i)
       else None )
 
@@ -170,7 +170,7 @@ let pp_returntype ppf arg_types rt =
   match rt with
   | Some ut when UnsizedType.is_int_type ut ->
       pf ppf "%a@ " pp_unsizedtype_custom_scalar ("int", ut)
-  | Some ut -> pf ppf "%a@ " pp_unsizedtype_custom_scalar_rt (scalar, ut)
+  | Some ut -> pf ppf "%a@ " pp_unsizedtype_custom_scalar (scalar, ut)
   | None -> pf ppf "void@ "
 
 let pp_eigen_arg_to_ref ppf arg_types =

@@ -42,8 +42,8 @@ let%expect_test "udf" =
     void
     sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
       using local_scalar_t__ =
-              stan::promote_args_t<stan::value_type_t<T0__>,
-                                   stan::value_type_t<T1__>>;
+              stan::promote_args_t<stan::base_type_t<T0__>,
+                                   stan::base_type_t<T1__>>;
       int current_statement__ = 0;
       const auto& x = stan::math::to_ref(x_arg__);
       const auto& y = stan::math::to_ref(y_arg__);
@@ -91,15 +91,15 @@ let%expect_test "udf-expressions" =
               stan::require_row_vector_t<T2__>* = nullptr,
               stan::require_not_vt_complex<T2__>* = nullptr,
               stan::require_stan_scalar_t<T3__>* = nullptr>
-    Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-                         stan::value_type_t<T2__>, T3__>, -1, -1>
+    Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, stan::base_type_t<T1__>,
+                         stan::base_type_t<T2__>, T3__>, -1, -1>
     sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,
          const std::vector<Eigen::Matrix<T3__, -1, -1>>& w,
          std::ostream* pstream__) {
       using local_scalar_t__ =
-              stan::promote_args_t<stan::value_type_t<T0__>,
-                                   stan::value_type_t<T1__>,
-                                   stan::value_type_t<T2__>, T3__>;
+              stan::promote_args_t<stan::base_type_t<T0__>,
+                                   stan::base_type_t<T1__>,
+                                   stan::base_type_t<T2__>, T3__>;
       int current_statement__ = 0;
       const auto& x = stan::math::to_ref(x_arg__);
       const auto& y = stan::math::to_ref(y_arg__);
