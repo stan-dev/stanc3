@@ -1082,8 +1082,7 @@ let verify_sampling_distribution loc tenv id arguments =
   let name_w_suffix_sampling_dist suffix =
     SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes in
   let sampling_dists =
-    List.map ~f:name_w_suffix_sampling_dist
-      (Utils.distribution_suffices @ Utils.unnormalized_suffices) in
+    List.map ~f:name_w_suffix_sampling_dist Utils.distribution_suffices in
   let is_sampling_dist_defined =
     List.exists
       ~f:(function UniqueMatch (ReturnType UReal, _, _) -> true | _ -> false)

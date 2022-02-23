@@ -133,7 +133,7 @@ let compare_match_results e1 e2 =
       Int.compare (List.length l1) (List.length l2)
   | SignatureErrors _, _ -> 1
   | _, SignatureErrors _ -> -1
-  | _, _ -> 0
+  | UniqueMatch _, UniqueMatch _ -> 0
 
 let rec check_same_type depth t1 t2 =
   let wrap_func = Result.map_error ~f:(fun e -> TypeMismatch (t1, t2, Some e)) in
