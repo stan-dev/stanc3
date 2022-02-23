@@ -79,6 +79,18 @@ Semantic error in 'array_expr_bad2.stan', line 2, column 40 to column 41:
    -------------------------------------------------
 
 Array expression must have entries of consistent type. Expected array[] int but found int.
+  $ ../../../../install/default/bin/stanc assigment-to-function-stanmath.stan
+Semantic error in 'assigment-to-function-stanmath.stan', line 8, column 5 to column 15:
+   -------------------------------------------------
+     6:     void baz(){
+     7:       // NB: putting this in later blocks produce an error due to assigning to a global variable
+     8:       foo = pow;
+              ^
+     9:     }
+    10:  }
+   -------------------------------------------------
+
+Cannot assign a function type '<Stan Math function>' to variable 'foo'.
   $ ../../../../install/default/bin/stanc assign_real_to_int.stan
 Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 8:
    -------------------------------------------------
@@ -90,6 +102,18 @@ Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 8:
    -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator =: lhs has type int and rhs has type real
+  $ ../../../../install/default/bin/stanc assignment-to-function.stan
+Semantic error in 'assignment-to-function.stan', line 12, column 5 to column 15:
+   -------------------------------------------------
+    10:     void baz(){
+    11:       // NB: putting this in later blocks produce an error due to assigning to a global variable
+    12:       foo = bar;
+              ^
+    13:     }
+    14:  }
+   -------------------------------------------------
+
+Cannot assign a function type '(int) => real' to variable 'foo'.
   $ ../../../../install/default/bin/stanc bad_fundef_returntypes1.stan
 Semantic error in 'bad_fundef_returntypes1.stan', line 2, column 13 to line 6, column 3:
    -------------------------------------------------
@@ -134,7 +158,7 @@ Semantic error in 'bad_prob_fun_suffix.stan', line 10, column 2 to column 19:
     11:  }
    -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution 'foo' was found with the correct signature.
+Ill-typed arguments to '~' statement. No distribution 'foo' was found.
   $ ../../../../install/default/bin/stanc bad_var_assignment_type1.stan
 Semantic error in 'bad_var_assignment_type1.stan', line 4, column 2 to column 8:
    -------------------------------------------------
@@ -192,7 +216,7 @@ Semantic error in 'binomial_coefficient_sample.stan', line 5, column 2 to column
      6:  }
    -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution 'binomial_coefficient' was found with the correct signature.
+Ill-typed arguments to '~' statement. No distribution 'binomial_coefficient' was found.
   $ ../../../../install/default/bin/stanc break1.stan
 Semantic error in 'break1.stan', line 4, column 2 to column 8:
    -------------------------------------------------
@@ -1441,7 +1465,7 @@ Semantic error in 'multiply_sample.stan', line 5, column 2 to column 18:
      6:  }
    -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution 'multiply' was found with the correct signature.
+Ill-typed arguments to '~' statement. No distribution 'multiply' was found.
   $ ../../../../install/default/bin/stanc oneline-error.stan
 Syntax error in 'oneline-error.stan', line 1, column 20 to column 21, parsing error:
    -------------------------------------------------
@@ -2013,7 +2037,35 @@ Semantic error in 'signature_sampling_known.stan', line 8, column 2 to column 29
      9:  }
    -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution 'bernoulli_logit' was found with the correct signature.
+Ill-typed arguments supplied to function 'bernoulli_logit':
+(vector, vector)
+Available signatures:
+(int, row_vector) => real
+  The first argument must be int but got vector
+(int, vector) => real
+  The first argument must be int but got vector
+(int, array[] real) => real
+  The first argument must be int but got vector
+(int, real) => real
+  The first argument must be int but got vector
+(array[] int, row_vector) => real
+  The first argument must be array[] int but got vector
+(Additional signatures omitted)
+  $ ../../../../install/default/bin/stanc signature_sampling_udf.stan
+Semantic error in 'signature_sampling_udf.stan', line 8, column 2 to column 19:
+   -------------------------------------------------
+     6:  
+     7:  model {
+     8:    1.0 ~ foo(3.5,3);
+           ^
+     9:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'foo':
+(real, real, int)
+Available signatures:
+(real, int, real) => real
+  The second argument must be int but got real
   $ ../../../../install/default/bin/stanc signature_sampling_unknown.stan
 Semantic error in 'signature_sampling_unknown.stan', line 8, column 2 to column 24:
    -------------------------------------------------
@@ -2024,7 +2076,7 @@ Semantic error in 'signature_sampling_unknown.stan', line 8, column 2 to column 
      9:  }
    -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution 'foo_whatev' was found with the correct signature.
+Ill-typed arguments to '~' statement. No distribution 'foo_whatev' was found.
   $ ../../../../install/default/bin/stanc stanc_helper.stan
 Semantic error in 'stanc_helper.stan', line 5, column 2 to column 18:
    -------------------------------------------------
@@ -2035,7 +2087,7 @@ Semantic error in 'stanc_helper.stan', line 5, column 2 to column 18:
      6:  }
    -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution 'ormal' was found with the correct signature.
+Ill-typed arguments to '~' statement. No distribution 'ormal' was found.
   $ ../../../../install/default/bin/stanc string_literal_newline.stan
 Syntax error in 'string_literal_newline.stan', line 3, column 1, lexing error:
    -------------------------------------------------

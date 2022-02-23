@@ -3255,7 +3255,7 @@ let%expect_test "adlevel_optimization" =
           real y;
           real z;
           data real z_data;
-          if((1 > 2)) y = (y + x); else y = (y + w);
+          if((1 > 2)) y = (y + promote(x, real)); else y = (y + w);
           if((2 > 1)) z = y;
           if((3 > 1)) z_data = promote(x, real);
           FnPrint__(z);
@@ -3271,7 +3271,7 @@ let%expect_test "adlevel_optimization" =
           data real y;
           data real z;
           data real z_data;
-          if((1 > 2)) y = (y + x); else y = (y + w);
+          if((1 > 2)) y = (y + promote(x, real)); else y = (y + w);
           if((2 > 1)) z = y;
           if((3 > 1)) z_data = promote(x, real);
           FnPrint__(z);
@@ -3353,8 +3353,12 @@ let%expect_test "adlevel_optimization expressions" =
                    (FunApp (StanLib Plus__ FnPlain AoS)
                     (((pattern (Var y))
                       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-                     ((pattern (Var x))
-                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                     ((pattern
+                       (Promotion
+                        ((pattern (Var x))
+                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                        UReal DataOnly))
+                      (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                (meta <opaque>))
               (((pattern
@@ -3457,7 +3461,7 @@ let%expect_test "adlevel_optimization 2" =
           array[real, 2] y;
           real z;
           data real z_data;
-          if((1 > 2)) y[1] = (y[1] + x); else y[2] = (y[2] + w);
+          if((1 > 2)) y[1] = (y[1] + promote(x, real)); else y[2] = (y[2] + w);
           if((2 > 1)) z = y[1];
           if((3 > 1)) z_data = promote(x, real);
           FnPrint__(z);
@@ -3475,7 +3479,7 @@ let%expect_test "adlevel_optimization 2" =
           data array[real, 2] y;
           data real z;
           data real z_data;
-          if((1 > 2)) y[1] = (y[1] + x); else y[2] = (y[2] + w);
+          if((1 > 2)) y[1] = (y[1] + promote(x, real)); else y[2] = (y[2] + w);
           if((2 > 1)) z = y[1];
           if((3 > 1)) z_data = promote(x, real);
           FnPrint__(z);

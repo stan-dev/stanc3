@@ -4,7 +4,7 @@
  */
 functions {
   real n_lpdf(real y);
-  
+
   real n_lpdf(real y) {
     return -0.5 * square(y);
   }
@@ -14,6 +14,7 @@ parameters {
 }
 model {
   mu ~ n();
-  target += n_lpdf(mu | ); // check both instantiations
+  target += n_lpdf(mu /*check*/|// both instantiations
+   );
 }
 

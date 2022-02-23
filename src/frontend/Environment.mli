@@ -29,8 +29,8 @@ type info =
 
 type t
 
-val create : unit -> t
-(** Return a new type environment which contains the Stan math library functions
+val stan_math_environment : t
+(** A type environment which contains the Stan math library functions
 *)
 
 val find : t -> string -> info list

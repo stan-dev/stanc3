@@ -68,7 +68,7 @@ val node_vars_dependencies :
 
 val build_dep_info_map :
      Program.Typed.t
-  -> (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t
+  -> Stmt.Located.t
   -> ( label
      , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
      Map.Poly.t

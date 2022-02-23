@@ -1,7 +1,7 @@
 @Library('StanUtils')
 import org.stan.Utils
 
-def utils = new org.stan.Utils()
+utils = new org.stan.Utils()
 
 def skipExpressionTests = false
 def skipRemainingStages = false
@@ -24,6 +24,30 @@ def tagName() {
     }
 }
 
+def runPerformanceTests(String testsPath){
+    unstash 'ubuntu-exe'
+
+    sh """
+        git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+    """
+
+    writeFile(file:"performance-tests-cmdstan/cmdstan/make/local", text:"CXX=${CXX}")
+
+    utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
+    utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
+    utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
+
+    sh """
+        cd performance-tests-cmdstan
+        mkdir cmdstan/bin
+        cp ../bin/stanc cmdstan/bin/linux-stanc
+        cd cmdstan; make clean-all;
+        echo 'O=0' >> make/local
+        make -j${env.PARALLEL} build; cd ..
+        ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}
+    """
+}
+
 pipeline {
     agent none
     parameters {
@@ -38,7 +62,7 @@ pipeline {
     options {parallelsAlwaysFailFast()}
     environment {
         CXX = 'clang++-6.0'
-        PARALLEL = 8
+        PARALLEL = 4
     }
     stages {
         stage('Kill previous builds') {
@@ -176,7 +200,8 @@ pipeline {
         }
         stage("CmdStan & Math tests") {
             parallel {
-                stage("Compile tests") {
+
+                stage("Compile tests - good") {
                     when {
                         beforeAgent true
                         expression {
@@ -191,26 +216,7 @@ pipeline {
                     }
                     steps {
                         script {
-                            unstash 'ubuntu-exe'
-                            sh """
-                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                            """
-
-                            writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
-                                    text:"O=0\nCXX=${CXX}")
-
-                            utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
-                            utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
-                            utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
-
-                            sh """
-                                cd performance-tests-cmdstan
-                                mkdir cmdstan/bin
-                                cp ../bin/stanc cmdstan/bin/linux-stanc
-                                cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..
-                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../test/integration/good
-                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
-                                """
+                            runPerformanceTests("../test/integration/good")
                         }
 
                         xunit([GoogleTest(
@@ -223,6 +229,36 @@ pipeline {
                     }
                     post { always { runShell("rm -rf ./*") }}
                 }
+
+                stage("Compile tests - example-models") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipCompileTests
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/ci:gpu'
+                            label 'linux'
+                        }
+                    }
+                    steps {
+                        script {
+                            runPerformanceTests("example-models")
+                        }
+
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)
+                        ])
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+
                 stage("Model end-to-end tests") {
                     when {
                         beforeAgent true
@@ -327,17 +363,44 @@ pipeline {
             }
         }
 
-        stage("Build & test Mac OS X binary") {
+        // Builds on Flatiron macOS - recent macOS version
+        stage("Build & test Mac OS X binary - develop") {
             when {
                 beforeAgent true
-                expression {
-                    !skipRebuildingBinaries
+                allOf {
+                    expression { !skipRebuildingBinaries }
+                    anyOf { branch 'develop'; changeRequest() }
                 }
             }
             agent { label 'osx' }
             steps {
                 runShell("""
                     export PATH=/Users/jenkins/brew/bin:\$PATH
+                    opam switch 4.12.0
+                    eval \$(opam env --switch=4.12.0)
+                    opam update || true
+                    bash -x scripts/install_build_deps.sh
+                    dune subst
+                    dune build @install
+                """)
+                sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
+                stash name:'mac-exe', includes:'bin/*'
+            }
+            post { always { runShell("rm -rf ./*") }}
+        }
+
+        // Builds on gelman macOS - version 10.11.6
+        stage("Build & test Mac OS X binary - release") {
+            when {
+                beforeAgent true
+                allOf {
+                    expression { !skipRebuildingBinaries }
+                    anyOf { buildingTag(); branch 'master' }
+                }
+            }
+            agent { label 'gg-osx' }
+            steps {
+                runShell("""
                     opam switch 4.12.0
                     eval \$(opam env --switch=4.12.0)
                     opam update || true

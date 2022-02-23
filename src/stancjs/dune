@@ -1,6 +1,11 @@
 (executable
  (name stancjs)
- (libraries js_of_ocaml frontend stan_math_backend)
+ (libraries
+  js_of_ocaml
+  frontend
+  middle
+  analysis_and_optimization
+  stan_math_backend)
  (preprocess
   (pps js_of_ocaml-ppx ppx_jane))
  (modes js))

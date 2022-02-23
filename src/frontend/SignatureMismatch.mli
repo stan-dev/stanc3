@@ -55,6 +55,12 @@ val matching_function :
     Requires a unique minimum option under type promotion
 *)
 
+val matching_stanlib_function :
+  string -> (UnsizedType.autodifftype * UnsizedType.t) list -> match_result
+(** Same as [matching_function] but requires specifically that the function
+    be from StanMath (uses [Environment.stan_math_environment])
+*)
+
 val check_variadic_args :
      bool
   -> (UnsizedType.autodifftype * UnsizedType.t) list
@@ -80,4 +86,8 @@ val pp_signature_mismatch :
        * bool )
   -> unit
 
+val pp_math_lib_assignmentoperator_sigs :
+  Format.formatter -> UnsizedType.t * Operator.t -> unit
+
 val compare_errors : function_mismatch -> function_mismatch -> int
+val compare_match_results : match_result -> match_result -> int

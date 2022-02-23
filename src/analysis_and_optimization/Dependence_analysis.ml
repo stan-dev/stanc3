@@ -203,8 +203,7 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
                    (Set.Poly.union arg_vars globals)
                    fdbody ) ) ) ]
 
-let build_dep_info_map (mir : Program.Typed.t)
-    (stmt : (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t) :
+let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
     ( label
     , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
     Map.Poly.t =

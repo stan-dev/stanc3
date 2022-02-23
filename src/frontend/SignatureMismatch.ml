@@ -124,6 +124,17 @@ let rec compare_errors e1 e2 =
       | SuffixMismatch _, _ | _, InputMismatch _ -> -1
       | InputMismatch _, _ | _, SuffixMismatch _ -> 1 ) )
 
+let compare_match_results e1 e2 =
+  (* Prefer informative errors *)
+  match (e1, e2) with
+  | AmbiguousMatch _, _ -> 1
+  | _, AmbiguousMatch _ -> -1
+  | SignatureErrors (l1, _), SignatureErrors (l2, _) ->
+      Int.compare (List.length l1) (List.length l2)
+  | SignatureErrors _, _ -> 1
+  | _, SignatureErrors _ -> -1
+  | UniqueMatch _, UniqueMatch _ -> 0
+
 let rec check_same_type depth t1 t2 =
   let wrap_func = Result.map_error ~f:(fun e -> TypeMismatch (t1, t2, Some e)) in
   match (t1, t2) with
@@ -198,14 +209,8 @@ let unique_minimum_promotion promotion_options =
     | [] -> Error None )
   | None -> Error None
 
-let matching_function env name args =
+let find_compatible_rt function_types args =
   (* NB: Variadic arguments are special-cased in the typechecker and not handled here *)
-  let name = Utils.stdlib_distribution_name name in
-  let function_types =
-    Environment.find env name
-    |> List.filter_map ~f:extract_function_types
-    |> List.sort ~compare:(fun (ret1, _, _, _) (ret2, _, _, _) ->
-           UnsizedType.compare_returntype ret1 ret2 ) in
   let matches, errors =
     List.partition_map function_types
       ~f:(fun (rt, tys, funkind_constructor, _) ->
@@ -224,6 +229,18 @@ let matching_function env name args =
       in
       let errors, omitted = List.split_n errors max_n_errors in
       SignatureErrors (errors, not (List.is_empty omitted))
+
+let matching_function env name args =
+  let name = Utils.stdlib_distribution_name name in
+  let function_types =
+    Environment.find env name
+    |> List.filter_map ~f:extract_function_types
+    |> List.sort ~compare:(fun (ret1, _, _, _) (ret2, _, _, _) ->
+           UnsizedType.compare_returntype ret1 ret2 ) in
+  find_compatible_rt function_types args
+
+let matching_stanlib_function =
+  matching_function Environment.stan_math_environment
 
 let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
     fun_return args =
@@ -359,3 +376,26 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
     name pp_args arg_tys
     (list ~sep:cut pp_signature)
     sigs pp_omitted ()
+
+let pp_math_lib_assignmentoperator_sigs ppf (lt, op) =
+  let signatures =
+    let errors =
+      Stan_math_signatures.make_assignmentoperator_stan_math_signatures op in
+    let errors =
+      List.filter
+        ~f:(fun (_, args, _) ->
+          Result.is_ok (check_same_type 0 lt (snd (List.hd_exn args))) )
+        errors in
+    match List.split_n errors max_n_errors with
+    | [], _ -> None
+    | errors, [] -> Some (errors, false)
+    | errors, _ -> Some (errors, true) in
+  let pp_sigs ppf (signatures, omitted) =
+    Fmt.pf ppf "@[<v>%a%a@]"
+      (Fmt.list ~sep:Fmt.cut Stan_math_signatures.pp_math_sig)
+      signatures
+      (if omitted then Fmt.pf else Fmt.nop)
+      "@ (Additional signatures omitted)" in
+  Fmt.pf ppf "%a"
+    (Fmt.option ~none:(Fmt.any "No matching signatures") pp_sigs)
+    signatures
