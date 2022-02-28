@@ -15,10 +15,17 @@ See {{!page-getting_started}the Getting Started page} for information on setting
 Here are some resources (internal and external) which may be useful
 to a new developer.
 
+- {{:https://dev.realworldocaml.org/} Real World OCaml}, a free introduction to the OCaml language which features some
+  of the libraries we use.
+
+- {{!page-core_ideas} An overview of some elements of Stanc which may be strange to existing OCaml developers}.
+
 - {{:https://github.com/stan-dev/stanc3/wiki/Format---Fmt-code-generation-quickstart}
   Wiki on using [Format]/[Fmt] module}
+
 - {{!page-parser_messages}
   Page on modifying the parser's error messages}
+
 - {{:https://github.com/stan-dev/stanc3/wiki/Software-Engineering-best-practices}
   Wiki on generic software best practices}
 

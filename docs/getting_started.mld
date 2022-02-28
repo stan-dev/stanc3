@@ -156,3 +156,9 @@ If you use {{:https://github.com/jwiegley/use-package}[use-package.el]}, this sn
             (define-key tuareg-mode-map (kbd "C-M-<tab>") #'ocamlformat)
             (add-hook 'before-save-hook #'ocamlformat-before-save)))
 ]}
+
+{2 Finding your way around the code}
+
+Even to an experienced OCaml developer, there are certain practices
+in the stanc3 codebase which might be unfamiliar. We have tried to document
+those on our {{!page-core_ideas}Core ideas} page.
