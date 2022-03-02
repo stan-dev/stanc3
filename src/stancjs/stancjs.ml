@@ -180,6 +180,11 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
 let dump_stan_math_signatures () =
   Js.string @@ Fmt.str "%a" Stan_math_signatures.pretty_print_all_math_sigs ()
 
+let dump_stan_math_distributions () =
+  Js.string
+  @@ Fmt.str "%a" Stan_math_signatures.pretty_print_all_math_distributions ()
+
 let () =
   Js.export "dump_stan_math_signatures" dump_stan_math_signatures ;
+  Js.export "dump_stan_math_distributions" dump_stan_math_distributions ;
   Js.export "stanc" stan2cpp_wrapped

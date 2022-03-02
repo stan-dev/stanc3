@@ -49,6 +49,8 @@ let rec expand_arg = function
             map (range 0 8) ~f:(fun i -> bare_array_type (a, i)) ))
 
 type fkind = Lpmf | Lpdf | Rng | Cdf | Ccdf | UnaryVectorized
+[@@deriving show {with_path= false}]
+
 type fun_arg = UnsizedType.autodifftype * UnsizedType.t
 
 type stan_math_table_values =
@@ -493,6 +495,14 @@ let pretty_print_all_math_sigs ppf () =
   pf ppf "@[<v>%a@]"
     (list ~sep:cut pp_sigs_for_name)
     (List.sort ~compare (Hashtbl.keys stan_math_signatures))
+
+let pretty_print_all_math_distributions ppf () =
+  let open Fmt in
+  let pp_dist ppf (kinds, name, _, _) =
+    pf ppf "@[%s: %a@]" name
+      (list ~sep:comma Fmt.string)
+      (List.map ~f:(Fn.compose String.lowercase show_fkind) kinds) in
+  pf ppf "@[<v>%a@]" (list ~sep:cut pp_dist) distributions
 
 let pretty_print_math_lib_operator_sigs op =
   if op = Operator.IntDivide then
