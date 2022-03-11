@@ -3,11 +3,7 @@ open Ast
 open Deprecation_analysis
 
 type canonicalizer_settings =
-  { deprecations: bool
-  ; parentheses: bool
-  ; braces: bool
-  ; (* TODO: NYI. Really for the pretty printer but it makes sense to live here *)
-    inline_includes: bool }
+  {deprecations: bool; parentheses: bool; braces: bool; inline_includes: bool}
 
 let all =
   {deprecations= true; parentheses= true; inline_includes= true; braces= true}
@@ -167,7 +163,8 @@ let rec no_parens {expr; emeta} =
 
 and keep_parens {expr; emeta} =
   match expr with
-  | Paren {expr= Paren e; _} -> keep_parens e
+  | Promotion (e, ut, ad) -> {expr= Promotion (keep_parens e, ut, ad); emeta}
+  | Paren ({expr= Paren _; _} as e) -> keep_parens e
   | Paren ({expr= BinOp _; _} as e)
    |Paren ({expr= PrefixOp _; _} as e)
    |Paren ({expr= PostfixOp _; _} as e)

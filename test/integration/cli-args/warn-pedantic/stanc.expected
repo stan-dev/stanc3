@@ -399,6 +399,62 @@ Warning: Parameter f has constraints that don't make sense. The lower bound
     should be strictly less than the upper bound.
 Warning: Parameter e has constraints that don't make sense. The lower bound
     should be strictly less than the upper bound.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_false_alarm.stan
+Warning: The parameter z has 7 priors.
+Warning: The parameter y has 9 priors.
+Warning: The parameter v has 8 priors.
+Warning: The parameter m has 12 priors.
+Warning: The parameter a has 2 priors.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning1.stan
+Warning in 'jacobian_warning1.stan', line 7, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_warning1.stan', line 5, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning: The parameter y has 2 priors.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning2.stan
+Warning in 'jacobian_warning2.stan', line 5, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning3.stan
+Warning in 'jacobian_warning3.stan', line 5, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning4.stan
+Warning in 'jacobian_warning4.stan', line 5, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning5.stan
+Warning in 'jacobian_warning5.stan', line 5, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning6.stan
+Warning in 'jacobian_warning6.stan', line 5, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning7.stan
+Warning in 'jacobian_warning7.stan', line 6, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning in 'jacobian_warning7.stan', line 5, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
+Warning: The parameter y has 2 priors.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning_user.stan
+Warning in 'jacobian_warning_user.stan', line 5, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  missing_priors.stan
 Warning: The parameter tau has no priors.
 Warning: The parameter mu has no priors.
@@ -431,9 +487,6 @@ Warning in 'param-depend-control.stan', line 13, column 2: A control flow
 Warning in 'param-depend-control.stan', line 8, column 2: A control flow
     statement depends on parameter(s): a.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  unbounded-sigma.stan
-Warning in 'unbounded-sigma.stan', line 15, column 11: A normal distribution
-    is given value -1 as a scale parameter (argument 2), but a scale
-    parameter is not strictly positive.
 Warning in 'unbounded-sigma.stan', line 12, column 17: A normal distribution
     is given parameter sigma_c as a scale parameter (argument 2), but sigma_c
     was not constrained to be strictly positive.

@@ -15,6 +15,7 @@ Test that a nonsense argument is caught
     --debug-transformed-mir         For debugging purposes: print the MIR after the backend has transformed it.
     --debug-transformed-mir-pretty  For debugging purposes: pretty print the MIR after the backend has transformed it.
     --dump-stan-math-signatures     Dump out the list of supported type signatures for Stan Math backend.
+    --dump-stan-math-distributions  Dump out the list of supported probability distributions and their supported suffix types for the Stan Math backend.
     --warn-uninitialized            Emit warnings about uninitialized variables to stderr. Currently an experimental feature.
     --warn-pedantic                 Emit warnings about common mistakes in Stan programs.
     --auto-format                   Pretty prints a formatted version of the Stan program.
@@ -23,10 +24,10 @@ Test that a nonsense argument is caught
     --print-canonical               Prints the canonicalized program. Equivalent to --auto-format --canonicalize [all options]
     --version                       Display stanc version number
     --name                          Take a string to set the model name (default = "$model_filename_model")
-    -O0                             (Default) Do not apply optimizations to the Stan code.
-    -O1                             Apply level 1 compiler optimizations (only basic optimizations).
-    -Oexperimental                  (Experimental) Apply all compiler optimizations. Some of these are not thorougly tested and may not always improve a programs performance.
-    --O                             (Experimental) Same as -Oexperimental. Apply all compiler optimizations. Some of these are not thorougly tested and may not always improve a programs performance.
+    --O0                            (Default) Do not apply optimizations to the Stan code.
+    --O1                            Apply level 1 compiler optimizations (only basic optimizations).
+    --Oexperimental                 (Experimental) Apply all compiler optimizations. Some of these are not thorougly tested and may not always improve a programs performance.
+    --O                             (Experimental) Same as --Oexperimental. Apply all compiler optimizations. Some of these are not thorougly tested and may not always improve a programs performance.
     -fno-soa                        Turn off the Struct of Arrays optimization
     -fsoa                           Turn on the Struct of Arrays optimization
     --o                             Take the path to an output file for generated C++ code (default = "$name.hpp") or auto-formatting output (default: no file/print to stdout)
@@ -59,6 +60,7 @@ Test capitalization - this should fail due to the lack of model_name, not the ca
     --debug-transformed-mir         For debugging purposes: print the MIR after the backend has transformed it.
     --debug-transformed-mir-pretty  For debugging purposes: pretty print the MIR after the backend has transformed it.
     --dump-stan-math-signatures     Dump out the list of supported type signatures for Stan Math backend.
+    --dump-stan-math-distributions  Dump out the list of supported probability distributions and their supported suffix types for the Stan Math backend.
     --warn-uninitialized            Emit warnings about uninitialized variables to stderr. Currently an experimental feature.
     --warn-pedantic                 Emit warnings about common mistakes in Stan programs.
     --auto-format                   Pretty prints a formatted version of the Stan program.
@@ -67,10 +69,10 @@ Test capitalization - this should fail due to the lack of model_name, not the ca
     --print-canonical               Prints the canonicalized program. Equivalent to --auto-format --canonicalize [all options]
     --version                       Display stanc version number
     --name                          Take a string to set the model name (default = "$model_filename_model")
-    -O0                             (Default) Do not apply optimizations to the Stan code.
-    -O1                             Apply level 1 compiler optimizations (only basic optimizations).
-    -Oexperimental                  (Experimental) Apply all compiler optimizations. Some of these are not thorougly tested and may not always improve a programs performance.
-    --O                             (Experimental) Same as -Oexperimental. Apply all compiler optimizations. Some of these are not thorougly tested and may not always improve a programs performance.
+    --O0                            (Default) Do not apply optimizations to the Stan code.
+    --O1                            Apply level 1 compiler optimizations (only basic optimizations).
+    --Oexperimental                 (Experimental) Apply all compiler optimizations. Some of these are not thorougly tested and may not always improve a programs performance.
+    --O                             (Experimental) Same as --Oexperimental. Apply all compiler optimizations. Some of these are not thorougly tested and may not always improve a programs performance.
     -fno-soa                        Turn off the Struct of Arrays optimization
     -fsoa                           Turn on the Struct of Arrays optimization
     --o                             Take the path to an output file for generated C++ code (default = "$name.hpp") or auto-formatting output (default: no file/print to stdout)

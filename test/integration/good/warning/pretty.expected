@@ -460,6 +460,18 @@ Warning in 'cov_exp_quad.stan', line 109, column 29: cov_exp_quad is
     deprecated and will be removed in Stan 2.32.0. Use gp_exp_quad_cov
     instead. This can be automatically changed using the canonicalize flag
     for stanc
+  $ ../../../../../install/default/bin/stanc --auto-format decl.stan
+data {
+  array[5] int array; // this is terrible
+  array[5] int array2;
+}
+
+Warning in 'decl.stan', line 2, column 7: Variable name 'array' will be a
+    reserved word starting in Stan 2.32.0. Please rename it!
+Warning in 'decl.stan', line 2, column 3: Declaration of arrays by placing
+    brackets after a variable name is deprecated and will be removed in Stan
+    2.32.0. Instead use the array keyword before the type. This can be
+    changed automatically using the auto-format flag to stanc
   $ ../../../../../install/default/bin/stanc --auto-format declarations.stan
 data {
   int a0;
@@ -2586,59 +2598,3 @@ Warning in 'validate_division_int_warning.stan', line 7, column 6: Found int
     the division as
       j * 1.0 / k
     If rounding is intended please use the integer division operator %/%.
-  $ ../../../../../install/default/bin/stanc --auto-format validate_jacobian_warning1.stan
-parameters {
-  real y;
-}
-model {
-  log(y) ~ normal(0, 1);
-}
-
-  $ ../../../../../install/default/bin/stanc --auto-format validate_jacobian_warning2.stan
-parameters {
-  real y;
-}
-model {
-  (y * y) ~ normal(0, 1);
-}
-
-  $ ../../../../../install/default/bin/stanc --auto-format validate_jacobian_warning3.stan
-parameters {
-  vector[5] v;
-}
-model {
-  (v' * v) ~ normal(0, 1);
-}
-
-  $ ../../../../../install/default/bin/stanc --auto-format validate_jacobian_warning4.stan
-parameters {
-  real y;
-}
-model {
-  1 + (y * y) ~ normal(0, 1);
-}
-
-  $ ../../../../../install/default/bin/stanc --auto-format validate_jacobian_warning5.stan
-parameters {
-  vector[10] y;
-}
-model {
-  head((y .* y), 2) ~ normal(0, 1);
-}
-
-  $ ../../../../../install/default/bin/stanc --auto-format validate_jacobian_warning6.stan
-parameters {
-  real y;
-}
-model {
-  -(y * y) ~ normal(0, 1);
-}
-
-  $ ../../../../../install/default/bin/stanc --auto-format validate_jacobian_warning_user.stan
-parameters {
-  vector[1] y;
-}
-model {
-  exp(y[1]) ~ normal(0, 2);
-}
-

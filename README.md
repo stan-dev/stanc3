@@ -3,10 +3,9 @@ This repo contains a new compiler for Stan, stanc3, written in OCaml.
 Since version 2.26, this has been the default compiler for Stan. See [this wiki](https://github.com/stan-dev/stanc3/wiki/changes-from-stanc2) for a list of minor differences between this compiler and the previous Stan compiler.
 
 To read more about why we built this, see this [introductory blog post](https://statmodeling.stat.columbia.edu/2019/03/13/stanc3-rewriting-the-stan-compiler/). For some discussion as to how we chose OCaml, see [this accidental flamewar](https://discourse.mc-stan.org/t/choosing-the-new-stan-compilers-implementation-language/6203).
-We're testing [these models](https://jenkins.mc-stan.org/job/stanc3/job/master/) (listed under Test Results) on every pull request.
+We're testing [these models](https://jenkins.flatironinstitute.org/job/Stan/job/Stanc3/job/master/) (listed under Test Results) on every pull request.
 
-[![Build Status](https://jenkins.mc-stan.org/buildStatus/icon?job=stanc3%2Fmaster&style=flat-square)](https://jenkins.mc-stan.org/job/stanc3/job/master/)
-
+[![Build Status](https://jenkins.flatironinstitute.org/job/Stan/job/Stanc3/job/master/badge/icon?style=flat-square)](https://jenkins.flatironinstitute.org/job/Stan/job/Stanc3/job/master/)
 
 ## Documentation
 

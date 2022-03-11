@@ -34,7 +34,9 @@ let%expect_test "udf" =
   |> print_endline ;
   [%expect
     {|
-    template <typename T0__, typename T1__>
+    template <typename T0__, typename T1__,
+              stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
+              stan::require_row_vector_t<T1__>* = nullptr>
     void
     sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
       using local_scalar_t__ =
@@ -79,7 +81,11 @@ let%expect_test "udf-expressions" =
   |> print_endline ;
   [%expect
     {|
-    template <typename T0__, typename T1__, typename T2__, typename T3__>
+    template <typename T0__, typename T1__, typename T2__, typename T3__,
+              stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
+              stan::require_row_vector_t<T1__>* = nullptr,
+              stan::require_row_vector_t<T2__>* = nullptr,
+              stan::require_stan_scalar_t<T3__>* = nullptr>
     Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
                          stan::value_type_t<T2__>, T3__>, -1, -1>
     sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,

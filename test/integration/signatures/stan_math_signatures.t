@@ -3917,7 +3917,6 @@ Display all Stan math signatures exposed in the language
   divide(int, int) => int
   divide(real, real) => real
   divide(vector, real) => vector
-  divide(complex, real) => complex
   divide(complex, complex) => complex
   divide(row_vector, real) => row_vector
   divide(matrix, real) => matrix
@@ -14517,7 +14516,6 @@ Display all Stan math signatures exposed in the language
   multiply(real, vector) => vector
   multiply(vector, real) => vector
   multiply(matrix, vector) => vector
-  multiply(complex, real) => complex
   multiply(complex, complex) => complex
   multiply(real, row_vector) => row_vector
   multiply(row_vector, real) => row_vector
@@ -26164,8 +26162,6 @@ Display all Stan math signatures exposed in the language
   subtract(real, vector) => vector
   subtract(vector, real) => vector
   subtract(vector, vector) => vector
-  subtract(complex, real) => complex
-  subtract(complex, complex) => complex
   subtract(complex, complex) => complex
   subtract(real, row_vector) => row_vector
   subtract(row_vector, real) => row_vector

@@ -79,12 +79,6 @@ type signature_error =
   (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
   * function_mismatch
 
-type promotions =
-  | None
-  | IntToRealPromotion
-  | IntToComplexPromotion
-  | RealToComplexPromotion
-
 type ('unique, 'error) generic_match_result =
   | UniqueMatch of 'unique
   | AmbiguousMatch of
@@ -95,7 +89,7 @@ type ('unique, 'error) generic_match_result =
 type match_result =
   ( UnsizedType.returntype
     * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
-    * promotions list
+    * Promotion.t list
   , signature_error list * bool )
   generic_match_result
 
@@ -130,13 +124,24 @@ let rec compare_errors e1 e2 =
       | SuffixMismatch _, _ | _, InputMismatch _ -> -1
       | InputMismatch _, _ | _, SuffixMismatch _ -> 1 ) )
 
+let compare_match_results e1 e2 =
+  (* Prefer informative errors *)
+  match (e1, e2) with
+  | AmbiguousMatch _, _ -> 1
+  | _, AmbiguousMatch _ -> -1
+  | SignatureErrors (l1, _), SignatureErrors (l2, _) ->
+      Int.compare (List.length l1) (List.length l2)
+  | SignatureErrors _, _ -> 1
+  | _, SignatureErrors _ -> -1
+  | UniqueMatch _, UniqueMatch _ -> 0
+
 let rec check_same_type depth t1 t2 =
   let wrap_func = Result.map_error ~f:(fun e -> TypeMismatch (t1, t2, Some e)) in
   match (t1, t2) with
-  | t1, t2 when t1 = t2 -> Ok None
-  | UnsizedType.(UReal, UInt) when depth < 1 -> Ok IntToRealPromotion
-  | UnsizedType.(UComplex, UInt) when depth < 1 -> Ok IntToComplexPromotion
-  | UnsizedType.(UComplex, UReal) when depth < 1 -> Ok RealToComplexPromotion
+  | t1, t2 when t1 = t2 -> Ok Promotion.NoPromotion
+  | UnsizedType.(UReal, UInt) when depth < 1 -> Ok IntToReal
+  | UnsizedType.(UComplex, UInt) when depth < 1 -> Ok IntToComplex
+  | UnsizedType.(UComplex, UReal) when depth < 1 -> Ok RealToComplex
   (* Arrays: Try to recursively promote, but make sure the error is for these types,
      not the recursive call *)
   | UArray nt1, UArray nt2 ->
@@ -153,12 +158,12 @@ let rec check_same_type depth t1 t2 =
       Error (ReturnTypeMismatch (rt1, rt2)) |> wrap_func
   | UFun (l1, _, _, _), UFun (l2, _, _, _) -> (
     match check_compatible_arguments (depth + 1) l2 l1 with
-    | Ok _ -> Ok None
+    | Ok _ -> Ok NoPromotion
     | Error e -> Error (InputMismatch e) |> wrap_func )
   | t1, t2 -> Error (TypeMismatch (t1, t2, None))
 
 and check_compatible_arguments depth typs args2 :
-    (promotions list, function_mismatch) result =
+    (Promotion.t list, function_mismatch) result =
   match List.zip typs args2 with
   | List.Or_unequal_lengths.Unequal_lengths ->
       Error (ArgNumMismatch (List.length typs, List.length args2))
@@ -173,6 +178,7 @@ and check_compatible_arguments depth typs args2 :
               else Error (ArgError (i + 1, DataOnlyError)) )
       |> Result.all
 
+let check_of_same_type_mod_conv = check_same_type 0
 let check_compatible_arguments_mod_conv = check_compatible_arguments 0
 let max_n_errors = 5
 
@@ -184,30 +190,9 @@ let extract_function_types f =
       Some (return, args, (fun x -> UserDefined x), mem)
   | _ -> None
 
-let promote es promotions =
-  List.map2_exn es promotions ~f:(fun (exp : Ast.typed_expression) prom ->
-      let open UnsizedType in
-      let emeta = exp.emeta in
-      match prom with
-      | IntToRealPromotion when is_int_type emeta.type_ ->
-          Ast.
-            { expr= Ast.Promotion (exp, UReal, emeta.ad_level)
-            ; emeta= {emeta with type_= promote_array emeta.type_ UReal} }
-      | (IntToComplexPromotion | RealToComplexPromotion)
-        when not (is_complex_type emeta.type_) ->
-          { expr= Promotion (exp, UComplex, emeta.ad_level)
-          ; emeta= {emeta with type_= promote_array emeta.type_ UComplex} }
-      | _ -> exp )
-
-let promotion_cost p =
-  match p with
-  | None -> 0
-  | RealToComplexPromotion | IntToRealPromotion -> 1
-  | IntToComplexPromotion -> 2
-
 let unique_minimum_promotion promotion_options =
   let size (_, p) =
-    List.fold ~init:0 ~f:(fun acc p -> acc + promotion_cost p) p in
+    List.fold ~init:0 ~f:(fun acc p -> acc + Promotion.promotion_cost p) p in
   let sizes = List.map ~f:size promotion_options in
   let min_promotion = List.min_elt ~compare:Int.compare sizes in
   let sizes_and_promotons = List.zip_exn sizes promotion_options in
@@ -224,14 +209,8 @@ let unique_minimum_promotion promotion_options =
     | [] -> Error None )
   | None -> Error None
 
-let matching_function env name args =
+let find_compatible_rt function_types args =
   (* NB: Variadic arguments are special-cased in the typechecker and not handled here *)
-  let name = Utils.stdlib_distribution_name name in
-  let function_types =
-    Environment.find env name
-    |> List.filter_map ~f:extract_function_types
-    |> List.sort ~compare:(fun (ret1, _, _, _) (ret2, _, _, _) ->
-           UnsizedType.compare_returntype ret1 ret2 ) in
   let matches, errors =
     List.partition_map function_types
       ~f:(fun (rt, tys, funkind_constructor, _) ->
@@ -250,6 +229,18 @@ let matching_function env name args =
       in
       let errors, omitted = List.split_n errors max_n_errors in
       SignatureErrors (errors, not (List.is_empty omitted))
+
+let matching_function env name args =
+  let name = Utils.stdlib_distribution_name name in
+  let function_types =
+    Environment.find env name
+    |> List.filter_map ~f:extract_function_types
+    |> List.sort ~compare:(fun (ret1, _, _, _) (ret2, _, _, _) ->
+           UnsizedType.compare_returntype ret1 ret2 ) in
+  find_compatible_rt function_types args
+
+let matching_stanlib_function =
+  matching_function Environment.stan_math_environment
 
 let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
     fun_return args =
@@ -385,3 +376,26 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
     name pp_args arg_tys
     (list ~sep:cut pp_signature)
     sigs pp_omitted ()
+
+let pp_math_lib_assignmentoperator_sigs ppf (lt, op) =
+  let signatures =
+    let errors =
+      Stan_math_signatures.make_assignmentoperator_stan_math_signatures op in
+    let errors =
+      List.filter
+        ~f:(fun (_, args, _) ->
+          Result.is_ok (check_same_type 0 lt (snd (List.hd_exn args))) )
+        errors in
+    match List.split_n errors max_n_errors with
+    | [], _ -> None
+    | errors, [] -> Some (errors, false)
+    | errors, _ -> Some (errors, true) in
+  let pp_sigs ppf (signatures, omitted) =
+    Fmt.pf ppf "@[<v>%a%a@]"
+      (Fmt.list ~sep:Fmt.cut Stan_math_signatures.pp_math_sig)
+      signatures
+      (if omitted then Fmt.pf else Fmt.nop)
+      "@ (Additional signatures omitted)" in
+  Fmt.pf ppf "%a"
+    (Fmt.option ~none:(Fmt.any "No matching signatures") pp_sigs)
+    signatures

@@ -12,7 +12,13 @@ model {
   for (i in (1) : (N - 3)) {
     n[i] = (m[i : (i + 3), (((i)))]');
   }
-  if (((b < x) && (x < 1))) 
+  if (((b < x) && (x < 1)))
     (x + 4) ~ normal(0, (1 + 1)) T[0, (8)];
+
+  real y_raw;
+  real y;
+  y = (((y_raw > 0) ? 1 : -1)) - y_raw;
+  y = ((((y_raw > 0) ? 1 : -1))) - y_raw;
+
 }
 

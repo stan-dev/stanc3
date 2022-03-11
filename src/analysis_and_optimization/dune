@@ -1,7 +1,7 @@
 (library
  (name analysis_and_optimization)
  (public_name stanc.analysis)
- (libraries core_kernel str fmt common middle)
+ (libraries core_kernel str fmt common middle frontend)
  (inline_tests)
  ;; TODO: Not sure what's going on but it's throwing an error that this module has no implementation
  (modules_without_implementation monotone_framework_sigs)

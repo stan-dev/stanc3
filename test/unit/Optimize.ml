@@ -140,7 +140,9 @@ let%expect_test "inline functions" =
         {
           {
             FnPrint__(3);
-            FnPrint__(FnMakeRowVec__(FnMakeRowVec__(3, 2), FnMakeRowVec__(4, 6)));
+            FnPrint__(FnMakeRowVec__(FnMakeRowVec__(promote(3, real),
+                      promote(2, real)), FnMakeRowVec__(promote(4, real),
+                      promote(6, real))));
           }
           real inline_g_return_sym2__;
           {
@@ -231,134 +233,154 @@ let%expect_test "list collapsing" =
   print_s [%sexp (mir : Middle.Program.Typed.t)] ;
   [%expect
     {|
-    ((functions_block
-      (((fdrt ()) (fdname f) (fdsuffix FnPlain)
-        (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
-        (fdbody
+((functions_block
+  (((fdrt ()) (fdname f) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
+    (fdbody
+     (((pattern
+        (Block
          (((pattern
-            (Block
+            (NRFunApp (CompilerInternal FnPrint)
+             (((pattern (Var x))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp (CompilerInternal FnPrint)
+             (((pattern (Var y))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))
+   ((fdrt (UReal)) (fdname g) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable z UInt)))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (Return
              (((pattern
-                (NRFunApp (CompilerInternal FnPrint)
-                 (((pattern (Var x))
+                (FunApp (StanLib Pow__ FnPlain AoS)
+                 (((pattern (Var z))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                  ((pattern (Lit Int 2))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta <opaque>))
-              ((pattern
-                (NRFunApp (CompilerInternal FnPrint)
-                 (((pattern (Var y))
-                   (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
-               (meta <opaque>)))))
-           (meta <opaque>))))
-        (fdloc <opaque>))
-       ((fdrt (UReal)) (fdname g) (fdsuffix FnPlain)
-        (fdargs ((AutoDiffable z UInt)))
-        (fdbody
-         (((pattern
-            (Block
-             (((pattern
-                (Return
-                 (((pattern
-                    (FunApp (StanLib Pow__ FnPlain AoS)
-                     (((pattern (Var z))
-                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern (Lit Int 2))
-                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta <opaque>)))))
-           (meta <opaque>))))
-        (fdloc <opaque>))))
-     (input_vars ()) (prepare_data ())
-     (log_prob
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))))
+ (input_vars ()) (prepare_data ())
+ (log_prob
+  (((pattern
+     (Block
       (((pattern
          (Block
           (((pattern
-             (Block
+             (NRFunApp (CompilerInternal FnPrint)
+              (((pattern (Lit Int 3))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta <opaque>))
+           ((pattern
+             (NRFunApp (CompilerInternal FnPrint)
               (((pattern
-                 (NRFunApp (CompilerInternal FnPrint)
-                  (((pattern (Lit Int 3))
-                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                (meta <opaque>))
-               ((pattern
-                 (NRFunApp (CompilerInternal FnPrint)
+                 (FunApp (CompilerInternal FnMakeRowVec)
                   (((pattern
                      (FunApp (CompilerInternal FnMakeRowVec)
                       (((pattern
-                         (FunApp (CompilerInternal FnMakeRowVec)
-                          (((pattern (Lit Int 3))
-                            (meta
-                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                           ((pattern (Lit Int 2))
-                            (meta
-                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                         (Promotion
+                          ((pattern (Lit Int 3))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                          UReal DataOnly))
                         (meta
-                         ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))
+                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern
-                         (FunApp (CompilerInternal FnMakeRowVec)
-                          (((pattern (Lit Int 4))
-                            (meta
-                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                           ((pattern (Lit Int 6))
-                            (meta
-                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                         (Promotion
+                          ((pattern (Lit Int 2))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                          UReal DataOnly))
                         (meta
-                         ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
-                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
-                (meta <opaque>)))))
-            (meta <opaque>))
-           ((pattern
-             (Decl (decl_adtype AutoDiffable) (decl_id inline_g_return_sym2__)
-              (decl_type (Unsized UReal)) (initialize true)))
-            (meta <opaque>))
-           ((pattern
-             (Block
-              (((pattern
-                 (Assignment (inline_g_return_sym2__ UReal ())
-                  ((pattern
-                    (FunApp (StanLib Pow__ FnPlain AoS)
-                     (((pattern (Lit Int 53))
-                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern (Lit Int 2))
-                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
-                (meta <opaque>)))))
-            (meta <opaque>))
-           ((pattern
-             (NRFunApp (CompilerInternal FnReject)
-              (((pattern (Var inline_g_return_sym2__))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta
+                     ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))
+                   ((pattern
+                     (FunApp (CompilerInternal FnMakeRowVec)
+                      (((pattern
+                         (Promotion
+                          ((pattern (Lit Int 4))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                          UReal DataOnly))
+                        (meta
+                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                       ((pattern
+                         (Promotion
+                          ((pattern (Lit Int 6))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                          UReal DataOnly))
+                        (meta
+                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta
+                     ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
+                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
             (meta <opaque>)))))
-        (meta <opaque>))))
-     (generate_quantities
-      (((pattern
-         (IfElse
-          ((pattern (Var emit_transformed_parameters__))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern Skip) (meta <opaque>))
-          (((pattern (Block ())) (meta <opaque>)))))
         (meta <opaque>))
        ((pattern
-         (IfElse
-          ((pattern
-            (FunApp (StanLib PNot__ FnPlain AoS)
-             (((pattern
-                (EOr
-                 ((pattern (Var emit_transformed_parameters__))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                 ((pattern (Var emit_generated_quantities__))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Return ())) (meta <opaque>)) ()))
+         (Decl (decl_adtype AutoDiffable) (decl_id inline_g_return_sym2__)
+          (decl_type (Unsized UReal)) (initialize true)))
         (meta <opaque>))
        ((pattern
-         (IfElse
-          ((pattern
-            (FunApp (StanLib PNot__ FnPlain AoS)
-             (((pattern (Var emit_generated_quantities__))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Return ())) (meta <opaque>)) ()))
-        (meta <opaque>))))
-     (transform_inits ()) (output_vars ()) (prog_name "") (prog_path ""))
+         (Block
+          (((pattern
+             (Assignment (inline_g_return_sym2__ UReal ())
+              ((pattern
+                (FunApp (StanLib Pow__ FnPlain AoS)
+                 (((pattern (Lit Int 53))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                  ((pattern (Lit Int 2))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+            (meta <opaque>)))))
+        (meta <opaque>))
+       ((pattern
+         (NRFunApp (CompilerInternal FnReject)
+          (((pattern (Var inline_g_return_sym2__))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (generate_quantities
+  (((pattern
+     (IfElse
+      ((pattern (Var emit_transformed_parameters__))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern Skip) (meta <opaque>))
+      (((pattern (Block ())) (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern
+            (EOr
+             ((pattern (Var emit_transformed_parameters__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var emit_generated_quantities__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Return ())) (meta <opaque>)) ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern (Var emit_generated_quantities__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Return ())) (meta <opaque>)) ()))
+    (meta <opaque>))))
+ (transform_inits ()) (output_vars ()) (prog_name "") (prog_path ""))
     |}]
 
 let%expect_test "do not inline recursive functions" =
@@ -2839,26 +2861,26 @@ let%expect_test "lazy code motion, 13" =
   [%expect
     {|
       log_prob {
-        data int lcm_sym7__;
-        data int lcm_sym6__;
+        data real lcm_sym7__;
+        data real lcm_sym6__;
         data int lcm_sym5__;
         data int lcm_sym4__;
         data int lcm_sym3__;
         {
           real temp;
           if((2 > 3)) {
-            lcm_sym6__ = (2 * 2);
+            lcm_sym6__ = promote((2 * 2), real);
             temp = lcm_sym6__;
             ;
           } else {
             FnPrint__("hello");
-            lcm_sym6__ = (2 * 2);
+            lcm_sym6__ = promote((2 * 2), real);
             ;
           }
           temp = lcm_sym6__;
           real temp2;
           if((3 >= 2)) {
-            lcm_sym7__ = (2 * 3);
+            lcm_sym7__ = promote((2 * 3), real);
             temp2 = lcm_sym7__;
             target += temp;
             lcm_sym5__ = (2 + 1);
@@ -3084,9 +3106,9 @@ let%expect_test "adlevel_optimization" =
           real y;
           real z;
           data real z_data;
-          if((1 > 2)) y = (y + x); else y = (y + w);
+          if((1 > 2)) y = (y + promote(x, real)); else y = (y + w);
           if((2 > 1)) z = y;
-          if((3 > 1)) z_data = x;
+          if((3 > 1)) z_data = promote(x, real);
           FnPrint__(z);
           FnPrint__(z_data);
         }
@@ -3100,9 +3122,9 @@ let%expect_test "adlevel_optimization" =
           data real y;
           data real z;
           data real z_data;
-          if((1 > 2)) y = (y + x); else y = (y + w);
+          if((1 > 2)) y = (y + promote(x, real)); else y = (y + w);
           if((2 > 1)) z = y;
-          if((3 > 1)) z_data = x;
+          if((3 > 1)) z_data = promote(x, real);
           FnPrint__(z);
           FnPrint__(z_data);
         }
@@ -3182,8 +3204,12 @@ let%expect_test "adlevel_optimization expressions" =
                    (FunApp (StanLib Plus__ FnPlain AoS)
                     (((pattern (Var y))
                       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-                     ((pattern (Var x))
-                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                     ((pattern
+                       (Promotion
+                        ((pattern (Var x))
+                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                        UReal DataOnly))
+                      (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                (meta <opaque>))
               (((pattern
@@ -3224,8 +3250,12 @@ let%expect_test "adlevel_optimization expressions" =
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
                 (Assignment (z_data UReal ())
-                 ((pattern (Var x))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                 ((pattern
+                   (Promotion
+                    ((pattern (Var x))
+                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                    UReal DataOnly))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                (meta <opaque>))
               ()))
             (meta <opaque>))
@@ -3276,15 +3306,15 @@ let%expect_test "adlevel_optimization 2" =
       log_prob {
         real w;
         data real w_trans;
-        w_trans = 1;
+        w_trans = promote(1, real);
         {
           data int x;
           array[real, 2] y;
           real z;
           data real z_data;
-          if((1 > 2)) y[1] = (y[1] + x); else y[2] = (y[2] + w);
+          if((1 > 2)) y[1] = (y[1] + promote(x, real)); else y[2] = (y[2] + w);
           if((2 > 1)) z = y[1];
-          if((3 > 1)) z_data = x;
+          if((3 > 1)) z_data = promote(x, real);
           FnPrint__(z);
           FnPrint__(z_data);
         }
@@ -3294,15 +3324,15 @@ let%expect_test "adlevel_optimization 2" =
         data real w;
         data real w_trans;
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
-        w_trans = 1;
+        w_trans = promote(1, real);
         {
           data int x;
           data array[real, 2] y;
           data real z;
           data real z_data;
-          if((1 > 2)) y[1] = (y[1] + x); else y[2] = (y[2] + w);
+          if((1 > 2)) y[1] = (y[1] + promote(x, real)); else y[2] = (y[2] + w);
           if((2 > 1)) z = y[1];
-          if((3 > 1)) z_data = x;
+          if((3 > 1)) z_data = promote(x, real);
           FnPrint__(z);
           FnPrint__(z_data);
         }

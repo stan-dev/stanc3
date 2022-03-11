@@ -29,6 +29,7 @@ let dump_tx_mir_pretty = ref false
 let dump_opt_mir = ref false
 let dump_opt_mir_pretty = ref false
 let dump_stan_math_sigs = ref false
+let dump_stan_math_distributions = ref false
 let opt_lvl = ref Optimize.O0
 let no_soa_opt = ref false
 let soa_opt = ref false
@@ -100,6 +101,10 @@ let options =
       , Arg.Set dump_stan_math_sigs
       , " Dump out the list of supported type signatures for Stan Math backend."
       )
+    ; ( "--dump-stan-math-distributions"
+      , Arg.Set dump_stan_math_distributions
+      , " Dump out the list of supported probability distributions and their \
+         supported suffix types for the Stan Math backend." )
     ; ( "--warn-uninitialized"
       , Arg.Set warn_uninitialized
       , " Emit warnings about uninitialized variables to stderr. Currently an \
@@ -140,20 +145,20 @@ let options =
       , Arg.Set_string Typechecker.model_name
       , " Take a string to set the model name (default = \
          \"$model_filename_model\")" )
-    ; ( "-O0"
+    ; ( "--O0"
       , Arg.Unit (fun () -> opt_lvl := Optimize.O0)
       , "\t(Default) Do not apply optimizations to the Stan code." )
-    ; ( "-O1"
+    ; ( "--O1"
       , Arg.Unit (fun () -> opt_lvl := Optimize.O1)
       , "\tApply level 1 compiler optimizations (only basic optimizations)." )
-    ; ( "-Oexperimental"
+    ; ( "--Oexperimental"
       , Arg.Unit (fun () -> opt_lvl := Optimize.Oexperimental)
       , "\t(Experimental) Apply all compiler optimizations. Some of these are \
          not thorougly tested and may not always improve a programs \
          performance." )
     ; ( "--O"
       , Arg.Unit (fun () -> opt_lvl := Optimize.Oexperimental)
-      , "\t(Experimental) Same as -Oexperimental. Apply all compiler \
+      , "\t(Experimental) Same as --Oexperimental. Apply all compiler \
          optimizations. Some of these are not thorougly tested and may not \
          always improve a programs performance." )
     ; ( "-fno-soa"
@@ -271,7 +276,8 @@ let use_file filename =
     Warnings.pp_warnings Fmt.stderr ?printed_filename
       (Deprecation_analysis.collect_warnings typed_ast) ;
   if !generate_data then
-    print_endline (Debug_data_generation.print_data_prog typed_ast) ;
+    print_endline
+      (Debug_data_generation.print_data_prog (Ast_to_Mir.gather_data typed_ast)) ;
   Debugging.typed_ast_logger typed_ast ;
   if not !pretty_print_program then (
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
@@ -315,10 +321,13 @@ let main () =
   (* Parse the arguments. *)
   Arg.parse options add_file usage ;
   print_deprecated_arg_warning ;
-  (* print_deprecated_arg_warning options; *)
   (* Deal with multiple modalities *)
   if !dump_stan_math_sigs then (
     Stan_math_signatures.pretty_print_all_math_sigs Format.std_formatter () ;
+    exit 0 ) ;
+  if !dump_stan_math_distributions then (
+    Stan_math_signatures.pretty_print_all_math_distributions
+      Format.std_formatter () ;
     exit 0 ) ;
   if !model_file = "" then model_file_err () ;
   (* if we only have functions, always compile as standalone *)

@@ -87,8 +87,15 @@ module Helpers : sig
   val variable : string -> Typed.t
   val zero : Typed.t
   val one : Typed.t
+  val unary_op : Operator.t -> Typed.t -> Typed.t
   val binop : Typed.t -> Operator.t -> Typed.t -> Typed.t
   val binop_list : Typed.t list -> Operator.t -> default:Typed.t -> Typed.t
+  val row_vector : float list -> Typed.t
+  val vector : float list -> Typed.t
+  val matrix : float list list -> Typed.t
+  val matrix_from_rows : Typed.t list -> Typed.t
+  val array_expr : Typed.t list -> Typed.t
+  val try_unpack : Typed.t -> Typed.t list option
   val loop_bottom : Typed.t
 
   val internal_funapp :
