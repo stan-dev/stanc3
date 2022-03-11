@@ -754,9 +754,12 @@ let partial_evaluation = Partial_evaluator.eval_prog
 let rec find_assignment_idx (name : string) Stmt.Fixed.{pattern; _} =
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
-      ((assign_name, (_ : UnsizedType.t), idx_lst), (rhs : 'a Expr.Fixed.t))
+      ((assign_name, lhs_ut, idx_lst), (rhs : 'a Expr.Fixed.t))
     when name = assign_name
-         && not (Set.Poly.mem (expr_var_names_set rhs) assign_name) ->
+         && (not (Set.Poly.mem (expr_var_names_set rhs) assign_name))
+         && not
+              ( rhs.meta.adlevel = UnsizedType.DataOnly
+              && UnsizedType.is_array lhs_ut ) ->
       Some idx_lst
   | _ -> None
 
