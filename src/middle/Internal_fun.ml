@@ -25,7 +25,6 @@ type 'expr t =
   | FnResizeToMatch
   | FnNaN
   | FnDeepCopy
-  | FnMove
   | FnReadWriteEventsOpenCL of string
 [@@deriving sexp, hash, compare, map, fold]
 
@@ -54,7 +53,7 @@ let pp (pp_expr : 'a Fmt.t) ppf internal =
 let can_side_effect = function
   | FnReadParam _ | FnReadData | FnReadDataSerializer | FnWriteParam _
    |FnValidateSize | FnValidateSizeSimplex | FnValidateSizeUnitVector
-   |FnReadWriteEventsOpenCL _ | FnMove ->
+   |FnReadWriteEventsOpenCL _ ->
       true
   | FnLength | FnMakeArray | FnMakeRowVec | FnNegInf | FnPrint | FnReject
    |FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _ ->
