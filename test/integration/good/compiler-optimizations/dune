@@ -77,6 +77,7 @@
    ad-level-deep-dependence.stan
    lupdf-inlining.stan
    unenforce-initialize.stan
+   unenforce-initialize-should-fail.stan
    partial_eval_multiply.stan
    inline-functions-varmat.stan))
  (action
