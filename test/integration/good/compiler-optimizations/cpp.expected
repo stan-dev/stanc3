@@ -6429,7 +6429,8 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       current_statement__ = 1;
       mu = in__.template read_constrain_ordered<
              Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__, 2);
-      std::vector<local_scalar_t__> sigma;
+      std::vector<local_scalar_t__> sigma =
+         std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       current_statement__ = 2;
       sigma = in__.template read_constrain_lb<std::vector<local_scalar_t__>, 
                 jacobian__>(0, lp__, 2);
@@ -6514,7 +6515,8 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       current_statement__ = 1;
       mu = in__.template read_constrain_ordered<
              Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__, 2);
-      std::vector<double> sigma;
+      std::vector<double> sigma =
+         std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       sigma = in__.template read_constrain_lb<std::vector<local_scalar_t__>, 
                 jacobian__>(0, lp__, 2);
@@ -6901,7 +6903,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       local_scalar_t__ mu;
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
-      std::vector<local_scalar_t__> theta;
+      std::vector<local_scalar_t__> theta =
+         std::vector<local_scalar_t__>(J, DUMMY_VAR__);
       current_statement__ = 2;
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
       local_scalar_t__ tau;
@@ -6951,7 +6954,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       double mu;
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
-      std::vector<double> theta;
+      std::vector<double> theta =
+         std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
       double tau;
@@ -13485,7 +13489,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         current_statement__ = 50;
         stan::math::validate_non_negative_index("recruit", "n_occasions",
                                                 n_occasions);
-        std::vector<std::vector<int>> recruit;
+        std::vector<std::vector<int>> recruit =
+           std::vector<std::vector<int>>(M, 
+             std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
         current_statement__ = 51;
         stan::model::assign(recruit,
           stan::math::rep_array(0, M, n_occasions),
@@ -14433,7 +14439,10 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       pi = in__.template read_constrain_simplex<
              stan::conditional_var_value_t<local_scalar_t__, 
                Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(lp__, K);
-      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> theta;
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> theta =
+         std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(J, 
+           std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, 
+             Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(K, DUMMY_VAR__)));
       current_statement__ = 2;
       theta = in__.template read_constrain_simplex<
                 std::vector<
@@ -14627,7 +14636,11 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       current_statement__ = 1;
       pi = in__.template read_constrain_simplex<
              Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__, K);
-      std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> theta;
+      std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> theta =
+         std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(J, 
+           std::vector<Eigen::Matrix<double, -1, 1>>(K, 
+             Eigen::Matrix<double, -1, 1>::Constant(K,
+               std::numeric_limits<double>::quiet_NaN())));
       current_statement__ = 2;
       theta = in__.template read_constrain_simplex<
                 std::vector<
@@ -20196,7 +20209,9 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         current_statement__ = 51;
         stan::math::validate_non_negative_index("recruit", "n_occasions",
                                                 n_occasions);
-        std::vector<std::vector<int>> recruit;
+        std::vector<std::vector<int>> recruit =
+           std::vector<std::vector<int>>(M, 
+             std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
         current_statement__ = 52;
         stan::model::assign(recruit,
           stan::math::rep_array(0, M, n_occasions),
@@ -21559,7 +21574,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     
     try {
       double lcm_sym4__;
-      std::vector<local_scalar_t__> theta;
+      std::vector<local_scalar_t__> theta =
+         std::vector<local_scalar_t__>(J, DUMMY_VAR__);
       current_statement__ = 1;
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
       {
@@ -21600,7 +21616,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     try {
       int lcm_sym3__;
       int lcm_sym2__;
-      std::vector<double> theta;
+      std::vector<double> theta =
+         std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
       out__.write(theta);
@@ -31363,7 +31380,14 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
               lp__);
       std::vector<
         stan::conditional_var_value_t<local_scalar_t__, 
-          Eigen::Matrix<local_scalar_t__, -1, 1>>> b;
+          Eigen::Matrix<local_scalar_t__, -1, 1>>> b =
+         std::vector<
+           stan::conditional_var_value_t<local_scalar_t__, 
+             Eigen::Matrix<local_scalar_t__, -1, 1>>>(I, 
+           stan::conditional_var_value_t<local_scalar_t__, 
+             Eigen::Matrix<local_scalar_t__, -1, 1>>(
+             Eigen::Matrix<double, -1, 1>::Constant(8,
+               std::numeric_limits<double>::quiet_NaN())));
       current_statement__ = 6;
       b = in__.template read<
             std::vector<
@@ -31486,7 +31510,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 5;
       tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
-      std::vector<Eigen::Matrix<double, -1, 1>> b;
+      std::vector<Eigen::Matrix<double, -1, 1>> b =
+         std::vector<Eigen::Matrix<double, -1, 1>>(I, 
+           Eigen::Matrix<double, -1, 1>::Constant(8,
+             std::numeric_limits<double>::quiet_NaN()));
       current_statement__ = 6;
       b = in__.template read<
             std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(I, 8);

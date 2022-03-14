@@ -1,6 +1,14 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v2.29.1 (2 March 2022)
+======================================================================
+
+- Formatting without a | when only one argument is supplied to a distribution.
+- Stanc previously would allow you to erroneously assign a function to a different functions name using =, which then failed in C++ compilation. This is now an error.
+- Nonlinear transforms of the LHS of a tilde statement now produce warnings in pedantic mode.
+- Improved type error messages for operators and tilde statements.
+
 v2.29.0 (14 February 2022)
 ======================================================================
 
