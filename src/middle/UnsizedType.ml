@@ -186,7 +186,8 @@ let rec is_container ut =
 let is_array ut =
   match ut with
   | UInt | UComplex | UReal | UMathLibraryFunction | UFun _ | UVector
-   |URowVector | UMatrix ->
+   |URowVector | UMatrix | UComplexVector | UComplexRowVector | UComplexMatrix
+    ->
       false
   | UArray _ -> true
 
