@@ -15558,7 +15558,9 @@ Display all Stan math signatures exposed in the language
   normal_id_glm_lpdf(vector, row_vector, vector, vector, real) => real
   normal_id_glm_lpdf(vector, row_vector, vector, vector, vector) => real
   normal_id_glm_lpdf(vector, matrix, real, vector, real) => real
+  normal_id_glm_lpdf(vector, matrix, real, vector, vector) => real
   normal_id_glm_lpdf(vector, matrix, vector, vector, real) => real
+  normal_id_glm_lpdf(vector, matrix, vector, vector, vector) => real
   normal_lccdf(real, real, real) => real
   normal_lccdf(real, real, vector) => real
   normal_lccdf(real, real, row_vector) => real
