@@ -1421,8 +1421,8 @@ and check_sizedtype cf tenv sizedty =
       let te = check e "Row vector sizes" in
       SRowVector (mem_pattern, te)
   | SMatrix (mem_pattern, e1, e2) ->
-      let te1 = check e1 "Matrix sizes" in
-      let te2 = check e2 "Matrix sizes" in
+      let te1 = check e1 "Matrix row size" in
+      let te2 = check e2 "Matrix column size" in
       SMatrix (mem_pattern, te1, te2)
   | SComplexVector e ->
       let te = check e "complex vector sizes" in
@@ -1431,8 +1431,8 @@ and check_sizedtype cf tenv sizedty =
       let te = check e "complex row vector sizes" in
       SComplexRowVector te
   | SComplexMatrix (e1, e2) ->
-      let te1 = check e1 "Complex matrix sizes" in
-      let te2 = check e2 "Complex matrix sizes" in
+      let te1 = check e1 "Complex matrix row size" in
+      let te2 = check e2 "Complex matrix column size" in
       SComplexMatrix (te1, te2)
   | SArray (st, e) ->
       let tst = check_sizedtype cf tenv st in

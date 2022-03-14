@@ -63,6 +63,7 @@ let rec promote (exp : Ast.typed_expression) prom =
       let fst = List.hd_exn pes in
       let ad_level = fst.emeta.ad_level in
       let type_ =
+        (* "RowVectorExpr" can also be a matrix expr, depends on what is inside *)
         match fst.emeta.type_ with
         | UComplexRowVector -> UnsizedType.UComplexMatrix
         | URowVector -> UMatrix
@@ -76,16 +77,16 @@ let promote_list es promotions = List.map2_exn es promotions ~f:promote
 (** Get the promotion needed to make the second type into the first.
   Types NEED to have previously been checked to be promotable
 *)
-let rec get_type_promotion_exn (ad, ty) (ad2, ty2) =
-  match (ty, ty2) with
+let rec get_type_promotion_exn (ad_orig, ty_orig) (ad_expect, ty_expect) =
+  match (ty_orig, ty_expect) with
   | UnsizedType.(UReal, (UReal | UInt) | UVector, UVector | UMatrix, UMatrix)
-    when ad <> ad2 ->
+    when ad_orig <> ad_expect ->
       ToVar
   | UComplex, (UReal | UInt | UComplex)
    |UComplexMatrix, (UMatrix | UComplexMatrix)
    |UComplexVector, (UVector | UComplexVector)
    |UComplexRowVector, (URowVector | UComplexRowVector)
-    when ad <> ad2 ->
+    when ad_orig <> ad_expect ->
       ToComplexVar
   | UReal, UInt -> IntToReal
   | UComplex, UInt -> IntToComplex
@@ -94,14 +95,15 @@ let rec get_type_promotion_exn (ad, ty) (ad2, ty2) =
    |UComplexVector, UVector
    |UComplexRowVector, URowVector ->
       RealToComplex
-  | UArray nt1, UArray nt2 -> get_type_promotion_exn (ad, nt1) (ad2, nt2)
+  | UArray nt1, UArray nt2 ->
+      get_type_promotion_exn (ad_orig, nt1) (ad_expect, nt2)
   | t1, t2 when t1 = t2 -> NoPromotion
   | _, _ ->
       Common.FatalError.fatal_error_msg
         [%message
           "Tried to get promotion of mismatched types!"
-            (ty : UnsizedType.t)
-            (ty2 : UnsizedType.t)]
+            (ty_orig : UnsizedType.t)
+            (ty_expect : UnsizedType.t)]
 
 (** Calculate the "cost"/number of promotions performed.
     Used to disambiguate function signatures

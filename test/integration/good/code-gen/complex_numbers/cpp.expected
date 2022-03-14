@@ -176,13 +176,13 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
       current_statement__ = 99;
       stan::math::validate_non_negative_index("rowvec", "N", N);
       current_statement__ = 100;
-      stan::math::validate_non_negative_index("gq_c_matrix", "N", N);
+      stan::math::validate_non_negative_index("tp_c_matrix", "N", N);
       current_statement__ = 101;
-      stan::math::validate_non_negative_index("gq_c_matrix", "N", N);
+      stan::math::validate_non_negative_index("tp_c_matrix", "N", N);
       current_statement__ = 102;
-      stan::math::validate_non_negative_index("gq_c_vector", "N", N);
+      stan::math::validate_non_negative_index("tp_c_vector", "N", N);
       current_statement__ = 103;
-      stan::math::validate_non_negative_index("gq_c_rowvector", "N", N);
+      stan::math::validate_non_negative_index("tp_c_rowvector", "N", N);
       current_statement__ = 104;
       stan::math::validate_non_negative_index("carray", "N", N);
       current_statement__ = 105;
@@ -250,330 +250,330 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
       local_scalar_t__ r = DUMMY_VAR__;
       current_statement__ = 8;
       r = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<std::complex<local_scalar_t__>, -1, -1> gq_c_matrix =
+      Eigen::Matrix<std::complex<local_scalar_t__>, -1, -1> tp_c_matrix =
          Eigen::Matrix<std::complex<local_scalar_t__>, -1, -1>::Constant(N,
            N, DUMMY_VAR__);
       current_statement__ = 14;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(cmat, cmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(cmat, cmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 15;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 16;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat),
-          cmat), "assigning variable gq_c_matrix");
+          cmat), "assigning variable tp_c_matrix");
       current_statement__ = 17;
-      stan::model::assign(gq_c_matrix, stan::math::elt_multiply(cmat, cmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::elt_multiply(cmat, cmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 18;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::elt_multiply(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 19;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::elt_multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat),
-          cmat), "assigning variable gq_c_matrix");
+          cmat), "assigning variable tp_c_matrix");
       current_statement__ = 20;
-      stan::model::assign(gq_c_matrix, stan::math::elt_divide(cmat, cmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::elt_divide(cmat, cmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 21;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::elt_divide(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 22;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::elt_divide(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat),
-          cmat), "assigning variable gq_c_matrix");
+          cmat), "assigning variable tp_c_matrix");
       current_statement__ = 23;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(cmat, z),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(cmat, z),
+        "assigning variable tp_c_matrix");
       current_statement__ = 24;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(z, cmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(z, cmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 25;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(r, cmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(r, cmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 26;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(cmat, r),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(cmat, r),
+        "assigning variable tp_c_matrix");
       current_statement__ = 27;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat), z),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 28;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(z,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 29;
-      stan::model::assign(gq_c_matrix, stan::math::add(cmat, cmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::add(cmat, cmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 30;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::add(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 31;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::add(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat),
-          cmat), "assigning variable gq_c_matrix");
+          cmat), "assigning variable tp_c_matrix");
       current_statement__ = 32;
-      stan::model::assign(gq_c_matrix, stan::math::subtract(cmat, cmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::subtract(cmat, cmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 33;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::subtract(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 34;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::subtract(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat),
-          cmat), "assigning variable gq_c_matrix");
+          cmat), "assigning variable tp_c_matrix");
       current_statement__ = 35;
-      stan::model::assign(gq_c_matrix, stan::math::minus(cmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::minus(cmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 36;
-      stan::model::assign(gq_c_matrix, stan::math::minus(mat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::minus(mat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 37;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(cvec, crowvec),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(cvec, crowvec),
+        "assigning variable tp_c_matrix");
       current_statement__ = 38;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec),
-          crowvec), "assigning variable gq_c_matrix");
+          crowvec), "assigning variable tp_c_matrix");
       current_statement__ = 39;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec)),
-        "assigning variable gq_c_matrix");
-      Eigen::Matrix<std::complex<local_scalar_t__>, -1, 1> gq_c_vector =
+        "assigning variable tp_c_matrix");
+      Eigen::Matrix<std::complex<local_scalar_t__>, -1, 1> tp_c_vector =
          Eigen::Matrix<std::complex<local_scalar_t__>, -1, 1>::Constant(N,
            DUMMY_VAR__);
       current_statement__ = 10;
-      stan::model::assign(gq_c_vector, stan::math::transpose(crowvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::transpose(crowvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 40;
-      stan::model::assign(gq_c_vector, stan::math::multiply(cmat, cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(cmat, cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 41;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat),
-          cvec), "assigning variable gq_c_vector");
+          cvec), "assigning variable tp_c_vector");
       current_statement__ = 42;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::multiply(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 43;
-      stan::model::assign(gq_c_vector, stan::math::multiply(z, cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(z, cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 44;
-      stan::model::assign(gq_c_vector, stan::math::multiply(cvec, z),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(cvec, z),
+        "assigning variable tp_c_vector");
       current_statement__ = 45;
-      stan::model::assign(gq_c_vector, stan::math::multiply(r, cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(r, cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 46;
-      stan::model::assign(gq_c_vector, stan::math::multiply(cvec, r),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(cvec, r),
+        "assigning variable tp_c_vector");
       current_statement__ = 47;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::multiply(z,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 48;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec), z),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 49;
-      stan::model::assign(gq_c_vector, stan::math::elt_multiply(cvec, cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::elt_multiply(cvec, cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 50;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::elt_multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec),
-          cvec), "assigning variable gq_c_vector");
+          cvec), "assigning variable tp_c_vector");
       current_statement__ = 51;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::elt_multiply(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 52;
-      stan::model::assign(gq_c_vector, stan::math::elt_divide(cvec, cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::elt_divide(cvec, cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 53;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::elt_divide(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec),
-          cvec), "assigning variable gq_c_vector");
+          cvec), "assigning variable tp_c_vector");
       current_statement__ = 54;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::elt_divide(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 55;
-      stan::model::assign(gq_c_vector, stan::math::add(cvec, cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::add(cvec, cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 56;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::add(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec),
-          cvec), "assigning variable gq_c_vector");
+          cvec), "assigning variable tp_c_vector");
       current_statement__ = 57;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::add(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 58;
-      stan::model::assign(gq_c_vector, stan::math::subtract(cvec, cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::subtract(cvec, cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 59;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::subtract(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec),
-          cvec), "assigning variable gq_c_vector");
+          cvec), "assigning variable tp_c_vector");
       current_statement__ = 60;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::subtract(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 61;
-      stan::model::assign(gq_c_vector, stan::math::minus(cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::minus(cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 62;
-      stan::model::assign(gq_c_vector, stan::math::minus(vec),
-        "assigning variable gq_c_vector");
-      Eigen::Matrix<std::complex<local_scalar_t__>, 1, -1> gq_c_rowvector =
+      stan::model::assign(tp_c_vector, stan::math::minus(vec),
+        "assigning variable tp_c_vector");
+      Eigen::Matrix<std::complex<local_scalar_t__>, 1, -1> tp_c_rowvector =
          Eigen::Matrix<std::complex<local_scalar_t__>, 1, -1>::Constant(N,
            DUMMY_VAR__);
       current_statement__ = 11;
-      stan::model::assign(gq_c_rowvector, stan::math::transpose(cvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::transpose(cvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 63;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(crowvec, cmat),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 64;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec),
-          cmat), "assigning variable gq_c_rowvector");
+          cmat), "assigning variable tp_c_rowvector");
       current_statement__ = 65;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 66;
-      stan::model::assign(gq_c_rowvector, stan::math::multiply(z, crowvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::multiply(z, crowvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 67;
-      stan::model::assign(gq_c_rowvector, stan::math::multiply(crowvec, z),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::multiply(crowvec, z),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 68;
-      stan::model::assign(gq_c_rowvector, stan::math::multiply(r, crowvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::multiply(r, crowvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 69;
-      stan::model::assign(gq_c_rowvector, stan::math::multiply(crowvec, r),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::multiply(crowvec, r),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 70;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(z,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 71;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec),
-          z), "assigning variable gq_c_rowvector");
+          z), "assigning variable tp_c_rowvector");
       current_statement__ = 72;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_multiply(crowvec, crowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 73;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_multiply(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 74;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec),
-          crowvec), "assigning variable gq_c_rowvector");
+          crowvec), "assigning variable tp_c_rowvector");
       current_statement__ = 75;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_divide(crowvec, crowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 76;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_divide(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 77;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_divide(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec),
-          crowvec), "assigning variable gq_c_rowvector");
+          crowvec), "assigning variable tp_c_rowvector");
       current_statement__ = 78;
-      stan::model::assign(gq_c_rowvector, stan::math::add(crowvec, crowvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::add(crowvec, crowvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 79;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::add(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 80;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::add(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec),
-          crowvec), "assigning variable gq_c_rowvector");
+          crowvec), "assigning variable tp_c_rowvector");
       current_statement__ = 81;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::subtract(crowvec, crowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 82;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::subtract(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 83;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::subtract(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec),
-          crowvec), "assigning variable gq_c_rowvector");
+          crowvec), "assigning variable tp_c_rowvector");
       current_statement__ = 84;
-      stan::model::assign(gq_c_rowvector, stan::math::minus(crowvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::minus(crowvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 85;
-      stan::model::assign(gq_c_rowvector, stan::math::minus(rowvec),
-        "assigning variable gq_c_rowvector");
-      std::complex<local_scalar_t__> gq_c =
+      stan::model::assign(tp_c_rowvector, stan::math::minus(rowvec),
+        "assigning variable tp_c_rowvector");
+      std::complex<local_scalar_t__> tp_c =
          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
       current_statement__ = 86;
-      gq_c = stan::math::multiply(crowvec, cvec);
+      tp_c = stan::math::multiply(crowvec, cvec);
       current_statement__ = 87;
-      gq_c = stan::math::multiply(crowvec,
+      tp_c = stan::math::multiply(crowvec,
                stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec));
       current_statement__ = 88;
-      gq_c = stan::math::multiply(
+      tp_c = stan::math::multiply(
                stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec),
                cvec);
       current_statement__ = 89;
-      gq_c = stan::math::sum(stan::math::to_array_1d(cvec));
+      tp_c = stan::math::sum(stan::math::to_array_1d(cvec));
       std::vector<std::vector<std::complex<local_scalar_t__>>> carray =
          std::vector<std::vector<std::complex<local_scalar_t__>>>(N, 
            std::vector<std::complex<local_scalar_t__>>(N, 
@@ -654,16 +654,16 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
       double r = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 8;
       r = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<std::complex<double>, -1, -1> gq_c_matrix =
+      Eigen::Matrix<std::complex<double>, -1, -1> tp_c_matrix =
          Eigen::Matrix<std::complex<double>, -1, -1>::Constant(N, N,
            std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<std::complex<double>, -1, 1> gq_c_vector =
+      Eigen::Matrix<std::complex<double>, -1, 1> tp_c_vector =
          Eigen::Matrix<std::complex<double>, -1, 1>::Constant(N,
            std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<std::complex<double>, 1, -1> gq_c_rowvector =
+      Eigen::Matrix<std::complex<double>, 1, -1> tp_c_rowvector =
          Eigen::Matrix<std::complex<double>, 1, -1>::Constant(N,
            std::numeric_limits<double>::quiet_NaN());
-      std::complex<double> gq_c =
+      std::complex<double> tp_c =
          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
            std::numeric_limits<double>::quiet_NaN());
       std::vector<std::vector<std::complex<double>>> carray =
@@ -685,326 +685,326 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
         return ;
       } 
       current_statement__ = 14;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(cmat, cmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(cmat, cmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 15;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 16;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat),
-          cmat), "assigning variable gq_c_matrix");
+          cmat), "assigning variable tp_c_matrix");
       current_statement__ = 17;
-      stan::model::assign(gq_c_matrix, stan::math::elt_multiply(cmat, cmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::elt_multiply(cmat, cmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 18;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::elt_multiply(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 19;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::elt_multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat),
-          cmat), "assigning variable gq_c_matrix");
+          cmat), "assigning variable tp_c_matrix");
       current_statement__ = 20;
-      stan::model::assign(gq_c_matrix, stan::math::elt_divide(cmat, cmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::elt_divide(cmat, cmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 21;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::elt_divide(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 22;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::elt_divide(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat),
-          cmat), "assigning variable gq_c_matrix");
+          cmat), "assigning variable tp_c_matrix");
       current_statement__ = 23;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(cmat, z),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(cmat, z),
+        "assigning variable tp_c_matrix");
       current_statement__ = 24;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(z, cmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(z, cmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 25;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(r, cmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(r, cmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 26;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(cmat, r),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(cmat, r),
+        "assigning variable tp_c_matrix");
       current_statement__ = 27;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat), z),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 28;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(z,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 29;
-      stan::model::assign(gq_c_matrix, stan::math::add(cmat, cmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::add(cmat, cmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 30;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::add(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 31;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::add(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat),
-          cmat), "assigning variable gq_c_matrix");
+          cmat), "assigning variable tp_c_matrix");
       current_statement__ = 32;
-      stan::model::assign(gq_c_matrix, stan::math::subtract(cmat, cmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::subtract(cmat, cmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 33;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::subtract(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 34;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::subtract(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat),
-          cmat), "assigning variable gq_c_matrix");
+          cmat), "assigning variable tp_c_matrix");
       current_statement__ = 35;
-      stan::model::assign(gq_c_matrix, stan::math::minus(cmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::minus(cmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 36;
-      stan::model::assign(gq_c_matrix, stan::math::minus(mat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::minus(mat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 37;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(cvec, crowvec),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(cvec, crowvec),
+        "assigning variable tp_c_matrix");
       current_statement__ = 38;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec),
-          crowvec), "assigning variable gq_c_matrix");
+          crowvec), "assigning variable tp_c_matrix");
       current_statement__ = 39;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 10;
-      stan::model::assign(gq_c_vector, stan::math::transpose(crowvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::transpose(crowvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 40;
-      stan::model::assign(gq_c_vector, stan::math::multiply(cmat, cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(cmat, cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 41;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat),
-          cvec), "assigning variable gq_c_vector");
+          cvec), "assigning variable tp_c_vector");
       current_statement__ = 42;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::multiply(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 43;
-      stan::model::assign(gq_c_vector, stan::math::multiply(z, cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(z, cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 44;
-      stan::model::assign(gq_c_vector, stan::math::multiply(cvec, z),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(cvec, z),
+        "assigning variable tp_c_vector");
       current_statement__ = 45;
-      stan::model::assign(gq_c_vector, stan::math::multiply(r, cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(r, cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 46;
-      stan::model::assign(gq_c_vector, stan::math::multiply(cvec, r),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(cvec, r),
+        "assigning variable tp_c_vector");
       current_statement__ = 47;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::multiply(z,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 48;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec), z),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 49;
-      stan::model::assign(gq_c_vector, stan::math::elt_multiply(cvec, cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::elt_multiply(cvec, cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 50;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::elt_multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec),
-          cvec), "assigning variable gq_c_vector");
+          cvec), "assigning variable tp_c_vector");
       current_statement__ = 51;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::elt_multiply(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 52;
-      stan::model::assign(gq_c_vector, stan::math::elt_divide(cvec, cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::elt_divide(cvec, cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 53;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::elt_divide(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec),
-          cvec), "assigning variable gq_c_vector");
+          cvec), "assigning variable tp_c_vector");
       current_statement__ = 54;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::elt_divide(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 55;
-      stan::model::assign(gq_c_vector, stan::math::add(cvec, cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::add(cvec, cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 56;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::add(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec),
-          cvec), "assigning variable gq_c_vector");
+          cvec), "assigning variable tp_c_vector");
       current_statement__ = 57;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::add(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 58;
-      stan::model::assign(gq_c_vector, stan::math::subtract(cvec, cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::subtract(cvec, cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 59;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::subtract(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec),
-          cvec), "assigning variable gq_c_vector");
+          cvec), "assigning variable tp_c_vector");
       current_statement__ = 60;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::subtract(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 61;
-      stan::model::assign(gq_c_vector, stan::math::minus(cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::minus(cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 62;
-      stan::model::assign(gq_c_vector, stan::math::minus(vec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::minus(vec),
+        "assigning variable tp_c_vector");
       current_statement__ = 11;
-      stan::model::assign(gq_c_rowvector, stan::math::transpose(cvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::transpose(cvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 63;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(crowvec, cmat),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 64;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec),
-          cmat), "assigning variable gq_c_rowvector");
+          cmat), "assigning variable tp_c_rowvector");
       current_statement__ = 65;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 66;
-      stan::model::assign(gq_c_rowvector, stan::math::multiply(z, crowvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::multiply(z, crowvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 67;
-      stan::model::assign(gq_c_rowvector, stan::math::multiply(crowvec, z),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::multiply(crowvec, z),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 68;
-      stan::model::assign(gq_c_rowvector, stan::math::multiply(r, crowvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::multiply(r, crowvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 69;
-      stan::model::assign(gq_c_rowvector, stan::math::multiply(crowvec, r),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::multiply(crowvec, r),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 70;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(z,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 71;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec),
-          z), "assigning variable gq_c_rowvector");
+          z), "assigning variable tp_c_rowvector");
       current_statement__ = 72;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_multiply(crowvec, crowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 73;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_multiply(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 74;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_multiply(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec),
-          crowvec), "assigning variable gq_c_rowvector");
+          crowvec), "assigning variable tp_c_rowvector");
       current_statement__ = 75;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_divide(crowvec, crowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 76;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_divide(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 77;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_divide(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec),
-          crowvec), "assigning variable gq_c_rowvector");
+          crowvec), "assigning variable tp_c_rowvector");
       current_statement__ = 78;
-      stan::model::assign(gq_c_rowvector, stan::math::add(crowvec, crowvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::add(crowvec, crowvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 79;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::add(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 80;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::add(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec),
-          crowvec), "assigning variable gq_c_rowvector");
+          crowvec), "assigning variable tp_c_rowvector");
       current_statement__ = 81;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::subtract(crowvec, crowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 82;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::subtract(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 83;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::subtract(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec),
-          crowvec), "assigning variable gq_c_rowvector");
+          crowvec), "assigning variable tp_c_rowvector");
       current_statement__ = 84;
-      stan::model::assign(gq_c_rowvector, stan::math::minus(crowvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::minus(crowvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 85;
-      stan::model::assign(gq_c_rowvector, stan::math::minus(rowvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::minus(rowvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 86;
-      gq_c = stan::math::multiply(crowvec, cvec);
+      tp_c = stan::math::multiply(crowvec, cvec);
       current_statement__ = 87;
-      gq_c = stan::math::multiply(crowvec,
+      tp_c = stan::math::multiply(crowvec,
                stan::math::promote_scalar<std::complex<local_scalar_t__>>(vec));
       current_statement__ = 88;
-      gq_c = stan::math::multiply(
+      tp_c = stan::math::multiply(
                stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec),
                cvec);
       current_statement__ = 89;
-      gq_c = stan::math::sum(stan::math::to_array_1d(cvec));
+      tp_c = stan::math::sum(stan::math::to_array_1d(cvec));
       current_statement__ = 90;
       stan::model::assign(carray, stan::math::to_array_2d(cmat),
         "assigning variable carray");
       if (emit_transformed_parameters__) {
-        out__.write(gq_c_matrix);
-        out__.write(gq_c_vector);
-        out__.write(gq_c_rowvector);
-        out__.write(gq_c);
+        out__.write(tp_c_matrix);
+        out__.write(tp_c_vector);
+        out__.write(tp_c_rowvector);
+        out__.write(tp_c);
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             out__.write(carray[(sym2__ - 1)][(sym1__ - 1)]);
@@ -1100,8 +1100,8 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__ = std::vector<std::string>{"cmat", "cvec", "crowvec", "z", "mat",
-      "vec", "rowvec", "r", "gq_c_matrix", "gq_c_vector", "gq_c_rowvector",
-      "gq_c", "carray"};
+      "vec", "rowvec", "r", "tp_c_matrix", "tp_c_vector", "tp_c_rowvector",
+      "tp_c", "carray"};
     
     } // get_param_names() 
     
@@ -1186,26 +1186,26 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
         {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             {
-              param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
-              param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
+              param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
+              param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
             } 
           }
         } 
       }
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "gq_c_vector" + '.' + std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "gq_c_vector" + '.' + std::to_string(sym1__) + '.' + "imag");
+          param_names__.emplace_back(std::string() + "tp_c_vector" + '.' + std::to_string(sym1__) + '.' + "real");
+          param_names__.emplace_back(std::string() + "tp_c_vector" + '.' + std::to_string(sym1__) + '.' + "imag");
         } 
       }
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' + std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' + std::to_string(sym1__) + '.' + "imag");
+          param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' + std::to_string(sym1__) + '.' + "real");
+          param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' + std::to_string(sym1__) + '.' + "imag");
         } 
       }
-      param_names__.emplace_back(std::string() + "gq_c" + '.' + "real");
-      param_names__.emplace_back(std::string() + "gq_c" + '.' + "imag");
+      param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
+      param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
@@ -1279,26 +1279,26 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
         {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             {
-              param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
-              param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
+              param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
+              param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
             } 
           }
         } 
       }
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "gq_c_vector" + '.' + std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "gq_c_vector" + '.' + std::to_string(sym1__) + '.' + "imag");
+          param_names__.emplace_back(std::string() + "tp_c_vector" + '.' + std::to_string(sym1__) + '.' + "real");
+          param_names__.emplace_back(std::string() + "tp_c_vector" + '.' + std::to_string(sym1__) + '.' + "imag");
         } 
       }
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' + std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' + std::to_string(sym1__) + '.' + "imag");
+          param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' + std::to_string(sym1__) + '.' + "real");
+          param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' + std::to_string(sym1__) + '.' + "imag");
         } 
       }
-      param_names__.emplace_back(std::string() + "gq_c" + '.' + "real");
-      param_names__.emplace_back(std::string() + "gq_c" + '.' + "imag");
+      param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
+      param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
@@ -1319,13 +1319,13 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     
   inline std::string get_constrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"cmat\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"crowvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"rowvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gq_c_matrix\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"gq_c_vector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"gq_c_rowvector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"gq_c\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"carray\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"cmat\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"crowvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"rowvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tp_c_matrix\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c_vector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c_rowvector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"carray\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"}]");
     
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"cmat\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"crowvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"rowvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gq_c_matrix\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"gq_c_vector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"gq_c_rowvector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"gq_c\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"carray\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"cmat\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"crowvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"rowvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tp_c_matrix\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c_vector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c_rowvector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"carray\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"}]");
     
     } // get_unconstrained_sizedtypes() 
     
@@ -2892,13 +2892,13 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       current_statement__ = 110;
       stan::math::validate_non_negative_index("vrowvec", "N", N);
       current_statement__ = 111;
-      stan::math::validate_non_negative_index("gq_c_matrix", "N", N);
+      stan::math::validate_non_negative_index("tp_c_matrix", "N", N);
       current_statement__ = 112;
-      stan::math::validate_non_negative_index("gq_c_matrix", "N", N);
+      stan::math::validate_non_negative_index("tp_c_matrix", "N", N);
       current_statement__ = 113;
-      stan::math::validate_non_negative_index("gq_c_vector", "N", N);
+      stan::math::validate_non_negative_index("tp_c_vector", "N", N);
       current_statement__ = 114;
-      stan::math::validate_non_negative_index("gq_c_rowvector", "N", N);
+      stan::math::validate_non_negative_index("tp_c_rowvector", "N", N);
       current_statement__ = 115;
       stan::math::validate_non_negative_index("carray", "N", N);
       current_statement__ = 116;
@@ -2967,313 +2967,313 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       local_scalar_t__ v = DUMMY_VAR__;
       current_statement__ = 8;
       v = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<std::complex<local_scalar_t__>, -1, -1> gq_c_matrix =
+      Eigen::Matrix<std::complex<local_scalar_t__>, -1, -1> tp_c_matrix =
          Eigen::Matrix<std::complex<local_scalar_t__>, -1, -1>::Constant(N,
            N, DUMMY_VAR__);
       current_statement__ = 14;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(cmat, cvmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(cmat, cvmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 15;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 16;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<double>>(mat), cvmat),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 17;
-      stan::model::assign(gq_c_matrix, stan::math::elt_multiply(cmat, cvmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::elt_multiply(cmat, cvmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 18;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::elt_multiply(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 19;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::elt_multiply(
           stan::math::promote_scalar<std::complex<double>>(mat), cvmat),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 20;
-      stan::model::assign(gq_c_matrix, stan::math::elt_divide(cmat, cvmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::elt_divide(cmat, cvmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 21;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::elt_divide(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 22;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::elt_divide(
           stan::math::promote_scalar<std::complex<double>>(mat), cvmat),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 23;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(cmat, zv),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(cmat, zv),
+        "assigning variable tp_c_matrix");
       current_statement__ = 24;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(z, cvmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(z, cvmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 25;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(r, cvmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(r, cvmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 26;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(cmat, v),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(cmat, v),
+        "assigning variable tp_c_matrix");
       current_statement__ = 27;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<double>>(mat), zv),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 28;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(z,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 29;
-      stan::model::assign(gq_c_matrix, stan::math::add(cmat, cvmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::add(cmat, cvmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 30;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::add(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 31;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::add(
           stan::math::promote_scalar<std::complex<double>>(mat), cvmat),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 32;
-      stan::model::assign(gq_c_matrix, stan::math::subtract(cmat, cvmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::subtract(cmat, cvmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 33;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::subtract(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 34;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::subtract(
           stan::math::promote_scalar<std::complex<double>>(mat), cvmat),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 35;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(cvec, cvrowvec),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(cvec, cvrowvec),
+        "assigning variable tp_c_matrix");
       current_statement__ = 36;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<double>>(vec), cvrowvec),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 37;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec)),
-        "assigning variable gq_c_matrix");
-      Eigen::Matrix<std::complex<local_scalar_t__>, -1, 1> gq_c_vector =
+        "assigning variable tp_c_matrix");
+      Eigen::Matrix<std::complex<local_scalar_t__>, -1, 1> tp_c_vector =
          Eigen::Matrix<std::complex<local_scalar_t__>, -1, 1>::Constant(N,
            DUMMY_VAR__);
       current_statement__ = 10;
-      stan::model::assign(gq_c_vector, stan::math::transpose(cvrowvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::transpose(cvrowvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 38;
-      stan::model::assign(gq_c_vector, stan::math::multiply(cmat, cvvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(cmat, cvvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 39;
-      stan::model::assign(gq_c_vector, stan::math::multiply(cvmat, cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(cvmat, cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 40;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<double>>(mat), cvvec),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 41;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::multiply(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vvec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 42;
-      stan::model::assign(gq_c_vector, stan::math::multiply(z, cvvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(z, cvvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 43;
-      stan::model::assign(gq_c_vector, stan::math::multiply(cvec, zv),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(cvec, zv),
+        "assigning variable tp_c_vector");
       current_statement__ = 44;
-      stan::model::assign(gq_c_vector, stan::math::multiply(r, cvvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(r, cvvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 45;
-      stan::model::assign(gq_c_vector, stan::math::multiply(cvec, v),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(cvec, v),
+        "assigning variable tp_c_vector");
       current_statement__ = 46;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::multiply(z,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vvec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 47;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<double>>(vec), zv),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 48;
-      stan::model::assign(gq_c_vector, stan::math::elt_multiply(cvec, cvvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::elt_multiply(cvec, cvvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 49;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::elt_multiply(
           stan::math::promote_scalar<std::complex<double>>(vec), cvvec),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 50;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::elt_multiply(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vvec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 51;
-      stan::model::assign(gq_c_vector, stan::math::elt_divide(cvec, cvvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::elt_divide(cvec, cvvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 52;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::elt_divide(
           stan::math::promote_scalar<std::complex<double>>(vec), cvvec),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 53;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::elt_divide(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vvec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 54;
-      stan::model::assign(gq_c_vector, stan::math::add(cvec, cvvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::add(cvec, cvvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 55;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::add(
           stan::math::promote_scalar<std::complex<double>>(vec), cvvec),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 56;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::add(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vvec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 57;
-      stan::model::assign(gq_c_vector, stan::math::subtract(cvec, cvvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::subtract(cvec, cvvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 58;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::subtract(
           stan::math::promote_scalar<std::complex<double>>(vec), cvvec),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 59;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::subtract(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vvec)),
-        "assigning variable gq_c_vector");
-      Eigen::Matrix<std::complex<local_scalar_t__>, 1, -1> gq_c_rowvector =
+        "assigning variable tp_c_vector");
+      Eigen::Matrix<std::complex<local_scalar_t__>, 1, -1> tp_c_rowvector =
          Eigen::Matrix<std::complex<local_scalar_t__>, 1, -1>::Constant(N,
            DUMMY_VAR__);
       current_statement__ = 11;
-      stan::model::assign(gq_c_rowvector, stan::math::transpose(cvvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::transpose(cvvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 60;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(crowvec, cvmat),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 61;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<double>>(rowvec), cvmat),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 62;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 63;
-      stan::model::assign(gq_c_rowvector, stan::math::multiply(z, cvrowvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::multiply(z, cvrowvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 64;
-      stan::model::assign(gq_c_rowvector, stan::math::multiply(crowvec, zv),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::multiply(crowvec, zv),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 65;
-      stan::model::assign(gq_c_rowvector, stan::math::multiply(r, cvrowvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::multiply(r, cvrowvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 66;
-      stan::model::assign(gq_c_rowvector, stan::math::multiply(crowvec, v),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::multiply(crowvec, v),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 67;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(z,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 68;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<double>>(rowvec), zv),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 69;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_multiply(crowvec, cvrowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 70;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_multiply(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 71;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_multiply(
           stan::math::promote_scalar<std::complex<double>>(rowvec), cvrowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 72;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_divide(crowvec, cvrowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 73;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_divide(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 74;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_divide(
           stan::math::promote_scalar<std::complex<double>>(rowvec), cvrowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 75;
-      stan::model::assign(gq_c_rowvector, stan::math::add(crowvec, cvrowvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::add(crowvec, cvrowvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 76;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::add(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 77;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::add(
           stan::math::promote_scalar<std::complex<double>>(rowvec), cvrowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 78;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::subtract(crowvec, cvrowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 79;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::subtract(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 80;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::subtract(
           stan::math::promote_scalar<std::complex<double>>(rowvec), cvrowvec),
-        "assigning variable gq_c_rowvector");
-      std::complex<local_scalar_t__> gq_c =
+        "assigning variable tp_c_rowvector");
+      std::complex<local_scalar_t__> tp_c =
          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
       current_statement__ = 81;
-      gq_c = stan::math::multiply(crowvec, cvvec);
+      tp_c = stan::math::multiply(crowvec, cvvec);
       current_statement__ = 82;
-      gq_c = stan::math::multiply(cvrowvec, cvec);
+      tp_c = stan::math::multiply(cvrowvec, cvec);
       current_statement__ = 83;
-      gq_c = stan::math::multiply(crowvec,
+      tp_c = stan::math::multiply(crowvec,
                stan::math::promote_scalar<std::complex<local_scalar_t__>>(vvec));
       current_statement__ = 84;
-      gq_c = stan::math::multiply(
+      tp_c = stan::math::multiply(
                stan::math::promote_scalar<std::complex<double>>(rowvec),
                cvvec);
       std::vector<std::vector<std::complex<local_scalar_t__>>> carray =
@@ -3357,16 +3357,16 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       double v = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 8;
       v = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<std::complex<double>, -1, -1> gq_c_matrix =
+      Eigen::Matrix<std::complex<double>, -1, -1> tp_c_matrix =
          Eigen::Matrix<std::complex<double>, -1, -1>::Constant(N, N,
            std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<std::complex<double>, -1, 1> gq_c_vector =
+      Eigen::Matrix<std::complex<double>, -1, 1> tp_c_vector =
          Eigen::Matrix<std::complex<double>, -1, 1>::Constant(N,
            std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<std::complex<double>, 1, -1> gq_c_rowvector =
+      Eigen::Matrix<std::complex<double>, 1, -1> tp_c_rowvector =
          Eigen::Matrix<std::complex<double>, 1, -1>::Constant(N,
            std::numeric_limits<double>::quiet_NaN());
-      std::complex<double> gq_c =
+      std::complex<double> tp_c =
          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
            std::numeric_limits<double>::quiet_NaN());
       std::vector<std::vector<std::complex<double>>> carray =
@@ -3388,311 +3388,311 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
         return ;
       } 
       current_statement__ = 14;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(cmat, cvmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(cmat, cvmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 15;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 16;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<double>>(mat), cvmat),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 17;
-      stan::model::assign(gq_c_matrix, stan::math::elt_multiply(cmat, cvmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::elt_multiply(cmat, cvmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 18;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::elt_multiply(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 19;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::elt_multiply(
           stan::math::promote_scalar<std::complex<double>>(mat), cvmat),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 20;
-      stan::model::assign(gq_c_matrix, stan::math::elt_divide(cmat, cvmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::elt_divide(cmat, cvmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 21;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::elt_divide(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 22;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::elt_divide(
           stan::math::promote_scalar<std::complex<double>>(mat), cvmat),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 23;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(cmat, zv),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(cmat, zv),
+        "assigning variable tp_c_matrix");
       current_statement__ = 24;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(z, cvmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(z, cvmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 25;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(r, cvmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(r, cvmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 26;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(cmat, v),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(cmat, v),
+        "assigning variable tp_c_matrix");
       current_statement__ = 27;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<double>>(mat), zv),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 28;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(z,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 29;
-      stan::model::assign(gq_c_matrix, stan::math::add(cmat, cvmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::add(cmat, cvmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 30;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::add(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 31;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::add(
           stan::math::promote_scalar<std::complex<double>>(mat), cvmat),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 32;
-      stan::model::assign(gq_c_matrix, stan::math::subtract(cmat, cvmat),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::subtract(cmat, cvmat),
+        "assigning variable tp_c_matrix");
       current_statement__ = 33;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::subtract(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 34;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::subtract(
           stan::math::promote_scalar<std::complex<double>>(mat), cvmat),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 35;
-      stan::model::assign(gq_c_matrix, stan::math::multiply(cvec, cvrowvec),
-        "assigning variable gq_c_matrix");
+      stan::model::assign(tp_c_matrix, stan::math::multiply(cvec, cvrowvec),
+        "assigning variable tp_c_matrix");
       current_statement__ = 36;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<double>>(vec), cvrowvec),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 37;
-      stan::model::assign(gq_c_matrix,
+      stan::model::assign(tp_c_matrix,
         stan::math::multiply(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec)),
-        "assigning variable gq_c_matrix");
+        "assigning variable tp_c_matrix");
       current_statement__ = 10;
-      stan::model::assign(gq_c_vector, stan::math::transpose(cvrowvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::transpose(cvrowvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 38;
-      stan::model::assign(gq_c_vector, stan::math::multiply(cmat, cvvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(cmat, cvvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 39;
-      stan::model::assign(gq_c_vector, stan::math::multiply(cvmat, cvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(cvmat, cvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 40;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<double>>(mat), cvvec),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 41;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::multiply(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vvec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 42;
-      stan::model::assign(gq_c_vector, stan::math::multiply(z, cvvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(z, cvvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 43;
-      stan::model::assign(gq_c_vector, stan::math::multiply(cvec, zv),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(cvec, zv),
+        "assigning variable tp_c_vector");
       current_statement__ = 44;
-      stan::model::assign(gq_c_vector, stan::math::multiply(r, cvvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(r, cvvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 45;
-      stan::model::assign(gq_c_vector, stan::math::multiply(cvec, v),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::multiply(cvec, v),
+        "assigning variable tp_c_vector");
       current_statement__ = 46;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::multiply(z,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vvec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 47;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<double>>(vec), zv),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 48;
-      stan::model::assign(gq_c_vector, stan::math::elt_multiply(cvec, cvvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::elt_multiply(cvec, cvvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 49;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::elt_multiply(
           stan::math::promote_scalar<std::complex<double>>(vec), cvvec),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 50;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::elt_multiply(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vvec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 51;
-      stan::model::assign(gq_c_vector, stan::math::elt_divide(cvec, cvvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::elt_divide(cvec, cvvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 52;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::elt_divide(
           stan::math::promote_scalar<std::complex<double>>(vec), cvvec),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 53;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::elt_divide(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vvec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 54;
-      stan::model::assign(gq_c_vector, stan::math::add(cvec, cvvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::add(cvec, cvvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 55;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::add(
           stan::math::promote_scalar<std::complex<double>>(vec), cvvec),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 56;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::add(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vvec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 57;
-      stan::model::assign(gq_c_vector, stan::math::subtract(cvec, cvvec),
-        "assigning variable gq_c_vector");
+      stan::model::assign(tp_c_vector, stan::math::subtract(cvec, cvvec),
+        "assigning variable tp_c_vector");
       current_statement__ = 58;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::subtract(
           stan::math::promote_scalar<std::complex<double>>(vec), cvvec),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 59;
-      stan::model::assign(gq_c_vector,
+      stan::model::assign(tp_c_vector,
         stan::math::subtract(cvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vvec)),
-        "assigning variable gq_c_vector");
+        "assigning variable tp_c_vector");
       current_statement__ = 11;
-      stan::model::assign(gq_c_rowvector, stan::math::transpose(cvvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::transpose(cvvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 60;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(crowvec, cvmat),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 61;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<double>>(rowvec), cvmat),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 62;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 63;
-      stan::model::assign(gq_c_rowvector, stan::math::multiply(z, cvrowvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::multiply(z, cvrowvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 64;
-      stan::model::assign(gq_c_rowvector, stan::math::multiply(crowvec, zv),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::multiply(crowvec, zv),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 65;
-      stan::model::assign(gq_c_rowvector, stan::math::multiply(r, cvrowvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::multiply(r, cvrowvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 66;
-      stan::model::assign(gq_c_rowvector, stan::math::multiply(crowvec, v),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::multiply(crowvec, v),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 67;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(z,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 68;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::multiply(
           stan::math::promote_scalar<std::complex<double>>(rowvec), zv),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 69;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_multiply(crowvec, cvrowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 70;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_multiply(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 71;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_multiply(
           stan::math::promote_scalar<std::complex<double>>(rowvec), cvrowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 72;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_divide(crowvec, cvrowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 73;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_divide(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 74;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::elt_divide(
           stan::math::promote_scalar<std::complex<double>>(rowvec), cvrowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 75;
-      stan::model::assign(gq_c_rowvector, stan::math::add(crowvec, cvrowvec),
-        "assigning variable gq_c_rowvector");
+      stan::model::assign(tp_c_rowvector, stan::math::add(crowvec, cvrowvec),
+        "assigning variable tp_c_rowvector");
       current_statement__ = 76;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::add(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 77;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::add(
           stan::math::promote_scalar<std::complex<double>>(rowvec), cvrowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 78;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::subtract(crowvec, cvrowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 79;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::subtract(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec)),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 80;
-      stan::model::assign(gq_c_rowvector,
+      stan::model::assign(tp_c_rowvector,
         stan::math::subtract(
           stan::math::promote_scalar<std::complex<double>>(rowvec), cvrowvec),
-        "assigning variable gq_c_rowvector");
+        "assigning variable tp_c_rowvector");
       current_statement__ = 81;
-      gq_c = stan::math::multiply(crowvec, cvvec);
+      tp_c = stan::math::multiply(crowvec, cvvec);
       current_statement__ = 82;
-      gq_c = stan::math::multiply(cvrowvec, cvec);
+      tp_c = stan::math::multiply(cvrowvec, cvec);
       current_statement__ = 83;
-      gq_c = stan::math::multiply(crowvec,
+      tp_c = stan::math::multiply(crowvec,
                stan::math::promote_scalar<std::complex<local_scalar_t__>>(vvec));
       current_statement__ = 84;
-      gq_c = stan::math::multiply(
+      tp_c = stan::math::multiply(
                stan::math::promote_scalar<std::complex<double>>(rowvec),
                cvvec);
       current_statement__ = 85;
       stan::model::assign(carray, stan::math::to_array_2d(cvmat),
         "assigning variable carray");
       if (emit_transformed_parameters__) {
-        out__.write(gq_c_matrix);
-        out__.write(gq_c_vector);
-        out__.write(gq_c_rowvector);
-        out__.write(gq_c);
+        out__.write(tp_c_matrix);
+        out__.write(tp_c_vector);
+        out__.write(tp_c_rowvector);
+        out__.write(tp_c);
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             out__.write(carray[(sym2__ - 1)][(sym1__ - 1)]);
@@ -3788,8 +3788,8 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__ = std::vector<std::string>{"cvmat", "cvvec", "cvrowvec", "zv",
-      "vmat", "vvec", "vrowvec", "v", "gq_c_matrix", "gq_c_vector",
-      "gq_c_rowvector", "gq_c", "carray"};
+      "vmat", "vvec", "vrowvec", "v", "tp_c_matrix", "tp_c_vector",
+      "tp_c_rowvector", "tp_c", "carray"};
     
     } // get_param_names() 
     
@@ -3874,26 +3874,26 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
         {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             {
-              param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
-              param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
+              param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
+              param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
             } 
           }
         } 
       }
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "gq_c_vector" + '.' + std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "gq_c_vector" + '.' + std::to_string(sym1__) + '.' + "imag");
+          param_names__.emplace_back(std::string() + "tp_c_vector" + '.' + std::to_string(sym1__) + '.' + "real");
+          param_names__.emplace_back(std::string() + "tp_c_vector" + '.' + std::to_string(sym1__) + '.' + "imag");
         } 
       }
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' + std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' + std::to_string(sym1__) + '.' + "imag");
+          param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' + std::to_string(sym1__) + '.' + "real");
+          param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' + std::to_string(sym1__) + '.' + "imag");
         } 
       }
-      param_names__.emplace_back(std::string() + "gq_c" + '.' + "real");
-      param_names__.emplace_back(std::string() + "gq_c" + '.' + "imag");
+      param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
+      param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
@@ -3967,26 +3967,26 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
         {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             {
-              param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
-              param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
+              param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
+              param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
             } 
           }
         } 
       }
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "gq_c_vector" + '.' + std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "gq_c_vector" + '.' + std::to_string(sym1__) + '.' + "imag");
+          param_names__.emplace_back(std::string() + "tp_c_vector" + '.' + std::to_string(sym1__) + '.' + "real");
+          param_names__.emplace_back(std::string() + "tp_c_vector" + '.' + std::to_string(sym1__) + '.' + "imag");
         } 
       }
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' + std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' + std::to_string(sym1__) + '.' + "imag");
+          param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' + std::to_string(sym1__) + '.' + "real");
+          param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' + std::to_string(sym1__) + '.' + "imag");
         } 
       }
-      param_names__.emplace_back(std::string() + "gq_c" + '.' + "real");
-      param_names__.emplace_back(std::string() + "gq_c" + '.' + "imag");
+      param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
+      param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
@@ -4007,13 +4007,13 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     
   inline std::string get_constrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"cvmat\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvrowvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"zv\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"vmat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vrowvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"v\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gq_c_matrix\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"gq_c_vector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"gq_c_rowvector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"gq_c\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"carray\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"cvmat\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvrowvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"zv\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"vmat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vrowvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"v\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tp_c_matrix\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c_vector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c_rowvector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"carray\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"}]");
     
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"cvmat\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvrowvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"zv\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"vmat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vrowvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"v\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gq_c_matrix\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"gq_c_vector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"gq_c_rowvector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"gq_c\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"carray\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"cvmat\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvrowvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"zv\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"vmat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vrowvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"v\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tp_c_matrix\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c_vector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c_rowvector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"carray\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"}]");
     
     } // get_unconstrained_sizedtypes() 
     

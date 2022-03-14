@@ -15,114 +15,114 @@ parameters {
 
 
 transformed parameters {
-  complex_matrix[N,N] gq_c_matrix;
+  complex_matrix[N,N] tp_c_matrix;
 
   // matrix-matrix multiply and elt
-  gq_c_matrix = cmat * cmat;
-  gq_c_matrix = cmat * mat;
-  gq_c_matrix = mat * cmat;
-  gq_c_matrix = cmat .* cmat;
-  gq_c_matrix = cmat .* mat;
-  gq_c_matrix = mat .* cmat;
-  gq_c_matrix = cmat ./ cmat;
-  gq_c_matrix = cmat ./ mat;
-  gq_c_matrix = mat ./ cmat;
+  tp_c_matrix = cmat * cmat;
+  tp_c_matrix = cmat * mat;
+  tp_c_matrix = mat * cmat;
+  tp_c_matrix = cmat .* cmat;
+  tp_c_matrix = cmat .* mat;
+  tp_c_matrix = mat .* cmat;
+  tp_c_matrix = cmat ./ cmat;
+  tp_c_matrix = cmat ./ mat;
+  tp_c_matrix = mat ./ cmat;
 
   // matrix-scalar multiply
-  gq_c_matrix = cmat * z;
-  gq_c_matrix = z * cmat;
-  gq_c_matrix = r * cmat;
-  gq_c_matrix = cmat * r;
-  gq_c_matrix = mat * z;
-  gq_c_matrix = z * mat;
+  tp_c_matrix = cmat * z;
+  tp_c_matrix = z * cmat;
+  tp_c_matrix = r * cmat;
+  tp_c_matrix = cmat * r;
+  tp_c_matrix = mat * z;
+  tp_c_matrix = z * mat;
 
   // matrix-matrix addition and subtraction
-  gq_c_matrix = cmat + cmat;
-  gq_c_matrix = cmat + mat;
-  gq_c_matrix = mat + cmat;
-  gq_c_matrix = cmat - cmat;
-  gq_c_matrix = cmat - mat;
-  gq_c_matrix = mat - cmat;
-  gq_c_matrix = -cmat;
-  gq_c_matrix = -mat;
+  tp_c_matrix = cmat + cmat;
+  tp_c_matrix = cmat + mat;
+  tp_c_matrix = mat + cmat;
+  tp_c_matrix = cmat - cmat;
+  tp_c_matrix = cmat - mat;
+  tp_c_matrix = mat - cmat;
+  tp_c_matrix = -cmat;
+  tp_c_matrix = -mat;
 
   // vector-rowvector multiply
-  gq_c_matrix = cvec * crowvec;
-  gq_c_matrix = vec * crowvec;
-  gq_c_matrix = cvec * rowvec;
+  tp_c_matrix = cvec * crowvec;
+  tp_c_matrix = vec * crowvec;
+  tp_c_matrix = cvec * rowvec;
 
-  complex_vector[N] gq_c_vector = crowvec';
+  complex_vector[N] tp_c_vector = crowvec';
   // matrix-vector products
-  gq_c_vector = cmat * cvec;
-  gq_c_vector = mat * cvec;
-  gq_c_vector = cmat * vec;
+  tp_c_vector = cmat * cvec;
+  tp_c_vector = mat * cvec;
+  tp_c_vector = cmat * vec;
 
   // vector-scalar multiplication
-  gq_c_vector = z * cvec;
-  gq_c_vector = cvec * z;
-  gq_c_vector = r * cvec;
-  gq_c_vector = cvec * r;
-  gq_c_vector = z * vec;
-  gq_c_vector = vec * z;
+  tp_c_vector = z * cvec;
+  tp_c_vector = cvec * z;
+  tp_c_vector = r * cvec;
+  tp_c_vector = cvec * r;
+  tp_c_vector = z * vec;
+  tp_c_vector = vec * z;
 
   // vector-vector elt mult and div
-  gq_c_vector = cvec .* cvec;
-  gq_c_vector = vec .* cvec;
-  gq_c_vector = cvec .* vec;
-  gq_c_vector = cvec ./ cvec;
-  gq_c_vector = vec ./ cvec;
-  gq_c_vector = cvec ./ vec;
+  tp_c_vector = cvec .* cvec;
+  tp_c_vector = vec .* cvec;
+  tp_c_vector = cvec .* vec;
+  tp_c_vector = cvec ./ cvec;
+  tp_c_vector = vec ./ cvec;
+  tp_c_vector = cvec ./ vec;
 
   // vector-vector addition and subtraction
-  gq_c_vector = cvec + cvec;
-  gq_c_vector = vec + cvec;
-  gq_c_vector = cvec + vec;
-  gq_c_vector = cvec - cvec;
-  gq_c_vector = vec - cvec;
-  gq_c_vector = cvec - vec;
-  gq_c_vector = -cvec;
-  gq_c_vector = -vec;
+  tp_c_vector = cvec + cvec;
+  tp_c_vector = vec + cvec;
+  tp_c_vector = cvec + vec;
+  tp_c_vector = cvec - cvec;
+  tp_c_vector = vec - cvec;
+  tp_c_vector = cvec - vec;
+  tp_c_vector = -cvec;
+  tp_c_vector = -vec;
 
-  complex_row_vector[N] gq_c_rowvector = cvec';
+  complex_row_vector[N] tp_c_rowvector = cvec';
   // rowvector-matrix multiplication
-  gq_c_rowvector = crowvec * cmat;
-  gq_c_rowvector = rowvec * cmat;
-  gq_c_rowvector = crowvec * mat;
+  tp_c_rowvector = crowvec * cmat;
+  tp_c_rowvector = rowvec * cmat;
+  tp_c_rowvector = crowvec * mat;
 
   // rowvector-scalar multiplication
-  gq_c_rowvector = z * crowvec;
-  gq_c_rowvector = crowvec * z;
-  gq_c_rowvector = r * crowvec;
-  gq_c_rowvector = crowvec * r;
-  gq_c_rowvector = z * rowvec;
-  gq_c_rowvector = rowvec * z;
+  tp_c_rowvector = z * crowvec;
+  tp_c_rowvector = crowvec * z;
+  tp_c_rowvector = r * crowvec;
+  tp_c_rowvector = crowvec * r;
+  tp_c_rowvector = z * rowvec;
+  tp_c_rowvector = rowvec * z;
 
   // rowvector-rowvector elt mult and div
-  gq_c_rowvector = crowvec .* crowvec;
-  gq_c_rowvector = crowvec .* rowvec;
-  gq_c_rowvector = rowvec .* crowvec;
-  gq_c_rowvector = crowvec ./ crowvec;
-  gq_c_rowvector = crowvec ./ rowvec;
-  gq_c_rowvector = rowvec ./ crowvec;
+  tp_c_rowvector = crowvec .* crowvec;
+  tp_c_rowvector = crowvec .* rowvec;
+  tp_c_rowvector = rowvec .* crowvec;
+  tp_c_rowvector = crowvec ./ crowvec;
+  tp_c_rowvector = crowvec ./ rowvec;
+  tp_c_rowvector = rowvec ./ crowvec;
 
   // rowvector-rowvector addition and subtraction
-  gq_c_rowvector = crowvec + crowvec;
-  gq_c_rowvector = crowvec + rowvec;
-  gq_c_rowvector = rowvec + crowvec;
-  gq_c_rowvector = crowvec - crowvec;
-  gq_c_rowvector = crowvec - rowvec;
-  gq_c_rowvector = rowvec - crowvec;
-  gq_c_rowvector = -crowvec;
-  gq_c_rowvector = -rowvec;
+  tp_c_rowvector = crowvec + crowvec;
+  tp_c_rowvector = crowvec + rowvec;
+  tp_c_rowvector = rowvec + crowvec;
+  tp_c_rowvector = crowvec - crowvec;
+  tp_c_rowvector = crowvec - rowvec;
+  tp_c_rowvector = rowvec - crowvec;
+  tp_c_rowvector = -crowvec;
+  tp_c_rowvector = -rowvec;
 
-  complex gq_c;
+  complex tp_c;
   // rowvector-vector multiply
-  gq_c = crowvec * cvec;
-  gq_c = crowvec * vec;
-  gq_c = rowvec * cvec;
+  tp_c = crowvec * cvec;
+  tp_c = crowvec * vec;
+  tp_c = rowvec * cvec;
 
   // reductions
-  gq_c = sum(to_array_1d(cvec));
+  tp_c = sum(to_array_1d(cvec));
 
   // TODO ldivide, pow, matrix_power
 
