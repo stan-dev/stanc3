@@ -1,4 +1,9 @@
 functions {
+
+  // test some forward decls
+  real foo(vector p);
+  real foo(int p);
+
   real foo(int p){
     return p + 1.0;
   }
@@ -37,6 +42,7 @@ functions {
 }
 transformed data{
    vector[5] a = [0.1, 0.1, 0.1, 0.1, 0.1]';
+   matrix[5,5] M = [a',a',a',a',a'];
 }
 parameters {
     real y;
@@ -48,6 +54,9 @@ model {
     a ~ normal(foo(z), 1);
     y ~ normal(foo(a), 1);
     y ~ normal(foo(a'), 1);
+    y ~ normal(foo(M), 1);
+    y ~ normal(foo(M[,1]), 1);
+    y ~ normal(foo(M[1,]), 1);
     y ~ normal(foo({a}), 1);
     y ~ normal(foo({1,2}), 1);
     y ~ normal(foo({1,2.3}), 1);
