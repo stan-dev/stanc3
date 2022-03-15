@@ -153,10 +153,6 @@ pipeline {
                     dune subst
                     dune build @install --profile static
                 """)
-                echo runShell("""
-                    eval \$(opam env)
-                    time dune runtest --profile static --verbose
-                """)
                 sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
                 archiveArtifacts 'bin/*'
             }
@@ -179,10 +175,6 @@ pipeline {
                     eval \$(opam env)
                     dune subst
                     dune build -x windows
-                """)
-                echo runShell("""
-                    eval \$(opam env)
-                    time dune runtest --verbose
                 """)
                 sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
                 stash name:'windows-exe', includes:'bin/*'
