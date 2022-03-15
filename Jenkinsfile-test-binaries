@@ -56,17 +56,14 @@ pipeline {
         stage("Build") {
             agent {
                 docker {
-                    image 'stanorg/stanc3:debian'
-                    args "-u root --entrypoint=\'\'"
-                    label 'linux-ec2'
+                    image 'stanorg/stanc3:debianfi'
+                    args "--entrypoint=\'\'"
                 }
             }
             steps {
                 script {
                     checkoutRepository("sh")
                 }
-                sh 'echo Hellow'
-                sh 'printenv'
                 runShell("""
                     eval \$(opam env)
                     dune build @install
@@ -81,7 +78,7 @@ pipeline {
             failFast true
             parallel {
                 stage("Build & test Mac OS X binary") {
-                    agent { label "osx && ocaml" }
+                    agent { label 'osx' }
                     steps {
                         script {
                             checkoutRepository("sh")
@@ -108,10 +105,9 @@ pipeline {
                 stage("Build stanc.js") {
                     agent {
                         docker {
-                            image 'stanorg/stanc3:debian'
+                            image 'stanorg/stanc3:debianfi'
                             //Forces image to ignore entrypoint
-                            args "-u root --entrypoint=\'\'"
-                            label 'linux-ec2'
+                            args "--entrypoint=\'\'"
                         }
                     }
                     steps {
@@ -134,10 +130,9 @@ pipeline {
                 stage("Build & test a static Linux binary") {
                     agent {
                         docker {
-                            image 'stanorg/stanc3:static'
+                            image 'stanorg/stanc3:staticfi'
                             //Forces image to ignore entrypoint
-                            args "-u 1000 --entrypoint=\'\'"
-                            label 'linux-ec2'
+                            args "--entrypoint=\'\'"
                         }
                     }
                     steps {
@@ -166,10 +161,9 @@ pipeline {
                 stage("Build & test static Windows binary") {
                     agent {
                         docker {
-                            image 'stanorg/stanc3:debian-windows'
-                            label 'linux-ec2'
+                            image 'stanorg/stanc3:debian-windowsfi'
                             //Forces image to ignore entrypoint
-                            args "-u 1000 --entrypoint=\'\'"
+                            args "--entrypoint=\'\'"
                         }
                     }
                     steps {
