@@ -172,6 +172,8 @@ let rec contains_eigen_type st =
       true
   | SArray (t, _) -> contains_eigen_type t
 
+let is_complex_type st = UnsizedType.is_complex_type (to_unsized st)
+
 (**
  * Return the mem_pattern of the SizedType
  *)
