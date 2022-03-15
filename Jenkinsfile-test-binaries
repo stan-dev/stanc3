@@ -53,6 +53,24 @@ pipeline {
     }
     options {parallelsAlwaysFailFast()}
     stages {
+
+        stage("Dune tests") {
+            agent {
+                docker {
+                    image 'stanorg/stanc3:debianfi'
+                    //Forces image to ignore entrypoint
+                    args "--entrypoint=\'\'"
+                }
+            }
+            steps {
+                runShell("""
+                    eval \$(opam env)
+                    time dune runtest --verbose
+                """)
+            }
+            post { always { runShell("rm -rf ./*") }}
+        }
+
         stage("Build") {
             agent {
                 docker {
@@ -87,8 +105,6 @@ pipeline {
                     bash -x scripts/install_build_deps.sh
                     dune subst
                     dune build @install
-                    eval \$(opam env)
-                    time dune runtest --verbose
                 """)
                 sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
                 archiveArtifacts 'bin/*'
