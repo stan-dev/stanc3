@@ -65,7 +65,7 @@ pipeline {
             steps {
                 runShell("""
                     eval \$(opam env)
-                    time dune runtest --verbose
+                    dune runtest --verbose
                 """)
             }
             post { always { runShell("rm -rf ./*") }}
