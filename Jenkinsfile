@@ -29,9 +29,6 @@ def runPerformanceTests(String testsPath){
 
     sh """
         git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-        cd performance-tests-cmdstan/example-models
-        git checkout debug
-        cd ../..
     """
 
     writeFile(file:"performance-tests-cmdstan/cmdstan/make/local", text:"CXX=${CXX}")
@@ -63,7 +60,6 @@ pipeline {
         string(defaultValue: 'develop', name: 'math_pr',
                description: "Math PR to test against. Will check out this PR in the downstream Math repo.")
     }
-    options {parallelsAlwaysFailFast()}
     environment {
         CXX = 'clang++-6.0'
         PARALLEL = 4
