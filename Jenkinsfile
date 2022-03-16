@@ -46,11 +46,11 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
     """
 
     if (stancFlags?.trim()) {
-        sh "cd cmdstan && echo 'STANCFLAGS= $stancFlags' >> make/local"
+        sh "cd performance-tests-cmdstan/cmdstan && echo 'STANCFLAGS= $stancFlags' >> make/local"
     }
 
     sh """
-        cd cmdstan
+        cd performance-tests-cmdstan/cmdstan
         echo 'O=0' >> make/local
         make -j${env.PARALLEL} build; cd ..
         ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}
