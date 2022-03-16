@@ -100,8 +100,8 @@ pipeline {
                     def compileTests = ['test/integration/good'].join(" ")
                     skipCompileTests = utils.verifyChanges(compileTests)
 
-                    def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
-                    skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1)
+//                     def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
+//                     skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1)
 
                     def sourceCodePaths = ['src'].join(" ")
                     skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths)
