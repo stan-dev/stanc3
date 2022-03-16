@@ -94,8 +94,8 @@ pipeline {
                     def stanMathSigs = ['test/integration/signatures/stan_math_signatures.t'].join(" ")
                     skipExpressionTests = utils.verifyChanges(stanMathSigs)
 
-                    def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
-                    skipRemainingStages = utils.verifyChanges(runTestPaths)
+//                     def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
+//                     skipRemainingStages = utils.verifyChanges(runTestPaths)
 
                     def compileTests = ['test/integration/good'].join(" ")
                     skipCompileTests = utils.verifyChanges(compileTests)
