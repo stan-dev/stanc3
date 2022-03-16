@@ -7,6 +7,7 @@ def skipExpressionTests = false
 def skipRemainingStages = false
 def skipCompileTests = false
 def skipRebuildingBinaries = false
+def skipCompileTestsAtO1 = false
 
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
@@ -24,7 +25,7 @@ def tagName() {
     }
 }
 
-def runPerformanceTests(String testsPath){
+def runPerformanceTests(String testsPath, String stancFlags = ""){
     unstash 'ubuntu-exe'
 
     sh """
@@ -44,8 +45,13 @@ def runPerformanceTests(String testsPath){
         cd cmdstan; make clean-all;
         echo 'O=0' >> make/local
         make -j${env.PARALLEL} build; cd ..
-        ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}
     """
+
+    if (stancFlags?.trim()) {
+        sh "echo 'STANCFLAGS= $stancFlags' >> make/local"
+    }
+
+    sh "./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}"
 }
 
 pipeline {
@@ -93,6 +99,9 @@ pipeline {
 
                     def compileTests = ['test/integration/good'].join(" ")
                     skipCompileTests = utils.verifyChanges(compileTests)
+
+                    def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
+                    skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1)
 
                     def sourceCodePaths = ['src'].join(" ")
                     skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths)
@@ -246,6 +255,64 @@ pipeline {
                     steps {
                         script {
                             runPerformanceTests("example-models")
+                        }
+
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)
+                        ])
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+
+                stage("Compile tests - good at O=1") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipCompileTestsAtO1
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/ci:gpu'
+                            label 'linux'
+                        }
+                    }
+                    steps {
+                        script {
+                            runPerformanceTests("../test/integration/good", "--O1")
+                        }
+
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)
+                        ])
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+
+                stage("Compile tests - example-models at O=1") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipCompileTestsAtO1
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/ci:gpu'
+                            label 'linux'
+                        }
+                    }
+                    steps {
+                        script {
+                            runPerformanceTests("example-models", "--O1")
                         }
 
                         xunit([GoogleTest(
