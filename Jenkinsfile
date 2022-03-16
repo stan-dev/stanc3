@@ -31,7 +31,7 @@ def runPerformanceTests(String testsPath){
         git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
     """
 
-    writeFile(file:"performance-tests-cmdstan/cmdstan/make/local", text:"CXX=${CXX}")
+    writeFile(file:"performance-tests-cmdstan/cmdstan/make/local", text:"CXX=${CXX}\nSTANCFLAGS += --O1")
 
     utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
     utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
