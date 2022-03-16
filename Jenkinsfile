@@ -29,6 +29,9 @@ def runPerformanceTests(String testsPath){
 
     sh """
         git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+        cd performance-tests-cmdstan/example-models
+        git checkout debug
+        cd ../..
     """
 
     writeFile(file:"performance-tests-cmdstan/cmdstan/make/local", text:"CXX=${CXX}")
