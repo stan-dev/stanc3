@@ -6,7 +6,6 @@ open Middle
 open Fmt
 open Expression_gen
 open Statement_gen
-open Cpp_util
 
 type template =
   | Typename of string

@@ -23,7 +23,6 @@ open Fmt
 open Expression_gen
 open Statement_gen
 open Function_gen
-open Cpp_util
 
 let standalone_functions = ref false
 
