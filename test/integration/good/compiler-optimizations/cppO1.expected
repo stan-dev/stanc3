@@ -1466,19 +1466,18 @@ template <typename T2__, typename T3__,
           t_next = (t_curr + 1);
           current_statement__ = 69;
           stan::model::assign(chi,
-            ((1 -
-               stan::model::rvalue(phi, "phi",
-                 stan::model::index_uni(i), stan::model::index_uni(t_curr)))
-              +
-              ((stan::model::rvalue(phi, "phi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_curr))
-                 *
-                 (1 -
-                   stan::model::rvalue(p, "p",
-                     stan::model::index_uni(i),
-                       stan::model::index_uni((t_next - 1))))) *
-                stan::model::rvalue(chi, "chi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_next)))),
+            stan::math::fma(
+              (stan::model::rvalue(phi, "phi",
+                 stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
+                (1 -
+                  stan::model::rvalue(p, "p",
+                    stan::model::index_uni(i),
+                      stan::model::index_uni((t_next - 1))))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next)),
+              (1 -
+                stan::model::rvalue(phi, "phi",
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
             "assigning variable chi", stan::model::index_uni(i),
                                         stan::model::index_uni(t_curr));
         }
@@ -2685,12 +2684,12 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         for (int j = 1; j <= n_state; ++j) {
           current_statement__ = 33;
           stan::model::assign(b_state_hat,
-            (stan::model::rvalue(b_region, "b_region",
-               stan::model::index_uni(stan::model::rvalue(region, "region",
-                                        stan::model::index_uni(j)))) +
-              (b_v_prev *
-                stan::model::rvalue(v_prev, "v_prev",
-                  stan::model::index_uni(j)))),
+            stan::math::fma(b_v_prev,
+              stan::model::rvalue(v_prev, "v_prev",
+                stan::model::index_uni(j)),
+              stan::model::rvalue(b_region, "b_region",
+                stan::model::index_uni(stan::model::rvalue(region, "region",
+                                         stan::model::index_uni(j))))),
             "assigning variable b_state_hat", stan::model::index_uni(j));
         }
         current_statement__ = 35;
@@ -2703,18 +2702,18 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
             stan::math::fmax(0,
               stan::math::fmin(1,
                 stan::math::inv_logit(
-                  (((((((b_0 +
-                          (b_female *
-                            stan::model::rvalue(female, "female",
-                              stan::model::index_uni(i)))) +
-                         (b_black *
-                           stan::model::rvalue(black, "black",
-                             stan::model::index_uni(i)))) +
-                        ((b_female_black *
-                           stan::model::rvalue(female, "female",
-                             stan::model::index_uni(i))) *
+                  ((((stan::math::fma(
+                        (b_female_black *
+                          stan::model::rvalue(female, "female",
+                            stan::model::index_uni(i))),
+                        stan::model::rvalue(black, "black",
+                          stan::model::index_uni(i)),
+                        stan::math::fma(b_black,
                           stan::model::rvalue(black, "black",
-                            stan::model::index_uni(i)))) +
+                            stan::model::index_uni(i)),
+                          stan::math::fma(b_female,
+                            stan::model::rvalue(female, "female",
+                              stan::model::index_uni(i)), b_0))) +
                        stan::model::rvalue(b_age, "b_age",
                          stan::model::index_uni(stan::model::rvalue(age,
                                                   "age",
@@ -5217,26 +5216,29 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 13;
         stan::model::assign(y_hat,
-          (((((((((stan::model::rvalue(beta, "beta",
-                     stan::model::index_uni(1)) +
-                    (stan::model::rvalue(beta, "beta",
-                       stan::model::index_uni(2)) *
-                      stan::model::rvalue(black, "black",
-                        stan::model::index_uni(i)))) +
+          (((((stan::math::fma(
+                 stan::model::rvalue(beta, "beta", stan::model::index_uni(4)),
+                 stan::model::rvalue(v_prev_full, "v_prev_full",
+                   stan::model::index_uni(i)),
+                 stan::math::fma(
                    (stan::model::rvalue(beta, "beta",
-                      stan::model::index_uni(3)) *
-                     stan::model::rvalue(female, "female",
-                       stan::model::index_uni(i)))) +
-                  ((stan::model::rvalue(beta, "beta",
                       stan::model::index_uni(5)) *
                      stan::model::rvalue(female, "female",
-                       stan::model::index_uni(i))) *
-                    stan::model::rvalue(black, "black",
-                      stan::model::index_uni(i)))) +
-                 (stan::model::rvalue(beta, "beta",
-                    stan::model::index_uni(4)) *
-                   stan::model::rvalue(v_prev_full, "v_prev_full",
-                     stan::model::index_uni(i)))) +
+                       stan::model::index_uni(i))),
+                   stan::model::rvalue(black, "black",
+                     stan::model::index_uni(i)),
+                   stan::math::fma(
+                     stan::model::rvalue(beta, "beta",
+                       stan::model::index_uni(3)),
+                     stan::model::rvalue(female, "female",
+                       stan::model::index_uni(i)),
+                     stan::math::fma(
+                       stan::model::rvalue(beta, "beta",
+                         stan::model::index_uni(2)),
+                       stan::model::rvalue(black, "black",
+                         stan::model::index_uni(i)),
+                       stan::model::rvalue(beta, "beta",
+                         stan::model::index_uni(1)))))) +
                 stan::model::rvalue(a, "a",
                   stan::model::index_uni(stan::model::rvalue(age, "age",
                                            stan::model::index_uni(i))))) +
@@ -5367,26 +5369,29 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 13;
         stan::model::assign(y_hat,
-          (((((((((stan::model::rvalue(beta, "beta",
-                     stan::model::index_uni(1)) +
-                    (stan::model::rvalue(beta, "beta",
-                       stan::model::index_uni(2)) *
-                      stan::model::rvalue(black, "black",
-                        stan::model::index_uni(i)))) +
+          (((((stan::math::fma(
+                 stan::model::rvalue(beta, "beta", stan::model::index_uni(4)),
+                 stan::model::rvalue(v_prev_full, "v_prev_full",
+                   stan::model::index_uni(i)),
+                 stan::math::fma(
                    (stan::model::rvalue(beta, "beta",
-                      stan::model::index_uni(3)) *
-                     stan::model::rvalue(female, "female",
-                       stan::model::index_uni(i)))) +
-                  ((stan::model::rvalue(beta, "beta",
                       stan::model::index_uni(5)) *
                      stan::model::rvalue(female, "female",
-                       stan::model::index_uni(i))) *
-                    stan::model::rvalue(black, "black",
-                      stan::model::index_uni(i)))) +
-                 (stan::model::rvalue(beta, "beta",
-                    stan::model::index_uni(4)) *
-                   stan::model::rvalue(v_prev_full, "v_prev_full",
-                     stan::model::index_uni(i)))) +
+                       stan::model::index_uni(i))),
+                   stan::model::rvalue(black, "black",
+                     stan::model::index_uni(i)),
+                   stan::math::fma(
+                     stan::model::rvalue(beta, "beta",
+                       stan::model::index_uni(3)),
+                     stan::model::rvalue(female, "female",
+                       stan::model::index_uni(i)),
+                     stan::math::fma(
+                       stan::model::rvalue(beta, "beta",
+                         stan::model::index_uni(2)),
+                       stan::model::rvalue(black, "black",
+                         stan::model::index_uni(i)),
+                       stan::model::rvalue(beta, "beta",
+                         stan::model::index_uni(1)))))) +
                 stan::model::rvalue(a, "a",
                   stan::model::index_uni(stan::model::rvalue(age, "age",
                                            stan::model::index_uni(i))))) +
@@ -6001,7 +6006,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
                       phi_std_raw_1dim__);
       local_scalar_t__ sigma_phi;
       current_statement__ = 3;
-      sigma_phi = stan::math::inv(stan::math::sqrt(tau_phi));
+      sigma_phi = stan::math::inv_sqrt(tau_phi);
       stan::conditional_var_value_t<local_scalar_t__, 
         Eigen::Matrix<local_scalar_t__, -1, 1>> phi =
          stan::conditional_var_value_t<local_scalar_t__, 
@@ -6087,7 +6092,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         return ;
       } 
       current_statement__ = 3;
-      sigma_phi = stan::math::inv(stan::math::sqrt(tau_phi));
+      sigma_phi = stan::math::inv_sqrt(tau_phi);
       current_statement__ = 5;
       stan::model::assign(phi, phi_std_raw,
         "assigning variable phi", stan::model::index_min_max(1, (N - 1)));
@@ -6137,7 +6142,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 21;
       tau_theta = stan::math::gamma_rng(3.2761, 1.81, base_rng__);
       current_statement__ = 22;
-      sigma_theta = stan::math::inv(stan::math::sqrt(tau_theta));
+      sigma_theta = stan::math::inv_sqrt(tau_theta);
       current_statement__ = 23;
       stan::model::assign(theta,
         stan::math::multiply(theta_std, sigma_theta),
@@ -6150,10 +6155,10 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         current_statement__ = 25;
         stan::model::assign(y,
           stan::math::poisson_log_rng(
-            ((((stan::model::rvalue(log_E, "log_E",
-                  stan::model::index_uni(i)) + beta0) +
-                (beta1 *
-                  stan::model::rvalue(x, "x", stan::model::index_uni(i)))) +
+            ((stan::math::fma(beta1,
+                stan::model::rvalue(x, "x", stan::model::index_uni(i)),
+                (stan::model::rvalue(log_E, "log_E",
+                   stan::model::index_uni(i)) + beta0)) +
                stan::model::rvalue(phi, "phi", stan::model::index_uni(i))) +
               stan::model::rvalue(theta, "theta", stan::model::index_uni(i))),
             base_rng__), "assigning variable y", stan::model::index_uni(i));
@@ -6656,19 +6661,18 @@ template <typename T2__, typename T3__,
           t_next = (t_curr + 1);
           current_statement__ = 74;
           stan::model::assign(chi,
-            ((1 -
-               stan::model::rvalue(phi, "phi",
-                 stan::model::index_uni(i), stan::model::index_uni(t_curr)))
-              +
-              ((stan::model::rvalue(phi, "phi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_curr))
-                 *
-                 (1 -
-                   stan::model::rvalue(p, "p",
-                     stan::model::index_uni(i),
-                       stan::model::index_uni((t_next - 1))))) *
-                stan::model::rvalue(chi, "chi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_next)))),
+            stan::math::fma(
+              (stan::model::rvalue(phi, "phi",
+                 stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
+                (1 -
+                  stan::model::rvalue(p, "p",
+                    stan::model::index_uni(i),
+                      stan::model::index_uni((t_next - 1))))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next)),
+              (1 -
+                stan::model::rvalue(phi, "phi",
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
             "assigning variable chi", stan::model::index_uni(i),
                                         stan::model::index_uni(t_curr));
         }
@@ -7737,19 +7741,17 @@ template <typename T0__, typename T1__,
           t_next = (t_curr + 1);
           current_statement__ = 115;
           stan::model::assign(chi,
-            ((1 -
-               stan::model::rvalue(phi, "phi",
-                 stan::model::index_uni(i), stan::model::index_uni(t_curr)))
-              +
-              ((stan::model::rvalue(phi, "phi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_curr))
-                 *
-                 (1 -
-                   stan::model::rvalue(p, "p",
-                     stan::model::index_uni(i),
-                       stan::model::index_uni(t_next)))) *
-                stan::model::rvalue(chi, "chi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_next)))),
+            stan::math::fma(
+              (stan::model::rvalue(phi, "phi",
+                 stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
+                (1 -
+                  stan::model::rvalue(p, "p",
+                    stan::model::index_uni(i), stan::model::index_uni(t_next)))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next)),
+              (1 -
+                stan::model::rvalue(phi, "phi",
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
             "assigning variable chi", stan::model::index_uni(i),
                                         stan::model::index_uni(t_curr));
         }
@@ -8541,12 +8543,13 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             current_statement__ = 36;
             stan::model::assign(z,
               stan::math::bernoulli_rng(
-                ((stan::model::rvalue(z, "z",
+                stan::math::fma(
+                  stan::model::rvalue(z, "z",
                     stan::model::index_uni(i),
-                      stan::model::index_uni((t - 1))) *
-                   stan::model::rvalue(phi, "phi",
-                     stan::model::index_uni(i),
-                       stan::model::index_uni((t - 1)))) +
+                      stan::model::index_uni((t - 1))),
+                  stan::model::rvalue(phi, "phi",
+                    stan::model::index_uni(i),
+                      stan::model::index_uni((t - 1))),
                   (q *
                     stan::model::rvalue(nu, "nu", stan::model::index_uni(t)))),
                 base_rng__),
@@ -8586,8 +8589,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
           int f;
           current_statement__ = 50;
           f = first_capture(
-                stan::model::rvalue(z, "z",
-                  stan::model::index_uni(i), stan::model::index_omni()), pstream__);
+                stan::model::rvalue(z, "z", stan::model::index_uni(i)), pstream__);
           current_statement__ = 52;
           if (stan::math::logical_gt(f, 0)) {
             current_statement__ = 51;
@@ -9944,7 +9946,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
                         Eigen::Matrix<local_scalar_t__, -1, 1>>>(N);
       local_scalar_t__ sigma_phi;
       current_statement__ = 7;
-      sigma_phi = stan::math::inv(stan::math::sqrt(tau_phi));
+      sigma_phi = stan::math::inv_sqrt(tau_phi);
       stan::conditional_var_value_t<local_scalar_t__, 
         Eigen::Matrix<local_scalar_t__, -1, 1>> phi =
          stan::conditional_var_value_t<local_scalar_t__, 
@@ -10037,7 +10039,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
         return ;
       } 
       current_statement__ = 7;
-      sigma_phi = stan::math::inv(stan::math::sqrt(tau_phi));
+      sigma_phi = stan::math::inv_sqrt(tau_phi);
       current_statement__ = 9;
       stan::model::assign(phi, phi_std_raw,
         "assigning variable phi", stan::model::index_min_max(1, N));
@@ -10516,19 +10518,18 @@ template <typename T2__, typename T3__,
           t_next = (t_curr + 1);
           current_statement__ = 69;
           stan::model::assign(chi,
-            ((1 -
-               stan::model::rvalue(phi, "phi",
-                 stan::model::index_uni(i), stan::model::index_uni(t_curr)))
-              +
-              ((stan::model::rvalue(phi, "phi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_curr))
-                 *
-                 (1 -
-                   stan::model::rvalue(p, "p",
-                     stan::model::index_uni(i),
-                       stan::model::index_uni((t_next - 1))))) *
-                stan::model::rvalue(chi, "chi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_next)))),
+            stan::math::fma(
+              (stan::model::rvalue(phi, "phi",
+                 stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
+                (1 -
+                  stan::model::rvalue(p, "p",
+                    stan::model::index_uni(i),
+                      stan::model::index_uni((t_next - 1))))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next)),
+              (1 -
+                stan::model::rvalue(phi, "phi",
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
             "assigning variable chi", stan::model::index_uni(i),
                                         stan::model::index_uni(t_curr));
         }
@@ -11593,19 +11594,17 @@ template <typename T0__, typename T1__,
           t_next = (t_curr + 1);
           current_statement__ = 106;
           stan::model::assign(chi,
-            ((1 -
-               stan::model::rvalue(phi, "phi",
-                 stan::model::index_uni(i), stan::model::index_uni(t_curr)))
-              +
-              ((stan::model::rvalue(phi, "phi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_curr))
-                 *
-                 (1 -
-                   stan::model::rvalue(p, "p",
-                     stan::model::index_uni(i),
-                       stan::model::index_uni(t_next)))) *
-                stan::model::rvalue(chi, "chi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_next)))),
+            stan::math::fma(
+              (stan::model::rvalue(phi, "phi",
+                 stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
+                (1 -
+                  stan::model::rvalue(p, "p",
+                    stan::model::index_uni(i), stan::model::index_uni(t_next)))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next)),
+              (1 -
+                stan::model::rvalue(phi, "phi",
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
             "assigning variable chi", stan::model::index_uni(i),
                                         stan::model::index_uni(t_curr));
         }
@@ -11891,10 +11890,9 @@ template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr>
           "assigning variable log_cprob", stan::model::index_uni(n));
         current_statement__ = 153;
         log_residual_prob = (log_residual_prob +
-                              stan::math::log(
-                                (1 -
-                                  stan::model::rvalue(gamma, "gamma",
-                                    stan::model::index_uni(n)))));
+                              stan::math::log1m(
+                                stan::model::rvalue(gamma, "gamma",
+                                  stan::model::index_uni(n))));
       }
       current_statement__ = 156;
       return stan::math::exp(log_cprob);
@@ -12367,12 +12365,13 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                     stan::model::index_uni(i),
                       stan::model::index_uni((t - 1)))));
           current_statement__ = 25;
-          mu2 = ((stan::model::rvalue(phi, "phi",
+          mu2 = stan::math::fma(
+                  stan::model::rvalue(phi, "phi",
                     stan::model::index_uni(i),
-                      stan::model::index_uni((t - 1))) *
-                   stan::model::rvalue(z, "z",
-                     stan::model::index_uni(i),
-                       stan::model::index_uni((t - 1)))) +
+                      stan::model::index_uni((t - 1))),
+                  stan::model::rvalue(z, "z",
+                    stan::model::index_uni(i),
+                      stan::model::index_uni((t - 1))),
                   (stan::model::rvalue(gamma, "gamma",
                      stan::model::index_uni(t)) * q));
           current_statement__ = 26;
@@ -12421,8 +12420,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           int f;
           current_statement__ = 43;
           f = first_capture(
-                stan::model::rvalue(z, "z",
-                  stan::model::index_uni(i), stan::model::index_omni()), pstream__);
+                stan::model::rvalue(z, "z", stan::model::index_uni(i)), pstream__);
           current_statement__ = 45;
           if (stan::math::logical_gt(f, 0)) {
             current_statement__ = 44;
@@ -12927,16 +12925,16 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
         current_statement__ = 4;
         x = stan::math::normal_rng(123, 1, base_rng__);
         current_statement__ = 5;
-        z = stan::math::normal_rng(((stan::math::sqrt(j) * 2) + 1), 1,
-              base_rng__);
+        z = stan::math::normal_rng(
+              stan::math::fma(stan::math::sqrt(j), 2, 1), 1, base_rng__);
       }
       current_statement__ = 7;
       i = std::numeric_limits<double>::quiet_NaN();
       
       
       current_statement__ = 7;
-      i = stan::math::normal_rng(((stan::math::sqrt(j) * 2) + 1), 1,
-            base_rng__);
+      i = stan::math::normal_rng(stan::math::fma(stan::math::sqrt(j), 2, 1),
+            1, base_rng__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -13287,11 +13285,10 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
         current_statement__ = 5;
         for (int j = 1; j <= 1; ++j) { current_statement__ = 3;
                                        y = (y + 1);}
-        current_statement__ = 7;
-        if (stan::math::logical_gt(1, 0)) {
+        {
           current_statement__ = 6;
           y = (y + 1);
-        } 
+        }
         current_statement__ = 8;
         lp_accum__.add(y);
       }
@@ -14087,19 +14084,18 @@ template <typename T2__, typename T3__,
           t_next = (t_curr + 1);
           current_statement__ = 64;
           stan::model::assign(chi,
-            ((1 -
-               stan::model::rvalue(phi, "phi",
-                 stan::model::index_uni(i), stan::model::index_uni(t_curr)))
-              +
-              ((stan::model::rvalue(phi, "phi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_curr))
-                 *
-                 (1 -
-                   stan::model::rvalue(p, "p",
-                     stan::model::index_uni(i),
-                       stan::model::index_uni((t_next - 1))))) *
-                stan::model::rvalue(chi, "chi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_next)))),
+            stan::math::fma(
+              (stan::model::rvalue(phi, "phi",
+                 stan::model::index_uni(i), stan::model::index_uni(t_curr)) *
+                (1 -
+                  stan::model::rvalue(p, "p",
+                    stan::model::index_uni(i),
+                      stan::model::index_uni((t_next - 1))))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next)),
+              (1 -
+                stan::model::rvalue(phi, "phi",
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
             "assigning variable chi", stan::model::index_uni(i),
                                         stan::model::index_uni(t_curr));
         }
@@ -15512,13 +15508,11 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       Eigen::Matrix<local_scalar_t__, -1, -1> logit_p =
          Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(R, T, DUMMY_VAR__);
       current_statement__ = 7;
-      stan::model::assign(logit_psi,
-        stan::math::add(alpha_occ, stan::math::multiply(beta_occ, X)),
+      stan::model::assign(logit_psi, stan::math::fma(beta_occ, X, alpha_occ),
         "assigning variable logit_psi");
       current_statement__ = 8;
       stan::model::assign(logit_p,
-        stan::math::rep_matrix(
-          stan::math::add(alpha_p, stan::math::multiply(beta_p, X)), T),
+        stan::math::rep_matrix(stan::math::fma(beta_p, X, alpha_p), T),
         "assigning variable logit_p");
       {
         current_statement__ = 33;
@@ -15612,13 +15606,11 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
         return ;
       } 
       current_statement__ = 7;
-      stan::model::assign(logit_psi,
-        stan::math::add(alpha_occ, stan::math::multiply(beta_occ, X)),
+      stan::model::assign(logit_psi, stan::math::fma(beta_occ, X, alpha_occ),
         "assigning variable logit_psi");
       current_statement__ = 8;
       stan::model::assign(logit_p,
-        stan::math::rep_matrix(
-          stan::math::add(alpha_p, stan::math::multiply(beta_p, X)), T),
+        stan::math::rep_matrix(stan::math::fma(beta_p, X, alpha_p), T),
         "assigning variable logit_p");
       if (emit_transformed_parameters__) {
         out__.write(logit_psi);
@@ -15655,11 +15647,10 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
                     stan::model::index_uni(i))))), "assigning variable q");
           double qT;
           current_statement__ = 18;
-          qT = stan::math::prod(
-                 stan::model::rvalue(q, "q", stan::model::index_omni()));
+          qT = stan::math::prod(q);
           current_statement__ = 19;
           stan::model::assign(psi_con,
-            ((psi * qT) / ((psi * qT) + (1 - psi))),
+            ((psi * qT) / stan::math::fma(psi, qT, (1 - psi))),
             "assigning variable psi_con", stan::model::index_uni(i));
           current_statement__ = 20;
           stan::model::assign(z,
@@ -16220,28 +16211,29 @@ class off_small_model final : public model_base_crtp<off_small_model> {
          Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
       current_statement__ = 12;
       stan::model::assign(a1,
-        stan::math::add((10 * mu_a1), stan::math::multiply(sigma_a1, eta1)),
+        stan::math::fma(10, mu_a1, stan::math::multiply(sigma_a1, eta1)),
         "assigning variable a1");
       current_statement__ = 13;
       stan::model::assign(a2,
-        stan::math::add((0.1 * mu_a2), stan::math::multiply(sigma_a2, eta2)),
+        stan::math::fma(0.1, mu_a2, stan::math::multiply(sigma_a2, eta2)),
         "assigning variable a2");
       current_statement__ = 15;
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 14;
         stan::model::assign(y_hat,
-          ((((beta *
-               stan::model::rvalue(time, "time", stan::model::index_uni(i)))
-              *
+          stan::math::fma(
+            stan::model::rvalue(a2, "a2",
+              stan::model::index_uni(stan::model::rvalue(person, "person",
+                                       stan::model::index_uni(i)))),
+            stan::model::rvalue(time, "time", stan::model::index_uni(i)),
+            stan::math::fma(
+              (beta *
+                stan::model::rvalue(time, "time", stan::model::index_uni(i))),
               stan::model::rvalue(treatment, "treatment",
-                stan::model::index_uni(i))) +
-             stan::model::rvalue(a1, "a1",
-               stan::model::index_uni(stan::model::rvalue(person, "person",
-                                        stan::model::index_uni(i))))) +
-            (stan::model::rvalue(a2, "a2",
-               stan::model::index_uni(stan::model::rvalue(person, "person",
-                                        stan::model::index_uni(i)))) *
-              stan::model::rvalue(time, "time", stan::model::index_uni(i)))),
+                stan::model::index_uni(i)),
+              stan::model::rvalue(a1, "a1",
+                stan::model::index_uni(stan::model::rvalue(person, "person",
+                                         stan::model::index_uni(i)))))),
           "assigning variable y_hat", stan::model::index_uni(i));
       }
       {
@@ -16341,28 +16333,29 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       } 
       current_statement__ = 12;
       stan::model::assign(a1,
-        stan::math::add((10 * mu_a1), stan::math::multiply(sigma_a1, eta1)),
+        stan::math::fma(10, mu_a1, stan::math::multiply(sigma_a1, eta1)),
         "assigning variable a1");
       current_statement__ = 13;
       stan::model::assign(a2,
-        stan::math::add((0.1 * mu_a2), stan::math::multiply(sigma_a2, eta2)),
+        stan::math::fma(0.1, mu_a2, stan::math::multiply(sigma_a2, eta2)),
         "assigning variable a2");
       current_statement__ = 15;
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 14;
         stan::model::assign(y_hat,
-          ((((beta *
-               stan::model::rvalue(time, "time", stan::model::index_uni(i)))
-              *
+          stan::math::fma(
+            stan::model::rvalue(a2, "a2",
+              stan::model::index_uni(stan::model::rvalue(person, "person",
+                                       stan::model::index_uni(i)))),
+            stan::model::rvalue(time, "time", stan::model::index_uni(i)),
+            stan::math::fma(
+              (beta *
+                stan::model::rvalue(time, "time", stan::model::index_uni(i))),
               stan::model::rvalue(treatment, "treatment",
-                stan::model::index_uni(i))) +
-             stan::model::rvalue(a1, "a1",
-               stan::model::index_uni(stan::model::rvalue(person, "person",
-                                        stan::model::index_uni(i))))) +
-            (stan::model::rvalue(a2, "a2",
-               stan::model::index_uni(stan::model::rvalue(person, "person",
-                                        stan::model::index_uni(i)))) *
-              stan::model::rvalue(time, "time", stan::model::index_uni(i)))),
+                stan::model::index_uni(i)),
+              stan::model::rvalue(a1, "a1",
+                stan::model::index_uni(stan::model::rvalue(person, "person",
+                                         stan::model::index_uni(i)))))),
           "assigning variable y_hat", stan::model::index_uni(i));
       }
       if (emit_transformed_parameters__) {
@@ -16680,7 +16673,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 112> locations_array__ = 
+static constexpr std::array<const char*, 109> locations_array__ = 
 {" (found before start of program)",
  " (in 'optimizations.stan', line 20, column 4 to column 15)",
  " (in 'optimizations.stan', line 21, column 4 to column 13)",
@@ -16767,7 +16760,6 @@ static constexpr std::array<const char*, 112> locations_array__ =
  " (in 'optimizations.stan', line 117, column 4 to line 127, column 5)",
  " (in 'optimizations.stan', line 128, column 4 to column 14)",
  " (in 'optimizations.stan', line 132, column 6 to column 21)",
- " (in 'optimizations.stan', line 130, column 6 to column 19)",
  " (in 'optimizations.stan', line 129, column 4 to line 132, column 21)",
  " (in 'optimizations.stan', line 134, column 4 to column 15)",
  " (in 'optimizations.stan', line 137, column 8 to column 23)",
@@ -16775,8 +16767,6 @@ static constexpr std::array<const char*, 112> locations_array__ =
  " (in 'optimizations.stan', line 135, column 21 to line 139, column 5)",
  " (in 'optimizations.stan', line 135, column 4 to line 139, column 5)",
  " (in 'optimizations.stan', line 140, column 4 to column 25)",
- " (in 'optimizations.stan', line 142, column 6 to column 27)",
- " (in 'optimizations.stan', line 141, column 4 to line 142, column 27)",
  " (in 'optimizations.stan', line 143, column 4 to column 26)",
  " (in 'optimizations.stan', line 144, column 4 to column 22)",
  " (in 'optimizations.stan', line 146, column 6 to column 28)",
@@ -16822,12 +16812,12 @@ template <bool propto__, typename T0__, typename T_lp__,
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 102;
+      current_statement__ = 99;
       if (stan::math::logical_gt(x, 342)) {
-        current_statement__ = 101;
+        current_statement__ = 98;
         return ;
       } 
-      current_statement__ = 103;
+      current_statement__ = 100;
       lp_accum__.add(y);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -16841,12 +16831,12 @@ int rfun(const int& y, std::ostream* pstream__) {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 106;
+      current_statement__ = 103;
       if (stan::math::logical_gt(y, 2)) {
-        current_statement__ = 105;
+        current_statement__ = 102;
         return (y + 24);
       } 
-      current_statement__ = 107;
+      current_statement__ = 104;
       return (y + 2);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -16859,9 +16849,9 @@ template <bool propto__, typename T_lp__, typename T_lp_accum__> int
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 109;
+      current_statement__ = 106;
       lp_accum__.add(2);
-      current_statement__ = 110;
+      current_statement__ = 107;
       return 24;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -16925,7 +16915,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 1 + (3 * 2) + 2 + (2 + ((2 * (2 - 1)) / 2));
+    num_params_r__ = 1 + 1 + (3 * 2) + 2 + 3;
     
   }
   
@@ -17053,13 +17043,13 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         current_statement__ = 42;
         lp_accum__.add(247);
         current_statement__ = 43;
-        x = (24 * 24);
+        x = 576;
         current_statement__ = 44;
         lp_accum__.add(576);
         current_statement__ = 46;
         if (stan::math::logical_gt(theta, 46)) {
           current_statement__ = 45;
-          x = (24 * 245);
+          x = 5880;
         } 
         current_statement__ = 47;
         lp_accum__.add(x);
@@ -17096,7 +17086,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           ;
         } else ;
         current_statement__ = 66;
-        while ((24 * 24)) {
+        while (576) {
           break;
         }
         current_statement__ = 67;
@@ -17133,10 +17123,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           }
         }
         local_scalar_t__ temp = DUMMY_VAR__;
-        current_statement__ = 87;
-        if (stan::math::logical_gt(2, 3)) {
-          ;
-        } else {
+        {
           current_statement__ = 85;
           if (pstream__) {
             stan::math::stan_print(pstream__, "hello");
@@ -17144,32 +17131,24 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           }
         }
         local_scalar_t__ temp2 = DUMMY_VAR__;
-        current_statement__ = 92;
+        current_statement__ = 91;
         for (int i = 2; i <= 3; ++i) {
-          current_statement__ = 89;
+          current_statement__ = 88;
           lp_accum__.add(4);
-          current_statement__ = 90;
+          current_statement__ = 89;
           lp_accum__.add(6);
         }
         local_scalar_t__ dataonlyvar;
-        current_statement__ = 93;
+        current_statement__ = 92;
         dataonlyvar = 3;
-        current_statement__ = 95;
-        if (stan::math::logical_gt(3, 4)) {
-          current_statement__ = 94;
-          dataonlyvar = (3 * 53);
-        } 
-        current_statement__ = 96;
+        current_statement__ = 93;
         lp_accum__.add(dataonlyvar);
-        local_scalar_t__ paramvar;
-        current_statement__ = 97;
-        paramvar = 3;
-        current_statement__ = 99;
-        if (stan::math::logical_gt(42, 1)) {
-          current_statement__ = 98;
+        local_scalar_t__ paramvar = DUMMY_VAR__;
+        {
+          current_statement__ = 95;
           paramvar = (theta * 34);
-        } 
-        current_statement__ = 100;
+        }
+        current_statement__ = 97;
         lp_accum__.add(paramvar);
       }
     } catch (const std::exception& e) {
@@ -17373,7 +17352,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         param_names__.emplace_back(std::string() + "x_vector" + '.' + std::to_string(sym1__));
       } 
     }
-    for (int sym1__ = 1; sym1__ <= (2 + ((2 * (2 - 1)) / 2)); ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
       {
         param_names__.emplace_back(std::string() + "x_cov" + '.' + std::to_string(sym1__));
       } 
@@ -17396,7 +17375,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     
   inline std::string get_unconstrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"x_vector\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"x_cov\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((2 + ((2 * (2 - 1)) / 2))) + "},\"block\":\"parameters\"}]");
+    return std::string("[{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"x_vector\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"x_cov\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},\"block\":\"parameters\"}]");
     
     } // get_unconstrained_sizedtypes() 
     
@@ -17759,15 +17738,17 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 7;
         stan::model::assign(y_hat,
-          ((stan::model::rvalue(a, "a",
-              stan::model::index_uni(stan::model::rvalue(pair, "pair",
-                                       stan::model::index_uni(i)))) +
-             (stan::model::rvalue(beta, "beta", stan::model::index_uni(1)) *
-               stan::model::rvalue(treatment, "treatment",
-                 stan::model::index_uni(i)))) +
-            (stan::model::rvalue(beta, "beta", stan::model::index_uni(2)) *
-              stan::model::rvalue(pre_test, "pre_test",
-                stan::model::index_uni(i)))),
+          stan::math::fma(
+            stan::model::rvalue(beta, "beta", stan::model::index_uni(2)),
+            stan::model::rvalue(pre_test, "pre_test",
+              stan::model::index_uni(i)),
+            stan::math::fma(
+              stan::model::rvalue(beta, "beta", stan::model::index_uni(1)),
+              stan::model::rvalue(treatment, "treatment",
+                stan::model::index_uni(i)),
+              stan::model::rvalue(a, "a",
+                stan::model::index_uni(stan::model::rvalue(pair, "pair",
+                                         stan::model::index_uni(i)))))),
           "assigning variable y_hat", stan::model::index_uni(i));
       }
       {
@@ -17847,15 +17828,17 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 7;
         stan::model::assign(y_hat,
-          ((stan::model::rvalue(a, "a",
-              stan::model::index_uni(stan::model::rvalue(pair, "pair",
-                                       stan::model::index_uni(i)))) +
-             (stan::model::rvalue(beta, "beta", stan::model::index_uni(1)) *
-               stan::model::rvalue(treatment, "treatment",
-                 stan::model::index_uni(i)))) +
-            (stan::model::rvalue(beta, "beta", stan::model::index_uni(2)) *
-              stan::model::rvalue(pre_test, "pre_test",
-                stan::model::index_uni(i)))),
+          stan::math::fma(
+            stan::model::rvalue(beta, "beta", stan::model::index_uni(2)),
+            stan::model::rvalue(pre_test, "pre_test",
+              stan::model::index_uni(i)),
+            stan::math::fma(
+              stan::model::rvalue(beta, "beta", stan::model::index_uni(1)),
+              stan::model::rvalue(treatment, "treatment",
+                stan::model::index_uni(i)),
+              stan::model::rvalue(a, "a",
+                stan::model::index_uni(stan::model::rvalue(pair, "pair",
+                                         stan::model::index_uni(i)))))),
           "assigning variable y_hat", stan::model::index_uni(i));
       }
       if (emit_transformed_parameters__) {
@@ -18311,14 +18294,12 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
         stan::conditional_var_value_t<local_scalar_t__, 
           Eigen::Matrix<local_scalar_t__, -1, -1>> m6;
         current_statement__ = 4;
-        stan::model::assign(m6,
-          stan::math::add(stan::math::elt_multiply(m1, m2), m4),
+        stan::model::assign(m6, stan::math::fma(m1, m2, m4),
           "assigning variable m6");
         stan::conditional_var_value_t<local_scalar_t__, 
           Eigen::Matrix<local_scalar_t__, -1, -1>> m7;
         current_statement__ = 5;
-        stan::model::assign(m7,
-          stan::math::add(m4, stan::math::elt_multiply(m1, m2)),
+        stan::model::assign(m7, stan::math::fma(m1, m2, m4),
           "assigning variable m7");
         current_statement__ = 6;
         lp_accum__.add(
@@ -18902,16 +18883,14 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
               stan::model::rvalue(n, "n", stan::model::index_uni(i)),
               stan::model::rvalue(N, "N", stan::model::index_uni(i)),
               stan::math::add(
-                (((alpha0 +
-                    (alpha1 *
+                stan::math::fma(alpha12,
+                  stan::model::rvalue(x1x2, "x1x2",
+                    stan::model::index_uni(i)),
+                  stan::math::fma(alpha2,
+                    stan::model::rvalue(x2, "x2", stan::model::index_uni(i)),
+                    stan::math::fma(alpha1,
                       stan::model::rvalue(x1, "x1",
-                        stan::model::index_uni(i)))) +
-                   (alpha2 *
-                     stan::model::rvalue(x2, "x2", stan::model::index_uni(i))))
-                  +
-                  (alpha12 *
-                    stan::model::rvalue(x1x2, "x1x2",
-                      stan::model::index_uni(i)))),
+                        stan::model::index_uni(i)), alpha0))),
                 stan::model::rvalue(b, "b", stan::model::index_uni(i)))));
         }
       }
@@ -19658,7 +19637,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 14> locations_array__ = 
+static constexpr std::array<const char*, 13> locations_array__ = 
 {" (found before start of program)",
  " (in 'unenforce-initialize.stan', line 2, column 2 to column 9)",
  " (in 'unenforce-initialize.stan', line 5, column 2 to column 15)",
@@ -19668,7 +19647,6 @@ static constexpr std::array<const char*, 14> locations_array__ =
  " (in 'unenforce-initialize.stan', line 9, column 2 to column 18)",
  " (in 'unenforce-initialize.stan', line 13, column 2 to column 20)",
  " (in 'unenforce-initialize.stan', line 11, column 4 to column 21)",
- " (in 'unenforce-initialize.stan', line 10, column 14 to line 12, column 3)",
  " (in 'unenforce-initialize.stan', line 10, column 2 to line 12, column 3)",
  " (in 'unenforce-initialize.stan', line 15, column 4 to column 21)",
  " (in 'unenforce-initialize.stan', line 14, column 18 to line 16, column 3)",
@@ -19747,15 +19725,14 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       current_statement__ = 5;
       used_on_lhs = used_on_lhs;
       local_scalar_t__ no_init_if = DUMMY_VAR__;
-      current_statement__ = 10;
-      if (stan::math::logical_eq(1, 1)) {
+      {
         current_statement__ = 8;
         no_init_if = 1.0;
-      } 
+      }
       local_scalar_t__ for_loop_var = DUMMY_VAR__;
-      current_statement__ = 13;
+      current_statement__ = 12;
       for (int i = 1; i <= 10; ++i) {
-        current_statement__ = 11;
+        current_statement__ = 10;
         for_loop_var = 1;
       }
     } catch (const std::exception& e) {
@@ -19811,14 +19788,13 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       dependent_no_init = (no_init * y);
       current_statement__ = 5;
       used_on_lhs = used_on_lhs;
-      current_statement__ = 10;
-      if (stan::math::logical_eq(1, 1)) {
+      {
         current_statement__ = 8;
         no_init_if = 1.0;
-      } 
-      current_statement__ = 13;
+      }
+      current_statement__ = 12;
       for (int i = 1; i <= 10; ++i) {
-        current_statement__ = 11;
+        current_statement__ = 10;
         for_loop_var = 1;
       }
       if (emit_transformed_parameters__) {
