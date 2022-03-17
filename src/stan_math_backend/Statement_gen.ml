@@ -15,30 +15,9 @@ let pp_profile ppf (pp_body, name, body) =
       name in
   pf ppf "{@;<1 2>@[<v>%a@;@;%a@]@,}" profile name pp_body body
 
-let rec contains_eigen (ut : UnsizedType.t) : bool =
-  match ut with
-  | UnsizedType.UArray t -> contains_eigen t
-  | UMatrix | URowVector | UVector -> true
-  | UInt | UReal | UComplex | UMathLibraryFunction | UFun _ -> false
-
-(*Fill only needs to happen for containers
-  * Note: This should probably be moved into its own function as data
-  * does not need to be filled as we are promised user input data has the correct
-  * dimensions. Transformed data must be filled as incorrect slices could lead
-  * to elements of objects in transform data not being set by the user.
-*)
-let pp_filler ppf (decl_id, st, nan_type, needs_filled) =
-  match (needs_filled, contains_eigen (SizedType.to_unsized st)) with
-  | true, true ->
-      pf ppf "@[<hov 2>stan::math::initialize_fill(%s, %s);@]@," decl_id
-        nan_type
-  | _ -> ()
-
 (*Pretty print a sized type*)
 let pp_st ppf (st, adtype) =
   pf ppf "%a" pp_unsizedtype_local (adtype, SizedType.to_unsized st)
-
-let pp_ut ppf (ut, adtype) = pf ppf "%a" pp_unsizedtype_local (adtype, ut)
 
 (*Get a string representing for the NaN type of the given type *)
 let nan_type (st, adtype) =
@@ -201,11 +180,6 @@ let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
     loopvar pp_expr upper loopvar ;
   pf ppf " %a@]" pp_body body
 
-let rec integer_el_type = function
-  | SizedType.SInt -> true
-  | SArray (st, _) -> integer_el_type st
-  | _ -> false
-
 (** Print the private members of the model class
 
   Accounting for types that can be moved to OpenCL.
@@ -227,14 +201,6 @@ let pp_data_decl ppf (vident, ut) =
         pf ppf "%a %s__;" pp_type (DataOnly, ut) vident
     | _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident )
   | (true, _), _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident
-
-(** Create string representations for [vars__.emplace_back] *)
-let pp_emplace_var ppf var =
-  match Expr.Typed.type_of var with
-  | UnsizedType.UComplex ->
-      pf ppf "@[<hov 2>vars__.emplace_back(%a.real());@]@," pp_expr var ;
-      pf ppf "@[<hov 2>vars__.emplace_back(%a.imag());@]" pp_expr var
-  | _ -> pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
 
 (** Create strings representing maps of Eigen types*)
 let pp_map_decl ppf (vident, ut) =
