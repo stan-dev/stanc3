@@ -61,6 +61,7 @@ pipeline {
     agent none
     parameters {
         booleanParam(name:"skip_end_to_end", defaultValue: false, description:"Skip end-to-end tests ")
+        booleanParam(name:"skip_duplicate_compile_O1", defaultValue: false, description:"Skip duplicated compile tests that with with STANCFLAGS = --O1")
         string(defaultValue: 'develop', name: 'cmdstan_pr',
                description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: 'develop', name: 'stan_pr',
@@ -99,14 +100,14 @@ pipeline {
                     def stanMathSigs = ['test/integration/signatures/stan_math_signatures.t'].join(" ")
                     skipExpressionTests = utils.verifyChanges(stanMathSigs)
 
-//                     def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
-//                     skipRemainingStages = utils.verifyChanges(runTestPaths)
+                    //def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
+                    //skipRemainingStages = utils.verifyChanges(runTestPaths)
 
                     def compileTests = ['test/integration/good'].join(" ")
                     skipCompileTests = utils.verifyChanges(compileTests)
 
-//                     def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
-//                     skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1)
+                    //def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
+                    //skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1)
 
                     def sourceCodePaths = ['src'].join(" ")
                     skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths)
@@ -276,8 +277,13 @@ pipeline {
                 stage("Compile tests - good at O=1") {
                     when {
                         beforeAgent true
-                        expression {
+                        allOf {
+                          expression {
                             !skipCompileTestsAtO1
+                          }
+                          expression {
+                            !params.skip_duplicate_compile_O1
+                          }
                         }
                     }
                     agent {
@@ -305,8 +311,13 @@ pipeline {
                 stage("Compile tests - example-models at O=1") {
                     when {
                         beforeAgent true
-                        expression {
+                        allOf {
+                          expression {
                             !skipCompileTestsAtO1
+                          }
+                          expression {
+                            !params.skip_duplicate_compile_O1
+                          }
                         }
                     }
                     agent {
