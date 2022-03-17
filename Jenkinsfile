@@ -7,7 +7,6 @@ def skipExpressionTests = false
 def skipRemainingStages = false
 def skipCompileTests = false
 def skipRebuildingBinaries = false
-def skipCompileTestsAtO1 = false
 
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
@@ -61,7 +60,7 @@ pipeline {
     agent none
     parameters {
         booleanParam(name:"skip_end_to_end", defaultValue: false, description:"Skip end-to-end tests ")
-        booleanParam(name:"skip_duplicate_compile_O1", defaultValue: false, description:"Skip duplicated compile tests that with with STANCFLAGS = --O1")
+        booleanParam(name:"skip_compile_O1", defaultValue: false, description:"Skip compile tests that run with STANCFLAGS = --O1")
         string(defaultValue: 'develop', name: 'cmdstan_pr',
                description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: 'develop', name: 'stan_pr',
@@ -103,11 +102,8 @@ pipeline {
                     //def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
                     //skipRemainingStages = utils.verifyChanges(runTestPaths)
 
-                    def compileTests = ['test/integration/good'].join(" ")
-                    skipCompileTests = utils.verifyChanges(compileTests)
-
-                    //def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
-                    //skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1)
+                    //def compileTests = ['test/integration/good'].join(" ")
+                    //skipCompileTests = utils.verifyChanges(compileTests)
 
                     def sourceCodePaths = ['src'].join(" ")
                     skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths)
@@ -279,10 +275,10 @@ pipeline {
                         beforeAgent true
                         allOf {
                           expression {
-                            !skipCompileTestsAtO1
+                            !skipCompileTests
                           }
                           expression {
-                            !params.skip_duplicate_compile_O1
+                            !params.skip_compile_O1
                           }
                         }
                     }
@@ -313,10 +309,10 @@ pipeline {
                         beforeAgent true
                         allOf {
                           expression {
-                            !skipCompileTestsAtO1
+                            !skipCompileTests
                           }
                           expression {
-                            !params.skip_duplicate_compile_O1
+                            !params.skip_compile_O1
                           }
                         }
                     }
