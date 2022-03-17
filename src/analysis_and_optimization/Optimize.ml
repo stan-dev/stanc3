@@ -1231,10 +1231,10 @@ let level_optimizations (lvl : optimization_level) : optimization_settings =
       ; expression_propagation= false
       ; copy_propagation= true
       ; dead_code_elimination= true
-      ; partial_evaluation= true
+      ; partial_evaluation= false
       ; lazy_code_motion= false
       ; allow_uninitialized_decls= true
-      ; optimize_ad_levels= true
+      ; optimize_ad_levels= false
       ; preserve_stability= false
       ; optimize_soa= true }
   | Oexperimental -> all_optimizations
