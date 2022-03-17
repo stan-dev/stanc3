@@ -67,6 +67,8 @@ pipeline {
                description: "Stan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: 'develop', name: 'math_pr',
                description: "Math PR to test against. Will check out this PR in the downstream Math repo.")
+        string(defaultValue: '', name: 'stanc_flags',
+               description: "Pass STANCFLAGS to make/local, default none")
     }
     options {parallelsAlwaysFailFast()}
     environment {
@@ -228,7 +230,7 @@ pipeline {
                     }
                     steps {
                         script {
-                            runPerformanceTests("../test/integration/good")
+                            runPerformanceTests("../test/integration/good", params.stanc_flags)
                         }
 
                         xunit([GoogleTest(
@@ -248,7 +250,7 @@ pipeline {
                         expression {
                             !skipCompileTests
                         }
-                    }
+                    }falco
                     agent {
                         docker {
                             image 'stanorg/ci:gpu'
@@ -257,7 +259,7 @@ pipeline {
                     }
                     steps {
                         script {
-                            runPerformanceTests("example-models")
+                            runPerformanceTests("example-models", params.stanc_flags)
                         }
 
                         xunit([GoogleTest(
