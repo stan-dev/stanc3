@@ -251,7 +251,7 @@ pipeline {
                         expression {
                             !skipCompileTests
                         }
-                    }falco
+                    }
                     agent {
                         docker {
                             image 'stanorg/ci:gpu'
