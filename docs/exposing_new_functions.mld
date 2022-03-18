@@ -82,3 +82,9 @@ possible combination of arguments.
 
 These tests confirm both that the typechecker accepts these signatures and that the C++ generated
 for them compiles against the Math Library implementations.
+
+{1 Documentation}
+
+Finally, before a function can be exposed in the Stan compiler it needs to be added to the Stan
+Functions Reference, which is stored at {{:https://github.com/stan-dev/docs}stan-dev/docs}.
+New PRs to stanc3 will prompt you to link to the accompanying documentation PR.
