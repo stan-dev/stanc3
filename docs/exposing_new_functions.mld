@@ -5,8 +5,10 @@
 {1 Background}
 
 For a function to be built into Stan, it has to be included in the Stan Math library and its signature has to be
-exposed to the parser. To do the latter, we have to add a corresponding line in [src/middle/Stan_math_signatures.ml].
-The parser uses the signatures defined there to do the type checking. 
+exposed to the compiler.
+
+To do the latter, we have to add a corresponding line in [src/middle/Stan_math_signatures.ml].
+The compiler uses the signatures defined there to do type checking.
 
 
 {1 Adding a distribution function }
@@ -27,5 +29,46 @@ an integer or a real as its first argument, the proper way to expose the functio
   ; ([Lpdf], "foo", [DVInt; DVReal], SoA)
 ]}
 
-Once we modified [Stan_math_signatures.ml], we need to compile stanc3.
+{1 Adding a normal function}
+Standard functions (e.g., not distributions or variadic functions) are added to a list in the same file.
+This list begins near the bottom of the file with the line
 
+{[
+(* -- Start populating stan_math_signaturess -- *)
+let () =
+]}
+
+
+The statements in this list use several helper functions, such as [add_unqualified], [add_qualified],
+[add_binary], etc.
+
+The core function of these is [add_qualified], which registers a function based on:
+{ol
+ - The name of the function
+ - The return type (an [UnsizedType.returntype])
+ - A list of argument types (A list of [UnsizedType.autodifftype * UnsizedType.t] tuples)
+ - The memory pattern supported by this function, Array of Structs (AoS) or Struct of Arrays (SoA).
+}
+
+All other functions are simply helpers for calling this one. For example, if a function does not have
+any arguments it requires to be of type [data], then [add_unqualified] is provided for convience. It
+does the same thing as [add_qualfied], but the third argument is just a list of [UnsizedType.t]s.
+Other helpers, such as [add_binary], exist for common cases such as a function with a signature
+[(real, real) => real]
+
+If a function has multiple signatures, it will generally need multiple calls to these functions.
+Some helpers, such as [add_binary_vec] add multiple signatures at once for vectorized functions.
+
+For example, the following line defines the signature [add(real, matrix) => matrix]
+
+{[
+  add_unqualified ("add", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
+]}
+
+{1 Higher-Order Variadic functions}
+
+Functions such as the ODE integrators or [reduce_sum], which take in user-functions and a variable-length
+list of arguments, are {b NOT} added to this list.
+
+These are instead treated as special cases in the [Typechecker] module in the frontend folder. It
+it best to consult an existing example of how these are done before proceeding.
