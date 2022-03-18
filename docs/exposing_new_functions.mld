@@ -1,0 +1,31 @@
+{0 Exposing New Functions to stanc3}
+
+
+
+{1 Background}
+
+For a function to be built into Stan, it has to be included in the Stan Math library and its signature has to be
+exposed to the parser. To do the latter, we have to add a corresponding line in [src/middle/Stan_math_signatures.ml].
+The parser uses the signatures defined there to do the type checking. 
+
+
+{1 Adding a distribution function }
+To add a distribution, we have to find the line containing [let distributions =]. The existing distributions can be
+used for reference. The first argument defines the type of function we want to add.
+The second argument is the function name without the [_...] part. The third argument specifies
+the argument types of the function. The last argument describes whether the return type can be represented as an
+Array of Structs (AoS) or as a Struct of Arrays (SoA). The following line exposes a function [foo_lpdf] which takes in
+two real numbers:
+{[
+  ; ([Lpdf], "foo", [DVReal; DVReal], SoA)
+]}
+
+For overloaded functions, we need to add a signature for each combination of variable types. If [foo_lpdf] admits either
+an integer or a real as its first argument, the proper way to expose the function would be:
+{[
+  ; ([Lpdf], "foo", [DVReal; DVReal], SoA)
+  ; ([Lpdf], "foo", [DVInt; DVReal], SoA)
+]}
+
+Once we modified [Stan_math_signatures.ml], we need to compile stanc3.
+
