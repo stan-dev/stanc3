@@ -43,7 +43,6 @@ def runPerformanceTests(String testsPath){
         cp ../bin/stanc cmdstan/bin/linux-stanc
         cd cmdstan; make clean-all;
         echo 'O=0' >> make/local
-        echo 'STANCFLAGS= --O1' >> make/local
         make -j${env.PARALLEL} build; cd ..
         ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}
     """
@@ -60,6 +59,7 @@ pipeline {
         string(defaultValue: 'develop', name: 'math_pr',
                description: "Math PR to test against. Will check out this PR in the downstream Math repo.")
     }
+    options {parallelsAlwaysFailFast()}
     environment {
         CXX = 'clang++-6.0'
         PARALLEL = 4
