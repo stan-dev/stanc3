@@ -8,6 +8,7 @@ let pp_fun_def_w_rs a b =
   pp_fun_def a
     ( b
     , String.Table.create ()
+    , Hash_set.Poly.create ()
     , String.Set.empty
     , String.Set.empty
     , String.Set.empty )

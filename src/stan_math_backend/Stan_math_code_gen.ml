@@ -249,10 +249,11 @@ let mk_extra_args templates args =
 *)
 let pp_fun_def ppf
     ( Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
-    , functors
-    , funs_used_in_reduce_sum
-    , funs_used_in_variadic_ode
-    , funs_used_in_variadic_dae ) =
+    , (functors : (string, found_functor list) Hashtbl.t)
+    , (forward_decls : (string * template list) Hash_set.t)
+    , (funs_used_in_reduce_sum : String.Set.t)
+    , (funs_used_in_variadic_ode : String.Set.t)
+    , (funs_used_in_variadic_dae : String.Set.t) ) =
   let extra, extra_templates =
     match fdsuffix with
     | Fun_kind.FnTarget -> (["lp__"; "lp_accum__"], ["T_lp__"; "T_lp_accum__"])
@@ -304,10 +305,17 @@ let pp_fun_def ppf
     pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs ;
     Format.close_box () in
   let templates, templated_args = get_templates true `None in
-  pp_templates ~defaults:(Option.is_some fdbody) ppf templates ;
-  pp_sig ppf (fdname, templated_args, `None) ;
+  let signature = str "%a" pp_sig (fdname, templated_args, `None) in
+  (* We want to print the [* = nullptr] at most once, and preferrably on a forward decl *)
+  let defaults =
+    Option.is_none fdbody
+    || not (Hash_set.mem forward_decls (signature, templates)) in
+  pf ppf "%a%a" (pp_templates ~defaults) templates pp_sig
+    (fdname, templated_args, `None) ;
   match fdbody with
-  | None -> pf ppf ";@ "
+  | None ->
+      pf ppf ";@ " ;
+      Hash_set.add forward_decls (signature, templates)
   | Some fdbody ->
       pp_block ppf (pp_body, fdbody) ;
       let register_functor (str_args, args, variadic) =
@@ -323,7 +331,7 @@ let pp_fun_def ppf
           | FnLpdf _, `ReduceSum -> Some (Bool "propto__")
           | _ -> None in
         let arg_templates, templated_args = get_templates false variadic in
-        let signature =
+        let op_signature =
           str "%a" pp_sig ("operator()", templated_args, variadic) in
         let defn =
           str "%a@ const@,{@.  return %a;@.}@." pp_sig
@@ -340,7 +348,8 @@ let pp_fun_def ppf
               @ List.map ~f:(fun (_, name, _) -> name) args
               @ extra @ ["pstream__"] ) in
         Hashtbl.add_multi functors ~key:functor_name
-          ~data:{struct_template; arg_templates; signature; defn} in
+          ~data:{struct_template; arg_templates; signature= op_signature; defn}
+      in
       register_functor ([], fdargs, `None) ;
       if String.Set.mem funs_used_in_reduce_sum fdname then
         (* Produces the reduce_sum functors that has the pstream argument
@@ -1012,6 +1021,7 @@ let is_fun_used_with_variadic_fn variadic_fn_test p =
 let collect_functors_functions p =
   let (functors : (string, found_functor list) Hashtbl.t) =
     String.Table.create () in
+  let forward_decls = Hash_set.Poly.create () in
   let reduce_sum_fns =
     is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p in
   let variadic_ode_fns =
@@ -1021,8 +1031,12 @@ let collect_functors_functions p =
   let pp_fun_def_with_variadic_fn_list ppf fblock =
     (hovbox ~indent:2 pp_fun_def)
       ppf
-      (fblock, functors, reduce_sum_fns, variadic_ode_fns, variadic_dae_fns)
-  in
+      ( fblock
+      , functors
+      , forward_decls
+      , reduce_sum_fns
+      , variadic_ode_fns
+      , variadic_dae_fns ) in
   ( str "@[<v>%a@]"
       (list ~sep:cut pp_fun_def_with_variadic_fn_list)
       p.functions_block

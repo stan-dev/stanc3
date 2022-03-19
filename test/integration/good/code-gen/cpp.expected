@@ -6779,17 +6779,17 @@ int foo(const int& n, std::ostream* pstream__) {
     }
     }
 template <typename T0__, typename T1__, typename T2__,
-          stan::require_stan_scalar_t<T0__>*,
-          stan::require_stan_scalar_t<T1__>*,
-          stan::require_stan_scalar_t<T2__>*>
+          stan::require_stan_scalar_t<T0__>* = nullptr,
+          stan::require_stan_scalar_t<T1__>* = nullptr,
+          stan::require_stan_scalar_t<T2__>* = nullptr>
   std::vector<stan::promote_args_t<T0__, T1__, T2__>>
   sho(const T0__& t, const std::vector<T1__>& y,
       const std::vector<T2__>& theta, const std::vector<double>& x,
       const std::vector<int>& x_int, std::ostream* pstream__) ; 
 template <typename T0__, typename T1__, typename T2__,
-          stan::require_stan_scalar_t<T0__>* = nullptr,
-          stan::require_stan_scalar_t<T1__>* = nullptr,
-          stan::require_stan_scalar_t<T2__>* = nullptr>
+          stan::require_stan_scalar_t<T0__>*,
+          stan::require_stan_scalar_t<T1__>*,
+          stan::require_stan_scalar_t<T2__>*>
   std::vector<stan::promote_args_t<T0__, T1__, T2__>>
   sho(const T0__& t, const std::vector<T1__>& y,
       const std::vector<T2__>& theta, const std::vector<double>& x,
@@ -23656,42 +23656,46 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 35> locations_array__ = 
+static constexpr std::array<const char*, 39> locations_array__ = 
 {" (found before start of program)",
- " (in 'overloading_templating.stan', line 42, column 4 to column 11)",
- " (in 'overloading_templating.stan', line 43, column 4 to column 11)",
- " (in 'overloading_templating.stan', line 46, column 4 to column 26)",
- " (in 'overloading_templating.stan', line 47, column 4 to column 28)",
- " (in 'overloading_templating.stan', line 48, column 4 to column 26)",
- " (in 'overloading_templating.stan', line 49, column 4 to column 26)",
- " (in 'overloading_templating.stan', line 50, column 4 to column 27)",
- " (in 'overloading_templating.stan', line 51, column 4 to column 28)",
- " (in 'overloading_templating.stan', line 52, column 4 to column 30)",
- " (in 'overloading_templating.stan', line 53, column 4 to column 32)",
- " (in 'overloading_templating.stan', line 54, column 4 to column 40)",
- " (in 'overloading_templating.stan', line 39, column 3 to column 44)",
- " (in 'overloading_templating.stan', line 3, column 4 to column 19)",
- " (in 'overloading_templating.stan', line 2, column 17 to line 4, column 3)",
- " (in 'overloading_templating.stan', line 7, column 4 to column 17)",
- " (in 'overloading_templating.stan', line 6, column 20 to line 8, column 4)",
- " (in 'overloading_templating.stan', line 10, column 4 to column 22)",
- " (in 'overloading_templating.stan', line 9, column 26 to line 11, column 4)",
- " (in 'overloading_templating.stan', line 13, column 4 to column 22)",
- " (in 'overloading_templating.stan', line 12, column 22 to line 14, column 4)",
- " (in 'overloading_templating.stan', line 16, column 4 to column 22)",
- " (in 'overloading_templating.stan', line 15, column 22 to line 17, column 4)",
- " (in 'overloading_templating.stan', line 19, column 4 to column 22)",
- " (in 'overloading_templating.stan', line 18, column 28 to line 20, column 4)",
- " (in 'overloading_templating.stan', line 23, column 4 to column 25)",
- " (in 'overloading_templating.stan', line 22, column 33 to line 24, column 4)",
- " (in 'overloading_templating.stan', line 26, column 4 to column 25)",
- " (in 'overloading_templating.stan', line 25, column 30 to line 27, column 4)",
- " (in 'overloading_templating.stan', line 29, column 4 to column 25)",
- " (in 'overloading_templating.stan', line 28, column 30 to line 30, column 4)",
- " (in 'overloading_templating.stan', line 32, column 4 to column 26)",
- " (in 'overloading_templating.stan', line 31, column 29 to line 33, column 4)",
- " (in 'overloading_templating.stan', line 35, column 4 to column 23)",
- " (in 'overloading_templating.stan', line 34, column 25 to line 36, column 3)"};
+ " (in 'overloading_templating.stan', line 48, column 4 to column 11)",
+ " (in 'overloading_templating.stan', line 49, column 4 to column 11)",
+ " (in 'overloading_templating.stan', line 52, column 4 to column 26)",
+ " (in 'overloading_templating.stan', line 53, column 4 to column 28)",
+ " (in 'overloading_templating.stan', line 54, column 4 to column 26)",
+ " (in 'overloading_templating.stan', line 55, column 4 to column 26)",
+ " (in 'overloading_templating.stan', line 56, column 4 to column 27)",
+ " (in 'overloading_templating.stan', line 57, column 4 to column 26)",
+ " (in 'overloading_templating.stan', line 58, column 4 to column 30)",
+ " (in 'overloading_templating.stan', line 59, column 4 to column 30)",
+ " (in 'overloading_templating.stan', line 60, column 4 to column 28)",
+ " (in 'overloading_templating.stan', line 61, column 4 to column 30)",
+ " (in 'overloading_templating.stan', line 62, column 4 to column 32)",
+ " (in 'overloading_templating.stan', line 63, column 4 to column 40)",
+ " (in 'overloading_templating.stan', line 44, column 3 to column 44)",
+ " (in 'overloading_templating.stan', line 45, column 3 to column 36)",
+ " (in 'overloading_templating.stan', line 8, column 4 to column 19)",
+ " (in 'overloading_templating.stan', line 7, column 17 to line 9, column 3)",
+ " (in 'overloading_templating.stan', line 12, column 4 to column 17)",
+ " (in 'overloading_templating.stan', line 11, column 20 to line 13, column 4)",
+ " (in 'overloading_templating.stan', line 15, column 4 to column 22)",
+ " (in 'overloading_templating.stan', line 14, column 26 to line 16, column 4)",
+ " (in 'overloading_templating.stan', line 18, column 4 to column 22)",
+ " (in 'overloading_templating.stan', line 17, column 22 to line 19, column 4)",
+ " (in 'overloading_templating.stan', line 21, column 4 to column 22)",
+ " (in 'overloading_templating.stan', line 20, column 22 to line 22, column 4)",
+ " (in 'overloading_templating.stan', line 24, column 4 to column 22)",
+ " (in 'overloading_templating.stan', line 23, column 28 to line 25, column 4)",
+ " (in 'overloading_templating.stan', line 28, column 4 to column 25)",
+ " (in 'overloading_templating.stan', line 27, column 33 to line 29, column 4)",
+ " (in 'overloading_templating.stan', line 31, column 4 to column 25)",
+ " (in 'overloading_templating.stan', line 30, column 30 to line 32, column 4)",
+ " (in 'overloading_templating.stan', line 34, column 4 to column 25)",
+ " (in 'overloading_templating.stan', line 33, column 30 to line 35, column 4)",
+ " (in 'overloading_templating.stan', line 37, column 4 to column 26)",
+ " (in 'overloading_templating.stan', line 36, column 29 to line 38, column 4)",
+ " (in 'overloading_templating.stan', line 40, column 4 to column 23)",
+ " (in 'overloading_templating.stan', line 39, column 25 to line 41, column 3)"};
 
 struct foo_functor__ {
   double
@@ -23731,6 +23735,10 @@ struct foo_functor__ {
   operator()(const int& p, std::ostream* pstream__) const;
 };
 
+template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr>
+  stan::promote_args_t<stan::value_type_t<T0__>>
+  foo(const T0__& p_arg__, std::ostream* pstream__) ; 
+double foo(const int& p, std::ostream* pstream__) ; 
 double foo(const int& p, std::ostream* pstream__) {
     using local_scalar_t__ = double;
     int current_statement__ = 0; 
@@ -23739,7 +23747,7 @@ double foo(const int& p, std::ostream* pstream__) {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 13;
+      current_statement__ = 17;
       return (p + 1.0);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -23754,7 +23762,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 15;
+      current_statement__ = 19;
       return (p + 2);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -23771,13 +23779,13 @@ template <typename T0__, stan::require_row_vector_t<T0__>* = nullptr>
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 17;
+      current_statement__ = 21;
       return (stan::math::sum(p) + 3);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr>
+template <typename T0__, stan::require_col_vector_t<T0__>*>
   stan::promote_args_t<stan::value_type_t<T0__>>
   foo(const T0__& p_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
@@ -23788,7 +23796,7 @@ template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr>
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 19;
+      current_statement__ = 23;
       return (stan::math::sum(p) + 4);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -23806,7 +23814,7 @@ template <typename T0__,
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 21;
+      current_statement__ = 25;
       return (stan::math::sum(p) + 5);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -23822,7 +23830,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 23;
+      current_statement__ = 27;
       return (stan::math::sum(p) + 6);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -23839,7 +23847,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 25;
+      current_statement__ = 29;
       return (stan::math::sum(
                 stan::model::rvalue(p, "p", stan::model::index_uni(1))) + 7);
     } catch (const std::exception& e) {
@@ -23857,7 +23865,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 27;
+      current_statement__ = 31;
       return (stan::math::sum(
                 stan::model::rvalue(p, "p", stan::model::index_uni(1))) + 8);
     } catch (const std::exception& e) {
@@ -23875,7 +23883,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 29;
+      current_statement__ = 33;
       return (stan::math::sum(
                 stan::model::rvalue(p, "p", stan::model::index_uni(1))) + 9);
     } catch (const std::exception& e) {
@@ -23892,7 +23900,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 31;
+      current_statement__ = 35;
       return (stan::math::sum(
                 stan::model::rvalue(p, "p", stan::model::index_uni(1))) + 10);
     } catch (const std::exception& e) {
@@ -23907,7 +23915,7 @@ double foo(const std::vector<int>& p, std::ostream* pstream__) {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 33;
+      current_statement__ = 37;
       return (stan::math::sum(p) + 12);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -23998,8 +24006,10 @@ const
 class overloading_templating_model final : public model_base_crtp<overloading_templating_model> {
 
  private:
-  Eigen::Matrix<double, -1, 1> a__; 
+  Eigen::Matrix<double, -1, 1> a__;
+  Eigen::Matrix<double, -1, -1> M__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> a{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, -1>> M{nullptr, 0, 0};
  
  public:
   ~overloading_templating_model() { }
@@ -24026,15 +24036,27 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 12;
+      current_statement__ = 15;
       a__ = 
         Eigen::Matrix<double, -1, 1>::Constant(5,
           std::numeric_limits<double>::quiet_NaN());
       new (&a) Eigen::Map<Eigen::Matrix<double, -1, 1>>(a__.data(), 5);
       
-      current_statement__ = 12;
+      current_statement__ = 15;
       stan::model::assign(a, (Eigen::Matrix<double,-1,1>(5) << 0.1, 0.1, 0.1,
         0.1, 0.1).finished(), "assigning variable a");
+      current_statement__ = 16;
+      M__ = 
+        Eigen::Matrix<double, -1, -1>::Constant(5, 5,
+          std::numeric_limits<double>::quiet_NaN());
+      new (&M) Eigen::Map<Eigen::Matrix<double, -1, -1>>(M__.data(), 5, 5);
+      
+      current_statement__ = 16;
+      stan::model::assign(M, stan::math::to_matrix(
+        std::vector<Eigen::Matrix<double, 1, -1>>{stan::math::transpose(a),
+        stan::math::transpose(a), stan::math::transpose(a),
+        stan::math::transpose(a), stan::math::transpose(a)}),
+        "assigning variable M");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -24085,17 +24107,34 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
             foo(stan::math::transpose(a), pstream__), 1));
         current_statement__ = 8;
         lp_accum__.add(
-          stan::math::normal_lpdf<propto__>(y,
-            foo(std::vector<Eigen::Matrix<double, -1, 1>>{a}, pstream__), 1));
+          stan::math::normal_lpdf<propto__>(y, foo(M, pstream__), 1));
         current_statement__ = 9;
         lp_accum__.add(
           stan::math::normal_lpdf<propto__>(y,
-            foo(std::vector<int>{1, 2}, pstream__), 1));
+            foo(
+              stan::model::rvalue(M, "M",
+                stan::model::index_omni(), stan::model::index_uni(1)), pstream__),
+            1));
         current_statement__ = 10;
         lp_accum__.add(
           stan::math::normal_lpdf<propto__>(y,
-            foo(std::vector<double>{1, 2.3}, pstream__), 1));
+            foo(
+              stan::model::rvalue(M, "M",
+                stan::model::index_uni(1), stan::model::index_omni()), pstream__),
+            1));
         current_statement__ = 11;
+        lp_accum__.add(
+          stan::math::normal_lpdf<propto__>(y,
+            foo(std::vector<Eigen::Matrix<double, -1, 1>>{a}, pstream__), 1));
+        current_statement__ = 12;
+        lp_accum__.add(
+          stan::math::normal_lpdf<propto__>(y,
+            foo(std::vector<int>{1, 2}, pstream__), 1));
+        current_statement__ = 13;
+        lp_accum__.add(
+          stan::math::normal_lpdf<propto__>(y,
+            foo(std::vector<double>{1, 2.3}, pstream__), 1));
+        current_statement__ = 14;
         lp_accum__.add(
           stan::math::normal_lpdf<propto__>(std::vector<double>{5.5, 6.5},
             foo(std::vector<local_scalar_t__>{z, 2.3}, pstream__), 1));
