@@ -7,6 +7,7 @@ def skipExpressionTests = false
 def skipRemainingStages = false
 def skipCompileTests = false
 def skipRebuildingBinaries = false
+def skipCompileTestsAtO1 = false
 
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
@@ -99,11 +100,14 @@ pipeline {
                     def stanMathSigs = ['test/integration/signatures/stan_math_signatures.t'].join(" ")
                     skipExpressionTests = utils.verifyChanges(stanMathSigs)
 
-                    //def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
-                    //skipRemainingStages = utils.verifyChanges(runTestPaths)
+                    def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
+                    skipRemainingStages = utils.verifyChanges(runTestPaths)
 
-                    //def compileTests = ['test/integration/good'].join(" ")
-                    //skipCompileTests = utils.verifyChanges(compileTests)
+                    def compileTests = ['test/integration/good'].join(" ")
+                    skipCompileTests = utils.verifyChanges(compileTests)
+
+                    def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
+                    skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1)
 
                     def sourceCodePaths = ['src'].join(" ")
                     skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths)
@@ -275,7 +279,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                           expression {
-                            !skipCompileTests
+                            !skipCompileTestsAtO1
                           }
                           expression {
                             !params.skip_compile_O1
@@ -309,7 +313,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                           expression {
-                            !skipCompileTests
+                            !skipCompileTestsAtO1
                           }
                           expression {
                             !params.skip_compile_O1
