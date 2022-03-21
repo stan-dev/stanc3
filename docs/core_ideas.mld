@@ -14,7 +14,7 @@ standard library. There are a few differences from the OCaml standard library wh
 
   This means a call like [List.map square [1;2;3]] will look like [List.map ~f:square [1;2;3]].}
 
-{- Core_kernel defaults to safe operations which return {i options} rather than possibly erroring.
+{- Core_kernel defaults to safe operations which return {i options} rather than possibly erring.
 
   In "normal" OCaml, [List.hd] has type ['a list -> 'a].
   A call [List.hd []] will throw an exception.
@@ -25,7 +25,7 @@ standard library. There are a few differences from the OCaml standard library wh
 
 If for some reason you {e need} functionality from the OCaml standard library that is not available in Jane Street
 (be sure to triple check), you can use the modules [Stdlib] and [Caml] to access the built-in versions. Currently there
-is only one such usage in the compiler, to use the normal definition of [!=] in the Menhir parser.
+is only one such usage in the compiler, to use the standard definition of [!=] in the Menhir parser.
 
 There are a few other things we gain from these libraries. The most important idea to understand is {b deriving}.
 
@@ -38,7 +38,7 @@ type typed_expression = (typed_expr_meta, fun_kind) expr_with
 [@@deriving sexp, compare, map, hash, fold]
 ]}
 
-If you use an editor which supports code completion, you may also notice that the [Ast] module suggests functions
+When using an editor that supports code completion, you may notice that the [Ast] module suggests functions
 which are not defined in the actual source text. This is because these functions are created at compile time by
 {{:https://github.com/ocaml-ppx/ppx_deriving}[ppx_deriving]}.The above syntax [[@@deriving ...]] indicates which
 functions we would like to be generated.
@@ -48,21 +48,21 @@ a type which derives [sexp] can be serialized to Lisp-style S-Expressions. Most 
 
 {1 "Two Level Types"}
 
-The other curious thing about the types we define in our AST and MIR is they use a trick known as "two level types".
-This allows use to re-use the same type structure with different amounts of metadata attatched (e.g., before typechecking we have
-an [untyped_program] which only has nodes and their source locations, after typechecking we have [typed_program] which features
+The other curious thing about the types we define in our AST and MIR is that they use a trick known as "two level types".
+This allows re-using the same type structure with different amounts of metadata attached (e.g., before type checking we have
+an [untyped_program] which only has nodes and their source locations, after type checking we have [typed_program] which features
 nodes, locations, {i and} types, in the same basic tree structure.
 
 The way that this is implemented is a bit non-obvious at first. Essentially,
 many of the tree variant types are parameterized by something that ends up being a placeholder not
 for just metadata but for the recursive type including metadata,
 sometimes called the fixed point.
-So instead of recursively referencing [expression] you would instead reference type parameter ['e],
+So instead of recursively referencing [expression], you would instead reference type parameter ['e],
 which will later be filled in with something like [type expr_with_meta = metadata expression].
 
 
 This takes some getting used to, and also can lead to some unhelpful type signatures in editors such as
-VSCode, due to the fact that abbreviations are not always used. For example, [Expr.Typed.t], the MIR's typed
+VSCode, because abbreviations are not always used in hover-over text. For example, [Expr.Typed.t], the MIR's typed
 expression type, actually has a signature of [Expr.Typed.Meta.t Expr.Fixed.t].
 
 {1 The [Fmt] library and pretty-printing}
