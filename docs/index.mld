@@ -26,6 +26,9 @@ to a new developer.
 - {{!page-parser_messages}
   Page on modifying the parser's error messages}
 
+- {{!page-exposing_new_functions}
+  Page on exposing a new function of the Stan Math library}
+  
 - {{:https://github.com/stan-dev/stanc3/wiki/Software-Engineering-best-practices}
   Wiki on generic software best practices}
 
