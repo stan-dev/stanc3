@@ -1,0 +1,150 @@
+{0 Exposing New Functions to stanc3}
+
+
+
+{1 Background}
+
+For a function to be built into Stan, it has to be included in the Stan Math library and its signature has to be
+exposed to the compiler.
+
+To do the latter, we have to add a corresponding line in [src/middle/Stan_math_signatures.ml].
+The compiler uses the signatures defined there to do type checking.
+
+
+{1 Adding a distribution function }
+To add a distribution, we have to find the line containing [let distributions =]. The existing distributions can be
+used for reference. The first argument defines the kind of function we want to add.
+The second argument is the base function name without the [_...] suffixes. The third argument specifies
+the argument types of the function. The last argument describes the memory pattern supported by this function, either an
+Array of Structs (AoS) or a Struct of Arrays (SoA). The following line exposes a function [foo_lpdf]/[foo_log] which takes in
+a (non-vectorizable) real number and a (non-vectorizable) integer :
+{[
+  ; ([Lpdf], "foo", [DReal; DInt], SoA)
+]}
+
+To see the exact signatures created, we can recompile stanc using [make all] and display the signatures using
+[stanc --dump-stan-math-signatures]. By filtering for [foo] (for example by using [grep]), we get the
+following output:
+{[
+$ stanc --dump-stan-math-signatures | grep foo
+foo_log(real, int) => real
+foo_lpdf(real, int) => real
+]}
+The [[Lpdf]] type adds the suffixes [_log] and [_lpdf].
+
+If we want to allow the first parameter to be vectorizable, we can change the signature to
+{[
+  ; ([Lpdf], "foo", [DVReal; DReal], SoA)
+]}
+
+This produces the following signatures:
+{[
+$ stanc --dump-stan-math-signatures | grep foo
+foo_log(real, int) => real
+foo_log(vector, int) => real
+foo_log(row_vector, int) => real
+foo_log(array[] real, int) => real
+foo_lpdf(real, int) => real
+foo_lpdf(vector, int) => real
+foo_lpdf(row_vector, int) => real
+foo_lpdf(array[] real, int) => real
+]}
+As we can see, allowing a parameter to be vectorized automatically produces signatures where
+the parameter is either [base type], [vector], [row_vector] or [array[]].
+
+{2 Available parameter types}
+
+The following parameter types are available:
+- [DInt]: Scalar integer -> [int]
+- [DReal]: Scalar real number -> [real]
+- [DVector]: Vector -> [vector]
+- [DMatrix]: Matrix -> [matrix]
+- [DIntArray]: Integer array -> [array[] int]
+- [DVInt]: Vectorizable integer -> [int; array[] int]
+- [DVReal]: Vectorizable real number -> [real; vector; row_vector; array[] real]
+- [DVectors]: Vectorizable vectors (for multivariate functions) -> [vector, row_vector, array[] vector, array[] row_vector]
+- ([DDeepVectorized]: all base types with up to 8 levels of nested containers)
+
+{2 Available types of distribution functions}
+As we have seen above, specifying our function as [[Lpdf]] added the suffixes [_lpdf] and [_log] to our base function name.
+There are several types available which specify the suffixes that will be added:
+- [Lpmf]: [_lpmf, _log]
+- [Lpdf]: [_lpdf, _log]
+- [Rng]: [_rng]
+- [Cdf]: [_cdf, _cdf_log, _lcdf]
+- [Ccdf]: [_ccdf_log, _lccdf]
+
+Additionally, [full_lpdf] combines all suffixes of [Lpdf], [Rng], [Ccdf] and [Cdf]. [full_lpmf] does the same, but
+using the suffixes of [Lpmf] instead of [Lpdf]. Note that these two have to be used without brackets. This means we would
+write
+{[
+  ; ([Cdf], "foo", [DReal; DInt], SoA)
+]}
+but
+{[
+  ; (full_lpdf, "foo", [DReal; DInt], SoA)
+]}
+which corresponds to
+{[
+  ; ([Lpdf; Rng; Ccdf; Cdf], "foo", [DReal; DInt], SoA)
+]}
+
+{1 Adding a normal function}
+Standard functions (e.g., not distributions or variadic functions) are added to a list in the same file.
+This list begins near the bottom of the file with the line
+
+{[
+(* -- Start populating stan_math_signaturess -- *)
+let () =
+]}
+
+
+The statements in this list use several helper functions, such as [add_unqualified], [add_qualified],
+[add_binary], etc.
+
+The core function of these is [add_qualified], which registers a function based on:
+{ol
+ {- The name of the function}
+ {- The return type (an [UnsizedType.returntype])}
+ {- A list of argument types (A list of [UnsizedType.autodifftype * UnsizedType.t] tuples)}
+ {- The memory pattern supported by this function, Array of Structs (AoS) or Struct of Arrays (SoA)}
+}
+
+All other functions are simply helpers for calling this one. For example, if a function does not have
+any arguments it requires to be of type [data], then [add_unqualified] is provided for convience. It
+does the same thing as [add_qualfied], but the third argument is just a list of [UnsizedType.t]s.
+Other helpers, such as [add_binary], exist for common cases such as a function with a signature
+[(real, real) => real]
+
+If a function has multiple signatures, it will generally need multiple calls to these functions.
+Some helpers, such as [add_binary_vec] add multiple signatures at once for vectorized functions.
+
+For example, the following line defines the signature [add(real, matrix) => matrix]
+
+{[
+  add_unqualified ("add", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
+]}
+
+{1 Higher-Order Variadic functions}
+
+Functions such as the ODE integrators or [reduce_sum], which take in user-functions and a variable-length
+list of arguments, are {b NOT} added to this list.
+
+These are instead treated as special cases in the [Typechecker] module in the frontend folder. It
+it best to consult an existing example of how these are done before proceeding.
+
+{1 Testing}
+
+Functions exposed from the Stan Math Library are tested for all declared signatures. These tests live
+in the folder [test/integration/good/function-signatures]. They consist of a basic Stan program (or
+multiple programs for functions with a large number of overloads) which call the new function on each
+possible combination of arguments.
+
+These tests confirm both that the typechecker accepts these signatures and that the C++ generated
+for them compiles against the Math Library implementations.
+
+{1 Documentation}
+
+Finally, before a function can be exposed in the Stan compiler it needs to be added to the Stan
+Functions Reference, which is stored at {{:https://github.com/stan-dev/docs}stan-dev/docs}.
+New PRs to stanc3 will prompt you to link to the accompanying documentation PR.
