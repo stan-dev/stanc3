@@ -1,0 +1,71 @@
+{0 Core Ideas}
+
+This is not meant to be tutorial on the OCaml language itself, but rather on some of the
+features and libraries of Stanc3 which may not be familiar to developers who do have
+some OCaml exposure.
+
+{1 The Jane Street standard library}
+
+We use Jane Street's {{:https://ocaml.janestreet.com/ocaml-core/v0.14/doc/core_kernel/index.html}Core_kernel}
+standard library. There are a few differences from the OCaml standard library which are instantly noticeable:
+
+{ul
+{- Most higher-order functions such as  [List.map] take a {i named} function argument.
+
+  This means a call like [List.map square [1;2;3]] will look like [List.map ~f:square [1;2;3]].}
+
+{- Core_kernel defaults to safe operations which return {i options} rather than possibly erring.
+
+  In "normal" OCaml, [List.hd] has type ['a list -> 'a].
+  A call [List.hd []] will throw an exception.
+  By contrast, in the Jane Street libraries, the same function has type ['a list -> 'a option].
+
+  Usually, a function with the suffix [_exn] recovers the original signature, e.g. [List.hd_exn : 'a list -> 'a ].}
+}
+
+If for some reason you {e need} functionality from the OCaml standard library that is not available in Jane Street
+(be sure to triple check), you can use the modules [Stdlib] and [Caml] to access the built-in versions. Currently there
+is only one such usage in the compiler, to use the standard definition of [!=] in the Menhir parser.
+
+There are a few other things we gain from these libraries. The most important idea to understand is {b deriving}.
+
+{2 Deriving functions}
+
+If you look at a type declaration of something like [Ast.typed_expression], you'll notice something curious after the declaration:
+
+{[
+type typed_expression = (typed_expr_meta, fun_kind) expr_with
+[@@deriving sexp, compare, map, hash, fold]
+]}
+
+When using an editor that supports code completion, you may notice that the [Ast] module suggests functions
+which are not defined in the actual source text. This is because these functions are created at compile time by
+{{:https://github.com/ocaml-ppx/ppx_deriving}[ppx_deriving]}.The above syntax [[@@deriving ...]] indicates which
+functions we would like to be generated.
+
+These are very helpful - if a type derives [hash], it can automatically be used as keys in Jane Street's hash tables, and
+a type which derives [sexp] can be serialized to Lisp-style S-Expressions. Most of our major types derive at least one function.
+
+{1 "Two Level Types"}
+
+The other curious thing about the types we define in our AST and MIR is that they use a trick known as "two level types".
+This allows re-using the same type structure with different amounts of metadata attached (e.g., before type checking we have
+an [untyped_program] which only has nodes and their source locations, after type checking we have [typed_program] which features
+nodes, locations, {i and} types, in the same basic tree structure.
+
+The way that this is implemented is a bit non-obvious at first. Essentially,
+many of the tree variant types are parameterized by something that ends up being a placeholder not
+for just metadata but for the recursive type including metadata,
+sometimes called the fixed point.
+So instead of recursively referencing [expression], you would instead reference type parameter ['e],
+which will later be filled in with something like [type expr_with_meta = metadata expression].
+
+
+This takes some getting used to, and also can lead to some unhelpful type signatures in editors such as
+VSCode, because abbreviations are not always used in hover-over text. For example, [Expr.Typed.t], the MIR's typed
+expression type, actually has a signature of [Expr.Typed.Meta.t Expr.Fixed.t].
+
+{1 The [Fmt] library and pretty-printing}
+
+We extensively use the {{:https://erratique.ch/software/fmt}Fmt} library for our pretty-printing and code
+generation. We have an existing guide on the {{:https://github.com/stan-dev/stanc3/wiki/Format---Fmt-code-generation-quickstart}wiki} which covers the core ideas.

@@ -10,8 +10,8 @@
     was able to make a decent-looking pretty-printer for a subset of Javascript[3] that
     might serve as a good reference. Good luck!
 
-    [0] Format module doc: https://caml.inria.fr/pub/docs/manual-ocaml/libref/Format.html
-    [1] Fmt module doc: https://erratique.ch/software/fmt/doc/Fmt.html
+    [0] Format module doc: https://ocaml.org/api/Format.html
+    [1] Fmt module doc: https://erratique.ch/software/fmt/doc/Fmt/index.html
     [2] Format Unraveled: https://hal.archives-ouvertes.fr/hal-01503081/file/format-unraveled.pdf
     [3] Javascript pretty-printer https://github.com/Virum/compiler/blob/28e807b842bab5dcf11460c8193dd5b16674951f/JavaScript.ml#L112
 *)
