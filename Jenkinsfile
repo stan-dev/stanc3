@@ -381,6 +381,7 @@ pipeline {
                                 echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
                                 cd cmdstan; make clean-all; git show HEAD --stat; cd ..
                                 CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
+                                CXX="${CXX}" ./compare-optimizer.sh "--tests-file all.tests --num-samples=10" "--O1"
                             """
                         }
 
