@@ -8,9 +8,9 @@ open Expression_gen
 open Statement_gen
 
 (**
- * Typename: The name of a template typename 
- * Require: One of Stan's C++ template require giving a condition and the template names needing to satisfy that condition.
- * Bool: A boolean template type
+  Typename: The name of a template typename 
+  Require: One of Stan's C++ template require giving a condition and the template names needing to satisfy that condition.
+  Bool: A boolean template type
  *)
 type template_parameter =
   | Typename of string
@@ -29,7 +29,7 @@ let pp_template_parameter_defaults ppf template_parameter =
   | _ -> pp_template_parameter ppf template_parameter
 
 (**
-  * Pretty print a full C++ `template <parameter-list>`  
+   Pretty print a full C++ `template <parameter-list>`  
   *)
 let pp_template ~defaults ppf template_parameters =
   match template_parameters with
@@ -54,8 +54,8 @@ let is_data_matrix_or_not_int_type = function
   | _ -> true
 
 (** Print template arguments for C++ functions that need templates
- * @param args A pack of [Program.fun_arg_decl] containing functions to detect templates.
- * @return A list of arguments with template parameter names added.
+  @param args A pack of [Program.fun_arg_decl] containing functions to detect templates.
+  @return A list of arguments with template parameter names added.
  *)
 let template_parameter_names (args : Program.fun_arg_decl) =
   List.mapi args ~f:(fun i arg ->
@@ -92,8 +92,8 @@ let%expect_test "arg types templated correctly" =
   [%expect {| T0__ |}]
 
 (** Print the code for promoting stan real types
- * @param ppf A pretty printer$
- * @param args A pack of arguments to detect whether they need to use the promotion rules.
+  @param ppf A pretty printer$
+  @param args A pack of arguments to detect whether they need to use the promotion rules.
  *)
 let pp_promoted_scalar ppf args =
   match args with
@@ -133,10 +133,10 @@ let pp_eigen_arg_to_ref ppf arg_types =
        arg_types )
 
 (** Print the type of an object.
- * @param ppf A pretty printer
- * @param custom_scalar_opt A string representing a types inner scalar value.
- * @param name The name of the object
- * @param ut The unsized type of the object
+  @param ppf A pretty printer
+  @param custom_scalar_opt A string representing a types inner scalar value.
+  @param name The name of the object
+  @param ut The unsized type of the object
  *)
 let pp_arg ppf (custom_scalar_opt, (_, name, ut)) =
   let scalar =
@@ -161,8 +161,8 @@ let pp_arg_eigen_suffix ppf (custom_scalar_opt, (_, name, ut)) =
 let typename parameter_name = Typename parameter_name
 
 (** Construct an object with it's needed templates for function signatures.
- * @param is_possibly_eigen_expr if true, argument can possibly be an unevaluated eigen expression.
- * @param fdargs A sexp list of strings representing C++ types.
+  @param is_possibly_eigen_expr if true, argument can possibly be an unevaluated eigen expression.
+  @param fdargs A sexp list of strings representing C++ types.
  *)
 let templates_and_args (is_possibly_eigen_expr : bool)
     (fdargs : Program.fun_arg_decl) :
@@ -185,7 +185,7 @@ let mk_extra_args templates args =
   List.map ~f:(fun (t, v) -> t ^ "& " ^ v) (List.zip_exn templates args)
 
 (**
- * Prints boilerplate at start of function. Body of function wrapped in a `try` block.
+  Prints boilerplate at start of function. Body of function wrapped in a `try` block.
  *)
 let pp_fun_body fdargs fdsuffix ppf (Stmt.Fixed.{pattern; _} as fdbody) =
   pf ppf "@[<hv 8>using local_scalar_t__ =@ %a;@]@," pp_promoted_scalar fdargs ;
@@ -209,7 +209,7 @@ let pp_fun_body fdargs fdsuffix ppf (Stmt.Fixed.{pattern; _} as fdbody) =
   pf ppf "@ "
 
 (**
-   * Functor to generate a pretty printer for the function signature.
+    Functor to generate a pretty printer for the function signature.
    *)
 let gen_pp_sig fdargs fdrt extra_templates extra ppf (name, args, variadic) =
   Format.open_vbox 2 ;
@@ -229,9 +229,9 @@ let gen_pp_sig fdargs fdrt extra_templates extra ppf (name, args, variadic) =
   Format.close_box ()
 
 (** Print the C++ function definition.
- * @param ppf A pretty printer
- * Refactor this please - one idea might be to have different functions for
- *  printing user defined distributions vs rngs vs regular functions.
+  @param ppf A pretty printer
+  Refactor this please - one idea might be to have different functions for
+   printing user defined distributions vs rngs vs regular functions.
  *)
 let pp_fun_def ppf
     ( Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
