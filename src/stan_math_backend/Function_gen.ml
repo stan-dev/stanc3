@@ -7,112 +7,110 @@ open Fmt
 open Expression_gen
 open Statement_gen
 
-type template =
+(**
+ * Typename: The name of a template typename 
+ * Require: One of Stan's C++ template require giving a condition and the template names needing to satisfy that condition.
+ * Bool: A boolean template type
+ *)
+type template_parameter =
   | Typename of string
   | Require of string * string
   | Bool of string
 
-(* and stmt =
-   | Struct of {templates: template list; name: string; body: stmt list}
-   | FunDef of
-       { name: string
-       ; templates: template list
-       ; args: string list
-       ; return: string
-       ; body: stmt list option }
-   | Generated of string
-       (** Placeholder for all other C++.
-           We should slowly move more and more statements
-           away from strings *) *)
+let pp_template_parameter ppf template_parameter =
+  match template_parameter with
+  | Typename param_name -> pf ppf "typename %s" param_name
+  | Require (requirement, param_name) -> pf ppf "%s<%s>*" requirement param_name
+  | Bool param_name -> pf ppf "bool %s" param_name
 
-let pp_template ppf template =
-  match template with
-  | Typename t -> pf ppf "typename %s" t
-  | Require (r, t) -> pf ppf "%s<%s>*" r t
-  | Bool s -> pf ppf "bool %s" s
+let pp_template_parameter_defaults ppf template_parameter =
+  match template_parameter with
+  | Require _ -> pf ppf "%a = nullptr" pp_template_parameter template_parameter
+  | _ -> pp_template_parameter ppf template_parameter
 
-let pp_template_defaults ppf template =
-  match template with
-  | Require _ -> pf ppf "%a = nullptr" pp_template template
-  | _ -> pp_template ppf template
-
-let pp_templates ~defaults ppf templates =
-  match templates with
+(**
+  * Pretty print a full C++ `template <parameter-list>`  
+  *)
+let pp_template ~defaults ppf template_parameters =
+  match template_parameters with
   | [] -> ()
   | _ ->
       pf ppf "template <@[%a@]>@ "
         (list ~sep:comma
-           (if defaults then pp_template_defaults else pp_template) )
-        templates
+           ( if defaults then pp_template_parameter_defaults
+           else pp_template_parameter ) )
+        template_parameters
 
 type found_functor =
-  { struct_template: template option
-  ; arg_templates: template list
+  { struct_template: template_parameter option
+  ; arg_templates: template_parameter list
   ; signature: string
   ; defn: string }
 
 (** Detect if argument requires C++ template *)
-let arg_needs_template = function
-  | UnsizedType.DataOnly, _, t -> UnsizedType.is_eigen_type t
+let is_data_matrix_or_not_int_type = function
+  | UnsizedType.DataOnly, _, ut -> UnsizedType.is_eigen_type ut
   | _, _, t when UnsizedType.is_int_type t -> false
   | _ -> true
 
 (** Print template arguments for C++ functions that need templates
-@param args A pack of [Program.fun_arg_decl] containing functions to detect templates.
-@return A list of arguments with template parameter names added.
-*)
-let maybe_templated_arg_types (args : Program.fun_arg_decl) =
-  List.mapi args ~f:(fun i a ->
-      match arg_needs_template a with
+ * @param args A pack of [Program.fun_arg_decl] containing functions to detect templates.
+ * @return A list of arguments with template parameter names added.
+ *)
+let template_parameter_names (args : Program.fun_arg_decl) =
+  List.mapi args ~f:(fun i arg ->
+      match is_data_matrix_or_not_int_type arg with
       | true -> Some (sprintf "T%d__" i)
       | false -> None )
 
-let maybe_require_templates (names : string option list)
+let requires (_, _, ut) =
+  match ut with
+  | UnsizedType.URowVector -> "stan::require_row_vector_t"
+  | UVector -> "stan::require_col_vector_t"
+  | UMatrix -> "stan::require_eigen_matrix_dynamic_t"
+  (* NB: Not unwinding array types due to the way arrays of eigens are printed *)
+  | _ -> "stan::require_stan_scalar_t"
+
+let optional_require_templates (name_ops : string option list)
     (args : Program.fun_arg_decl) =
-  let require_for_arg arg =
-    match trd3 arg with
-    | UnsizedType.URowVector -> "stan::require_row_vector_t"
-    | UVector -> "stan::require_col_vector_t"
-    | UMatrix -> "stan::require_eigen_matrix_dynamic_t"
-    (* NB: Not unwinding array types due to the way arrays of eigens are printed *)
-    | _ -> "stan::require_stan_scalar_t" in
-  List.map2_exn names args ~f:(fun name a ->
-      match name with
-      | Some t -> Some (Require (require_for_arg a, t))
+  List.map2_exn name_ops args ~f:(fun name_op fun_arg ->
+      match name_op with
+      | Some param_name -> Some (Require (requires fun_arg, param_name))
       | None -> None )
 
-let return_arg_types (args : Program.fun_arg_decl) =
-  List.mapi args ~f:(fun i ((_, _, ut) as a) ->
-      if UnsizedType.is_eigen_type ut && arg_needs_template a then
+let return_optional_arg_types (args : Program.fun_arg_decl) =
+  List.mapi args ~f:(fun i ((_, _, ut) as arg) ->
+      if UnsizedType.is_eigen_type ut && is_data_matrix_or_not_int_type arg then
         Some (sprintf "stan::value_type_t<T%d__>" i)
-      else if arg_needs_template a then Some (sprintf "T%d__" i)
+      else if is_data_matrix_or_not_int_type arg then Some (sprintf "T%d__" i)
       else None )
 
 let%expect_test "arg types templated correctly" =
   [(AutoDiffable, "xreal", UReal); (DataOnly, "yint", UInt)]
-  |> maybe_templated_arg_types |> List.filter_opt |> String.concat ~sep:","
+  |> template_parameter_names |> List.filter_opt |> String.concat ~sep:","
   |> print_endline ;
   [%expect {| T0__ |}]
 
 (** Print the code for promoting stan real types
-@param ppf A pretty printer
-@param args A pack of arguments to detect whether they need to use the promotion rules.
-*)
+ * @param ppf A pretty printer$
+ * @param args A pack of arguments to detect whether they need to use the promotion rules.
+ *)
 let pp_promoted_scalar ppf args =
   match args with
   | [] -> pf ppf "double"
   | _ ->
       let rec promote_args_chunked ppf args =
-        let go ppf tl =
-          match tl with [] -> () | _ -> pf ppf ",@ %a" promote_args_chunked tl
-        in
+        let chunk_till_empty ppf list_tail =
+          match list_tail with
+          | [] -> ()
+          | _ -> pf ppf ",@ %a" promote_args_chunked list_tail in
         match args with
         | [] -> pf ppf "double"
-        | hd :: tl ->
+        | hd :: list_tail ->
             pf ppf "@[stan::promote_args_t<@[%a%a@]>@]" (list ~sep:comma string)
-              hd go tl in
+              hd chunk_till_empty list_tail in
       promote_args_chunked ppf
-        List.(chunks_of ~length:5 (filter_opt (return_arg_types args)))
+        List.(chunks_of ~length:5 (filter_opt (return_optional_arg_types args)))
 
 (** Pretty-prints a function's return-type, taking into account templated argument
   promotion.*)
@@ -135,10 +133,10 @@ let pp_eigen_arg_to_ref ppf arg_types =
        arg_types )
 
 (** Print the type of an object.
- @param ppf A pretty printer
- @param custom_scalar_opt A string representing a types inner scalar value.
- @param name The name of the object
- @param ut The unsized type of the object
+ * @param ppf A pretty printer
+ * @param custom_scalar_opt A string representing a types inner scalar value.
+ * @param name The name of the object
+ * @param ut The unsized type of the object
  *)
 let pp_arg ppf (custom_scalar_opt, (_, name, ut)) =
   let scalar =
@@ -160,126 +158,146 @@ let pp_arg_eigen_suffix ppf (custom_scalar_opt, (_, name, ut)) =
   pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
     opt_arg_suffix
 
-let typename t = Typename t
+let typename parameter_name = Typename parameter_name
 
 (** Construct an object with it's needed templates for function signatures.
- @param fdargs A sexp list of strings representing C++ types.
-  *)
-let get_templates_and_args exprs fdargs =
-  let argtypetemplates = maybe_templated_arg_types fdargs in
-  let requireargtemplates = maybe_require_templates argtypetemplates fdargs in
-  ( List.filter_opt argtypetemplates
-  , List.filter_opt requireargtemplates
-  , if not exprs then
+ * @param is_possibly_eigen_expr if true, argument can possibly be an unevaluated eigen expression.
+ * @param fdargs A sexp list of strings representing C++ types.
+ *)
+let templates_and_args (is_possibly_eigen_expr : bool)
+    (fdargs : Program.fun_arg_decl) :
+    string list * template_parameter list * string list =
+  let arg_type_templates = template_parameter_names fdargs in
+  let require_arg_templates =
+    optional_require_templates arg_type_templates fdargs in
+  ( List.filter_opt arg_type_templates
+  , List.filter_opt require_arg_templates
+  , if not is_possibly_eigen_expr then
       List.map
         ~f:(fun a -> str "%a" pp_arg a)
-        (List.zip_exn argtypetemplates fdargs)
+        (List.zip_exn arg_type_templates fdargs)
     else
       List.map
         ~f:(fun a -> str "%a" pp_arg_eigen_suffix a)
-        (List.zip_exn argtypetemplates fdargs) )
+        (List.zip_exn arg_type_templates fdargs) )
 
 let mk_extra_args templates args =
   List.map ~f:(fun (t, v) -> t ^ "& " ^ v) (List.zip_exn templates args)
 
+(**
+ * Prints boilerplate at start of function. Body of function wrapped in a `try` block.
+ *)
+let pp_fun_body fdargs fdsuffix ppf (Stmt.Fixed.{pattern; _} as fdbody) =
+  pf ppf "@[<hv 8>using local_scalar_t__ =@ %a;@]@," pp_promoted_scalar fdargs ;
+  pf ppf "int current_statement__ = 0; @ " ;
+  if List.exists ~f:(fun (_, _, ut) -> UnsizedType.is_eigen_type ut) fdargs then
+    pp_eigen_arg_to_ref ppf fdargs ;
+  ( match fdsuffix with
+  | Fun_kind.FnLpdf _ | FnTarget -> ()
+  | FnPlain | FnRng ->
+      pf ppf "%s@ " "static constexpr bool propto__ = true;" ;
+      pf ppf "%s@ " "(void) propto__;" ) ;
+  pf ppf "%s@ "
+    "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
+  pf ppf "%a" pp_unused "DUMMY_VAR__" ;
+  let blocked_fdbody =
+    match pattern with
+    | SList stmts -> {fdbody with pattern= Block stmts}
+    | Block _ -> fdbody
+    | _ -> {fdbody with pattern= Block [fdbody]} in
+  pp_located_error ppf (pp_statement, blocked_fdbody) ;
+  pf ppf "@ "
+
+(**
+   * Functor to generate a pretty printer for the function signature.
+   *)
+let gen_pp_sig fdargs fdrt extra_templates extra ppf (name, args, variadic) =
+  Format.open_vbox 2 ;
+  pp_returntype ppf fdargs fdrt ;
+  let args, variadic_args =
+    match variadic with
+    | `ReduceSum -> List.split_n args 3
+    | `VariadicODE -> List.split_n args 2
+    | `VariadicDAE -> List.split_n args 3
+    | `None -> (args, []) in
+  let arg_strs =
+    args
+    @ mk_extra_args extra_templates extra
+    @ ["std::ostream* pstream__"]
+    @ variadic_args in
+  pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs ;
+  Format.close_box ()
+
 (** Print the C++ function definition.
-  @param ppf A pretty printer
-  Refactor this please - one idea might be to have different functions for
-   printing user defined distributions vs rngs vs regular functions.
-*)
+ * @param ppf A pretty printer
+ * Refactor this please - one idea might be to have different functions for
+ *  printing user defined distributions vs rngs vs regular functions.
+ *)
 let pp_fun_def ppf
     ( Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _}
     , (functors : (string, found_functor list) Hashtbl.t)
-    , (forward_decls : (string * template list) Hash_set.t)
+    , (forward_decls : (string * template_parameter list) Hash_set.t)
     , (funs_used_in_reduce_sum : String.Set.t)
     , (funs_used_in_variadic_ode : String.Set.t)
     , (funs_used_in_variadic_dae : String.Set.t) ) =
-  let extra, extra_templates =
+  let extra, template_extra_params =
     match fdsuffix with
     | Fun_kind.FnTarget -> (["lp__"; "lp_accum__"], ["T_lp__"; "T_lp_accum__"])
     | FnRng -> (["base_rng__"], ["RNG"])
     | FnLpdf _ | FnPlain -> ([], []) in
-  let pp_body ppf (Stmt.Fixed.{pattern; _} as fdbody) =
-    pf ppf "@[<hv 8>using local_scalar_t__ =@ %a;@]@," pp_promoted_scalar fdargs ;
-    pf ppf "int current_statement__ = 0; @ " ;
-    if List.exists ~f:(fun (_, _, t) -> UnsizedType.is_eigen_type t) fdargs then
-      pp_eigen_arg_to_ref ppf fdargs ;
-    ( match fdsuffix with
-    | FnLpdf _ | FnTarget -> ()
-    | FnPlain | FnRng ->
-        pf ppf "%s@ " "static constexpr bool propto__ = true;" ;
-        pf ppf "%s@ " "(void) propto__;" ) ;
-    pf ppf "%s@ "
-      "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
-    pf ppf "%a" pp_unused "DUMMY_VAR__" ;
-    let blocked_fdbody =
-      match pattern with
-      | SList stmts -> {fdbody with pattern= Block stmts}
-      | Block _ -> fdbody
-      | _ -> {fdbody with pattern= Block [fdbody]} in
-    pp_located_error ppf (pp_statement, blocked_fdbody) ;
-    pf ppf "@ " in
-  let get_templates exprs variadic =
-    let argtypetemplates, require_templates, args =
-      get_templates_and_args exprs fdargs in
-    let templates =
-      List.(map ~f:typename (argtypetemplates @ extra_templates))
-      @ require_templates in
-    match (fdsuffix, variadic) with
-    | (FnLpdf _ | FnTarget), `None -> (Bool "propto__" :: templates, args)
-    | _ -> (templates, args) in
-  let pp_sig ppf (name, args, variadic) =
-    Format.open_vbox 2 ;
-    pp_returntype ppf fdargs fdrt ;
-    let args, variadic_args =
-      match variadic with
-      | `ReduceSum -> List.split_n args 3
-      | `VariadicODE -> List.split_n args 2
-      | `VariadicDAE -> List.split_n args 3
-      | `None -> (args, []) in
-    let arg_strs =
-      args
-      @ mk_extra_args extra_templates extra
-      @ ["std::ostream* pstream__"]
-      @ variadic_args in
-    pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs ;
-    Format.close_box () in
-  let templates, templated_args = get_templates true `None in
-  let signature = str "%a" pp_sig (fdname, templated_args, `None) in
+  let template_parameter_and_arg_names is_possibly_eigen_expr variadic_fun_type
+      =
+    let template_param_names, template_require_checks, args =
+      templates_and_args is_possibly_eigen_expr fdargs in
+    let template_params =
+      List.(map ~f:typename (template_param_names @ template_extra_params))
+      @ template_require_checks in
+    match (fdsuffix, variadic_fun_type) with
+    | (FnLpdf _ | FnTarget), `None -> (Bool "propto__" :: template_params, args)
+    | _ -> (template_params, args) in
+  let template_params, templated_args =
+    template_parameter_and_arg_names true `None in
+  let pp_fun_sig = gen_pp_sig fdargs fdrt template_extra_params extra in
+  let signature = str "%a" pp_fun_sig (fdname, templated_args, `None) in
   (* We want to print the [* = nullptr] at most once, and preferrably on a forward decl *)
-  let defaults =
+  let template_parameter_default_values =
     Option.is_none fdbody
-    || not (Hash_set.mem forward_decls (signature, templates)) in
-  pf ppf "%a%a" (pp_templates ~defaults) templates pp_sig
+    || not (Hash_set.mem forward_decls (signature, template_params)) in
+  pf ppf "%a%a"
+    (pp_template ~defaults:template_parameter_default_values)
+    template_params pp_fun_sig
     (fdname, templated_args, `None) ;
   match fdbody with
   | None ->
       pf ppf ";@ " ;
-      Hash_set.add forward_decls (signature, templates)
+      (* Side Effect: *)
+      Hash_set.add forward_decls (signature, template_params)
   | Some fdbody ->
-      pp_block ppf (pp_body, fdbody) ;
-      let register_functor (str_args, args, variadic) =
+      pp_block ppf (pp_fun_body fdargs fdsuffix, fdbody) ;
+      let register_functor (str_args, args, variadic_fun_type) =
         let suffix =
-          match variadic with
+          match variadic_fun_type with
           | `None -> functor_suffix
           | `ReduceSum -> reduce_sum_functor_suffix
           | `VariadicODE -> variadic_ode_functor_suffix
           | `VariadicDAE -> variadic_dae_functor_suffix in
         let functor_name = fdname ^ suffix in
         let struct_template =
-          match (fdsuffix, variadic) with
+          match (fdsuffix, variadic_fun_type) with
           | FnLpdf _, `ReduceSum -> Some (Bool "propto__")
           | _ -> None in
-        let arg_templates, templated_args = get_templates false variadic in
+        let arg_templates, templated_args =
+          template_parameter_and_arg_names false variadic_fun_type in
         let op_signature =
-          str "%a" pp_sig ("operator()", templated_args, variadic) in
-        let defn =
-          str "%a@ const@,{@.  return %a;@.}@." pp_sig
+          str "%a" pp_fun_sig ("operator()", templated_args, variadic_fun_type)
+        in
+        let operator_paren_sig =
+          str "%a@ const@,{@.  return %a;@.}@." pp_fun_sig
             ( functor_name
               ^ (if struct_template <> None then "<propto__>" else "")
               ^ "::operator()"
             , templated_args
-            , variadic )
+            , variadic_fun_type )
             pp_call_str
             ( ( match fdsuffix with
               | FnLpdf _ | FnTarget -> fdname ^ "<propto__>"
@@ -287,9 +305,13 @@ let pp_fun_def ppf
             , str_args
               @ List.map ~f:(fun (_, name, _) -> name) args
               @ extra @ ["pstream__"] ) in
+        (* Side Effect: *)
         Hashtbl.add_multi functors ~key:functor_name
-          ~data:{struct_template; arg_templates; signature= op_signature; defn}
-      in
+          ~data:
+            { struct_template
+            ; arg_templates
+            ; signature= op_signature
+            ; defn= operator_paren_sig } in
       register_functor ([], fdargs, `None) ;
       if String.Set.mem funs_used_in_reduce_sum fdname then
         (* Produces the reduce_sum functors that has the pstream argument
@@ -347,7 +369,8 @@ let pp_standalone_fun_def namespace_fun ppf
         , List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
         )
 
-let is_fun_used_with_variadic_fn variadic_fn_test p =
+let is_fun_used_with_variadic_fn (variadic_fn_test : string -> bool)
+    (p : ('a, 'b) Program.t) =
   let rec find_functors_expr accum Expr.Fixed.{pattern; _} =
     String.Set.union accum
       ( match pattern with
@@ -361,7 +384,7 @@ let is_fun_used_with_variadic_fn variadic_fn_test p =
   in
   Program.fold find_functors_expr find_functors_stmt String.Set.empty p
 
-let collect_functors_functions p =
+let collect_functors_functions (p : ('a, 'b) Program.t) =
   let (functors : (string, found_functor list) Hashtbl.t) =
     String.Table.create () in
   let forward_decls = Hash_set.Poly.create () in
@@ -385,29 +408,35 @@ let collect_functors_functions p =
       p.functions_block
   , functors )
 
-let pp_functions_functors ppf p =
+let pp_functions_functors ppf (p : ('a, 'b) Program.t) =
   let fns_str, functors = collect_functors_functions p in
   let pp_functor_decls ppf tbl =
     Hashtbl.iteri tbl ~f:(fun ~key ~data ->
         pf ppf "@[<v 2>%astruct %s {@,%aconst;@]@,};@."
           (option
-             (option (fun ppf t ->
-                  pf ppf "template <%a>@ " pp_template_defaults t ) ) )
-          (Option.map ~f:(fun x -> x.struct_template) (List.hd data))
+             (option (fun ppf template_param ->
+                  pf ppf "template <%a>@ " pp_template_parameter_defaults
+                    template_param ) ) )
+          (Option.map
+             ~f:(fun functor_t -> functor_t.struct_template)
+             (List.hd data) )
           key
-          (list ~sep:(any "const;@,") (fun ppf (ts, sign) ->
-               pf ppf "%a@[<h>%a@]" (pp_templates ~defaults:true) ts text sign )
-          )
+          (list ~sep:(any "const;@,") (fun ppf (template_parameters, sign) ->
+               pf ppf "%a@[<h>%a@]"
+                 (pp_template ~defaults:true)
+                 template_parameters text sign ) )
           (List.map
              ~f:(fun {arg_templates; signature; _} -> (arg_templates, signature))
              data ) ) in
-  let pp_functors ppf tbl =
-    Hashtbl.iter tbl ~f:(fun data ->
+  let pp_functors ppf functor_tbl =
+    Hashtbl.iter functor_tbl ~f:(fun data ->
         List.iter data ~f:(fun {struct_template; defn; arg_templates; _} ->
             pf ppf "%a%a%s@."
-              (option (fun ppf t -> pf ppf "template <%a>@ " pp_template t))
+              (option (fun ppf template_param ->
+                   pf ppf "template <%a>@ " pp_template_parameter template_param )
+              )
               struct_template
-              (pp_templates ~defaults:false)
+              (pp_template ~defaults:false)
               arg_templates defn ) ) in
   pf ppf "%a@ %s@ %a" pp_functor_decls functors fns_str pp_functors functors
 
