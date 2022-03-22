@@ -370,7 +370,7 @@ let pp_standalone_fun_def namespace_fun ppf
         )
 
 let is_fun_used_with_variadic_fn (variadic_fn_test : string -> bool)
-    (p : ('a, 'b) Program.t) =
+    (p : Program.Numbered.t) =
   let rec find_functors_expr accum Expr.Fixed.{pattern; _} =
     String.Set.union accum
       ( match pattern with
@@ -384,7 +384,7 @@ let is_fun_used_with_variadic_fn (variadic_fn_test : string -> bool)
   in
   Program.fold find_functors_expr find_functors_stmt String.Set.empty p
 
-let collect_functors_functions (p : ('a, 'b) Program.t) =
+let collect_functors_functions (p : Program.Numbered.t) =
   let (functors : (string, found_functor list) Hashtbl.t) =
     String.Table.create () in
   let forward_decls = Hash_set.Poly.create () in
@@ -408,7 +408,7 @@ let collect_functors_functions (p : ('a, 'b) Program.t) =
       p.functions_block
   , functors )
 
-let pp_functions_functors ppf (p : ('a, 'b) Program.t) =
+let pp_functions_functors ppf (p : Program.Numbered.t) =
   let fns_str, functors = collect_functors_functions p in
   let pp_functor_decls ppf tbl =
     Hashtbl.iteri tbl ~f:(fun ~key ~data ->
