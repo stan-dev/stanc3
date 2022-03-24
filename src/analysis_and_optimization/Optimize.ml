@@ -765,12 +765,17 @@ let partial_evaluation = Partial_evaluator.eval_prog
  *)
 let rec find_assignment_idx (name : string) Stmt.Fixed.{pattern; _} =
   match pattern with
-  | Stmt.Fixed.Pattern.Assignment
-      (lval, (_ : UnsizedType.t), (rhs : 'a Expr.Fixed.t))
-    when let assign_name = TupleUtils.lhs_variable lval in
-         name = assign_name
-         && not (Set.Poly.mem (expr_var_names_set rhs) assign_name) ->
-      Some (TupleUtils.lhs_indices lval)
+  | Stmt.Fixed.Pattern.Assignment (lval, lhs_ut, (rhs : 'a Expr.Fixed.t)) ->
+      let assign_name = TupleUtils.lhs_variable lval in
+      let idx_lst = TupleUtils.lhs_indices lval in
+      if
+        name = assign_name
+        && (not (Set.Poly.mem (expr_var_names_set rhs) assign_name))
+        && not
+             ( rhs.meta.adlevel = UnsizedType.DataOnly
+             && UnsizedType.is_array lhs_ut )
+      then Some idx_lst
+      else None
   | _ -> None
 
 (**
@@ -1244,7 +1249,7 @@ let level_optimizations (lvl : optimization_level) : optimization_settings =
       ; partial_evaluation= true
       ; lazy_code_motion= false
       ; allow_uninitialized_decls= true
-      ; optimize_ad_levels= true
+      ; optimize_ad_levels= false
       ; preserve_stability= false
       ; optimize_soa= true }
   | Oexperimental -> all_optimizations

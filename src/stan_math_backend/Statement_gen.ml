@@ -6,6 +6,12 @@ open Expression_gen
 
 let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
 let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
+let pp_unused = fmt "(void) %s;  // suppress unused var warning"
+
+(** Print the body of exception handling for functions *)
+let pp_located ppf _ =
+  pf ppf
+    {|stan::lang::rethrow_located(e, locations_array__[current_statement__]);|}
 
 let pp_profile ppf (pp_body, name, body) =
   let profile ppf name =
@@ -15,31 +21,9 @@ let pp_profile ppf (pp_body, name, body) =
       name in
   pf ppf "{@;<1 2>@[<v>%a@;@;%a@]@,}" profile name pp_body body
 
-let rec contains_eigen (ut : UnsizedType.t) : bool =
-  match ut with
-  | UnsizedType.UTuple ts -> List.exists ~f:contains_eigen ts
-  | UnsizedType.UArray t -> contains_eigen t
-  | UMatrix | URowVector | UVector -> true
-  | UInt | UReal | UComplex | UMathLibraryFunction | UFun _ -> false
-
-(*Fill only needs to happen for containers
-  * Note: This should probably be moved into its own function as data
-  * does not need to be filled as we are promised user input data has the correct
-  * dimensions. Transformed data must be filled as incorrect slices could lead
-  * to elements of objects in transform data not being set by the user.
-*)
-let pp_filler ppf (decl_id, st, nan_type, needs_filled) =
-  match (needs_filled, contains_eigen (SizedType.to_unsized st)) with
-  | true, true ->
-      pf ppf "@[<hov 2>stan::math::initialize_fill(%s, %s);@]@," decl_id
-        nan_type
-  | _ -> ()
-
 (*Pretty print a sized type*)
 let pp_st ppf (st, adtype) =
   pf ppf "%a" pp_unsizedtype_local (adtype, SizedType.to_unsized st)
-
-let pp_ut ppf (ut, adtype) = pf ppf "%a" pp_unsizedtype_local (adtype, ut)
 
 (*Get a string representing for the NaN type of the given type *)
 let nan_type (st, adtype) =
@@ -73,7 +57,7 @@ let rec pp_initialize ppf (st, adtype) =
             pp_initialize (t, adtype)
       | STuple _ ->
           Common.FatalError.fatal_error_msg
-            [%message "Tuple without Tuple AD type in codegen"] )
+            [%message "DataOnly Tuple without Tuple AD type in codegen"] )
   | AutoDiffable -> (
       let init_nan = nan_type (st, adtype) in
       let ut = SizedType.to_unsized st in
@@ -107,7 +91,7 @@ let rec pp_initialize ppf (st, adtype) =
             pp_expr d pp_initialize (t, adtype)
       | STuple _ ->
           Common.FatalError.fatal_error_msg
-            [%message "Tuple without Tuple AD type in codegen"] )
+            [%message "AutoDiff Tuple without Tuple AD type in codegen"] )
   | TupleAD ads -> (
     match st with
     (* TUPLE MAYBE
@@ -122,7 +106,7 @@ let rec pp_initialize ppf (st, adtype) =
            std::tuple<type,..>{value,..};
     *)
     | STuple ts ->
-        pf ppf "std::tuple<%a>{@%a@}" pp_st (st, adtype)
+        pf ppf "%a{%a}" pp_st (st, adtype)
           (list ~sep:(Fmt.unit ", ") pp_initialize)
           (List.zip_exn ts ads)
     | SArray (t, d) ->
@@ -241,11 +225,6 @@ let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
     loopvar pp_expr upper loopvar ;
   pf ppf " %a@]" pp_body body
 
-let rec integer_el_type = function
-  | SizedType.SInt -> true
-  | SArray (st, _) -> integer_el_type st
-  | _ -> false
-
 (** Print the private members of the model class
 
   Accounting for types that can be moved to OpenCL.
@@ -273,14 +252,6 @@ let pp_data_decl ppf (vident, ut) =
       pf ppf "%a %s;" pp_type
         (UnsizedType.fill_adtype_for_type DataOnly ut, ut)
         vident
-
-(** Create string representations for [vars__.emplace_back] *)
-let pp_emplace_var ppf var =
-  match Expr.Typed.type_of var with
-  | UnsizedType.UComplex ->
-      pf ppf "@[<hov 2>vars__.emplace_back(%a.real());@]@," pp_expr var ;
-      pf ppf "@[<hov 2>vars__.emplace_back(%a.imag());@]" pp_expr var
-  | _ -> pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
 
 (** Create strings representing maps of Eigen types*)
 let pp_map_decl ppf (vident, ut) =
@@ -516,3 +487,21 @@ and pp_block_s ppf body =
   match body.pattern with
   | Block ls -> pp_block ppf (list ~sep:cut pp_statement, ls)
   | _ -> pp_block ppf (pp_statement, body)
+
+(** [pp_located_error ppf (pp_body_block, body_block, err_msg)] surrounds [body_block]
+    with a C++ try-catch that will rethrow the error with the proper source location
+    from the [body_block] (required to be a [stmt_loc Block] variant).
+  @param ppf A pretty printer.
+  @param pp_body_block A pretty printer for the body block
+  @param body A C++ scoped body block surrounded by squiggly braces.
+  *)
+let pp_located_error ppf (pp_body_block, body) =
+  pf ppf "@ try %a" pp_body_block body ;
+  string ppf " catch (const std::exception& e) " ;
+  pp_block ppf (pp_located, ())
+
+(** [pp_located_error_b] automatically adds a Block wrapper *)
+let pp_located_error_b ppf body_stmts =
+  pp_located_error ppf
+    ( pp_statement
+    , Stmt.Fixed.{pattern= Block body_stmts; meta= Locations.no_span_num} )

@@ -406,4 +406,10 @@ module Helpers = struct
       ; pattern=
           Assignment (LIndexed (LVariable vident, indices), decl_type, varfn var)
       }
+  
+  let rec get_name (lval : 'a Fixed.Pattern.lvalue) = 
+    match lval with 
+    | LVariable name -> name
+    | LIndexed (sub_lval, _) -> get_name sub_lval
+    | LTupleProjection (sub_lval, num) -> (get_name sub_lval)^"."^(string_of_int num)
 end

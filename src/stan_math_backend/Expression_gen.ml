@@ -10,8 +10,6 @@ let stan_namespace_qualify f =
   if String.is_suffix ~suffix:"functor__" f || String.contains f ':' then f
   else "stan::math::" ^ f
 
-let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
-
 (* retun true if the type of the expression
    is integer, real, or complex (e.g. not a container) *)
 let is_scalar e =
@@ -161,6 +159,10 @@ let rec pp_possibly_var_decl ppf (adtype, ut, mem_pattern) =
         (adtype, t, mem_pattern)
   | UMatrix | UVector | URowVector -> pf ppf "%a" pp_var_decl ut
   | UReal | UInt | UComplex -> pf ppf "%a" pp_unsizedtype_local (adtype, ut)
+  | UTuple t_lst ->
+    pf ppf "@[<hov 2>std::tuple<@,%a>@]" 
+      (list ~sep:comma pp_possibly_var_decl)
+      (List.map ~f:(fun t -> (adtype, t, mem_pattern)) t_lst)
   | x ->
       (* TUPLE TODO *)
       Common.FatalError.fatal_error_msg
@@ -514,7 +516,7 @@ and pp_compiler_internal_fn ad ut f ppf es =
     pf ppf "std::vector<%a>{@,%a}" pp_unsizedtype_local (ad, ut)
       (list ~sep:comma pp_expr) es in
   let pp_tuple_literal ppf es =
-    pf ppf "std::make_tuple(@[%a@])" (list ~sep:comma pp_expr) es in
+    pf ppf "std::forward_as_tuple(@[%a@])" (list ~sep:comma pp_expr) es in
   match f with
   | Internal_fun.FnMakeArray ->
       let ut =

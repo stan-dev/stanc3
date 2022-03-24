@@ -137,14 +137,14 @@ let reverse (type l) (module F : FLOWGRAPH with type labels = l) =
     with type labels = l )
 
 (** Modify the end nodes of a flowgraph to depend on its inits
- * To force the monotone framework to run until the program never changes
- *  this function modifies the input `Flowgraph` so that it's end nodes
- *  depend on it's initial nodes. The inits of the reverse flowgraph are used
- *  for this since we normally have both the forward and reverse flowgraphs
- *  available.
- * @tparam l Type of the label for each flowgraph, most commonly an int
- * @param Flowgraph The flowgraph to modify
- * @param RevFlowgraph The same flowgraph as `Flowgraph` but reversed.
+  To force the monotone framework to run until the program never changes
+   this function modifies the input [Flowgraph] so that it's end nodes
+   depend on it's initial nodes. The inits of the reverse flowgraph are used
+   for this since we normally have both the forward and reverse flowgraphs
+   available.
+  @param l Type of the label for each flowgraph, most commonly an int
+  @param Flowgraph The flowgraph to modify
+  @param RevFlowgraph The same flowgraph as [Flowgraph] but reversed.
  *
  *)
 let make_circular_flowgraph (type l)
@@ -1033,12 +1033,12 @@ let lazy_expressions_mfp
   (latest_expr, used_not_latest_expressions_mfp)
 
 (** Run the minimal fixed point algorithm to deduce the smallest set of
- *   variables that satisfy a set of conditions.
- * @param Flowgraph The set of nodes to analyze
- * @param flowgraph_to_mir Map of nodes to their actual values in the MIR
- * @param initial_variables The set of variables to start in the set
- * @param gen_variable Used in the transfer function to deduce variables
- *  that should be in the set
+    variables that satisfy a set of conditions.
+  @param Flowgraph The set of nodes to analyze
+  @param flowgraph_to_mir Map of nodes to their actual values in the MIR
+  @param initial_variables The set of variables to start in the set
+  @param gen_variable Used in the transfer function to deduce variables
+   that should be in the set
  *
  *)
 let minimal_variables_mfp

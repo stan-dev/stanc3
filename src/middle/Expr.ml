@@ -34,10 +34,10 @@ module Fixed = struct
             Fmt.(list pp_e ~sep:Fmt.comma)
             args
       | TernaryIf (pred, texpr, fexpr) ->
-          Fmt.pf ppf {|@[%a@ %a@,%a@,%a@ %a@]|} pp_e pred pp_builtin_syntax "?"
+          Fmt.pf ppf "(@[%a@ %a@ %a@ %a@ %a@])" pp_e pred pp_builtin_syntax "?"
             pp_e texpr pp_builtin_syntax ":" pp_e fexpr
       | Indexed (expr, indices) ->
-          Fmt.pf ppf {|@[%a%a@]|} pp_e expr
+          Fmt.pf ppf "@[%a%a@]" pp_e expr
             ( if List.is_empty indices then fun _ _ -> ()
             else Fmt.(list (Index.pp pp_e) ~sep:comma |> brackets) )
             indices

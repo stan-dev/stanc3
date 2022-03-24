@@ -180,6 +180,13 @@ let rec is_container ut =
   | UFun (_, ReturnType t, _, _) -> is_container t
   | UMathLibraryFunction -> false
 
+let is_array ut =
+  match ut with
+  | UInt | UComplex | UReal | UMathLibraryFunction | UFun _ | UVector
+   |URowVector | UMatrix | UTuple _ ->
+      false
+  | UArray _ -> true
+
 let return_contains_eigen_type ret =
   match ret with ReturnType t -> contains_eigen_type t | Void -> false
 
