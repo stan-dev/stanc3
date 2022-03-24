@@ -67,7 +67,7 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
         
       
       {
-        std::vector<double> X_d_flat__;
+        std::vector<local_scalar_t__> X_d_flat__;
         current_statement__ = 10;
         X_d_flat__ = context__.vals_r("X_d");
         current_statement__ = 10;
@@ -1015,11 +1015,10 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
         return ;
       } 
       {
-        std::vector<double> theta =
-           std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
+        std::vector<double> theta;
         current_statement__ = 6;
-        stan::model::assign(theta, std::vector<double>{beta, 1000000, gamma,
-          xi, delta}, "assigning variable theta");
+        stan::model::assign(theta, std::vector<local_scalar_t__>{beta,
+          1000000, gamma, xi, delta}, "assigning variable theta");
         current_statement__ = 7;
         stan::model::assign(y,
           stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0, 0, t,
@@ -2534,7 +2533,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         
       
       {
-        std::vector<double> v_prev_flat__;
+        std::vector<local_scalar_t__> v_prev_flat__;
         current_statement__ = 59;
         v_prev_flat__ = context__.vals_r("v_prev");
         current_statement__ = 59;
@@ -4012,7 +4011,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
       
       {
-        std::vector<double> y_flat__;
+        std::vector<local_scalar_t__> y_flat__;
         current_statement__ = 11;
         y_flat__ = context__.vals_r("y");
         current_statement__ = 11;
@@ -4055,8 +4054,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       current_statement__ = 1;
       mu = in__.template read_constrain_ordered<
              Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__, 2);
-      std::vector<local_scalar_t__> sigma =
-         std::vector<local_scalar_t__>(2, DUMMY_VAR__);
+      std::vector<local_scalar_t__> sigma;
       current_statement__ = 2;
       sigma = in__.template read_constrain_lb<std::vector<local_scalar_t__>, 
                 jacobian__>(0, lp__, 2);
@@ -4124,8 +4122,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       current_statement__ = 1;
       mu = in__.template read_constrain_ordered<
              Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__, 2);
-      std::vector<double> sigma =
-         std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
+      std::vector<double> sigma;
       current_statement__ = 2;
       sigma = in__.template read_constrain_lb<std::vector<local_scalar_t__>, 
                 jacobian__>(0, lp__, 2);
@@ -4503,8 +4500,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       local_scalar_t__ mu;
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
-      std::vector<local_scalar_t__> theta =
-         std::vector<local_scalar_t__>(J, DUMMY_VAR__);
+      std::vector<local_scalar_t__> theta;
       current_statement__ = 2;
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
       local_scalar_t__ tau;
@@ -4552,8 +4548,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       double mu;
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
-      std::vector<double> theta =
-         std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
+      std::vector<double> theta;
       current_statement__ = 2;
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
       double tau;
@@ -5010,7 +5005,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         
       
       {
-        std::vector<double> black_flat__;
+        std::vector<local_scalar_t__> black_flat__;
         current_statement__ = 33;
         black_flat__ = context__.vals_r("black");
         current_statement__ = 33;
@@ -5054,7 +5049,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         
       
       {
-        std::vector<double> female_flat__;
+        std::vector<local_scalar_t__> female_flat__;
         current_statement__ = 37;
         female_flat__ = context__.vals_r("female");
         current_statement__ = 37;
@@ -5114,7 +5109,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         
       
       {
-        std::vector<double> v_prev_full_flat__;
+        std::vector<local_scalar_t__> v_prev_full_flat__;
         current_statement__ = 43;
         v_prev_full_flat__ = context__.vals_r("v_prev_full");
         current_statement__ = 43;
@@ -5932,7 +5927,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       new (&E) Eigen::Map<Eigen::Matrix<double, -1, 1>>(E__.data(), N);
       
       {
-        std::vector<double> E_flat__;
+        std::vector<local_scalar_t__> E_flat__;
         current_statement__ = 37;
         E_flat__ = context__.vals_r("E");
         current_statement__ = 37;
@@ -9249,7 +9244,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         
       
       {
-        std::vector<double> alpha_flat__;
+        std::vector<local_scalar_t__> alpha_flat__;
         current_statement__ = 29;
         alpha_flat__ = context__.vals_r("alpha");
         current_statement__ = 29;
@@ -9280,7 +9275,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       
       
       {
-        std::vector<double> beta_flat__;
+        std::vector<local_scalar_t__> beta_flat__;
         current_statement__ = 32;
         beta_flat__ = context__.vals_r("beta");
         current_statement__ = 32;
@@ -9343,10 +9338,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       pi = in__.template read_constrain_simplex<
              stan::conditional_var_value_t<local_scalar_t__, 
                Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(lp__, K);
-      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> theta =
-         std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(J, 
-           std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, 
-             Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(K, DUMMY_VAR__)));
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> theta;
       current_statement__ = 2;
       theta = in__.template read_constrain_simplex<
                 std::vector<
@@ -9430,11 +9422,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       current_statement__ = 1;
       pi = in__.template read_constrain_simplex<
              Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__, K);
-      std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> theta =
-         std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(J, 
-           std::vector<Eigen::Matrix<double, -1, 1>>(K, 
-             Eigen::Matrix<double, -1, 1>::Constant(K,
-               std::numeric_limits<double>::quiet_NaN())));
+      std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> theta;
       current_statement__ = 2;
       theta = in__.template read_constrain_simplex<
                 std::vector<
@@ -9915,7 +9903,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       new (&x) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x__.data(), N);
       
       {
-        std::vector<double> x_flat__;
+        std::vector<local_scalar_t__> x_flat__;
         current_statement__ = 21;
         x_flat__ = context__.vals_r("x");
         current_statement__ = 21;
@@ -13703,8 +13691,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      std::vector<local_scalar_t__> theta =
-         std::vector<local_scalar_t__>(J, DUMMY_VAR__);
+      std::vector<local_scalar_t__> theta;
       current_statement__ = 1;
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
       {
@@ -13743,8 +13730,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      std::vector<double> theta =
-         std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
+      std::vector<double> theta;
       current_statement__ = 1;
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
       out__.write(theta);
@@ -15486,7 +15472,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       new (&X) Eigen::Map<Eigen::Matrix<double, -1, 1>>(X__.data(), R);
       
       {
-        std::vector<double> X_flat__;
+        std::vector<local_scalar_t__> X_flat__;
         current_statement__ = 40;
         X_flat__ = context__.vals_r("X");
         current_statement__ = 40;
@@ -16153,7 +16139,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       new (&time) Eigen::Map<Eigen::Matrix<double, -1, 1>>(time__.data(), N);
       
       {
-        std::vector<double> time_flat__;
+        std::vector<local_scalar_t__> time_flat__;
         current_statement__ = 27;
         time_flat__ = context__.vals_r("time");
         current_statement__ = 27;
@@ -16179,7 +16165,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
         
       
       {
-        std::vector<double> treatment_flat__;
+        std::vector<local_scalar_t__> treatment_flat__;
         current_statement__ = 29;
         treatment_flat__ = context__.vals_r("treatment");
         current_statement__ = 29;
@@ -16204,7 +16190,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
       
       {
-        std::vector<double> y_flat__;
+        std::vector<local_scalar_t__> y_flat__;
         current_statement__ = 31;
         y_flat__ = context__.vals_r("y");
         current_statement__ = 31;
@@ -17040,7 +17026,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                   Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(lp__,
                 2);
       {
-        double x = std::numeric_limits<double>::quiet_NaN();
+        local_scalar_t__ x = DUMMY_VAR__;
         current_statement__ = 7;
         nrfun_lp<propto__>(4, 3, lp__, lp_accum__, pstream__);
         current_statement__ = 8;
@@ -17130,7 +17116,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         } 
         current_statement__ = 47;
         lp_accum__.add(x);
-        double z;
+        local_scalar_t__ z;
         current_statement__ = 49;
         z = x;
         current_statement__ = 50;
@@ -17145,12 +17131,12 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         current_statement__ = 54;
         lp_accum__.add(2);
         {
-          double y = std::numeric_limits<double>::quiet_NaN();
+          local_scalar_t__ y = DUMMY_VAR__;
           current_statement__ = 56;
           lp_accum__.add(24);
         }
         {
-          double y = std::numeric_limits<double>::quiet_NaN();
+          local_scalar_t__ y = DUMMY_VAR__;
           current_statement__ = 59;
           lp_accum__.add(245);
         }
@@ -17199,7 +17185,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             lp_accum__.add(1);
           }
         }
-        double temp = std::numeric_limits<double>::quiet_NaN();
+        local_scalar_t__ temp = DUMMY_VAR__;
         {
           current_statement__ = 85;
           if (pstream__) {
@@ -17207,7 +17193,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             stan::math::stan_print(pstream__, "\n");
           }
         }
-        double temp2 = std::numeric_limits<double>::quiet_NaN();
+        local_scalar_t__ temp2 = DUMMY_VAR__;
         current_statement__ = 91;
         for (int i = 2; i <= 3; ++i) {
           current_statement__ = 88;
@@ -17215,7 +17201,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 89;
           lp_accum__.add(6);
         }
-        double dataonlyvar;
+        local_scalar_t__ dataonlyvar;
         current_statement__ = 92;
         dataonlyvar = 3;
         current_statement__ = 93;
@@ -17693,7 +17679,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         
       
       {
-        std::vector<double> pre_test_flat__;
+        std::vector<local_scalar_t__> pre_test_flat__;
         current_statement__ = 18;
         pre_test_flat__ = context__.vals_r("pre_test");
         current_statement__ = 18;
@@ -17719,7 +17705,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         
       
       {
-        std::vector<double> treatment_flat__;
+        std::vector<local_scalar_t__> treatment_flat__;
         current_statement__ = 20;
         treatment_flat__ = context__.vals_r("treatment");
         current_statement__ = 20;
@@ -17749,7 +17735,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
       
       {
-        std::vector<double> y_flat__;
+        std::vector<local_scalar_t__> y_flat__;
         current_statement__ = 22;
         y_flat__ = context__.vals_r("y");
         current_statement__ = 22;
@@ -18256,7 +18242,7 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
         
       
       {
-        std::vector<double> m1_flat__;
+        std::vector<local_scalar_t__> m1_flat__;
         current_statement__ = 7;
         m1_flat__ = context__.vals_r("m1");
         current_statement__ = 7;
@@ -18285,7 +18271,7 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
         
       
       {
-        std::vector<double> m4_flat__;
+        std::vector<local_scalar_t__> m4_flat__;
         current_statement__ = 8;
         m4_flat__ = context__.vals_r("m4");
         current_statement__ = 8;
@@ -18824,7 +18810,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       new (&x1) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x1__.data(), I);
       
       {
-        std::vector<double> x1_flat__;
+        std::vector<local_scalar_t__> x1_flat__;
         current_statement__ = 24;
         x1_flat__ = context__.vals_r("x1");
         current_statement__ = 24;
@@ -18849,7 +18835,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       new (&x2) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x2__.data(), I);
       
       {
-        std::vector<double> x2_flat__;
+        std::vector<local_scalar_t__> x2_flat__;
         current_statement__ = 26;
         x2_flat__ = context__.vals_r("x2");
         current_statement__ = 26;
@@ -18927,14 +18913,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
               lp__);
       std::vector<
         stan::conditional_var_value_t<local_scalar_t__, 
-          Eigen::Matrix<local_scalar_t__, -1, 1>>> b =
-         std::vector<
-           stan::conditional_var_value_t<local_scalar_t__, 
-             Eigen::Matrix<local_scalar_t__, -1, 1>>>(I, 
-           stan::conditional_var_value_t<local_scalar_t__, 
-             Eigen::Matrix<local_scalar_t__, -1, 1>>(
-             Eigen::Matrix<double, -1, 1>::Constant(8,
-               std::numeric_limits<double>::quiet_NaN())));
+          Eigen::Matrix<local_scalar_t__, -1, 1>>> b;
       current_statement__ = 6;
       b = in__.template read<
             std::vector<
@@ -19026,10 +19005,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 5;
       tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
-      std::vector<Eigen::Matrix<double, -1, 1>> b =
-         std::vector<Eigen::Matrix<double, -1, 1>>(I, 
-           Eigen::Matrix<double, -1, 1>::Constant(8,
-             std::numeric_limits<double>::quiet_NaN()));
+      std::vector<Eigen::Matrix<double, -1, 1>> b;
       current_statement__ = 6;
       b = in__.template read<
             std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(I, 8);
@@ -19801,22 +19777,22 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       local_scalar_t__ y;
       current_statement__ = 1;
       y = in__.template read<local_scalar_t__>();
-      double no_init = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ no_init = DUMMY_VAR__;
       local_scalar_t__ init_from_param;
       current_statement__ = 3;
       init_from_param = (y * 5.0);
       local_scalar_t__ dependent_no_init;
       current_statement__ = 4;
       dependent_no_init = (no_init * y);
-      double used_on_lhs = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ used_on_lhs = DUMMY_VAR__;
       current_statement__ = 5;
       used_on_lhs = used_on_lhs;
-      double no_init_if = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ no_init_if = DUMMY_VAR__;
       {
         current_statement__ = 8;
         no_init_if = 1.0;
       }
-      double for_loop_var = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ for_loop_var = DUMMY_VAR__;
       current_statement__ = 12;
       for (int i = 1; i <= 10; ++i) {
         current_statement__ = 10;

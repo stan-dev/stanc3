@@ -10,8 +10,6 @@ let stan_namespace_qualify f =
   if String.is_suffix ~suffix:"functor__" f || String.contains f ':' then f
   else "stan::math::" ^ f
 
-let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
-
 (* retun true if the type of the expression
    is integer, real, or complex (e.g. not a container) *)
 let is_scalar e =

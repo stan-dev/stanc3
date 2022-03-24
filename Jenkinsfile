@@ -7,6 +7,7 @@ def skipExpressionTests = false
 def skipRemainingStages = false
 def skipCompileTests = false
 def skipRebuildingBinaries = false
+def skipCompileTestsAtO1 = false
 
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
@@ -24,7 +25,7 @@ def tagName() {
     }
 }
 
-def runPerformanceTests(String testsPath){
+def runPerformanceTests(String testsPath, String stancFlags = ""){
     unstash 'ubuntu-exe'
 
     sh """
@@ -42,6 +43,14 @@ def runPerformanceTests(String testsPath){
         mkdir cmdstan/bin
         cp ../bin/stanc cmdstan/bin/linux-stanc
         cd cmdstan; make clean-all;
+    """
+
+    if (stancFlags?.trim()) {
+        sh "cd performance-tests-cmdstan/cmdstan && echo 'STANCFLAGS= $stancFlags' >> make/local"
+    }
+
+    sh """
+        cd performance-tests-cmdstan/cmdstan
         echo 'O=0' >> make/local
         make -j${env.PARALLEL} build; cd ..
         ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}
@@ -52,12 +61,15 @@ pipeline {
     agent none
     parameters {
         booleanParam(name:"skip_end_to_end", defaultValue: false, description:"Skip end-to-end tests ")
+        booleanParam(name:"skip_compile_O1", defaultValue: false, description:"Skip compile tests that run with STANCFLAGS = --O1")
         string(defaultValue: 'develop', name: 'cmdstan_pr',
                description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: 'develop', name: 'stan_pr',
                description: "Stan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: 'develop', name: 'math_pr',
                description: "Math PR to test against. Will check out this PR in the downstream Math repo.")
+        string(defaultValue: '', name: 'stanc_flags',
+               description: "Pass STANCFLAGS to make/local, default none")
     }
     options {parallelsAlwaysFailFast()}
     environment {
@@ -93,6 +105,9 @@ pipeline {
 
                     def compileTests = ['test/integration/good'].join(" ")
                     skipCompileTests = utils.verifyChanges(compileTests)
+
+                    def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
+                    skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1)
 
                     def sourceCodePaths = ['src'].join(" ")
                     skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths)
@@ -216,7 +231,7 @@ pipeline {
                     }
                     steps {
                         script {
-                            runPerformanceTests("../test/integration/good")
+                            runPerformanceTests("../test/integration/good", params.stanc_flags)
                         }
 
                         xunit([GoogleTest(
@@ -245,7 +260,75 @@ pipeline {
                     }
                     steps {
                         script {
-                            runPerformanceTests("example-models")
+                            runPerformanceTests("example-models", params.stanc_flags)
+                        }
+
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)
+                        ])
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+
+                stage("Compile tests - good at O=1") {
+                    when {
+                        beforeAgent true
+                        allOf {
+                          expression {
+                            !skipCompileTestsAtO1
+                          }
+                          expression {
+                            !params.skip_compile_O1
+                          }
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/ci:gpu'
+                            label 'linux'
+                        }
+                    }
+                    steps {
+                        script {
+                            runPerformanceTests("../test/integration/good", "--O1")
+                        }
+
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)
+                        ])
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+
+                stage("Compile tests - example-models at O=1") {
+                    when {
+                        beforeAgent true
+                        allOf {
+                          expression {
+                            !skipCompileTestsAtO1
+                          }
+                          expression {
+                            !params.skip_compile_O1
+                          }
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/ci:gpu'
+                            label 'linux'
+                        }
+                    }
+                    steps {
+                        script {
+                            runPerformanceTests("example-models", "--O1")
                         }
 
                         xunit([GoogleTest(
@@ -298,6 +381,73 @@ pipeline {
                                 echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
                                 cd cmdstan; make clean-all; git show HEAD --stat; cd ..
                                 CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
+                            """
+                        }
+
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)
+                        ])
+
+                        archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+
+                        perfReport modePerformancePerTestCase: true,
+                            sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                            modeThroughput: false,
+                            excludeResponseTime: true,
+                            errorFailedThreshold: 100,
+                            errorUnstableThreshold: 100
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+                stage("Model end-to-end tests at O=1") {
+                    when {
+                        beforeAgent true
+                        allOf {
+                         expression {
+                            !skipCompileTests
+                         }
+                         expression {
+                            !params.skip_end_to_end
+                         }
+                         expression {
+                            !skipCompileTestsAtO1
+                         }
+                         expression {
+                            !params.skip_compile_O1
+                         }
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/ci:gpu'
+                            label 'linux'
+                        }
+                    }
+                    steps {
+                        script {
+                            unstash 'ubuntu-exe'
+                            sh """
+                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                            """
+                            utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
+                            utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
+                            utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
+                            sh """
+                                cd performance-tests-cmdstan
+                                git show HEAD --stat
+                                echo "example-models/regression_tests/mother.stan" > all.tests
+                                cat known_good_perf_all.tests >> all.tests
+                                echo "" >> all.tests
+                                cat shotgun_perf_all.tests >> all.tests
+                                cat all.tests
+                                echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+                                echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
+                                cd cmdstan; make clean-all; git show HEAD --stat; cd ..
+                                CXX="${CXX}" ./compare-optimizer.sh "--tests-file all.tests --num-samples=10" "--O1"
                             """
                         }
 
