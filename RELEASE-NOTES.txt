@@ -1,6 +1,18 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+<<<<<<< HEAD
+=======
+v2.29.2 (25 March 2022)
+======================================================================
+
+- Fixed a bug fix with `--O1` when arrays declared in transformed parameters or model were assigned data.
+- Added missing signatures for `normal_id_glm_lpdf`.
+- Fixed a compilation error with forward declarations.
+- Disabled AD level optimizations in `--O1` optimizations.
+- MIR pretty printing now always adds ( and ) around the ternary operator ?:
+
+>>>>>>> upstream/master
 v2.29.1 (2 March 2022)
 ======================================================================
 
