@@ -246,11 +246,11 @@ let pp_data_decl ppf (vident, ut) =
         pf ppf "%a %s__;" pp_type (DataOnly, ut) vident
     | _ ->
         pf ppf "%a %s;" pp_type
-          (UnsizedType.fill_adtype_for_type DataOnly ut, ut)
+          (UnsizedType.fill_adtype_for_type UnsizedType.DataOnly ut, ut)
           vident )
   | (true, _), _ ->
       pf ppf "%a %s;" pp_type
-        (UnsizedType.fill_adtype_for_type DataOnly ut, ut)
+        (UnsizedType.fill_adtype_for_type UnsizedType.DataOnly ut, ut)
         vident
 
 (** Create strings representing maps of Eigen types*)

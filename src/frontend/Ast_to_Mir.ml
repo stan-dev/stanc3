@@ -684,12 +684,14 @@ let trans_block ud_dists declc block prog =
         let rhs = Option.map ~f:trans_expr initial_value in
         let size, type_ =
           trans_sizedtype_decl declc transform identifier.name type_ in
-        let decl_adtype = declc.dadlevel in
+        let decl_adtype =
+          UnsizedType.fill_adtype_for_type declc.dadlevel
+            (SizedType.to_unsized type_) in
         let decl_var =
           Expr.
             { Fixed.pattern= Var decl_id
             ; meta=
-                Typed.Meta.create ~adlevel:declc.dadlevel ~loc:smeta.Ast.loc
+                Typed.Meta.create ~adlevel:decl_adtype ~loc:smeta.Ast.loc
                   ~type_:(SizedType.to_unsized type_)
                   () } in
         let decl =
@@ -720,7 +722,7 @@ let trans_block ud_dists declc block prog =
           if Utils.is_user_ident decl_id then
             (decl :: rhs_assignment)
             @ var_constrain_check_stmts (Some declc.transform_action) smeta.loc
-                declc.dadlevel decl_id decl_var transform (Type.Sized type_)
+                decl_adtype decl_id decl_var transform (Type.Sized type_)
           else decl :: rhs_assignment in
         (outvar :: accum1, size @ accum2, stmts @ accum3)
     | stmt -> (accum1, accum2, trans_stmt ud_dists declc stmt @ accum3) in

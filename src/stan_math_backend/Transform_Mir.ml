@@ -147,12 +147,14 @@ let rec data_read smeta ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
       (* TUPLE STUB
          Data read from tuples
          There seems to be dispatch to a FnReadData function, could foist to C++
-
       *)
-      let get_subtypes = match st with 
-      | STuple subs -> subs
-      | _ -> [] in
-      let sub_sts = List.mapi ~f:(fun iter x -> (Stmt.Fixed.Pattern.LTupleProjection (LVariable decl_id, iter), x)) get_subtypes in
+      let get_subtypes = match st with STuple subs -> subs | _ -> [] in
+      let sub_sts =
+        List.mapi
+          ~f:(fun iter x ->
+            (Stmt.Fixed.Pattern.LTupleProjection (LVariable decl_id, iter), x)
+            )
+          get_subtypes in
       List.concat (List.map ~f:(data_read smeta) sub_sts)
       (* raise_s [%message "Reading from tuples not implemented."] *)
   | UFun _ | UMathLibraryFunction ->
@@ -160,15 +162,19 @@ let rec data_read smeta ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
         [%message "Cannot read a function type."]
   | UVector | URowVector | UMatrix | UArray _ ->
       let decl, assign, flat_var =
-        let decl_id = decl_id ^ "_flat__" in
+        let decl_id_flat = decl_id ^ "_flat__" in
         ( Stmt.Fixed.Pattern.Decl
             { decl_adtype= AutoDiffable
-            ; decl_id
+            ; decl_id= decl_id_flat
             ; decl_type= Unsized flat_type
             ; initialize= false }
           |> swrap
-        , Assignment (decl_id_lval, flat_type, readfnapp decl_var) |> swrap
-        , { Expr.Fixed.pattern= Var decl_id
+        , Assignment
+            ( Stmt.Fixed.Pattern.LVariable decl_id_flat
+            , flat_type
+            , readfnapp decl_var )
+          |> swrap
+        , { Expr.Fixed.pattern= Var decl_id_flat
           ; meta=
               Expr.Typed.Meta.{loc= smeta; type_= flat_type; adlevel= DataOnly}
           } ) in
@@ -229,7 +235,9 @@ let param_read smeta
     let decl_id = Stmt.Helpers.get_name decl_id_lval in
     let ut = SizedType.to_unsized cst in
     let emeta =
-      Expr.Typed.Meta.create ~loc:smeta ~type_:ut ~adlevel:AutoDiffable () in
+      Expr.Typed.Meta.create ~loc:smeta ~type_:ut
+        ~adlevel:(UnsizedType.fill_adtype_for_type AutoDiffable ut)
+        () in
     let dims = read_constrain_dims out_trans cst in
     let read =
       Expr.(
@@ -323,7 +331,10 @@ let add_reads vars mkread stmts =
   let add_read_to_decl (Stmt.Fixed.{pattern; meta} as stmt) =
     match pattern with
     | Decl {decl_id; _} when Map.mem var_names decl_id ->
-        stmt :: mkread meta (Stmt.Fixed.Pattern.LVariable decl_id, Map.find_exn var_names decl_id)
+        stmt
+        :: mkread meta
+             ( Stmt.Fixed.Pattern.LVariable decl_id
+             , Map.find_exn var_names decl_id )
     | _ -> [stmt] in
   List.concat_map ~f:add_read_to_decl stmts
 
@@ -376,7 +387,9 @@ let data_unconstrain_transform smeta (decl_id, outvar) =
   [ Stmt.Fixed.
       { pattern=
           Decl
-            { decl_adtype= UnsizedType.AutoDiffable
+            { decl_adtype=
+                UnsizedType.fill_adtype_for_type AutoDiffable
+                  (SizedType.to_unsized outvar.Program.out_constrained_st)
             ; decl_id
             ; decl_type= Type.Sized outvar.Program.out_constrained_st
             ; initialize= true }

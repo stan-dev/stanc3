@@ -26,15 +26,23 @@ and autodifftype = DataOnly | AutoDiffable | TupleAD of autodifftype list
 
 and returntype = Void | ReturnType of t [@@deriving compare, hash, sexp]
 
+let rec pp_tuple_autodifftype ppf = function
+  | DataOnly -> pp_keyword ppf "data"
+  | AutoDiffable -> pp_keyword ppf "autodiffable"
+  (* TUPLE STUB tuplead print
+     bmw: does this mean void foo(data (real, int) x){...} is impossible?
+  *)
+  | TupleAD ad ->
+      Fmt.pf ppf "Tuple(%a)" Fmt.(list ~sep:comma pp_tuple_autodifftype) ad
+
 let pp_autodifftype ppf = function
   | DataOnly -> pp_keyword ppf "data "
   | AutoDiffable -> ()
   (* TUPLE STUB tuplead print
      bmw: does this mean void foo(data (real, int) x){...} is impossible?
   *)
-  | TupleAD _ ->
-      Common.FatalError.fatal_error_msg
-        [%message "Shouldn't be trying to print tuple adlevel."]
+  | TupleAD ad ->
+      Fmt.pf ppf "Tuple(%a)" Fmt.(list ~sep:comma pp_tuple_autodifftype) ad
 
 let unsized_array_depth unsized_ty =
   let rec aux depth = function
@@ -200,10 +208,18 @@ let rec is_indexing_matrix = function
     Previously we would just say DataOnly or AutoDiffable, however this breaks
     the invariant that a Tuple always has TupleAD as it's autodifftype *)
 let rec fill_adtype_for_type ad ut =
-  match ut with
-  | UArray t -> fill_adtype_for_type ad t
-  | UTuple ts -> TupleAD (List.map ~f:(fill_adtype_for_type ad) ts)
-  | _ -> ad
+  match (ad, ut) with
+  | _, UArray t -> fill_adtype_for_type ad t
+  | TupleAD ad2, UTuple ts ->
+      TupleAD (List.map2_exn ~f:fill_adtype_for_type ad2 ts)
+  | _, UTuple ts -> TupleAD (List.map ~f:(fill_adtype_for_type ad) ts)
+  | TupleAD _, _ ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Attempting to give a non-tuple a TupleAD type"
+            (ut : t)
+            (ad : autodifftype)]
+  | _, _ -> ad
 
 module Comparator = Comparator.Make (struct
   type nonrec t = t

@@ -35,7 +35,12 @@ let rec local_scalar ut ad =
   (* TUPLE MAYBE error on local scalar with tuple ad
      The issue is an array can be an array of tuples
   *)
-  | _, TupleAD _ -> raise_s [%message "Attempting to make a local scalar tuple"]
+  | _, TupleAD _ ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Attempting to make a local scalar tuple"
+            (ut : UnsizedType.t)
+            (ad : UnsizedType.autodifftype)]
 
 let minus_one e =
   { e with
@@ -126,9 +131,10 @@ let rec pp_unsizedtype_local ppf (adtype, ut) =
   match (adtype, ut) with
   (* TUPLE MAYBE - i think this is what is necessary to handle different AD types*)
   | UnsizedType.TupleAD ads, UnsizedType.UTuple ts ->
+      let tuple_zip = List.map2_exn ~f:(fun x y -> (x, y)) ads ts in
       pf ppf "std::tuple<@[%a@]>"
         (list ~sep:comma pp_unsizedtype_local)
-        (List.zip_exn ads ts)
+        tuple_zip
   | _, UnsizedType.UTuple _ ->
       Common.FatalError.fatal_error_msg
         [%message
@@ -146,10 +152,10 @@ let pp_expr_type ppf e =
   pp_unsizedtype_local ppf Expr.Typed.(adlevel_of e, type_of e)
 
 let rec pp_possibly_var_decl ppf (adtype, ut, mem_pattern) =
-  let scalar = local_scalar ut adtype in
   let pp_var_decl ppf p_ut =
     if mem_pattern = Common.Helpers.SoA && adtype = UnsizedType.AutoDiffable
     then
+      let scalar = local_scalar ut adtype in
       pf ppf "@[<hov 2>stan::conditional_var_value_t<%s,@ @,%a>@]" scalar
         pp_unsizedtype_local (adtype, p_ut)
     else pf ppf "%a" pp_unsizedtype_local (adtype, p_ut) in
@@ -160,9 +166,12 @@ let rec pp_possibly_var_decl ppf (adtype, ut, mem_pattern) =
   | UMatrix | UVector | URowVector -> pf ppf "%a" pp_var_decl ut
   | UReal | UInt | UComplex -> pf ppf "%a" pp_unsizedtype_local (adtype, ut)
   | UTuple t_lst ->
-    pf ppf "@[<hov 2>std::tuple<@,%a>@]" 
-      (list ~sep:comma pp_possibly_var_decl)
-      (List.map ~f:(fun t -> (adtype, t, mem_pattern)) t_lst)
+      let ad_tuple_type = match adtype with TupleAD xx -> xx | xx -> [xx] in
+      pf ppf "@[<hov 2>std::tuple<@,%a>@]"
+        (list ~sep:comma pp_possibly_var_decl)
+        (List.map2_exn
+           ~f:(fun ad t -> (ad, t, mem_pattern))
+           ad_tuple_type t_lst )
   | x ->
       (* TUPLE TODO *)
       Common.FatalError.fatal_error_msg

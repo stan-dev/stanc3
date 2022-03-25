@@ -183,6 +183,6 @@ module Helpers : sig
     -> ('b Expr.Fixed.t -> 'b Expr.Fixed.t)
     -> 'b Expr.Fixed.t
     -> ('b, 'a) Fixed.t
-  
+
   val get_name : 'a Fixed.Pattern.lvalue -> string
 end
