@@ -2032,10 +2032,9 @@ let () =
   add_unqualified ("sum", ReturnType UReal, [URowVector], SoA) ;
   add_unqualified ("sum", ReturnType UReal, [UMatrix], SoA) ;
   add_unqualified ("sum", ReturnType UComplex, [UArray UComplex], SoA) ;
-  (* TODO:  *)
-  (* add_unqualified ("sum", ReturnType UComplex, [UComplexVector], SoA) ;
-     add_unqualified ("sum", ReturnType UComplex, [UComplexRowVector], SoA) ;
-     add_unqualified ("sum", ReturnType UComplex, [UComplexMatrix], SoA) ; *)
+  add_unqualified ("sum", ReturnType UComplex, [UComplexVector], SoA) ;
+  add_unqualified ("sum", ReturnType UComplex, [UComplexRowVector], SoA) ;
+  add_unqualified ("sum", ReturnType UComplex, [UComplexMatrix], SoA) ;
   add_unqualified ("svd_U", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("svd_V", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified

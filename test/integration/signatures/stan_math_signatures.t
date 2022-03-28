@@ -26367,6 +26367,9 @@ Display all Stan math signatures exposed in the language
   sum(row_vector) => real
   sum(matrix) => real
   sum(array[] real) => real
+  sum(complex_vector) => complex
+  sum(complex_row_vector) => complex
+  sum(complex_matrix) => complex
   sum(array[] complex) => complex
   svd_U(matrix) => matrix
   svd_V(matrix) => matrix
