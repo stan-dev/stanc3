@@ -5161,13 +5161,15 @@ static constexpr std::array<const char*, 428> locations_array__ =
  " (in 'complex_scalar.stan', line 33, column 45 to line 35, column 3)"};
 
 struct foo8_functor__ {
-  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   operator()(const std::vector<std::vector<std::complex<T0__>>>& z,
              std::ostream* pstream__) const;
 };
 struct foo1_functor__ {
-  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   operator()(const std::complex<T0__>& z, std::ostream* pstream__) const;
 };
@@ -5176,38 +5178,45 @@ struct foo4_functor__ {
   operator()(std::ostream* pstream__) const;
 };
 struct foo6_functor__ {
-  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   std::vector<std::complex<stan::promote_args_t<T0__>>>
   operator()(const T0__& r, std::ostream* pstream__) const;
 };
 struct foo10_functor__ {
-  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
   operator()(const std::vector<std::vector<std::complex<T0__>>>& z,
              std::ostream* pstream__) const;
 };
 struct foo2_functor__ {
-  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   std::complex<stan::promote_args_t<T0__>>
   operator()(const T0__& r, std::ostream* pstream__) const;
 };
 struct foo9_functor__ {
-  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
   operator()(const T0__& r, std::ostream* pstream__) const;
 };
 struct foo3_functor__ {
-  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   std::complex<stan::promote_args_t<T0__>>
   operator()(const std::complex<T0__>& z, std::ostream* pstream__) const;
 };
 struct foo7_functor__ {
-  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   std::vector<std::complex<stan::promote_args_t<T0__>>>
   operator()(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) const;
 };
 struct foo5_functor__ {
-  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   operator()(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) const;
 };
@@ -5230,7 +5239,8 @@ std::complex<double> foo(std::ostream* pstream__) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   foo1(const std::complex<T0__>& z, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -5246,7 +5256,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   std::complex<stan::promote_args_t<T0__>>
   foo2(const T0__& r, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -5262,7 +5273,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   std::complex<stan::promote_args_t<T0__>>
   foo3(const std::complex<T0__>& z, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -5293,7 +5305,8 @@ std::vector<std::complex<double>> foo4(std::ostream* pstream__) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   foo5(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -5309,7 +5322,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   std::vector<std::complex<stan::promote_args_t<T0__>>>
   foo6(const T0__& r, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -5326,7 +5340,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   std::vector<std::complex<stan::promote_args_t<T0__>>>
   foo7(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -5342,7 +5357,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   foo8(const std::vector<std::vector<std::complex<T0__>>>& z,
        std::ostream* pstream__) {
@@ -5359,7 +5375,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
   foo9(const T0__& r, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -5381,7 +5398,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
   foo10(const std::vector<std::vector<std::complex<T0__>>>& z,
         std::ostream* pstream__) {
@@ -5398,7 +5416,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
 foo8_functor__::operator()(const std::vector<std::vector<std::complex<T0__>>>& z,
                            std::ostream* pstream__)  const
@@ -5406,7 +5424,7 @@ foo8_functor__::operator()(const std::vector<std::vector<std::complex<T0__>>>& z
   return foo8(z, pstream__);
 }
 
-template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
 foo1_functor__::operator()(const std::complex<T0__>& z,
                            std::ostream* pstream__)  const
@@ -5420,14 +5438,14 @@ foo4_functor__::operator()(std::ostream* pstream__)  const
   return foo4(pstream__);
 }
 
-template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 std::vector<std::complex<stan::promote_args_t<T0__>>>
 foo6_functor__::operator()(const T0__& r, std::ostream* pstream__)  const
 {
   return foo6(r, pstream__);
 }
 
-template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
 foo10_functor__::operator()(const std::vector<std::vector<std::complex<T0__>>>& z,
                             std::ostream* pstream__)  const
@@ -5435,21 +5453,21 @@ foo10_functor__::operator()(const std::vector<std::vector<std::complex<T0__>>>& 
   return foo10(z, pstream__);
 }
 
-template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 std::complex<stan::promote_args_t<T0__>>
 foo2_functor__::operator()(const T0__& r, std::ostream* pstream__)  const
 {
   return foo2(r, pstream__);
 }
 
-template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
 foo9_functor__::operator()(const T0__& r, std::ostream* pstream__)  const
 {
   return foo9(r, pstream__);
 }
 
-template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 std::complex<stan::promote_args_t<T0__>>
 foo3_functor__::operator()(const std::complex<T0__>& z,
                            std::ostream* pstream__)  const
@@ -5457,7 +5475,7 @@ foo3_functor__::operator()(const std::complex<T0__>& z,
   return foo3(z, pstream__);
 }
 
-template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 std::vector<std::complex<stan::promote_args_t<T0__>>>
 foo7_functor__::operator()(const std::vector<std::complex<T0__>>& z,
                            std::ostream* pstream__)  const
@@ -5465,7 +5483,7 @@ foo7_functor__::operator()(const std::vector<std::complex<T0__>>& z,
   return foo7(z, pstream__);
 }
 
-template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
 foo5_functor__::operator()(const std::vector<std::complex<T0__>>& z,
                            std::ostream* pstream__)  const
@@ -7875,45 +7893,51 @@ static constexpr std::array<const char*, 31> locations_array__ =
  " (in 'user_function_templating.stan', line 23, column 38 to line 25, column 3)"};
 
 struct foo_functor__ {
-  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   std::vector<Eigen::Matrix<stan::promote_args_t<T0__>, -1, -1>>
   operator()(const std::vector<Eigen::Matrix<T0__, -1, -1>>& A,
              std::ostream* pstream__) const;
-  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   std::vector<Eigen::Matrix<std::complex<stan::promote_args_t<T0__>>, -1, -1>>
   operator()(const std::vector<Eigen::Matrix<std::complex<T0__>, -1, -1>>& Z,
              std::ostream* pstream__) const;
-  template <typename T0__, stan::require_row_vector_t<T0__>* = nullptr,
-            stan::require_not_vt_complex<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_row_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, 1, -1>
   operator()(const T0__& A, std::ostream* pstream__) const;
-  template <typename T0__, stan::require_row_vector_t<T0__>* = nullptr,
-            stan::require_vt_complex<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_row_vector<T0__>,
+                                stan::is_vt_complex<T0__>>* = nullptr>
   Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>, 1, -1>
   operator()(const T0__& Z, std::ostream* pstream__) const;
-  template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-            stan::require_not_vt_complex<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
   operator()(const T0__& A, std::ostream* pstream__) const;
-  template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-            stan::require_vt_complex<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_complex<T0__>>* = nullptr>
   Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>, -1, 1>
   operator()(const T0__& Z, std::ostream* pstream__) const;
   template <typename T0__,
-            stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
-            stan::require_not_vt_complex<T0__>* = nullptr>
+            stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, -1>
   operator()(const T0__& A, std::ostream* pstream__) const;
   template <typename T0__,
-            stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
-            stan::require_vt_complex<T0__>* = nullptr>
+            stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                                stan::is_vt_complex<T0__>>* = nullptr>
   Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>, -1, -1>
   operator()(const T0__& Z, std::ostream* pstream__) const;
 };
 
 template <typename T0__,
-          stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
-          stan::require_vt_complex<T0__>* = nullptr>
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_complex<T0__>>* = nullptr>
   Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>, -1, -1>
   foo(const T0__& Z_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -7931,8 +7955,8 @@ template <typename T0__,
     }
     }
 template <typename T0__,
-          stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
-          stan::require_not_vt_complex<T0__>* = nullptr>
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, -1>
   foo(const T0__& A_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -7951,8 +7975,9 @@ template <typename T0__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-          stan::require_vt_complex<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_complex<T0__>>* = nullptr>
   Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>, -1, 1>
   foo(const T0__& Z_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -7969,8 +7994,9 @@ template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-          stan::require_not_vt_complex<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
   foo(const T0__& A_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -7989,8 +8015,9 @@ template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_row_vector_t<T0__>* = nullptr,
-          stan::require_vt_complex<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_row_vector<T0__>,
+                              stan::is_vt_complex<T0__>>* = nullptr>
   Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>, 1, -1>
   foo(const T0__& Z_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -8007,8 +8034,9 @@ template <typename T0__, stan::require_row_vector_t<T0__>* = nullptr,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_row_vector_t<T0__>* = nullptr,
-          stan::require_not_vt_complex<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_row_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, 1, -1>
   foo(const T0__& A_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -8027,7 +8055,8 @@ template <typename T0__, stan::require_row_vector_t<T0__>* = nullptr,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   std::vector<Eigen::Matrix<std::complex<stan::promote_args_t<T0__>>, -1, -1>>
   foo(const std::vector<Eigen::Matrix<std::complex<T0__>, -1, -1>>& Z,
       std::ostream* pstream__) {
@@ -8044,7 +8073,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   std::vector<Eigen::Matrix<stan::promote_args_t<T0__>, -1, -1>>
   foo(const std::vector<Eigen::Matrix<T0__, -1, -1>>& A,
       std::ostream* pstream__) {
@@ -8063,7 +8093,7 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 std::vector<Eigen::Matrix<stan::promote_args_t<T0__>, -1, -1>>
 foo_functor__::operator()(const std::vector<Eigen::Matrix<T0__, -1, -1>>& A,
                           std::ostream* pstream__)  const
@@ -8071,7 +8101,7 @@ foo_functor__::operator()(const std::vector<Eigen::Matrix<T0__, -1, -1>>& A,
   return foo(A, pstream__);
 }
 
-template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 std::vector<Eigen::Matrix<std::complex<stan::promote_args_t<T0__>>, -1, -1>>
 foo_functor__::operator()(const std::vector<Eigen::Matrix<std::complex<T0__>, -1, -1>>& Z,
                           std::ostream* pstream__)  const
@@ -8079,48 +8109,54 @@ foo_functor__::operator()(const std::vector<Eigen::Matrix<std::complex<T0__>, -1
   return foo(Z, pstream__);
 }
 
-template <typename T0__, stan::require_row_vector_t<T0__>*,
-          stan::require_not_vt_complex<T0__>*>
+template <typename T0__,
+          stan::require_all_t<stan::is_row_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, 1, -1>
 foo_functor__::operator()(const T0__& A, std::ostream* pstream__)  const
 {
   return foo(A, pstream__);
 }
 
-template <typename T0__, stan::require_row_vector_t<T0__>*,
-          stan::require_vt_complex<T0__>*>
+template <typename T0__,
+          stan::require_all_t<stan::is_row_vector<T0__>,
+                              stan::is_vt_complex<T0__>>*>
 Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>, 1, -1>
 foo_functor__::operator()(const T0__& Z, std::ostream* pstream__)  const
 {
   return foo(Z, pstream__);
 }
 
-template <typename T0__, stan::require_col_vector_t<T0__>*,
-          stan::require_not_vt_complex<T0__>*>
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
 foo_functor__::operator()(const T0__& A, std::ostream* pstream__)  const
 {
   return foo(A, pstream__);
 }
 
-template <typename T0__, stan::require_col_vector_t<T0__>*,
-          stan::require_vt_complex<T0__>*>
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_complex<T0__>>*>
 Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>, -1, 1>
 foo_functor__::operator()(const T0__& Z, std::ostream* pstream__)  const
 {
   return foo(Z, pstream__);
 }
 
-template <typename T0__, stan::require_eigen_matrix_dynamic_t<T0__>*,
-          stan::require_not_vt_complex<T0__>*>
+template <typename T0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, -1>
 foo_functor__::operator()(const T0__& A, std::ostream* pstream__)  const
 {
   return foo(A, pstream__);
 }
 
-template <typename T0__, stan::require_eigen_matrix_dynamic_t<T0__>*,
-          stan::require_vt_complex<T0__>*>
+template <typename T0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_complex<T0__>>*>
 Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>, -1, -1>
 foo_functor__::operator()(const T0__& Z, std::ostream* pstream__)  const
 {
