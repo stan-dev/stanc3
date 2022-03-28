@@ -98,19 +98,19 @@ pipeline {
                     sh 'git clean -xffd'
 
                     def stanMathSigs = ['test/integration/signatures/stan_math_signatures.t'].join(" ")
-                    skipExpressionTests = utils.verifyChanges(stanMathSigs)
+                    skipExpressionTests = utils.verifyChanges(stanMathSigs, "master")
 
                     def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
-                    skipRemainingStages = utils.verifyChanges(runTestPaths)
+                    skipRemainingStages = utils.verifyChanges(runTestPaths, "master")
 
                     def compileTests = ['test/integration/good'].join(" ")
-                    skipCompileTests = utils.verifyChanges(compileTests)
+                    skipCompileTests = utils.verifyChanges(compileTests, "master")
 
                     def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
-                    skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1)
+                    skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1, "master")
 
                     def sourceCodePaths = ['src'].join(" ")
-                    skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths)
+                    skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths, "master")
                 }
             }
         }
