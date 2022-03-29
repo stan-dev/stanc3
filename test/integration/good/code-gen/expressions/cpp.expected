@@ -29,10 +29,13 @@ struct foo1_functor__ {
             typename T5__, stan::require_stan_scalar_t<T0__>* = nullptr,
             stan::require_stan_scalar_t<T2__>* = nullptr,
             stan::require_col_vector_t<T3__>* = nullptr,
+            stan::require_not_vt_complex<T3__>* = nullptr,
             stan::require_eigen_matrix_dynamic_t<T4__>* = nullptr,
-            stan::require_row_vector_t<T5__>* = nullptr>
-  stan::promote_args_t<T0__, T2__, stan::value_type_t<T3__>,
-                       stan::value_type_t<T4__>, stan::value_type_t<T5__>>
+            stan::require_not_vt_complex<T4__>* = nullptr,
+            stan::require_row_vector_t<T5__>* = nullptr,
+            stan::require_not_vt_complex<T5__>* = nullptr>
+  stan::promote_args_t<T0__, T2__, stan::base_type_t<T3__>,
+                       stan::base_type_t<T4__>, stan::base_type_t<T5__>>
   operator()(const T0__& a, const int& b, const std::vector<T2__>& c,
              const T3__& d, const T4__& e, const T5__& f,
              std::ostream* pstream__) const;
@@ -40,9 +43,10 @@ struct foo1_functor__ {
 struct foo2_functor__ {
   template <typename T0__, typename T1__, typename T2__,
             stan::require_col_vector_t<T0__>* = nullptr,
+            stan::require_not_vt_complex<T0__>* = nullptr,
             stan::require_stan_scalar_t<T1__>* = nullptr,
             stan::require_stan_scalar_t<T2__>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, T1__, T2__>, -1, 1>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, T1__, T2__>, -1, 1>
   operator()(const T0__& a, const std::vector<Eigen::Matrix<T1__, -1, -1>>& b,
              const std::vector<Eigen::Matrix<T2__, 1, -1>>& c,
              std::ostream* pstream__) const;
@@ -50,15 +54,19 @@ struct foo2_functor__ {
 struct foo3_functor__ {
   template <typename T0__, typename T1__,
             stan::require_col_vector_t<T0__>* = nullptr,
-            stan::require_eigen_matrix_dynamic_t<T1__>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
+            stan::require_not_vt_complex<T0__>* = nullptr,
+            stan::require_eigen_matrix_dynamic_t<T1__>* = nullptr,
+            stan::require_not_vt_complex<T1__>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, stan::base_type_t<T1__>>, -1, -1>
   operator()(const T0__& a, const T1__& b, std::ostream* pstream__) const;
 };
 struct add_udf_functor__ {
   template <typename T0__, typename T1__,
             stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
-            stan::require_eigen_matrix_dynamic_t<T1__>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
+            stan::require_not_vt_complex<T0__>* = nullptr,
+            stan::require_eigen_matrix_dynamic_t<T1__>* = nullptr,
+            stan::require_not_vt_complex<T1__>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, stan::base_type_t<T1__>>, -1, -1>
   operator()(const T0__& a, const T1__& b, std::ostream* pstream__) const;
 };
 
@@ -66,17 +74,20 @@ template <typename T0__, typename T2__, typename T3__, typename T4__,
           typename T5__, stan::require_stan_scalar_t<T0__>* = nullptr,
           stan::require_stan_scalar_t<T2__>* = nullptr,
           stan::require_col_vector_t<T3__>* = nullptr,
+          stan::require_not_vt_complex<T3__>* = nullptr,
           stan::require_eigen_matrix_dynamic_t<T4__>* = nullptr,
-          stan::require_row_vector_t<T5__>* = nullptr>
-  stan::promote_args_t<T0__, T2__, stan::value_type_t<T3__>,
-                     stan::value_type_t<T4__>, stan::value_type_t<T5__>>
+          stan::require_not_vt_complex<T4__>* = nullptr,
+          stan::require_row_vector_t<T5__>* = nullptr,
+          stan::require_not_vt_complex<T5__>* = nullptr>
+  stan::promote_args_t<T0__, T2__, stan::base_type_t<T3__>,
+                     stan::base_type_t<T4__>, stan::base_type_t<T5__>>
   foo1(const T0__& a, const int& b, const std::vector<T2__>& c,
        const T3__& d_arg__, const T4__& e_arg__, const T5__& f_arg__,
        std::ostream* pstream__) {
     using local_scalar_t__ =
-            stan::promote_args_t<T0__, T2__, stan::value_type_t<T3__>,
-                                 stan::value_type_t<T4__>,
-                                 stan::value_type_t<T5__>>;
+            stan::promote_args_t<T0__, T2__, stan::base_type_t<T3__>,
+                                 stan::base_type_t<T4__>,
+                                 stan::base_type_t<T5__>>;
     int current_statement__ = 0; 
     const auto& d = stan::math::to_ref(d_arg__);
     const auto& e = stan::math::to_ref(e_arg__);
@@ -94,15 +105,16 @@ template <typename T0__, typename T2__, typename T3__, typename T4__,
     }
 template <typename T0__, typename T1__, typename T2__,
           stan::require_col_vector_t<T0__>* = nullptr,
+          stan::require_not_vt_complex<T0__>* = nullptr,
           stan::require_stan_scalar_t<T1__>* = nullptr,
           stan::require_stan_scalar_t<T2__>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, T1__, T2__>, -1, 1>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, T1__, T2__>, -1, 1>
   foo2(const T0__& a_arg__,
        const std::vector<Eigen::Matrix<T1__, -1, -1>>& b,
        const std::vector<Eigen::Matrix<T2__, 1, -1>>& c,
        std::ostream* pstream__) {
     using local_scalar_t__ =
-            stan::promote_args_t<stan::value_type_t<T0__>, T1__, T2__>;
+            stan::promote_args_t<stan::base_type_t<T0__>, T1__, T2__>;
     int current_statement__ = 0; 
     const auto& a = stan::math::to_ref(a_arg__);
     static constexpr bool propto__ = true;
@@ -118,12 +130,14 @@ template <typename T0__, typename T1__, typename T2__,
     }
 template <typename T0__, typename T1__,
           stan::require_col_vector_t<T0__>* = nullptr,
-          stan::require_eigen_matrix_dynamic_t<T1__>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
+          stan::require_not_vt_complex<T0__>* = nullptr,
+          stan::require_eigen_matrix_dynamic_t<T1__>* = nullptr,
+          stan::require_not_vt_complex<T1__>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, stan::base_type_t<T1__>>, -1, -1>
   foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
     using local_scalar_t__ =
-            stan::promote_args_t<stan::value_type_t<T0__>,
-                                 stan::value_type_t<T1__>>;
+            stan::promote_args_t<stan::base_type_t<T0__>,
+                                 stan::base_type_t<T1__>>;
     int current_statement__ = 0; 
     const auto& a = stan::math::to_ref(a_arg__);
     const auto& b = stan::math::to_ref(b_arg__);
@@ -140,12 +154,14 @@ template <typename T0__, typename T1__,
     }
 template <typename T0__, typename T1__,
           stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
-          stan::require_eigen_matrix_dynamic_t<T1__>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
+          stan::require_not_vt_complex<T0__>* = nullptr,
+          stan::require_eigen_matrix_dynamic_t<T1__>* = nullptr,
+          stan::require_not_vt_complex<T1__>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, stan::base_type_t<T1__>>, -1, -1>
   add_udf(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
     using local_scalar_t__ =
-            stan::promote_args_t<stan::value_type_t<T0__>,
-                                 stan::value_type_t<T1__>>;
+            stan::promote_args_t<stan::base_type_t<T0__>,
+                                 stan::base_type_t<T1__>>;
     int current_statement__ = 0; 
     const auto& a = stan::math::to_ref(a_arg__);
     const auto& b = stan::math::to_ref(b_arg__);
@@ -164,10 +180,13 @@ template <typename T0__, typename T2__, typename T3__, typename T4__,
           typename T5__, stan::require_stan_scalar_t<T0__>*,
           stan::require_stan_scalar_t<T2__>*,
           stan::require_col_vector_t<T3__>*,
+          stan::require_not_vt_complex<T3__>*,
           stan::require_eigen_matrix_dynamic_t<T4__>*,
-          stan::require_row_vector_t<T5__>*>
-stan::promote_args_t<T0__, T2__, stan::value_type_t<T3__>,
-                     stan::value_type_t<T4__>, stan::value_type_t<T5__>>
+          stan::require_not_vt_complex<T4__>*,
+          stan::require_row_vector_t<T5__>*,
+          stan::require_not_vt_complex<T5__>*>
+stan::promote_args_t<T0__, T2__, stan::base_type_t<T3__>,
+                     stan::base_type_t<T4__>, stan::base_type_t<T5__>>
 foo1_functor__::operator()(const T0__& a, const int& b,
                            const std::vector<T2__>& c, const T3__& d,
                            const T4__& e, const T5__& f,
@@ -178,9 +197,10 @@ foo1_functor__::operator()(const T0__& a, const int& b,
 
 template <typename T0__, typename T1__, typename T2__,
           stan::require_col_vector_t<T0__>*,
+          stan::require_not_vt_complex<T0__>*,
           stan::require_stan_scalar_t<T1__>*,
           stan::require_stan_scalar_t<T2__>*>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, T1__, T2__>, -1, 1>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, T1__, T2__>, -1, 1>
 foo2_functor__::operator()(const T0__& a,
                            const std::vector<Eigen::Matrix<T1__, -1, -1>>& b,
                            const std::vector<Eigen::Matrix<T2__, 1, -1>>& c,
@@ -190,8 +210,10 @@ foo2_functor__::operator()(const T0__& a,
 }
 
 template <typename T0__, typename T1__, stan::require_col_vector_t<T0__>*,
-          stan::require_eigen_matrix_dynamic_t<T1__>*>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
+          stan::require_not_vt_complex<T0__>*,
+          stan::require_eigen_matrix_dynamic_t<T1__>*,
+          stan::require_not_vt_complex<T1__>*>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, stan::base_type_t<T1__>>, -1, -1>
 foo3_functor__::operator()(const T0__& a, const T1__& b,
                            std::ostream* pstream__)  const
 {
@@ -200,8 +222,10 @@ foo3_functor__::operator()(const T0__& a, const T1__& b,
 
 template <typename T0__, typename T1__,
           stan::require_eigen_matrix_dynamic_t<T0__>*,
-          stan::require_eigen_matrix_dynamic_t<T1__>*>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>>, -1, -1>
+          stan::require_not_vt_complex<T0__>*,
+          stan::require_eigen_matrix_dynamic_t<T1__>*,
+          stan::require_not_vt_complex<T1__>*>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, stan::base_type_t<T1__>>, -1, -1>
 add_udf_functor__::operator()(const T0__& a, const T1__& b,
                               std::ostream* pstream__)  const
 {

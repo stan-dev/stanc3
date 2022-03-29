@@ -165,6 +165,11 @@ module Helpers = struct
     { Fixed.meta= {Typed.Meta.empty with type_= UReal}
     ; pattern= Lit (Real, Float.to_string i) }
 
+  let complex (r, i) =
+    { Fixed.meta= {Typed.Meta.empty with type_= UComplex}
+    ; pattern= FunApp (StanLib ("to_complex", FnPlain, AoS), [float r; float i])
+    }
+
   let str i = {Fixed.meta= Typed.Meta.empty; pattern= Lit (Str, i)}
   let variable v = {Fixed.meta= Typed.Meta.empty; pattern= Var v}
   let zero = int 0
@@ -197,6 +202,18 @@ module Helpers = struct
     { Fixed.meta= {Typed.Meta.empty with type_= UMatrix}
     ; pattern= FunApp (CompilerInternal FnMakeRowVec, List.map ~f:row_vector l)
     }
+
+  let complex_row_vector l =
+    { Fixed.meta= {Typed.Meta.empty with type_= UComplexRowVector}
+    ; pattern= FunApp (CompilerInternal FnMakeRowVec, List.map ~f:complex l) }
+
+  let complex_vector l =
+    let v = unary_op Transpose (complex_row_vector l) in
+    {v with meta= {Typed.Meta.empty with type_= UComplexVector}}
+
+  let complex_matrix_from_rows l =
+    { Fixed.meta= {Typed.Meta.empty with type_= UComplexMatrix}
+    ; pattern= FunApp (CompilerInternal FnMakeRowVec, l) }
 
   let matrix_from_rows l =
     { Fixed.meta= {Typed.Meta.empty with type_= UMatrix}
@@ -248,9 +265,19 @@ module Helpers = struct
      |UMatrix, [MultiIndex _]
      |UMatrix, [Single _] ->
         UVector
+    | UComplexMatrix, [All; Single _]
+     |UComplexMatrix, [Upfrom _; Single _]
+     |UComplexMatrix, [Between _; Single _]
+     |UComplexMatrix, [MultiIndex _]
+     |UComplexMatrix, [Single _] ->
+        UComplexVector
     | UArray t, Single _ :: tl -> infer_type_of_indexed t tl
     | UArray t, _ :: tl -> UArray (infer_type_of_indexed t tl)
     | UMatrix, [Single _; Single _] | UVector, [_] | URowVector, [_] -> UReal
+    | UComplexMatrix, [Single _; Single _]
+     |UComplexVector, [_]
+     |UComplexRowVector, [_] ->
+        UComplex
     | _ ->
         FatalError.fatal_error_msg [%message "Can't index" (ut : UnsizedType.t)]
 

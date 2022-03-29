@@ -649,7 +649,7 @@ Syntax error in 'err-decl-vector-2.stan', line 2, column 10 to column 11, parsin
      4:  model {
    -------------------------------------------------
 
-"[" expression "]" expected for vector size.
+Expected "[" expression "]" for vector size.
   $ ../../../../install/default/bin/stanc err-decl-vector.stan
 Syntax error in 'err-decl-vector.stan', line 2, column 9 to column 10, parsing error:
    -------------------------------------------------
@@ -660,7 +660,7 @@ Syntax error in 'err-decl-vector.stan', line 2, column 9 to column 10, parsing e
      4:  model {
    -------------------------------------------------
 
-"[" expression "]" expected for vector size.
+Expected "[" expression "]" for vector size.
   $ ../../../../install/default/bin/stanc err-double-dims.stan
 Semantic error in 'err-double-dims.stan', line 2, column 8 to column 11:
    -------------------------------------------------
@@ -796,6 +796,9 @@ Ill-typed arguments supplied to infix operator -. Available signatures:
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex_vector, complex_vector) => complex_vector
+(complex_row_vector, complex_row_vector) => complex_row_vector
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: vector, matrix.
   $ ../../../../install/default/bin/stanc err-nested-parens-close.stan
 Syntax error in 'err-nested-parens-close.stan', line 3, column 12 to column 13, parsing error:
@@ -1341,7 +1344,7 @@ Syntax error in 'local_var_constraint.stan', line 5, column 12 to column 13, par
      7:  }
    -------------------------------------------------
 
-"[" expression"]" expected after "row_vector" in local (or model block) variable declaration. (No transformations/constraints allowed.)
+Expected "[" expression "]" for row vector size.
   $ ../../../../install/default/bin/stanc local_var_constraint2.stan
 Syntax error in 'local_var_constraint2.stan', line 5, column 8 to column 9, parsing error:
    -------------------------------------------------
@@ -1353,7 +1356,7 @@ Syntax error in 'local_var_constraint2.stan', line 5, column 8 to column 9, pars
      7:  }
    -------------------------------------------------
 
-"[" expression  "]" expected after "vector" in local (or model block) variable declaration. (No transformations/constraints allowed.)
+Expected "[" expression "]" for vector size.
   $ ../../../../install/default/bin/stanc local_var_constraint3.stan
 Syntax error in 'local_var_constraint3.stan', line 5, column 8 to column 9, parsing error:
    -------------------------------------------------
@@ -1365,7 +1368,7 @@ Syntax error in 'local_var_constraint3.stan', line 5, column 8 to column 9, pars
      7:  }
    -------------------------------------------------
 
-"[" expression "," expression "]" expected after "matrix" in local (or model block) variable declaration. (No transformations/constraints allowed.)
+Expected "[" expression "," expression "]" for sizes of matrix.
   $ ../../../../install/default/bin/stanc local_var_constraint4.stan
 Syntax error in 'local_var_constraint4.stan', line 5, column 6 to column 7, parsing error:
    -------------------------------------------------
@@ -1473,7 +1476,7 @@ Syntax error in 'oneline-error.stan', line 1, column 20 to column 21, parsing er
                              ^
    -------------------------------------------------
 
-"[" expression "]" expected for vector size.
+Expected "[" expression "]" for vector size.
   $ ../../../../install/default/bin/stanc op_addition_bad.stan
 Semantic error in 'op_addition_bad.stan', line 7, column 6 to column 11:
    -------------------------------------------------
@@ -1497,6 +1500,9 @@ Ill-typed arguments supplied to infix operator +. Available signatures:
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex_vector, complex_vector) => complex_vector
+(complex_row_vector, complex_row_vector) => complex_row_vector
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: matrix, vector.
   $ ../../../../install/default/bin/stanc op_divide_bad.stan
 Semantic error in 'op_divide_bad.stan', line 7, column 6 to column 11:
@@ -1556,12 +1562,16 @@ Ill-typed arguments supplied to infix operator ./. Available signatures:
 (real, vector) => vector
 (vector, real) => vector
 (vector, vector) => vector
+(complex, complex) => complex
 (real, row_vector) => row_vector
 (row_vector, real) => row_vector
 (row_vector, row_vector) => row_vector
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex_vector, complex_vector) => complex_vector
+(complex_row_vector, complex_row_vector) => complex_row_vector
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_elt_multiply_bad.stan
 Semantic error in 'op_elt_multiply_bad.stan', line 7, column 6 to column 12:
@@ -1577,8 +1587,12 @@ Ill-typed arguments supplied to infix operator .*. Available signatures:
 (int, int) => int
 (real, real) => real
 (vector, vector) => vector
+(complex, complex) => complex
 (row_vector, row_vector) => row_vector
 (matrix, matrix) => matrix
+(complex_vector, complex_vector) => complex_vector
+(complex_row_vector, complex_row_vector) => complex_row_vector
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_intdivide_bad.stan
 Semantic error in 'op_intdivide_bad.stan', line 7, column 6 to column 13:
@@ -1680,6 +1694,9 @@ Ill-typed arguments supplied to prefix operator -. Available signatures:
 (complex) => complex
 (row_vector) => row_vector
 (matrix) => matrix
+(complex_vector) => complex_vector
+(complex_row_vector) => complex_row_vector
+(complex_matrix) => complex_matrix
 Instead supplied argument of incompatible type: array[] int.
   $ ../../../../install/default/bin/stanc op_modulus_bad.stan
 Semantic error in 'op_modulus_bad.stan', line 7, column 6 to column 11:
@@ -1712,6 +1729,7 @@ Ill-typed arguments supplied to infix operator *. Available signatures:
 (vector, real) => vector
 (matrix, vector) => vector
 (complex, complex) => complex
+(complex_row_vector, complex_vector) => complex
 (real, row_vector) => row_vector
 (row_vector, real) => row_vector
 (row_vector, matrix) => row_vector
@@ -1719,6 +1737,16 @@ Ill-typed arguments supplied to infix operator *. Available signatures:
 (vector, row_vector) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
+(complex_matrix, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
+(complex_row_vector, complex_matrix) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
+(complex_vector, complex_row_vector) => complex_matrix
+(complex_matrix, complex) => complex_matrix
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_subtraction_bad.stan
 Semantic error in 'op_subtraction_bad.stan', line 7, column 6 to column 11:
@@ -1743,6 +1771,9 @@ Ill-typed arguments supplied to infix operator -. Available signatures:
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex_vector, complex_vector) => complex_vector
+(complex_row_vector, complex_row_vector) => complex_row_vector
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: vector, matrix.
   $ ../../../../install/default/bin/stanc op_transpose_bad.stan
 Semantic error in 'op_transpose_bad.stan', line 7, column 6 to column 8:
@@ -1758,6 +1789,9 @@ Ill-typed arguments supplied to postfix operator '. Available signatures:
 (row_vector) => vector
 (vector) => row_vector
 (matrix) => matrix
+(complex_row_vector) => complex_vector
+(complex_vector) => complex_row_vector
+(complex_matrix) => complex_matrix
 Instead supplied argument of incompatible type: array[] int.
   $ ../../../../install/default/bin/stanc print-void.stan
 Semantic error in 'print-void.stan', line 8, column 8 to column 14:
@@ -2582,7 +2616,7 @@ Semantic error in 'validate_validate_int_expr_bad10.stan', line 9, column 24 to 
     11:    cov_matrix[3] k;
    -------------------------------------------------
 
-Matrix sizes must be of type int. Instead found type real.
+Matrix column size must be of type int. Instead found type real.
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad11.stan
 Semantic error in 'validate_validate_int_expr_bad11.stan', line 10, column 22 to column 25:
    -------------------------------------------------
@@ -2594,7 +2628,7 @@ Semantic error in 'validate_validate_int_expr_bad11.stan', line 10, column 22 to
     12:    corr_matrix[3] l;
    -------------------------------------------------
 
-Matrix sizes must be of type int. Instead found type real.
+Matrix row size must be of type int. Instead found type real.
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad12.stan
 Semantic error in 'validate_validate_int_expr_bad12.stan', line 11, column 13 to column 16:
    -------------------------------------------------
@@ -2606,7 +2640,7 @@ Semantic error in 'validate_validate_int_expr_bad12.stan', line 11, column 13 to
     13:  }
    -------------------------------------------------
 
-Matrix sizes must be of type int. Instead found type real.
+Matrix row size must be of type int. Instead found type real.
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad13.stan
 Semantic error in 'validate_validate_int_expr_bad13.stan', line 12, column 14 to column 17:
    -------------------------------------------------
@@ -2618,7 +2652,7 @@ Semantic error in 'validate_validate_int_expr_bad13.stan', line 12, column 14 to
     14:  parameters {
    -------------------------------------------------
 
-Matrix sizes must be of type int. Instead found type real.
+Matrix row size must be of type int. Instead found type real.
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad2.stan
 Semantic error in 'validate_validate_int_expr_bad2.stan', line 3, column 13 to column 16:
    -------------------------------------------------
@@ -2642,7 +2676,7 @@ Semantic error in 'validate_validate_int_expr_bad3.stan', line 4, column 9 to co
      6:    simplex[3] e;
    -------------------------------------------------
 
-Matrix sizes must be of type int. Instead found type real.
+Matrix row size must be of type int. Instead found type real.
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad4.stan
 Semantic error in 'validate_validate_int_expr_bad4.stan', line 4, column 11 to column 14:
    -------------------------------------------------
@@ -2654,7 +2688,7 @@ Semantic error in 'validate_validate_int_expr_bad4.stan', line 4, column 11 to c
      6:    simplex[3] e;
    -------------------------------------------------
 
-Matrix sizes must be of type int. Instead found type real.
+Matrix column size must be of type int. Instead found type real.
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad5.stan
 Semantic error in 'validate_validate_int_expr_bad5.stan', line 5, column 14 to column 17:
    -------------------------------------------------
@@ -2714,7 +2748,7 @@ Semantic error in 'validate_validate_int_expr_bad9.stan', line 9, column 22 to c
     11:    cov_matrix[3] k;
    -------------------------------------------------
 
-Matrix sizes must be of type int. Instead found type real.
+Matrix row size must be of type int. Instead found type real.
   $ ../../../../install/default/bin/stanc var-decl-bad-1.stan
 Semantic error in 'var-decl-bad-1.stan', line 3, column 13 to column 14:
    -------------------------------------------------

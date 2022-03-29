@@ -8,7 +8,7 @@ open Expression_gen
 open Statement_gen
 
 (**
-  Typename: The name of a template typename 
+  Typename: The name of a template typename
   Require: One of Stan's C++ template require giving a condition and the template names needing to satisfy that condition.
   Bool: A boolean template type
  *)
@@ -29,7 +29,7 @@ let pp_template_parameter_defaults ppf template_parameter =
   | _ -> pp_template_parameter ppf template_parameter
 
 (**
-   Pretty print a full C++ `template <parameter-list>`  
+   Pretty print a full C++ `template <parameter-list>`
   *)
 let pp_template ~defaults ppf template_parameters =
   match template_parameters with
@@ -63,25 +63,40 @@ let template_parameter_names (args : Program.fun_arg_decl) =
       | true -> Some (sprintf "T%d__" i)
       | false -> None )
 
-let requires (_, _, ut) =
+let requires (_, _, ut) t =
   match ut with
-  | UnsizedType.URowVector -> "stan::require_row_vector_t"
-  | UVector -> "stan::require_col_vector_t"
-  | UMatrix -> "stan::require_eigen_matrix_dynamic_t"
-  (* NB: Not unwinding array types due to the way arrays of eigens are printed *)
-  | _ -> "stan::require_stan_scalar_t"
+  | UnsizedType.URowVector ->
+      [ Require ("stan::require_row_vector_t", t)
+      ; Require ("stan::require_not_vt_complex", t) ]
+  | UComplexRowVector ->
+      [ Require ("stan::require_row_vector_t", t)
+      ; Require ("stan::require_vt_complex", t) ]
+  | UVector ->
+      [ Require ("stan::require_col_vector_t", t)
+      ; Require ("stan::require_not_vt_complex", t) ]
+  | UComplexVector ->
+      [ Require ("stan::require_col_vector_t", t)
+      ; Require ("stan::require_vt_complex", t) ]
+  | UMatrix ->
+      [ Require ("stan::require_eigen_matrix_dynamic_t", t)
+      ; Require ("stan::require_not_vt_complex", t) ]
+  | UComplexMatrix ->
+      [ Require ("stan::require_eigen_matrix_dynamic_t", t)
+      ; Require ("stan::require_vt_complex", t) ]
+      (* NB: Not unwinding array types due to the way arrays of eigens are printed *)
+  | _ -> [Require ("stan::require_stan_scalar_t", t)]
 
 let optional_require_templates (name_ops : string option list)
     (args : Program.fun_arg_decl) =
   List.map2_exn name_ops args ~f:(fun name_op fun_arg ->
       match name_op with
-      | Some param_name -> Some (Require (requires fun_arg, param_name))
-      | None -> None )
+      | Some param_name -> requires fun_arg param_name
+      | None -> [] )
 
 let return_optional_arg_types (args : Program.fun_arg_decl) =
   List.mapi args ~f:(fun i ((_, _, ut) as arg) ->
       if UnsizedType.is_eigen_type ut && is_data_matrix_or_not_int_type arg then
-        Some (sprintf "stan::value_type_t<T%d__>" i)
+        Some (sprintf "stan::base_type_t<T%d__>" i)
       else if is_data_matrix_or_not_int_type arg then Some (sprintf "T%d__" i)
       else None )
 
@@ -171,7 +186,7 @@ let templates_and_args (is_possibly_eigen_expr : bool)
   let require_arg_templates =
     optional_require_templates arg_type_templates fdargs in
   ( List.filter_opt arg_type_templates
-  , List.filter_opt require_arg_templates
+  , List.concat require_arg_templates
   , if not is_possibly_eigen_expr then
       List.map
         ~f:(fun a -> str "%a" pp_arg a)
@@ -475,12 +490,14 @@ let%expect_test "udf" =
     {|
     template <typename T0__, typename T1__,
               stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
-              stan::require_row_vector_t<T1__>* = nullptr>
+              stan::require_not_vt_complex<T0__>* = nullptr,
+              stan::require_row_vector_t<T1__>* = nullptr,
+              stan::require_not_vt_complex<T1__>* = nullptr>
     void
     sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
       using local_scalar_t__ =
-              stan::promote_args_t<stan::value_type_t<T0__>,
-                                   stan::value_type_t<T1__>>;
+              stan::promote_args_t<stan::base_type_t<T0__>,
+                                   stan::base_type_t<T1__>>;
       int current_statement__ = 0;
       const auto& x = stan::math::to_ref(x_arg__);
       const auto& y = stan::math::to_ref(y_arg__);
@@ -522,18 +539,21 @@ let%expect_test "udf-expressions" =
     {|
     template <typename T0__, typename T1__, typename T2__, typename T3__,
               stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
+              stan::require_not_vt_complex<T0__>* = nullptr,
               stan::require_row_vector_t<T1__>* = nullptr,
+              stan::require_not_vt_complex<T1__>* = nullptr,
               stan::require_row_vector_t<T2__>* = nullptr,
+              stan::require_not_vt_complex<T2__>* = nullptr,
               stan::require_stan_scalar_t<T3__>* = nullptr>
-    Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-                         stan::value_type_t<T2__>, T3__>, -1, -1>
+    Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, stan::base_type_t<T1__>,
+                         stan::base_type_t<T2__>, T3__>, -1, -1>
     sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,
          const std::vector<Eigen::Matrix<T3__, -1, -1>>& w,
          std::ostream* pstream__) {
       using local_scalar_t__ =
-              stan::promote_args_t<stan::value_type_t<T0__>,
-                                   stan::value_type_t<T1__>,
-                                   stan::value_type_t<T2__>, T3__>;
+              stan::promote_args_t<stan::base_type_t<T0__>,
+                                   stan::base_type_t<T1__>,
+                                   stan::base_type_t<T2__>, T3__>;
       int current_statement__ = 0;
       const auto& x = stan::math::to_ref(x_arg__);
       const auto& y = stan::math::to_ref(y_arg__);
