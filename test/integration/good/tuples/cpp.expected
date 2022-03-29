@@ -3619,7 +3619,7 @@ stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 3> locations_array__ = 
 {" (found before start of program)",
  " (in 'tuple-nested-param.stan', line 2, column 2 to column 18)",
- " (in 'tuple-nested-param.stan', line 3, column 2 to column 27)"};
+ " (in 'tuple-nested-param.stan', line 3, column 2 to column 36)"};
 
 
 
@@ -3688,17 +3688,21 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
                               in__.template read<local_scalar_t__>()),
         "assigning variable ps");
       std::tuple<local_scalar_t__,
-        std::tuple<local_scalar_t__, local_scalar_t__>> ps2 =
+        std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>> ps2 =
          std::tuple<local_scalar_t__,
-                    std::tuple<local_scalar_t__, local_scalar_t__>>{DUMMY_VAR__, std::tuple<
-        local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__}};
+                    std::tuple<local_scalar_t__,
+                               Eigen::Matrix<local_scalar_t__, -1, -1>>>{DUMMY_VAR__, std::tuple<
+        local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>{DUMMY_VAR__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10,
+          DUMMY_VAR__)}};
       current_statement__ = 2;
       stan::model::assign(ps2,
         std::forward_as_tuple(in__.template read<local_scalar_t__>(),
                               std::forward_as_tuple(in__.template read<
                                                       local_scalar_t__>(),
                                                     in__.template read<
-                                                      local_scalar_t__>())),
+                                                      Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                                                      10, 10))),
         "assigning variable ps2");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3739,22 +3743,31 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
         std::forward_as_tuple(in__.template read<local_scalar_t__>(),
                               in__.template read<local_scalar_t__>()),
         "assigning variable ps");
-      std::tuple<double, std::tuple<double, double>> ps2 =
-         std::tuple<double, std::tuple<double, double>>{std::numeric_limits<double>::quiet_NaN(), std::tuple<
-        double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()}};
+      std::tuple<double, std::tuple<double, Eigen::Matrix<double, -1, -1>>> ps2 =
+         std::tuple<double, std::tuple<double, Eigen::Matrix<double, -1, -1>>>{std::numeric_limits<double>::quiet_NaN(), std::tuple<
+        double, Eigen::Matrix<double, -1, -1>>{std::numeric_limits<double>::quiet_NaN(), 
+        Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+          std::numeric_limits<double>::quiet_NaN())}};
       current_statement__ = 2;
       stan::model::assign(ps2,
         std::forward_as_tuple(in__.template read<local_scalar_t__>(),
                               std::forward_as_tuple(in__.template read<
                                                       local_scalar_t__>(),
                                                     in__.template read<
-                                                      local_scalar_t__>())),
+                                                      Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                                                      10, 10))),
         "assigning variable ps2");
       out__.write(std::get<0>(ps));
       out__.write(std::get<1>(ps));
       out__.write(std::get<0>(ps2));
       out__.write(std::get<0>(std::get<1>(ps2)));
-      out__.write(std::get<1>(std::get<1>(ps2)));
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          out__.write(
+            stan::model::rvalue(std::get<1>(std::get<1>(ps2)), "ps2.2.2",
+              stan::model::index_uni(sym2__), stan::model::index_uni(sym1__)));
+        }
+      }
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
@@ -3790,10 +3803,13 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
       out__.write(std::get<0>(ps));
       out__.write(std::get<1>(ps));
       std::tuple<local_scalar_t__,
-        std::tuple<local_scalar_t__, local_scalar_t__>> ps2 =
+        std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>> ps2 =
          std::tuple<local_scalar_t__,
-                    std::tuple<local_scalar_t__, local_scalar_t__>>{DUMMY_VAR__, std::tuple<
-        local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__}};
+                    std::tuple<local_scalar_t__,
+                               Eigen::Matrix<local_scalar_t__, -1, -1>>>{DUMMY_VAR__, std::tuple<
+        local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>{DUMMY_VAR__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10,
+          DUMMY_VAR__)}};
       stan::model::assign(ps2, in__.read<local_scalar_t__>(),
         "assigning variable ps2");
       out__.write(std::get<0>(ps2));

@@ -300,7 +300,7 @@ module Helpers = struct
     let meta = Typed.Meta.{e.meta with type_= mtype}
     and pattern =
       match e.pattern with
-      | Var _ -> Fixed.Pattern.Indexed (e, [i])
+      | Var _ | TupleProjection _ -> Fixed.Pattern.Indexed (e, [i])
       | Indexed (e, indices) -> Indexed (e, indices @ [i])
       | _ ->
           (* rybern: shouldn't we also handle adding an index to e.g. container literals? *)

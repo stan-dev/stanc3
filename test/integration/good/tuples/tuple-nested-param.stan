@@ -1,4 +1,4 @@
 parameters {
   (real, real) ps;
-  (real, (real, real)) ps2;
+  (real, (real, matrix[10,10])) ps2;
 }
