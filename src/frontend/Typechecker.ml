@@ -871,7 +871,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       let te = ce e in
       match (te.emeta.type_, te.emeta.ad_level) with
       | UTuple ts, TupleAD ads -> (
-        match (List.nth ts i, List.nth ads i) with
+        match (List.nth ts (i - 1), List.nth ads (i - 1)) with
         | Some t, Some ad ->
             mk_typed_expression
               ~expr:(TupleProjection (te, i))
