@@ -24,5 +24,9 @@ type 'e t =
 [@@deriving sexp, compare, map, hash, fold]
 
 let has_check = function
-  | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ -> false
+  | Identity | Offset _ | Multiplier _ | OffsetMultiplier _
+   |TupleTransformation _ ->
+      (* NB: TupleTransform does not have a check on its own,
+         but could generate multiple checks *)
+      false
   | _ -> true
