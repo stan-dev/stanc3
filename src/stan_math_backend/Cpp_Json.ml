@@ -33,8 +33,7 @@ let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
          Writing to JSON
          See https://github.com/stan-dev/stanc3/issues/820
       *)
-      Common.FatalError.fatal_error_msg
-        [%message "Writing tuples to JSON is not implemented."]
+      `Null
 
 let out_var_json (name, st, block) : Yojson.Basic.t =
   `Assoc

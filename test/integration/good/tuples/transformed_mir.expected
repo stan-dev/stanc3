@@ -77,51 +77,6 @@
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
  (output_vars ()) (prog_name simple_model) (prog_path simple.stan))
-Uncaught exception:
-  
-  ("Fatal error: this should never happen. Please file a bug on https://github.com/stan-dev/stanc3/issues/new and include the model that caused this issue."
-   "pp_set_size TUPLES STUB")
-
-Raised at Base__Error.raise in file "src/error.ml" (inlined), line 8, characters 14-30
-Called from Base__Error.raise_s in file "src/error.ml", line 9, characters 19-40
-Called from Stan_math_backend__Statement_gen.pp_initialize in file "src/stan_math_backend/Statement_gen.ml", line 40, characters 17-38
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1294, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1301, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__list.iter in file "list.ml", line 110, characters 12-15
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Statement_gen.pp_located_error in file "src/stan_math_backend/Statement_gen.ml", line 522, characters 2-38
-Called from Stan_math_backend__Stan_math_code_gen.pp_ctor.(fun) in file "src/stan_math_backend/Stan_math_code_gen.ml", line 134, characters 8-106
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_model_public in file "src/stan_math_backend/Stan_math_code_gen.ml", line 594, characters 2-25
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1298, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_prog in file "src/stan_math_backend/Stan_math_code_gen.ml", line 650, characters 2-222
-Called from Stdlib__format.kasprintf.k in file "format.ml", line 1384, characters 4-22
-Called from Dune__exe__Stanc.use_file in file "src/stanc/stanc.ml", line 310, characters 14-61
-Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 9-16
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir simple2.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
@@ -219,51 +174,6 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
  (output_vars ()) (prog_name simple2_model) (prog_path simple2.stan))
-Uncaught exception:
-  
-  ("Fatal error: this should never happen. Please file a bug on https://github.com/stan-dev/stanc3/issues/new and include the model that caused this issue."
-   "pp_set_size TUPLES STUB")
-
-Raised at Base__Error.raise in file "src/error.ml" (inlined), line 8, characters 14-30
-Called from Base__Error.raise_s in file "src/error.ml", line 9, characters 19-40
-Called from Stan_math_backend__Statement_gen.pp_initialize in file "src/stan_math_backend/Statement_gen.ml", line 40, characters 17-38
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1294, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1301, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__list.iter in file "list.ml", line 110, characters 12-15
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Statement_gen.pp_located_error in file "src/stan_math_backend/Statement_gen.ml", line 522, characters 2-38
-Called from Stan_math_backend__Stan_math_code_gen.pp_ctor.(fun) in file "src/stan_math_backend/Stan_math_code_gen.ml", line 134, characters 8-106
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_model_public in file "src/stan_math_backend/Stan_math_code_gen.ml", line 594, characters 2-25
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1298, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_prog in file "src/stan_math_backend/Stan_math_code_gen.ml", line 650, characters 2-222
-Called from Stdlib__format.kasprintf.k in file "format.ml", line 1384, characters 4-22
-Called from Dune__exe__Stanc.use_file in file "src/stanc/stanc.ml", line 310, characters 14-61
-Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 9-16
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir simple3.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
@@ -388,51 +298,6 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
  (output_vars ()) (prog_name simple3_model) (prog_path simple3.stan))
-Uncaught exception:
-  
-  ("Fatal error: this should never happen. Please file a bug on https://github.com/stan-dev/stanc3/issues/new and include the model that caused this issue."
-   "pp_set_size TUPLES STUB")
-
-Raised at Base__Error.raise in file "src/error.ml" (inlined), line 8, characters 14-30
-Called from Base__Error.raise_s in file "src/error.ml", line 9, characters 19-40
-Called from Stan_math_backend__Statement_gen.pp_initialize in file "src/stan_math_backend/Statement_gen.ml", line 40, characters 17-38
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1294, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1301, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__list.iter in file "list.ml", line 110, characters 12-15
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Statement_gen.pp_located_error in file "src/stan_math_backend/Statement_gen.ml", line 522, characters 2-38
-Called from Stan_math_backend__Stan_math_code_gen.pp_ctor.(fun) in file "src/stan_math_backend/Stan_math_code_gen.ml", line 134, characters 8-106
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_model_public in file "src/stan_math_backend/Stan_math_code_gen.ml", line 594, characters 2-25
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1298, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_prog in file "src/stan_math_backend/Stan_math_code_gen.ml", line 650, characters 2-222
-Called from Stdlib__format.kasprintf.k in file "format.ml", line 1384, characters 4-22
-Called from Dune__exe__Stanc.use_file in file "src/stanc/stanc.ml", line 310, characters 14-61
-Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 9-16
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-constraints-data2.stan
 ((functions_block ())
  (input_vars ((y (STuple (SInt (STuple (SReal SInt)))))))
@@ -619,51 +484,6 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
     (meta <opaque>))))
  (output_vars ()) (prog_name tuple_constraints_data2_model)
  (prog_path tuple-constraints-data2.stan))
-Uncaught exception:
-  
-  ("Fatal error: this should never happen. Please file a bug on https://github.com/stan-dev/stanc3/issues/new and include the model that caused this issue."
-   "pp_set_size TUPLES STUB")
-
-Raised at Base__Error.raise in file "src/error.ml" (inlined), line 8, characters 14-30
-Called from Base__Error.raise_s in file "src/error.ml", line 9, characters 19-40
-Called from Stan_math_backend__Statement_gen.pp_initialize in file "src/stan_math_backend/Statement_gen.ml", line 40, characters 17-38
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1294, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1301, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__list.iter in file "list.ml", line 110, characters 12-15
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Statement_gen.pp_located_error in file "src/stan_math_backend/Statement_gen.ml", line 522, characters 2-38
-Called from Stan_math_backend__Stan_math_code_gen.pp_ctor.(fun) in file "src/stan_math_backend/Stan_math_code_gen.ml", line 134, characters 8-106
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_model_public in file "src/stan_math_backend/Stan_math_code_gen.ml", line 594, characters 2-25
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1298, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_prog in file "src/stan_math_backend/Stan_math_code_gen.ml", line 650, characters 2-222
-Called from Stdlib__format.kasprintf.k in file "format.ml", line 1384, characters 4-22
-Called from Dune__exe__Stanc.use_file in file "src/stanc/stanc.ml", line 310, characters 14-61
-Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 9-16
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-constraints-params.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
@@ -684,19 +504,29 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
    ((pattern
      (Assignment (LVariable ps) (UTuple (UReal UReal))
       ((pattern
-        (FunApp
-         (CompilerInternal
-          (FnReadParam
-           (constrain
-            (TupleTransformation
-             ((Lower
-               ((pattern (Lit Int 0))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (Lower
-               ((pattern (Lit Int 0))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-           (dims ()) (mem_pattern SoA)))
-         ()))
+        (FunApp (CompilerInternal FnMakeTuple)
+         (((pattern
+            (FunApp
+             (CompilerInternal
+              (FnReadParam
+               (constrain
+                (Lower
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (dims ()) (mem_pattern AoS)))
+             ()))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern
+            (FunApp
+             (CompilerInternal
+              (FnReadParam
+               (constrain
+                (Lower
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (dims ()) (mem_pattern AoS)))
+             ()))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta
         ((type_ (UTuple (UReal UReal))) (loc <opaque>)
          (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
@@ -709,19 +539,29 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
    ((pattern
      (Assignment (LVariable ps) (UTuple (UReal UReal))
       ((pattern
-        (FunApp
-         (CompilerInternal
-          (FnReadParam
-           (constrain
-            (TupleTransformation
-             ((Lower
-               ((pattern (Lit Int 0))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (Lower
-               ((pattern (Lit Int 0))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-           (dims ()) (mem_pattern AoS)))
-         ()))
+        (FunApp (CompilerInternal FnMakeTuple)
+         (((pattern
+            (FunApp
+             (CompilerInternal
+              (FnReadParam
+               (constrain
+                (Lower
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (dims ()) (mem_pattern AoS)))
+             ()))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern
+            (FunApp
+             (CompilerInternal
+              (FnReadParam
+               (constrain
+                (Lower
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (dims ()) (mem_pattern AoS)))
+             ()))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta
         ((type_ (UTuple (UReal UReal))) (loc <opaque>)
          (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
@@ -847,18 +687,52 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
       (CompilerInternal
        (FnWriteParam
         (unconstrain_opt
-         ((TupleTransformation
-           ((Lower
-             ((pattern (Lit Int 0))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-            (Lower
-             ((pattern (Lit Int 0))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+         ((Lower
+           ((pattern (Lit Int 0))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (var
-         ((pattern (Var ps))
-          (meta
-           ((type_ (UTuple (UReal UReal))) (loc <opaque>) (adlevel DataOnly)))))))
-      ()))
+         ((pattern
+           (TupleProjection
+            ((pattern (Var ps))
+             (meta
+              ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+               (adlevel DataOnly))))
+            1))
+          (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      (((pattern
+         (TupleProjection
+          ((pattern (Var ps))
+           (meta
+            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+             (adlevel DataOnly))))
+          1))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp
+      (CompilerInternal
+       (FnWriteParam
+        (unconstrain_opt
+         ((Lower
+           ((pattern (Lit Int 0))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+        (var
+         ((pattern
+           (TupleProjection
+            ((pattern (Var ps))
+             (meta
+              ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+               (adlevel DataOnly))))
+            2))
+          (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      (((pattern
+         (TupleProjection
+          ((pattern (Var ps))
+           (meta
+            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+             (adlevel DataOnly))))
+          2))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))))
  (output_vars
   ((ps
@@ -874,42 +748,6 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))))))
  (prog_name tuple_constraints_params_model)
  (prog_path tuple-constraints-params.stan))
-Uncaught exception:
-  
-  ("Fatal error: this should never happen. Please file a bug on https://github.com/stan-dev/stanc3/issues/new and include the model that caused this issue."
-   "pp_set_size TUPLES STUB")
-
-Raised at Base__Error.raise in file "src/error.ml" (inlined), line 8, characters 14-30
-Called from Base__Error.raise_s in file "src/error.ml", line 9, characters 19-40
-Called from Stan_math_backend__Statement_gen.pp_initialize in file "src/stan_math_backend/Statement_gen.ml", line 40, characters 17-38
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__list.iter in file "list.ml", line 110, characters 12-15
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Statement_gen.pp_located_error in file "src/stan_math_backend/Statement_gen.ml", line 522, characters 2-38
-Called from Stan_math_backend__Stan_math_code_gen.pp_method in file "src/stan_math_backend/Stan_math_code_gen.ml", line 184, characters 2-12
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_model_public in file "src/stan_math_backend/Stan_math_code_gen.ml", line 595, characters 2-29
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1298, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_prog in file "src/stan_math_backend/Stan_math_code_gen.ml", line 650, characters 2-222
-Called from Stdlib__format.kasprintf.k in file "format.ml", line 1384, characters 4-22
-Called from Dune__exe__Stanc.use_file in file "src/stanc/stanc.ml", line 310, characters 14-61
-Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 9-16
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-constraints.stan
 ((functions_block ()) (input_vars ((y (STuple (SInt SReal)))))
  (prepare_data
@@ -1041,51 +879,6 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
     (meta <opaque>))))
  (output_vars ()) (prog_name tuple_constraints_model)
  (prog_path tuple-constraints.stan))
-Uncaught exception:
-  
-  ("Fatal error: this should never happen. Please file a bug on https://github.com/stan-dev/stanc3/issues/new and include the model that caused this issue."
-   "pp_set_size TUPLES STUB")
-
-Raised at Base__Error.raise in file "src/error.ml" (inlined), line 8, characters 14-30
-Called from Base__Error.raise_s in file "src/error.ml", line 9, characters 19-40
-Called from Stan_math_backend__Statement_gen.pp_initialize in file "src/stan_math_backend/Statement_gen.ml", line 40, characters 17-38
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1294, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1301, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__list.iter in file "list.ml", line 110, characters 12-15
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Statement_gen.pp_located_error in file "src/stan_math_backend/Statement_gen.ml", line 522, characters 2-38
-Called from Stan_math_backend__Stan_math_code_gen.pp_ctor.(fun) in file "src/stan_math_backend/Stan_math_code_gen.ml", line 134, characters 8-106
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_model_public in file "src/stan_math_backend/Stan_math_code_gen.ml", line 594, characters 2-25
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1298, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_prog in file "src/stan_math_backend/Stan_math_code_gen.ml", line 650, characters 2-222
-Called from Stdlib__format.kasprintf.k in file "format.ml", line 1384, characters 4-22
-Called from Dune__exe__Stanc.use_file in file "src/stanc/stanc.ml", line 310, characters 14-61
-Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 9-16
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-full.stan
 ((functions_block ())
  (input_vars
@@ -1211,19 +1004,29 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
    ((pattern
      (Assignment (LVariable ps) (UTuple (UReal UReal))
       ((pattern
-        (FunApp
-         (CompilerInternal
-          (FnReadParam
-           (constrain
-            (TupleTransformation
-             ((Lower
-               ((pattern (Lit Int 0))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (Lower
-               ((pattern (Lit Int 0))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-           (dims ()) (mem_pattern SoA)))
-         ()))
+        (FunApp (CompilerInternal FnMakeTuple)
+         (((pattern
+            (FunApp
+             (CompilerInternal
+              (FnReadParam
+               (constrain
+                (Lower
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (dims ()) (mem_pattern AoS)))
+             ()))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern
+            (FunApp
+             (CompilerInternal
+              (FnReadParam
+               (constrain
+                (Lower
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (dims ()) (mem_pattern AoS)))
+             ()))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta
         ((type_ (UTuple (UReal UReal))) (loc <opaque>)
          (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
@@ -1349,19 +1152,29 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
    ((pattern
      (Assignment (LVariable ps) (UTuple (UReal UReal))
       ((pattern
-        (FunApp
-         (CompilerInternal
-          (FnReadParam
-           (constrain
-            (TupleTransformation
-             ((Lower
-               ((pattern (Lit Int 0))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (Lower
-               ((pattern (Lit Int 0))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-           (dims ()) (mem_pattern AoS)))
-         ()))
+        (FunApp (CompilerInternal FnMakeTuple)
+         (((pattern
+            (FunApp
+             (CompilerInternal
+              (FnReadParam
+               (constrain
+                (Lower
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (dims ()) (mem_pattern AoS)))
+             ()))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern
+            (FunApp
+             (CompilerInternal
+              (FnReadParam
+               (constrain
+                (Lower
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (dims ()) (mem_pattern AoS)))
+             ()))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta
         ((type_ (UTuple (UReal UReal))) (loc <opaque>)
          (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
@@ -1487,18 +1300,52 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
       (CompilerInternal
        (FnWriteParam
         (unconstrain_opt
-         ((TupleTransformation
-           ((Lower
-             ((pattern (Lit Int 0))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-            (Lower
-             ((pattern (Lit Int 0))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+         ((Lower
+           ((pattern (Lit Int 0))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (var
-         ((pattern (Var ps))
-          (meta
-           ((type_ (UTuple (UReal UReal))) (loc <opaque>) (adlevel DataOnly)))))))
-      ()))
+         ((pattern
+           (TupleProjection
+            ((pattern (Var ps))
+             (meta
+              ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+               (adlevel DataOnly))))
+            1))
+          (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      (((pattern
+         (TupleProjection
+          ((pattern (Var ps))
+           (meta
+            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+             (adlevel DataOnly))))
+          1))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp
+      (CompilerInternal
+       (FnWriteParam
+        (unconstrain_opt
+         ((Lower
+           ((pattern (Lit Int 0))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+        (var
+         ((pattern
+           (TupleProjection
+            ((pattern (Var ps))
+             (meta
+              ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+               (adlevel DataOnly))))
+            2))
+          (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      (((pattern
+         (TupleProjection
+          ((pattern (Var ps))
+           (meta
+            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+             (adlevel DataOnly))))
+          2))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))))
  (output_vars
   ((ps
@@ -1513,51 +1360,6 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
          ((pattern (Lit Int 0))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))))))
  (prog_name tuple_full_model) (prog_path tuple-full.stan))
-Uncaught exception:
-  
-  ("Fatal error: this should never happen. Please file a bug on https://github.com/stan-dev/stanc3/issues/new and include the model that caused this issue."
-   "pp_set_size TUPLES STUB")
-
-Raised at Base__Error.raise in file "src/error.ml" (inlined), line 8, characters 14-30
-Called from Base__Error.raise_s in file "src/error.ml", line 9, characters 19-40
-Called from Stan_math_backend__Statement_gen.pp_initialize in file "src/stan_math_backend/Statement_gen.ml", line 40, characters 17-38
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1294, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1301, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__list.iter in file "list.ml", line 110, characters 12-15
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Statement_gen.pp_located_error in file "src/stan_math_backend/Statement_gen.ml", line 522, characters 2-38
-Called from Stan_math_backend__Stan_math_code_gen.pp_ctor.(fun) in file "src/stan_math_backend/Stan_math_code_gen.ml", line 134, characters 8-106
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_model_public in file "src/stan_math_backend/Stan_math_code_gen.ml", line 594, characters 2-25
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1298, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_prog in file "src/stan_math_backend/Stan_math_code_gen.ml", line 650, characters 2-222
-Called from Stdlib__format.kasprintf.k in file "format.ml", line 1384, characters 4-22
-Called from Dune__exe__Stanc.use_file in file "src/stanc/stanc.ml", line 310, characters 14-61
-Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 9-16
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-ix-assign.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
@@ -1620,51 +1422,6 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
     (meta <opaque>))))
  (output_vars ()) (prog_name tuple_ix_assign_model)
  (prog_path tuple-ix-assign.stan))
-Uncaught exception:
-  
-  ("Fatal error: this should never happen. Please file a bug on https://github.com/stan-dev/stanc3/issues/new and include the model that caused this issue."
-   "pp_set_size TUPLES STUB")
-
-Raised at Base__Error.raise in file "src/error.ml" (inlined), line 8, characters 14-30
-Called from Base__Error.raise_s in file "src/error.ml", line 9, characters 19-40
-Called from Stan_math_backend__Statement_gen.pp_initialize in file "src/stan_math_backend/Statement_gen.ml", line 40, characters 17-38
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1294, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1301, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__list.iter in file "list.ml", line 110, characters 12-15
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Statement_gen.pp_located_error in file "src/stan_math_backend/Statement_gen.ml", line 522, characters 2-38
-Called from Stan_math_backend__Stan_math_code_gen.pp_ctor.(fun) in file "src/stan_math_backend/Stan_math_code_gen.ml", line 134, characters 8-106
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_model_public in file "src/stan_math_backend/Stan_math_code_gen.ml", line 594, characters 2-25
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1298, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_prog in file "src/stan_math_backend/Stan_math_code_gen.ml", line 650, characters 2-222
-Called from Stdlib__format.kasprintf.k in file "format.ml", line 1384, characters 4-22
-Called from Dune__exe__Stanc.use_file in file "src/stanc/stanc.ml", line 310, characters 14-61
-Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 9-16
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-ix-assign2.stan
 Semantic error in 'tuple-ix-assign2.stan', line 3, column 2 to column 8:
    -------------------------------------------------
@@ -1765,27 +1522,18 @@ Too many indexes, expression dimensions=0, indexes found=1.
 Uncaught exception:
   
   ("Fatal error: this should never happen. Please file a bug on https://github.com/stan-dev/stanc3/issues/new and include the model that caused this issue."
-   "pp_set_size TUPLES STUB")
+   "Cannot generate tuple transformation directly; should not be called")
 
 Raised at Base__Error.raise in file "src/error.ml" (inlined), line 8, characters 14-30
 Called from Base__Error.raise_s in file "src/error.ml", line 9, characters 19-40
-Called from Stan_math_backend__Statement_gen.pp_initialize in file "src/stan_math_backend/Statement_gen.ml", line 40, characters 17-38
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1294, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1301, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
+Called from Stan_math_backend__Statement_gen.pp_statement in file "src/stan_math_backend/Statement_gen.ml", line 444, characters 18-41
 Called from Stdlib__list.iter in file "list.ml", line 110, characters 12-15
 Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
 Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
 Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
 Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
 Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Statement_gen.pp_located_error in file "src/stan_math_backend/Statement_gen.ml", line 522, characters 2-38
+Called from Stan_math_backend__Statement_gen.pp_located_error in file "src/stan_math_backend/Statement_gen.ml", line 523, characters 2-38
 Called from Stan_math_backend__Stan_math_code_gen.pp_ctor.(fun) in file "src/stan_math_backend/Stan_math_code_gen.ml", line 134, characters 8-106
 Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
 Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
@@ -1838,11 +1586,19 @@ Too many indexes, expression dimensions=0, indexes found=1.
    ((pattern
      (Assignment (LVariable ps) (UTuple (UReal UReal))
       ((pattern
-        (FunApp
-         (CompilerInternal
-          (FnReadParam (constrain (TupleTransformation (Identity Identity)))
-           (dims ()) (mem_pattern SoA)))
-         ()))
+        (FunApp (CompilerInternal FnMakeTuple)
+         (((pattern
+            (FunApp
+             (CompilerInternal
+              (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+             ()))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern
+            (FunApp
+             (CompilerInternal
+              (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+             ()))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta
         ((type_ (UTuple (UReal UReal))) (loc <opaque>)
          (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
@@ -1855,11 +1611,19 @@ Too many indexes, expression dimensions=0, indexes found=1.
    ((pattern
      (Assignment (LVariable ps) (UTuple (UReal UReal))
       ((pattern
-        (FunApp
-         (CompilerInternal
-          (FnReadParam (constrain (TupleTransformation (Identity Identity)))
-           (dims ()) (mem_pattern AoS)))
-         ()))
+        (FunApp (CompilerInternal FnMakeTuple)
+         (((pattern
+            (FunApp
+             (CompilerInternal
+              (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+             ()))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern
+            (FunApp
+             (CompilerInternal
+              (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+             ()))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta
         ((type_ (UTuple (UReal UReal))) (loc <opaque>)
          (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
@@ -1983,13 +1747,46 @@ Too many indexes, expression dimensions=0, indexes found=1.
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam
-        (unconstrain_opt ((TupleTransformation (Identity Identity))))
+       (FnWriteParam (unconstrain_opt (Identity))
         (var
-         ((pattern (Var ps))
-          (meta
-           ((type_ (UTuple (UReal UReal))) (loc <opaque>) (adlevel DataOnly)))))))
-      ()))
+         ((pattern
+           (TupleProjection
+            ((pattern (Var ps))
+             (meta
+              ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+               (adlevel DataOnly))))
+            1))
+          (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      (((pattern
+         (TupleProjection
+          ((pattern (Var ps))
+           (meta
+            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+             (adlevel DataOnly))))
+          1))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp
+      (CompilerInternal
+       (FnWriteParam (unconstrain_opt (Identity))
+        (var
+         ((pattern
+           (TupleProjection
+            ((pattern (Var ps))
+             (meta
+              ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+               (adlevel DataOnly))))
+            2))
+          (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      (((pattern
+         (TupleProjection
+          ((pattern (Var ps))
+           (meta
+            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+             (adlevel DataOnly))))
+          2))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))))
  (output_vars
   ((ps
@@ -1997,42 +1794,6 @@ Too many indexes, expression dimensions=0, indexes found=1.
      (out_constrained_st (STuple (SReal SReal))) (out_block Parameters)
      (out_trans (TupleTransformation (Identity Identity)))))))
  (prog_name tuple_params_model) (prog_path tuple-params.stan))
-Uncaught exception:
-  
-  ("Fatal error: this should never happen. Please file a bug on https://github.com/stan-dev/stanc3/issues/new and include the model that caused this issue."
-   "pp_set_size TUPLES STUB")
-
-Raised at Base__Error.raise in file "src/error.ml" (inlined), line 8, characters 14-30
-Called from Base__Error.raise_s in file "src/error.ml", line 9, characters 19-40
-Called from Stan_math_backend__Statement_gen.pp_initialize in file "src/stan_math_backend/Statement_gen.ml", line 40, characters 17-38
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__list.iter in file "list.ml", line 110, characters 12-15
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Statement_gen.pp_located_error in file "src/stan_math_backend/Statement_gen.ml", line 522, characters 2-38
-Called from Stan_math_backend__Stan_math_code_gen.pp_method in file "src/stan_math_backend/Stan_math_code_gen.ml", line 184, characters 2-12
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_model_public in file "src/stan_math_backend/Stan_math_code_gen.ml", line 595, characters 2-29
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1298, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_prog in file "src/stan_math_backend/Stan_math_code_gen.ml", line 650, characters 2-222
-Called from Stdlib__format.kasprintf.k in file "format.ml", line 1384, characters 4-22
-Called from Dune__exe__Stanc.use_file in file "src/stanc/stanc.ml", line 310, characters 14-61
-Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 9-16
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuples-constraints-data.stan
 ((functions_block ()) (input_vars ((x (STuple (SInt SReal)))))
  (prepare_data
@@ -2164,48 +1925,3 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
     (meta <opaque>))))
  (output_vars ()) (prog_name tuples_constraints_data_model)
  (prog_path tuples-constraints-data.stan))
-Uncaught exception:
-  
-  ("Fatal error: this should never happen. Please file a bug on https://github.com/stan-dev/stanc3/issues/new and include the model that caused this issue."
-   "pp_set_size TUPLES STUB")
-
-Raised at Base__Error.raise in file "src/error.ml" (inlined), line 8, characters 14-30
-Called from Base__Error.raise_s in file "src/error.ml", line 9, characters 19-40
-Called from Stan_math_backend__Statement_gen.pp_initialize in file "src/stan_math_backend/Statement_gen.ml", line 40, characters 17-38
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1294, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1301, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__list.iter in file "list.ml", line 110, characters 12-15
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Statement_gen.pp_located_error in file "src/stan_math_backend/Statement_gen.ml", line 522, characters 2-38
-Called from Stan_math_backend__Stan_math_code_gen.pp_ctor.(fun) in file "src/stan_math_backend/Stan_math_code_gen.ml", line 134, characters 8-106
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_model_public in file "src/stan_math_backend/Stan_math_code_gen.ml", line 594, characters 2-25
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1298, characters 32-48
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Stan_math_code_gen.pp_prog in file "src/stan_math_backend/Stan_math_code_gen.ml", line 650, characters 2-222
-Called from Stdlib__format.kasprintf.k in file "format.ml", line 1384, characters 4-22
-Called from Dune__exe__Stanc.use_file in file "src/stanc/stanc.ml", line 310, characters 14-61
-Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 9-16

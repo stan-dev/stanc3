@@ -781,27 +781,18 @@ stan::math::profile_map& get_stan_profile_data() {
 Uncaught exception:
   
   ("Fatal error: this should never happen. Please file a bug on https://github.com/stan-dev/stanc3/issues/new and include the model that caused this issue."
-   "pp_set_size TUPLES STUB")
+   "Cannot generate tuple transformation directly; should not be called")
 
 Raised at Base__Error.raise in file "src/error.ml" (inlined), line 8, characters 14-30
 Called from Base__Error.raise_s in file "src/error.ml", line 9, characters 19-40
-Called from Stan_math_backend__Statement_gen.pp_initialize in file "src/stan_math_backend/Statement_gen.ml", line 40, characters 17-38
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1294, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1301, characters 32-48
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
-Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
+Called from Stan_math_backend__Statement_gen.pp_statement in file "src/stan_math_backend/Statement_gen.ml", line 444, characters 18-41
 Called from Stdlib__list.iter in file "list.ml", line 110, characters 12-15
 Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
 Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
 Called from Stdlib__format.output_acc in file "format.ml", line 1300, characters 32-48
 Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
 Called from Stdlib__format.kfprintf.(fun) in file "format.ml", line 1349, characters 16-34
-Called from Stan_math_backend__Statement_gen.pp_located_error in file "src/stan_math_backend/Statement_gen.ml", line 522, characters 2-38
+Called from Stan_math_backend__Statement_gen.pp_located_error in file "src/stan_math_backend/Statement_gen.ml", line 523, characters 2-38
 Called from Stan_math_backend__Stan_math_code_gen.pp_ctor.(fun) in file "src/stan_math_backend/Stan_math_code_gen.ml", line 134, characters 8-106
 Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20
 Called from Stdlib__format.output_acc in file "format.ml", line 1288, characters 4-20

@@ -157,7 +157,6 @@ let rec data_read smeta ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
             )
           get_subtypes in
       List.concat (List.map ~f:(data_read smeta) sub_sts)
-      (* raise_s [%message "Reading from tuples not implemented."] *)
   | UFun _ | UMathLibraryFunction ->
       Common.FatalError.fatal_error_msg
         [%message "Cannot read a function type."]
@@ -239,25 +238,33 @@ let param_read smeta
   if not (out_block = Parameters) then []
   else
     let decl_id = Stmt.Helpers.get_name decl_id_lval in
-    let ut = SizedType.to_unsized cst in
-    let emeta =
-      Expr.Typed.Meta.create ~loc:smeta ~type_:ut
-        ~adlevel:(UnsizedType.fill_adtype_for_type AutoDiffable ut)
-        () in
-    let dims = read_constrain_dims out_trans cst in
-    let read =
-      Expr.(
-        Helpers.(
-          internal_funapp
-            (FnReadParam
-               { constrain= out_trans
-               ; dims
-               ; mem_pattern= SizedType.get_mem_pattern cst } )
-            []
-            Typed.Meta.{emeta with type_= ut})) in
+    let rec aux (cst, out_trans) =
+      let ut = SizedType.to_unsized cst in
+      let emeta =
+        Expr.Typed.Meta.create ~loc:smeta ~type_:ut
+          ~adlevel:(UnsizedType.fill_adtype_for_type AutoDiffable ut)
+          () in
+      match cst with
+      | STuple _ ->
+          Expr.Helpers.internal_funapp FnMakeTuple
+            (List.map ~f:aux @@ TupleUtils.zip_stuple_trans_exn cst out_trans)
+            emeta
+      | _ ->
+          let dims = read_constrain_dims out_trans cst in
+          let read =
+            Expr.Helpers.internal_funapp
+              (FnReadParam
+                 { constrain= out_trans
+                 ; dims
+                 ; mem_pattern= SizedType.get_mem_pattern cst } )
+              [] emeta in
+          read in
+    let read = aux (cst, out_trans) in
     [ Stmt.Fixed.
-        {pattern= Pattern.Assignment (LVariable decl_id, ut, read); meta= smeta}
-    ]
+        { pattern=
+            Pattern.Assignment
+              (LVariable decl_id, SizedType.to_unsized cst, read)
+        ; meta= smeta } ]
 
 let escape_name str =
   str
@@ -353,16 +360,31 @@ let gen_write ?(unconstrain = false)
           { loc= Location_span.empty
           ; type_= SizedType.to_unsized out_constrained_st
           ; adlevel= DataOnly } } in
-  Stmt.Helpers.internal_nrfunapp
-    (FnWriteParam
-       {unconstrain_opt= Option.some_if unconstrain out_trans; var= decl_var} )
-    [] Location_span.empty
+  match (unconstrain, out_trans) with
+  | true, TupleTransformation ts ->
+      let bodyfn trans var =
+        Stmt.Helpers.internal_nrfunapp
+          (FnWriteParam {unconstrain_opt= Some trans; var})
+          [var] Location_span.empty in
+      let meta =
+        { Expr.Typed.Meta.empty with
+          type_= SizedType.to_unsized out_constrained_st } in
+      let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
+      Stmt.Helpers.for_each_tuple bodyfn expr ts Location_span.empty
+  | true, _ ->
+      Stmt.Helpers.internal_nrfunapp
+        (FnWriteParam {unconstrain_opt= Some out_trans; var= decl_var})
+        [] Location_span.empty
+  | false, _ ->
+      Stmt.Helpers.internal_nrfunapp
+        (FnWriteParam {unconstrain_opt= None; var= decl_var})
+        [] Location_span.empty
 
 (**
   Generate write instructions for unconstrained types. For scalars,
- *  matrices, vectors, and arrays with one dimension we can write
- *  these directly, but for arrays of arrays/vectors/matrices we
- *  need to use for_scalar_inv to write them in "column major order"
+  matrices, vectors, and arrays with one dimension we can write
+  these directly, but for arrays of arrays/vectors/matrices we
+  need to use for_scalar_inv to write them in "column major order"
  *)
 let gen_unconstrained_write (decl_id, Program.{out_constrained_st; _}) =
   if SizedType.is_recursive_container out_constrained_st then

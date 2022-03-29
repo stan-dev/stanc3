@@ -169,6 +169,13 @@ module Helpers : sig
     -> Location_span.t
     -> Located.t
 
+  val for_each_tuple :
+       ('a -> Expr.Typed.t -> Located.t)
+    -> Expr.Typed.t
+    -> 'a list
+    -> Location_span.t
+    -> Located.t
+
   val for_eigen :
        Expr.Typed.t SizedType.t
     -> (Expr.Typed.t SizedType.t -> Expr.Typed.t -> Located.t)
