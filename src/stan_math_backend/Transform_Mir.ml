@@ -362,14 +362,18 @@ let gen_write ?(unconstrain = false)
           ; adlevel= DataOnly } } in
   match (unconstrain, out_trans) with
   | true, TupleTransformation ts ->
-      let bodyfn trans var =
-        Stmt.Helpers.internal_nrfunapp
-          (FnWriteParam {unconstrain_opt= Some trans; var})
-          [var] Location_span.empty in
       let meta =
         { Expr.Typed.Meta.empty with
           type_= SizedType.to_unsized out_constrained_st } in
       let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
+      let rec bodyfn trans var =
+        match trans with
+        | Transformation.TupleTransformation ts' ->
+            Stmt.Helpers.for_each_tuple bodyfn var ts' Location_span.empty
+        | _ ->
+            Stmt.Helpers.internal_nrfunapp
+              (FnWriteParam {unconstrain_opt= Some trans; var})
+              [var] Location_span.empty in
       Stmt.Helpers.for_each_tuple bodyfn expr ts Location_span.empty
   | true, _ ->
       Stmt.Helpers.internal_nrfunapp

@@ -1,3 +1,3 @@
 parameters {
-  (real, real) ps;
+  (real, real<lower=0>) ps;
 }
