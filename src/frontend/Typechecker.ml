@@ -871,7 +871,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       let te = ce e in
       match (te.emeta.type_, te.emeta.ad_level) with
       | UTuple ts, TupleAD ads -> (
-        match (List.nth ts (i - 1), List.nth ads (i - 1)) with
+        match (List.nth ts i, List.nth ads i) with
         | Some t, Some ad ->
             mk_typed_expression
               ~expr:(TupleProjection (te, i))
@@ -1028,7 +1028,7 @@ let rec check_lvalue cf tenv = function
       let tlval = check_lvalue cf tenv lval in
       match (tlval.lmeta.type_, tlval.lmeta.ad_level) with
       | UTuple tys, TupleAD ads -> (
-        match (List.nth tys idx, List.nth ads idx) with
+        match (List.nth tys (idx - 1), List.nth ads (idx - 1)) with
         | Some type_, Some ad_level ->
             {lval= LTupleProjection (tlval, idx); lmeta= {ad_level; type_; loc}}
         | None, None ->
