@@ -103,13 +103,17 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
       pf ppf "std::tuple<%a>"
         (list ~sep:comma pp_unsizedtype_custom_scalar)
         (List.map ~f:(fun t -> (scalar, t)) ts)
+  | UComplexMatrix -> pf ppf "Eigen::Matrix<std::complex<%s>, -1, -1>" scalar
+  | UComplexRowVector -> pf ppf "Eigen::Matrix<std::complex<%s>, 1, -1>" scalar
+  | UComplexVector -> pf ppf "Eigen::Matrix<std::complex<%s>, -1, 1>" scalar
   | UMathLibraryFunction | UFun _ ->
       Common.FatalError.fatal_error_msg
         [%message "Function types not implemented"]
 
 let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   match ut with
-  | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector ->
+  | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector | UComplexVector
+   |UComplexMatrix | UComplexRowVector ->
       string ppf scalar
   | UComplex -> pf ppf "std::complex<%s>" scalar
   | UArray t ->
@@ -163,7 +167,9 @@ let rec pp_possibly_var_decl ppf (adtype, ut, mem_pattern) =
   | UArray t ->
       pf ppf "@[<hov 2>std::vector<@,%a>@]" pp_possibly_var_decl
         (adtype, t, mem_pattern)
-  | UMatrix | UVector | URowVector -> pf ppf "%a" pp_var_decl ut
+  | UMatrix | UVector | URowVector | UComplexRowVector | UComplexVector
+   |UComplexMatrix ->
+      pf ppf "%a" pp_var_decl ut
   | UReal | UInt | UComplex -> pf ppf "%a" pp_unsizedtype_local (adtype, ut)
   | UTuple t_lst ->
       let ad_tuple_type = match adtype with TupleAD xx -> xx | xx -> [xx] in
@@ -487,7 +493,8 @@ and read_data ut ppf es =
     | UArray UReal -> "r"
     | UArray UComplex -> "c"
     | UInt | UReal | UComplex | UVector | URowVector | UMatrix | UArray _
-     |UTuple _ | UFun _ | UMathLibraryFunction ->
+     |UTuple _ | UComplexMatrix | UComplexRowVector | UComplexVector | UFun _
+     |UMathLibraryFunction ->
         Common.FatalError.fatal_error_msg
           [%message "Can't ReadData of " (ut : UnsizedType.t)] in
   pf ppf "context__.vals_%s(%a)" i_or_r_or_c pp_expr (List.hd_exn es)
@@ -547,6 +554,17 @@ and pp_compiler_internal_fn ad ut f ppf es =
             (List.length es) (list ~sep:comma pp_expr) es
     | UMatrix ->
         pf ppf "stan::math::to_matrix(@,%a)" (pp_array_literal URowVector) es
+    | UComplexRowVector ->
+        let st = local_scalar ut (promote_adtype es) in
+        if List.is_empty es then
+          pf ppf "Eigen::Matrix<std::complex<%s>,1,-1>(0)" st
+        else
+          pf ppf "(Eigen::Matrix<std::complex<%s>,1,-1>(%d) <<@ %a).finished()"
+            st (List.length es) (list ~sep:comma pp_expr) es
+    | UComplexMatrix ->
+        pf ppf "stan::math::to_matrix(@,%a)"
+          (pp_array_literal UComplexRowVector)
+          es
     | _ ->
         Common.FatalError.fatal_error_msg
           [%message
@@ -631,6 +649,17 @@ and pp_expr ppf Expr.Fixed.{pattern; meta} =
       if List.is_empty es then pf ppf "Eigen::Matrix<%s,-1,1>(0)" st
       else
         pf ppf "(Eigen::Matrix<%s,-1,1>(%d) <<@ %a).finished()" st
+          (List.length es) (list ~sep:comma pp_expr) es
+  | FunApp
+      ( StanLib (op, _, _)
+      , [ { meta= {type_= UComplexRowVector; _}
+          ; pattern= FunApp (CompilerInternal FnMakeRowVec, es) } ] )
+    when Operator.(Some Transpose = of_string_opt op) ->
+      let st = local_scalar UComplexVector (promote_adtype es) in
+      if List.is_empty es then
+        pf ppf "Eigen::Matrix<std::complex<%s>,-1,1>(0)" st
+      else
+        pf ppf "(Eigen::Matrix<std::complex<%s>,-1,1>(%d) <<@ %a).finished()" st
           (List.length es) (list ~sep:comma pp_expr) es
   | FunApp (StanLib (f, suffix, mem_pattern), es) ->
       let ret_type = Some (UnsizedType.ReturnType meta.type_) in

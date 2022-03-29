@@ -17,7 +17,8 @@ let pp_unsized_type ctx ppf =
   let rec pp ppf ty =
     match ty with
     | UnsizedType.UInt | UReal | UVector | URowVector | UMatrix | UComplex
-     |UMathLibraryFunction | UTuple _ ->
+     |UMathLibraryFunction | UTuple _ | UComplexRowVector | UComplexVector
+     |UComplexMatrix ->
         UnsizedType.pp ppf ty
     | UArray ut ->
         let ut2, d = UnsizedType.unwind_array_type ut in
@@ -140,8 +141,13 @@ let rec check_same_type depth t1 t2 =
   match (t1, t2) with
   | t1, t2 when t1 = t2 -> Ok Promotion.NoPromotion
   | UnsizedType.(UReal, UInt) when depth < 1 -> Ok IntToReal
-  | UnsizedType.(UComplex, UInt) when depth < 1 -> Ok IntToComplex
-  | UnsizedType.(UComplex, UReal) when depth < 1 -> Ok RealToComplex
+  | UComplex, UInt when depth < 1 -> Ok IntToComplex
+  | UComplex, UReal
+   |UComplexMatrix, UMatrix
+   |UComplexVector, UVector
+   |UComplexRowVector, URowVector
+    when depth < 1 ->
+      Ok RealToComplex
   (* Arrays: Try to recursively promote, but make sure the error is for these types,
      not the recursive call *)
   | UArray nt1, UArray nt2 ->

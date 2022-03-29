@@ -3134,7 +3134,7 @@ Syntax error in 'type-size-bad17.stan', line 1, column 20 to column 21, parsing 
      2:  }
    -------------------------------------------------
 
-Expected "[" expression "," expression "]" for sizes of matrix.
+"[" expression "," expression "]" expected for matrix sizes.
   $ ../../../../../install/default/bin/stanc type-size-bad18.stan
 Syntax error in 'type-size-bad18.stan', line 1, column 19 to column 24, parsing error:
    -------------------------------------------------
@@ -3143,7 +3143,7 @@ Syntax error in 'type-size-bad18.stan', line 1, column 19 to column 24, parsing 
      2:  }
    -------------------------------------------------
 
-Expected "[" expression "," expression "]" for sizes of matrix.
+"[" expression "," expression "]" expected for matrix sizes.
   $ ../../../../../install/default/bin/stanc type-size-bad19.stan
 Syntax error in 'type-size-bad19.stan', line 1, column 21 to column 26, parsing error:
    -------------------------------------------------
@@ -3168,7 +3168,7 @@ Syntax error in 'type-size-bad20.stan', line 1, column 18 to column 19, parsing 
                            ^
    -------------------------------------------------
 
-Expected "[" expression "," expression "]" for sizes of matrix.
+"[" expression "," expression "]" expected for matrix sizes.
   $ ../../../../../install/default/bin/stanc type-size-bad21.stan
 Syntax error in 'type-size-bad21.stan', line 1, column 17 to column 22, parsing error:
    -------------------------------------------------
@@ -3176,7 +3176,7 @@ Syntax error in 'type-size-bad21.stan', line 1, column 17 to column 22, parsing 
                           ^
    -------------------------------------------------
 
-Expected "[" expression "," expression "]" for sizes of matrix.
+"[" expression "," expression "]" expected for matrix sizes.
   $ ../../../../../install/default/bin/stanc type-size-bad22.stan
 Syntax error in 'type-size-bad22.stan', line 1, column 16 to column 17, parsing error:
    -------------------------------------------------
@@ -3184,7 +3184,7 @@ Syntax error in 'type-size-bad22.stan', line 1, column 16 to column 17, parsing 
                          ^
    -------------------------------------------------
 
-Expected "[" expression "," expression "]" for sizes of matrix.
+"[" expression "," expression "]" expected for matrix sizes.
   $ ../../../../../install/default/bin/stanc type-size-bad23.stan
 Syntax error in 'type-size-bad23.stan', line 1, column 14 to column 19, parsing error:
    -------------------------------------------------
@@ -3192,7 +3192,7 @@ Syntax error in 'type-size-bad23.stan', line 1, column 14 to column 19, parsing 
                        ^
    -------------------------------------------------
 
-Expected "[" expression "," expression "]" for sizes of matrix.
+"[" expression "," expression "]" expected for matrix sizes.
   $ ../../../../../install/default/bin/stanc type-size-bad24.stan
 Syntax error in 'type-size-bad24.stan', line 1, column 19 to column 24, parsing error:
    -------------------------------------------------
@@ -3386,7 +3386,7 @@ Syntax error in 'type-size-bad45.stan', line 1, column 15 to column 16, parsing 
                         ^
    -------------------------------------------------
 
-"[" expression "]" expected for vector size.
+Expected "[" expression "]" for vector size.
   $ ../../../../../install/default/bin/stanc type-size-bad46.stan
 Syntax error in 'type-size-bad46.stan', line 1, column 14 to column 19, parsing error:
    -------------------------------------------------
@@ -3394,7 +3394,7 @@ Syntax error in 'type-size-bad46.stan', line 1, column 14 to column 19, parsing 
                        ^
    -------------------------------------------------
 
-"[" expression "]" expected for vector size.
+Expected "[" expression "]" for vector size.
   $ ../../../../../install/default/bin/stanc type-size-bad47.stan
 Syntax error in 'type-size-bad47.stan', line 1, column 20 to column 25, parsing error:
    -------------------------------------------------
@@ -3491,7 +3491,7 @@ Syntax error in 'type-size-bad57.stan', line 1, column 21 to column 22, parsing 
                               ^
    -------------------------------------------------
 
-"[" expression "]" expected for row_vector sizes.
+"[" expression "]" expected for row_vector size.
   $ ../../../../../install/default/bin/stanc type-size-bad58.stan
 Syntax error in 'type-size-bad58.stan', line 1, column 21 to column 26, parsing error:
    -------------------------------------------------
@@ -3499,7 +3499,7 @@ Syntax error in 'type-size-bad58.stan', line 1, column 21 to column 26, parsing 
                               ^
    -------------------------------------------------
 
-"[" expression "]" expected for row_vector sizes.
+"[" expression "]" expected for row_vector size.
   $ ../../../../../install/default/bin/stanc type-size-bad59.stan
 Syntax error in 'type-size-bad59.stan', line 1, column 19 to column 24, parsing error:
    -------------------------------------------------
@@ -3524,7 +3524,7 @@ Syntax error in 'type-size-bad60.stan', line 1, column 18 to column 19, parsing 
                            ^
    -------------------------------------------------
 
-"[" expression "]" expected for vector sizes.
+Expected "[" expression "]" for vector size.
   $ ../../../../../install/default/bin/stanc type-size-bad61.stan
 Syntax error in 'type-size-bad61.stan', line 1, column 16 to column 21, parsing error:
    -------------------------------------------------
@@ -3532,7 +3532,17 @@ Syntax error in 'type-size-bad61.stan', line 1, column 16 to column 21, parsing 
                          ^
    -------------------------------------------------
 
-"[" expression "]" expected for vector sizes.
+Expected "[" expression "]" for vector size.
+  $ ../../../../../install/default/bin/stanc type-size-bad62.stan
+Syntax error in 'type-size-bad62.stan', line 3, column 0 to column 1, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:     complex_vector[foo
+     3:  }
+         ^
+   -------------------------------------------------
+
+Expected "[" expression "]" for vector size.
   $ ../../../../../install/default/bin/stanc type-size-bad7.stan
 Syntax error in 'type-size-bad7.stan', line 1, column 27 to column 28, parsing error:
    -------------------------------------------------
@@ -3577,7 +3587,7 @@ Syntax error in 'variable-decl-bad2.stan', line 1, column 27 to column 28, parsi
      2:  }
    -------------------------------------------------
 
-Expected "[" expression "," expression "]" for matrix sizes as part of top-level variable declaration.
+"[" expression "," expression "]" expected for matrix sizes.
   $ ../../../../../install/default/bin/stanc variable-decl-bad3.stan
 Syntax error in 'variable-decl-bad3.stan', line 1, column 17 to column 22, parsing error:
    -------------------------------------------------

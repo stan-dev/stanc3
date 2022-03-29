@@ -307,9 +307,9 @@ module Helpers = struct
       Expr.Helpers.internal_funapp FnLength [e] emeta' in
     match Expr.Typed.type_of iteratee with
     | UInt | UReal | UComplex -> bodyfn iteratee
-    | UVector | URowVector ->
+    | UVector | URowVector | UComplexVector | UComplexRowVector ->
         mk_for_iteratee (len iteratee) bodyfn iteratee smeta
-    | UMatrix ->
+    | UMatrix | UComplexMatrix ->
         let emeta = iteratee.meta in
         let emeta' = {emeta with Expr.Typed.Meta.type_= UInt} in
         let rows =
@@ -349,7 +349,7 @@ module Helpers = struct
   let rec for_eigen st bodyfn var smeta =
     match st with
     | SizedType.SInt | SReal | SComplex | SVector _ | SRowVector _ | SMatrix _
-      ->
+     |SComplexVector _ | SComplexRowVector _ | SComplexMatrix _ ->
         bodyfn st var
     | SArray (t, d) ->
         mk_for_iteratee d (fun e -> for_eigen t bodyfn e smeta) var smeta
@@ -368,11 +368,18 @@ module Helpers = struct
   let rec for_scalar st bodyfn var smeta =
     match st with
     | SizedType.SInt | SReal | SComplex -> bodyfn st var
-    | SVector (_, d) | SRowVector (_, d) ->
+    | SVector (_, d)
+     |SRowVector (_, d)
+     |SComplexVector d
+     |SComplexRowVector d ->
         mk_for_iteratee d (bodyfn st) var smeta
     | SMatrix (mem_pattern, d1, d2) ->
         mk_for_iteratee d1
           (fun e -> for_scalar (SRowVector (mem_pattern, d2)) bodyfn e smeta)
+          var smeta
+    | SComplexMatrix (d1, d2) ->
+        mk_for_iteratee d1
+          (fun e -> for_scalar (SComplexRowVector d2) bodyfn e smeta)
           var smeta
     | SArray (t, d) ->
         mk_for_iteratee d (fun e -> for_scalar t bodyfn e smeta) var smeta
