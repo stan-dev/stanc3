@@ -262,6 +262,11 @@ let rec gen_array m st n t =
       Expr.Helpers.array_expr (gen_ul_bounded m (generate_value m st) e1 e2)
   | _ -> Expr.Helpers.array_expr (repeat_th n elt)
 
+and gen_tuple m st t =
+  Expr.Helpers.tuple_expr
+    ( TupleUtils.zip_stuple_trans_exn st t
+    |> List.map ~f:(fun (x, y) -> generate_value m x y) )
+
 and generate_value m st t =
   match st with
   | SizedType.SInt -> Expr.Helpers.int (gen_num_int m t)
@@ -278,22 +283,21 @@ and generate_value m st t =
   | SComplexMatrix (e1, e2) ->
       gen_complex_matrix (unwrap_int_exn m e1) (unwrap_int_exn m e2)
   | SArray (st, e) -> gen_array m st (unwrap_int_exn m e) t
-  | STuple _ ->
-      (* TUPLE STUB
-         This should be easy when literals are implemented *)
-      Common.FatalError.fatal_error_msg
-        [%message "Generating tuples not implemented."]
+  | STuple _ -> gen_tuple m st t
 
 let rec pp_value_json ppf e =
+  let open Fmt in
   match e.Expr.Fixed.pattern with
-  | Lit ((Int | Real), s) -> Fmt.string ppf s
+  | Lit ((Int | Real), s) -> string ppf s
   | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l) ->
-      Fmt.(pf ppf "[@[<hov 1>%a@]]" (list ~sep:comma pp_value_json) l)
+      pf ppf "[@[<hov 1>%a@]]" (list ~sep:comma pp_value_json) l
   | FunApp (StanLib (transpose, _, _), [e])
     when String.equal transpose (Operator.to_string Transpose) ->
       pp_value_json ppf e
   | FunApp (StanLib ("to_complex", _, _), [r; i]) ->
-      Fmt.(pf ppf "[@[<hov 1>%a, %a@]]" pp_value_json r pp_value_json i)
+      pf ppf "[@[<hov 1>%a, %a@]]" pp_value_json r pp_value_json i
+  | FunApp (CompilerInternal FnMakeTuple, l) ->
+      pf ppf "[@[<hov 1>%a@]]" (list ~sep:comma pp_value_json) l
   | _ ->
       Common.FatalError.fatal_error_msg
         [%message "Could not evaluate expression " (e : Expr.Typed.t)]

@@ -100,6 +100,7 @@ module Helpers : sig
   val complex_vector : (float * float) list -> Typed.t
   val complex_matrix_from_rows : Typed.t list -> Typed.t
   val array_expr : Typed.t list -> Typed.t
+  val tuple_expr : Typed.t list -> Typed.t
   val try_unpack : Typed.t -> Typed.t list option
   val loop_bottom : Typed.t
 

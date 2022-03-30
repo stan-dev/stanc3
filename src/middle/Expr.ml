@@ -238,6 +238,11 @@ module Helpers = struct
     { Fixed.meta= {Typed.Meta.empty with type_= UArray type_}
     ; pattern= FunApp (CompilerInternal FnMakeArray, l) }
 
+  let tuple_expr l =
+    let type_ = UnsizedType.UTuple (List.map ~f:Typed.type_of l) in
+    { Fixed.meta= {Typed.Meta.empty with type_}
+    ; pattern= FunApp (CompilerInternal FnMakeTuple, l) }
+
   let try_unpack e =
     match e.Fixed.pattern with
     | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l) -> Some l
