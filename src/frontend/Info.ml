@@ -3,30 +3,25 @@ open Ast
 open Middle
 open Yojson.Basic
 
-let rec unsized_basetype_json t =
-  let base_type_dims type_ dim : t =
+let unsized_basetype_json t =
+  let rec type_dims t =
+    match t with
+    | UnsizedType.UInt -> ("int", 0)
+    | UReal -> ("real", 0)
+    | UComplex -> ("complex", 0)
+    | UVector | URowVector -> ("real", 1)
+    | UComplexVector | UComplexRowVector -> ("complex", 1)
+    | UMatrix -> ("real", 2)
+    | UComplexMatrix -> ("complex", 2)
+    | UArray t' ->
+        let type_, dim = type_dims t' in
+        (type_, dim + 1)
+    | UMathLibraryFunction | UFun _ -> assert false in
+  let to_json (type_, dim) : t =
     `Assoc [("type", `String type_); ("dimensions", `Int dim)] in
-  match t with
-  | UnsizedType.UInt -> base_type_dims "int" 0
-  | UReal -> base_type_dims "real" 0
-  | UComplex -> base_type_dims "complex" 0
-  | UVector | URowVector -> base_type_dims "real" 1
-  | UComplexVector | UComplexRowVector -> base_type_dims "complex" 1
-  | UMatrix -> base_type_dims "real" 2
-  | UComplexMatrix -> base_type_dims "complex" 2
-  | UArray t' -> (
-    match unsized_basetype_json t' with
-    | `Assoc (ty :: ("dimensions", `Int dim) :: x) ->
-        `Assoc (ty :: ("dimensions", `Int (dim + 1)) :: x)
-    | _ ->
-        Common.FatalError.fatal_error_msg
-          [%message "Failed to produce info for type " (t : UnsizedType.t)] )
-  | UMathLibraryFunction | UFun _ -> assert false
+  type_dims t |> to_json
 
-let basetype_dims t =
-  match t with
-  | Type.Sized t -> SizedType.to_unsized t |> unsized_basetype_json
-  | Type.Unsized t -> unsized_basetype_json t
+let basetype_dims t = Type.to_unsized t |> unsized_basetype_json
 
 let get_var_decl {stmts; _} : t =
   `Assoc
