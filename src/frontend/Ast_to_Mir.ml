@@ -247,9 +247,6 @@ let rec param_size transform sizedtype =
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen_mat f t, d)
     | SMatrix (mem_pattern, d1, d2) -> SVector (mem_pattern, f d1 d2)
     | SInt | SReal | SComplex | SRowVector _ | SVector _ | STuple _
-    (* TUPLE MAYBE
-       I have very little idea of what this function does, this is my best guesses
-    *)
      |SComplexRowVector _ | SComplexVector _ | SComplexMatrix _ ->
         Common.FatalError.fatal_error_msg
           [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]

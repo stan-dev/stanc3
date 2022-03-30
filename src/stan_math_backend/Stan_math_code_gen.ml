@@ -318,7 +318,7 @@ let pp_constrained_param_names ppf {Program.output_vars; _} =
       output_vars in
   let pp_param_names ppf (decl_id, st) =
     let gen_name =
-      if SizedType.contains_complex st then emit_complex_name else emit_name
+      if SizedType.is_complex_type st then emit_complex_name else emit_name
     in
     let dims = List.rev (SizedType.get_dims st) in
     pp_for_loop_iteratee ppf (decl_id, dims, gen_name) in
@@ -365,7 +365,7 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
       output_vars in
   let pp_param_names ppf (decl_id, st) =
     let pp_names =
-      if SizedType.contains_complex st then emit_complex_name else emit_name
+      if SizedType.is_complex_type st then emit_complex_name else emit_name
     in
     pp_for_loop_iteratee ppf
       (decl_id, List.rev (SizedType.get_dims st), pp_names) in

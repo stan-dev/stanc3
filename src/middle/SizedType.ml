@@ -82,31 +82,6 @@ let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
 
 let rec inner_type st = match st with SArray (t, _) -> inner_type t | t -> t
 
-let rec contains_complex st =
-  match st with
-  | SComplex | SComplexVector _ | SComplexRowVector _ | SComplexMatrix _ -> true
-  | SArray (t, _) -> contains_complex t
-  | _ -> false
-
-let rec dims_of st =
-  match st with
-  | SArray (t, _) -> dims_of t
-  | SInt | SReal | SComplex | STuple _ ->
-      (* TUPLE STUB dims_of
-         How should tuples be expected to behave in this function?
-         What does it mean for tuples to have dimensions?
-         I think dims are used to emit parameter names
-         But this is the only non-rectangular container
-         Defaulting to 'no dimensions'
-      *)
-      []
-  | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) -> [d1; d2]
-  | SRowVector (_, dim)
-   |SVector (_, dim)
-   |SComplexRowVector dim
-   |SComplexVector dim ->
-      [dim]
-
 (**
  Get the dimensions with respect to sizes needed for IO.
  {b Note}: The main difference from get_dims is complex,
