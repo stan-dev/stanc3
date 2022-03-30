@@ -375,21 +375,24 @@ let is_multiindex i =
 
 let inferred_unsizedtype_of_indexed ~loc ut indices =
   let rec aux type_ idcs =
+    let vec, rowvec, scalar =
+      if UnsizedType.is_complex_type type_ then
+        UnsizedType.(UComplexVector, UComplexRowVector, UComplex)
+      else (UVector, URowVector, UReal) in
     match (type_, idcs) with
     | _, [] -> type_
     | UnsizedType.UArray type_, `Single :: tl -> aux type_ tl
     | UArray type_, `Multi :: tl -> aux type_ tl |> UnsizedType.UArray
     | (UVector | URowVector | UComplexRowVector | UComplexVector), [`Single]
      |(UMatrix | UComplexMatrix), [`Single; `Single] ->
-        UnsizedType.UReal
+        scalar
     | ( ( UVector | URowVector | UMatrix | UComplexVector | UComplexMatrix
         | UComplexRowVector )
       , [`Multi] )
      |(UMatrix | UComplexMatrix), [`Multi; `Multi] ->
         type_
-    | (UMatrix | UComplexMatrix), ([`Single] | [`Single; `Multi]) ->
-        UnsizedType.URowVector
-    | (UMatrix | UComplexMatrix), [`Multi; `Single] -> UnsizedType.UVector
+    | (UMatrix | UComplexMatrix), ([`Single] | [`Single; `Multi]) -> rowvec
+    | (UMatrix | UComplexMatrix), [`Multi; `Single] -> vec
     | (UMatrix | UComplexMatrix), _ :: _ :: _ :: _
      |(UVector | URowVector | UComplexRowVector | UComplexVector), _ :: _ :: _
      |( (UInt | UReal | UComplex | UFun _ | UMathLibraryFunction | UTuple _)

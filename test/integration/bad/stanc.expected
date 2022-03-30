@@ -330,6 +330,18 @@ Semantic error in 'cdf-sample.stan', line 5, column 2 to column 23:
    -------------------------------------------------
 
 CDF and CCDF functions may not be used with sampling notation. Use target += normal_cdf_log(...) instead.
+  $ ../../../../install/default/bin/stanc complex_mat_bad.stan
+Semantic error in 'complex_mat_bad.stan', line 7, column 2 to column 18:
+   -------------------------------------------------
+     5:  
+     6:  model {
+     7:    real x = Z[1,1];
+           ^
+     8:    target += x;
+     9:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to assignment operator =: lhs has type real and rhs has type complex
   $ ../../../../install/default/bin/stanc conditional_condition_bad_1.stan
 Semantic error in 'conditional_condition_bad_1.stan', line 6, column 6 to column 7:
    -------------------------------------------------
