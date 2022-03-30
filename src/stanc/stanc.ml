@@ -29,6 +29,7 @@ let dump_tx_mir_pretty = ref false
 let dump_opt_mir = ref false
 let dump_opt_mir_pretty = ref false
 let dump_stan_math_sigs = ref false
+let dump_stan_math_distributions = ref false
 let opt_lvl = ref Optimize.O0
 let no_soa_opt = ref false
 let soa_opt = ref false
@@ -100,6 +101,10 @@ let options =
       , Arg.Set dump_stan_math_sigs
       , " Dump out the list of supported type signatures for Stan Math backend."
       )
+    ; ( "--dump-stan-math-distributions"
+      , Arg.Set dump_stan_math_distributions
+      , " Dump out the list of supported probability distributions and their \
+         supported suffix types for the Stan Math backend." )
     ; ( "--warn-uninitialized"
       , Arg.Set warn_uninitialized
       , " Emit warnings about uninitialized variables to stderr. Currently an \
@@ -316,10 +321,13 @@ let main () =
   (* Parse the arguments. *)
   Arg.parse options add_file usage ;
   print_deprecated_arg_warning ;
-  (* print_deprecated_arg_warning options; *)
   (* Deal with multiple modalities *)
   if !dump_stan_math_sigs then (
     Stan_math_signatures.pretty_print_all_math_sigs Format.std_formatter () ;
+    exit 0 ) ;
+  if !dump_stan_math_distributions then (
+    Stan_math_signatures.pretty_print_all_math_distributions
+      Format.std_formatter () ;
     exit 0 ) ;
   if !model_file = "" then model_file_err () ;
   (* if we only have functions, always compile as standalone *)

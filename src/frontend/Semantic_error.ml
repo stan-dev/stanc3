@@ -103,17 +103,16 @@ module TypeError = struct
           UnsizedType.pp ut
     | IllTypedAssignment (Operator.Equals, lt, rt) ->
         Fmt.pf ppf
-          "Ill-typed arguments supplied to assignment operator %s: lhs has \
-           type %a and rhs has type %a"
-          "=" UnsizedType.pp lt UnsizedType.pp rt
+          "Ill-typed arguments supplied to assignment operator =: lhs has type \
+           %a and rhs has type %a"
+          UnsizedType.pp lt UnsizedType.pp rt
     | IllTypedAssignment (op, lt, rt) ->
         Fmt.pf ppf
-          "@[<h>Ill-typed arguments supplied to assignment operator %s: lhs \
-           has type %a and rhs has type %a. Available signatures:@]%s"
-          (Fmt.str "%a=" Operator.pp op)
-          UnsizedType.pp lt UnsizedType.pp rt
-          ( Stan_math_signatures.pretty_print_math_lib_assignmentoperator_sigs op
-          |> Option.value ~default:"no matching signatures" )
+          "@[<v>Ill-typed arguments supplied to assignment operator %a=: lhs \
+           has type %a and rhs has type %a.@ Available signatures for given \
+           lhs:@]@ %a"
+          Operator.pp op UnsizedType.pp lt UnsizedType.pp rt
+          SignatureMismatch.pp_math_lib_assignmentoperator_sigs (lt, op)
     | IllTypedTernaryIf (UInt, ut, _) when UnsizedType.is_fun_type ut ->
         Fmt.pf ppf "Ternary expression cannot have a function type: %a"
           UnsizedType.pp ut
@@ -345,6 +344,7 @@ module StatementError = struct
   type t =
     | CannotAssignToReadOnly of string
     | CannotAssignToGlobal of string
+    | CannotAssignFunction of UnsizedType.t * string
     | LValueMultiIndexing
     | InvalidSamplingPDForPMF
     | InvalidSamplingCDForCCDF of string
@@ -380,6 +380,9 @@ module StatementError = struct
         Fmt.pf ppf
           "Cannot assign to global variable '%s' declared in previous blocks."
           name
+    | CannotAssignFunction (ut, name) ->
+        Fmt.pf ppf "Cannot assign a function type '%a' to variable '%s'."
+          UnsizedType.pp ut name
     | LValueMultiIndexing ->
         Fmt.pf ppf
           "Left hand side of an assignment cannot have nested multi-indexing."
@@ -401,7 +404,7 @@ module StatementError = struct
     | InvalidSamplingNoSuchDistribution name ->
         Fmt.pf ppf
           "Ill-typed arguments to '~' statement. No distribution '%s' was \
-           found with the correct signature."
+           found."
           name
     | InvalidTruncationCDForCCDF ->
         Fmt.pf ppf
@@ -657,6 +660,9 @@ let cannot_assign_to_read_only loc name =
 
 let cannot_assign_to_global loc name =
   StatementError (loc, StatementError.CannotAssignToGlobal name)
+
+let cannot_assign_function loc ut name =
+  StatementError (loc, StatementError.CannotAssignFunction (ut, name))
 
 let cannot_assign_to_multiindex loc =
   StatementError (loc, StatementError.LValueMultiIndexing)

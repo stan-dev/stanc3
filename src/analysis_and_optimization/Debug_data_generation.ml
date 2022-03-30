@@ -232,6 +232,22 @@ let gen_matrix mm m n t =
       Expr.Helpers.matrix_from_rows
         (repeat_th m (fun () -> gen_row_vector mm n t))
 
+let gen_complex_unwrapped () =
+  ( gen_num_real Map.Poly.empty Transformation.Identity
+  , gen_num_real Map.Poly.empty Transformation.Identity )
+
+let gen_complex () = Expr.Helpers.complex (gen_complex_unwrapped ())
+
+let gen_complex_row_vector n =
+  Expr.Helpers.complex_row_vector (repeat_th n gen_complex_unwrapped)
+
+let gen_complex_vector n =
+  Expr.Helpers.complex_vector (repeat_th n gen_complex_unwrapped)
+
+let gen_complex_matrix m n =
+  Expr.Helpers.complex_matrix_from_rows
+    (repeat_th m (fun () -> gen_complex_row_vector n))
+
 let rec gen_array m st n t =
   let elt () = generate_value m st t in
   match (t : Expr.Typed.t Transformation.t) with
@@ -252,11 +268,15 @@ and generate_value m st t =
   | SReal -> Expr.Helpers.float (gen_num_real m t)
   | SComplex ->
       (* when serialzied, a complex number looks just like a 2-array of reals *)
-      generate_value m (SArray (SReal, Expr.Helpers.int 2)) t
+      gen_complex ()
   | SVector (_, e) -> gen_vector m (unwrap_int_exn m e) t
   | SRowVector (_, e) -> gen_row_vector m (unwrap_int_exn m e) t
   | SMatrix (_, e1, e2) ->
       gen_matrix m (unwrap_int_exn m e1) (unwrap_int_exn m e2) t
+  | SComplexVector e -> gen_complex_vector (unwrap_int_exn m e)
+  | SComplexRowVector e -> gen_complex_row_vector (unwrap_int_exn m e)
+  | SComplexMatrix (e1, e2) ->
+      gen_complex_matrix (unwrap_int_exn m e1) (unwrap_int_exn m e2)
   | SArray (st, e) -> gen_array m st (unwrap_int_exn m e) t
 
 let rec pp_value_json ppf e =
@@ -267,6 +287,8 @@ let rec pp_value_json ppf e =
   | FunApp (StanLib (transpose, _, _), [e])
     when String.equal transpose (Operator.to_string Transpose) ->
       pp_value_json ppf e
+  | FunApp (StanLib ("to_complex", _, _), [r; i]) ->
+      Fmt.(pf ppf "[@[<hov 1>%a, %a@]]" pp_value_json r pp_value_json i)
   | _ ->
       Common.FatalError.fatal_error_msg
         [%message "Could not evaluate expression " (e : Expr.Typed.t)]

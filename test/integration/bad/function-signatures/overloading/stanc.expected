@@ -97,7 +97,13 @@ Semantic error in 'no_minimum_tilde.stan', line 12, column 3 to column 14:
     14:  }
    -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution 'foo' was found with the correct signature.
+No unique minimum promotion found for function 'foo'.
+Overloaded functions must not have multiple equally valid promotion paths.
+For args (int, int), this function has several:
+(int, real) => real
+(real, int) => real
+Consider defining a new signature for the exact types needed or
+re-thinking existing definitions.
   $ ../../../../../../install/default/bin/stanc no_minimum_tilde2.stan
 Semantic error in 'no_minimum_tilde2.stan', line 12, column 3 to column 16:
    -------------------------------------------------
@@ -108,7 +114,13 @@ Semantic error in 'no_minimum_tilde2.stan', line 12, column 3 to column 16:
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution 'foo' was found with the correct signature.
+No unique minimum promotion found for function 'foo'.
+Overloaded functions must not have multiple equally valid promotion paths.
+For args (int, int, int), this function has several:
+(int, real, int) => real
+(int, int, real) => real
+Consider defining a new signature for the exact types needed or
+re-thinking existing definitions.
   $ ../../../../../../install/default/bin/stanc no_minimum_variadic.stan
 Semantic error in 'no_minimum_variadic.stan', line 82, column 37 to line 84, column 81:
    -------------------------------------------------

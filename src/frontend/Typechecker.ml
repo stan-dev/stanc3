@@ -334,18 +334,30 @@ let check_rowvector loc es =
   match es with
   | {emeta= {ad_level; type_= UnsizedType.URowVector; _}; _} :: _ -> (
     match get_consistent_types ad_level URowVector es with
+    | Ok (ad_level, typ, promotions) ->
+        mk_typed_expression
+          ~expr:(RowVectorExpr (Promotion.promote_list es promotions))
+          ~ad_level
+          ~type_:(if typ = UComplex then UComplexMatrix else UMatrix)
+          ~loc
+    | Error (_, meta) ->
+        Semantic_error.invalid_matrix_types meta.loc meta.type_ |> error )
+  | {emeta= {ad_level; type_= UnsizedType.UComplexRowVector; _}; _} :: _ -> (
+    match get_consistent_types ad_level UComplexRowVector es with
     | Ok (ad_level, _, promotions) ->
         mk_typed_expression
           ~expr:(RowVectorExpr (Promotion.promote_list es promotions))
-          ~ad_level ~type_:UMatrix ~loc
+          ~ad_level ~type_:UComplexMatrix ~loc
     | Error (_, meta) ->
         Semantic_error.invalid_matrix_types meta.loc meta.type_ |> error )
   | _ -> (
     match get_consistent_types DataOnly UReal es with
-    | Ok (ad_level, _, promotions) ->
+    | Ok (ad_level, typ, promotions) ->
         mk_typed_expression
           ~expr:(RowVectorExpr (Promotion.promote_list es promotions))
-          ~ad_level ~type_:URowVector ~loc
+          ~ad_level
+          ~type_:(if typ = UComplex then UComplexRowVector else URowVector)
+          ~loc
     | Error (_, meta) ->
         Semantic_error.invalid_row_vector_types meta.loc meta.type_ |> error )
 
@@ -361,18 +373,26 @@ let is_multiindex i =
 
 let inferred_unsizedtype_of_indexed ~loc ut indices =
   let rec aux type_ idcs =
+    let vec, rowvec, scalar =
+      if UnsizedType.is_complex_type type_ then
+        UnsizedType.(UComplexVector, UComplexRowVector, UComplex)
+      else (UVector, URowVector, UReal) in
     match (type_, idcs) with
     | _, [] -> type_
     | UnsizedType.UArray type_, `Single :: tl -> aux type_ tl
     | UArray type_, `Multi :: tl -> aux type_ tl |> UnsizedType.UArray
-    | (UVector | URowVector), [`Single] | UMatrix, [`Single; `Single] ->
-        UnsizedType.UReal
-    | (UVector | URowVector | UMatrix), [`Multi] | UMatrix, [`Multi; `Multi] ->
+    | (UVector | URowVector | UComplexRowVector | UComplexVector), [`Single]
+     |(UMatrix | UComplexMatrix), [`Single; `Single] ->
+        scalar
+    | ( ( UVector | URowVector | UMatrix | UComplexVector | UComplexMatrix
+        | UComplexRowVector )
+      , [`Multi] )
+     |(UMatrix | UComplexMatrix), [`Multi; `Multi] ->
         type_
-    | UMatrix, ([`Single] | [`Single; `Multi]) -> UnsizedType.URowVector
-    | UMatrix, [`Multi; `Single] -> UnsizedType.UVector
-    | UMatrix, _ :: _ :: _ :: _
-     |(UVector | URowVector), _ :: _ :: _
+    | (UMatrix | UComplexMatrix), ([`Single] | [`Single; `Multi]) -> rowvec
+    | (UMatrix | UComplexMatrix), [`Multi; `Single] -> vec
+    | (UMatrix | UComplexMatrix), _ :: _ :: _ :: _
+     |(UVector | URowVector | UComplexRowVector | UComplexVector), _ :: _ :: _
      |(UInt | UReal | UComplex | UFun _ | UMathLibraryFunction), _ :: _ ->
         Semantic_error.not_indexable loc ut (List.length indices) |> error in
   aux ut (List.map ~f:indexing_type indices)
@@ -937,6 +957,15 @@ let verify_assignment_global loc cf block is_global id =
   if (not is_global) || block = cf.current_block then ()
   else Semantic_error.cannot_assign_to_global loc id.name |> error
 
+(* Until function types are added to the user language, we
+   disallow assignments to function values
+*)
+let verify_assignment_non_function loc ut id =
+  match ut with
+  | UnsizedType.UFun _ | UMathLibraryFunction ->
+      Semantic_error.cannot_assign_function loc ut id.name |> error
+  | _ -> ()
+
 let check_assignment_operator loc assop lhs rhs =
   let err op =
     Semantic_error.illtyped_assignment loc op lhs.lmeta.type_ rhs.emeta.type_
@@ -1019,6 +1048,7 @@ let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
         |> error in
   verify_assignment_global loc cf block global assign_id ;
   verify_assignment_read_only loc readonly assign_id ;
+  verify_assignment_non_function loc rhs.emeta.type_ assign_id ;
   let rhs' = check_assignment_operator loc assign_op lhs rhs in
   mk_typed_statement ~return_type:NoReturnType ~loc
     ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})
@@ -1069,54 +1099,48 @@ let verify_valid_sampling_pos loc cf =
 let verify_sampling_distribution loc tenv id arguments =
   let name = id.name in
   let argumenttypes = List.map ~f:arg_type arguments in
-  let is_name_w_suffix_sampling_dist suffix =
-    match
-      SignatureMismatch.matching_stanlib_function (name ^ suffix) argumenttypes
-    with
-    | UniqueMatch (ReturnType UReal, _, _) -> true
-    | _ -> false in
-  let is_sampling_dist_in_math =
-    List.exists ~f:is_name_w_suffix_sampling_dist
-      (Utils.distribution_suffices @ Utils.unnormalized_suffices)
+  let name_w_suffix_sampling_dist suffix =
+    SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes in
+  let sampling_dists =
+    List.map ~f:name_w_suffix_sampling_dist Utils.distribution_suffices in
+  let is_sampling_dist_defined =
+    List.exists
+      ~f:(function UniqueMatch (ReturnType UReal, _, _) -> true | _ -> false)
+      sampling_dists
     && name <> "binomial_coefficient"
     && name <> "multiply" in
-  let is_name_w_suffix_udf_sampling_dist suffix =
+  if is_sampling_dist_defined then ()
+  else
     match
-      SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes
+      List.max_elt sampling_dists
+        ~compare:SignatureMismatch.compare_match_results
     with
-    | UniqueMatch (rt, f, _)
-      when rt = ReturnType UReal && f FnPlain = UserDefined FnPlain ->
-        true
-    | _ (* TODO don't throw away this information, improve errors *) -> false
-  in
-  let is_udf_sampling_dist =
-    List.exists ~f:is_name_w_suffix_udf_sampling_dist
-      (Utils.distribution_suffices @ Utils.unnormalized_suffices) in
-  if is_sampling_dist_in_math || is_udf_sampling_dist then ()
-  else Semantic_error.invalid_sampling_no_such_dist loc name |> error
+    | None | Some (UniqueMatch _) | Some (SignatureErrors ([], _)) ->
+        (* Either non-existant or a very odd case,
+           output the old non-informative error *)
+        Semantic_error.invalid_sampling_no_such_dist loc name |> error
+    | Some (AmbiguousMatch sigs) ->
+        Semantic_error.ambiguous_function_promotion loc id.name
+          (Some (List.map ~f:type_of_expr_typed arguments))
+          sigs
+        |> error
+    | Some (SignatureErrors (l, b)) ->
+        arguments
+        |> List.map ~f:(fun e -> e.emeta.type_)
+        |> Semantic_error.illtyped_fn_app loc id.name (l, b)
+        |> error
 
 let is_cumulative_density_defined tenv id arguments =
   let name = id.name in
   let argumenttypes = List.map ~f:arg_type arguments in
-  let is_real_rt_for_suffix suffix =
-    match
-      SignatureMismatch.matching_stanlib_function (name ^ suffix) argumenttypes
-    with
-    | UniqueMatch (ReturnType UReal, _, _) -> true
-    | _ -> false in
   let valid_arg_types_for_suffix suffix =
     match
       SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes
     with
-    | UniqueMatch (rt, _, _) when rt = ReturnType UReal -> true
+    | UniqueMatch (ReturnType UReal, _, _) -> true
     | _ -> false in
-  ( is_real_rt_for_suffix "_lcdf"
-  || valid_arg_types_for_suffix "_lcdf"
-  || is_real_rt_for_suffix "_cdf_log"
-  || valid_arg_types_for_suffix "_cdf_log" )
-  && ( is_real_rt_for_suffix "_lccdf"
-     || valid_arg_types_for_suffix "_lccdf"
-     || is_real_rt_for_suffix "_ccdf_log"
+  (valid_arg_types_for_suffix "_lcdf" || valid_arg_types_for_suffix "_cdf_log")
+  && ( valid_arg_types_for_suffix "_lccdf"
      || valid_arg_types_for_suffix "_ccdf_log" )
 
 let verify_can_truncate_distribution loc (arg : typed_expression) = function
@@ -1377,8 +1401,7 @@ and verify_valid_transformation_for_type loc is_global sized_ty trans =
     Semantic_error.non_int_bounds loc |> error ;
   let is_transformation =
     match trans with Transformation.Identity -> false | _ -> true in
-  if
-    is_global && SizedType.(inner_type sized_ty = SComplex) && is_transformation
+  if is_global && SizedType.(contains_complex sized_ty) && is_transformation
   then Semantic_error.complex_transform loc |> error
 
 and verify_transformed_param_ty loc cf is_global unsized_ty =
@@ -1396,18 +1419,28 @@ and check_sizedtype cf tenv sizedty =
   | SComplex -> SComplex
   | SVector (mem_pattern, e) ->
       let te = check e "Vector sizes" in
-      SizedType.SVector (mem_pattern, te)
+      SVector (mem_pattern, te)
   | SRowVector (mem_pattern, e) ->
       let te = check e "Row vector sizes" in
-      SizedType.SRowVector (mem_pattern, te)
+      SRowVector (mem_pattern, te)
   | SMatrix (mem_pattern, e1, e2) ->
-      let te1 = check e1 "Matrix sizes" in
-      let te2 = check e2 "Matrix sizes" in
-      SizedType.SMatrix (mem_pattern, te1, te2)
+      let te1 = check e1 "Matrix row size" in
+      let te2 = check e2 "Matrix column size" in
+      SMatrix (mem_pattern, te1, te2)
+  | SComplexVector e ->
+      let te = check e "complex vector sizes" in
+      SComplexVector te
+  | SComplexRowVector e ->
+      let te = check e "complex row vector sizes" in
+      SComplexRowVector te
+  | SComplexMatrix (e1, e2) ->
+      let te1 = check e1 "Complex matrix row size" in
+      let te2 = check e2 "Complex matrix column size" in
+      SComplexMatrix (te1, te2)
   | SArray (st, e) ->
       let tst = check_sizedtype cf tenv st in
       let te = check e "Array sizes" in
-      SizedType.SArray (tst, te)
+      SArray (tst, te)
 
 and check_var_decl_initial_value loc cf tenv id init_val_opt =
   match init_val_opt with

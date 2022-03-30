@@ -11,6 +11,9 @@ type t =
   | UComplex
   | URowVector
   | UMatrix
+  | UComplexVector
+  | UComplexRowVector
+  | UComplexMatrix
   | UArray of t
   | UFun of
       (autodifftype * t) list
@@ -52,6 +55,9 @@ let rec pp ppf = function
   | UVector -> pp_keyword ppf "vector"
   | URowVector -> pp_keyword ppf "row_vector"
   | UMatrix -> pp_keyword ppf "matrix"
+  | UComplexVector -> pp_keyword ppf "complex_vector"
+  | UComplexRowVector -> pp_keyword ppf "complex_row_vector"
+  | UComplexMatrix -> pp_keyword ppf "complex_matrix"
   | UArray ut ->
       let ut2, d = unwind_array_type ut in
       let array_str = "[" ^ String.make d ',' ^ "]" in
@@ -87,6 +93,10 @@ let rec common_type = function
   | UReal, UInt | UInt, UReal -> Some UReal
   | UComplex, UInt | UInt, UComplex | UComplex, UReal | UReal, UComplex ->
       Some UComplex
+  | UComplexVector, UVector | UVector, UComplexVector -> Some UComplexVector
+  | UComplexRowVector, URowVector | URowVector, UComplexRowVector ->
+      Some UComplexRowVector
+  | UComplexMatrix, UMatrix | UMatrix, UComplexMatrix -> Some UComplexMatrix
   | UArray t1, UArray t2 ->
       common_type (t1, t2) |> Option.map ~f:(fun t -> UArray t)
   | t1, t2 when t1 = t2 -> Some t1
@@ -111,11 +121,14 @@ let is_dataonlytype possibly_adtype : bool =
 
 let is_scalar_type = function UReal | UInt -> true | _ -> false
 
-let promote_array ut scalar =
+let promote_container ut scalar =
   let scalar = fst (unwind_array_type scalar) in
   let rec loop ut =
     match (ut, scalar) with
     | (UInt | UReal), (UReal | UComplex) -> scalar
+    | URowVector, UComplexRowVector -> UComplexRowVector
+    | UVector, UComplexVector -> UComplexVector
+    | UMatrix, UComplexMatrix -> UComplexMatrix
     | UArray ut2, _ -> UArray (loop ut2)
     | _, _ -> ut in
   loop ut
@@ -125,7 +138,7 @@ let rec is_int_type ut =
 
 let rec is_complex_type ut =
   match ut with
-  | UComplex -> true
+  | UComplex | UComplexMatrix | UComplexRowVector | UComplexVector -> true
   | UArray ut -> is_complex_type ut
   | _ -> false
 
@@ -133,14 +146,18 @@ let rec internal_scalar ut =
   match ut with
   | UVector | UMatrix | URowVector | UReal -> UReal
   | UInt -> UInt
-  | UComplex -> UComplex
+  | UComplex | UComplexVector | UComplexMatrix | UComplexRowVector -> UComplex
   | UArray ut -> internal_scalar ut
   | _ ->
       Common.FatalError.fatal_error_msg
         [%message "Tried to get scalar type of " (ut : t)]
 
 let is_eigen_type ut =
-  match ut with UVector | URowVector | UMatrix -> true | _ -> false
+  match ut with
+  | UVector | URowVector | UMatrix | UComplexRowVector | UComplexVector
+   |UComplexMatrix ->
+      true
+  | _ -> false
 
 let is_fun_type = function UFun _ | UMathLibraryFunction -> true | _ -> false
 
@@ -152,23 +169,35 @@ let rec contains_eigen_type ut =
   match ut with
   | UInt | UComplex -> false
   | UReal | UMathLibraryFunction | UFun (_, Void, _, _) -> false
-  | UVector | URowVector | UMatrix -> true
+  | UVector | URowVector | UMatrix | UComplexRowVector | UComplexVector
+   |UComplexMatrix ->
+      true
   | UArray t | UFun (_, ReturnType t, _, _) -> contains_eigen_type t
 
 let rec is_container ut =
   match ut with
-  | UVector | URowVector | UMatrix | UArray _ -> true
+  | UVector | URowVector | UMatrix | UComplexRowVector | UComplexVector
+   |UComplexMatrix | UArray _ ->
+      true
   | UReal | UInt | UComplex | UFun (_, Void, _, _) -> false
   | UFun (_, ReturnType t, _, _) -> is_container t
   | UMathLibraryFunction -> false
+
+let is_array ut =
+  match ut with
+  | UInt | UComplex | UReal | UMathLibraryFunction | UFun _ | UVector
+   |URowVector | UMatrix | UComplexVector | UComplexRowVector | UComplexMatrix
+    ->
+      false
+  | UArray _ -> true
 
 let return_contains_eigen_type ret =
   match ret with ReturnType t -> contains_eigen_type t | Void -> false
 
 let rec is_indexing_matrix = function
   | UArray t, _ :: idcs -> is_indexing_matrix (t, idcs)
-  | UMatrix, [] -> false
-  | UMatrix, _ -> true
+  | (UMatrix | UComplexMatrix), [] -> false
+  | (UMatrix | UComplexMatrix), _ -> true
   | _ -> false
 
 module Comparator = Comparator.Make (struct

@@ -907,7 +907,7 @@ let%expect_test "inline function in ternary if " =
               break;
             }
           }
-          FnPrint__(inline_sym1__ ?inline_sym4__: inline_sym7__);
+          FnPrint__((inline_sym1__ ? inline_sym4__ : inline_sym7__));
         }
       }
 

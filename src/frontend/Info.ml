@@ -1,51 +1,41 @@
 open Core_kernel
 open Ast
 open Middle
+open Yojson.Basic
 
-let rec sized_basetype_dims t =
-  match t with
-  | SizedType.SInt -> ("int", 0)
-  | SReal -> ("real", 0)
-  | SComplex -> ("complex", 0)
-  | SVector _ | SRowVector _ -> ("real", 1)
-  | SMatrix _ -> ("real", 2)
-  | SArray (t, _) ->
-      let bt, n = sized_basetype_dims t in
-      (bt, n + 1)
+let unsized_basetype_json t =
+  let rec type_dims t =
+    match t with
+    | UnsizedType.UInt -> ("int", 0)
+    | UReal -> ("real", 0)
+    | UComplex -> ("complex", 0)
+    | UVector | URowVector -> ("real", 1)
+    | UComplexVector | UComplexRowVector -> ("complex", 1)
+    | UMatrix -> ("real", 2)
+    | UComplexMatrix -> ("complex", 2)
+    | UArray t' ->
+        let type_, dim = type_dims t' in
+        (type_, dim + 1)
+    | UMathLibraryFunction | UFun _ -> assert false in
+  let to_json (type_, dim) : t =
+    `Assoc [("type", `String type_); ("dimensions", `Int dim)] in
+  type_dims t |> to_json
 
-let rec unsized_basetype_dims t =
-  match t with
-  | UnsizedType.UInt -> ("int", 0)
-  | UReal -> ("real", 0)
-  | UComplex -> ("complex", 0)
-  | UVector | URowVector -> ("real", 1)
-  | UMatrix -> ("real", 2)
-  | UArray t ->
-      let bt, n = unsized_basetype_dims t in
-      (bt, n + 1)
-  | UMathLibraryFunction | UFun _ -> assert false
+let basetype_dims t = Type.to_unsized t |> unsized_basetype_json
 
-let basetype_dims t =
-  match t with
-  | Type.Sized t -> sized_basetype_dims t
-  | Type.Unsized t -> unsized_basetype_dims t
+let get_var_decl {stmts; _} : t =
+  `Assoc
+    (List.fold_right ~init:[]
+       ~f:(fun stmt acc ->
+         match stmt.Ast.stmt with
+         | Ast.VarDecl decl ->
+             let type_info = basetype_dims decl.decl_type in
+             (decl.identifier.name, type_info) :: acc
+         | _ -> acc )
+       stmts )
 
-let get_var_decl {stmts; _} =
-  List.fold_right ~init:[]
-    ~f:(fun stmt acc ->
-      match stmt.Ast.stmt with
-      | Ast.VarDecl decl ->
-          let t, n = basetype_dims decl.decl_type in
-          (decl.identifier.name, t, n) :: acc
-      | _ -> acc )
-    stmts
-
-let block_info name ppf block =
-  let var_info ppf (name, t, n) =
-    Fmt.pf ppf "\"%s\": { \"type\": \"%s\", \"dimensions\": %d}" name t n in
-  let vars_info = Fmt.list ~sep:Fmt.comma var_info in
-  Fmt.pf ppf "\"%s\": { @[<v 0>%a @]}" name vars_info
-    (Option.value_map block ~default:[] ~f:get_var_decl)
+let block_info_json name block : t =
+  `Assoc [(name, Option.value_map block ~default:(`Assoc []) ~f:get_var_decl)]
 
 let rec get_function_calls_expr (funs, distrs) expr =
   let acc =
@@ -78,7 +68,7 @@ let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
     (fun acc _ -> acc)
     acc stmt.stmt
 
-let function_calls ppf p =
+let function_calls_json p =
   let map f list_op =
     Option.value_map ~default:[]
       ~f:(fun {stmts; _} -> List.concat_map ~f stmts)
@@ -93,22 +83,23 @@ let function_calls ppf p =
       (get_function_calls_stmt ud_dists)
       (String.Set.empty, String.Set.empty)
       p in
-  Fmt.pf ppf "\"functions\": [ @[<v 0>%a @]],@,"
-    (Fmt.list ~sep:Fmt.comma (fun ppf s -> Fmt.pf ppf "\"%s\"" s))
-    (Set.to_list funs) ;
-  Fmt.pf ppf "\"distributions\": [ @[<v 0>%a @]]"
-    (Fmt.list ~sep:Fmt.comma (fun ppf s -> Fmt.pf ppf "\"%s\"" s))
-    (Set.to_list distrs)
+  let set_to_List s =
+    `List (Set.to_list s |> List.map ~f:(fun str -> `String str)) in
+  `Assoc [("functions", set_to_List funs); ("distributions", set_to_List distrs)]
 
-let includes ppf () =
-  Fmt.pf ppf "\"included_files\": [ @[<v 0>%a @]]"
-    Fmt.(list ~sep:comma (fun ppf s -> Fmt.pf ppf "\"%s\"" s))
-    (List.rev !Preprocessor.included_files)
+let includes_json () =
+  `Assoc
+    [ ( "included_files"
+      , `List
+          ( List.rev !Preprocessor.included_files
+          |> List.map ~f:(fun str -> `String str) ) ) ]
 
-let info ast =
-  Fmt.str "{ @[<v 0>%a,@,%a,@,%a,@,%a,@,%a,@,%a @]}@." (block_info "inputs")
-    ast.datablock (block_info "parameters") ast.parametersblock
-    (block_info "transformed parameters")
-    ast.transformedparametersblock
-    (block_info "generated quantities")
-    ast.generatedquantitiesblock function_calls ast includes ()
+let info_json ast =
+  List.fold ~f:Util.combine ~init:(`Assoc [])
+    [ block_info_json "inputs" ast.datablock
+    ; block_info_json "parameters" ast.parametersblock
+    ; block_info_json "transformed parameters" ast.transformedparametersblock
+    ; block_info_json "generated quantities" ast.generatedquantitiesblock
+    ; function_calls_json ast; includes_json () ]
+
+let info ast = pretty_to_string (info_json ast)
