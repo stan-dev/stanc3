@@ -676,11 +676,14 @@
       (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LVariable ps) ()) (UTuple (UReal UReal))
+     (Assignment (LIndexed (LTupleProjection (LVariable ps) 0) ()) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
-       (meta
-        ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-         (adlevel AutoDiffable))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LIndexed (LTupleProjection (LVariable ps) 1) ()) UReal
+      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -1289,11 +1292,14 @@
       (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LVariable ps) ()) (UTuple (UReal UReal))
+     (Assignment (LIndexed (LTupleProjection (LVariable ps) 0) ()) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
-       (meta
-        ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-         (adlevel AutoDiffable))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LIndexed (LTupleProjection (LVariable ps) 1) ()) UReal
+      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -2127,11 +2133,14 @@
       (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LVariable ps) ()) (UTuple (UReal UReal))
+     (Assignment (LIndexed (LTupleProjection (LVariable ps) 0) ()) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
-       (meta
-        ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-         (adlevel AutoDiffable))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LIndexed (LTupleProjection (LVariable ps) 1) ()) UReal
+      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -2196,12 +2205,68 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LVariable ps2) ())
-      (UTuple (UReal (UTuple (UReal UMatrix))))
+     (Assignment (LIndexed (LTupleProjection (LVariable ps2) 0) ()) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
-       (meta
-        ((type_ (UTuple (UReal (UTuple (UReal UMatrix))))) (loc <opaque>)
-         (adlevel AutoDiffable))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment
+      (LIndexed (LTupleProjection (LTupleProjection (LVariable ps2) 1) 0) ())
+      UReal
+      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (For (loopvar sym2__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Lit Int 10))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (Assignment
+                      (LIndexed
+                       (LTupleProjection (LTupleProjection (LVariable ps2) 1)
+                        1)
+                       ((Single
+                         ((pattern (Var sym2__))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                        (Single
+                         ((pattern (Var sym1__))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      UMatrix
+                      ((pattern
+                        (FunApp (CompilerInternal FnReadDataSerializer)
+                         (((pattern (Lit Int 10))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                          ((pattern (Lit Int 10))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       (meta
+                        ((type_ UMatrix) (loc <opaque>)
+                         (adlevel AutoDiffable))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -2506,11 +2571,14 @@
       (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LVariable ps) ()) (UTuple (UReal UReal))
+     (Assignment (LIndexed (LTupleProjection (LVariable ps) 0) ()) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
-       (meta
-        ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-         (adlevel AutoDiffable))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LIndexed (LTupleProjection (LVariable ps) 1) ()) UReal
+      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp

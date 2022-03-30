@@ -416,7 +416,8 @@ let gen_unconstrained_write (decl_id, Program.{out_constrained_st; _}) =
 
 (** Statements to read, unconstrain and assign a parameter then write it back *)
 let data_unconstrain_transform smeta (decl_id, outvar) =
-  [ Stmt.Fixed.
+  let decl =
+    Stmt.Fixed.
       { pattern=
           Decl
             { decl_adtype=
@@ -425,22 +426,34 @@ let data_unconstrain_transform smeta (decl_id, outvar) =
             ; decl_id
             ; decl_type= Type.Sized outvar.Program.out_constrained_st
             ; initialize= true }
-      ; meta= smeta }
-  ; (let nonarray_st, array_dims =
-       SizedType.get_array_dims outvar.Program.out_constrained_st in
-     Stmt.Helpers.mk_nested_for (List.rev array_dims)
-       (fun loopvars ->
-         Stmt.Fixed.
-           { meta= smeta
-           ; pattern=
-               Assignment
-                 ( LIndexed
-                     ( LVariable decl_id
-                     , List.map ~f:(fun e -> Index.Single e) (List.rev loopvars)
-                     )
-                 , SizedType.to_unsized nonarray_st
-                 , data_serializer_read smeta nonarray_st ) } )
-       smeta ); gen_write ~unconstrain:true (decl_id, outvar) ]
+      ; meta= smeta } in
+  let rec read (lval, st) =
+    match st with
+    | SizedType.STuple sts ->
+        let sub_sts =
+          List.mapi
+            ~f:(fun iter x ->
+              (Stmt.Fixed.Pattern.LTupleProjection (lval, iter), x) )
+            sts in
+        List.concat_map ~f:read sub_sts
+    | st ->
+        let nonarray_st, array_dims = SizedType.get_array_dims st in
+        [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
+            (fun loopvars ->
+              Stmt.Fixed.
+                { meta= smeta
+                ; pattern=
+                    Assignment
+                      ( LIndexed
+                          ( lval
+                          , List.map
+                              ~f:(fun e -> Index.Single e)
+                              (List.rev loopvars) )
+                      , SizedType.to_unsized nonarray_st
+                      , data_serializer_read smeta nonarray_st ) } )
+            smeta ] in
+  (decl :: read (LVariable decl_id, outvar.Program.out_constrained_st))
+  @ [gen_write ~unconstrain:true (decl_id, outvar)]
 
 let rec contains_var_expr is_vident accum Expr.Fixed.{pattern; _} =
   accum

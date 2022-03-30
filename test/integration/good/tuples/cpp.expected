@@ -1463,8 +1463,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
       pos__ = 1;
       std::tuple<local_scalar_t__, local_scalar_t__> ps =
          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__};
-      stan::model::assign(ps, in__.read<local_scalar_t__>(),
-        "assigning variable ps");
+      std::get<0>(ps) = in__.read<local_scalar_t__>();
+      std::get<1>(ps) = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, std::get<0>(ps));
       out__.write_free_lb(0, std::get<1>(ps));
     } catch (const std::exception& e) {
@@ -2158,8 +2158,8 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
       pos__ = 1;
       std::tuple<local_scalar_t__, local_scalar_t__> ps =
          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__};
-      stan::model::assign(ps, in__.read<local_scalar_t__>(),
-        "assigning variable ps");
+      std::get<0>(ps) = in__.read<local_scalar_t__>();
+      std::get<1>(ps) = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, std::get<0>(ps));
       out__.write_free_lb(0, std::get<1>(ps));
     } catch (const std::exception& e) {
@@ -3798,8 +3798,8 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
       pos__ = 1;
       std::tuple<local_scalar_t__, local_scalar_t__> ps =
          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__};
-      stan::model::assign(ps, in__.read<local_scalar_t__>(),
-        "assigning variable ps");
+      std::get<0>(ps) = in__.read<local_scalar_t__>();
+      std::get<1>(ps) = in__.read<local_scalar_t__>();
       out__.write(std::get<0>(ps));
       out__.write(std::get<1>(ps));
       std::tuple<local_scalar_t__,
@@ -3810,8 +3810,16 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
         local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>{DUMMY_VAR__, 
         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10,
           DUMMY_VAR__)}};
-      stan::model::assign(ps2, in__.read<local_scalar_t__>(),
-        "assigning variable ps2");
+      std::get<0>(ps2) = in__.read<local_scalar_t__>();
+      std::get<0>(std::get<1>(ps2)) = in__.read<local_scalar_t__>();
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          stan::model::assign(std::get<1>(std::get<1>(ps2)),
+            in__.read<local_scalar_t__>(),
+            "assigning variable std::get<1>(std::get<1>(ps2))", stan::model::index_uni(sym2__),
+                                                                  stan::model::index_uni(sym1__));
+        }
+      }
       out__.write(std::get<0>(ps2));
       out__.write(std::get<0>(std::get<1>(ps2)));
       out__.write(std::get<1>(std::get<1>(ps2)));
@@ -4148,8 +4156,8 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
       pos__ = 1;
       std::tuple<local_scalar_t__, local_scalar_t__> ps =
          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__};
-      stan::model::assign(ps, in__.read<local_scalar_t__>(),
-        "assigning variable ps");
+      std::get<0>(ps) = in__.read<local_scalar_t__>();
+      std::get<1>(ps) = in__.read<local_scalar_t__>();
       out__.write(std::get<0>(ps));
       out__.write_free_lb(0, std::get<1>(ps));
     } catch (const std::exception& e) {
