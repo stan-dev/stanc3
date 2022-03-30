@@ -689,10 +689,6 @@ and pp_expr ppf Expr.Fixed.{pattern; meta} =
       ->
         pp_indexed_simple ppf (str "%a" pp_expr e, idx)
     | _ -> pp_indexed ppf (str "%a" pp_expr e, idx, pretty_print e) )
-  (* TUPLE MAYBE c++ indexing
-       from https://en.cppreference.com/w/cpp/utility/tuple
-       Index std::tuple with std::get
-  *)
   | TupleProjection (t, ix) -> pf ppf "std::get<%d>(%a)" (ix - 1) pp_expr t
 
 (* these functions are just for testing *)

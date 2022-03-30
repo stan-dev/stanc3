@@ -1490,7 +1490,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                                       bool emit_generated_quantities__ = true) const
     final {
     
-    param_names__.emplace_back(std::string() + "ps");
+    param_names__.emplace_back(std::string() + "ps:1");
+    param_names__.emplace_back(std::string() + "ps:2");
     if (emit_transformed_parameters__) {
       
     }
@@ -1507,7 +1508,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                                         bool emit_generated_quantities__ = true) const
     final {
     
-    param_names__.emplace_back(std::string() + "ps");
+    param_names__.emplace_back(std::string() + "ps:1");
+    param_names__.emplace_back(std::string() + "ps:2");
     if (emit_transformed_parameters__) {
       
     }
@@ -2185,7 +2187,8 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
                                       bool emit_generated_quantities__ = true) const
     final {
     
-    param_names__.emplace_back(std::string() + "ps");
+    param_names__.emplace_back(std::string() + "ps:1");
+    param_names__.emplace_back(std::string() + "ps:2");
     if (emit_transformed_parameters__) {
       
     }
@@ -2202,7 +2205,8 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
                                         bool emit_generated_quantities__ = true) const
     final {
     
-    param_names__.emplace_back(std::string() + "ps");
+    param_names__.emplace_back(std::string() + "ps:1");
+    param_names__.emplace_back(std::string() + "ps:2");
     if (emit_transformed_parameters__) {
       
     }
@@ -3847,8 +3851,19 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
                                       bool emit_generated_quantities__ = true) const
     final {
     
-    param_names__.emplace_back(std::string() + "ps");
-    param_names__.emplace_back(std::string() + "ps2");
+    param_names__.emplace_back(std::string() + "ps:1");
+    param_names__.emplace_back(std::string() + "ps:2");
+    param_names__.emplace_back(std::string() + "ps2:1");
+    param_names__.emplace_back(std::string() + "ps2:2:1");
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          {
+            param_names__.emplace_back(std::string() + "ps2:2:2" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          } 
+        }
+      } 
+    }
     if (emit_transformed_parameters__) {
       
     }
@@ -3865,8 +3880,19 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
                                         bool emit_generated_quantities__ = true) const
     final {
     
-    param_names__.emplace_back(std::string() + "ps");
-    param_names__.emplace_back(std::string() + "ps2");
+    param_names__.emplace_back(std::string() + "ps:1");
+    param_names__.emplace_back(std::string() + "ps:2");
+    param_names__.emplace_back(std::string() + "ps2:1");
+    param_names__.emplace_back(std::string() + "ps2:2:1");
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          {
+            param_names__.emplace_back(std::string() + "ps2:2:2" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          } 
+        }
+      } 
+    }
     if (emit_transformed_parameters__) {
       
     }
@@ -4183,7 +4209,8 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
                                       bool emit_generated_quantities__ = true) const
     final {
     
-    param_names__.emplace_back(std::string() + "ps");
+    param_names__.emplace_back(std::string() + "ps:1");
+    param_names__.emplace_back(std::string() + "ps:2");
     if (emit_transformed_parameters__) {
       
     }
@@ -4200,7 +4227,8 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
                                         bool emit_generated_quantities__ = true) const
     final {
     
-    param_names__.emplace_back(std::string() + "ps");
+    param_names__.emplace_back(std::string() + "ps:1");
+    param_names__.emplace_back(std::string() + "ps:2");
     if (emit_transformed_parameters__) {
       
     }

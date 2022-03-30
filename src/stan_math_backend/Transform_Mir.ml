@@ -211,9 +211,8 @@ let rec data_read smeta ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
 let read_constrain_dims constrain_transform st =
   let rec constrain_get_dims st =
     match st with
-    | SizedType.SInt | SReal | SComplex -> []
+    | SizedType.SInt | SReal | SComplex | STuple _ -> []
     | SArray (t, dim) -> dim :: constrain_get_dims t
-    | STuple _ -> failwith "TUPLE TODO read_param/read_constrain_dims"
     | SVector (_, d)
      |SRowVector (_, d)
      |SComplexVector d

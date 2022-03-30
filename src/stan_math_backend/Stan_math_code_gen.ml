@@ -282,23 +282,31 @@ let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body) =
           pf ppf "@[%a @]" pp_block
             (pp_for_loop_iteratee ~index_ids:idcs, (i, dims, pp_body)) )
 
-(* TUPLE TODO - need to handle emit_names/pp_*_param_names *)
-let emit_name ppf (name, idcs) =
-  let name = Mangle.remove_prefix name in
-  let to_string = fmt "std::to_string(%s)" in
-  pf ppf "param_names__.emplace_back(std::string() + %a);"
-    (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
-    (str "%S" name :: List.map ~f:(str "%a" to_string) idcs)
-
-let emit_complex_name ppf (name, idcs) =
-  let name = Mangle.remove_prefix name in
-  let to_string = fmt "std::to_string(%s)" in
-  pf ppf "@[param_names__.emplace_back(std::string() + %a);@]@,"
-    (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
-    ((str "%S" name :: List.map ~f:(str "%a" to_string) idcs) @ ["\"real\""]) ;
-  pf ppf "param_names__.emplace_back(std::string() + %a);"
-    (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
-    ((str "%S" name :: List.map ~f:(str "%a" to_string) idcs) @ ["\"imag\""])
+let rec pp_param_names ppf (decl_id, st) =
+  let pp_names ppf (name, idcs) =
+    let name = Mangle.remove_prefix name in
+    let to_string = fmt "std::to_string(%s)" in
+    match st with
+    | SizedType.STuple sts ->
+        let subtypes =
+          List.mapi
+            ~f:(fun i typ -> (name ^ ":" ^ string_of_int (i + 1), typ))
+            sts in
+        pf ppf "@[<v>%a@]" (list ~sep:cut pp_param_names) subtypes
+    | _ when SizedType.is_complex_type st ->
+        pf ppf "@[param_names__.emplace_back(std::string() + %a);@]@,"
+          (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
+          ( (str "%S" name :: List.map ~f:(str "%a" to_string) idcs)
+          @ ["\"real\""] ) ;
+        pf ppf "param_names__.emplace_back(std::string() + %a);"
+          (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
+          ( (str "%S" name :: List.map ~f:(str "%a" to_string) idcs)
+          @ ["\"imag\""] )
+    | _ ->
+        pf ppf "param_names__.emplace_back(std::string() + %a);"
+          (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
+          (str "%S" name :: List.map ~f:(str "%a" to_string) idcs) in
+  pp_for_loop_iteratee ppf (decl_id, List.rev (SizedType.get_dims st), pp_names)
 
 (** Print the [constrained_param_names] method of the model class. *)
 let pp_constrained_param_names ppf {Program.output_vars; _} =
@@ -316,12 +324,6 @@ let pp_constrained_param_names ppf {Program.output_vars; _} =
         | id, {out_block= GeneratedQuantities; out_constrained_st= st; _} ->
             `Trd (id, st) )
       output_vars in
-  let pp_param_names ppf (decl_id, st) =
-    let gen_name =
-      if SizedType.is_complex_type st then emit_complex_name else emit_name
-    in
-    let dims = List.rev (SizedType.get_dims st) in
-    pp_for_loop_iteratee ppf (decl_id, dims, gen_name) in
   pp_method ppf "void" "constrained_param_names" params nop
     (fun ppf ->
       (list ~sep:cut pp_param_names) ppf paramvars ;
@@ -363,12 +365,6 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
         | id, {out_block= GeneratedQuantities; out_unconstrained_st= st; _} ->
             `Trd (id, st) )
       output_vars in
-  let pp_param_names ppf (decl_id, st) =
-    let pp_names =
-      if SizedType.is_complex_type st then emit_complex_name else emit_name
-    in
-    pp_for_loop_iteratee ppf
-      (decl_id, List.rev (SizedType.get_dims st), pp_names) in
   let cv_attr = ["const"; "final"] in
   pp_method ppf "void" "unconstrained_param_names" params nop
     (fun ppf ->
