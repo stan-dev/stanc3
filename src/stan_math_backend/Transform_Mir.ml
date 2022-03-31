@@ -145,10 +145,6 @@ let rec data_read smeta ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
   | UArray UInt | UArray UReal ->
       [Assignment (LVariable decl_id, flat_type, readfnapp decl_var) |> swrap]
   | UTuple _ ->
-      (* TUPLE STUB
-         Data read from tuples
-         There seems to be dispatch to a FnReadData function, could foist to C++
-      *)
       let get_subtypes = match st with STuple subs -> subs | _ -> [] in
       let sub_sts =
         List.mapi

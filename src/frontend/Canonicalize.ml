@@ -161,9 +161,7 @@ let rec no_parens {expr; emeta} =
                   | i -> map_index keep_parens i )
                 l )
       ; emeta }
-  | TupleProjection (e, i) ->
-      {expr= (* TUPLE MAYBE *)
-             TupleProjection (keep_parens e, i); emeta}
+  | TupleProjection (e, i) -> {expr= TupleProjection (keep_parens e, i); emeta}
   | ArrayExpr _ | RowVectorExpr _ | FunApp _ | CondDistApp _ | TupleExpr _
    |Promotion _ ->
       {expr= map_expression no_parens ident expr; emeta}

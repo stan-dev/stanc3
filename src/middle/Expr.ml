@@ -41,16 +41,7 @@ module Fixed = struct
             ( if List.is_empty indices then fun _ _ -> ()
             else Fmt.(list (Index.pp pp_e) ~sep:comma |> brackets) )
             indices
-      | TupleProjection (expr, ix) ->
-          (* TUPLE DESIGN pp parens
-             Do I need the extra parens here?
-             ((1,2)).1
-             only if there might be tuple operators, like
-             (1,1) + (2,2)
-             needs parens
-             Defaulting to no parens
-          *)
-          Fmt.pf ppf "@[%a.%d@]" pp_e expr ix
+      | TupleProjection (expr, ix) -> Fmt.pf ppf "@[%a.%d@]" pp_e expr ix
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
       | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
       | Promotion (from, ut, _) ->

@@ -1,6 +1,8 @@
 transformed data {
   int N = 12;
   real b = 1.5;
+
+  (real, (real, int)) tpl = ((3.1), ((4.5, (((2))))));
 }
 parameters {
   real<lower=((b > 3) ? 1.0 : b - 2)> x;
