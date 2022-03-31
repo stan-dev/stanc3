@@ -47,3 +47,37 @@ Available signatures:
 (real, array[,,,] int) => array[,,,] real
   The second argument must be array[,,,] int but got real
 (Additional signatures omitted)
+  $ ../../../../../install/default/bin/stanc tuple-dataonly-ad.stan
+Semantic error in 'tuple-dataonly-ad.stan', line 13, column 12 to column 19:
+   -------------------------------------------------
+    11:  
+    12:  model {
+    13:    target += foo(ps);
+                     ^
+    14:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'foo':
+((real, real))
+Available signatures:
+(data (real, real)) => real
+  The first argument must be data-only. (Local variables are assumed to
+  depend on parameters; same goes for function inputs unless they are marked
+  with the keyword 'data'.)
+  $ ../../../../../install/default/bin/stanc tuple-dataonly-ad2.stan
+Semantic error in 'tuple-dataonly-ad2.stan', line 17, column 12 to column 24:
+   -------------------------------------------------
+    15:  
+    16:  model {
+    17:    target += foo((x1,x2));
+                     ^
+    18:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'foo':
+((real, real))
+Available signatures:
+(data (real, real)) => real
+  The first argument must be data-only. (Local variables are assumed to
+  depend on parameters; same goes for function inputs unless they are marked
+  with the keyword 'data'.)

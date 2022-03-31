@@ -32,18 +32,12 @@ and returntype = Void | ReturnType of t [@@deriving compare, hash, sexp]
 let rec pp_tuple_autodifftype ppf = function
   | DataOnly -> pp_keyword ppf "data"
   | AutoDiffable -> pp_keyword ppf "autodiffable"
-  (* TUPLE STUB tuplead print
-     bmw: does this mean void foo(data (real, int) x){...} is impossible?
-  *)
   | TupleAD ad ->
       Fmt.pf ppf "Tuple(%a)" Fmt.(list ~sep:comma pp_tuple_autodifftype) ad
 
 let pp_autodifftype ppf = function
   | DataOnly -> pp_keyword ppf "data "
   | AutoDiffable -> ()
-  (* TUPLE STUB tuplead print
-     bmw: does this mean void foo(data (real, int) x){...} is impossible?
-  *)
   | TupleAD ad ->
       Fmt.pf ppf "Tuple(%a)" Fmt.(list ~sep:comma pp_tuple_autodifftype) ad
 
@@ -97,8 +91,14 @@ and pp_returntype ppf = function
   | ReturnType ut -> pp ppf ut
 
 (* -- Type conversion -- *)
-let autodifftype_can_convert at1 at2 =
-  match (at1, at2) with DataOnly, AutoDiffable -> false | _ -> true
+let rec autodifftype_can_convert at1 at2 =
+  match (at1, at2) with
+  | DataOnly, AutoDiffable -> false
+  | TupleAD ts, TupleAD ts2 -> (
+    try List.for_all2_exn ts ts2 ~f:autodifftype_can_convert with _ -> false )
+  | DataOnly, TupleAD ts ->
+      List.for_all ts ~f:(autodifftype_can_convert DataOnly)
+  | _, _ -> true
 
 let rec lub_ad_type = function
   | [] -> DataOnly

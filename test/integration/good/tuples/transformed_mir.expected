@@ -882,6 +882,125 @@
     (meta <opaque>))))
  (output_vars ()) (prog_name tuple_constraints_model)
  (prog_path tuple-constraints.stan))
+  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-dataonly.stan
+((functions_block
+  (((fdrt (UReal)) (fdname foo) (fdsuffix FnPlain)
+    (fdargs ((DataOnly x (UTuple (UReal UReal)))))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (Return
+             (((pattern
+                (TupleProjection
+                 ((pattern (Var x))
+                  (meta
+                   ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                    (adlevel (TupleAD (DataOnly DataOnly))))))
+                 1))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))))
+ (input_vars ((d (STuple (SReal SReal)))))
+ (prepare_data
+  (((pattern
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable pos__) UInt
+      ((pattern (Lit Int 1))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id d)
+      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LVariable d) 0) UReal
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str d.0))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LVariable d) 1) UReal
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str d.1))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))))
+ (log_prob
+  (((pattern
+     (Block
+      (((pattern
+         (TargetPE
+          ((pattern
+            (FunApp (UserDefined foo FnPlain)
+             (((pattern (Var d))
+               (meta
+                ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                 (adlevel (TupleAD (DataOnly DataOnly)))))))))
+           (meta
+            ((type_ UReal) (loc <opaque>)
+             (adlevel (TupleAD (DataOnly DataOnly))))))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (generate_quantities
+  (((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern
+            (EOr
+             ((pattern (Var emit_transformed_parameters__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var emit_generated_quantities__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
+       (meta <opaque>))
+      ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern (Var emit_generated_quantities__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
+       (meta <opaque>))
+      ()))
+    (meta <opaque>))))
+ (transform_inits
+  (((pattern
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable pos__) UInt
+      ((pattern (Lit Int 1))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))))
+ (output_vars ()) (prog_name tuple_dataonly_model)
+ (prog_path tuple-dataonly.stan))
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-full.stan
 ((functions_block ())
  (input_vars
