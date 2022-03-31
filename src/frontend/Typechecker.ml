@@ -1696,7 +1696,8 @@ and check_fundef loc cf tenv return_ty id args body =
         | AutoDiffable, ut -> (Param, ut)
         | TupleAD _, _ ->
             Common.FatalError.fatal_error_msg
-              [%message "Validate fundef tupleAD TUPLES STUB"] )
+              [%message "TupleAD in function definition, this is unexpected!"]
+        )
       arg_types in
   let tenv_body =
     List.fold2_exn arg_names arg_types_internal ~init:tenv

@@ -387,9 +387,6 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
           | { pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _)
             ; _ } ) as rhs ) ) ->
       pf ppf "@[<hov 4>%a = %a;@]" pp_nonrange_lvalue lhs pp_expr rhs
-  (* TUPLE MAYBE assigning to tuples
-     We've decided to delegate this to `assign()` in C++
-  *)
   | Assignment
       (LIndexed (LVariable assignee, idcs), (UInt | UReal | UComplex), rhs)
     when List.for_all ~f:is_single_index idcs ->
