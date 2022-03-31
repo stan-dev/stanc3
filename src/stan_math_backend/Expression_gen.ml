@@ -10,8 +10,6 @@ let stan_namespace_qualify f =
   if String.is_suffix ~suffix:"functor__" f || String.contains f ':' then f
   else "stan::math::" ^ f
 
-let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
-
 (* retun true if the type of the expression
    is integer, real, or complex (e.g. not a container) *)
 let is_scalar e =
@@ -88,13 +86,17 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
   | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
+  | UComplexMatrix -> pf ppf "Eigen::Matrix<std::complex<%s>, -1, -1>" scalar
+  | UComplexRowVector -> pf ppf "Eigen::Matrix<std::complex<%s>, 1, -1>" scalar
+  | UComplexVector -> pf ppf "Eigen::Matrix<std::complex<%s>, -1, 1>" scalar
   | UMathLibraryFunction | UFun _ ->
       Common.FatalError.fatal_error_msg
         [%message "Function types not implemented"]
 
 let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   match ut with
-  | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector ->
+  | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector | UComplexVector
+   |UComplexMatrix | UComplexRowVector ->
       string ppf scalar
   | UComplex -> pf ppf "std::complex<%s>" scalar
   | UArray t ->
@@ -123,7 +125,9 @@ let rec pp_possibly_var_decl ppf (adtype, ut, mem_pattern) =
   | UArray t ->
       pf ppf "@[<hov 2>std::vector<@,%a>@]" pp_possibly_var_decl
         (adtype, t, mem_pattern)
-  | UMatrix | UVector | URowVector -> pf ppf "%a" pp_var_decl ut
+  | UMatrix | UVector | URowVector | UComplexRowVector | UComplexVector
+   |UComplexMatrix ->
+      pf ppf "%a" pp_var_decl ut
   | UReal | UInt | UComplex -> pf ppf "%a" pp_unsizedtype_local (adtype, ut)
   | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
 
@@ -430,8 +434,9 @@ and read_data ut ppf es =
     | UnsizedType.UArray UInt -> "i"
     | UArray UReal -> "r"
     | UArray UComplex -> "c"
-    | UInt | UReal | UComplex | UVector | URowVector | UMatrix | UArray _
-     |UFun _ | UMathLibraryFunction ->
+    | UInt | UReal | UComplex | UVector | URowVector | UMatrix
+     |UComplexMatrix | UComplexRowVector | UComplexVector | UArray _ | UFun _
+     |UMathLibraryFunction ->
         Common.FatalError.fatal_error_msg
           [%message "Can't ReadData of " (ut : UnsizedType.t)] in
   pf ppf "context__.vals_%s(%a)" i_or_r_or_c pp_expr (List.hd_exn es)
@@ -489,6 +494,17 @@ and pp_compiler_internal_fn ad ut f ppf es =
             (List.length es) (list ~sep:comma pp_expr) es
     | UMatrix ->
         pf ppf "stan::math::to_matrix(@,%a)" (pp_array_literal URowVector) es
+    | UComplexRowVector ->
+        let st = local_scalar ut (promote_adtype es) in
+        if List.is_empty es then
+          pf ppf "Eigen::Matrix<std::complex<%s>,1,-1>(0)" st
+        else
+          pf ppf "(Eigen::Matrix<std::complex<%s>,1,-1>(%d) <<@ %a).finished()"
+            st (List.length es) (list ~sep:comma pp_expr) es
+    | UComplexMatrix ->
+        pf ppf "stan::math::to_matrix(@,%a)"
+          (pp_array_literal UComplexRowVector)
+          es
     | _ ->
         Common.FatalError.fatal_error_msg
           [%message
@@ -572,6 +588,17 @@ and pp_expr ppf Expr.Fixed.{pattern; meta} =
       if List.is_empty es then pf ppf "Eigen::Matrix<%s,-1,1>(0)" st
       else
         pf ppf "(Eigen::Matrix<%s,-1,1>(%d) <<@ %a).finished()" st
+          (List.length es) (list ~sep:comma pp_expr) es
+  | FunApp
+      ( StanLib (op, _, _)
+      , [ { meta= {type_= UComplexRowVector; _}
+          ; pattern= FunApp (CompilerInternal FnMakeRowVec, es) } ] )
+    when Operator.(Some Transpose = of_string_opt op) ->
+      let st = local_scalar UComplexVector (promote_adtype es) in
+      if List.is_empty es then
+        pf ppf "Eigen::Matrix<std::complex<%s>,-1,1>(0)" st
+      else
+        pf ppf "(Eigen::Matrix<std::complex<%s>,-1,1>(%d) <<@ %a).finished()" st
           (List.length es) (list ~sep:comma pp_expr) es
   | FunApp (StanLib (f, suffix, mem_pattern), es) ->
       let ret_type = Some (UnsizedType.ReturnType meta.type_) in

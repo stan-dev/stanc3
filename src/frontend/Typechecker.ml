@@ -334,18 +334,30 @@ let check_rowvector loc es =
   match es with
   | {emeta= {ad_level; type_= UnsizedType.URowVector; _}; _} :: _ -> (
     match get_consistent_types ad_level URowVector es with
+    | Ok (ad_level, typ, promotions) ->
+        mk_typed_expression
+          ~expr:(RowVectorExpr (Promotion.promote_list es promotions))
+          ~ad_level
+          ~type_:(if typ = UComplex then UComplexMatrix else UMatrix)
+          ~loc
+    | Error (_, meta) ->
+        Semantic_error.invalid_matrix_types meta.loc meta.type_ |> error )
+  | {emeta= {ad_level; type_= UnsizedType.UComplexRowVector; _}; _} :: _ -> (
+    match get_consistent_types ad_level UComplexRowVector es with
     | Ok (ad_level, _, promotions) ->
         mk_typed_expression
           ~expr:(RowVectorExpr (Promotion.promote_list es promotions))
-          ~ad_level ~type_:UMatrix ~loc
+          ~ad_level ~type_:UComplexMatrix ~loc
     | Error (_, meta) ->
         Semantic_error.invalid_matrix_types meta.loc meta.type_ |> error )
   | _ -> (
     match get_consistent_types DataOnly UReal es with
-    | Ok (ad_level, _, promotions) ->
+    | Ok (ad_level, typ, promotions) ->
         mk_typed_expression
           ~expr:(RowVectorExpr (Promotion.promote_list es promotions))
-          ~ad_level ~type_:URowVector ~loc
+          ~ad_level
+          ~type_:(if typ = UComplex then UComplexRowVector else URowVector)
+          ~loc
     | Error (_, meta) ->
         Semantic_error.invalid_row_vector_types meta.loc meta.type_ |> error )
 
@@ -361,18 +373,26 @@ let is_multiindex i =
 
 let inferred_unsizedtype_of_indexed ~loc ut indices =
   let rec aux type_ idcs =
+    let vec, rowvec, scalar =
+      if UnsizedType.is_complex_type type_ then
+        UnsizedType.(UComplexVector, UComplexRowVector, UComplex)
+      else (UVector, URowVector, UReal) in
     match (type_, idcs) with
     | _, [] -> type_
     | UnsizedType.UArray type_, `Single :: tl -> aux type_ tl
     | UArray type_, `Multi :: tl -> aux type_ tl |> UnsizedType.UArray
-    | (UVector | URowVector), [`Single] | UMatrix, [`Single; `Single] ->
-        UnsizedType.UReal
-    | (UVector | URowVector | UMatrix), [`Multi] | UMatrix, [`Multi; `Multi] ->
+    | (UVector | URowVector | UComplexRowVector | UComplexVector), [`Single]
+     |(UMatrix | UComplexMatrix), [`Single; `Single] ->
+        scalar
+    | ( ( UVector | URowVector | UMatrix | UComplexVector | UComplexMatrix
+        | UComplexRowVector )
+      , [`Multi] )
+     |(UMatrix | UComplexMatrix), [`Multi; `Multi] ->
         type_
-    | UMatrix, ([`Single] | [`Single; `Multi]) -> UnsizedType.URowVector
-    | UMatrix, [`Multi; `Single] -> UnsizedType.UVector
-    | UMatrix, _ :: _ :: _ :: _
-     |(UVector | URowVector), _ :: _ :: _
+    | (UMatrix | UComplexMatrix), ([`Single] | [`Single; `Multi]) -> rowvec
+    | (UMatrix | UComplexMatrix), [`Multi; `Single] -> vec
+    | (UMatrix | UComplexMatrix), _ :: _ :: _ :: _
+     |(UVector | URowVector | UComplexRowVector | UComplexVector), _ :: _ :: _
      |(UInt | UReal | UComplex | UFun _ | UMathLibraryFunction), _ :: _ ->
         Semantic_error.not_indexable loc ut (List.length indices) |> error in
   aux ut (List.map ~f:indexing_type indices)
@@ -1381,8 +1401,7 @@ and verify_valid_transformation_for_type loc is_global sized_ty trans =
     Semantic_error.non_int_bounds loc |> error ;
   let is_transformation =
     match trans with Transformation.Identity -> false | _ -> true in
-  if
-    is_global && SizedType.(inner_type sized_ty = SComplex) && is_transformation
+  if is_global && SizedType.(contains_complex sized_ty) && is_transformation
   then Semantic_error.complex_transform loc |> error
 
 and verify_transformed_param_ty loc cf is_global unsized_ty =
@@ -1400,18 +1419,28 @@ and check_sizedtype cf tenv sizedty =
   | SComplex -> SComplex
   | SVector (mem_pattern, e) ->
       let te = check e "Vector sizes" in
-      SizedType.SVector (mem_pattern, te)
+      SVector (mem_pattern, te)
   | SRowVector (mem_pattern, e) ->
       let te = check e "Row vector sizes" in
-      SizedType.SRowVector (mem_pattern, te)
+      SRowVector (mem_pattern, te)
   | SMatrix (mem_pattern, e1, e2) ->
-      let te1 = check e1 "Matrix sizes" in
-      let te2 = check e2 "Matrix sizes" in
-      SizedType.SMatrix (mem_pattern, te1, te2)
+      let te1 = check e1 "Matrix row size" in
+      let te2 = check e2 "Matrix column size" in
+      SMatrix (mem_pattern, te1, te2)
+  | SComplexVector e ->
+      let te = check e "complex vector sizes" in
+      SComplexVector te
+  | SComplexRowVector e ->
+      let te = check e "complex row vector sizes" in
+      SComplexRowVector te
+  | SComplexMatrix (e1, e2) ->
+      let te1 = check e1 "Complex matrix row size" in
+      let te2 = check e2 "Complex matrix column size" in
+      SComplexMatrix (te1, te2)
   | SArray (st, e) ->
       let tst = check_sizedtype cf tenv st in
       let te = check e "Array sizes" in
-      SizedType.SArray (tst, te)
+      SArray (tst, te)
 
 and check_var_decl_initial_value loc cf tenv id init_val_opt =
   match init_val_opt with

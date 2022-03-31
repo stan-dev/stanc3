@@ -781,8 +781,8 @@ let%expect_test "inline function in ternary if " =
               inline_h_return_sym5__ = (4 + 4);
             }
           }
-          FnPrint__(inline_f_return_sym1__ ?inline_g_return_sym3__:
-                    inline_h_return_sym5__);
+          FnPrint__((inline_f_return_sym1__ ? inline_g_return_sym3__ :
+                     inline_h_return_sym5__));
         }
       }
 

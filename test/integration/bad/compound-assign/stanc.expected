@@ -123,7 +123,7 @@ Syntax error in 'plus_equals_matrix_shape_mismatch.stan', line 4, column 10 to c
      6:  }
    -------------------------------------------------
 
-"[" expression "]" expected for vector size.
+Expected "[" expression "]" for vector size.
   $ ../../../../../install/default/bin/stanc plus_equals_prim_array.stan
 Semantic error in 'plus_equals_prim_array.stan', line 5, column 2 to column 9:
    -------------------------------------------------

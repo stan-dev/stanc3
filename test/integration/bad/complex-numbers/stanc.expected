@@ -1,0 +1,55 @@
+  $ ../../../../../install/default/bin/stanc assignment-wrong-way.stan
+Semantic error in 'assignment-wrong-way.stan', line 11, column 2 to column 9:
+   -------------------------------------------------
+     9:  
+    10:    Z1 = R; // fine
+    11:    R = Z1; // error
+           ^
+    12:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to assignment operator =: lhs has type array[] matrix and rhs has type array[] complex_matrix
+  $ ../../../../../install/default/bin/stanc bad_bounds1.stan
+Semantic error in 'bad_bounds1.stan', line 5, column 2 to column 33:
+   -------------------------------------------------
+     3:  }
+     4:  parameters {
+     5:    complex_matrix<lower=0>[N,N] Z;
+           ^
+     6:  }
+   -------------------------------------------------
+
+Complex types do not support transformations.
+  $ ../../../../../install/default/bin/stanc bad_bounds2.stan
+Semantic error in 'bad_bounds2.stan', line 2, column 2 to column 31:
+   -------------------------------------------------
+     1:  data {
+     2:    array[10] complex<lower=1> x;
+           ^
+     3:  }
+     4:  parameters {
+   -------------------------------------------------
+
+Complex types do not support transformations.
+  $ ../../../../../install/default/bin/stanc bad_bounds3.stan
+Semantic error in 'bad_bounds3.stan', line 2, column 1 to column 21:
+   -------------------------------------------------
+     1:  data {
+     2:   complex<offset=1> x;
+          ^
+     3:  }
+     4:  parameters {
+   -------------------------------------------------
+
+Complex types do not support transformations.
+  $ ../../../../../install/default/bin/stanc bad_bounds4.stan
+Semantic error in 'bad_bounds4.stan', line 2, column 2 to column 30:
+   -------------------------------------------------
+     1:  data {
+     2:    complex<lower=1, upper=5> x;
+           ^
+     3:  }
+     4:  parameters {
+   -------------------------------------------------
+
+Complex types do not support transformations.

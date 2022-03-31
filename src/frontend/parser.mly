@@ -41,9 +41,10 @@ let (!=) = Stdlib.(!=)
        BREAK "break" CONTINUE "continue" PROFILE "profile"
 %token VOID "void" INT "int" REAL "real" COMPLEX "complex" VECTOR "vector"
        ROWVECTOR "row_vector" ARRAY "array" MATRIX "matrix" ORDERED "ordered"
+       COMPLEXVECTOR "complex_vector" COMPLEXROWVECTOR "complex_row_vector"
        POSITIVEORDERED "positive_ordered" SIMPLEX "simplex" UNITVECTOR "unit_vector"
        CHOLESKYFACTORCORR "cholesky_factor_corr" CHOLESKYFACTORCOV "cholesky_factor_cov"
-       CORRMATRIX "corr_matrix" COVMATRIX "cov_matrix"
+       CORRMATRIX "corr_matrix" COVMATRIX "cov_matrix" COMPLEXMATRIX "complex_matrix"
 %token LOWER "lower" UPPER "upper" OFFSET "offset" MULTIPLIER "multiplier"
 %token <string> INTNUMERAL "24"
 %token <string> REALNUMERAL "3.1415"
@@ -216,6 +217,9 @@ reserved_word:
   | VECTOR { build_id "vector" $loc }
   | ROWVECTOR { build_id "row_vector" $loc }
   | MATRIX { build_id "matrix" $loc }
+  | COMPLEXVECTOR { build_id "complex_vector" $loc }
+  | COMPLEXROWVECTOR { build_id "complex_row_vector" $loc }
+  | COMPLEXMATRIX { build_id "complex_matrix" $loc }
   | ORDERED { build_id "ordered" $loc }
   | POSITIVEORDERED { build_id "positive_ordered" $loc }
   | SIMPLEX { build_id "simplex" $loc }
@@ -277,6 +281,12 @@ basic_type:
     {  grammar_logger "basic_type ROWVECTOR" ; UnsizedType.URowVector }
   | MATRIX
     {  grammar_logger "basic_type MATRIX" ; UnsizedType.UMatrix }
+  | COMPLEXVECTOR
+    {  grammar_logger "basic_type COMPLEXVECTOR" ; UnsizedType.UComplexVector }
+  | COMPLEXROWVECTOR
+    {  grammar_logger "basic_type COMPLEXROWVECTOR" ; UnsizedType.UComplexRowVector }
+  | COMPLEXMATRIX
+    {  grammar_logger "basic_type COMPLEXMATRIX" ; UnsizedType.UComplexMatrix }
 
 unsized_dims:
   | LBRACK cs=list(COMMA) RBRACK
@@ -402,6 +412,12 @@ sized_basic_type:
     { grammar_logger "ROWVECTOR_var_type" ; (SizedType.SRowVector (AoS, e) , Identity) }
   | MATRIX LBRACK e1=expression COMMA e2=expression RBRACK
     { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (AoS, e1, e2), Identity) }
+  | COMPLEXVECTOR LBRACK e=expression RBRACK
+    { grammar_logger "COMPLEXVECTOR_var_type" ; (SizedType.SComplexVector e, Identity) }
+  | COMPLEXROWVECTOR LBRACK e=expression RBRACK
+    { grammar_logger "COMPLEXROWVECTOR_var_type" ; (SizedType.SComplexRowVector e , Identity) }
+  | COMPLEXMATRIX LBRACK e1=expression COMMA e2=expression RBRACK
+    { grammar_logger "COMPLEXMATRIX_var_type" ; (SizedType.SComplexMatrix (e1, e2), Identity) }
 
 top_var_type:
   | INT r=range_constraint
@@ -416,6 +432,12 @@ top_var_type:
     { grammar_logger "ROWVECTOR_top_var_type" ; (SRowVector (AoS, e), c) }
   | MATRIX c=type_constraint LBRACK e1=expression COMMA e2=expression RBRACK
     { grammar_logger "MATRIX_top_var_type" ; (SMatrix (AoS, e1, e2), c) }
+  | COMPLEXVECTOR c=type_constraint LBRACK e=expression RBRACK
+    { grammar_logger "COMPLEXVECTOR_top_var_type" ; (SComplexVector e, c) }
+  | COMPLEXROWVECTOR c=type_constraint LBRACK e=expression RBRACK
+    { grammar_logger "COMPLEXROWVECTOR_top_var_type" ; (SComplexRowVector e, c) }
+  | COMPLEXMATRIX c=type_constraint LBRACK e1=expression COMMA e2=expression RBRACK
+    { grammar_logger "COMPLEXMATRIX_top_var_type" ; (SComplexMatrix (e1, e2), c) }
   | ORDERED LBRACK e=expression RBRACK
     { grammar_logger "ORDERED_top_var_type" ; (SVector (AoS, e), Ordered) }
   | POSITIVEORDERED LBRACK e=expression RBRACK

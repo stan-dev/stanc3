@@ -180,7 +180,7 @@ let pp_autodifftype = Middle.UnsizedType.pp_autodifftype
 let rec unwind_sized_array_type st =
   match st with
   | Middle.SizedType.SInt | SReal | SComplex | SVector _ | SRowVector _
-   |SMatrix _ ->
+   |SMatrix _ | SComplexMatrix _ | SComplexVector _ | SComplexRowVector _ ->
       (st, [])
   | SArray (st, dim) ->
       let st', dims = unwind_sized_array_type st in
@@ -319,6 +319,10 @@ let rec pp_sizedtype ppf = function
   | SRowVector (_, e) -> pf ppf "row_vector[%a]" pp_expression e
   | SMatrix (_, e1, e2) ->
       pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
+  | SComplexVector e -> pf ppf "complex_vector[%a]" pp_expression e
+  | SComplexRowVector e -> pf ppf "complex_row_vector[%a]" pp_expression e
+  | SComplexMatrix (e1, e2) ->
+      pf ppf "complex_matrix[%a, %a]" pp_expression e1 pp_expression e2
   | SArray _ as arr ->
       let ty, ixs = unwind_sized_array_type arr in
       pf ppf "array[@[%a@]]@ %a"
@@ -348,9 +352,12 @@ let pp_transformed_type ppf (pst, trans) =
       let pp_possibly_transformed_type ppf (st, trans) =
         let sizes_fmt =
           match st with
-          | SizedType.SVector (_, e) | SRowVector (_, e) ->
+          | SizedType.SVector (_, e)
+           |SRowVector (_, e)
+           |SComplexVector e
+           |SComplexRowVector e ->
               const (fun ppf -> pf ppf "[%a]" pp_expression) e
-          | SMatrix (_, e1, e2) ->
+          | SMatrix (_, e1, e2) | SComplexMatrix (e1, e2) ->
               const
                 (fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression)
                 e2
