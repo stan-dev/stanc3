@@ -55,6 +55,9 @@ let count_dims unsized_ty =
     | _ -> dims in
   aux 0 unsized_ty
 
+let rec contains_tuple t =
+  match t with UTuple _ -> true | UArray t -> contains_tuple t | _ -> false
+
 let rec unwind_array_type = function
   | UArray ut -> ( match unwind_array_type ut with ut2, d -> (ut2, d + 1) )
   | ut -> (ut, 0)

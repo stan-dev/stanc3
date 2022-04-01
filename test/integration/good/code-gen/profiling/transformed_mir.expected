@@ -555,7 +555,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LVariable rho) ()) UReal
+     (Assignment (LVariable rho) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -577,7 +577,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LVariable alpha) ()) UReal
+     (Assignment (LVariable alpha) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -599,7 +599,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LVariable sigma) ()) UReal
+     (Assignment (LVariable sigma) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))

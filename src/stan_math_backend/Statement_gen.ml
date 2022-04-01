@@ -344,7 +344,7 @@ let rec pp_nonrange_lvalue ppf lvalue =
   match lvalue with
   | Stmt.Fixed.Pattern.LVariable v -> Fmt.string ppf v
   | LTupleProjection (lv, ix) ->
-      Fmt.pf ppf "std::get<%d>(%a)" ix pp_nonrange_lvalue lv
+      Fmt.pf ppf "std::get<%d>(%a)" (ix - 1) pp_nonrange_lvalue lv
   | LIndexed (lv, idcs) when List.for_all ~f:is_single_index idcs ->
       pf ppf "%a%a" pp_nonrange_lvalue lv pp_indices_simple ("", idcs)
   | LIndexed (_, _) ->

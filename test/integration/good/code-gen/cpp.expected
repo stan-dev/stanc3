@@ -917,7 +917,7 @@ class complex_tuples_model final : public model_base_crtp<complex_tuples_model> 
       
       
       current_statement__ = 4;
-      std::get<1>(x) = 1;
+      std::get<0>(x) = 1;
       current_statement__ = 5;
       z = std::numeric_limits<int>::min();
       

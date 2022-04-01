@@ -1,23 +1,334 @@
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir array-tuple-param.stan
-Uncaught exception:
-  
-  ("Fatal error: this should never happen. Please file a bug on https://github.com/stan-dev/stanc3/issues/new and include the model that caused this issue."
-   ("Internal error: Attempted to apply tuple index to a non-tuple type:"
-    (t (UArray (UTuple (UReal UReal))))))
-
-Raised at Base__Error.raise in file "src/error.ml" (inlined), line 8, characters 14-30
-Called from Base__Error.raise_s in file "src/error.ml", line 9, characters 19-40
-Called from Middle__Expr.Helpers.add_tuple_index in file "src/middle/Expr.ml", line 314, characters 10-203
-Called from Middle__Stmt.Helpers.for_each_tuple.(fun) in file "src/middle/Stmt.ml", line 299, characters 21-73
-Called from Base__List.rev_mapi.loop in file "src/list.ml", line 515, characters 30-35
-Called from Base__List.mapi in file "src/list.ml" (inlined), line 520, characters 20-35
-Called from Middle__Stmt.Helpers.for_each_tuple in file "src/middle/Stmt.ml", line 298, characters 8-148
-Called from Stan_math_backend__Transform_Mir.trans_prog.(fun) in file "src/stan_math_backend/Transform_Mir.ml", line 562, characters 35-73
-Called from Base__List.count_map in file "src/list.ml", line 387, characters 13-17
-Called from Base__List.map in file "src/list.ml" (inlined), line 418, characters 15-31
-Called from Stan_math_backend__Transform_Mir.trans_prog in file "src/stan_math_backend/Transform_Mir.ml", line 561, characters 4-129
-Called from Dune__exe__Stanc.use_file in file "src/stanc/stanc.ml", line 293, characters 17-45
-Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 9-16
+((functions_block ()) (input_vars ())
+ (prepare_data
+  (((pattern
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable pos__) UInt
+      ((pattern (Lit Int 1))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))))
+ (log_prob
+  (((pattern
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id arr)
+      (decl_type
+       (Sized
+        (SArray (STuple (SReal SReal))
+         ((pattern (Lit Int 10))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (Assignment
+              (LIndexed (LVariable arr)
+               ((Single
+                 ((pattern (Var sym1__))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              (UTuple (UReal UReal))
+              ((pattern
+                (FunApp (CompilerInternal FnMakeTuple)
+                 (((pattern
+                    (FunApp
+                     (CompilerInternal
+                      (FnReadParam (constrain Identity) (dims ())
+                       (mem_pattern AoS)))
+                     ()))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                  ((pattern
+                    (FunApp
+                     (CompilerInternal
+                      (FnReadParam (constrain Identity) (dims ())
+                       (mem_pattern AoS)))
+                     ()))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta
+                ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                 (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (generate_quantities
+  (((pattern
+     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id arr)
+      (decl_type
+       (Sized
+        (SArray (STuple (SReal SReal))
+         ((pattern (Lit Int 10))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (Assignment
+              (LIndexed (LVariable arr)
+               ((Single
+                 ((pattern (Var sym1__))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              (UTuple (UReal UReal))
+              ((pattern
+                (FunApp (CompilerInternal FnMakeTuple)
+                 (((pattern
+                    (FunApp
+                     (CompilerInternal
+                      (FnReadParam (constrain Identity) (dims ())
+                       (mem_pattern AoS)))
+                     ()))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                  ((pattern
+                    (FunApp
+                     (CompilerInternal
+                      (FnReadParam (constrain Identity) (dims ())
+                       (mem_pattern AoS)))
+                     ()))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta
+                ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                 (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (NRFunApp
+              (CompilerInternal
+               (FnWriteParam (unconstrain_opt ())
+                (var
+                 ((pattern
+                   (TupleProjection
+                    ((pattern
+                      (Indexed
+                       ((pattern (Var arr))
+                        (meta
+                         ((type_ (UArray (UTuple (UReal UReal))))
+                          (loc <opaque>) (adlevel DataOnly))))
+                       ((Single
+                         ((pattern (Var sym1__))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                     (meta
+                      ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                       (adlevel DataOnly))))
+                    1))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+              ()))
+            (meta <opaque>))
+           ((pattern
+             (NRFunApp
+              (CompilerInternal
+               (FnWriteParam (unconstrain_opt ())
+                (var
+                 ((pattern
+                   (TupleProjection
+                    ((pattern
+                      (Indexed
+                       ((pattern (Var arr))
+                        (meta
+                         ((type_ (UArray (UTuple (UReal UReal))))
+                          (loc <opaque>) (adlevel DataOnly))))
+                       ((Single
+                         ((pattern (Var sym1__))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                     (meta
+                      ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                       (adlevel DataOnly))))
+                    2))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+              ()))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern
+            (EOr
+             ((pattern (Var emit_transformed_parameters__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var emit_generated_quantities__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
+       (meta <opaque>))
+      ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern (Var emit_generated_quantities__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
+       (meta <opaque>))
+      ()))
+    (meta <opaque>))))
+ (transform_inits
+  (((pattern
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable pos__) UInt
+      ((pattern (Lit Int 1))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id arr)
+      (decl_type
+       (Sized
+        (SArray (STuple (SReal SReal))
+         ((pattern (Lit Int 10))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (Assignment
+              (LTupleProjection
+               (LIndexed (LVariable arr)
+                ((Single
+                  ((pattern (Var sym1__))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               1)
+              (UTuple (UReal UReal))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+            (meta <opaque>))
+           ((pattern
+             (Assignment
+              (LTupleProjection
+               (LIndexed (LVariable arr)
+                ((Single
+                  ((pattern (Var sym1__))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               2)
+              (UTuple (UReal UReal))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (NRFunApp
+              (CompilerInternal
+               (FnWriteParam (unconstrain_opt (Identity))
+                (var
+                 ((pattern
+                   (TupleProjection
+                    ((pattern
+                      (Indexed
+                       ((pattern (Var arr))
+                        (meta
+                         ((type_ (UArray (UTuple (UReal UReal))))
+                          (loc <opaque>) (adlevel DataOnly))))
+                       ((Single
+                         ((pattern (Var sym1__))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                     (meta
+                      ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                       (adlevel DataOnly))))
+                    1))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+              ()))
+            (meta <opaque>))
+           ((pattern
+             (NRFunApp
+              (CompilerInternal
+               (FnWriteParam (unconstrain_opt (Identity))
+                (var
+                 ((pattern
+                   (TupleProjection
+                    ((pattern
+                      (Indexed
+                       ((pattern (Var arr))
+                        (meta
+                         ((type_ (UArray (UTuple (UReal UReal))))
+                          (loc <opaque>) (adlevel DataOnly))))
+                       ((Single
+                         ((pattern (Var sym1__))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                     (meta
+                      ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                       (adlevel DataOnly))))
+                    2))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+              ()))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (output_vars
+  ((arr
+    ((out_unconstrained_st (STuple (SReal SReal)))
+     (out_constrained_st
+      (SArray (STuple (SReal SReal))
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block Parameters)
+     (out_trans (TupleTransformation (Identity Identity)))))))
+ (prog_name array_tuple_param_model) (prog_path array-tuple-param.stan))
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir simple.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
@@ -337,12 +648,12 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LTupleProjection (LVariable y) 0) UInt
+     (Assignment (LTupleProjection (LVariable y) 1) UInt
       ((pattern
         (Indexed
          ((pattern
            (FunApp (CompilerInternal FnReadData)
-            (((pattern (Lit Str y.0))
+            (((pattern (Lit Str y.1))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
          ((Single
@@ -351,12 +662,13 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LTupleProjection (LVariable y.1) 0) UReal
+     (Assignment (LTupleProjection (LTupleProjection (LVariable y) 2) 1)
+      UReal
       ((pattern
         (Indexed
          ((pattern
            (FunApp (CompilerInternal FnReadData)
-            (((pattern (Lit Str y.1.0))
+            (((pattern (Lit Str y.2.1))
               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
          ((Single
@@ -365,12 +677,12 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LTupleProjection (LVariable y.1) 1) UInt
+     (Assignment (LTupleProjection (LTupleProjection (LVariable y) 2) 2) UInt
       ((pattern
         (Indexed
          ((pattern
            (FunApp (CompilerInternal FnReadData)
-            (((pattern (Lit Str y.1.1))
+            (((pattern (Lit Str y.2.2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
          ((Single
@@ -593,32 +905,13 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
         (var
          ((pattern
            (TupleProjection
-            ((pattern
-              (Indexed
-               ((pattern (Var ps))
-                (meta
-                 ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                  (adlevel DataOnly))))
-               ()))
+            ((pattern (Var ps))
              (meta
               ((type_ (UTuple (UReal UReal))) (loc <opaque>)
                (adlevel DataOnly))))
             1))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern
-            (Indexed
-             ((pattern (Var ps))
-              (meta
-               ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                (adlevel DataOnly))))
-             ()))
-           (meta
-            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-             (adlevel DataOnly))))
-          1))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -627,32 +920,13 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
         (var
          ((pattern
            (TupleProjection
-            ((pattern
-              (Indexed
-               ((pattern (Var ps))
-                (meta
-                 ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                  (adlevel DataOnly))))
-               ()))
+            ((pattern (Var ps))
              (meta
               ((type_ (UTuple (UReal UReal))) (loc <opaque>)
                (adlevel DataOnly))))
             2))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern
-            (Indexed
-             ((pattern (Var ps))
-              (meta
-               ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                (adlevel DataOnly))))
-             ()))
-           (meta
-            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-             (adlevel DataOnly))))
-          2))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
      (IfElse
@@ -696,12 +970,12 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
       (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LTupleProjection (LVariable ps) 0) ()) UReal
+     (Assignment (LTupleProjection (LVariable ps) 1) (UTuple (UReal UReal))
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LTupleProjection (LVariable ps) 1) ()) UReal
+     (Assignment (LTupleProjection (LVariable ps) 2) (UTuple (UReal UReal))
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -722,14 +996,7 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
                (adlevel DataOnly))))
             1))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern (Var ps))
-           (meta
-            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-             (adlevel DataOnly))))
-          1))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -748,14 +1015,7 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
                (adlevel DataOnly))))
             2))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern (Var ps))
-           (meta
-            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-             (adlevel DataOnly))))
-          2))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))))
  (output_vars
   ((ps
@@ -788,12 +1048,12 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
       (decl_type (Sized (STuple (SInt SReal)))) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LTupleProjection (LVariable y) 0) UInt
+     (Assignment (LTupleProjection (LVariable y) 1) UInt
       ((pattern
         (Indexed
          ((pattern
            (FunApp (CompilerInternal FnReadData)
-            (((pattern (Lit Str y.0))
+            (((pattern (Lit Str y.1))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
          ((Single
@@ -802,12 +1062,12 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LTupleProjection (LVariable y) 1) UReal
+     (Assignment (LTupleProjection (LVariable y) 2) UReal
       ((pattern
         (Indexed
          ((pattern
            (FunApp (CompilerInternal FnReadData)
-            (((pattern (Lit Str y.1))
+            (((pattern (Lit Str y.2))
               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
          ((Single
@@ -938,12 +1198,12 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
       (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LTupleProjection (LVariable d) 0) UReal
+     (Assignment (LTupleProjection (LVariable d) 1) UReal
       ((pattern
         (Indexed
          ((pattern
            (FunApp (CompilerInternal FnReadData)
-            (((pattern (Lit Str d.0))
+            (((pattern (Lit Str d.1))
               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
          ((Single
@@ -952,12 +1212,12 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LTupleProjection (LVariable d) 1) UReal
+     (Assignment (LTupleProjection (LVariable d) 2) UReal
       ((pattern
         (Indexed
          ((pattern
            (FunApp (CompilerInternal FnReadData)
-            (((pattern (Lit Str d.1))
+            (((pattern (Lit Str d.2))
               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
          ((Single
@@ -1061,12 +1321,12 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LTupleProjection (LVariable ds) 0) UInt
+     (Assignment (LTupleProjection (LVariable ds) 1) UInt
       ((pattern
         (Indexed
          ((pattern
            (FunApp (CompilerInternal FnReadData)
-            (((pattern (Lit Str ds.0))
+            (((pattern (Lit Str ds.1))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
          ((Single
@@ -1075,18 +1335,20 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable ds.1.0) (UArray UInt)
+     (Assignment (LTupleProjection (LTupleProjection (LVariable ds) 2) 1)
+      (UArray UInt)
       ((pattern
         (FunApp (CompilerInternal FnReadData)
-         (((pattern (Lit Str ds.1.0))
+         (((pattern (Lit Str ds.2.1))
            (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable ds.1.1) (UArray UInt)
+     (Assignment (LTupleProjection (LTupleProjection (LVariable ds) 2) 2)
+      (UArray UInt)
       ((pattern
         (FunApp (CompilerInternal FnReadData)
-         (((pattern (Lit Str ds.1.1))
+         (((pattern (Lit Str ds.2.2))
            (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -1328,32 +1590,13 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
         (var
          ((pattern
            (TupleProjection
-            ((pattern
-              (Indexed
-               ((pattern (Var ps))
-                (meta
-                 ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                  (adlevel DataOnly))))
-               ()))
+            ((pattern (Var ps))
              (meta
               ((type_ (UTuple (UReal UReal))) (loc <opaque>)
                (adlevel DataOnly))))
             1))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern
-            (Indexed
-             ((pattern (Var ps))
-              (meta
-               ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                (adlevel DataOnly))))
-             ()))
-           (meta
-            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-             (adlevel DataOnly))))
-          1))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -1362,32 +1605,13 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
         (var
          ((pattern
            (TupleProjection
-            ((pattern
-              (Indexed
-               ((pattern (Var ps))
-                (meta
-                 ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                  (adlevel DataOnly))))
-               ()))
+            ((pattern (Var ps))
              (meta
               ((type_ (UTuple (UReal UReal))) (loc <opaque>)
                (adlevel DataOnly))))
             2))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern
-            (Indexed
-             ((pattern (Var ps))
-              (meta
-               ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                (adlevel DataOnly))))
-             ()))
-           (meta
-            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-             (adlevel DataOnly))))
-          2))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
      (IfElse
@@ -1431,12 +1655,12 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
       (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LTupleProjection (LVariable ps) 0) ()) UReal
+     (Assignment (LTupleProjection (LVariable ps) 1) (UTuple (UReal UReal))
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LTupleProjection (LVariable ps) 1) ()) UReal
+     (Assignment (LTupleProjection (LVariable ps) 2) (UTuple (UReal UReal))
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -1457,14 +1681,7 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
                (adlevel DataOnly))))
             1))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern (Var ps))
-           (meta
-            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-             (adlevel DataOnly))))
-          1))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -1483,14 +1700,7 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
                (adlevel DataOnly))))
             2))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern (Var ps))
-           (meta
-            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-             (adlevel DataOnly))))
-          2))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))))
  (output_vars
   ((ps
@@ -1978,32 +2188,13 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
         (var
          ((pattern
            (TupleProjection
-            ((pattern
-              (Indexed
-               ((pattern (Var ps))
-                (meta
-                 ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                  (adlevel DataOnly))))
-               ()))
+            ((pattern (Var ps))
              (meta
               ((type_ (UTuple (UReal UReal))) (loc <opaque>)
                (adlevel DataOnly))))
             1))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern
-            (Indexed
-             ((pattern (Var ps))
-              (meta
-               ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                (adlevel DataOnly))))
-             ()))
-           (meta
-            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-             (adlevel DataOnly))))
-          1))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -2012,32 +2203,13 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
         (var
          ((pattern
            (TupleProjection
-            ((pattern
-              (Indexed
-               ((pattern (Var ps))
-                (meta
-                 ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                  (adlevel DataOnly))))
-               ()))
+            ((pattern (Var ps))
              (meta
               ((type_ (UTuple (UReal UReal))) (loc <opaque>)
                (adlevel DataOnly))))
             2))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern
-            (Indexed
-             ((pattern (Var ps))
-              (meta
-               ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                (adlevel DataOnly))))
-             ()))
-           (meta
-            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-             (adlevel DataOnly))))
-          2))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -2046,32 +2218,13 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
         (var
          ((pattern
            (TupleProjection
-            ((pattern
-              (Indexed
-               ((pattern (Var ps2))
-                (meta
-                 ((type_ (UTuple (UReal (UTuple (UReal UMatrix)))))
-                  (loc <opaque>) (adlevel DataOnly))))
-               ()))
+            ((pattern (Var ps2))
              (meta
               ((type_ (UTuple (UReal (UTuple (UReal UMatrix)))))
                (loc <opaque>) (adlevel DataOnly))))
             1))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern
-            (Indexed
-             ((pattern (Var ps2))
-              (meta
-               ((type_ (UTuple (UReal (UTuple (UReal UMatrix)))))
-                (loc <opaque>) (adlevel DataOnly))))
-             ()))
-           (meta
-            ((type_ (UTuple (UReal (UTuple (UReal UMatrix))))) (loc <opaque>)
-             (adlevel DataOnly))))
-          1))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -2082,13 +2235,7 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
            (TupleProjection
             ((pattern
               (TupleProjection
-               ((pattern
-                 (Indexed
-                  ((pattern (Var ps2))
-                   (meta
-                    ((type_ (UTuple (UReal (UTuple (UReal UMatrix)))))
-                     (loc <opaque>) (adlevel DataOnly))))
-                  ()))
+               ((pattern (Var ps2))
                 (meta
                  ((type_ (UTuple (UReal (UTuple (UReal UMatrix)))))
                   (loc <opaque>) (adlevel DataOnly))))
@@ -2098,137 +2245,28 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
                (adlevel DataOnly))))
             1))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern
-            (TupleProjection
-             ((pattern
-               (Indexed
-                ((pattern (Var ps2))
-                 (meta
-                  ((type_ (UTuple (UReal (UTuple (UReal UMatrix)))))
-                   (loc <opaque>) (adlevel DataOnly))))
-                ()))
-              (meta
-               ((type_ (UTuple (UReal (UTuple (UReal UMatrix)))))
-                (loc <opaque>) (adlevel DataOnly))))
-             2))
-           (meta
-            ((type_ (UTuple (UReal UMatrix))) (loc <opaque>)
-             (adlevel DataOnly))))
-          1))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
-     (For (loopvar sym1__)
-      (lower
-       ((pattern (Lit Int 1))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-      (upper
-       ((pattern (Lit Int 10))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-      (body
-       ((pattern
-         (Block
-          (((pattern
-             (For (loopvar sym2__)
-              (lower
-               ((pattern (Lit Int 1))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (upper
-               ((pattern (Lit Int 10))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (body
-               ((pattern
-                 (Block
-                  (((pattern
-                     (NRFunApp
-                      (CompilerInternal
-                       (FnWriteParam (unconstrain_opt ())
-                        (var
-                         ((pattern
-                           (Indexed
-                            ((pattern
-                              (TupleProjection
-                               ((pattern
-                                 (TupleProjection
-                                  ((pattern
-                                    (Indexed
-                                     ((pattern (Var ps2))
-                                      (meta
-                                       ((type_
-                                         (UTuple
-                                          (UReal (UTuple (UReal UMatrix)))))
-                                        (loc <opaque>) (adlevel DataOnly))))
-                                     ()))
-                                   (meta
-                                    ((type_
-                                      (UTuple
-                                       (UReal (UTuple (UReal UMatrix)))))
-                                     (loc <opaque>) (adlevel DataOnly))))
-                                  2))
-                                (meta
-                                 ((type_ (UTuple (UReal UMatrix)))
-                                  (loc <opaque>) (adlevel DataOnly))))
-                               2))
-                             (meta
-                              ((type_ UMatrix) (loc <opaque>)
-                               (adlevel DataOnly))))
-                            ((Single
-                              ((pattern (Var sym2__))
-                               (meta
-                                ((type_ UInt) (loc <opaque>)
-                                 (adlevel DataOnly)))))
-                             (Single
-                              ((pattern (Var sym1__))
-                               (meta
-                                ((type_ UInt) (loc <opaque>)
-                                 (adlevel DataOnly))))))))
-                          (meta
-                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-                      (((pattern
-                         (Indexed
-                          ((pattern
-                            (TupleProjection
-                             ((pattern
-                               (TupleProjection
-                                ((pattern
-                                  (Indexed
-                                   ((pattern (Var ps2))
-                                    (meta
-                                     ((type_
-                                       (UTuple
-                                        (UReal (UTuple (UReal UMatrix)))))
-                                      (loc <opaque>) (adlevel DataOnly))))
-                                   ()))
-                                 (meta
-                                  ((type_
-                                    (UTuple (UReal (UTuple (UReal UMatrix)))))
-                                   (loc <opaque>) (adlevel DataOnly))))
-                                2))
-                              (meta
-                               ((type_ (UTuple (UReal UMatrix)))
-                                (loc <opaque>) (adlevel DataOnly))))
-                             2))
-                           (meta
-                            ((type_ UMatrix) (loc <opaque>)
-                             (adlevel DataOnly))))
-                          ((Single
-                            ((pattern (Var sym2__))
-                             (meta
-                              ((type_ UInt) (loc <opaque>)
-                               (adlevel DataOnly)))))
-                           (Single
-                            ((pattern (Var sym1__))
-                             (meta
-                              ((type_ UInt) (loc <opaque>)
-                               (adlevel DataOnly))))))))
-                        (meta
-                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-                    (meta <opaque>)))))
-                (meta <opaque>)))))
-            (meta <opaque>)))))
-        (meta <opaque>)))))
+     (NRFunApp
+      (CompilerInternal
+       (FnWriteParam (unconstrain_opt ())
+        (var
+         ((pattern
+           (TupleProjection
+            ((pattern
+              (TupleProjection
+               ((pattern (Var ps2))
+                (meta
+                 ((type_ (UTuple (UReal (UTuple (UReal UMatrix)))))
+                  (loc <opaque>) (adlevel DataOnly))))
+               2))
+             (meta
+              ((type_ (UTuple (UReal UMatrix))) (loc <opaque>)
+               (adlevel DataOnly))))
+            2))
+          (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
      (IfElse
@@ -2272,12 +2310,12 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
       (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LTupleProjection (LVariable ps) 0) ()) UReal
+     (Assignment (LTupleProjection (LVariable ps) 1) (UTuple (UReal UReal))
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LTupleProjection (LVariable ps) 1) ()) UReal
+     (Assignment (LTupleProjection (LVariable ps) 2) (UTuple (UReal UReal))
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -2294,14 +2332,7 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
                (adlevel DataOnly))))
             1))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern (Var ps))
-           (meta
-            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-             (adlevel DataOnly))))
-          1))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -2316,14 +2347,7 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
                (adlevel DataOnly))))
             2))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern (Var ps))
-           (meta
-            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-             (adlevel DataOnly))))
-          2))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
      (Decl
@@ -2344,14 +2368,14 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LTupleProjection (LVariable ps2) 0) ()) UReal
+     (Assignment (LTupleProjection (LVariable ps2) 1)
+      (UTuple (UReal (UTuple (UReal UMatrix))))
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment
-      (LIndexed (LTupleProjection (LTupleProjection (LVariable ps2) 1) 0) ())
-      UReal
+     (Assignment (LTupleProjection (LTupleProjection (LVariable ps2) 2) 1)
+      (UTuple (UReal (UTuple (UReal UMatrix))))
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -2380,8 +2404,8 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
                   (((pattern
                      (Assignment
                       (LIndexed
-                       (LTupleProjection (LTupleProjection (LVariable ps2) 1)
-                        1)
+                       (LTupleProjection (LTupleProjection (LVariable ps2) 2)
+                        2)
                        ((Single
                          ((pattern (Var sym2__))
                           (meta
@@ -2390,18 +2414,11 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
                          ((pattern (Var sym1__))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                      UMatrix
+                      (UTuple (UReal (UTuple (UReal UMatrix))))
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -2420,14 +2437,7 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
                (loc <opaque>) (adlevel DataOnly))))
             1))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern (Var ps2))
-           (meta
-            ((type_ (UTuple (UReal (UTuple (UReal UMatrix))))) (loc <opaque>)
-             (adlevel DataOnly))))
-          1))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -2448,20 +2458,7 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
                (adlevel DataOnly))))
             1))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern
-            (TupleProjection
-             ((pattern (Var ps2))
-              (meta
-               ((type_ (UTuple (UReal (UTuple (UReal UMatrix)))))
-                (loc <opaque>) (adlevel DataOnly))))
-             2))
-           (meta
-            ((type_ (UTuple (UReal UMatrix))) (loc <opaque>)
-             (adlevel DataOnly))))
-          1))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -2482,20 +2479,7 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
                (adlevel DataOnly))))
             2))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern
-            (TupleProjection
-             ((pattern (Var ps2))
-              (meta
-               ((type_ (UTuple (UReal (UTuple (UReal UMatrix)))))
-                (loc <opaque>) (adlevel DataOnly))))
-             2))
-           (meta
-            ((type_ (UTuple (UReal UMatrix))) (loc <opaque>)
-             (adlevel DataOnly))))
-          2))
-        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))))
  (output_vars
   ((ps
@@ -2607,32 +2591,13 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
         (var
          ((pattern
            (TupleProjection
-            ((pattern
-              (Indexed
-               ((pattern (Var ps))
-                (meta
-                 ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                  (adlevel DataOnly))))
-               ()))
+            ((pattern (Var ps))
              (meta
               ((type_ (UTuple (UReal UReal))) (loc <opaque>)
                (adlevel DataOnly))))
             1))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern
-            (Indexed
-             ((pattern (Var ps))
-              (meta
-               ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                (adlevel DataOnly))))
-             ()))
-           (meta
-            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-             (adlevel DataOnly))))
-          1))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -2641,32 +2606,13 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
         (var
          ((pattern
            (TupleProjection
-            ((pattern
-              (Indexed
-               ((pattern (Var ps))
-                (meta
-                 ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                  (adlevel DataOnly))))
-               ()))
+            ((pattern (Var ps))
              (meta
               ((type_ (UTuple (UReal UReal))) (loc <opaque>)
                (adlevel DataOnly))))
             2))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern
-            (Indexed
-             ((pattern (Var ps))
-              (meta
-               ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                (adlevel DataOnly))))
-             ()))
-           (meta
-            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-             (adlevel DataOnly))))
-          2))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
      (IfElse
@@ -2710,12 +2656,12 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
       (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LTupleProjection (LVariable ps) 0) ()) UReal
+     (Assignment (LTupleProjection (LVariable ps) 1) (UTuple (UReal UReal))
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LTupleProjection (LVariable ps) 1) ()) UReal
+     (Assignment (LTupleProjection (LVariable ps) 2) (UTuple (UReal UReal))
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -2732,14 +2678,7 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
                (adlevel DataOnly))))
             1))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern (Var ps))
-           (meta
-            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-             (adlevel DataOnly))))
-          1))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -2758,14 +2697,7 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
                (adlevel DataOnly))))
             2))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      (((pattern
-         (TupleProjection
-          ((pattern (Var ps))
-           (meta
-            ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-             (adlevel DataOnly))))
-          2))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
     (meta <opaque>))))
  (output_vars
   ((ps
@@ -2795,12 +2727,12 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
       (decl_type (Sized (STuple (SInt SReal)))) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LTupleProjection (LVariable x) 0) UInt
+     (Assignment (LTupleProjection (LVariable x) 1) UInt
       ((pattern
         (Indexed
          ((pattern
            (FunApp (CompilerInternal FnReadData)
-            (((pattern (Lit Str x.0))
+            (((pattern (Lit Str x.1))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
          ((Single
@@ -2809,12 +2741,12 @@ Called from Dune__exe__Stanc in file "src/stanc/stanc.ml", line 346, characters 
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LTupleProjection (LVariable x) 1) UReal
+     (Assignment (LTupleProjection (LVariable x) 2) UReal
       ((pattern
         (Indexed
          ((pattern
            (FunApp (CompilerInternal FnReadData)
-            (((pattern (Lit Str x.1))
+            (((pattern (Lit Str x.2))
               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
          ((Single

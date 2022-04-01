@@ -8432,12 +8432,12 @@ static constexpr std::array<const char*, 43> locations_array__ =
 class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model> {
 
  private:
-  double lcm_sym28__;
   double lcm_sym27__;
-  Eigen::Matrix<double, -1, 1> lcm_sym26____;
-  int lcm_sym25__;
+  double lcm_sym26__;
+  Eigen::Matrix<double, -1, 1> lcm_sym25____;
   int lcm_sym24__;
   int lcm_sym23__;
+  int lcm_sym22__;
   int N;
   int N_edges;
   std::vector<int> node1;
@@ -8445,7 +8445,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
   Eigen::Matrix<double, -1, 1> E__;
   Eigen::Matrix<double, -1, 1> log_E__;
   int phi_std_raw_1dim__; 
-  Eigen::Map<Eigen::Matrix<double, -1, 1>> lcm_sym26__{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> lcm_sym25__{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> E{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> log_E{nullptr, 0};
  
@@ -8580,11 +8580,11 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       phi_std_raw_1dim__ = std::numeric_limits<int>::min();
       
       
-      lcm_sym24__ = (N - 1);
-      phi_std_raw_1dim__ = lcm_sym24__;
+      lcm_sym23__ = (N - 1);
+      phi_std_raw_1dim__ = lcm_sym23__;
       current_statement__ = 37;
       stan::math::validate_non_negative_index("phi_std_raw", "N - 1",
-                                              lcm_sym24__);
+                                              lcm_sym23__);
       current_statement__ = 38;
       stan::math::validate_non_negative_index("phi", "N", N);
       current_statement__ = 39;
@@ -8620,12 +8620,12 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     (void) function__;  // suppress unused var warning
     
     try {
-      local_scalar_t__ lcm_sym21__;
-      double lcm_sym20__;
+      local_scalar_t__ lcm_sym20__;
       double lcm_sym19__;
-      Eigen::Matrix<double, -1, 1> lcm_sym18__;
-      double lcm_sym17__;
-      int lcm_sym22__;
+      double lcm_sym18__;
+      Eigen::Matrix<double, -1, 1> lcm_sym17__;
+      double lcm_sym16__;
+      int lcm_sym21__;
       local_scalar_t__ tau_phi;
       current_statement__ = 1;
       tau_phi = in__.template read_constrain_lb<local_scalar_t__, 
@@ -8636,13 +8636,13 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
            Eigen::Matrix<local_scalar_t__, -1, 1>>(
            Eigen::Matrix<double, -1, 1>::Constant((N - 1),
              std::numeric_limits<double>::quiet_NaN()));
-      lcm_sym22__ = (N - 1);
+      lcm_sym21__ = (N - 1);
       phi_std_raw = in__.template read<
                       stan::conditional_var_value_t<local_scalar_t__, 
-                        Eigen::Matrix<local_scalar_t__, -1, 1>>>(lcm_sym22__);
+                        Eigen::Matrix<local_scalar_t__, -1, 1>>>(lcm_sym21__);
       local_scalar_t__ sigma_phi = DUMMY_VAR__;
-      lcm_sym21__ = stan::math::inv_sqrt(tau_phi);
-      sigma_phi = lcm_sym21__;
+      lcm_sym20__ = stan::math::inv_sqrt(tau_phi);
+      sigma_phi = lcm_sym20__;
       stan::conditional_var_value_t<local_scalar_t__, 
         Eigen::Matrix<local_scalar_t__, -1, 1>> phi =
          stan::conditional_var_value_t<local_scalar_t__, 
@@ -8651,17 +8651,17 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
              std::numeric_limits<double>::quiet_NaN()));
       current_statement__ = 5;
       stan::model::assign(phi, phi_std_raw,
-        "assigning variable phi", stan::model::index_min_max(1, lcm_sym22__));
+        "assigning variable phi", stan::model::index_min_max(1, lcm_sym21__));
       current_statement__ = 6;
       stan::model::assign(phi, -stan::math::sum(phi_std_raw),
         "assigning variable phi", stan::model::index_uni(N));
       current_statement__ = 7;
       stan::model::assign(phi,
-        stan::math::multiply(stan::model::deep_copy(phi), lcm_sym21__),
+        stan::math::multiply(stan::model::deep_copy(phi), lcm_sym20__),
         "assigning variable phi");
       current_statement__ = 3;
       stan::math::check_greater_or_equal(function__, "sigma_phi",
-                                            lcm_sym21__, 0);
+                                            lcm_sym20__, 0);
       {
         current_statement__ = 25;
         lp_accum__.add(
@@ -8707,17 +8707,17 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     (void) function__;  // suppress unused var warning
     
     try {
-      double lcm_sym12__;
       double lcm_sym11__;
-      Eigen::Matrix<double, -1, 1> lcm_sym10__;
+      double lcm_sym10__;
       Eigen::Matrix<double, -1, 1> lcm_sym9__;
-      double lcm_sym14__;
+      Eigen::Matrix<double, -1, 1> lcm_sym8__;
       double lcm_sym13__;
-      int lcm_sym8__;
+      double lcm_sym12__;
       int lcm_sym7__;
-      double lcm_sym6__;
-      int lcm_sym15__;
-      int lcm_sym4__;
+      int lcm_sym6__;
+      double lcm_sym5__;
+      int lcm_sym14__;
+      int lcm_sym3__;
       double tau_phi;
       current_statement__ = 1;
       tau_phi = in__.template read_constrain_lb<local_scalar_t__, 
@@ -8725,9 +8725,9 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       Eigen::Matrix<double, -1, 1> phi_std_raw =
          Eigen::Matrix<double, -1, 1>::Constant((N - 1),
            std::numeric_limits<double>::quiet_NaN());
-      lcm_sym15__ = (N - 1);
+      lcm_sym14__ = (N - 1);
       phi_std_raw = in__.template read<
-                      Eigen::Matrix<local_scalar_t__, -1, 1>>(lcm_sym15__);
+                      Eigen::Matrix<local_scalar_t__, -1, 1>>(lcm_sym14__);
       double sigma_phi = std::numeric_limits<double>::quiet_NaN();
       Eigen::Matrix<double, -1, 1> phi =
          Eigen::Matrix<double, -1, 1>::Constant(N,
@@ -8739,23 +8739,23 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
             emit_generated_quantities__)))) {
         return ;
       } 
-      lcm_sym11__ = stan::math::inv_sqrt(tau_phi);
-      sigma_phi = lcm_sym11__;
+      lcm_sym10__ = stan::math::inv_sqrt(tau_phi);
+      sigma_phi = lcm_sym10__;
       current_statement__ = 5;
       stan::model::assign(phi, phi_std_raw,
-        "assigning variable phi", stan::model::index_min_max(1, lcm_sym15__));
+        "assigning variable phi", stan::model::index_min_max(1, lcm_sym14__));
       current_statement__ = 6;
       stan::model::assign(phi, -stan::math::sum(phi_std_raw),
         "assigning variable phi", stan::model::index_uni(N));
       current_statement__ = 7;
       stan::model::assign(phi,
-        stan::math::multiply(stan::model::deep_copy(phi), lcm_sym11__),
+        stan::math::multiply(stan::model::deep_copy(phi), lcm_sym10__),
         "assigning variable phi");
       current_statement__ = 3;
       stan::math::check_greater_or_equal(function__, "sigma_phi",
-                                            lcm_sym11__, 0);
+                                            lcm_sym10__, 0);
       if (emit_transformed_parameters__) {
-        out__.write(lcm_sym11__);
+        out__.write(lcm_sym10__);
         out__.write(phi);
       } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
@@ -8780,8 +8780,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       beta0 = stan::math::normal_rng(0, 1, base_rng__);
       current_statement__ = 17;
       beta1 = stan::math::normal_rng(0, 1, base_rng__);
-      lcm_sym4__ = stan::math::logical_gte(N, 1);
-      if (lcm_sym4__) {
+      lcm_sym3__ = stan::math::logical_gte(N, 1);
+      if (lcm_sym3__) {
         current_statement__ = 18;
         stan::model::assign(theta_std,
           stan::math::normal_rng(0, 1, base_rng__),
@@ -8795,14 +8795,14 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       } 
       current_statement__ = 20;
       tau_theta = stan::math::gamma_rng(3.2761, 1.81, base_rng__);
-      lcm_sym12__ = stan::math::inv_sqrt(tau_theta);
-      sigma_theta = lcm_sym12__;
-      stan::model::assign(lcm_sym10__,
-        stan::math::multiply(theta_std, lcm_sym12__),
-        "assigning variable lcm_sym10__");
-      stan::model::assign(theta, lcm_sym10__, "assigning variable theta");
+      lcm_sym11__ = stan::math::inv_sqrt(tau_theta);
+      sigma_theta = lcm_sym11__;
+      stan::model::assign(lcm_sym9__,
+        stan::math::multiply(theta_std, lcm_sym11__),
+        "assigning variable lcm_sym9__");
+      stan::model::assign(theta, lcm_sym9__, "assigning variable theta");
       current_statement__ = 24;
-      if (lcm_sym4__) {
+      if (lcm_sym3__) {
         current_statement__ = 21;
         stan::model::assign(x, stan::math::normal_rng(0, 1, base_rng__),
           "assigning variable x", stan::model::index_uni(1));
@@ -8814,7 +8814,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
                 (stan::model::rvalue(stan::math::log(E), "log(E)",
                    stan::model::index_uni(1)) + beta0)) +
                stan::model::rvalue(phi, "phi", stan::model::index_uni(1))) +
-              stan::model::rvalue(lcm_sym10__, "lcm_sym10__",
+              stan::model::rvalue(lcm_sym9__, "lcm_sym9__",
                 stan::model::index_uni(1))), base_rng__),
           "assigning variable y", stan::model::index_uni(1));
         for (int i = 2; i <= N; ++i) {
@@ -8830,7 +8830,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
                      stan::model::index_uni(i)) + beta0)) +
                  stan::model::rvalue(phi, "phi", stan::model::index_uni(i)))
                 +
-                stan::model::rvalue(lcm_sym10__, "lcm_sym10__",
+                stan::model::rvalue(lcm_sym9__, "lcm_sym9__",
                   stan::model::index_uni(i))), base_rng__),
             "assigning variable y", stan::model::index_uni(i));
         }
@@ -8840,12 +8840,12 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
                                             0);
       current_statement__ = 11;
       stan::math::check_greater_or_equal(function__, "sigma_theta",
-                                            lcm_sym12__, 0);
+                                            lcm_sym11__, 0);
       out__.write(beta0);
       out__.write(beta1);
       out__.write(tau_theta);
-      out__.write(lcm_sym12__);
-      out__.write(lcm_sym10__);
+      out__.write(lcm_sym11__);
+      out__.write(lcm_sym9__);
       out__.write(theta_std);
       out__.write(x);
       out__.write(y);
@@ -8867,7 +8867,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
-      int lcm_sym3__;
+      int lcm_sym2__;
       int lcm_sym1__;
       int pos__;
       pos__ = 1;
@@ -8877,11 +8877,11 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       Eigen::Matrix<local_scalar_t__, -1, 1> phi_std_raw =
          Eigen::Matrix<local_scalar_t__, -1, 1>::Constant((N - 1),
            DUMMY_VAR__);
-      lcm_sym3__ = (N - 1);
-      if (stan::math::logical_gte(lcm_sym3__, 1)) {
+      lcm_sym2__ = (N - 1);
+      if (stan::math::logical_gte(lcm_sym2__, 1)) {
         stan::model::assign(phi_std_raw, in__.read<local_scalar_t__>(),
           "assigning variable phi_std_raw", stan::model::index_uni(1));
-        for (int sym1__ = 2; sym1__ <= lcm_sym3__; ++sym1__) {
+        for (int sym1__ = 2; sym1__ <= lcm_sym2__; ++sym1__) {
           stan::model::assign(phi_std_raw, in__.read<local_scalar_t__>(),
             "assigning variable phi_std_raw", stan::model::index_uni(sym1__));
         }
@@ -8920,16 +8920,16 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     final {
     
     param_names__.emplace_back(std::string() + "tau_phi");
-    for (int sym29__ = 1; sym29__ <= phi_std_raw_1dim__; ++sym29__) {
+    for (int sym28__ = 1; sym28__ <= phi_std_raw_1dim__; ++sym28__) {
       {
-        param_names__.emplace_back(std::string() + "phi_std_raw" + '.' + std::to_string(sym29__));
+        param_names__.emplace_back(std::string() + "phi_std_raw" + '.' + std::to_string(sym28__));
       } 
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "sigma_phi");
-      for (int sym29__ = 1; sym29__ <= N; ++sym29__) {
+      for (int sym28__ = 1; sym28__ <= N; ++sym28__) {
         {
-          param_names__.emplace_back(std::string() + "phi" + '.' + std::to_string(sym29__));
+          param_names__.emplace_back(std::string() + "phi" + '.' + std::to_string(sym28__));
         } 
       }
     }
@@ -8939,24 +8939,24 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       param_names__.emplace_back(std::string() + "beta1");
       param_names__.emplace_back(std::string() + "tau_theta");
       param_names__.emplace_back(std::string() + "sigma_theta");
-      for (int sym29__ = 1; sym29__ <= N; ++sym29__) {
+      for (int sym28__ = 1; sym28__ <= N; ++sym28__) {
         {
-          param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym29__));
+          param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym28__));
         } 
       }
-      for (int sym29__ = 1; sym29__ <= N; ++sym29__) {
+      for (int sym28__ = 1; sym28__ <= N; ++sym28__) {
         {
-          param_names__.emplace_back(std::string() + "theta_std" + '.' + std::to_string(sym29__));
+          param_names__.emplace_back(std::string() + "theta_std" + '.' + std::to_string(sym28__));
         } 
       }
-      for (int sym29__ = 1; sym29__ <= N; ++sym29__) {
+      for (int sym28__ = 1; sym28__ <= N; ++sym28__) {
         {
-          param_names__.emplace_back(std::string() + "x" + '.' + std::to_string(sym29__));
+          param_names__.emplace_back(std::string() + "x" + '.' + std::to_string(sym28__));
         } 
       }
-      for (int sym29__ = 1; sym29__ <= N; ++sym29__) {
+      for (int sym28__ = 1; sym28__ <= N; ++sym28__) {
         {
-          param_names__.emplace_back(std::string() + "y" + '.' + std::to_string(sym29__));
+          param_names__.emplace_back(std::string() + "y" + '.' + std::to_string(sym28__));
         } 
       }
     }
@@ -8970,16 +8970,16 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     final {
     
     param_names__.emplace_back(std::string() + "tau_phi");
-    for (int sym29__ = 1; sym29__ <= phi_std_raw_1dim__; ++sym29__) {
+    for (int sym28__ = 1; sym28__ <= phi_std_raw_1dim__; ++sym28__) {
       {
-        param_names__.emplace_back(std::string() + "phi_std_raw" + '.' + std::to_string(sym29__));
+        param_names__.emplace_back(std::string() + "phi_std_raw" + '.' + std::to_string(sym28__));
       } 
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "sigma_phi");
-      for (int sym29__ = 1; sym29__ <= N; ++sym29__) {
+      for (int sym28__ = 1; sym28__ <= N; ++sym28__) {
         {
-          param_names__.emplace_back(std::string() + "phi" + '.' + std::to_string(sym29__));
+          param_names__.emplace_back(std::string() + "phi" + '.' + std::to_string(sym28__));
         } 
       }
     }
@@ -8989,24 +8989,24 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       param_names__.emplace_back(std::string() + "beta1");
       param_names__.emplace_back(std::string() + "tau_theta");
       param_names__.emplace_back(std::string() + "sigma_theta");
-      for (int sym29__ = 1; sym29__ <= N; ++sym29__) {
+      for (int sym28__ = 1; sym28__ <= N; ++sym28__) {
         {
-          param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym29__));
+          param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym28__));
         } 
       }
-      for (int sym29__ = 1; sym29__ <= N; ++sym29__) {
+      for (int sym28__ = 1; sym28__ <= N; ++sym28__) {
         {
-          param_names__.emplace_back(std::string() + "theta_std" + '.' + std::to_string(sym29__));
+          param_names__.emplace_back(std::string() + "theta_std" + '.' + std::to_string(sym28__));
         } 
       }
-      for (int sym29__ = 1; sym29__ <= N; ++sym29__) {
+      for (int sym28__ = 1; sym28__ <= N; ++sym28__) {
         {
-          param_names__.emplace_back(std::string() + "x" + '.' + std::to_string(sym29__));
+          param_names__.emplace_back(std::string() + "x" + '.' + std::to_string(sym28__));
         } 
       }
-      for (int sym29__ = 1; sym29__ <= N; ++sym29__) {
+      for (int sym28__ = 1; sym28__ <= N; ++sym28__) {
         {
-          param_names__.emplace_back(std::string() + "y" + '.' + std::to_string(sym29__));
+          param_names__.emplace_back(std::string() + "y" + '.' + std::to_string(sym28__));
         } 
       }
     }
@@ -18647,7 +18647,6 @@ prob_uncaptured_functor__::operator()(const T0__& p, const T1__& phi,
 class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> {
 
  private:
-  int lcm_sym279__;
   int lcm_sym278__;
   int lcm_sym277__;
   int lcm_sym276__;
@@ -18663,6 +18662,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
   int lcm_sym266__;
   int lcm_sym265__;
   int lcm_sym264__;
+  int lcm_sym263__;
   int M;
   int n_occasions;
   std::vector<std::vector<int>> y;
@@ -18756,8 +18756,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         current_statement__ = 106;
         if (stan::math::logical_gte(n_occasions, 1)) {
           {
-            lcm_sym264__ = stan::math::logical_gte(M, 1);
-            if (lcm_sym264__) {
+            lcm_sym263__ = stan::math::logical_gte(M, 1);
+            if (lcm_sym263__) {
               current_statement__ = 106;
               stan::model::assign(y,
                 stan::model::rvalue(y_flat__, "y_flat__",
@@ -18777,7 +18777,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             } 
             for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
               current_statement__ = 106;
-              if (lcm_sym264__) {
+              if (lcm_sym263__) {
                 current_statement__ = 106;
                 stan::model::assign(y, y_flat__[(pos__ - 1)],
                   "assigning variable y", stan::model::index_uni(1),
@@ -18796,7 +18796,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             }
           }
         } else {
-          lcm_sym264__ = stan::math::logical_gte(M, 1);
+          lcm_sym263__ = stan::math::logical_gte(M, 1);
         }
       }
       current_statement__ = 106;
@@ -18816,15 +18816,15 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       
       
       current_statement__ = 112;
-      if (lcm_sym264__) {
+      if (lcm_sym263__) {
         int inline_sym41__;
         int inline_sym43__;
         inline_sym43__ = 0;
         for (int inline_sym44__ = 1; inline_sym44__ <= 1; ++inline_sym44__) {
-          lcm_sym273__ = stan::math::size(
+          lcm_sym272__ = stan::math::size(
                            stan::model::rvalue(y, "y",
                              stan::model::index_uni(1)));
-          for (int inline_sym42__ = 1; inline_sym42__ <= lcm_sym273__;
+          for (int inline_sym42__ = 1; inline_sym42__ <= lcm_sym272__;
                ++inline_sym42__) {
             current_statement__ = 59;
             if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
@@ -18848,10 +18848,10 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           int inline_sym43__;
           inline_sym43__ = 0;
           for (int inline_sym44__ = 1; inline_sym44__ <= 1; ++inline_sym44__) {
-            lcm_sym272__ = stan::math::size(
+            lcm_sym271__ = stan::math::size(
                              stan::model::rvalue(y, "y",
                                stan::model::index_uni(i)));
-            for (int inline_sym42__ = 1; inline_sym42__ <= lcm_sym272__;
+            for (int inline_sym42__ = 1; inline_sym42__ <= lcm_sym271__;
                  ++inline_sym42__) {
               current_statement__ = 59;
               if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
@@ -18873,25 +18873,25 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         }
       } 
       current_statement__ = 119;
-      if (lcm_sym264__) {
+      if (lcm_sym263__) {
         int inline_sym45__;
         int inline_sym48__;
         inline_sym48__ = 0;
         for (int inline_sym49__ = 1; inline_sym49__ <= 1; ++inline_sym49__) {
-          lcm_sym273__ = stan::math::size(
+          lcm_sym272__ = stan::math::size(
                            stan::model::rvalue(y, "y",
                              stan::model::index_uni(1)));
-          lcm_sym270__ = (lcm_sym273__ - 1);
-          for (int inline_sym47__ = 0; inline_sym47__ <= lcm_sym270__;
+          lcm_sym269__ = (lcm_sym272__ - 1);
+          for (int inline_sym47__ = 0; inline_sym47__ <= lcm_sym269__;
                ++inline_sym47__) {
             int inline_sym46__ = std::numeric_limits<int>::min();
-            lcm_sym269__ = (lcm_sym273__ - inline_sym47__);
-            inline_sym46__ = lcm_sym269__;
+            lcm_sym268__ = (lcm_sym272__ - inline_sym47__);
+            inline_sym46__ = lcm_sym268__;
             current_statement__ = 115;
             if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
-                (lcm_sym269__ - 1)]) {
+                (lcm_sym268__ - 1)]) {
               inline_sym48__ = 1;
-              inline_sym45__ = lcm_sym269__;
+              inline_sym45__ = lcm_sym268__;
               break;
             } 
           }
@@ -18909,20 +18909,20 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           int inline_sym48__;
           inline_sym48__ = 0;
           for (int inline_sym49__ = 1; inline_sym49__ <= 1; ++inline_sym49__) {
-            lcm_sym272__ = stan::math::size(
+            lcm_sym271__ = stan::math::size(
                              stan::model::rvalue(y, "y",
                                stan::model::index_uni(i)));
-            lcm_sym268__ = (lcm_sym272__ - 1);
-            for (int inline_sym47__ = 0; inline_sym47__ <= lcm_sym268__;
+            lcm_sym267__ = (lcm_sym271__ - 1);
+            for (int inline_sym47__ = 0; inline_sym47__ <= lcm_sym267__;
                  ++inline_sym47__) {
               int inline_sym46__ = std::numeric_limits<int>::min();
-              lcm_sym267__ = (lcm_sym272__ - inline_sym47__);
-              inline_sym46__ = lcm_sym267__;
+              lcm_sym266__ = (lcm_sym271__ - inline_sym47__);
+              inline_sym46__ = lcm_sym266__;
               current_statement__ = 115;
               if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
-                  (lcm_sym267__ - 1)]) {
+                  (lcm_sym266__ - 1)]) {
                 inline_sym48__ = 1;
-                inline_sym45__ = lcm_sym267__;
+                inline_sym45__ = lcm_sym266__;
                 break;
               } 
             }
@@ -18952,11 +18952,11 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       epsilon_1dim__ = std::numeric_limits<int>::min();
       
       
-      lcm_sym266__ = (n_occasions - 1);
-      epsilon_1dim__ = lcm_sym266__;
+      lcm_sym265__ = (n_occasions - 1);
+      epsilon_1dim__ = lcm_sym265__;
       current_statement__ = 121;
       stan::math::validate_non_negative_index("epsilon", "n_occasions - 1",
-                                              lcm_sym266__);
+                                              lcm_sym265__);
       current_statement__ = 122;
       stan::math::validate_non_negative_index("phi", "M", M);
       current_statement__ = 123;
@@ -18964,10 +18964,10 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       
       
       current_statement__ = 123;
-      phi_2dim__ = lcm_sym266__;
+      phi_2dim__ = lcm_sym265__;
       current_statement__ = 123;
       stan::math::validate_non_negative_index("phi", "n_occasions - 1",
-                                              lcm_sym266__);
+                                              lcm_sym265__);
       current_statement__ = 124;
       stan::math::validate_non_negative_index("p", "M", M);
       current_statement__ = 125;
@@ -19012,22 +19012,21 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     (void) function__;  // suppress unused var warning
     
     try {
-      int lcm_sym263__;
       int lcm_sym262__;
       int lcm_sym261__;
       int lcm_sym260__;
       int lcm_sym259__;
       int lcm_sym258__;
-      int lcm_sym256__;
-      Eigen::Matrix<local_scalar_t__, -1, -1> lcm_sym255__;
-      double lcm_sym254__;
+      int lcm_sym257__;
+      int lcm_sym255__;
+      Eigen::Matrix<local_scalar_t__, -1, -1> lcm_sym254__;
       double lcm_sym253__;
-      local_scalar_t__ lcm_sym252__;
+      double lcm_sym252__;
       local_scalar_t__ lcm_sym251__;
-      double lcm_sym250__;
+      local_scalar_t__ lcm_sym250__;
       double lcm_sym249__;
-      int lcm_sym248__;
-      double lcm_sym247__;
+      double lcm_sym248__;
+      int lcm_sym247__;
       double lcm_sym246__;
       double lcm_sym245__;
       double lcm_sym244__;
@@ -19040,10 +19039,10 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       double lcm_sym237__;
       double lcm_sym236__;
       double lcm_sym235__;
-      int lcm_sym234__;
+      double lcm_sym234__;
       int lcm_sym233__;
       int lcm_sym232__;
-      double lcm_sym231__;
+      int lcm_sym231__;
       double lcm_sym230__;
       double lcm_sym229__;
       double lcm_sym228__;
@@ -19057,17 +19056,17 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       double lcm_sym220__;
       double lcm_sym219__;
       double lcm_sym218__;
-      int lcm_sym217__;
+      double lcm_sym217__;
       int lcm_sym216__;
       int lcm_sym215__;
       int lcm_sym214__;
       int lcm_sym213__;
       int lcm_sym212__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym211__;
+      int lcm_sym211__;
       Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym210__;
       Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym209__;
-      int lcm_sym257__;
-      int lcm_sym207__;
+      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym208__;
+      int lcm_sym256__;
       int lcm_sym206__;
       int lcm_sym205__;
       int lcm_sym204__;
@@ -19078,6 +19077,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       int lcm_sym199__;
       int lcm_sym198__;
       int lcm_sym197__;
+      int lcm_sym196__;
       local_scalar_t__ mean_phi;
       current_statement__ = 1;
       mean_phi = in__.template read_constrain_lub<local_scalar_t__, 
@@ -19094,15 +19094,15 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon =
          Eigen::Matrix<local_scalar_t__, -1, 1>::Constant((n_occasions - 1),
            DUMMY_VAR__);
-      lcm_sym257__ = (n_occasions - 1);
+      lcm_sym256__ = (n_occasions - 1);
       epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-                  lcm_sym257__);
+                  lcm_sym256__);
       local_scalar_t__ sigma;
       current_statement__ = 5;
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi =
-         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(M, lcm_sym257__,
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(M, lcm_sym256__,
            DUMMY_VAR__);
       Eigen::Matrix<local_scalar_t__, -1, -1> p =
          Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(M, n_occasions,
@@ -19111,117 +19111,117 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
          Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(M, n_occasions,
            DUMMY_VAR__);
       current_statement__ = 11;
-      if (stan::math::logical_gte(lcm_sym257__, 1)) {
-        lcm_sym199__ = stan::math::logical_gte(M, 1);
-        if (lcm_sym199__) {
-          lcm_sym252__ = stan::math::inv_logit(
+      if (stan::math::logical_gte(lcm_sym256__, 1)) {
+        lcm_sym198__ = stan::math::logical_gte(M, 1);
+        if (lcm_sym198__) {
+          lcm_sym251__ = stan::math::inv_logit(
                            (stan::math::logit(mean_phi) +
                              stan::model::rvalue(epsilon, "epsilon",
                                stan::model::index_uni(1))));
-          stan::model::assign(phi, lcm_sym252__,
+          stan::model::assign(phi, lcm_sym251__,
             "assigning variable phi", stan::model::index_uni(1),
                                         stan::model::index_uni(1));
           for (int i = 2; i <= M; ++i) {
             current_statement__ = 9;
-            stan::model::assign(phi, lcm_sym252__,
+            stan::model::assign(phi, lcm_sym251__,
               "assigning variable phi", stan::model::index_uni(i),
                                           stan::model::index_uni(1));
           }
         } 
-        for (int t = 2; t <= lcm_sym257__; ++t) {
+        for (int t = 2; t <= lcm_sym256__; ++t) {
           current_statement__ = 10;
-          if (lcm_sym199__) {
-            lcm_sym251__ = stan::math::inv_logit(
+          if (lcm_sym198__) {
+            lcm_sym250__ = stan::math::inv_logit(
                              (stan::math::logit(mean_phi) +
                                stan::model::rvalue(epsilon, "epsilon",
                                  stan::model::index_uni(t))));
-            stan::model::assign(phi, lcm_sym251__,
+            stan::model::assign(phi, lcm_sym250__,
               "assigning variable phi", stan::model::index_uni(1),
                                           stan::model::index_uni(t));
             for (int i = 2; i <= M; ++i) {
               current_statement__ = 9;
-              stan::model::assign(phi, lcm_sym251__,
+              stan::model::assign(phi, lcm_sym250__,
                 "assigning variable phi", stan::model::index_uni(i),
                                             stan::model::index_uni(t));
             }
           } 
         }
       } 
-      stan::model::assign(lcm_sym255__,
+      stan::model::assign(lcm_sym254__,
         stan::math::rep_matrix(mean_p, M, n_occasions),
-        "assigning variable lcm_sym255__");
-      stan::model::assign(p, lcm_sym255__, "assigning variable p");
+        "assigning variable lcm_sym254__");
+      stan::model::assign(p, lcm_sym254__, "assigning variable p");
       Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym22__;
       int inline_sym30__;
       inline_sym30__ = 0;
       for (int inline_sym31__ = 1; inline_sym31__ <= 1; ++inline_sym31__) {
         int inline_sym23__ = std::numeric_limits<int>::min();
-        lcm_sym256__ = stan::math::rows(lcm_sym255__);
+        lcm_sym255__ = stan::math::rows(lcm_sym254__);
         int inline_sym24__ = std::numeric_limits<int>::min();
-        lcm_sym248__ = stan::math::cols(lcm_sym255__);
+        lcm_sym247__ = stan::math::cols(lcm_sym254__);
         current_statement__ = 14;
-        stan::math::validate_non_negative_index("chi", "n_ind", lcm_sym256__);
+        stan::math::validate_non_negative_index("chi", "n_ind", lcm_sym255__);
         current_statement__ = 15;
         stan::math::validate_non_negative_index("chi", "n_occasions",
-                                                lcm_sym248__);
+                                                lcm_sym247__);
         Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym25__ =
-           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(lcm_sym256__,
-             lcm_sym248__, DUMMY_VAR__);
-        for (int inline_sym29__ = 1; inline_sym29__ <= lcm_sym256__;
+           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(lcm_sym255__,
+             lcm_sym247__, DUMMY_VAR__);
+        for (int inline_sym29__ = 1; inline_sym29__ <= lcm_sym255__;
              ++inline_sym29__) {
           current_statement__ = 17;
           stan::model::assign(inline_sym25__, 1.0,
             "assigning variable inline_sym25__", stan::model::index_uni(inline_sym29__),
-                                                   stan::model::index_uni(lcm_sym248__));
-          lcm_sym213__ = (lcm_sym248__ - 1);
-          if (stan::math::logical_gte(lcm_sym213__, 1)) {
+                                                   stan::model::index_uni(lcm_sym247__));
+          lcm_sym212__ = (lcm_sym247__ - 1);
+          if (stan::math::logical_gte(lcm_sym212__, 1)) {
             int inline_sym26__ = std::numeric_limits<int>::min();
             int inline_sym27__ = std::numeric_limits<int>::min();
-            lcm_sym217__ = (lcm_sym213__ + 1);
+            lcm_sym216__ = (lcm_sym212__ + 1);
             current_statement__ = 20;
             stan::model::assign(inline_sym25__,
               stan::math::fma(
                 (stan::model::rvalue(phi, "phi",
                    stan::model::index_uni(inline_sym29__),
-                     stan::model::index_uni(lcm_sym213__)) *
+                     stan::model::index_uni(lcm_sym212__)) *
                   (1 -
-                    stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                    stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                       stan::model::index_uni(inline_sym29__),
-                        stan::model::index_uni(lcm_sym217__)))),
+                        stan::model::index_uni(lcm_sym216__)))),
                 stan::model::rvalue(inline_sym25__, "inline_sym25__",
                   stan::model::index_uni(inline_sym29__),
-                    stan::model::index_uni(lcm_sym217__)),
+                    stan::model::index_uni(lcm_sym216__)),
                 (1 -
                   stan::model::rvalue(phi, "phi",
                     stan::model::index_uni(inline_sym29__),
-                      stan::model::index_uni(lcm_sym213__)))),
+                      stan::model::index_uni(lcm_sym212__)))),
               "assigning variable inline_sym25__", stan::model::index_uni(inline_sym29__),
-                                                     stan::model::index_uni(lcm_sym213__));
-            for (int inline_sym28__ = 2; inline_sym28__ <= lcm_sym213__;
+                                                     stan::model::index_uni(lcm_sym212__));
+            for (int inline_sym28__ = 2; inline_sym28__ <= lcm_sym212__;
                  ++inline_sym28__) {
               int inline_sym26__ = std::numeric_limits<int>::min();
-              lcm_sym212__ = (lcm_sym248__ - inline_sym28__);
+              lcm_sym211__ = (lcm_sym247__ - inline_sym28__);
               int inline_sym27__ = std::numeric_limits<int>::min();
-              lcm_sym216__ = (lcm_sym212__ + 1);
+              lcm_sym215__ = (lcm_sym211__ + 1);
               current_statement__ = 20;
               stan::model::assign(inline_sym25__,
                 stan::math::fma(
                   (stan::model::rvalue(phi, "phi",
                      stan::model::index_uni(inline_sym29__),
-                       stan::model::index_uni(lcm_sym212__)) *
+                       stan::model::index_uni(lcm_sym211__)) *
                     (1 -
-                      stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                      stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                         stan::model::index_uni(inline_sym29__),
-                          stan::model::index_uni(lcm_sym216__)))),
+                          stan::model::index_uni(lcm_sym215__)))),
                   stan::model::rvalue(inline_sym25__, "inline_sym25__",
                     stan::model::index_uni(inline_sym29__),
-                      stan::model::index_uni(lcm_sym216__)),
+                      stan::model::index_uni(lcm_sym215__)),
                   (1 -
                     stan::model::rvalue(phi, "phi",
                       stan::model::index_uni(inline_sym29__),
-                        stan::model::index_uni(lcm_sym212__)))),
+                        stan::model::index_uni(lcm_sym211__)))),
                 "assigning variable inline_sym25__", stan::model::index_uni(inline_sym29__),
-                                                       stan::model::index_uni(lcm_sym212__));
+                                                       stan::model::index_uni(lcm_sym211__));
             }
           } 
           if (inline_sym30__) {
@@ -19242,9 +19242,9 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       current_statement__ = 6;
       stan::math::check_less_or_equal(function__, "phi", phi, 1);
       current_statement__ = 7;
-      stan::math::check_greater_or_equal(function__, "p", lcm_sym255__, 0);
+      stan::math::check_greater_or_equal(function__, "p", lcm_sym254__, 0);
       current_statement__ = 7;
-      stan::math::check_less_or_equal(function__, "p", lcm_sym255__, 1);
+      stan::math::check_less_or_equal(function__, "p", lcm_sym254__, 1);
       current_statement__ = 8;
       stan::math::check_greater_or_equal(function__, "chi", inline_sym22__, 0);
       current_statement__ = 8;
@@ -19255,126 +19255,126 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         int inline_sym39__ = std::numeric_limits<int>::min();
         {
           int inline_sym32__ = std::numeric_limits<int>::min();
-          lcm_sym262__ = stan::model::rvalue(stan::math::dims(y), "dims(y)",
+          lcm_sym261__ = stan::model::rvalue(stan::math::dims(y), "dims(y)",
                            stan::model::index_uni(1));
           int inline_sym33__ = std::numeric_limits<int>::min();
-          lcm_sym263__ = stan::model::rvalue(stan::math::dims(y), "dims(y)",
+          lcm_sym262__ = stan::model::rvalue(stan::math::dims(y), "dims(y)",
                            stan::model::index_uni(2));
           current_statement__ = 77;
           stan::math::validate_non_negative_index("qgamma", "n_occasions",
-                                                  lcm_sym263__);
+                                                  lcm_sym262__);
           Eigen::Matrix<double, -1, 1> inline_sym34__ =
-             Eigen::Matrix<double, -1, 1>::Constant(lcm_sym263__,
+             Eigen::Matrix<double, -1, 1>::Constant(lcm_sym262__,
                std::numeric_limits<double>::quiet_NaN());
-          stan::model::assign(lcm_sym209__, stan::math::subtract(1.0, gamma),
-            "assigning variable lcm_sym209__");
-          lcm_sym206__ = stan::math::logical_gte(lcm_sym262__, 1);
-          if (lcm_sym206__) {
+          stan::model::assign(lcm_sym208__, stan::math::subtract(1.0, gamma),
+            "assigning variable lcm_sym208__");
+          lcm_sym205__ = stan::math::logical_gte(lcm_sym261__, 1);
+          if (lcm_sym205__) {
             current_statement__ = 79;
             stan::math::validate_non_negative_index("qp", "n_occasions",
-                                                    lcm_sym263__);
+                                                    lcm_sym262__);
             Eigen::Matrix<double, -1, 1> inline_sym35__ =
-               Eigen::Matrix<double, -1, 1>::Constant(lcm_sym263__,
+               Eigen::Matrix<double, -1, 1>::Constant(lcm_sym262__,
                  std::numeric_limits<double>::quiet_NaN());
-            stan::model::assign(lcm_sym211__,
+            stan::model::assign(lcm_sym210__,
               stan::math::subtract(1.0,
                 stan::math::transpose(
-                  stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                  stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                     stan::model::index_uni(1)))),
-              "assigning variable lcm_sym211__");
-            lcm_sym259__ = stan::model::rvalue(first, "first",
+              "assigning variable lcm_sym210__");
+            lcm_sym258__ = stan::model::rvalue(first, "first",
                              stan::model::index_uni(1));
-            if (lcm_sym259__) {
+            if (lcm_sym258__) {
               current_statement__ = 95;
-              if (stan::math::logical_eq(lcm_sym259__, 1)) {
+              if (stan::math::logical_eq(lcm_sym258__, 1)) {
                 current_statement__ = 93;
                 lp_accum__.add(
                   stan::math::bernoulli_lpmf<propto__>(1,
                     (stan::model::rvalue(gamma, "gamma",
                        stan::model::index_uni(1)) *
-                      stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                      stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                         stan::model::index_uni(1), stan::model::index_uni(1)))));
               } else {
                 current_statement__ = 87;
                 stan::math::validate_non_negative_index("lp", "first[i]",
-                                                        lcm_sym259__);
+                                                        lcm_sym258__);
                 Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym36__ =
                    Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
-                     lcm_sym259__, DUMMY_VAR__);
-                lcm_sym215__ = (lcm_sym259__ - 1);
+                     lcm_sym258__, DUMMY_VAR__);
+                lcm_sym214__ = (lcm_sym258__ - 1);
                 stan::model::assign(inline_sym36__,
                   (((stan::math::bernoulli_lpmf<false>(1,
                        stan::model::rvalue(gamma, "gamma",
                          stan::model::index_uni(1))) +
                       stan::math::bernoulli_lpmf<false>(1,
                         stan::math::prod(
-                          stan::model::rvalue(lcm_sym211__, "lcm_sym211__",
-                            stan::model::index_min_max(1, lcm_sym215__))))) +
+                          stan::model::rvalue(lcm_sym210__, "lcm_sym210__",
+                            stan::model::index_min_max(1, lcm_sym214__))))) +
                      stan::math::bernoulli_lpmf<false>(1,
                        stan::math::prod(
                          stan::model::rvalue(phi, "phi",
                            stan::model::index_uni(1),
-                             stan::model::index_min_max(1, lcm_sym215__)))))
+                             stan::model::index_min_max(1, lcm_sym214__)))))
                     +
                     stan::math::bernoulli_lpmf<false>(1,
-                      stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                      stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                         stan::model::index_uni(1),
-                          stan::model::index_uni(lcm_sym259__)))),
+                          stan::model::index_uni(lcm_sym258__)))),
                   "assigning variable inline_sym36__", stan::model::index_uni(1));
-                if (stan::math::logical_gte(lcm_sym215__, 2)) {
+                if (stan::math::logical_gte(lcm_sym214__, 2)) {
                   current_statement__ = 89;
                   stan::model::assign(inline_sym36__,
                     ((((stan::math::bernoulli_lpmf<false>(1,
                           stan::math::prod(
-                            stan::model::rvalue(lcm_sym209__, "lcm_sym209__",
+                            stan::model::rvalue(lcm_sym208__, "lcm_sym208__",
                               stan::model::index_min_max(1, 1)))) +
                          stan::math::bernoulli_lpmf<false>(1,
                            stan::model::rvalue(gamma, "gamma",
                              stan::model::index_uni(2)))) +
                         stan::math::bernoulli_lpmf<false>(1,
                           stan::math::prod(
-                            stan::model::rvalue(lcm_sym211__, "lcm_sym211__",
-                              stan::model::index_min_max(2, lcm_sym215__)))))
+                            stan::model::rvalue(lcm_sym210__, "lcm_sym210__",
+                              stan::model::index_min_max(2, lcm_sym214__)))))
                        +
                        stan::math::bernoulli_lpmf<false>(1,
                          stan::math::prod(
                            stan::model::rvalue(phi, "phi",
                              stan::model::index_uni(1),
-                               stan::model::index_min_max(2, lcm_sym215__)))))
+                               stan::model::index_min_max(2, lcm_sym214__)))))
                       +
                       stan::math::bernoulli_lpmf<false>(1,
-                        stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                        stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                           stan::model::index_uni(1),
-                            stan::model::index_uni(lcm_sym259__)))),
+                            stan::model::index_uni(lcm_sym258__)))),
                     "assigning variable inline_sym36__", stan::model::index_uni(2));
                   for (int inline_sym37__ = 3;
-                       inline_sym37__ <= lcm_sym215__; ++inline_sym37__) {
+                       inline_sym37__ <= lcm_sym214__; ++inline_sym37__) {
                     current_statement__ = 89;
                     stan::model::assign(inline_sym36__,
                       ((((stan::math::bernoulli_lpmf<false>(1,
                             stan::math::prod(
-                              stan::model::rvalue(lcm_sym209__,
-                                "lcm_sym209__",
+                              stan::model::rvalue(lcm_sym208__,
+                                "lcm_sym208__",
                                 stan::model::index_min_max(1, (inline_sym37__
                                                                 - 1))))) +
                            stan::math::bernoulli_lpmf<false>(1,
                              gamma[(inline_sym37__ - 1)])) +
                           stan::math::bernoulli_lpmf<false>(1,
                             stan::math::prod(
-                              stan::model::rvalue(lcm_sym211__,
-                                "lcm_sym211__",
-                                stan::model::index_min_max(inline_sym37__, lcm_sym215__)))))
+                              stan::model::rvalue(lcm_sym210__,
+                                "lcm_sym210__",
+                                stan::model::index_min_max(inline_sym37__, lcm_sym214__)))))
                          +
                          stan::math::bernoulli_lpmf<false>(1,
                            stan::math::prod(
                              stan::model::rvalue(phi, "phi",
                                stan::model::index_uni(1),
-                                 stan::model::index_min_max(inline_sym37__, lcm_sym215__)))))
+                                 stan::model::index_min_max(inline_sym37__, lcm_sym214__)))))
                         +
                         stan::math::bernoulli_lpmf<false>(1,
-                          stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                          stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                             stan::model::index_uni(1),
-                              stan::model::index_uni(lcm_sym259__)))),
+                              stan::model::index_uni(lcm_sym258__)))),
                       "assigning variable inline_sym36__", stan::model::index_uni(inline_sym37__));
                   }
                 } 
@@ -19382,38 +19382,38 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                 stan::model::assign(inline_sym36__,
                   ((stan::math::bernoulli_lpmf<false>(1,
                       stan::math::prod(
-                        stan::model::rvalue(lcm_sym209__, "lcm_sym209__",
-                          stan::model::index_min_max(1, lcm_sym215__)))) +
+                        stan::model::rvalue(lcm_sym208__, "lcm_sym208__",
+                          stan::model::index_min_max(1, lcm_sym214__)))) +
                      stan::math::bernoulli_lpmf<false>(1,
-                       gamma[(lcm_sym259__ - 1)])) +
+                       gamma[(lcm_sym258__ - 1)])) +
                     stan::math::bernoulli_lpmf<false>(1,
-                      stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                      stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                         stan::model::index_uni(1),
-                          stan::model::index_uni(lcm_sym259__)))),
-                  "assigning variable inline_sym36__", stan::model::index_uni(lcm_sym259__));
+                          stan::model::index_uni(lcm_sym258__)))),
+                  "assigning variable inline_sym36__", stan::model::index_uni(lcm_sym258__));
                 current_statement__ = 91;
                 lp_accum__.add(stan::math::log_sum_exp(inline_sym36__));
               }
-              lcm_sym261__ = stan::model::rvalue(last, "last",
+              lcm_sym260__ = stan::model::rvalue(last, "last",
                                stan::model::index_uni(1));
-              if (stan::math::logical_gte(lcm_sym261__, (lcm_sym259__ + 1))) {
+              if (stan::math::logical_gte(lcm_sym260__, (lcm_sym258__ + 1))) {
                 current_statement__ = 96;
                 lp_accum__.add(
                   stan::math::bernoulli_lpmf<propto__>(1,
                     stan::model::rvalue(phi, "phi",
                       stan::model::index_uni(1),
-                        stan::model::index_uni(((lcm_sym259__ + 1) - 1)))));
-                lcm_sym233__ = ((lcm_sym259__ + 1) + 1);
+                        stan::model::index_uni(((lcm_sym258__ + 1) - 1)))));
+                lcm_sym232__ = ((lcm_sym258__ + 1) + 1);
                 lp_accum__.add(
                   stan::math::bernoulli_lpmf<propto__>(
                     stan::model::rvalue(y, "y",
                       stan::model::index_uni(1),
-                        stan::model::index_uni((lcm_sym259__ + 1))),
-                    stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                        stan::model::index_uni((lcm_sym258__ + 1))),
+                    stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                       stan::model::index_uni(1),
-                        stan::model::index_uni((lcm_sym259__ + 1)))));
-                for (int inline_sym37__ = lcm_sym233__;
-                     inline_sym37__ <= lcm_sym261__; ++inline_sym37__) {
+                        stan::model::index_uni((lcm_sym258__ + 1)))));
+                for (int inline_sym37__ = lcm_sym232__;
+                     inline_sym37__ <= lcm_sym260__; ++inline_sym37__) {
                   current_statement__ = 96;
                   lp_accum__.add(
                     stan::math::bernoulli_lpmf<propto__>(1,
@@ -19426,7 +19426,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                       stan::model::rvalue(y, "y",
                         stan::model::index_uni(1),
                           stan::model::index_uni(inline_sym37__)),
-                      stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                      stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                         stan::model::index_uni(1),
                           stan::model::index_uni(inline_sym37__))));
                 }
@@ -19436,59 +19436,59 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                 stan::math::bernoulli_lpmf<propto__>(1,
                   stan::model::rvalue(inline_sym22__, "inline_sym22__",
                     stan::model::index_uni(1),
-                      stan::model::index_uni(lcm_sym261__))));
+                      stan::model::index_uni(lcm_sym260__))));
             } else {
-              lcm_sym234__ = (lcm_sym263__ + 1);
+              lcm_sym233__ = (lcm_sym262__ + 1);
               stan::math::validate_non_negative_index("lp",
                                                       "n_occasions + 1",
-                                                      lcm_sym234__);
+                                                      lcm_sym233__);
               Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym36__ =
                  Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
-                   lcm_sym234__, DUMMY_VAR__);
+                   lcm_sym233__, DUMMY_VAR__);
               current_statement__ = 82;
               stan::model::assign(inline_sym36__,
                 ((stan::math::bernoulli_lpmf<false>(1,
                     stan::model::rvalue(gamma, "gamma",
                       stan::model::index_uni(1))) +
                    stan::math::bernoulli_lpmf<false>(0,
-                     stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                     stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                        stan::model::index_uni(1), stan::model::index_uni(1))))
                   +
                   stan::math::bernoulli_lpmf<false>(1,
                     stan::model::rvalue(inline_sym22__, "inline_sym22__",
                       stan::model::index_uni(1), stan::model::index_uni(1)))),
                 "assigning variable inline_sym36__", stan::model::index_uni(1));
-              if (stan::math::logical_gte(lcm_sym263__, 2)) {
+              if (stan::math::logical_gte(lcm_sym262__, 2)) {
                 current_statement__ = 83;
                 stan::model::assign(inline_sym36__,
                   (((stan::math::bernoulli_lpmf<false>(1,
                        stan::math::prod(
-                         stan::model::rvalue(lcm_sym209__, "lcm_sym209__",
+                         stan::model::rvalue(lcm_sym208__, "lcm_sym208__",
                            stan::model::index_min_max(1, 1)))) +
                       stan::math::bernoulli_lpmf<false>(1,
                         stan::model::rvalue(gamma, "gamma",
                           stan::model::index_uni(2)))) +
                      stan::math::bernoulli_lpmf<false>(0,
-                       stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                       stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                          stan::model::index_uni(1), stan::model::index_uni(2))))
                     +
                     stan::math::bernoulli_lpmf<false>(1,
                       stan::model::rvalue(inline_sym22__, "inline_sym22__",
                         stan::model::index_uni(1), stan::model::index_uni(2)))),
                   "assigning variable inline_sym36__", stan::model::index_uni(2));
-                for (int inline_sym37__ = 3; inline_sym37__ <= lcm_sym263__;
+                for (int inline_sym37__ = 3; inline_sym37__ <= lcm_sym262__;
                      ++inline_sym37__) {
                   current_statement__ = 83;
                   stan::model::assign(inline_sym36__,
                     (((stan::math::bernoulli_lpmf<false>(1,
                          stan::math::prod(
-                           stan::model::rvalue(lcm_sym209__, "lcm_sym209__",
+                           stan::model::rvalue(lcm_sym208__, "lcm_sym208__",
                              stan::model::index_min_max(1, (inline_sym37__ -
                                                              1))))) +
                         stan::math::bernoulli_lpmf<false>(1,
                           gamma[(inline_sym37__ - 1)])) +
                        stan::math::bernoulli_lpmf<false>(0,
-                         stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                         stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                            stan::model::index_uni(1),
                              stan::model::index_uni(inline_sym37__)))) +
                       stan::math::bernoulli_lpmf<false>(1,
@@ -19501,121 +19501,121 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
               current_statement__ = 84;
               stan::model::assign(inline_sym36__,
                 stan::math::bernoulli_lpmf<false>(1,
-                  stan::math::prod(lcm_sym209__)),
-                "assigning variable inline_sym36__", stan::model::index_uni(lcm_sym234__));
+                  stan::math::prod(lcm_sym208__)),
+                "assigning variable inline_sym36__", stan::model::index_uni(lcm_sym233__));
               current_statement__ = 85;
               lp_accum__.add(stan::math::log_sum_exp(inline_sym36__));
             }
-            for (int inline_sym38__ = 2; inline_sym38__ <= lcm_sym262__;
+            for (int inline_sym38__ = 2; inline_sym38__ <= lcm_sym261__;
                  ++inline_sym38__) {
               current_statement__ = 79;
               stan::math::validate_non_negative_index("qp", "n_occasions",
-                                                      lcm_sym263__);
+                                                      lcm_sym262__);
               Eigen::Matrix<double, -1, 1> inline_sym35__ =
-                 Eigen::Matrix<double, -1, 1>::Constant(lcm_sym263__,
+                 Eigen::Matrix<double, -1, 1>::Constant(lcm_sym262__,
                    std::numeric_limits<double>::quiet_NaN());
-              stan::model::assign(lcm_sym210__,
+              stan::model::assign(lcm_sym209__,
                 stan::math::subtract(1.0,
                   stan::math::transpose(
-                    stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                    stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                       stan::model::index_uni(inline_sym38__)))),
-                "assigning variable lcm_sym210__");
-              lcm_sym258__ = first[(inline_sym38__ - 1)];
-              if (lcm_sym258__) {
+                "assigning variable lcm_sym209__");
+              lcm_sym257__ = first[(inline_sym38__ - 1)];
+              if (lcm_sym257__) {
                 current_statement__ = 95;
-                if (stan::math::logical_eq(lcm_sym258__, 1)) {
+                if (stan::math::logical_eq(lcm_sym257__, 1)) {
                   current_statement__ = 93;
                   lp_accum__.add(
                     stan::math::bernoulli_lpmf<propto__>(1,
                       (stan::model::rvalue(gamma, "gamma",
                          stan::model::index_uni(1)) *
-                        stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                        stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                           stan::model::index_uni(inline_sym38__),
                             stan::model::index_uni(1)))));
                 } else {
                   current_statement__ = 87;
                   stan::math::validate_non_negative_index("lp", "first[i]",
-                                                          lcm_sym258__);
+                                                          lcm_sym257__);
                   Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym36__ =
                      Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
-                       lcm_sym258__, DUMMY_VAR__);
-                  lcm_sym214__ = (lcm_sym258__ - 1);
+                       lcm_sym257__, DUMMY_VAR__);
+                  lcm_sym213__ = (lcm_sym257__ - 1);
                   stan::model::assign(inline_sym36__,
                     (((stan::math::bernoulli_lpmf<false>(1,
                          stan::model::rvalue(gamma, "gamma",
                            stan::model::index_uni(1))) +
                         stan::math::bernoulli_lpmf<false>(1,
                           stan::math::prod(
-                            stan::model::rvalue(lcm_sym210__, "lcm_sym210__",
-                              stan::model::index_min_max(1, lcm_sym214__)))))
+                            stan::model::rvalue(lcm_sym209__, "lcm_sym209__",
+                              stan::model::index_min_max(1, lcm_sym213__)))))
                        +
                        stan::math::bernoulli_lpmf<false>(1,
                          stan::math::prod(
                            stan::model::rvalue(phi, "phi",
                              stan::model::index_uni(inline_sym38__),
-                               stan::model::index_min_max(1, lcm_sym214__)))))
+                               stan::model::index_min_max(1, lcm_sym213__)))))
                       +
                       stan::math::bernoulli_lpmf<false>(1,
-                        stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                        stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                           stan::model::index_uni(inline_sym38__),
-                            stan::model::index_uni(lcm_sym258__)))),
+                            stan::model::index_uni(lcm_sym257__)))),
                     "assigning variable inline_sym36__", stan::model::index_uni(1));
-                  if (stan::math::logical_gte(lcm_sym214__, 2)) {
+                  if (stan::math::logical_gte(lcm_sym213__, 2)) {
                     current_statement__ = 89;
                     stan::model::assign(inline_sym36__,
                       ((((stan::math::bernoulli_lpmf<false>(1,
                             stan::math::prod(
-                              stan::model::rvalue(lcm_sym209__,
-                                "lcm_sym209__",
+                              stan::model::rvalue(lcm_sym208__,
+                                "lcm_sym208__",
                                 stan::model::index_min_max(1, 1)))) +
                            stan::math::bernoulli_lpmf<false>(1,
                              stan::model::rvalue(gamma, "gamma",
                                stan::model::index_uni(2)))) +
                           stan::math::bernoulli_lpmf<false>(1,
                             stan::math::prod(
-                              stan::model::rvalue(lcm_sym210__,
-                                "lcm_sym210__",
-                                stan::model::index_min_max(2, lcm_sym214__)))))
+                              stan::model::rvalue(lcm_sym209__,
+                                "lcm_sym209__",
+                                stan::model::index_min_max(2, lcm_sym213__)))))
                          +
                          stan::math::bernoulli_lpmf<false>(1,
                            stan::math::prod(
                              stan::model::rvalue(phi, "phi",
                                stan::model::index_uni(inline_sym38__),
-                                 stan::model::index_min_max(2, lcm_sym214__)))))
+                                 stan::model::index_min_max(2, lcm_sym213__)))))
                         +
                         stan::math::bernoulli_lpmf<false>(1,
-                          stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                          stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                             stan::model::index_uni(inline_sym38__),
-                              stan::model::index_uni(lcm_sym258__)))),
+                              stan::model::index_uni(lcm_sym257__)))),
                       "assigning variable inline_sym36__", stan::model::index_uni(2));
                     for (int inline_sym37__ = 3;
-                         inline_sym37__ <= lcm_sym214__; ++inline_sym37__) {
+                         inline_sym37__ <= lcm_sym213__; ++inline_sym37__) {
                       current_statement__ = 89;
                       stan::model::assign(inline_sym36__,
                         ((((stan::math::bernoulli_lpmf<false>(1,
                               stan::math::prod(
-                                stan::model::rvalue(lcm_sym209__,
-                                  "lcm_sym209__",
+                                stan::model::rvalue(lcm_sym208__,
+                                  "lcm_sym208__",
                                   stan::model::index_min_max(1, (inline_sym37__
                                                                   - 1))))) +
                              stan::math::bernoulli_lpmf<false>(1,
                                gamma[(inline_sym37__ - 1)])) +
                             stan::math::bernoulli_lpmf<false>(1,
                               stan::math::prod(
-                                stan::model::rvalue(lcm_sym210__,
-                                  "lcm_sym210__",
-                                  stan::model::index_min_max(inline_sym37__, lcm_sym214__)))))
+                                stan::model::rvalue(lcm_sym209__,
+                                  "lcm_sym209__",
+                                  stan::model::index_min_max(inline_sym37__, lcm_sym213__)))))
                            +
                            stan::math::bernoulli_lpmf<false>(1,
                              stan::math::prod(
                                stan::model::rvalue(phi, "phi",
                                  stan::model::index_uni(inline_sym38__),
-                                   stan::model::index_min_max(inline_sym37__, lcm_sym214__)))))
+                                   stan::model::index_min_max(inline_sym37__, lcm_sym213__)))))
                           +
                           stan::math::bernoulli_lpmf<false>(1,
-                            stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                            stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                               stan::model::index_uni(inline_sym38__),
-                                stan::model::index_uni(lcm_sym258__)))),
+                                stan::model::index_uni(lcm_sym257__)))),
                         "assigning variable inline_sym36__", stan::model::index_uni(inline_sym37__));
                     }
                   } 
@@ -19623,37 +19623,37 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                   stan::model::assign(inline_sym36__,
                     ((stan::math::bernoulli_lpmf<false>(1,
                         stan::math::prod(
-                          stan::model::rvalue(lcm_sym209__, "lcm_sym209__",
-                            stan::model::index_min_max(1, lcm_sym214__)))) +
+                          stan::model::rvalue(lcm_sym208__, "lcm_sym208__",
+                            stan::model::index_min_max(1, lcm_sym213__)))) +
                        stan::math::bernoulli_lpmf<false>(1,
-                         gamma[(lcm_sym258__ - 1)])) +
+                         gamma[(lcm_sym257__ - 1)])) +
                       stan::math::bernoulli_lpmf<false>(1,
-                        stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                        stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                           stan::model::index_uni(inline_sym38__),
-                            stan::model::index_uni(lcm_sym258__)))),
-                    "assigning variable inline_sym36__", stan::model::index_uni(lcm_sym258__));
+                            stan::model::index_uni(lcm_sym257__)))),
+                    "assigning variable inline_sym36__", stan::model::index_uni(lcm_sym257__));
                   current_statement__ = 91;
                   lp_accum__.add(stan::math::log_sum_exp(inline_sym36__));
                 }
-                lcm_sym260__ = last[(inline_sym38__ - 1)];
-                if (stan::math::logical_gte(lcm_sym260__, (lcm_sym258__ + 1))) {
+                lcm_sym259__ = last[(inline_sym38__ - 1)];
+                if (stan::math::logical_gte(lcm_sym259__, (lcm_sym257__ + 1))) {
                   current_statement__ = 96;
                   lp_accum__.add(
                     stan::math::bernoulli_lpmf<propto__>(1,
                       stan::model::rvalue(phi, "phi",
                         stan::model::index_uni(inline_sym38__),
-                          stan::model::index_uni(((lcm_sym258__ + 1) - 1)))));
-                  lcm_sym232__ = ((lcm_sym258__ + 1) + 1);
+                          stan::model::index_uni(((lcm_sym257__ + 1) - 1)))));
+                  lcm_sym231__ = ((lcm_sym257__ + 1) + 1);
                   lp_accum__.add(
                     stan::math::bernoulli_lpmf<propto__>(
                       stan::model::rvalue(y, "y",
                         stan::model::index_uni(inline_sym38__),
-                          stan::model::index_uni((lcm_sym258__ + 1))),
-                      stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                          stan::model::index_uni((lcm_sym257__ + 1))),
+                      stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                         stan::model::index_uni(inline_sym38__),
-                          stan::model::index_uni((lcm_sym258__ + 1)))));
-                  for (int inline_sym37__ = lcm_sym232__;
-                       inline_sym37__ <= lcm_sym260__; ++inline_sym37__) {
+                          stan::model::index_uni((lcm_sym257__ + 1)))));
+                  for (int inline_sym37__ = lcm_sym231__;
+                       inline_sym37__ <= lcm_sym259__; ++inline_sym37__) {
                     current_statement__ = 96;
                     lp_accum__.add(
                       stan::math::bernoulli_lpmf<propto__>(1,
@@ -19664,7 +19664,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                     lp_accum__.add(
                       stan::math::bernoulli_lpmf<propto__>(
                         y[(inline_sym38__ - 1)][(inline_sym37__ - 1)],
-                        stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                        stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                           stan::model::index_uni(inline_sym38__),
                             stan::model::index_uni(inline_sym37__))));
                   }
@@ -19674,22 +19674,22 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                   stan::math::bernoulli_lpmf<propto__>(1,
                     stan::model::rvalue(inline_sym22__, "inline_sym22__",
                       stan::model::index_uni(inline_sym38__),
-                        stan::model::index_uni(lcm_sym260__))));
+                        stan::model::index_uni(lcm_sym259__))));
               } else {
-                lcm_sym234__ = (lcm_sym263__ + 1);
+                lcm_sym233__ = (lcm_sym262__ + 1);
                 stan::math::validate_non_negative_index("lp",
                                                         "n_occasions + 1",
-                                                        lcm_sym234__);
+                                                        lcm_sym233__);
                 Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym36__ =
                    Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
-                     lcm_sym234__, DUMMY_VAR__);
+                     lcm_sym233__, DUMMY_VAR__);
                 current_statement__ = 82;
                 stan::model::assign(inline_sym36__,
                   ((stan::math::bernoulli_lpmf<false>(1,
                       stan::model::rvalue(gamma, "gamma",
                         stan::model::index_uni(1))) +
                      stan::math::bernoulli_lpmf<false>(0,
-                       stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                       stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                          stan::model::index_uni(inline_sym38__),
                            stan::model::index_uni(1)))) +
                     stan::math::bernoulli_lpmf<false>(1,
@@ -19697,18 +19697,18 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                         stan::model::index_uni(inline_sym38__),
                           stan::model::index_uni(1)))),
                   "assigning variable inline_sym36__", stan::model::index_uni(1));
-                if (stan::math::logical_gte(lcm_sym263__, 2)) {
+                if (stan::math::logical_gte(lcm_sym262__, 2)) {
                   current_statement__ = 83;
                   stan::model::assign(inline_sym36__,
                     (((stan::math::bernoulli_lpmf<false>(1,
                          stan::math::prod(
-                           stan::model::rvalue(lcm_sym209__, "lcm_sym209__",
+                           stan::model::rvalue(lcm_sym208__, "lcm_sym208__",
                              stan::model::index_min_max(1, 1)))) +
                         stan::math::bernoulli_lpmf<false>(1,
                           stan::model::rvalue(gamma, "gamma",
                             stan::model::index_uni(2)))) +
                        stan::math::bernoulli_lpmf<false>(0,
-                         stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                         stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                            stan::model::index_uni(inline_sym38__),
                              stan::model::index_uni(2)))) +
                       stan::math::bernoulli_lpmf<false>(1,
@@ -19717,19 +19717,19 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                             stan::model::index_uni(2)))),
                     "assigning variable inline_sym36__", stan::model::index_uni(2));
                   for (int inline_sym37__ = 3;
-                       inline_sym37__ <= lcm_sym263__; ++inline_sym37__) {
+                       inline_sym37__ <= lcm_sym262__; ++inline_sym37__) {
                     current_statement__ = 83;
                     stan::model::assign(inline_sym36__,
                       (((stan::math::bernoulli_lpmf<false>(1,
                            stan::math::prod(
-                             stan::model::rvalue(lcm_sym209__,
-                               "lcm_sym209__",
+                             stan::model::rvalue(lcm_sym208__,
+                               "lcm_sym208__",
                                stan::model::index_min_max(1, (inline_sym37__
                                                                - 1))))) +
                           stan::math::bernoulli_lpmf<false>(1,
                             gamma[(inline_sym37__ - 1)])) +
                          stan::math::bernoulli_lpmf<false>(0,
-                           stan::model::rvalue(lcm_sym255__, "lcm_sym255__",
+                           stan::model::rvalue(lcm_sym254__, "lcm_sym254__",
                              stan::model::index_uni(inline_sym38__),
                                stan::model::index_uni(inline_sym37__)))) +
                         stan::math::bernoulli_lpmf<false>(1,
@@ -19743,8 +19743,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                 current_statement__ = 84;
                 stan::model::assign(inline_sym36__,
                   stan::math::bernoulli_lpmf<false>(1,
-                    stan::math::prod(lcm_sym209__)),
-                  "assigning variable inline_sym36__", stan::model::index_uni(lcm_sym234__));
+                    stan::math::prod(lcm_sym208__)),
+                  "assigning variable inline_sym36__", stan::model::index_uni(lcm_sym233__));
                 current_statement__ = 85;
                 lp_accum__.add(stan::math::log_sum_exp(inline_sym36__));
               }
@@ -19784,64 +19784,64 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     (void) function__;  // suppress unused var warning
     
     try {
-      double lcm_sym196__;
-      int lcm_sym195__;
+      double lcm_sym195__;
       int lcm_sym194__;
       int lcm_sym193__;
       int lcm_sym192__;
       int lcm_sym191__;
       int lcm_sym190__;
-      double lcm_sym163__;
-      int lcm_sym188__;
+      int lcm_sym189__;
+      double lcm_sym162__;
       int lcm_sym187__;
       int lcm_sym186__;
       int lcm_sym185__;
       int lcm_sym184__;
       int lcm_sym183__;
-      double lcm_sym182__;
-      int lcm_sym181__;
-      double lcm_sym180__;
-      int lcm_sym179__;
+      int lcm_sym182__;
+      double lcm_sym181__;
+      int lcm_sym180__;
+      double lcm_sym179__;
       int lcm_sym178__;
       int lcm_sym177__;
       int lcm_sym176__;
-      Eigen::Matrix<double, -1, -1> lcm_sym175__;
-      std::vector<std::vector<int>> lcm_sym174__;
-      local_scalar_t__ lcm_sym173__;
+      int lcm_sym175__;
+      Eigen::Matrix<double, -1, -1> lcm_sym174__;
+      std::vector<std::vector<int>> lcm_sym173__;
       local_scalar_t__ lcm_sym172__;
-      double lcm_sym171__;
+      local_scalar_t__ lcm_sym171__;
       double lcm_sym170__;
       double lcm_sym169__;
       double lcm_sym168__;
       double lcm_sym167__;
       double lcm_sym166__;
-      Eigen::Matrix<double, -1, 1> lcm_sym165__;
-      int lcm_sym164__;
-      int lcm_sym158__;
+      double lcm_sym165__;
+      Eigen::Matrix<double, -1, 1> lcm_sym164__;
+      int lcm_sym163__;
       int lcm_sym157__;
       int lcm_sym156__;
       int lcm_sym155__;
-      double lcm_sym154__;
+      int lcm_sym154__;
       double lcm_sym153__;
       double lcm_sym152__;
-      int lcm_sym151__;
+      double lcm_sym151__;
       int lcm_sym150__;
-      double lcm_sym149__;
-      int lcm_sym148__;
+      int lcm_sym149__;
+      double lcm_sym148__;
       int lcm_sym147__;
       int lcm_sym146__;
       int lcm_sym145__;
       int lcm_sym144__;
       int lcm_sym143__;
-      int lcm_sym189__;
-      int lcm_sym141__;
+      int lcm_sym142__;
+      int lcm_sym188__;
       int lcm_sym140__;
       int lcm_sym139__;
       int lcm_sym138__;
       int lcm_sym137__;
       int lcm_sym136__;
       int lcm_sym135__;
-      Eigen::Matrix<double, -1, 1> lcm_sym134__;
+      int lcm_sym134__;
+      Eigen::Matrix<double, -1, 1> lcm_sym133__;
       double mean_phi;
       current_statement__ = 1;
       mean_phi = in__.template read_constrain_lub<local_scalar_t__, 
@@ -19858,15 +19858,15 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       Eigen::Matrix<double, -1, 1> epsilon =
          Eigen::Matrix<double, -1, 1>::Constant((n_occasions - 1),
            std::numeric_limits<double>::quiet_NaN());
-      lcm_sym189__ = (n_occasions - 1);
+      lcm_sym188__ = (n_occasions - 1);
       epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-                  lcm_sym189__);
+                  lcm_sym188__);
       double sigma;
       current_statement__ = 5;
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
       Eigen::Matrix<double, -1, -1> phi =
-         Eigen::Matrix<double, -1, -1>::Constant(M, lcm_sym189__,
+         Eigen::Matrix<double, -1, -1>::Constant(M, lcm_sym188__,
            std::numeric_limits<double>::quiet_NaN());
       Eigen::Matrix<double, -1, -1> p =
          Eigen::Matrix<double, -1, -1>::Constant(M, n_occasions,
@@ -19885,37 +19885,37 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         return ;
       } 
       current_statement__ = 11;
-      if (stan::math::logical_gte(lcm_sym189__, 1)) {
+      if (stan::math::logical_gte(lcm_sym188__, 1)) {
         {
-          lcm_sym135__ = stan::math::logical_gte(M, 1);
-          if (lcm_sym135__) {
-            lcm_sym173__ = stan::math::inv_logit(
+          lcm_sym134__ = stan::math::logical_gte(M, 1);
+          if (lcm_sym134__) {
+            lcm_sym172__ = stan::math::inv_logit(
                              (stan::math::logit(mean_phi) +
                                stan::model::rvalue(epsilon, "epsilon",
                                  stan::model::index_uni(1))));
-            stan::model::assign(phi, lcm_sym173__,
+            stan::model::assign(phi, lcm_sym172__,
               "assigning variable phi", stan::model::index_uni(1),
                                           stan::model::index_uni(1));
             for (int i = 2; i <= M; ++i) {
               current_statement__ = 9;
-              stan::model::assign(phi, lcm_sym173__,
+              stan::model::assign(phi, lcm_sym172__,
                 "assigning variable phi", stan::model::index_uni(i),
                                             stan::model::index_uni(1));
             }
           } 
-          for (int t = 2; t <= lcm_sym189__; ++t) {
+          for (int t = 2; t <= lcm_sym188__; ++t) {
             current_statement__ = 10;
-            if (lcm_sym135__) {
-              lcm_sym172__ = stan::math::inv_logit(
+            if (lcm_sym134__) {
+              lcm_sym171__ = stan::math::inv_logit(
                                (stan::math::logit(mean_phi) +
                                  stan::model::rvalue(epsilon, "epsilon",
                                    stan::model::index_uni(t))));
-              stan::model::assign(phi, lcm_sym172__,
+              stan::model::assign(phi, lcm_sym171__,
                 "assigning variable phi", stan::model::index_uni(1),
                                             stan::model::index_uni(t));
               for (int i = 2; i <= M; ++i) {
                 current_statement__ = 9;
-                stan::model::assign(phi, lcm_sym172__,
+                stan::model::assign(phi, lcm_sym171__,
                   "assigning variable phi", stan::model::index_uni(i),
                                               stan::model::index_uni(t));
               }
@@ -19923,83 +19923,83 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           }
         }
       } else {
-        lcm_sym135__ = stan::math::logical_gte(M, 1);
+        lcm_sym134__ = stan::math::logical_gte(M, 1);
       }
-      stan::model::assign(lcm_sym175__,
+      stan::model::assign(lcm_sym174__,
         stan::math::rep_matrix(mean_p, M, n_occasions),
-        "assigning variable lcm_sym175__");
-      stan::model::assign(p, lcm_sym175__, "assigning variable p");
+        "assigning variable lcm_sym174__");
+      stan::model::assign(p, lcm_sym174__, "assigning variable p");
       Eigen::Matrix<double, -1, -1> inline_sym1__;
       int inline_sym9__;
       inline_sym9__ = 0;
       for (int inline_sym10__ = 1; inline_sym10__ <= 1; ++inline_sym10__) {
         int inline_sym2__ = std::numeric_limits<int>::min();
-        lcm_sym177__ = stan::math::rows(lcm_sym175__);
+        lcm_sym176__ = stan::math::rows(lcm_sym174__);
         int inline_sym3__ = std::numeric_limits<int>::min();
-        lcm_sym164__ = stan::math::cols(lcm_sym175__);
+        lcm_sym163__ = stan::math::cols(lcm_sym174__);
         current_statement__ = 14;
-        stan::math::validate_non_negative_index("chi", "n_ind", lcm_sym177__);
+        stan::math::validate_non_negative_index("chi", "n_ind", lcm_sym176__);
         current_statement__ = 15;
         stan::math::validate_non_negative_index("chi", "n_occasions",
-                                                lcm_sym164__);
+                                                lcm_sym163__);
         Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym4__ =
-           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(lcm_sym177__,
-             lcm_sym164__, DUMMY_VAR__);
-        for (int inline_sym8__ = 1; inline_sym8__ <= lcm_sym177__;
+           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(lcm_sym176__,
+             lcm_sym163__, DUMMY_VAR__);
+        for (int inline_sym8__ = 1; inline_sym8__ <= lcm_sym176__;
              ++inline_sym8__) {
           current_statement__ = 17;
           stan::model::assign(inline_sym4__, 1.0,
             "assigning variable inline_sym4__", stan::model::index_uni(inline_sym8__),
-                                                  stan::model::index_uni(lcm_sym164__));
-          lcm_sym146__ = (lcm_sym164__ - 1);
-          if (stan::math::logical_gte(lcm_sym146__, 1)) {
+                                                  stan::model::index_uni(lcm_sym163__));
+          lcm_sym145__ = (lcm_sym163__ - 1);
+          if (stan::math::logical_gte(lcm_sym145__, 1)) {
             int inline_sym5__ = std::numeric_limits<int>::min();
             int inline_sym6__ = std::numeric_limits<int>::min();
-            lcm_sym151__ = (lcm_sym146__ + 1);
+            lcm_sym150__ = (lcm_sym145__ + 1);
             current_statement__ = 20;
             stan::model::assign(inline_sym4__,
               stan::math::fma(
                 (stan::model::rvalue(phi, "phi",
                    stan::model::index_uni(inline_sym8__),
-                     stan::model::index_uni(lcm_sym146__)) *
+                     stan::model::index_uni(lcm_sym145__)) *
                   (1 -
-                    stan::model::rvalue(lcm_sym175__, "lcm_sym175__",
+                    stan::model::rvalue(lcm_sym174__, "lcm_sym174__",
                       stan::model::index_uni(inline_sym8__),
-                        stan::model::index_uni(lcm_sym151__)))),
+                        stan::model::index_uni(lcm_sym150__)))),
                 stan::model::rvalue(inline_sym4__, "inline_sym4__",
                   stan::model::index_uni(inline_sym8__),
-                    stan::model::index_uni(lcm_sym151__)),
+                    stan::model::index_uni(lcm_sym150__)),
                 (1 -
                   stan::model::rvalue(phi, "phi",
                     stan::model::index_uni(inline_sym8__),
-                      stan::model::index_uni(lcm_sym146__)))),
+                      stan::model::index_uni(lcm_sym145__)))),
               "assigning variable inline_sym4__", stan::model::index_uni(inline_sym8__),
-                                                    stan::model::index_uni(lcm_sym146__));
-            for (int inline_sym7__ = 2; inline_sym7__ <= lcm_sym146__;
+                                                    stan::model::index_uni(lcm_sym145__));
+            for (int inline_sym7__ = 2; inline_sym7__ <= lcm_sym145__;
                  ++inline_sym7__) {
               int inline_sym5__ = std::numeric_limits<int>::min();
-              lcm_sym145__ = (lcm_sym164__ - inline_sym7__);
+              lcm_sym144__ = (lcm_sym163__ - inline_sym7__);
               int inline_sym6__ = std::numeric_limits<int>::min();
-              lcm_sym150__ = (lcm_sym145__ + 1);
+              lcm_sym149__ = (lcm_sym144__ + 1);
               current_statement__ = 20;
               stan::model::assign(inline_sym4__,
                 stan::math::fma(
                   (stan::model::rvalue(phi, "phi",
                      stan::model::index_uni(inline_sym8__),
-                       stan::model::index_uni(lcm_sym145__)) *
+                       stan::model::index_uni(lcm_sym144__)) *
                     (1 -
-                      stan::model::rvalue(lcm_sym175__, "lcm_sym175__",
+                      stan::model::rvalue(lcm_sym174__, "lcm_sym174__",
                         stan::model::index_uni(inline_sym8__),
-                          stan::model::index_uni(lcm_sym150__)))),
+                          stan::model::index_uni(lcm_sym149__)))),
                   stan::model::rvalue(inline_sym4__, "inline_sym4__",
                     stan::model::index_uni(inline_sym8__),
-                      stan::model::index_uni(lcm_sym150__)),
+                      stan::model::index_uni(lcm_sym149__)),
                   (1 -
                     stan::model::rvalue(phi, "phi",
                       stan::model::index_uni(inline_sym8__),
-                        stan::model::index_uni(lcm_sym145__)))),
+                        stan::model::index_uni(lcm_sym144__)))),
                 "assigning variable inline_sym4__", stan::model::index_uni(inline_sym8__),
-                                                      stan::model::index_uni(lcm_sym145__));
+                                                      stan::model::index_uni(lcm_sym144__));
             }
           } 
           if (inline_sym9__) {
@@ -20020,16 +20020,16 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       current_statement__ = 6;
       stan::math::check_less_or_equal(function__, "phi", phi, 1);
       current_statement__ = 7;
-      stan::math::check_greater_or_equal(function__, "p", lcm_sym175__, 0);
+      stan::math::check_greater_or_equal(function__, "p", lcm_sym174__, 0);
       current_statement__ = 7;
-      stan::math::check_less_or_equal(function__, "p", lcm_sym175__, 1);
+      stan::math::check_less_or_equal(function__, "p", lcm_sym174__, 1);
       current_statement__ = 8;
       stan::math::check_greater_or_equal(function__, "chi", inline_sym1__, 0);
       current_statement__ = 8;
       stan::math::check_less_or_equal(function__, "chi", inline_sym1__, 1);
       if (emit_transformed_parameters__) {
         out__.write(phi);
-        out__.write(lcm_sym175__);
+        out__.write(lcm_sym174__);
         out__.write(inline_sym1__);
       } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
@@ -20049,31 +20049,31 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
          std::vector<std::vector<int>>(M, 
            std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
       current_statement__ = 39;
-      if (lcm_sym135__) {
+      if (lcm_sym134__) {
         int q = std::numeric_limits<int>::min();
         double mu2 = std::numeric_limits<double>::quiet_NaN();
-        lcm_sym163__ = stan::model::rvalue(gamma, "gamma",
+        lcm_sym162__ = stan::model::rvalue(gamma, "gamma",
                          stan::model::index_uni(1));
         stan::model::assign(z,
-          stan::math::bernoulli_rng(lcm_sym163__, base_rng__),
+          stan::math::bernoulli_rng(lcm_sym162__, base_rng__),
           "assigning variable z", stan::model::index_uni(1),
                                     stan::model::index_uni(1));
-        lcm_sym137__ = stan::math::logical_gte(n_occasions, 2);
-        if (lcm_sym137__) {
-          lcm_sym193__ = stan::model::rvalue(z, "z",
+        lcm_sym136__ = stan::math::logical_gte(n_occasions, 2);
+        if (lcm_sym136__) {
+          lcm_sym192__ = stan::model::rvalue(z, "z",
                            stan::model::index_uni(1),
                              stan::model::index_uni(1));
-          lcm_sym158__ = (1 * (1 - lcm_sym193__));
-          q = lcm_sym158__;
-          lcm_sym170__ = stan::math::fma(
+          lcm_sym157__ = (1 * (1 - lcm_sym192__));
+          q = lcm_sym157__;
+          lcm_sym169__ = stan::math::fma(
                            stan::model::rvalue(phi, "phi",
                              stan::model::index_uni(1),
-                               stan::model::index_uni(1)), lcm_sym193__,
+                               stan::model::index_uni(1)), lcm_sym192__,
                            (stan::model::rvalue(gamma, "gamma",
-                              stan::model::index_uni(2)) * lcm_sym158__));
+                              stan::model::index_uni(2)) * lcm_sym157__));
           current_statement__ = 33;
           stan::model::assign(z,
-            stan::math::bernoulli_rng(lcm_sym170__, base_rng__),
+            stan::math::bernoulli_rng(lcm_sym169__, base_rng__),
             "assigning variable z", stan::model::index_uni(1),
                                       stan::model::index_uni(2));
           for (int t = 3; t <= n_occasions; ++t) {
@@ -20083,7 +20083,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                     stan::model::rvalue(z, "z",
                       stan::model::index_uni(1),
                         stan::model::index_uni((t - 1)))));
-            lcm_sym171__ = stan::math::fma(
+            lcm_sym170__ = stan::math::fma(
                              stan::model::rvalue(phi, "phi",
                                stan::model::index_uni(1),
                                  stan::model::index_uni((t - 1))),
@@ -20094,7 +20094,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                                 stan::model::index_uni(t)) * q));
             current_statement__ = 33;
             stan::model::assign(z,
-              stan::math::bernoulli_rng(lcm_sym171__, base_rng__),
+              stan::math::bernoulli_rng(lcm_sym170__, base_rng__),
               "assigning variable z", stan::model::index_uni(1),
                                         stan::model::index_uni(t));
           }
@@ -20104,18 +20104,18 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           double mu2 = std::numeric_limits<double>::quiet_NaN();
           current_statement__ = 36;
           stan::model::assign(z,
-            stan::math::bernoulli_rng(lcm_sym163__, base_rng__),
+            stan::math::bernoulli_rng(lcm_sym162__, base_rng__),
             "assigning variable z", stan::model::index_uni(i),
                                       stan::model::index_uni(1));
           current_statement__ = 37;
-          if (lcm_sym137__) {
-            lcm_sym157__ = (1 *
+          if (lcm_sym136__) {
+            lcm_sym156__ = (1 *
                              (1 -
                                stan::model::rvalue(z, "z",
                                  stan::model::index_uni(i),
                                    stan::model::index_uni(1))));
-            q = lcm_sym157__;
-            lcm_sym168__ = stan::math::fma(
+            q = lcm_sym156__;
+            lcm_sym167__ = stan::math::fma(
                              stan::model::rvalue(phi, "phi",
                                stan::model::index_uni(i),
                                  stan::model::index_uni(1)),
@@ -20123,10 +20123,10 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                                stan::model::index_uni(i),
                                  stan::model::index_uni(1)),
                              (stan::model::rvalue(gamma, "gamma",
-                                stan::model::index_uni(2)) * lcm_sym157__));
+                                stan::model::index_uni(2)) * lcm_sym156__));
             current_statement__ = 33;
             stan::model::assign(z,
-              stan::math::bernoulli_rng(lcm_sym168__, base_rng__),
+              stan::math::bernoulli_rng(lcm_sym167__, base_rng__),
               "assigning variable z", stan::model::index_uni(i),
                                         stan::model::index_uni(2));
             for (int t = 3; t <= n_occasions; ++t) {
@@ -20136,7 +20136,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                       stan::model::rvalue(z, "z",
                         stan::model::index_uni(i),
                           stan::model::index_uni((t - 1)))));
-              lcm_sym169__ = stan::math::fma(
+              lcm_sym168__ = stan::math::fma(
                                stan::model::rvalue(phi, "phi",
                                  stan::model::index_uni(i),
                                    stan::model::index_uni((t - 1))),
@@ -20147,7 +20147,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                                   stan::model::index_uni(t)) * q));
               current_statement__ = 33;
               stan::model::assign(z,
-                stan::math::bernoulli_rng(lcm_sym169__, base_rng__),
+                stan::math::bernoulli_rng(lcm_sym168__, base_rng__),
                 "assigning variable z", stan::model::index_uni(i),
                                           stan::model::index_uni(t));
             }
@@ -20166,23 +20166,23 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         inline_sym16__ = 0;
         for (int inline_sym17__ = 1; inline_sym17__ <= 1; ++inline_sym17__) {
           int inline_sym12__ = std::numeric_limits<int>::min();
-          lcm_sym176__ = stan::math::rows(gamma);
+          lcm_sym175__ = stan::math::rows(gamma);
           current_statement__ = 43;
           stan::math::validate_non_negative_index("log_cprob", "N",
-                                                  lcm_sym176__);
+                                                  lcm_sym175__);
           Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym13__ =
-             Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym176__,
+             Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym175__,
                DUMMY_VAR__);
           local_scalar_t__ inline_sym14__ = DUMMY_VAR__;
-          if (stan::math::logical_gte(lcm_sym176__, 1)) {
-            lcm_sym163__ = stan::model::rvalue(gamma, "gamma",
+          if (stan::math::logical_gte(lcm_sym175__, 1)) {
+            lcm_sym162__ = stan::model::rvalue(gamma, "gamma",
                              stan::model::index_uni(1));
             stan::model::assign(inline_sym13__,
-              (stan::math::log(lcm_sym163__) + 0),
+              (stan::math::log(lcm_sym162__) + 0),
               "assigning variable inline_sym13__", stan::model::index_uni(1));
             current_statement__ = 46;
-            inline_sym14__ = (0 + stan::math::log1m(lcm_sym163__));
-            for (int inline_sym15__ = 2; inline_sym15__ <= lcm_sym176__;
+            inline_sym14__ = (0 + stan::math::log1m(lcm_sym162__));
+            for (int inline_sym15__ = 2; inline_sym15__ <= lcm_sym175__;
                  ++inline_sym15__) {
               current_statement__ = 47;
               stan::model::assign(inline_sym13__,
@@ -20224,25 +20224,25 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         stan::math::validate_non_negative_index("Nalive", "M", M);
         std::vector<int> Nalive =
            std::vector<int>(M, std::numeric_limits<int>::min());
-        lcm_sym180__ = stan::math::square(sigma);
-        sigma2 = lcm_sym180__;
-        lcm_sym182__ = stan::math::sum(inline_sym11__);
-        psi = lcm_sym182__;
-        stan::model::assign(lcm_sym134__,
-          stan::math::divide(inline_sym11__, lcm_sym182__),
-          "assigning variable lcm_sym134__");
-        stan::model::assign(b, lcm_sym134__, "assigning variable b");
+        lcm_sym179__ = stan::math::square(sigma);
+        sigma2 = lcm_sym179__;
+        lcm_sym181__ = stan::math::sum(inline_sym11__);
+        psi = lcm_sym181__;
+        stan::model::assign(lcm_sym133__,
+          stan::math::divide(inline_sym11__, lcm_sym181__),
+          "assigning variable lcm_sym133__");
+        stan::model::assign(b, lcm_sym133__, "assigning variable b");
         current_statement__ = 64;
-        if (lcm_sym135__) {
+        if (lcm_sym134__) {
           int f = std::numeric_limits<int>::min();
           int inline_sym18__;
           int inline_sym20__;
           inline_sym20__ = 0;
           for (int inline_sym21__ = 1; inline_sym21__ <= 1; ++inline_sym21__) {
-            lcm_sym179__ = stan::math::size(
+            lcm_sym178__ = stan::math::size(
                              stan::model::rvalue(z, "z",
                                stan::model::index_uni(1)));
-            for (int inline_sym19__ = 1; inline_sym19__ <= lcm_sym179__;
+            for (int inline_sym19__ = 1; inline_sym19__ <= lcm_sym178__;
                  ++inline_sym19__) {
               current_statement__ = 59;
               if (stan::model::rvalue(z, "z",
@@ -20274,10 +20274,10 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             inline_sym20__ = 0;
             for (int inline_sym21__ = 1; inline_sym21__ <= 1;
                  ++inline_sym21__) {
-              lcm_sym178__ = stan::math::size(
+              lcm_sym177__ = stan::math::size(
                                stan::model::rvalue(z, "z",
                                  stan::model::index_uni(i)));
-              for (int inline_sym19__ = 1; inline_sym19__ <= lcm_sym178__;
+              for (int inline_sym19__ = 1; inline_sym19__ <= lcm_sym177__;
                    ++inline_sym19__) {
                 current_statement__ = 59;
                 if (stan::model::rvalue(z, "z",
@@ -20304,8 +20304,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             } 
           }
         } 
-        lcm_sym136__ = stan::math::logical_gte(n_occasions, 1);
-        if (lcm_sym136__) {
+        lcm_sym135__ = stan::math::logical_gte(n_occasions, 1);
+        if (lcm_sym135__) {
           current_statement__ = 65;
           stan::model::assign(N,
             stan::math::sum(
@@ -20334,7 +20334,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           }
         } 
         current_statement__ = 71;
-        if (lcm_sym135__) {
+        if (lcm_sym134__) {
           current_statement__ = 68;
           stan::model::assign(Nind,
             stan::math::sum(
@@ -20364,14 +20364,14 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         current_statement__ = 72;
         Nsuper = stan::math::sum(Nalive);
       }
-      out__.write(lcm_sym180__);
-      out__.write(lcm_sym182__);
-      out__.write(lcm_sym134__);
+      out__.write(lcm_sym179__);
+      out__.write(lcm_sym181__);
+      out__.write(lcm_sym133__);
       out__.write(Nsuper);
       out__.write(N);
       out__.write(B);
-      if (lcm_sym136__) {
-        if (lcm_sym135__) {
+      if (lcm_sym135__) {
+        if (lcm_sym134__) {
           out__.write(
             stan::model::rvalue(z, "z",
               stan::model::index_uni(1), stan::model::index_uni(1)));
@@ -20382,7 +20382,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           }
         } 
         for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
-          if (lcm_sym135__) {
+          if (lcm_sym134__) {
             out__.write(
               stan::model::rvalue(z, "z",
                 stan::model::index_uni(1), stan::model::index_uni(sym1__)));
@@ -20410,7 +20410,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
-      int lcm_sym133__;
+      int lcm_sym132__;
       int lcm_sym131__;
       int lcm_sym130__;
       int pos__;
@@ -20436,11 +20436,11 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon =
          Eigen::Matrix<local_scalar_t__, -1, 1>::Constant((n_occasions - 1),
            DUMMY_VAR__);
-      lcm_sym133__ = (n_occasions - 1);
-      if (stan::math::logical_gte(lcm_sym133__, 1)) {
+      lcm_sym132__ = (n_occasions - 1);
+      if (stan::math::logical_gte(lcm_sym132__, 1)) {
         stan::model::assign(epsilon, in__.read<local_scalar_t__>(),
           "assigning variable epsilon", stan::model::index_uni(1));
-        for (int sym1__ = 2; sym1__ <= lcm_sym133__; ++sym1__) {
+        for (int sym1__ = 2; sym1__ <= lcm_sym132__; ++sym1__) {
           stan::model::assign(epsilon, in__.read<local_scalar_t__>(),
             "assigning variable epsilon", stan::model::index_uni(sym1__));
         }
@@ -20493,41 +20493,41 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     
     param_names__.emplace_back(std::string() + "mean_phi");
     param_names__.emplace_back(std::string() + "mean_p");
-    for (int sym280__ = 1; sym280__ <= n_occasions; ++sym280__) {
+    for (int sym279__ = 1; sym279__ <= n_occasions; ++sym279__) {
       {
-        param_names__.emplace_back(std::string() + "gamma" + '.' + std::to_string(sym280__));
+        param_names__.emplace_back(std::string() + "gamma" + '.' + std::to_string(sym279__));
       } 
     }
-    for (int sym280__ = 1; sym280__ <= epsilon_1dim__; ++sym280__) {
+    for (int sym279__ = 1; sym279__ <= epsilon_1dim__; ++sym279__) {
       {
-        param_names__.emplace_back(std::string() + "epsilon" + '.' + std::to_string(sym280__));
+        param_names__.emplace_back(std::string() + "epsilon" + '.' + std::to_string(sym279__));
       } 
     }
     param_names__.emplace_back(std::string() + "sigma");
     if (emit_transformed_parameters__) {
-      for (int sym280__ = 1; sym280__ <= phi_2dim__; ++sym280__) {
+      for (int sym279__ = 1; sym279__ <= phi_2dim__; ++sym279__) {
         {
-          for (int sym281__ = 1; sym281__ <= M; ++sym281__) {
+          for (int sym280__ = 1; sym280__ <= M; ++sym280__) {
             {
-              param_names__.emplace_back(std::string() + "phi" + '.' + std::to_string(sym281__) + '.' + std::to_string(sym280__));
+              param_names__.emplace_back(std::string() + "phi" + '.' + std::to_string(sym280__) + '.' + std::to_string(sym279__));
             } 
           }
         } 
       }
-      for (int sym280__ = 1; sym280__ <= n_occasions; ++sym280__) {
+      for (int sym279__ = 1; sym279__ <= n_occasions; ++sym279__) {
         {
-          for (int sym281__ = 1; sym281__ <= M; ++sym281__) {
+          for (int sym280__ = 1; sym280__ <= M; ++sym280__) {
             {
-              param_names__.emplace_back(std::string() + "p" + '.' + std::to_string(sym281__) + '.' + std::to_string(sym280__));
+              param_names__.emplace_back(std::string() + "p" + '.' + std::to_string(sym280__) + '.' + std::to_string(sym279__));
             } 
           }
         } 
       }
-      for (int sym280__ = 1; sym280__ <= n_occasions; ++sym280__) {
+      for (int sym279__ = 1; sym279__ <= n_occasions; ++sym279__) {
         {
-          for (int sym281__ = 1; sym281__ <= M; ++sym281__) {
+          for (int sym280__ = 1; sym280__ <= M; ++sym280__) {
             {
-              param_names__.emplace_back(std::string() + "chi" + '.' + std::to_string(sym281__) + '.' + std::to_string(sym280__));
+              param_names__.emplace_back(std::string() + "chi" + '.' + std::to_string(sym280__) + '.' + std::to_string(sym279__));
             } 
           }
         } 
@@ -20537,27 +20537,27 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "sigma2");
       param_names__.emplace_back(std::string() + "psi");
-      for (int sym280__ = 1; sym280__ <= n_occasions; ++sym280__) {
+      for (int sym279__ = 1; sym279__ <= n_occasions; ++sym279__) {
         {
-          param_names__.emplace_back(std::string() + "b" + '.' + std::to_string(sym280__));
+          param_names__.emplace_back(std::string() + "b" + '.' + std::to_string(sym279__));
         } 
       }
       param_names__.emplace_back(std::string() + "Nsuper");
-      for (int sym280__ = 1; sym280__ <= n_occasions; ++sym280__) {
+      for (int sym279__ = 1; sym279__ <= n_occasions; ++sym279__) {
         {
-          param_names__.emplace_back(std::string() + "N" + '.' + std::to_string(sym280__));
+          param_names__.emplace_back(std::string() + "N" + '.' + std::to_string(sym279__));
         } 
       }
-      for (int sym280__ = 1; sym280__ <= n_occasions; ++sym280__) {
+      for (int sym279__ = 1; sym279__ <= n_occasions; ++sym279__) {
         {
-          param_names__.emplace_back(std::string() + "B" + '.' + std::to_string(sym280__));
+          param_names__.emplace_back(std::string() + "B" + '.' + std::to_string(sym279__));
         } 
       }
-      for (int sym280__ = 1; sym280__ <= n_occasions; ++sym280__) {
+      for (int sym279__ = 1; sym279__ <= n_occasions; ++sym279__) {
         {
-          for (int sym281__ = 1; sym281__ <= M; ++sym281__) {
+          for (int sym280__ = 1; sym280__ <= M; ++sym280__) {
             {
-              param_names__.emplace_back(std::string() + "z" + '.' + std::to_string(sym281__) + '.' + std::to_string(sym280__));
+              param_names__.emplace_back(std::string() + "z" + '.' + std::to_string(sym280__) + '.' + std::to_string(sym279__));
             } 
           }
         } 
@@ -20574,41 +20574,41 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     
     param_names__.emplace_back(std::string() + "mean_phi");
     param_names__.emplace_back(std::string() + "mean_p");
-    for (int sym280__ = 1; sym280__ <= n_occasions; ++sym280__) {
+    for (int sym279__ = 1; sym279__ <= n_occasions; ++sym279__) {
       {
-        param_names__.emplace_back(std::string() + "gamma" + '.' + std::to_string(sym280__));
+        param_names__.emplace_back(std::string() + "gamma" + '.' + std::to_string(sym279__));
       } 
     }
-    for (int sym280__ = 1; sym280__ <= epsilon_1dim__; ++sym280__) {
+    for (int sym279__ = 1; sym279__ <= epsilon_1dim__; ++sym279__) {
       {
-        param_names__.emplace_back(std::string() + "epsilon" + '.' + std::to_string(sym280__));
+        param_names__.emplace_back(std::string() + "epsilon" + '.' + std::to_string(sym279__));
       } 
     }
     param_names__.emplace_back(std::string() + "sigma");
     if (emit_transformed_parameters__) {
-      for (int sym280__ = 1; sym280__ <= phi_2dim__; ++sym280__) {
+      for (int sym279__ = 1; sym279__ <= phi_2dim__; ++sym279__) {
         {
-          for (int sym281__ = 1; sym281__ <= M; ++sym281__) {
+          for (int sym280__ = 1; sym280__ <= M; ++sym280__) {
             {
-              param_names__.emplace_back(std::string() + "phi" + '.' + std::to_string(sym281__) + '.' + std::to_string(sym280__));
+              param_names__.emplace_back(std::string() + "phi" + '.' + std::to_string(sym280__) + '.' + std::to_string(sym279__));
             } 
           }
         } 
       }
-      for (int sym280__ = 1; sym280__ <= n_occasions; ++sym280__) {
+      for (int sym279__ = 1; sym279__ <= n_occasions; ++sym279__) {
         {
-          for (int sym281__ = 1; sym281__ <= M; ++sym281__) {
+          for (int sym280__ = 1; sym280__ <= M; ++sym280__) {
             {
-              param_names__.emplace_back(std::string() + "p" + '.' + std::to_string(sym281__) + '.' + std::to_string(sym280__));
+              param_names__.emplace_back(std::string() + "p" + '.' + std::to_string(sym280__) + '.' + std::to_string(sym279__));
             } 
           }
         } 
       }
-      for (int sym280__ = 1; sym280__ <= n_occasions; ++sym280__) {
+      for (int sym279__ = 1; sym279__ <= n_occasions; ++sym279__) {
         {
-          for (int sym281__ = 1; sym281__ <= M; ++sym281__) {
+          for (int sym280__ = 1; sym280__ <= M; ++sym280__) {
             {
-              param_names__.emplace_back(std::string() + "chi" + '.' + std::to_string(sym281__) + '.' + std::to_string(sym280__));
+              param_names__.emplace_back(std::string() + "chi" + '.' + std::to_string(sym280__) + '.' + std::to_string(sym279__));
             } 
           }
         } 
@@ -20618,27 +20618,27 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "sigma2");
       param_names__.emplace_back(std::string() + "psi");
-      for (int sym280__ = 1; sym280__ <= n_occasions; ++sym280__) {
+      for (int sym279__ = 1; sym279__ <= n_occasions; ++sym279__) {
         {
-          param_names__.emplace_back(std::string() + "b" + '.' + std::to_string(sym280__));
+          param_names__.emplace_back(std::string() + "b" + '.' + std::to_string(sym279__));
         } 
       }
       param_names__.emplace_back(std::string() + "Nsuper");
-      for (int sym280__ = 1; sym280__ <= n_occasions; ++sym280__) {
+      for (int sym279__ = 1; sym279__ <= n_occasions; ++sym279__) {
         {
-          param_names__.emplace_back(std::string() + "N" + '.' + std::to_string(sym280__));
+          param_names__.emplace_back(std::string() + "N" + '.' + std::to_string(sym279__));
         } 
       }
-      for (int sym280__ = 1; sym280__ <= n_occasions; ++sym280__) {
+      for (int sym279__ = 1; sym279__ <= n_occasions; ++sym279__) {
         {
-          param_names__.emplace_back(std::string() + "B" + '.' + std::to_string(sym280__));
+          param_names__.emplace_back(std::string() + "B" + '.' + std::to_string(sym279__));
         } 
       }
-      for (int sym280__ = 1; sym280__ <= n_occasions; ++sym280__) {
+      for (int sym279__ = 1; sym279__ <= n_occasions; ++sym279__) {
         {
-          for (int sym281__ = 1; sym281__ <= M; ++sym281__) {
+          for (int sym280__ = 1; sym280__ <= M; ++sym280__) {
             {
-              param_names__.emplace_back(std::string() + "z" + '.' + std::to_string(sym281__) + '.' + std::to_string(sym280__));
+              param_names__.emplace_back(std::string() + "z" + '.' + std::to_string(sym280__) + '.' + std::to_string(sym279__));
             } 
           }
         } 

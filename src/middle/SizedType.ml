@@ -132,15 +132,15 @@ let is_recursive_container st =
   | STuple _ -> true
 
 (** Return a type's array dimensions and the type inside the (possibly nested) array *)
-let rec get_array_dims st =
+let rec get_container_dims st =
   match st with
   | SInt | SReal | SComplex | STuple _ -> (st, [])
-  | SVector (_, d) | SRowVector (_, d) | SComplexVector d | SComplexRowVector d
-    ->
-      (st, [d])
-  | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) -> (st, [d1; d2])
+  | SVector (_, d) | SRowVector (_, d) -> (SReal, [d])
+  | SComplexVector d | SComplexRowVector d -> (SComplex, [d])
+  | SMatrix (_, d1, d2) -> (SReal, [d1; d2])
+  | SComplexMatrix (d1, d2) -> (SComplex, [d1; d2])
   | SArray (st, dim) ->
-      let st', dims = get_array_dims st in
+      let st', dims = get_container_dims st in
       (st', dim :: dims)
 
 let num_elems_expr st =
@@ -160,6 +160,12 @@ let%expect_test "dims" =
              , Expr.Helpers.str "z" ) ) ) )
   |> print_endline ;
   [%expect {| z, x, y |}]
+
+let rec contains_tuple st =
+  match st with
+  | STuple _ -> true
+  | SArray (st, _) -> contains_tuple st
+  | _ -> false
 
 (**
  * Return true if SizedType contains an Eigen type

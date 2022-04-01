@@ -215,16 +215,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -4016,11 +4009,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var N))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -4066,11 +4056,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var K))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -4110,11 +4097,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var Nr))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -4154,11 +4138,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Lit Int 2))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -4176,7 +4157,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LVariable ma) ()) UReal
+     (Assignment (LVariable ma) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -4194,7 +4175,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LVariable phi_beta) ()) UReal
+     (Assignment (LVariable phi_beta) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -4218,7 +4199,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LVariable sigma2) ()) UReal
+     (Assignment (LVariable sigma2) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -4240,7 +4221,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LVariable Intercept) ()) UReal
+     (Assignment (LVariable Intercept) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -4280,11 +4261,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var N))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -4324,11 +4302,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var N))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -4350,7 +4325,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LVariable theta) ()) UReal
+     (Assignment (LVariable theta) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -4390,11 +4365,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var N))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -4438,11 +4410,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var N))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -4488,12 +4457,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               URowVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var N))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta
-                ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -4547,11 +4512,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var N))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -4597,11 +4559,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var N))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -4641,11 +4600,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var N))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -4685,11 +4641,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var N))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -4748,16 +4701,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Var N))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Var N))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -4818,16 +4764,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Var N))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Var N))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -4888,16 +4827,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Var K))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Var K))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -4958,16 +4890,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Var K))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Var K))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -6029,16 +5954,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -9126,24 +9044,7 @@
                                  (adlevel DataOnly))))))))
                           (meta
                            ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-                      (((pattern
-                         (Indexed
-                          ((pattern (Var p_soa_arr_vec_v))
-                           (meta
-                            ((type_ (UArray UVector)) (loc <opaque>)
-                             (adlevel DataOnly))))
-                          ((Single
-                            ((pattern (Var sym2__))
-                             (meta
-                              ((type_ UInt) (loc <opaque>)
-                               (adlevel DataOnly)))))
-                           (Single
-                            ((pattern (Var sym1__))
-                             (meta
-                              ((type_ UInt) (loc <opaque>)
-                               (adlevel DataOnly))))))))
-                        (meta
-                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                      ()))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -9486,7 +9387,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LVariable alpha) ()) UReal
+     (Assignment (LVariable alpha) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -9526,11 +9427,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var M))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -9589,16 +9487,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Var N))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Var M))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -9660,13 +9551,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UVector
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Var N))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UVector) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -9727,16 +9614,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Var N))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Var M))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -9778,11 +9658,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var N))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -9841,16 +9718,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Var N))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Var M))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -9892,12 +9762,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               URowVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var N))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta
-                ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -9937,11 +9803,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var N))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -9982,11 +9845,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var N))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -10046,16 +9906,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Var N))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Var M))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -10097,11 +9950,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var M))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -10141,11 +9991,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var M))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -10185,11 +10032,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var M))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -10230,11 +10074,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Var M))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -10293,16 +10134,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Var N))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Var M))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -10363,16 +10197,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Var N))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Var M))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -10435,16 +10262,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Var N))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Var M))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -10507,16 +10327,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Var N))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Var M))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -10577,16 +10390,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Var N))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Var M))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -10647,16 +10453,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Var N))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Var M))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -11304,7 +11103,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LIndexed (LVariable alpha) ()) UReal
+     (Assignment (LVariable alpha) UReal
       ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -11344,11 +11143,8 @@
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               UVector
-              ((pattern
-                (FunApp (CompilerInternal FnReadDataSerializer)
-                 (((pattern (Lit Int 10))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+              ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))
@@ -11931,16 +11727,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Lit Int 5))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -12001,16 +11790,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Lit Int 5))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -12071,16 +11853,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Lit Int 5))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -12726,16 +12501,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -12796,16 +12564,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -13359,16 +13120,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -13429,16 +13183,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -13821,16 +13568,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Lit Int 5))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
@@ -13891,16 +13631,9 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (CompilerInternal FnReadDataSerializer)
-                         (((pattern (Lit Int 5))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 10))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (FunApp (CompilerInternal FnReadDataSerializer) ()))
                        (meta
-                        ((type_ UMatrix) (loc <opaque>)
-                         (adlevel AutoDiffable))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
