@@ -235,8 +235,7 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
     "template <typename RNG, typename VecR, typename VecI, typename VecVar, @ \
      stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, @ \
      stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, @ \
-     stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> \
-     @ " ;
+     stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> @ " ;
   let params =
     [ "RNG& base_rng__"; "VecR& params_r__"; "VecI& params_i__"; "VecVar& vars__"
     ; "const bool emit_transformed_parameters__ = true"
