@@ -18958,6 +18958,10 @@ Display all Stan math signatures exposed in the language
   prod(row_vector) => real
   prod(matrix) => real
   prod(array[] real) => real
+  prod(complex_vector) => complex
+  prod(complex_row_vector) => complex
+  prod(complex_matrix) => complex
+  prod(array[] complex) => complex
   proj(complex) => complex
   qr_Q(matrix) => matrix
   qr_R(matrix) => matrix

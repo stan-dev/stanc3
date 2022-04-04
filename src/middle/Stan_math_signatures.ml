@@ -1860,6 +1860,10 @@ let () =
   add_unqualified ("prod", ReturnType UReal, [UVector], AoS) ;
   add_unqualified ("prod", ReturnType UReal, [URowVector], AoS) ;
   add_unqualified ("prod", ReturnType UReal, [UMatrix], AoS) ;
+  add_unqualified ("prod", ReturnType UComplex, [UArray UComplex], AoS) ;
+  add_unqualified ("prod", ReturnType UComplex, [UComplexVector], AoS) ;
+  add_unqualified ("prod", ReturnType UComplex, [UComplexRowVector], AoS) ;
+  add_unqualified ("prod", ReturnType UComplex, [UComplexMatrix], AoS) ;
   add_unqualified ("proj", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("quad_form", ReturnType UReal, [UMatrix; UVector], SoA) ;
   add_unqualified ("quad_form", ReturnType UMatrix, [UMatrix; UMatrix], SoA) ;
