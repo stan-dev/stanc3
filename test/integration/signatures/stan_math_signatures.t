@@ -3984,6 +3984,8 @@ Display all Stan math signatures exposed in the language
   dot_product(array[] complex, array[] complex) => complex
   dot_self(vector) => real
   dot_self(row_vector) => real
+  dot_self(complex_vector) => complex
+  dot_self(complex_row_vector) => complex
   double_exponential_ccdf_log(real, real, real) => real
   double_exponential_ccdf_log(real, real, vector) => real
   double_exponential_ccdf_log(real, real, row_vector) => real

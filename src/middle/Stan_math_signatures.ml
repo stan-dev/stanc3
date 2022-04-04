@@ -1072,6 +1072,8 @@ let () =
     ("dot_product", ReturnType UComplex, [UArray UComplex; UArray UComplex], SoA) ;
   add_unqualified ("dot_self", ReturnType UReal, [UVector], SoA) ;
   add_unqualified ("dot_self", ReturnType UReal, [URowVector], SoA) ;
+  add_unqualified ("dot_self", ReturnType UComplex, [UComplexVector], SoA) ;
+  add_unqualified ("dot_self", ReturnType UComplex, [UComplexRowVector], SoA) ;
   add_nullary "e" ;
   add_unqualified ("eigenvalues_sym", ReturnType UVector, [UMatrix], AoS) ;
   add_unqualified ("eigenvectors_sym", ReturnType UMatrix, [UMatrix], AoS) ;
