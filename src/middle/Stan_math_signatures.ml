@@ -2200,6 +2200,7 @@ let () =
   add_unqualified ("to_vector", ReturnType UVector, [UArray UReal], AoS) ;
   add_unqualified ("to_vector", ReturnType UVector, [UArray UInt], AoS) ;
   add_unqualified ("trace", ReturnType UReal, [UMatrix], SoA) ;
+  add_unqualified ("trace", ReturnType UComplex, [UComplexMatrix], AoS) ;
   add_unqualified
     ("trace_gen_quad_form", ReturnType UReal, [UMatrix; UMatrix; UMatrix], SoA) ;
   add_unqualified ("trace_quad_form", ReturnType UReal, [UMatrix; UVector], SoA) ;

@@ -26614,6 +26614,7 @@ Display all Stan math signatures exposed in the language
   to_vector(array[] int) => vector
   to_vector(array[] real) => vector
   trace(matrix) => real
+  trace(complex_matrix) => complex
   trace_gen_quad_form(matrix, matrix, matrix) => real
   trace_quad_form(matrix, vector) => real
   trace_quad_form(matrix, matrix) => real
