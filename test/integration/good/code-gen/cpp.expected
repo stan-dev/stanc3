@@ -348,16 +348,22 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   ((1 + 1) + J);
-      const size_t num_transformed = J;
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_transformed = emit_transformed_parameters * J;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -371,10 +377,20 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
   ((1 + 1) + J);
       const size_t num_transformed = J;
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -676,16 +692,22 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 1;
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -698,10 +720,20 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
       const size_t num_params__ = 1;
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -1763,18 +1795,24 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       const size_t num_params__ = 
   ((((((((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1)
      + 1) + 1);
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 
   ((((((((((((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1)
           + 1) + 1) + 1) + 1) + 1) + 1) + 1);
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -1791,10 +1829,20 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       const size_t num_gen_quantities = 
   ((((((((((((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1)
           + 1) + 1) + 1) + 1) + 1) + 1) + 1);
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -2220,16 +2268,22 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   ((1 + 1) + J);
-      const size_t num_transformed = J;
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_transformed = emit_transformed_parameters * J;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -2243,10 +2297,20 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
   ((1 + 1) + J);
       const size_t num_transformed = J;
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -2677,17 +2741,23 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 3;
-      const size_t num_transformed = 
+      const size_t num_transformed = emit_transformed_parameters * 
   (((3 * 3) + (3 * 3)) + (3 * 3));
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -2701,10 +2771,20 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       const size_t num_transformed = 
   (((3 * 3) + (3 * 3)) + (3 * 3));
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -12068,12 +12148,12 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
               (((N * M) * K) * N)) + (5 * 4)) + (((4 * 5) * 2) * 3)) + N) +
           (N * N)) + (((N * M) * K) * N)) + (5 * 4)) + (3 * 3)) +
       ((K * 3) * 3)) + 2) + 2);
-      const size_t num_transformed = 
+      const size_t num_transformed = emit_transformed_parameters * 
   (((((((((((((((((N + ((N * M) * K)) + N) + (N * N)) + (((N * M) * K) * N))
                 + N) + (N * N)) + (((N * M) * K) * N)) + (5 * 4)) +
             (((4 * 5) * 2) * 3)) + N) + (N * N)) + (((N * M) * K) * N)) +
         (5 * 4)) + (3 * 3)) + ((K * 3) * 3)) + 2) + 1);
-      const size_t num_gen_quantities = 
+      const size_t num_gen_quantities = emit_generated_quantities * 
   ((((((((((((((((((((((((((1 + 1) + N) + ((N * M) * K)) + N) + (N * N)) +
                         (((N * M) * K) * N)) + N) + (N * N)) +
                      (((N * M) * K) * N)) + (((4 * 5) * 2) * 3)) + N) +
@@ -12081,14 +12161,20 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
               ((K * 3) * 3)) + 3) + ((5 * 3) * 4)) + ((3 * 3) * 4)) +
           ((5 * 3) * 4)) + ((3 * 3) * 3)) + ((3 * 3) * 4)) + ((5 * 3) * 4)) +
       ((3 * 3) * 3)) + (3 * 4)) + (2 * 2));
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -12117,10 +12203,20 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
               ((K * 3) * 3)) + 3) + ((5 * 3) * 4)) + ((3 * 3) * 4)) +
           ((5 * 3) * 4)) + ((3 * 3) * 3)) + ((3 * 3) * 4)) + ((5 * 3) * 4)) +
       ((3 * 3) * 3)) + (3 * 4)) + (2 * 2));
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -14012,18 +14108,24 @@ const
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   ((((((2 + 1) + 1) + 2) + 3) + (3 * 3)) + 1);
-      const size_t num_transformed = 
+      const size_t num_transformed = emit_transformed_parameters * 
   (((((((((1 + 1) + 1) + 3) + 3) + 3) + 2) + 2) + 2) + 2);
-      const size_t num_gen_quantities = 
+      const size_t num_gen_quantities = emit_generated_quantities * 
   ((((((((T * 2) + 1) + 1) + 1) + 1) + 3) + 3) + 2);
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -14039,10 +14141,20 @@ const
   (((((((((1 + 1) + 1) + 3) + 3) + 3) + 2) + 2) + 2) + 2);
       const size_t num_gen_quantities = 
   ((((((((T * 2) + 1) + 1) + 1) + 1) + 3) + 3) + 2);
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -18631,17 +18743,24 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   ((1 + N) + N);
-      const size_t num_transformed = (N * N);
-      const size_t num_gen_quantities = 
+      const size_t num_transformed = emit_transformed_parameters * 
   (N * N);
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_gen_quantities = emit_generated_quantities * 
+  (N * N);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -18656,10 +18775,20 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       const size_t num_transformed = (N * N);
       const size_t num_gen_quantities = 
   (N * N);
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -19301,17 +19430,23 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (((((1 + 1) + 1) + 1) + 2) + 2);
-      const size_t num_transformed = 
+      const size_t num_transformed = emit_transformed_parameters * 
   (N * 2);
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -19326,10 +19461,20 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       const size_t num_transformed = 
   (N * 2);
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -21001,16 +21146,22 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   ((((((((k + k) + k) + 1) + 1) + 1) + (n * k)) + (n * k)) + n);
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -21024,10 +21175,20 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   ((((((((k + k) + k) + 1) + 1) + 1) + (n * k)) + (n * k)) + n);
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -21759,16 +21920,22 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (1 + 1);
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -21782,10 +21949,20 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
   (1 + 1);
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -22199,16 +22376,22 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (((nt * 2) * 2) + NS);
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -22222,10 +22405,20 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
   (((nt * 2) * 2) + NS);
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -22520,16 +22713,22 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 0;
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -22542,10 +22741,20 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
       const size_t num_params__ = 0;
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -22930,17 +23139,23 @@ ident_functor__::operator()(const std::complex<T0__>& x,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 0;
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 
   (((1 + 2) + 4) + 1);
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -22954,10 +23169,20 @@ ident_functor__::operator()(const std::complex<T0__>& x,
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 
   (((1 + 2) + 4) + 1);
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -23530,16 +23755,22 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   ((N + N) + N);
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -23553,10 +23784,20 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
   ((N + N) + N);
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -26153,16 +26394,22 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
                 (N * N)) + ((N * N) * N)) + (N * N)) + (N * N)) + N) +
            (((N * N) * N) * N)) + ((N * N) * N)) + ((N * N) * N)) + (N * N))
        + ((N * N) * N)) + (N * N)) + (N * N)) + N);
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -26179,10 +26426,20 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
        + ((N * N) * N)) + (N * N)) + (N * N)) + N);
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -30330,19 +30587,25 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
   ((((((((((((N + (N * N)) + (N * N)) + ((N * N) * N)) + (N * N)) +
            ((N * N) * N)) + ((N * N) * N)) + (((N * N) * N) * N)) + 1) + N) +
       N) + (N * N)) + ((N * N) * N));
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 
   (((((((((((((((((((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
                    1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1)
        + 1) + 1) + 1) + 1);
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -30361,10 +30624,20 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
   (((((((((((((((((((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
                    1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1)
        + 1) + 1) + 1) + 1);
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -31400,17 +31673,23 @@ rhs_functor__::operator()(const T0__& t, const T1__& y, const T2__& alpha,
                            1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
                  1) + 1) + 5) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 4) +
      1) + 1);
-      const size_t num_transformed = ((1 + (1 * 4)) +
-                                                     result_1dim__);
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_transformed = emit_transformed_parameters * 
+  ((1 + (1 * 4)) + result_1dim__);
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -31428,10 +31707,20 @@ rhs_functor__::operator()(const T0__& t, const T1__& y, const T2__& alpha,
       const size_t num_transformed = ((1 + (1 * 4)) +
                                                      result_1dim__);
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -31905,16 +32194,22 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 0;
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -31927,10 +32222,20 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
       const size_t num_params__ = 0;
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -32262,16 +32567,22 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 1;
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -32284,10 +32595,20 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       const size_t num_params__ = 1;
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -34952,19 +35273,25 @@ class transform_model final : public model_base_crtp<transform_model> {
   (((((((((((((((((k + k) + k) + k) + k) + k) + k) + k) + (m * k)) +
             ((n * m) * k)) + k) + (m * k)) + ((n * m) * k)) + k) + (m * k)) +
       ((n * m) * k)) + (m * k)) + ((n * m) * k));
-      const size_t num_transformed = 
+      const size_t num_transformed = emit_transformed_parameters * 
   (((((((((((((((((k + k) + k) + k) + k) + k) + k) + k) + (m * k)) +
             ((n * m) * k)) + k) + (m * k)) + ((n * m) * k)) + k) + (m * k)) +
       ((n * m) * k)) + (m * k)) + ((n * m) * k));
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -34983,10 +35310,20 @@ class transform_model final : public model_base_crtp<transform_model> {
             ((n * m) * k)) + k) + (m * k)) + ((n * m) * k)) + k) + (m * k)) +
       ((n * m) * k)) + (m * k)) + ((n * m) * k));
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -35417,16 +35754,22 @@ class truncate_model final : public model_base_crtp<truncate_model> {
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (1 + 1);
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -35440,10 +35783,20 @@ class truncate_model final : public model_base_crtp<truncate_model> {
   (1 + 1);
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -35768,16 +36121,22 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 1;
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -35790,10 +36149,20 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
       const size_t num_params__ = 1;
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -36125,16 +36494,22 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 1;
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params__
-       + (emit_transformed_parameters * num_transformed)
-       + (emit_generated_quantities * num_gen_quantities));
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
       std::vector<int> params_i;
-      write_array_impl(base_rng, params_r, params_i, vars_vec,
+      if (vars.size() == 0) {
+        vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN())
+        write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        vars_vec.data(), vars_vec.size());
+      } else {
+        vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <typename RNG>
@@ -36147,10 +36522,20 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
       const size_t num_params__ = 1;
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params__
-        + (emit_transformed_parameters * num_transformed)
-        + (emit_generated_quantities * num_gen_quantities));
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      if (vars.size() == 0) {
+        vars = std::vector<double>(num_to_write, 
+          std::numeric_limits<double>::quiet_NaN());        
+        write_array_impl(base_rng, params_r, params_i, vars, 
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      } else {
+        Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
+        vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
+        std::numeric_limits<double>::quiet_NaN());
+        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      }
     }
 
     template <bool propto__, bool jacobian__, typename T_>
