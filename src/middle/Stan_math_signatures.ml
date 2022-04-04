@@ -1039,6 +1039,7 @@ let () =
   add_unqualified
     ("diag_pre_multiply", ReturnType UMatrix, [URowVector; UMatrix], SoA) ;
   add_unqualified ("diagonal", ReturnType UVector, [UMatrix], SoA) ;
+  add_unqualified ("diagonal", ReturnType UComplexVector, [UComplexMatrix], SoA) ;
   add_unqualified ("dims", ReturnType (UArray UInt), [UComplex], AoS) ;
   add_unqualified ("dims", ReturnType (UArray UInt), [UInt], SoA) ;
   add_unqualified ("dims", ReturnType (UArray UInt), [UReal], SoA) ;
