@@ -223,10 +223,10 @@ let pp_get_dims ppf {Program.output_vars; _} =
         pp_output_var dim_list )
     ~cv_attr:["const"]
 
-let pp_method_b ppf rt name params intro ?(outro = nop) ?(cv_attr = ["const"])
-    body =
+let pp_method_b ppf rt name params intro ?(decls = []) ?(cleanup = [])
+    ?(outro = nop) ?(cv_attr = ["const"]) body =
   pp_method ppf rt name params intro
-    (fun ppf -> pp_located_error_b ppf body)
+    (fun ppf -> pp_located_error_b ~decls ~cleanup ppf body)
     ~outro ~cv_attr
 
 (** Print the write_array method of the model class *)
@@ -256,7 +256,15 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
          DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());"
       ; "constexpr bool jacobian__ = false;" ]
       pp_unused "DUMMY_VAR__" pp_function__ (prog_name, "write_array") in
-  pp_method_b ppf "void" "write_array_impl" params intro generate_quantities
+  match List.rev generate_quantities with
+  | {Stmt.Fixed.pattern= Block writes; _}
+    :: {Stmt.Fixed.pattern= Block stmts; _} :: rev_decls ->
+      let decls = List.rev rev_decls and cleanup = writes in
+      pp_method_b ppf "void" "write_array_impl" params intro ~decls ~cleanup
+        stmts
+  | _ ->
+      Common.FatalError.fatal_error_msg
+        [%message "Unexpected pattern in write_array."]
 
 (** Prints the for loop for [constrained_param_names]
     and [unconstrained_param_names]

@@ -265,32 +265,40 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "simple_function_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double rho = std::numeric_limits<double>::quiet_NaN();
+    double alpha = std::numeric_limits<double>::quiet_NaN();
+    double sigma = std::numeric_limits<double>::quiet_NaN();
     try {
-      double rho = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
-      double alpha = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       alpha = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
-      double sigma = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
-      out__.write(rho);
-      out__.write(alpha);
-      out__.write(sigma);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(rho);
+        out__.write(alpha);
+        out__.write(sigma);
         return ;
       } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(rho);
+        out__.write(alpha);
+        out__.write(sigma);
         return ;
       } 
+      out__.write(rho);
+      out__.write(alpha);
+      out__.write(sigma);
     } catch (const std::exception& e) {
+      out__.write(rho);
+      out__.write(alpha);
+      out__.write(sigma);
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 

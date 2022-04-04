@@ -470,34 +470,33 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "ode_adjoint_test_model_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double y = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> y0 =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    double t0 = std::numeric_limits<double>::quiet_NaN();
+    std::vector<double> times =
+       std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+    std::vector<Eigen::Matrix<double, -1, 1>> z =
+       std::vector<Eigen::Matrix<double, -1, 1>>(M, 
+         Eigen::Matrix<double, -1, 1>::Constant(N,
+           std::numeric_limits<double>::quiet_NaN()));
     try {
-      double y = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       y = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double, -1, 1> y0 =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       y0 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
-      double t0 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
       t0 = in__.template read<local_scalar_t__>();
-      std::vector<double> times =
-         std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 4;
       times = in__.template read<std::vector<local_scalar_t__>>(N);
-      std::vector<Eigen::Matrix<double, -1, 1>> z =
-         std::vector<Eigen::Matrix<double, -1, 1>>(M, 
-           Eigen::Matrix<double, -1, 1>::Constant(N,
-             std::numeric_limits<double>::quiet_NaN()));
-      out__.write(y);
-      out__.write(y0);
-      out__.write(t0);
-      out__.write(times);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(y);
+        out__.write(y0);
+        out__.write(t0);
+        out__.write(times);
         return ;
       } 
       current_statement__ = 6;
@@ -521,6 +520,24 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
           abs_tol_q, max_num_steps, num_checkpoints,
           interpolation_polynomial, solver_f, solver_b, pstream__, i, y),
         "assigning variable z");
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(y);
+        out__.write(y0);
+        out__.write(t0);
+        out__.write(times);
+        if (emit_transformed_parameters__) {
+          for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+            for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+              out__.write(z[(sym2__ - 1)][(sym1__ - 1)]);
+            }
+          }
+        } 
+        return ;
+      } 
+      out__.write(y);
+      out__.write(y0);
+      out__.write(t0);
+      out__.write(times);
       if (emit_transformed_parameters__) {
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
@@ -528,10 +545,18 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
           }
         }
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(y);
+      out__.write(y0);
+      out__.write(t0);
+      out__.write(times);
+      if (emit_transformed_parameters__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+            out__.write(z[(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -1400,39 +1425,38 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "overloaded_ode_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double beta = std::numeric_limits<double>::quiet_NaN();
+    double gamma = std::numeric_limits<double>::quiet_NaN();
+    double xi = std::numeric_limits<double>::quiet_NaN();
+    double delta = std::numeric_limits<double>::quiet_NaN();
+    std::vector<Eigen::Matrix<double, -1, 1>> y =
+       std::vector<Eigen::Matrix<double, -1, 1>>(N_t, 
+         Eigen::Matrix<double, -1, 1>::Constant(4,
+           std::numeric_limits<double>::quiet_NaN()));
+    std::vector<Eigen::Matrix<double, -1, 1>> y2 =
+       std::vector<Eigen::Matrix<double, -1, 1>>(N_t, 
+         Eigen::Matrix<double, -1, 1>::Constant(4,
+           std::numeric_limits<double>::quiet_NaN()));
     try {
-      double beta = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       beta = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
                lp__);
-      double gamma = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       gamma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
-      double xi = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
       xi = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
              lp__);
-      double delta = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 4;
       delta = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
-      std::vector<Eigen::Matrix<double, -1, 1>> y =
-         std::vector<Eigen::Matrix<double, -1, 1>>(N_t, 
-           Eigen::Matrix<double, -1, 1>::Constant(4,
-             std::numeric_limits<double>::quiet_NaN()));
-      std::vector<Eigen::Matrix<double, -1, 1>> y2 =
-         std::vector<Eigen::Matrix<double, -1, 1>>(N_t, 
-           Eigen::Matrix<double, -1, 1>::Constant(4,
-             std::numeric_limits<double>::quiet_NaN()));
-      out__.write(beta);
-      out__.write(gamma);
-      out__.write(xi);
-      out__.write(delta);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(beta);
+        out__.write(gamma);
+        out__.write(xi);
+        out__.write(delta);
         return ;
       } 
       current_statement__ = 5;
@@ -1449,6 +1473,29 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 6;
       stan::math::check_greater_or_equal(function__, "y2", y2, 0);
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(beta);
+        out__.write(gamma);
+        out__.write(xi);
+        out__.write(delta);
+        if (emit_transformed_parameters__) {
+          for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+            for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
+              out__.write(y[(sym2__ - 1)][(sym1__ - 1)]);
+            }
+          }
+          for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+            for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
+              out__.write(y2[(sym2__ - 1)][(sym1__ - 1)]);
+            }
+          }
+        } 
+        return ;
+      } 
+      out__.write(beta);
+      out__.write(gamma);
+      out__.write(xi);
+      out__.write(delta);
       if (emit_transformed_parameters__) {
         for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
@@ -1461,10 +1508,23 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
           }
         }
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(beta);
+      out__.write(gamma);
+      out__.write(xi);
+      out__.write(delta);
+      if (emit_transformed_parameters__) {
+        for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
+            out__.write(y[(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+        for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
+            out__.write(y2[(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 

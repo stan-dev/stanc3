@@ -437,13 +437,18 @@ and pp_block_s ppf body =
   @param pp_body_block A pretty printer for the body block
   @param body A C++ scoped body block surrounded by squiggly braces.
   *)
-let pp_located_error ppf (pp_body_block, body) =
+let pp_located_error ?(cleanup = []) ppf (pp_body_block, body) =
   pf ppf "@ try %a" pp_body_block body ;
   string ppf " catch (const std::exception& e) " ;
-  pp_block ppf (pp_located, ())
+  let pp =
+    if List.is_empty cleanup then pp_located
+    else fun ppf () ->
+      pf ppf "%a@ %a" (Fmt.list pp_statement) cleanup pp_located () in
+  pp_block ppf (pp, ())
 
 (** [pp_located_error_b] automatically adds a Block wrapper *)
-let pp_located_error_b ppf body_stmts =
-  pp_located_error ppf
+let pp_located_error_b ?(decls = []) ?(cleanup = []) ppf body_stmts =
+  Fmt.list pp_statement ppf decls ;
+  pp_located_error ~cleanup ppf
     ( pp_statement
     , Stmt.Fixed.{pattern= Block body_stmts; meta= Locations.no_span_num} )

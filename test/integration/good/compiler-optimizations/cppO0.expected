@@ -189,39 +189,38 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "ad_level_deep_dependence_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    Eigen::Matrix<double, -1, -1> X_p =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> X_tp1 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> X_tp2 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> X_tp3 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> X_tp4 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> X_tp5 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> X_tp6 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> X_tp7 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      Eigen::Matrix<double, -1, -1> X_p =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
       X_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(10,
               10);
-      Eigen::Matrix<double, -1, -1> X_tp1 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> X_tp2 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> X_tp3 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> X_tp4 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> X_tp5 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> X_tp6 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> X_tp7 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(X_p);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(X_p);
         return ;
       } 
       current_statement__ = 2;
@@ -246,6 +245,20 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
         "assigning variable X_tp7");
       current_statement__ = 9;
       stan::model::assign(X_tp1, X_p, "assigning variable X_tp1");
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(X_p);
+        if (emit_transformed_parameters__) {
+          out__.write(X_tp1);
+          out__.write(X_tp2);
+          out__.write(X_tp3);
+          out__.write(X_tp4);
+          out__.write(X_tp5);
+          out__.write(X_tp6);
+          out__.write(X_tp7);
+        } 
+        return ;
+      } 
+      out__.write(X_p);
       if (emit_transformed_parameters__) {
         out__.write(X_tp1);
         out__.write(X_tp2);
@@ -255,10 +268,17 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
         out__.write(X_tp6);
         out__.write(X_tp7);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(X_p);
+      if (emit_transformed_parameters__) {
+        out__.write(X_tp1);
+        out__.write(X_tp2);
+        out__.write(X_tp3);
+        out__.write(X_tp4);
+        out__.write(X_tp5);
+        out__.write(X_tp6);
+        out__.write(X_tp7);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -994,34 +1014,33 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "ad_level_failing_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double beta = std::numeric_limits<double>::quiet_NaN();
+    double gamma = std::numeric_limits<double>::quiet_NaN();
+    double xi = std::numeric_limits<double>::quiet_NaN();
+    double delta = std::numeric_limits<double>::quiet_NaN();
+    std::vector<std::vector<double>> y =
+       std::vector<std::vector<double>>(N_t, 
+         std::vector<double>(4, std::numeric_limits<double>::quiet_NaN()));
     try {
-      double beta = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       beta = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
                lp__);
-      double gamma = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       gamma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
-      double xi = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
       xi = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
              lp__);
-      double delta = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 4;
       delta = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
-      std::vector<std::vector<double>> y =
-         std::vector<std::vector<double>>(N_t, 
-           std::vector<double>(4, std::numeric_limits<double>::quiet_NaN()));
-      out__.write(beta);
-      out__.write(gamma);
-      out__.write(xi);
-      out__.write(delta);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(beta);
+        out__.write(gamma);
+        out__.write(xi);
+        out__.write(delta);
         return ;
       } 
       {
@@ -1037,6 +1056,24 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       }
       current_statement__ = 5;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(beta);
+        out__.write(gamma);
+        out__.write(xi);
+        out__.write(delta);
+        if (emit_transformed_parameters__) {
+          for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+            for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
+              out__.write(y[(sym2__ - 1)][(sym1__ - 1)]);
+            }
+          }
+        } 
+        return ;
+      } 
+      out__.write(beta);
+      out__.write(gamma);
+      out__.write(xi);
+      out__.write(delta);
       if (emit_transformed_parameters__) {
         for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
@@ -1044,10 +1081,18 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
           }
         }
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(beta);
+      out__.write(gamma);
+      out__.write(xi);
+      out__.write(delta);
+      if (emit_transformed_parameters__) {
+        for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
+            out__.write(y[(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -1439,24 +1484,23 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "ad_levels_deep_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    Eigen::Matrix<double, -1, -1> X_p =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> X_tp1 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> X_tp2 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      Eigen::Matrix<double, -1, -1> X_p =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
       X_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(10,
               10);
-      Eigen::Matrix<double, -1, -1> X_tp1 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> X_tp2 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(X_p);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(X_p);
         return ;
       } 
       current_statement__ = 2;
@@ -1467,14 +1511,25 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
         "assigning variable X_tp2");
       current_statement__ = 4;
       stan::model::assign(X_tp1, X_p, "assigning variable X_tp1");
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(X_p);
+        if (emit_transformed_parameters__) {
+          out__.write(X_tp1);
+          out__.write(X_tp2);
+        } 
+        return ;
+      } 
+      out__.write(X_p);
       if (emit_transformed_parameters__) {
         out__.write(X_tp1);
         out__.write(X_tp2);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(X_p);
+      if (emit_transformed_parameters__) {
+        out__.write(X_tp1);
+        out__.write(X_tp2);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -2351,33 +2406,32 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "copy_fail_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double mean_p = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> beta =
+       Eigen::Matrix<double, -1, 1>::Constant(max_age,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> phi =
+       Eigen::Matrix<double, -1, -1>::Constant(nind, n_occ_minus_1,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> p =
+       Eigen::Matrix<double, -1, -1>::Constant(nind, n_occ_minus_1,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> chi =
+       Eigen::Matrix<double, -1, -1>::Constant(nind, n_occasions,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      double mean_p = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       mean_p = in__.template read_constrain_lub<local_scalar_t__, 
                  jacobian__>(0, 1, lp__);
-      Eigen::Matrix<double, -1, 1> beta =
-         Eigen::Matrix<double, -1, 1>::Constant(max_age,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       beta = in__.template read_constrain_lub<
                Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(0, 1,
                lp__, max_age);
-      Eigen::Matrix<double, -1, -1> phi =
-         Eigen::Matrix<double, -1, -1>::Constant(nind, n_occ_minus_1,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> p =
-         Eigen::Matrix<double, -1, -1>::Constant(nind, n_occ_minus_1,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> chi =
-         Eigen::Matrix<double, -1, -1>::Constant(nind, n_occasions,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(mean_p);
-      out__.write(beta);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(mean_p);
+        out__.write(beta);
         return ;
       } 
       current_statement__ = 15;
@@ -2430,15 +2484,31 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
       stan::math::check_greater_or_equal(function__, "chi", chi, 0);
       current_statement__ = 5;
       stan::math::check_less_or_equal(function__, "chi", chi, 1);
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(mean_p);
+        out__.write(beta);
+        if (emit_transformed_parameters__) {
+          out__.write(phi);
+          out__.write(p);
+          out__.write(chi);
+        } 
+        return ;
+      } 
+      out__.write(mean_p);
+      out__.write(beta);
       if (emit_transformed_parameters__) {
         out__.write(phi);
         out__.write(p);
         out__.write(chi);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(mean_p);
+      out__.write(beta);
+      if (emit_transformed_parameters__) {
+        out__.write(phi);
+        out__.write(p);
+        out__.write(chi);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -3254,77 +3324,116 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "dce_fail_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double sigma = std::numeric_limits<double>::quiet_NaN();
+    double sigma_age = std::numeric_limits<double>::quiet_NaN();
+    double sigma_edu = std::numeric_limits<double>::quiet_NaN();
+    double sigma_state = std::numeric_limits<double>::quiet_NaN();
+    double sigma_region = std::numeric_limits<double>::quiet_NaN();
+    double sigma_age_edu = std::numeric_limits<double>::quiet_NaN();
+    double b_0 = std::numeric_limits<double>::quiet_NaN();
+    double b_female = std::numeric_limits<double>::quiet_NaN();
+    double b_black = std::numeric_limits<double>::quiet_NaN();
+    double b_female_black = std::numeric_limits<double>::quiet_NaN();
+    double b_v_prev = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> b_age =
+       Eigen::Matrix<double, -1, 1>::Constant(n_age,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> b_edu =
+       Eigen::Matrix<double, -1, 1>::Constant(n_edu,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> b_region =
+       Eigen::Matrix<double, -1, 1>::Constant(n_region,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> b_age_edu =
+       Eigen::Matrix<double, -1, -1>::Constant(n_age, n_edu,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> b_hat =
+       Eigen::Matrix<double, -1, 1>::Constant(n_state,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      double sigma = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
-      double sigma_age = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       sigma_age = in__.template read_constrain_lb<local_scalar_t__, 
                     jacobian__>(0, lp__);
-      double sigma_edu = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
       sigma_edu = in__.template read_constrain_lb<local_scalar_t__, 
                     jacobian__>(0, lp__);
-      double sigma_state = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 4;
       sigma_state = in__.template read_constrain_lb<local_scalar_t__, 
                       jacobian__>(0, lp__);
-      double sigma_region = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 5;
       sigma_region = in__.template read_constrain_lb<local_scalar_t__, 
                        jacobian__>(0, lp__);
-      double sigma_age_edu = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 6;
       sigma_age_edu = in__.template read_constrain_lb<local_scalar_t__, 
                         jacobian__>(0, lp__);
-      double b_0 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 7;
       b_0 = in__.template read<local_scalar_t__>();
-      double b_female = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 8;
       b_female = in__.template read<local_scalar_t__>();
-      double b_black = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 9;
       b_black = in__.template read<local_scalar_t__>();
-      double b_female_black = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 10;
       b_female_black = in__.template read<local_scalar_t__>();
-      double b_v_prev = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 11;
       b_v_prev = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double, -1, 1> b_age =
-         Eigen::Matrix<double, -1, 1>::Constant(n_age,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 12;
       b_age = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                 n_age);
-      Eigen::Matrix<double, -1, 1> b_edu =
-         Eigen::Matrix<double, -1, 1>::Constant(n_edu,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 13;
       b_edu = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                 n_edu);
-      Eigen::Matrix<double, -1, 1> b_region =
-         Eigen::Matrix<double, -1, 1>::Constant(n_region,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 14;
       b_region = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    n_region);
-      Eigen::Matrix<double, -1, -1> b_age_edu =
-         Eigen::Matrix<double, -1, -1>::Constant(n_age, n_edu,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 15;
       b_age_edu = in__.template read<
                     Eigen::Matrix<local_scalar_t__, -1, -1>>(n_age, n_edu);
-      Eigen::Matrix<double, -1, 1> b_hat =
-         Eigen::Matrix<double, -1, 1>::Constant(n_state,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 16;
       b_hat = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                 n_state);
+      if (stan::math::logical_negation((stan::math::primitive_value(
+            emit_transformed_parameters__) || stan::math::primitive_value(
+            emit_generated_quantities__)))) {
+        out__.write(sigma);
+        out__.write(sigma_age);
+        out__.write(sigma_edu);
+        out__.write(sigma_state);
+        out__.write(sigma_region);
+        out__.write(sigma_age_edu);
+        out__.write(b_0);
+        out__.write(b_female);
+        out__.write(b_black);
+        out__.write(b_female_black);
+        out__.write(b_v_prev);
+        out__.write(b_age);
+        out__.write(b_edu);
+        out__.write(b_region);
+        out__.write(b_age_edu);
+        out__.write(b_hat);
+        return ;
+      } 
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(sigma);
+        out__.write(sigma_age);
+        out__.write(sigma_edu);
+        out__.write(sigma_state);
+        out__.write(sigma_region);
+        out__.write(sigma_age_edu);
+        out__.write(b_0);
+        out__.write(b_female);
+        out__.write(b_black);
+        out__.write(b_female_black);
+        out__.write(b_v_prev);
+        out__.write(b_age);
+        out__.write(b_edu);
+        out__.write(b_region);
+        out__.write(b_age_edu);
+        out__.write(b_hat);
+        return ;
+      } 
       out__.write(sigma);
       out__.write(sigma_age);
       out__.write(sigma_edu);
@@ -3341,15 +3450,23 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       out__.write(b_region);
       out__.write(b_age_edu);
       out__.write(b_hat);
-      if (stan::math::logical_negation((stan::math::primitive_value(
-            emit_transformed_parameters__) || stan::math::primitive_value(
-            emit_generated_quantities__)))) {
-        return ;
-      } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(sigma);
+      out__.write(sigma_age);
+      out__.write(sigma_edu);
+      out__.write(sigma_state);
+      out__.write(sigma_region);
+      out__.write(sigma_age_edu);
+      out__.write(b_0);
+      out__.write(b_female);
+      out__.write(b_black);
+      out__.write(b_female_black);
+      out__.write(b_v_prev);
+      out__.write(b_age);
+      out__.write(b_edu);
+      out__.write(b_region);
+      out__.write(b_age_edu);
+      out__.write(b_hat);
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -4606,35 +4723,43 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "expr_prop_fail_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    Eigen::Matrix<double, -1, 1> mu =
+       Eigen::Matrix<double, -1, 1>::Constant(2,
+         std::numeric_limits<double>::quiet_NaN());
+    std::vector<double> sigma =
+       std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
+    double theta = std::numeric_limits<double>::quiet_NaN();
     try {
-      Eigen::Matrix<double, -1, 1> mu =
-         Eigen::Matrix<double, -1, 1>::Constant(2,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
       mu = in__.template read_constrain_ordered<
              Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__, 2);
-      std::vector<double> sigma =
-         std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       sigma = in__.template read_constrain_lb<std::vector<local_scalar_t__>, 
                 jacobian__>(0, lp__, 2);
-      double theta = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
       theta = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 1, lp__);
-      out__.write(mu);
-      out__.write(sigma);
-      out__.write(theta);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(mu);
+        out__.write(sigma);
+        out__.write(theta);
         return ;
       } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(mu);
+        out__.write(sigma);
+        out__.write(theta);
         return ;
       } 
+      out__.write(mu);
+      out__.write(sigma);
+      out__.write(theta);
     } catch (const std::exception& e) {
+      out__.write(mu);
+      out__.write(sigma);
+      out__.write(theta);
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -5037,31 +5162,39 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "expr_prop_fail2_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double mu = std::numeric_limits<double>::quiet_NaN();
+    std::vector<double> theta =
+       std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
+    double tau = std::numeric_limits<double>::quiet_NaN();
     try {
-      double mu = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
-      std::vector<double> theta =
-         std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
-      double tau = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
       tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
-      out__.write(mu);
-      out__.write(theta);
-      out__.write(tau);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(mu);
+        out__.write(theta);
+        out__.write(tau);
         return ;
       } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(mu);
+        out__.write(theta);
+        out__.write(tau);
         return ;
       } 
+      out__.write(mu);
+      out__.write(theta);
+      out__.write(tau);
     } catch (const std::exception& e) {
+      out__.write(mu);
+      out__.write(theta);
+      out__.write(tau);
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -5811,77 +5944,76 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "expr_prop_fail3_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    Eigen::Matrix<double, -1, 1> a =
+       Eigen::Matrix<double, -1, 1>::Constant(n_age,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> b =
+       Eigen::Matrix<double, -1, 1>::Constant(n_edu,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> c =
+       Eigen::Matrix<double, -1, 1>::Constant(n_age_edu,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> d =
+       Eigen::Matrix<double, -1, 1>::Constant(n_state,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> e =
+       Eigen::Matrix<double, -1, 1>::Constant(n_region_full,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> beta =
+       Eigen::Matrix<double, -1, 1>::Constant(5,
+         std::numeric_limits<double>::quiet_NaN());
+    double sigma_a = std::numeric_limits<double>::quiet_NaN();
+    double sigma_b = std::numeric_limits<double>::quiet_NaN();
+    double sigma_c = std::numeric_limits<double>::quiet_NaN();
+    double sigma_d = std::numeric_limits<double>::quiet_NaN();
+    double sigma_e = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> y_hat =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      Eigen::Matrix<double, -1, 1> a =
-         Eigen::Matrix<double, -1, 1>::Constant(n_age,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
       a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age);
-      Eigen::Matrix<double, -1, 1> b =
-         Eigen::Matrix<double, -1, 1>::Constant(n_edu,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       b = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu);
-      Eigen::Matrix<double, -1, 1> c =
-         Eigen::Matrix<double, -1, 1>::Constant(n_age_edu,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 3;
       c = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
             n_age_edu);
-      Eigen::Matrix<double, -1, 1> d =
-         Eigen::Matrix<double, -1, 1>::Constant(n_state,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 4;
       d = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state);
-      Eigen::Matrix<double, -1, 1> e =
-         Eigen::Matrix<double, -1, 1>::Constant(n_region_full,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 5;
       e = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
             n_region_full);
-      Eigen::Matrix<double, -1, 1> beta =
-         Eigen::Matrix<double, -1, 1>::Constant(5,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 6;
       beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(5);
-      double sigma_a = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 7;
       sigma_a = in__.template read_constrain_lub<local_scalar_t__, 
                   jacobian__>(0, 100, lp__);
-      double sigma_b = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 8;
       sigma_b = in__.template read_constrain_lub<local_scalar_t__, 
                   jacobian__>(0, 100, lp__);
-      double sigma_c = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 9;
       sigma_c = in__.template read_constrain_lub<local_scalar_t__, 
                   jacobian__>(0, 100, lp__);
-      double sigma_d = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 10;
       sigma_d = in__.template read_constrain_lub<local_scalar_t__, 
                   jacobian__>(0, 100, lp__);
-      double sigma_e = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 11;
       sigma_e = in__.template read_constrain_lub<local_scalar_t__, 
                   jacobian__>(0, 100, lp__);
-      Eigen::Matrix<double, -1, 1> y_hat =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(a);
-      out__.write(b);
-      out__.write(c);
-      out__.write(d);
-      out__.write(e);
-      out__.write(beta);
-      out__.write(sigma_a);
-      out__.write(sigma_b);
-      out__.write(sigma_c);
-      out__.write(sigma_d);
-      out__.write(sigma_e);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(a);
+        out__.write(b);
+        out__.write(c);
+        out__.write(d);
+        out__.write(e);
+        out__.write(beta);
+        out__.write(sigma_a);
+        out__.write(sigma_b);
+        out__.write(sigma_c);
+        out__.write(sigma_d);
+        out__.write(sigma_e);
         return ;
       } 
       current_statement__ = 14;
@@ -5927,13 +6059,52 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
                                        stan::model::index_uni(i))))),
           "assigning variable y_hat", stan::model::index_uni(i));
       }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(a);
+        out__.write(b);
+        out__.write(c);
+        out__.write(d);
+        out__.write(e);
+        out__.write(beta);
+        out__.write(sigma_a);
+        out__.write(sigma_b);
+        out__.write(sigma_c);
+        out__.write(sigma_d);
+        out__.write(sigma_e);
+        if (emit_transformed_parameters__) {
+          out__.write(y_hat);
+        } 
+        return ;
+      } 
+      out__.write(a);
+      out__.write(b);
+      out__.write(c);
+      out__.write(d);
+      out__.write(e);
+      out__.write(beta);
+      out__.write(sigma_a);
+      out__.write(sigma_b);
+      out__.write(sigma_c);
+      out__.write(sigma_d);
+      out__.write(sigma_e);
       if (emit_transformed_parameters__) {
         out__.write(y_hat);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(a);
+      out__.write(b);
+      out__.write(c);
+      out__.write(d);
+      out__.write(e);
+      out__.write(beta);
+      out__.write(sigma_a);
+      out__.write(sigma_b);
+      out__.write(sigma_c);
+      out__.write(sigma_d);
+      out__.write(sigma_e);
+      if (emit_transformed_parameters__) {
+        out__.write(y_hat);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -6295,9 +6466,6 @@ static constexpr std::array<const char*, 46> locations_array__ =
  " (in 'expr-prop-fail4.stan', line 13, column 2 to column 28)",
  " (in 'expr-prop-fail4.stan', line 16, column 2 to column 47)",
  " (in 'expr-prop-fail4.stan', line 17, column 2 to column 16)",
- " (in 'expr-prop-fail4.stan', line 18, column 2 to column 33)",
- " (in 'expr-prop-fail4.stan', line 19, column 2 to column 29)",
- " (in 'expr-prop-fail4.stan', line 20, column 2 to column 24)",
  " (in 'expr-prop-fail4.stan', line 27, column 2 to column 13)",
  " (in 'expr-prop-fail4.stan', line 28, column 2 to column 13)",
  " (in 'expr-prop-fail4.stan', line 29, column 2 to column 26)",
@@ -6306,6 +6474,9 @@ static constexpr std::array<const char*, 46> locations_array__ =
  " (in 'expr-prop-fail4.stan', line 32, column 2 to column 22)",
  " (in 'expr-prop-fail4.stan', line 34, column 2 to column 14)",
  " (in 'expr-prop-fail4.stan', line 35, column 2 to column 17)",
+ " (in 'expr-prop-fail4.stan', line 18, column 2 to column 33)",
+ " (in 'expr-prop-fail4.stan', line 19, column 2 to column 29)",
+ " (in 'expr-prop-fail4.stan', line 20, column 2 to column 24)",
  " (in 'expr-prop-fail4.stan', line 37, column 2 to column 27)",
  " (in 'expr-prop-fail4.stan', line 38, column 2 to column 27)",
  " (in 'expr-prop-fail4.stan', line 40, column 4 to column 36)",
@@ -6525,13 +6696,13 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       sigma_phi = stan::math::inv(stan::math::sqrt(tau_phi));
       Eigen::Matrix<local_scalar_t__, -1, 1> phi =
          Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
-      current_statement__ = 5;
+      current_statement__ = 13;
       stan::model::assign(phi, phi_std_raw,
         "assigning variable phi", stan::model::index_min_max(1, (N - 1)));
-      current_statement__ = 6;
+      current_statement__ = 14;
       stan::model::assign(phi, -stan::math::sum(phi_std_raw),
         "assigning variable phi", stan::model::index_uni(N));
-      current_statement__ = 7;
+      current_statement__ = 15;
       stan::model::assign(phi,
         stan::math::multiply(stan::model::deep_copy(phi), sigma_phi),
         "assigning variable phi");
@@ -6581,67 +6752,68 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "expr_prop_fail4_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double tau_phi = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> phi_std_raw =
+       Eigen::Matrix<double, -1, 1>::Constant(phi_std_raw_1dim__,
+         std::numeric_limits<double>::quiet_NaN());
+    double sigma_phi = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> phi =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    double beta0 = std::numeric_limits<double>::quiet_NaN();
+    double beta1 = std::numeric_limits<double>::quiet_NaN();
+    double tau_theta = std::numeric_limits<double>::quiet_NaN();
+    double sigma_theta = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> theta =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> theta_std =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> x =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    std::vector<int> y =
+       std::vector<int>(N, std::numeric_limits<int>::min());
     try {
-      double tau_phi = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       tau_phi = in__.template read_constrain_lb<local_scalar_t__, 
                   jacobian__>(0, lp__);
-      Eigen::Matrix<double, -1, 1> phi_std_raw =
-         Eigen::Matrix<double, -1, 1>::Constant(phi_std_raw_1dim__,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       phi_std_raw = in__.template read<
                       Eigen::Matrix<local_scalar_t__, -1, 1>>(
                       phi_std_raw_1dim__);
-      double sigma_phi = std::numeric_limits<double>::quiet_NaN();
-      Eigen::Matrix<double, -1, 1> phi =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(tau_phi);
-      out__.write(phi_std_raw);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(tau_phi);
+        out__.write(phi_std_raw);
         return ;
       } 
       current_statement__ = 3;
       sigma_phi = stan::math::inv(stan::math::sqrt(tau_phi));
-      current_statement__ = 5;
+      current_statement__ = 13;
       stan::model::assign(phi, phi_std_raw,
         "assigning variable phi", stan::model::index_min_max(1, (N - 1)));
-      current_statement__ = 6;
+      current_statement__ = 14;
       stan::model::assign(phi, -stan::math::sum(phi_std_raw),
         "assigning variable phi", stan::model::index_uni(N));
-      current_statement__ = 7;
+      current_statement__ = 15;
       stan::model::assign(phi,
         stan::math::multiply(stan::model::deep_copy(phi), sigma_phi),
         "assigning variable phi");
       current_statement__ = 3;
       stan::math::check_greater_or_equal(function__, "sigma_phi", sigma_phi,
                                             0);
-      if (emit_transformed_parameters__) {
-        out__.write(sigma_phi);
-        out__.write(phi);
-      } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(tau_phi);
+        out__.write(phi_std_raw);
+        if (emit_transformed_parameters__) {
+          out__.write(sigma_phi);
+          out__.write(phi);
+        } 
         return ;
       } 
-      double beta0 = std::numeric_limits<double>::quiet_NaN();
-      double beta1 = std::numeric_limits<double>::quiet_NaN();
-      double tau_theta = std::numeric_limits<double>::quiet_NaN();
-      double sigma_theta = std::numeric_limits<double>::quiet_NaN();
-      Eigen::Matrix<double, -1, 1> theta =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, 1> theta_std =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, 1> x =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
-      std::vector<int> y =
-         std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 16;
       beta0 = stan::math::normal_rng(0, 1, base_rng__);
       current_statement__ = 17;
@@ -6677,12 +6849,18 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
               stan::model::rvalue(theta, "theta", stan::model::index_uni(i))),
             base_rng__), "assigning variable y", stan::model::index_uni(i));
       }
-      current_statement__ = 10;
+      current_statement__ = 7;
       stan::math::check_greater_or_equal(function__, "tau_theta", tau_theta,
                                             0);
-      current_statement__ = 11;
+      current_statement__ = 8;
       stan::math::check_greater_or_equal(function__, "sigma_theta",
                                             sigma_theta, 0);
+      out__.write(tau_phi);
+      out__.write(phi_std_raw);
+      if (emit_transformed_parameters__) {
+        out__.write(sigma_phi);
+        out__.write(phi);
+      } 
       out__.write(beta0);
       out__.write(beta1);
       out__.write(tau_theta);
@@ -6692,6 +6870,22 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       out__.write(x);
       out__.write(y);
     } catch (const std::exception& e) {
+      out__.write(tau_phi);
+      out__.write(phi_std_raw);
+      if (emit_transformed_parameters__) {
+        out__.write(sigma_phi);
+        out__.write(phi);
+      } 
+      if (emit_generated_quantities__) {
+        out__.write(beta0);
+        out__.write(beta1);
+        out__.write(tau_theta);
+        out__.write(sigma_theta);
+        out__.write(theta);
+        out__.write(theta_std);
+        out__.write(x);
+        out__.write(y);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -6996,6 +7190,7 @@ static constexpr std::array<const char*, 81> locations_array__ =
  " (in 'expr-prop-fail5.stan', line 77, column 2 to column 50)",
  " (in 'expr-prop-fail5.stan', line 78, column 2 to column 50)",
  " (in 'expr-prop-fail5.stan', line 79, column 2 to column 10)",
+ " (in 'expr-prop-fail5.stan', line 118, column 2 to column 23)",
  " (in 'expr-prop-fail5.stan', line 82, column 2 to column 23)",
  " (in 'expr-prop-fail5.stan', line 85, column 6 to column 20)",
  " (in 'expr-prop-fail5.stan', line 86, column 6 to column 18)",
@@ -7008,7 +7203,6 @@ static constexpr std::array<const char*, 81> locations_array__ =
  " (in 'expr-prop-fail5.stan', line 83, column 22 to line 92, column 3)",
  " (in 'expr-prop-fail5.stan', line 83, column 2 to line 92, column 3)",
  " (in 'expr-prop-fail5.stan', line 94, column 2 to column 51)",
- " (in 'expr-prop-fail5.stan', line 118, column 2 to column 23)",
  " (in 'expr-prop-fail5.stan', line 120, column 2 to column 25)",
  " (in 'expr-prop-fail5.stan', line 104, column 2 to column 29)",
  " (in 'expr-prop-fail5.stan', line 110, column 8 to column 37)",
@@ -7439,29 +7633,29 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
          Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(nind, n_occasions,
            DUMMY_VAR__);
       local_scalar_t__ mu = DUMMY_VAR__;
-      current_statement__ = 9;
+      current_statement__ = 10;
       mu = stan::math::logit(mean_phi);
-      current_statement__ = 19;
+      current_statement__ = 20;
       for (int i = 1; i <= nind; ++i) {
-        current_statement__ = 13;
+        current_statement__ = 14;
         for (int t = 1;
              t <= (stan::model::rvalue(first, "first",
                      stan::model::index_uni(i)) - 1);
              ++t) {
-          current_statement__ = 10;
+          current_statement__ = 11;
           stan::model::assign(phi, 0,
             "assigning variable phi", stan::model::index_uni(i),
                                         stan::model::index_uni(t));
-          current_statement__ = 11;
+          current_statement__ = 12;
           stan::model::assign(p, 0,
             "assigning variable p", stan::model::index_uni(i),
                                       stan::model::index_uni(t));
         }
-        current_statement__ = 17;
+        current_statement__ = 18;
         for (int t = stan::model::rvalue(first, "first",
                        stan::model::index_uni(i));
              t <= n_occ_minus_1; ++t) {
-          current_statement__ = 14;
+          current_statement__ = 15;
           stan::model::assign(phi,
             stan::math::inv_logit(
               (mu +
@@ -7469,13 +7663,13 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                   stan::model::index_uni(i)))),
             "assigning variable phi", stan::model::index_uni(i),
                                         stan::model::index_uni(t));
-          current_statement__ = 15;
+          current_statement__ = 16;
           stan::model::assign(p, mean_p,
             "assigning variable p", stan::model::index_uni(i),
                                       stan::model::index_uni(t));
         }
       }
-      current_statement__ = 20;
+      current_statement__ = 21;
       stan::model::assign(chi,
         prob_uncaptured(nind, n_occasions, p, phi, pstream__),
         "assigning variable chi");
@@ -7561,68 +7755,68 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "expr_prop_fail5_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double mean_phi = std::numeric_limits<double>::quiet_NaN();
+    double mean_p = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> epsilon =
+       Eigen::Matrix<double, -1, 1>::Constant(nind,
+         std::numeric_limits<double>::quiet_NaN());
+    double sigma = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, -1> phi =
+       Eigen::Matrix<double, -1, -1>::Constant(nind, n_occ_minus_1,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> p =
+       Eigen::Matrix<double, -1, -1>::Constant(nind, n_occ_minus_1,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> chi =
+       Eigen::Matrix<double, -1, -1>::Constant(nind, n_occasions,
+         std::numeric_limits<double>::quiet_NaN());
+    double mu = std::numeric_limits<double>::quiet_NaN();
+    double sigma2 = std::numeric_limits<double>::quiet_NaN();
     try {
-      double mean_phi = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       mean_phi = in__.template read_constrain_lub<local_scalar_t__, 
                    jacobian__>(0, 1, lp__);
-      double mean_p = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       mean_p = in__.template read_constrain_lub<local_scalar_t__, 
                  jacobian__>(0, 1, lp__);
-      Eigen::Matrix<double, -1, 1> epsilon =
-         Eigen::Matrix<double, -1, 1>::Constant(nind,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 3;
       epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                   nind);
-      double sigma = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 4;
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
-      Eigen::Matrix<double, -1, -1> phi =
-         Eigen::Matrix<double, -1, -1>::Constant(nind, n_occ_minus_1,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> p =
-         Eigen::Matrix<double, -1, -1>::Constant(nind, n_occ_minus_1,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> chi =
-         Eigen::Matrix<double, -1, -1>::Constant(nind, n_occasions,
-           std::numeric_limits<double>::quiet_NaN());
-      double mu = std::numeric_limits<double>::quiet_NaN();
-      out__.write(mean_phi);
-      out__.write(mean_p);
-      out__.write(epsilon);
-      out__.write(sigma);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(mean_phi);
+        out__.write(mean_p);
+        out__.write(epsilon);
+        out__.write(sigma);
         return ;
       } 
-      current_statement__ = 9;
+      current_statement__ = 10;
       mu = stan::math::logit(mean_phi);
-      current_statement__ = 19;
+      current_statement__ = 20;
       for (int i = 1; i <= nind; ++i) {
-        current_statement__ = 13;
+        current_statement__ = 14;
         for (int t = 1;
              t <= (stan::model::rvalue(first, "first",
                      stan::model::index_uni(i)) - 1);
              ++t) {
-          current_statement__ = 10;
+          current_statement__ = 11;
           stan::model::assign(phi, 0,
             "assigning variable phi", stan::model::index_uni(i),
                                         stan::model::index_uni(t));
-          current_statement__ = 11;
+          current_statement__ = 12;
           stan::model::assign(p, 0,
             "assigning variable p", stan::model::index_uni(i),
                                       stan::model::index_uni(t));
         }
-        current_statement__ = 17;
+        current_statement__ = 18;
         for (int t = stan::model::rvalue(first, "first",
                        stan::model::index_uni(i));
              t <= n_occ_minus_1; ++t) {
-          current_statement__ = 14;
+          current_statement__ = 15;
           stan::model::assign(phi,
             stan::math::inv_logit(
               (mu +
@@ -7630,13 +7824,13 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                   stan::model::index_uni(i)))),
             "assigning variable phi", stan::model::index_uni(i),
                                         stan::model::index_uni(t));
-          current_statement__ = 15;
+          current_statement__ = 16;
           stan::model::assign(p, mean_p,
             "assigning variable p", stan::model::index_uni(i),
                                       stan::model::index_uni(t));
         }
       }
-      current_statement__ = 20;
+      current_statement__ = 21;
       stan::model::assign(chi,
         prob_uncaptured(nind, n_occasions, p, phi, pstream__),
         "assigning variable chi");
@@ -7652,22 +7846,48 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       stan::math::check_greater_or_equal(function__, "chi", chi, 0);
       current_statement__ = 7;
       stan::math::check_less_or_equal(function__, "chi", chi, 1);
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(mean_phi);
+        out__.write(mean_p);
+        out__.write(epsilon);
+        out__.write(sigma);
+        if (emit_transformed_parameters__) {
+          out__.write(phi);
+          out__.write(p);
+          out__.write(chi);
+          out__.write(mu);
+        } 
+        return ;
+      } 
+      current_statement__ = 22;
+      sigma2 = stan::math::square(sigma);
+      current_statement__ = 9;
+      stan::math::check_greater_or_equal(function__, "sigma2", sigma2, 0);
+      out__.write(mean_phi);
+      out__.write(mean_p);
+      out__.write(epsilon);
+      out__.write(sigma);
       if (emit_transformed_parameters__) {
         out__.write(phi);
         out__.write(p);
         out__.write(chi);
         out__.write(mu);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
-      double sigma2 = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 22;
-      sigma2 = stan::math::square(sigma);
-      current_statement__ = 21;
-      stan::math::check_greater_or_equal(function__, "sigma2", sigma2, 0);
       out__.write(sigma2);
     } catch (const std::exception& e) {
+      out__.write(mean_phi);
+      out__.write(mean_p);
+      out__.write(epsilon);
+      out__.write(sigma);
+      if (emit_transformed_parameters__) {
+        out__.write(phi);
+        out__.write(p);
+        out__.write(chi);
+        out__.write(mu);
+      } 
+      if (emit_generated_quantities__) {
+        out__.write(sigma2);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -7996,6 +8216,11 @@ static constexpr std::array<const char*, 158> locations_array__ =
  " (in 'expr-prop-fail6.stan', line 172, column 2 to column 25)",
  " (in 'expr-prop-fail6.stan', line 173, column 2 to column 43)",
  " (in 'expr-prop-fail6.stan', line 174, column 2 to column 47)",
+ " (in 'expr-prop-fail6.stan', line 212, column 2 to column 23)",
+ " (in 'expr-prop-fail6.stan', line 213, column 2 to column 22)",
+ " (in 'expr-prop-fail6.stan', line 214, column 2 to column 36)",
+ " (in 'expr-prop-fail6.stan', line 215, column 2 to column 36)",
+ " (in 'expr-prop-fail6.stan', line 216, column 2 to column 48)",
  " (in 'expr-prop-fail6.stan', line 177, column 2 to column 49)",
  " (in 'expr-prop-fail6.stan', line 179, column 4 to column 51)",
  " (in 'expr-prop-fail6.stan', line 178, column 2 to line 179, column 51)",
@@ -8009,11 +8234,6 @@ static constexpr std::array<const char*, 158> locations_array__ =
  " (in 'expr-prop-fail6.stan', line 194, column 4 to column 26)",
  " (in 'expr-prop-fail6.stan', line 186, column 2 to line 195, column 3)",
  " (in 'expr-prop-fail6.stan', line 198, column 2 to column 32)",
- " (in 'expr-prop-fail6.stan', line 212, column 2 to column 23)",
- " (in 'expr-prop-fail6.stan', line 213, column 2 to column 22)",
- " (in 'expr-prop-fail6.stan', line 214, column 2 to column 36)",
- " (in 'expr-prop-fail6.stan', line 215, column 2 to column 36)",
- " (in 'expr-prop-fail6.stan', line 216, column 2 to column 48)",
  " (in 'expr-prop-fail6.stan', line 218, column 2 to column 25)",
  " (in 'expr-prop-fail6.stan', line 222, column 4 to column 14)",
  " (in 'expr-prop-fail6.stan', line 232, column 6 to column 44)",
@@ -8841,46 +9061,46 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       Eigen::Matrix<local_scalar_t__, -1, -1> chi =
          Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(M, n_occasions,
            DUMMY_VAR__);
-      current_statement__ = 12;
+      current_statement__ = 17;
       stan::model::assign(phi,
         stan::math::rep_matrix(mean_phi, M, (n_occasions - 1)),
         "assigning variable phi");
-      current_statement__ = 14;
+      current_statement__ = 19;
       for (int t = 1; t <= n_occasions; ++t) {
-        current_statement__ = 13;
+        current_statement__ = 18;
         stan::model::assign(p,
           stan::math::inv_logit(
             stan::math::add(stan::math::logit(mean_p), epsilon)),
           "assigning variable p", stan::model::index_omni(),
                                     stan::model::index_uni(t));
       }
-      current_statement__ = 15;
+      current_statement__ = 20;
       stan::model::assign(b, stan::math::divide(beta, stan::math::sum(beta)),
         "assigning variable b");
       {
         local_scalar_t__ cum_b = DUMMY_VAR__;
-        current_statement__ = 16;
+        current_statement__ = 21;
         cum_b = stan::model::rvalue(b, "b", stan::model::index_uni(1));
-        current_statement__ = 17;
+        current_statement__ = 22;
         stan::model::assign(nu,
           stan::model::rvalue(b, "b", stan::model::index_uni(1)),
           "assigning variable nu", stan::model::index_uni(1));
-        current_statement__ = 21;
+        current_statement__ = 26;
         for (int t = 2; t <= (n_occasions - 1); ++t) {
-          current_statement__ = 18;
+          current_statement__ = 23;
           stan::model::assign(nu,
             (stan::model::rvalue(b, "b", stan::model::index_uni(t)) /
               (1.0 - cum_b)),
             "assigning variable nu", stan::model::index_uni(t));
-          current_statement__ = 19;
+          current_statement__ = 24;
           cum_b = (cum_b +
                     stan::model::rvalue(b, "b", stan::model::index_uni(t)));
         }
-        current_statement__ = 22;
+        current_statement__ = 27;
         stan::model::assign(nu, 1.0,
           "assigning variable nu", stan::model::index_uni(n_occasions));
       }
-      current_statement__ = 24;
+      current_statement__ = 29;
       stan::model::assign(chi, prob_uncaptured(p, phi, pstream__),
         "assigning variable chi");
       current_statement__ = 7;
@@ -8940,102 +9160,110 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "expr_prop_fail6_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double mean_phi = std::numeric_limits<double>::quiet_NaN();
+    double mean_p = std::numeric_limits<double>::quiet_NaN();
+    double psi = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> beta =
+       Eigen::Matrix<double, -1, 1>::Constant(n_occasions,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> epsilon =
+       Eigen::Matrix<double, -1, 1>::Constant(M,
+         std::numeric_limits<double>::quiet_NaN());
+    double sigma = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, -1> phi =
+       Eigen::Matrix<double, -1, -1>::Constant(M, phi_2dim__,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> p =
+       Eigen::Matrix<double, -1, -1>::Constant(M, n_occasions,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> b =
+       Eigen::Matrix<double, -1, 1>::Constant(n_occasions,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> nu =
+       Eigen::Matrix<double, -1, 1>::Constant(n_occasions,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> chi =
+       Eigen::Matrix<double, -1, -1>::Constant(M, n_occasions,
+         std::numeric_limits<double>::quiet_NaN());
+    double sigma2 = std::numeric_limits<double>::quiet_NaN();
+    int Nsuper = std::numeric_limits<int>::min();
+    std::vector<int> N =
+       std::vector<int>(n_occasions, std::numeric_limits<int>::min());
+    std::vector<int> B =
+       std::vector<int>(n_occasions, std::numeric_limits<int>::min());
+    std::vector<std::vector<int>> z =
+       std::vector<std::vector<int>>(M, 
+         std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
     try {
-      double mean_phi = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       mean_phi = in__.template read_constrain_lub<local_scalar_t__, 
                    jacobian__>(0, 1, lp__);
-      double mean_p = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       mean_p = in__.template read_constrain_lub<local_scalar_t__, 
                  jacobian__>(0, 1, lp__);
-      double psi = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
       psi = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
               1, lp__);
-      Eigen::Matrix<double, -1, 1> beta =
-         Eigen::Matrix<double, -1, 1>::Constant(n_occasions,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 4;
       beta = in__.template read_constrain_lb<
                Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(0, lp__,
                n_occasions);
-      Eigen::Matrix<double, -1, 1> epsilon =
-         Eigen::Matrix<double, -1, 1>::Constant(M,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 5;
       epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(M);
-      double sigma = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 6;
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
-      Eigen::Matrix<double, -1, -1> phi =
-         Eigen::Matrix<double, -1, -1>::Constant(M, phi_2dim__,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> p =
-         Eigen::Matrix<double, -1, -1>::Constant(M, n_occasions,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, 1> b =
-         Eigen::Matrix<double, -1, 1>::Constant(n_occasions,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, 1> nu =
-         Eigen::Matrix<double, -1, 1>::Constant(n_occasions,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> chi =
-         Eigen::Matrix<double, -1, -1>::Constant(M, n_occasions,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(mean_phi);
-      out__.write(mean_p);
-      out__.write(psi);
-      out__.write(beta);
-      out__.write(epsilon);
-      out__.write(sigma);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(mean_phi);
+        out__.write(mean_p);
+        out__.write(psi);
+        out__.write(beta);
+        out__.write(epsilon);
+        out__.write(sigma);
         return ;
       } 
-      current_statement__ = 12;
+      current_statement__ = 17;
       stan::model::assign(phi,
         stan::math::rep_matrix(mean_phi, M, (n_occasions - 1)),
         "assigning variable phi");
-      current_statement__ = 14;
+      current_statement__ = 19;
       for (int t = 1; t <= n_occasions; ++t) {
-        current_statement__ = 13;
+        current_statement__ = 18;
         stan::model::assign(p,
           stan::math::inv_logit(
             stan::math::add(stan::math::logit(mean_p), epsilon)),
           "assigning variable p", stan::model::index_omni(),
                                     stan::model::index_uni(t));
       }
-      current_statement__ = 15;
+      current_statement__ = 20;
       stan::model::assign(b, stan::math::divide(beta, stan::math::sum(beta)),
         "assigning variable b");
       {
         double cum_b = std::numeric_limits<double>::quiet_NaN();
-        current_statement__ = 16;
+        current_statement__ = 21;
         cum_b = stan::model::rvalue(b, "b", stan::model::index_uni(1));
-        current_statement__ = 17;
+        current_statement__ = 22;
         stan::model::assign(nu,
           stan::model::rvalue(b, "b", stan::model::index_uni(1)),
           "assigning variable nu", stan::model::index_uni(1));
-        current_statement__ = 21;
+        current_statement__ = 26;
         for (int t = 2; t <= (n_occasions - 1); ++t) {
-          current_statement__ = 18;
+          current_statement__ = 23;
           stan::model::assign(nu,
             (stan::model::rvalue(b, "b", stan::model::index_uni(t)) /
               (1.0 - cum_b)),
             "assigning variable nu", stan::model::index_uni(t));
-          current_statement__ = 19;
+          current_statement__ = 24;
           cum_b = (cum_b +
                     stan::model::rvalue(b, "b", stan::model::index_uni(t)));
         }
-        current_statement__ = 22;
+        current_statement__ = 27;
         stan::model::assign(nu, 1.0,
           "assigning variable nu", stan::model::index_uni(n_occasions));
       }
-      current_statement__ = 24;
+      current_statement__ = 29;
       stan::model::assign(chi, prob_uncaptured(p, phi, pstream__),
         "assigning variable chi");
       current_statement__ = 7;
@@ -9056,25 +9284,22 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       stan::math::check_greater_or_equal(function__, "chi", chi, 0);
       current_statement__ = 11;
       stan::math::check_less_or_equal(function__, "chi", chi, 1);
-      if (emit_transformed_parameters__) {
-        out__.write(phi);
-        out__.write(p);
-        out__.write(b);
-        out__.write(nu);
-        out__.write(chi);
-      } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(mean_phi);
+        out__.write(mean_p);
+        out__.write(psi);
+        out__.write(beta);
+        out__.write(epsilon);
+        out__.write(sigma);
+        if (emit_transformed_parameters__) {
+          out__.write(phi);
+          out__.write(p);
+          out__.write(b);
+          out__.write(nu);
+          out__.write(chi);
+        } 
         return ;
       } 
-      double sigma2 = std::numeric_limits<double>::quiet_NaN();
-      int Nsuper = std::numeric_limits<int>::min();
-      std::vector<int> N =
-         std::vector<int>(n_occasions, std::numeric_limits<int>::min());
-      std::vector<int> B =
-         std::vector<int>(n_occasions, std::numeric_limits<int>::min());
-      std::vector<std::vector<int>> z =
-         std::vector<std::vector<int>>(M, 
-           std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
       current_statement__ = 30;
       sigma2 = stan::math::square(sigma);
       current_statement__ = 42;
@@ -9188,18 +9413,31 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         current_statement__ = 63;
         Nsuper = stan::math::sum(Nalive);
       }
-      current_statement__ = 25;
+      current_statement__ = 12;
       stan::math::check_greater_or_equal(function__, "sigma2", sigma2, 0);
-      current_statement__ = 26;
+      current_statement__ = 13;
       stan::math::check_greater_or_equal(function__, "Nsuper", Nsuper, 0);
-      current_statement__ = 27;
+      current_statement__ = 14;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
-      current_statement__ = 28;
+      current_statement__ = 15;
       stan::math::check_greater_or_equal(function__, "B", B, 0);
-      current_statement__ = 29;
+      current_statement__ = 16;
       stan::math::check_greater_or_equal(function__, "z", z, 0);
-      current_statement__ = 29;
+      current_statement__ = 16;
       stan::math::check_less_or_equal(function__, "z", z, 1);
+      out__.write(mean_phi);
+      out__.write(mean_p);
+      out__.write(psi);
+      out__.write(beta);
+      out__.write(epsilon);
+      out__.write(sigma);
+      if (emit_transformed_parameters__) {
+        out__.write(phi);
+        out__.write(p);
+        out__.write(b);
+        out__.write(nu);
+        out__.write(chi);
+      } 
       out__.write(sigma2);
       out__.write(Nsuper);
       out__.write(N);
@@ -9210,6 +9448,30 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         }
       }
     } catch (const std::exception& e) {
+      out__.write(mean_phi);
+      out__.write(mean_p);
+      out__.write(psi);
+      out__.write(beta);
+      out__.write(epsilon);
+      out__.write(sigma);
+      if (emit_transformed_parameters__) {
+        out__.write(phi);
+        out__.write(p);
+        out__.write(b);
+        out__.write(nu);
+        out__.write(chi);
+      } 
+      if (emit_generated_quantities__) {
+        out__.write(sigma2);
+        out__.write(Nsuper);
+        out__.write(N);
+        out__.write(B);
+        for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+            out__.write(z[(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -9947,44 +10209,51 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "expr_prop_fail7_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
-    try {
-      Eigen::Matrix<double, -1, 1> pi =
+    Eigen::Matrix<double, -1, 1> pi =
+       Eigen::Matrix<double, -1, 1>::Constant(K,
+         std::numeric_limits<double>::quiet_NaN());
+    std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> theta =
+       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(J, 
+         std::vector<Eigen::Matrix<double, -1, 1>>(K, 
+           Eigen::Matrix<double, -1, 1>::Constant(K,
+             std::numeric_limits<double>::quiet_NaN())));
+    std::vector<Eigen::Matrix<double, -1, 1>> log_Pr_z =
+       std::vector<Eigen::Matrix<double, -1, 1>>(I, 
          Eigen::Matrix<double, -1, 1>::Constant(K,
-           std::numeric_limits<double>::quiet_NaN());
+           std::numeric_limits<double>::quiet_NaN()));
+    try {
       current_statement__ = 1;
       pi = in__.template read_constrain_simplex<
              Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__, K);
-      std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> theta =
-         std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(J, 
-           std::vector<Eigen::Matrix<double, -1, 1>>(K, 
-             Eigen::Matrix<double, -1, 1>::Constant(K,
-               std::numeric_limits<double>::quiet_NaN())));
       current_statement__ = 2;
       theta = in__.template read_constrain_simplex<
                 std::vector<
                   std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, 
                 jacobian__>(lp__, J, K, K);
-      out__.write(pi);
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= J; ++sym3__) {
-            out__.write(theta[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
-          }
-        }
-      }
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(pi);
+        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= J; ++sym3__) {
+              out__.write(theta[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+            }
+          }
+        }
         return ;
       } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(pi);
+        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= J; ++sym3__) {
+              out__.write(theta[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+            }
+          }
+        }
         return ;
       } 
-      std::vector<Eigen::Matrix<double, -1, 1>> log_Pr_z =
-         std::vector<Eigen::Matrix<double, -1, 1>>(I, 
-           Eigen::Matrix<double, -1, 1>::Constant(K,
-             std::numeric_limits<double>::quiet_NaN()));
       current_statement__ = 10;
       for (int i = 1; i <= I; ++i) {
         current_statement__ = 4;
@@ -10014,12 +10283,35 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           stan::math::subtract(log_q, stan::math::log_sum_exp(log_q)),
           "assigning variable log_Pr_z", stan::model::index_uni(i));
       }
+      out__.write(pi);
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= J; ++sym3__) {
+            out__.write(theta[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+      }
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
           out__.write(log_Pr_z[(sym2__ - 1)][(sym1__ - 1)]);
         }
       }
     } catch (const std::exception& e) {
+      out__.write(pi);
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= J; ++sym3__) {
+            out__.write(theta[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+      }
+      if (emit_generated_quantities__) {
+        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
+            out__.write(log_Pr_z[(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -10562,47 +10854,46 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "expr_prop_fail8_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double beta0 = std::numeric_limits<double>::quiet_NaN();
+    double beta1 = std::numeric_limits<double>::quiet_NaN();
+    double tau_theta = std::numeric_limits<double>::quiet_NaN();
+    double tau_phi = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> theta_std =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> phi_std_raw =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    double sigma_phi = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> phi =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      double beta0 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       beta0 = in__.template read<local_scalar_t__>();
-      double beta1 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       beta1 = in__.template read<local_scalar_t__>();
-      double tau_theta = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
       tau_theta = in__.template read_constrain_lb<local_scalar_t__, 
                     jacobian__>(0, lp__);
-      double tau_phi = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 4;
       tau_phi = in__.template read_constrain_lb<local_scalar_t__, 
                   jacobian__>(0, lp__);
-      Eigen::Matrix<double, -1, 1> theta_std =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 5;
       theta_std = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                     N);
-      Eigen::Matrix<double, -1, 1> phi_std_raw =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 6;
       phi_std_raw = in__.template read<
                       Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
-      double sigma_phi = std::numeric_limits<double>::quiet_NaN();
-      Eigen::Matrix<double, -1, 1> phi =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(beta0);
-      out__.write(beta1);
-      out__.write(tau_theta);
-      out__.write(tau_phi);
-      out__.write(theta_std);
-      out__.write(phi_std_raw);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(beta0);
+        out__.write(beta1);
+        out__.write(tau_theta);
+        out__.write(tau_phi);
+        out__.write(theta_std);
+        out__.write(phi_std_raw);
         return ;
       } 
       current_statement__ = 7;
@@ -10617,14 +10908,40 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       current_statement__ = 7;
       stan::math::check_greater_or_equal(function__, "sigma_phi", sigma_phi,
                                             0);
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(beta0);
+        out__.write(beta1);
+        out__.write(tau_theta);
+        out__.write(tau_phi);
+        out__.write(theta_std);
+        out__.write(phi_std_raw);
+        if (emit_transformed_parameters__) {
+          out__.write(sigma_phi);
+          out__.write(phi);
+        } 
+        return ;
+      } 
+      out__.write(beta0);
+      out__.write(beta1);
+      out__.write(tau_theta);
+      out__.write(tau_phi);
+      out__.write(theta_std);
+      out__.write(phi_std_raw);
       if (emit_transformed_parameters__) {
         out__.write(sigma_phi);
         out__.write(phi);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(beta0);
+      out__.write(beta1);
+      out__.write(tau_theta);
+      out__.write(tau_phi);
+      out__.write(theta_std);
+      out__.write(phi_std_raw);
+      if (emit_transformed_parameters__) {
+        out__.write(sigma_phi);
+        out__.write(phi);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -11505,33 +11822,32 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "fails_test_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double mean_p = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> beta =
+       Eigen::Matrix<double, -1, 1>::Constant(max_age,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> phi =
+       Eigen::Matrix<double, -1, -1>::Constant(nind, n_occ_minus_1,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> p =
+       Eigen::Matrix<double, -1, -1>::Constant(nind, n_occ_minus_1,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> chi =
+       Eigen::Matrix<double, -1, -1>::Constant(nind, n_occasions,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      double mean_p = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       mean_p = in__.template read_constrain_lub<local_scalar_t__, 
                  jacobian__>(0, 1, lp__);
-      Eigen::Matrix<double, -1, 1> beta =
-         Eigen::Matrix<double, -1, 1>::Constant(max_age,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       beta = in__.template read_constrain_lub<
                Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(0, 1,
                lp__, max_age);
-      Eigen::Matrix<double, -1, -1> phi =
-         Eigen::Matrix<double, -1, -1>::Constant(nind, n_occ_minus_1,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> p =
-         Eigen::Matrix<double, -1, -1>::Constant(nind, n_occ_minus_1,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> chi =
-         Eigen::Matrix<double, -1, -1>::Constant(nind, n_occasions,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(mean_p);
-      out__.write(beta);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(mean_p);
+        out__.write(beta);
         return ;
       } 
       current_statement__ = 15;
@@ -11584,15 +11900,31 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
       stan::math::check_greater_or_equal(function__, "chi", chi, 0);
       current_statement__ = 5;
       stan::math::check_less_or_equal(function__, "chi", chi, 1);
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(mean_p);
+        out__.write(beta);
+        if (emit_transformed_parameters__) {
+          out__.write(phi);
+          out__.write(p);
+          out__.write(chi);
+        } 
+        return ;
+      } 
+      out__.write(mean_p);
+      out__.write(beta);
       if (emit_transformed_parameters__) {
         out__.write(phi);
         out__.write(p);
         out__.write(chi);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(mean_p);
+      out__.write(beta);
+      if (emit_transformed_parameters__) {
+        out__.write(phi);
+        out__.write(p);
+        out__.write(chi);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -11893,11 +12225,6 @@ static constexpr std::array<const char*, 158> locations_array__ =
  " (in 'inlining-fail2.stan', line 184, column 2 to column 51)",
  " (in 'inlining-fail2.stan', line 185, column 2 to column 45)",
  " (in 'inlining-fail2.stan', line 186, column 2 to column 47)",
- " (in 'inlining-fail2.stan', line 191, column 6 to column 58)",
- " (in 'inlining-fail2.stan', line 190, column 4 to line 191, column 58)",
- " (in 'inlining-fail2.stan', line 189, column 2 to line 191, column 58)",
- " (in 'inlining-fail2.stan', line 192, column 2 to column 41)",
- " (in 'inlining-fail2.stan', line 195, column 2 to column 32)",
  " (in 'inlining-fail2.stan', line 208, column 2 to column 14)",
  " (in 'inlining-fail2.stan', line 209, column 2 to column 11)",
  " (in 'inlining-fail2.stan', line 210, column 2 to column 24)",
@@ -11905,6 +12232,11 @@ static constexpr std::array<const char*, 158> locations_array__ =
  " (in 'inlining-fail2.stan', line 212, column 2 to column 27)",
  " (in 'inlining-fail2.stan', line 213, column 2 to column 27)",
  " (in 'inlining-fail2.stan', line 214, column 2 to column 30)",
+ " (in 'inlining-fail2.stan', line 191, column 6 to column 58)",
+ " (in 'inlining-fail2.stan', line 190, column 4 to line 191, column 58)",
+ " (in 'inlining-fail2.stan', line 189, column 2 to line 191, column 58)",
+ " (in 'inlining-fail2.stan', line 192, column 2 to column 41)",
+ " (in 'inlining-fail2.stan', line 195, column 2 to column 32)",
  " (in 'inlining-fail2.stan', line 218, column 4 to column 14)",
  " (in 'inlining-fail2.stan', line 219, column 4 to column 13)",
  " (in 'inlining-fail2.stan', line 221, column 4 to column 38)",
@@ -12789,11 +13121,11 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       Eigen::Matrix<local_scalar_t__, -1, -1> chi =
          Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(M, n_occasions,
            DUMMY_VAR__);
-      current_statement__ = 11;
+      current_statement__ = 18;
       for (int t = 1; t <= (n_occasions - 1); ++t) {
-        current_statement__ = 10;
+        current_statement__ = 17;
         for (int i = 1; i <= M; ++i) {
-          current_statement__ = 9;
+          current_statement__ = 16;
           stan::model::assign(phi,
             stan::math::inv_logit(
               (stan::math::logit(mean_phi) +
@@ -12803,10 +13135,10 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                                         stan::model::index_uni(t));
         }
       }
-      current_statement__ = 12;
+      current_statement__ = 19;
       stan::model::assign(p, stan::math::rep_matrix(mean_p, M, n_occasions),
         "assigning variable p");
-      current_statement__ = 13;
+      current_statement__ = 20;
       stan::model::assign(chi, prob_uncaptured(p, phi, pstream__),
         "assigning variable chi");
       current_statement__ = 6;
@@ -12858,57 +13190,69 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "inlining_fail2_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double mean_phi = std::numeric_limits<double>::quiet_NaN();
+    double mean_p = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> gamma =
+       Eigen::Matrix<double, -1, 1>::Constant(n_occasions,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> epsilon =
+       Eigen::Matrix<double, -1, 1>::Constant(epsilon_1dim__,
+         std::numeric_limits<double>::quiet_NaN());
+    double sigma = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, -1> phi =
+       Eigen::Matrix<double, -1, -1>::Constant(M, phi_2dim__,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> p =
+       Eigen::Matrix<double, -1, -1>::Constant(M, n_occasions,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> chi =
+       Eigen::Matrix<double, -1, -1>::Constant(M, n_occasions,
+         std::numeric_limits<double>::quiet_NaN());
+    double sigma2 = std::numeric_limits<double>::quiet_NaN();
+    double psi = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> b =
+       Eigen::Matrix<double, -1, 1>::Constant(n_occasions,
+         std::numeric_limits<double>::quiet_NaN());
+    int Nsuper = std::numeric_limits<int>::min();
+    std::vector<int> N =
+       std::vector<int>(n_occasions, std::numeric_limits<int>::min());
+    std::vector<int> B =
+       std::vector<int>(n_occasions, std::numeric_limits<int>::min());
+    std::vector<std::vector<int>> z =
+       std::vector<std::vector<int>>(M, 
+         std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
     try {
-      double mean_phi = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       mean_phi = in__.template read_constrain_lub<local_scalar_t__, 
                    jacobian__>(0, 1, lp__);
-      double mean_p = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       mean_p = in__.template read_constrain_lub<local_scalar_t__, 
                  jacobian__>(0, 1, lp__);
-      Eigen::Matrix<double, -1, 1> gamma =
-         Eigen::Matrix<double, -1, 1>::Constant(n_occasions,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 3;
       gamma = in__.template read_constrain_lub<
                 Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(0, 1,
                 lp__, n_occasions);
-      Eigen::Matrix<double, -1, 1> epsilon =
-         Eigen::Matrix<double, -1, 1>::Constant(epsilon_1dim__,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 4;
       epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                   epsilon_1dim__);
-      double sigma = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 5;
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
-      Eigen::Matrix<double, -1, -1> phi =
-         Eigen::Matrix<double, -1, -1>::Constant(M, phi_2dim__,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> p =
-         Eigen::Matrix<double, -1, -1>::Constant(M, n_occasions,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> chi =
-         Eigen::Matrix<double, -1, -1>::Constant(M, n_occasions,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(mean_phi);
-      out__.write(mean_p);
-      out__.write(gamma);
-      out__.write(epsilon);
-      out__.write(sigma);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(mean_phi);
+        out__.write(mean_p);
+        out__.write(gamma);
+        out__.write(epsilon);
+        out__.write(sigma);
         return ;
       } 
-      current_statement__ = 11;
+      current_statement__ = 18;
       for (int t = 1; t <= (n_occasions - 1); ++t) {
-        current_statement__ = 10;
+        current_statement__ = 17;
         for (int i = 1; i <= M; ++i) {
-          current_statement__ = 9;
+          current_statement__ = 16;
           stan::model::assign(phi,
             stan::math::inv_logit(
               (stan::math::logit(mean_phi) +
@@ -12918,10 +13262,10 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                                         stan::model::index_uni(t));
         }
       }
-      current_statement__ = 12;
+      current_statement__ = 19;
       stan::model::assign(p, stan::math::rep_matrix(mean_p, M, n_occasions),
         "assigning variable p");
-      current_statement__ = 13;
+      current_statement__ = 20;
       stan::model::assign(chi, prob_uncaptured(p, phi, pstream__),
         "assigning variable chi");
       current_statement__ = 6;
@@ -12936,27 +13280,19 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       stan::math::check_greater_or_equal(function__, "chi", chi, 0);
       current_statement__ = 8;
       stan::math::check_less_or_equal(function__, "chi", chi, 1);
-      if (emit_transformed_parameters__) {
-        out__.write(phi);
-        out__.write(p);
-        out__.write(chi);
-      } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(mean_phi);
+        out__.write(mean_p);
+        out__.write(gamma);
+        out__.write(epsilon);
+        out__.write(sigma);
+        if (emit_transformed_parameters__) {
+          out__.write(phi);
+          out__.write(p);
+          out__.write(chi);
+        } 
         return ;
       } 
-      double sigma2 = std::numeric_limits<double>::quiet_NaN();
-      double psi = std::numeric_limits<double>::quiet_NaN();
-      Eigen::Matrix<double, -1, 1> b =
-         Eigen::Matrix<double, -1, 1>::Constant(n_occasions,
-           std::numeric_limits<double>::quiet_NaN());
-      int Nsuper = std::numeric_limits<int>::min();
-      std::vector<int> N =
-         std::vector<int>(n_occasions, std::numeric_limits<int>::min());
-      std::vector<int> B =
-         std::vector<int>(n_occasions, std::numeric_limits<int>::min());
-      std::vector<std::vector<int>> z =
-         std::vector<std::vector<int>>(M, 
-           std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
       current_statement__ = 30;
       for (int i = 1; i <= M; ++i) {
         int q = std::numeric_limits<int>::min();
@@ -13077,6 +13413,16 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         current_statement__ = 56;
         Nsuper = stan::math::sum(Nalive);
       }
+      out__.write(mean_phi);
+      out__.write(mean_p);
+      out__.write(gamma);
+      out__.write(epsilon);
+      out__.write(sigma);
+      if (emit_transformed_parameters__) {
+        out__.write(phi);
+        out__.write(p);
+        out__.write(chi);
+      } 
       out__.write(sigma2);
       out__.write(psi);
       out__.write(b);
@@ -13089,6 +13435,29 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         }
       }
     } catch (const std::exception& e) {
+      out__.write(mean_phi);
+      out__.write(mean_p);
+      out__.write(gamma);
+      out__.write(epsilon);
+      out__.write(sigma);
+      if (emit_transformed_parameters__) {
+        out__.write(phi);
+        out__.write(p);
+        out__.write(chi);
+      } 
+      if (emit_generated_quantities__) {
+        out__.write(sigma2);
+        out__.write(psi);
+        out__.write(b);
+        out__.write(Nsuper);
+        out__.write(N);
+        out__.write(B);
+        for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+            out__.write(z[(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -13939,21 +14308,23 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "lcm_experiment2_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double x = std::numeric_limits<double>::quiet_NaN();
     try {
-      double x = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       x = in__.template read<local_scalar_t__>();
-      out__.write(x);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(x);
         return ;
       } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(x);
         return ;
       } 
+      out__.write(x);
     } catch (const std::exception& e) {
+      out__.write(x);
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -14289,22 +14660,24 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "lcm_fails_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    std::vector<double> theta =
+       std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
     try {
-      std::vector<double> theta =
-         std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
-      out__.write(theta);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(theta);
         return ;
       } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(theta);
         return ;
       } 
+      out__.write(theta);
     } catch (const std::exception& e) {
+      out__.write(theta);
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -15064,30 +15437,29 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "lcm_fails2_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double mean_phi = std::numeric_limits<double>::quiet_NaN();
+    double mean_p = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, -1> phi =
+       Eigen::Matrix<double, -1, -1>::Constant(nind, n_occ_minus_1,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> p =
+       Eigen::Matrix<double, -1, -1>::Constant(nind, n_occ_minus_1,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> chi =
+       Eigen::Matrix<double, -1, -1>::Constant(nind, n_occasions,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      double mean_phi = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       mean_phi = in__.template read_constrain_lub<local_scalar_t__, 
                    jacobian__>(0, 1, lp__);
-      double mean_p = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       mean_p = in__.template read_constrain_lub<local_scalar_t__, 
                  jacobian__>(0, 1, lp__);
-      Eigen::Matrix<double, -1, -1> phi =
-         Eigen::Matrix<double, -1, -1>::Constant(nind, n_occ_minus_1,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> p =
-         Eigen::Matrix<double, -1, -1>::Constant(nind, n_occ_minus_1,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> chi =
-         Eigen::Matrix<double, -1, -1>::Constant(nind, n_occasions,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(mean_phi);
-      out__.write(mean_p);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(mean_phi);
+        out__.write(mean_p);
         return ;
       } 
       current_statement__ = 15;
@@ -15136,15 +15508,31 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
       stan::math::check_greater_or_equal(function__, "chi", chi, 0);
       current_statement__ = 5;
       stan::math::check_less_or_equal(function__, "chi", chi, 1);
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(mean_phi);
+        out__.write(mean_p);
+        if (emit_transformed_parameters__) {
+          out__.write(phi);
+          out__.write(p);
+          out__.write(chi);
+        } 
+        return ;
+      } 
+      out__.write(mean_phi);
+      out__.write(mean_p);
       if (emit_transformed_parameters__) {
         out__.write(phi);
         out__.write(p);
         out__.write(chi);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(mean_phi);
+      out__.write(mean_p);
+      if (emit_transformed_parameters__) {
+        out__.write(phi);
+        out__.write(p);
+        out__.write(chi);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -15633,35 +16021,47 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "lupdf_inlining_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double mu = std::numeric_limits<double>::quiet_NaN();
+    double tp = std::numeric_limits<double>::quiet_NaN();
+    double lbaz = std::numeric_limits<double>::quiet_NaN();
+    double lbar = std::numeric_limits<double>::quiet_NaN();
     try {
-      double mu = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
-      double tp = std::numeric_limits<double>::quiet_NaN();
-      out__.write(mu);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(mu);
         return ;
       } 
       current_statement__ = 2;
       tp = foo_lpdf<false>(mu, 1.0, pstream__);
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(mu);
+        if (emit_transformed_parameters__) {
+          out__.write(tp);
+        } 
+        return ;
+      } 
+      current_statement__ = 3;
+      lbaz = baz_lpdf<false>(mu, pstream__);
+      current_statement__ = 4;
+      lbar = bar_lpmf<false>(n, mu, pstream__);
+      out__.write(mu);
       if (emit_transformed_parameters__) {
         out__.write(tp);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
-      double lbaz = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 3;
-      lbaz = baz_lpdf<false>(mu, pstream__);
-      double lbar = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 4;
-      lbar = bar_lpmf<false>(n, mu, pstream__);
       out__.write(lbaz);
       out__.write(lbar);
     } catch (const std::exception& e) {
+      out__.write(mu);
+      if (emit_transformed_parameters__) {
+        out__.write(tp);
+      } 
+      if (emit_generated_quantities__) {
+        out__.write(lbaz);
+        out__.write(lbar);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -15880,11 +16280,11 @@ static constexpr std::array<const char*, 55> locations_array__ =
  " (in 'off-dce.stan', line 24, column 2 to column 14)",
  " (in 'off-dce.stan', line 27, column 2 to column 22)",
  " (in 'off-dce.stan', line 28, column 2 to column 23)",
- " (in 'off-dce.stan', line 30, column 2 to column 39)",
- " (in 'off-dce.stan', line 31, column 2 to column 48)",
  " (in 'off-dce.stan', line 54, column 2 to column 13)",
  " (in 'off-dce.stan', line 55, column 2 to column 24)",
  " (in 'off-dce.stan', line 56, column 2 to column 17)",
+ " (in 'off-dce.stan', line 30, column 2 to column 39)",
+ " (in 'off-dce.stan', line 31, column 2 to column 48)",
  " (in 'off-dce.stan', line 68, column 6 to column 21)",
  " (in 'off-dce.stan', line 69, column 6 to column 15)",
  " (in 'off-dce.stan', line 66, column 11 to line 70, column 5)",
@@ -16133,11 +16533,11 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
          Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(R, DUMMY_VAR__);
       Eigen::Matrix<local_scalar_t__, -1, -1> logit_p =
          Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(R, T, DUMMY_VAR__);
-      current_statement__ = 7;
+      current_statement__ = 10;
       stan::model::assign(logit_psi,
         stan::math::add(alpha_occ, stan::math::multiply(beta_occ, X)),
         "assigning variable logit_psi");
-      current_statement__ = 8;
+      current_statement__ = 11;
       stan::model::assign(logit_p,
         stan::math::rep_matrix(
           stan::math::add(alpha_p, stan::math::multiply(beta_p, X)), T),
@@ -16204,56 +16604,59 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "off_dce_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double alpha_occ = std::numeric_limits<double>::quiet_NaN();
+    double beta_occ = std::numeric_limits<double>::quiet_NaN();
+    double alpha_p = std::numeric_limits<double>::quiet_NaN();
+    double beta_p = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> logit_psi =
+       Eigen::Matrix<double, -1, 1>::Constant(R,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> logit_p =
+       Eigen::Matrix<double, -1, -1>::Constant(R, T,
+         std::numeric_limits<double>::quiet_NaN());
+    int occ_fs = std::numeric_limits<int>::min();
+    std::vector<double> psi_con =
+       std::vector<double>(R, std::numeric_limits<double>::quiet_NaN());
+    std::vector<int> z =
+       std::vector<int>(R, std::numeric_limits<int>::min());
     try {
-      double alpha_occ = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       alpha_occ = in__.template read<local_scalar_t__>();
-      double beta_occ = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       beta_occ = in__.template read<local_scalar_t__>();
-      double alpha_p = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
       alpha_p = in__.template read<local_scalar_t__>();
-      double beta_p = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 4;
       beta_p = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double, -1, 1> logit_psi =
-         Eigen::Matrix<double, -1, 1>::Constant(R,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> logit_p =
-         Eigen::Matrix<double, -1, -1>::Constant(R, T,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(alpha_occ);
-      out__.write(beta_occ);
-      out__.write(alpha_p);
-      out__.write(beta_p);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(alpha_occ);
+        out__.write(beta_occ);
+        out__.write(alpha_p);
+        out__.write(beta_p);
         return ;
       } 
-      current_statement__ = 7;
+      current_statement__ = 10;
       stan::model::assign(logit_psi,
         stan::math::add(alpha_occ, stan::math::multiply(beta_occ, X)),
         "assigning variable logit_psi");
-      current_statement__ = 8;
+      current_statement__ = 11;
       stan::model::assign(logit_p,
         stan::math::rep_matrix(
           stan::math::add(alpha_p, stan::math::multiply(beta_p, X)), T),
         "assigning variable logit_p");
-      if (emit_transformed_parameters__) {
-        out__.write(logit_psi);
-        out__.write(logit_p);
-      } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(alpha_occ);
+        out__.write(beta_occ);
+        out__.write(alpha_p);
+        out__.write(beta_p);
+        if (emit_transformed_parameters__) {
+          out__.write(logit_psi);
+          out__.write(logit_p);
+        } 
         return ;
       } 
-      int occ_fs = std::numeric_limits<int>::min();
-      std::vector<double> psi_con =
-         std::vector<double>(R, std::numeric_limits<double>::quiet_NaN());
-      std::vector<int> z =
-         std::vector<int>(R, std::numeric_limits<int>::min());
       current_statement__ = 24;
       for (int i = 1; i <= R; ++i) {
         current_statement__ = 22;
@@ -16302,10 +16705,31 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       }
       current_statement__ = 25;
       occ_fs = stan::math::sum(z);
+      out__.write(alpha_occ);
+      out__.write(beta_occ);
+      out__.write(alpha_p);
+      out__.write(beta_p);
+      if (emit_transformed_parameters__) {
+        out__.write(logit_psi);
+        out__.write(logit_p);
+      } 
       out__.write(occ_fs);
       out__.write(psi_con);
       out__.write(z);
     } catch (const std::exception& e) {
+      out__.write(alpha_occ);
+      out__.write(beta_occ);
+      out__.write(alpha_p);
+      out__.write(beta_p);
+      if (emit_transformed_parameters__) {
+        out__.write(logit_psi);
+        out__.write(logit_p);
+      } 
+      if (emit_generated_quantities__) {
+        out__.write(occ_fs);
+        out__.write(psi_con);
+        out__.write(z);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -16914,59 +17338,58 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "off_small_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double beta = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> eta1 =
+       Eigen::Matrix<double, -1, 1>::Constant(J,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> eta2 =
+       Eigen::Matrix<double, -1, 1>::Constant(J,
+         std::numeric_limits<double>::quiet_NaN());
+    double mu_a1 = std::numeric_limits<double>::quiet_NaN();
+    double mu_a2 = std::numeric_limits<double>::quiet_NaN();
+    double sigma_a1 = std::numeric_limits<double>::quiet_NaN();
+    double sigma_a2 = std::numeric_limits<double>::quiet_NaN();
+    double sigma_y = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> a1 =
+       Eigen::Matrix<double, -1, 1>::Constant(J,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> a2 =
+       Eigen::Matrix<double, -1, 1>::Constant(J,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> y_hat =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      double beta = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       beta = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double, -1, 1> eta1 =
-         Eigen::Matrix<double, -1, 1>::Constant(J,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       eta1 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J);
-      Eigen::Matrix<double, -1, 1> eta2 =
-         Eigen::Matrix<double, -1, 1>::Constant(J,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 3;
       eta2 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J);
-      double mu_a1 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 4;
       mu_a1 = in__.template read<local_scalar_t__>();
-      double mu_a2 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 5;
       mu_a2 = in__.template read<local_scalar_t__>();
-      double sigma_a1 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 6;
       sigma_a1 = in__.template read_constrain_lub<local_scalar_t__, 
                    jacobian__>(0, 100, lp__);
-      double sigma_a2 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 7;
       sigma_a2 = in__.template read_constrain_lub<local_scalar_t__, 
                    jacobian__>(0, 100, lp__);
-      double sigma_y = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 8;
       sigma_y = in__.template read_constrain_lub<local_scalar_t__, 
                   jacobian__>(0, 100, lp__);
-      Eigen::Matrix<double, -1, 1> a1 =
-         Eigen::Matrix<double, -1, 1>::Constant(J,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, 1> a2 =
-         Eigen::Matrix<double, -1, 1>::Constant(J,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, 1> y_hat =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(beta);
-      out__.write(eta1);
-      out__.write(eta2);
-      out__.write(mu_a1);
-      out__.write(mu_a2);
-      out__.write(sigma_a1);
-      out__.write(sigma_a2);
-      out__.write(sigma_y);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(beta);
+        out__.write(eta1);
+        out__.write(eta2);
+        out__.write(mu_a1);
+        out__.write(mu_a2);
+        out__.write(sigma_a1);
+        out__.write(sigma_a2);
+        out__.write(sigma_y);
         return ;
       } 
       current_statement__ = 12;
@@ -16995,15 +17418,49 @@ class off_small_model final : public model_base_crtp<off_small_model> {
               stan::model::rvalue(time, "time", stan::model::index_uni(i)))),
           "assigning variable y_hat", stan::model::index_uni(i));
       }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(beta);
+        out__.write(eta1);
+        out__.write(eta2);
+        out__.write(mu_a1);
+        out__.write(mu_a2);
+        out__.write(sigma_a1);
+        out__.write(sigma_a2);
+        out__.write(sigma_y);
+        if (emit_transformed_parameters__) {
+          out__.write(a1);
+          out__.write(a2);
+          out__.write(y_hat);
+        } 
+        return ;
+      } 
+      out__.write(beta);
+      out__.write(eta1);
+      out__.write(eta2);
+      out__.write(mu_a1);
+      out__.write(mu_a2);
+      out__.write(sigma_a1);
+      out__.write(sigma_a2);
+      out__.write(sigma_y);
       if (emit_transformed_parameters__) {
         out__.write(a1);
         out__.write(a2);
         out__.write(y_hat);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(beta);
+      out__.write(eta1);
+      out__.write(eta2);
+      out__.write(mu_a1);
+      out__.write(mu_a2);
+      out__.write(sigma_a1);
+      out__.write(sigma_a2);
+      out__.write(sigma_y);
+      if (emit_transformed_parameters__) {
+        out__.write(a1);
+        out__.write(a2);
+        out__.write(y_hat);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -17928,46 +18385,60 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "optimizations_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double theta = std::numeric_limits<double>::quiet_NaN();
+    double phi = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, -1> x_matrix =
+       Eigen::Matrix<double, -1, -1>::Constant(3, 2,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> x_vector =
+       Eigen::Matrix<double, -1, 1>::Constant(2,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> x_cov =
+       Eigen::Matrix<double, -1, -1>::Constant(2, 2,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      double theta = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       theta = in__.template read<local_scalar_t__>();
-      double phi = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       phi = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double, -1, -1> x_matrix =
-         Eigen::Matrix<double, -1, -1>::Constant(3, 2,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 3;
       x_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                    3, 2);
-      Eigen::Matrix<double, -1, 1> x_vector =
-         Eigen::Matrix<double, -1, 1>::Constant(2,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 4;
       x_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    2);
-      Eigen::Matrix<double, -1, -1> x_cov =
-         Eigen::Matrix<double, -1, -1>::Constant(2, 2,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 5;
       x_cov = in__.template read_constrain_cov_matrix<
                 Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(lp__, 2);
+      if (stan::math::logical_negation((stan::math::primitive_value(
+            emit_transformed_parameters__) || stan::math::primitive_value(
+            emit_generated_quantities__)))) {
+        out__.write(theta);
+        out__.write(phi);
+        out__.write(x_matrix);
+        out__.write(x_vector);
+        out__.write(x_cov);
+        return ;
+      } 
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(theta);
+        out__.write(phi);
+        out__.write(x_matrix);
+        out__.write(x_vector);
+        out__.write(x_cov);
+        return ;
+      } 
       out__.write(theta);
       out__.write(phi);
       out__.write(x_matrix);
       out__.write(x_vector);
       out__.write(x_cov);
-      if (stan::math::logical_negation((stan::math::primitive_value(
-            emit_transformed_parameters__) || stan::math::primitive_value(
-            emit_generated_quantities__)))) {
-        return ;
-      } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(theta);
+      out__.write(phi);
+      out__.write(x_matrix);
+      out__.write(x_vector);
+      out__.write(x_cov);
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -18907,40 +19378,39 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "partial_eval_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    Eigen::Matrix<double, -1, 1> a =
+       Eigen::Matrix<double, -1, 1>::Constant(n_pair,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> beta =
+       Eigen::Matrix<double, -1, 1>::Constant(2,
+         std::numeric_limits<double>::quiet_NaN());
+    double mu_a = std::numeric_limits<double>::quiet_NaN();
+    double sigma_a = std::numeric_limits<double>::quiet_NaN();
+    double sigma_y = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> y_hat =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      Eigen::Matrix<double, -1, 1> a =
-         Eigen::Matrix<double, -1, 1>::Constant(n_pair,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
       a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_pair);
-      Eigen::Matrix<double, -1, 1> beta =
-         Eigen::Matrix<double, -1, 1>::Constant(2,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
-      double mu_a = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
       mu_a = in__.template read<local_scalar_t__>();
-      double sigma_a = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 4;
       sigma_a = in__.template read_constrain_lub<local_scalar_t__, 
                   jacobian__>(0, 100, lp__);
-      double sigma_y = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 5;
       sigma_y = in__.template read_constrain_lub<local_scalar_t__, 
                   jacobian__>(0, 100, lp__);
-      Eigen::Matrix<double, -1, 1> y_hat =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(a);
-      out__.write(beta);
-      out__.write(mu_a);
-      out__.write(sigma_a);
-      out__.write(sigma_y);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(a);
+        out__.write(beta);
+        out__.write(mu_a);
+        out__.write(sigma_a);
+        out__.write(sigma_y);
         return ;
       } 
       current_statement__ = 8;
@@ -18958,13 +19428,34 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
                 stan::model::index_uni(i)))),
           "assigning variable y_hat", stan::model::index_uni(i));
       }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(a);
+        out__.write(beta);
+        out__.write(mu_a);
+        out__.write(sigma_a);
+        out__.write(sigma_y);
+        if (emit_transformed_parameters__) {
+          out__.write(y_hat);
+        } 
+        return ;
+      } 
+      out__.write(a);
+      out__.write(beta);
+      out__.write(mu_a);
+      out__.write(sigma_a);
+      out__.write(sigma_y);
       if (emit_transformed_parameters__) {
         out__.write(y_hat);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(a);
+      out__.write(beta);
+      out__.write(mu_a);
+      out__.write(sigma_a);
+      out__.write(sigma_y);
+      if (emit_transformed_parameters__) {
+        out__.write(y_hat);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -19457,31 +19948,36 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "partial_eval_multiply_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    Eigen::Matrix<double, -1, -1> m2 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> m3 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      Eigen::Matrix<double, -1, -1> m2 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
       m2 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(10,
              10);
-      Eigen::Matrix<double, -1, -1> m3 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       m3 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(10,
              10);
-      out__.write(m2);
-      out__.write(m3);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(m2);
+        out__.write(m3);
         return ;
       } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(m2);
+        out__.write(m3);
         return ;
       } 
+      out__.write(m2);
+      out__.write(m3);
     } catch (const std::exception& e) {
+      out__.write(m2);
+      out__.write(m3);
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -20050,32 +20546,64 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "stalled1_failure_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double alpha0 = std::numeric_limits<double>::quiet_NaN();
+    double alpha1 = std::numeric_limits<double>::quiet_NaN();
+    double alpha2 = std::numeric_limits<double>::quiet_NaN();
+    double alpha12 = std::numeric_limits<double>::quiet_NaN();
+    double tau = std::numeric_limits<double>::quiet_NaN();
+    std::vector<Eigen::Matrix<double, -1, 1>> b =
+       std::vector<Eigen::Matrix<double, -1, 1>>(I, 
+         Eigen::Matrix<double, -1, 1>::Constant(K,
+           std::numeric_limits<double>::quiet_NaN()));
+    double sigma = std::numeric_limits<double>::quiet_NaN();
     try {
-      double alpha0 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       alpha0 = in__.template read<local_scalar_t__>();
-      double alpha1 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       alpha1 = in__.template read<local_scalar_t__>();
-      double alpha2 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
       alpha2 = in__.template read<local_scalar_t__>();
-      double alpha12 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 4;
       alpha12 = in__.template read<local_scalar_t__>();
-      double tau = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 5;
       tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
-      std::vector<Eigen::Matrix<double, -1, 1>> b =
-         std::vector<Eigen::Matrix<double, -1, 1>>(I, 
-           Eigen::Matrix<double, -1, 1>::Constant(K,
-             std::numeric_limits<double>::quiet_NaN()));
       current_statement__ = 6;
       b = in__.template read<
             std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(I, K);
-      double sigma = std::numeric_limits<double>::quiet_NaN();
+      if (stan::math::logical_negation((stan::math::primitive_value(
+            emit_transformed_parameters__) || stan::math::primitive_value(
+            emit_generated_quantities__)))) {
+        out__.write(alpha0);
+        out__.write(alpha1);
+        out__.write(alpha2);
+        out__.write(alpha12);
+        out__.write(tau);
+        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
+            out__.write(b[(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+        return ;
+      } 
+      current_statement__ = 8;
+      sigma = (1 / stan::math::sqrt(tau));
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(alpha0);
+        out__.write(alpha1);
+        out__.write(alpha2);
+        out__.write(alpha12);
+        out__.write(tau);
+        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
+            out__.write(b[(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+        if (emit_transformed_parameters__) {
+          out__.write(sigma);
+        } 
+        return ;
+      } 
       out__.write(alpha0);
       out__.write(alpha1);
       out__.write(alpha2);
@@ -20086,20 +20614,23 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
           out__.write(b[(sym2__ - 1)][(sym1__ - 1)]);
         }
       }
-      if (stan::math::logical_negation((stan::math::primitive_value(
-            emit_transformed_parameters__) || stan::math::primitive_value(
-            emit_generated_quantities__)))) {
-        return ;
-      } 
-      current_statement__ = 8;
-      sigma = (1 / stan::math::sqrt(tau));
       if (emit_transformed_parameters__) {
         out__.write(sigma);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(alpha0);
+      out__.write(alpha1);
+      out__.write(alpha2);
+      out__.write(alpha12);
+      out__.write(tau);
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
+          out__.write(b[(sym2__ - 1)][(sym1__ - 1)]);
+        }
+      }
+      if (emit_transformed_parameters__) {
+        out__.write(sigma);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -20500,19 +21031,18 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "unenforce_initialize_should_fail_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double param = std::numeric_limits<double>::quiet_NaN();
+    std::vector<Eigen::Matrix<double, -1, 1>> local =
+       std::vector<Eigen::Matrix<double, -1, 1>>(2, 
+         Eigen::Matrix<double, -1, 1>::Constant(5,
+           std::numeric_limits<double>::quiet_NaN()));
     try {
-      double param = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       param = in__.template read<local_scalar_t__>();
-      std::vector<Eigen::Matrix<double, -1, 1>> local =
-         std::vector<Eigen::Matrix<double, -1, 1>>(2, 
-           Eigen::Matrix<double, -1, 1>::Constant(5,
-             std::numeric_limits<double>::quiet_NaN()));
-      out__.write(param);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(param);
         return ;
       } 
       current_statement__ = 2;
@@ -20529,6 +21059,18 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
                                           stan::model::index_uni(j));
         }
       }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(param);
+        if (emit_transformed_parameters__) {
+          for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+            for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+              out__.write(local[(sym2__ - 1)][(sym1__ - 1)]);
+            }
+          }
+        } 
+        return ;
+      } 
+      out__.write(param);
       if (emit_transformed_parameters__) {
         for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
@@ -20536,10 +21078,15 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
           }
         }
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(param);
+      if (emit_transformed_parameters__) {
+        for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+            out__.write(local[(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -20896,21 +21443,20 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "unenforce_initialize_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double y = std::numeric_limits<double>::quiet_NaN();
+    double no_init = std::numeric_limits<double>::quiet_NaN();
+    double init_from_param = std::numeric_limits<double>::quiet_NaN();
+    double dependent_no_init = std::numeric_limits<double>::quiet_NaN();
+    double used_on_lhs = std::numeric_limits<double>::quiet_NaN();
+    double no_init_if = std::numeric_limits<double>::quiet_NaN();
+    double for_loop_var = std::numeric_limits<double>::quiet_NaN();
     try {
-      double y = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       y = in__.template read<local_scalar_t__>();
-      double no_init = std::numeric_limits<double>::quiet_NaN();
-      double init_from_param = std::numeric_limits<double>::quiet_NaN();
-      double dependent_no_init = std::numeric_limits<double>::quiet_NaN();
-      double used_on_lhs = std::numeric_limits<double>::quiet_NaN();
-      double no_init_if = std::numeric_limits<double>::quiet_NaN();
-      double for_loop_var = std::numeric_limits<double>::quiet_NaN();
-      out__.write(y);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(y);
         return ;
       } 
       current_statement__ = 3;
@@ -20929,6 +21475,19 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
         current_statement__ = 11;
         for_loop_var = 1;
       }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(y);
+        if (emit_transformed_parameters__) {
+          out__.write(no_init);
+          out__.write(init_from_param);
+          out__.write(dependent_no_init);
+          out__.write(used_on_lhs);
+          out__.write(no_init_if);
+          out__.write(for_loop_var);
+        } 
+        return ;
+      } 
+      out__.write(y);
       if (emit_transformed_parameters__) {
         out__.write(no_init);
         out__.write(init_from_param);
@@ -20937,10 +21496,16 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
         out__.write(no_init_if);
         out__.write(for_loop_var);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(y);
+      if (emit_transformed_parameters__) {
+        out__.write(no_init);
+        out__.write(init_from_param);
+        out__.write(dependent_no_init);
+        out__.write(used_on_lhs);
+        out__.write(no_init_if);
+        out__.write(for_loop_var);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -21273,7 +21838,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "unroll_limit_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    int x = std::numeric_limits<int>::min();
     try {
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
@@ -21283,7 +21848,6 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       } 
-      int x = std::numeric_limits<int>::min();
       current_statement__ = 4;
       for (int i = 1; i <= 100; ++i) {
         current_statement__ = 2;
@@ -21311,6 +21875,9 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
       }
       out__.write(x);
     } catch (const std::exception& e) {
+      if (emit_generated_quantities__) {
+        out__.write(x);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 

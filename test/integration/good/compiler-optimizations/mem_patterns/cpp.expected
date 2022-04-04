@@ -115,33 +115,41 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "complex_fails_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    Eigen::Matrix<double, -1, -1> A_p =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<std::complex<double>, -1, -1> A_complex_tp =
+       Eigen::Matrix<std::complex<double>, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      Eigen::Matrix<double, -1, -1> A_p =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
       A_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(10,
               10);
-      Eigen::Matrix<std::complex<double>, -1, -1> A_complex_tp =
-         Eigen::Matrix<std::complex<double>, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(A_p);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(A_p);
         return ;
       } 
       current_statement__ = 2;
       stan::model::assign(A_complex_tp, A_p,
         "assigning variable A_complex_tp");
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(A_p);
+        if (emit_transformed_parameters__) {
+          out__.write(A_complex_tp);
+        } 
+        return ;
+      } 
+      out__.write(A_p);
       if (emit_transformed_parameters__) {
         out__.write(A_complex_tp);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(A_p);
+      if (emit_transformed_parameters__) {
+        out__.write(A_complex_tp);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -1255,11 +1263,86 @@ class constraints_model final : public model_base_crtp<constraints_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "constraints_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    Eigen::Matrix<double, -1, 1> high_low_est =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> b =
+       Eigen::Matrix<double, -1, 1>::Constant(K,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> h =
+       Eigen::Matrix<double, -1, 1>::Constant(Nr,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> ar =
+       Eigen::Matrix<double, -1, 1>::Constant(2,
+         std::numeric_limits<double>::quiet_NaN());
+    double ma = std::numeric_limits<double>::quiet_NaN();
+    double phi_beta = std::numeric_limits<double>::quiet_NaN();
+    double sigma2 = std::numeric_limits<double>::quiet_NaN();
+    double Intercept = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> mean_price =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> sigma_price =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    double theta = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> upper_test =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> lower_upper_test =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, 1, -1> row_vec_lower_upper_test =
+       Eigen::Matrix<double, 1, -1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> offset_mult_test =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> ordered_test =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> unit_vec_test =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> pos_ordered_test =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> corr_matrix_test =
+       Eigen::Matrix<double, -1, -1>::Constant(N, N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> cov_matrix_test =
+       Eigen::Matrix<double, -1, -1>::Constant(N, N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> chol_fac_cov_test =
+       Eigen::Matrix<double, -1, -1>::Constant(K, K,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> chol_fac_corr_test =
+       Eigen::Matrix<double, -1, -1>::Constant(K, K,
+         std::numeric_limits<double>::quiet_NaN());
+    double phi = std::numeric_limits<double>::quiet_NaN();
+    double sigma = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> prices =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> prices_diff =
+       Eigen::Matrix<double, -1, 1>::Constant(Nr,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> mu =
+       Eigen::Matrix<double, -1, 1>::Constant(Nr,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> err =
+       Eigen::Matrix<double, -1, 1>::Constant(Nr,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> h_i_mean =
+       Eigen::Matrix<double, -1, 1>::Constant(Nr,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> h_i_sigma =
+       Eigen::Matrix<double, -1, 1>::Constant(Nr,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> h_sigma =
+       Eigen::Matrix<double, -1, 1>::Constant(Nr,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      Eigen::Matrix<double, -1, 1> high_low_est =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
       high_low_est = in__.template read_constrain_lub<
                        Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
@@ -1270,61 +1353,35 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 1;
       stan::math::check_matching_dims("constraint", "high_low_est",
                                       high_low_est, "upper", diff_high_mid);
-      Eigen::Matrix<double, -1, 1> b =
-         Eigen::Matrix<double, -1, 1>::Constant(K,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       b = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(K);
-      Eigen::Matrix<double, -1, 1> h =
-         Eigen::Matrix<double, -1, 1>::Constant(Nr,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 3;
       h = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(Nr);
-      Eigen::Matrix<double, -1, 1> ar =
-         Eigen::Matrix<double, -1, 1>::Constant(2,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 4;
       ar = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
-      double ma = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 5;
       ma = in__.template read<local_scalar_t__>();
-      double phi_beta = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 6;
       phi_beta = in__.template read_constrain_lub<local_scalar_t__, 
                    jacobian__>(0, 1, lp__);
-      double sigma2 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 7;
       sigma2 = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                  0, lp__);
-      double Intercept = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 8;
       Intercept = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double, -1, 1> mean_price =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 9;
       mean_price = in__.template read<
                      Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
-      Eigen::Matrix<double, -1, 1> sigma_price =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 10;
       sigma_price = in__.template read_constrain_lb<
                       Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                       0.0, lp__, N);
-      double theta = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 11;
       theta = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double, -1, 1> upper_test =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 12;
       upper_test = in__.template read_constrain_ub<
                      Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(ma,
                      lp__, N);
-      Eigen::Matrix<double, -1, 1> lower_upper_test =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 13;
       lower_upper_test = in__.template read_constrain_lub<
                            Eigen::Matrix<local_scalar_t__, -1, 1>, 
@@ -1335,9 +1392,6 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 13;
       stan::math::check_matching_dims("constraint", "lower_upper_test",
                                       lower_upper_test, "upper", upper_test);
-      Eigen::Matrix<double, 1, -1> row_vec_lower_upper_test =
-         Eigen::Matrix<double, 1, -1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 14;
       row_vec_lower_upper_test = in__.template read_constrain_lub<
                                    Eigen::Matrix<local_scalar_t__, 1, -1>, 
@@ -1355,9 +1409,6 @@ class constraints_model final : public model_base_crtp<constraints_model> {
                                       "row_vec_lower_upper_test",
                                       row_vec_lower_upper_test, "upper",
                                       stan::math::transpose(upper_test));
-      Eigen::Matrix<double, -1, 1> offset_mult_test =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 15;
       offset_mult_test = in__.template read_constrain_offset_multiplier<
                            Eigen::Matrix<local_scalar_t__, -1, 1>, 
@@ -1369,103 +1420,59 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       stan::math::check_matching_dims("constraint", "offset_mult_test",
                                       offset_mult_test, "multiplier",
                                       sigma_price);
-      Eigen::Matrix<double, -1, 1> ordered_test =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 16;
       ordered_test = in__.template read_constrain_ordered<
                        Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                        lp__, N);
-      Eigen::Matrix<double, -1, 1> unit_vec_test =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 17;
       unit_vec_test = in__.template read_constrain_unit_vector<
                         Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                         lp__, N);
-      Eigen::Matrix<double, -1, 1> pos_ordered_test =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 18;
       pos_ordered_test = in__.template read_constrain_positive_ordered<
                            Eigen::Matrix<local_scalar_t__, -1, 1>, 
                            jacobian__>(lp__, N);
-      Eigen::Matrix<double, -1, -1> corr_matrix_test =
-         Eigen::Matrix<double, -1, -1>::Constant(N, N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 19;
       corr_matrix_test = in__.template read_constrain_corr_matrix<
                            Eigen::Matrix<local_scalar_t__, -1, -1>, 
                            jacobian__>(lp__, N);
-      Eigen::Matrix<double, -1, -1> cov_matrix_test =
-         Eigen::Matrix<double, -1, -1>::Constant(N, N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 20;
       cov_matrix_test = in__.template read_constrain_cov_matrix<
                           Eigen::Matrix<local_scalar_t__, -1, -1>, 
                           jacobian__>(lp__, N);
-      Eigen::Matrix<double, -1, -1> chol_fac_cov_test =
-         Eigen::Matrix<double, -1, -1>::Constant(K, K,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 21;
       chol_fac_cov_test = in__.template read_constrain_cholesky_factor_cov<
                             Eigen::Matrix<local_scalar_t__, -1, -1>, 
                             jacobian__>(lp__, K, K);
-      Eigen::Matrix<double, -1, -1> chol_fac_corr_test =
-         Eigen::Matrix<double, -1, -1>::Constant(K, K,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 22;
       chol_fac_corr_test = in__.template read_constrain_cholesky_factor_corr<
                              Eigen::Matrix<local_scalar_t__, -1, -1>, 
                              jacobian__>(lp__, K);
-      double phi = std::numeric_limits<double>::quiet_NaN();
-      double sigma = std::numeric_limits<double>::quiet_NaN();
-      Eigen::Matrix<double, -1, 1> prices =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, 1> prices_diff =
-         Eigen::Matrix<double, -1, 1>::Constant(Nr,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, 1> mu =
-         Eigen::Matrix<double, -1, 1>::Constant(Nr,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, 1> err =
-         Eigen::Matrix<double, -1, 1>::Constant(Nr,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, 1> h_i_mean =
-         Eigen::Matrix<double, -1, 1>::Constant(Nr,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, 1> h_i_sigma =
-         Eigen::Matrix<double, -1, 1>::Constant(Nr,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, 1> h_sigma =
-         Eigen::Matrix<double, -1, 1>::Constant(Nr,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(high_low_est);
-      out__.write(b);
-      out__.write(h);
-      out__.write(ar);
-      out__.write(ma);
-      out__.write(phi_beta);
-      out__.write(sigma2);
-      out__.write(Intercept);
-      out__.write(mean_price);
-      out__.write(sigma_price);
-      out__.write(theta);
-      out__.write(upper_test);
-      out__.write(lower_upper_test);
-      out__.write(row_vec_lower_upper_test);
-      out__.write(offset_mult_test);
-      out__.write(ordered_test);
-      out__.write(unit_vec_test);
-      out__.write(pos_ordered_test);
-      out__.write(corr_matrix_test);
-      out__.write(cov_matrix_test);
-      out__.write(chol_fac_cov_test);
-      out__.write(chol_fac_corr_test);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(high_low_est);
+        out__.write(b);
+        out__.write(h);
+        out__.write(ar);
+        out__.write(ma);
+        out__.write(phi_beta);
+        out__.write(sigma2);
+        out__.write(Intercept);
+        out__.write(mean_price);
+        out__.write(sigma_price);
+        out__.write(theta);
+        out__.write(upper_test);
+        out__.write(lower_upper_test);
+        out__.write(row_vec_lower_upper_test);
+        out__.write(offset_mult_test);
+        out__.write(ordered_test);
+        out__.write(unit_vec_test);
+        out__.write(pos_ordered_test);
+        out__.write(corr_matrix_test);
+        out__.write(cov_matrix_test);
+        out__.write(chol_fac_cov_test);
+        out__.write(chol_fac_corr_test);
         return ;
       } 
       current_statement__ = 23;
@@ -1554,6 +1561,64 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 30;
       stan::math::check_greater_or_equal(function__, "h_i_sigma", h_i_sigma,
                                             0);
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(high_low_est);
+        out__.write(b);
+        out__.write(h);
+        out__.write(ar);
+        out__.write(ma);
+        out__.write(phi_beta);
+        out__.write(sigma2);
+        out__.write(Intercept);
+        out__.write(mean_price);
+        out__.write(sigma_price);
+        out__.write(theta);
+        out__.write(upper_test);
+        out__.write(lower_upper_test);
+        out__.write(row_vec_lower_upper_test);
+        out__.write(offset_mult_test);
+        out__.write(ordered_test);
+        out__.write(unit_vec_test);
+        out__.write(pos_ordered_test);
+        out__.write(corr_matrix_test);
+        out__.write(cov_matrix_test);
+        out__.write(chol_fac_cov_test);
+        out__.write(chol_fac_corr_test);
+        if (emit_transformed_parameters__) {
+          out__.write(phi);
+          out__.write(sigma);
+          out__.write(prices);
+          out__.write(prices_diff);
+          out__.write(mu);
+          out__.write(err);
+          out__.write(h_i_mean);
+          out__.write(h_i_sigma);
+          out__.write(h_sigma);
+        } 
+        return ;
+      } 
+      out__.write(high_low_est);
+      out__.write(b);
+      out__.write(h);
+      out__.write(ar);
+      out__.write(ma);
+      out__.write(phi_beta);
+      out__.write(sigma2);
+      out__.write(Intercept);
+      out__.write(mean_price);
+      out__.write(sigma_price);
+      out__.write(theta);
+      out__.write(upper_test);
+      out__.write(lower_upper_test);
+      out__.write(row_vec_lower_upper_test);
+      out__.write(offset_mult_test);
+      out__.write(ordered_test);
+      out__.write(unit_vec_test);
+      out__.write(pos_ordered_test);
+      out__.write(corr_matrix_test);
+      out__.write(cov_matrix_test);
+      out__.write(chol_fac_cov_test);
+      out__.write(chol_fac_corr_test);
       if (emit_transformed_parameters__) {
         out__.write(phi);
         out__.write(sigma);
@@ -1565,10 +1630,40 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         out__.write(h_i_sigma);
         out__.write(h_sigma);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(high_low_est);
+      out__.write(b);
+      out__.write(h);
+      out__.write(ar);
+      out__.write(ma);
+      out__.write(phi_beta);
+      out__.write(sigma2);
+      out__.write(Intercept);
+      out__.write(mean_price);
+      out__.write(sigma_price);
+      out__.write(theta);
+      out__.write(upper_test);
+      out__.write(lower_upper_test);
+      out__.write(row_vec_lower_upper_test);
+      out__.write(offset_mult_test);
+      out__.write(ordered_test);
+      out__.write(unit_vec_test);
+      out__.write(pos_ordered_test);
+      out__.write(corr_matrix_test);
+      out__.write(cov_matrix_test);
+      out__.write(chol_fac_cov_test);
+      out__.write(chol_fac_corr_test);
+      if (emit_transformed_parameters__) {
+        out__.write(phi);
+        out__.write(sigma);
+        out__.write(prices);
+        out__.write(prices_diff);
+        out__.write(mu);
+        out__.write(err);
+        out__.write(h_i_mean);
+        out__.write(h_i_sigma);
+        out__.write(h_sigma);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -2413,39 +2508,38 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "deep_dependence_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    Eigen::Matrix<double, -1, -1> X_p =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> X_tp1 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> X_tp2 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> X_tp3 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> X_tp4 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> X_tp5 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> X_tp6 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> X_tp7 =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      Eigen::Matrix<double, -1, -1> X_p =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
       X_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(10,
               10);
-      Eigen::Matrix<double, -1, -1> X_tp1 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> X_tp2 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> X_tp3 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> X_tp4 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> X_tp5 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> X_tp6 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> X_tp7 =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(X_p);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(X_p);
         return ;
       } 
       current_statement__ = 2;
@@ -2482,6 +2576,20 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
                                           stan::model::index_uni(j));
         }
       }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(X_p);
+        if (emit_transformed_parameters__) {
+          out__.write(X_tp1);
+          out__.write(X_tp2);
+          out__.write(X_tp3);
+          out__.write(X_tp4);
+          out__.write(X_tp5);
+          out__.write(X_tp6);
+          out__.write(X_tp7);
+        } 
+        return ;
+      } 
+      out__.write(X_p);
       if (emit_transformed_parameters__) {
         out__.write(X_tp1);
         out__.write(X_tp2);
@@ -2491,10 +2599,17 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
         out__.write(X_tp6);
         out__.write(X_tp7);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(X_p);
+      if (emit_transformed_parameters__) {
+        out__.write(X_tp1);
+        out__.write(X_tp2);
+        out__.write(X_tp3);
+        out__.write(X_tp4);
+        out__.write(X_tp5);
+        out__.write(X_tp6);
+        out__.write(X_tp7);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -3771,186 +3886,185 @@ udf_fun_functor__::operator()(const T0__& A, std::ostream* pstream__)  const
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "indexing_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double alpha = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> p_soa_vec_v =
+       Eigen::Matrix<double, -1, 1>::Constant(M,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> p_soa_mat =
+       Eigen::Matrix<double, -1, -1>::Constant(N, M,
+         std::numeric_limits<double>::quiet_NaN());
+    std::vector<Eigen::Matrix<double, -1, 1>> p_soa_arr_vec_v =
+       std::vector<Eigen::Matrix<double, -1, 1>>(10, 
+         Eigen::Matrix<double, -1, 1>::Constant(N,
+           std::numeric_limits<double>::quiet_NaN()));
+    Eigen::Matrix<double, -1, -1> p_soa_mat_uni_col_idx =
+       Eigen::Matrix<double, -1, -1>::Constant(N, M,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> p_soa_vec_uni_idx =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> p_soa_loop_mat_uni_col_idx =
+       Eigen::Matrix<double, -1, -1>::Constant(N, M,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, 1, -1> p_soa_lhs_loop_mul =
+       Eigen::Matrix<double, 1, -1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> p_soa_rhs_loop_mul =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> p_soa_used_with_aos_in_excluded_fun =
+       Eigen::Matrix<double, -1, 1>::Constant(N,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> p_soa_loop_mat_multi_uni_uni_idx =
+       Eigen::Matrix<double, -1, -1>::Constant(N, M,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> p_aos_vec_v_assign_to_aos =
+       Eigen::Matrix<double, -1, 1>::Constant(M,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> p_aos_vec_v_tp_fails_func =
+       Eigen::Matrix<double, -1, 1>::Constant(M,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> p_aos_loop_vec_v_uni_idx =
+       Eigen::Matrix<double, -1, 1>::Constant(M,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> p_aos_fail_assign_from_top_idx =
+       Eigen::Matrix<double, -1, 1>::Constant(M,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> p_aos_loop_mat_uni_uni_idx =
+       Eigen::Matrix<double, -1, -1>::Constant(N, M,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> p_aos_mat =
+       Eigen::Matrix<double, -1, -1>::Constant(N, M,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> p_aos_mat_pass_func_outer_single_indexed1 =
+       Eigen::Matrix<double, -1, -1>::Constant(N, M,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> p_aos_mat_pass_func_outer_single_indexed2 =
+       Eigen::Matrix<double, -1, -1>::Constant(N, M,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> p_aos_mat_fail_uni_uni_idx1 =
+       Eigen::Matrix<double, -1, -1>::Constant(N, M,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> p_aos_mat_fail_uni_uni_idx2 =
+       Eigen::Matrix<double, -1, -1>::Constant(N, M,
+         std::numeric_limits<double>::quiet_NaN());
+    double tp_real_from_aos = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> tp_aos_vec_v =
+       Eigen::Matrix<double, -1, 1>::Constant(M,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> tp_soa_single_idx_uninit =
+       Eigen::Matrix<double, -1, 1>::Constant(M,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> tp_aos_fail_func_vec_v =
+       Eigen::Matrix<double, -1, 1>::Constant(M,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, 1> tp_aos_fail_assign_from_top_idx =
+       Eigen::Matrix<double, -1, 1>::Constant(M,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      double alpha = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       alpha = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double, -1, 1> p_soa_vec_v =
-         Eigen::Matrix<double, -1, 1>::Constant(M,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       p_soa_vec_v = in__.template read<
                       Eigen::Matrix<local_scalar_t__, -1, 1>>(M);
-      Eigen::Matrix<double, -1, -1> p_soa_mat =
-         Eigen::Matrix<double, -1, -1>::Constant(N, M,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 3;
       p_soa_mat = in__.template read<
                     Eigen::Matrix<local_scalar_t__, -1, -1>>(N, M);
-      std::vector<Eigen::Matrix<double, -1, 1>> p_soa_arr_vec_v =
-         std::vector<Eigen::Matrix<double, -1, 1>>(10, 
-           Eigen::Matrix<double, -1, 1>::Constant(N,
-             std::numeric_limits<double>::quiet_NaN()));
       current_statement__ = 4;
       p_soa_arr_vec_v = in__.template read<
                           std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                           10, N);
-      Eigen::Matrix<double, -1, -1> p_soa_mat_uni_col_idx =
-         Eigen::Matrix<double, -1, -1>::Constant(N, M,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 5;
       p_soa_mat_uni_col_idx = in__.template read<
                                 Eigen::Matrix<local_scalar_t__, -1, -1>>(N,
                                 M);
-      Eigen::Matrix<double, -1, 1> p_soa_vec_uni_idx =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 6;
       p_soa_vec_uni_idx = in__.template read<
                             Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
-      Eigen::Matrix<double, -1, -1> p_soa_loop_mat_uni_col_idx =
-         Eigen::Matrix<double, -1, -1>::Constant(N, M,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 7;
       p_soa_loop_mat_uni_col_idx = in__.template read<
                                      Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                      N, M);
-      Eigen::Matrix<double, 1, -1> p_soa_lhs_loop_mul =
-         Eigen::Matrix<double, 1, -1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 8;
       p_soa_lhs_loop_mul = in__.template read<
                              Eigen::Matrix<local_scalar_t__, 1, -1>>(N);
-      Eigen::Matrix<double, -1, 1> p_soa_rhs_loop_mul =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 9;
       p_soa_rhs_loop_mul = in__.template read<
                              Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
-      Eigen::Matrix<double, -1, 1> p_soa_used_with_aos_in_excluded_fun =
-         Eigen::Matrix<double, -1, 1>::Constant(N,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 10;
       p_soa_used_with_aos_in_excluded_fun = in__.template read<
                                               Eigen::Matrix<local_scalar_t__, -1, 1>>(
                                               N);
-      Eigen::Matrix<double, -1, -1> p_soa_loop_mat_multi_uni_uni_idx =
-         Eigen::Matrix<double, -1, -1>::Constant(N, M,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 11;
       p_soa_loop_mat_multi_uni_uni_idx = in__.template read<
                                            Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                            N, M);
-      Eigen::Matrix<double, -1, 1> p_aos_vec_v_assign_to_aos =
-         Eigen::Matrix<double, -1, 1>::Constant(M,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 12;
       p_aos_vec_v_assign_to_aos = in__.template read<
                                     Eigen::Matrix<local_scalar_t__, -1, 1>>(
                                     M);
-      Eigen::Matrix<double, -1, 1> p_aos_vec_v_tp_fails_func =
-         Eigen::Matrix<double, -1, 1>::Constant(M,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 13;
       p_aos_vec_v_tp_fails_func = in__.template read<
                                     Eigen::Matrix<local_scalar_t__, -1, 1>>(
                                     M);
-      Eigen::Matrix<double, -1, 1> p_aos_loop_vec_v_uni_idx =
-         Eigen::Matrix<double, -1, 1>::Constant(M,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 14;
       p_aos_loop_vec_v_uni_idx = in__.template read<
                                    Eigen::Matrix<local_scalar_t__, -1, 1>>(M);
-      Eigen::Matrix<double, -1, 1> p_aos_fail_assign_from_top_idx =
-         Eigen::Matrix<double, -1, 1>::Constant(M,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 15;
       p_aos_fail_assign_from_top_idx = in__.template read<
                                          Eigen::Matrix<local_scalar_t__, -1, 1>>(
                                          M);
-      Eigen::Matrix<double, -1, -1> p_aos_loop_mat_uni_uni_idx =
-         Eigen::Matrix<double, -1, -1>::Constant(N, M,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 16;
       p_aos_loop_mat_uni_uni_idx = in__.template read<
                                      Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                      N, M);
-      Eigen::Matrix<double, -1, -1> p_aos_mat =
-         Eigen::Matrix<double, -1, -1>::Constant(N, M,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 17;
       p_aos_mat = in__.template read<
                     Eigen::Matrix<local_scalar_t__, -1, -1>>(N, M);
-      Eigen::Matrix<double, -1, -1> p_aos_mat_pass_func_outer_single_indexed1 =
-         Eigen::Matrix<double, -1, -1>::Constant(N, M,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 18;
       p_aos_mat_pass_func_outer_single_indexed1 = in__.template read<
                                                     Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                                     N, M);
-      Eigen::Matrix<double, -1, -1> p_aos_mat_pass_func_outer_single_indexed2 =
-         Eigen::Matrix<double, -1, -1>::Constant(N, M,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 19;
       p_aos_mat_pass_func_outer_single_indexed2 = in__.template read<
                                                     Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                                     N, M);
-      Eigen::Matrix<double, -1, -1> p_aos_mat_fail_uni_uni_idx1 =
-         Eigen::Matrix<double, -1, -1>::Constant(N, M,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 20;
       p_aos_mat_fail_uni_uni_idx1 = in__.template read<
                                       Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                       N, M);
-      Eigen::Matrix<double, -1, -1> p_aos_mat_fail_uni_uni_idx2 =
-         Eigen::Matrix<double, -1, -1>::Constant(N, M,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 21;
       p_aos_mat_fail_uni_uni_idx2 = in__.template read<
                                       Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                       N, M);
-      double tp_real_from_aos = std::numeric_limits<double>::quiet_NaN();
-      Eigen::Matrix<double, -1, 1> tp_aos_vec_v =
-         Eigen::Matrix<double, -1, 1>::Constant(M,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, 1> tp_soa_single_idx_uninit =
-         Eigen::Matrix<double, -1, 1>::Constant(M,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, 1> tp_aos_fail_func_vec_v =
-         Eigen::Matrix<double, -1, 1>::Constant(M,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, 1> tp_aos_fail_assign_from_top_idx =
-         Eigen::Matrix<double, -1, 1>::Constant(M,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(alpha);
-      out__.write(p_soa_vec_v);
-      out__.write(p_soa_mat);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-          out__.write(p_soa_arr_vec_v[(sym2__ - 1)][(sym1__ - 1)]);
-        }
-      }
-      out__.write(p_soa_mat_uni_col_idx);
-      out__.write(p_soa_vec_uni_idx);
-      out__.write(p_soa_loop_mat_uni_col_idx);
-      out__.write(p_soa_lhs_loop_mul);
-      out__.write(p_soa_rhs_loop_mul);
-      out__.write(p_soa_used_with_aos_in_excluded_fun);
-      out__.write(p_soa_loop_mat_multi_uni_uni_idx);
-      out__.write(p_aos_vec_v_assign_to_aos);
-      out__.write(p_aos_vec_v_tp_fails_func);
-      out__.write(p_aos_loop_vec_v_uni_idx);
-      out__.write(p_aos_fail_assign_from_top_idx);
-      out__.write(p_aos_loop_mat_uni_uni_idx);
-      out__.write(p_aos_mat);
-      out__.write(p_aos_mat_pass_func_outer_single_indexed1);
-      out__.write(p_aos_mat_pass_func_outer_single_indexed2);
-      out__.write(p_aos_mat_fail_uni_uni_idx1);
-      out__.write(p_aos_mat_fail_uni_uni_idx2);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(alpha);
+        out__.write(p_soa_vec_v);
+        out__.write(p_soa_mat);
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+            out__.write(p_soa_arr_vec_v[(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+        out__.write(p_soa_mat_uni_col_idx);
+        out__.write(p_soa_vec_uni_idx);
+        out__.write(p_soa_loop_mat_uni_col_idx);
+        out__.write(p_soa_lhs_loop_mul);
+        out__.write(p_soa_rhs_loop_mul);
+        out__.write(p_soa_used_with_aos_in_excluded_fun);
+        out__.write(p_soa_loop_mat_multi_uni_uni_idx);
+        out__.write(p_aos_vec_v_assign_to_aos);
+        out__.write(p_aos_vec_v_tp_fails_func);
+        out__.write(p_aos_loop_vec_v_uni_idx);
+        out__.write(p_aos_fail_assign_from_top_idx);
+        out__.write(p_aos_loop_mat_uni_uni_idx);
+        out__.write(p_aos_mat);
+        out__.write(p_aos_mat_pass_func_outer_single_indexed1);
+        out__.write(p_aos_mat_pass_func_outer_single_indexed2);
+        out__.write(p_aos_mat_fail_uni_uni_idx1);
+        out__.write(p_aos_mat_fail_uni_uni_idx2);
         return ;
       } 
       current_statement__ = 22;
@@ -3980,6 +4094,66 @@ udf_fun_functor__::operator()(const T0__& A, std::ostream* pstream__)  const
         stan::model::rvalue(p_aos_fail_assign_from_top_idx,
           "p_aos_fail_assign_from_top_idx", stan::model::index_min(1)),
         "assigning variable tp_aos_fail_assign_from_top_idx", stan::model::index_min(1));
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(alpha);
+        out__.write(p_soa_vec_v);
+        out__.write(p_soa_mat);
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+            out__.write(p_soa_arr_vec_v[(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+        out__.write(p_soa_mat_uni_col_idx);
+        out__.write(p_soa_vec_uni_idx);
+        out__.write(p_soa_loop_mat_uni_col_idx);
+        out__.write(p_soa_lhs_loop_mul);
+        out__.write(p_soa_rhs_loop_mul);
+        out__.write(p_soa_used_with_aos_in_excluded_fun);
+        out__.write(p_soa_loop_mat_multi_uni_uni_idx);
+        out__.write(p_aos_vec_v_assign_to_aos);
+        out__.write(p_aos_vec_v_tp_fails_func);
+        out__.write(p_aos_loop_vec_v_uni_idx);
+        out__.write(p_aos_fail_assign_from_top_idx);
+        out__.write(p_aos_loop_mat_uni_uni_idx);
+        out__.write(p_aos_mat);
+        out__.write(p_aos_mat_pass_func_outer_single_indexed1);
+        out__.write(p_aos_mat_pass_func_outer_single_indexed2);
+        out__.write(p_aos_mat_fail_uni_uni_idx1);
+        out__.write(p_aos_mat_fail_uni_uni_idx2);
+        if (emit_transformed_parameters__) {
+          out__.write(tp_real_from_aos);
+          out__.write(tp_aos_vec_v);
+          out__.write(tp_soa_single_idx_uninit);
+          out__.write(tp_aos_fail_func_vec_v);
+          out__.write(tp_aos_fail_assign_from_top_idx);
+        } 
+        return ;
+      } 
+      out__.write(alpha);
+      out__.write(p_soa_vec_v);
+      out__.write(p_soa_mat);
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          out__.write(p_soa_arr_vec_v[(sym2__ - 1)][(sym1__ - 1)]);
+        }
+      }
+      out__.write(p_soa_mat_uni_col_idx);
+      out__.write(p_soa_vec_uni_idx);
+      out__.write(p_soa_loop_mat_uni_col_idx);
+      out__.write(p_soa_lhs_loop_mul);
+      out__.write(p_soa_rhs_loop_mul);
+      out__.write(p_soa_used_with_aos_in_excluded_fun);
+      out__.write(p_soa_loop_mat_multi_uni_uni_idx);
+      out__.write(p_aos_vec_v_assign_to_aos);
+      out__.write(p_aos_vec_v_tp_fails_func);
+      out__.write(p_aos_loop_vec_v_uni_idx);
+      out__.write(p_aos_fail_assign_from_top_idx);
+      out__.write(p_aos_loop_mat_uni_uni_idx);
+      out__.write(p_aos_mat);
+      out__.write(p_aos_mat_pass_func_outer_single_indexed1);
+      out__.write(p_aos_mat_pass_func_outer_single_indexed2);
+      out__.write(p_aos_mat_fail_uni_uni_idx1);
+      out__.write(p_aos_mat_fail_uni_uni_idx2);
       if (emit_transformed_parameters__) {
         out__.write(tp_real_from_aos);
         out__.write(tp_aos_vec_v);
@@ -3987,10 +4161,39 @@ udf_fun_functor__::operator()(const T0__& A, std::ostream* pstream__)  const
         out__.write(tp_aos_fail_func_vec_v);
         out__.write(tp_aos_fail_assign_from_top_idx);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(alpha);
+      out__.write(p_soa_vec_v);
+      out__.write(p_soa_mat);
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          out__.write(p_soa_arr_vec_v[(sym2__ - 1)][(sym1__ - 1)]);
+        }
+      }
+      out__.write(p_soa_mat_uni_col_idx);
+      out__.write(p_soa_vec_uni_idx);
+      out__.write(p_soa_loop_mat_uni_col_idx);
+      out__.write(p_soa_lhs_loop_mul);
+      out__.write(p_soa_rhs_loop_mul);
+      out__.write(p_soa_used_with_aos_in_excluded_fun);
+      out__.write(p_soa_loop_mat_multi_uni_uni_idx);
+      out__.write(p_aos_vec_v_assign_to_aos);
+      out__.write(p_aos_vec_v_tp_fails_func);
+      out__.write(p_aos_loop_vec_v_uni_idx);
+      out__.write(p_aos_fail_assign_from_top_idx);
+      out__.write(p_aos_loop_mat_uni_uni_idx);
+      out__.write(p_aos_mat);
+      out__.write(p_aos_mat_pass_func_outer_single_indexed1);
+      out__.write(p_aos_mat_pass_func_outer_single_indexed2);
+      out__.write(p_aos_mat_fail_uni_uni_idx1);
+      out__.write(p_aos_mat_fail_uni_uni_idx2);
+      if (emit_transformed_parameters__) {
+        out__.write(tp_real_from_aos);
+        out__.write(tp_aos_vec_v);
+        out__.write(tp_soa_single_idx_uninit);
+        out__.write(tp_aos_fail_func_vec_v);
+        out__.write(tp_aos_fail_assign_from_top_idx);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -4955,28 +5158,33 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "indexing2_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    double alpha = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, 1> p_aos_loop_single_idx =
+       Eigen::Matrix<double, -1, 1>::Constant(10,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      double alpha = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       alpha = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double, -1, 1> p_aos_loop_single_idx =
-         Eigen::Matrix<double, -1, 1>::Constant(10,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       p_aos_loop_single_idx = in__.template read<
                                 Eigen::Matrix<local_scalar_t__, -1, 1>>(10);
-      out__.write(alpha);
-      out__.write(p_aos_loop_single_idx);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(alpha);
+        out__.write(p_aos_loop_single_idx);
         return ;
       } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(alpha);
+        out__.write(p_aos_loop_single_idx);
         return ;
       } 
+      out__.write(alpha);
+      out__.write(p_aos_loop_single_idx);
     } catch (const std::exception& e) {
+      out__.write(alpha);
+      out__.write(p_aos_loop_single_idx);
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -5433,39 +5641,38 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "reductions_allowed_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    Eigen::Matrix<double, -1, -1> soa_x =
+       Eigen::Matrix<double, -1, -1>::Constant(5, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> aos_x =
+       Eigen::Matrix<double, -1, -1>::Constant(5, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> aos_y =
+       Eigen::Matrix<double, -1, -1>::Constant(5, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    double tp_real_from_soa = std::numeric_limits<double>::quiet_NaN();
+    Eigen::Matrix<double, -1, -1> tp_matrix_aos_from_mix =
+       Eigen::Matrix<double, -1, -1>::Constant(5, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> tp_matrix_from_udf_reduced_soa =
+       Eigen::Matrix<double, -1, -1>::Constant(5, 10,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      Eigen::Matrix<double, -1, -1> soa_x =
-         Eigen::Matrix<double, -1, -1>::Constant(5, 10,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
       soa_x = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(5,
                 10);
-      Eigen::Matrix<double, -1, -1> aos_x =
-         Eigen::Matrix<double, -1, -1>::Constant(5, 10,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       aos_x = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(5,
                 10);
-      Eigen::Matrix<double, -1, -1> aos_y =
-         Eigen::Matrix<double, -1, -1>::Constant(5, 10,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 3;
       aos_y = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(5,
                 10);
-      double tp_real_from_soa = std::numeric_limits<double>::quiet_NaN();
-      Eigen::Matrix<double, -1, -1> tp_matrix_aos_from_mix =
-         Eigen::Matrix<double, -1, -1>::Constant(5, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> tp_matrix_from_udf_reduced_soa =
-         Eigen::Matrix<double, -1, -1>::Constant(5, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(soa_x);
-      out__.write(aos_x);
-      out__.write(aos_y);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(soa_x);
+        out__.write(aos_x);
+        out__.write(aos_y);
         return ;
       } 
       current_statement__ = 4;
@@ -5482,15 +5689,34 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
       stan::model::assign(tp_matrix_from_udf_reduced_soa,
         okay_reduction(stan::math::sum(soa_x), aos_x, pstream__),
         "assigning variable tp_matrix_from_udf_reduced_soa");
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(soa_x);
+        out__.write(aos_x);
+        out__.write(aos_y);
+        if (emit_transformed_parameters__) {
+          out__.write(tp_real_from_soa);
+          out__.write(tp_matrix_aos_from_mix);
+          out__.write(tp_matrix_from_udf_reduced_soa);
+        } 
+        return ;
+      } 
+      out__.write(soa_x);
+      out__.write(aos_x);
+      out__.write(aos_y);
       if (emit_transformed_parameters__) {
         out__.write(tp_real_from_soa);
         out__.write(tp_matrix_aos_from_mix);
         out__.write(tp_matrix_from_udf_reduced_soa);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(soa_x);
+      out__.write(aos_x);
+      out__.write(aos_y);
+      if (emit_transformed_parameters__) {
+        out__.write(tp_real_from_soa);
+        out__.write(tp_matrix_aos_from_mix);
+        out__.write(tp_matrix_from_udf_reduced_soa);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -6046,40 +6272,39 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "return_types_and_udfs_demotes_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    Eigen::Matrix<double, -1, -1> row_soa =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> udf_input_aos =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> user_func_aos =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> empty_user_func_aos =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> inner_empty_user_func_aos =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> int_aos_mul_aos =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> mul_two_aos =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      Eigen::Matrix<double, -1, -1> row_soa =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
       row_soa = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                   10, 10);
-      Eigen::Matrix<double, -1, -1> udf_input_aos =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       udf_input_aos = in__.template read<
                         Eigen::Matrix<local_scalar_t__, -1, -1>>(10, 10);
-      Eigen::Matrix<double, -1, -1> user_func_aos =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> empty_user_func_aos =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> inner_empty_user_func_aos =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> int_aos_mul_aos =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double, -1, -1> mul_two_aos =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(row_soa);
-      out__.write(udf_input_aos);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(row_soa);
+        out__.write(udf_input_aos);
         return ;
       } 
       current_statement__ = 3;
@@ -6103,6 +6328,20 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
           stan::math::multiply(stan::math::cols(row_soa),
             stan::math::transpose(int_aos_mul_aos)), user_func_aos),
         "assigning variable mul_two_aos");
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(row_soa);
+        out__.write(udf_input_aos);
+        if (emit_transformed_parameters__) {
+          out__.write(user_func_aos);
+          out__.write(empty_user_func_aos);
+          out__.write(inner_empty_user_func_aos);
+          out__.write(int_aos_mul_aos);
+          out__.write(mul_two_aos);
+        } 
+        return ;
+      } 
+      out__.write(row_soa);
+      out__.write(udf_input_aos);
       if (emit_transformed_parameters__) {
         out__.write(user_func_aos);
         out__.write(empty_user_func_aos);
@@ -6110,10 +6349,16 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
         out__.write(int_aos_mul_aos);
         out__.write(mul_two_aos);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(row_soa);
+      out__.write(udf_input_aos);
+      if (emit_transformed_parameters__) {
+        out__.write(user_func_aos);
+        out__.write(empty_user_func_aos);
+        out__.write(inner_empty_user_func_aos);
+        out__.write(int_aos_mul_aos);
+        out__.write(mul_two_aos);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -6637,26 +6882,25 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "single_indexing_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    Eigen::Matrix<double, -1, -1> aos_p =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> soa_p =
+       Eigen::Matrix<double, -1, -1>::Constant(10, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    double tp_real_from_soa = std::numeric_limits<double>::quiet_NaN();
     try {
-      Eigen::Matrix<double, -1, -1> aos_p =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
       aos_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(10,
                 10);
-      Eigen::Matrix<double, -1, -1> soa_p =
-         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       soa_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(10,
                 10);
-      double tp_real_from_soa = std::numeric_limits<double>::quiet_NaN();
-      out__.write(aos_p);
-      out__.write(soa_p);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(aos_p);
+        out__.write(soa_p);
         return ;
       } 
       current_statement__ = 3;
@@ -6683,13 +6927,25 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
               stan::model::index_uni(i), stan::model::index_uni(i)), soa_p),
           "assigning variable tp_matrix_from_soa_loop");
       }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(aos_p);
+        out__.write(soa_p);
+        if (emit_transformed_parameters__) {
+          out__.write(tp_real_from_soa);
+        } 
+        return ;
+      } 
+      out__.write(aos_p);
+      out__.write(soa_p);
       if (emit_transformed_parameters__) {
         out__.write(tp_real_from_soa);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(aos_p);
+      out__.write(soa_p);
+      if (emit_transformed_parameters__) {
+        out__.write(tp_real_from_soa);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
@@ -7161,28 +7417,27 @@ const
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "tp_reused_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
-    
+    Eigen::Matrix<double, -1, -1> first_pass_soa_x =
+       Eigen::Matrix<double, -1, -1>::Constant(5, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> aos_x =
+       Eigen::Matrix<double, -1, -1>::Constant(5, 10,
+         std::numeric_limits<double>::quiet_NaN());
+    Eigen::Matrix<double, -1, -1> tp_matrix_aos =
+       Eigen::Matrix<double, -1, -1>::Constant(5, 10,
+         std::numeric_limits<double>::quiet_NaN());
     try {
-      Eigen::Matrix<double, -1, -1> first_pass_soa_x =
-         Eigen::Matrix<double, -1, -1>::Constant(5, 10,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
       first_pass_soa_x = in__.template read<
                            Eigen::Matrix<local_scalar_t__, -1, -1>>(5, 10);
-      Eigen::Matrix<double, -1, -1> aos_x =
-         Eigen::Matrix<double, -1, -1>::Constant(5, 10,
-           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 2;
       aos_x = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(5,
                 10);
-      Eigen::Matrix<double, -1, -1> tp_matrix_aos =
-         Eigen::Matrix<double, -1, -1>::Constant(5, 10,
-           std::numeric_limits<double>::quiet_NaN());
-      out__.write(first_pass_soa_x);
-      out__.write(aos_x);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
+        out__.write(first_pass_soa_x);
+        out__.write(aos_x);
         return ;
       } 
       current_statement__ = 3;
@@ -7191,13 +7446,25 @@ const
       current_statement__ = 4;
       stan::model::assign(tp_matrix_aos, nono_func(aos_x, pstream__),
         "assigning variable tp_matrix_aos");
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        out__.write(first_pass_soa_x);
+        out__.write(aos_x);
+        if (emit_transformed_parameters__) {
+          out__.write(tp_matrix_aos);
+        } 
+        return ;
+      } 
+      out__.write(first_pass_soa_x);
+      out__.write(aos_x);
       if (emit_transformed_parameters__) {
         out__.write(tp_matrix_aos);
       } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
     } catch (const std::exception& e) {
+      out__.write(first_pass_soa_x);
+      out__.write(aos_x);
+      if (emit_transformed_parameters__) {
+        out__.write(tp_matrix_aos);
+      } 
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     } // write_array_impl() 

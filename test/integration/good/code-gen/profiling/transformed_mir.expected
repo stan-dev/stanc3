@@ -436,108 +436,199 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (rho UReal ())
-      ((pattern
-        (FunApp
-         (CompilerInternal
-          (FnReadParam
-           (constrain
-            (Lower
-             ((pattern (Lit Int 0))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (dims ()) (mem_pattern AoS)))
-         ()))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
-    (meta <opaque>))
-   ((pattern
      (Decl (decl_adtype DataOnly) (decl_id alpha) (decl_type (Sized SReal))
       (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (alpha UReal ())
-      ((pattern
-        (FunApp
-         (CompilerInternal
-          (FnReadParam
-           (constrain
-            (Lower
-             ((pattern (Lit Int 0))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (dims ()) (mem_pattern AoS)))
-         ()))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id sigma) (decl_type (Sized SReal))
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (sigma UReal ())
-      ((pattern
-        (FunApp
-         (CompilerInternal
-          (FnReadParam
-           (constrain
-            (Lower
-             ((pattern (Lit Int 0))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (dims ()) (mem_pattern AoS)))
-         ()))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+     (Block
+      (((pattern
+         (Assignment (rho UReal ())
+          ((pattern
+            (FunApp
+             (CompilerInternal
+              (FnReadParam
+               (constrain
+                (Lower
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (dims ()) (mem_pattern AoS)))
+             ()))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (alpha UReal ())
+          ((pattern
+            (FunApp
+             (CompilerInternal
+              (FnReadParam
+               (constrain
+                (Lower
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (dims ()) (mem_pattern AoS)))
+             ()))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (sigma UReal ())
+          ((pattern
+            (FunApp
+             (CompilerInternal
+              (FnReadParam
+               (constrain
+                (Lower
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (dims ()) (mem_pattern AoS)))
+             ()))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+        (meta <opaque>))
+       ((pattern
+         (IfElse
+          ((pattern
+            (FunApp (StanLib PNot__ FnPlain AoS)
+             (((pattern
+                (EOr
+                 ((pattern (Var emit_transformed_parameters__))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Var emit_generated_quantities__))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern
+            (Block
+             (((pattern
+                (NRFunApp
+                 (CompilerInternal
+                  (FnWriteParam (unconstrain_opt ())
+                   (var
+                    ((pattern (Var rho))
+                     (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                 ()))
+               (meta <opaque>))
+              ((pattern
+                (NRFunApp
+                 (CompilerInternal
+                  (FnWriteParam (unconstrain_opt ())
+                   (var
+                    ((pattern (Var alpha))
+                     (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                 ()))
+               (meta <opaque>))
+              ((pattern
+                (NRFunApp
+                 (CompilerInternal
+                  (FnWriteParam (unconstrain_opt ())
+                   (var
+                    ((pattern (Var sigma))
+                     (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                 ()))
+               (meta <opaque>))
+              ((pattern (Return ())) (meta <opaque>)))))
+           (meta <opaque>))
+          ()))
+        (meta <opaque>))
+       ((pattern
+         (IfElse
+          ((pattern
+            (FunApp (StanLib PNot__ FnPlain AoS)
+             (((pattern (Var emit_generated_quantities__))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern
+            (Block
+             (((pattern
+                (NRFunApp
+                 (CompilerInternal
+                  (FnWriteParam (unconstrain_opt ())
+                   (var
+                    ((pattern (Var rho))
+                     (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                 ()))
+               (meta <opaque>))
+              ((pattern
+                (NRFunApp
+                 (CompilerInternal
+                  (FnWriteParam (unconstrain_opt ())
+                   (var
+                    ((pattern (Var alpha))
+                     (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                 ()))
+               (meta <opaque>))
+              ((pattern
+                (NRFunApp
+                 (CompilerInternal
+                  (FnWriteParam (unconstrain_opt ())
+                   (var
+                    ((pattern (Var sigma))
+                     (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                 ()))
+               (meta <opaque>))
+              ((pattern (Return ())) (meta <opaque>)))))
+           (meta <opaque>))
+          ()))
+        (meta <opaque>))
+       ((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var rho))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var alpha))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var sigma))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp
-      (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
-        (var
-         ((pattern (Var rho))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      ()))
-    (meta <opaque>))
-   ((pattern
-     (NRFunApp
-      (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
-        (var
-         ((pattern (Var alpha))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      ()))
-    (meta <opaque>))
-   ((pattern
-     (NRFunApp
-      (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
-        (var
-         ((pattern (Var sigma))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      ()))
-    (meta <opaque>))
-   ((pattern
-     (IfElse
-      ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
-         (((pattern
-            (EOr
-             ((pattern (Var emit_transformed_parameters__))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             ((pattern (Var emit_generated_quantities__))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-      ((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
-       (meta <opaque>))
-      ()))
-    (meta <opaque>))
-   ((pattern
-     (IfElse
-      ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
-         (((pattern (Var emit_generated_quantities__))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-      ((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
-       (meta <opaque>))
-      ()))
+     (Block
+      (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var rho))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var alpha))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var sigma))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>)))))
     (meta <opaque>))))
  (transform_inits
   (((pattern

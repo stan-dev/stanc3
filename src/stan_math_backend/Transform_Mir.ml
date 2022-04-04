@@ -414,12 +414,6 @@ let rec map_fn_names s =
       | stmt -> Pattern.map map_fn_names_expr map_fn_names stmt) in
   {s with pattern= stmt}
 
-let rec insert_before f to_insert = function
-  | [] -> to_insert
-  | hd :: tl ->
-      if f hd then to_insert @ (hd :: tl)
-      else hd :: insert_before f to_insert tl
-
 let is_opencl_var = String.is_suffix ~suffix:opencl_suffix
 
 let rec collect_vars_expr is_target accum Expr.Fixed.{pattern; _} =
@@ -446,11 +440,6 @@ let%expect_test "collect vars expr" =
   Stmt.Fixed.{pattern= TargetPE fnapp; meta= Location_span.empty}
   |> collect_opencl_vars |> String.Set.sexp_of_t |> print_s ;
   [%expect {| (w_opencl__ x_opencl__) |}]
-
-let%expect_test "insert before" =
-  let l = [1; 2; 3; 4; 5; 6] |> insert_before (( = ) 6) [999] in
-  [%sexp (l : int list)] |> print_s ;
-  [%expect {| (1 2 3 4 5 999 6) |}]
 
 let map_prog_stmt_lists f (p : ('a, 'b) Program.t) =
   { p with
@@ -497,25 +486,6 @@ let trans_prog (p : Program.Typed.t) =
            | Parameters -> `Fst x
            | TransformedParameters -> `Snd x
            | GeneratedQuantities -> `Trd x ) in
-  let tparam_start stmt =
-    Stmt.Fixed.(
-      match stmt.pattern with
-      | IfElse (cond, _, _)
-        when contains_var_expr
-               (( = ) "emit_transformed_parameters__")
-               false cond ->
-          true
-      | _ -> false) in
-  let gq_start Stmt.Fixed.{pattern; _} =
-    match pattern with
-    | IfElse
-        ( { pattern=
-              FunApp (_, [{pattern= Var "emit_generated_quantities__"; _}])
-          ; _ }
-        , _
-        , _ ) ->
-        true
-    | _ -> false in
   let translate_to_open_cl stmts =
     if !use_opencl then
       let decl Stmt.Fixed.{pattern; _} =
@@ -532,26 +502,76 @@ let trans_prog (p : Program.Typed.t) =
       in
       List.map stmts ~f:trans_stmt_to_opencl
     else stmts in
-  let tparam_writes_cond =
-    match tparam_writes with
+  let conditional_writes var = function
     | [] -> []
-    | _ ->
+    | writes ->
         [ Stmt.Fixed.
             { pattern=
                 IfElse
-                  ( Expr.
-                      { Fixed.pattern= Var "emit_transformed_parameters__"
-                      ; meta= Typed.Meta.empty }
-                  , {pattern= SList tparam_writes; meta= Location_span.empty}
+                  ( Expr.{Fixed.pattern= Var var; meta= Typed.Meta.empty}
+                  , {pattern= SList writes; meta= Location_span.empty}
                   , None )
             ; meta= Location_span.empty } ] in
+  let tparam_writes_cond =
+    conditional_writes "emit_transformed_parameters__" tparam_writes in
+  let gq_writes_cond =
+    conditional_writes "emit_generated_quantities__" gq_writes in
+  let output_vars = String.Set.of_list (List.map p.output_vars ~f:fst) in
+  let collect_decls_and_insert_writes stmts =
+    List.fold stmts ~init:([], []) ~f:(fun (decls, stmts) -> function
+      | Stmt.Fixed.{pattern= Decl {decl_id; decl_type; decl_adtype; _}; meta}
+        when Set.mem output_vars decl_id ->
+          ( Stmt.Fixed.
+              { pattern= Decl {decl_id; decl_type; decl_adtype; initialize= true}
+              ; meta }
+            :: decls
+          , stmts )
+      | {pattern= IfElse (cond, early_return, None); meta}
+        when contains_var_expr
+               (( = ) "emit_transformed_parameters__")
+               false cond ->
+          ( decls
+          , Stmt.Fixed.
+              { pattern=
+                  IfElse
+                    ( cond
+                    , {pattern= Block (param_writes @ [early_return]); meta}
+                    , None )
+              ; meta }
+            :: stmts )
+      | { pattern=
+            IfElse
+              ( ( { pattern=
+                      FunApp
+                        (_, [{pattern= Var "emit_generated_quantities__"; _}])
+                  ; _ } as cond )
+              , early_return
+              , None )
+        ; meta } ->
+          ( decls
+          , { pattern=
+                IfElse
+                  ( cond
+                  , { pattern=
+                        Block
+                          (param_writes @ tparam_writes_cond @ [early_return])
+                    ; meta }
+                  , None )
+            ; meta }
+            :: stmts )
+      | s -> (decls, s :: stmts) )
+    |> fun (decls, stmts) ->
+    ( List.rev decls
+    , List.rev stmts @ param_writes @ tparam_writes_cond @ gq_writes
+    , param_writes @ tparam_writes_cond @ gq_writes_cond ) in
   let generate_quantities =
-    ( p.generate_quantities
+    p.generate_quantities
     |> add_reads p.output_vars param_read
-    |> translate_to_open_cl
-    |> insert_before tparam_start param_writes
-    |> insert_before gq_start tparam_writes_cond )
-    @ gq_writes in
+    |> translate_to_open_cl |> collect_decls_and_insert_writes
+    |> fun (decls, stmts, writes) ->
+    [ {Stmt.Fixed.pattern= SList decls; meta= Location_span.empty}
+    ; {Stmt.Fixed.pattern= Block stmts; meta= Location_span.empty}
+    ; {Stmt.Fixed.pattern= Block writes; meta= Location_span.empty} ] in
   let log_prob =
     p.log_prob |> add_reads p.output_vars param_read |> translate_to_open_cl
   in
