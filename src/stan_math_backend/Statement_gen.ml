@@ -11,7 +11,7 @@ let pp_unused = fmt "(void) %s;  // suppress unused var warning"
 (** Print the body of exception handling for functions *)
 let pp_located ppf _ =
   pf ppf
-    {|stan::lang::rethrow_located(e, locations_array__[current_statement__]);|}
+    {|stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);|}
 
 let pp_profile ppf (pp_body, name, body) =
   let profile ppf name =
@@ -439,7 +439,7 @@ and pp_block_s ppf body =
   *)
 let pp_located_error ?(cleanup = []) ppf (pp_body_block, body) =
   pf ppf "@ try %a" pp_body_block body ;
-  string ppf " catch (const std::exception& e) " ;
+  string ppf " catch (const std::exception& _exc) " ;
   let pp =
     if List.is_empty cleanup then pp_located
     else fun ppf () ->

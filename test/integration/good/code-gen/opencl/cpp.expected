@@ -933,8 +933,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       d_row_vector_opencl__ = stan::math::to_matrix_cl(d_row_vector);
       
       d_vector_opencl__ = stan::math::to_matrix_cl(d_vector);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + d_int + (d_int * d_int) + d_int + d_int + 1;
     
@@ -4020,8 +4020,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       d_real_array_opencl__.wait_for_read_write_events();
       d_row_vector_opencl__.wait_for_read_write_events();
       d_vector_opencl__.wait_for_read_write_events();
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -7139,7 +7139,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       if (emit_transformed_parameters__) {
         out__.write(transformed_param_real);
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(p_real);
       out__.write(p_real_array);
       out__.write(p_matrix);
@@ -7149,7 +7149,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       if (emit_transformed_parameters__) {
         out__.write(transformed_param_real);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -7205,8 +7205,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       local_scalar_t__ y_p = DUMMY_VAR__;
       y_p = in__.read<local_scalar_t__>();
       out__.write(y_p);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -7634,8 +7634,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       stan::math::validate_non_negative_index("p_row_vector", "d_int", d_int);
       
       d_vector_opencl__ = stan::math::to_matrix_cl(d_vector);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + d_int + (d_int * d_int) + d_int + d_int + 1;
     
@@ -7738,8 +7738,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y_p, 0, 1));
       }
       d_vector_opencl__.wait_for_read_write_events();
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -7877,7 +7877,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       if (emit_transformed_parameters__) {
         out__.write(transformed_param_real);
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(p_real);
       out__.write(p_real_array);
       out__.write(p_matrix);
@@ -7887,7 +7887,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       if (emit_transformed_parameters__) {
         out__.write(transformed_param_real);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -7943,8 +7943,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       local_scalar_t__ y_p = DUMMY_VAR__;
       y_p = in__.read<local_scalar_t__>();
       out__.write(y_p);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     

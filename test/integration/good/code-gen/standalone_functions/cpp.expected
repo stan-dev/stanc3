@@ -95,8 +95,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     try {
       current_statement__ = 1;
       return stan::math::log1p_exp(x);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
@@ -111,8 +111,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     try {
       current_statement__ = 3;
       return stan::math::sum(a);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 double int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
@@ -125,8 +125,8 @@ double int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
     try {
       current_statement__ = 5;
       return stan::math::sum(a);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
@@ -152,8 +152,8 @@ template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
         "assigning variable result");
       current_statement__ = 9;
       return result;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 int
@@ -167,8 +167,8 @@ int
     try {
       current_statement__ = 11;
       return (a * b);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
@@ -183,8 +183,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     try {
       current_statement__ = 13;
       return stan::math::lgamma(x);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <bool propto__, typename T0__, typename T_lp__,
@@ -199,8 +199,8 @@ template <bool propto__, typename T0__, typename T_lp__,
     try {
       current_statement__ = 15;
       lp_accum__.add(stan::math::normal_lpdf<propto__>(a, 0, 1));
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, typename RNG,
@@ -216,8 +216,8 @@ template <typename T0__, typename RNG,
     try {
       current_statement__ = 17;
       return stan::math::normal_rng(a, 1, base_rng__);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <bool propto__, typename T0__, typename T1__,
@@ -232,8 +232,8 @@ template <bool propto__, typename T0__, typename T1__,
     try {
       current_statement__ = 19;
       return stan::math::normal_lpdf<false>(a, b, 1);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 int
@@ -481,8 +481,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     try {
       current_statement__ = 1;
       return stan::math::log1p_exp(x);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
@@ -497,8 +497,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     try {
       current_statement__ = 3;
       return stan::math::sum(a);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 double int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
@@ -511,8 +511,8 @@ double int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
     try {
       current_statement__ = 5;
       return stan::math::sum(a);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
@@ -538,8 +538,8 @@ template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
         "assigning variable result");
       current_statement__ = 9;
       return result;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 int
@@ -553,8 +553,8 @@ int
     try {
       current_statement__ = 11;
       return (a * b);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
@@ -569,8 +569,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     try {
       current_statement__ = 13;
       return stan::math::lgamma(x);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <bool propto__, typename T0__, typename T_lp__,
@@ -585,8 +585,8 @@ template <bool propto__, typename T0__, typename T_lp__,
     try {
       current_statement__ = 15;
       lp_accum__.add(stan::math::normal_lpdf<propto__>(a, 0, 1));
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, typename RNG,
@@ -602,8 +602,8 @@ template <typename T0__, typename RNG,
     try {
       current_statement__ = 17;
       return stan::math::normal_rng(a, 1, base_rng__);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <bool propto__, typename T0__, typename T1__,
@@ -618,8 +618,8 @@ template <bool propto__, typename T0__, typename T1__,
     try {
       current_statement__ = 19;
       return stan::math::normal_lpdf<false>(a, b, 1);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 int
@@ -830,8 +830,8 @@ template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
     try {
       current_statement__ = 1;
       return stan::math::exp(stan::math::minus(stan::math::square(x)));
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, typename T1__, typename T2__, typename T3__,
@@ -861,8 +861,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
         "assigning variable df_dx", stan::model::index_uni(1));
       current_statement__ = 6;
       return df_dx;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 double ode_integrate(std::ostream* pstream__) {
@@ -883,8 +883,8 @@ double ode_integrate(std::ostream* pstream__) {
   stan::math::rep_array(0.0, 0), x_i, pstream__),
                "integrate_ode_bdf(integrand_ode, rep_array(0.0, 1), 1E-5,\nrep_array((1.0 - 1E-5), 1), rep_array(0.0, 0), rep_array(0.0, 0),\nx_i)",
                stan::model::index_uni(1), stan::model::index_uni(1));
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, typename T1__, typename T2__, typename T3__,

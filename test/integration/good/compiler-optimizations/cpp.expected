@@ -901,8 +901,8 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
           }
         }
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = (10 * 10);
     
@@ -978,8 +978,8 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
         "assigning variable X_tp7");
       current_statement__ = 9;
       stan::model::assign(X_tp1, X_p, "assigning variable X_tp1");
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -1095,7 +1095,7 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
         out__.write(lcm_sym7__);
         out__.write(lcm_sym8__);
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(X_p);
       if (emit_transformed_parameters__) {
         out__.write(X_p);
@@ -1106,7 +1106,7 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
         out__.write(lcm_sym7__);
         out__.write(lcm_sym8__);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -1649,8 +1649,8 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
         }
       }
       out__.write(X_p);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -2102,8 +2102,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
         current_statement__ = 33;
         return dydt;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, typename T1__, typename T2__, typename T3__,
@@ -2238,8 +2238,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       stan::math::check_greater_or_equal(function__, "kappa", 1000000, 0);
       current_statement__ = 28;
       stan::math::validate_non_negative_index("y", "N_t", N_t);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + 1 + 1 + 1;
     
@@ -2353,8 +2353,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
             stan::math::log(
               stan::math::col(stan::math::to_matrix(lcm_sym19__), 4)), 0.15));
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -2549,7 +2549,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
           }
         }
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(beta);
       out__.write(gamma);
       out__.write(xi);
@@ -2605,7 +2605,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
           }
         }
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -2636,8 +2636,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       local_scalar_t__ delta;
       delta = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, delta);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -2971,8 +2971,8 @@ int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
         current_statement__ = 64;
         return 0;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
@@ -3012,8 +3012,8 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
         current_statement__ = 65;
         return 0;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T2__, typename T3__,
@@ -3172,8 +3172,8 @@ template <typename T2__, typename T3__,
         current_statement__ = 68;
         return chi;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 int
@@ -3611,8 +3611,8 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
       current_statement__ = 63;
       stan::math::validate_non_negative_index("chi", "n_occasions",
                                               n_occasions);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + max_age;
     
@@ -3994,8 +3994,8 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
           }
         } 
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -4294,7 +4294,7 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
         out__.write(p);
         out__.write(inline_sym1__);
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(mean_p);
       out__.write(beta);
       if (emit_transformed_parameters__) {
@@ -4302,7 +4302,7 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
         out__.write(p);
         out__.write(inline_sym1__);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -4337,8 +4337,8 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
         }
       } 
       out__.write_free_lub(0, 1, beta);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -4915,8 +4915,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       stan::math::validate_non_negative_index("b_age_edu", "n_edu", n_edu);
       current_statement__ = 65;
       stan::math::validate_non_negative_index("b_hat", "n_state", n_state);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + n_age
        + n_edu + n_region + (n_age * n_edu) + n_state;
@@ -5204,8 +5204,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         current_statement__ = 38;
         lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(y, p));
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -5362,7 +5362,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       out__.write(b_region);
       out__.write(b_age_edu);
       out__.write(b_hat);
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(sigma);
       out__.write(sigma_age);
       out__.write(sigma_edu);
@@ -5379,7 +5379,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       out__.write(b_region);
       out__.write(b_age_edu);
       out__.write(b_hat);
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -5511,8 +5511,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         }
       } 
       out__.write(b_hat);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -5880,8 +5880,8 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
       i = stan::math::normal_rng(5, 1, base_rng__);
       current_statement__ = 8;
       y = stan::math::normal_rng(z, 1, base_rng__);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 0U;
     
@@ -5906,8 +5906,8 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     
     try {
       
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -5947,8 +5947,8 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       } 
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -5967,8 +5967,8 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     try {
       int pos__;
       pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -6231,8 +6231,8 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
       }
       current_statement__ = 7;
       y = stan::math::normal_rng(z, 1, base_rng__);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 0U;
     
@@ -6257,8 +6257,8 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     
     try {
       
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -6298,8 +6298,8 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       } 
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -6318,8 +6318,8 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     try {
       int pos__;
       pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -6604,8 +6604,8 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
           }
         } 
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 2 + 2 + 1;
     
@@ -6687,8 +6687,8 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
           }
         } 
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -6752,11 +6752,11 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       out__.write(mu);
       out__.write(sigma);
       out__.write(theta);
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(mu);
       out__.write(sigma);
       out__.write(theta);
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -6798,8 +6798,8 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       local_scalar_t__ theta;
       theta = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 1, theta);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -7093,8 +7093,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       stan::math::check_greater_or_equal(function__, "sigma", sigma, 0);
       current_statement__ = 11;
       stan::math::validate_non_negative_index("theta", "J", J);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + J + 1;
     
@@ -7137,8 +7137,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
         current_statement__ = 5;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, theta, sigma));
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -7198,11 +7198,11 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       out__.write(mu);
       out__.write(theta);
       out__.write(tau);
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(mu);
       out__.write(theta);
       out__.write(tau);
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -7237,8 +7237,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       local_scalar_t__ tau;
       tau = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, tau);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -7832,8 +7832,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
                                               n_region_full);
       current_statement__ = 51;
       stan::math::validate_non_negative_index("y_hat", "N", N);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = n_age + n_edu + n_age_edu + n_state + n_region_full + 
       5 + 1 + 1 + 1 + 1 + 1;
@@ -8018,8 +8018,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         current_statement__ = 21;
         lp_accum__.add(stan::math::bernoulli_logit_lpmf<propto__>(y, y_hat));
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -8248,7 +8248,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       if (emit_transformed_parameters__) {
         out__.write(y_hat);
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(a);
       out__.write(b);
       out__.write(c);
@@ -8263,7 +8263,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       if (emit_transformed_parameters__) {
         out__.write(y_hat);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -8383,8 +8383,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       local_scalar_t__ sigma_e;
       sigma_e = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 100, sigma_e);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -8873,8 +8873,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       stan::math::validate_non_negative_index("x", "N", N);
       current_statement__ = 42;
       stan::math::validate_non_negative_index("y", "N", N);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + phi_std_raw_1dim__;
     
@@ -8953,8 +8953,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         current_statement__ = 26;
         lp_accum__.add(stan::math::gamma_lpdf<propto__>(tau_phi, 1, 1));
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -9134,7 +9134,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       out__.write(theta_std);
       out__.write(x);
       out__.write(y);
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(tau_phi);
       out__.write(phi_std_raw);
       if (emit_transformed_parameters__) {
@@ -9151,7 +9151,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         out__.write(x);
         out__.write(y);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -9188,8 +9188,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         }
       } 
       out__.write(phi_std_raw);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -9575,8 +9575,8 @@ int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
         current_statement__ = 66;
         return 0;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
@@ -9616,8 +9616,8 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
         current_statement__ = 67;
         return 0;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T2__, typename T3__,
@@ -9776,8 +9776,8 @@ template <typename T2__, typename T3__,
         current_statement__ = 70;
         return chi;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 int
@@ -10132,8 +10132,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       current_statement__ = 65;
       stan::math::validate_non_negative_index("chi", "n_occasions",
                                               n_occasions);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + 1 + nind + 1;
     
@@ -10517,8 +10517,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
           }
         } 
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -10831,7 +10831,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
         out__.write(lcm_sym67__);
       } 
       out__.write(lcm_sym68__);
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(mean_phi);
       out__.write(mean_p);
       out__.write(epsilon);
@@ -10845,7 +10845,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       if (emit_generated_quantities__) {
         out__.write(lcm_sym68__);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -10885,8 +10885,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       local_scalar_t__ sigma;
       sigma = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 5, sigma);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -11382,8 +11382,8 @@ int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
         current_statement__ = 137;
         return 0;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
@@ -11423,8 +11423,8 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
         current_statement__ = 138;
         return 0;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, typename T1__,
@@ -11589,8 +11589,8 @@ template <typename T0__, typename T1__,
         current_statement__ = 141;
         return chi;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <bool propto__, typename T3__, typename T4__, typename T5__,
@@ -12157,8 +12157,8 @@ template <bool propto__, typename T3__, typename T4__, typename T5__,
           }
         } 
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 int
@@ -12551,8 +12551,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       stan::math::validate_non_negative_index("z", "M", M);
       current_statement__ = 136;
       stan::math::validate_non_negative_index("z", "n_occasions", n_occasions);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + 1 + 1 + n_occasions + M + 1;
     
@@ -13368,8 +13368,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
           } 
         }
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -14023,7 +14023,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
           } 
         }
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(mean_phi);
       out__.write(mean_p);
       out__.write(psi);
@@ -14065,7 +14065,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
           }
         } 
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -14121,8 +14121,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       local_scalar_t__ sigma;
       sigma = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 5, sigma);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -14786,8 +14786,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       stan::math::validate_non_negative_index("log_Pr_z", "I", I);
       current_statement__ = 36;
       stan::math::validate_non_negative_index("log_Pr_z", "K", K);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = (K - 1) + (J * K * (K - 1));
     
@@ -14969,8 +14969,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           }
         } 
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -15352,7 +15352,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           } 
         }
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(pi);
       if (lcm_sym5__) {
         if (lcm_sym5__) {
@@ -15441,7 +15441,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           }
         } 
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -15541,8 +15541,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         }
       } 
       out__.write_free_simplex(theta);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -15959,8 +15959,8 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       stan::math::validate_non_negative_index("phi_std_raw", "N", N);
       current_statement__ = 24;
       stan::math::validate_non_negative_index("phi", "N", N);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + 1 + 1 + 1 + N + N;
     
@@ -16038,8 +16038,8 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
           stan::math::dot_self(
             stan::model::rvalue(phi, "phi", stan::model::index_multi(node1))));
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -16149,7 +16149,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
         out__.write(lcm_sym5__);
         out__.write(phi);
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(beta0);
       out__.write(beta1);
       out__.write(tau_theta);
@@ -16160,7 +16160,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
         out__.write(lcm_sym5__);
         out__.write(phi);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -16215,8 +16215,8 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
         }
       } 
       out__.write(phi_std_raw);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -16567,8 +16567,8 @@ int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
         current_statement__ = 64;
         return 0;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
@@ -16608,8 +16608,8 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
         current_statement__ = 65;
         return 0;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T2__, typename T3__,
@@ -16768,8 +16768,8 @@ template <typename T2__, typename T3__,
         current_statement__ = 68;
         return chi;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 int
@@ -17207,8 +17207,8 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
       current_statement__ = 63;
       stan::math::validate_non_negative_index("chi", "n_occasions",
                                               n_occasions);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + max_age;
     
@@ -17590,8 +17590,8 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
           }
         } 
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -17890,7 +17890,7 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
         out__.write(p);
         out__.write(inline_sym1__);
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(mean_p);
       out__.write(beta);
       if (emit_transformed_parameters__) {
@@ -17898,7 +17898,7 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
         out__.write(p);
         out__.write(inline_sym1__);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -17933,8 +17933,8 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
         }
       } 
       out__.write_free_lub(0, 1, beta);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -18412,8 +18412,8 @@ int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
         current_statement__ = 133;
         return 0;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
@@ -18453,8 +18453,8 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
         current_statement__ = 134;
         return 0;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, typename T1__,
@@ -18619,8 +18619,8 @@ template <typename T0__, typename T1__,
         current_statement__ = 137;
         return chi;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <bool propto__, typename T3__, typename T4__, typename T5__,
@@ -19178,8 +19178,8 @@ template <bool propto__, typename T3__, typename T4__, typename T5__,
           }
         } 
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
@@ -19242,8 +19242,8 @@ template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
         current_statement__ = 143;
         return stan::math::exp(log_cprob);
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <bool propto__, typename T3__, typename T4__, typename T5__,
@@ -19648,8 +19648,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       stan::math::validate_non_negative_index("z", "M", M);
       current_statement__ = 132;
       stan::math::validate_non_negative_index("z", "n_occasions", n_occasions);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + 1 + n_occasions + epsilon_1dim__ + 1;
     
@@ -20413,8 +20413,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           } 
         }
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -21069,7 +21069,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           } 
         }
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(mean_phi);
       out__.write(mean_p);
       out__.write(gamma);
@@ -21110,7 +21110,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           }
         } 
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -21166,8 +21166,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       local_scalar_t__ sigma;
       sigma = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 5, sigma);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -21585,8 +21585,8 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
       
       current_statement__ = 6;
       i = stan::math::normal_rng(lcm_sym3__, 1, base_rng__);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 0U;
     
@@ -21611,8 +21611,8 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     
     try {
       
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -21652,8 +21652,8 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       } 
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -21672,8 +21672,8 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     try {
       int pos__;
       pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -21900,8 +21900,8 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     try {
       int pos__;
       pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1;
     
@@ -21945,8 +21945,8 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
         current_statement__ = 7;
         lp_accum__.add(y);
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -21992,9 +21992,9 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
         return ;
       } 
       out__.write(x);
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(x);
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -22016,8 +22016,8 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
       local_scalar_t__ x;
       x = in__.read<local_scalar_t__>();
       out__.write(x);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -22266,8 +22266,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       y = context__.vals_r("y");
       current_statement__ = 6;
       stan::math::validate_non_negative_index("theta", "J", J);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = J;
     
@@ -22300,8 +22300,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
         current_statement__ = 2;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, theta, 1));
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -22348,9 +22348,9 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
         return ;
       } 
       out__.write(theta);
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(theta);
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -22379,8 +22379,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
         }
       } 
       out__.write(theta);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -22690,8 +22690,8 @@ int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
         current_statement__ = 60;
         return 0;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
@@ -22731,8 +22731,8 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
         current_statement__ = 61;
         return 0;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T2__, typename T3__,
@@ -22891,8 +22891,8 @@ template <typename T2__, typename T3__,
         current_statement__ = 64;
         return chi;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 int
@@ -23244,8 +23244,8 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
       current_statement__ = 59;
       stan::math::validate_non_negative_index("chi", "n_occasions",
                                               n_occasions);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + 1;
     
@@ -23606,8 +23606,8 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
           }
         } 
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -23883,7 +23883,7 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
         out__.write(p);
         out__.write(inline_sym1__);
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(mean_phi);
       out__.write(mean_p);
       if (emit_transformed_parameters__) {
@@ -23891,7 +23891,7 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
         out__.write(p);
         out__.write(inline_sym1__);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -23916,8 +23916,8 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
       local_scalar_t__ mean_p;
       mean_p = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 1, mean_p);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -24215,8 +24215,8 @@ template <bool propto__, typename T0__, typename T1__,
         current_statement__ = 10;
         return stan::math::normal_lpdf<propto__>(x, mu, 1);
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <bool propto__, typename T1__,
@@ -24233,8 +24233,8 @@ template <bool propto__, typename T1__,
         current_statement__ = 11;
         return stan::math::poisson_lpmf<propto__>(n, mu);
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <bool propto__, typename T0__,
@@ -24251,8 +24251,8 @@ template <bool propto__, typename T0__,
         current_statement__ = 12;
         return foo_lpdf<propto__>(x, 0.5, pstream__);
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <bool propto__, typename T0__, stan::require_stan_scalar_t<T0__>*>
@@ -24320,8 +24320,8 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       
       current_statement__ = 9;
       n = context__.vals_i("n")[(1 - 1)];
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1;
     
@@ -24386,8 +24386,8 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
         }
         lp_accum__.add(inline_sym34__);
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -24479,7 +24479,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       } 
       out__.write(inline_sym16__);
       out__.write(inline_sym22__);
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(mu);
       if (emit_transformed_parameters__) {
         out__.write(inline_sym13__);
@@ -24488,7 +24488,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
         out__.write(inline_sym16__);
         out__.write(inline_sym22__);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -24510,8 +24510,8 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       local_scalar_t__ mu;
       mu = in__.read<local_scalar_t__>();
       out__.write(mu);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -24993,8 +24993,8 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       stan::math::validate_non_negative_index("psi_con", "R", R);
       current_statement__ = 51;
       stan::math::validate_non_negative_index("z", "R", R);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + 1 + 1 + 1;
     
@@ -25116,8 +25116,8 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
           }
         } 
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -25319,7 +25319,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       out__.write(lcm_sym18__);
       out__.write(psi_con);
       out__.write(z);
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(alpha_occ);
       out__.write(beta_occ);
       out__.write(alpha_p);
@@ -25333,7 +25333,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
         out__.write(psi_con);
         out__.write(z);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -25364,8 +25364,8 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       local_scalar_t__ beta_p;
       beta_p = in__.read<local_scalar_t__>();
       out__.write(beta_p);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -25852,8 +25852,8 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       stan::math::validate_non_negative_index("a2", "J", J);
       current_statement__ = 34;
       stan::math::validate_non_negative_index("y_hat", "N", N);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + J + J + 1 + 1 + 1 + 1 + 1;
     
@@ -25982,8 +25982,8 @@ class off_small_model final : public model_base_crtp<off_small_model> {
         current_statement__ = 19;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, y_hat, sigma_y));
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -26149,7 +26149,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
         out__.write(lcm_sym5__);
         out__.write(y_hat);
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(beta);
       out__.write(eta1);
       out__.write(eta2);
@@ -26163,7 +26163,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
         out__.write(lcm_sym5__);
         out__.write(y_hat);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -26224,8 +26224,8 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       local_scalar_t__ sigma_y;
       sigma_y = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 100, sigma_y);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -26610,8 +26610,8 @@ template <bool propto__, typename T0__, typename T_lp__,
         current_statement__ = 9;
         lp_accum__.add(y);
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 int rfun(const int& y, std::ostream* pstream__) {
@@ -26634,8 +26634,8 @@ int rfun(const int& y, std::ostream* pstream__) {
         current_statement__ = 89;
         return (y + 2);
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <bool propto__, typename T_lp__, typename T_lp_accum__> int
@@ -26651,8 +26651,8 @@ template <bool propto__, typename T_lp__, typename T_lp_accum__> int
         current_statement__ = 90;
         return 24;
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 int rfun_functor__::operator()(const int& y, std::ostream* pstream__)  const
@@ -26710,8 +26710,8 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     try {
       int pos__;
       pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + 1 + (3 * 2) + 2 + 3;
     
@@ -27273,8 +27273,8 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         current_statement__ = 87;
         lp_accum__.add(paramvar);
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -27353,13 +27353,13 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       out__.write(x_matrix);
       out__.write(x_vector);
       out__.write(x_cov);
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(theta);
       out__.write(phi);
       out__.write(x_matrix);
       out__.write(x_vector);
       out__.write(x_cov);
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -27459,8 +27459,8 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
       }
       out__.write_free_cov_matrix(x_cov);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -27724,8 +27724,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
         current_statement__ = 2;
         return (x + 0.5);
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 double dumb(const int& x, std::ostream* pstream__) {
@@ -27741,8 +27741,8 @@ double dumb(const int& x, std::ostream* pstream__) {
         current_statement__ = 4;
         return (x - 0.5);
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 double dumb_functor__::operator()(const int& x, std::ostream* pstream__) 
@@ -27790,8 +27790,8 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
     try {
       int pos__;
       pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 0U;
     
@@ -27820,8 +27820,8 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
         current_statement__ = 1;
         lp_accum__.add(dumb(1.0, pstream__));
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -27861,8 +27861,8 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       } 
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -27881,8 +27881,8 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
     try {
       int pos__;
       pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -28294,8 +28294,8 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       stan::math::validate_non_negative_index("a", "n_pair", n_pair);
       current_statement__ = 24;
       stan::math::validate_non_negative_index("y_hat", "N", N);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = n_pair + 2 + 1 + 1 + 1;
     
@@ -28389,8 +28389,8 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         current_statement__ = 12;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, y_hat, sigma_y));
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -28511,7 +28511,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       if (emit_transformed_parameters__) {
         out__.write(y_hat);
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(a);
       out__.write(beta);
       out__.write(mu_a);
@@ -28520,7 +28520,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       if (emit_transformed_parameters__) {
         out__.write(y_hat);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -28572,8 +28572,8 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       local_scalar_t__ sigma_y;
       sigma_y = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 100, sigma_y);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -30553,8 +30553,8 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
       
       current_statement__ = 10;
       idy = context__.vals_i("idy");
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = (10 * 10) + (10 * 10);
     
@@ -30618,8 +30618,8 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
           ((stan::math::sum(lcm_sym4__) + stan::math::sum(lcm_sym5__)) +
             stan::math::sum(lcm_sym5__)));
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -30677,10 +30677,10 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
       } 
       out__.write(m2);
       out__.write(m3);
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(m2);
       out__.write(m3);
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -31747,8 +31747,8 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
         }
       }
       out__.write(m3);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -32189,8 +32189,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       stan::math::validate_non_negative_index("b", "I", I);
       current_statement__ = 32;
       stan::math::validate_non_negative_index("b", "K", 8);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + 1 + 1 + 1 + 1 + (I * K);
     
@@ -32317,8 +32317,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
           }
         } 
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -32702,7 +32702,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       if (emit_transformed_parameters__) {
         out__.write(lcm_sym2__);
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(alpha0);
       out__.write(alpha1);
       out__.write(alpha2);
@@ -32808,7 +32808,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       if (emit_transformed_parameters__) {
         out__.write(lcm_sym2__);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -32944,8 +32944,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
         }
       }
       out__.write(b);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -33211,8 +33211,8 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     try {
       int pos__;
       pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1;
     
@@ -33297,8 +33297,8 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
           for_loop_var = 1;
         }
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -33418,7 +33418,7 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
         out__.write(no_init_if);
         out__.write(for_loop_var);
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(y);
       if (emit_transformed_parameters__) {
         out__.write(no_init);
@@ -33428,7 +33428,7 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
         out__.write(no_init_if);
         out__.write(for_loop_var);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -33450,8 +33450,8 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       local_scalar_t__ y;
       y = in__.read<local_scalar_t__>();
       out__.write(y);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -33701,8 +33701,8 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     try {
       int pos__;
       pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 0U;
     
@@ -33727,8 +33727,8 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     
     try {
       
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -34044,11 +34044,11 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
         }
       }
       out__.write(x);
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       if (emit_generated_quantities__) {
         out__.write(x);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -34067,8 +34067,8 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     try {
       int pos__;
       pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     

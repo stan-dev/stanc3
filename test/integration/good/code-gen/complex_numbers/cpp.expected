@@ -187,8 +187,8 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
       stan::math::validate_non_negative_index("carray", "N", N);
       current_statement__ = 105;
       stan::math::validate_non_negative_index("carray", "N", N);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = (N * N * 2) + (N * 2) + (N * 2) + 2 + (N * N) + 
       N + N + 1;
@@ -581,8 +581,8 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
       current_statement__ = 90;
       stan::model::assign(carray, stan::math::to_array_2d(cmat),
         "assigning variable carray");
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -1040,7 +1040,7 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
           }
         }
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(cmat);
       out__.write(cvec);
       out__.write(crowvec);
@@ -1060,7 +1060,7 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
           }
         }
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -1137,8 +1137,8 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
       local_scalar_t__ r = DUMMY_VAR__;
       r = in__.read<local_scalar_t__>();
       out__.write(r);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -1865,8 +1865,8 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       stan::math::validate_non_negative_index("carray", "N", N);
       current_statement__ = 105;
       stan::math::validate_non_negative_index("carray", "N", N);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 0U;
     
@@ -1891,8 +1891,8 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     
     try {
       
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -2272,7 +2272,7 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
           out__.write(carray[(sym2__ - 1)][(sym1__ - 1)]);
         }
       }
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       if (emit_generated_quantities__) {
         out__.write(gq_c_matrix);
         out__.write(gq_c_vector);
@@ -2284,7 +2284,7 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
           }
         }
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -2303,8 +2303,8 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -2958,8 +2958,8 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       stan::math::validate_non_negative_index("carray", "N", N);
       current_statement__ = 116;
       stan::math::validate_non_negative_index("carray", "N", N);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = (N * N * 2) + (N * 2) + (N * 2) + 2 + (N * N) + 
       N + N + 1;
@@ -3338,8 +3338,8 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       current_statement__ = 85;
       stan::model::assign(carray, stan::math::to_array_2d(cvmat),
         "assigning variable carray");
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -3783,7 +3783,7 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
           }
         }
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(cvmat);
       out__.write(cvvec);
       out__.write(cvrowvec);
@@ -3803,7 +3803,7 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
           }
         }
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -3880,8 +3880,8 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       local_scalar_t__ v = DUMMY_VAR__;
       v = in__.read<local_scalar_t__>();
       out__.write(v);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -4560,8 +4560,8 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
           }
         }
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 0U;
     
@@ -4586,8 +4586,8 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
     
     try {
       
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -4626,8 +4626,8 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       } 
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -4646,8 +4646,8 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -5326,8 +5326,8 @@ std::complex<double> foo(std::ostream* pstream__) {
     try {
       current_statement__ = 406;
       return stan::math::to_complex();
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
@@ -5342,8 +5342,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     try {
       current_statement__ = 408;
       return 1.0;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
@@ -5358,8 +5358,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     try {
       current_statement__ = 410;
       return stan::math::to_complex(r);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
@@ -5374,8 +5374,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     try {
       current_statement__ = 412;
       return z;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 std::vector<std::complex<double>> foo4(std::ostream* pstream__) {
@@ -5389,8 +5389,8 @@ std::vector<std::complex<double>> foo4(std::ostream* pstream__) {
       current_statement__ = 414;
       return std::vector<std::complex<double>>{stan::math::to_complex(),
           stan::math::to_complex()};
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
@@ -5405,8 +5405,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     try {
       current_statement__ = 416;
       return 1.0;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
@@ -5422,8 +5422,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
       current_statement__ = 418;
       return std::vector<std::complex<local_scalar_t__>>{
           stan::math::to_complex(r), stan::math::to_complex(r, r)};
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
@@ -5438,8 +5438,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     try {
       current_statement__ = 420;
       return z;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
@@ -5455,8 +5455,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     try {
       current_statement__ = 422;
       return 1.0;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
@@ -5477,8 +5477,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
           std::vector<std::complex<local_scalar_t__>>{
           stan::math::to_complex(r), stan::math::to_complex(r),
           stan::math::to_complex(r)}};
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
@@ -5494,8 +5494,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     try {
       current_statement__ = 426;
       return z;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_stan_scalar_t<T0__>*>
@@ -5893,8 +5893,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       stan::math::validate_non_negative_index("i_arr", "0", 0);
       current_statement__ = 405;
       stan::math::validate_non_negative_index("i_arr_1", "1", 1);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + 2 + (2 * 2) + (2 * 3 * 2);
     
@@ -6139,8 +6139,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         lp_accum__.add(
           stan::math::normal_lpdf<propto__>(stan::math::abs(p_complex), 0, 1));
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -7124,7 +7124,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       out__.write(zi);
       out__.write(yi);
       out__.write(x);
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(p_r);
       out__.write(p_complex);
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
@@ -7167,7 +7167,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         out__.write(yi);
         out__.write(x);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -7214,8 +7214,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         }
       }
       out__.write(p_complex_array_2d);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -7618,8 +7618,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 0U;
     
@@ -7672,8 +7672,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
            DUMMY_VAR__);
       current_statement__ = 4;
       stan::model::assign(zx, x, "assigning variable zx");
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -7753,14 +7753,14 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
         out__.write(x);
         out__.write(zx);
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       if (emit_transformed_parameters__) {
         out__.write(z);
         out__.write(zs);
         out__.write(x);
         out__.write(zx);
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -7779,8 +7779,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -8110,8 +8110,8 @@ template <typename T0__,
     try {
       current_statement__ = 15;
       return Z;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__,
@@ -8131,8 +8131,8 @@ template <typename T0__,
       std::stringstream errmsg_stream__;
       errmsg_stream__ << "called the wrong foo";
       throw std::domain_error(errmsg_stream__.str());
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
@@ -8149,8 +8149,8 @@ template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
     try {
       current_statement__ = 19;
       return Z;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
@@ -8169,8 +8169,8 @@ template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
       std::stringstream errmsg_stream__;
       errmsg_stream__ << "called the wrong foo";
       throw std::domain_error(errmsg_stream__.str());
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_row_vector_t<T0__>* = nullptr,
@@ -8187,8 +8187,8 @@ template <typename T0__, stan::require_row_vector_t<T0__>* = nullptr,
     try {
       current_statement__ = 23;
       return Z;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_row_vector_t<T0__>* = nullptr,
@@ -8207,8 +8207,8 @@ template <typename T0__, stan::require_row_vector_t<T0__>* = nullptr,
       std::stringstream errmsg_stream__;
       errmsg_stream__ << "called the wrong foo";
       throw std::domain_error(errmsg_stream__.str());
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
@@ -8224,8 +8224,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     try {
       current_statement__ = 27;
       return Z;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
@@ -8243,8 +8243,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
       std::stringstream errmsg_stream__;
       errmsg_stream__ << "called the wrong foo";
       throw std::domain_error(errmsg_stream__.str());
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, stan::require_stan_scalar_t<T0__>*>
@@ -8349,8 +8349,8 @@ class user_function_templating_model final : public model_base_crtp<user_functio
       
       current_statement__ = 14;
       N = 3;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 0U;
     
@@ -8416,8 +8416,8 @@ class user_function_templating_model final : public model_base_crtp<user_functio
             std::vector<Eigen::Matrix<std::complex<local_scalar_t__>, -1, -1>>{
             x, x}, pstream__), "assigning variable w");
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -8456,8 +8456,8 @@ class user_function_templating_model final : public model_base_crtp<user_functio
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       } 
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -8476,8 +8476,8 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     

@@ -59,8 +59,8 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
       
       current_statement__ = 2;
       q = (p + 5);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 0U;
     
@@ -85,8 +85,8 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     
     try {
       
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -125,8 +125,8 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       } 
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -145,8 +145,8 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     

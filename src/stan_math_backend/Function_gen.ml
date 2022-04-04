@@ -507,8 +507,8 @@ let%expect_test "udf" =
       (void) DUMMY_VAR__;  // suppress unused var warning
       try {
         return stan::math::add(x, 1);
-      } catch (const std::exception& e) {
-        stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      } catch (const std::exception& _exc) {
+        stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
       }
 
     } |}]
@@ -564,8 +564,8 @@ let%expect_test "udf-expressions" =
       (void) DUMMY_VAR__;  // suppress unused var warning
       try {
         return stan::math::add(x, 1);
-      } catch (const std::exception& e) {
-        stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      } catch (const std::exception& _exc) {
+        stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
       }
 
     } |}]

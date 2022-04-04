@@ -121,8 +121,8 @@ template <typename T0__, typename T1__,
     try {
       current_statement__ = 30;
       return z;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, typename T1__, typename T2__,
@@ -144,8 +144,8 @@ template <typename T0__, typename T1__, typename T2__,
     try {
       current_statement__ = 32;
       return z;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, typename T1__, typename T3__,
@@ -167,8 +167,8 @@ template <typename T0__, typename T1__, typename T3__,
     try {
       current_statement__ = 34;
       return z;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, typename T1__, typename T3__,
@@ -373,8 +373,8 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       stan::math::validate_non_negative_index("z", "M", M);
       current_statement__ = 29;
       stan::math::validate_non_negative_index("z", "N", N);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + N + 1 + N;
     
@@ -440,8 +440,8 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
         current_statement__ = 9;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, 0, 1));
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -545,7 +545,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
           }
         }
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(y);
       out__.write(y0);
       out__.write(t0);
@@ -557,7 +557,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
           }
         }
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -595,8 +595,8 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
         times[(sym1__ - 1)] = in__.read<local_scalar_t__>();
       }
       out__.write(times);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
@@ -993,8 +993,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
         "assigning variable dydt", stan::model::index_uni(4));
       current_statement__ = 45;
       return dydt;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, typename T1__, typename T2__, typename T3__,
@@ -1053,8 +1053,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
         "assigning variable dydt", stan::model::index_uni(4));
       current_statement__ = 53;
       return dydt;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     }
 template <typename T0__, typename T1__, typename T2__, typename T3__,
@@ -1268,8 +1268,8 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
       stan::math::validate_non_negative_index("y", "N_t", N_t);
       current_statement__ = 39;
       stan::math::validate_non_negative_index("y2", "N_t", N_t);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + 1 + 1 + 1;
     
@@ -1395,8 +1395,8 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
               stan::model::rvalue(y2, "y2",
                 stan::model::index_omni(), stan::model::index_uni(4))), 0.15));
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -1508,7 +1508,7 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
           }
         }
       } 
-    } catch (const std::exception& e) {
+    } catch (const std::exception& _exc) {
       out__.write(beta);
       out__.write(gamma);
       out__.write(xi);
@@ -1525,7 +1525,7 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
           }
         }
       } 
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // write_array_impl() 
     
@@ -1556,8 +1556,8 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
       local_scalar_t__ delta = DUMMY_VAR__;
       delta = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, delta);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    } catch (const std::exception& _exc) {
+      stan::lang::rethrow_located(_exc, locations_array__[current_statement__]);
     }
     } // transform_inits_impl() 
     
