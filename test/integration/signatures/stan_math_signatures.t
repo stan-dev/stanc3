@@ -15937,6 +15937,9 @@ Display all Stan math signatures exposed in the language
   num_elements(vector) => int
   num_elements(row_vector) => int
   num_elements(matrix) => int
+  num_elements(complex_vector) => int
+  num_elements(complex_row_vector) => int
+  num_elements(complex_matrix) => int
   num_elements(array[] int) => int
   num_elements(array[] real) => int
   num_elements(array[] vector) => int

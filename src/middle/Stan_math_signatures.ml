@@ -1717,6 +1717,9 @@ let () =
   add_unqualified ("num_elements", ReturnType UInt, [UMatrix], SoA) ;
   add_unqualified ("num_elements", ReturnType UInt, [UVector], SoA) ;
   add_unqualified ("num_elements", ReturnType UInt, [URowVector], SoA) ;
+  add_unqualified ("num_elements", ReturnType UInt, [UComplexMatrix], SoA) ;
+  add_unqualified ("num_elements", ReturnType UInt, [UComplexVector], SoA) ;
+  add_unqualified ("num_elements", ReturnType UInt, [UComplexRowVector], SoA) ;
   List.iter
     ~f:(fun i ->
       List.iter
