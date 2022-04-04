@@ -481,7 +481,7 @@ let pp_overloads ppf {Program.output_vars; _} =
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -507,7 +507,7 @@ let pp_overloads ppf {Program.output_vars; _} =
       const size_t num_gen_quantities = %a;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 

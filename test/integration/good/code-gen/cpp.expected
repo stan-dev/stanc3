@@ -353,7 +353,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -380,7 +380,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -699,7 +699,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -725,7 +725,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -1806,7 +1806,7 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -1836,7 +1836,7 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
           + 1) + 1) + 1) + 1) + 1) + 1) + 1);
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -2279,7 +2279,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -2306,7 +2306,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -2755,7 +2755,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -2782,7 +2782,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -12174,7 +12174,7 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -12216,7 +12216,7 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       ((3 * 3) * 3)) + (3 * 4)) + (2 * 2));
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -14127,7 +14127,7 @@ const
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -14156,7 +14156,7 @@ const
   ((((((((T * 2) + 1) + 1) + 1) + 1) + 3) + 3) + 2);
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -18764,7 +18764,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -18792,7 +18792,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
   (N * N);
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -19452,7 +19452,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -19480,7 +19480,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -21169,7 +21169,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -21196,7 +21196,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -21945,7 +21945,7 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -21972,7 +21972,7 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -22403,7 +22403,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -22430,7 +22430,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -22742,7 +22742,7 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -22768,7 +22768,7 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -23171,7 +23171,7 @@ ident_functor__::operator()(const std::complex<T0__>& x,
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -23198,7 +23198,7 @@ ident_functor__::operator()(const std::complex<T0__>& x,
   (((1 + 2) + 4) + 1);
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -23788,7 +23788,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -23815,7 +23815,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -26429,7 +26429,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -26459,7 +26459,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -30627,7 +30627,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -30659,7 +30659,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
        + 1) + 1) + 1) + 1);
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -31713,7 +31713,7 @@ rhs_functor__::operator()(const T0__& t, const T1__& y, const T2__& alpha,
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -31744,7 +31744,7 @@ rhs_functor__::operator()(const T0__& t, const T1__& y, const T2__& alpha,
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -32235,7 +32235,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -32261,7 +32261,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -32610,7 +32610,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -32636,7 +32636,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -35321,7 +35321,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -35353,7 +35353,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -35801,7 +35801,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -35828,7 +35828,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -36170,7 +36170,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -36196,7 +36196,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
@@ -36545,7 +36545,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
@@ -36571,7 +36571,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
       const size_t num_gen_quantities = 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      if (vars.size() == 0) {
+      if (vars.size() < num_to_write) {
         vars = std::vector<double>(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());        
         write_array_impl(base_rng, params_r, params_i, vars, 
