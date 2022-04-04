@@ -235,7 +235,7 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
     "template <typename RNG, typename VecR, typename VecI, typename VecVar, @ \
      stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, @ \
      stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, @ \
-     stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> \
+     stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> \
      @ " ;
   let params =
     [ "RNG& base_rng__"; "VecR& params_r__"; "VecI& params_i__"; "VecVar& vars__"
@@ -382,7 +382,7 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
 let pp_transform_inits_impl ppf {Program.transform_inits; _} =
   pf ppf
     "template <typename VecVar, typename VecI, @ \
-     stan::require_std_vector_t<VecVar>* = nullptr, @ \
+     stan::require_vector_t<VecVar>* = nullptr, @ \
      stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> @ " ;
   let params =
     [ "VecVar& params_r__"; "VecI& params_i__"; "VecVar& vars__"
@@ -484,13 +484,14 @@ let pp_overloads ppf {Program.output_vars; _} =
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -516,7 +517,8 @@ let pp_overloads ppf {Program.output_vars; _} =
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
