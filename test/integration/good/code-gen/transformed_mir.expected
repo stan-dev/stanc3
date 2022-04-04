@@ -14139,6 +14139,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (Assignment (p_real UReal ())
           ((pattern
             (FunApp
@@ -24107,6 +24116,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (NRFunApp
           (CompilerInternal
            (FnWriteParam (unconstrain_opt ())

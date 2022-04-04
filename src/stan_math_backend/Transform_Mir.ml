@@ -569,9 +569,15 @@ let trans_prog (p : Program.Typed.t) =
     |> add_reads p.output_vars param_read
     |> translate_to_open_cl |> collect_decls_and_insert_writes
     |> fun (decls, stmts, writes) ->
-    [ {Stmt.Fixed.pattern= SList decls; meta= Location_span.empty}
-    ; {Stmt.Fixed.pattern= Block stmts; meta= Location_span.empty}
-    ; {Stmt.Fixed.pattern= Block writes; meta= Location_span.empty} ] in
+    let wrap pattern = {Stmt.Fixed.pattern; meta= Location_span.empty} in
+    let dummy_write =
+      Stmt.Helpers.internal_nrfunapp
+        (FnWriteParam
+           {unconstrain_opt= None; var= Expr.Helpers.variable "gq_marker__"} )
+        [] Location_span.empty in
+    (* HACK: insert a dummy writes so optimization can't rearrange these blocks *)
+    [ wrap (SList decls); wrap (Block (dummy_write :: stmts))
+    ; wrap (Block (dummy_write :: writes)) ] in
   let log_prob =
     p.log_prob |> add_reads p.output_vars param_read |> translate_to_open_cl
   in

@@ -257,8 +257,27 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
       ; "constexpr bool jacobian__ = false;" ]
       pp_unused "DUMMY_VAR__" pp_function__ (prog_name, "write_array") in
   match List.rev generate_quantities with
-  | {Stmt.Fixed.pattern= Block writes; _}
-    :: {Stmt.Fixed.pattern= Block stmts; _} :: rev_decls ->
+  | { Stmt.Fixed.pattern=
+        Block
+          ({ pattern=
+               NRFunApp
+                 ( CompilerInternal
+                     (FnWriteParam {var= {pattern= Var "gq_marker__"; _}; _})
+                 , _ )
+           ; _ }
+          :: writes )
+    ; _ }
+    :: { Stmt.Fixed.pattern=
+           Block
+             ({ pattern=
+                  NRFunApp
+                    ( CompilerInternal
+                        (FnWriteParam {var= {pattern= Var "gq_marker__"; _}; _})
+                    , _ )
+              ; _ }
+             :: stmts )
+       ; _ }
+       :: rev_decls ->
       let decls = List.rev rev_decls and cleanup = writes in
       pp_method_b ppf "void" "write_array_impl" params intro ~decls ~cleanup
         stmts

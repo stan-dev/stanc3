@@ -83,6 +83,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (Assignment (A_p UMatrix ())
           ((pattern
             (FunApp
@@ -210,6 +219,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (NRFunApp
           (CompilerInternal
            (FnWriteParam (unconstrain_opt ())
@@ -2822,6 +2840,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (Assignment (high_low_est UVector ())
           ((pattern
             (FunApp
@@ -4644,6 +4671,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (NRFunApp
           (CompilerInternal
            (FnWriteParam (unconstrain_opt ())
@@ -6677,6 +6713,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (Assignment (X_p UMatrix ())
           ((pattern
             (FunApp
@@ -7040,6 +7085,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (NRFunApp
           (CompilerInternal
            (FnWriteParam (unconstrain_opt ())
@@ -9905,6 +9959,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (Assignment (alpha UReal ())
           ((pattern
             (FunApp
@@ -11233,6 +11296,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (NRFunApp
           (CompilerInternal
            (FnWriteParam (unconstrain_opt ())
@@ -13271,6 +13343,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (Assignment (alpha UReal ())
           ((pattern
             (FunApp
@@ -13383,6 +13464,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (NRFunApp
           (CompilerInternal
            (FnWriteParam (unconstrain_opt ())
@@ -13786,6 +13876,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (Assignment (soa_x UMatrix ())
           ((pattern
             (FunApp
@@ -14107,6 +14206,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (NRFunApp
           (CompilerInternal
            (FnWriteParam (unconstrain_opt ())
@@ -14769,6 +14877,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (Assignment (row_soa UMatrix ())
           ((pattern
             (FunApp
@@ -15088,6 +15205,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (NRFunApp
           (CompilerInternal
            (FnWriteParam (unconstrain_opt ())
@@ -15610,6 +15736,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (Assignment (aos_p UMatrix ())
           ((pattern
             (FunApp
@@ -15871,6 +16006,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (NRFunApp
           (CompilerInternal
            (FnWriteParam (unconstrain_opt ())
@@ -16264,6 +16408,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (Assignment (first_pass_soa_x UMatrix ())
           ((pattern
             (FunApp
@@ -16438,6 +16591,15 @@
    ((pattern
      (Block
       (((pattern
+         (NRFunApp
+          (CompilerInternal
+           (FnWriteParam (unconstrain_opt ())
+            (var
+             ((pattern (Var gq_marker__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ()))
+        (meta <opaque>))
+       ((pattern
          (NRFunApp
           (CompilerInternal
            (FnWriteParam (unconstrain_opt ())
