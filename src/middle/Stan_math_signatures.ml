@@ -962,6 +962,21 @@ let () =
     ("columns_dot_product", ReturnType URowVector, [URowVector; URowVector], AoS) ;
   add_unqualified
     ("columns_dot_product", ReturnType URowVector, [UMatrix; UMatrix], SoA) ;
+  add_unqualified
+    ( "columns_dot_product"
+    , ReturnType UComplexRowVector
+    , [UComplexVector; UComplexVector]
+    , AoS ) ;
+  add_unqualified
+    ( "columns_dot_product"
+    , ReturnType UComplexRowVector
+    , [UComplexRowVector; UComplexRowVector]
+    , AoS ) ;
+  add_unqualified
+    ( "columns_dot_product"
+    , ReturnType UComplexRowVector
+    , [UComplexMatrix; UComplexMatrix]
+    , AoS ) ;
   add_unqualified ("columns_dot_self", ReturnType URowVector, [UVector], AoS) ;
   add_unqualified ("columns_dot_self", ReturnType URowVector, [URowVector], AoS) ;
   add_unqualified ("columns_dot_self", ReturnType URowVector, [UMatrix], AoS) ;
@@ -1052,28 +1067,28 @@ let () =
   add_unqualified
     ("dot_product", ReturnType UReal, [UArray UReal; UArray UReal], SoA) ;
   add_unqualified
-    ("dot_product", ReturnType UComplex, [UComplexVector; UComplexVector], SoA) ;
+    ("dot_product", ReturnType UComplex, [UComplexVector; UComplexVector], AoS) ;
   add_unqualified
     ( "dot_product"
     , ReturnType UComplex
     , [UComplexRowVector; UComplexRowVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "dot_product"
     , ReturnType UComplex
     , [UComplexVector; UComplexRowVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "dot_product"
     , ReturnType UComplex
     , [UComplexRowVector; UComplexVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
-    ("dot_product", ReturnType UComplex, [UArray UComplex; UArray UComplex], SoA) ;
+    ("dot_product", ReturnType UComplex, [UArray UComplex; UArray UComplex], AoS) ;
   add_unqualified ("dot_self", ReturnType UReal, [UVector], SoA) ;
   add_unqualified ("dot_self", ReturnType UReal, [URowVector], SoA) ;
-  add_unqualified ("dot_self", ReturnType UComplex, [UComplexVector], SoA) ;
-  add_unqualified ("dot_self", ReturnType UComplex, [UComplexRowVector], SoA) ;
+  add_unqualified ("dot_self", ReturnType UComplex, [UComplexVector], AoS) ;
+  add_unqualified ("dot_self", ReturnType UComplex, [UComplexRowVector], AoS) ;
   add_nullary "e" ;
   add_unqualified ("eigenvalues_sym", ReturnType UVector, [UMatrix], AoS) ;
   add_unqualified ("eigenvectors_sym", ReturnType UMatrix, [UMatrix], AoS) ;
@@ -1528,11 +1543,11 @@ let () =
     ("mdivide_left_tri_low", ReturnType UVector, [UMatrix; UVector], AoS) ;
   add_unqualified
     ("mdivide_right", ReturnType URowVector, [URowVector; UMatrix], AoS) ;
+  add_unqualified ("mdivide_right", ReturnType UMatrix, [UMatrix; UMatrix], AoS) ;
   add_unqualified
     ("mdivide_right_spd", ReturnType UMatrix, [UMatrix; UMatrix], AoS) ;
   add_unqualified
     ("mdivide_right_spd", ReturnType URowVector, [URowVector; UMatrix], AoS) ;
-  add_unqualified ("mdivide_right", ReturnType UMatrix, [UMatrix; UMatrix], AoS) ;
   add_unqualified
     ("mdivide_right_tri_low", ReturnType URowVector, [URowVector; UMatrix], AoS) ;
   add_unqualified
@@ -1974,6 +1989,21 @@ let () =
     ("rows_dot_product", ReturnType UVector, [URowVector; URowVector], AoS) ;
   add_unqualified
     ("rows_dot_product", ReturnType UVector, [UMatrix; UMatrix], SoA) ;
+  add_unqualified
+    ( "rows_dot_product"
+    , ReturnType UComplexVector
+    , [UComplexVector; UComplexVector]
+    , AoS ) ;
+  add_unqualified
+    ( "rows_dot_product"
+    , ReturnType UComplexVector
+    , [UComplexRowVector; UComplexRowVector]
+    , AoS ) ;
+  add_unqualified
+    ( "rows_dot_product"
+    , ReturnType UComplexVector
+    , [UComplexMatrix; UComplexMatrix]
+    , AoS ) ;
   add_unqualified ("rows_dot_self", ReturnType UVector, [UVector], SoA) ;
   add_unqualified ("rows_dot_self", ReturnType UVector, [URowVector], SoA) ;
   add_unqualified ("rows_dot_self", ReturnType UVector, [UMatrix], SoA) ;

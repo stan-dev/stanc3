@@ -3643,6 +3643,9 @@ Display all Stan math signatures exposed in the language
   columns_dot_product(vector, vector) => row_vector
   columns_dot_product(row_vector, row_vector) => row_vector
   columns_dot_product(matrix, matrix) => row_vector
+  columns_dot_product(complex_vector, complex_vector) => complex_row_vector
+  columns_dot_product(complex_row_vector, complex_row_vector) => complex_row_vector
+  columns_dot_product(complex_matrix, complex_matrix) => complex_row_vector
   columns_dot_self(vector) => row_vector
   columns_dot_self(row_vector) => row_vector
   columns_dot_self(matrix) => row_vector
@@ -19396,6 +19399,9 @@ Display all Stan math signatures exposed in the language
   rows_dot_product(vector, vector) => vector
   rows_dot_product(row_vector, row_vector) => vector
   rows_dot_product(matrix, matrix) => vector
+  rows_dot_product(complex_vector, complex_vector) => complex_vector
+  rows_dot_product(complex_row_vector, complex_row_vector) => complex_vector
+  rows_dot_product(complex_matrix, complex_matrix) => complex_vector
   rows_dot_self(vector) => vector
   rows_dot_self(row_vector) => vector
   rows_dot_self(matrix) => vector
