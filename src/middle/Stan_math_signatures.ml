@@ -953,6 +953,9 @@ let () =
   add_unqualified ("cols", ReturnType UInt, [UVector], SoA) ;
   add_unqualified ("cols", ReturnType UInt, [URowVector], SoA) ;
   add_unqualified ("cols", ReturnType UInt, [UMatrix], SoA) ;
+  add_unqualified ("cols", ReturnType UInt, [UComplexVector], SoA) ;
+  add_unqualified ("cols", ReturnType UInt, [UComplexRowVector], SoA) ;
+  add_unqualified ("cols", ReturnType UInt, [UComplexMatrix], SoA) ;
   add_unqualified
     ("columns_dot_product", ReturnType URowVector, [UVector; UVector], AoS) ;
   add_unqualified
@@ -1937,6 +1940,9 @@ let () =
   add_unqualified ("rows", ReturnType UInt, [UVector], SoA) ;
   add_unqualified ("rows", ReturnType UInt, [URowVector], SoA) ;
   add_unqualified ("rows", ReturnType UInt, [UMatrix], SoA) ;
+  add_unqualified ("rows", ReturnType UInt, [UComplexVector], SoA) ;
+  add_unqualified ("rows", ReturnType UInt, [UComplexRowVector], SoA) ;
+  add_unqualified ("rows", ReturnType UInt, [UComplexMatrix], SoA) ;
   add_unqualified
     ("rows_dot_product", ReturnType UVector, [UVector; UVector], AoS) ;
   add_unqualified
