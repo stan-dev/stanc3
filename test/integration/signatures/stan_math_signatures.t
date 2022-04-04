@@ -3637,6 +3637,9 @@ Display all Stan math signatures exposed in the language
   cols(vector) => int
   cols(row_vector) => int
   cols(matrix) => int
+  cols(complex_vector) => int
+  cols(complex_row_vector) => int
+  cols(complex_matrix) => int
   columns_dot_product(vector, vector) => row_vector
   columns_dot_product(row_vector, row_vector) => row_vector
   columns_dot_product(matrix, matrix) => row_vector
@@ -3974,6 +3977,11 @@ Display all Stan math signatures exposed in the language
   dot_product(row_vector, vector) => real
   dot_product(row_vector, row_vector) => real
   dot_product(array[] real, array[] real) => real
+  dot_product(complex_vector, complex_vector) => complex
+  dot_product(complex_vector, complex_row_vector) => complex
+  dot_product(complex_row_vector, complex_vector) => complex
+  dot_product(complex_row_vector, complex_row_vector) => complex
+  dot_product(array[] complex, array[] complex) => complex
   dot_self(vector) => real
   dot_self(row_vector) => real
   double_exponential_ccdf_log(real, real, real) => real
@@ -19376,6 +19384,9 @@ Display all Stan math signatures exposed in the language
   rows(vector) => int
   rows(row_vector) => int
   rows(matrix) => int
+  rows(complex_vector) => int
+  rows(complex_row_vector) => int
+  rows(complex_matrix) => int
   rows_dot_product(vector, vector) => vector
   rows_dot_product(row_vector, row_vector) => vector
   rows_dot_product(matrix, matrix) => vector

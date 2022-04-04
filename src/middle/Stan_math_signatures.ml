@@ -1051,6 +1051,25 @@ let () =
   add_unqualified ("dot_product", ReturnType UReal, [URowVector; UVector], SoA) ;
   add_unqualified
     ("dot_product", ReturnType UReal, [UArray UReal; UArray UReal], SoA) ;
+  add_unqualified
+    ("dot_product", ReturnType UComplex, [UComplexVector; UComplexVector], SoA) ;
+  add_unqualified
+    ( "dot_product"
+    , ReturnType UComplex
+    , [UComplexRowVector; UComplexRowVector]
+    , SoA ) ;
+  add_unqualified
+    ( "dot_product"
+    , ReturnType UComplex
+    , [UComplexVector; UComplexRowVector]
+    , SoA ) ;
+  add_unqualified
+    ( "dot_product"
+    , ReturnType UComplex
+    , [UComplexRowVector; UComplexVector]
+    , SoA ) ;
+  add_unqualified
+    ("dot_product", ReturnType UComplex, [UArray UComplex; UArray UComplex], SoA) ;
   add_unqualified ("dot_self", ReturnType UReal, [UVector], SoA) ;
   add_unqualified ("dot_self", ReturnType UReal, [URowVector], SoA) ;
   add_nullary "e" ;
