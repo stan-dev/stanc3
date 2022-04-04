@@ -163,7 +163,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -225,7 +225,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -355,13 +355,14 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -388,7 +389,8 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -562,7 +564,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -602,7 +604,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -699,13 +701,14 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -731,7 +734,8 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -1443,7 +1447,7 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -1580,7 +1584,7 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -1804,13 +1808,14 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -1840,7 +1845,8 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -2083,7 +2089,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -2145,7 +2151,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -2275,13 +2281,14 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -2308,7 +2315,8 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -2504,7 +2512,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -2583,7 +2591,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -2749,13 +2757,14 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -2782,7 +2791,8 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -9316,7 +9326,7 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -10442,7 +10452,7 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -12166,13 +12176,14 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -12214,7 +12225,8 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -13339,7 +13351,7 @@ const
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -13754,7 +13766,7 @@ const
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -14117,13 +14129,14 @@ const
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -14152,7 +14165,8 @@ const
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -16928,7 +16942,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -18583,7 +18597,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -18752,13 +18766,14 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -18786,7 +18801,8 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -19187,7 +19203,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -19271,7 +19287,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -19438,13 +19454,14 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -19472,7 +19489,8 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -20826,7 +20844,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -20912,7 +20930,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -21153,13 +21171,14 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -21186,7 +21205,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -21779,7 +21799,7 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -21823,7 +21843,7 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -21927,13 +21947,14 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -21960,7 +21981,8 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -22161,7 +22183,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -22226,7 +22248,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -22383,13 +22405,14 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -22416,7 +22439,8 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -22590,7 +22614,7 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -22626,7 +22650,7 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -22720,13 +22744,14 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -22752,7 +22777,8 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -22977,7 +23003,7 @@ ident_functor__::operator()(const std::complex<T0__>& x,
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -23033,7 +23059,7 @@ ident_functor__::operator()(const std::complex<T0__>& x,
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -23147,13 +23173,14 @@ ident_functor__::operator()(const std::complex<T0__>& x,
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -23180,7 +23207,8 @@ ident_functor__::operator()(const std::complex<T0__>& x,
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -23566,7 +23594,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -23617,7 +23645,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -23762,13 +23790,14 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -23795,7 +23824,8 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -25456,7 +25486,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -25720,7 +25750,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -26401,13 +26431,14 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -26437,7 +26468,8 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -29741,7 +29773,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -30035,7 +30067,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -30597,13 +30629,14 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -30635,7 +30668,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -31111,7 +31145,7 @@ rhs_functor__::operator()(const T0__& t, const T1__& y, const T2__& alpha,
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -31344,7 +31378,7 @@ rhs_functor__::operator()(const T0__& t, const T1__& y, const T2__& alpha,
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -31681,13 +31715,14 @@ rhs_functor__::operator()(const T0__& t, const T1__& y, const T2__& alpha,
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -31718,7 +31753,8 @@ rhs_functor__::operator()(const T0__& t, const T1__& y, const T2__& alpha,
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -32071,7 +32107,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -32107,7 +32143,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -32201,13 +32237,14 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -32233,7 +32270,8 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -32436,7 +32474,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -32477,7 +32515,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -32574,13 +32612,14 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -32606,7 +32645,8 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -33711,7 +33751,7 @@ class transform_model final : public model_base_crtp<transform_model> {
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -34393,7 +34433,7 @@ class transform_model final : public model_base_crtp<transform_model> {
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -35283,13 +35323,14 @@ class transform_model final : public model_base_crtp<transform_model> {
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -35321,7 +35362,8 @@ class transform_model final : public model_base_crtp<transform_model> {
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -35612,7 +35654,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -35657,7 +35699,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -35761,13 +35803,14 @@ class truncate_model final : public model_base_crtp<truncate_model> {
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -35794,7 +35837,8 @@ class truncate_model final : public model_base_crtp<truncate_model> {
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -35991,7 +36035,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -36031,7 +36075,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -36128,13 +36172,14 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -36160,7 +36205,8 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -36363,7 +36409,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
   stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -36404,7 +36450,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
                                    VecVar& vars__,
@@ -36501,13 +36547,14 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
       std::vector<int> params_i;
       if (vars.size() == 0) {
         vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
-          std::numeric_limits<double>::quiet_NaN())
+          std::numeric_limits<double>::quiet_NaN());
         write_array_impl(base_rng, params_r, params_i, vars,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       } else {
         vars.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
           std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars.tail(num_to_write),
+        auto vars_tail = vars.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
@@ -36533,7 +36580,8 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
         Eigen::Map<Eigen::VectorXd> vars_map(vars.data(), vars.size());
         vars_map.tail(num_to_write) = Eigen::VectorXd::Constant(num_to_write, 
         std::numeric_limits<double>::quiet_NaN());
-        write_array_impl(base_rng, params_r, params_i, vars_map.tail(num_to_write),
+        auto vars_tail = vars_map.tail(num_to_write);
+        write_array_impl(base_rng, params_r, params_i, vars_tail,
           emit_transformed_parameters, emit_generated_quantities, pstream);
       }
     }
