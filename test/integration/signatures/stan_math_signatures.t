@@ -3649,6 +3649,9 @@ Display all Stan math signatures exposed in the language
   columns_dot_self(vector) => row_vector
   columns_dot_self(row_vector) => row_vector
   columns_dot_self(matrix) => row_vector
+  columns_dot_self(complex_vector) => complex_row_vector
+  columns_dot_self(complex_row_vector) => complex_row_vector
+  columns_dot_self(complex_matrix) => complex_row_vector
   conj(complex) => complex
   cos(int) => real
   cos(real) => real
@@ -19405,6 +19408,9 @@ Display all Stan math signatures exposed in the language
   rows_dot_self(vector) => vector
   rows_dot_self(row_vector) => vector
   rows_dot_self(matrix) => vector
+  rows_dot_self(complex_vector) => complex_vector
+  rows_dot_self(complex_row_vector) => complex_vector
+  rows_dot_self(complex_matrix) => complex_vector
   scale_matrix_exp_multiply(real, matrix, matrix) => matrix
   scaled_inv_chi_square_ccdf_log(real, real, real) => real
   scaled_inv_chi_square_ccdf_log(real, real, vector) => real

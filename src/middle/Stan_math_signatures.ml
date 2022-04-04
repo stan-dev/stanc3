@@ -980,6 +980,12 @@ let () =
   add_unqualified ("columns_dot_self", ReturnType URowVector, [UVector], AoS) ;
   add_unqualified ("columns_dot_self", ReturnType URowVector, [URowVector], AoS) ;
   add_unqualified ("columns_dot_self", ReturnType URowVector, [UMatrix], AoS) ;
+  add_unqualified
+    ("columns_dot_self", ReturnType UComplexRowVector, [UComplexVector], AoS) ;
+  add_unqualified
+    ("columns_dot_self", ReturnType UComplexRowVector, [UComplexRowVector], AoS) ;
+  add_unqualified
+    ("columns_dot_self", ReturnType UComplexRowVector, [UComplexMatrix], AoS) ;
   add_unqualified ("conj", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("cos", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("cosh", ReturnType UComplex, [UComplex], AoS) ;
@@ -2007,6 +2013,12 @@ let () =
   add_unqualified ("rows_dot_self", ReturnType UVector, [UVector], SoA) ;
   add_unqualified ("rows_dot_self", ReturnType UVector, [URowVector], SoA) ;
   add_unqualified ("rows_dot_self", ReturnType UVector, [UMatrix], SoA) ;
+  add_unqualified
+    ("rows_dot_self", ReturnType UComplexVector, [UComplexVector], AoS) ;
+  add_unqualified
+    ("rows_dot_self", ReturnType UComplexVector, [UComplexRowVector], AoS) ;
+  add_unqualified
+    ("rows_dot_self", ReturnType UComplexVector, [UComplexMatrix], AoS) ;
   add_unqualified
     ( "scale_matrix_exp_multiply"
     , ReturnType UMatrix
