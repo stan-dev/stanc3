@@ -2175,6 +2175,11 @@ let () =
   add_unqualified ("svd_V", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
   add_unqualified
     ("symmetrize_from_lower_tri", ReturnType UMatrix, [UMatrix], AoS) ;
+  add_unqualified
+    ( "symmetrize_from_lower_tri"
+    , ReturnType UComplexMatrix
+    , [UComplexMatrix]
+    , AoS ) ;
   add_unqualified ("tail", ReturnType URowVector, [URowVector; UInt], SoA) ;
   add_unqualified ("tail", ReturnType UVector, [UVector; UInt], SoA) ;
   List.iter

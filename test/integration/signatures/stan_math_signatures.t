@@ -26426,6 +26426,7 @@ Display all Stan math signatures exposed in the language
   svd_V(matrix) => matrix
   svd_V(complex_matrix) => complex_matrix
   symmetrize_from_lower_tri(matrix) => matrix
+  symmetrize_from_lower_tri(complex_matrix) => complex_matrix
   tail(vector, int) => vector
   tail(row_vector, int) => row_vector
   tail(array[] int, int) => array[] int
