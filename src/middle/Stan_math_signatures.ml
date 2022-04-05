@@ -961,7 +961,8 @@ let () =
   add_unqualified ("chol2inv", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("cholesky_decompose", ReturnType UMatrix, [UMatrix], SoA) ;
   add_binary_vec_int_int "choose" AoS ;
-  add_unqualified ("col", ReturnType UVector, [UMatrix; UInt], SoA) ;
+  add_unqualified ("col", ReturnType UVector, [UMatrix; UInt], AoS) ;
+  add_unqualified ("col", ReturnType UComplexVector, [UComplexMatrix; UInt], SoA) ;
   add_unqualified ("cols", ReturnType UInt, [UVector], SoA) ;
   add_unqualified ("cols", ReturnType UInt, [URowVector], SoA) ;
   add_unqualified ("cols", ReturnType UInt, [UMatrix], SoA) ;
@@ -2038,6 +2039,8 @@ let () =
   add_binary_vec_int_int "rising_factorial" AoS ;
   add_binary_vec_real_int "rising_factorial" AoS ;
   add_unqualified ("row", ReturnType URowVector, [UMatrix; UInt], SoA) ;
+  add_unqualified
+    ("row", ReturnType UComplexRowVector, [UComplexMatrix; UInt], AoS) ;
   add_unqualified ("rows", ReturnType UInt, [UVector], SoA) ;
   add_unqualified ("rows", ReturnType UInt, [URowVector], SoA) ;
   add_unqualified ("rows", ReturnType UInt, [UMatrix], SoA) ;
@@ -2168,6 +2171,8 @@ let () =
   add_unqualified ("sum", ReturnType UComplex, [UComplexMatrix], SoA) ;
   add_unqualified ("svd_U", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("svd_V", ReturnType UMatrix, [UMatrix], SoA) ;
+  add_unqualified ("svd_U", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
+  add_unqualified ("svd_V", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
   add_unqualified
     ("symmetrize_from_lower_tri", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("tail", ReturnType URowVector, [URowVector; UInt], SoA) ;

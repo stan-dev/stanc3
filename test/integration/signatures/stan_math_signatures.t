@@ -3637,6 +3637,7 @@ Display all Stan math signatures exposed in the language
   choose(array[,,,,,,] int, int) => array[,,,,,,] int
   choose(array[,,,,,,] int, array[,,,,,,] int) => array[,,,,,,] int
   col(matrix, int) => vector
+  col(complex_matrix, int) => complex_vector
   cols(vector) => int
   cols(row_vector) => int
   cols(matrix) => int
@@ -19409,6 +19410,7 @@ Display all Stan math signatures exposed in the language
   round(array[,,,,,,] row_vector) => array[,,,,,,] row_vector
   round(array[,,,,,,] matrix) => array[,,,,,,] matrix
   row(matrix, int) => row_vector
+  row(complex_matrix, int) => complex_row_vector
   rows(vector) => int
   rows(row_vector) => int
   rows(matrix) => int
@@ -26420,7 +26422,9 @@ Display all Stan math signatures exposed in the language
   sum(complex_matrix) => complex
   sum(array[] complex) => complex
   svd_U(matrix) => matrix
+  svd_U(complex_matrix) => complex_matrix
   svd_V(matrix) => matrix
+  svd_V(complex_matrix) => complex_matrix
   symmetrize_from_lower_tri(matrix) => matrix
   tail(vector, int) => vector
   tail(row_vector, int) => row_vector
