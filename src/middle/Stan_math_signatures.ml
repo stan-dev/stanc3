@@ -938,6 +938,11 @@ let () =
   add_binary_vec "binomial_coefficient_log" AoS ;
   add_unqualified
     ("block", ReturnType UMatrix, [UMatrix; UInt; UInt; UInt; UInt], SoA) ;
+  add_unqualified
+    ( "block"
+    , ReturnType UComplexMatrix
+    , [UComplexMatrix; UInt; UInt; UInt; UInt]
+    , AoS ) ;
   add_unqualified ("categorical_rng", ReturnType UInt, [UVector], AoS) ;
   add_unqualified ("categorical_logit_rng", ReturnType UInt, [UVector], AoS) ;
   add_unqualified

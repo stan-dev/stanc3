@@ -2916,6 +2916,7 @@ Display all Stan math signatures exposed in the language
   binomial_rng(array[] int, array[] int) => array[] int
   binomial_rng(array[] int, array[] real) => array[] int
   block(matrix, int, int, int, int) => matrix
+  block(complex_matrix, int, int, int, int) => complex_matrix
   categorical_log(int, vector) => real
   categorical_log(array[] int, vector) => real
   categorical_logit_glm_lpmf(int, row_vector, vector, matrix) => real
