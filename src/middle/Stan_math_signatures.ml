@@ -2171,8 +2171,6 @@ let () =
   add_unqualified ("sum", ReturnType UComplex, [UComplexMatrix], SoA) ;
   add_unqualified ("svd_U", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("svd_V", ReturnType UMatrix, [UMatrix], SoA) ;
-  add_unqualified ("svd_U", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
-  add_unqualified ("svd_V", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
   add_unqualified
     ("symmetrize_from_lower_tri", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified
