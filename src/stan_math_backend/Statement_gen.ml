@@ -375,17 +375,24 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
               pp_expr function_arg pp_expr
               (Expr.Helpers.str var_name)
               pp_expr var (list ~sep:comma pp_expr) args )
-  | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; var}), _) -> (
+  | NRFunApp (CompilerInternal (FnWriteParam {constraint_; var}), _) -> (
     match
-      (unconstrain_opt, Option.bind ~f:constraint_to_string unconstrain_opt)
+      ( constraint_
+      , Option.bind ~f:constraint_to_string
+          (Internal_fun.transform_opt constraint_) )
     with
     (* When the current block or this transformation doesn't require unconstraining,
        use vanilla write *)
     | None, _ | _, None -> pf ppf "@[<hov 2>out__.write(@,%a);@]" pp_expr var
     (* Otherwise, use stan::io::serializer's write_free functions *)
-    | Some trans, Some unconstrain_string ->
+    | Unconstrain trans, Some unconstrain_string ->
         let unconstrain_args = transform_args trans in
         pf ppf "@[<hov 2>out__.write_free_%s(@,%a);@]" unconstrain_string
+          (list ~sep:comma pp_expr)
+          (unconstrain_args @ [var])
+    | Check trans, Some unconstrain_string ->
+        let unconstrain_args = transform_args trans in
+        pf ppf "@[<hov 2>out__.write_checked_%s(@,%a);@]" unconstrain_string
           (list ~sep:comma pp_expr)
           (unconstrain_args @ [var]) )
   | NRFunApp (CompilerInternal f, args) ->

@@ -2,6 +2,14 @@
 
 open Core_kernel
 
+type 'expr constraint_ =
+  | Unconstrain of 'expr Transformation.t
+  | Check of 'expr Transformation.t
+  | None
+[@@deriving sexp, hash, compare, map, fold]
+
+let transform_opt = function Unconstrain t | Check t -> Some t | None -> None
+
 type 'expr t =
   | FnLength
   | FnMakeArray
@@ -15,7 +23,7 @@ type 'expr t =
       { constrain: 'expr Transformation.t
       ; dims: 'expr list
       ; mem_pattern: Common.Helpers.mem_pattern }
-  | FnWriteParam of {unconstrain_opt: 'expr Transformation.t option; var: 'expr}
+  | FnWriteParam of {constraint_: 'expr constraint_; var: 'expr}
   | FnValidateSize
   | FnValidateSizeSimplex
   | FnValidateSizeUnitVector

@@ -322,40 +322,21 @@ let gen_write ?(unconstrain = false)
           { loc= Location_span.empty
           ; type_= SizedType.to_unsized out_constrained_st
           ; adlevel= DataOnly } } in
+  let constraint_ =
+    if unconstrain then Internal_fun.Unconstrain out_trans
+    else
+      let rewrite suffix = function
+        | {Expr.Fixed.pattern= Lit _ | Var _; _} as e -> e
+        | e -> {e with pattern= Var (decl_id ^ suffix)} in
+      match out_trans with
+      | Lower e -> Check (Lower (rewrite "_lower__" e))
+      | Upper e -> Check (Upper (rewrite "_upper__" e))
+      | LowerUpper (e1, e2) ->
+          Check (LowerUpper (rewrite "_lower__" e1, rewrite "_upper__" e2))
+      | _ -> Check out_trans in
   Stmt.Helpers.internal_nrfunapp
-    (FnWriteParam
-       {unconstrain_opt= Option.some_if unconstrain out_trans; var= decl_var} )
+    (FnWriteParam {constraint_; var= decl_var})
     [] Location_span.empty
-
-(**
-  Generate write instructions for unconstrained types. For scalars,
- *  matrices, vectors, and arrays with one dimension we can write
- *  these directly, but for arrays of arrays/vectors/matrices we
- *  need to use for_scalar_inv to write them in "column major order"
- *)
-let gen_unconstrained_write (decl_id, Program.{out_constrained_st; _}) =
-  if SizedType.is_recursive_container out_constrained_st then
-    let bodyfn var =
-      Stmt.Helpers.internal_nrfunapp
-        (FnWriteParam {unconstrain_opt= None; var})
-        [var] Location_span.empty in
-    let meta =
-      {Expr.Typed.Meta.empty with type_= SizedType.to_unsized out_constrained_st}
-    in
-    let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
-    Stmt.Helpers.for_scalar_inv out_constrained_st bodyfn expr
-      Location_span.empty
-  else
-    let decl_var =
-      { Expr.Fixed.pattern= Var decl_id
-      ; meta=
-          Expr.Typed.Meta.
-            { loc= Location_span.empty
-            ; type_= SizedType.to_unsized out_constrained_st
-            ; adlevel= DataOnly } } in
-    Stmt.Helpers.internal_nrfunapp
-      (FnWriteParam {unconstrain_opt= None; var= decl_var})
-      [] Location_span.empty
 
 (** Statements to read, unconstrain and assign a parameter then write it back *)
 let data_unconstrain_transform smeta (decl_id, outvar) =
@@ -480,7 +461,7 @@ let trans_prog (p : Program.Typed.t) =
            Stmt.Fixed.{pattern; meta= Location_span.empty} ) in
   let param_writes, tparam_writes, gq_writes =
     List.map p.output_vars ~f:(fun (name, outvar) ->
-        (outvar.Program.out_block, gen_unconstrained_write (name, outvar)) )
+        (outvar.Program.out_block, gen_write (name, outvar)) )
     |> List.partition3_map ~f:(fun (b, x) ->
            match b with
            | Parameters -> `Fst x
@@ -559,6 +540,38 @@ let trans_prog (p : Program.Typed.t) =
                   , None )
             ; meta }
             :: stmts )
+      | { pattern=
+            NRFunApp (CompilerInternal (FnCheck {trans; var_name; var}), es)
+        ; meta }
+        when Set.mem output_vars var_name -> (
+          (* Remove FnChecks. These functions raise an exception if the check fails
+             but we're already at the end of generated quantities block; it's too late to stop.
+             The only thing we can do is replace the bad values with NaNs in the output
+             and that's handled by FnWriteParam. Record the upper and lower bounds for that. *)
+          let mk_decl_assign suffix rhs =
+            Stmt.Fixed.
+              ( { pattern=
+                    Decl
+                      { decl_adtype= DataOnly
+                      ; decl_id= var_name ^ suffix
+                      ; decl_type=
+                          ( match var.meta.type_ with
+                          | UInt | UReal -> Sized SReal
+                          | t -> Unsized t )
+                      ; initialize= true }
+                ; meta }
+              , { pattern=
+                    Assignment ((var_name ^ suffix, var.meta.type_, []), rhs)
+                ; meta } ) in
+          match (trans, es) with
+          | _, [{pattern= Lit _ | Var _; _}] -> (decls, stmts)
+          | Lower _, [e] ->
+              let decl, assign = mk_decl_assign "_lower__" e in
+              (decl :: decls, assign :: stmts)
+          | Upper _, [e] ->
+              let decl, assign = mk_decl_assign "_upper__" e in
+              (decl :: decls, assign :: stmts)
+          | _ -> (decls, stmts) )
       | s -> (decls, s :: stmts) )
     |> fun (decls, stmts) ->
     ( List.rev decls
@@ -573,7 +586,7 @@ let trans_prog (p : Program.Typed.t) =
     let dummy_write =
       Stmt.Helpers.internal_nrfunapp
         (FnWriteParam
-           {unconstrain_opt= None; var= Expr.Helpers.variable "gq_marker__"} )
+           {constraint_= None; var= Expr.Helpers.variable "gq_marker__"} )
         [] Location_span.empty in
     (* HACK: insert a dummy writes so optimization can't rearrange these blocks *)
     [ wrap (SList decls); wrap (Block (dummy_write :: stmts))
