@@ -1586,6 +1586,16 @@ let () =
     ("mdivide_right", ReturnType URowVector, [URowVector; UMatrix], AoS) ;
   add_unqualified ("mdivide_right", ReturnType UMatrix, [UMatrix; UMatrix], AoS) ;
   add_unqualified
+    ( "mdivide_right"
+    , ReturnType UComplexRowVector
+    , [UComplexRowVector; UComplexMatrix]
+    , AoS ) ;
+  add_unqualified
+    ( "mdivide_right"
+    , ReturnType UComplexMatrix
+    , [UComplexMatrix; UComplexMatrix]
+    , AoS ) ;
+  add_unqualified
     ("mdivide_right_spd", ReturnType UMatrix, [UMatrix; UMatrix], AoS) ;
   add_unqualified
     ("mdivide_right_spd", ReturnType URowVector, [URowVector; UMatrix], AoS) ;

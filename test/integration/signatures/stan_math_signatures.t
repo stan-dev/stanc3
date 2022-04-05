@@ -14286,6 +14286,8 @@ Display all Stan math signatures exposed in the language
   mdivide_left_tri_low(matrix, matrix) => matrix
   mdivide_right(row_vector, matrix) => row_vector
   mdivide_right(matrix, matrix) => matrix
+  mdivide_right(complex_row_vector, complex_matrix) => complex_row_vector
+  mdivide_right(complex_matrix, complex_matrix) => complex_matrix
   mdivide_right_spd(row_vector, matrix) => row_vector
   mdivide_right_spd(matrix, matrix) => matrix
   mdivide_right_tri_low(row_vector, matrix) => row_vector
