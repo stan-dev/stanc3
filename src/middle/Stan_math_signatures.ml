@@ -2101,6 +2101,13 @@ let () =
   add_unqualified
     ("segment", ReturnType URowVector, [URowVector; UInt; UInt], SoA) ;
   add_unqualified ("segment", ReturnType UVector, [UVector; UInt; UInt], SoA) ;
+  add_unqualified
+    ( "segment"
+    , ReturnType UComplexRowVector
+    , [UComplexRowVector; UInt; UInt]
+    , AoS ) ;
+  add_unqualified
+    ("segment", ReturnType UComplexVector, [UComplexVector; UInt; UInt], AoS) ;
   List.iter
     ~f:(fun t ->
       List.iter

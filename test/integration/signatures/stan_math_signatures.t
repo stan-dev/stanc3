@@ -19925,6 +19925,8 @@ Display all Stan math signatures exposed in the language
   sd(array[] real) => real
   segment(vector, int, int) => vector
   segment(row_vector, int, int) => row_vector
+  segment(complex_vector, int, int) => complex_vector
+  segment(complex_row_vector, int, int) => complex_row_vector
   segment(array[] int, int, int) => array[] int
   segment(array[] real, int, int) => array[] real
   segment(array[] vector, int, int) => array[] vector
