@@ -1986,8 +1986,18 @@ let () =
   add_unqualified ("rep_matrix", ReturnType UMatrix, [UReal; UInt; UInt], SoA) ;
   add_unqualified ("rep_matrix", ReturnType UMatrix, [UVector; UInt], AoS) ;
   add_unqualified ("rep_matrix", ReturnType UMatrix, [URowVector; UInt], AoS) ;
+  add_unqualified
+    ("rep_matrix", ReturnType UComplexMatrix, [UComplex; UInt; UInt], AoS) ;
+  add_unqualified
+    ("rep_matrix", ReturnType UComplexMatrix, [UComplexVector; UInt], AoS) ;
+  add_unqualified
+    ("rep_matrix", ReturnType UComplexMatrix, [UComplexRowVector; UInt], AoS) ;
   add_unqualified ("rep_row_vector", ReturnType URowVector, [UReal; UInt], SoA) ;
+  add_unqualified
+    ("rep_row_vector", ReturnType UComplexRowVector, [UComplex; UInt], AoS) ;
   add_unqualified ("rep_vector", ReturnType UVector, [UReal; UInt], SoA) ;
+  add_unqualified
+    ("rep_vector", ReturnType UComplexVector, [UComplex; UInt], AoS) ;
   add_unqualified ("reverse", ReturnType UVector, [UVector], SoA) ;
   add_unqualified ("reverse", ReturnType URowVector, [URowVector], SoA) ;
   List.iter

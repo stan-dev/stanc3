@@ -19196,8 +19196,13 @@ Display all Stan math signatures exposed in the language
   rep_matrix(real, int, int) => matrix
   rep_matrix(vector, int) => matrix
   rep_matrix(row_vector, int) => matrix
+  rep_matrix(complex, int, int) => complex_matrix
+  rep_matrix(complex_vector, int) => complex_matrix
+  rep_matrix(complex_row_vector, int) => complex_matrix
   rep_row_vector(real, int) => row_vector
+  rep_row_vector(complex, int) => complex_row_vector
   rep_vector(real, int) => vector
+  rep_vector(complex, int) => complex_vector
   reverse(vector) => vector
   reverse(row_vector) => row_vector
   reverse(array[] int) => array[] int
