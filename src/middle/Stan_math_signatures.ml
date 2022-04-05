@@ -1314,6 +1314,10 @@ let () =
   (* ; add_nullary ("get_lp")   *)
   add_unqualified ("head", ReturnType URowVector, [URowVector; UInt], SoA) ;
   add_unqualified ("head", ReturnType UVector, [UVector; UInt], SoA) ;
+  add_unqualified
+    ("head", ReturnType UComplexRowVector, [UComplexRowVector; UInt], AoS) ;
+  add_unqualified
+    ("head", ReturnType UComplexVector, [UComplexVector; UInt], AoS) ;
   List.iter
     ~f:(fun t ->
       List.iter
@@ -2198,6 +2202,10 @@ let () =
     , AoS ) ;
   add_unqualified ("tail", ReturnType URowVector, [URowVector; UInt], SoA) ;
   add_unqualified ("tail", ReturnType UVector, [UVector; UInt], SoA) ;
+  add_unqualified
+    ("tail", ReturnType UComplexRowVector, [UComplexRowVector; UInt], AoS) ;
+  add_unqualified
+    ("tail", ReturnType UComplexVector, [UComplexVector; UInt], AoS) ;
   List.iter
     ~f:(fun t ->
       List.iter

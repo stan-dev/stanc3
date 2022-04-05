@@ -9541,6 +9541,8 @@ Display all Stan math signatures exposed in the language
   gumbel_rng(array[] real, array[] real) => array[] real
   head(vector, int) => vector
   head(row_vector, int) => row_vector
+  head(complex_vector, int) => complex_vector
+  head(complex_row_vector, int) => complex_row_vector
   head(array[] int, int) => array[] int
   head(array[] real, int) => array[] real
   head(array[] vector, int) => array[] vector
@@ -26432,6 +26434,8 @@ Display all Stan math signatures exposed in the language
   symmetrize_from_lower_tri(complex_matrix) => complex_matrix
   tail(vector, int) => vector
   tail(row_vector, int) => row_vector
+  tail(complex_vector, int) => complex_vector
+  tail(complex_row_vector, int) => complex_row_vector
   tail(array[] int, int) => array[] int
   tail(array[] real, int) => array[] real
   tail(array[] vector, int) => array[] vector
