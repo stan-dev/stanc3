@@ -963,6 +963,41 @@ let () =
     ("append_col", ReturnType URowVector, [URowVector; URowVector], AoS) ;
   add_unqualified ("append_col", ReturnType URowVector, [UReal; URowVector], AoS) ;
   add_unqualified ("append_col", ReturnType URowVector, [URowVector; UReal], AoS) ;
+  add_unqualified
+    ( "append_col"
+    , ReturnType UComplexMatrix
+    , [UComplexMatrix; UComplexMatrix]
+    , AoS ) ;
+  add_unqualified
+    ( "append_col"
+    , ReturnType UComplexMatrix
+    , [UComplexVector; UComplexMatrix]
+    , AoS ) ;
+  add_unqualified
+    ( "append_col"
+    , ReturnType UComplexMatrix
+    , [UComplexMatrix; UComplexVector]
+    , AoS ) ;
+  add_unqualified
+    ( "append_col"
+    , ReturnType UComplexMatrix
+    , [UComplexVector; UComplexVector]
+    , AoS ) ;
+  add_unqualified
+    ( "append_col"
+    , ReturnType UComplexRowVector
+    , [UComplexRowVector; UComplexRowVector]
+    , AoS ) ;
+  add_unqualified
+    ( "append_col"
+    , ReturnType UComplexRowVector
+    , [UComplex; UComplexRowVector]
+    , AoS ) ;
+  add_unqualified
+    ( "append_col"
+    , ReturnType UComplexRowVector
+    , [UComplexRowVector; UComplex]
+    , AoS ) ;
   add_unqualified ("chol2inv", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("cholesky_decompose", ReturnType UMatrix, [UMatrix], SoA) ;
   add_binary_vec_int_int "choose" AoS ;
@@ -1987,6 +2022,35 @@ let () =
   add_unqualified ("append_row", ReturnType UVector, [UVector; UVector], AoS) ;
   add_unqualified ("append_row", ReturnType UVector, [UReal; UVector], AoS) ;
   add_unqualified ("append_row", ReturnType UVector, [UVector; UReal], AoS) ;
+  add_unqualified
+    ( "append_row"
+    , ReturnType UComplexMatrix
+    , [UComplexMatrix; UComplexMatrix]
+    , AoS ) ;
+  add_unqualified
+    ( "append_row"
+    , ReturnType UComplexMatrix
+    , [UComplexRowVector; UComplexMatrix]
+    , AoS ) ;
+  add_unqualified
+    ( "append_row"
+    , ReturnType UComplexMatrix
+    , [UComplexMatrix; UComplexRowVector]
+    , AoS ) ;
+  add_unqualified
+    ( "append_row"
+    , ReturnType UComplexMatrix
+    , [UComplexRowVector; UComplexRowVector]
+    , AoS ) ;
+  add_unqualified
+    ( "append_row"
+    , ReturnType UComplexVector
+    , [UComplexVector; UComplexVector]
+    , AoS ) ;
+  add_unqualified
+    ("append_row", ReturnType UComplexVector, [UComplex; UComplexVector], AoS) ;
+  add_unqualified
+    ("append_row", ReturnType UComplexVector, [UComplexVector; UComplex], AoS) ;
   List.iter
     ~f:(fun t ->
       add_unqualified

@@ -266,6 +266,13 @@ Display all Stan math signatures exposed in the language
   append_col(vector, matrix) => matrix
   append_col(matrix, vector) => matrix
   append_col(matrix, matrix) => matrix
+  append_col(complex, complex_row_vector) => complex_row_vector
+  append_col(complex_row_vector, complex) => complex_row_vector
+  append_col(complex_row_vector, complex_row_vector) => complex_row_vector
+  append_col(complex_vector, complex_vector) => complex_matrix
+  append_col(complex_vector, complex_matrix) => complex_matrix
+  append_col(complex_matrix, complex_vector) => complex_matrix
+  append_col(complex_matrix, complex_matrix) => complex_matrix
   append_row(real, vector) => vector
   append_row(vector, real) => vector
   append_row(vector, vector) => vector
@@ -273,6 +280,13 @@ Display all Stan math signatures exposed in the language
   append_row(row_vector, matrix) => matrix
   append_row(matrix, row_vector) => matrix
   append_row(matrix, matrix) => matrix
+  append_row(complex, complex_vector) => complex_vector
+  append_row(complex_vector, complex) => complex_vector
+  append_row(complex_vector, complex_vector) => complex_vector
+  append_row(complex_row_vector, complex_row_vector) => complex_matrix
+  append_row(complex_row_vector, complex_matrix) => complex_matrix
+  append_row(complex_matrix, complex_row_vector) => complex_matrix
+  append_row(complex_matrix, complex_matrix) => complex_matrix
   arg(complex) => real
   asin(int) => real
   asin(real) => real
