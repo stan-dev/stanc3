@@ -183,6 +183,9 @@ Display all Stan math signatures exposed in the language
   add_diag(matrix, real) => matrix
   add_diag(matrix, vector) => matrix
   add_diag(matrix, row_vector) => matrix
+  add_diag(complex_matrix, complex) => complex_matrix
+  add_diag(complex_matrix, complex_vector) => complex_matrix
+  add_diag(complex_matrix, complex_row_vector) => complex_matrix
   algebra_solver((vector, vector, data array[] real, data array[] int) => vector,
                    vector, vector, array[] real, array[] int) => vector
   algebra_solver((vector, vector, data array[] real, data array[] int) => vector,

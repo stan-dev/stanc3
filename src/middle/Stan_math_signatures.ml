@@ -811,6 +811,18 @@ let () =
   add_unqualified ("add_diag", ReturnType UMatrix, [UMatrix; UReal], AoS) ;
   add_unqualified ("add_diag", ReturnType UMatrix, [UMatrix; UVector], AoS) ;
   add_unqualified ("add_diag", ReturnType UMatrix, [UMatrix; URowVector], AoS) ;
+  add_unqualified
+    ("add_diag", ReturnType UComplexMatrix, [UComplexMatrix; UComplex], AoS) ;
+  add_unqualified
+    ( "add_diag"
+    , ReturnType UComplexMatrix
+    , [UComplexMatrix; UComplexVector]
+    , AoS ) ;
+  add_unqualified
+    ( "add_diag"
+    , ReturnType UComplexMatrix
+    , [UComplexMatrix; UComplexRowVector]
+    , AoS ) ;
   add_qualified
     ( "algebra_solver"
     , ReturnType UVector
