@@ -3752,6 +3752,7 @@ Display all Stan math signatures exposed in the language
   cumulative_sum(array[] real) => array[] real
   determinant(matrix) => real
   diag_matrix(vector) => matrix
+  diag_matrix(complex_vector) => complex_matrix
   diag_post_multiply(matrix, vector) => matrix
   diag_post_multiply(matrix, row_vector) => matrix
   diag_post_multiply(complex_matrix, complex_vector) => complex_matrix

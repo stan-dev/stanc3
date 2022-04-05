@@ -1031,6 +1031,8 @@ let () =
   add_unqualified ("determinant", ReturnType UReal, [UMatrix], SoA) ;
   add_unqualified ("diag_matrix", ReturnType UMatrix, [UVector], AoS) ;
   add_unqualified
+    ("diag_matrix", ReturnType UComplexMatrix, [UComplexVector], AoS) ;
+  add_unqualified
     ("diag_post_multiply", ReturnType UMatrix, [UMatrix; UVector], SoA) ;
   add_unqualified
     ("diag_post_multiply", ReturnType UMatrix, [UMatrix; URowVector], SoA) ;
