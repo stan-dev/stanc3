@@ -2041,6 +2041,9 @@ let () =
             , SoA ) )
         bare_types )
     (List.range 1 8) ;
+  add_unqualified ("reverse", ReturnType UComplexVector, [UComplexVector], SoA) ;
+  add_unqualified
+    ("reverse", ReturnType UComplexRowVector, [UComplexRowVector], SoA) ;
   add_binary_vec_int_int "rising_factorial" AoS ;
   add_binary_vec_real_int "rising_factorial" AoS ;
   add_unqualified ("row", ReturnType URowVector, [UMatrix; UInt], SoA) ;

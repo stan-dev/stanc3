@@ -19213,6 +19213,8 @@ Display all Stan math signatures exposed in the language
   rep_vector(complex, int) => complex_vector
   reverse(vector) => vector
   reverse(row_vector) => row_vector
+  reverse(complex_vector) => complex_vector
+  reverse(complex_row_vector) => complex_row_vector
   reverse(array[] int) => array[] int
   reverse(array[] real) => array[] real
   reverse(array[] vector) => array[] vector
