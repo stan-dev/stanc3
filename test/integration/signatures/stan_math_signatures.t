@@ -26399,7 +26399,9 @@ Display all Stan math signatures exposed in the language
   student_t_rng(array[] real, array[] real, array[] int) => array[] real
   student_t_rng(array[] real, array[] real, array[] real) => array[] real
   sub_col(matrix, int, int, int) => vector
+  sub_col(complex_matrix, int, int, int) => complex_vector
   sub_row(matrix, int, int, int) => row_vector
+  sub_row(complex_matrix, int, int, int) => complex_row_vector
   subtract(int, int) => int
   subtract(real, real) => real
   subtract(real, vector) => vector

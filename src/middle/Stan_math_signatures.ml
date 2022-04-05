@@ -2158,7 +2158,17 @@ let () =
   add_unqualified
     ("sub_col", ReturnType UVector, [UMatrix; UInt; UInt; UInt], SoA) ;
   add_unqualified
+    ( "sub_col"
+    , ReturnType UComplexVector
+    , [UComplexMatrix; UInt; UInt; UInt]
+    , AoS ) ;
+  add_unqualified
     ("sub_row", ReturnType URowVector, [UMatrix; UInt; UInt; UInt], SoA) ;
+  add_unqualified
+    ( "sub_row"
+    , ReturnType UComplexRowVector
+    , [UComplexMatrix; UInt; UInt; UInt]
+    , AoS ) ;
   List.iter
     ~f:(fun x -> add_unqualified ("subtract", ReturnType x, [x; x], SoA))
     bare_types ;
