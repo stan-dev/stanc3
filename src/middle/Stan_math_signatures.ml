@@ -2234,6 +2234,48 @@ let () =
     ("to_matrix", ReturnType UMatrix, [bare_array_type (UReal, 2)], AoS) ;
   add_unqualified
     ("to_matrix", ReturnType UMatrix, [bare_array_type (UInt, 2)], AoS) ;
+  add_unqualified ("to_matrix", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
+  add_unqualified
+    ("to_matrix", ReturnType UComplexMatrix, [UComplexMatrix; UInt; UInt], AoS) ;
+  add_unqualified
+    ( "to_matrix"
+    , ReturnType UComplexMatrix
+    , [UComplexMatrix; UInt; UInt; UInt]
+    , AoS ) ;
+  add_unqualified ("to_matrix", ReturnType UComplexMatrix, [UComplexVector], AoS) ;
+  add_unqualified
+    ("to_matrix", ReturnType UComplexMatrix, [UComplexVector; UInt; UInt], AoS) ;
+  add_unqualified
+    ( "to_matrix"
+    , ReturnType UComplexMatrix
+    , [UComplexVector; UInt; UInt; UInt]
+    , AoS ) ;
+  add_unqualified
+    ("to_matrix", ReturnType UComplexMatrix, [UComplexRowVector], AoS) ;
+  add_unqualified
+    ("to_matrix", ReturnType UComplexMatrix, [UArray UComplexRowVector], AoS) ;
+  add_unqualified
+    ( "to_matrix"
+    , ReturnType UComplexMatrix
+    , [UComplexRowVector; UInt; UInt]
+    , AoS ) ;
+  add_unqualified
+    ( "to_matrix"
+    , ReturnType UComplexMatrix
+    , [UComplexRowVector; UInt; UInt; UInt]
+    , AoS ) ;
+  add_unqualified
+    ("to_matrix", ReturnType UComplexMatrix, [UArray UComplex; UInt; UInt], AoS) ;
+  add_unqualified
+    ( "to_matrix"
+    , ReturnType UComplexMatrix
+    , [UArray UComplex; UInt; UInt; UInt]
+    , AoS ) ;
+  add_unqualified
+    ( "to_matrix"
+    , ReturnType UComplexMatrix
+    , [bare_array_type (UComplex, 2)]
+    , AoS ) ;
   add_unqualified ("to_row_vector", ReturnType URowVector, [UMatrix], AoS) ;
   add_unqualified ("to_row_vector", ReturnType URowVector, [UVector], AoS) ;
   add_unqualified ("to_row_vector", ReturnType URowVector, [URowVector], AoS) ;
