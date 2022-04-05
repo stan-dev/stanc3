@@ -3754,8 +3754,12 @@ Display all Stan math signatures exposed in the language
   diag_matrix(vector) => matrix
   diag_post_multiply(matrix, vector) => matrix
   diag_post_multiply(matrix, row_vector) => matrix
+  diag_post_multiply(complex_matrix, complex_vector) => complex_matrix
+  diag_post_multiply(complex_matrix, complex_row_vector) => complex_matrix
   diag_pre_multiply(vector, matrix) => matrix
   diag_pre_multiply(row_vector, matrix) => matrix
+  diag_pre_multiply(complex_vector, complex_matrix) => complex_matrix
+  diag_pre_multiply(complex_row_vector, complex_matrix) => complex_matrix
   diagonal(matrix) => vector
   diagonal(complex_matrix) => complex_vector
   digamma(int) => real

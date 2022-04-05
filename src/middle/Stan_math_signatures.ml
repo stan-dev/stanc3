@@ -1035,9 +1035,29 @@ let () =
   add_unqualified
     ("diag_post_multiply", ReturnType UMatrix, [UMatrix; URowVector], SoA) ;
   add_unqualified
+    ( "diag_post_multiply"
+    , ReturnType UComplexMatrix
+    , [UComplexMatrix; UComplexVector]
+    , AoS ) ;
+  add_unqualified
+    ( "diag_post_multiply"
+    , ReturnType UComplexMatrix
+    , [UComplexMatrix; UComplexRowVector]
+    , AoS ) ;
+  add_unqualified
     ("diag_pre_multiply", ReturnType UMatrix, [UVector; UMatrix], SoA) ;
   add_unqualified
     ("diag_pre_multiply", ReturnType UMatrix, [URowVector; UMatrix], SoA) ;
+  add_unqualified
+    ( "diag_pre_multiply"
+    , ReturnType UComplexMatrix
+    , [UComplexVector; UComplexMatrix]
+    , AoS ) ;
+  add_unqualified
+    ( "diag_pre_multiply"
+    , ReturnType UComplexMatrix
+    , [UComplexRowVector; UComplexMatrix]
+    , AoS ) ;
   add_unqualified ("diagonal", ReturnType UVector, [UMatrix], SoA) ;
   add_unqualified ("diagonal", ReturnType UComplexVector, [UComplexMatrix], SoA) ;
   add_unqualified ("dims", ReturnType (UArray UInt), [UComplex], AoS) ;

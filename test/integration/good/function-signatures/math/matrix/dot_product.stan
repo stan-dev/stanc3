@@ -55,7 +55,7 @@ transformed parameters {
 
 
   complex transformed_param_complex;
-  transformed_param_complex = dot_product(d_ccvector, d_ccvector);
+  transformed_param_complex = dot_product(d_cvector, d_cvector);
   transformed_param_complex = dot_product(d_cvector, d_crow_vector);
   transformed_param_complex = dot_product(d_crow_vector, d_cvector);
   transformed_param_complex = dot_product(d_crow_vector, d_crow_vector);
