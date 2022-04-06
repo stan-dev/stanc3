@@ -183,15 +183,10 @@ Display all Stan math signatures exposed in the language
   add_diag(matrix, real) => matrix
   add_diag(matrix, vector) => matrix
   add_diag(matrix, row_vector) => matrix
-  algebra_solver((vector, vector, data array[] real, data array[] int) => vector,
-                   vector, vector, array[] real, array[] int) => vector
-  algebra_solver((vector, vector, data array[] real, data array[] int) => vector,
-                   vector, vector, array[] real, array[] int, real, real, real) => vector
-  algebra_solver_newton((vector, vector, data array[] real, data array[] int) => vector,
-                          vector, vector, array[] real, array[] int) => vector
-  algebra_solver_newton((vector, vector, data array[] real, data array[] int) => vector,
-                          vector, vector, array[] real, array[] int, real,
-                          real, real) => vector
+  algebra_solver((vector, vector, data array[] real, data array[] int) => vector, vector, vector, array[] real, array[] int) => vector
+  algebra_solver((vector, vector, data array[] real, data array[] int) => vector, vector, vector, array[] real, array[] int, real, real, real) => vector
+  algebra_solver_newton((vector, vector, data array[] real, data array[] int) => vector, vector, vector, array[] real, array[] int) => vector
+  algebra_solver_newton((vector, vector, data array[] real, data array[] int) => vector, vector, vector, array[] real, array[] int, real, real, real) => vector
   append_array(array[] int, array[] int) => array[] int
   append_array(array[] real, array[] real) => array[] real
   append_array(array[] vector, array[] vector) => array[] vector
@@ -253,8 +248,7 @@ Display all Stan math signatures exposed in the language
   append_array(array[,,,,,,] row_vector, array[,,,,,,] row_vector) => array[,,,,,,] row_vector
   append_array(array[,,,,,,] matrix, array[,,,,,,] matrix) => array[,,,,,,] matrix
   append_array(array[,,,,,,] complex_vector, array[,,,,,,] complex_vector) => array[,,,,,,] complex_vector
-  append_array(array[,,,,,,] complex_row_vector,
-                 array[,,,,,,] complex_row_vector) => array[,,,,,,] complex_row_vector
+  append_array(array[,,,,,,] complex_row_vector, array[,,,,,,] complex_row_vector) => array[,,,,,,] complex_row_vector
   append_array(array[,,,,,,] complex_matrix, array[,,,,,,] complex_matrix) => array[,,,,,,] complex_matrix
   append_col(real, row_vector) => row_vector
   append_col(row_vector, real) => row_vector
@@ -4903,8 +4897,7 @@ Display all Stan math signatures exposed in the language
   exp_mod_normal_ccdf_log(array[] real, array[] real, array[] real, real) => real
   exp_mod_normal_ccdf_log(array[] real, array[] real, array[] real, vector) => real
   exp_mod_normal_ccdf_log(array[] real, array[] real, array[] real, row_vector) => real
-  exp_mod_normal_ccdf_log(array[] real, array[] real, array[] real,
-                            array[] real) => real
+  exp_mod_normal_ccdf_log(array[] real, array[] real, array[] real, array[] real) => real
   exp_mod_normal_cdf(real, real, real, real) => real
   exp_mod_normal_cdf(real, real, real, vector) => real
   exp_mod_normal_cdf(real, real, real, row_vector) => real
@@ -9757,31 +9750,15 @@ Display all Stan math signatures exposed in the language
   inc_beta(real, real, real) => real
   int_step(int) => int
   int_step(real) => int
-  integrate_1d((real, real, array[] real, data array[] real, data array[] int) => real,
-                 real, real, array[] real, array[] real, array[] int) => real
-  integrate_1d((real, real, array[] real, data array[] real, data array[] int) => real,
-                 real, real, array[] real, array[] real, array[] int, real) => real
-  integrate_ode((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real,
-                  array[] real, real, array[] real, array[] real, array[] real,
-                  array[] int) => array[,] real
-  integrate_ode_adams((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real,
-                        array[] real, real, array[] real, array[] real,
-                        array[] real, array[] int) => array[,] real
-  integrate_ode_adams((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real,
-                        array[] real, real, array[] real, array[] real,
-                        array[] real, array[] int, real, real, real) => array[,] real
-  integrate_ode_bdf((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real,
-                      array[] real, real, array[] real, array[] real,
-                      array[] real, array[] int) => array[,] real
-  integrate_ode_bdf((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real,
-                      array[] real, real, array[] real, array[] real,
-                      array[] real, array[] int, real, real, real) => array[,] real
-  integrate_ode_rk45((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real,
-                       array[] real, real, array[] real, array[] real,
-                       array[] real, array[] int) => array[,] real
-  integrate_ode_rk45((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real,
-                       array[] real, real, array[] real, array[] real,
-                       array[] real, array[] int, real, real, real) => array[,] real
+  integrate_1d((real, real, array[] real, data array[] real, data array[] int) => real, real, real, array[] real, array[] real, array[] int) => real
+  integrate_1d((real, real, array[] real, data array[] real, data array[] int) => real, real, real, array[] real, array[] real, array[] int, real) => real
+  integrate_ode((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real, array[] real, real, array[] real, array[] real, array[] real, array[] int) => array[,] real
+  integrate_ode_adams((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real, array[] real, real, array[] real, array[] real, array[] real, array[] int) => array[,] real
+  integrate_ode_adams((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real, array[] real, real, array[] real, array[] real, array[] real, array[] int, real, real, real) => array[,] real
+  integrate_ode_bdf((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real, array[] real, real, array[] real, array[] real, array[] real, array[] int) => array[,] real
+  integrate_ode_bdf((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real, array[] real, real, array[] real, array[] real, array[] real, array[] int, real, real, real) => array[,] real
+  integrate_ode_rk45((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real, array[] real, real, array[] real, array[] real, array[] real, array[] int) => array[,] real
+  integrate_ode_rk45((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real, array[] real, real, array[] real, array[] real, array[] real, array[] int, real, real, real) => array[,] real
   inv(int) => real
   inv(real) => real
   inv(vector) => vector
@@ -12714,8 +12691,7 @@ Display all Stan math signatures exposed in the language
   log_modified_bessel_first_kind(real, array[,,,,,] row_vector) => array[,,,,,] row_vector
   log_modified_bessel_first_kind(array[,,,,,] row_vector, int) => array[,,,,,] row_vector
   log_modified_bessel_first_kind(array[,,,,,] row_vector, real) => array[,,,,,] row_vector
-  log_modified_bessel_first_kind(array[,,,,,] row_vector,
-                                   array[,,,,,] row_vector) => array[,,,,,] row_vector
+  log_modified_bessel_first_kind(array[,,,,,] row_vector, array[,,,,,] row_vector) => array[,,,,,] row_vector
   log_modified_bessel_first_kind(int, array[,,,,,] matrix) => array[,,,,,] matrix
   log_modified_bessel_first_kind(real, array[,,,,,] matrix) => array[,,,,,] matrix
   log_modified_bessel_first_kind(array[,,,,,] matrix, int) => array[,,,,,] matrix
@@ -12740,8 +12716,7 @@ Display all Stan math signatures exposed in the language
   log_modified_bessel_first_kind(real, array[,,,,,,] row_vector) => array[,,,,,,] row_vector
   log_modified_bessel_first_kind(array[,,,,,,] row_vector, int) => array[,,,,,,] row_vector
   log_modified_bessel_first_kind(array[,,,,,,] row_vector, real) => array[,,,,,,] row_vector
-  log_modified_bessel_first_kind(array[,,,,,,] row_vector,
-                                   array[,,,,,,] row_vector) => array[,,,,,,] row_vector
+  log_modified_bessel_first_kind(array[,,,,,,] row_vector, array[,,,,,,] row_vector) => array[,,,,,,] row_vector
   log_modified_bessel_first_kind(int, array[,,,,,,] matrix) => array[,,,,,,] matrix
   log_modified_bessel_first_kind(real, array[,,,,,,] matrix) => array[,,,,,,] matrix
   log_modified_bessel_first_kind(array[,,,,,,] matrix, int) => array[,,,,,,] matrix
@@ -14242,8 +14217,7 @@ Display all Stan math signatures exposed in the language
   lognormal_rng(array[] real, array[] int) => array[] real
   lognormal_rng(array[] real, array[] real) => array[] real
   machine_precision() => real
-  map_rect((vector, vector, data array[] real, data array[] int) => vector,
-             vector, array[] vector, array[,] real, array[,] int) => vector
+  map_rect((vector, vector, data array[] real, data array[] int) => vector, vector, array[] vector, array[,] real, array[,] int) => vector
   matrix_exp(matrix) => matrix
   matrix_exp_multiply(matrix, matrix) => matrix
   matrix_power(matrix, int) => matrix
@@ -20115,8 +20089,7 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_ccdf_log(real, array[] real, array[] real, real) => real
   skew_double_exponential_ccdf_log(real, array[] real, array[] real, vector) => real
   skew_double_exponential_ccdf_log(real, array[] real, array[] real, row_vector) => real
-  skew_double_exponential_ccdf_log(real, array[] real, array[] real,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(real, array[] real, array[] real, array[] real) => real
   skew_double_exponential_ccdf_log(vector, real, real, real) => real
   skew_double_exponential_ccdf_log(vector, real, real, vector) => real
   skew_double_exponential_ccdf_log(vector, real, real, row_vector) => real
@@ -20164,8 +20137,7 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_ccdf_log(vector, row_vector, array[] real, real) => real
   skew_double_exponential_ccdf_log(vector, row_vector, array[] real, vector) => real
   skew_double_exponential_ccdf_log(vector, row_vector, array[] real, row_vector) => real
-  skew_double_exponential_ccdf_log(vector, row_vector, array[] real,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(vector, row_vector, array[] real, array[] real) => real
   skew_double_exponential_ccdf_log(vector, array[] real, real, real) => real
   skew_double_exponential_ccdf_log(vector, array[] real, real, vector) => real
   skew_double_exponential_ccdf_log(vector, array[] real, real, row_vector) => real
@@ -20177,14 +20149,11 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_ccdf_log(vector, array[] real, row_vector, real) => real
   skew_double_exponential_ccdf_log(vector, array[] real, row_vector, vector) => real
   skew_double_exponential_ccdf_log(vector, array[] real, row_vector, row_vector) => real
-  skew_double_exponential_ccdf_log(vector, array[] real, row_vector,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(vector, array[] real, row_vector, array[] real) => real
   skew_double_exponential_ccdf_log(vector, array[] real, array[] real, real) => real
   skew_double_exponential_ccdf_log(vector, array[] real, array[] real, vector) => real
-  skew_double_exponential_ccdf_log(vector, array[] real, array[] real,
-                                     row_vector) => real
-  skew_double_exponential_ccdf_log(vector, array[] real, array[] real,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(vector, array[] real, array[] real, row_vector) => real
+  skew_double_exponential_ccdf_log(vector, array[] real, array[] real, array[] real) => real
   skew_double_exponential_ccdf_log(row_vector, real, real, real) => real
   skew_double_exponential_ccdf_log(row_vector, real, real, vector) => real
   skew_double_exponential_ccdf_log(row_vector, real, real, row_vector) => real
@@ -20216,8 +20185,7 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_ccdf_log(row_vector, vector, array[] real, real) => real
   skew_double_exponential_ccdf_log(row_vector, vector, array[] real, vector) => real
   skew_double_exponential_ccdf_log(row_vector, vector, array[] real, row_vector) => real
-  skew_double_exponential_ccdf_log(row_vector, vector, array[] real,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(row_vector, vector, array[] real, array[] real) => real
   skew_double_exponential_ccdf_log(row_vector, row_vector, real, real) => real
   skew_double_exponential_ccdf_log(row_vector, row_vector, real, vector) => real
   skew_double_exponential_ccdf_log(row_vector, row_vector, real, row_vector) => real
@@ -20228,16 +20196,12 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_ccdf_log(row_vector, row_vector, vector, array[] real) => real
   skew_double_exponential_ccdf_log(row_vector, row_vector, row_vector, real) => real
   skew_double_exponential_ccdf_log(row_vector, row_vector, row_vector, vector) => real
-  skew_double_exponential_ccdf_log(row_vector, row_vector, row_vector,
-                                     row_vector) => real
-  skew_double_exponential_ccdf_log(row_vector, row_vector, row_vector,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(row_vector, row_vector, row_vector, row_vector) => real
+  skew_double_exponential_ccdf_log(row_vector, row_vector, row_vector, array[] real) => real
   skew_double_exponential_ccdf_log(row_vector, row_vector, array[] real, real) => real
   skew_double_exponential_ccdf_log(row_vector, row_vector, array[] real, vector) => real
-  skew_double_exponential_ccdf_log(row_vector, row_vector, array[] real,
-                                     row_vector) => real
-  skew_double_exponential_ccdf_log(row_vector, row_vector, array[] real,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(row_vector, row_vector, array[] real, row_vector) => real
+  skew_double_exponential_ccdf_log(row_vector, row_vector, array[] real, array[] real) => real
   skew_double_exponential_ccdf_log(row_vector, array[] real, real, real) => real
   skew_double_exponential_ccdf_log(row_vector, array[] real, real, vector) => real
   skew_double_exponential_ccdf_log(row_vector, array[] real, real, row_vector) => real
@@ -20245,21 +20209,15 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_ccdf_log(row_vector, array[] real, vector, real) => real
   skew_double_exponential_ccdf_log(row_vector, array[] real, vector, vector) => real
   skew_double_exponential_ccdf_log(row_vector, array[] real, vector, row_vector) => real
-  skew_double_exponential_ccdf_log(row_vector, array[] real, vector,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(row_vector, array[] real, vector, array[] real) => real
   skew_double_exponential_ccdf_log(row_vector, array[] real, row_vector, real) => real
   skew_double_exponential_ccdf_log(row_vector, array[] real, row_vector, vector) => real
-  skew_double_exponential_ccdf_log(row_vector, array[] real, row_vector,
-                                     row_vector) => real
-  skew_double_exponential_ccdf_log(row_vector, array[] real, row_vector,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(row_vector, array[] real, row_vector, row_vector) => real
+  skew_double_exponential_ccdf_log(row_vector, array[] real, row_vector, array[] real) => real
   skew_double_exponential_ccdf_log(row_vector, array[] real, array[] real, real) => real
-  skew_double_exponential_ccdf_log(row_vector, array[] real, array[] real,
-                                     vector) => real
-  skew_double_exponential_ccdf_log(row_vector, array[] real, array[] real,
-                                     row_vector) => real
-  skew_double_exponential_ccdf_log(row_vector, array[] real, array[] real,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(row_vector, array[] real, array[] real, vector) => real
+  skew_double_exponential_ccdf_log(row_vector, array[] real, array[] real, row_vector) => real
+  skew_double_exponential_ccdf_log(row_vector, array[] real, array[] real, array[] real) => real
   skew_double_exponential_ccdf_log(array[] real, real, real, real) => real
   skew_double_exponential_ccdf_log(array[] real, real, real, vector) => real
   skew_double_exponential_ccdf_log(array[] real, real, real, row_vector) => real
@@ -20275,8 +20233,7 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_ccdf_log(array[] real, real, array[] real, real) => real
   skew_double_exponential_ccdf_log(array[] real, real, array[] real, vector) => real
   skew_double_exponential_ccdf_log(array[] real, real, array[] real, row_vector) => real
-  skew_double_exponential_ccdf_log(array[] real, real, array[] real,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(array[] real, real, array[] real, array[] real) => real
   skew_double_exponential_ccdf_log(array[] real, vector, real, real) => real
   skew_double_exponential_ccdf_log(array[] real, vector, real, vector) => real
   skew_double_exponential_ccdf_log(array[] real, vector, real, row_vector) => real
@@ -20288,14 +20245,11 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_ccdf_log(array[] real, vector, row_vector, real) => real
   skew_double_exponential_ccdf_log(array[] real, vector, row_vector, vector) => real
   skew_double_exponential_ccdf_log(array[] real, vector, row_vector, row_vector) => real
-  skew_double_exponential_ccdf_log(array[] real, vector, row_vector,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(array[] real, vector, row_vector, array[] real) => real
   skew_double_exponential_ccdf_log(array[] real, vector, array[] real, real) => real
   skew_double_exponential_ccdf_log(array[] real, vector, array[] real, vector) => real
-  skew_double_exponential_ccdf_log(array[] real, vector, array[] real,
-                                     row_vector) => real
-  skew_double_exponential_ccdf_log(array[] real, vector, array[] real,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(array[] real, vector, array[] real, row_vector) => real
+  skew_double_exponential_ccdf_log(array[] real, vector, array[] real, array[] real) => real
   skew_double_exponential_ccdf_log(array[] real, row_vector, real, real) => real
   skew_double_exponential_ccdf_log(array[] real, row_vector, real, vector) => real
   skew_double_exponential_ccdf_log(array[] real, row_vector, real, row_vector) => real
@@ -20303,47 +20257,31 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_ccdf_log(array[] real, row_vector, vector, real) => real
   skew_double_exponential_ccdf_log(array[] real, row_vector, vector, vector) => real
   skew_double_exponential_ccdf_log(array[] real, row_vector, vector, row_vector) => real
-  skew_double_exponential_ccdf_log(array[] real, row_vector, vector,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(array[] real, row_vector, vector, array[] real) => real
   skew_double_exponential_ccdf_log(array[] real, row_vector, row_vector, real) => real
   skew_double_exponential_ccdf_log(array[] real, row_vector, row_vector, vector) => real
-  skew_double_exponential_ccdf_log(array[] real, row_vector, row_vector,
-                                     row_vector) => real
-  skew_double_exponential_ccdf_log(array[] real, row_vector, row_vector,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(array[] real, row_vector, row_vector, row_vector) => real
+  skew_double_exponential_ccdf_log(array[] real, row_vector, row_vector, array[] real) => real
   skew_double_exponential_ccdf_log(array[] real, row_vector, array[] real, real) => real
-  skew_double_exponential_ccdf_log(array[] real, row_vector, array[] real,
-                                     vector) => real
-  skew_double_exponential_ccdf_log(array[] real, row_vector, array[] real,
-                                     row_vector) => real
-  skew_double_exponential_ccdf_log(array[] real, row_vector, array[] real,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(array[] real, row_vector, array[] real, vector) => real
+  skew_double_exponential_ccdf_log(array[] real, row_vector, array[] real, row_vector) => real
+  skew_double_exponential_ccdf_log(array[] real, row_vector, array[] real, array[] real) => real
   skew_double_exponential_ccdf_log(array[] real, array[] real, real, real) => real
   skew_double_exponential_ccdf_log(array[] real, array[] real, real, vector) => real
   skew_double_exponential_ccdf_log(array[] real, array[] real, real, row_vector) => real
-  skew_double_exponential_ccdf_log(array[] real, array[] real, real,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(array[] real, array[] real, real, array[] real) => real
   skew_double_exponential_ccdf_log(array[] real, array[] real, vector, real) => real
   skew_double_exponential_ccdf_log(array[] real, array[] real, vector, vector) => real
-  skew_double_exponential_ccdf_log(array[] real, array[] real, vector,
-                                     row_vector) => real
-  skew_double_exponential_ccdf_log(array[] real, array[] real, vector,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(array[] real, array[] real, vector, row_vector) => real
+  skew_double_exponential_ccdf_log(array[] real, array[] real, vector, array[] real) => real
   skew_double_exponential_ccdf_log(array[] real, array[] real, row_vector, real) => real
-  skew_double_exponential_ccdf_log(array[] real, array[] real, row_vector,
-                                     vector) => real
-  skew_double_exponential_ccdf_log(array[] real, array[] real, row_vector,
-                                     row_vector) => real
-  skew_double_exponential_ccdf_log(array[] real, array[] real, row_vector,
-                                     array[] real) => real
-  skew_double_exponential_ccdf_log(array[] real, array[] real, array[] real,
-                                     real) => real
-  skew_double_exponential_ccdf_log(array[] real, array[] real, array[] real,
-                                     vector) => real
-  skew_double_exponential_ccdf_log(array[] real, array[] real, array[] real,
-                                     row_vector) => real
-  skew_double_exponential_ccdf_log(array[] real, array[] real, array[] real,
-                                     array[] real) => real
+  skew_double_exponential_ccdf_log(array[] real, array[] real, row_vector, vector) => real
+  skew_double_exponential_ccdf_log(array[] real, array[] real, row_vector, row_vector) => real
+  skew_double_exponential_ccdf_log(array[] real, array[] real, row_vector, array[] real) => real
+  skew_double_exponential_ccdf_log(array[] real, array[] real, array[] real, real) => real
+  skew_double_exponential_ccdf_log(array[] real, array[] real, array[] real, vector) => real
+  skew_double_exponential_ccdf_log(array[] real, array[] real, array[] real, row_vector) => real
+  skew_double_exponential_ccdf_log(array[] real, array[] real, array[] real, array[] real) => real
   skew_double_exponential_cdf(real, real, real, real) => real
   skew_double_exponential_cdf(real, real, real, vector) => real
   skew_double_exponential_cdf(real, real, real, row_vector) => real
@@ -20519,8 +20457,7 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_cdf(row_vector, row_vector, array[] real, real) => real
   skew_double_exponential_cdf(row_vector, row_vector, array[] real, vector) => real
   skew_double_exponential_cdf(row_vector, row_vector, array[] real, row_vector) => real
-  skew_double_exponential_cdf(row_vector, row_vector, array[] real,
-                                array[] real) => real
+  skew_double_exponential_cdf(row_vector, row_vector, array[] real, array[] real) => real
   skew_double_exponential_cdf(row_vector, array[] real, real, real) => real
   skew_double_exponential_cdf(row_vector, array[] real, real, vector) => real
   skew_double_exponential_cdf(row_vector, array[] real, real, row_vector) => real
@@ -20532,14 +20469,11 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_cdf(row_vector, array[] real, row_vector, real) => real
   skew_double_exponential_cdf(row_vector, array[] real, row_vector, vector) => real
   skew_double_exponential_cdf(row_vector, array[] real, row_vector, row_vector) => real
-  skew_double_exponential_cdf(row_vector, array[] real, row_vector,
-                                array[] real) => real
+  skew_double_exponential_cdf(row_vector, array[] real, row_vector, array[] real) => real
   skew_double_exponential_cdf(row_vector, array[] real, array[] real, real) => real
   skew_double_exponential_cdf(row_vector, array[] real, array[] real, vector) => real
-  skew_double_exponential_cdf(row_vector, array[] real, array[] real,
-                                row_vector) => real
-  skew_double_exponential_cdf(row_vector, array[] real, array[] real,
-                                array[] real) => real
+  skew_double_exponential_cdf(row_vector, array[] real, array[] real, row_vector) => real
+  skew_double_exponential_cdf(row_vector, array[] real, array[] real, array[] real) => real
   skew_double_exponential_cdf(array[] real, real, real, real) => real
   skew_double_exponential_cdf(array[] real, real, real, vector) => real
   skew_double_exponential_cdf(array[] real, real, real, row_vector) => real
@@ -20583,14 +20517,11 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_cdf(array[] real, row_vector, row_vector, real) => real
   skew_double_exponential_cdf(array[] real, row_vector, row_vector, vector) => real
   skew_double_exponential_cdf(array[] real, row_vector, row_vector, row_vector) => real
-  skew_double_exponential_cdf(array[] real, row_vector, row_vector,
-                                array[] real) => real
+  skew_double_exponential_cdf(array[] real, row_vector, row_vector, array[] real) => real
   skew_double_exponential_cdf(array[] real, row_vector, array[] real, real) => real
   skew_double_exponential_cdf(array[] real, row_vector, array[] real, vector) => real
-  skew_double_exponential_cdf(array[] real, row_vector, array[] real,
-                                row_vector) => real
-  skew_double_exponential_cdf(array[] real, row_vector, array[] real,
-                                array[] real) => real
+  skew_double_exponential_cdf(array[] real, row_vector, array[] real, row_vector) => real
+  skew_double_exponential_cdf(array[] real, row_vector, array[] real, array[] real) => real
   skew_double_exponential_cdf(array[] real, array[] real, real, real) => real
   skew_double_exponential_cdf(array[] real, array[] real, real, vector) => real
   skew_double_exponential_cdf(array[] real, array[] real, real, row_vector) => real
@@ -20601,16 +20532,12 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_cdf(array[] real, array[] real, vector, array[] real) => real
   skew_double_exponential_cdf(array[] real, array[] real, row_vector, real) => real
   skew_double_exponential_cdf(array[] real, array[] real, row_vector, vector) => real
-  skew_double_exponential_cdf(array[] real, array[] real, row_vector,
-                                row_vector) => real
-  skew_double_exponential_cdf(array[] real, array[] real, row_vector,
-                                array[] real) => real
+  skew_double_exponential_cdf(array[] real, array[] real, row_vector, row_vector) => real
+  skew_double_exponential_cdf(array[] real, array[] real, row_vector, array[] real) => real
   skew_double_exponential_cdf(array[] real, array[] real, array[] real, real) => real
   skew_double_exponential_cdf(array[] real, array[] real, array[] real, vector) => real
-  skew_double_exponential_cdf(array[] real, array[] real, array[] real,
-                                row_vector) => real
-  skew_double_exponential_cdf(array[] real, array[] real, array[] real,
-                                array[] real) => real
+  skew_double_exponential_cdf(array[] real, array[] real, array[] real, row_vector) => real
+  skew_double_exponential_cdf(array[] real, array[] real, array[] real, array[] real) => real
   skew_double_exponential_cdf_log(real, real, real, real) => real
   skew_double_exponential_cdf_log(real, real, real, vector) => real
   skew_double_exponential_cdf_log(real, real, real, row_vector) => real
@@ -20674,8 +20601,7 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_cdf_log(real, array[] real, array[] real, real) => real
   skew_double_exponential_cdf_log(real, array[] real, array[] real, vector) => real
   skew_double_exponential_cdf_log(real, array[] real, array[] real, row_vector) => real
-  skew_double_exponential_cdf_log(real, array[] real, array[] real,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(real, array[] real, array[] real, array[] real) => real
   skew_double_exponential_cdf_log(vector, real, real, real) => real
   skew_double_exponential_cdf_log(vector, real, real, vector) => real
   skew_double_exponential_cdf_log(vector, real, real, row_vector) => real
@@ -20723,8 +20649,7 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_cdf_log(vector, row_vector, array[] real, real) => real
   skew_double_exponential_cdf_log(vector, row_vector, array[] real, vector) => real
   skew_double_exponential_cdf_log(vector, row_vector, array[] real, row_vector) => real
-  skew_double_exponential_cdf_log(vector, row_vector, array[] real,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(vector, row_vector, array[] real, array[] real) => real
   skew_double_exponential_cdf_log(vector, array[] real, real, real) => real
   skew_double_exponential_cdf_log(vector, array[] real, real, vector) => real
   skew_double_exponential_cdf_log(vector, array[] real, real, row_vector) => real
@@ -20736,14 +20661,11 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_cdf_log(vector, array[] real, row_vector, real) => real
   skew_double_exponential_cdf_log(vector, array[] real, row_vector, vector) => real
   skew_double_exponential_cdf_log(vector, array[] real, row_vector, row_vector) => real
-  skew_double_exponential_cdf_log(vector, array[] real, row_vector,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(vector, array[] real, row_vector, array[] real) => real
   skew_double_exponential_cdf_log(vector, array[] real, array[] real, real) => real
   skew_double_exponential_cdf_log(vector, array[] real, array[] real, vector) => real
-  skew_double_exponential_cdf_log(vector, array[] real, array[] real,
-                                    row_vector) => real
-  skew_double_exponential_cdf_log(vector, array[] real, array[] real,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(vector, array[] real, array[] real, row_vector) => real
+  skew_double_exponential_cdf_log(vector, array[] real, array[] real, array[] real) => real
   skew_double_exponential_cdf_log(row_vector, real, real, real) => real
   skew_double_exponential_cdf_log(row_vector, real, real, vector) => real
   skew_double_exponential_cdf_log(row_vector, real, real, row_vector) => real
@@ -20775,8 +20697,7 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_cdf_log(row_vector, vector, array[] real, real) => real
   skew_double_exponential_cdf_log(row_vector, vector, array[] real, vector) => real
   skew_double_exponential_cdf_log(row_vector, vector, array[] real, row_vector) => real
-  skew_double_exponential_cdf_log(row_vector, vector, array[] real,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(row_vector, vector, array[] real, array[] real) => real
   skew_double_exponential_cdf_log(row_vector, row_vector, real, real) => real
   skew_double_exponential_cdf_log(row_vector, row_vector, real, vector) => real
   skew_double_exponential_cdf_log(row_vector, row_vector, real, row_vector) => real
@@ -20787,16 +20708,12 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_cdf_log(row_vector, row_vector, vector, array[] real) => real
   skew_double_exponential_cdf_log(row_vector, row_vector, row_vector, real) => real
   skew_double_exponential_cdf_log(row_vector, row_vector, row_vector, vector) => real
-  skew_double_exponential_cdf_log(row_vector, row_vector, row_vector,
-                                    row_vector) => real
-  skew_double_exponential_cdf_log(row_vector, row_vector, row_vector,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(row_vector, row_vector, row_vector, row_vector) => real
+  skew_double_exponential_cdf_log(row_vector, row_vector, row_vector, array[] real) => real
   skew_double_exponential_cdf_log(row_vector, row_vector, array[] real, real) => real
   skew_double_exponential_cdf_log(row_vector, row_vector, array[] real, vector) => real
-  skew_double_exponential_cdf_log(row_vector, row_vector, array[] real,
-                                    row_vector) => real
-  skew_double_exponential_cdf_log(row_vector, row_vector, array[] real,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(row_vector, row_vector, array[] real, row_vector) => real
+  skew_double_exponential_cdf_log(row_vector, row_vector, array[] real, array[] real) => real
   skew_double_exponential_cdf_log(row_vector, array[] real, real, real) => real
   skew_double_exponential_cdf_log(row_vector, array[] real, real, vector) => real
   skew_double_exponential_cdf_log(row_vector, array[] real, real, row_vector) => real
@@ -20804,21 +20721,15 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_cdf_log(row_vector, array[] real, vector, real) => real
   skew_double_exponential_cdf_log(row_vector, array[] real, vector, vector) => real
   skew_double_exponential_cdf_log(row_vector, array[] real, vector, row_vector) => real
-  skew_double_exponential_cdf_log(row_vector, array[] real, vector,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(row_vector, array[] real, vector, array[] real) => real
   skew_double_exponential_cdf_log(row_vector, array[] real, row_vector, real) => real
   skew_double_exponential_cdf_log(row_vector, array[] real, row_vector, vector) => real
-  skew_double_exponential_cdf_log(row_vector, array[] real, row_vector,
-                                    row_vector) => real
-  skew_double_exponential_cdf_log(row_vector, array[] real, row_vector,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(row_vector, array[] real, row_vector, row_vector) => real
+  skew_double_exponential_cdf_log(row_vector, array[] real, row_vector, array[] real) => real
   skew_double_exponential_cdf_log(row_vector, array[] real, array[] real, real) => real
-  skew_double_exponential_cdf_log(row_vector, array[] real, array[] real,
-                                    vector) => real
-  skew_double_exponential_cdf_log(row_vector, array[] real, array[] real,
-                                    row_vector) => real
-  skew_double_exponential_cdf_log(row_vector, array[] real, array[] real,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(row_vector, array[] real, array[] real, vector) => real
+  skew_double_exponential_cdf_log(row_vector, array[] real, array[] real, row_vector) => real
+  skew_double_exponential_cdf_log(row_vector, array[] real, array[] real, array[] real) => real
   skew_double_exponential_cdf_log(array[] real, real, real, real) => real
   skew_double_exponential_cdf_log(array[] real, real, real, vector) => real
   skew_double_exponential_cdf_log(array[] real, real, real, row_vector) => real
@@ -20834,8 +20745,7 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_cdf_log(array[] real, real, array[] real, real) => real
   skew_double_exponential_cdf_log(array[] real, real, array[] real, vector) => real
   skew_double_exponential_cdf_log(array[] real, real, array[] real, row_vector) => real
-  skew_double_exponential_cdf_log(array[] real, real, array[] real,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(array[] real, real, array[] real, array[] real) => real
   skew_double_exponential_cdf_log(array[] real, vector, real, real) => real
   skew_double_exponential_cdf_log(array[] real, vector, real, vector) => real
   skew_double_exponential_cdf_log(array[] real, vector, real, row_vector) => real
@@ -20847,14 +20757,11 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_cdf_log(array[] real, vector, row_vector, real) => real
   skew_double_exponential_cdf_log(array[] real, vector, row_vector, vector) => real
   skew_double_exponential_cdf_log(array[] real, vector, row_vector, row_vector) => real
-  skew_double_exponential_cdf_log(array[] real, vector, row_vector,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(array[] real, vector, row_vector, array[] real) => real
   skew_double_exponential_cdf_log(array[] real, vector, array[] real, real) => real
   skew_double_exponential_cdf_log(array[] real, vector, array[] real, vector) => real
-  skew_double_exponential_cdf_log(array[] real, vector, array[] real,
-                                    row_vector) => real
-  skew_double_exponential_cdf_log(array[] real, vector, array[] real,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(array[] real, vector, array[] real, row_vector) => real
+  skew_double_exponential_cdf_log(array[] real, vector, array[] real, array[] real) => real
   skew_double_exponential_cdf_log(array[] real, row_vector, real, real) => real
   skew_double_exponential_cdf_log(array[] real, row_vector, real, vector) => real
   skew_double_exponential_cdf_log(array[] real, row_vector, real, row_vector) => real
@@ -20862,47 +20769,31 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_cdf_log(array[] real, row_vector, vector, real) => real
   skew_double_exponential_cdf_log(array[] real, row_vector, vector, vector) => real
   skew_double_exponential_cdf_log(array[] real, row_vector, vector, row_vector) => real
-  skew_double_exponential_cdf_log(array[] real, row_vector, vector,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(array[] real, row_vector, vector, array[] real) => real
   skew_double_exponential_cdf_log(array[] real, row_vector, row_vector, real) => real
   skew_double_exponential_cdf_log(array[] real, row_vector, row_vector, vector) => real
-  skew_double_exponential_cdf_log(array[] real, row_vector, row_vector,
-                                    row_vector) => real
-  skew_double_exponential_cdf_log(array[] real, row_vector, row_vector,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(array[] real, row_vector, row_vector, row_vector) => real
+  skew_double_exponential_cdf_log(array[] real, row_vector, row_vector, array[] real) => real
   skew_double_exponential_cdf_log(array[] real, row_vector, array[] real, real) => real
-  skew_double_exponential_cdf_log(array[] real, row_vector, array[] real,
-                                    vector) => real
-  skew_double_exponential_cdf_log(array[] real, row_vector, array[] real,
-                                    row_vector) => real
-  skew_double_exponential_cdf_log(array[] real, row_vector, array[] real,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(array[] real, row_vector, array[] real, vector) => real
+  skew_double_exponential_cdf_log(array[] real, row_vector, array[] real, row_vector) => real
+  skew_double_exponential_cdf_log(array[] real, row_vector, array[] real, array[] real) => real
   skew_double_exponential_cdf_log(array[] real, array[] real, real, real) => real
   skew_double_exponential_cdf_log(array[] real, array[] real, real, vector) => real
   skew_double_exponential_cdf_log(array[] real, array[] real, real, row_vector) => real
-  skew_double_exponential_cdf_log(array[] real, array[] real, real,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(array[] real, array[] real, real, array[] real) => real
   skew_double_exponential_cdf_log(array[] real, array[] real, vector, real) => real
   skew_double_exponential_cdf_log(array[] real, array[] real, vector, vector) => real
-  skew_double_exponential_cdf_log(array[] real, array[] real, vector,
-                                    row_vector) => real
-  skew_double_exponential_cdf_log(array[] real, array[] real, vector,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(array[] real, array[] real, vector, row_vector) => real
+  skew_double_exponential_cdf_log(array[] real, array[] real, vector, array[] real) => real
   skew_double_exponential_cdf_log(array[] real, array[] real, row_vector, real) => real
-  skew_double_exponential_cdf_log(array[] real, array[] real, row_vector,
-                                    vector) => real
-  skew_double_exponential_cdf_log(array[] real, array[] real, row_vector,
-                                    row_vector) => real
-  skew_double_exponential_cdf_log(array[] real, array[] real, row_vector,
-                                    array[] real) => real
-  skew_double_exponential_cdf_log(array[] real, array[] real, array[] real,
-                                    real) => real
-  skew_double_exponential_cdf_log(array[] real, array[] real, array[] real,
-                                    vector) => real
-  skew_double_exponential_cdf_log(array[] real, array[] real, array[] real,
-                                    row_vector) => real
-  skew_double_exponential_cdf_log(array[] real, array[] real, array[] real,
-                                    array[] real) => real
+  skew_double_exponential_cdf_log(array[] real, array[] real, row_vector, vector) => real
+  skew_double_exponential_cdf_log(array[] real, array[] real, row_vector, row_vector) => real
+  skew_double_exponential_cdf_log(array[] real, array[] real, row_vector, array[] real) => real
+  skew_double_exponential_cdf_log(array[] real, array[] real, array[] real, real) => real
+  skew_double_exponential_cdf_log(array[] real, array[] real, array[] real, vector) => real
+  skew_double_exponential_cdf_log(array[] real, array[] real, array[] real, row_vector) => real
+  skew_double_exponential_cdf_log(array[] real, array[] real, array[] real, array[] real) => real
   skew_double_exponential_lccdf(real, real, real, real) => real
   skew_double_exponential_lccdf(real, real, real, vector) => real
   skew_double_exponential_lccdf(real, real, real, row_vector) => real
@@ -21030,8 +20921,7 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_lccdf(vector, array[] real, array[] real, real) => real
   skew_double_exponential_lccdf(vector, array[] real, array[] real, vector) => real
   skew_double_exponential_lccdf(vector, array[] real, array[] real, row_vector) => real
-  skew_double_exponential_lccdf(vector, array[] real, array[] real,
-                                  array[] real) => real
+  skew_double_exponential_lccdf(vector, array[] real, array[] real, array[] real) => real
   skew_double_exponential_lccdf(row_vector, real, real, real) => real
   skew_double_exponential_lccdf(row_vector, real, real, vector) => real
   skew_double_exponential_lccdf(row_vector, real, real, row_vector) => real
@@ -21075,14 +20965,11 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_lccdf(row_vector, row_vector, row_vector, real) => real
   skew_double_exponential_lccdf(row_vector, row_vector, row_vector, vector) => real
   skew_double_exponential_lccdf(row_vector, row_vector, row_vector, row_vector) => real
-  skew_double_exponential_lccdf(row_vector, row_vector, row_vector,
-                                  array[] real) => real
+  skew_double_exponential_lccdf(row_vector, row_vector, row_vector, array[] real) => real
   skew_double_exponential_lccdf(row_vector, row_vector, array[] real, real) => real
   skew_double_exponential_lccdf(row_vector, row_vector, array[] real, vector) => real
-  skew_double_exponential_lccdf(row_vector, row_vector, array[] real,
-                                  row_vector) => real
-  skew_double_exponential_lccdf(row_vector, row_vector, array[] real,
-                                  array[] real) => real
+  skew_double_exponential_lccdf(row_vector, row_vector, array[] real, row_vector) => real
+  skew_double_exponential_lccdf(row_vector, row_vector, array[] real, array[] real) => real
   skew_double_exponential_lccdf(row_vector, array[] real, real, real) => real
   skew_double_exponential_lccdf(row_vector, array[] real, real, vector) => real
   skew_double_exponential_lccdf(row_vector, array[] real, real, row_vector) => real
@@ -21093,16 +20980,12 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_lccdf(row_vector, array[] real, vector, array[] real) => real
   skew_double_exponential_lccdf(row_vector, array[] real, row_vector, real) => real
   skew_double_exponential_lccdf(row_vector, array[] real, row_vector, vector) => real
-  skew_double_exponential_lccdf(row_vector, array[] real, row_vector,
-                                  row_vector) => real
-  skew_double_exponential_lccdf(row_vector, array[] real, row_vector,
-                                  array[] real) => real
+  skew_double_exponential_lccdf(row_vector, array[] real, row_vector, row_vector) => real
+  skew_double_exponential_lccdf(row_vector, array[] real, row_vector, array[] real) => real
   skew_double_exponential_lccdf(row_vector, array[] real, array[] real, real) => real
   skew_double_exponential_lccdf(row_vector, array[] real, array[] real, vector) => real
-  skew_double_exponential_lccdf(row_vector, array[] real, array[] real,
-                                  row_vector) => real
-  skew_double_exponential_lccdf(row_vector, array[] real, array[] real,
-                                  array[] real) => real
+  skew_double_exponential_lccdf(row_vector, array[] real, array[] real, row_vector) => real
+  skew_double_exponential_lccdf(row_vector, array[] real, array[] real, array[] real) => real
   skew_double_exponential_lccdf(array[] real, real, real, real) => real
   skew_double_exponential_lccdf(array[] real, real, real, vector) => real
   skew_double_exponential_lccdf(array[] real, real, real, row_vector) => real
@@ -21134,8 +21017,7 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_lccdf(array[] real, vector, array[] real, real) => real
   skew_double_exponential_lccdf(array[] real, vector, array[] real, vector) => real
   skew_double_exponential_lccdf(array[] real, vector, array[] real, row_vector) => real
-  skew_double_exponential_lccdf(array[] real, vector, array[] real,
-                                  array[] real) => real
+  skew_double_exponential_lccdf(array[] real, vector, array[] real, array[] real) => real
   skew_double_exponential_lccdf(array[] real, row_vector, real, real) => real
   skew_double_exponential_lccdf(array[] real, row_vector, real, vector) => real
   skew_double_exponential_lccdf(array[] real, row_vector, real, row_vector) => real
@@ -21146,16 +21028,12 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_lccdf(array[] real, row_vector, vector, array[] real) => real
   skew_double_exponential_lccdf(array[] real, row_vector, row_vector, real) => real
   skew_double_exponential_lccdf(array[] real, row_vector, row_vector, vector) => real
-  skew_double_exponential_lccdf(array[] real, row_vector, row_vector,
-                                  row_vector) => real
-  skew_double_exponential_lccdf(array[] real, row_vector, row_vector,
-                                  array[] real) => real
+  skew_double_exponential_lccdf(array[] real, row_vector, row_vector, row_vector) => real
+  skew_double_exponential_lccdf(array[] real, row_vector, row_vector, array[] real) => real
   skew_double_exponential_lccdf(array[] real, row_vector, array[] real, real) => real
   skew_double_exponential_lccdf(array[] real, row_vector, array[] real, vector) => real
-  skew_double_exponential_lccdf(array[] real, row_vector, array[] real,
-                                  row_vector) => real
-  skew_double_exponential_lccdf(array[] real, row_vector, array[] real,
-                                  array[] real) => real
+  skew_double_exponential_lccdf(array[] real, row_vector, array[] real, row_vector) => real
+  skew_double_exponential_lccdf(array[] real, row_vector, array[] real, array[] real) => real
   skew_double_exponential_lccdf(array[] real, array[] real, real, real) => real
   skew_double_exponential_lccdf(array[] real, array[] real, real, vector) => real
   skew_double_exponential_lccdf(array[] real, array[] real, real, row_vector) => real
@@ -21163,21 +21041,15 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_lccdf(array[] real, array[] real, vector, real) => real
   skew_double_exponential_lccdf(array[] real, array[] real, vector, vector) => real
   skew_double_exponential_lccdf(array[] real, array[] real, vector, row_vector) => real
-  skew_double_exponential_lccdf(array[] real, array[] real, vector,
-                                  array[] real) => real
+  skew_double_exponential_lccdf(array[] real, array[] real, vector, array[] real) => real
   skew_double_exponential_lccdf(array[] real, array[] real, row_vector, real) => real
   skew_double_exponential_lccdf(array[] real, array[] real, row_vector, vector) => real
-  skew_double_exponential_lccdf(array[] real, array[] real, row_vector,
-                                  row_vector) => real
-  skew_double_exponential_lccdf(array[] real, array[] real, row_vector,
-                                  array[] real) => real
+  skew_double_exponential_lccdf(array[] real, array[] real, row_vector, row_vector) => real
+  skew_double_exponential_lccdf(array[] real, array[] real, row_vector, array[] real) => real
   skew_double_exponential_lccdf(array[] real, array[] real, array[] real, real) => real
-  skew_double_exponential_lccdf(array[] real, array[] real, array[] real,
-                                  vector) => real
-  skew_double_exponential_lccdf(array[] real, array[] real, array[] real,
-                                  row_vector) => real
-  skew_double_exponential_lccdf(array[] real, array[] real, array[] real,
-                                  array[] real) => real
+  skew_double_exponential_lccdf(array[] real, array[] real, array[] real, vector) => real
+  skew_double_exponential_lccdf(array[] real, array[] real, array[] real, row_vector) => real
+  skew_double_exponential_lccdf(array[] real, array[] real, array[] real, array[] real) => real
   skew_double_exponential_lcdf(real, real, real, real) => real
   skew_double_exponential_lcdf(real, real, real, vector) => real
   skew_double_exponential_lcdf(real, real, real, row_vector) => real
@@ -21353,8 +21225,7 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_lcdf(row_vector, row_vector, array[] real, real) => real
   skew_double_exponential_lcdf(row_vector, row_vector, array[] real, vector) => real
   skew_double_exponential_lcdf(row_vector, row_vector, array[] real, row_vector) => real
-  skew_double_exponential_lcdf(row_vector, row_vector, array[] real,
-                                 array[] real) => real
+  skew_double_exponential_lcdf(row_vector, row_vector, array[] real, array[] real) => real
   skew_double_exponential_lcdf(row_vector, array[] real, real, real) => real
   skew_double_exponential_lcdf(row_vector, array[] real, real, vector) => real
   skew_double_exponential_lcdf(row_vector, array[] real, real, row_vector) => real
@@ -21366,14 +21237,11 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_lcdf(row_vector, array[] real, row_vector, real) => real
   skew_double_exponential_lcdf(row_vector, array[] real, row_vector, vector) => real
   skew_double_exponential_lcdf(row_vector, array[] real, row_vector, row_vector) => real
-  skew_double_exponential_lcdf(row_vector, array[] real, row_vector,
-                                 array[] real) => real
+  skew_double_exponential_lcdf(row_vector, array[] real, row_vector, array[] real) => real
   skew_double_exponential_lcdf(row_vector, array[] real, array[] real, real) => real
   skew_double_exponential_lcdf(row_vector, array[] real, array[] real, vector) => real
-  skew_double_exponential_lcdf(row_vector, array[] real, array[] real,
-                                 row_vector) => real
-  skew_double_exponential_lcdf(row_vector, array[] real, array[] real,
-                                 array[] real) => real
+  skew_double_exponential_lcdf(row_vector, array[] real, array[] real, row_vector) => real
+  skew_double_exponential_lcdf(row_vector, array[] real, array[] real, array[] real) => real
   skew_double_exponential_lcdf(array[] real, real, real, real) => real
   skew_double_exponential_lcdf(array[] real, real, real, vector) => real
   skew_double_exponential_lcdf(array[] real, real, real, row_vector) => real
@@ -21417,14 +21285,11 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_lcdf(array[] real, row_vector, row_vector, real) => real
   skew_double_exponential_lcdf(array[] real, row_vector, row_vector, vector) => real
   skew_double_exponential_lcdf(array[] real, row_vector, row_vector, row_vector) => real
-  skew_double_exponential_lcdf(array[] real, row_vector, row_vector,
-                                 array[] real) => real
+  skew_double_exponential_lcdf(array[] real, row_vector, row_vector, array[] real) => real
   skew_double_exponential_lcdf(array[] real, row_vector, array[] real, real) => real
   skew_double_exponential_lcdf(array[] real, row_vector, array[] real, vector) => real
-  skew_double_exponential_lcdf(array[] real, row_vector, array[] real,
-                                 row_vector) => real
-  skew_double_exponential_lcdf(array[] real, row_vector, array[] real,
-                                 array[] real) => real
+  skew_double_exponential_lcdf(array[] real, row_vector, array[] real, row_vector) => real
+  skew_double_exponential_lcdf(array[] real, row_vector, array[] real, array[] real) => real
   skew_double_exponential_lcdf(array[] real, array[] real, real, real) => real
   skew_double_exponential_lcdf(array[] real, array[] real, real, vector) => real
   skew_double_exponential_lcdf(array[] real, array[] real, real, row_vector) => real
@@ -21435,16 +21300,12 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_lcdf(array[] real, array[] real, vector, array[] real) => real
   skew_double_exponential_lcdf(array[] real, array[] real, row_vector, real) => real
   skew_double_exponential_lcdf(array[] real, array[] real, row_vector, vector) => real
-  skew_double_exponential_lcdf(array[] real, array[] real, row_vector,
-                                 row_vector) => real
-  skew_double_exponential_lcdf(array[] real, array[] real, row_vector,
-                                 array[] real) => real
+  skew_double_exponential_lcdf(array[] real, array[] real, row_vector, row_vector) => real
+  skew_double_exponential_lcdf(array[] real, array[] real, row_vector, array[] real) => real
   skew_double_exponential_lcdf(array[] real, array[] real, array[] real, real) => real
   skew_double_exponential_lcdf(array[] real, array[] real, array[] real, vector) => real
-  skew_double_exponential_lcdf(array[] real, array[] real, array[] real,
-                                 row_vector) => real
-  skew_double_exponential_lcdf(array[] real, array[] real, array[] real,
-                                 array[] real) => real
+  skew_double_exponential_lcdf(array[] real, array[] real, array[] real, row_vector) => real
+  skew_double_exponential_lcdf(array[] real, array[] real, array[] real, array[] real) => real
   skew_double_exponential_log(real, real, real, real) => real
   skew_double_exponential_log(real, real, real, vector) => real
   skew_double_exponential_log(real, real, real, row_vector) => real
@@ -21620,8 +21481,7 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_log(row_vector, row_vector, array[] real, real) => real
   skew_double_exponential_log(row_vector, row_vector, array[] real, vector) => real
   skew_double_exponential_log(row_vector, row_vector, array[] real, row_vector) => real
-  skew_double_exponential_log(row_vector, row_vector, array[] real,
-                                array[] real) => real
+  skew_double_exponential_log(row_vector, row_vector, array[] real, array[] real) => real
   skew_double_exponential_log(row_vector, array[] real, real, real) => real
   skew_double_exponential_log(row_vector, array[] real, real, vector) => real
   skew_double_exponential_log(row_vector, array[] real, real, row_vector) => real
@@ -21633,14 +21493,11 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_log(row_vector, array[] real, row_vector, real) => real
   skew_double_exponential_log(row_vector, array[] real, row_vector, vector) => real
   skew_double_exponential_log(row_vector, array[] real, row_vector, row_vector) => real
-  skew_double_exponential_log(row_vector, array[] real, row_vector,
-                                array[] real) => real
+  skew_double_exponential_log(row_vector, array[] real, row_vector, array[] real) => real
   skew_double_exponential_log(row_vector, array[] real, array[] real, real) => real
   skew_double_exponential_log(row_vector, array[] real, array[] real, vector) => real
-  skew_double_exponential_log(row_vector, array[] real, array[] real,
-                                row_vector) => real
-  skew_double_exponential_log(row_vector, array[] real, array[] real,
-                                array[] real) => real
+  skew_double_exponential_log(row_vector, array[] real, array[] real, row_vector) => real
+  skew_double_exponential_log(row_vector, array[] real, array[] real, array[] real) => real
   skew_double_exponential_log(array[] real, real, real, real) => real
   skew_double_exponential_log(array[] real, real, real, vector) => real
   skew_double_exponential_log(array[] real, real, real, row_vector) => real
@@ -21684,14 +21541,11 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_log(array[] real, row_vector, row_vector, real) => real
   skew_double_exponential_log(array[] real, row_vector, row_vector, vector) => real
   skew_double_exponential_log(array[] real, row_vector, row_vector, row_vector) => real
-  skew_double_exponential_log(array[] real, row_vector, row_vector,
-                                array[] real) => real
+  skew_double_exponential_log(array[] real, row_vector, row_vector, array[] real) => real
   skew_double_exponential_log(array[] real, row_vector, array[] real, real) => real
   skew_double_exponential_log(array[] real, row_vector, array[] real, vector) => real
-  skew_double_exponential_log(array[] real, row_vector, array[] real,
-                                row_vector) => real
-  skew_double_exponential_log(array[] real, row_vector, array[] real,
-                                array[] real) => real
+  skew_double_exponential_log(array[] real, row_vector, array[] real, row_vector) => real
+  skew_double_exponential_log(array[] real, row_vector, array[] real, array[] real) => real
   skew_double_exponential_log(array[] real, array[] real, real, real) => real
   skew_double_exponential_log(array[] real, array[] real, real, vector) => real
   skew_double_exponential_log(array[] real, array[] real, real, row_vector) => real
@@ -21702,16 +21556,12 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_log(array[] real, array[] real, vector, array[] real) => real
   skew_double_exponential_log(array[] real, array[] real, row_vector, real) => real
   skew_double_exponential_log(array[] real, array[] real, row_vector, vector) => real
-  skew_double_exponential_log(array[] real, array[] real, row_vector,
-                                row_vector) => real
-  skew_double_exponential_log(array[] real, array[] real, row_vector,
-                                array[] real) => real
+  skew_double_exponential_log(array[] real, array[] real, row_vector, row_vector) => real
+  skew_double_exponential_log(array[] real, array[] real, row_vector, array[] real) => real
   skew_double_exponential_log(array[] real, array[] real, array[] real, real) => real
   skew_double_exponential_log(array[] real, array[] real, array[] real, vector) => real
-  skew_double_exponential_log(array[] real, array[] real, array[] real,
-                                row_vector) => real
-  skew_double_exponential_log(array[] real, array[] real, array[] real,
-                                array[] real) => real
+  skew_double_exponential_log(array[] real, array[] real, array[] real, row_vector) => real
+  skew_double_exponential_log(array[] real, array[] real, array[] real, array[] real) => real
   skew_double_exponential_lpdf(real, real, real, real) => real
   skew_double_exponential_lpdf(real, real, real, vector) => real
   skew_double_exponential_lpdf(real, real, real, row_vector) => real
@@ -21887,8 +21737,7 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_lpdf(row_vector, row_vector, array[] real, real) => real
   skew_double_exponential_lpdf(row_vector, row_vector, array[] real, vector) => real
   skew_double_exponential_lpdf(row_vector, row_vector, array[] real, row_vector) => real
-  skew_double_exponential_lpdf(row_vector, row_vector, array[] real,
-                                 array[] real) => real
+  skew_double_exponential_lpdf(row_vector, row_vector, array[] real, array[] real) => real
   skew_double_exponential_lpdf(row_vector, array[] real, real, real) => real
   skew_double_exponential_lpdf(row_vector, array[] real, real, vector) => real
   skew_double_exponential_lpdf(row_vector, array[] real, real, row_vector) => real
@@ -21900,14 +21749,11 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_lpdf(row_vector, array[] real, row_vector, real) => real
   skew_double_exponential_lpdf(row_vector, array[] real, row_vector, vector) => real
   skew_double_exponential_lpdf(row_vector, array[] real, row_vector, row_vector) => real
-  skew_double_exponential_lpdf(row_vector, array[] real, row_vector,
-                                 array[] real) => real
+  skew_double_exponential_lpdf(row_vector, array[] real, row_vector, array[] real) => real
   skew_double_exponential_lpdf(row_vector, array[] real, array[] real, real) => real
   skew_double_exponential_lpdf(row_vector, array[] real, array[] real, vector) => real
-  skew_double_exponential_lpdf(row_vector, array[] real, array[] real,
-                                 row_vector) => real
-  skew_double_exponential_lpdf(row_vector, array[] real, array[] real,
-                                 array[] real) => real
+  skew_double_exponential_lpdf(row_vector, array[] real, array[] real, row_vector) => real
+  skew_double_exponential_lpdf(row_vector, array[] real, array[] real, array[] real) => real
   skew_double_exponential_lpdf(array[] real, real, real, real) => real
   skew_double_exponential_lpdf(array[] real, real, real, vector) => real
   skew_double_exponential_lpdf(array[] real, real, real, row_vector) => real
@@ -21951,14 +21797,11 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_lpdf(array[] real, row_vector, row_vector, real) => real
   skew_double_exponential_lpdf(array[] real, row_vector, row_vector, vector) => real
   skew_double_exponential_lpdf(array[] real, row_vector, row_vector, row_vector) => real
-  skew_double_exponential_lpdf(array[] real, row_vector, row_vector,
-                                 array[] real) => real
+  skew_double_exponential_lpdf(array[] real, row_vector, row_vector, array[] real) => real
   skew_double_exponential_lpdf(array[] real, row_vector, array[] real, real) => real
   skew_double_exponential_lpdf(array[] real, row_vector, array[] real, vector) => real
-  skew_double_exponential_lpdf(array[] real, row_vector, array[] real,
-                                 row_vector) => real
-  skew_double_exponential_lpdf(array[] real, row_vector, array[] real,
-                                 array[] real) => real
+  skew_double_exponential_lpdf(array[] real, row_vector, array[] real, row_vector) => real
+  skew_double_exponential_lpdf(array[] real, row_vector, array[] real, array[] real) => real
   skew_double_exponential_lpdf(array[] real, array[] real, real, real) => real
   skew_double_exponential_lpdf(array[] real, array[] real, real, vector) => real
   skew_double_exponential_lpdf(array[] real, array[] real, real, row_vector) => real
@@ -21969,16 +21812,12 @@ Display all Stan math signatures exposed in the language
   skew_double_exponential_lpdf(array[] real, array[] real, vector, array[] real) => real
   skew_double_exponential_lpdf(array[] real, array[] real, row_vector, real) => real
   skew_double_exponential_lpdf(array[] real, array[] real, row_vector, vector) => real
-  skew_double_exponential_lpdf(array[] real, array[] real, row_vector,
-                                 row_vector) => real
-  skew_double_exponential_lpdf(array[] real, array[] real, row_vector,
-                                 array[] real) => real
+  skew_double_exponential_lpdf(array[] real, array[] real, row_vector, row_vector) => real
+  skew_double_exponential_lpdf(array[] real, array[] real, row_vector, array[] real) => real
   skew_double_exponential_lpdf(array[] real, array[] real, array[] real, real) => real
   skew_double_exponential_lpdf(array[] real, array[] real, array[] real, vector) => real
-  skew_double_exponential_lpdf(array[] real, array[] real, array[] real,
-                                 row_vector) => real
-  skew_double_exponential_lpdf(array[] real, array[] real, array[] real,
-                                 array[] real) => real
+  skew_double_exponential_lpdf(array[] real, array[] real, array[] real, row_vector) => real
+  skew_double_exponential_lpdf(array[] real, array[] real, array[] real, array[] real) => real
   skew_double_exponential_rng(int, int, int) => real
   skew_double_exponential_rng(int, int, real) => real
   skew_double_exponential_rng(int, real, int) => real
@@ -29151,8 +28990,7 @@ Display all Stan math signatures exposed in the language
   wiener_log(array[] real, array[] real, array[] real, array[] real, real) => real
   wiener_log(array[] real, array[] real, array[] real, array[] real, vector) => real
   wiener_log(array[] real, array[] real, array[] real, array[] real, row_vector) => real
-  wiener_log(array[] real, array[] real, array[] real, array[] real,
-               array[] real) => real
+  wiener_log(array[] real, array[] real, array[] real, array[] real, array[] real) => real
   wiener_lpdf(real, real, real, real, real) => real
   wiener_lpdf(real, real, real, real, vector) => real
   wiener_lpdf(real, real, real, real, row_vector) => real
@@ -29920,8 +29758,7 @@ Display all Stan math signatures exposed in the language
   wiener_lpdf(row_vector, array[] real, array[] real, array[] real, real) => real
   wiener_lpdf(row_vector, array[] real, array[] real, array[] real, vector) => real
   wiener_lpdf(row_vector, array[] real, array[] real, array[] real, row_vector) => real
-  wiener_lpdf(row_vector, array[] real, array[] real, array[] real,
-                array[] real) => real
+  wiener_lpdf(row_vector, array[] real, array[] real, array[] real, array[] real) => real
   wiener_lpdf(array[] real, real, real, real, real) => real
   wiener_lpdf(array[] real, real, real, real, vector) => real
   wiener_lpdf(array[] real, real, real, real, row_vector) => real
@@ -30113,8 +29950,7 @@ Display all Stan math signatures exposed in the language
   wiener_lpdf(array[] real, row_vector, array[] real, array[] real, real) => real
   wiener_lpdf(array[] real, row_vector, array[] real, array[] real, vector) => real
   wiener_lpdf(array[] real, row_vector, array[] real, array[] real, row_vector) => real
-  wiener_lpdf(array[] real, row_vector, array[] real, array[] real,
-                array[] real) => real
+  wiener_lpdf(array[] real, row_vector, array[] real, array[] real, array[] real) => real
   wiener_lpdf(array[] real, array[] real, real, real, real) => real
   wiener_lpdf(array[] real, array[] real, real, real, vector) => real
   wiener_lpdf(array[] real, array[] real, real, real, row_vector) => real
@@ -30162,8 +29998,7 @@ Display all Stan math signatures exposed in the language
   wiener_lpdf(array[] real, array[] real, row_vector, array[] real, real) => real
   wiener_lpdf(array[] real, array[] real, row_vector, array[] real, vector) => real
   wiener_lpdf(array[] real, array[] real, row_vector, array[] real, row_vector) => real
-  wiener_lpdf(array[] real, array[] real, row_vector, array[] real,
-                array[] real) => real
+  wiener_lpdf(array[] real, array[] real, row_vector, array[] real, array[] real) => real
   wiener_lpdf(array[] real, array[] real, array[] real, real, real) => real
   wiener_lpdf(array[] real, array[] real, array[] real, real, vector) => real
   wiener_lpdf(array[] real, array[] real, array[] real, real, row_vector) => real
@@ -30175,14 +30010,11 @@ Display all Stan math signatures exposed in the language
   wiener_lpdf(array[] real, array[] real, array[] real, row_vector, real) => real
   wiener_lpdf(array[] real, array[] real, array[] real, row_vector, vector) => real
   wiener_lpdf(array[] real, array[] real, array[] real, row_vector, row_vector) => real
-  wiener_lpdf(array[] real, array[] real, array[] real, row_vector,
-                array[] real) => real
+  wiener_lpdf(array[] real, array[] real, array[] real, row_vector, array[] real) => real
   wiener_lpdf(array[] real, array[] real, array[] real, array[] real, real) => real
   wiener_lpdf(array[] real, array[] real, array[] real, array[] real, vector) => real
-  wiener_lpdf(array[] real, array[] real, array[] real, array[] real,
-                row_vector) => real
-  wiener_lpdf(array[] real, array[] real, array[] real, array[] real,
-                array[] real) => real
+  wiener_lpdf(array[] real, array[] real, array[] real, array[] real, row_vector) => real
+  wiener_lpdf(array[] real, array[] real, array[] real, array[] real, array[] real) => real
   wishart_log(matrix, real, matrix) => real
   wishart_lpdf(matrix, real, matrix) => real
   wishart_rng(real, matrix) => matrix
