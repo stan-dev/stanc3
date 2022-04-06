@@ -377,6 +377,9 @@ module Helpers = struct
       | SMatrix (mem_pattern, d1, d2) ->
           let bodyfn' var = mk_for_iteratee d1 bodyfn var smeta in
           go (SRowVector (mem_pattern, d2)) bodyfn' var smeta
+      | SComplexMatrix (d1, d2) ->
+          let bodyfn' var = mk_for_iteratee d1 bodyfn var smeta in
+          go (SComplexRowVector d2) bodyfn' var smeta
       | _ -> for_scalar st bodyfn var smeta in
     go st (Fn.compose bodyfn invert_index_order) var smeta
 
