@@ -4144,7 +4144,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 23> locations_array__ = 
+static constexpr std::array<const char*, 26> locations_array__ = 
 {" (found before start of program)",
  " (in 'complex_data.stan', line 2, column 2 to column 8)",
  " (in 'complex_data.stan', line 3, column 2 to column 12)",
@@ -4167,7 +4167,10 @@ static constexpr std::array<const char*, 23> locations_array__ =
  " (in 'complex_data.stan', line 12, column 8 to column 9)",
  " (in 'complex_data.stan', line 12, column 26 to column 27)",
  " (in 'complex_data.stan', line 12, column 28 to column 29)",
- " (in 'complex_data.stan', line 12, column 2 to column 34)"};
+ " (in 'complex_data.stan', line 12, column 2 to column 34)",
+ " (in 'complex_data.stan', line 15, column 17 to column 18)",
+ " (in 'complex_data.stan', line 15, column 19 to column 20)",
+ " (in 'complex_data.stan', line 15, column 2 to column 25)"};
 
 
 
@@ -4184,10 +4187,12 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
   std::vector<std::complex<double>> z4;
   std::vector<Eigen::Matrix<std::complex<double>, -1, 1>> z5;
   std::vector<Eigen::Matrix<std::complex<double>, 1, -1>> z6;
-  std::vector<Eigen::Matrix<std::complex<double>, -1, -1>> z7; 
+  std::vector<Eigen::Matrix<std::complex<double>, -1, -1>> z7;
+  Eigen::Matrix<std::complex<double>, -1, -1> z8__; 
   Eigen::Map<Eigen::Matrix<std::complex<double>, -1, 1>> z1{nullptr, 0};
   Eigen::Map<Eigen::Matrix<std::complex<double>, 1, -1>> z2{nullptr, 0};
   Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>> z3{nullptr, 0, 0};
+  Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>> z8{nullptr, 0, 0};
  
  public:
   ~complex_data_model() { }
@@ -4457,6 +4462,39 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
               current_statement__ = 22;
               pos__ = (pos__ + 1);
             }
+          }
+        }
+      }
+      current_statement__ = 23;
+      stan::math::validate_non_negative_index("z8", "N", N);
+      current_statement__ = 24;
+      stan::math::validate_non_negative_index("z8", "M", M);
+      current_statement__ = 25;
+      context__.validate_dims("data initialization","z8","double",
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(M), static_cast<size_t>(2)});
+      z8__ = 
+        Eigen::Matrix<std::complex<double>, -1, -1>::Constant(N, M,
+          std::numeric_limits<double>::quiet_NaN());
+      new (&z8) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>>(z8__.data(), N, M);
+        
+      
+      {
+        std::vector<std::complex<local_scalar_t__>> z8_flat__;
+        current_statement__ = 25;
+        z8_flat__ = context__.vals_c("z8");
+        current_statement__ = 25;
+        pos__ = 1;
+        current_statement__ = 25;
+        for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+          current_statement__ = 25;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 25;
+            stan::model::assign(z8, z8_flat__[(pos__ - 1)],
+              "assigning variable z8", stan::model::index_uni(sym2__),
+                                         stan::model::index_uni(sym1__));
+            current_statement__ = 25;
+            pos__ = (pos__ + 1);
           }
         }
       }
