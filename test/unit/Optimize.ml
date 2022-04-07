@@ -328,7 +328,7 @@ let%expect_test "list collapsing" =
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id inline_g_return_sym2__)
-          (decl_type (Unsized UReal)) (initialize true)))
+          (decl_type (Sized SReal)) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Block

@@ -75,8 +75,8 @@ let block_no_loc l = Stmt.Fixed.Pattern.Block (map_no_loc l)
 let slist_concat_no_loc l stmt =
   match l with [] -> stmt | l -> slist_no_loc (l @ [stmt])
 
-let replace_fresh_local_vars (fname : string) s' =
-  let f m = function
+let replace_fresh_local_vars (fname : string) stmt =
+  let f (m : (string, string) Core_kernel.Map.Poly.t) = function
     | Stmt.Fixed.Pattern.Decl {decl_adtype; decl_type; decl_id; initialize} ->
         let new_name =
           match Map.Poly.find m decl_id with
@@ -105,7 +105,7 @@ let replace_fresh_local_vars (fname : string) s' =
           | Some var_name -> var_name in
         (Stmt.Fixed.Pattern.Assignment ((var_name, ut, l), e), m)
     | x -> (x, m) in
-  let s, m = map_rec_state_stmt_loc f Map.Poly.empty s' in
+  let s, m = map_rec_state_stmt_loc f Map.Poly.empty stmt in
   name_subst_stmt m s
 
 let subst_args_stmt args es =
@@ -239,7 +239,17 @@ let handle_early_returns (fname : string) opt_var stmt =
           ; meta= Location_span.empty } ]
   else (map_rec_stmt_loc (generate_inner_breaks num_returns) stmt).pattern
 
-let inline_list f es =
+let inline_idx_list f (es : Expr.Typed.Meta.t Stmt.Fixed.First.t Index.t list) =
+  let dse_list = List.map ~f es in
+  (* function arguments are evaluated from right to left in C++, so we need to reverse *)
+  let d_list =
+    List.concat (List.rev (List.map ~f:(function x, _, _ -> x) dse_list)) in
+  let s_list =
+    List.concat (List.rev (List.map ~f:(function _, x, _ -> x) dse_list)) in
+  let es = List.map ~f:(function _, _, x -> x) dse_list in
+  (d_list, s_list, es)
+
+let inline_expr_list f (es : Expr.Typed.Meta.t Expr.Fixed.t list) =
   let dse_list = List.map ~f es in
   (* function arguments are evaluated from right to left in C++, so we need to reverse *)
   let d_list =
@@ -260,7 +270,7 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
       (d, sl, {e with pattern= Promotion (expr', ut, ad)})
   | FunApp (kind, es) -> (
       let d_list, s_list, es =
-        inline_list (inline_function_expression propto adt fim) es in
+        inline_expr_list (inline_function_expression propto adt fim) es in
       match kind with
       | CompilerInternal _ ->
           (d_list, s_list, {e with pattern= FunApp (kind, es)})
@@ -279,27 +289,48 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
                 | Fun_kind.UserDefined _ -> Fun_kind.UserDefined (fname, suffix)
                 | _ -> StanLib (fname, suffix, AoS) in
               (d_list, s_list, {e with pattern= FunApp (fun_kind, es)})
-          | Some (rt, args, b) ->
-              let x =
+          | Some (rt, args, body) ->
+              let inline_return_name =
                 Gensym.generate ~prefix:("inline_" ^ fname ^ "_return_") ()
               in
-              let handle = handle_early_returns fname (Some x) in
+              let handle =
+                handle_early_returns fname (Some inline_return_name) in
               let d_list2, s_list2, (e : Expr.Typed.t) =
+                let unsized_to_sized rt =
+                  match rt with
+                  | Type.Sized _ as a -> a
+                  | Unsized aa ->
+                      let rec to_sized a =
+                        match a with
+                        | UnsizedType.UReal -> SizedType.SReal
+                        | UInt -> SInt
+                        | UComplex -> SComplex
+                        | UArray t -> SArray (to_sized t, Expr.Helpers.int 0)
+                        | UMatrix ->
+                            SMatrix
+                              ( Common.Helpers.AoS
+                              , Expr.Helpers.int 0
+                              , Expr.Helpers.int 0 )
+                        | UVector ->
+                            SVector (Common.Helpers.AoS, Expr.Helpers.int 0)
+                        | _ -> SizedType.SReal in
+                      Type.Sized (to_sized aa) in
+                let blah = Option.map ~f:unsized_to_sized rt in
                 ( [ Stmt.Fixed.Pattern.Decl
                       { decl_adtype= adt
-                      ; decl_id= x
-                      ; decl_type= Option.value_exn rt
-                      ; initialize= true } ]
+                      ; decl_id= inline_return_name
+                      ; decl_type= Option.value_exn blah
+                      ; initialize= false } ]
                   (* We should minimize the code that's having its variables
                      replaced to avoid conflict with the (two) new dummy
                      variables introduced by inlining *)
                 , [ handle
                       (replace_fresh_local_vars fname
-                         (subst_args_stmt args es b) ) ]
-                , { pattern= Var x
+                         (subst_args_stmt args es body) ) ]
+                , { pattern= Var inline_return_name
                   ; meta=
                       Expr.Typed.Meta.
-                        { type_= Type.to_unsized (Option.value_exn rt)
+                        { type_= Type.to_unsized (Option.value_exn blah)
                         ; adlevel= adt
                         ; loc= Location_span.empty } } ) in
               let d_list = d_list @ d_list2 in
@@ -321,7 +352,7 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
   | Indexed (e', i_list) ->
       let dl, sl, e' = inline_function_expression propto adt fim e' in
       let d_list, s_list, i_list =
-        inline_list (inline_function_index propto adt fim) i_list in
+        inline_idx_list (inline_function_index propto adt fim) i_list in
       (d_list @ dl, s_list @ sl, {e with pattern= Indexed (e', i_list)})
   | EAnd (e1, e2) ->
       let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
@@ -368,7 +399,8 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.{pattern; meta} =
         ( match pattern with
         | Assignment ((assignee, ut, idx_lst), rhs) ->
             let dl1, sl1, new_idx_lst =
-              inline_list (inline_function_index propto adt fim) idx_lst in
+              inline_idx_list (inline_function_index propto adt fim) idx_lst
+            in
             let dl2, sl2, new_rhs =
               inline_function_expression propto adt fim rhs in
             slist_concat_no_loc
@@ -379,7 +411,7 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.{pattern; meta} =
             slist_concat_no_loc (d @ s) (TargetPE e)
         | NRFunApp (kind, exprs) ->
             let d_list, s_list, es =
-              inline_list (inline_function_expression propto adt fim) exprs
+              inline_expr_list (inline_function_expression propto adt fim) exprs
             in
             slist_concat_no_loc (d_list @ s_list)
               ( match kind with

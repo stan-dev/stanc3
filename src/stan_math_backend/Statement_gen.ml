@@ -279,6 +279,7 @@ let pp_sized_decl ppf (vident, st, adtype, initialize) =
 
 let pp_decl ppf (vident, pst, adtype, initialize) =
   match pst with
+  (**NOTE: Need to change here so that the inlined function ret decls are sized 0*)
   | Type.Sized st -> pp_sized_decl ppf (vident, st, adtype, initialize)
   | Unsized ut -> pp_unsized_decl ppf (vident, ut, adtype)
 

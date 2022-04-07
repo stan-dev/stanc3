@@ -12481,7 +12481,8 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
            Eigen::Matrix<local_scalar_t__, -1, 1>>(
            Eigen::Matrix<double, -1, 1>::Constant(5,
              std::numeric_limits<double>::quiet_NaN()));
-      Eigen::Matrix<local_scalar_t__, -1, 1> inline_single_ret_fun_return_sym7__;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> inline_single_ret_fun_return_sym7__;
       stan::model::assign(tp_single_ret_vec, p_single_ret_vec,
         "assigning variable tp_single_ret_vec");
       stan::conditional_var_value_t<local_scalar_t__, 
@@ -12490,7 +12491,8 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
            Eigen::Matrix<local_scalar_t__, -1, 1>>(
            Eigen::Matrix<double, -1, 1>::Constant(5,
              std::numeric_limits<double>::quiet_NaN()));
-      Eigen::Matrix<local_scalar_t__, -1, 1> inline_multi_ret_fun_return_sym9__;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> inline_multi_ret_fun_return_sym9__;
       int inline_multi_ret_fun_early_ret_check_sym11__ =
          std::numeric_limits<int>::min();
       for (int inline_multi_ret_fun_iterator_sym12__ = 1;
