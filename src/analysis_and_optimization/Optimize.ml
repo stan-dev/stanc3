@@ -366,19 +366,21 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.{pattern; meta} =
   Stmt.Fixed.
     { pattern=
         ( match pattern with
-        | Assignment ((x, ut, l), e2) ->
-            let dl1, sl1, l =
-              inline_list (inline_function_index propto adt fim) l in
-            let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
+        | Assignment ((assignee, ut, idx_lst), rhs) ->
+            let dl1, sl1, new_idx_lst =
+              inline_list (inline_function_index propto adt fim) idx_lst in
+            let dl2, sl2, new_rhs =
+              inline_function_expression propto adt fim rhs in
             slist_concat_no_loc
               (dl2 @ dl1 @ sl2 @ sl1)
-              (Assignment ((x, ut, l), e2))
+              (Assignment ((assignee, ut, new_idx_lst), new_rhs))
         | TargetPE e ->
             let d, s, e = inline_function_expression propto adt fim e in
             slist_concat_no_loc (d @ s) (TargetPE e)
-        | NRFunApp (kind, es) ->
+        | NRFunApp (kind, exprs) ->
             let d_list, s_list, es =
-              inline_list (inline_function_expression propto adt fim) es in
+              inline_list (inline_function_expression propto adt fim) exprs
+            in
             slist_concat_no_loc (d_list @ s_list)
               ( match kind with
               | CompilerInternal _ -> NRFunApp (kind, es)
@@ -394,28 +396,28 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.{pattern; meta} =
         | Return e -> (
           match e with
           | None -> Return None
-          | Some e ->
-              let d, s, e = inline_function_expression propto adt fim e in
+          | Some expr ->
+              let d, s, e = inline_function_expression propto adt fim expr in
               slist_concat_no_loc (d @ s) (Return (Some e)) )
-        | IfElse (e, s1, s2) ->
-            let d, s, e = inline_function_expression propto adt fim e in
+        | IfElse (expr, s1, s2) ->
+            let d, s, e = inline_function_expression propto adt fim expr in
             slist_concat_no_loc (d @ s)
               (IfElse
                  ( e
                  , inline_function_statement propto adt fim s1
                  , Option.map ~f:(inline_function_statement propto adt fim) s2
                  ) )
-        | While (e, s) ->
-            let d', s', e = inline_function_expression propto adt fim e in
+        | While (expr, stmt) ->
+            let d', s', e = inline_function_expression propto adt fim expr in
             slist_concat_no_loc (d' @ s')
               (While
                  ( e
                  , match s' with
-                   | [] -> inline_function_statement propto adt fim s
+                   | [] -> inline_function_statement propto adt fim stmt
                    | _ ->
                        { pattern=
                            Block
-                             ( [inline_function_statement propto adt fim s]
+                             ( [inline_function_statement propto adt fim stmt]
                              @ map_no_loc s' )
                        ; meta= Location_span.empty } ) )
         | For {loopvar; lower; upper; body} ->
@@ -638,9 +640,9 @@ let propagation
             with type labels = int
              and type properties = (string, Middle.Expr.Typed.t) Map.Poly.t
                                    option ) ) (mir : Program.Typed.t) =
-  let transform s =
+  let transform stmt =
     let flowgraph, flowgraph_to_mir =
-      Monotone_framework.forward_flowgraph_of_stmt s in
+      Monotone_framework.forward_flowgraph_of_stmt stmt in
     let (module Flowgraph) = flowgraph in
     let values =
       Monotone_framework.propagation_mfp mir

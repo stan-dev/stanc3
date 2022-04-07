@@ -406,33 +406,43 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
     type labels = int
     type properties = (string, Expr.Typed.t) Map.Poly.t option
 
-    let transfer_function l p =
-      match p with
+    let transfer_function int_label optional_map =
+      match optional_map with
       | None -> None
-      | Some m ->
-          let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
-          let kill_var m v =
+      | Some expr_map ->
+          let mir_node = (Map.find_exn flowgraph_to_mir int_label).pattern in
+          let kill_var m var_name =
             Map.filteri m ~f:(fun ~key ~(data : Expr.Typed.t) ->
-                not (key = v || data.pattern = Var v) ) in
+                not (key = var_name || data.pattern = Var var_name) ) in
           Some
-            ( match mir_node with
-            | Assignment ((s, _, []), {pattern= Var t; meta}) ->
-                let m' = kill_var m s in
-                if Set.Poly.mem globals s then m'
-                else Map.set m' ~key:s ~data:Expr.Fixed.{pattern= Var t; meta}
-            | Decl {decl_id= s; _} | Assignment ((s, _, _), _) -> kill_var m s
-            | Profile (_, b) | Block b ->
-                let kills =
-                  Set.Poly.union_list
-                    (List.map ~f:(label_top_decls flowgraph_to_mir) b) in
-                Set.Poly.fold kills ~init:m ~f:kill_var
-            | TargetPE _
-             |NRFunApp (_, _)
-             |Break | Continue | Return _ | Skip
-             |IfElse (_, _, _)
-             |While (_, _)
-             |For _ | SList _ ->
-                m ) end : TRANSFER_FUNCTION
+            (let is_not_internal_param varname =
+               not
+                 ( String.is_suffix ~suffix:"__" varname
+                 && String.is_prefix ~prefix:"inline_" varname ) in
+             match mir_node with
+             | Assignment ((assignee, _, []), {pattern= Var assigner; meta})
+               when is_not_internal_param assigner
+                    || is_not_internal_param assignee ->
+                 let m' = kill_var expr_map assignee in
+                 if Set.Poly.mem globals assignee then m'
+                 else
+                   Map.set m' ~key:assignee
+                     ~data:Expr.Fixed.{pattern= Var assigner; meta}
+             | Decl {decl_id= name; _} | Assignment ((name, _, _), _) ->
+                 kill_var expr_map name
+             | Profile (_, stmt_lst) | Block stmt_lst | SList stmt_lst ->
+                 let kills =
+                   Set.Poly.union_list
+                     (List.map ~f:(label_top_decls flowgraph_to_mir) stmt_lst)
+                 in
+                 Set.Poly.fold kills ~init:expr_map ~f:kill_var
+             | TargetPE _
+              |NRFunApp (_, _)
+              |Break | Continue | Return _ | Skip
+              |IfElse (_, _, _)
+              |While (_, _)
+              |For _ ->
+                 expr_map ) end : TRANSFER_FUNCTION
     with type labels = int
      and type properties = (string, Expr.Typed.t) Map.Poly.t option )
 

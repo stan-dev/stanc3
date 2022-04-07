@@ -17242,8 +17242,9 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
                                                                     mu, 0.5,
                                                                     1);
           }
+          inline_baz_lpdf_return_sym18__ = inline_baz_lpdf_inline_foo_lpdf_return_sym7___sym19__;
         }
-        lp_accum__.add(inline_baz_lpdf_inline_foo_lpdf_return_sym7___sym19__);
+        lp_accum__.add(inline_baz_lpdf_return_sym18__);
         local_scalar_t__ inline_bar_lpmf_return_sym21__;
         {
           current_statement__ = 6;
@@ -17317,8 +17318,9 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
                                                                     mu, 0.5,
                                                                     1);
         }
+        inline_baz_lpdf_return_sym11__ = inline_baz_lpdf_inline_foo_lpdf_return_sym1___sym12__;
       }
-      lbaz = inline_baz_lpdf_inline_foo_lpdf_return_sym1___sym12__;
+      lbaz = inline_baz_lpdf_return_sym11__;
       double lbar = std::numeric_limits<double>::quiet_NaN();
       double inline_bar_lpmf_return_sym14__;
       {
