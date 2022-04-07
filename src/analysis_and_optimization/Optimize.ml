@@ -313,7 +313,21 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
                               , Expr.Helpers.int 0 )
                         | UVector ->
                             SVector (Common.Helpers.AoS, Expr.Helpers.int 0)
-                        | _ -> SizedType.SReal in
+                        | URowVector ->
+                            SRowVector (Common.Helpers.AoS, Expr.Helpers.int 0)
+                        | UComplexMatrix ->
+                            SComplexMatrix
+                              (Expr.Helpers.int 0, Expr.Helpers.int 0)
+                        | UComplexVector -> SComplexVector (Expr.Helpers.int 0)
+                        | UComplexRowVector ->
+                            SComplexRowVector (Expr.Helpers.int 0)
+                        | UFun (_, UnsizedType.ReturnType x, _, _) -> to_sized x
+                        | UFun (_, Void, _, _) | UMathLibraryFunction ->
+                            Common.FatalError.fatal_error_msg
+                              [%message
+                                ( "return type of a function was a void user \
+                                   defined function or math library function."
+                                  : string )] in
                       Type.Sized (to_sized aa) in
                 let blah = Option.map ~f:unsized_to_sized rt in
                 ( [ Stmt.Fixed.Pattern.Decl
