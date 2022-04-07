@@ -56,6 +56,7 @@ let includes = "#include <stan/model/model_header.hpp>"
  @param st The SizedType of the object.
  *)
 let pp_validate_data ppf (name, st) =
+  (* TUPLE TODO: This needs to be adapted for tuples *)
   if String.is_suffix ~suffix:"__" name then ()
   else
     let pp_stdvector ppf args =
@@ -68,28 +69,17 @@ let pp_validate_data ppf (name, st) =
       (stantype_prim_str (SizedType.to_unsized st))
       pp_stdvector (SizedType.get_dims_io st)
 
-let pp_mul ppf () = pf ppf " * "
-
 let get_unconstrained_param_st lst =
   match lst with
-  | _, {Program.out_block= Parameters; out_unconstrained_st= st; _} -> (
-    match SizedType.get_dims_io st with
-    | [] -> Some [Expr.Helpers.loop_bottom]
-    | ls -> Some ls )
+  | _, {Program.out_block= Parameters; out_unconstrained_st= st; _} ->
+      Some (SizedType.io_size st)
   | _ -> None
 
 let get_constrained_param_st lst =
   match lst with
-  | _, {Program.out_block= Parameters; out_constrained_st= st; _} -> (
-    match SizedType.get_dims_io st with
-    | [] -> Some [Expr.Helpers.one]
-    | ls -> Some ls )
+  | _, {Program.out_block= Parameters; out_constrained_st= st; _} ->
+      Some (SizedType.io_size st)
   | _ -> None
-
-let pp_num_param ppf (dims : Expr.Typed.t list) =
-  match dims with
-  | [a] -> pf ppf "@[%a@]@," (list ~sep:pp_mul pp_expr) [a]
-  | _ -> pf ppf "@[(%a)@]@," (list ~sep:pp_mul pp_expr) dims
 
 (** Print the constructor of the model class.
  Read in data steps:
@@ -137,7 +127,8 @@ let pp_ctor ppf p =
         let output_params =
           List.filter_map ~f:get_unconstrained_param_st output_vars in
         let pp_plus ppf () = pf ppf " + " in
-        let pp_set_params ppf pars = (list ~sep:pp_plus pp_num_param) ppf pars in
+        let pp_set_params ppf pars =
+          (list ~sep:pp_plus (parens pp_expr)) ppf pars in
         match output_params with
         | [] -> pf ppf "num_params_r__ = 0U;@,"
         | _ ->
@@ -202,6 +193,7 @@ let pp_get_param_names ppf {Program.output_vars; _} =
 
 (** Print the [get_dims] method of the model class. *)
 let pp_get_dims ppf {Program.output_vars; _} =
+  (* TUPLE TODO: This needs to be adapted for tuples *)
   let pp_cast ppf cast_dims =
     pf ppf "@[<hov 2>static_cast<size_t>(%a)@]@," pp_expr cast_dims in
   let pp_pack ppf inner_dims =
@@ -451,8 +443,7 @@ let pp_overloads ppf {Program.output_vars; _} =
   let num_outvars (outvars : Expr.Typed.t Program.outvar list) =
     Expr.Helpers.binop_list
       (List.map
-         ~f:(fun outvar ->
-           SizedType.num_elems_expr outvar.Program.out_constrained_st )
+         ~f:(fun outvar -> SizedType.io_size outvar.Program.out_constrained_st)
          outvars )
       Operator.Plus ~default:(Expr.Helpers.int 0) in
   (* The list of output variables that came from a particular block *)
@@ -552,13 +543,14 @@ let pp_transform_inits ppf {Program.output_vars; _} =
     match constrained_params with
     | [] ->
         pf ppf
-          "@[<hov 2> const std::array<Eigen::Index, 0> \
+          "@[<v 2> const std::array<Eigen::Index, 0> @ \
            constrain_param_sizes__{};@]@,"
     | _ ->
-        let pp_set_params ppf pars = (list ~sep:comma pp_num_param) ppf pars in
+        let pp_set_params ppf pars =
+          (list ~sep:comma (Fmt.parens pp_expr)) ppf pars in
         pf ppf
-          "@[<hov 2> const std::array<Eigen::Index, %i> \
-           constrain_param_sizes__{%a};@]@,"
+          "@[<v 8> const std::array<Eigen::Index, %i> @ \
+           constrain_param_sizes__{@[%a@]};@]@,"
           list_len pp_set_params constrained_params in
   let get_constrained_param_size ppf () =
     pf ppf

@@ -103,7 +103,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 1 + J;
+    num_params_r__ = (1) + (1) + (J);
     
   }
   
@@ -408,7 +408,8 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 3> names__{"mu", "tau",
       "theta_tilde"};
-      const std::array<Eigen::Index, 3> constrain_param_sizes__{1, 1, J};
+      const std::array<Eigen::Index, 3> 
+             constrain_param_sizes__{(1), (1), (J)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -511,7 +512,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1;
+    num_params_r__ = (1);
     
   }
   
@@ -734,7 +735,8 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 1> names__{"bar"};
-      const std::array<Eigen::Index, 1> constrain_param_sizes__{1};
+      const std::array<Eigen::Index, 1> 
+             constrain_param_sizes__{(1)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -1172,7 +1174,8 @@ class complex_tuples_model final : public model_base_crtp<complex_tuples_model> 
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 0> names__{};
-      const std::array<Eigen::Index, 0> constrain_param_sizes__{};
+      const std::array<Eigen::Index, 0> 
+       constrain_param_sizes__{};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -1751,8 +1754,8 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 
-      1 + 1 + 1;
+    num_params_r__ = (1) + (1) + (1) + (1) + (1) + (1) + (1) + (1) + 
+      (1) + (1) + (1) + (1) + (1) + (1) + (1);
     
   }
   
@@ -2264,8 +2267,10 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
      constexpr std::array<const char*, 15> names__{"explicit", "float",
       "friend", "goto", "inline", "long", "mutable", "namespace", "new",
       "noexcept", "not", "not_eq", "nullptr", "operator", "or"};
-      const std::array<Eigen::Index, 15> constrain_param_sizes__{1, 1, 
-       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+      const std::array<Eigen::Index, 15> 
+             constrain_param_sizes__{(1), (1), (1), (1), (1), (1), (1), 
+                                     (1), (1), (1), (1), (1), (1), (1), 
+                                     (1)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -2410,7 +2415,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 1 + J;
+    num_params_r__ = (1) + (1) + (J);
     
   }
   
@@ -2715,7 +2720,8 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 3> names__{"mu", "tau",
       "theta_tilde"};
-      const std::array<Eigen::Index, 3> constrain_param_sizes__{1, 1, J};
+      const std::array<Eigen::Index, 3> 
+             constrain_param_sizes__{(1), (1), (J)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -2818,7 +2824,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 3;
+    num_params_r__ = ((3 * 1));
     
   }
   
@@ -3111,9 +3117,11 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      const size_t num_params__ = 3;
-      const size_t num_transformed = 
-  (((3 * 3) + (3 * 3)) + (3 * 3));
+      const size_t num_params__ = 
+  (3 * 1);
+      const size_t num_transformed = (((3 * (3 * 1)) +
+                                                   (3 * (3 * 1))) +
+                                                  (3 * (3 * 1)));
       const size_t num_gen_quantities = 0;
       std::vector<double> vars_vec(num_params__
        + (emit_transformed_parameters * num_transformed)
@@ -3132,9 +3140,11 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      const size_t num_params__ = 3;
-      const size_t num_transformed = 
-  (((3 * 3) + (3 * 3)) + (3 * 3));
+      const size_t num_params__ = 
+  (3 * 1);
+      const size_t num_transformed = (((3 * (3 * 1)) +
+                                                   (3 * (3 * 1))) +
+                                                  (3 * (3 * 1)));
       const size_t num_gen_quantities = 0;
       vars.resize(num_params__
         + (emit_transformed_parameters * num_transformed)
@@ -3172,7 +3182,8 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 1> names__{"xx"};
-      const std::array<Eigen::Index, 1> constrain_param_sizes__{3};
+      const std::array<Eigen::Index, 1> 
+             constrain_param_sizes__{((3 * 1))};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -9121,12 +9132,22 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 1 + 1 + 5 + 5 + 5 + N + (N * M * K) + N + (N * N)
-       + (N * M * K * N) + N + (N * N) + (N * M * K * N) + (5 * 4)
-       + (4 * 5 * 2 * 3) + (N - 1) + (N * (N - 1)) + (N * M * K * (N - 1))
-       + ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4))
-       + ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))
-       + (K * ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))) + 2 + 2;
+    num_params_r__ = (1) + (1) + (1) + ((5 * 1)) + ((5 * 1)) + ((5 * 1)) + 
+      ((N * 1)) + ((N * (M * (K * 1)))) + (N) + ((N * N)) + ((N *
+                                                               (M * (K * N)))) + 
+      (N) + ((N * N)) + ((N * (M * (K * N)))) + ((5 * 4)) + ((4 *
+                                                               (5 * (2 * 3)))) + 
+      ((N - 1)) + ((N * (N - 1))) + ((N * (M * (K * (N - 1))))) + (((((4 *
+                                                                    (4 - 1))
+                                                                    / 2) + 4)
+                                                                    +
+                                                                    ((5 - 4)
+                                                                    * 4))) + 
+      (((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))) + ((K *
+                                                         ((((3 * (3 - 1)) /
+                                                             2) + 3) +
+                                                           ((3 - 3) * 3)))) + 
+      (2) + (2);
     
   }
   
@@ -12498,24 +12519,36 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  (((((((((((((((((((((((1 + 1) + 1) + 5) + 5) + 5) + N) + ((N * M) * K)) +
-                   N) + (N * N)) + (((N * M) * K) * N)) + N) + (N * N)) +
-              (((N * M) * K) * N)) + (5 * 4)) + (((4 * 5) * 2) * 3)) + N) +
-          (N * N)) + (((N * M) * K) * N)) + (5 * 4)) + (3 * 3)) +
-      ((K * 3) * 3)) + 2) + 2);
-      const size_t num_transformed = 
-  (((((((((((((((((N + ((N * M) * K)) + N) + (N * N)) + (((N * M) * K) * N))
-                + N) + (N * N)) + (((N * M) * K) * N)) + (5 * 4)) +
-            (((4 * 5) * 2) * 3)) + N) + (N * N)) + (((N * M) * K) * N)) +
-        (5 * 4)) + (3 * 3)) + ((K * 3) * 3)) + 2) + 1);
+  (((((((((((((((((((((((1 + 1) + 1) + (5 * 1)) + (5 * 1)) + (5 * 1)) +
+                     (N * 1)) + (N * (M * (K * 1)))) + N) + (N * N)) +
+                 (N * (M * (K * N)))) + N) + (N * N)) + (N * (M * (K * N))))
+             + (5 * 4)) + (4 * (5 * (2 * 3)))) + N) + (N * N)) +
+         (N * (M * (K * N)))) + (5 * 4)) + (3 * 3)) + (K * (3 * 3))) + 2) +
+    2);
+      const size_t num_transformed = ((((((((((((((((((N * 1) +
+                                                               (N *
+                                                                 (M *
+                                                                   (K * 1))))
+                                                              + N) + 
+                                                             (N * N)) +
+                                                            (N *
+                                                              (M * (K * N))))
+                                                           + N) + (N * N)) +
+                                                         (N * (M * (K * N))))
+                                                        + (5 * 4)) +
+                                                       (4 * (5 * (2 * 3)))) +
+                                                      N) + (N * N)) +
+                                                    (N * (M * (K * N)))) +
+                                                   (5 * 4)) + (3 * 3)) +
+                                                 (K * (3 * 3))) + 2) + 1);
       const size_t num_gen_quantities = 
-  ((((((((((((((((((((((((((1 + 1) + N) + ((N * M) * K)) + N) + (N * N)) +
-                        (((N * M) * K) * N)) + N) + (N * N)) +
-                     (((N * M) * K) * N)) + (((4 * 5) * 2) * 3)) + N) +
-                  (N * N)) + (((N * M) * K) * N)) + (5 * 4)) + (3 * 3)) +
-              ((K * 3) * 3)) + 3) + ((5 * 3) * 4)) + ((3 * 3) * 4)) +
-          ((5 * 3) * 4)) + ((3 * 3) * 3)) + ((3 * 3) * 4)) + ((5 * 3) * 4)) +
-      ((3 * 3) * 3)) + (3 * 4)) + (2 * 2));
+  ((((((((((((((((((((((((((1 + 1) + (N * 1)) + (N * (M * (K * 1)))) + N) +
+                         (N * N)) + (N * (M * (K * N)))) + N) + (N * N)) +
+                     (N * (M * (K * N)))) + (4 * (5 * (2 * 3)))) + N) +
+                  (N * N)) + (N * (M * (K * N)))) + (5 * 4)) + (3 * 3)) +
+              (K * (3 * 3))) + (3 * 1)) + (5 * (3 * 4))) + (3 * (3 * 4))) +
+          (5 * (3 * 4))) + (3 * (3 * 3))) + (3 * (3 * 4))) + (5 * (3 * 4))) +
+      (3 * (3 * 3))) + (3 * 4)) + (2 * 2));
       std::vector<double> vars_vec(num_params__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
@@ -12534,24 +12567,36 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  (((((((((((((((((((((((1 + 1) + 1) + 5) + 5) + 5) + N) + ((N * M) * K)) +
-                   N) + (N * N)) + (((N * M) * K) * N)) + N) + (N * N)) +
-              (((N * M) * K) * N)) + (5 * 4)) + (((4 * 5) * 2) * 3)) + N) +
-          (N * N)) + (((N * M) * K) * N)) + (5 * 4)) + (3 * 3)) +
-      ((K * 3) * 3)) + 2) + 2);
-      const size_t num_transformed = 
-  (((((((((((((((((N + ((N * M) * K)) + N) + (N * N)) + (((N * M) * K) * N))
-                + N) + (N * N)) + (((N * M) * K) * N)) + (5 * 4)) +
-            (((4 * 5) * 2) * 3)) + N) + (N * N)) + (((N * M) * K) * N)) +
-        (5 * 4)) + (3 * 3)) + ((K * 3) * 3)) + 2) + 1);
+  (((((((((((((((((((((((1 + 1) + 1) + (5 * 1)) + (5 * 1)) + (5 * 1)) +
+                     (N * 1)) + (N * (M * (K * 1)))) + N) + (N * N)) +
+                 (N * (M * (K * N)))) + N) + (N * N)) + (N * (M * (K * N))))
+             + (5 * 4)) + (4 * (5 * (2 * 3)))) + N) + (N * N)) +
+         (N * (M * (K * N)))) + (5 * 4)) + (3 * 3)) + (K * (3 * 3))) + 2) +
+    2);
+      const size_t num_transformed = ((((((((((((((((((N * 1) +
+                                                               (N *
+                                                                 (M *
+                                                                   (K * 1))))
+                                                              + N) + 
+                                                             (N * N)) +
+                                                            (N *
+                                                              (M * (K * N))))
+                                                           + N) + (N * N)) +
+                                                         (N * (M * (K * N))))
+                                                        + (5 * 4)) +
+                                                       (4 * (5 * (2 * 3)))) +
+                                                      N) + (N * N)) +
+                                                    (N * (M * (K * N)))) +
+                                                   (5 * 4)) + (3 * 3)) +
+                                                 (K * (3 * 3))) + 2) + 1);
       const size_t num_gen_quantities = 
-  ((((((((((((((((((((((((((1 + 1) + N) + ((N * M) * K)) + N) + (N * N)) +
-                        (((N * M) * K) * N)) + N) + (N * N)) +
-                     (((N * M) * K) * N)) + (((4 * 5) * 2) * 3)) + N) +
-                  (N * N)) + (((N * M) * K) * N)) + (5 * 4)) + (3 * 3)) +
-              ((K * 3) * 3)) + 3) + ((5 * 3) * 4)) + ((3 * 3) * 4)) +
-          ((5 * 3) * 4)) + ((3 * 3) * 3)) + ((3 * 3) * 4)) + ((5 * 3) * 4)) +
-      ((3 * 3) * 3)) + (3 * 4)) + (2 * 2));
+  ((((((((((((((((((((((((((1 + 1) + (N * 1)) + (N * (M * (K * 1)))) + N) +
+                         (N * N)) + (N * (M * (K * N)))) + N) + (N * N)) +
+                     (N * (M * (K * N)))) + (4 * (5 * (2 * 3)))) + N) +
+                  (N * N)) + (N * (M * (K * N)))) + (5 * 4)) + (3 * 3)) +
+              (K * (3 * 3))) + (3 * 1)) + (5 * (3 * 4))) + (3 * (3 * 4))) +
+          (5 * (3 * 4))) + (3 * (3 * 3))) + (3 * (3 * 4))) + (5 * (3 * 4))) +
+      (3 * (3 * 3))) + (3 * 4)) + (2 * 2));
       vars.resize(num_params__
         + (emit_transformed_parameters * num_transformed)
         + (emit_generated_quantities * num_gen_quantities));
@@ -12593,10 +12638,16 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       "p_1d_vec", "p_3d_vec", "p_row_vec", "p_1d_row_vec", "p_3d_row_vec",
       "p_mat", "p_ar_mat", "p_simplex", "p_1d_simplex", "p_3d_simplex",
       "p_cfcov_54", "p_cfcov_33", "p_cfcov_33_ar", "x_p", "y_p"};
-      const std::array<Eigen::Index, 24> constrain_param_sizes__{1, 1, 
-       1, 5, 5, 5, N, (N * M * K), N, (N * N), (N * M * K * N), N, (N * N),
-       (N * M * K * N), (5 * 4), (4 * 5 * 2 * 3), N, (N * N), (N * M * K * N)
-       , (5 * 4), (3 * 3), (K * 3 * 3), 2, 2};
+      const std::array<Eigen::Index, 24> 
+             constrain_param_sizes__{(1), (1), (1), ((5 * 1)), ((5 * 1)),
+                                     ((5 * 1)), ((N * 1)),
+                                     ((N * (M * (K * 1)))), (N), ((N * N)),
+                                     ((N * (M * (K * N)))), (N), ((N * N)),
+                                     ((N * (M * (K * N)))), ((5 * 4)),
+                                     ((4 * (5 * (2 * 3)))), (N), ((N * N)),
+                                     ((N * (M * (K * N)))), ((5 * 4)),
+                                     ((3 * 3)), ((K * (3 * 3))), (2), 
+                                     (2)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -13359,7 +13410,8 @@ const
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 2 + 1 + 1 + 2 + 3 + (3 * 3) + 1;
+    num_params_r__ = ((2 * 1)) + ((1 * 1)) + ((1 * 1)) + (2) + (3) + 
+      ((3 * 3)) + (1);
     
   }
   
@@ -14446,11 +14498,11 @@ const
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  ((((((2 + 1) + 1) + 2) + 3) + (3 * 3)) + 1);
+  (((((((2 * 1) + (1 * 1)) + (1 * 1)) + 2) + 3) + (3 * 3)) + 1);
       const size_t num_transformed = 
   (((((((((1 + 1) + 1) + 3) + 3) + 3) + 2) + 2) + 2) + 2);
       const size_t num_gen_quantities = 
-  ((((((((T * 2) + 1) + 1) + 1) + 1) + 3) + 3) + 2);
+  ((((((((T * (2 * 1)) + 1) + 1) + 1) + 1) + 3) + 3) + 2);
       std::vector<double> vars_vec(num_params__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
@@ -14469,11 +14521,11 @@ const
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  ((((((2 + 1) + 1) + 2) + 3) + (3 * 3)) + 1);
+  (((((((2 * 1) + (1 * 1)) + (1 * 1)) + 2) + 3) + (3 * 3)) + 1);
       const size_t num_transformed = 
   (((((((((1 + 1) + 1) + 3) + 3) + 3) + 2) + 2) + 2) + 2);
       const size_t num_gen_quantities = 
-  ((((((((T * 2) + 1) + 1) + 1) + 1) + 3) + 3) + 2);
+  ((((((((T * (2 * 1)) + 1) + 1) + 1) + 1) + 3) + 3) + 2);
       vars.resize(num_params__
         + (emit_transformed_parameters * num_transformed)
         + (emit_generated_quantities * num_gen_quantities));
@@ -14511,8 +14563,9 @@ const
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 7> names__{"y0_p", "theta_p", "x_p",
       "x_p_v", "shared_params_p", "job_params_p", "x_r"};
-      const std::array<Eigen::Index, 7> constrain_param_sizes__{2, 1, 
-       1, 2, 3, (3 * 3), 1};
+      const std::array<Eigen::Index, 7> 
+             constrain_param_sizes__{((2 * 1)), ((1 * 1)), ((1 * 1)), 
+                                     (2), (3), ((3 * 3)), (1)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -15610,7 +15663,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + N + N;
+    num_params_r__ = (1) + ((N * 1)) + (N);
     
   }
   
@@ -19065,7 +19118,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  ((1 + N) + N);
+  ((1 + (N * 1)) + N);
       const size_t num_transformed = (N * N);
       const size_t num_gen_quantities = 
   (N * N);
@@ -19087,7 +19140,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  ((1 + N) + N);
+  ((1 + (N * 1)) + N);
       const size_t num_transformed = (N * N);
       const size_t num_gen_quantities = 
   (N * N);
@@ -19127,7 +19180,8 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 3> names__{"r", "ra", "v"};
-      const std::array<Eigen::Index, 3> constrain_param_sizes__{1, N, N};
+      const std::array<Eigen::Index, 3> 
+             constrain_param_sizes__{(1), ((N * 1)), (N)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -19389,7 +19443,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 1 + 1 + 1 + 2 + 2;
+    num_params_r__ = (1) + (1) + (1) + (1) + ((2 * 1)) + ((2 * 1));
     
   }
   
@@ -19735,9 +19789,9 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  (((((1 + 1) + 1) + 1) + 2) + 2);
+  (((((1 + 1) + 1) + 1) + (2 * 1)) + (2 * 1));
       const size_t num_transformed = 
-  (N * 2);
+  (N * (2 * 1));
       const size_t num_gen_quantities = 0;
       std::vector<double> vars_vec(num_params__
        + (emit_transformed_parameters * num_transformed)
@@ -19757,9 +19811,9 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  (((((1 + 1) + 1) + 1) + 2) + 2);
+  (((((1 + 1) + 1) + 1) + (2 * 1)) + (2 * 1));
       const size_t num_transformed = 
-  (N * 2);
+  (N * (2 * 1));
       const size_t num_gen_quantities = 0;
       vars.resize(num_params__
         + (emit_transformed_parameters * num_transformed)
@@ -19798,8 +19852,8 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 6> names__{"alpha", "beta", "gamma",
       "delta", "z_init", "sigma"};
-      const std::array<Eigen::Index, 6> constrain_param_sizes__{1, 1, 
-       1, 1, 2, 2};
+      const std::array<Eigen::Index, 6> 
+             constrain_param_sizes__{(1), (1), (1), (1), ((2 * 1)), ((2 * 1))};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -20388,7 +20442,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = k + k + k + 1 + 1 + 1 + (n * k) + (n * k) + n;
+    num_params_r__ = (k) + (k) + (k) + (1) + (1) + (1) + ((n * k)) + 
+      ((n * k)) + (n);
     
   }
   
@@ -21496,8 +21551,9 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 9> names__{"alpha_v", "beta", "cuts",
       "sigma", "alpha", "phi", "X_p", "beta_m", "X_rv_p"};
-      const std::array<Eigen::Index, 9> constrain_param_sizes__{k, k, 
-       k, 1, 1, 1, (n * k), (n * k), n};
+      const std::array<Eigen::Index, 9> 
+             constrain_param_sizes__{(k), (k), (k), (1), (1), (1), ((n * k)),
+                                     ((n * k)), (n)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -21964,7 +22020,7 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 1;
+    num_params_r__ = (1) + (1);
     
   }
   
@@ -22253,7 +22309,8 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 2> names__{"y", "z"};
-      const std::array<Eigen::Index, 2> constrain_param_sizes__{1, 1};
+      const std::array<Eigen::Index, 2> 
+             constrain_param_sizes__{(1), (1)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -22371,7 +22428,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (nt * ((2 * (2 - 1)) / 2)) + NS;
+    num_params_r__ = ((nt * ((2 * (2 - 1)) / 2))) + (NS);
     
   }
   
@@ -22633,7 +22690,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  (((nt * 2) * 2) + NS);
+  ((nt * (2 * 2)) + NS);
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
       std::vector<double> vars_vec(num_params__
@@ -22654,7 +22711,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  (((nt * 2) * 2) + NS);
+  ((nt * (2 * 2)) + NS);
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
       vars.resize(num_params__
@@ -22693,8 +22750,8 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 2> names__{"L_Omega", "z1"};
-      const std::array<Eigen::Index, 2> constrain_param_sizes__{(nt * 2 * 2),
-       NS};
+      const std::array<Eigen::Index, 2> 
+             constrain_param_sizes__{((nt * (2 * 2))), (NS)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -23013,7 +23070,8 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 0> names__{};
-      const std::array<Eigen::Index, 0> constrain_param_sizes__{};
+      const std::array<Eigen::Index, 0> 
+       constrain_param_sizes__{};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -23367,7 +23425,7 @@ ident_functor__::operator()(const std::complex<T0__>& x,
       const size_t num_params__ = 0;
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 
-  (((1 + 2) + 4) + 1);
+  (((1 + 2) + (4 * 1)) + 1);
       std::vector<double> vars_vec(num_params__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
@@ -23388,7 +23446,7 @@ ident_functor__::operator()(const std::complex<T0__>& x,
       const size_t num_params__ = 0;
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 
-  (((1 + 2) + 4) + 1);
+  (((1 + 2) + (4 * 1)) + 1);
       vars.resize(num_params__
         + (emit_transformed_parameters * num_transformed)
         + (emit_generated_quantities * num_gen_quantities));
@@ -23425,7 +23483,8 @@ ident_functor__::operator()(const std::complex<T0__>& x,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 0> names__{};
-      const std::array<Eigen::Index, 0> constrain_param_sizes__{};
+      const std::array<Eigen::Index, 0> 
+       constrain_param_sizes__{};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -23716,7 +23775,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = N + N + N;
+    num_params_r__ = ((N * 1)) + ((N * 1)) + ((N * 1));
     
   }
   
@@ -23964,7 +24023,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  ((N + N) + N);
+  (((N * 1) + (N * 1)) + (N * 1));
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
       std::vector<double> vars_vec(num_params__
@@ -23985,7 +24044,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  ((N + N) + N);
+  (((N * 1) + (N * 1)) + (N * 1));
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
       vars.resize(num_params__
@@ -24024,7 +24083,8 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 3> names__{"y1", "y2", "y3"};
-      const std::array<Eigen::Index, 3> constrain_param_sizes__{N, N, N};
+      const std::array<Eigen::Index, 3> 
+             constrain_param_sizes__{((N * 1)), ((N * 1)), ((N * 1))};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -25456,9 +25516,11 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (N * N * N * N) + (N * N * N) + (N * N * N) + (N * N)
-       + (N * N * N) + (N * N) + (N * N) + N + (N * N * N * N) + (N * N * N)
-       + (N * N * N) + (N * N) + (N * N * N) + (N * N) + (N * N) + N;
+    num_params_r__ = ((N * (N * (N * N)))) + ((N * (N * N))) + ((N * (N * N))) + 
+      ((N * (N * 1))) + ((N * (N * N))) + ((N * N)) + ((N * N)) + ((N * 1)) + 
+      ((N * (N * (N * N)))) + ((N * (N * N))) + ((N * (N * N))) + ((N *
+                                                                    (N * 1))) + 
+      ((N * (N * N))) + ((N * N)) + ((N * N)) + ((N * 1));
     
   }
   
@@ -26584,10 +26646,10 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  ((((((((((((((((((N * N) * N) * N) + ((N * N) * N)) + ((N * N) * N)) +
-                (N * N)) + ((N * N) * N)) + (N * N)) + (N * N)) + N) +
-           (((N * N) * N) * N)) + ((N * N) * N)) + ((N * N) * N)) + (N * N))
-       + ((N * N) * N)) + (N * N)) + (N * N)) + N);
+  ((((((((((((((((N * (N * (N * N))) + (N * (N * N))) + (N * (N * N))) +
+                (N * (N * 1))) + (N * (N * N))) + (N * N)) + (N * N)) +
+            (N * 1)) + (N * (N * (N * N)))) + (N * (N * N))) + (N * (N * N)))
+        + (N * (N * 1))) + (N * (N * N))) + (N * N)) + (N * N)) + (N * 1));
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
       std::vector<double> vars_vec(num_params__
@@ -26608,10 +26670,10 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  ((((((((((((((((((N * N) * N) * N) + ((N * N) * N)) + ((N * N) * N)) +
-                (N * N)) + ((N * N) * N)) + (N * N)) + (N * N)) + N) +
-           (((N * N) * N) * N)) + ((N * N) * N)) + ((N * N) * N)) + (N * N))
-       + ((N * N) * N)) + (N * N)) + (N * N)) + N);
+  ((((((((((((((((N * (N * (N * N))) + (N * (N * N))) + (N * (N * N))) +
+                (N * (N * 1))) + (N * (N * N))) + (N * N)) + (N * N)) +
+            (N * 1)) + (N * (N * (N * N)))) + (N * (N * N))) + (N * (N * N)))
+        + (N * (N * 1))) + (N * (N * N))) + (N * N)) + (N * N)) + (N * 1));
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
       vars.resize(num_params__
@@ -26652,10 +26714,14 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
      constexpr std::array<const char*, 16> names__{"a8", "a7", "a6", "a5",
       "a4", "a3", "a2", "a1", "y8", "y7", "y6", "y5", "y4", "y3", "y2",
       "y1"};
-      const std::array<Eigen::Index, 16> constrain_param_sizes__{(N * N * N * N)
-       , (N * N * N), (N * N * N), (N * N), (N * N * N), (N * N), (N * N), 
-       N, (N * N * N * N), (N * N * N), (N * N * N), (N * N), (N * N * N),
-       (N * N), (N * N), N};
+      const std::array<Eigen::Index, 16> 
+             constrain_param_sizes__{((N * (N * (N * N)))), ((N * (N * N))),
+                                     ((N * (N * N))), ((N * (N * 1))),
+                                     ((N * (N * N))), ((N * N)), ((N * N)),
+                                     ((N * 1)), ((N * (N * (N * N)))),
+                                     ((N * (N * N))), ((N * (N * N))),
+                                     ((N * (N * 1))), ((N * (N * N))),
+                                     ((N * N)), ((N * N)), ((N * 1))};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -29721,9 +29787,10 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = N + (N * N) + (N * N) + (N * N * N) + (N * N)
-       + (N * N * N) + (N * N * N) + (N * N * N * N) + 1 + N + N + (N * N)
-       + (N * N * N);
+    num_params_r__ = ((N * 1)) + ((N * N)) + ((N * N)) + ((N * (N * N))) + 
+      ((N * (N * 1))) + ((N * (N * N))) + ((N * (N * N))) + ((N *
+                                                               (N * (N * N)))) + 
+      (1) + (N) + (N) + ((N * N)) + ((N * (N * (N * 1))));
     
   }
   
@@ -30762,9 +30829,9 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  ((((((((((((N + (N * N)) + (N * N)) + ((N * N) * N)) + (N * N)) +
-           ((N * N) * N)) + ((N * N) * N)) + (((N * N) * N) * N)) + 1) + N) +
-      N) + (N * N)) + ((N * N) * N));
+  (((((((((((((N * 1) + (N * N)) + (N * N)) + (N * (N * N))) + (N * (N * 1)))
+           + (N * (N * N))) + (N * (N * N))) + (N * (N * (N * N)))) + 1) + N)
+      + N) + (N * N)) + (N * (N * (N * 1))));
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 
   (((((((((((((((((((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
@@ -30788,9 +30855,9 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  ((((((((((((N + (N * N)) + (N * N)) + ((N * N) * N)) + (N * N)) +
-           ((N * N) * N)) + ((N * N) * N)) + (((N * N) * N) * N)) + 1) + N) +
-      N) + (N * N)) + ((N * N) * N));
+  (((((((((((((N * 1) + (N * N)) + (N * N)) + (N * (N * N))) + (N * (N * 1)))
+           + (N * (N * N))) + (N * (N * N))) + (N * (N * (N * N)))) + 1) + N)
+      + N) + (N * N)) + (N * (N * (N * 1))));
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 
   (((((((((((((((((((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
@@ -30833,9 +30900,12 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 13> names__{"y1", "y2", "y3", "y4",
       "y5", "y6", "y7", "y8", "y9", "y10", "y11", "y12", "y17"};
-      const std::array<Eigen::Index, 13> constrain_param_sizes__{N, (N * N),
-       (N * N), (N * N * N), (N * N), (N * N * N), (N * N * N),
-       (N * N * N * N), 1, N, N, (N * N), (N * N * N)};
+      const std::array<Eigen::Index, 13> 
+             constrain_param_sizes__{((N * 1)), ((N * N)), ((N * N)),
+                                     ((N * (N * N))), ((N * (N * 1))),
+                                     ((N * (N * N))), ((N * (N * N))),
+                                     ((N * (N * (N * N)))), (1), (N), 
+                                     (N), ((N * N)), ((N * (N * (N * 1))))};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -31083,9 +31153,10 @@ rhs_functor__::operator()(const T0__& t, const T1__& y, const T2__& alpha,
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 
-      1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + (5 - 1) + 1 + 1 + 1 + 1 + 1 + 
-      1 + 1 + 1 + 4 + 1 + 1;
+    num_params_r__ = (1) + (1) + (1) + (1) + (1) + (1) + (1) + (1) + 
+      (1) + (1) + (1) + (1) + (1) + (1) + (1) + (1) + (1) + (1) + (1) + 
+      (1) + (1) + ((5 - 1)) + (1) + (1) + (1) + (1) + (1) + (1) + (1) + 
+      (1) + (4) + (1) + (1);
     
   }
   
@@ -31907,9 +31978,12 @@ rhs_functor__::operator()(const T0__& t, const T1__& y, const T2__& alpha,
       "profile_map", "assign", "rvalue", "stan_print", "model_base_crtp",
       "index_uni", "bernoulli_logit_glm_lpmf", "reduce_sum", "segment",
       "ode_bdf", "ode_bdf_tol"};
-      const std::array<Eigen::Index, 33> constrain_param_sizes__{1, 1, 
-       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 
-       1, 1, 1, 1, 1, 1, 1, 4, 1, 1};
+      const std::array<Eigen::Index, 33> 
+             constrain_param_sizes__{(1), (1), (1), (1), (1), (1), (1), 
+                                     (1), (1), (1), (1), (1), (1), (1), 
+                                     (1), (1), (1), (1), (1), (1), (1), 
+                                     (5), (1), (1), (1), (1), (1), (1), 
+                                     (1), (1), (4), (1), (1)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -32398,7 +32472,8 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 0> names__{};
-      const std::array<Eigen::Index, 0> constrain_param_sizes__{};
+      const std::array<Eigen::Index, 0> 
+       constrain_param_sizes__{};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -32504,7 +32579,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1;
+    num_params_r__ = (1);
     
   }
   
@@ -32755,7 +32830,8 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 1> names__{"x"};
-      const std::array<Eigen::Index, 1> constrain_param_sizes__{1};
+      const std::array<Eigen::Index, 1> 
+             constrain_param_sizes__{(1)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -33277,9 +33353,10 @@ class transform_model final : public model_base_crtp<transform_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = k + k + k + k + k + k + k + k + (m * k) + (n * m * k)
-       + k + (m * k) + (n * m * k) + k + (m * k) + (n * m * k) + (m * k)
-       + (n * m * k);
+    num_params_r__ = ((k * 1)) + ((k * 1)) + ((k * 1)) + ((k * 1)) + 
+      ((k * 1)) + ((k * 1)) + ((k * 1)) + ((k * 1)) + ((m * (k * 1))) + 
+      ((n * (m * (k * 1)))) + (k) + ((m * k)) + ((n * (m * k))) + (k) + 
+      ((m * k)) + ((n * (m * k))) + ((m * k)) + ((n * (m * k)));
     
   }
   
@@ -35384,13 +35461,15 @@ class transform_model final : public model_base_crtp<transform_model> {
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  (((((((((((((((((k + k) + k) + k) + k) + k) + k) + k) + (m * k)) +
-            ((n * m) * k)) + k) + (m * k)) + ((n * m) * k)) + k) + (m * k)) +
-      ((n * m) * k)) + (m * k)) + ((n * m) * k));
+  ((((((((((((((((((k * 1) + (k * 1)) + (k * 1)) + (k * 1)) + (k * 1)) +
+                (k * 1)) + (k * 1)) + (k * 1)) + (m * (k * 1))) +
+            (n * (m * (k * 1)))) + k) + (m * k)) + (n * (m * k))) + k) +
+       (m * k)) + (n * (m * k))) + (m * k)) + (n * (m * k)));
       const size_t num_transformed = 
-  (((((((((((((((((k + k) + k) + k) + k) + k) + k) + k) + (m * k)) +
-            ((n * m) * k)) + k) + (m * k)) + ((n * m) * k)) + k) + (m * k)) +
-      ((n * m) * k)) + (m * k)) + ((n * m) * k));
+  ((((((((((((((((((k * 1) + (k * 1)) + (k * 1)) + (k * 1)) + (k * 1)) +
+                (k * 1)) + (k * 1)) + (k * 1)) + (m * (k * 1))) +
+            (n * (m * (k * 1)))) + k) + (m * k)) + (n * (m * k))) + k) +
+       (m * k)) + (n * (m * k))) + (m * k)) + (n * (m * k)));
       const size_t num_gen_quantities = 0;
       std::vector<double> vars_vec(num_params__
        + (emit_transformed_parameters * num_transformed)
@@ -35410,13 +35489,15 @@ class transform_model final : public model_base_crtp<transform_model> {
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  (((((((((((((((((k + k) + k) + k) + k) + k) + k) + k) + (m * k)) +
-            ((n * m) * k)) + k) + (m * k)) + ((n * m) * k)) + k) + (m * k)) +
-      ((n * m) * k)) + (m * k)) + ((n * m) * k));
+  ((((((((((((((((((k * 1) + (k * 1)) + (k * 1)) + (k * 1)) + (k * 1)) +
+                (k * 1)) + (k * 1)) + (k * 1)) + (m * (k * 1))) +
+            (n * (m * (k * 1)))) + k) + (m * k)) + (n * (m * k))) + k) +
+       (m * k)) + (n * (m * k))) + (m * k)) + (n * (m * k)));
       const size_t num_transformed = 
-  (((((((((((((((((k + k) + k) + k) + k) + k) + k) + k) + (m * k)) +
-            ((n * m) * k)) + k) + (m * k)) + ((n * m) * k)) + k) + (m * k)) +
-      ((n * m) * k)) + (m * k)) + ((n * m) * k));
+  ((((((((((((((((((k * 1) + (k * 1)) + (k * 1)) + (k * 1)) + (k * 1)) +
+                (k * 1)) + (k * 1)) + (k * 1)) + (m * (k * 1))) +
+            (n * (m * (k * 1)))) + k) + (m * k)) + (n * (m * k))) + k) +
+       (m * k)) + (n * (m * k))) + (m * k)) + (n * (m * k)));
       const size_t num_gen_quantities = 0;
       vars.resize(num_params__
         + (emit_transformed_parameters * num_transformed)
@@ -35456,9 +35537,14 @@ class transform_model final : public model_base_crtp<transform_model> {
      constexpr std::array<const char*, 18> names__{"p_1", "p_2", "p_3",
       "p_4", "p_5", "p_6", "p_7", "p_8", "p_9", "p_10", "pv_1", "pv_2",
       "pv_3", "pr_1", "pr_2", "pr_3", "pm_1", "pm_2"};
-      const std::array<Eigen::Index, 18> constrain_param_sizes__{k, k, 
-       k, k, k, k, k, k, (m * k), (n * m * k), k, (m * k), (n * m * k), 
-       k, (m * k), (n * m * k), (m * k), (n * m * k)};
+      const std::array<Eigen::Index, 18> 
+             constrain_param_sizes__{((k * 1)), ((k * 1)), ((k * 1)),
+                                     ((k * 1)), ((k * 1)), ((k * 1)),
+                                     ((k * 1)), ((k * 1)), ((m * (k * 1))),
+                                     ((n * (m * (k * 1)))), (k), ((m * k)),
+                                     ((n * (m * k))), (k), ((m * k)),
+                                     ((n * (m * k))), ((m * k)),
+                                     ((n * (m * k)))};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -35588,7 +35674,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 1;
+    num_params_r__ = (1) + (1);
     
   }
   
@@ -35911,7 +35997,8 @@ class truncate_model final : public model_base_crtp<truncate_model> {
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 2> names__{"m", "y"};
-      const std::array<Eigen::Index, 2> constrain_param_sizes__{1, 1};
+      const std::array<Eigen::Index, 2> 
+             constrain_param_sizes__{(1), (1)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -36034,7 +36121,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1;
+    num_params_r__ = (1);
     
   }
   
@@ -36261,7 +36348,8 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 1> names__{"x"};
-      const std::array<Eigen::Index, 1> constrain_param_sizes__{1};
+      const std::array<Eigen::Index, 1> 
+             constrain_param_sizes__{(1)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -36389,7 +36477,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1;
+    num_params_r__ = (1);
     
   }
   
@@ -36618,7 +36706,8 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 1> names__{"x"};
-      const std::array<Eigen::Index, 1> constrain_param_sizes__{1};
+      const std::array<Eigen::Index, 1> 
+             constrain_param_sizes__{(1)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     

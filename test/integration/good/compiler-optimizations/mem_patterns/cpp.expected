@@ -51,7 +51,7 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (10 * 10);
+    num_params_r__ = ((10 * 10));
     
   }
   
@@ -286,7 +286,7 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (10 * 10);
-      const size_t num_transformed = ((10 * 10) * 2);
+      const size_t num_transformed = (10 * (10 * 2));
       const size_t num_gen_quantities = 0;
       std::vector<double> vars_vec(num_params__
        + (emit_transformed_parameters * num_transformed)
@@ -307,7 +307,7 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (10 * 10);
-      const size_t num_transformed = ((10 * 10) * 2);
+      const size_t num_transformed = (10 * (10 * 2));
       const size_t num_gen_quantities = 0;
       vars.resize(num_params__
         + (emit_transformed_parameters * num_transformed)
@@ -345,7 +345,8 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 1> names__{"A_p"};
-      const std::array<Eigen::Index, 1> constrain_param_sizes__{(10 * 10)};
+      const std::array<Eigen::Index, 1> 
+             constrain_param_sizes__{((10 * 10))};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -804,9 +805,12 @@ class constraints_model final : public model_base_crtp<constraints_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = N + K + Nr + 2 + 1 + 1 + 1 + 1 + N + N + 1 + N + 
-      N + N + N + N + N + N + ((N * (N - 1)) / 2) + (N + ((N * (N - 1)) / 2))
-       + ((((K * (K - 1)) / 2) + K) + ((K - K) * K)) + ((K * (K - 1)) / 2);
+    num_params_r__ = (N) + (K) + (Nr) + (2) + (1) + (1) + (1) + (1) + 
+      (N) + (N) + (1) + (N) + (N) + (N) + (N) + (N) + (N) + (N) + (((N *
+                                                                    (N - 1))
+                                                                    / 2)) + 
+      ((N + ((N * (N - 1)) / 2))) + (((((K * (K - 1)) / 2) + K) +
+                                       ((K - K) * K))) + (((K * (K - 1)) / 2));
     
   }
   
@@ -2192,9 +2196,11 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       "row_vec_lower_upper_test", "offset_mult_test", "ordered_test",
       "unit_vec_test", "pos_ordered_test", "corr_matrix_test",
       "cov_matrix_test", "chol_fac_cov_test", "chol_fac_corr_test"};
-      const std::array<Eigen::Index, 22> constrain_param_sizes__{N, K, 
-       Nr, 2, 1, 1, 1, 1, N, N, 1, N, N, N, N, N, N, N, (N * N), (N * N),
-       (K * K), (K * K)};
+      const std::array<Eigen::Index, 22> 
+             constrain_param_sizes__{(N), (K), (Nr), (2), (1), (1), (1), 
+                                     (1), (N), (N), (1), (N), (N), (N), 
+                                     (N), (N), (N), (N), ((N * N)),
+                                     ((N * N)), ((K * K)), ((K * K))};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -2300,7 +2306,7 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (10 * 10);
+    num_params_r__ = ((10 * 10));
     
   }
   
@@ -2820,7 +2826,8 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 1> names__{"X_p"};
-      const std::array<Eigen::Index, 1> constrain_param_sizes__{(10 * 10)};
+      const std::array<Eigen::Index, 1> 
+             constrain_param_sizes__{((10 * 10))};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -3261,9 +3268,10 @@ udf_fun_functor__::operator()(const T0__& A, std::ostream* pstream__)  const
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + M + (N * M) + (10 * N) + (N * M) + N + (N * M) + 
-      N + N + N + (N * M) + M + M + M + M + (N * M) + (N * M) + (N * M)
-       + (N * M) + (N * M) + (N * M);
+    num_params_r__ = (1) + (M) + ((N * M)) + ((10 * N)) + ((N * M)) + 
+      (N) + ((N * M)) + (N) + (N) + (N) + ((N * M)) + (M) + (M) + (M) + 
+      (M) + ((N * M)) + ((N * M)) + ((N * M)) + ((N * M)) + ((N * M)) + 
+      ((N * M));
     
   }
   
@@ -4714,9 +4722,12 @@ udf_fun_functor__::operator()(const T0__& A, std::ostream* pstream__)  const
       "p_aos_mat", "p_aos_mat_pass_func_outer_single_indexed1",
       "p_aos_mat_pass_func_outer_single_indexed2",
       "p_aos_mat_fail_uni_uni_idx1", "p_aos_mat_fail_uni_uni_idx2"};
-      const std::array<Eigen::Index, 21> constrain_param_sizes__{1, M,
-       (N * M), (10 * N), (N * M), N, (N * M), N, N, N, (N * M), M, M, 
-       M, M, (N * M), (N * M), (N * M), (N * M), (N * M), (N * M)};
+      const std::array<Eigen::Index, 21> 
+             constrain_param_sizes__{(1), (M), ((N * M)), ((10 * N)),
+                                     ((N * M)), (N), ((N * M)), (N), 
+                                     (N), (N), ((N * M)), (M), (M), (M), 
+                                     (M), ((N * M)), ((N * M)), ((N * M)),
+                                     ((N * M)), ((N * M)), ((N * M))};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -4850,7 +4861,7 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 10;
+    num_params_r__ = (1) + (10);
     
   }
   
@@ -5152,7 +5163,8 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 2> names__{"alpha",
       "p_aos_loop_single_idx"};
-      const std::array<Eigen::Index, 2> constrain_param_sizes__{1, 10};
+      const std::array<Eigen::Index, 2> 
+             constrain_param_sizes__{(1), (10)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -5338,7 +5350,7 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (5 * 10) + (5 * 10) + (5 * 10);
+    num_params_r__ = ((5 * 10)) + ((5 * 10)) + ((5 * 10));
     
   }
   
@@ -5777,8 +5789,8 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 3> names__{"soa_x", "aos_x", "aos_y"};
-      const std::array<Eigen::Index, 3> constrain_param_sizes__{(5 * 10),
-       (5 * 10), (5 * 10)};
+      const std::array<Eigen::Index, 3> 
+             constrain_param_sizes__{((5 * 10)), ((5 * 10)), ((5 * 10))};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -5942,7 +5954,7 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (10 * 10) + (10 * 10);
+    num_params_r__ = ((10 * 10)) + ((10 * 10));
     
   }
   
@@ -6439,8 +6451,8 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 2> names__{"row_soa",
       "udf_input_aos"};
-      const std::array<Eigen::Index, 2> constrain_param_sizes__{(10 * 10),
-       (10 * 10)};
+      const std::array<Eigen::Index, 2> 
+             constrain_param_sizes__{((10 * 10)), ((10 * 10))};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -6538,7 +6550,7 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (10 * 10) + (10 * 10);
+    num_params_r__ = ((10 * 10)) + ((10 * 10));
     
   }
   
@@ -6904,8 +6916,8 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 2> names__{"aos_p", "soa_p"};
-      const std::array<Eigen::Index, 2> constrain_param_sizes__{(10 * 10),
-       (10 * 10)};
+      const std::array<Eigen::Index, 2> 
+             constrain_param_sizes__{((10 * 10)), ((10 * 10))};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -7088,7 +7100,7 @@ const
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (5 * 10) + (5 * 10);
+    num_params_r__ = ((5 * 10)) + ((5 * 10));
     
   }
   
@@ -7431,8 +7443,8 @@ const
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 2> names__{"first_pass_soa_x",
       "aos_x"};
-      const std::array<Eigen::Index, 2> constrain_param_sizes__{(5 * 10),
-       (5 * 10)};
+      const std::array<Eigen::Index, 2> 
+             constrain_param_sizes__{((5 * 10)), ((5 * 10))};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     

@@ -92,9 +92,8 @@ let rec get_dims_io st =
   match st with
   (* TUPLE TODO get_dims_io
 
-      Difficult to define a sense of "tuple dimension" here.
-      This answer is wrong, but is better than empty
-     The numbers here are ultimately multiplied to construct constrain_param_sizes__, among other things
+     THIS IS WRONG FOR TUPLES
+     We should use io_size wherever possible
   *)
   | SInt | SReal -> []
   | STuple ts ->
@@ -106,6 +105,23 @@ let rec get_dims_io st =
   | SComplexVector d | SComplexRowVector d -> [d; two]
   | SComplexMatrix (dim1, dim2) -> [dim1; dim2; two]
   | SArray (t, dim) -> dim :: get_dims_io t
+
+let rec io_size st =
+  let two = Expr.Helpers.int 2 in
+  match st with
+  | SInt | SReal -> Expr.Helpers.one
+  | STuple ts ->
+      Expr.Helpers.binop_list (List.map ~f:io_size ts) Operator.Plus
+        ~default:Expr.Helpers.zero
+  | SComplex -> two
+  | SVector (_, d) | SRowVector (_, d) -> d
+  | SMatrix (_, dim1, dim2) -> Expr.Helpers.binop dim1 Operator.Times dim2
+  | SComplexVector d | SComplexRowVector d ->
+      Expr.Helpers.binop d Operator.Times two
+  | SComplexMatrix (dim1, dim2) ->
+      Expr.Helpers.binop dim1 Operator.Times
+        (Expr.Helpers.binop dim2 Operator.Times two)
+  | SArray (t, dim) -> Expr.Helpers.binop dim Operator.Times (io_size t)
 
 let rec get_dims st =
   match st with
@@ -146,10 +162,6 @@ let rec get_container_dims st =
   | SArray (st, dim) ->
       let st', dims = get_container_dims st in
       (st', dim :: dims)
-
-let num_elems_expr st =
-  Expr.Helpers.binop_list (get_dims_io st) Operator.Times
-    ~default:(Expr.Helpers.int 1)
 
 let%expect_test "dims" =
   let open Fmt in
