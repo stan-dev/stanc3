@@ -486,7 +486,7 @@ let string_operator_to_stan_math_fns str =
 let pretty_print_all_math_sigs ppf () =
   let open Fmt in
   let pp_sig ppf (name, (rt, args, _)) =
-    pf ppf "%s(@[<hov 2>%a@]) => %a" name
+    pf ppf "%s(@[<h>%a@]) => %a" name
       (list ~sep:comma UnsizedType.pp)
       (List.map ~f:snd args) UnsizedType.pp_returntype rt in
   let pp_sigs_for_name ppf name =
