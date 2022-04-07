@@ -60,7 +60,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       pos__ = 1;
       current_statement__ = 5;
       context__.validate_dims("data initialization","darr","double",
-           std::vector<size_t>{static_cast<size_t>(10)});
+           std::vector<size_t>{static_cast<size_t>(10),
+            static_cast<size_t>(2)});
       darr = 
         std::vector<std::tuple<double, double>>(10, 
           std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()});
@@ -77,7 +78,9 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       }
       current_statement__ = 6;
       context__.validate_dims("data initialization","darr2","double",
-           std::vector<size_t>{static_cast<size_t>(10)});
+           std::vector<size_t>{static_cast<size_t>(10),
+            static_cast<size_t>(2), static_cast<size_t>(10),
+            static_cast<size_t>(2)});
       darr2 = 
         std::vector<std::tuple<double,
                                std::vector<std::tuple<double, double>>>>(10, 
@@ -103,7 +106,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       }
       current_statement__ = 7;
       context__.validate_dims("data initialization","darr3","double",
-           std::vector<size_t>{});
+           std::vector<size_t>{static_cast<size_t>(2),
+            static_cast<size_t>(10), static_cast<size_t>(2)});
       darr3 = 
         std::tuple<double, std::vector<std::tuple<double, double>>>{std::numeric_limits<double>::quiet_NaN(), 
         std::vector<std::tuple<double, double>>(10, 
@@ -123,7 +127,9 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       }
       current_statement__ = 8;
       context__.validate_dims("data initialization","darr4","double",
-           std::vector<size_t>{static_cast<size_t>(11)});
+           std::vector<size_t>{static_cast<size_t>(11),
+            static_cast<size_t>(2), static_cast<size_t>(10),
+            static_cast<size_t>(14), static_cast<size_t>(2)});
       darr4 = 
         std::vector<std::tuple<std::vector<double>,
                                std::vector<std::tuple<double, int>>>>(11, 
@@ -152,7 +158,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 1 + 1 + 1;
+    num_params_r__ = 2 + (2 * 2) + (2 * 2) + (2 * 10 * 2 * (2 - 1));
     
   }
   
@@ -554,9 +560,16 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
                                                                    static_cast<size_t>(10)
+                                                                   ,
+                                                                   static_cast<size_t>(2)
                                                                    },
-      std::vector<size_t>{static_cast<size_t>(10)}, std::vector<size_t>{
-      }, std::vector<size_t>{static_cast<size_t>(11)}};
+      std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(2),
+                          static_cast<size_t>(10), static_cast<size_t>(2)},
+      std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(10),
+                          static_cast<size_t>(2)},
+      std::vector<size_t>{static_cast<size_t>(11), static_cast<size_t>(2),
+                          static_cast<size_t>(10), static_cast<size_t>(14),
+                          static_cast<size_t>(2), static_cast<size_t>(2)}};
     
     } // get_dims() 
     
@@ -654,7 +667,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  (((10 + 10) + 1) + 11);
+  ((((10 * 2) + (((10 * 2) * 10) * 2)) + ((2 * 10) * 2)) +
+    (((((11 * 2) * 10) * 14) * 2) * 2));
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
       std::vector<double> vars_vec(num_params__
@@ -675,7 +689,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  (((10 + 10) + 1) + 11);
+  ((((10 * 2) + (((10 * 2) * 10) * 2)) + ((2 * 10) * 2)) +
+    (((((11 * 2) * 10) * 14) * 2) * 2));
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
       vars.resize(num_params__
@@ -715,8 +730,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 4> names__{"arr", "arr2", "arr3",
       "arr4"};
-      const std::array<Eigen::Index, 4> constrain_param_sizes__{10, 10, 
-       1, 11};
+      const std::array<Eigen::Index, 4> constrain_param_sizes__{(10 * 2),
+       (10 * 2 * 10 * 2), (2 * 10 * 2), (11 * 2 * 10 * 14 * 2 * 2)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -1788,7 +1803,8 @@ class tuple_constraints_data2_model final : public model_base_crtp<tuple_constra
       pos__ = 1;
       current_statement__ = 1;
       context__.validate_dims("data initialization","y","double",
-           std::vector<size_t>{});
+           std::vector<size_t>{static_cast<size_t>(2),
+            static_cast<size_t>(2)});
       y = 
         std::tuple<int, std::tuple<double, int>>{std::numeric_limits<int>::min(), std::tuple<
         double, int>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<int>::min()}};
@@ -2120,7 +2136,7 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1;
+    num_params_r__ = 2;
     
   }
   
@@ -2241,7 +2257,9 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{}};
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
+                                                                   static_cast<size_t>(2)
+                                                                   }};
     
     } // get_dims() 
     
@@ -2302,7 +2320,7 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      const size_t num_params__ = 1;
+      const size_t num_params__ = 2;
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
       std::vector<double> vars_vec(num_params__
@@ -2322,7 +2340,7 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      const size_t num_params__ = 1;
+      const size_t num_params__ = 2;
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
       vars.resize(num_params__
@@ -2361,7 +2379,7 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 1> names__{"ps"};
-      const std::array<Eigen::Index, 1> constrain_param_sizes__{1};
+      const std::array<Eigen::Index, 1> constrain_param_sizes__{2};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -2455,7 +2473,7 @@ class tuple_constraints_model final : public model_base_crtp<tuple_constraints_m
       pos__ = 1;
       current_statement__ = 1;
       context__.validate_dims("data initialization","y","double",
-           std::vector<size_t>{});
+           std::vector<size_t>{static_cast<size_t>(2)});
       y = 
         std::tuple<int, double>{std::numeric_limits<int>::min(), std::numeric_limits<double>::quiet_NaN()};
       
@@ -2809,7 +2827,7 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
       pos__ = 1;
       current_statement__ = 2;
       context__.validate_dims("data initialization","d","double",
-           std::vector<size_t>{});
+           std::vector<size_t>{static_cast<size_t>(2)});
       d = 
         std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
       
@@ -3132,7 +3150,9 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
       pos__ = 1;
       current_statement__ = 4;
       context__.validate_dims("data initialization","ds","double",
-           std::vector<size_t>{});
+           std::vector<size_t>{static_cast<size_t>(2),
+            static_cast<size_t>(2), static_cast<size_t>(2),
+            static_cast<size_t>(2)});
       ds = 
         std::tuple<int, std::tuple<std::vector<int>, std::vector<int>>>{std::numeric_limits<int>::min(), std::tuple<
         std::vector<int>, std::vector<int>>{std::vector<int>(2, 
@@ -3154,7 +3174,7 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1;
+    num_params_r__ = 2;
     
   }
   
@@ -3288,7 +3308,9 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{}};
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
+                                                                   static_cast<size_t>(2)
+                                                                   }};
     
     } // get_dims() 
     
@@ -3349,7 +3371,7 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      const size_t num_params__ = 1;
+      const size_t num_params__ = 2;
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
       std::vector<double> vars_vec(num_params__
@@ -3369,7 +3391,7 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      const size_t num_params__ = 1;
+      const size_t num_params__ = 2;
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
       vars.resize(num_params__
@@ -3408,7 +3430,7 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 1> names__{"ps"};
-      const std::array<Eigen::Index, 1> constrain_param_sizes__{1};
+      const std::array<Eigen::Index, 1> constrain_param_sizes__{2};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -4773,7 +4795,7 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 1;
+    num_params_r__ = 2 + (2 * 2 * 10 * 10);
     
   }
   
@@ -4945,8 +4967,11 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{}};
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
+                                                                   static_cast<size_t>(2)
+                                                                   },
+      std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(2),
+                          static_cast<size_t>(10), static_cast<size_t>(10)}};
     
     } // get_dims() 
     
@@ -5030,7 +5055,7 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  (1 + 1);
+  (2 + (((2 * 2) * 10) * 10));
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
       std::vector<double> vars_vec(num_params__
@@ -5051,7 +5076,7 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  (1 + 1);
+  (2 + (((2 * 2) * 10) * 10));
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
       vars.resize(num_params__
@@ -5090,7 +5115,8 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 2> names__{"ps", "ps2"};
-      const std::array<Eigen::Index, 2> constrain_param_sizes__{1, 1};
+      const std::array<Eigen::Index, 2> constrain_param_sizes__{2,
+       (2 * 2 * 10 * 10)};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -5185,7 +5211,7 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1;
+    num_params_r__ = 2;
     
   }
   
@@ -5304,7 +5330,9 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{}};
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
+                                                                   static_cast<size_t>(2)
+                                                                   }};
     
     } // get_dims() 
     
@@ -5365,7 +5393,7 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      const size_t num_params__ = 1;
+      const size_t num_params__ = 2;
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
       std::vector<double> vars_vec(num_params__
@@ -5385,7 +5413,7 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      const size_t num_params__ = 1;
+      const size_t num_params__ = 2;
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
       vars.resize(num_params__
@@ -5424,7 +5452,7 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
      constexpr std::array<const char*, 1> names__{"ps"};
-      const std::array<Eigen::Index, 1> constrain_param_sizes__{1};
+      const std::array<Eigen::Index, 1> constrain_param_sizes__{2};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -5517,7 +5545,7 @@ class tuples_constraints_data_model final : public model_base_crtp<tuples_constr
       pos__ = 1;
       current_statement__ = 1;
       context__.validate_dims("data initialization","x","double",
-           std::vector<size_t>{});
+           std::vector<size_t>{static_cast<size_t>(2)});
       x = 
         std::tuple<int, double>{std::numeric_limits<int>::min(), std::numeric_limits<double>::quiet_NaN()};
       

@@ -90,12 +90,16 @@ let rec inner_type st = match st with SArray (t, _) -> inner_type t | t -> t
 let rec get_dims_io st =
   let two = Expr.Helpers.int 2 in
   match st with
-  (* TUPLE STUB get_dims_io
-     How should tuples be expected to behave in this function?
-     Same as above?
-     Although this one seems to have a sense of recursion
+  (* TUPLE TODO get_dims_io
+
+      Difficult to define a sense of "tuple dimension" here.
+      This answer is wrong, but is better than empty
+     The numbers here are ultimately multiplied to construct constrain_param_sizes__, among other things
   *)
-  | STuple _ | SInt | SReal -> []
+  | SInt | SReal -> []
+  | STuple ts ->
+      let subts = List.map ~f:get_dims_io ts in
+      Expr.Helpers.int (List.length subts) :: List.concat subts
   | SComplex -> [two]
   | SVector (_, d) | SRowVector (_, d) -> [d]
   | SMatrix (_, dim1, dim2) -> [dim1; dim2]

@@ -82,7 +82,7 @@ let get_constrained_param_st lst =
   match lst with
   | _, {Program.out_block= Parameters; out_constrained_st= st; _} -> (
     match SizedType.get_dims_io st with
-    | [] -> Some [Expr.Helpers.loop_bottom]
+    | [] -> Some [Expr.Helpers.one]
     | ls -> Some ls )
   | _ -> None
 
