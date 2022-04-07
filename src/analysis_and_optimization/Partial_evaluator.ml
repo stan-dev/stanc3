@@ -766,6 +766,33 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                       ; _ } ] ) ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp (StanLib ("trace_quad_form", suffix, lub_mem), [a; b])
+                | ( ("Plus__" | "add")
+                  , [ ({pattern= Lit (Imaginary, i); _} as im)
+                    ; ({pattern= Lit ((Real | Int), _); _} as r) ] )
+                 |( ("Plus__" | "add")
+                  , [ ({pattern= Lit ((Real | Int), _); _} as r)
+                    ; ({pattern= Lit (Imaginary, i); _} as im) ] )
+                 |( ("Plus__" | "add")
+                  , [ ({pattern= Lit (Imaginary, i); _} as im)
+                    ; { pattern=
+                          Promotion
+                            ( ({pattern= Lit ((Real | Int), _); _} as r)
+                            , UComplex
+                            , _ )
+                      ; _ } ] )
+                 |( ("Plus__" | "add")
+                  , [ { pattern=
+                          Promotion
+                            ( ({pattern= Lit ((Real | Int), _); _} as r)
+                            , UComplex
+                            , _ )
+                      ; _ }; ({pattern= Lit (Imaginary, i); _} as im) ] ) ->
+                    let im_part =
+                      Expr.Fixed.
+                        { pattern= Lit (Real, i)
+                        ; meta= {im.meta with type_= UReal} } in
+                    FunApp
+                      (StanLib ("to_complex", suffix, mem_type), [r; im_part])
                 | ( "Minus__"
                   , [x; {pattern= FunApp (StanLib ("erf", FnPlain, mem), l); _}]
                   )
