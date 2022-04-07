@@ -17565,7 +17565,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 25> locations_array__ = 
+static constexpr std::array<const char*, 29> locations_array__ = 
 {" (found before start of program)",
  " (in 'partial-eval.stan', line 10, column 2 to column 19)",
  " (in 'partial-eval.stan', line 11, column 2 to column 17)",
@@ -17575,10 +17575,14 @@ static constexpr std::array<const char*, 25> locations_array__ =
  " (in 'partial-eval.stan', line 17, column 2 to column 18)",
  " (in 'partial-eval.stan', line 20, column 4 to column 75)",
  " (in 'partial-eval.stan', line 19, column 2 to line 20, column 75)",
- " (in 'partial-eval.stan', line 23, column 2 to column 22)",
- " (in 'partial-eval.stan', line 24, column 2 to column 34)",
- " (in 'partial-eval.stan', line 25, column 2 to column 24)",
- " (in 'partial-eval.stan', line 26, column 2 to column 29)",
+ " (in 'partial-eval.stan', line 24, column 2 to column 22)",
+ " (in 'partial-eval.stan', line 25, column 2 to column 34)",
+ " (in 'partial-eval.stan', line 26, column 2 to column 24)",
+ " (in 'partial-eval.stan', line 27, column 2 to column 29)",
+ " (in 'partial-eval.stan', line 29, column 2 to column 25)",
+ " (in 'partial-eval.stan', line 30, column 2 to column 11)",
+ " (in 'partial-eval.stan', line 31, column 2 to column 13)",
+ " (in 'partial-eval.stan', line 32, column 2 to column 24)",
  " (in 'partial-eval.stan', line 2, column 2 to column 17)",
  " (in 'partial-eval.stan', line 3, column 2 to column 22)",
  " (in 'partial-eval.stan', line 4, column 8 to column 9)",
@@ -17633,43 +17637,43 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     try {
       int pos__;
       pos__ = 1;
-      current_statement__ = 13;
+      current_statement__ = 17;
       context__.validate_dims("data initialization","N","int",
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
       
-      current_statement__ = 13;
+      current_statement__ = 17;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 13;
+      current_statement__ = 17;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
-      current_statement__ = 14;
+      current_statement__ = 18;
       context__.validate_dims("data initialization","n_pair","int",
            std::vector<size_t>{});
       n_pair = std::numeric_limits<int>::min();
       
       
-      current_statement__ = 14;
+      current_statement__ = 18;
       n_pair = context__.vals_i("n_pair")[(1 - 1)];
-      current_statement__ = 14;
+      current_statement__ = 18;
       stan::math::check_greater_or_equal(function__, "n_pair", n_pair, 0);
-      current_statement__ = 15;
+      current_statement__ = 19;
       stan::math::validate_non_negative_index("pair", "N", N);
-      current_statement__ = 16;
+      current_statement__ = 20;
       context__.validate_dims("data initialization","pair","int",
            std::vector<size_t>{static_cast<size_t>(N)});
       pair = std::vector<int>(N, std::numeric_limits<int>::min());
       
       
-      current_statement__ = 16;
+      current_statement__ = 20;
       pair = context__.vals_i("pair");
-      current_statement__ = 16;
+      current_statement__ = 20;
       stan::math::check_greater_or_equal(function__, "pair", pair, 1);
-      current_statement__ = 16;
+      current_statement__ = 20;
       stan::math::check_less_or_equal(function__, "pair", pair, n_pair);
-      current_statement__ = 17;
+      current_statement__ = 21;
       stan::math::validate_non_negative_index("pre_test", "N", N);
-      current_statement__ = 18;
+      current_statement__ = 22;
       context__.validate_dims("data initialization","pre_test","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       pre_test__ = 
@@ -17680,22 +17684,22 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       
       {
         std::vector<local_scalar_t__> pre_test_flat__;
-        current_statement__ = 18;
+        current_statement__ = 22;
         pre_test_flat__ = context__.vals_r("pre_test");
-        current_statement__ = 18;
+        current_statement__ = 22;
         pos__ = 1;
-        current_statement__ = 18;
+        current_statement__ = 22;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 18;
+          current_statement__ = 22;
           stan::model::assign(pre_test, pre_test_flat__[(pos__ - 1)],
             "assigning variable pre_test", stan::model::index_uni(sym1__));
-          current_statement__ = 18;
+          current_statement__ = 22;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 19;
+      current_statement__ = 23;
       stan::math::validate_non_negative_index("treatment", "N", N);
-      current_statement__ = 20;
+      current_statement__ = 24;
       context__.validate_dims("data initialization","treatment","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       treatment__ = 
@@ -17706,27 +17710,27 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       
       {
         std::vector<local_scalar_t__> treatment_flat__;
-        current_statement__ = 20;
+        current_statement__ = 24;
         treatment_flat__ = context__.vals_r("treatment");
-        current_statement__ = 20;
+        current_statement__ = 24;
         pos__ = 1;
-        current_statement__ = 20;
+        current_statement__ = 24;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 20;
+          current_statement__ = 24;
           stan::model::assign(treatment, treatment_flat__[(pos__ - 1)],
             "assigning variable treatment", stan::model::index_uni(sym1__));
-          current_statement__ = 20;
+          current_statement__ = 24;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 20;
+      current_statement__ = 24;
       stan::math::check_greater_or_equal(function__, "treatment", treatment,
                                             0);
-      current_statement__ = 20;
+      current_statement__ = 24;
       stan::math::check_less_or_equal(function__, "treatment", treatment, 1);
-      current_statement__ = 21;
+      current_statement__ = 25;
       stan::math::validate_non_negative_index("y", "N", N);
-      current_statement__ = 22;
+      current_statement__ = 26;
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       y__ = 
@@ -17736,22 +17740,22 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       
       {
         std::vector<local_scalar_t__> y_flat__;
-        current_statement__ = 22;
+        current_statement__ = 26;
         y_flat__ = context__.vals_r("y");
-        current_statement__ = 22;
+        current_statement__ = 26;
         pos__ = 1;
-        current_statement__ = 22;
+        current_statement__ = 26;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 22;
+          current_statement__ = 26;
           stan::model::assign(y, y_flat__[(pos__ - 1)],
             "assigning variable y", stan::model::index_uni(sym1__));
-          current_statement__ = 22;
+          current_statement__ = 26;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 23;
+      current_statement__ = 27;
       stan::math::validate_non_negative_index("a", "n_pair", n_pair);
-      current_statement__ = 24;
+      current_statement__ = 28;
       stan::math::validate_non_negative_index("y_hat", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -17824,6 +17828,18 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         lp_accum__.add(stan::math::normal_lpdf<propto__>(beta, 0, 100));
         current_statement__ = 12;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, y_hat, sigma_y));
+        std::complex<local_scalar_t__> z;
+        current_statement__ = 13;
+        z = stan::math::to_complex(7, 5);
+        current_statement__ = 14;
+        if (pstream__) {
+          stan::math::stan_print(pstream__, z);
+          stan::math::stan_print(pstream__, "\n");
+        }
+        current_statement__ = 15;
+        z = stan::math::to_complex(5, 4);
+        current_statement__ = 16;
+        lp_accum__.add(stan::math::get_real(z));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
