@@ -366,9 +366,6 @@ module Helpers = struct
     the outermost layers first.
 *)
   let rec for_scalar st bodyfn var smeta =
-    (* TUPLE TODO does bodyfn need to take the transformation to be able to handle arrays of tuples?
-       I think what we really want is to call bodyfn on the tuple types, not for_each_tuple
-    *)
     match st with
     | SizedType.SInt | SReal | SComplex -> bodyfn st var
     | SVector (_, d)
@@ -387,7 +384,6 @@ module Helpers = struct
     | SArray (t, d) ->
         mk_for_iteratee d (fun e -> for_scalar t bodyfn e smeta) var smeta
     | STuple _ -> bodyfn st var
-  (* for_each_tuple (fun t e -> for_scalar t bodyfn e smeta) var ts smeta *)
 
   (** Exactly like for_scalar, but iterating through array dimensions in the
   inverted order.*)

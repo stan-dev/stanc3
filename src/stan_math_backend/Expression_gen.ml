@@ -96,10 +96,6 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
   | UTuple ts ->
-      (* TUPLE STUB c++ scalar of type
-         Unclear what a scalar of tuple type would be, either semantic error or depend on usage
-         This appears to be used as the type for variable initialization, so I'm guessing it should be recursive for tuples because initialization is (currently) recursive for tuples
-      *)
       pf ppf "std::tuple<%a>"
         (list ~sep:comma pp_unsizedtype_custom_scalar)
         (List.map ~f:(fun t -> (scalar, t)) ts)
@@ -120,10 +116,6 @@ let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
       (* Expressions are not accepted for arrays of Eigen::Matrix *)
       pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
   | UTuple ts ->
-      (* TUPLE STUB c++ scalar of type
-         Unclear what a scalar of tuple type would be, either semantic error or depend on usage
-         This appears to be used as the type for variable initialization, so I'm guessing it should be recursive for tuples because initialization is (currently) recursive for tuples
-      *)
       pf ppf "std::tuple<%a>"
         (list ~sep:comma pp_unsizedtype_custom_scalar)
         (List.map ~f:(fun t -> (scalar, t)) ts)
@@ -179,7 +171,6 @@ let rec pp_possibly_var_decl ppf (adtype, ut, mem_pattern) =
            ~f:(fun ad t -> (ad, t, mem_pattern))
            ad_tuple_type t_lst )
   | x ->
-      (* TUPLE TODO *)
       Common.FatalError.fatal_error_msg
         [%message (x : UnsizedType.t) "not implemented yet"]
 
