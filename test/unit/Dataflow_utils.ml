@@ -1,8 +1,8 @@
 open Frontend
 open Middle
 open Analysis_and_optimization.Dataflow_utils
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Analysis_and_optimization.Dataflow_types
 
 let mir_of_string s =

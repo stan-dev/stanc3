@@ -1,7 +1,7 @@
 (executable
  (name run_bin_on_args)
  (public_name run_bin_on_args)
- (libraries core_kernel core_kernel.caml_unix))
+ (libraries core_kernel core_kernel.caml_unix core_unix.sys_unix))
 
 (cram
  (applies_to :whole_subtree)

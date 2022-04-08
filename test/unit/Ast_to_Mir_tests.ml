@@ -1,6 +1,6 @@
 open Frontend
 open Middle
-open Core_kernel
+open Core
 open Ast_to_Mir
 
 let%expect_test "Operator-assign example" =

@@ -1,5 +1,5 @@
 open Analysis_and_optimization
-open Core_kernel
+open Core
 open Frontend
 open Debug_data_generation
 

@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 module Unix = Caml_unix
 
 let run_capturing_output cmd =
@@ -10,7 +10,9 @@ let run_capturing_output cmd =
   String.concat ~sep:"\n" (List.concat out)
 
 let () =
-  let files = Array.(sub Sys.argv ~pos:1 ~len:(length Sys.argv - 1)) in
+  let files =
+    Array.(sub (Sys.get_argv ()) ~pos:1 ~len:(length (Sys.get_argv ()) - 1))
+  in
   Array.stable_sort ~compare:String.compare files ;
   Array.iter files ~f:(fun arg ->
       let cmd = "node " ^ arg in

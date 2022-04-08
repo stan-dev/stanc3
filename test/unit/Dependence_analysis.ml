@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Frontend
 open Analysis_and_optimization.Dependence_analysis
 open Middle
