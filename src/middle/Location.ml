@@ -1,6 +1,6 @@
 (** Storing locations in the original source *)
 
-open Core_kernel
+open Core
 
 (**/**)
 

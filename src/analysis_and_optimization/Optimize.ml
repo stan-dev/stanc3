@@ -1,7 +1,7 @@
 (** Code for optimization passes on the MIR *)
 
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Common
 open Middle
 open Mir_utils
@@ -76,7 +76,7 @@ let slist_concat_no_loc l stmt =
   match l with [] -> stmt | l -> slist_no_loc (l @ [stmt])
 
 let replace_fresh_local_vars (fname : string) stmt =
-  let f (m : (string, string) Core_kernel.Map.Poly.t) = function
+  let f (m : (string, string) Core.Map.Poly.t) = function
     | Stmt.Fixed.Pattern.Decl {decl_adtype; decl_type; decl_id; initialize} ->
         let new_name =
           match Map.Poly.find m decl_id with
@@ -1136,7 +1136,7 @@ let optimize_minimal_variables
           ( Expr.Typed.t
           , (Expr.Typed.Meta.t, 'a) Stmt.Fixed.t )
           Stmt.Fixed.Pattern.t
-       -> string Core_kernel.Set.Poly.t
+       -> string Core.Set.Poly.t
        -> ( Expr.Typed.t
           , (Expr.Typed.Meta.t, 'a) Stmt.Fixed.t )
           Stmt.Fixed.Pattern.t )

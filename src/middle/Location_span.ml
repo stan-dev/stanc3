@@ -1,7 +1,7 @@
 (** Delimited locations in source code *)
 
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 
 type t = {begin_loc: Location.t; end_loc: Location.t}
 [@@deriving sexp, hash, compare]

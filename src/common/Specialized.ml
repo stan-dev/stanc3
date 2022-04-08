@@ -8,7 +8,7 @@ the analysis and optimization code, we work with map's and sets of our IR types
 a lot and this approach makes the types much nicer to work with.
 *)
 
-open Core_kernel
+open Core
 
 (** Signature of all meta data used to annotate IRs *)
 module type Meta = sig

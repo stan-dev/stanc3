@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Middle
 open Dataflow_types
 open Dataflow_utils

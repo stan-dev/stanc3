@@ -1,6 +1,6 @@
 (** Preprocessor for handling include directives *)
 
-open Core_kernel
+open Core
 
 val current_buffer : unit -> Lexing.lexbuf
 (** Buffer at the top of the include stack *)

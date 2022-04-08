@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Middle
 
 (** Type errors that may arise during semantic check *)

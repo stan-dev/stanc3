@@ -1,5 +1,5 @@
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Middle
 
 (**
@@ -582,7 +582,7 @@ and modify_expr ?force_demotion:(force = false)
 *)
 let rec modify_stmt_pattern
     (pattern : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
-    (modifiable_set : string Core_kernel.Set.Poly.t) =
+    (modifiable_set : string Core.Set.Poly.t) =
   let mod_expr force = modify_expr ~force_demotion:force modifiable_set in
   let mod_stmt stmt = modify_stmt stmt modifiable_set in
   match pattern with

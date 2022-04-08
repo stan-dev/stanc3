@@ -1,7 +1,7 @@
 (** Some helpers to produce nice error messages and for auto-formatting Stan programs *)
 
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Ast
 open Fmt
 
