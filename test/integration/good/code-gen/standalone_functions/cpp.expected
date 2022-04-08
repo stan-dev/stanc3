@@ -37,14 +37,15 @@ struct int_only_multiplication_functor__ {
   operator()(const int& a, const int& b, std::ostream* pstream__) const;
 };
 struct test_lgamma_functor__ {
-  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
 struct test_lp_functor__ {
   template <bool propto__, typename T0__, typename T_lp__,
             typename T_lp_accum__,
-            stan::require_stan_scalar_t<T0__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   void
   operator()(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
              std::ostream* pstream__) const;
@@ -54,36 +55,40 @@ struct int_array_fun_functor__ {
   operator()(const std::vector<int>& a, std::ostream* pstream__) const;
 };
 struct array_fun_functor__ {
-  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   operator()(const std::vector<T0__>& a, std::ostream* pstream__) const;
 };
 struct my_log1p_exp_functor__ {
-  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
 struct my_vector_mul_by_5_functor__ {
-  template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-            stan::require_not_vt_complex<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
 struct test_lpdf_functor__ {
   template <bool propto__, typename T0__, typename T1__,
-            stan::require_stan_scalar_t<T0__>* = nullptr,
-            stan::require_stan_scalar_t<T1__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T1__>>* = nullptr>
   stan::promote_args_t<T0__, T1__>
   operator()(const T0__& a, const T1__& b, std::ostream* pstream__) const;
 };
 struct test_rng_functor__ {
   template <typename T0__, typename RNG,
-            stan::require_stan_scalar_t<T0__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   operator()(const T0__& a, RNG& base_rng__, std::ostream* pstream__) const;
 };
 
-template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   my_log1p_exp(const T0__& x, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -99,7 +104,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -129,8 +135,9 @@ double int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-          stan::require_not_vt_complex<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
   my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -171,7 +178,8 @@ int
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   test_lgamma(const T0__& x, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -188,8 +196,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     }
     }
 template <bool propto__, typename T0__, typename T_lp__,
-          typename T_lp_accum__, stan::require_stan_scalar_t<T0__>* = nullptr>
-  void
+          typename T_lp_accum__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr> void
   test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
           std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -204,7 +212,7 @@ template <bool propto__, typename T0__, typename T_lp__,
     }
     }
 template <typename T0__, typename RNG,
-          stan::require_stan_scalar_t<T0__>* = nullptr>
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -221,8 +229,8 @@ template <typename T0__, typename RNG,
     }
     }
 template <bool propto__, typename T0__, typename T1__,
-          stan::require_stan_scalar_t<T0__>* = nullptr,
-          stan::require_stan_scalar_t<T1__>* = nullptr>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_stan_scalar<T1__>>* = nullptr>
   stan::promote_args_t<T0__, T1__>
   test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
@@ -243,7 +251,7 @@ int_only_multiplication_functor__::operator()(const int& a, const int& b,
   return int_only_multiplication(a, b, pstream__);
 }
 
-template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
 test_lgamma_functor__::operator()(const T0__& x, std::ostream* pstream__) 
 const
@@ -252,7 +260,8 @@ const
 }
 
 template <bool propto__, typename T0__, typename T_lp__,
-          typename T_lp_accum__, stan::require_stan_scalar_t<T0__>*>
+          typename T_lp_accum__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 void
 test_lp_functor__::operator()(const T0__& a, T_lp__& lp__,
                               T_lp_accum__& lp_accum__,
@@ -268,7 +277,7 @@ int_array_fun_functor__::operator()(const std::vector<int>& a,
   return int_array_fun(a, pstream__);
 }
 
-template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
 array_fun_functor__::operator()(const std::vector<T0__>& a,
                                 std::ostream* pstream__)  const
@@ -276,7 +285,7 @@ array_fun_functor__::operator()(const std::vector<T0__>& a,
   return array_fun(a, pstream__);
 }
 
-template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
 my_log1p_exp_functor__::operator()(const T0__& x, std::ostream* pstream__) 
 const
@@ -284,8 +293,9 @@ const
   return my_log1p_exp(x, pstream__);
 }
 
-template <typename T0__, stan::require_col_vector_t<T0__>*,
-          stan::require_not_vt_complex<T0__>*>
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
 my_vector_mul_by_5_functor__::operator()(const T0__& x,
                                          std::ostream* pstream__)  const
@@ -294,8 +304,8 @@ my_vector_mul_by_5_functor__::operator()(const T0__& x,
 }
 
 template <bool propto__, typename T0__, typename T1__,
-          stan::require_stan_scalar_t<T0__>*,
-          stan::require_stan_scalar_t<T1__>*>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_stan_scalar<T1__>>*>
 stan::promote_args_t<T0__, T1__>
 test_lpdf_functor__::operator()(const T0__& a, const T1__& b,
                                 std::ostream* pstream__)  const
@@ -303,7 +313,8 @@ test_lpdf_functor__::operator()(const T0__& a, const T1__& b,
   return test_lpdf<propto__>(a, b, pstream__);
 }
 
-template <typename T0__, typename RNG, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, typename RNG,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
 test_rng_functor__::operator()(const T0__& a, RNG& base_rng__,
                                std::ostream* pstream__)  const
@@ -423,14 +434,15 @@ struct int_only_multiplication_functor__ {
   operator()(const int& a, const int& b, std::ostream* pstream__) const;
 };
 struct test_lgamma_functor__ {
-  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
 struct test_lp_functor__ {
   template <bool propto__, typename T0__, typename T_lp__,
             typename T_lp_accum__,
-            stan::require_stan_scalar_t<T0__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   void
   operator()(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
              std::ostream* pstream__) const;
@@ -440,36 +452,40 @@ struct int_array_fun_functor__ {
   operator()(const std::vector<int>& a, std::ostream* pstream__) const;
 };
 struct array_fun_functor__ {
-  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   operator()(const std::vector<T0__>& a, std::ostream* pstream__) const;
 };
 struct my_log1p_exp_functor__ {
-  template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
 struct my_vector_mul_by_5_functor__ {
-  template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-            stan::require_not_vt_complex<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
 struct test_lpdf_functor__ {
   template <bool propto__, typename T0__, typename T1__,
-            stan::require_stan_scalar_t<T0__>* = nullptr,
-            stan::require_stan_scalar_t<T1__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T1__>>* = nullptr>
   stan::promote_args_t<T0__, T1__>
   operator()(const T0__& a, const T1__& b, std::ostream* pstream__) const;
 };
 struct test_rng_functor__ {
   template <typename T0__, typename RNG,
-            stan::require_stan_scalar_t<T0__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   operator()(const T0__& a, RNG& base_rng__, std::ostream* pstream__) const;
 };
 
-template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   my_log1p_exp(const T0__& x, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -485,7 +501,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -515,8 +532,9 @@ double int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-          stan::require_not_vt_complex<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
   my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -557,7 +575,8 @@ int
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   test_lgamma(const T0__& x, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -574,8 +593,8 @@ template <typename T0__, stan::require_stan_scalar_t<T0__>* = nullptr>
     }
     }
 template <bool propto__, typename T0__, typename T_lp__,
-          typename T_lp_accum__, stan::require_stan_scalar_t<T0__>* = nullptr>
-  void
+          typename T_lp_accum__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr> void
   test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
           std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -590,7 +609,7 @@ template <bool propto__, typename T0__, typename T_lp__,
     }
     }
 template <typename T0__, typename RNG,
-          stan::require_stan_scalar_t<T0__>* = nullptr>
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
   stan::promote_args_t<T0__>
   test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -607,8 +626,8 @@ template <typename T0__, typename RNG,
     }
     }
 template <bool propto__, typename T0__, typename T1__,
-          stan::require_stan_scalar_t<T0__>* = nullptr,
-          stan::require_stan_scalar_t<T1__>* = nullptr>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_stan_scalar<T1__>>* = nullptr>
   stan::promote_args_t<T0__, T1__>
   test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
@@ -629,7 +648,7 @@ int_only_multiplication_functor__::operator()(const int& a, const int& b,
   return int_only_multiplication(a, b, pstream__);
 }
 
-template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
 test_lgamma_functor__::operator()(const T0__& x, std::ostream* pstream__) 
 const
@@ -638,7 +657,8 @@ const
 }
 
 template <bool propto__, typename T0__, typename T_lp__,
-          typename T_lp_accum__, stan::require_stan_scalar_t<T0__>*>
+          typename T_lp_accum__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 void
 test_lp_functor__::operator()(const T0__& a, T_lp__& lp__,
                               T_lp_accum__& lp_accum__,
@@ -654,7 +674,7 @@ int_array_fun_functor__::operator()(const std::vector<int>& a,
   return int_array_fun(a, pstream__);
 }
 
-template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
 array_fun_functor__::operator()(const std::vector<T0__>& a,
                                 std::ostream* pstream__)  const
@@ -662,7 +682,7 @@ array_fun_functor__::operator()(const std::vector<T0__>& a,
   return array_fun(a, pstream__);
 }
 
-template <typename T0__, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
 my_log1p_exp_functor__::operator()(const T0__& x, std::ostream* pstream__) 
 const
@@ -670,8 +690,9 @@ const
   return my_log1p_exp(x, pstream__);
 }
 
-template <typename T0__, stan::require_col_vector_t<T0__>*,
-          stan::require_not_vt_complex<T0__>*>
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
 my_vector_mul_by_5_functor__::operator()(const T0__& x,
                                          std::ostream* pstream__)  const
@@ -680,8 +701,8 @@ my_vector_mul_by_5_functor__::operator()(const T0__& x,
 }
 
 template <bool propto__, typename T0__, typename T1__,
-          stan::require_stan_scalar_t<T0__>*,
-          stan::require_stan_scalar_t<T1__>*>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_stan_scalar<T1__>>*>
 stan::promote_args_t<T0__, T1__>
 test_lpdf_functor__::operator()(const T0__& a, const T1__& b,
                                 std::ostream* pstream__)  const
@@ -689,7 +710,8 @@ test_lpdf_functor__::operator()(const T0__& a, const T1__& b,
   return test_lpdf<propto__>(a, b, pstream__);
 }
 
-template <typename T0__, typename RNG, stan::require_stan_scalar_t<T0__>*>
+template <typename T0__, typename RNG,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
 test_rng_functor__::operator()(const T0__& a, RNG& base_rng__,
                                std::ostream* pstream__)  const
@@ -796,10 +818,10 @@ static constexpr std::array<const char*, 11> locations_array__ =
 
 struct integrand_ode_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_stan_scalar_t<T0__>* = nullptr,
-            stan::require_stan_scalar_t<T1__>* = nullptr,
-            stan::require_stan_scalar_t<T2__>* = nullptr,
-            stan::require_stan_scalar_t<T3__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T1__>,
+                                stan::is_stan_scalar<T2__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
   std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
   operator()(const T0__& r, const std::vector<T1__>& f,
              const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
@@ -810,14 +832,16 @@ struct ode_integrate_functor__ {
   operator()(std::ostream* pstream__) const;
 };
 struct integrand_functor__ {
-  template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-            stan::require_not_vt_complex<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
 
-template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-          stan::require_not_vt_complex<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
   integrand(const T0__& x_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -835,10 +859,10 @@ template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
     }
     }
 template <typename T0__, typename T1__, typename T2__, typename T3__,
-          stan::require_stan_scalar_t<T0__>* = nullptr,
-          stan::require_stan_scalar_t<T1__>* = nullptr,
-          stan::require_stan_scalar_t<T2__>* = nullptr,
-          stan::require_stan_scalar_t<T3__>* = nullptr>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_stan_scalar<T1__>,
+                              stan::is_stan_scalar<T2__>,
+                              stan::is_stan_scalar<T3__>>* = nullptr>
   std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
   integrand_ode(const T0__& r, const std::vector<T1__>& f,
                 const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
@@ -888,10 +912,10 @@ double ode_integrate(std::ostream* pstream__) {
     }
     }
 template <typename T0__, typename T1__, typename T2__, typename T3__,
-          stan::require_stan_scalar_t<T0__>*,
-          stan::require_stan_scalar_t<T1__>*,
-          stan::require_stan_scalar_t<T2__>*,
-          stan::require_stan_scalar_t<T3__>*>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_stan_scalar<T1__>,
+                              stan::is_stan_scalar<T2__>,
+                              stan::is_stan_scalar<T3__>>*>
 std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
 integrand_ode_functor__::operator()(const T0__& r,
                                     const std::vector<T1__>& f,
@@ -908,8 +932,9 @@ double ode_integrate_functor__::operator()(std::ostream* pstream__)  const
   return ode_integrate(pstream__);
 }
 
-template <typename T0__, stan::require_col_vector_t<T0__>*,
-          stan::require_not_vt_complex<T0__>*>
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
 integrand_functor__::operator()(const T0__& x, std::ostream* pstream__) 
 const
