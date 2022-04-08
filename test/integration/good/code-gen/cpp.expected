@@ -804,7 +804,8 @@ static constexpr std::array<const char*, 11> locations_array__ =
  " (in 'complex-tuples.stan', line 2, column 85 to line 4, column 3)"};
 
 struct f_functor__ {
-  template <typename T1__, stan::require_stan_scalar_t<T1__>* = nullptr>
+  template <typename T1__,
+            stan::require_all_t<stan::is_stan_scalar<T1__>>* = nullptr>
   std::tuple<stan::promote_args_t<T1__>,
   std::vector<std::tuple<stan::promote_args_t<T1__>,
   stan::promote_args_t<T1__>>>>
@@ -814,7 +815,8 @@ struct f_functor__ {
              std::ostream* pstream__) const;
 };
 
-template <typename T1__, stan::require_stan_scalar_t<T1__>* = nullptr>
+template <typename T1__,
+          stan::require_all_t<stan::is_stan_scalar<T1__>>* = nullptr>
   std::tuple<stan::promote_args_t<T1__>,
   std::vector<std::tuple<stan::promote_args_t<T1__>,
   stan::promote_args_t<T1__>>>>
@@ -836,7 +838,7 @@ std::vector<std::vector<T1__>>>>>& x2,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T1__, stan::require_stan_scalar_t<T1__>*>
+template <typename T1__, stan::require_all_t<stan::is_stan_scalar<T1__>>*>
 std::tuple<stan::promote_args_t<T1__>,
 std::vector<std::tuple<stan::promote_args_t<T1__>,
 stan::promote_args_t<T1__>>>>
