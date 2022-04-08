@@ -49,65 +49,65 @@ static constexpr std::array<const char*, 36> locations_array__ =
 
 struct f_2_arg_functor__ {
   template <typename T0__, typename T1__, typename T3__,
-            stan::require_stan_scalar_t<T0__>* = nullptr,
-            stan::require_col_vector_t<T1__>* = nullptr,
-            stan::require_not_vt_complex<T1__>* = nullptr,
-            stan::require_stan_scalar_t<T3__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_col_vector<T1__>,
+                                stan::is_vt_not_complex<T1__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T3__>, -1, 1>
   operator()(const T0__& t, const T1__& z, const int& b, const T3__& a,
              std::ostream* pstream__) const;
 };
 struct f_0_arg_functor__ {
   template <typename T0__, typename T1__,
-            stan::require_stan_scalar_t<T0__>* = nullptr,
-            stan::require_col_vector_t<T1__>* = nullptr,
-            stan::require_not_vt_complex<T1__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_col_vector<T1__>,
+                                stan::is_vt_not_complex<T1__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>, -1, 1>
   operator()(const T0__& t, const T1__& z, std::ostream* pstream__) const;
 };
 struct f_1_arg_functor__ {
   template <typename T0__, typename T1__, typename T2__,
-            stan::require_stan_scalar_t<T0__>* = nullptr,
-            stan::require_col_vector_t<T1__>* = nullptr,
-            stan::require_not_vt_complex<T1__>* = nullptr,
-            stan::require_stan_scalar_t<T2__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_col_vector<T1__>,
+                                stan::is_vt_not_complex<T1__>,
+                                stan::is_stan_scalar<T2__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>, -1, 1>
   operator()(const T0__& t, const T1__& z, const T2__& a,
              std::ostream* pstream__) const;
 };
 struct f_1_arg_odefunctor__ {
   template <typename T0__, typename T1__, typename T2__,
-            stan::require_stan_scalar_t<T0__>* = nullptr,
-            stan::require_col_vector_t<T1__>* = nullptr,
-            stan::require_not_vt_complex<T1__>* = nullptr,
-            stan::require_stan_scalar_t<T2__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_col_vector<T1__>,
+                                stan::is_vt_not_complex<T1__>,
+                                stan::is_stan_scalar<T2__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>, -1, 1>
   operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
              const T2__& a) const;
 };
 struct f_0_arg_odefunctor__ {
   template <typename T0__, typename T1__,
-            stan::require_stan_scalar_t<T0__>* = nullptr,
-            stan::require_col_vector_t<T1__>* = nullptr,
-            stan::require_not_vt_complex<T1__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_col_vector<T1__>,
+                                stan::is_vt_not_complex<T1__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>, -1, 1>
   operator()(const T0__& t, const T1__& z, std::ostream* pstream__) const;
 };
 struct f_2_arg_odefunctor__ {
   template <typename T0__, typename T1__, typename T3__,
-            stan::require_stan_scalar_t<T0__>* = nullptr,
-            stan::require_col_vector_t<T1__>* = nullptr,
-            stan::require_not_vt_complex<T1__>* = nullptr,
-            stan::require_stan_scalar_t<T3__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_col_vector<T1__>,
+                                stan::is_vt_not_complex<T1__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T3__>, -1, 1>
   operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
              const int& b, const T3__& a) const;
 };
 
 template <typename T0__, typename T1__,
-          stan::require_stan_scalar_t<T0__>* = nullptr,
-          stan::require_col_vector_t<T1__>* = nullptr,
-          stan::require_not_vt_complex<T1__>* = nullptr>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_col_vector<T1__>,
+                              stan::is_vt_not_complex<T1__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>, -1, 1>
   f_0_arg(const T0__& t, const T1__& z_arg__, std::ostream* pstream__) {
     using local_scalar_t__ =
@@ -126,10 +126,10 @@ template <typename T0__, typename T1__,
     }
     }
 template <typename T0__, typename T1__, typename T2__,
-          stan::require_stan_scalar_t<T0__>* = nullptr,
-          stan::require_col_vector_t<T1__>* = nullptr,
-          stan::require_not_vt_complex<T1__>* = nullptr,
-          stan::require_stan_scalar_t<T2__>* = nullptr>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_col_vector<T1__>,
+                              stan::is_vt_not_complex<T1__>,
+                              stan::is_stan_scalar<T2__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>, -1, 1>
   f_1_arg(const T0__& t, const T1__& z_arg__, const T2__& a,
           std::ostream* pstream__) {
@@ -149,10 +149,10 @@ template <typename T0__, typename T1__, typename T2__,
     }
     }
 template <typename T0__, typename T1__, typename T3__,
-          stan::require_stan_scalar_t<T0__>* = nullptr,
-          stan::require_col_vector_t<T1__>* = nullptr,
-          stan::require_not_vt_complex<T1__>* = nullptr,
-          stan::require_stan_scalar_t<T3__>* = nullptr>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_col_vector<T1__>,
+                              stan::is_vt_not_complex<T1__>,
+                              stan::is_stan_scalar<T3__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T3__>, -1, 1>
   f_2_arg(const T0__& t, const T1__& z_arg__, const int& b, const T3__& a,
           std::ostream* pstream__) {
@@ -172,10 +172,10 @@ template <typename T0__, typename T1__, typename T3__,
     }
     }
 template <typename T0__, typename T1__, typename T3__,
-          stan::require_stan_scalar_t<T0__>*,
-          stan::require_col_vector_t<T1__>*,
-          stan::require_not_vt_complex<T1__>*,
-          stan::require_stan_scalar_t<T3__>*>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_col_vector<T1__>,
+                              stan::is_vt_not_complex<T1__>,
+                              stan::is_stan_scalar<T3__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T3__>, -1, 1>
 f_2_arg_functor__::operator()(const T0__& t, const T1__& z, const int& b,
                               const T3__& a, std::ostream* pstream__)  const
@@ -183,9 +183,10 @@ f_2_arg_functor__::operator()(const T0__& t, const T1__& z, const int& b,
   return f_2_arg(t, z, b, a, pstream__);
 }
 
-template <typename T0__, typename T1__, stan::require_stan_scalar_t<T0__>*,
-          stan::require_col_vector_t<T1__>*,
-          stan::require_not_vt_complex<T1__>*>
+template <typename T0__, typename T1__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_col_vector<T1__>,
+                              stan::is_vt_not_complex<T1__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>, -1, 1>
 f_0_arg_functor__::operator()(const T0__& t, const T1__& z,
                               std::ostream* pstream__)  const
@@ -194,10 +195,10 @@ f_0_arg_functor__::operator()(const T0__& t, const T1__& z,
 }
 
 template <typename T0__, typename T1__, typename T2__,
-          stan::require_stan_scalar_t<T0__>*,
-          stan::require_col_vector_t<T1__>*,
-          stan::require_not_vt_complex<T1__>*,
-          stan::require_stan_scalar_t<T2__>*>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_col_vector<T1__>,
+                              stan::is_vt_not_complex<T1__>,
+                              stan::is_stan_scalar<T2__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>, -1, 1>
 f_1_arg_functor__::operator()(const T0__& t, const T1__& z, const T2__& a,
                               std::ostream* pstream__)  const
@@ -206,10 +207,10 @@ f_1_arg_functor__::operator()(const T0__& t, const T1__& z, const T2__& a,
 }
 
 template <typename T0__, typename T1__, typename T2__,
-          stan::require_stan_scalar_t<T0__>*,
-          stan::require_col_vector_t<T1__>*,
-          stan::require_not_vt_complex<T1__>*,
-          stan::require_stan_scalar_t<T2__>*>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_col_vector<T1__>,
+                              stan::is_vt_not_complex<T1__>,
+                              stan::is_stan_scalar<T2__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>, -1, 1>
 f_1_arg_odefunctor__::operator()(const T0__& t, const T1__& z,
                                  std::ostream* pstream__, const T2__& a) 
@@ -218,9 +219,10 @@ const
   return f_1_arg(t, z, a, pstream__);
 }
 
-template <typename T0__, typename T1__, stan::require_stan_scalar_t<T0__>*,
-          stan::require_col_vector_t<T1__>*,
-          stan::require_not_vt_complex<T1__>*>
+template <typename T0__, typename T1__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_col_vector<T1__>,
+                              stan::is_vt_not_complex<T1__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>, -1, 1>
 f_0_arg_odefunctor__::operator()(const T0__& t, const T1__& z,
                                  std::ostream* pstream__)  const
@@ -229,10 +231,10 @@ f_0_arg_odefunctor__::operator()(const T0__& t, const T1__& z,
 }
 
 template <typename T0__, typename T1__, typename T3__,
-          stan::require_stan_scalar_t<T0__>*,
-          stan::require_col_vector_t<T1__>*,
-          stan::require_not_vt_complex<T1__>*,
-          stan::require_stan_scalar_t<T3__>*>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_col_vector<T1__>,
+                              stan::is_vt_not_complex<T1__>,
+                              stan::is_stan_scalar<T3__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T3__>, -1, 1>
 f_2_arg_odefunctor__::operator()(const T0__& t, const T1__& z,
                                  std::ostream* pstream__, const int& b,
@@ -856,14 +858,14 @@ static constexpr std::array<const char*, 55> locations_array__ =
 struct simple_SIR_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             typename T4__, typename T5__, typename T6__,
-            stan::require_stan_scalar_t<T0__>* = nullptr,
-            stan::require_col_vector_t<T1__>* = nullptr,
-            stan::require_not_vt_complex<T1__>* = nullptr,
-            stan::require_stan_scalar_t<T2__>* = nullptr,
-            stan::require_stan_scalar_t<T3__>* = nullptr,
-            stan::require_stan_scalar_t<T4__>* = nullptr,
-            stan::require_stan_scalar_t<T5__>* = nullptr,
-            stan::require_stan_scalar_t<T6__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_col_vector<T1__>,
+                                stan::is_vt_not_complex<T1__>,
+                                stan::is_stan_scalar<T2__>,
+                                stan::is_stan_scalar<T3__>,
+                                stan::is_stan_scalar<T4__>,
+                                stan::is_stan_scalar<T5__>,
+                                stan::is_stan_scalar<T6__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__, T4__,
                        stan::promote_args_t<T5__, T6__>>, -1, 1>
   operator()(const T0__& t, const T1__& y, const T2__& beta, const T3__& kappa,
@@ -871,14 +873,14 @@ struct simple_SIR_functor__ {
              const int& unused, std::ostream* pstream__) const;
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             typename T4__, typename T5__, typename T6__,
-            stan::require_stan_scalar_t<T0__>* = nullptr,
-            stan::require_col_vector_t<T1__>* = nullptr,
-            stan::require_not_vt_complex<T1__>* = nullptr,
-            stan::require_stan_scalar_t<T2__>* = nullptr,
-            stan::require_stan_scalar_t<T3__>* = nullptr,
-            stan::require_stan_scalar_t<T4__>* = nullptr,
-            stan::require_stan_scalar_t<T5__>* = nullptr,
-            stan::require_stan_scalar_t<T6__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_col_vector<T1__>,
+                                stan::is_vt_not_complex<T1__>,
+                                stan::is_stan_scalar<T2__>,
+                                stan::is_stan_scalar<T3__>,
+                                stan::is_stan_scalar<T4__>,
+                                stan::is_stan_scalar<T5__>,
+                                stan::is_stan_scalar<T6__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__, T4__,
                        stan::promote_args_t<T5__, T6__>>, -1, 1>
   operator()(const T0__& t, const T1__& y, const T2__& beta, const T3__& kappa,
@@ -888,14 +890,14 @@ struct simple_SIR_functor__ {
 struct simple_SIR_odefunctor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             typename T4__, typename T5__, typename T6__,
-            stan::require_stan_scalar_t<T0__>* = nullptr,
-            stan::require_col_vector_t<T1__>* = nullptr,
-            stan::require_not_vt_complex<T1__>* = nullptr,
-            stan::require_stan_scalar_t<T2__>* = nullptr,
-            stan::require_stan_scalar_t<T3__>* = nullptr,
-            stan::require_stan_scalar_t<T4__>* = nullptr,
-            stan::require_stan_scalar_t<T5__>* = nullptr,
-            stan::require_stan_scalar_t<T6__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_col_vector<T1__>,
+                                stan::is_vt_not_complex<T1__>,
+                                stan::is_stan_scalar<T2__>,
+                                stan::is_stan_scalar<T3__>,
+                                stan::is_stan_scalar<T4__>,
+                                stan::is_stan_scalar<T5__>,
+                                stan::is_stan_scalar<T6__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__, T4__,
                        stan::promote_args_t<T5__, T6__>>, -1, 1>
   operator()(const T0__& t, const T1__& y, std::ostream* pstream__,
@@ -903,14 +905,14 @@ struct simple_SIR_odefunctor__ {
              const T5__& xi, const T6__& delta, const int& unused) const;
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             typename T4__, typename T5__, typename T6__,
-            stan::require_stan_scalar_t<T0__>* = nullptr,
-            stan::require_col_vector_t<T1__>* = nullptr,
-            stan::require_not_vt_complex<T1__>* = nullptr,
-            stan::require_stan_scalar_t<T2__>* = nullptr,
-            stan::require_stan_scalar_t<T3__>* = nullptr,
-            stan::require_stan_scalar_t<T4__>* = nullptr,
-            stan::require_stan_scalar_t<T5__>* = nullptr,
-            stan::require_stan_scalar_t<T6__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_col_vector<T1__>,
+                                stan::is_vt_not_complex<T1__>,
+                                stan::is_stan_scalar<T2__>,
+                                stan::is_stan_scalar<T3__>,
+                                stan::is_stan_scalar<T4__>,
+                                stan::is_stan_scalar<T5__>,
+                                stan::is_stan_scalar<T6__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__, T4__,
                        stan::promote_args_t<T5__, T6__>>, -1, 1>
   operator()(const T0__& t, const T1__& y, std::ostream* pstream__,
@@ -920,14 +922,14 @@ struct simple_SIR_odefunctor__ {
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__,
-          stan::require_stan_scalar_t<T0__>* = nullptr,
-          stan::require_col_vector_t<T1__>* = nullptr,
-          stan::require_not_vt_complex<T1__>* = nullptr,
-          stan::require_stan_scalar_t<T2__>* = nullptr,
-          stan::require_stan_scalar_t<T3__>* = nullptr,
-          stan::require_stan_scalar_t<T4__>* = nullptr,
-          stan::require_stan_scalar_t<T5__>* = nullptr,
-          stan::require_stan_scalar_t<T6__>* = nullptr>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_col_vector<T1__>,
+                              stan::is_vt_not_complex<T1__>,
+                              stan::is_stan_scalar<T2__>,
+                              stan::is_stan_scalar<T3__>,
+                              stan::is_stan_scalar<T4__>,
+                              stan::is_stan_scalar<T5__>,
+                              stan::is_stan_scalar<T6__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__, T4__,
                      stan::promote_args_t<T5__, T6__>>, -1, 1>
   simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta,
@@ -975,14 +977,14 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
     }
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__,
-          stan::require_stan_scalar_t<T0__>* = nullptr,
-          stan::require_col_vector_t<T1__>* = nullptr,
-          stan::require_not_vt_complex<T1__>* = nullptr,
-          stan::require_stan_scalar_t<T2__>* = nullptr,
-          stan::require_stan_scalar_t<T3__>* = nullptr,
-          stan::require_stan_scalar_t<T4__>* = nullptr,
-          stan::require_stan_scalar_t<T5__>* = nullptr,
-          stan::require_stan_scalar_t<T6__>* = nullptr>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_col_vector<T1__>,
+                              stan::is_vt_not_complex<T1__>,
+                              stan::is_stan_scalar<T2__>,
+                              stan::is_stan_scalar<T3__>,
+                              stan::is_stan_scalar<T4__>,
+                              stan::is_stan_scalar<T5__>,
+                              stan::is_stan_scalar<T6__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__, T4__,
                      stan::promote_args_t<T5__, T6__>>, -1, 1>
   simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta,
@@ -1035,14 +1037,14 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
     }
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__,
-          stan::require_stan_scalar_t<T0__>*,
-          stan::require_col_vector_t<T1__>*,
-          stan::require_not_vt_complex<T1__>*,
-          stan::require_stan_scalar_t<T2__>*,
-          stan::require_stan_scalar_t<T3__>*,
-          stan::require_stan_scalar_t<T4__>*,
-          stan::require_stan_scalar_t<T5__>*,
-          stan::require_stan_scalar_t<T6__>*>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_col_vector<T1__>,
+                              stan::is_vt_not_complex<T1__>,
+                              stan::is_stan_scalar<T2__>,
+                              stan::is_stan_scalar<T3__>,
+                              stan::is_stan_scalar<T4__>,
+                              stan::is_stan_scalar<T5__>,
+                              stan::is_stan_scalar<T6__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__, T4__,
                      stan::promote_args_t<T5__, T6__>>, -1, 1>
 simple_SIR_functor__::operator()(const T0__& t, const T1__& y,
@@ -1056,14 +1058,14 @@ simple_SIR_functor__::operator()(const T0__& t, const T1__& y,
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__,
-          stan::require_stan_scalar_t<T0__>*,
-          stan::require_col_vector_t<T1__>*,
-          stan::require_not_vt_complex<T1__>*,
-          stan::require_stan_scalar_t<T2__>*,
-          stan::require_stan_scalar_t<T3__>*,
-          stan::require_stan_scalar_t<T4__>*,
-          stan::require_stan_scalar_t<T5__>*,
-          stan::require_stan_scalar_t<T6__>*>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_col_vector<T1__>,
+                              stan::is_vt_not_complex<T1__>,
+                              stan::is_stan_scalar<T2__>,
+                              stan::is_stan_scalar<T3__>,
+                              stan::is_stan_scalar<T4__>,
+                              stan::is_stan_scalar<T5__>,
+                              stan::is_stan_scalar<T6__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__, T4__,
                      stan::promote_args_t<T5__, T6__>>, -1, 1>
 simple_SIR_functor__::operator()(const T0__& t, const T1__& y,
@@ -1077,14 +1079,14 @@ const
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__,
-          stan::require_stan_scalar_t<T0__>*,
-          stan::require_col_vector_t<T1__>*,
-          stan::require_not_vt_complex<T1__>*,
-          stan::require_stan_scalar_t<T2__>*,
-          stan::require_stan_scalar_t<T3__>*,
-          stan::require_stan_scalar_t<T4__>*,
-          stan::require_stan_scalar_t<T5__>*,
-          stan::require_stan_scalar_t<T6__>*>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_col_vector<T1__>,
+                              stan::is_vt_not_complex<T1__>,
+                              stan::is_stan_scalar<T2__>,
+                              stan::is_stan_scalar<T3__>,
+                              stan::is_stan_scalar<T4__>,
+                              stan::is_stan_scalar<T5__>,
+                              stan::is_stan_scalar<T6__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__, T4__,
                      stan::promote_args_t<T5__, T6__>>, -1, 1>
 simple_SIR_odefunctor__::operator()(const T0__& t, const T1__& y,
@@ -1099,14 +1101,14 @@ const
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__,
-          stan::require_stan_scalar_t<T0__>*,
-          stan::require_col_vector_t<T1__>*,
-          stan::require_not_vt_complex<T1__>*,
-          stan::require_stan_scalar_t<T2__>*,
-          stan::require_stan_scalar_t<T3__>*,
-          stan::require_stan_scalar_t<T4__>*,
-          stan::require_stan_scalar_t<T5__>*,
-          stan::require_stan_scalar_t<T6__>*>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_col_vector<T1__>,
+                              stan::is_vt_not_complex<T1__>,
+                              stan::is_stan_scalar<T2__>,
+                              stan::is_stan_scalar<T3__>,
+                              stan::is_stan_scalar<T4__>,
+                              stan::is_stan_scalar<T5__>,
+                              stan::is_stan_scalar<T6__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__, T4__,
                      stan::promote_args_t<T5__, T6__>>, -1, 1>
 simple_SIR_odefunctor__::operator()(const T0__& t, const T1__& y,
