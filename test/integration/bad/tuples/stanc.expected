@@ -1,3 +1,48 @@
+  $ ../../../../../install/default/bin/stanc incomplete1.stan
+Syntax error in 'incomplete1.stan', line 2, column 25 to column 30, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    ( array [ foo ] real , while
+                                  ^
+   -------------------------------------------------
+
+Incomplete type specification, expected further types followed by ')' to complete tuple.
+  $ ../../../../../install/default/bin/stanc incomplete2.stan
+Syntax error in 'incomplete2.stan', line 1, column 28 to column 31, parsing error:
+   -------------------------------------------------
+     1:  data { ( array [ foo ] real foo
+                                     ^
+   -------------------------------------------------
+
+Invalid type specification, unmatched "(".
+Expected "," followed by further types and ")" to complete tuple.
+  $ ../../../../../install/default/bin/stanc incomplete3.stan
+Syntax error in 'incomplete3.stan', line 2, column 0 to column 0, parsing error:
+   -------------------------------------------------
+     1:  model { ( complex , complex ) while
+         ^
+   -------------------------------------------------
+
+Expected identifier. Multiple declarations must have the same type.
+  $ ../../../../../install/default/bin/stanc incomplete4.stan
+Syntax error in 'incomplete4.stan', line 2, column 35 to column 40, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:      ( real , ( complex , complex ) while
+                                            ^
+   -------------------------------------------------
+
+Incomplete type specification. Expected either ")" or "," followed by
+further types and ")" to complete tuple.
+  $ ../../../../../install/default/bin/stanc incomplete5.stan
+Syntax error in 'incomplete5.stan', line 1, column 9 to column 14, parsing error:
+   -------------------------------------------------
+     1:  data { ( while
+                  ^
+   -------------------------------------------------
+
+Incomplete type declaration. Expected comma seperated list of types between "("
+and ")" to declare tuple variable.
   $ ../../../../../install/default/bin/stanc tuple-dataonly-ad.stan
 Semantic error in 'tuple-dataonly-ad.stan', line 13, column 12 to column 19:
    -------------------------------------------------

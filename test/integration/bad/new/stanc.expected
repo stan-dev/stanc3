@@ -3321,7 +3321,7 @@ Syntax error in 'type-size-bad38.stan', line 1, column 17 to column 18, parsing 
                           ^
    -------------------------------------------------
 
-Expected "[" expression "]" for size declaration of simplex.
+Expected "[" expression "]" for size of simplex.
   $ ../../../../../install/default/bin/stanc type-size-bad39.stan
 Syntax error in 'type-size-bad39.stan', line 1, column 15 to column 20, parsing error:
    -------------------------------------------------
@@ -3329,7 +3329,7 @@ Syntax error in 'type-size-bad39.stan', line 1, column 15 to column 20, parsing 
                         ^
    -------------------------------------------------
 
-Expected "[" expression "]" for size declaration of simplex.
+Expected "[" expression "]" for size of simplex.
   $ ../../../../../install/default/bin/stanc type-size-bad4.stan
 Syntax error in 'type-size-bad4.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -3338,7 +3338,7 @@ Syntax error in 'type-size-bad4.stan', line 1, column 29 to column 34, parsing e
      2:  }
    -------------------------------------------------
 
-Expected comma separated list of expressions. Ill-formed expression.
+Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
   $ ../../../../../install/default/bin/stanc type-size-bad40.stan
 Syntax error in 'type-size-bad40.stan', line 1, column 24 to column 29, parsing error:
    -------------------------------------------------
@@ -3354,7 +3354,7 @@ Syntax error in 'type-size-bad41.stan', line 1, column 21 to column 22, parsing 
                               ^
    -------------------------------------------------
 
-Expected "[" expression "]" for size declaration of unit_vector.
+Expected "[" expression "]" for size of unit_vector.
   $ ../../../../../install/default/bin/stanc type-size-bad42.stan
 Syntax error in 'type-size-bad42.stan', line 1, column 20 to column 25, parsing error:
    -------------------------------------------------
@@ -3362,7 +3362,7 @@ Syntax error in 'type-size-bad42.stan', line 1, column 20 to column 25, parsing 
                              ^
    -------------------------------------------------
 
-Expected "[" expression "]" for size declaration of unit_vector.
+Expected "[" expression "]" for size of unit_vector.
   $ ../../../../../install/default/bin/stanc type-size-bad43.stan
 Syntax error in 'type-size-bad43.stan', line 1, column 19 to column 24, parsing error:
    -------------------------------------------------
@@ -3370,7 +3370,7 @@ Syntax error in 'type-size-bad43.stan', line 1, column 19 to column 24, parsing 
                             ^
    -------------------------------------------------
 
-Expected "[" expression "]" for size declaration of unit_vector.
+Expected "[" expression "]" for size of unit_vector.
   $ ../../../../../install/default/bin/stanc type-size-bad44.stan
 Syntax error in 'type-size-bad44.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -3427,7 +3427,7 @@ Syntax error in 'type-size-bad5.stan', line 1, column 31 to column 32, parsing e
      2:  }
    -------------------------------------------------
 
-Expected comma separated list of expressions. Ill-formed expression.
+Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
   $ ../../../../../install/default/bin/stanc type-size-bad50.stan
 Syntax error in 'type-size-bad50.stan', line 1, column 17 to column 22, parsing error:
    -------------------------------------------------
@@ -3619,7 +3619,7 @@ Syntax error in 'variable-decl-bad6.stan', line 1, column 15 to column 20, parsi
                         ^
    -------------------------------------------------
 
-Expected "[" expression "]" for size declaration of simplex.
+Expected "[" expression "]" for size of simplex.
   $ ../../../../../install/default/bin/stanc variable-decl-bad7.stan
 Syntax error in 'variable-decl-bad7.stan', line 1, column 28 to column 29, parsing error:
    -------------------------------------------------
