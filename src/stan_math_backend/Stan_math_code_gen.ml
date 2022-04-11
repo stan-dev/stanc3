@@ -547,7 +547,7 @@ let pp_transform_inits ppf {Program.output_vars; _} =
            constrain_param_sizes__{};@]@,"
     | _ ->
         let pp_set_params ppf pars =
-          (list ~sep:comma (Fmt.parens pp_expr)) ppf pars in
+          (list ~sep:comma (parens pp_expr)) ppf pars in
         pf ppf
           "@[<v 8> const std::array<Eigen::Index, %i> @ \
            constrain_param_sizes__{@[%a@]};@]@,"
