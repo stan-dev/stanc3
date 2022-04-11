@@ -494,7 +494,7 @@ Syntax error in 'ill-formed-expression32.stan', line 1, column 24 to column 29, 
                                  ^
    -------------------------------------------------
 
-Ill-formed phrase. Found an L-value. This can be followed by a "~", a ",", a "}", a "[" or an infix or postfix operator or an assignment operator.
+Ill-formed statement or expression. A statement or expression could be expected here.
   $ ../../../../../install/default/bin/stanc ill-formed-expression33.stan
 Syntax error in 'ill-formed-expression33.stan', line 1, column 25 to column 30, parsing error:
    -------------------------------------------------
@@ -2084,7 +2084,7 @@ Syntax error in 'mystery51.stan', line 1, column 29 to column 30, parsing error:
                                       ^
    -------------------------------------------------
 
-Got an incomplete statement - are you missing a paren or semi-colon?
+Ill-formed reject statement. After "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
   $ ../../../../../install/default/bin/stanc mystery52.stan
 Syntax error in 'mystery52.stan', line 1, column 29 to column 30, parsing error:
    -------------------------------------------------
@@ -2633,7 +2633,7 @@ Syntax error in 'reject-bad2.stan', line 1, column 31 to column 36, parsing erro
                                         ^
    -------------------------------------------------
 
-Ill-formed printable. After "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
+Ill-formed reject statement. After "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
   $ ../../../../../install/default/bin/stanc reject-bad3.stan
 Syntax error in 'reject-bad3.stan', line 1, column 34 to column 39, parsing error:
    -------------------------------------------------
@@ -2732,7 +2732,7 @@ Syntax error in 'target-pe-bad1.stan', line 3, column 10 to column 17, parsing e
      4:  }
    -------------------------------------------------
 
-Expected an expression followed by a ";", after "target +=".
+Ill-formed statement. Expression followed by ";" expected after "target +=".
   $ ../../../../../install/default/bin/stanc target-pe-bad2.stan
 Syntax error in 'target-pe-bad2.stan', line 1, column 33 to column 38, parsing error:
    -------------------------------------------------
@@ -2748,7 +2748,7 @@ Syntax error in 'target-pe-bad3.stan', line 1, column 30 to column 31, parsing e
                                        ^
    -------------------------------------------------
 
-Ill-formed expression. Expression followed by ";" expected after "target +=".
+Ill-formed statement. Expression followed by ";" expected after "target +=".
   $ ../../../../../install/default/bin/stanc target-pe-bad4.stan
 Syntax error in 'target-pe-bad4.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -2756,7 +2756,7 @@ Syntax error in 'target-pe-bad4.stan', line 1, column 29 to column 34, parsing e
                                       ^
    -------------------------------------------------
 
-Expected an expression followed by a ";", after "target +=".
+Ill-formed statement. Expression followed by ";" expected after "target +=".
   $ ../../../../../install/default/bin/stanc tilde-bad1.stan
 Syntax error in 'tilde-bad1.stan', line 1, column 43 to column 53, parsing error:
    -------------------------------------------------
@@ -3659,7 +3659,7 @@ Syntax error in 'while-bad4.stan', line 1, column 27 to column 28, parsing error
                                     ^
    -------------------------------------------------
 
-Ill-formed expression. We expect an expression after "(" for the test of the while-loop.
+Ill-formed expression. We expect an expression after "(" for the test of a while-loop.
   $ ../../../../../install/default/bin/stanc while-bad5.stan
 Syntax error in 'while-bad5.stan', line 1, column 26 to column 31, parsing error:
    -------------------------------------------------
@@ -3667,7 +3667,7 @@ Syntax error in 'while-bad5.stan', line 1, column 26 to column 31, parsing error
                                    ^
    -------------------------------------------------
 
-Ill-formed expression. We expect an expression after "(" for the test of the while-loop.
+Ill-formed expression. We expect an expression after "(" for the test of a while-loop.
   $ ../../../../../install/default/bin/stanc while-bad6.stan
 Syntax error in 'while-bad6.stan', line 1, column 25 to column 30, parsing error:
    -------------------------------------------------

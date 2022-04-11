@@ -43,6 +43,25 @@ Syntax error in 'incomplete5.stan', line 1, column 9 to column 14, parsing error
 
 Incomplete type declaration. Expected comma seperated list of types between "("
 and ")" to declare tuple variable.
+  $ ../../../../../install/default/bin/stanc incomplete6.stan
+Syntax error in 'incomplete6.stan', line 2, column 25 to column 26, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    (real, int) x = (3.5, 4;
+                                  ^
+   -------------------------------------------------
+
+Ill-formed phrase. Found an expression. This can be followed by a ",", a "}", a ")", a "]", a "[" or an infix or postfix operator.
+  $ ../../../../../install/default/bin/stanc incomplete7.stan
+Syntax error in 'incomplete7.stan', line 2, column 10 to column 11, parsing error:
+   -------------------------------------------------
+     1:  functions {
+     2:     (real, ) foo()
+                   ^
+     3:  }
+   -------------------------------------------------
+
+Expected comma-separated list of types followed by ")" to declare tuple return type.
   $ ../../../../../install/default/bin/stanc tuple-dataonly-ad.stan
 Semantic error in 'tuple-dataonly-ad.stan', line 13, column 12 to column 19:
    -------------------------------------------------

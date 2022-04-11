@@ -822,7 +822,7 @@ Syntax error in 'err-nested-parens-close.stan', line 3, column 12 to column 13, 
      4:  }
    -------------------------------------------------
 
-Expression or range of expressions followed by ")" expected after "(".
+Expression or comma separated list of expressions followed by ")" expected after "(".
   $ ../../../../install/default/bin/stanc err-nested-parens.stan
 Syntax error in 'err-nested-parens.stan', line 3, column 12 to column 13, parsing error:
    -------------------------------------------------
@@ -833,7 +833,7 @@ Syntax error in 'err-nested-parens.stan', line 3, column 12 to column 13, parsin
      4:  }
    -------------------------------------------------
 
-Expression or comma seperated list of expressions expected after "(".
+Expression or comma separated list of expressions followed by ")" expected after "(".
   $ ../../../../install/default/bin/stanc err-no-cond-else-if.stan
 Syntax error in 'err-no-cond-else-if.stan', line 5, column 12 to column 13, parsing error:
    -------------------------------------------------
@@ -1240,7 +1240,7 @@ Syntax error in 'functions-bad25.stan', line 5, column 2 to column 3, parsing er
      6:  }
    -------------------------------------------------
 
-";" or expression followed by ";" expected after "return".
+Ill-formed return statement. ";" or expression followed by ";" expected after "return".
   $ ../../../../install/default/bin/stanc functions-bad26.stan
 Syntax error in 'functions-bad26.stan', line 5, column 2 to column 3, parsing error:
    -------------------------------------------------
