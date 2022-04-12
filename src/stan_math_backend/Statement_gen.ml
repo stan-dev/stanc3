@@ -356,13 +356,13 @@ let expr_overlaps_lhs_ref (lhs_base_ref : 'e Stmt.Fixed.Pattern.lvalue)
     (expr : 'a Expr.Fixed.t) : bool =
   Option.value_map
     (* Convert the expression to an lvalue to get rid of everything but variables and indices *)
-    (TupleUtils.lvalue_of_expr_opt expr)
+    (Stmt.Helpers.lvalue_of_expr_opt expr)
     (* If we can't, this expression can't be deep copied *)
     ~default:
       false
       (* If we can, then find it's base reference and see if it overlaps with the LHS *)
     ~f:(fun expr_lv ->
-      let expr_base_ref = TupleUtils.lvalue_base_reference expr_lv in
+      let expr_base_ref = Stmt.Helpers.lvalue_base_reference expr_lv in
       expr_base_ref = lhs_base_ref )
 
 let pp_bool_expr ppf expr =
@@ -397,7 +397,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
       (* XXX I think in general we don't need to do a deepcopy if e is nested
          inside some function call - the function should get its own copy
          (in all cases???) *)
-      let lhs_ref = TupleUtils.lvalue_base_reference lhs in
+      let lhs_ref = Stmt.Helpers.lvalue_base_reference lhs in
       let rec maybe_deep_copy e =
         match e.Expr.Fixed.pattern with
         (* Never need to copy a scalar type *)

@@ -32,9 +32,6 @@ let rec local_scalar ut ad =
   | UnsizedType.UArray t, _ -> local_scalar t ad
   | _, UnsizedType.DataOnly | UInt, AutoDiffable -> stantype_prim_str ut
   | _, AutoDiffable -> "local_scalar_t__"
-  (* TUPLE MAYBE error on local scalar with tuple ad
-     The issue is an array can be an array of tuples
-  *)
   | _, TupleAD _ ->
       Common.FatalError.fatal_error_msg
         [%message

@@ -87,15 +87,16 @@ let rec replace_deprecated_expr
           ident expr in
   {expr; emeta}
 
-let replace_deprecated_lval deprecated_userdefined {lval; lmeta} =
+let rec replace_deprecated_lval deprecated_userdefined {lval; lmeta} =
   let is_multiindex = function
     | Single {emeta= {type_= Middle.UnsizedType.UInt; _}; _} -> false
     | _ -> true in
   let rec flatten_multi = function
     | LVariable id -> (LVariable id, None)
     | LTupleProjection (lval, idx) ->
-        (* TUPLE MAYBE - might need some recursion or change function type? *)
-        (LTupleProjection (lval, idx), None)
+        ( LTupleProjection
+            (replace_deprecated_lval deprecated_userdefined lval, idx)
+        , None )
     | LIndexed ({lval; lmeta}, idcs) -> (
         let outer =
           List.map idcs

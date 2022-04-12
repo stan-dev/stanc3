@@ -26,7 +26,7 @@ let rec change_kwrds_stmts s =
         NRFunApp (UserDefined (add_prefix_to_kwrds s, sfx), e)
     | Assignment (lhs, t, e2) ->
         Assignment
-          (TupleUtils.map_lhs_variable ~f:add_prefix_to_kwrds lhs, t, e2)
+          (Stmt.Helpers.map_lhs_variable ~f:add_prefix_to_kwrds lhs, t, e2)
     | For e -> For {e with loopvar= add_prefix_to_kwrds e.loopvar}
     | x -> map Fn.id change_kwrds_stmts x in
   {s with pattern}
@@ -122,7 +122,8 @@ let rec data_read smeta ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
   let unsized = SizedType.to_unsized st in
   let scalar = base_type st in
   let flat_type = UnsizedType.UArray scalar in
-  let decl_id = Stmt.Helpers.get_name decl_id_lval in
+  (* TUPLE MAYBE: do we want to do this via name and the normal context? *)
+  let decl_id = Stmt.Helpers.get_lhs_name decl_id_lval in
   let decl_var =
     { Expr.Fixed.pattern= Var decl_id
     ; meta= Expr.Typed.Meta.{loc= smeta; type_= unsized; adlevel= DataOnly} }
@@ -256,8 +257,7 @@ let param_read smeta
       match cst with
       | STuple _ ->
           Expr.Helpers.internal_funapp FnMakeTuple
-            ( List.map ~f:read_expr
-            @@ TupleUtils.zip_stuple_trans_exn cst out_trans )
+            (List.map ~f:read_expr @@ Utils.zip_stuple_trans_exn cst out_trans)
             emeta
       | _ ->
           let dims = read_constrain_dims out_trans cst in
@@ -294,7 +294,7 @@ let param_read smeta
                            , out_trans ) ) } )
               smeta ]
       | SizedType.STuple _ when contains_nested_tuple_arr cst ->
-          let subtys = TupleUtils.zip_stuple_trans_exn cst out_trans in
+          let subtys = Utils.zip_stuple_trans_exn cst out_trans in
           let sub_sts =
             List.mapi
               ~f:(fun iter (st, trans) ->

@@ -363,8 +363,8 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
       ( lval
       , (ut : UnsizedType.t)
       , (Expr.Fixed.{meta= Expr.Typed.Meta.{type_; adlevel; _}; _} as rhs) ) ->
-      let name = TupleUtils.lhs_variable lval in
-      let idx = TupleUtils.lhs_indices lval in
+      let name = Stmt.Helpers.lhs_variable lval in
+      let idx = Stmt.Helpers.lhs_indices lval in
       let idx_list =
         List.fold ~init:acc
           ~f:(fun accum x ->
@@ -455,7 +455,7 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
       (lval, (_ : UnsizedType.t), (rhs : Expr.Typed.t)) -> (
-      let assign_name = TupleUtils.lhs_variable lval in
+      let assign_name = Stmt.Helpers.lhs_variable lval in
       let all_rhs_eigen_names = query_var_eigen_names rhs in
       if Set.Poly.mem aos_exits assign_name then
         Set.Poly.add all_rhs_eigen_names assign_name
@@ -607,7 +607,7 @@ let rec modify_stmt_pattern
       , ut
       , ( {pattern= FunApp (CompilerInternal (FnReadParam read_param), args); _}
         as assigner ) ) ->
-      let name = TupleUtils.lhs_variable lval in
+      let name = Stmt.Helpers.lhs_variable lval in
       if Set.Poly.mem modifiable_set name then
         Assignment
           ( lval
@@ -629,7 +629,7 @@ let rec modify_stmt_pattern
                       (FnReadParam {read_param with mem_pattern= SoA})
                   , List.map ~f:(mod_expr false) args ) } )
   | Assignment (lval, (ut : UnsizedType.t), rhs) ->
-      let name = TupleUtils.lhs_variable lval in
+      let name = Stmt.Helpers.lhs_variable lval in
       if Set.Poly.mem modifiable_set name then
         (*If assignee is in bad set, force demotion of rhs functions*)
         Assignment (lval, ut, mod_expr true rhs)

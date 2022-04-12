@@ -392,7 +392,7 @@ let rec pp_transformed_type ppf (pst, trans) =
         | Covariance -> pf ppf "cov_matrix%a" cov_sizes_fmt ()
         | TupleTransformation _ as trans ->
             (* NB this calls the top-level function to handle internal arrays etc *)
-            let transTypes = Middle.TupleUtils.zip_tuple_trans_exn pst trans in
+            let transTypes = Middle.Utils.zip_tuple_trans_exn pst trans in
             pf ppf "(@[%a@])" (list ~sep:comma pp_transformed_type) transTypes
       in
       match st with

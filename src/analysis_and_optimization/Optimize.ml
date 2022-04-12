@@ -97,7 +97,7 @@ let replace_fresh_local_vars s' =
           match Map.Poly.find m var_name with
           | None -> var_name
           | Some var_name' -> var_name' in
-        let lhs' = Middle.TupleUtils.map_lhs_variable ~f:update_name lhs in
+        let lhs' = Middle.Stmt.Helpers.map_lhs_variable ~f:update_name lhs in
         (Stmt.Fixed.Pattern.Assignment (lhs', type_, e), m)
     | x -> (x, m) in
   let s, m = map_rec_state_stmt_loc f Map.Poly.empty s' in
@@ -338,13 +338,13 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.{pattern; meta} =
     { pattern=
         ( match pattern with
         | Assignment (lhs, ut, e2) ->
-            let e1 = Middle.TupleUtils.expr_of_lvalue lhs ~meta:e2.meta in
+            let e1 = Middle.Stmt.Helpers.expr_of_lvalue lhs ~meta:e2.meta in
             (* This inner e2 is wrong. We are giving the wrong type to Var x. But it doens't really matter as we discard it later. *)
             let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
             let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
             let lhs' =
               Option.value_exn
-                (Middle.TupleUtils.lvalue_of_expr_opt e1)
+                (Middle.Stmt.Helpers.lvalue_of_expr_opt e1)
                 ~message:
                   "Internal error in inline optimization: lhs could not be \
                    converted round-trip to expression" in
@@ -699,11 +699,11 @@ let dead_code_elimination (mir : Program.Typed.t) =
       match stmt with
       | Stmt.Fixed.Pattern.Assignment (lhs, _, rhs) ->
           if
-            Set.Poly.mem live_variables_s (Middle.TupleUtils.lhs_variable lhs)
+            Set.Poly.mem live_variables_s (Middle.Stmt.Helpers.lhs_variable lhs)
             || cannot_remove_expr rhs
             || List.exists
                  ~f:(idx_any cannot_remove_expr)
-                 (Middle.TupleUtils.lhs_indices lhs)
+                 (Middle.Stmt.Helpers.lhs_indices lhs)
           then stmt
           else Skip
       (* NOTE: we never get rid of declarations as we might not be able to
@@ -766,8 +766,8 @@ let partial_evaluation = Partial_evaluator.eval_prog
 let rec find_assignment_idx (name : string) Stmt.Fixed.{pattern; _} =
   match pattern with
   | Stmt.Fixed.Pattern.Assignment (lval, lhs_ut, (rhs : 'a Expr.Fixed.t)) ->
-      let assign_name = TupleUtils.lhs_variable lval in
-      let idx_lst = TupleUtils.lhs_indices lval in
+      let assign_name = Stmt.Helpers.lhs_variable lval in
+      let idx_lst = Stmt.Helpers.lhs_indices lval in
       if
         name = assign_name
         && (not (Set.Poly.mem (expr_var_names_set rhs) assign_name))
@@ -1104,7 +1104,7 @@ let optimize_ad_levels (mir : Program.Typed.t) =
     | Assignment (lval, _, e)
       when Expr.Typed.adlevel_of (update_expr_ad_levels ad_variables e)
            = AutoDiffable ->
-        Set.Poly.singleton (TupleUtils.lhs_variable lval)
+        Set.Poly.singleton (Stmt.Helpers.lhs_variable lval)
     | _ -> Set.Poly.empty in
   let global_initial_ad_variables =
     Set.Poly.of_list

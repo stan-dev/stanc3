@@ -416,10 +416,66 @@ module Helpers = struct
           Assignment (LIndexed (LVariable vident, indices), decl_type, varfn var)
       }
 
-  let rec get_name (lval : 'a Fixed.Pattern.lvalue) =
+  let rec get_lhs_name (lval : 'a Fixed.Pattern.lvalue) =
     match lval with
     | LVariable name -> name
-    | LIndexed (sub_lval, _) -> get_name sub_lval
+    | LIndexed (sub_lval, _) -> get_lhs_name sub_lval
     | LTupleProjection (sub_lval, num) ->
-        get_name sub_lval ^ "." ^ string_of_int num
+        get_lhs_name sub_lval ^ "." ^ string_of_int num
+
+  (* Copied from AST's version in AST.ml *)
+  let rec lvalue_of_expr_opt (expr : 'e Expr.Fixed.t) :
+      'e Expr.Fixed.t Fixed.Pattern.lvalue option =
+    match expr.pattern with
+    | Var s -> Some (LVariable s)
+    | Indexed (l, i) ->
+        Option.( >>= ) (lvalue_of_expr_opt l) (fun lv ->
+            Some (Fixed.Pattern.LIndexed (lv, i)) )
+    | TupleProjection (l, i) ->
+        Option.( >>= ) (lvalue_of_expr_opt l) (fun lv ->
+            Some (Fixed.Pattern.LTupleProjection (lv, i)) )
+    | _ -> None
+
+  let rec expr_of_lvalue (lhs : 'e Expr.Fixed.t Fixed.Pattern.lvalue)
+      ~(meta : 'e) : 'e Expr.Fixed.t =
+    let pattern =
+      match lhs with
+      | LVariable v -> Expr.Fixed.Pattern.Var v
+      | LIndexed (lv, ix) -> Indexed (expr_of_lvalue ~meta lv, ix)
+      | LTupleProjection (lv, ix) ->
+          TupleProjection (expr_of_lvalue ~meta lv, ix) in
+    {pattern; meta}
+
+  let rec map_lhs_variable ~(f : string -> string)
+      (lhs : 'e Fixed.Pattern.lvalue) : 'e Fixed.Pattern.lvalue =
+    match lhs with
+    | LVariable v -> LVariable (f v)
+    | LIndexed (lv, ix) -> LIndexed (map_lhs_variable ~f lv, ix)
+    | LTupleProjection (lv, ix) -> LTupleProjection (map_lhs_variable ~f lv, ix)
+
+  let rec lhs_indices (lhs : 'e Fixed.Pattern.lvalue) : 'e Index.t list =
+    match lhs with
+    | LVariable _ -> []
+    | LIndexed (lv, idcs) -> idcs @ lhs_indices lv
+    | LTupleProjection (lv, _) -> lhs_indices lv
+
+  let rec lhs_variable (lhs : 'e Fixed.Pattern.lvalue) : string =
+    match lhs with
+    | LVariable v -> v
+    | LIndexed (lv, _) | LTupleProjection (lv, _) -> lhs_variable lv
+
+  (* Reduce an lvalue down to its "base reference", which is a variable with maximum tuple indices after it.
+     For example:
+     x[1,2][3] -> x
+     x.1[1,2].2[3].3 -> x.1
+     x.1.2[1,2][3].3 -> x.1.2
+  *)
+  let lvalue_base_reference (lvalue : 'e Fixed.Pattern.lvalue) =
+    let rec go (lv : 'e Fixed.Pattern.lvalue) wrap =
+      match lv with
+      | LVariable _ | LTupleProjection (LVariable _, _) -> wrap lv
+      | LIndexed (lv, _) -> go lv Fn.id
+      | LTupleProjection (lv, ix) ->
+          go lv (fun lv -> wrap (LTupleProjection (lv, ix))) in
+    go lvalue Fn.id
 end

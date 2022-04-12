@@ -264,7 +264,7 @@ let rec param_size transform sizedtype =
   | TupleTransformation _ as trans ->
       (* Call recursively for tuples *)
       SizedType.STuple
-        (List.map (TupleUtils.zip_stuple_trans_exn sizedtype trans)
+        (List.map (Utils.zip_stuple_trans_exn sizedtype trans)
            ~f:(fun (st, trans) -> param_size trans st) )
   | Simplex ->
       shrink_eigen (fun d -> Expr.Helpers.(binop d Minus (int 1))) sizedtype
@@ -354,7 +354,7 @@ let rec var_constrain_check_stmts dconstrain loc adlevel decl_id decl_var trans
   match type_ with
   | Type.Sized (STuple _) | Type.Unsized (UTuple _) ->
       (* If the variable is a tuple, constrain each element in turn *)
-      let transTypes = TupleUtils.zip_tuple_trans_exn type_ trans in
+      let transTypes = Utils.zip_tuple_trans_exn type_ trans in
       List.concat_mapi transTypes ~f:(fun ix (pst, trans) ->
           let elem = Expr.Helpers.add_tuple_index decl_var (ix + 1) in
           let elem_decl_id =
@@ -678,7 +678,7 @@ let rec trans_sizedtype_decl declc tr name st =
         *)
         let stmts, sts' =
           List.unzip
-            (List.mapi (TupleUtils.zip_stuple_trans_exn tuple tr)
+            (List.mapi (Utils.zip_stuple_trans_exn tuple tr)
                ~f:(fun ix (st, trans) ->
                  trans_sizedtype_decl declc trans
                    (name ^ "." ^ string_of_int (ix - 1))

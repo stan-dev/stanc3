@@ -1538,7 +1538,7 @@ and check_transformation cf tenv ut trans =
   | Correlation -> Correlation
   | Covariance -> Covariance
   | TupleTransformation _ ->
-      let typesTrans = TupleUtils.zip_utuple_trans_exn ut trans in
+      let typesTrans = Utils.zip_utuple_trans_exn ut trans in
       let tes =
         List.map typesTrans ~f:(fun (ut, tm) ->
             check_transformation cf tenv ut tm ) in

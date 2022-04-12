@@ -191,5 +191,31 @@ module Helpers : sig
     -> 'b Expr.Fixed.t
     -> ('b, 'a) Fixed.t
 
-  val get_name : 'a Fixed.Pattern.lvalue -> string
+  val get_lhs_name : 'a Fixed.Pattern.lvalue -> string
+  (** The name of the lhs.
+  This adds "." and an index to tuple projections *)
+
+  val lvalue_of_expr_opt :
+    'e Expr.Fixed.t -> 'e Expr.Fixed.t Fixed.Pattern.lvalue option
+
+  val expr_of_lvalue :
+    'e Expr.Fixed.t Fixed.Pattern.lvalue -> meta:'e -> 'e Expr.Fixed.t
+
+  val map_lhs_variable :
+    f:(string -> string) -> 'e Fixed.Pattern.lvalue -> 'e Fixed.Pattern.lvalue
+
+  val lhs_indices : 'e Fixed.Pattern.lvalue -> 'e Index.t list
+
+  val lhs_variable : 'e Fixed.Pattern.lvalue -> string
+  (** This gets the innermost name of the variable.
+  It differs from [get_lhs_name] in that tuple
+  projections do not add their indices here. *)
+
+  val lvalue_base_reference : 'e Fixed.Pattern.lvalue -> 'e Fixed.Pattern.lvalue
+  (** Reduce an lvalue down to its "base reference", which is a variable with maximum tuple indices after it.
+     For example:
+     {[x[1,2][3] -> x
+     x.1[1,2].2[3].3 -> x.1
+     x.1.2[1,2][3].3 -> x.1.2}]
+  *)
 end

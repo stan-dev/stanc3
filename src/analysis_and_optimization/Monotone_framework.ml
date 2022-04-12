@@ -339,7 +339,7 @@ let constant_propagation_transfer ?(preserve_stability = false)
               | _ -> Map.remove m s )
             | Decl {decl_id= s; _} -> Map.remove m s
             | Assignment (lhs, _, _) ->
-                Map.remove m (Middle.TupleUtils.lhs_variable lhs)
+                Map.remove m (Middle.Stmt.Helpers.lhs_variable lhs)
             | TargetPE _
              |NRFunApp (_, _)
              |Break | Continue | Return _ | Skip
@@ -389,7 +389,7 @@ let expression_propagation_transfer ?(preserve_stability = false)
                 else Map.set m ~key:s ~data:(subst_expr m e)
             | Decl {decl_id= s; _} -> kill_var m s
             | Assignment (lhs, _, _) ->
-                kill_var m (Middle.TupleUtils.lhs_variable lhs)
+                kill_var m (Middle.Stmt.Helpers.lhs_variable lhs)
             | Profile (_, b) | Block b ->
                 let kills =
                   Set.Poly.union_list
@@ -428,7 +428,7 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
                 else Map.set m' ~key:s ~data:Expr.Fixed.{pattern= Var t; meta}
             | Decl {decl_id= s; _} -> kill_var m s
             | Assignment (lhs, _, _) ->
-                kill_var m (Middle.TupleUtils.lhs_variable lhs)
+                kill_var m (Middle.Stmt.Helpers.lhs_variable lhs)
             | Profile (_, b) | Block b ->
                 let kills =
                   Set.Poly.union_list
@@ -453,7 +453,7 @@ let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
 let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t) =
   match s with
   | Assignment (lhs, _, _) ->
-      Set.Poly.singleton (Middle.TupleUtils.lhs_variable lhs)
+      Set.Poly.singleton (Middle.Stmt.Helpers.lhs_variable lhs)
   | TargetPE _ -> Set.Poly.singleton "target"
   | NRFunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _) ->
       Set.Poly.singleton "target"
