@@ -1529,6 +1529,8 @@ Semantic error in 'op_divide_bad.stan', line 7, column 6 to column 11:
 Ill-typed arguments supplied to infix operator /. Available signatures: 
 (row_vector, matrix) => row_vector
 (matrix, matrix) => matrix
+(complex_row_vector, complex_matrix) => complex_row_vector
+(complex_matrix, complex_matrix) => complex_matrix
 
 (int, int) => int
 (real, real) => real
@@ -1550,6 +1552,8 @@ Semantic error in 'op_divide_right_bad.stan', line 7, column 6 to column 11:
 Ill-typed arguments supplied to infix operator /. Available signatures: 
 (row_vector, matrix) => row_vector
 (matrix, matrix) => matrix
+(complex_row_vector, complex_matrix) => complex_row_vector
+(complex_matrix, complex_matrix) => complex_matrix
 
 (int, int) => int
 (real, real) => real

@@ -4,8 +4,7 @@ functions {
    }
 
    real sum_weird(complex_matrix zs){
-      // return sum(get_real(zs)) + sum(get_imag(zs));
-      return 3.0;
+      return sum(get_real(zs)) + sum(get_imag(zs));
    }
 }
 
