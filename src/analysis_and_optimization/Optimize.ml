@@ -279,7 +279,8 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
             match suffix with
             | FnLpdf propto' when propto' && propto ->
                 ( Fun_kind.FnLpdf true
-                , Utils.with_unnormalized_suffix fname |> Option.value_exn )
+                , Utils.with_unnormalized_suffix fname
+                  |> Option.value ~default:fname )
             | FnLpdf _ -> (Fun_kind.FnLpdf false, fname)
             | _ -> (suffix, fname) in
           match Map.find fim fname' with
