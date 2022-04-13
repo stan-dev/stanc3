@@ -1,6 +1,6 @@
 open Frontend
 open Analysis_and_optimization.Factor_graph
-open Core
+open Core_kernel
 open Analysis_and_optimization.Dataflow_types
 
 let reject_example =

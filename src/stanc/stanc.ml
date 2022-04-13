@@ -214,9 +214,8 @@ let options =
 let print_deprecated_arg_warning =
   (* is_prefix is used to also cover the --include-paths=... *)
   let arg_is_used arg =
-    Array.mem
-      ~equal:(fun x y -> String.is_prefix ~prefix:x y)
-      (Sys.get_argv ()) arg in
+    Array.mem ~equal:(fun x y -> String.is_prefix ~prefix:x y) (Sys.get_argv ()) arg
+  in
   if arg_is_used "--allow_undefined" then
     eprintf
       "--allow_undefined is deprecated and will be removed in Stan 2.32.0. \

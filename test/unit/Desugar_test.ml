@@ -1,4 +1,4 @@
-open Core
+open Core_kernel
 open Analysis_and_optimization
 
 let to_mir s =

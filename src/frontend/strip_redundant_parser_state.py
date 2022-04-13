@@ -24,7 +24,7 @@ def strip_lines(s):
 
 
 if __name__ == "__main__":
-    with open((Sys.get_argv())[1]) as f:
+    with open(sys.argv[1]) as f:
         messages = f.read()
     curr = strip_redundant_parser_states(messages)
     while messages != curr:

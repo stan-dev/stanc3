@@ -6,9 +6,9 @@ import subprocess
 import sys
 parse = re.compile('File "(.*)", line (\d+).*\nError: this sentence.*\nNo sentence that leads to this state exists in "(.*)".')
 
-parser = (Sys.get_argv ())[1]
-new_messages = (Sys.get_argv ())[2]
-old_messages = (Sys.get_argv ())[3]
+parser = sys.argv[1]
+new_messages = sys.argv[2]
+old_messages = sys.argv[3]
 
 p = subprocess.run("menhir {} --compare-errors {} --compare-errors {}".format(
     parser, new_messages, old_messages),

@@ -1,4 +1,4 @@
-open Core
+open Core_kernel
 open Frontend
 
 let print_ast_of_string s =

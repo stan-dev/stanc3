@@ -1,4 +1,4 @@
-open Core
+open Core_kernel
 open Frontend
 open Frontend_utils
 
