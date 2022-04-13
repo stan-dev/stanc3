@@ -103,6 +103,14 @@ let rec ints_to_real unsized =
   | UArray t -> UArray (ints_to_real t)
   | x -> x
 
+let rec complex_to_real = function
+  | UnsizedType.UComplex -> UnsizedType.UReal
+  | UComplexVector -> UVector
+  | UComplexRowVector -> URowVector
+  | UComplexMatrix -> UMatrix
+  | UArray t -> UArray (complex_to_real t)
+  | x -> x
+
 let reduce_sum_allowed_dimensionalities = [1; 2; 3; 4; 5; 6; 7]
 
 let reduce_sum_slice_types =
@@ -519,6 +527,9 @@ let vector_types = [UnsizedType.UReal; UArray UReal; UVector; URowVector]
 let vector_types_size = List.length vector_types
 let primitive_types = [UnsizedType.UInt; UReal]
 let primitive_types_size = List.length primitive_types
+
+let complex_types =
+  [UnsizedType.UComplex; UComplexVector; UComplexRowVector; UComplexMatrix]
 
 let all_vector_types =
   [UnsizedType.UReal; UArray UReal; UVector; URowVector; UInt; UArray UInt]
@@ -1211,8 +1222,28 @@ let () =
     , ReturnType UReal
     , [UMatrix; UMatrix; UMatrix; UVector; UMatrix; UVector; UMatrix]
     , AoS ) ;
-  add_unqualified ("get_imag", ReturnType UReal, [UComplex], AoS) ;
-  add_unqualified ("get_real", ReturnType UReal, [UComplex], AoS) ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun t ->
+          add_unqualified
+            ( "get_imag"
+            , ReturnType (bare_array_type (complex_to_real t, i))
+            , [bare_array_type (t, i)]
+            , AoS ) )
+        complex_types )
+    (List.range 0 8) ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun t ->
+          add_unqualified
+            ( "get_real"
+            , ReturnType (bare_array_type (complex_to_real t, i))
+            , [bare_array_type (t, i)]
+            , AoS ) )
+        complex_types )
+    (List.range 0 8) ;
   add_unqualified
     ("gp_dot_prod_cov", ReturnType UMatrix, [UArray UReal; UReal], AoS) ;
   add_unqualified
