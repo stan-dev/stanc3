@@ -1,6 +1,6 @@
 (** Language functions defined internally by the compiler *)
 
-open Core
+open Core_kernel
 
 type 'expr t =
   | FnLength

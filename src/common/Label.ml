@@ -1,4 +1,4 @@
-open Core
+open Core_kernel
 
 (** Comparable, pretty-printable labels used to annotate intermediate
 representations*)

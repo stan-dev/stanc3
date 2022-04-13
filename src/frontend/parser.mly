@@ -1,7 +1,7 @@
 (** The parser for Stan. A Menhir file. *)
 
 %{
-open Core
+open Core_kernel
 open Middle
 open Ast
 open Debugging

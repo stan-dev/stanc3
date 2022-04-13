@@ -1,6 +1,6 @@
 (** Setup of our compiler errors *)
 
-open Core
+open Core_kernel
 module Str = Re.Str
 
 (** Our type of syntax error information *)

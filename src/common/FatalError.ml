@@ -1,6 +1,6 @@
 (** Internal compiler errors *)
 
-open Core
+open Core_kernel
 
 (** Equivalent to [raise_s] but prepends a stanc specific
   message asking users to report a bug *)

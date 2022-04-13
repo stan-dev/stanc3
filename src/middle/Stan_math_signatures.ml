@@ -1,7 +1,7 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
-open Core
+open Core_kernel
 
-open Core.Poly
+open Core_kernel.Poly
 
 (** The "dimensionality" (bad name?) is supposed to help us represent the
     vectorized nature of many Stan functions. It allows us to represent when

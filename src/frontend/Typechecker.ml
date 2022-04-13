@@ -13,8 +13,8 @@
   stan math functions. This is a functional map, meaning it is handled immutably.
 *)
 
-open Core
-open Core.Poly
+open Core_kernel
+open Core_kernel.Poly
 open Middle
 open Ast
 module Env = Environment

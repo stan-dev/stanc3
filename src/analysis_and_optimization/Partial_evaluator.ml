@@ -1,7 +1,7 @@
 (* A partial evaluator for use in static analysis and optimization *)
 
-open Core
-open Core.Poly
+open Core_kernel
+open Core_kernel.Poly
 open Middle
 
 exception Rejected of Location_span.t * string

@@ -1,5 +1,5 @@
-open Core
-open Core.Poly
+open Core_kernel
+open Core_kernel.Poly
 open Middle
 open Fmt
 open Expression_gen
@@ -95,7 +95,7 @@ let pp_assign_sized ppf (st, adtype, initialize) =
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
-  Fmt.str "@[<v>%a@]" pp_assign_sized
+  strf "@[<v>%a@]" pp_assign_sized
     ( SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5)
     , DataOnly
     , false )
@@ -104,7 +104,7 @@ let%expect_test "set size mat array" =
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
-  Fmt.str "@[<v>%a@]" pp_assign_sized
+  strf "@[<v>%a@]" pp_assign_sized
     (SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5), DataOnly, true)
   |> print_endline ;
   [%expect

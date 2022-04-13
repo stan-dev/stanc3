@@ -1,5 +1,5 @@
-open Core
-open Core.Poly
+open Core_kernel
+open Core_kernel.Poly
 open Middle
 open Middle.Program
 open Middle.Expr
@@ -78,7 +78,7 @@ let data_set ?(exclude_transformed = false) ?(exclude_ints = false)
   (* Possibly remove ints from the data set *)
   let filtered_data =
     let remove_ints = Set.Poly.filter ~f:(fun (_, st) -> st <> SizedType.SInt) in
-    Set.Poly.map ~f:fst ((if exclude_ints then remove_ints else Fn.id) data)
+    Set.Poly.map ~f:fst ((if exclude_ints then remove_ints else ident) data)
   in
   (* Transformed data are declarations in prepare_data but excluding data *)
   if exclude_transformed then filtered_data

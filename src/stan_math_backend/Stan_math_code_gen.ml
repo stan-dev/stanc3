@@ -16,8 +16,8 @@
     [3] Javascript pretty-printer https://github.com/Virum/compiler/blob/28e807b842bab5dcf11460c8193dd5b16674951f/JavaScript.ml#L112
 *)
 
-open Core
-open Core.Poly
+open Core_kernel
+open Core_kernel.Poly
 open Middle
 open Fmt
 open Expression_gen
@@ -34,7 +34,7 @@ let stanc_args_to_print =
         && not (is_prefix ~prefix:"--filename-in-msg" x)
         || is_prefix ~prefix:"--o" x) in
   (* Ignore the "--o" arg, the stan file and the binary name (bin/stanc). *)
-  Array.to_list (Sys.get_argv ()) |> List.tl_exn
+  Array.to_list Sys.argv |> List.tl_exn
   |> List.filter ~f:sans_model_and_hpp_paths
   |> String.concat ~sep:" "
 

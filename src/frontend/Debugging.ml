@@ -1,6 +1,6 @@
 (** Some helpers for debugging *)
 
-open Core
+open Core_kernel
 
 (* For s-expression support *)
 

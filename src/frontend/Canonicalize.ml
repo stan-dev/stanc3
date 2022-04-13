@@ -1,4 +1,4 @@
-open Core
+open Core_kernel
 open Ast
 open Deprecation_analysis
 
@@ -26,11 +26,11 @@ let rec repair_syntax_stmt user_dists {stmt; smeta} =
       ; smeta }
   | _ ->
       { stmt=
-          map_statement Fn.id (repair_syntax_stmt user_dists) Fn.id Fn.id stmt
+          map_statement ident (repair_syntax_stmt user_dists) ident ident stmt
       ; smeta }
 
 let rec replace_deprecated_expr
-    (deprecated_userdefined : Middle.UnsizedType.t Core.String.Map.t)
+    (deprecated_userdefined : Middle.UnsizedType.t Core_kernel.String.Map.t)
     {expr; emeta} =
   let expr =
     match expr with
@@ -84,7 +84,7 @@ let rec replace_deprecated_expr
     | _ ->
         map_expression
           (replace_deprecated_expr deprecated_userdefined)
-          Fn.id expr in
+          ident expr in
   {expr; emeta}
 
 let replace_deprecated_lval deprecated_userdefined {lval; lmeta} =
@@ -111,7 +111,7 @@ let replace_deprecated_lval deprecated_userdefined {lval; lmeta} =
   {lval; lmeta}
 
 let rec replace_deprecated_stmt
-    (deprecated_userdefined : Middle.UnsizedType.t Core.String.Map.t)
+    (deprecated_userdefined : Middle.UnsizedType.t Core_kernel.String.Map.t)
     ({stmt; smeta} : typed_statement) =
   let stmt =
     match stmt with
@@ -137,7 +137,7 @@ let rec replace_deprecated_stmt
           (replace_deprecated_expr deprecated_userdefined)
           (replace_deprecated_stmt deprecated_userdefined)
           (replace_deprecated_lval deprecated_userdefined)
-          Fn.id stmt in
+          ident stmt in
   {stmt; smeta}
 
 let rec no_parens {expr; emeta} =
@@ -147,7 +147,7 @@ let rec no_parens {expr; emeta} =
    |GetTarget ->
       {expr; emeta}
   | TernaryIf _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
-      {expr= map_expression keep_parens Fn.id expr; emeta}
+      {expr= map_expression keep_parens ident expr; emeta}
   | Indexed (e, l) ->
       { expr=
           Indexed
@@ -159,7 +159,7 @@ let rec no_parens {expr; emeta} =
                 l )
       ; emeta }
   | ArrayExpr _ | RowVectorExpr _ | FunApp _ | CondDistApp _ | Promotion _ ->
-      {expr= map_expression no_parens Fn.id expr; emeta}
+      {expr= map_expression no_parens ident expr; emeta}
 
 and keep_parens {expr; emeta} =
   match expr with
@@ -172,7 +172,7 @@ and keep_parens {expr; emeta} =
       {expr= Paren (no_parens e); emeta}
   | _ -> no_parens {expr; emeta}
 
-let parens_lval = map_lval_with no_parens Fn.id
+let parens_lval = map_lval_with no_parens ident
 
 let rec parens_stmt ({stmt; smeta} : typed_statement) : typed_statement =
   let stmt =
@@ -195,7 +195,7 @@ let rec parens_stmt ({stmt; smeta} : typed_statement) : typed_statement =
           ; lower_bound= keep_parens lower_bound
           ; upper_bound= keep_parens upper_bound
           ; loop_body= parens_stmt loop_body }
-    | _ -> map_statement no_parens parens_stmt parens_lval Fn.id stmt in
+    | _ -> map_statement no_parens parens_stmt parens_lval ident stmt in
   {stmt; smeta}
 
 let rec blocks_stmt ({stmt; smeta} : typed_statement) : typed_statement =
@@ -219,7 +219,7 @@ let rec blocks_stmt ({stmt; smeta} : typed_statement) : typed_statement =
         IfThenElse (e, stmt_to_block s1, Option.map ~f:stmt_to_block s2)
     | For ({loop_body; _} as f) ->
         For {f with loop_body= stmt_to_block loop_body}
-    | _ -> map_statement Fn.id blocks_stmt Fn.id Fn.id stmt in
+    | _ -> map_statement ident blocks_stmt ident ident stmt in
   {stmt; smeta}
 
 let repair_syntax program settings =

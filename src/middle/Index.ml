@@ -1,6 +1,6 @@
 (** Types of indexing operations *)
 
-open Core
+open Core_kernel
 
 type 'a t =
   | All

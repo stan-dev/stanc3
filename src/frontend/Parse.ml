@@ -1,7 +1,7 @@
 (** Some complicated stuff to get the custom syntax errors out of Menhir's Incremental
     API *)
 
-open Core
+open Core_kernel
 open Middle
 
 let parse parse_fun lexbuf =

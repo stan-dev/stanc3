@@ -1,6 +1,6 @@
 (** Defines the core of the MIR *)
 
-open Core
+open Core_kernel
 open Common
 open Helpers
 

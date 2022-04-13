@@ -2,7 +2,7 @@
   finding proper replacements for deprecated features
 *)
 
-open Core
+open Core_kernel
 open Ast
 
 val find_udf_log_suffix :

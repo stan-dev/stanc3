@@ -1,7 +1,7 @@
 (** stanc console application *)
 
-open Core
-open Core.Poly
+open Core_kernel
+open Core_kernel.Poly
 open Frontend
 open Stan_math_backend
 open Analysis_and_optimization
@@ -214,7 +214,7 @@ let options =
 let print_deprecated_arg_warning =
   (* is_prefix is used to also cover the --include-paths=... *)
   let arg_is_used arg =
-    Array.mem ~equal:(fun x y -> String.is_prefix ~prefix:x y) (Sys.get_argv ()) arg
+    Array.mem ~equal:(fun x y -> String.is_prefix ~prefix:x y) Sys.argv arg
   in
   if arg_is_used "--allow_undefined" then
     eprintf

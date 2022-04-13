@@ -12,8 +12,8 @@
     the lexer won't allow this in a user-created variable.
 *)
 
-open Core
-open Core.Poly
+open Core_kernel
+open Core_kernel.Poly
 
 let kwrds_prefix = "_stan_"
 let prefix_len = String.length kwrds_prefix

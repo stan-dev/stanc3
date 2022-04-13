@@ -1,4 +1,4 @@
-open! Core
+open! Core_kernel
 
 let warnings = ref []
 let init () = warnings := []

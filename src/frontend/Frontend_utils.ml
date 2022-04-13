@@ -1,4 +1,4 @@
-open Core
+open Core_kernel
 
 let untyped_ast_of_string s =
   let res, warnings = Parse.parse_string Parser.Incremental.program s in

@@ -8,7 +8,7 @@
   later be filled in with something like [type expr_with_meta = metadata expression]
 *)
 
-open Core
+open Core_kernel
 open Middle
 
 (** Our type for identifiers, on which we record a location *)

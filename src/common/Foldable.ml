@@ -15,7 +15,7 @@ type constructors, the convention is to append the arity to the names of the
 signatures and functors e.g. [Basic2], [S2] and [Make2]
 *)
 
-open Core
+open Core_kernel
 
 (**
 The [Basic] definition for type constructors with a single type variable.

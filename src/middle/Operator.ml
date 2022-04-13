@@ -1,6 +1,6 @@
 (** Utilities for Stan's built in operators *)
 
-open Core
+open Core_kernel
 
 type t =
   | Plus

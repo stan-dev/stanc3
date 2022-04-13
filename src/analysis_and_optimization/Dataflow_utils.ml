@@ -1,4 +1,4 @@
-open Core
+open Core_kernel
 open Middle
 open Dataflow_types
 open Mir_utils
