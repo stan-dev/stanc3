@@ -1195,6 +1195,8 @@ let () =
   add_binary_vec_int_int "falling_factorial" SoA ;
   add_binary_vec_real_int "falling_factorial" SoA ;
   add_binary_vec "fdim" AoS ;
+  add_unqualified ("fft", ReturnType UComplexVector, [UComplexVector], AoS) ;
+  add_unqualified ("fft2", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
   add_ternary_vec "fma" SoA ;
   add_binary_vec "fmax" AoS ;
   add_binary_vec "fmin" AoS ;
@@ -1514,6 +1516,8 @@ let () =
       ; (DataOnly, UArray UInt); (DataOnly, UReal); (DataOnly, UReal)
       ; (DataOnly, UReal) ]
     , AoS ) ;
+  add_unqualified ("inv_fft", ReturnType UComplexVector, [UComplexVector], AoS) ;
+  add_unqualified ("inv_fft2", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
   add_unqualified ("inv_wishart_rng", ReturnType UMatrix, [UReal; UMatrix], AoS) ;
   add_unqualified ("inverse", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("inverse_spd", ReturnType UMatrix, [UMatrix], AoS) ;
