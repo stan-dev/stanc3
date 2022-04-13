@@ -7187,6 +7187,8 @@ Display all Stan math signatures exposed in the language
   fdim(array[,,,,,,,] real, int) => array[,,,,,,,] real
   fdim(array[,,,,,,,] real, real) => array[,,,,,,,] real
   fdim(array[,,,,,,,] real, array[,,,,,,,] real) => array[,,,,,,,] real
+  fft(complex_vector) => complex_vector
+  fft2(complex_matrix) => complex_matrix
   floor(int) => real
   floor(real) => real
   floor(vector) => vector
@@ -10080,6 +10082,8 @@ Display all Stan math signatures exposed in the language
   inv_erfc(array[,,,,,,] vector) => array[,,,,,,] vector
   inv_erfc(array[,,,,,,] row_vector) => array[,,,,,,] row_vector
   inv_erfc(array[,,,,,,] matrix) => array[,,,,,,] matrix
+  inv_fft(complex_vector) => complex_vector
+  inv_fft2(complex_matrix) => complex_matrix
   inv_gamma_ccdf_log(real, real, real) => real
   inv_gamma_ccdf_log(real, real, vector) => real
   inv_gamma_ccdf_log(real, real, row_vector) => real
