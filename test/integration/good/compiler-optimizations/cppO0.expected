@@ -11896,22 +11896,22 @@ static constexpr std::array<const char*, 8> locations_array__ =
 
 struct outer_lpdf_functor__ {
   template <bool propto__, typename T0__,
-            stan::require_col_vector_t<T0__>* = nullptr,
-            stan::require_not_vt_complex<T0__>* = nullptr>
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
   stan::promote_args_t<stan::base_type_t<T0__>>
   operator()(const T0__& phi, std::ostream* pstream__) const;
 };
 struct inner_lpdf_functor__ {
   template <bool propto__, typename T0__,
-            stan::require_col_vector_t<T0__>* = nullptr,
-            stan::require_not_vt_complex<T0__>* = nullptr>
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
   stan::promote_args_t<stan::base_type_t<T0__>>
   operator()(const T0__& phi, std::ostream* pstream__) const;
 };
 
 template <bool propto__, typename T0__,
-          stan::require_col_vector_t<T0__>* = nullptr,
-          stan::require_not_vt_complex<T0__>* = nullptr>
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
   stan::promote_args_t<stan::base_type_t<T0__>>
   inner_lpdf(const T0__& phi_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -11927,8 +11927,8 @@ template <bool propto__, typename T0__,
     }
     }
 template <bool propto__, typename T0__,
-          stan::require_col_vector_t<T0__>* = nullptr,
-          stan::require_not_vt_complex<T0__>* = nullptr>
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
   stan::promote_args_t<stan::base_type_t<T0__>>
   outer_lpdf(const T0__& phi_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -11943,8 +11943,9 @@ template <bool propto__, typename T0__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <bool propto__, typename T0__, stan::require_col_vector_t<T0__>*,
-          stan::require_not_vt_complex<T0__>*>
+template <bool propto__, typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 stan::promote_args_t<stan::base_type_t<T0__>>
 outer_lpdf_functor__::operator()(const T0__& phi, std::ostream* pstream__) 
 const
@@ -11952,8 +11953,9 @@ const
   return outer_lpdf<propto__>(phi, pstream__);
 }
 
-template <bool propto__, typename T0__, stan::require_col_vector_t<T0__>*,
-          stan::require_not_vt_complex<T0__>*>
+template <bool propto__, typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 stan::promote_args_t<stan::base_type_t<T0__>>
 inner_lpdf_functor__::operator()(const T0__& phi, std::ostream* pstream__) 
 const
@@ -12307,20 +12309,23 @@ static constexpr std::array<const char*, 14> locations_array__ =
  " (in 'inline-functions-varmat.stan', line 5, column 33 to line 12, column 3)"};
 
 struct multi_ret_fun_functor__ {
-  template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-            stan::require_not_vt_complex<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
   operator()(const T0__& A, std::ostream* pstream__) const;
 };
 struct single_ret_fun_functor__ {
-  template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-            stan::require_not_vt_complex<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
   operator()(const T0__& A, std::ostream* pstream__) const;
 };
 
-template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-          stan::require_not_vt_complex<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
   single_ret_fun(const T0__& A_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -12337,8 +12342,9 @@ template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-          stan::require_not_vt_complex<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
   multi_ret_fun(const T0__& A_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -12364,8 +12370,9 @@ template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_col_vector_t<T0__>*,
-          stan::require_not_vt_complex<T0__>*>
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
 multi_ret_fun_functor__::operator()(const T0__& A, std::ostream* pstream__) 
 const
@@ -12373,8 +12380,9 @@ const
   return multi_ret_fun(A, pstream__);
 }
 
-template <typename T0__, stan::require_col_vector_t<T0__>*,
-          stan::require_not_vt_complex<T0__>*>
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
 single_ret_fun_functor__::operator()(const T0__& A, std::ostream* pstream__) 
 const
