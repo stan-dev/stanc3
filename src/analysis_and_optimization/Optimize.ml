@@ -75,16 +75,18 @@ let block_no_loc l = Stmt.Fixed.Pattern.Block (map_no_loc l)
 let slist_concat_no_loc l stmt =
   match l with [] -> stmt | l -> slist_no_loc (l @ [stmt])
 
+let gen_inline_var (name : string) (id_var : string) = 
+  Gensym.generate
+              ~prefix:("inline_" ^ name ^ "_" ^ id_var ^ "_")
+              () 
+
 let replace_fresh_local_vars (fname : string) stmt =
   let f (m : (string, string) Core_kernel.Map.Poly.t) = function
     | Stmt.Fixed.Pattern.Decl {decl_adtype; decl_type; decl_id; initialize} ->
         let new_name =
           match Map.Poly.find m decl_id with
           | Some existing -> existing
-          | None ->
-              Gensym.generate
-                ~prefix:("inline_" ^ fname ^ "_" ^ decl_id ^ "_")
-                () in
+          | None -> gen_inline_var fname decl_id in
         ( Stmt.Fixed.Pattern.Decl
             {decl_adtype; decl_id= new_name; decl_type; initialize}
         , Map.Poly.set m ~key:decl_id ~data:new_name )
@@ -92,10 +94,7 @@ let replace_fresh_local_vars (fname : string) stmt =
         let new_name =
           match Map.Poly.find m loopvar with
           | Some existing -> existing
-          | None ->
-              Gensym.generate
-                ~prefix:("inline_" ^ fname ^ "_" ^ loopvar ^ "_")
-                () in
+          | None -> gen_inline_var fname loopvar in
         ( Stmt.Fixed.Pattern.For {loopvar= new_name; lower; upper; body}
         , Map.Poly.set m ~key:loopvar ~data:new_name )
     | Assignment ((var_name, ut, l), e) ->
@@ -115,16 +114,9 @@ let subst_args_stmt args es =
 (**
  * Count the number of returns that happen in a statement
  *)
-let rec count_returns (acc : int) Stmt.Fixed.{pattern; _} : int =
-  match pattern with
-  | Return _ -> acc + 1
-  | IfElse (_, true_stmt, false_stmt) ->
-      count_returns acc true_stmt
-      + Option.value_map ~default:0 ~f:(count_returns acc) false_stmt
-  | While (_, body) | For {body; _} -> count_returns acc body
-  | Block lst | SList lst | Profile (_, lst) ->
-      List.fold ~init:acc ~f:count_returns lst
-  | _ -> acc
+let rec count_returns Stmt.Fixed.{pattern;_} : int = 
+  Stmt.Fixed.Pattern.fold  (fun acc _ -> acc) 
+(fun acc -> function Stmt.Fixed.{pattern=Return _; _} -> acc + 1 | stmt -> acc + count_returns stmt) 0 pattern
 
 (* The strategy here is to wrap the function body in a dummy loop, then replace
    returns with breaks. One issue is early return from internal loops - in
@@ -134,8 +126,7 @@ let rec count_returns (acc : int) Stmt.Fixed.{pattern; _} : int =
    is called from an inner loop, there's a cascade of breaks all the way out of
    the dummy loop. *)
 let handle_early_returns (fname : string) opt_var stmt =
-  let returned =
-    Gensym.generate ~prefix:("inline_" ^ fname ^ "_early_ret_check_") () in
+  let returned = gen_inline_var fname "early_ret_check" in
   let generate_inner_breaks num_returns stmt_pattern =
     match stmt_pattern with
     | Stmt.Fixed.Pattern.Return opt_ret -> (
@@ -190,7 +181,7 @@ let handle_early_returns (fname : string) opt_var stmt =
                     , None )
               ; meta= Location_span.empty } ]
     | x -> x in
-  let num_returns = count_returns 0 stmt in
+  let num_returns = count_returns stmt in
   if num_returns > 1 then
     Stmt.Fixed.Pattern.SList
       [ Stmt.Fixed.
@@ -216,10 +207,7 @@ let handle_early_returns (fname : string) opt_var stmt =
       ; Stmt.Fixed.
           { pattern=
               Stmt.Fixed.Pattern.For
-                { loopvar=
-                    Gensym.generate
-                      ~prefix:("inline_" ^ fname ^ "_iterator_")
-                      ()
+                { loopvar= gen_inline_var fname "iterator"
                 ; lower=
                     Expr.Fixed.
                       { pattern= Lit (Int, "1")
@@ -291,8 +279,7 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
                 | _ -> StanLib (fname, suffix, AoS) in
               (d_list, s_list, {e with pattern= FunApp (fun_kind, es)})
           | Some (rt, args, body) ->
-              let inline_return_name =
-                Gensym.generate ~prefix:("inline_" ^ fname ^ "_return_") ()
+              let inline_return_name = gen_inline_var fname "return"
               in
               let handle =
                 handle_early_returns fname (Some inline_return_name) in
