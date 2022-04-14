@@ -75,10 +75,8 @@ let block_no_loc l = Stmt.Fixed.Pattern.Block (map_no_loc l)
 let slist_concat_no_loc l stmt =
   match l with [] -> stmt | l -> slist_no_loc (l @ [stmt])
 
-let gen_inline_var (name : string) (id_var : string) = 
-  Gensym.generate
-              ~prefix:("inline_" ^ name ^ "_" ^ id_var ^ "_")
-              () 
+let gen_inline_var (name : string) (id_var : string) =
+  Gensym.generate ~prefix:("inline_" ^ name ^ "_" ^ id_var ^ "_") ()
 
 let replace_fresh_local_vars (fname : string) stmt =
   let f (m : (string, string) Core_kernel.Map.Poly.t) = function
@@ -114,9 +112,13 @@ let subst_args_stmt args es =
 (**
  * Count the number of returns that happen in a statement
  *)
-let rec count_returns Stmt.Fixed.{pattern;_} : int = 
-  Stmt.Fixed.Pattern.fold  (fun acc _ -> acc) 
-(fun acc -> function Stmt.Fixed.{pattern=Return _; _} -> acc + 1 | stmt -> acc + count_returns stmt) 0 pattern
+let rec count_returns Stmt.Fixed.{pattern; _} : int =
+  Stmt.Fixed.Pattern.fold
+    (fun acc _ -> acc)
+    (fun acc -> function
+      | Stmt.Fixed.{pattern= Return _; _} -> acc + 1
+      | stmt -> acc + count_returns stmt )
+    0 pattern
 
 (* The strategy here is to wrap the function body in a dummy loop, then replace
    returns with breaks. One issue is early return from internal loops - in
@@ -279,8 +281,7 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
                 | _ -> StanLib (fname, suffix, AoS) in
               (d_list, s_list, {e with pattern= FunApp (fun_kind, es)})
           | Some (rt, args, body) ->
-              let inline_return_name = gen_inline_var fname "return"
-              in
+              let inline_return_name = gen_inline_var fname "return" in
               let handle =
                 handle_early_returns fname (Some inline_return_name) in
               let d_list2, s_list2, (e : Expr.Typed.t) =
