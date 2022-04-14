@@ -7,39 +7,43 @@ open Fmt
 open Expression_gen
 open Statement_gen
 
-(**
-  Typename: The name of a template typename
-  Require: One of Stan's C++ template require giving a condition and the template names needing to satisfy that condition.
-  Bool: A boolean template type
- *)
 type template_parameter =
-  | Typename of string
+  | Typename of string  (** The name of a template typename *)
   | Require of string * string
-  | Bool of string
+      (** A C++ type trait and the name which needs to satisfy that *)
+  | Bool of string  (** A named boolean template type *)
 
 let pp_template_parameter ppf template_parameter =
   match template_parameter with
   | Typename param_name -> pf ppf "typename %s" param_name
-  | Require (requirement, param_name) -> pf ppf "%s<%s>*" requirement param_name
+  | Require (requirement, param_name) ->
+      pf ppf "stan::require_t<%s<%s>>*" requirement param_name
   | Bool param_name -> pf ppf "bool %s" param_name
 
-let pp_template_parameter_defaults ppf template_parameter =
-  match template_parameter with
-  | Require _ -> pf ppf "%a = nullptr" pp_template_parameter template_parameter
-  | _ -> pp_template_parameter ppf template_parameter
+let pp_requires ~default ppf requires =
+  match requires with
+  | [] -> ()
+  | _ ->
+      let pp_require ppf (trait, name) = pf ppf "%s<%s>" trait name in
+      pf ppf ",@ stan::require_all_t<@[%a@]>*%s"
+        (list ~sep:comma pp_require)
+        requires
+        (if default then " = nullptr" else "")
 
 (**
    Pretty print a full C++ `template <parameter-list>`
   *)
-let pp_template ~defaults ppf template_parameters =
+let pp_template ~default ppf template_parameters =
   match template_parameters with
   | [] -> ()
   | _ ->
-      pf ppf "template <@[%a@]>@ "
-        (list ~sep:comma
-           ( if defaults then pp_template_parameter_defaults
-           else pp_template_parameter ) )
-        template_parameters
+      let templates, requires =
+        List.partition_map template_parameters ~f:(function
+          | Require (trait, name) -> Second (trait, name)
+          | Typename name -> First ("typename " ^ name)
+          | Bool name -> First ("bool " ^ name) ) in
+      pf ppf "template <@[%a%a@]>@ " (list ~sep:comma string) templates
+        (pp_requires ~default) requires
 
 type found_functor =
   { struct_template: template_parameter option
@@ -66,25 +70,23 @@ let template_parameter_names (args : Program.fun_arg_decl) =
 let requires (_, _, ut) t =
   match ut with
   | UnsizedType.URowVector ->
-      [ Require ("stan::require_row_vector_t", t)
-      ; Require ("stan::require_not_vt_complex", t) ]
+      [ Require ("stan::is_row_vector", t)
+      ; Require ("stan::is_vt_not_complex", t) ]
   | UComplexRowVector ->
-      [ Require ("stan::require_row_vector_t", t)
-      ; Require ("stan::require_vt_complex", t) ]
+      [Require ("stan::is_row_vector", t); Require ("stan::is_vt_complex", t)]
   | UVector ->
-      [ Require ("stan::require_col_vector_t", t)
-      ; Require ("stan::require_not_vt_complex", t) ]
+      [ Require ("stan::is_col_vector", t)
+      ; Require ("stan::is_vt_not_complex", t) ]
   | UComplexVector ->
-      [ Require ("stan::require_col_vector_t", t)
-      ; Require ("stan::require_vt_complex", t) ]
+      [Require ("stan::is_col_vector", t); Require ("stan::is_vt_complex", t)]
   | UMatrix ->
-      [ Require ("stan::require_eigen_matrix_dynamic_t", t)
-      ; Require ("stan::require_not_vt_complex", t) ]
+      [ Require ("stan::is_eigen_matrix_dynamic", t)
+      ; Require ("stan::is_vt_not_complex", t) ]
   | UComplexMatrix ->
-      [ Require ("stan::require_eigen_matrix_dynamic_t", t)
-      ; Require ("stan::require_vt_complex", t) ]
+      [ Require ("stan::is_eigen_matrix_dynamic", t)
+      ; Require ("stan::is_vt_complex", t) ]
       (* NB: Not unwinding array types due to the way arrays of eigens are printed *)
-  | _ -> [Require ("stan::require_stan_scalar_t", t)]
+  | _ -> [Require ("stan::is_stan_scalar", t)]
 
 let optional_require_templates (name_ops : string option list)
     (args : Program.fun_arg_decl) =
@@ -279,7 +281,7 @@ let pp_fun_def ppf
     Option.is_none fdbody
     || not (Hash_set.mem forward_decls (signature, template_params)) in
   pf ppf "%a%a"
-    (pp_template ~defaults:template_parameter_default_values)
+    (pp_template ~default:template_parameter_default_values)
     template_params pp_fun_sig
     (fdname, templated_args, `None) ;
   match fdbody with
@@ -430,15 +432,15 @@ let pp_functions_functors ppf (p : Program.Numbered.t) =
         pf ppf "@[<v 2>%astruct %s {@,%aconst;@]@,};@."
           (option
              (option (fun ppf template_param ->
-                  pf ppf "template <%a>@ " pp_template_parameter_defaults
-                    template_param ) ) )
+                  pf ppf "template <%a>@ " pp_template_parameter template_param )
+             ) )
           (Option.map
              ~f:(fun functor_t -> functor_t.struct_template)
              (List.hd data) )
           key
           (list ~sep:(any "const;@,") (fun ppf (template_parameters, sign) ->
                pf ppf "%a@[<h>%a@]"
-                 (pp_template ~defaults:true)
+                 (pp_template ~default:true)
                  template_parameters text sign ) )
           (List.map
              ~f:(fun {arg_templates; signature; _} -> (arg_templates, signature))
@@ -451,7 +453,7 @@ let pp_functions_functors ppf (p : Program.Numbered.t) =
                    pf ppf "template <%a>@ " pp_template_parameter template_param )
               )
               struct_template
-              (pp_template ~defaults:false)
+              (pp_template ~default:false)
               arg_templates defn ) ) in
   pf ppf "%a@ %s@ %a" pp_functor_decls functors fns_str pp_functors functors
 
@@ -489,10 +491,10 @@ let%expect_test "udf" =
   [%expect
     {|
     template <typename T0__, typename T1__,
-              stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
-              stan::require_not_vt_complex<T0__>* = nullptr,
-              stan::require_row_vector_t<T1__>* = nullptr,
-              stan::require_not_vt_complex<T1__>* = nullptr>
+              stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                                  stan::is_vt_not_complex<T0__>,
+                                  stan::is_row_vector<T1__>,
+                                  stan::is_vt_not_complex<T1__>>* = nullptr>
     void
     sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
       using local_scalar_t__ =
@@ -538,13 +540,13 @@ let%expect_test "udf-expressions" =
   [%expect
     {|
     template <typename T0__, typename T1__, typename T2__, typename T3__,
-              stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
-              stan::require_not_vt_complex<T0__>* = nullptr,
-              stan::require_row_vector_t<T1__>* = nullptr,
-              stan::require_not_vt_complex<T1__>* = nullptr,
-              stan::require_row_vector_t<T2__>* = nullptr,
-              stan::require_not_vt_complex<T2__>* = nullptr,
-              stan::require_stan_scalar_t<T3__>* = nullptr>
+              stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                                  stan::is_vt_not_complex<T0__>,
+                                  stan::is_row_vector<T1__>,
+                                  stan::is_vt_not_complex<T1__>,
+                                  stan::is_row_vector<T2__>,
+                                  stan::is_vt_not_complex<T2__>,
+                                  stan::is_stan_scalar<T3__>>* = nullptr>
     Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, stan::base_type_t<T1__>,
                          stan::base_type_t<T2__>, T3__>, -1, -1>
     sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,

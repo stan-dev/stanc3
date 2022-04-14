@@ -15,14 +15,21 @@ parameters {
 }
 transformed parameters {
   vector[N] y_hat;
-  
-  for (i in 1 : N) 
+
+  for (i in 1 : N)
     y_hat[i] = a[pair[i]] + beta[1] * treatment[i] + beta[2] * pre_test[i];
+
 }
 model {
   mu_a ~ normal(0, 1);
   a ~ normal(100 * mu_a, sigma_a);
   beta ~ normal(0, 100);
   y ~ normal(y_hat, sigma_y);
+
+  complex z = 3 + 4 + 5i;
+  print(z);
+  z = 4i + 5;
+  target += get_real(z);
+
 }
 

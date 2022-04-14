@@ -2996,8 +2996,9 @@ struct mask_fun_functor__ {
   operator()(const int& i, std::ostream* pstream__) const;
 };
 struct udf_fun_functor__ {
-  template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-            stan::require_not_vt_complex<T0__>* = nullptr>
+  template <typename T0__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
   operator()(const T0__& A, std::ostream* pstream__) const;
 };
@@ -3016,8 +3017,9 @@ int mask_fun(const int& i, std::ostream* pstream__) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_col_vector_t<T0__>* = nullptr,
-          stan::require_not_vt_complex<T0__>* = nullptr>
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
   udf_fun(const T0__& A_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -3040,8 +3042,9 @@ const
   return mask_fun(i, pstream__);
 }
 
-template <typename T0__, stan::require_col_vector_t<T0__>*,
-          stan::require_not_vt_complex<T0__>*>
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
 udf_fun_functor__::operator()(const T0__& A, std::ostream* pstream__)  const
 {
@@ -5221,23 +5224,23 @@ static constexpr std::array<const char*, 12> locations_array__ =
 
 struct okay_reduction_functor__ {
   template <typename T0__, typename T1__,
-            stan::require_stan_scalar_t<T0__>* = nullptr,
-            stan::require_eigen_matrix_dynamic_t<T1__>* = nullptr,
-            stan::require_not_vt_complex<T1__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_eigen_matrix_dynamic<T1__>,
+                                stan::is_vt_not_complex<T1__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>, -1, -1>
   operator()(const T0__& sum_x, const T1__& y, std::ostream* pstream__) const;
 };
 struct nono_func_functor__ {
   template <typename T0__,
-            stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
-            stan::require_not_vt_complex<T0__>* = nullptr>
+            stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, -1>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
 
 template <typename T0__,
-          stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
-          stan::require_not_vt_complex<T0__>* = nullptr>
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, -1>
   nono_func(const T0__& x_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -5255,9 +5258,9 @@ template <typename T0__,
     }
     }
 template <typename T0__, typename T1__,
-          stan::require_stan_scalar_t<T0__>* = nullptr,
-          stan::require_eigen_matrix_dynamic_t<T1__>* = nullptr,
-          stan::require_not_vt_complex<T1__>* = nullptr>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_eigen_matrix_dynamic<T1__>,
+                              stan::is_vt_not_complex<T1__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>, -1, -1>
   okay_reduction(const T0__& sum_x, const T1__& y_arg__,
                  std::ostream* pstream__) {
@@ -5276,9 +5279,10 @@ template <typename T0__, typename T1__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, typename T1__, stan::require_stan_scalar_t<T0__>*,
-          stan::require_eigen_matrix_dynamic_t<T1__>*,
-          stan::require_not_vt_complex<T1__>*>
+template <typename T0__, typename T1__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_eigen_matrix_dynamic<T1__>,
+                              stan::is_vt_not_complex<T1__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>, -1, -1>
 okay_reduction_functor__::operator()(const T0__& sum_x, const T1__& y,
                                      std::ostream* pstream__)  const
@@ -5286,8 +5290,9 @@ okay_reduction_functor__::operator()(const T0__& sum_x, const T1__& y,
   return okay_reduction(sum_x, y, pstream__);
 }
 
-template <typename T0__, stan::require_eigen_matrix_dynamic_t<T0__>*,
-          stan::require_not_vt_complex<T0__>*>
+template <typename T0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, -1>
 nono_func_functor__::operator()(const T0__& x, std::ostream* pstream__) 
 const
@@ -5850,8 +5855,8 @@ struct empty_user_func_functor__ {
 };
 struct mat_ret_user_func_functor__ {
   template <typename T0__,
-            stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
-            stan::require_not_vt_complex<T0__>* = nullptr>
+            stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, -1>
   operator()(const T0__& A, std::ostream* pstream__) const;
 };
@@ -5874,8 +5879,8 @@ Eigen::Matrix<double, -1, -1> empty_user_func(std::ostream* pstream__) {
     }
     }
 template <typename T0__,
-          stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
-          stan::require_not_vt_complex<T0__>* = nullptr>
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, -1>
   mat_ret_user_func(const T0__& A_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -5898,8 +5903,9 @@ empty_user_func_functor__::operator()(std::ostream* pstream__)  const
   return empty_user_func(pstream__);
 }
 
-template <typename T0__, stan::require_eigen_matrix_dynamic_t<T0__>*,
-          stan::require_not_vt_complex<T0__>*>
+template <typename T0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, -1>
 mat_ret_user_func_functor__::operator()(const T0__& A,
                                         std::ostream* pstream__)  const
@@ -6972,23 +6978,23 @@ static constexpr std::array<const char*, 10> locations_array__ =
 
 struct okay_reduction_functor__ {
   template <typename T0__, typename T1__,
-            stan::require_stan_scalar_t<T0__>* = nullptr,
-            stan::require_eigen_matrix_dynamic_t<T1__>* = nullptr,
-            stan::require_not_vt_complex<T1__>* = nullptr>
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_eigen_matrix_dynamic<T1__>,
+                                stan::is_vt_not_complex<T1__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>, -1, -1>
   operator()(const T0__& sum_x, const T1__& y, std::ostream* pstream__) const;
 };
 struct nono_func_functor__ {
   template <typename T0__,
-            stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
-            stan::require_not_vt_complex<T0__>* = nullptr>
+            stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, -1>
   operator()(const T0__& x, std::ostream* pstream__) const;
 };
 
 template <typename T0__,
-          stan::require_eigen_matrix_dynamic_t<T0__>* = nullptr,
-          stan::require_not_vt_complex<T0__>* = nullptr>
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, -1>
   nono_func(const T0__& x_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -7006,9 +7012,9 @@ template <typename T0__,
     }
     }
 template <typename T0__, typename T1__,
-          stan::require_stan_scalar_t<T0__>* = nullptr,
-          stan::require_eigen_matrix_dynamic_t<T1__>* = nullptr,
-          stan::require_not_vt_complex<T1__>* = nullptr>
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_eigen_matrix_dynamic<T1__>,
+                              stan::is_vt_not_complex<T1__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>, -1, -1>
   okay_reduction(const T0__& sum_x, const T1__& y_arg__,
                  std::ostream* pstream__) {
@@ -7027,9 +7033,10 @@ template <typename T0__, typename T1__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, typename T1__, stan::require_stan_scalar_t<T0__>*,
-          stan::require_eigen_matrix_dynamic_t<T1__>*,
-          stan::require_not_vt_complex<T1__>*>
+template <typename T0__, typename T1__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_eigen_matrix_dynamic<T1__>,
+                              stan::is_vt_not_complex<T1__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>, -1, -1>
 okay_reduction_functor__::operator()(const T0__& sum_x, const T1__& y,
                                      std::ostream* pstream__)  const
@@ -7037,8 +7044,9 @@ okay_reduction_functor__::operator()(const T0__& sum_x, const T1__& y,
   return okay_reduction(sum_x, y, pstream__);
 }
 
-template <typename T0__, stan::require_eigen_matrix_dynamic_t<T0__>*,
-          stan::require_not_vt_complex<T0__>*>
+template <typename T0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, -1>
 nono_func_functor__::operator()(const T0__& x, std::ostream* pstream__) 
 const
