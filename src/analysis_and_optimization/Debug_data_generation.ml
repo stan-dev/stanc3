@@ -122,10 +122,9 @@ let gen_row_vector m n t =
 let gen_vector m n t =
   let gen_ordered n =
     let l = repeat_th n (fun _ -> Random.float 1.) in
-    let l =
-      List.fold (List.tl_exn l) ~init:[List.hd_exn l] ~f:(fun accum elt ->
-          (Float.exp elt +. List.hd_exn accum) :: accum ) in
-    l in
+    List.fold_map l ~init:0. ~f:(fun accum elt ->
+        let elt = accum +. elt in
+        (elt, elt) ) in
   match t with
   | Transformation.Simplex ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
@@ -133,15 +132,11 @@ let gen_vector m n t =
       let l = List.map l ~f:(fun x -> x /. sum) in
       Expr.Helpers.vector l
   | Ordered ->
-      let l = gen_ordered n in
-      let halfmax =
-        Option.value_exn (List.max_elt l ~compare:compare_float) /. 2. in
-      let l = List.map l ~f:(fun x -> (x -. halfmax) /. halfmax) in
+      let max, l = gen_ordered n in
+      let l = List.map l ~f:(fun x -> x -. (max /. 2.0)) in
       Expr.Helpers.vector l
   | PositiveOrdered ->
-      let l = gen_ordered n in
-      let max = Option.value_exn (List.max_elt l ~compare:compare_float) in
-      let l = List.map l ~f:(fun x -> x /. max) in
+      let _, l = gen_ordered n in
       Expr.Helpers.vector l
   | UnitVector ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
@@ -288,6 +283,7 @@ and generate_value m st t =
 let rec pp_value_json ppf e =
   let open Fmt in
   match e.Expr.Fixed.pattern with
+  | Lit (Real, s) when String.is_suffix s ~suffix:"." -> string ppf (s ^ "0")
   | Lit ((Int | Real), s) -> string ppf s
   | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l) ->
       pf ppf "[@[<hov 1>%a@]]" (list ~sep:comma pp_value_json) l
