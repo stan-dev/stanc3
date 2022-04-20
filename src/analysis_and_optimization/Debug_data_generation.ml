@@ -274,27 +274,34 @@ and generate_value m st t =
       gen_complex_matrix (unwrap_int_exn m e1) (unwrap_int_exn m e2)
   | SArray (st, e) -> gen_array m st (unwrap_int_exn m e) t
 
-let rec pp_value_json ppf e =
-  match e.Expr.Fixed.pattern with
-  | Lit (Real, s) when String.is_suffix s ~suffix:"." -> Fmt.string ppf (s ^ "0")
-  | Lit ((Int | Real), s) -> Fmt.string ppf s
-  | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l) ->
-      Fmt.(pf ppf "[@[<hov 1>%a@]]" (list ~sep:comma pp_value_json) l)
-  | FunApp (StanLib (transpose, _, _), [e])
-    when String.equal transpose (Operator.to_string Transpose) ->
-      pp_value_json ppf e
-  | FunApp (StanLib ("to_complex", _, _), [r; i]) ->
-      Fmt.(pf ppf "[@[<hov 1>%a, %a@]]" pp_value_json r pp_value_json i)
-  | _ ->
-      Common.FatalError.fatal_error_msg
-        [%message "Could not evaluate expression " (e : Expr.Typed.t)]
+let generate_expressions data =
+  List.fold data ~init:([], Map.Poly.empty)
+    ~f:(fun (l, m) (sizedtype, transformation, name) ->
+      let value = generate_value m sizedtype transformation in
+      ((name, value) :: l, Map.set m ~key:name ~data:value) )
+  |> fst |> List.rev
 
-let print_data_prog s =
-  let l, _ =
-    List.fold s ~init:([], Map.Poly.empty)
-      ~f:(fun (l, m) (sizedtype, transformation, name) ->
-        let value = generate_value m sizedtype transformation in
-        ((name, value) :: l, Map.set m ~key:name ~data:value) ) in
-  let pp ppf (id, value) =
-    Fmt.pf ppf {|@[<hov 2>"%s":@ %a@]|} id pp_value_json value in
-  Fmt.(str "{@ @[<hov>%a@]@ }" (list ~sep:comma pp) (List.rev l))
+open Yojson
+
+let generate_json_entries (name, expr) : string * t =
+  let rec expr_to_json e : t =
+    match e.Expr.Fixed.pattern with
+    | Lit (Real, s) when String.is_suffix s ~suffix:"." -> `Floatlit (s ^ "0")
+    | Lit (Int, s) -> `Intlit s
+    | Lit (Real, s) -> `Floatlit s
+    | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l)
+     |FunApp (StanLib ("to_complex", _, _), l) ->
+        `List (List.map ~f:expr_to_json l)
+    | FunApp (StanLib (transpose, _, _), [e])
+      when String.equal transpose (Operator.to_string Transpose) ->
+        expr_to_json e
+    | _ ->
+        Common.FatalError.fatal_error_msg
+          [%message "Could not evaluate expression " (e : Expr.Typed.t)] in
+  (name, expr_to_json expr)
+
+let print_data_prog data =
+  let ids_and_values = generate_expressions data in
+  let json_entries = List.map ~f:generate_json_entries ids_and_values in
+  let json = `Assoc json_entries in
+  pretty_to_string json
