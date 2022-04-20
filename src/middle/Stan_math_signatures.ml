@@ -1089,6 +1089,8 @@ let () =
   add_unqualified ("csr_extract_v", ReturnType (UArray UInt), [UMatrix], AoS) ;
   add_unqualified ("csr_extract_u", ReturnType (UArray UInt), [UMatrix], AoS) ;
   add_unqualified
+    ("cumulative_sum", ReturnType (UArray UInt), [UArray UInt], AoS) ;
+  add_unqualified
     ("cumulative_sum", ReturnType (UArray UReal), [UArray UReal], AoS) ;
   add_unqualified ("cumulative_sum", ReturnType UVector, [UVector], SoA) ;
   add_unqualified ("cumulative_sum", ReturnType URowVector, [URowVector], SoA) ;
