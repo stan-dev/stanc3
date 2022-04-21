@@ -1,5 +1,14 @@
 $ node allow-undefined.js
-Semantic error in 'string', line 3, column 8 to column 11: 
+Semantic error in 'string', line 3, column 8 to column 11:
+   -------------------------------------------------
+     1:  
+     2:  functions {
+     3:      int foo(real a);
+                 ^
+     4:  }
+     5:  transformed data {
+   -------------------------------------------------
+
 Function is declared without specifying a definition.
 
 $ node auto-format.js
@@ -26,7 +35,15 @@ model {
 }
 
 $ node basic.js
-Semantic error in 'string', line 6, column 4 to column 5: 
+Semantic error in 'string', line 6, column 4 to column 5:
+   -------------------------------------------------
+     4:  }
+     5:  model {
+     6:      z ~ std_normal();
+             ^
+     7:  }
+   -------------------------------------------------
+
 Identifier 'z' not in scope.
 
 $ node canonical.js
@@ -70,10 +87,26 @@ dim(p) = (4, 3)
 $ node debug.js
 
 $ node filename.js
-Semantic error in 'good_filename', line 6, column 4 to column 5: 
+Semantic error in 'good_filename', line 6, column 4 to column 5:
+   -------------------------------------------------
+     4:  }
+     5:  model {
+     6:      z ~ std_normal();
+             ^
+     7:  }
+   -------------------------------------------------
+
 Identifier 'z' not in scope.
 
-Semantic error in 'string', line 6, column 4 to column 5: 
+Semantic error in 'string', line 6, column 4 to column 5:
+   -------------------------------------------------
+     4:  }
+     5:  model {
+     6:      z ~ std_normal();
+             ^
+     7:  }
+   -------------------------------------------------
+
 Identifier 'z' not in scope.
 
 $ node functions-only.js
@@ -153,6 +186,15 @@ real test_lpdf(real a, real b) {
 }
 $ node good_after_bad.js
 Syntax error in 'string', line 8, column 0 to column 5, parsing error:
+   -------------------------------------------------
+     6:      y ~ std_normal();
+     7:  }
+     8:  model {
+         ^
+     9:      y ~ std_normal();
+    10:  }
+   -------------------------------------------------
+
 Expected "generated quantities {" or end of file after end of model block.
 
 $ node info.js
@@ -189,7 +231,16 @@ $ node info.js
 $ node math_sigs.js
 
 $ node optimization.js
-Semantic error in 'string', line 3, column 8 to column 11: 
+Semantic error in 'string', line 3, column 8 to column 11:
+   -------------------------------------------------
+     1:  
+     2:  functions {
+     3:      int foo(real a);
+                 ^
+     4:  }
+     5:  
+   -------------------------------------------------
+
 Function is declared without specifying a definition.
 
 $ node pedantic.js

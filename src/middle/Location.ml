@@ -12,16 +12,21 @@ module Str = Re.Str
 type t = {filename: string; line_num: int; col_num: int; included_from: t option}
 [@@deriving sexp, hash]
 
-(** Will attempt to {b open} the file and*)
-let pp_context_exn ppf {filename; line_num; col_num; _} =
-  let open In_channel in
-  let input = create filename in
+let pp_context_list ppf (lines, {line_num; col_num; _}) =
+  let advance l =
+    let front = List.hd !l in
+    match front with
+    | Some _ ->
+        l := List.tl_exn !l ;
+        front
+    | None -> None in
+  let input = ref lines in
   for _ = 1 to line_num - 3 do
-    ignore (input_line_exn input : string)
+    ignore (advance input : string option)
   done ;
   let get_line num =
     if num > 0 then
-      match input_line input with
+      match advance input with
       | Some input -> Printf.sprintf "%6d:  %s\n" num input
       | _ -> ""
     else "" in
@@ -31,14 +36,24 @@ let pp_context_exn ppf {filename; line_num; col_num; _} =
   let cursor_line = String.make (col_num + 9) ' ' ^ "^\n" in
   let line_after = get_line (line_num + 1) in
   let line_2_after = get_line (line_num + 2) in
-  close input ;
   Fmt.pf ppf
     "   -------------------------------------------------\n\
      %s%s%s%s%s%s   -------------------------------------------------\n"
     line_2_before line_before our_line cursor_line line_after line_2_after
 
-let context_to_string file =
-  try Some (Fmt.to_to_string pp_context_exn file) with _ -> None
+let pp_context_string ppf (string, loc) =
+  pp_context_list ppf (String.split_lines string, loc)
+
+(** Will attempt to {b open} the file and print context *)
+let pp_file_context_exn ppf loc =
+  pp_context_list ppf (In_channel.read_lines loc.filename, loc)
+
+let context_to_string type_ loc =
+  try
+    match type_ with
+    | `String s -> Some (Fmt.to_to_string pp_context_string (s, loc))
+    | `File -> Some (Fmt.to_to_string pp_file_context_exn loc)
+  with _ -> None
 
 let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 
