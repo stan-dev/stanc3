@@ -34,10 +34,10 @@ def checkoutRepository(os_type) {
     }
     else{
         if(os_type == "sh"){
-            sh "git checkout master && git pull && git checkout ${params.git_branch}"
+            sh "git checkout master && git pull && git checkout ${params.git_branch} && git pull origin ${params.git_branch}"
         }
         else if(os_type == "bat"){
-            bat "git checkout master && git pull && git checkout ${params.git_branch}"
+            bat "git checkout master && git pull && git checkout ${params.git_branch} && git pull origin ${params.git_branch}"
         }
     }
 }
