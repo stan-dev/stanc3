@@ -295,9 +295,12 @@ let generate_json_entries (name, expr) : string * t =
     | Lit (Real, s) when String.is_suffix s ~suffix:"." -> `Floatlit (s ^ "0")
     | Lit (Int, s) -> `Intlit s
     | Lit (Real, s) -> `Floatlit s
-    | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray | FnMakeTuple), l)
+    | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l)
      |FunApp (StanLib ("to_complex", _, _), l) ->
         `List (List.map ~f:expr_to_json l)
+    | FunApp (CompilerInternal FnMakeTuple, l) ->
+        `Assoc
+          (List.mapi ~f:(fun i t -> (string_of_int (i + 1), expr_to_json t)) l)
     | FunApp (StanLib (transpose, _, _), [e])
       when String.equal transpose (Operator.to_string Transpose) ->
         expr_to_json e
