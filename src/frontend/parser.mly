@@ -235,7 +235,7 @@ reserved_word:
   | PROFILE { build_id "profile" $loc }
 
 function_def:
-  | rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)
+  | rt=return_type name=decl_identifier LPAREN args=arg_list_trailing_comma(COMMA, arg_decl)
     RPAREN b=statement
     {
       grammar_logger "function_def" ;
@@ -810,3 +810,13 @@ top_vardecl_or_statement:
     { grammar_logger "top_vardecl_or_statement_statement" ; [s] }
   | v=top_var_decl
     { grammar_logger "top_vardecl_or_statement_top_vardecl" ; v }
+
+arg_list_trailing_comma(sep, X):
+(* code for parsing arg list with trailing commas;
+   taken from http://gallium.inria.fr/blog/lr-lists/ *)
+| (* nothing *)
+    { [] }
+| x = X
+    { [x] }
+| x = X sep xs = arg_list_trailing_comma(sep, X)
+    { x :: xs }

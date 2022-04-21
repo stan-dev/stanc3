@@ -107,6 +107,13 @@ transformed data {
   print("expect: [3,7,7,8,5]  v: ", v);
 }
 
+  $ ../../../../../install/default/bin/stanc --auto-format fun-args-trailing-comma.stan
+functions {
+  void foo(real x, real y) {
+    return;
+  }
+}
+
   $ ../../../../../install/default/bin/stanc --auto-format function_var.stan
 functions {
   void f0(int a1, array[] int a2, array[,] int a3, real a4, array[] real a5,
