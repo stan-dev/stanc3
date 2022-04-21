@@ -122,7 +122,6 @@ let rec data_read smeta ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
   let unsized = SizedType.to_unsized st in
   let scalar = base_type st in
   let flat_type = UnsizedType.UArray scalar in
-  (* TUPLE MAYBE: do we want to do this via name and the normal context? *)
   let decl_id = Stmt.Helpers.get_lhs_name decl_id_lval in
   let decl_var =
     { Expr.Fixed.pattern= Var decl_id
@@ -154,6 +153,8 @@ let rec data_read smeta ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
           get_subtypes in
       List.concat (List.map ~f:(data_read smeta) sub_sts)
   | UArray _ when UnsizedType.contains_tuple unsized ->
+      (* TUPLE TODO: we will actually want to do this case
+         (arrays of tuples) using the flat__ style *)
       let nonarray_st, array_dims = SizedType.get_container_dims st in
       [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
           (fun loopvars ->
