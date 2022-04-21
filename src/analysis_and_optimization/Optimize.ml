@@ -1319,9 +1319,6 @@ let optimization_suite ?(settings = all_optimizations) mir =
       (* Book section B *)
       (* Book: Procedure integration *)
       (function_inlining, settings.function_inlining)
-      (* XXX: function inlining generates slists which copy prop
-         fails to correctly recognize. This is a hack *)
-    ; (list_collapsing, settings.list_collapsing)
       (* Book: Sparse conditional constant propagation *)
     ; (constant_propagation ~preserve_stability, settings.constant_propagation)
       (* Book section C *)

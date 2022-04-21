@@ -345,12 +345,14 @@ let constant_propagation_transfer ?(preserve_stability = false)
     with type labels = int
      and type properties = (string, Expr.Typed.t) Map.Poly.t option )
 
-let label_top_decls
+let rec label_top_decls
     (flowgraph_to_mir : (int, Middle.Stmt.Located.Non_recursive.t) Map.Poly.t)
     label : string Set.Poly.t =
   let stmt = Map.Poly.find_exn flowgraph_to_mir label in
   match stmt.pattern with
   | Decl {decl_id= s; _} -> Set.Poly.singleton s
+  | SList ids ->
+      Set.Poly.union_list (List.map ~f:(label_top_decls flowgraph_to_mir) ids)
   | _ -> Set.Poly.empty
 
 (** The transfer function for an expression propagation analysis,

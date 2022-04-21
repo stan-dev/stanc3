@@ -3336,25 +3336,23 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
           lcm_sym125__ = stan::math::size(
                            stan::model::rvalue(y, "y",
                              stan::model::index_uni(1)));
-          {
-            for (int inline_first_capture_k_sym16__ = 1;
-                 inline_first_capture_k_sym16__ <= lcm_sym125__;
-                 ++inline_first_capture_k_sym16__) {
-              current_statement__ = 47;
-              if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
-                  (inline_first_capture_k_sym16__ - 1)]) {
-                inline_first_capture_early_ret_check_sym17__ = 1;
-                inline_first_capture_return_sym15__ = inline_first_capture_k_sym16__;
-                break;
-              } 
-            }
-            if (inline_first_capture_early_ret_check_sym17__) {
+          for (int inline_first_capture_k_sym16__ = 1;
+               inline_first_capture_k_sym16__ <= lcm_sym125__;
+               ++inline_first_capture_k_sym16__) {
+            current_statement__ = 47;
+            if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
+                (inline_first_capture_k_sym16__ - 1)]) {
+              inline_first_capture_early_ret_check_sym17__ = 1;
+              inline_first_capture_return_sym15__ = inline_first_capture_k_sym16__;
               break;
             } 
-            inline_first_capture_early_ret_check_sym17__ = 1;
-            inline_first_capture_return_sym15__ = 0;
-            break;
           }
+          if (inline_first_capture_early_ret_check_sym17__) {
+            break;
+          } 
+          inline_first_capture_early_ret_check_sym17__ = 1;
+          inline_first_capture_return_sym15__ = 0;
+          break;
         }
         stan::model::assign(first, inline_first_capture_return_sym15__,
           "assigning variable first", stan::model::index_uni(1));
@@ -3368,25 +3366,23 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
             lcm_sym124__ = stan::math::size(
                              stan::model::rvalue(y, "y",
                                stan::model::index_uni(i)));
-            {
-              for (int inline_first_capture_k_sym16__ = 1;
-                   inline_first_capture_k_sym16__ <= lcm_sym124__;
-                   ++inline_first_capture_k_sym16__) {
-                current_statement__ = 47;
-                if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
-                    (inline_first_capture_k_sym16__ - 1)]) {
-                  inline_first_capture_early_ret_check_sym17__ = 1;
-                  inline_first_capture_return_sym15__ = inline_first_capture_k_sym16__;
-                  break;
-                } 
-              }
-              if (inline_first_capture_early_ret_check_sym17__) {
+            for (int inline_first_capture_k_sym16__ = 1;
+                 inline_first_capture_k_sym16__ <= lcm_sym124__;
+                 ++inline_first_capture_k_sym16__) {
+              current_statement__ = 47;
+              if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
+                  (inline_first_capture_k_sym16__ - 1)]) {
+                inline_first_capture_early_ret_check_sym17__ = 1;
+                inline_first_capture_return_sym15__ = inline_first_capture_k_sym16__;
                 break;
               } 
-              inline_first_capture_early_ret_check_sym17__ = 1;
-              inline_first_capture_return_sym15__ = 0;
-              break;
             }
+            if (inline_first_capture_early_ret_check_sym17__) {
+              break;
+            } 
+            inline_first_capture_early_ret_check_sym17__ = 1;
+            inline_first_capture_return_sym15__ = 0;
+            break;
           }
           stan::model::assign(first, inline_first_capture_return_sym15__,
             "assigning variable first", stan::model::index_uni(i));
@@ -3404,30 +3400,27 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
                            stan::model::rvalue(y, "y",
                              stan::model::index_uni(1)));
           lcm_sym122__ = (lcm_sym125__ - 1);
-          {
-            for (int inline_last_capture_k_rev_sym21__ = 0;
-                 inline_last_capture_k_rev_sym21__ <= lcm_sym122__;
-                 ++inline_last_capture_k_rev_sym21__) {
-              int inline_last_capture_k_sym20__ =
-                 std::numeric_limits<int>::min();
-              lcm_sym121__ = (lcm_sym125__ -
-                               inline_last_capture_k_rev_sym21__);
-              inline_last_capture_k_sym20__ = lcm_sym121__;
-              current_statement__ = 53;
-              if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
-                  (lcm_sym121__ - 1)]) {
-                inline_last_capture_early_ret_check_sym22__ = 1;
-                inline_last_capture_return_sym19__ = lcm_sym121__;
-                break;
-              } 
-            }
-            if (inline_last_capture_early_ret_check_sym22__) {
+          for (int inline_last_capture_k_rev_sym21__ = 0;
+               inline_last_capture_k_rev_sym21__ <= lcm_sym122__;
+               ++inline_last_capture_k_rev_sym21__) {
+            int inline_last_capture_k_sym20__ =
+               std::numeric_limits<int>::min();
+            lcm_sym121__ = (lcm_sym125__ - inline_last_capture_k_rev_sym21__);
+            inline_last_capture_k_sym20__ = lcm_sym121__;
+            current_statement__ = 53;
+            if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
+                (lcm_sym121__ - 1)]) {
+              inline_last_capture_early_ret_check_sym22__ = 1;
+              inline_last_capture_return_sym19__ = lcm_sym121__;
               break;
             } 
-            inline_last_capture_early_ret_check_sym22__ = 1;
-            inline_last_capture_return_sym19__ = 0;
-            break;
           }
+          if (inline_last_capture_early_ret_check_sym22__) {
+            break;
+          } 
+          inline_last_capture_early_ret_check_sym22__ = 1;
+          inline_last_capture_return_sym19__ = 0;
+          break;
         }
         stan::model::assign(last, inline_last_capture_return_sym19__,
           "assigning variable last", stan::model::index_uni(1));
@@ -3442,30 +3435,28 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
                              stan::model::rvalue(y, "y",
                                stan::model::index_uni(i)));
             lcm_sym120__ = (lcm_sym124__ - 1);
-            {
-              for (int inline_last_capture_k_rev_sym21__ = 0;
-                   inline_last_capture_k_rev_sym21__ <= lcm_sym120__;
-                   ++inline_last_capture_k_rev_sym21__) {
-                int inline_last_capture_k_sym20__ =
-                   std::numeric_limits<int>::min();
-                lcm_sym119__ = (lcm_sym124__ -
-                                 inline_last_capture_k_rev_sym21__);
-                inline_last_capture_k_sym20__ = lcm_sym119__;
-                current_statement__ = 53;
-                if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
-                    (lcm_sym119__ - 1)]) {
-                  inline_last_capture_early_ret_check_sym22__ = 1;
-                  inline_last_capture_return_sym19__ = lcm_sym119__;
-                  break;
-                } 
-              }
-              if (inline_last_capture_early_ret_check_sym22__) {
+            for (int inline_last_capture_k_rev_sym21__ = 0;
+                 inline_last_capture_k_rev_sym21__ <= lcm_sym120__;
+                 ++inline_last_capture_k_rev_sym21__) {
+              int inline_last_capture_k_sym20__ =
+                 std::numeric_limits<int>::min();
+              lcm_sym119__ = (lcm_sym124__ -
+                               inline_last_capture_k_rev_sym21__);
+              inline_last_capture_k_sym20__ = lcm_sym119__;
+              current_statement__ = 53;
+              if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
+                  (lcm_sym119__ - 1)]) {
+                inline_last_capture_early_ret_check_sym22__ = 1;
+                inline_last_capture_return_sym19__ = lcm_sym119__;
                 break;
               } 
-              inline_last_capture_early_ret_check_sym22__ = 1;
-              inline_last_capture_return_sym19__ = 0;
-              break;
             }
+            if (inline_last_capture_early_ret_check_sym22__) {
+              break;
+            } 
+            inline_last_capture_early_ret_check_sym22__ = 1;
+            inline_last_capture_return_sym19__ = 0;
+            break;
           }
           stan::model::assign(last, inline_last_capture_return_sym19__,
             "assigning variable last", stan::model::index_uni(i));
@@ -9876,25 +9867,23 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
           lcm_sym124__ = stan::math::size(
                            stan::model::rvalue(y, "y",
                              stan::model::index_uni(1)));
-          {
-            for (int inline_first_capture_k_sym16__ = 1;
-                 inline_first_capture_k_sym16__ <= lcm_sym124__;
-                 ++inline_first_capture_k_sym16__) {
-              current_statement__ = 49;
-              if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
-                  (inline_first_capture_k_sym16__ - 1)]) {
-                inline_first_capture_early_ret_check_sym17__ = 1;
-                inline_first_capture_return_sym15__ = inline_first_capture_k_sym16__;
-                break;
-              } 
-            }
-            if (inline_first_capture_early_ret_check_sym17__) {
+          for (int inline_first_capture_k_sym16__ = 1;
+               inline_first_capture_k_sym16__ <= lcm_sym124__;
+               ++inline_first_capture_k_sym16__) {
+            current_statement__ = 49;
+            if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
+                (inline_first_capture_k_sym16__ - 1)]) {
+              inline_first_capture_early_ret_check_sym17__ = 1;
+              inline_first_capture_return_sym15__ = inline_first_capture_k_sym16__;
               break;
             } 
-            inline_first_capture_early_ret_check_sym17__ = 1;
-            inline_first_capture_return_sym15__ = 0;
-            break;
           }
+          if (inline_first_capture_early_ret_check_sym17__) {
+            break;
+          } 
+          inline_first_capture_early_ret_check_sym17__ = 1;
+          inline_first_capture_return_sym15__ = 0;
+          break;
         }
         stan::model::assign(first, inline_first_capture_return_sym15__,
           "assigning variable first", stan::model::index_uni(1));
@@ -9908,25 +9897,23 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
             lcm_sym123__ = stan::math::size(
                              stan::model::rvalue(y, "y",
                                stan::model::index_uni(i)));
-            {
-              for (int inline_first_capture_k_sym16__ = 1;
-                   inline_first_capture_k_sym16__ <= lcm_sym123__;
-                   ++inline_first_capture_k_sym16__) {
-                current_statement__ = 49;
-                if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
-                    (inline_first_capture_k_sym16__ - 1)]) {
-                  inline_first_capture_early_ret_check_sym17__ = 1;
-                  inline_first_capture_return_sym15__ = inline_first_capture_k_sym16__;
-                  break;
-                } 
-              }
-              if (inline_first_capture_early_ret_check_sym17__) {
+            for (int inline_first_capture_k_sym16__ = 1;
+                 inline_first_capture_k_sym16__ <= lcm_sym123__;
+                 ++inline_first_capture_k_sym16__) {
+              current_statement__ = 49;
+              if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
+                  (inline_first_capture_k_sym16__ - 1)]) {
+                inline_first_capture_early_ret_check_sym17__ = 1;
+                inline_first_capture_return_sym15__ = inline_first_capture_k_sym16__;
                 break;
               } 
-              inline_first_capture_early_ret_check_sym17__ = 1;
-              inline_first_capture_return_sym15__ = 0;
-              break;
             }
+            if (inline_first_capture_early_ret_check_sym17__) {
+              break;
+            } 
+            inline_first_capture_early_ret_check_sym17__ = 1;
+            inline_first_capture_return_sym15__ = 0;
+            break;
           }
           stan::model::assign(first, inline_first_capture_return_sym15__,
             "assigning variable first", stan::model::index_uni(i));
@@ -9944,30 +9931,27 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                            stan::model::rvalue(y, "y",
                              stan::model::index_uni(1)));
           lcm_sym121__ = (lcm_sym124__ - 1);
-          {
-            for (int inline_last_capture_k_rev_sym21__ = 0;
-                 inline_last_capture_k_rev_sym21__ <= lcm_sym121__;
-                 ++inline_last_capture_k_rev_sym21__) {
-              int inline_last_capture_k_sym20__ =
-                 std::numeric_limits<int>::min();
-              lcm_sym120__ = (lcm_sym124__ -
-                               inline_last_capture_k_rev_sym21__);
-              inline_last_capture_k_sym20__ = lcm_sym120__;
-              current_statement__ = 55;
-              if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
-                  (lcm_sym120__ - 1)]) {
-                inline_last_capture_early_ret_check_sym22__ = 1;
-                inline_last_capture_return_sym19__ = lcm_sym120__;
-                break;
-              } 
-            }
-            if (inline_last_capture_early_ret_check_sym22__) {
+          for (int inline_last_capture_k_rev_sym21__ = 0;
+               inline_last_capture_k_rev_sym21__ <= lcm_sym121__;
+               ++inline_last_capture_k_rev_sym21__) {
+            int inline_last_capture_k_sym20__ =
+               std::numeric_limits<int>::min();
+            lcm_sym120__ = (lcm_sym124__ - inline_last_capture_k_rev_sym21__);
+            inline_last_capture_k_sym20__ = lcm_sym120__;
+            current_statement__ = 55;
+            if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
+                (lcm_sym120__ - 1)]) {
+              inline_last_capture_early_ret_check_sym22__ = 1;
+              inline_last_capture_return_sym19__ = lcm_sym120__;
               break;
             } 
-            inline_last_capture_early_ret_check_sym22__ = 1;
-            inline_last_capture_return_sym19__ = 0;
-            break;
           }
+          if (inline_last_capture_early_ret_check_sym22__) {
+            break;
+          } 
+          inline_last_capture_early_ret_check_sym22__ = 1;
+          inline_last_capture_return_sym19__ = 0;
+          break;
         }
         stan::model::assign(last, inline_last_capture_return_sym19__,
           "assigning variable last", stan::model::index_uni(1));
@@ -9982,30 +9966,28 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                              stan::model::rvalue(y, "y",
                                stan::model::index_uni(i)));
             lcm_sym119__ = (lcm_sym123__ - 1);
-            {
-              for (int inline_last_capture_k_rev_sym21__ = 0;
-                   inline_last_capture_k_rev_sym21__ <= lcm_sym119__;
-                   ++inline_last_capture_k_rev_sym21__) {
-                int inline_last_capture_k_sym20__ =
-                   std::numeric_limits<int>::min();
-                lcm_sym118__ = (lcm_sym123__ -
-                                 inline_last_capture_k_rev_sym21__);
-                inline_last_capture_k_sym20__ = lcm_sym118__;
-                current_statement__ = 55;
-                if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
-                    (lcm_sym118__ - 1)]) {
-                  inline_last_capture_early_ret_check_sym22__ = 1;
-                  inline_last_capture_return_sym19__ = lcm_sym118__;
-                  break;
-                } 
-              }
-              if (inline_last_capture_early_ret_check_sym22__) {
+            for (int inline_last_capture_k_rev_sym21__ = 0;
+                 inline_last_capture_k_rev_sym21__ <= lcm_sym119__;
+                 ++inline_last_capture_k_rev_sym21__) {
+              int inline_last_capture_k_sym20__ =
+                 std::numeric_limits<int>::min();
+              lcm_sym118__ = (lcm_sym123__ -
+                               inline_last_capture_k_rev_sym21__);
+              inline_last_capture_k_sym20__ = lcm_sym118__;
+              current_statement__ = 55;
+              if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
+                  (lcm_sym118__ - 1)]) {
+                inline_last_capture_early_ret_check_sym22__ = 1;
+                inline_last_capture_return_sym19__ = lcm_sym118__;
                 break;
               } 
-              inline_last_capture_early_ret_check_sym22__ = 1;
-              inline_last_capture_return_sym19__ = 0;
-              break;
             }
+            if (inline_last_capture_early_ret_check_sym22__) {
+              break;
+            } 
+            inline_last_capture_early_ret_check_sym22__ = 1;
+            inline_last_capture_return_sym19__ = 0;
+            break;
           }
           stan::model::assign(last, inline_last_capture_return_sym19__,
             "assigning variable last", stan::model::index_uni(i));
@@ -12431,25 +12413,23 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
           lcm_sym257__ = stan::math::size(
                            stan::model::rvalue(y, "y",
                              stan::model::index_uni(1)));
-          {
-            for (int inline_first_capture_k_sym32__ = 1;
-                 inline_first_capture_k_sym32__ <= lcm_sym257__;
-                 ++inline_first_capture_k_sym32__) {
-              current_statement__ = 60;
-              if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
-                  (inline_first_capture_k_sym32__ - 1)]) {
-                inline_first_capture_early_ret_check_sym33__ = 1;
-                inline_first_capture_return_sym31__ = inline_first_capture_k_sym32__;
-                break;
-              } 
-            }
-            if (inline_first_capture_early_ret_check_sym33__) {
+          for (int inline_first_capture_k_sym32__ = 1;
+               inline_first_capture_k_sym32__ <= lcm_sym257__;
+               ++inline_first_capture_k_sym32__) {
+            current_statement__ = 60;
+            if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
+                (inline_first_capture_k_sym32__ - 1)]) {
+              inline_first_capture_early_ret_check_sym33__ = 1;
+              inline_first_capture_return_sym31__ = inline_first_capture_k_sym32__;
               break;
             } 
-            inline_first_capture_early_ret_check_sym33__ = 1;
-            inline_first_capture_return_sym31__ = 0;
-            break;
           }
+          if (inline_first_capture_early_ret_check_sym33__) {
+            break;
+          } 
+          inline_first_capture_early_ret_check_sym33__ = 1;
+          inline_first_capture_return_sym31__ = 0;
+          break;
         }
         stan::model::assign(first, inline_first_capture_return_sym31__,
           "assigning variable first", stan::model::index_uni(1));
@@ -12463,25 +12443,23 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             lcm_sym256__ = stan::math::size(
                              stan::model::rvalue(y, "y",
                                stan::model::index_uni(i)));
-            {
-              for (int inline_first_capture_k_sym32__ = 1;
-                   inline_first_capture_k_sym32__ <= lcm_sym256__;
-                   ++inline_first_capture_k_sym32__) {
-                current_statement__ = 60;
-                if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
-                    (inline_first_capture_k_sym32__ - 1)]) {
-                  inline_first_capture_early_ret_check_sym33__ = 1;
-                  inline_first_capture_return_sym31__ = inline_first_capture_k_sym32__;
-                  break;
-                } 
-              }
-              if (inline_first_capture_early_ret_check_sym33__) {
+            for (int inline_first_capture_k_sym32__ = 1;
+                 inline_first_capture_k_sym32__ <= lcm_sym256__;
+                 ++inline_first_capture_k_sym32__) {
+              current_statement__ = 60;
+              if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
+                  (inline_first_capture_k_sym32__ - 1)]) {
+                inline_first_capture_early_ret_check_sym33__ = 1;
+                inline_first_capture_return_sym31__ = inline_first_capture_k_sym32__;
                 break;
               } 
-              inline_first_capture_early_ret_check_sym33__ = 1;
-              inline_first_capture_return_sym31__ = 0;
-              break;
             }
+            if (inline_first_capture_early_ret_check_sym33__) {
+              break;
+            } 
+            inline_first_capture_early_ret_check_sym33__ = 1;
+            inline_first_capture_return_sym31__ = 0;
+            break;
           }
           stan::model::assign(first, inline_first_capture_return_sym31__,
             "assigning variable first", stan::model::index_uni(i));
@@ -12499,30 +12477,27 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                            stan::model::rvalue(y, "y",
                              stan::model::index_uni(1)));
           lcm_sym254__ = (lcm_sym257__ - 1);
-          {
-            for (int inline_last_capture_k_rev_sym37__ = 0;
-                 inline_last_capture_k_rev_sym37__ <= lcm_sym254__;
-                 ++inline_last_capture_k_rev_sym37__) {
-              int inline_last_capture_k_sym36__ =
-                 std::numeric_limits<int>::min();
-              lcm_sym253__ = (lcm_sym257__ -
-                               inline_last_capture_k_rev_sym37__);
-              inline_last_capture_k_sym36__ = lcm_sym253__;
-              current_statement__ = 124;
-              if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
-                  (lcm_sym253__ - 1)]) {
-                inline_last_capture_early_ret_check_sym38__ = 1;
-                inline_last_capture_return_sym35__ = lcm_sym253__;
-                break;
-              } 
-            }
-            if (inline_last_capture_early_ret_check_sym38__) {
+          for (int inline_last_capture_k_rev_sym37__ = 0;
+               inline_last_capture_k_rev_sym37__ <= lcm_sym254__;
+               ++inline_last_capture_k_rev_sym37__) {
+            int inline_last_capture_k_sym36__ =
+               std::numeric_limits<int>::min();
+            lcm_sym253__ = (lcm_sym257__ - inline_last_capture_k_rev_sym37__);
+            inline_last_capture_k_sym36__ = lcm_sym253__;
+            current_statement__ = 124;
+            if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
+                (lcm_sym253__ - 1)]) {
+              inline_last_capture_early_ret_check_sym38__ = 1;
+              inline_last_capture_return_sym35__ = lcm_sym253__;
               break;
             } 
-            inline_last_capture_early_ret_check_sym38__ = 1;
-            inline_last_capture_return_sym35__ = 0;
-            break;
           }
+          if (inline_last_capture_early_ret_check_sym38__) {
+            break;
+          } 
+          inline_last_capture_early_ret_check_sym38__ = 1;
+          inline_last_capture_return_sym35__ = 0;
+          break;
         }
         stan::model::assign(last, inline_last_capture_return_sym35__,
           "assigning variable last", stan::model::index_uni(1));
@@ -12537,30 +12512,28 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                              stan::model::rvalue(y, "y",
                                stan::model::index_uni(i)));
             lcm_sym252__ = (lcm_sym256__ - 1);
-            {
-              for (int inline_last_capture_k_rev_sym37__ = 0;
-                   inline_last_capture_k_rev_sym37__ <= lcm_sym252__;
-                   ++inline_last_capture_k_rev_sym37__) {
-                int inline_last_capture_k_sym36__ =
-                   std::numeric_limits<int>::min();
-                lcm_sym251__ = (lcm_sym256__ -
-                                 inline_last_capture_k_rev_sym37__);
-                inline_last_capture_k_sym36__ = lcm_sym251__;
-                current_statement__ = 124;
-                if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
-                    (lcm_sym251__ - 1)]) {
-                  inline_last_capture_early_ret_check_sym38__ = 1;
-                  inline_last_capture_return_sym35__ = lcm_sym251__;
-                  break;
-                } 
-              }
-              if (inline_last_capture_early_ret_check_sym38__) {
+            for (int inline_last_capture_k_rev_sym37__ = 0;
+                 inline_last_capture_k_rev_sym37__ <= lcm_sym252__;
+                 ++inline_last_capture_k_rev_sym37__) {
+              int inline_last_capture_k_sym36__ =
+                 std::numeric_limits<int>::min();
+              lcm_sym251__ = (lcm_sym256__ -
+                               inline_last_capture_k_rev_sym37__);
+              inline_last_capture_k_sym36__ = lcm_sym251__;
+              current_statement__ = 124;
+              if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
+                  (lcm_sym251__ - 1)]) {
+                inline_last_capture_early_ret_check_sym38__ = 1;
+                inline_last_capture_return_sym35__ = lcm_sym251__;
                 break;
               } 
-              inline_last_capture_early_ret_check_sym38__ = 1;
-              inline_last_capture_return_sym35__ = 0;
-              break;
             }
+            if (inline_last_capture_early_ret_check_sym38__) {
+              break;
+            } 
+            inline_last_capture_early_ret_check_sym38__ = 1;
+            inline_last_capture_return_sym35__ = 0;
+            break;
           }
           stan::model::assign(last, inline_last_capture_return_sym35__,
             "assigning variable last", stan::model::index_uni(i));
@@ -14118,26 +14091,24 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             lcm_sym156__ = stan::math::size(
                              stan::model::rvalue(z, "z",
                                stan::model::index_uni(1)));
-            {
-              for (int inline_first_capture_k_sym11__ = 1;
-                   inline_first_capture_k_sym11__ <= lcm_sym156__;
-                   ++inline_first_capture_k_sym11__) {
-                current_statement__ = 60;
-                if (stan::model::rvalue(z, "z",
-                      stan::model::index_uni(1),
-                        stan::model::index_uni(inline_first_capture_k_sym11__))) {
-                  inline_first_capture_early_ret_check_sym12__ = 1;
-                  inline_first_capture_return_sym10__ = inline_first_capture_k_sym11__;
-                  break;
-                } 
-              }
-              if (inline_first_capture_early_ret_check_sym12__) {
+            for (int inline_first_capture_k_sym11__ = 1;
+                 inline_first_capture_k_sym11__ <= lcm_sym156__;
+                 ++inline_first_capture_k_sym11__) {
+              current_statement__ = 60;
+              if (stan::model::rvalue(z, "z",
+                    stan::model::index_uni(1),
+                      stan::model::index_uni(inline_first_capture_k_sym11__))) {
+                inline_first_capture_early_ret_check_sym12__ = 1;
+                inline_first_capture_return_sym10__ = inline_first_capture_k_sym11__;
                 break;
               } 
-              inline_first_capture_early_ret_check_sym12__ = 1;
-              inline_first_capture_return_sym10__ = 0;
-              break;
             }
+            if (inline_first_capture_early_ret_check_sym12__) {
+              break;
+            } 
+            inline_first_capture_early_ret_check_sym12__ = 1;
+            inline_first_capture_return_sym10__ = 0;
+            break;
           }
           current_statement__ = 63;
           if (stan::math::logical_gt(inline_first_capture_return_sym10__, 0)) {
@@ -14157,26 +14128,24 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               lcm_sym155__ = stan::math::size(
                                stan::model::rvalue(z, "z",
                                  stan::model::index_uni(i)));
-              {
-                for (int inline_first_capture_k_sym11__ = 1;
-                     inline_first_capture_k_sym11__ <= lcm_sym155__;
-                     ++inline_first_capture_k_sym11__) {
-                  current_statement__ = 60;
-                  if (stan::model::rvalue(z, "z",
-                        stan::model::index_uni(i),
-                          stan::model::index_uni(inline_first_capture_k_sym11__))) {
-                    inline_first_capture_early_ret_check_sym12__ = 1;
-                    inline_first_capture_return_sym10__ = inline_first_capture_k_sym11__;
-                    break;
-                  } 
-                }
-                if (inline_first_capture_early_ret_check_sym12__) {
+              for (int inline_first_capture_k_sym11__ = 1;
+                   inline_first_capture_k_sym11__ <= lcm_sym155__;
+                   ++inline_first_capture_k_sym11__) {
+                current_statement__ = 60;
+                if (stan::model::rvalue(z, "z",
+                      stan::model::index_uni(i),
+                        stan::model::index_uni(inline_first_capture_k_sym11__))) {
+                  inline_first_capture_early_ret_check_sym12__ = 1;
+                  inline_first_capture_return_sym10__ = inline_first_capture_k_sym11__;
                   break;
                 } 
-                inline_first_capture_early_ret_check_sym12__ = 1;
-                inline_first_capture_return_sym10__ = 0;
-                break;
               }
+              if (inline_first_capture_early_ret_check_sym12__) {
+                break;
+              } 
+              inline_first_capture_early_ret_check_sym12__ = 1;
+              inline_first_capture_return_sym10__ = 0;
+              break;
             }
             current_statement__ = 63;
             if (stan::math::logical_gt(inline_first_capture_return_sym10__,
@@ -17038,25 +17007,23 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
           lcm_sym125__ = stan::math::size(
                            stan::model::rvalue(y, "y",
                              stan::model::index_uni(1)));
-          {
-            for (int inline_first_capture_k_sym16__ = 1;
-                 inline_first_capture_k_sym16__ <= lcm_sym125__;
-                 ++inline_first_capture_k_sym16__) {
-              current_statement__ = 47;
-              if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
-                  (inline_first_capture_k_sym16__ - 1)]) {
-                inline_first_capture_early_ret_check_sym17__ = 1;
-                inline_first_capture_return_sym15__ = inline_first_capture_k_sym16__;
-                break;
-              } 
-            }
-            if (inline_first_capture_early_ret_check_sym17__) {
+          for (int inline_first_capture_k_sym16__ = 1;
+               inline_first_capture_k_sym16__ <= lcm_sym125__;
+               ++inline_first_capture_k_sym16__) {
+            current_statement__ = 47;
+            if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
+                (inline_first_capture_k_sym16__ - 1)]) {
+              inline_first_capture_early_ret_check_sym17__ = 1;
+              inline_first_capture_return_sym15__ = inline_first_capture_k_sym16__;
               break;
             } 
-            inline_first_capture_early_ret_check_sym17__ = 1;
-            inline_first_capture_return_sym15__ = 0;
-            break;
           }
+          if (inline_first_capture_early_ret_check_sym17__) {
+            break;
+          } 
+          inline_first_capture_early_ret_check_sym17__ = 1;
+          inline_first_capture_return_sym15__ = 0;
+          break;
         }
         stan::model::assign(first, inline_first_capture_return_sym15__,
           "assigning variable first", stan::model::index_uni(1));
@@ -17070,25 +17037,23 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
             lcm_sym124__ = stan::math::size(
                              stan::model::rvalue(y, "y",
                                stan::model::index_uni(i)));
-            {
-              for (int inline_first_capture_k_sym16__ = 1;
-                   inline_first_capture_k_sym16__ <= lcm_sym124__;
-                   ++inline_first_capture_k_sym16__) {
-                current_statement__ = 47;
-                if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
-                    (inline_first_capture_k_sym16__ - 1)]) {
-                  inline_first_capture_early_ret_check_sym17__ = 1;
-                  inline_first_capture_return_sym15__ = inline_first_capture_k_sym16__;
-                  break;
-                } 
-              }
-              if (inline_first_capture_early_ret_check_sym17__) {
+            for (int inline_first_capture_k_sym16__ = 1;
+                 inline_first_capture_k_sym16__ <= lcm_sym124__;
+                 ++inline_first_capture_k_sym16__) {
+              current_statement__ = 47;
+              if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
+                  (inline_first_capture_k_sym16__ - 1)]) {
+                inline_first_capture_early_ret_check_sym17__ = 1;
+                inline_first_capture_return_sym15__ = inline_first_capture_k_sym16__;
                 break;
               } 
-              inline_first_capture_early_ret_check_sym17__ = 1;
-              inline_first_capture_return_sym15__ = 0;
-              break;
             }
+            if (inline_first_capture_early_ret_check_sym17__) {
+              break;
+            } 
+            inline_first_capture_early_ret_check_sym17__ = 1;
+            inline_first_capture_return_sym15__ = 0;
+            break;
           }
           stan::model::assign(first, inline_first_capture_return_sym15__,
             "assigning variable first", stan::model::index_uni(i));
@@ -17106,30 +17071,27 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
                            stan::model::rvalue(y, "y",
                              stan::model::index_uni(1)));
           lcm_sym122__ = (lcm_sym125__ - 1);
-          {
-            for (int inline_last_capture_k_rev_sym21__ = 0;
-                 inline_last_capture_k_rev_sym21__ <= lcm_sym122__;
-                 ++inline_last_capture_k_rev_sym21__) {
-              int inline_last_capture_k_sym20__ =
-                 std::numeric_limits<int>::min();
-              lcm_sym121__ = (lcm_sym125__ -
-                               inline_last_capture_k_rev_sym21__);
-              inline_last_capture_k_sym20__ = lcm_sym121__;
-              current_statement__ = 53;
-              if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
-                  (lcm_sym121__ - 1)]) {
-                inline_last_capture_early_ret_check_sym22__ = 1;
-                inline_last_capture_return_sym19__ = lcm_sym121__;
-                break;
-              } 
-            }
-            if (inline_last_capture_early_ret_check_sym22__) {
+          for (int inline_last_capture_k_rev_sym21__ = 0;
+               inline_last_capture_k_rev_sym21__ <= lcm_sym122__;
+               ++inline_last_capture_k_rev_sym21__) {
+            int inline_last_capture_k_sym20__ =
+               std::numeric_limits<int>::min();
+            lcm_sym121__ = (lcm_sym125__ - inline_last_capture_k_rev_sym21__);
+            inline_last_capture_k_sym20__ = lcm_sym121__;
+            current_statement__ = 53;
+            if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
+                (lcm_sym121__ - 1)]) {
+              inline_last_capture_early_ret_check_sym22__ = 1;
+              inline_last_capture_return_sym19__ = lcm_sym121__;
               break;
             } 
-            inline_last_capture_early_ret_check_sym22__ = 1;
-            inline_last_capture_return_sym19__ = 0;
-            break;
           }
+          if (inline_last_capture_early_ret_check_sym22__) {
+            break;
+          } 
+          inline_last_capture_early_ret_check_sym22__ = 1;
+          inline_last_capture_return_sym19__ = 0;
+          break;
         }
         stan::model::assign(last, inline_last_capture_return_sym19__,
           "assigning variable last", stan::model::index_uni(1));
@@ -17144,30 +17106,28 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
                              stan::model::rvalue(y, "y",
                                stan::model::index_uni(i)));
             lcm_sym120__ = (lcm_sym124__ - 1);
-            {
-              for (int inline_last_capture_k_rev_sym21__ = 0;
-                   inline_last_capture_k_rev_sym21__ <= lcm_sym120__;
-                   ++inline_last_capture_k_rev_sym21__) {
-                int inline_last_capture_k_sym20__ =
-                   std::numeric_limits<int>::min();
-                lcm_sym119__ = (lcm_sym124__ -
-                                 inline_last_capture_k_rev_sym21__);
-                inline_last_capture_k_sym20__ = lcm_sym119__;
-                current_statement__ = 53;
-                if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
-                    (lcm_sym119__ - 1)]) {
-                  inline_last_capture_early_ret_check_sym22__ = 1;
-                  inline_last_capture_return_sym19__ = lcm_sym119__;
-                  break;
-                } 
-              }
-              if (inline_last_capture_early_ret_check_sym22__) {
+            for (int inline_last_capture_k_rev_sym21__ = 0;
+                 inline_last_capture_k_rev_sym21__ <= lcm_sym120__;
+                 ++inline_last_capture_k_rev_sym21__) {
+              int inline_last_capture_k_sym20__ =
+                 std::numeric_limits<int>::min();
+              lcm_sym119__ = (lcm_sym124__ -
+                               inline_last_capture_k_rev_sym21__);
+              inline_last_capture_k_sym20__ = lcm_sym119__;
+              current_statement__ = 53;
+              if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
+                  (lcm_sym119__ - 1)]) {
+                inline_last_capture_early_ret_check_sym22__ = 1;
+                inline_last_capture_return_sym19__ = lcm_sym119__;
                 break;
               } 
-              inline_last_capture_early_ret_check_sym22__ = 1;
-              inline_last_capture_return_sym19__ = 0;
-              break;
             }
+            if (inline_last_capture_early_ret_check_sym22__) {
+              break;
+            } 
+            inline_last_capture_early_ret_check_sym22__ = 1;
+            inline_last_capture_return_sym19__ = 0;
+            break;
           }
           stan::model::assign(last, inline_last_capture_return_sym19__,
             "assigning variable last", stan::model::index_uni(i));
@@ -20232,25 +20192,23 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           lcm_sym275__ = stan::math::size(
                            stan::model::rvalue(y, "y",
                              stan::model::index_uni(1)));
-          {
-            for (int inline_first_capture_k_sym38__ = 1;
-                 inline_first_capture_k_sym38__ <= lcm_sym275__;
-                 ++inline_first_capture_k_sym38__) {
-              current_statement__ = 63;
-              if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
-                  (inline_first_capture_k_sym38__ - 1)]) {
-                inline_first_capture_early_ret_check_sym39__ = 1;
-                inline_first_capture_return_sym37__ = inline_first_capture_k_sym38__;
-                break;
-              } 
-            }
-            if (inline_first_capture_early_ret_check_sym39__) {
+          for (int inline_first_capture_k_sym38__ = 1;
+               inline_first_capture_k_sym38__ <= lcm_sym275__;
+               ++inline_first_capture_k_sym38__) {
+            current_statement__ = 63;
+            if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
+                (inline_first_capture_k_sym38__ - 1)]) {
+              inline_first_capture_early_ret_check_sym39__ = 1;
+              inline_first_capture_return_sym37__ = inline_first_capture_k_sym38__;
               break;
             } 
-            inline_first_capture_early_ret_check_sym39__ = 1;
-            inline_first_capture_return_sym37__ = 0;
-            break;
           }
+          if (inline_first_capture_early_ret_check_sym39__) {
+            break;
+          } 
+          inline_first_capture_early_ret_check_sym39__ = 1;
+          inline_first_capture_return_sym37__ = 0;
+          break;
         }
         stan::model::assign(first, inline_first_capture_return_sym37__,
           "assigning variable first", stan::model::index_uni(1));
@@ -20264,25 +20222,23 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             lcm_sym274__ = stan::math::size(
                              stan::model::rvalue(y, "y",
                                stan::model::index_uni(i)));
-            {
-              for (int inline_first_capture_k_sym38__ = 1;
-                   inline_first_capture_k_sym38__ <= lcm_sym274__;
-                   ++inline_first_capture_k_sym38__) {
-                current_statement__ = 63;
-                if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
-                    (inline_first_capture_k_sym38__ - 1)]) {
-                  inline_first_capture_early_ret_check_sym39__ = 1;
-                  inline_first_capture_return_sym37__ = inline_first_capture_k_sym38__;
-                  break;
-                } 
-              }
-              if (inline_first_capture_early_ret_check_sym39__) {
+            for (int inline_first_capture_k_sym38__ = 1;
+                 inline_first_capture_k_sym38__ <= lcm_sym274__;
+                 ++inline_first_capture_k_sym38__) {
+              current_statement__ = 63;
+              if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
+                  (inline_first_capture_k_sym38__ - 1)]) {
+                inline_first_capture_early_ret_check_sym39__ = 1;
+                inline_first_capture_return_sym37__ = inline_first_capture_k_sym38__;
                 break;
               } 
-              inline_first_capture_early_ret_check_sym39__ = 1;
-              inline_first_capture_return_sym37__ = 0;
-              break;
             }
+            if (inline_first_capture_early_ret_check_sym39__) {
+              break;
+            } 
+            inline_first_capture_early_ret_check_sym39__ = 1;
+            inline_first_capture_return_sym37__ = 0;
+            break;
           }
           stan::model::assign(first, inline_first_capture_return_sym37__,
             "assigning variable first", stan::model::index_uni(i));
@@ -20300,30 +20256,27 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                            stan::model::rvalue(y, "y",
                              stan::model::index_uni(1)));
           lcm_sym272__ = (lcm_sym275__ - 1);
-          {
-            for (int inline_last_capture_k_rev_sym43__ = 0;
-                 inline_last_capture_k_rev_sym43__ <= lcm_sym272__;
-                 ++inline_last_capture_k_rev_sym43__) {
-              int inline_last_capture_k_sym42__ =
-                 std::numeric_limits<int>::min();
-              lcm_sym271__ = (lcm_sym275__ -
-                               inline_last_capture_k_rev_sym43__);
-              inline_last_capture_k_sym42__ = lcm_sym271__;
-              current_statement__ = 123;
-              if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
-                  (lcm_sym271__ - 1)]) {
-                inline_last_capture_early_ret_check_sym44__ = 1;
-                inline_last_capture_return_sym41__ = lcm_sym271__;
-                break;
-              } 
-            }
-            if (inline_last_capture_early_ret_check_sym44__) {
+          for (int inline_last_capture_k_rev_sym43__ = 0;
+               inline_last_capture_k_rev_sym43__ <= lcm_sym272__;
+               ++inline_last_capture_k_rev_sym43__) {
+            int inline_last_capture_k_sym42__ =
+               std::numeric_limits<int>::min();
+            lcm_sym271__ = (lcm_sym275__ - inline_last_capture_k_rev_sym43__);
+            inline_last_capture_k_sym42__ = lcm_sym271__;
+            current_statement__ = 123;
+            if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
+                (lcm_sym271__ - 1)]) {
+              inline_last_capture_early_ret_check_sym44__ = 1;
+              inline_last_capture_return_sym41__ = lcm_sym271__;
               break;
             } 
-            inline_last_capture_early_ret_check_sym44__ = 1;
-            inline_last_capture_return_sym41__ = 0;
-            break;
           }
+          if (inline_last_capture_early_ret_check_sym44__) {
+            break;
+          } 
+          inline_last_capture_early_ret_check_sym44__ = 1;
+          inline_last_capture_return_sym41__ = 0;
+          break;
         }
         stan::model::assign(last, inline_last_capture_return_sym41__,
           "assigning variable last", stan::model::index_uni(1));
@@ -20338,30 +20291,28 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                              stan::model::rvalue(y, "y",
                                stan::model::index_uni(i)));
             lcm_sym270__ = (lcm_sym274__ - 1);
-            {
-              for (int inline_last_capture_k_rev_sym43__ = 0;
-                   inline_last_capture_k_rev_sym43__ <= lcm_sym270__;
-                   ++inline_last_capture_k_rev_sym43__) {
-                int inline_last_capture_k_sym42__ =
-                   std::numeric_limits<int>::min();
-                lcm_sym269__ = (lcm_sym274__ -
-                                 inline_last_capture_k_rev_sym43__);
-                inline_last_capture_k_sym42__ = lcm_sym269__;
-                current_statement__ = 123;
-                if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
-                    (lcm_sym269__ - 1)]) {
-                  inline_last_capture_early_ret_check_sym44__ = 1;
-                  inline_last_capture_return_sym41__ = lcm_sym269__;
-                  break;
-                } 
-              }
-              if (inline_last_capture_early_ret_check_sym44__) {
+            for (int inline_last_capture_k_rev_sym43__ = 0;
+                 inline_last_capture_k_rev_sym43__ <= lcm_sym270__;
+                 ++inline_last_capture_k_rev_sym43__) {
+              int inline_last_capture_k_sym42__ =
+                 std::numeric_limits<int>::min();
+              lcm_sym269__ = (lcm_sym274__ -
+                               inline_last_capture_k_rev_sym43__);
+              inline_last_capture_k_sym42__ = lcm_sym269__;
+              current_statement__ = 123;
+              if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
+                  (lcm_sym269__ - 1)]) {
+                inline_last_capture_early_ret_check_sym44__ = 1;
+                inline_last_capture_return_sym41__ = lcm_sym269__;
                 break;
               } 
-              inline_last_capture_early_ret_check_sym44__ = 1;
-              inline_last_capture_return_sym41__ = 0;
-              break;
             }
+            if (inline_last_capture_early_ret_check_sym44__) {
+              break;
+            } 
+            inline_last_capture_early_ret_check_sym44__ = 1;
+            inline_last_capture_return_sym41__ = 0;
+            break;
           }
           stan::model::assign(last, inline_last_capture_return_sym41__,
             "assigning variable last", stan::model::index_uni(i));
@@ -21893,26 +21844,24 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             lcm_sym178__ = stan::math::size(
                              stan::model::rvalue(z, "z",
                                stan::model::index_uni(1)));
-            {
-              for (int inline_first_capture_k_sym17__ = 1;
-                   inline_first_capture_k_sym17__ <= lcm_sym178__;
-                   ++inline_first_capture_k_sym17__) {
-                current_statement__ = 63;
-                if (stan::model::rvalue(z, "z",
-                      stan::model::index_uni(1),
-                        stan::model::index_uni(inline_first_capture_k_sym17__))) {
-                  inline_first_capture_early_ret_check_sym18__ = 1;
-                  inline_first_capture_return_sym16__ = inline_first_capture_k_sym17__;
-                  break;
-                } 
-              }
-              if (inline_first_capture_early_ret_check_sym18__) {
+            for (int inline_first_capture_k_sym17__ = 1;
+                 inline_first_capture_k_sym17__ <= lcm_sym178__;
+                 ++inline_first_capture_k_sym17__) {
+              current_statement__ = 63;
+              if (stan::model::rvalue(z, "z",
+                    stan::model::index_uni(1),
+                      stan::model::index_uni(inline_first_capture_k_sym17__))) {
+                inline_first_capture_early_ret_check_sym18__ = 1;
+                inline_first_capture_return_sym16__ = inline_first_capture_k_sym17__;
                 break;
               } 
-              inline_first_capture_early_ret_check_sym18__ = 1;
-              inline_first_capture_return_sym16__ = 0;
-              break;
             }
+            if (inline_first_capture_early_ret_check_sym18__) {
+              break;
+            } 
+            inline_first_capture_early_ret_check_sym18__ = 1;
+            inline_first_capture_return_sym16__ = 0;
+            break;
           }
           current_statement__ = 66;
           if (stan::math::logical_gt(inline_first_capture_return_sym16__, 0)) {
@@ -21932,26 +21881,24 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
               lcm_sym177__ = stan::math::size(
                                stan::model::rvalue(z, "z",
                                  stan::model::index_uni(i)));
-              {
-                for (int inline_first_capture_k_sym17__ = 1;
-                     inline_first_capture_k_sym17__ <= lcm_sym177__;
-                     ++inline_first_capture_k_sym17__) {
-                  current_statement__ = 63;
-                  if (stan::model::rvalue(z, "z",
-                        stan::model::index_uni(i),
-                          stan::model::index_uni(inline_first_capture_k_sym17__))) {
-                    inline_first_capture_early_ret_check_sym18__ = 1;
-                    inline_first_capture_return_sym16__ = inline_first_capture_k_sym17__;
-                    break;
-                  } 
-                }
-                if (inline_first_capture_early_ret_check_sym18__) {
+              for (int inline_first_capture_k_sym17__ = 1;
+                   inline_first_capture_k_sym17__ <= lcm_sym177__;
+                   ++inline_first_capture_k_sym17__) {
+                current_statement__ = 63;
+                if (stan::model::rvalue(z, "z",
+                      stan::model::index_uni(i),
+                        stan::model::index_uni(inline_first_capture_k_sym17__))) {
+                  inline_first_capture_early_ret_check_sym18__ = 1;
+                  inline_first_capture_return_sym16__ = inline_first_capture_k_sym17__;
                   break;
                 } 
-                inline_first_capture_early_ret_check_sym18__ = 1;
-                inline_first_capture_return_sym16__ = 0;
-                break;
               }
+              if (inline_first_capture_early_ret_check_sym18__) {
+                break;
+              } 
+              inline_first_capture_early_ret_check_sym18__ = 1;
+              inline_first_capture_return_sym16__ = 0;
+              break;
             }
             current_statement__ = 66;
             if (stan::math::logical_gt(inline_first_capture_return_sym16__,
@@ -24048,25 +23995,23 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
           lcm_sym115__ = stan::math::size(
                            stan::model::rvalue(y, "y",
                              stan::model::index_uni(1)));
-          {
-            for (int inline_first_capture_k_sym16__ = 1;
-                 inline_first_capture_k_sym16__ <= lcm_sym115__;
-                 ++inline_first_capture_k_sym16__) {
-              current_statement__ = 44;
-              if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
-                  (inline_first_capture_k_sym16__ - 1)]) {
-                inline_first_capture_early_ret_check_sym17__ = 1;
-                inline_first_capture_return_sym15__ = inline_first_capture_k_sym16__;
-                break;
-              } 
-            }
-            if (inline_first_capture_early_ret_check_sym17__) {
+          for (int inline_first_capture_k_sym16__ = 1;
+               inline_first_capture_k_sym16__ <= lcm_sym115__;
+               ++inline_first_capture_k_sym16__) {
+            current_statement__ = 44;
+            if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
+                (inline_first_capture_k_sym16__ - 1)]) {
+              inline_first_capture_early_ret_check_sym17__ = 1;
+              inline_first_capture_return_sym15__ = inline_first_capture_k_sym16__;
               break;
             } 
-            inline_first_capture_early_ret_check_sym17__ = 1;
-            inline_first_capture_return_sym15__ = 0;
-            break;
           }
+          if (inline_first_capture_early_ret_check_sym17__) {
+            break;
+          } 
+          inline_first_capture_early_ret_check_sym17__ = 1;
+          inline_first_capture_return_sym15__ = 0;
+          break;
         }
         stan::model::assign(first, inline_first_capture_return_sym15__,
           "assigning variable first", stan::model::index_uni(1));
@@ -24080,25 +24025,23 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
             lcm_sym114__ = stan::math::size(
                              stan::model::rvalue(y, "y",
                                stan::model::index_uni(i)));
-            {
-              for (int inline_first_capture_k_sym16__ = 1;
-                   inline_first_capture_k_sym16__ <= lcm_sym114__;
-                   ++inline_first_capture_k_sym16__) {
-                current_statement__ = 44;
-                if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
-                    (inline_first_capture_k_sym16__ - 1)]) {
-                  inline_first_capture_early_ret_check_sym17__ = 1;
-                  inline_first_capture_return_sym15__ = inline_first_capture_k_sym16__;
-                  break;
-                } 
-              }
-              if (inline_first_capture_early_ret_check_sym17__) {
+            for (int inline_first_capture_k_sym16__ = 1;
+                 inline_first_capture_k_sym16__ <= lcm_sym114__;
+                 ++inline_first_capture_k_sym16__) {
+              current_statement__ = 44;
+              if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
+                  (inline_first_capture_k_sym16__ - 1)]) {
+                inline_first_capture_early_ret_check_sym17__ = 1;
+                inline_first_capture_return_sym15__ = inline_first_capture_k_sym16__;
                 break;
               } 
-              inline_first_capture_early_ret_check_sym17__ = 1;
-              inline_first_capture_return_sym15__ = 0;
-              break;
             }
+            if (inline_first_capture_early_ret_check_sym17__) {
+              break;
+            } 
+            inline_first_capture_early_ret_check_sym17__ = 1;
+            inline_first_capture_return_sym15__ = 0;
+            break;
           }
           stan::model::assign(first, inline_first_capture_return_sym15__,
             "assigning variable first", stan::model::index_uni(i));
@@ -24116,30 +24059,27 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
                            stan::model::rvalue(y, "y",
                              stan::model::index_uni(1)));
           lcm_sym112__ = (lcm_sym115__ - 1);
-          {
-            for (int inline_last_capture_k_rev_sym21__ = 0;
-                 inline_last_capture_k_rev_sym21__ <= lcm_sym112__;
-                 ++inline_last_capture_k_rev_sym21__) {
-              int inline_last_capture_k_sym20__ =
-                 std::numeric_limits<int>::min();
-              lcm_sym111__ = (lcm_sym115__ -
-                               inline_last_capture_k_rev_sym21__);
-              inline_last_capture_k_sym20__ = lcm_sym111__;
-              current_statement__ = 50;
-              if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
-                  (lcm_sym111__ - 1)]) {
-                inline_last_capture_early_ret_check_sym22__ = 1;
-                inline_last_capture_return_sym19__ = lcm_sym111__;
-                break;
-              } 
-            }
-            if (inline_last_capture_early_ret_check_sym22__) {
+          for (int inline_last_capture_k_rev_sym21__ = 0;
+               inline_last_capture_k_rev_sym21__ <= lcm_sym112__;
+               ++inline_last_capture_k_rev_sym21__) {
+            int inline_last_capture_k_sym20__ =
+               std::numeric_limits<int>::min();
+            lcm_sym111__ = (lcm_sym115__ - inline_last_capture_k_rev_sym21__);
+            inline_last_capture_k_sym20__ = lcm_sym111__;
+            current_statement__ = 50;
+            if (stan::model::rvalue(y, "y", stan::model::index_uni(1))[
+                (lcm_sym111__ - 1)]) {
+              inline_last_capture_early_ret_check_sym22__ = 1;
+              inline_last_capture_return_sym19__ = lcm_sym111__;
               break;
             } 
-            inline_last_capture_early_ret_check_sym22__ = 1;
-            inline_last_capture_return_sym19__ = 0;
-            break;
           }
+          if (inline_last_capture_early_ret_check_sym22__) {
+            break;
+          } 
+          inline_last_capture_early_ret_check_sym22__ = 1;
+          inline_last_capture_return_sym19__ = 0;
+          break;
         }
         stan::model::assign(last, inline_last_capture_return_sym19__,
           "assigning variable last", stan::model::index_uni(1));
@@ -24154,30 +24094,28 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
                              stan::model::rvalue(y, "y",
                                stan::model::index_uni(i)));
             lcm_sym110__ = (lcm_sym114__ - 1);
-            {
-              for (int inline_last_capture_k_rev_sym21__ = 0;
-                   inline_last_capture_k_rev_sym21__ <= lcm_sym110__;
-                   ++inline_last_capture_k_rev_sym21__) {
-                int inline_last_capture_k_sym20__ =
-                   std::numeric_limits<int>::min();
-                lcm_sym109__ = (lcm_sym114__ -
-                                 inline_last_capture_k_rev_sym21__);
-                inline_last_capture_k_sym20__ = lcm_sym109__;
-                current_statement__ = 50;
-                if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
-                    (lcm_sym109__ - 1)]) {
-                  inline_last_capture_early_ret_check_sym22__ = 1;
-                  inline_last_capture_return_sym19__ = lcm_sym109__;
-                  break;
-                } 
-              }
-              if (inline_last_capture_early_ret_check_sym22__) {
+            for (int inline_last_capture_k_rev_sym21__ = 0;
+                 inline_last_capture_k_rev_sym21__ <= lcm_sym110__;
+                 ++inline_last_capture_k_rev_sym21__) {
+              int inline_last_capture_k_sym20__ =
+                 std::numeric_limits<int>::min();
+              lcm_sym109__ = (lcm_sym114__ -
+                               inline_last_capture_k_rev_sym21__);
+              inline_last_capture_k_sym20__ = lcm_sym109__;
+              current_statement__ = 50;
+              if (stan::model::rvalue(y, "y", stan::model::index_uni(i))[
+                  (lcm_sym109__ - 1)]) {
+                inline_last_capture_early_ret_check_sym22__ = 1;
+                inline_last_capture_return_sym19__ = lcm_sym109__;
                 break;
               } 
-              inline_last_capture_early_ret_check_sym22__ = 1;
-              inline_last_capture_return_sym19__ = 0;
-              break;
             }
+            if (inline_last_capture_early_ret_check_sym22__) {
+              break;
+            } 
+            inline_last_capture_early_ret_check_sym22__ = 1;
+            inline_last_capture_return_sym19__ = 0;
+            break;
           }
           stan::model::assign(last, inline_last_capture_return_sym19__,
             "assigning variable last", stan::model::index_uni(i));
