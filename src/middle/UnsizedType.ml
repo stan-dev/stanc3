@@ -76,7 +76,10 @@ let rec pp ppf = function
       let ut2, d = unwind_array_type ut in
       let array_str = "[" ^ String.make d ',' ^ "]" in
       Fmt.pf ppf "array%s %a" array_str pp ut2
-  | UTuple ts -> Fmt.pf ppf "(@[%a@])" Fmt.(list ~sep:comma pp) ts
+  | UTuple ts -> (
+    match ts with
+    | [t] -> Fmt.pf ppf "(@[%a,@])" pp t
+    | _ -> Fmt.pf ppf "(@[%a@])" Fmt.(list ~sep:comma pp) ts )
   | UFun (argtypes, rt, _, _) ->
       Fmt.pf ppf {|@[<h>(%a) => %a@]|}
         Fmt.(list pp_fun_arg ~sep:comma)

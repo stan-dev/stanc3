@@ -1,3 +1,3 @@
 functions {
-   (real, ) foo()
+   (real, int, ) foo()
 }

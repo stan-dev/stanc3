@@ -287,7 +287,9 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
     | [] -> pf ppf "%a" pp_expression e
     | l -> pf ppf "%a[%a]" pp_expression e pp_list_of_indices l )
   | TupleProjection (e, i) -> pf ppf "%a.%d" pp_expression e i
-  | TupleExpr es -> pf ppf "(@[%a@])" pp_list_of_expression (es, loc)
+  | TupleExpr es ->
+      pf ppf "(@[%a%s@])" pp_list_of_expression (es, loc)
+        (if List.length es = 1 then "," else "")
 
 and pp_list_of_expression ppf es =
   let loc_of (x : untyped_expression) = x.emeta.loc in
@@ -322,7 +324,10 @@ let rec pp_sizedtype ppf = function
   | SRowVector (_, e) -> pf ppf "row_vector[%a]" pp_expression e
   | SMatrix (_, e1, e2) ->
       pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
-  | STuple ts -> pf ppf "(@[%a@])" (list ~sep:comma pp_sizedtype) ts
+  | STuple ts -> (
+    match ts with
+    | [t] -> pf ppf "(@[%a,@])" pp_sizedtype t
+    | _ -> pf ppf "(@[%a@])" (list ~sep:comma pp_sizedtype) ts )
   | SComplexVector e -> pf ppf "complex_vector[%a]" pp_expression e
   | SComplexRowVector e -> pf ppf "complex_row_vector[%a]" pp_expression e
   | SComplexMatrix (e1, e2) ->
@@ -390,11 +395,13 @@ let rec pp_transformed_type ppf (pst, trans) =
         | CholeskyCov -> pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
         | Correlation -> pf ppf "corr_matrix%a" cov_sizes_fmt ()
         | Covariance -> pf ppf "cov_matrix%a" cov_sizes_fmt ()
-        | TupleTransformation _ as trans ->
+        | TupleTransformation ts as trans ->
             (* NB this calls the top-level function to handle internal arrays etc *)
             let transTypes = Middle.Utils.zip_tuple_trans_exn pst trans in
-            pf ppf "(@[%a@])" (list ~sep:comma pp_transformed_type) transTypes
-      in
+            pf ppf "(@[%a%s@])"
+              (list ~sep:comma pp_transformed_type)
+              transTypes
+              (if List.length ts = 1 then "," else "") in
       match st with
       (* array goes before something like cov_matrix *)
       | Middle.SizedType.SArray _ ->

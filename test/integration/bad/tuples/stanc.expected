@@ -53,11 +53,11 @@ Syntax error in 'incomplete6.stan', line 2, column 25 to column 26, parsing erro
 
 Ill-formed phrase. Found an expression. This can be followed by a ",", a "}", a ")", a "]", a "[" or an infix or postfix operator.
   $ ../../../../../install/default/bin/stanc incomplete7.stan
-Syntax error in 'incomplete7.stan', line 2, column 10 to column 11, parsing error:
+Syntax error in 'incomplete7.stan', line 2, column 15 to column 16, parsing error:
    -------------------------------------------------
      1:  functions {
-     2:     (real, ) foo()
-                   ^
+     2:     (real, int, ) foo()
+                        ^
      3:  }
    -------------------------------------------------
 

@@ -277,8 +277,8 @@ unsized_type:
     { t }
 
 %inline unsized_tuple_type:
-  | LPAREN ts=separated_nonempty_list(COMMA, unsized_type) RPAREN
-    {  UnsizedType.UTuple ts
+  | LPAREN hd=unsized_type COMMA ts=separated_list(COMMA, unsized_type) RPAREN
+    {  UnsizedType.UTuple (hd::ts)
     }
 
 basic_type:

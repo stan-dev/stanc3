@@ -2513,6 +2513,86 @@
        (Identity (TupleTransformation (Identity Simplex)))))))))
  (prog_name arrays_tuples_nested_model)
  (prog_path arrays-tuples-nested.stan))
+  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir onepl.stan
+((functions_block
+  (((fdrt ()) (fdname foo) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable x (UTuple (UReal)))))
+    (fdbody
+     (((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))))
+ (input_vars ())
+ (prepare_data
+  (((pattern
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable pos__) UInt
+      ((pattern (Lit Int 1))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype (TupleAD (DataOnly))) (decl_id x)
+      (decl_type (Sized (STuple (SReal)))) (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable x) (UTuple (UReal))
+      ((pattern
+        (FunApp (CompilerInternal FnMakeTuple)
+         (((pattern (Lit Real 3.5))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta
+        ((type_ (UTuple (UReal))) (loc <opaque>)
+         (adlevel (TupleAD (DataOnly))))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (UserDefined foo FnPlain)
+      (((pattern (Var x))
+        (meta
+         ((type_ (UTuple (UReal))) (loc <opaque>)
+          (adlevel (TupleAD (DataOnly)))))))))
+    (meta <opaque>))))
+ (log_prob ())
+ (generate_quantities
+  (((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern
+            (EOr
+             ((pattern (Var emit_transformed_parameters__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var emit_generated_quantities__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
+       (meta <opaque>))
+      ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern (Var emit_generated_quantities__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
+       (meta <opaque>))
+      ()))
+    (meta <opaque>))))
+ (transform_inits
+  (((pattern
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable pos__) UInt
+      ((pattern (Lit Int 1))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))))
+ (output_vars ()) (prog_name onepl_model) (prog_path onepl.stan))
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir simple.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
