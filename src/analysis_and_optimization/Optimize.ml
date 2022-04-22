@@ -275,41 +275,9 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
               let handle =
                 handle_early_returns fname (Some inline_return_name) in
               let d_list2, s_list2, (e : Expr.Typed.t) =
-                let unsized_to_sized rt =
-                  match rt with
-                  | Type.Sized _ as a -> a
-                  | Unsized aa ->
-                      let rec to_sized a =
-                        match a with
-                        | UnsizedType.UReal -> SizedType.SReal
-                        | UInt -> SInt
-                        | UComplex -> SComplex
-                        | UArray t -> SArray (to_sized t, Expr.Helpers.int 0)
-                        | UMatrix ->
-                            SMatrix
-                              ( Common.Helpers.AoS
-                              , Expr.Helpers.int 0
-                              , Expr.Helpers.int 0 )
-                        | UVector ->
-                            SVector (Common.Helpers.AoS, Expr.Helpers.int 0)
-                        | URowVector ->
-                            SRowVector (Common.Helpers.AoS, Expr.Helpers.int 0)
-                        | UComplexMatrix ->
-                            SComplexMatrix
-                              (Expr.Helpers.int 0, Expr.Helpers.int 0)
-                        | UComplexVector -> SComplexVector (Expr.Helpers.int 0)
-                        | UComplexRowVector ->
-                            SComplexRowVector (Expr.Helpers.int 0)
-                        | UFun (_, UnsizedType.ReturnType x, _, _) -> to_sized x
-                        | UFun (_, Void, _, _) | UMathLibraryFunction ->
-                            Common.FatalError.fatal_error_msg
-                              [%message
-                                ( "return type of a function was a void user \
-                                   defined function or math library function."
-                                  : string )] in
-                      Type.Sized (to_sized aa) in
                 let decl_type =
-                  Option.map ~f:unsized_to_sized rt |> Option.value_exn in
+                  Option.map ~f:Mir_utils.unsafe_unsized_to_sized_type rt
+                  |> Option.value_exn in
                 ( [ Stmt.Fixed.Pattern.Decl
                       { decl_adtype= adt
                       ; decl_id= inline_return_name
