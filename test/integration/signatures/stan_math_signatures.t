@@ -3762,7 +3762,11 @@ Display all Stan math signatures exposed in the language
   csr_to_dense_matrix(int, int, vector, array[] int, array[] int) => matrix
   cumulative_sum(vector) => vector
   cumulative_sum(row_vector) => row_vector
+  cumulative_sum(complex_vector) => complex_vector
+  cumulative_sum(complex_row_vector) => complex_row_vector
+  cumulative_sum(array[] int) => array[] int
   cumulative_sum(array[] real) => array[] real
+  cumulative_sum(array[] complex) => array[] complex
   determinant(matrix) => real
   diag_matrix(vector) => matrix
   diag_matrix(complex_vector) => complex_matrix

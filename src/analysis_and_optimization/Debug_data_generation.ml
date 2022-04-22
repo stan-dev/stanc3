@@ -122,10 +122,9 @@ let gen_row_vector m n t =
 let gen_vector m n t =
   let gen_ordered n =
     let l = repeat_th n (fun _ -> Random.float 1.) in
-    let l =
-      List.fold (List.tl_exn l) ~init:[List.hd_exn l] ~f:(fun accum elt ->
-          (Float.exp elt +. List.hd_exn accum) :: accum ) in
-    l in
+    List.fold_map l ~init:0. ~f:(fun accum elt ->
+        let elt = accum +. elt in
+        (elt, elt) ) in
   match t with
   | Transformation.Simplex ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
@@ -133,15 +132,11 @@ let gen_vector m n t =
       let l = List.map l ~f:(fun x -> x /. sum) in
       Expr.Helpers.vector l
   | Ordered ->
-      let l = gen_ordered n in
-      let halfmax =
-        Option.value_exn (List.max_elt l ~compare:compare_float) /. 2. in
-      let l = List.map l ~f:(fun x -> (x -. halfmax) /. halfmax) in
+      let max, l = gen_ordered n in
+      let l = List.map l ~f:(fun x -> x -. (max /. 2.0)) in
       Expr.Helpers.vector l
   | PositiveOrdered ->
-      let l = gen_ordered n in
-      let max = Option.value_exn (List.max_elt l ~compare:compare_float) in
-      let l = List.map l ~f:(fun x -> x /. max) in
+      let _, l = gen_ordered n in
       Expr.Helpers.vector l
   | UnitVector ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
@@ -279,26 +274,34 @@ and generate_value m st t =
       gen_complex_matrix (unwrap_int_exn m e1) (unwrap_int_exn m e2)
   | SArray (st, e) -> gen_array m st (unwrap_int_exn m e) t
 
-let rec pp_value_json ppf e =
-  match e.Expr.Fixed.pattern with
-  | Lit ((Int | Real), s) -> Fmt.string ppf s
-  | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l) ->
-      Fmt.(pf ppf "[@[<hov 1>%a@]]" (list ~sep:comma pp_value_json) l)
-  | FunApp (StanLib (transpose, _, _), [e])
-    when String.equal transpose (Operator.to_string Transpose) ->
-      pp_value_json ppf e
-  | FunApp (StanLib ("to_complex", _, _), [r; i]) ->
-      Fmt.(pf ppf "[@[<hov 1>%a, %a@]]" pp_value_json r pp_value_json i)
-  | _ ->
-      Common.FatalError.fatal_error_msg
-        [%message "Could not evaluate expression " (e : Expr.Typed.t)]
+let generate_expressions data =
+  List.fold data ~init:([], Map.Poly.empty)
+    ~f:(fun (l, m) (sizedtype, transformation, name) ->
+      let value = generate_value m sizedtype transformation in
+      ((name, value) :: l, Map.set m ~key:name ~data:value) )
+  |> fst |> List.rev
 
-let print_data_prog s =
-  let l, _ =
-    List.fold s ~init:([], Map.Poly.empty)
-      ~f:(fun (l, m) (sizedtype, transformation, name) ->
-        let value = generate_value m sizedtype transformation in
-        ((name, value) :: l, Map.set m ~key:name ~data:value) ) in
-  let pp ppf (id, value) =
-    Fmt.pf ppf {|@[<hov 2>"%s":@ %a@]|} id pp_value_json value in
-  Fmt.(str "{@ @[<hov>%a@]@ }" (list ~sep:comma pp) (List.rev l))
+open Yojson
+
+let generate_json_entries (name, expr) : string * t =
+  let rec expr_to_json e : t =
+    match e.Expr.Fixed.pattern with
+    | Lit (Real, s) when String.is_suffix s ~suffix:"." -> `Floatlit (s ^ "0")
+    | Lit (Int, s) -> `Intlit s
+    | Lit (Real, s) -> `Floatlit s
+    | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l)
+     |FunApp (StanLib ("to_complex", _, _), l) ->
+        `List (List.map ~f:expr_to_json l)
+    | FunApp (StanLib (transpose, _, _), [e])
+      when String.equal transpose (Operator.to_string Transpose) ->
+        expr_to_json e
+    | _ ->
+        Common.FatalError.fatal_error_msg
+          [%message "Could not evaluate expression " (e : Expr.Typed.t)] in
+  (name, expr_to_json expr)
+
+let print_data_prog data =
+  let ids_and_values = generate_expressions data in
+  let json_entries = List.map ~f:generate_json_entries ids_and_values in
+  let json = `Assoc json_entries in
+  pretty_to_string json
