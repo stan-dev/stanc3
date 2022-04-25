@@ -350,12 +350,14 @@ let constant_propagation_transfer ?(preserve_stability = false)
     with type labels = int
      and type properties = (string, Expr.Typed.t) Map.Poly.t option )
 
-let label_top_decls
+let rec label_top_decls
     (flowgraph_to_mir : (int, Middle.Stmt.Located.Non_recursive.t) Map.Poly.t)
     label : string Set.Poly.t =
   let stmt = Map.Poly.find_exn flowgraph_to_mir label in
   match stmt.pattern with
   | Decl {decl_id= s; _} -> Set.Poly.singleton s
+  | SList ids ->
+      Set.Poly.union_list (List.map ~f:(label_top_decls flowgraph_to_mir) ids)
   | _ -> Set.Poly.empty
 
 (** The transfer function for an expression propagation analysis,
@@ -412,35 +414,39 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
     type labels = int
     type properties = (string, Expr.Typed.t) Map.Poly.t option
 
-    let transfer_function l p =
-      match p with
+    let transfer_function int_label optional_map =
+      match optional_map with
       | None -> None
-      | Some m ->
-          let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
-          let kill_var m v =
+      | Some expr_map ->
+          let mir_node = (Map.find_exn flowgraph_to_mir int_label).pattern in
+          let kill_var m var_name =
             Map.filteri m ~f:(fun ~key ~(data : Expr.Typed.t) ->
-                not (key = v || data.pattern = Var v) ) in
+                not (key = var_name || data.pattern = Var var_name) ) in
           Some
             ( match mir_node with
-            | Assignment (LVariable s, _, {pattern= Var t; meta}) ->
-                let m' = kill_var m s in
-                if Set.Poly.mem globals s then m'
-                else Map.set m' ~key:s ~data:Expr.Fixed.{pattern= Var t; meta}
-            | Decl {decl_id= s; _} -> kill_var m s
+            | Assignment (LVariable assignee, _, {pattern= Var assigner; meta})
+              ->
+                let m' = kill_var expr_map assignee in
+                if Set.Poly.mem globals assignee then expr_map
+                else
+                  Map.set m' ~key:assignee
+                    ~data:Expr.Fixed.{pattern= Var assigner; meta}
+            | Decl {decl_id= name; _} -> kill_var expr_map name
             | Assignment (lhs, _, _) ->
-                kill_var m (Middle.Stmt.Helpers.lhs_variable lhs)
-            | Profile (_, b) | Block b ->
+                kill_var expr_map (Stmt.Helpers.lhs_variable lhs)
+            | Profile (_, stmt_lst) | Block stmt_lst ->
                 let kills =
                   Set.Poly.union_list
-                    (List.map ~f:(label_top_decls flowgraph_to_mir) b) in
-                Set.Poly.fold kills ~init:m ~f:kill_var
+                    (List.map ~f:(label_top_decls flowgraph_to_mir) stmt_lst)
+                in
+                Set.Poly.fold kills ~init:expr_map ~f:kill_var
             | TargetPE _
              |NRFunApp (_, _)
-             |Break | Continue | Return _ | Skip
+             |Break | Continue | Return _ | Skip | SList _
              |IfElse (_, _, _)
              |While (_, _)
-             |For _ | SList _ ->
-                m ) end : TRANSFER_FUNCTION
+             |For _ ->
+                expr_map ) end : TRANSFER_FUNCTION
     with type labels = int
      and type properties = (string, Expr.Typed.t) Map.Poly.t option )
 
