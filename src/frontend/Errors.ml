@@ -23,11 +23,14 @@ type t =
   | Semantic_error of Semantic_error.t
 
 let pp_context_with_message ?code ppf (msg, loc) =
-  let context =
+  let open Middle.Location in
+  let context_callback =
     match code with
-    | Some s -> Middle.Location.context_to_string (`String s) loc
-    | None -> Middle.Location.context_to_string `File loc in
-  Fmt.pf ppf "%a@,%s" (Fmt.option Fmt.string) context msg
+    | Some s -> fun () -> String.split_lines s
+    | None -> fun () -> In_channel.read_lines loc.filename in
+  Fmt.pf ppf "%a@,%s" (Fmt.option Fmt.string)
+    (context_to_string context_callback loc)
+    msg
 
 let pp_semantic_error ?printed_filename ?code ppf err =
   let loc_span = Semantic_error.location err in

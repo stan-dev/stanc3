@@ -41,19 +41,15 @@ let pp_context_list ppf (lines, {line_num; col_num; _}) =
      %s%s%s%s%s%s   -------------------------------------------------\n"
     line_2_before line_before our_line cursor_line line_after line_2_after
 
-let pp_context_string ppf (string, loc) =
-  pp_context_list ppf (String.split_lines string, loc)
-
-(** Will attempt to {b open} the file and print context *)
-let pp_file_context_exn ppf loc =
-  pp_context_list ppf (In_channel.read_lines loc.filename, loc)
-
-let context_to_string type_ loc =
-  try
-    match type_ with
-    | `String s -> Some (Fmt.to_to_string pp_context_string (s, loc))
-    | `File -> Some (Fmt.to_to_string pp_file_context_exn loc)
-  with _ -> None
+(** Turn the given location into a string holding the code of that location.
+    Code is retrieved by calling context_cb, which may do IO.
+    Exceptions in the callback or in the creation of the string
+    (possible if the context is incorrectly too short for the given location)
+    return [None] *)
+let context_to_string (context_cb : unit -> string list) (loc : t) :
+    string option =
+  Option.try_with (fun () ->
+      Fmt.to_to_string pp_context_list (context_cb (), loc) )
 
 let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 
