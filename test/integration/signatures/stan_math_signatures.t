@@ -11969,6 +11969,7 @@ Display all Stan math signatures exposed in the language
   log2(array[,,,,,,] row_vector) => array[,,,,,,] row_vector
   log2(array[,,,,,,] matrix) => array[,,,,,,] matrix
   log_determinant(matrix) => real
+  log_determinant_spd(matrix) => real
   log_diff_exp(int, int) => real
   log_diff_exp(int, real) => real
   log_diff_exp(real, int) => real
