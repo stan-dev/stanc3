@@ -1,6 +1,6 @@
 open Core_kernel
 open Frontend
-open Frontend_utils
+open Test_utils
 
 let%expect_test "indexed type checking" =
   {|

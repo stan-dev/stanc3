@@ -1,10 +1,8 @@
-open Frontend
 open Middle
 open Core_kernel
-open Ast_to_Mir
 
 let%expect_test "Operator-assign example" =
-  Frontend_utils.typed_ast_of_string_exn
+  Test_utils.mir_of_string
     {|
         model {
           real r;
@@ -12,7 +10,6 @@ let%expect_test "Operator-assign example" =
           x[1] ./= r;
         }
       |}
-  |> trans_prog ""
   |> (fun Program.{log_prob; _} -> log_prob)
   |> Fmt.str "@[<v>%a@]" (Fmt.list ~sep:Fmt.cut Stmt.Located.pp)
   |> print_endline ;
@@ -24,12 +21,9 @@ let%expect_test "Operator-assign example" =
         x[1] = (x[1] ./ r);
       } |}]
 
-let mir_from_string s =
-  Frontend_utils.typed_ast_of_string_exn s |> trans_prog ""
-
 let%expect_test "Prefix-Op-Example" =
   let mir =
-    mir_from_string
+    Test_utils.mir_of_string
       {|
         model {
           int i;
@@ -71,7 +65,7 @@ let%expect_test "Prefix-Op-Example" =
         (meta <opaque>))) |}]
 
 let%expect_test "read data" =
-  let m = mir_from_string "data { array[5] matrix[10, 20] mat; }" in
+  let m = Test_utils.mir_of_string "data { array[5] matrix[10, 20] mat; }" in
   print_s [%sexp (m.prepare_data : Stmt.Located.t list)] ;
   [%expect
     {|
@@ -92,7 +86,8 @@ let%expect_test "read data" =
 
 let%expect_test "read param" =
   let m =
-    mir_from_string "parameters { array[5] matrix<lower=0>[10, 20] mat; }" in
+    Test_utils.mir_of_string
+      "parameters { array[5] matrix<lower=0>[10, 20] mat; }" in
   print_s [%sexp (m.log_prob : Stmt.Located.t list)] ;
   [%expect
     {|
@@ -113,7 +108,7 @@ let%expect_test "read param" =
 
 let%expect_test "gen quant" =
   let m =
-    mir_from_string
+    Test_utils.mir_of_string
       "generated quantities { array[5] matrix<lower=0>[10, 20] mat; }" in
   print_s [%sexp (m.generate_quantities : Stmt.Located.t list)] ;
   [%expect

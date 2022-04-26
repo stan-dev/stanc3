@@ -60,28 +60,6 @@ let promote_adtype =
       | _ -> accum )
     ~init:UnsizedType.DataOnly
 
-let promote_unsizedtype es =
-  let rec fold_type accum mtype =
-    match (accum, mtype) with
-    | UnsizedType.UReal, _ -> UnsizedType.UReal
-    | _, UnsizedType.UReal -> UReal
-    | UArray t1, UArray t2 -> UArray (fold_type t1 t2)
-    | _, mtype -> mtype in
-  List.map es ~f:Expr.Typed.type_of
-  |> List.reduce ~f:fold_type
-  |> Option.value ~default:UReal
-
-let%expect_test "promote_unsized" =
-  let e mtype =
-    Expr.{Fixed.pattern= Var "x"; meta= Typed.Meta.{empty with type_= mtype}}
-  in
-  let tests =
-    [[e UInt; e UReal]; [e UReal; e UInt]; [e (UArray UInt); e (UArray UReal)]]
-  in
-  print_s
-    [%sexp (tests |> List.map ~f:promote_unsizedtype : UnsizedType.t list)] ;
-  [%expect {| (UReal UReal (UArray UReal)) |}]
-
 let to_var s = Expr.{Fixed.pattern= Var s; meta= Typed.Meta.empty}
 
 let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =

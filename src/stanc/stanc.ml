@@ -237,6 +237,27 @@ let remove_dotstan s =
   if String.is_suffix ~suffix:".stanfunctions" s then String.drop_suffix s 14
   else String.drop_suffix s 5
 
+let get_ast_or_exit ?printed_filename ?(print_warnings = true)
+    ?(bare_functions = false) filename =
+  let res, warnings =
+    if bare_functions then
+      Parse.parse_file Parser.Incremental.functions_only filename
+    else Parse.parse_file Parser.Incremental.program filename in
+  if print_warnings then
+    (Warnings.pp_warnings ?printed_filename) Fmt.stderr warnings ;
+  match res with
+  | Result.Ok ast -> ast
+  | Result.Error err -> Errors.pp Fmt.stderr err ; exit 1
+
+let type_ast_or_exit ast =
+  match Typechecker.check_program ast with
+  | Result.Ok (p, warns) ->
+      Warnings.pp_warnings Fmt.stderr warns ;
+      p
+  | Result.Error error ->
+      Errors.pp_semantic_error Fmt.stderr error ;
+      exit 1
+
 (*
       I am not using Fmt to print to stderr here because there was a pretty awful
       bug where it would unpredictably fail to flush. It would flush when using
@@ -253,13 +274,13 @@ let print_or_write data =
 
 let use_file filename =
   let ast =
-    Frontend_utils.get_ast_or_exit filename
+    get_ast_or_exit filename
       ~print_warnings:(not !canonicalize_settings.deprecations)
       ~bare_functions:!bare_functions in
   (* must be before typecheck to fix up deprecated syntax which gets rejected *)
   let ast = Canonicalize.repair_syntax ast !canonicalize_settings in
   Debugging.ast_logger ast ;
-  let typed_ast = Frontend_utils.type_ast_or_exit ast in
+  let typed_ast = type_ast_or_exit ast in
   let canonical_ast =
     Canonicalize.canonicalize_program typed_ast !canonicalize_settings in
   if !pretty_print_program then
