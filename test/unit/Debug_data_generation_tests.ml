@@ -7,7 +7,7 @@ let print_data_prog ast = print_data_prog (Ast_to_Mir.gather_data ast)
 
 let%expect_test "whole program data generation check" =
   let ast =
-    Frontend_utils.typed_ast_of_string_exn
+    Test_utils.typed_ast_of_string_exn
       {|       data {
                   int<lower=7> K;
                   int<lower=1> D;
@@ -38,7 +38,7 @@ let%expect_test "whole program data generation check" =
 
 let%expect_test "whole program data generation check" =
   let ast =
-    Frontend_utils.typed_ast_of_string_exn
+    Test_utils.typed_ast_of_string_exn
       {|       data {
                     array[3, 4] int x;
                     array[5, 2, 4] int y;
@@ -86,7 +86,7 @@ let%expect_test "whole program data generation check" =
 
 let%expect_test "whole program data generation check" =
   let ast =
-    Frontend_utils.typed_ast_of_string_exn
+    Test_utils.typed_ast_of_string_exn
       {|       data {
                   int<lower=2, upper=4> K;
                   int<lower=K, upper=K> D;
@@ -119,7 +119,7 @@ let%expect_test "whole program data generation check" =
 
 let%expect_test "whole program data generation check" =
   let ast =
-    Frontend_utils.typed_ast_of_string_exn
+    Test_utils.typed_ast_of_string_exn
       {|
         data {
           corr_matrix[5] d;
@@ -229,7 +229,7 @@ let%expect_test "whole program data generation check" =
 
 let%expect_test "whole program data generation check" =
   let ast =
-    Frontend_utils.typed_ast_of_string_exn
+    Test_utils.typed_ast_of_string_exn
       {|
         data {
           int<lower=0> N;
@@ -477,7 +477,7 @@ let%expect_test "whole program data generation check" =
 
 let%expect_test "whole program data generation check" =
   let ast =
-    Frontend_utils.typed_ast_of_string_exn
+    Test_utils.typed_ast_of_string_exn
       {|
         data {
           vector<upper=10>[5] x_vect;
@@ -636,7 +636,7 @@ let%expect_test "whole program data generation check" =
 
 let%expect_test "whole program data generation check" =
   let ast =
-    Frontend_utils.typed_ast_of_string_exn
+    Test_utils.typed_ast_of_string_exn
       {|
       data {
         int<lower = 0> K;                     // players
@@ -655,7 +655,7 @@ let%expect_test "whole program data generation check" =
 
 let%expect_test "Complex numbers program" =
   let ast =
-    Frontend_utils.typed_ast_of_string_exn
+    Test_utils.typed_ast_of_string_exn
       {|
       data {
         complex z;

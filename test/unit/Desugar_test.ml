@@ -1,16 +1,12 @@
 open Core_kernel
 open Analysis_and_optimization
 
-let to_mir s =
-  Frontend.Frontend_utils.typed_ast_of_string_exn s
-  |> Frontend.Ast_to_Mir.trans_prog "test prog"
-
 let print_tdata Middle.Program.{prepare_data; _} =
   Fmt.(str "@[<v>%a@]@," (list ~sep:cut Middle.Stmt.Located.pp) prepare_data)
   |> print_endline
 
 let%expect_test "matrix array multi indexing " =
-  to_mir
+  Test_utils.mir_of_string
     {|
 transformed data {
   array[3] int arr = {2, 3, 1};
@@ -26,7 +22,7 @@ transformed data {
     FnPrint__(mat[2, arr, 2]); |}]
 
 let%expect_test "matrix array multi indexing " =
-  to_mir
+  Test_utils.mir_of_string
     {|
 transformed data {
   array[3] int arr = {2, 3, 1};
@@ -43,7 +39,7 @@ transformed data {
  |}]
 
 let%expect_test "matrix array multi indexing " =
-  to_mir
+  Test_utils.mir_of_string
     {|
 transformed data {
   array[3] int arr = {2, 3, 1};
@@ -60,7 +56,7 @@ transformed data {
  |}]
 
 let%expect_test "matrix array multi indexing " =
-  to_mir
+  Test_utils.mir_of_string
     {|
 transformed data {
   array[3] int arr = {2, 3, 1};
@@ -77,7 +73,7 @@ transformed data {
  |}]
 
 let%expect_test "matrix array multi indexing " =
-  to_mir
+  Test_utils.mir_of_string
     {|
 transformed data {
   array[3] int arr = {2, 3, 1};
@@ -94,7 +90,7 @@ transformed data {
  |}]
 
 let%expect_test "matrix array multi indexing " =
-  to_mir
+  Test_utils.mir_of_string
     {|
 transformed data {
   array[3] int arr = {2, 3, 1};
@@ -118,7 +114,8 @@ transformed data {
     FnPrint__(mat[2, 2, arr[1]]); |}]
 
 let%expect_test "intertwined with partial evaluator" =
-  to_mir {|
+  Test_utils.mir_of_string
+    {|
 transformed data {
   vector[3] x;
   print(log(1-x[:])[:]);

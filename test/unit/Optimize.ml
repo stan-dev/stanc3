@@ -1,5 +1,4 @@
 open Core_kernel
-open Frontend
 open Analysis_and_optimization.Optimize
 open Middle
 open Common
@@ -7,7 +6,7 @@ open Analysis_and_optimization.Mir_utils
 
 let reset_and_mir_of_string s =
   Gensym.reset_danger_use_cautiously () ;
-  Frontend_utils.typed_ast_of_string_exn s |> Ast_to_Mir.trans_prog ""
+  Test_utils.mir_of_string s
 
 let%expect_test "map_rec_stmt_loc" =
   let mir =
