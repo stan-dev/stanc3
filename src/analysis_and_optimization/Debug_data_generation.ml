@@ -1,6 +1,9 @@
 open Core_kernel
 open Middle
 
+module Partial_evaluator =
+  Partial_evaluation.Make (Frontend.Std_library_utils.NullLibrary)
+
 let rec transpose = function
   | [] :: _ -> []
   | rows ->
@@ -30,7 +33,7 @@ let rec vect_to_mat l m =
 
 let eval_expr m e =
   let e = Mir_utils.subst_expr m e in
-  let e = Partial_evaluator.eval_expr e in
+  let e = Partial_evaluator.try_eval_expr e in
   let rec strip_promotions (e : Middle.Expr.Typed.t) =
     match e.pattern with Promotion (e, _, _) -> strip_promotions e | _ -> e
   in

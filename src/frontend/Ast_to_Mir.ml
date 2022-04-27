@@ -30,14 +30,6 @@ module Make (StdLib : Std_library_utils.Library) = struct
 
   let format_number s = s |> without_underscores |> drop_leading_zeros
 
-  let%expect_test "format_number0" =
-    format_number "0_000." |> print_endline ;
-    [%expect "0."]
-
-  let%expect_test "format_number1" =
-    format_number ".123_456" |> print_endline ;
-    [%expect ".123456"]
-
   let rec op_to_funapp op args type_ =
     let loc = Ast.expr_loc_lub args in
     let adlevel = Ast.expr_ad_lub args in

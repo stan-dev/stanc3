@@ -16,6 +16,7 @@ module Deprecations = Deprecation_analysis.Make (CppLibrary)
 module Canonicalizer = Canonicalize.Make (Deprecations)
 module ModelInfo = Info.Make (CppLibrary)
 module Ast2Mir = Ast_to_Mir.Make (CppLibrary)
+module Optimizer = Optimize.Make (CppLibrary)
 
 (** The main program. *)
 let version = "%%NAME%%3 %%VERSION%%"
@@ -332,7 +333,7 @@ let use_file filename =
           if !no_soa_opt then {base_optims with optimize_soa= false}
           else if !soa_opt then {base_optims with optimize_soa= true}
           else base_optims in
-        Optimize.optimization_suite ~settings:set_optims tx_mir in
+        Optimizer.optimization_suite ~settings:set_optims tx_mir in
       if !dump_opt_mir then
         Sexp.pp_hum Format.std_formatter [%sexp (opt : Middle.Program.Typed.t)] ;
       if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt ;

@@ -309,7 +309,9 @@ let minimal_variables_lattice initial_variables =
     end )
 
 (* The transfer function for a constant propagation analysis *)
-let constant_propagation_transfer ?(preserve_stability = false)
+let constant_propagation_transfer
+    (module Partial_evaluator : Partial_evaluation.PartialEvaluator)
+    ?(preserve_stability = false)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   ( module struct
     type labels = int
