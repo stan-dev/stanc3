@@ -138,11 +138,9 @@ let variadic_dae_functor_suffix = "_daefunctor__"
 
 let functor_suffix_select hof =
   match hof with
-  | x when Stan_math_signatures.is_reduce_sum_fn x -> reduce_sum_functor_suffix
-  | x when Stan_math_signatures.is_variadic_ode_fn x ->
-      variadic_ode_functor_suffix
-  | x when Stan_math_signatures.is_variadic_dae_fn x ->
-      variadic_dae_functor_suffix
+  | x when Stan_math_library.is_reduce_sum_fn x -> reduce_sum_functor_suffix
+  | x when Stan_math_library.is_variadic_ode_fn x -> variadic_ode_functor_suffix
+  | x when Stan_math_library.is_variadic_dae_fn x -> variadic_dae_functor_suffix
   | _ -> functor_suffix
 
 let constraint_to_string = function
@@ -334,7 +332,7 @@ and gen_functionals fname suffix es mem_pattern =
         | ( x
           , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
             :: grainsize :: container :: tl )
-          when Stan_math_signatures.is_reduce_sum_fn x ->
+          when Stan_math_library.is_reduce_sum_fn x ->
             let chop_functor_suffix =
               String.chop_suffix_exn ~suffix:reduce_sum_functor_suffix in
             let propto_template =
@@ -349,16 +347,16 @@ and gen_functionals fname suffix es mem_pattern =
             ( strf "%s<%s%s>" fname normalized_dist_functor propto_template
             , grainsize :: container :: msgs :: tl )
         | x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
-          when Stan_math_signatures.is_variadic_ode_fn x
+          when Stan_math_library.is_variadic_ode_fn x
                && String.is_suffix fname
-                    ~suffix:Stan_math_signatures.ode_tolerances_suffix
-               && not (Stan_math_signatures.variadic_ode_adjoint_fn = x) ->
+                    ~suffix:Stan_math_library.ode_tolerances_suffix
+               && not (Stan_math_library.variadic_ode_adjoint_fn = x) ->
             ( fname
             , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: msgs
               :: tl )
         | x, f :: y0 :: t0 :: ts :: tl
-          when Stan_math_signatures.is_variadic_ode_fn x
-               && not (Stan_math_signatures.variadic_ode_adjoint_fn = x) ->
+          when Stan_math_library.is_variadic_ode_fn x
+               && not (Stan_math_library.variadic_ode_adjoint_fn = x) ->
             (fname, f :: y0 :: t0 :: ts :: msgs :: tl)
         | ( x
           , f
@@ -375,7 +373,7 @@ and gen_functionals fname suffix es mem_pattern =
                                           :: num_checkpoints
                                              :: interpolation_polynomial
                                                 :: solver_f :: solver_b :: tl )
-          when Stan_math_signatures.variadic_ode_adjoint_fn = x ->
+          when Stan_math_library.variadic_ode_adjoint_fn = x ->
             ( fname
             , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: rel_tol_b
               :: abs_tol_b :: rel_tol_q :: abs_tol_q :: max_num_steps
@@ -384,14 +382,14 @@ and gen_functionals fname suffix es mem_pattern =
         | ( x
           , f :: yy0 :: yp0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
           )
-          when Stan_math_signatures.is_variadic_dae_fn x
+          when Stan_math_library.is_variadic_dae_fn x
                && String.is_suffix fname
-                    ~suffix:Stan_math_signatures.dae_tolerances_suffix ->
+                    ~suffix:Stan_math_library.dae_tolerances_suffix ->
             ( fname
             , f :: yy0 :: yp0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps
               :: msgs :: tl )
         | x, f :: yy0 :: yp0 :: t0 :: ts :: tl
-          when Stan_math_signatures.is_variadic_dae_fn x ->
+          when Stan_math_library.is_variadic_dae_fn x ->
             (fname, f :: yy0 :: yp0 :: t0 :: ts :: msgs :: tl)
         | ( "map_rect"
           , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}

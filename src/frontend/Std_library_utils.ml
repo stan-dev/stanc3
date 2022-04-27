@@ -46,6 +46,10 @@ module type Library = sig
 end
 
 module NullLibrary : Library = struct
+  (** A "standard library" for stan which contains no functions.
+      Useful only for testing
+   *)
+
   let function_signatures : (string, signature list) Hashtbl.t =
     String.Table.create ()
 

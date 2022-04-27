@@ -81,9 +81,7 @@ val pp_signature_mismatch :
   -> unit
 
 val pp_assignmentoperator_sigs :
-     Format.formatter
-  -> UnsizedType.t* Std_library_utils.signature list
-  -> unit
+  Format.formatter -> UnsizedType.t * Std_library_utils.signature list -> unit
 
 val compare_errors : function_mismatch -> function_mismatch -> int
 val compare_match_results : match_result -> match_result -> int

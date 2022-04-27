@@ -8,7 +8,9 @@ open Analysis_and_optimization
 open Middle
 
 (* Initialize functor modules with the Stan Math Library *)
-module CppLibrary = Std_library_utils.NullLibrary
+module CppLibrary : Std_library_utils.Library =
+  Stan_math_backend.Stan_math_library
+
 module Typechecker = Typechecking.Make (CppLibrary)
 module Deprecations = Deprecation_analysis.Make (CppLibrary)
 module Canonicalizer = Canonicalize.Make (Deprecations)
@@ -352,11 +354,11 @@ let main () =
   print_deprecated_arg_warning ;
   (* Deal with multiple modalities *)
   if !dump_stan_math_sigs then (
-    Stan_math_signatures.pretty_print_all_math_sigs Format.std_formatter () ;
+    Stan_math_library.pretty_print_all_math_sigs Format.std_formatter () ;
     exit 0 ) ;
   if !dump_stan_math_distributions then (
-    Stan_math_signatures.pretty_print_all_math_distributions
-      Format.std_formatter () ;
+    Stan_math_library.pretty_print_all_math_distributions Format.std_formatter
+      () ;
     exit 0 ) ;
   if !model_file = "" then model_file_err () ;
   (* if we only have functions, always compile as standalone *)

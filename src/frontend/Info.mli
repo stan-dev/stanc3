@@ -20,4 +20,4 @@ module type Information = sig
   val info : Ast.typed_program -> string
 end
 
-module Make(StdLib:Std_library_utils.Library): Information
+module Make (StdLib : Std_library_utils.Library) : Information

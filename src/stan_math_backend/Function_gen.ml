@@ -406,11 +406,11 @@ let collect_functors_functions (p : Program.Numbered.t) =
     String.Table.create () in
   let forward_decls = Hash_set.Poly.create () in
   let reduce_sum_fns =
-    is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p in
+    is_fun_used_with_variadic_fn Stan_math_library.is_reduce_sum_fn p in
   let variadic_ode_fns =
-    is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_ode_fn p in
+    is_fun_used_with_variadic_fn Stan_math_library.is_variadic_ode_fn p in
   let variadic_dae_fns =
-    is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_dae_fn p in
+    is_fun_used_with_variadic_fn Stan_math_library.is_variadic_dae_fn p in
   let pp_fun_def_with_variadic_fn_list ppf fblock =
     (hovbox ~indent:2 pp_fun_def)
       ppf
