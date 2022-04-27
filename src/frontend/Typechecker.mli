@@ -15,33 +15,40 @@
 
 open Ast
 
-val check_program_exn : untyped_program -> typed_program * Warnings.t list
-(**
-    Type check a full Stan program.
-    Can raise [Errors.SemanticError]
-*)
-
-val check_program :
-  untyped_program -> (typed_program * Warnings.t list, Semantic_error.t) result
-(**
-    The safe version of [check_program_exn]. This catches
-    all [Errors.SemanticError] exceptions and converts them
-    into a [Result.t]
-*)
-
-val operator_stan_math_return_type :
-     Middle.Operator.t
-  -> (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t) list
-  -> (Middle.UnsizedType.returntype * Promotion.t list) option
-
-val stan_math_return_type :
-     string
-  -> (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t) list
-  -> Middle.UnsizedType.returntype option
 
 val model_name : string ref
 (** A reference to hold the model name. Relevant for checking variable
-    clashes and used in code generation. *)
+      clashes and used in code generation. *)
 
 val check_that_all_functions_have_definition : bool ref
 (** A switch to determine whether we check that all functions have a definition *)
+
+module type Typechecker = sig
+  val check_program_exn : untyped_program -> typed_program * Warnings.t list
+  (**
+        Type check a full Stan program.
+        Can raise [Errors.SemanticError]
+    *)
+
+  val check_program :
+       untyped_program
+    -> (typed_program * Warnings.t list, Semantic_error.t) result
+  (**
+        The safe version of [check_program_exn]. This catches
+        all [Errors.SemanticError] exceptions and converts them
+        into a [Result.t]
+    *)
+
+  val operator_stan_math_return_type :
+       Middle.Operator.t
+    -> (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t) list
+    -> (Middle.UnsizedType.returntype * Promotion.t list) option
+
+  val stan_math_return_type :
+       string
+    -> (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t) list
+    -> Middle.UnsizedType.returntype option
+
+end
+
+module  Typecheck (StdLibrary : Std_library_utils.Library): Typechecker

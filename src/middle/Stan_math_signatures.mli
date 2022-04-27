@@ -21,9 +21,6 @@ val stan_math_signatures : (string, signature list) Hashtbl.t
 val is_stan_math_function_name : string -> bool
 (** Equivalent to [Hashtbl.mem stan_math_signatures s]*)
 
-(** Pretty printers *)
-
-val pp_math_sig : signature Fmt.t
 val pretty_print_all_math_sigs : unit Fmt.t
 val pretty_print_all_math_distributions : unit Fmt.t
 

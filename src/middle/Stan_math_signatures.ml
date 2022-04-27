@@ -441,14 +441,6 @@ let make_assignmentoperator_stan_math_signatures assop =
            else [(Void, [(ad1, lhs); (ad2, rhs)], SoA)]
        | _ -> [] )
 
-let pp_math_sig ppf (rt, args, mem_pattern) =
-  UnsizedType.pp ppf (UFun (args, rt, FnPlain, mem_pattern))
-
-let pp_math_sigs ppf name =
-  (Fmt.list ~sep:Fmt.cut pp_math_sig) ppf (get_sigs name)
-
-let pretty_print_math_sigs = Fmt.str "@[<v>@,%a@]" pp_math_sigs
-
 let string_operator_to_stan_math_fns str =
   match str with
   | "Plus__" -> "add"
@@ -499,8 +491,11 @@ let pretty_print_all_math_distributions ppf () =
 
 let pretty_print_math_lib_operator_sigs op =
   if op = Operator.IntDivide then
-    [Fmt.str "@[<v>@,%a@]" pp_math_sig int_divide_type]
-  else operator_to_stan_math_fns op |> List.map ~f:pretty_print_math_sigs
+    [Fmt.str "@[<v>@,%a@]" Std_library_utils.pp_math_sig int_divide_type]
+  else
+    operator_to_stan_math_fns op
+    |> List.map
+         ~f:(Fn.compose Std_library_utils.pretty_print_math_sigs get_sigs)
 
 (* -- Some helper definitions to populate stan_math_signatures -- *)
 let bare_types =
