@@ -69,6 +69,15 @@ val check_variadic_args :
       If none is found, returns [Error] of the list of args and a function_mismatch.
      *)
 
+val find_matching_first_order_fn :
+     Environment.t
+  -> (Environment.info -> (UnsizedType.t * Promotion.t list, 'a) result)
+  -> Ast.identifier
+  -> (UnsizedType.t * Promotion.t list, 'a) generic_match_result
+(** Given a constraint function [matches], find any signature which exists
+    Returns the first [Ok] if any exist, or else [Error]
+*)
+
 val pp_signature_mismatch :
      Format.formatter
   -> string

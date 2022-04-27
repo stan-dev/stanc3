@@ -283,6 +283,20 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
   | (_, x) :: _ -> TypeMismatch (minimal_func_type, x, None) |> wrap_err
   | [] -> Error ([], ArgNumMismatch (List.length mandatory_arg_tys, 0))
 
+let find_matching_first_order_fn tenv matches (fname : Ast.identifier) =
+  let candidates =
+    Utils.stdlib_distribution_name fname.name
+    |> Environment.find tenv |> List.map ~f:matches in
+  let ok, errs = List.partition_map candidates ~f:Result.to_either in
+  match unique_minimum_promotion ok with
+  | Ok a -> UniqueMatch a
+  | Error (Some promotions) ->
+      List.filter_map promotions ~f:(function
+        | UnsizedType.UFun (args, rt, _, _) -> Some (rt, args)
+        | _ -> None )
+      |> AmbiguousMatch
+  | Error None -> SignatureErrors (List.hd_exn errs)
+
 let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
   let open Fmt in
   let ctx = ref TypeMap.empty in

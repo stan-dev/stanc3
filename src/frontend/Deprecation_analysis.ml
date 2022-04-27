@@ -21,38 +21,6 @@ module type Deprecation_analizer = sig
 end
 
 module Make (StdLib : Std_library_utils.Library) : Deprecation_analizer = struct
-  (* String.Map.of_alist_exn
-     (List.map
-        ~f:(fun (x, y) -> (x, (y, "2.32.0")))
-        (List.concat_map StdLib.distributions
-           ~f:(fun (fnkinds, name, _, _) ->
-             List.filter_map fnkinds ~f:(function
-               | Lpdf -> Some (name ^ "_log", name ^ "_lpdf")
-               | Lpmf -> Some (name ^ "_log", name ^ "_lpmf")
-               | Cdf -> Some (name ^ "_cdf_log", name ^ "_lcdf")
-               | Ccdf -> Some (name ^ "_ccdf_log", name ^ "_lccdf")
-               | Rng | UnaryVectorized -> None ) ) ) ) *)
-  (* String.Map.of_alist_exn
-          [ ("multiply_log", ("lmultiply", "2.32.0"))
-          ; ("binomial_coefficient_log", ("lchoose", "2.32.0"))
-          ; ("cov_exp_quad", ("gp_exp_quad_cov", "2.32.0")) ]
-
-          +
-     This can be automatically changed using the \
-                         canonicalize flag for stanc
-  *)
-
-  (* String.Map.of_alist_exn
-      [ ("integrate_ode", ("ode_rk45", "3.0"))
-      ; ("integrate_ode_rk45", ("ode_rk45", "3.0"))
-      ; ("integrate_ode_bdf", ("ode_bdf", "3.0"))
-      ; ("integrate_ode_adams", ("ode_adams", "3.0")) ]
-
-      +
-      The new interface is slightly different, see:
-     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-  *)
-
   let stan_lib_deprecations =
     Map.merge_skewed StdLib.deprecated_distributions StdLib.deprecated_functions
       ~combine:(fun ~key x y ->
@@ -68,7 +36,9 @@ module Make (StdLib : Std_library_utils.Library) : Deprecation_analizer = struct
 
   let rename_deprecated map name =
     Map.find map name
-    |> Option.map ~f:(fun Std_library_utils.{replacement; _} -> replacement)
+    |> Option.map
+         ~f:(fun Std_library_utils.{replacement; canonicalize_away; _} ->
+           if canonicalize_away then replacement else name )
     |> Option.value ~default:name
 
   let rename_deprecated_distribution =
@@ -153,7 +123,7 @@ module Make (StdLib : Std_library_utils.Library) : Deprecation_analizer = struct
     | FunApp ((StanLib _ | UserDefined _), {name; _}, l) ->
         let w =
           match Map.find stan_lib_deprecations name with
-          | Some {replacement; version; extra_message} ->
+          | Some {replacement; version; extra_message; _} ->
               [ ( emeta.loc
                 , name ^ " is deprecated and will be removed in Stan " ^ version
                   ^ ". Use " ^ replacement ^ " instead. " ^ extra_message ) ]

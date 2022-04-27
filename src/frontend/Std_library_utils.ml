@@ -9,17 +9,11 @@ type fun_arg = UnsizedType.autodifftype * UnsizedType.t
 type signature =
   UnsizedType.returntype * fun_arg list * Common.Helpers.mem_pattern
 
-type variadic_checker =
-     is_cond_dist:bool
-  -> Location_span.t
-  -> Environment.originblock
-  -> Environment.t
-  -> Ast.identifier
-  -> Ast.typed_expression list
-  -> Ast.typed_expression
-
 type deprecation_info =
-  {replacement: string; version: string; extra_message: string}
+  { replacement: string
+  ; version: string
+  ; extra_message: string
+  ; canonicalize_away: bool }
 [@@deriving sexp]
 
 module type Library = sig
@@ -39,6 +33,17 @@ module type Library = sig
   val get_assignment_operator_signatures : Operator.t -> signature list
   val is_not_overloadable : string -> bool
   val is_variadic_function_name : string -> bool
+  val variadic_function_returntype : string -> UnsizedType.returntype option
+
+  val check_variadic_fn :
+       Ast.identifier
+    -> is_cond_dist:bool
+    -> Location_span.t
+    -> Environment.originblock
+    -> Environment.t
+    -> Ast.typed_expression list
+    -> Ast.typed_expression
+
   val operator_to_function_names : Operator.t -> string list
   val string_operator_to_function_name : string -> string
   val deprecated_distributions : deprecation_info String.Map.t
@@ -60,6 +65,12 @@ module NullLibrary : Library = struct
   let get_operator_signatures _ = []
   let is_not_overloadable _ = false
   let is_variadic_function_name _ = false
+  let variadic_function_returntype _ = None
+
+  let check_variadic_fn _ ~is_cond_dist _ _ _ _ : Ast.typed_expression =
+    ignore (is_cond_dist : bool) ;
+    Common.FatalError.fatal_error_msg [%message "Impossible"]
+
   let operator_to_function_names _ = []
   let string_operator_to_function_name s = s
   let deprecated_distributions = String.Map.empty

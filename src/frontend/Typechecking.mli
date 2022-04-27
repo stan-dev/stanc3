@@ -22,6 +22,15 @@ val model_name : string ref
 val check_that_all_functions_have_definition : bool ref
 (** A switch to determine whether we check that all functions have a definition *)
 
+val get_arg_types : typed_expression list -> Std_library_utils.fun_arg list
+val type_of_expr_typed : typed_expression -> Middle.UnsizedType.t
+
+val calculate_autodifftype :
+     Environment.originblock
+  -> Environment.originblock
+  -> Middle.UnsizedType.t
+  -> Middle.UnsizedType.autodifftype
+
 module type Typechecker = sig
   val check_program_exn : untyped_program -> typed_program * Warnings.t list
   (**

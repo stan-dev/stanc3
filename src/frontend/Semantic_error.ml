@@ -221,21 +221,21 @@ module TypeError = struct
     | IllTypedBinaryOperator (op, lt, rt, sigs) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to infix operator %a. Available \
-           signatures: @[<v>%a@]@[<h>Instead supplied arguments of \
+           signatures: @[<v>%a@.@]@[<h>Instead supplied arguments of \
            incompatible type: %a, %a.@]"
           Operator.pp op Std_library_utils.pp_math_sigs sigs UnsizedType.pp lt
           UnsizedType.pp rt
     | IllTypedPrefixOperator (op, ut, sigs) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to prefix operator %a. Available \
-           signatures: @[<v>%a@]@[<h>Instead supplied argument of incompatible \
-           type: %a.@]"
+           signatures: @[<v>%a@.@]@[<h>Instead supplied argument of \
+           incompatible type: %a.@]"
           Operator.pp op Std_library_utils.pp_math_sigs sigs UnsizedType.pp ut
     | IllTypedPostfixOperator (op, ut, sigs) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to postfix operator %a. Available \
-           signatures: @[<v>%a@]@[<h>Instead supplied argument of incompatible \
-           type: %a.@]"
+           signatures: @[<v>%a@.@]@[<h>Instead supplied argument of \
+           incompatible type: %a.@]"
           Operator.pp op Std_library_utils.pp_math_sigs sigs UnsizedType.pp ut
 end
 

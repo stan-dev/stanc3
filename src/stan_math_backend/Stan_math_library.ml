@@ -239,7 +239,219 @@ let is_variadic_dae_tol_fn f =
 let is_variadic_function_name name =
   is_reduce_sum_fn name || is_variadic_dae_fn name || is_variadic_ode_fn name
 
-let is_not_overloadable = is_variadic_dae_fn
+let variadic_function_returntype name =
+  if is_reduce_sum_fn name then Some (UnsizedType.ReturnType UReal)
+  else if is_variadic_ode_fn name then
+    Some (UnsizedType.ReturnType variadic_ode_return_type)
+  else if is_variadic_dae_fn name then
+    Some (UnsizedType.ReturnType variadic_dae_return_type)
+  else None
+
+let is_not_overloadable = is_variadic_function_name
+
+module Variadic_typechecking = struct
+  (** This module serves as the backend-specific portion
+      of the typechecker. *)
+
+  open Frontend
+  open Typechecking
+  open Ast
+
+  let error e = raise (Errors.SemanticError e)
+
+  let make_function_variable current_block loc id = function
+    | UnsizedType.UFun (args, rt, FnLpdf _, mem_pattern) ->
+        let type_ =
+          UnsizedType.UFun
+            (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in
+        mk_typed_expression ~expr:(Variable id)
+          ~ad_level:(calculate_autodifftype current_block Functions type_)
+          ~type_ ~loc
+    | UnsizedType.UFun _ as type_ ->
+        mk_typed_expression ~expr:(Variable id)
+          ~ad_level:(calculate_autodifftype current_block Functions type_)
+          ~type_ ~loc
+    | type_ ->
+        Common.FatalError.fatal_error_msg
+          [%message
+            "Attempting to create function variable out of "
+              (type_ : UnsizedType.t)]
+
+  let check_reduce_sum ~is_cond_dist loc current_block tenv id tes =
+    let basic_mismatch () =
+      let mandatory_args =
+        UnsizedType.[(AutoDiffable, UArray UReal); (AutoDiffable, UInt)] in
+      let mandatory_fun_args =
+        UnsizedType.
+          [(AutoDiffable, UArray UReal); (DataOnly, UInt); (DataOnly, UInt)]
+      in
+      SignatureMismatch.check_variadic_args true mandatory_args
+        mandatory_fun_args UReal (get_arg_types tes) in
+    let fail () =
+      let expected_args, err =
+        basic_mismatch () |> Result.error |> Option.value_exn in
+      Semantic_error.illtyped_variadic_fn loc id.name
+        (List.map ~f:type_of_expr_typed tes)
+        expected_args err UReal
+      |> error in
+    let matching remaining_es fn =
+      match fn with
+      | Environment.
+          { type_=
+              UnsizedType.UFun
+                (((_, sliced_arg_fun_type) as sliced_arg_fun) :: _, _, _, _) as
+              ftype
+          ; _ }
+        when List.mem reduce_sum_slice_types sliced_arg_fun_type ~equal:( = ) ->
+          let mandatory_args = [sliced_arg_fun; (AutoDiffable, UInt)] in
+          let mandatory_fun_args =
+            [sliced_arg_fun; (DataOnly, UInt); (DataOnly, UInt)] in
+          let arg_types =
+            (calculate_autodifftype current_block Functions ftype, ftype)
+            :: get_arg_types remaining_es in
+          SignatureMismatch.check_variadic_args true mandatory_args
+            mandatory_fun_args UReal arg_types
+      | _ -> basic_mismatch () in
+    match tes with
+    | {expr= Variable fname; _} :: remaining_es -> (
+      match
+        SignatureMismatch.find_matching_first_order_fn tenv
+          (matching remaining_es) fname
+      with
+      | SignatureMismatch.UniqueMatch (ftype, promotions) ->
+          (* a valid signature exists *)
+          let tes =
+            make_function_variable current_block loc fname ftype :: remaining_es
+          in
+          mk_typed_expression
+            ~expr:
+              (mk_fun_app ~is_cond_dist
+                 (StanLib FnPlain, id, Promotion.promote_list tes promotions) )
+            ~ad_level:(expr_ad_lub tes) ~type_:UnsizedType.UReal ~loc
+      | AmbiguousMatch ps ->
+          Semantic_error.ambiguous_function_promotion loc fname.name None ps
+          |> error
+      | SignatureErrors (expected_args, err) ->
+          Semantic_error.illtyped_variadic_fn loc id.name
+            (List.map ~f:type_of_expr_typed tes)
+            expected_args err UReal
+          |> error )
+    | _ -> fail ()
+
+  let check_variadic_ode ~is_cond_dist loc current_block tenv id tes =
+    let optional_tol_mandatory_args =
+      if variadic_ode_adjoint_fn = id.name then
+        variadic_ode_adjoint_ctl_tol_arg_types
+      else if is_variadic_ode_nonadjoint_tol_fn id.name then
+        variadic_ode_tol_arg_types
+      else [] in
+    let mandatory_arg_types =
+      variadic_ode_mandatory_arg_types @ optional_tol_mandatory_args in
+    let fail () =
+      let expected_args, err =
+        SignatureMismatch.check_variadic_args false mandatory_arg_types
+          variadic_ode_mandatory_fun_args variadic_ode_fun_return_type
+          (get_arg_types tes)
+        |> Result.error |> Option.value_exn in
+      Semantic_error.illtyped_variadic_fn loc id.name
+        (List.map ~f:type_of_expr_typed tes)
+        expected_args err variadic_ode_fun_return_type
+      |> error in
+    let matching remaining_es Environment.{type_= ftype; _} =
+      let arg_types =
+        (calculate_autodifftype current_block Functions ftype, ftype)
+        :: get_arg_types remaining_es in
+      SignatureMismatch.check_variadic_args false mandatory_arg_types
+        variadic_ode_mandatory_fun_args variadic_ode_fun_return_type arg_types
+    in
+    match tes with
+    | {expr= Variable fname; _} :: remaining_es -> (
+      match
+        SignatureMismatch.find_matching_first_order_fn tenv
+          (matching remaining_es) fname
+      with
+      | SignatureMismatch.UniqueMatch (ftype, promotions) ->
+          let tes =
+            make_function_variable current_block loc fname ftype :: remaining_es
+          in
+          mk_typed_expression
+            ~expr:
+              (mk_fun_app ~is_cond_dist
+                 (StanLib FnPlain, id, Promotion.promote_list tes promotions) )
+            ~ad_level:(expr_ad_lub tes) ~type_:variadic_ode_return_type ~loc
+      | AmbiguousMatch ps ->
+          Semantic_error.ambiguous_function_promotion loc fname.name None ps
+          |> error
+      | SignatureErrors (expected_args, err) ->
+          Semantic_error.illtyped_variadic_fn loc id.name
+            (List.map ~f:type_of_expr_typed tes)
+            expected_args err variadic_ode_fun_return_type
+          |> error )
+    | _ -> fail ()
+
+  let check_variadic_dae ~is_cond_dist loc current_block tenv id tes =
+    let optional_tol_mandatory_args =
+      if is_variadic_dae_tol_fn id.name then variadic_dae_tol_arg_types else []
+    in
+    let mandatory_arg_types =
+      variadic_dae_mandatory_arg_types @ optional_tol_mandatory_args in
+    let fail () =
+      let expected_args, err =
+        SignatureMismatch.check_variadic_args false mandatory_arg_types
+          variadic_dae_mandatory_fun_args variadic_dae_fun_return_type
+          (get_arg_types tes)
+        |> Result.error |> Option.value_exn in
+      Semantic_error.illtyped_variadic_fn loc id.name
+        (List.map ~f:type_of_expr_typed tes)
+        expected_args err variadic_dae_fun_return_type
+      |> error in
+    let matching remaining_es Environment.{type_= ftype; _} =
+      let arg_types =
+        (calculate_autodifftype current_block Functions ftype, ftype)
+        :: get_arg_types remaining_es in
+      SignatureMismatch.check_variadic_args false mandatory_arg_types
+        variadic_dae_mandatory_fun_args variadic_dae_fun_return_type arg_types
+    in
+    match tes with
+    | {expr= Variable fname; _} :: remaining_es -> (
+      match
+        SignatureMismatch.find_matching_first_order_fn tenv
+          (matching remaining_es) fname
+      with
+      | SignatureMismatch.UniqueMatch (ftype, promotions) ->
+          let tes =
+            make_function_variable current_block loc fname ftype :: remaining_es
+          in
+          mk_typed_expression
+            ~expr:
+              (mk_fun_app ~is_cond_dist
+                 (StanLib FnPlain, id, Promotion.promote_list tes promotions) )
+            ~ad_level:(expr_ad_lub tes) ~type_:variadic_dae_return_type ~loc
+      | AmbiguousMatch ps ->
+          Semantic_error.ambiguous_function_promotion loc fname.name None ps
+          |> error
+      | SignatureErrors (expected_args, err) ->
+          Semantic_error.illtyped_variadic_fn loc id.name
+            (List.map ~f:type_of_expr_typed tes)
+            expected_args err variadic_dae_fun_return_type
+          |> error )
+    | _ -> fail ()
+end
+
+let check_variadic_fn id ~is_cond_dist loc current_block tenv tes =
+  if is_reduce_sum_fn id.Frontend.Ast.name then
+    Variadic_typechecking.check_reduce_sum ~is_cond_dist loc current_block tenv
+      id tes
+  else if is_variadic_ode_fn id.name then
+    Variadic_typechecking.check_variadic_ode ~is_cond_dist loc current_block
+      tenv id tes
+  else if is_variadic_dae_fn id.name then
+    Variadic_typechecking.check_variadic_dae ~is_cond_dist loc current_block
+      tenv id tes
+  else
+    Common.FatalError.fatal_error_msg
+      [%message
+        "Invalid variadic function for Stan Math backend" (id.name : string)]
 
 let distributions =
   [ ( full_lpmf
@@ -499,21 +711,23 @@ let deprecated_distributions =
            ; version= "2.32.0"
            ; extra_message=
                "This can be automatically changed using the canonicalize flag \
-                for stanc" } ) )
+                for stanc"
+           ; canonicalize_away= true } ) )
   |> String.Map.of_alist_exn
 
 let deprecated_functions =
-  let make extra_message version replacement =
-    {extra_message; replacement; version} in
+  let make extra_message version canonicalize_away replacement =
+    {extra_message; replacement; version; canonicalize_away} in
   let ode =
     make
-      "The new interface is slightly different, see: \n\
+      "\n\
+       The new interface is slightly different, see: \
        https://mc-stan.org/users/documentation/case-studies/convert_odes.html"
-      "3.0" in
+      "3.0" false in
   let std =
     make
       "This can be automatically changed using the canonicalize flag for stanc"
-      "2.32" in
+      "2.32.0" true in
   String.Map.of_alist_exn
     [ ("multiply_log", std "lmultiply")
     ; ("binomial_coefficient_log", std "lchoose")

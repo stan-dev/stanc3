@@ -80,6 +80,10 @@ let mk_untyped_expression ~expr ~loc = {expr; emeta= {loc}}
 let mk_typed_expression ~expr ~loc ~type_ ~ad_level =
   {expr; emeta= {loc; type_; ad_level}}
 
+let mk_fun_app ~is_cond_dist (kind, id, arguments) =
+  if is_cond_dist then CondDistApp (kind, id, arguments)
+  else FunApp (kind, id, arguments)
+
 let expr_loc_lub exprs =
   match List.map ~f:(fun e -> e.emeta.loc) exprs with
   | [] -> Location_span.empty
