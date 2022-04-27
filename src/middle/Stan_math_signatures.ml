@@ -1592,8 +1592,8 @@ let () =
   add_nullary "log10" ;
   add_unqualified ("log10", ReturnType UComplex, [UComplex], AoS) ;
   add_nullary "log2" ;
-  add_unqualified ("log_determinant", ReturnType UReal, [UMatrix], AoS) ;
-  add_unqualified ("log_determinant_spd", ReturnType UReal, [UMatrix], AoS) ;
+  add_unqualified ("log_determinant", ReturnType UReal, [UMatrix], SoS) ;
+  add_unqualified ("log_determinant_spd", ReturnType UReal, [UMatrix], SoS) ;
   add_binary_vec "log_diff_exp" AoS ;
   add_binary_vec "log_falling_factorial" AoS ;
   add_binary_vec "log_inv_logit_diff" AoS ;
