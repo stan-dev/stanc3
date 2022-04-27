@@ -245,9 +245,6 @@ let matching_function env name args =
            UnsizedType.compare_returntype ret1 ret2 ) in
   find_compatible_rt function_types args
 
-let matching_stanlib_function =
-  matching_function Environment.stan_math_environment
-
 let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
     fun_return args =
   let minimal_func_type =

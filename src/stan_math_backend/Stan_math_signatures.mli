@@ -4,6 +4,7 @@
 *)
 
 open Core_kernel
+open Middle
 
 (** Function arguments are represented by their type an autodiff
    type. This is [AutoDiffable] for everything except arguments
@@ -39,7 +40,6 @@ val dist_name_suffix : (string * 'a) list -> string -> string
 
 val operator_to_stan_math_fns : Operator.t -> string list
 val string_operator_to_stan_math_fns : string -> string
-val pretty_print_math_lib_operator_sigs : Operator.t -> string list
 val make_assignmentoperator_stan_math_signatures : Operator.t -> signature list
 
 (** Special functions for the variadic signatures exposed *)

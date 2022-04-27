@@ -85,32 +85,26 @@ let reserved_keywords =
 
 module type Typechecker = sig
   val check_program_exn : untyped_program -> typed_program * Warnings.t list
-  (**
-        Type check a full Stan program.
-        Can raise [Errors.SemanticError]
-    *)
 
   val check_program :
        untyped_program
     -> (typed_program * Warnings.t list, Semantic_error.t) result
-  (**
-        The safe version of [check_program_exn]. This catches
-        all [Errors.SemanticError] exceptions and converts them
-        into a [Result.t]
-    *)
 
-  val operator_stan_math_return_type :
+  val operator_return_type :
        Middle.Operator.t
     -> (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t) list
     -> (Middle.UnsizedType.returntype * Promotion.t list) option
 
-  val stan_math_return_type :
+  val library_function_return_type :
        string
     -> (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t) list
     -> Middle.UnsizedType.returntype option
 end
 
-module Typecheck (StdLibrary : Std_library_utils.Library) : Typechecker = struct
+module Make (StdLibrary : Std_library_utils.Library) : Typechecker = struct
+  let std_library_tenv : Env.t =
+    Env.make_from_library StdLibrary.function_signatures
+
   let verify_identifier id : unit =
     if id.name = !model_name then
       Semantic_error.ident_is_model_name id.id_loc id.name |> error
@@ -217,14 +211,14 @@ module Typecheck (StdLibrary : Std_library_utils.Library) : Typechecker = struct
     | SignatureMismatch.UniqueMatch (rt, _, _) -> Some rt
     | _ -> None
 
-  let stan_math_return_type name arg_tys =
+  let library_function_return_type name arg_tys =
     match name with
     | x when StdLibrary.is_variadic_function_name x -> Some (failwith "TODO")
     | _ ->
-        SignatureMismatch.matching_stanlib_function name arg_tys
+        SignatureMismatch.matching_function std_library_tenv name arg_tys
         |> match_to_rt_option
 
-  let operator_stan_math_return_type op arg_tys =
+  let operator_return_type op arg_tys =
     match (op, arg_tys) with
     | Operator.IntDivide, [(_, UnsizedType.UInt); (_, UInt)] ->
         Some
@@ -233,19 +227,19 @@ module Typecheck (StdLibrary : Std_library_utils.Library) : Typechecker = struct
     | _ ->
         StdLibrary.operator_to_function_names op
         |> List.filter_map ~f:(fun name ->
-               SignatureMismatch.matching_stanlib_function name arg_tys
+               SignatureMismatch.matching_function std_library_tenv name arg_tys
                |> function
                | SignatureMismatch.UniqueMatch (rt, _, p) -> Some (rt, p)
                | _ -> None )
         |> List.hd
 
-  let assignmentoperator_stan_math_return_type assop arg_tys =
+  let assignmentoperator_return_type assop arg_tys =
     ( match assop with
     | Operator.Divide ->
-        SignatureMismatch.matching_stanlib_function "divide" arg_tys
+        SignatureMismatch.matching_function std_library_tenv "divide" arg_tys
         |> match_to_rt_option
     | Plus | Minus | Times | EltTimes | EltDivide ->
-        operator_stan_math_return_type assop arg_tys |> Option.map ~f:fst
+        operator_return_type assop arg_tys |> Option.map ~f:fst
     | _ -> None )
     |> Option.bind ~f:(function
          | ReturnType rtype
@@ -257,7 +251,7 @@ module Typecheck (StdLibrary : Std_library_utils.Library) : Typechecker = struct
          | _ -> None )
 
   let check_binop loc op le re =
-    let rt = [le; re] |> get_arg_types |> operator_stan_math_return_type op in
+    let rt = [le; re] |> get_arg_types |> operator_return_type op in
     match rt with
     | Some (ReturnType type_, [p1; p2]) ->
         mk_typed_expression
@@ -266,27 +260,34 @@ module Typecheck (StdLibrary : Std_library_utils.Library) : Typechecker = struct
           ~type_ ~loc
     | _ ->
         Semantic_error.illtyped_binary_op loc op le.emeta.type_ re.emeta.type_
+          (StdLibrary.get_operator_signatures op)
         |> error
 
   let check_prefixop loc op te =
-    let rt = operator_stan_math_return_type op [arg_type te] in
+    let rt = operator_return_type op [arg_type te] in
     match rt with
     | Some (ReturnType type_, _) ->
         mk_typed_expression
           ~expr:(PrefixOp (op, te))
           ~ad_level:(expr_ad_lub [te])
           ~type_ ~loc
-    | _ -> Semantic_error.illtyped_prefix_op loc op te.emeta.type_ |> error
+    | _ ->
+        Semantic_error.illtyped_prefix_op loc op te.emeta.type_
+          (StdLibrary.get_operator_signatures op)
+        |> error
 
   let check_postfixop loc op te =
-    let rt = operator_stan_math_return_type op [arg_type te] in
+    let rt = operator_return_type op [arg_type te] in
     match rt with
     | Some (ReturnType type_, _) ->
         mk_typed_expression
           ~expr:(PostfixOp (te, op))
           ~ad_level:(expr_ad_lub [te])
           ~type_ ~loc
-    | _ -> Semantic_error.illtyped_postfix_op loc op te.emeta.type_ |> error
+    | _ ->
+        Semantic_error.illtyped_postfix_op loc op te.emeta.type_
+          (StdLibrary.get_operator_signatures op)
+        |> error
 
   let check_id cf loc tenv id =
     match Env.find tenv (Utils.stdlib_distribution_name id.name) with
@@ -493,7 +494,7 @@ module Typecheck (StdLibrary : Std_library_utils.Library) : Typechecker = struct
     | {kind= `Variable _; _} :: _
     (* variables can sometimes shadow stanlib functions, so we have to check this *)
       when not
-             (StdLibrary.is_stan_math_function_name
+             (StdLibrary.is_stdlib_function_name
                 (Utils.normalized_name id.name) ) ->
         Semantic_error.returning_fn_expected_nonfn_found loc id.name |> error
     | [] ->
@@ -941,7 +942,7 @@ module Typecheck (StdLibrary : Std_library_utils.Library) : Typechecker = struct
     match Env.find tenv id.name with
     | {kind= `Variable _; _} :: _
     (* variables can shadow stanlib functions, so we have to check this *)
-      when not (StdLibrary.is_stan_math_function_name id.name) ->
+      when not (StdLibrary.is_stdlib_function_name id.name) ->
         Semantic_error.nonreturning_fn_expected_nonfn_found loc id.name |> error
     | [] ->
         Semantic_error.nonreturning_fn_expected_undeclaredident_found loc
@@ -1015,7 +1016,7 @@ module Typecheck (StdLibrary : Std_library_utils.Library) : Typechecker = struct
       | Error _ -> err Operator.Equals |> error )
     | OperatorAssign op -> (
         let args = List.map ~f:arg_type [Ast.expr_of_lvalue lhs; rhs] in
-        let return_type = assignmentoperator_stan_math_return_type op args in
+        let return_type = assignmentoperator_return_type op args in
         match return_type with Some Void -> rhs | _ -> err op |> error )
 
   let check_lvalue cf tenv = function
@@ -1797,7 +1798,7 @@ module Typecheck (StdLibrary : Std_library_utils.Library) : Typechecker = struct
         ; comments } as ast ) =
     warnings := [] ;
     (* create a new type environment which has only stan-math functions *)
-    let tenv = Env.stan_math_environment in
+    let tenv = std_library_tenv in
     let tenv, typed_fb = check_toplevel_block Functions tenv fb in
     verify_functions_have_defn tenv typed_fb ;
     let tenv, typed_db = check_toplevel_block Data tenv db in

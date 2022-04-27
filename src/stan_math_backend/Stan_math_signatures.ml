@@ -1,7 +1,8 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
-open Core_kernel
 
+open Core_kernel
 open Core_kernel.Poly
+open Middle
 
 (** The "dimensionality" (bad name?) is supposed to help us represent the
     vectorized nature of many Stan functions. It allows us to represent when
@@ -377,16 +378,10 @@ let is_stan_math_function_name name =
 
 let dist_name_suffix udf_names name =
   let is_udf_name s = List.exists ~f:(fun (n, _) -> n = s) udf_names in
-  match
-    Utils.distribution_suffices
-    |> List.filter ~f:(fun sfx ->
-           is_stan_math_function_name (name ^ sfx) || is_udf_name (name ^ sfx) )
-    |> List.hd
-  with
-  | Some hd -> hd
-  | None ->
-      Common.FatalError.fatal_error_msg
-        [%message "Couldn't find distribution " name]
+  Utils.distribution_suffices
+  |> List.filter ~f:(fun sfx ->
+         is_stan_math_function_name (name ^ sfx) || is_udf_name (name ^ sfx) )
+  |> List.hd_exn
 
 let operator_to_stan_math_fns op =
   match op with
@@ -413,12 +408,6 @@ let operator_to_stan_math_fns op =
   | Geq -> ["logical_gte"]
   | PNot -> ["logical_negation"]
   | Transpose -> ["transpose"]
-
-let int_divide_type =
-  UnsizedType.
-    ( ReturnType UInt
-    , [(AutoDiffable, UInt); (AutoDiffable, UInt)]
-    , Common.Helpers.AoS )
 
 let get_sigs name =
   let name = Utils.stdlib_distribution_name name in
@@ -489,13 +478,20 @@ let pretty_print_all_math_distributions ppf () =
       (List.map ~f:(Fn.compose String.lowercase show_fkind) kinds) in
   pf ppf "@[<v>%a@]" (list ~sep:cut pp_dist) distributions
 
-let pretty_print_math_lib_operator_sigs op =
-  if op = Operator.IntDivide then
-    [Fmt.str "@[<v>@,%a@]" Std_library_utils.pp_math_sig int_divide_type]
-  else
-    operator_to_stan_math_fns op
-    |> List.map
-         ~f:(Fn.compose Std_library_utils.pretty_print_math_sigs get_sigs)
+(* let int_divide_type =
+   UnsizedType.
+     ( ReturnType UInt
+     , [(AutoDiffable, UInt); (AutoDiffable, UInt)]
+     , Common.Helpers.AoS ) *)
+
+(* TODO turn into a get_sigs version
+   let pretty_print_math_lib_operator_sigs op =
+     if op = Operator.IntDivide then
+       [Fmt.str "@[<v>@,%a@]" Std_library_utils.pp_math_sig int_divide_type]
+     else
+       operator_to_stan_math_fns op
+       |> List.map
+            ~f:(Fn.compose Std_library_utils.pretty_print_math_sigs get_sigs) *)
 
 (* -- Some helper definitions to populate stan_math_signatures -- *)
 let bare_types =

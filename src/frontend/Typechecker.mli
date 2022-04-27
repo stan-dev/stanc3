@@ -15,7 +15,6 @@
 
 open Ast
 
-
 val model_name : string ref
 (** A reference to hold the model name. Relevant for checking variable
       clashes and used in code generation. *)
@@ -39,16 +38,15 @@ module type Typechecker = sig
         into a [Result.t]
     *)
 
-  val operator_stan_math_return_type :
+  val operator_return_type :
        Middle.Operator.t
     -> (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t) list
     -> (Middle.UnsizedType.returntype * Promotion.t list) option
 
-  val stan_math_return_type :
+  val library_function_return_type :
        string
     -> (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t) list
     -> Middle.UnsizedType.returntype option
-
 end
 
-module  Typecheck (StdLibrary : Std_library_utils.Library): Typechecker
+module Make (StdLibrary : Std_library_utils.Library) : Typechecker

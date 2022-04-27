@@ -100,18 +100,19 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
           | UserDefined _ | CompilerInternal _ -> FunApp (kind, l)
           | StanLib (f, suffix, mem_type) ->
               let get_fun_or_op_rt_opt name l' =
+                let module TC = Frontend.Typechecker.Make ((* TODO *)
+                  Frontend.Std_library_utils.NullLibrary) in
                 let argument_types =
                   List.map ~f:(fun x -> Expr.Typed.(adlevel_of x, type_of x)) l'
                 in
                 Operator.of_string_opt name
                 |> Option.value_map
                      ~f:(fun op ->
-                       Frontend.Typechecker.operator_stan_math_return_type op
-                         argument_types
+                       TC.operator_return_type op argument_types
                        |> Option.map ~f:fst )
                      ~default:
-                       (Frontend.Typechecker.stan_math_return_type name
-                          argument_types ) in
+                       (TC.library_function_return_type name argument_types)
+              in
               let try_partially_evaluate_stanlib e =
                 Expr.Fixed.Pattern.(
                   match e with

@@ -1,7 +1,15 @@
 (library
  (name frontend)
  (public_name stanc.frontend)
- (libraries core_kernel re menhirLib fmt middle common yojson)
+ (libraries
+  core_kernel
+  re
+  menhirLib
+  fmt
+  middle
+  common
+  yojson
+  stan_math_backend)
  (inline_tests)
  (preprocess
   (pps ppx_jane ppx_deriving.fold ppx_deriving.map)))

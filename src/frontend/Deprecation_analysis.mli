@@ -5,19 +5,22 @@
 open Core_kernel
 open Ast
 
-val find_udf_log_suffix :
-  typed_statement -> (string * Middle.UnsizedType.t) option
+module type Deprecation_analizer = sig
+  val find_udf_log_suffix :
+    typed_statement -> (string * Middle.UnsizedType.t) option
 
-val update_suffix : string -> Middle.UnsizedType.t -> string
+  val update_suffix : string -> Middle.UnsizedType.t -> string
 
-val collect_userdef_distributions :
-  typed_program -> Middle.UnsizedType.t String.Map.t
+  val collect_userdef_distributions :
+    typed_program -> Middle.UnsizedType.t String.Map.t
 
-val distribution_suffix : string -> bool
-val without_suffix : string list -> string -> string
-val is_deprecated_distribution : string -> bool
-val deprecated_distributions : (string * string) String.Map.t
-val deprecated_functions : (string * string) String.Map.t
-val rename_deprecated : (string * string) String.Map.t -> string -> string
-val userdef_distributions : untyped_statement block option -> string list
-val collect_warnings : typed_program -> Warnings.t list
+  val distribution_suffix : string -> bool
+  val without_suffix : string list -> string -> string
+  val is_deprecated_distribution : string -> bool
+  val rename_deprecated_distribution : string -> string
+  val rename_deprecated_function : string -> string
+  val userdef_distributions : untyped_statement block option -> string list
+  val collect_warnings : typed_program -> Warnings.t list
+end
+
+module Make (StdLib : Std_library_utils.Library) : Deprecation_analizer

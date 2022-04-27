@@ -42,28 +42,13 @@ val returning_fn_expected_undeclared_dist_suffix_found :
 val returning_fn_expected_wrong_dist_suffix_found :
   Location_span.t -> string * string -> t
 
-val illtyped_reduce_sum :
+val illtyped_variadic_fn :
      Location_span.t
   -> string
   -> UnsizedType.t list
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> SignatureMismatch.function_mismatch
-  -> t
-
-val illtyped_reduce_sum_generic :
-     Location_span.t
-  -> string
-  -> UnsizedType.t list
-  -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> SignatureMismatch.function_mismatch
-  -> t
-
-val illtyped_variadic_ode :
-     Location_span.t
-  -> string
-  -> UnsizedType.t list
-  -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> SignatureMismatch.function_mismatch
+  -> UnsizedType.t
   -> t
 
 val ambiguous_function_promotion :
@@ -72,14 +57,6 @@ val ambiguous_function_promotion :
   -> UnsizedType.t list option
   -> (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
      list
-  -> t
-
-val illtyped_variadic_dae :
-     Location_span.t
-  -> string
-  -> UnsizedType.t list
-  -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> SignatureMismatch.function_mismatch
   -> t
 
 val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
@@ -96,10 +73,27 @@ val illtyped_fn_app :
   -> t
 
 val illtyped_binary_op :
-  Location_span.t -> Operator.t -> UnsizedType.t -> UnsizedType.t -> t
+     Location_span.t
+  -> Operator.t
+  -> UnsizedType.t
+  -> UnsizedType.t
+  -> Std_library_utils.signature list
+  -> t
 
-val illtyped_prefix_op : Location_span.t -> Operator.t -> UnsizedType.t -> t
-val illtyped_postfix_op : Location_span.t -> Operator.t -> UnsizedType.t -> t
+val illtyped_prefix_op :
+     Location_span.t
+  -> Operator.t
+  -> UnsizedType.t
+  -> Std_library_utils.signature list
+  -> t
+
+val illtyped_postfix_op :
+     Location_span.t
+  -> Operator.t
+  -> UnsizedType.t
+  -> Std_library_utils.signature list
+  -> t
+
 val not_indexable : Location_span.t -> UnsizedType.t -> int -> t
 val ident_is_keyword : Location_span.t -> string -> t
 val ident_is_model_name : Location_span.t -> string -> t
