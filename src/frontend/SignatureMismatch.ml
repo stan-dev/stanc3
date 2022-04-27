@@ -380,10 +380,8 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
     (list ~sep:cut pp_signature)
     sigs pp_omitted ()
 
-let pp_math_lib_assignmentoperator_sigs ppf (lt, op) =
+let pp_assignmentoperator_sigs ppf (lt, errors) =
   let signatures =
-    let errors =
-      Stan_math_signatures.make_assignmentoperator_stan_math_signatures op in
     let errors =
       List.filter
         ~f:(fun (_, args, _) ->

@@ -1003,9 +1003,9 @@ module Make (StdLibrary : Std_library_utils.Library) : Typechecker = struct
     | _ -> ()
 
   let check_assignment_operator loc assop lhs rhs =
-    let err op =
+    let err op sigs =
       Semantic_error.illtyped_assignment loc op lhs.lmeta.type_ rhs.emeta.type_
-    in
+        sigs in
     match assop with
     | Assign | ArrowAssign -> (
       match
@@ -1013,11 +1013,14 @@ module Make (StdLibrary : Std_library_utils.Library) : Typechecker = struct
           rhs.emeta.type_
       with
       | Ok p -> Promotion.promote rhs p
-      | Error _ -> err Operator.Equals |> error )
+      | Error _ -> err Operator.Equals [] |> error )
     | OperatorAssign op -> (
         let args = List.map ~f:arg_type [Ast.expr_of_lvalue lhs; rhs] in
         let return_type = assignmentoperator_return_type op args in
-        match return_type with Some Void -> rhs | _ -> err op |> error )
+        match return_type with
+        | Some Void -> rhs
+        | _ ->
+            err op (StdLibrary.get_assignment_operator_signatures op) |> error )
 
   let check_lvalue cf tenv = function
     | {lval= LVariable id; lmeta= ({loc} : located_meta)} ->
@@ -1497,7 +1500,7 @@ module Make (StdLibrary : Std_library_utils.Library) : Typechecker = struct
         | Ok p -> Some (Promotion.promote rhs p)
         | Error _ ->
             Semantic_error.illtyped_assignment loc Equals lhs.lmeta.type_
-              rhs.emeta.type_
+              rhs.emeta.type_ []
             |> error )
     | None -> None
 

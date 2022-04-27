@@ -7,6 +7,14 @@ open Stan_math_backend
 open Analysis_and_optimization
 open Middle
 
+(* Initialize functor modules with the Stan Math Library *)
+module CppLibrary = Std_library_utils.NullLibrary
+module Typechecker = Typechecking.Make (CppLibrary)
+module Deprecations = Deprecation_analysis.Make (CppLibrary)
+module Canonicalizer = Canonicalize.Make (Deprecations)
+module ModelInfo = Info.Make (CppLibrary)
+module Ast2Mir = Ast_to_Mir.Make (CppLibrary)
+
 (** The main program. *)
 let version = "%%NAME%%3 %%VERSION%%"
 
@@ -142,7 +150,7 @@ let options =
             exit 0 )
       , " Display stanc version number" )
     ; ( "--name"
-      , Arg.Set_string Typechecker.model_name
+      , Arg.Set_string Typechecking.model_name
       , " Take a string to set the model name (default = \
          \"$model_filename_model\")" )
     ; ( "--O0"
@@ -176,10 +184,10 @@ let options =
       , Arg.Set print_model_cpp
       , " If set, output the generated C++ Stan model class to stdout." )
     ; ( "--allow-undefined"
-      , Arg.Clear Typechecker.check_that_all_functions_have_definition
+      , Arg.Clear Typechecking.check_that_all_functions_have_definition
       , " Do not fail if a function is declared but not defined" )
     ; ( "--allow_undefined"
-      , Arg.Clear Typechecker.check_that_all_functions_have_definition
+      , Arg.Clear Typechecking.check_that_all_functions_have_definition
       , " Deprecated. Same as --allow-undefined. Will be removed in Stan 2.32.0"
       )
     ; ( "--include-paths"
@@ -278,30 +286,30 @@ let use_file filename =
       ~print_warnings:(not !canonicalize_settings.deprecations)
       ~bare_functions:!bare_functions in
   (* must be before typecheck to fix up deprecated syntax which gets rejected *)
-  let ast = Canonicalize.repair_syntax ast !canonicalize_settings in
+  let ast = Canonicalizer.repair_syntax ast !canonicalize_settings in
   Debugging.ast_logger ast ;
   let typed_ast = type_ast_or_exit ast in
   let canonical_ast =
-    Canonicalize.canonicalize_program typed_ast !canonicalize_settings in
+    Canonicalizer.canonicalize_program typed_ast !canonicalize_settings in
   if !pretty_print_program then
     print_or_write
       (Pretty_printing.pretty_print_typed_program
          ~bare_functions:!bare_functions ~line_length:!pretty_print_line_length
          ~inline_includes:!canonicalize_settings.inline_includes canonical_ast ) ;
   if !print_info_json then (
-    print_endline (Info.info canonical_ast) ;
+    print_endline (ModelInfo.info canonical_ast) ;
     exit 0 ) ;
   let printed_filename =
     match !filename_for_msg with "" -> None | s -> Some s in
   if not !canonicalize_settings.deprecations then
     Warnings.pp_warnings Fmt.stderr ?printed_filename
-      (Deprecation_analysis.collect_warnings typed_ast) ;
+      (Deprecations.collect_warnings typed_ast) ;
   if !generate_data then
     print_endline
-      (Debug_data_generation.print_data_prog (Ast_to_Mir.gather_data typed_ast)) ;
+      (Debug_data_generation.print_data_prog (Ast2Mir.gather_data typed_ast)) ;
   Debugging.typed_ast_logger typed_ast ;
   if not !pretty_print_program then (
-    let mir = Ast_to_Mir.trans_prog filename typed_ast in
+    let mir = Ast2Mir.trans_prog filename typed_ast in
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.Program.Typed.t)] ;
     if !dump_mir_pretty then Program.Typed.pp Format.std_formatter mir ;
@@ -356,12 +364,12 @@ let main () =
     Stan_math_code_gen.standalone_functions := true ;
     bare_functions := true ) ;
   (* Just translate a stan program *)
-  if !Typechecker.model_name = "" then
-    Typechecker.model_name :=
+  if !Typechecking.model_name = "" then
+    Typechecking.model_name :=
       mangle
         (remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/'))))
       ^ "_model"
-  else Typechecker.model_name := mangle !Typechecker.model_name ;
+  else Typechecking.model_name := mangle !Typechecking.model_name ;
   use_file !model_file
 
 let () = main ()

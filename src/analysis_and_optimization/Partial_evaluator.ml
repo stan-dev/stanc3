@@ -100,7 +100,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
           | UserDefined _ | CompilerInternal _ -> FunApp (kind, l)
           | StanLib (f, suffix, mem_type) ->
               let get_fun_or_op_rt_opt name l' =
-                let module TC = Frontend.Typechecker.Make ((* TODO *)
+                let module TC = Frontend.Typechecking.Make ((* TODO *)
                   Frontend.Std_library_utils.NullLibrary) in
                 let argument_types =
                   List.map ~f:(fun x -> Expr.Typed.(adlevel_of x, type_of x)) l'

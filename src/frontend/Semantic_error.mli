@@ -25,7 +25,12 @@ val array_vector_rowvector_matrix_expected :
   Location_span.t -> UnsizedType.t -> t
 
 val illtyped_assignment :
-  Location_span.t -> Operator.t -> UnsizedType.t -> UnsizedType.t -> t
+     Location_span.t
+  -> Operator.t
+  -> UnsizedType.t
+  -> UnsizedType.t
+  -> Std_library_utils.signature list
+  -> t
 
 val illtyped_ternary_if :
   Location_span.t -> UnsizedType.t -> UnsizedType.t -> UnsizedType.t -> t

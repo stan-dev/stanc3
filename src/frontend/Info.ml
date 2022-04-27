@@ -45,48 +45,6 @@ let rec get_function_calls_expr (funs, distrs) expr =
     | _ -> (funs, distrs) in
   fold_expression get_function_calls_expr (fun acc _ -> acc) acc expr.expr
 
-let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
-  let acc =
-    match stmt.stmt with
-    | NRFunApp (StanLib _, f, _) -> (Set.add funs f.name, distrs)
-    | Tilde {distribution; _} ->
-        let possible_names =
-          List.map ~f:(( ^ ) distribution.name) Utils.distribution_suffices
-          |> String.Set.of_list in
-        if List.exists ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists then
-          (funs, distrs)
-        else
-          let suffix =
-            Stan_math_signatures.dist_name_suffix ud_dists distribution.name
-          in
-          let name = distribution.name ^ Utils.unnormalized_suffix suffix in
-          (funs, Set.add distrs name)
-    | _ -> (funs, distrs) in
-  fold_statement get_function_calls_expr
-    (get_function_calls_stmt ud_dists)
-    (fun acc _ -> acc)
-    (fun acc _ -> acc)
-    acc stmt.stmt
-
-let function_calls_json p =
-  let map f list_op =
-    Option.value_map ~default:[]
-      ~f:(fun {stmts; _} -> List.concat_map ~f stmts)
-      list_op in
-  let grab_fundef_names_and_types = function
-    | {Ast.stmt= Ast.FunDef {funname; arguments= (_, type_, _) :: _; _}; _} ->
-        [(funname.name, type_)]
-    | _ -> [] in
-  let ud_dists = map grab_fundef_names_and_types p.functionblock in
-  let funs, distrs =
-    fold_program
-      (get_function_calls_stmt ud_dists)
-      (String.Set.empty, String.Set.empty)
-      p in
-  let set_to_List s =
-    `List (Set.to_list s |> List.map ~f:(fun str -> `String str)) in
-  `Assoc [("functions", set_to_List funs); ("distributions", set_to_List distrs)]
-
 let includes_json () =
   `Assoc
     [ ( "included_files"
@@ -94,12 +52,62 @@ let includes_json () =
           ( List.rev !Preprocessor.included_files
           |> List.map ~f:(fun str -> `String str) ) ) ]
 
-let info_json ast =
-  List.fold ~f:Util.combine ~init:(`Assoc [])
-    [ block_info_json "inputs" ast.datablock
-    ; block_info_json "parameters" ast.parametersblock
-    ; block_info_json "transformed parameters" ast.transformedparametersblock
-    ; block_info_json "generated quantities" ast.generatedquantitiesblock
-    ; function_calls_json ast; includes_json () ]
+module type Information = sig
+  val info : Ast.typed_program -> string
+end
 
-let info ast = pretty_to_string (info_json ast)
+module Make (StdLib : Std_library_utils.Library) : Information = struct
+  let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
+    let acc =
+      match stmt.stmt with
+      | NRFunApp (StanLib _, f, _) -> (Set.add funs f.name, distrs)
+      | Tilde {distribution; _} ->
+          let possible_names =
+            List.map ~f:(( ^ ) distribution.name) Utils.distribution_suffices
+            |> String.Set.of_list in
+          if List.exists ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists
+          then (funs, distrs)
+          else
+            let suffix =
+              Std_library_utils.dist_name_suffix
+                (module StdLib)
+                ud_dists distribution.name in
+            let name = distribution.name ^ Utils.unnormalized_suffix suffix in
+            (funs, Set.add distrs name)
+      | _ -> (funs, distrs) in
+    fold_statement get_function_calls_expr
+      (get_function_calls_stmt ud_dists)
+      (fun acc _ -> acc)
+      (fun acc _ -> acc)
+      acc stmt.stmt
+
+  let function_calls_json p =
+    let map f list_op =
+      Option.value_map ~default:[]
+        ~f:(fun {stmts; _} -> List.concat_map ~f stmts)
+        list_op in
+    let grab_fundef_names_and_types = function
+      | {Ast.stmt= Ast.FunDef {funname; arguments= (_, type_, _) :: _; _}; _} ->
+          [(funname.name, type_)]
+      | _ -> [] in
+    let ud_dists = map grab_fundef_names_and_types p.functionblock in
+    let funs, distrs =
+      fold_program
+        (get_function_calls_stmt ud_dists)
+        (String.Set.empty, String.Set.empty)
+        p in
+    let set_to_List s =
+      `List (Set.to_list s |> List.map ~f:(fun str -> `String str)) in
+    `Assoc
+      [("functions", set_to_List funs); ("distributions", set_to_List distrs)]
+
+  let info_json ast =
+    List.fold ~f:Util.combine ~init:(`Assoc [])
+      [ block_info_json "inputs" ast.datablock
+      ; block_info_json "parameters" ast.parametersblock
+      ; block_info_json "transformed parameters" ast.transformedparametersblock
+      ; block_info_json "generated quantities" ast.generatedquantitiesblock
+      ; function_calls_json ast; includes_json () ]
+
+  let info ast = pretty_to_string (info_json ast)
+end

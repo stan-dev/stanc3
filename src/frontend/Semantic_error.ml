@@ -14,7 +14,11 @@ module TypeError = struct
     | IntIntArrayOrRangeExpected of UnsizedType.t
     | IntOrRealContainerExpected of UnsizedType.t
     | ArrayVectorRowVectorMatrixExpected of UnsizedType.t
-    | IllTypedAssignment of Operator.t * UnsizedType.t * UnsizedType.t
+    | IllTypedAssignment of
+        Operator.t
+        * UnsizedType.t
+        * UnsizedType.t
+        * Std_library_utils.signature list
     | IllTypedTernaryIf of UnsizedType.t * UnsizedType.t * UnsizedType.t
     | IllTypedVariadicFn of
         string
@@ -97,18 +101,18 @@ module TypeError = struct
           "Foreach-loop must be over array, vector, row_vector or matrix. \
            Instead found expression of type %a."
           UnsizedType.pp ut
-    | IllTypedAssignment (Operator.Equals, lt, rt) ->
+    | IllTypedAssignment (Operator.Equals, lt, rt, _) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to assignment operator =: lhs has type \
            %a and rhs has type %a"
           UnsizedType.pp lt UnsizedType.pp rt
-    | IllTypedAssignment (op, lt, rt) ->
+    | IllTypedAssignment (op, lt, rt, sigs) ->
         Fmt.pf ppf
           "@[<v>Ill-typed arguments supplied to assignment operator %a=: lhs \
            has type %a and rhs has type %a.@ Available signatures for given \
            lhs:@]@ %a"
           Operator.pp op UnsizedType.pp lt UnsizedType.pp rt
-          SignatureMismatch.pp_math_lib_assignmentoperator_sigs (lt, op)
+          SignatureMismatch.pp_assignmentoperator_sigs (lt, sigs)
     | IllTypedTernaryIf (UInt, ut, _) when UnsizedType.is_fun_type ut ->
         Fmt.pf ppf "Ternary expression cannot have a function type: %a"
           UnsizedType.pp ut
@@ -514,8 +518,8 @@ let int_or_real_container_expected loc ut =
 let array_vector_rowvector_matrix_expected loc ut =
   TypeError (loc, TypeError.ArrayVectorRowVectorMatrixExpected ut)
 
-let illtyped_assignment loc assignop lt rt =
-  TypeError (loc, TypeError.IllTypedAssignment (assignop, lt, rt))
+let illtyped_assignment loc assignop lt rt sigs =
+  TypeError (loc, TypeError.IllTypedAssignment (assignop, lt, rt, sigs))
 
 let illtyped_ternary_if loc predt lt rt =
   TypeError (loc, TypeError.IllTypedTernaryIf (predt, lt, rt))
