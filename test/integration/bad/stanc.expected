@@ -1531,7 +1531,6 @@ Ill-typed arguments supplied to infix operator /. Available signatures:
 (matrix, matrix) => matrix
 (complex_row_vector, complex_matrix) => complex_row_vector
 (complex_matrix, complex_matrix) => complex_matrix
-
 (int, int) => int
 (real, real) => real
 (vector, real) => vector
@@ -1554,7 +1553,6 @@ Ill-typed arguments supplied to infix operator /. Available signatures:
 (matrix, matrix) => matrix
 (complex_row_vector, complex_matrix) => complex_row_vector
 (complex_matrix, complex_matrix) => complex_matrix
-
 (int, int) => int
 (real, real) => real
 (vector, real) => vector

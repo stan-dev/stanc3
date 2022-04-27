@@ -487,11 +487,14 @@ let settings_constant_prop =
   ; copy_propagation= true
   ; partial_evaluation= true }
 
+(** Pedantic mode is only really valid for the Stan Math backend *)
+
 (* Collect all pedantic mode warnings, sorted, to stderr *)
 let warn_pedantic (mir_unopt : Program.Typed.t) =
   (* Some warnings will be stronger when constants are propagated *)
   let mir =
-    Optimize.optimization_suite ~settings:settings_constant_prop mir_unopt in
+    Optimize.optimization_suite ~settings:settings_constant_prop mir_unopt
+  in
   (* Try to avoid recomputation by pre-building structures *)
   let distributions_info = list_distributions mir in
   let factor_graph = prog_factor_graph mir in

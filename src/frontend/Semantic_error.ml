@@ -14,19 +14,13 @@ module TypeError = struct
     | IntIntArrayOrRangeExpected of UnsizedType.t
     | IntOrRealContainerExpected of UnsizedType.t
     | ArrayVectorRowVectorMatrixExpected of UnsizedType.t
-    | IllTypedAssignment of Operator.t * UnsizedType.t * UnsizedType.t
+    | IllTypedAssignment of
+        Operator.t
+        * UnsizedType.t
+        * UnsizedType.t
+        * Std_library_utils.signature list
     | IllTypedTernaryIf of UnsizedType.t * UnsizedType.t * UnsizedType.t
-    | IllTypedReduceSum of
-        string
-        * UnsizedType.t list
-        * (UnsizedType.autodifftype * UnsizedType.t) list
-        * SignatureMismatch.function_mismatch
-    | IllTypedReduceSumGeneric of
-        string
-        * UnsizedType.t list
-        * (UnsizedType.autodifftype * UnsizedType.t) list
-        * SignatureMismatch.function_mismatch
-    | IllTypedVariadicDE of
+    | IllTypedVariadicFn of
         string
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
@@ -50,9 +44,15 @@ module TypeError = struct
         string
         * UnsizedType.t list
         * (SignatureMismatch.signature_error list * bool)
-    | IllTypedBinaryOperator of Operator.t * UnsizedType.t * UnsizedType.t
-    | IllTypedPrefixOperator of Operator.t * UnsizedType.t
-    | IllTypedPostfixOperator of Operator.t * UnsizedType.t
+    | IllTypedBinaryOperator of
+        Operator.t
+        * UnsizedType.t
+        * UnsizedType.t
+        * Std_library_utils.signature list
+    | IllTypedPrefixOperator of
+        Operator.t * UnsizedType.t * Std_library_utils.signature list
+    | IllTypedPostfixOperator of
+        Operator.t * UnsizedType.t * Std_library_utils.signature list
     | NotIndexable of UnsizedType.t * int
 
   let pp ppf = function
@@ -101,18 +101,18 @@ module TypeError = struct
           "Foreach-loop must be over array, vector, row_vector or matrix. \
            Instead found expression of type %a."
           UnsizedType.pp ut
-    | IllTypedAssignment (Operator.Equals, lt, rt) ->
+    | IllTypedAssignment (Operator.Equals, lt, rt, _) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to assignment operator =: lhs has type \
            %a and rhs has type %a"
           UnsizedType.pp lt UnsizedType.pp rt
-    | IllTypedAssignment (op, lt, rt) ->
+    | IllTypedAssignment (op, lt, rt, sigs) ->
         Fmt.pf ppf
           "@[<v>Ill-typed arguments supplied to assignment operator %a=: lhs \
            has type %a and rhs has type %a.@ Available signatures for given \
            lhs:@]@ %a"
           Operator.pp op UnsizedType.pp lt UnsizedType.pp rt
-          SignatureMismatch.pp_math_lib_assignmentoperator_sigs (lt, op)
+          SignatureMismatch.pp_assignmentoperator_sigs (lt, sigs)
     | IllTypedTernaryIf (UInt, ut, _) when UnsizedType.is_fun_type ut ->
         Fmt.pf ppf "Ternary expression cannot have a function type: %a"
           UnsizedType.pp ut
@@ -125,13 +125,7 @@ module TypeError = struct
         Fmt.pf ppf
           "Condition in ternary expression must be primitive int; found type=%a"
           UnsizedType.pp ut1
-    | IllTypedReduceSum (name, arg_tys, expected_args, error) ->
-        SignatureMismatch.pp_signature_mismatch ppf
-          (name, arg_tys, ([((ReturnType UReal, expected_args), error)], false))
-    | IllTypedReduceSumGeneric (name, arg_tys, expected_args, error) ->
-        SignatureMismatch.pp_signature_mismatch ppf
-          (name, arg_tys, ([((ReturnType UReal, expected_args), error)], false))
-    | IllTypedVariadicDE (name, arg_tys, args, error, return_type) ->
+    | IllTypedVariadicFn (name, arg_tys, args, error, return_type) ->
         SignatureMismatch.pp_signature_mismatch ppf
           ( name
           , arg_tys
@@ -224,32 +218,25 @@ module TypeError = struct
           prefix suffix prefix prefix newsuffix
     | IllTypedFunctionApp (name, arg_tys, errors) ->
         SignatureMismatch.pp_signature_mismatch ppf (name, arg_tys, errors)
-    | IllTypedBinaryOperator (op, lt, rt) ->
+    | IllTypedBinaryOperator (op, lt, rt, sigs) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to infix operator %a. Available \
-           signatures: %s@[<h>Instead supplied arguments of incompatible type: \
-           %a, %a.@]"
-          Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
-          UnsizedType.pp lt UnsizedType.pp rt
-    | IllTypedPrefixOperator (op, ut) ->
+           signatures: @[<v>%a@.@]@[<h>Instead supplied arguments of \
+           incompatible type: %a, %a.@]"
+          Operator.pp op Std_library_utils.pp_math_sigs sigs UnsizedType.pp lt
+          UnsizedType.pp rt
+    | IllTypedPrefixOperator (op, ut, sigs) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to prefix operator %a. Available \
-           signatures: %s@[<h>Instead supplied argument of incompatible type: \
-           %a.@]"
-          Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
-          UnsizedType.pp ut
-    | IllTypedPostfixOperator (op, ut) ->
+           signatures: @[<v>%a@.@]@[<h>Instead supplied argument of \
+           incompatible type: %a.@]"
+          Operator.pp op Std_library_utils.pp_math_sigs sigs UnsizedType.pp ut
+    | IllTypedPostfixOperator (op, ut, sigs) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to postfix operator %a. Available \
-           signatures: %s\n\
-           Instead supplied argument of incompatible type: %a." Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
-          UnsizedType.pp ut
+           signatures: @[<v>%a@.@]@[<h>Instead supplied argument of \
+           incompatible type: %a.@]"
+          Operator.pp op Std_library_utils.pp_math_sigs sigs UnsizedType.pp ut
 end
 
 module IdentifierError = struct
@@ -531,8 +518,8 @@ let int_or_real_container_expected loc ut =
 let array_vector_rowvector_matrix_expected loc ut =
   TypeError (loc, TypeError.ArrayVectorRowVectorMatrixExpected ut)
 
-let illtyped_assignment loc assignop lt rt =
-  TypeError (loc, TypeError.IllTypedAssignment (assignop, lt, rt))
+let illtyped_assignment loc assignop lt rt sigs =
+  TypeError (loc, TypeError.IllTypedAssignment (assignop, lt, rt, sigs))
 
 let illtyped_ternary_if loc predt lt rt =
   TypeError (loc, TypeError.IllTypedTernaryIf (predt, lt, rt))
@@ -540,34 +527,9 @@ let illtyped_ternary_if loc predt lt rt =
 let returning_fn_expected_nonreturning_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonReturningFound name)
 
-let illtyped_reduce_sum loc name arg_tys args error =
-  TypeError (loc, TypeError.IllTypedReduceSum (name, arg_tys, args, error))
-
-let illtyped_reduce_sum_generic loc name arg_tys expected_args error =
+let illtyped_variadic_fn loc name arg_tys args error return_type =
   TypeError
-    ( loc
-    , TypeError.IllTypedReduceSumGeneric (name, arg_tys, expected_args, error)
-    )
-
-let illtyped_variadic_ode loc name arg_tys args error =
-  TypeError
-    ( loc
-    , TypeError.IllTypedVariadicDE
-        ( name
-        , arg_tys
-        , args
-        , error
-        , Stan_math_signatures.variadic_ode_fun_return_type ) )
-
-let illtyped_variadic_dae loc name arg_tys args error =
-  TypeError
-    ( loc
-    , TypeError.IllTypedVariadicDE
-        ( name
-        , arg_tys
-        , args
-        , error
-        , Stan_math_signatures.variadic_dae_fun_return_type ) )
+    (loc, TypeError.IllTypedVariadicFn (name, arg_tys, args, error, return_type))
 
 let ambiguous_function_promotion loc name arg_tys signatures =
   TypeError
@@ -601,14 +563,14 @@ let nonreturning_fn_expected_undeclaredident_found loc name sug =
 let illtyped_fn_app loc name errors arg_tys =
   TypeError (loc, TypeError.IllTypedFunctionApp (name, arg_tys, errors))
 
-let illtyped_binary_op loc op lt rt =
-  TypeError (loc, TypeError.IllTypedBinaryOperator (op, lt, rt))
+let illtyped_binary_op loc op lt rt sigs =
+  TypeError (loc, TypeError.IllTypedBinaryOperator (op, lt, rt, sigs))
 
-let illtyped_prefix_op loc op ut =
-  TypeError (loc, TypeError.IllTypedPrefixOperator (op, ut))
+let illtyped_prefix_op loc op ut sigs =
+  TypeError (loc, TypeError.IllTypedPrefixOperator (op, ut, sigs))
 
-let illtyped_postfix_op loc op ut =
-  TypeError (loc, TypeError.IllTypedPostfixOperator (op, ut))
+let illtyped_postfix_op loc op ut sigs =
+  TypeError (loc, TypeError.IllTypedPostfixOperator (op, ut, sigs))
 
 let not_indexable loc ut nidcs =
   TypeError (loc, TypeError.NotIndexable (ut, nidcs))

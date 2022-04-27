@@ -21,14 +21,6 @@ let drop_leading_zeros s =
 
 let format_number s = s |> without_underscores |> drop_leading_zeros
 
-let%expect_test "format_number0" =
-  format_number "0_000." |> print_endline ;
-  [%expect "0."]
-
-let%expect_test "format_number1" =
-  format_number ".123_456" |> print_endline ;
-  [%expect ".123456"]
-
 let rec op_to_funapp op args type_ =
   let loc = Ast.expr_loc_lub args in
   let adlevel = Ast.expr_ad_lub args in
@@ -107,8 +99,8 @@ let truncate_dist ud_dists (id : Ast.identifier) ast_obs ast_args t =
     | None ->
         ( Ast.StanLib FnPlain
         , Set.to_list possible_names |> List.hd_exn
-        , if Stan_math_signatures.is_stan_math_function_name (id.name ^ "_lpmf")
-          then UnsizedType.UInt
+        , if Library.is_stdlib_function_name (id.name ^ "_lpmf") then
+            UnsizedType.UInt
           else UnsizedType.UReal (* close enough *) ) in
   let trunc cond_op (x : Ast.typed_expression) y =
     let smeta = x.Ast.emeta.loc in
@@ -431,7 +423,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
   | Ast.Tilde {arg; distribution; args; truncation} ->
       let suffix =
-        Stan_math_signatures.dist_name_suffix ud_dists distribution.name in
+        Std_library_utils.dist_name_suffix Library.is_stdlib_function_name ud_dists distribution.name in
       let name = distribution.name ^ suffix in
       let kind =
         let possible_names =

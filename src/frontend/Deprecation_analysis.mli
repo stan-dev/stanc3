@@ -16,8 +16,7 @@ val collect_userdef_distributions :
 val distribution_suffix : string -> bool
 val without_suffix : string list -> string -> string
 val is_deprecated_distribution : string -> bool
-val deprecated_distributions : (string * string) String.Map.t
-val deprecated_functions : (string * string) String.Map.t
-val rename_deprecated : (string * string) String.Map.t -> string -> string
+val rename_deprecated_distribution : string -> string
+val rename_deprecated_function : string -> string
 val userdef_distributions : untyped_statement block option -> string list
 val collect_warnings : typed_program -> Warnings.t list

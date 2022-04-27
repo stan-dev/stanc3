@@ -1,9 +1,4 @@
-open Analysis_and_optimization
 open Core_kernel
-open Frontend
-open Debug_data_generation
-
-let print_data_prog ast = print_data_prog (Ast_to_Mir.gather_data ast)
 
 let%expect_test "whole program data generation check" =
   let ast =
@@ -17,7 +12,7 @@ let%expect_test "whole program data generation check" =
                     }
       |}
   in
-  let str = print_data_prog ast in
+  let str = Test_utils.print_data_prog ast in
   print_string str ;
   [%expect
     {|
@@ -48,7 +43,7 @@ let%expect_test "whole program data generation check" =
                 }
       |}
   in
-  let str = print_data_prog ast in
+  let str = Test_utils.print_data_prog ast in
   print_string str ;
   [%expect
     {|
@@ -97,7 +92,7 @@ let%expect_test "whole program data generation check" =
                 }
       |}
   in
-  let str = print_data_prog ast in
+  let str = Test_utils.print_data_prog ast in
   print_string str ;
   [%expect
     {|
@@ -134,7 +129,7 @@ let%expect_test "whole program data generation check" =
         }
       |}
   in
-  let str = print_data_prog ast in
+  let str = Test_utils.print_data_prog ast in
   print_string str ;
   [%expect
     {|
@@ -256,7 +251,7 @@ let%expect_test "whole program data generation check" =
         }
       |}
   in
-  let str = print_data_prog ast in
+  let str = Test_utils.print_data_prog ast in
   print_string str ;
   [%expect
     {|
@@ -515,7 +510,7 @@ let%expect_test "whole program data generation check" =
         }
       |}
   in
-  let str = print_data_prog ast in
+  let str = Test_utils.print_data_prog ast in
   print_string str ;
   [%expect
     {|
@@ -647,7 +642,7 @@ let%expect_test "whole program data generation check" =
       }
       |}
   in
-  let str = print_data_prog ast in
+  let str = Test_utils.print_data_prog ast in
   print_string str ;
   [%expect
     {|
@@ -666,7 +661,7 @@ let%expect_test "Complex numbers program" =
       }
       |}
   in
-  let str = print_data_prog ast in
+  let str = Test_utils.print_data_prog ast in
   print_string str ;
   [%expect
     {|

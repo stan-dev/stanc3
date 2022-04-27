@@ -111,16 +111,13 @@ let rec is_uni_eigen_loop_indexing in_loop (ut : UnsizedType.t)
 
 let query_stan_math_mem_pattern_support (name : string)
     (args : (UnsizedType.autodifftype * UnsizedType.t) list) =
-  let open Stan_math_signatures in
   match name with
-  | x when is_reduce_sum_fn x -> false
-  | x when is_variadic_ode_fn x -> false
-  | x when is_variadic_dae_fn x -> false
+  | x when Frontend.Library.is_variadic_function_name x -> false
   | _ ->
       let name =
-        string_operator_to_stan_math_fns (Utils.stdlib_distribution_name name)
-      in
-      let namematches = Hashtbl.find_multi stan_math_signatures name in
+        Frontend.Library.string_operator_to_function_name
+          (Utils.stdlib_distribution_name name) in
+      let namematches = Frontend.Library.get_signatures name in
       let filteredmatches =
         List.filter
           ~f:(fun x ->

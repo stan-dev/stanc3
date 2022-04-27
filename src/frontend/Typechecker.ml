@@ -56,10 +56,10 @@ let context block =
   ; in_udf_dist_def= false
   ; loop_depth= 0 }
 
-let calculate_autodifftype cf origin ut =
+let calculate_autodifftype current_block origin ut =
   match origin with
   | Env.(Param | TParam | Model | Functions)
-    when not (UnsizedType.is_int_type ut || cf.current_block = GQuant) ->
+    when not (UnsizedType.is_int_type ut || current_block = Env.GQuant) ->
       UnsizedType.AutoDiffable
   | _ -> DataOnly
 
@@ -82,6 +82,8 @@ let reserved_keywords =
   ; "generated"; "profile"; "return"; "break"; "continue"; "increment_log_prob"
   ; "get_lp"; "print"; "reject"; "typedef"; "struct"; "var"; "export"; "extern"
   ; "static"; "auto" ]
+
+let std_library_tenv : Env.t = Env.make_from_library Library.function_signatures
 
 let verify_identifier id : unit =
   if id.name = !model_name then
@@ -121,9 +123,7 @@ let verify_name_fresh_udf loc tenv name =
   if
     (* variadic functions are currently not in math sigs and aren't
        overloadable due to their separate typechecking *)
-    Stan_math_signatures.is_reduce_sum_fn name
-    || Stan_math_signatures.is_variadic_ode_fn name
-    || Stan_math_signatures.is_variadic_dae_fn name
+    Library.is_not_overloadable name
   then Semantic_error.ident_is_stanmath_name loc name |> error
   else if Utils.is_unnormalized_distribution name then
     Semantic_error.udf_is_unnormalized_fn loc name |> error
@@ -190,39 +190,35 @@ let match_to_rt_option = function
   | SignatureMismatch.UniqueMatch (rt, _, _) -> Some rt
   | _ -> None
 
-let stan_math_return_type name arg_tys =
+let library_function_return_type name arg_tys =
   match name with
-  | x when Stan_math_signatures.is_reduce_sum_fn x ->
-      Some (UnsizedType.ReturnType UReal)
-  | x when Stan_math_signatures.is_variadic_ode_fn x ->
-      Some (UnsizedType.ReturnType (UArray UVector))
-  | x when Stan_math_signatures.is_variadic_dae_fn x ->
-      Some (UnsizedType.ReturnType (UArray UVector))
+  | x when Library.is_variadic_function_name x ->
+      Library.variadic_function_returntype x
   | _ ->
-      SignatureMismatch.matching_stanlib_function name arg_tys
+      SignatureMismatch.matching_function std_library_tenv name arg_tys
       |> match_to_rt_option
 
-let operator_stan_math_return_type op arg_tys =
+let operator_return_type op arg_tys =
   match (op, arg_tys) with
   | Operator.IntDivide, [(_, UnsizedType.UInt); (_, UInt)] ->
       Some (UnsizedType.(ReturnType UInt), [Promotion.NoPromotion; NoPromotion])
   | IntDivide, _ -> None
   | _ ->
-      Stan_math_signatures.operator_to_stan_math_fns op
+      Library.operator_to_function_names op
       |> List.filter_map ~f:(fun name ->
-             SignatureMismatch.matching_stanlib_function name arg_tys
+             SignatureMismatch.matching_function std_library_tenv name arg_tys
              |> function
              | SignatureMismatch.UniqueMatch (rt, _, p) -> Some (rt, p)
              | _ -> None )
       |> List.hd
 
-let assignmentoperator_stan_math_return_type assop arg_tys =
+let assignmentoperator_return_type assop arg_tys =
   ( match assop with
   | Operator.Divide ->
-      SignatureMismatch.matching_stanlib_function "divide" arg_tys
+      SignatureMismatch.matching_function std_library_tenv "divide" arg_tys
       |> match_to_rt_option
   | Plus | Minus | Times | EltTimes | EltDivide ->
-      operator_stan_math_return_type assop arg_tys |> Option.map ~f:fst
+      operator_return_type assop arg_tys |> Option.map ~f:fst
   | _ -> None )
   |> Option.bind ~f:(function
        | ReturnType rtype
@@ -234,7 +230,7 @@ let assignmentoperator_stan_math_return_type assop arg_tys =
        | _ -> None )
 
 let check_binop loc op le re =
-  let rt = [le; re] |> get_arg_types |> operator_stan_math_return_type op in
+  let rt = [le; re] |> get_arg_types |> operator_return_type op in
   match rt with
   | Some (ReturnType type_, [p1; p2]) ->
       mk_typed_expression
@@ -243,27 +239,34 @@ let check_binop loc op le re =
         ~type_ ~loc
   | _ ->
       Semantic_error.illtyped_binary_op loc op le.emeta.type_ re.emeta.type_
+        (Library.get_operator_signatures op)
       |> error
 
 let check_prefixop loc op te =
-  let rt = operator_stan_math_return_type op [arg_type te] in
+  let rt = operator_return_type op [arg_type te] in
   match rt with
   | Some (ReturnType type_, _) ->
       mk_typed_expression
         ~expr:(PrefixOp (op, te))
         ~ad_level:(expr_ad_lub [te])
         ~type_ ~loc
-  | _ -> Semantic_error.illtyped_prefix_op loc op te.emeta.type_ |> error
+  | _ ->
+      Semantic_error.illtyped_prefix_op loc op te.emeta.type_
+        (Library.get_operator_signatures op)
+      |> error
 
 let check_postfixop loc op te =
-  let rt = operator_stan_math_return_type op [arg_type te] in
+  let rt = operator_return_type op [arg_type te] in
   match rt with
   | Some (ReturnType type_, _) ->
       mk_typed_expression
         ~expr:(PostfixOp (te, op))
         ~ad_level:(expr_ad_lub [te])
         ~type_ ~loc
-  | _ -> Semantic_error.illtyped_postfix_op loc op te.emeta.type_ |> error
+  | _ ->
+      Semantic_error.illtyped_postfix_op loc op te.emeta.type_
+        (Library.get_operator_signatures op)
+      |> error
 
 let check_id cf loc tenv id =
   match Env.find tenv (Utils.stdlib_distribution_name id.name) with
@@ -272,7 +275,7 @@ let check_id cf loc tenv id =
         (Env.nearest_ident tenv id.name)
       |> error
   | {kind= `StanMath; _} :: _ ->
-      ( calculate_autodifftype cf MathLibrary UMathLibraryFunction
+      ( calculate_autodifftype cf.current_block MathLibrary UMathLibraryFunction
       , UnsizedType.UMathLibraryFunction )
   | {kind= `Variable {origin= Param | TParam | GQuant; _}; _} :: _
     when cf.in_toplevel_decl ->
@@ -284,16 +287,16 @@ let check_id cf loc tenv id =
               || cf.current_block = Model ) ->
       Semantic_error.invalid_unnormalized_fn loc |> error
   | {kind= `Variable {origin; _}; type_} :: _ ->
-      (calculate_autodifftype cf origin type_, type_)
+      (calculate_autodifftype cf.current_block origin type_, type_)
   | { kind= `UserDefined | `UserDeclared _
     ; type_= UFun (args, rt, FnLpdf _, mem_pattern) }
     :: _ ->
       let type_ =
         UnsizedType.UFun
           (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in
-      (calculate_autodifftype cf Functions type_, type_)
+      (calculate_autodifftype cf.current_block Functions type_, type_)
   | {kind= `UserDefined | `UserDeclared _; type_} :: _ ->
-      (calculate_autodifftype cf Functions type_, type_)
+      (calculate_autodifftype cf.current_block Functions type_, type_)
 
 let check_variable cf loc tenv id =
   let ad_level, type_ = check_id cf loc tenv id in
@@ -411,7 +414,6 @@ let inferred_ad_type_of_indexed at uindices =
          uindices )
 
 (* function checking *)
-
 let verify_conddist_name loc id =
   if
     List.exists
@@ -460,24 +462,17 @@ let verify_unnormalized cf loc id =
     && not ((cf.in_fun_def && cf.in_udf_dist_def) || cf.current_block = Model)
   then Semantic_error.invalid_unnormalized_fn loc |> error
 
-let mk_fun_app ~is_cond_dist (x, y, z) =
-  if is_cond_dist then CondDistApp (x, y, z) else FunApp (x, y, z)
-
 let check_normal_fn ~is_cond_dist loc tenv id es =
   match Env.find tenv (Utils.normalized_name id.name) with
   | {kind= `Variable _; _} :: _
   (* variables can sometimes shadow stanlib functions, so we have to check this *)
-    when not
-           (Stan_math_signatures.is_stan_math_function_name
-              (Utils.normalized_name id.name) ) ->
+    when not (Library.is_stdlib_function_name (Utils.normalized_name id.name))
+    ->
       Semantic_error.returning_fn_expected_nonfn_found loc id.name |> error
   | [] ->
       ( match Utils.split_distribution_suffix id.name with
       | Some (prefix, suffix) -> (
-          let known_families =
-            List.map
-              ~f:(fun (_, y, _, _) -> y)
-              Stan_math_signatures.distributions in
+          let known_families = Library.distribution_families in
           let is_known_family s =
             List.mem known_families s ~equal:String.equal in
           match suffix with
@@ -534,200 +529,11 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
         |> Semantic_error.illtyped_fn_app loc id.name (l, b)
         |> error )
 
-(** Given a constraint function [matches], find any signature which exists
-    Returns the first [Ok] if any exist, or else [Error]
-*)
-let find_matching_first_order_fn tenv matches fname =
-  let candidates =
-    Utils.stdlib_distribution_name fname.name
-    |> Env.find tenv |> List.map ~f:matches in
-  let ok, errs = List.partition_map candidates ~f:Result.to_either in
-  match SignatureMismatch.unique_minimum_promotion ok with
-  | Ok a -> SignatureMismatch.UniqueMatch a
-  | Error (Some promotions) ->
-      List.filter_map promotions ~f:(function
-        | UnsizedType.UFun (args, rt, _, _) -> Some (rt, args)
-        | _ -> None )
-      |> AmbiguousMatch
-  | Error None -> SignatureMismatch.SignatureErrors (List.hd_exn errs)
-
-let make_function_variable cf loc id = function
-  | UnsizedType.UFun (args, rt, FnLpdf _, mem_pattern) ->
-      let type_ =
-        UnsizedType.UFun
-          (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in
-      mk_typed_expression ~expr:(Variable id)
-        ~ad_level:(calculate_autodifftype cf Functions type_)
-        ~type_ ~loc
-  | UnsizedType.UFun _ as type_ ->
-      mk_typed_expression ~expr:(Variable id)
-        ~ad_level:(calculate_autodifftype cf Functions type_)
-        ~type_ ~loc
-  | type_ ->
-      Common.FatalError.fatal_error_msg
-        [%message
-          "Attempting to create function variable out of "
-            (type_ : UnsizedType.t)]
-
 let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
     =
-  if Stan_math_signatures.is_reduce_sum_fn id.name then
-    check_reduce_sum ~is_cond_dist loc cf tenv id tes
-  else if Stan_math_signatures.is_variadic_ode_fn id.name then
-    check_variadic_ode ~is_cond_dist loc cf tenv id tes
-  else if Stan_math_signatures.is_variadic_dae_fn id.name then
-    check_variadic_dae ~is_cond_dist loc cf tenv id tes
+  if Library.is_variadic_function_name id.name then
+    Library.check_variadic_fn id ~is_cond_dist loc cf.current_block tenv tes
   else check_normal_fn ~is_cond_dist loc tenv id tes
-
-and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
-  let basic_mismatch () =
-    let mandatory_args =
-      UnsizedType.[(AutoDiffable, UArray UReal); (AutoDiffable, UInt)] in
-    let mandatory_fun_args =
-      UnsizedType.
-        [(AutoDiffable, UArray UReal); (DataOnly, UInt); (DataOnly, UInt)] in
-    SignatureMismatch.check_variadic_args true mandatory_args mandatory_fun_args
-      UReal (get_arg_types tes) in
-  let fail () =
-    let expected_args, err =
-      basic_mismatch () |> Result.error |> Option.value_exn in
-    Semantic_error.illtyped_reduce_sum_generic loc id.name
-      (List.map ~f:type_of_expr_typed tes)
-      expected_args err
-    |> error in
-  let matching remaining_es fn =
-    match fn with
-    | Env.
-        { type_=
-            UnsizedType.UFun
-              (((_, sliced_arg_fun_type) as sliced_arg_fun) :: _, _, _, _) as
-            ftype
-        ; _ }
-      when List.mem Stan_math_signatures.reduce_sum_slice_types
-             sliced_arg_fun_type ~equal:( = ) ->
-        let mandatory_args = [sliced_arg_fun; (AutoDiffable, UInt)] in
-        let mandatory_fun_args =
-          [sliced_arg_fun; (DataOnly, UInt); (DataOnly, UInt)] in
-        let arg_types =
-          (calculate_autodifftype cf Functions ftype, ftype)
-          :: get_arg_types remaining_es in
-        SignatureMismatch.check_variadic_args true mandatory_args
-          mandatory_fun_args UReal arg_types
-    | _ -> basic_mismatch () in
-  match tes with
-  | {expr= Variable fname; _} :: remaining_es -> (
-    match find_matching_first_order_fn tenv (matching remaining_es) fname with
-    | SignatureMismatch.UniqueMatch (ftype, promotions) ->
-        (* a valid signature exists *)
-        let tes = make_function_variable cf loc fname ftype :: remaining_es in
-        mk_typed_expression
-          ~expr:
-            (mk_fun_app ~is_cond_dist
-               (StanLib FnPlain, id, Promotion.promote_list tes promotions) )
-          ~ad_level:(expr_ad_lub tes) ~type_:UnsizedType.UReal ~loc
-    | AmbiguousMatch ps ->
-        Semantic_error.ambiguous_function_promotion loc fname.name None ps
-        |> error
-    | SignatureErrors (expected_args, err) ->
-        Semantic_error.illtyped_reduce_sum loc id.name
-          (List.map ~f:type_of_expr_typed tes)
-          expected_args err
-        |> error )
-  | _ -> fail ()
-
-and check_variadic_ode ~is_cond_dist loc cf tenv id tes =
-  let optional_tol_mandatory_args =
-    if Stan_math_signatures.variadic_ode_adjoint_fn = id.name then
-      Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
-    else if Stan_math_signatures.is_variadic_ode_nonadjoint_tol_fn id.name then
-      Stan_math_signatures.variadic_ode_tol_arg_types
-    else [] in
-  let mandatory_arg_types =
-    Stan_math_signatures.variadic_ode_mandatory_arg_types
-    @ optional_tol_mandatory_args in
-  let fail () =
-    let expected_args, err =
-      SignatureMismatch.check_variadic_args false mandatory_arg_types
-        Stan_math_signatures.variadic_ode_mandatory_fun_args
-        Stan_math_signatures.variadic_ode_fun_return_type (get_arg_types tes)
-      |> Result.error |> Option.value_exn in
-    Semantic_error.illtyped_variadic_ode loc id.name
-      (List.map ~f:type_of_expr_typed tes)
-      expected_args err
-    |> error in
-  let matching remaining_es Env.{type_= ftype; _} =
-    let arg_types =
-      (calculate_autodifftype cf Functions ftype, ftype)
-      :: get_arg_types remaining_es in
-    SignatureMismatch.check_variadic_args false mandatory_arg_types
-      Stan_math_signatures.variadic_ode_mandatory_fun_args
-      Stan_math_signatures.variadic_ode_fun_return_type arg_types in
-  match tes with
-  | {expr= Variable fname; _} :: remaining_es -> (
-    match find_matching_first_order_fn tenv (matching remaining_es) fname with
-    | SignatureMismatch.UniqueMatch (ftype, promotions) ->
-        let tes = make_function_variable cf loc fname ftype :: remaining_es in
-        mk_typed_expression
-          ~expr:
-            (mk_fun_app ~is_cond_dist
-               (StanLib FnPlain, id, Promotion.promote_list tes promotions) )
-          ~ad_level:(expr_ad_lub tes)
-          ~type_:Stan_math_signatures.variadic_ode_return_type ~loc
-    | AmbiguousMatch ps ->
-        Semantic_error.ambiguous_function_promotion loc fname.name None ps
-        |> error
-    | SignatureErrors (expected_args, err) ->
-        Semantic_error.illtyped_variadic_ode loc id.name
-          (List.map ~f:type_of_expr_typed tes)
-          expected_args err
-        |> error )
-  | _ -> fail ()
-
-and check_variadic_dae ~is_cond_dist loc cf tenv id tes =
-  let optional_tol_mandatory_args =
-    if Stan_math_signatures.is_variadic_dae_tol_fn id.name then
-      Stan_math_signatures.variadic_dae_tol_arg_types
-    else [] in
-  let mandatory_arg_types =
-    Stan_math_signatures.variadic_dae_mandatory_arg_types
-    @ optional_tol_mandatory_args in
-  let fail () =
-    let expected_args, err =
-      SignatureMismatch.check_variadic_args false mandatory_arg_types
-        Stan_math_signatures.variadic_dae_mandatory_fun_args
-        Stan_math_signatures.variadic_dae_fun_return_type (get_arg_types tes)
-      |> Result.error |> Option.value_exn in
-    Semantic_error.illtyped_variadic_dae loc id.name
-      (List.map ~f:type_of_expr_typed tes)
-      expected_args err
-    |> error in
-  let matching remaining_es Env.{type_= ftype; _} =
-    let arg_types =
-      (calculate_autodifftype cf Functions ftype, ftype)
-      :: get_arg_types remaining_es in
-    SignatureMismatch.check_variadic_args false mandatory_arg_types
-      Stan_math_signatures.variadic_dae_mandatory_fun_args
-      Stan_math_signatures.variadic_dae_fun_return_type arg_types in
-  match tes with
-  | {expr= Variable fname; _} :: remaining_es -> (
-    match find_matching_first_order_fn tenv (matching remaining_es) fname with
-    | SignatureMismatch.UniqueMatch (ftype, promotions) ->
-        let tes = make_function_variable cf loc fname ftype :: remaining_es in
-        mk_typed_expression
-          ~expr:
-            (mk_fun_app ~is_cond_dist
-               (StanLib FnPlain, id, Promotion.promote_list tes promotions) )
-          ~ad_level:(expr_ad_lub tes)
-          ~type_:Stan_math_signatures.variadic_dae_return_type ~loc
-    | AmbiguousMatch ps ->
-        Semantic_error.ambiguous_function_promotion loc fname.name None ps
-        |> error
-    | SignatureErrors (expected_args, err) ->
-        Semantic_error.illtyped_variadic_dae loc id.name
-          (List.map ~f:type_of_expr_typed tes)
-          expected_args err
-        |> error )
-  | _ -> fail ()
 
 and check_funapp loc cf tenv ~is_cond_dist id (es : Ast.typed_expression list) =
   let name_check =
@@ -844,7 +650,8 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
         Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
       else
         mk_typed_expression ~expr:GetLP
-          ~ad_level:(calculate_autodifftype cf cf.current_block UReal)
+          ~ad_level:
+            (calculate_autodifftype cf.current_block cf.current_block UReal)
           ~type_:UReal ~loc
   | GetTarget ->
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
@@ -856,7 +663,8 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
         Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
       else
         mk_typed_expression ~expr:GetTarget
-          ~ad_level:(calculate_autodifftype cf cf.current_block UReal)
+          ~ad_level:
+            (calculate_autodifftype cf.current_block cf.current_block UReal)
           ~type_:UReal ~loc
   | ArrayExpr es -> es |> List.map ~f:ce |> check_array_expr loc
   | RowVectorExpr es -> es |> List.map ~f:ce |> check_rowvector loc
@@ -907,7 +715,7 @@ let check_nrfn loc tenv id es =
   match Env.find tenv id.name with
   | {kind= `Variable _; _} :: _
   (* variables can shadow stanlib functions, so we have to check this *)
-    when not (Stan_math_signatures.is_stan_math_function_name id.name) ->
+    when not (Library.is_stdlib_function_name id.name) ->
       Semantic_error.nonreturning_fn_expected_nonfn_found loc id.name |> error
   | [] ->
       Semantic_error.nonreturning_fn_expected_undeclaredident_found loc id.name
@@ -967,9 +775,9 @@ let verify_assignment_non_function loc ut id =
   | _ -> ()
 
 let check_assignment_operator loc assop lhs rhs =
-  let err op =
+  let err op sigs =
     Semantic_error.illtyped_assignment loc op lhs.lmeta.type_ rhs.emeta.type_
-  in
+      sigs in
   match assop with
   | Assign | ArrowAssign -> (
     match
@@ -977,11 +785,13 @@ let check_assignment_operator loc assop lhs rhs =
         rhs.emeta.type_
     with
     | Ok p -> Promotion.promote rhs p
-    | Error _ -> err Operator.Equals |> error )
+    | Error _ -> err Operator.Equals [] |> error )
   | OperatorAssign op -> (
       let args = List.map ~f:arg_type [Ast.expr_of_lvalue lhs; rhs] in
-      let return_type = assignmentoperator_stan_math_return_type op args in
-      match return_type with Some Void -> rhs | _ -> err op |> error )
+      let return_type = assignmentoperator_return_type op args in
+      match return_type with
+      | Some Void -> rhs
+      | _ -> err op (Library.get_assignment_operator_signatures op) |> error )
 
 let check_lvalue cf tenv = function
   | {lval= LVariable id; lmeta= ({loc} : located_meta)} ->
@@ -1454,7 +1264,7 @@ and check_var_decl_initial_value loc cf tenv id init_val_opt =
       | Ok p -> Some (Promotion.promote rhs p)
       | Error _ ->
           Semantic_error.illtyped_assignment loc Equals lhs.lmeta.type_
-            rhs.emeta.type_
+            rhs.emeta.type_ []
           |> error )
   | None -> None
 
@@ -1749,7 +1559,7 @@ let check_program_exn
       ; comments } as ast ) =
   warnings := [] ;
   (* create a new type environment which has only stan-math functions *)
-  let tenv = Env.stan_math_environment in
+  let tenv = std_library_tenv in
   let tenv, typed_fb = check_toplevel_block Functions tenv fb in
   verify_functions_have_defn tenv typed_fb ;
   let tenv, typed_db = check_toplevel_block Data tenv db in

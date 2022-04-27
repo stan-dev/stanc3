@@ -2,7 +2,7 @@
 
 open Core_kernel
 open Core_kernel.Poly
-open Monotone_framework_sigs
+open Monotone_framework_intf
 open Mir_utils
 open Middle
 
@@ -864,7 +864,7 @@ let rec declared_variables_stmt
         (List.map ~f:(fun x -> declared_variables_stmt x.pattern) l)
 
 let propagation_mfp (prog : Program.Typed.t)
-    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH with type labels = int)
+    (module Flowgraph : FLOWGRAPH with type labels = int)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (propagation_transfer :
          (int, Stmt.Located.Non_recursive.t) Map.Poly.t
@@ -897,7 +897,7 @@ let propagation_mfp (prog : Program.Typed.t)
   Mf.mfp ()
 
 let reaching_definitions_mfp (mir : Program.Typed.t)
-    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH with type labels = int)
+    (module Flowgraph : FLOWGRAPH with type labels = int)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   let variables =
     ( module struct
@@ -918,7 +918,7 @@ let reaching_definitions_mfp (mir : Program.Typed.t)
   Mf.mfp ()
 
 let initialized_vars_mfp (total : string Set.Poly.t)
-    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH with type labels = int)
+    (module Flowgraph : FLOWGRAPH with type labels = int)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   let (module Lattice) =
     dual_powerset_lattice_empty_initial
@@ -949,8 +949,7 @@ let globals (prog : Program.Typed.t) =
 (** Monotone framework instance for live_variables analysis. Expects reverse
     flowgraph. *)
 let live_variables_mfp (prog : Program.Typed.t)
-    (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-      with type labels = int )
+    (module Rev_Flowgraph : FLOWGRAPH with type labels = int)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   let never_kill = globals prog in
   let variables =
@@ -970,10 +969,8 @@ let live_variables_mfp (prog : Program.Typed.t)
 
 (** Instantiate all four instances of the monotone framework for lazy
     code motion, reusing code between them *)
-let lazy_expressions_mfp
-    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH with type labels = int)
-    (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-      with type labels = int )
+let lazy_expressions_mfp (module Flowgraph : FLOWGRAPH with type labels = int)
+    (module Rev_Flowgraph : FLOWGRAPH with type labels = int)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   let all_expressions =
     used_subexpressions_stmt
@@ -1031,8 +1028,7 @@ let lazy_expressions_mfp
  *
  *)
 let minimal_variables_mfp
-    (module Circular_Fwd_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-      with type labels = int )
+    (module Circular_Fwd_Flowgraph : FLOWGRAPH with type labels = int)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (initial_variables : string Set.Poly.t)
     (gen_variable :

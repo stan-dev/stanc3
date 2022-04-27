@@ -55,12 +55,6 @@ val matching_function :
     Requires a unique minimum option under type promotion
 *)
 
-val matching_stanlib_function :
-  string -> (UnsizedType.autodifftype * UnsizedType.t) list -> match_result
-(** Same as [matching_function] but requires specifically that the function
-    be from StanMath (uses [Environment.stan_math_environment])
-*)
-
 val check_variadic_args :
      bool
   -> (UnsizedType.autodifftype * UnsizedType.t) list
@@ -75,6 +69,15 @@ val check_variadic_args :
       If none is found, returns [Error] of the list of args and a function_mismatch.
      *)
 
+val find_matching_first_order_fn :
+     Environment.t
+  -> (Environment.info -> (UnsizedType.t * Promotion.t list, 'a) result)
+  -> Ast.identifier
+  -> (UnsizedType.t * Promotion.t list, 'a) generic_match_result
+(** Given a constraint function [matches], find any signature which exists
+    Returns the first [Ok] if any exist, or else [Error]
+*)
+
 val pp_signature_mismatch :
      Format.formatter
   -> string
@@ -86,8 +89,8 @@ val pp_signature_mismatch :
        * bool )
   -> unit
 
-val pp_math_lib_assignmentoperator_sigs :
-  Format.formatter -> UnsizedType.t * Operator.t -> unit
+val pp_assignmentoperator_sigs :
+  Format.formatter -> UnsizedType.t * Std_library_utils.signature list -> unit
 
 val compare_errors : function_mismatch -> function_mismatch -> int
 val compare_match_results : match_result -> match_result -> int

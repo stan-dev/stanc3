@@ -1,0 +1,8 @@
+(library
+ (name stan_math_library)
+ (public_name stanc.stan_math_library)
+ (libraries core_kernel middle stan_math_backend)
+ (implements frontend)
+ (inline_tests)
+ (preprocess
+  (pps ppx_jane ppx_deriving.fold ppx_deriving.map ppx_deriving.show)))

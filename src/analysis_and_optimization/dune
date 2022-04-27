@@ -1,9 +1,7 @@
 (library
  (name analysis_and_optimization)
  (public_name stanc.analysis)
- (libraries core_kernel str fmt common middle frontend)
+ (libraries core_kernel str fmt common middle frontend stan_math_backend)
  (inline_tests)
- ;; TODO: Not sure what's going on but it's throwing an error that this module has no implementation
- (modules_without_implementation monotone_framework_sigs)
  (preprocess
   (pps ppx_jane ppx_deriving.map ppx_deriving.fold)))

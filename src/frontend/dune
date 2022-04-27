@@ -3,6 +3,7 @@
  (public_name stanc.frontend)
  (libraries core_kernel re menhirLib fmt middle common yojson)
  (inline_tests)
+ (virtual_modules library)
  (preprocess
   (pps ppx_jane ppx_deriving.fold ppx_deriving.map)))
 

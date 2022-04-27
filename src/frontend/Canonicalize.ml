@@ -1,6 +1,6 @@
 open Core_kernel
 open Ast
-open Deprecation_analysis
+module Deprecation = Deprecation_analysis
 
 type canonicalizer_settings =
   {deprecations: bool; parentheses: bool; braces: bool; inline_includes: bool}
@@ -20,7 +20,8 @@ let rec repair_syntax_stmt user_dists {stmt; smeta} =
       { stmt=
           Tilde
             { arg
-            ; distribution= {name= without_suffix user_dists name; id_loc}
+            ; distribution=
+                {name= Deprecation.without_suffix user_dists name; id_loc}
             ; args
             ; truncation }
       ; smeta }
@@ -46,10 +47,10 @@ let rec replace_deprecated_expr
           (replace_deprecated_expr deprecated_userdefined
              {expr= TernaryIf ({expr= Paren c; emeta= c.emeta}, t, e); emeta} )
     | FunApp (StanLib suffix, {name; id_loc}, e) ->
-        if is_deprecated_distribution name then
+        if Deprecation.is_deprecated_distribution name then
           CondDistApp
             ( StanLib suffix
-            , {name= rename_deprecated deprecated_distributions name; id_loc}
+            , {name= Deprecation.rename_deprecated_distribution name; id_loc}
             , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
         else if String.is_suffix name ~suffix:"_cdf" then
           CondDistApp
@@ -59,14 +60,14 @@ let rec replace_deprecated_expr
         else
           FunApp
             ( StanLib suffix
-            , {name= rename_deprecated deprecated_functions name; id_loc}
+            , {name= Deprecation.rename_deprecated_function name; id_loc}
             , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
     | FunApp (UserDefined suffix, {name; id_loc}, e) -> (
       match String.Map.find deprecated_userdefined name with
       | Some type_ ->
           CondDistApp
             ( UserDefined suffix
-            , {name= update_suffix name type_; id_loc}
+            , {name= Deprecation.update_suffix name type_; id_loc}
             , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
       | None ->
           if String.is_suffix name ~suffix:"_cdf" then
@@ -125,7 +126,7 @@ let rec replace_deprecated_stmt
     | FunDef {returntype; funname= {name; id_loc}; arguments; body} ->
         let newname =
           match String.Map.find deprecated_userdefined name with
-          | Some type_ -> update_suffix name type_
+          | Some type_ -> Deprecation.update_suffix name type_
           | None -> name in
         FunDef
           { returntype
@@ -226,7 +227,8 @@ let repair_syntax program settings =
   if settings.deprecations then
     program
     |> map_program
-         (repair_syntax_stmt (userdef_distributions program.functionblock))
+         (repair_syntax_stmt
+            (Deprecation.userdef_distributions program.functionblock) )
   else program
 
 let canonicalize_program program settings : typed_program =
@@ -234,7 +236,8 @@ let canonicalize_program program settings : typed_program =
     if settings.deprecations then
       program
       |> map_program
-           (replace_deprecated_stmt (collect_userdef_distributions program))
+           (replace_deprecated_stmt
+              (Deprecation.collect_userdef_distributions program) )
     else program in
   let program =
     if settings.parentheses then program |> map_program parens_stmt else program

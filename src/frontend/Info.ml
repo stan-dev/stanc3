@@ -45,6 +45,14 @@ let rec get_function_calls_expr (funs, distrs) expr =
     | _ -> (funs, distrs) in
   fold_expression get_function_calls_expr (fun acc _ -> acc) acc expr.expr
 
+let includes_json () =
+  `Assoc
+    [ ( "included_files"
+      , `List
+          ( List.rev !Preprocessor.included_files
+          |> List.map ~f:(fun str -> `String str) ) ) ]
+
+
 let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
   let acc =
     match stmt.stmt with
@@ -57,8 +65,7 @@ let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
           (funs, distrs)
         else
           let suffix =
-            Stan_math_signatures.dist_name_suffix ud_dists distribution.name
-          in
+            Std_library_utils.dist_name_suffix Library.is_stdlib_function_name ud_dists distribution.name in
           let name = distribution.name ^ Utils.unnormalized_suffix suffix in
           (funs, Set.add distrs name)
     | _ -> (funs, distrs) in
@@ -86,13 +93,6 @@ let function_calls_json p =
   let set_to_List s =
     `List (Set.to_list s |> List.map ~f:(fun str -> `String str)) in
   `Assoc [("functions", set_to_List funs); ("distributions", set_to_List distrs)]
-
-let includes_json () =
-  `Assoc
-    [ ( "included_files"
-      , `List
-          ( List.rev !Preprocessor.included_files
-          |> List.map ~f:(fun str -> `String str) ) ) ]
 
 let info_json ast =
   List.fold ~f:Util.combine ~init:(`Assoc [])
