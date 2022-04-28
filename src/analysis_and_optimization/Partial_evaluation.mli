@@ -5,4 +5,4 @@ module type PartialEvaluator = sig
   val eval_prog : Program.Typed.t -> Program.Typed.t
 end
 
-module Make (StdLib : Frontend.Std_library_utils.Library) : PartialEvaluator
+module Make (StdLibrary : Frontend.Std_library_utils.Library) : PartialEvaluator

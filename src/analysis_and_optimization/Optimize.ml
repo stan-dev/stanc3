@@ -93,9 +93,10 @@ module type Optimizer = sig
     ?settings:optimization_settings -> Program.Typed.t -> Program.Typed.t
 end
 
-module Make (StdLib : Frontend.Std_library_utils.Library) : Optimizer = struct
-  module Mem = Mem_pattern.Make (StdLib)
-  module Partial_evaluator = Partial_evaluation.Make (StdLib)
+module Make (StdLibrary : Frontend.Std_library_utils.Library) : Optimizer =
+struct
+  module Mem = Mem_pattern.Make (StdLibrary)
+  module Partial_evaluator = Partial_evaluation.Make (StdLibrary)
 
   (**
    Apply the transformation to each function body and to the rest of the program as one

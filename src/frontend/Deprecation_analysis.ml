@@ -20,10 +20,11 @@ module type Deprecation_analizer = sig
   val collect_warnings : typed_program -> Warnings.t list
 end
 
-module Make (StdLib : Std_library_utils.Library) : Deprecation_analizer = struct
+module Make (StdLibrary : Std_library_utils.Library) : Deprecation_analizer =
+struct
   let stan_lib_deprecations =
-    Map.merge_skewed StdLib.deprecated_distributions StdLib.deprecated_functions
-      ~combine:(fun ~key x y ->
+    Map.merge_skewed StdLibrary.deprecated_distributions
+      StdLibrary.deprecated_functions ~combine:(fun ~key x y ->
         Common.FatalError.fatal_error_msg
           [%message
             "Common key in deprecation map"
@@ -32,7 +33,7 @@ module Make (StdLib : Std_library_utils.Library) : Deprecation_analizer = struct
               (y : Std_library_utils.deprecation_info)] )
 
   let is_deprecated_distribution name =
-    Map.mem StdLib.deprecated_distributions name
+    Map.mem StdLibrary.deprecated_distributions name
 
   let rename_deprecated map name =
     Map.find map name
@@ -42,9 +43,10 @@ module Make (StdLib : Std_library_utils.Library) : Deprecation_analizer = struct
     |> Option.value ~default:name
 
   let rename_deprecated_distribution =
-    rename_deprecated StdLib.deprecated_distributions
+    rename_deprecated StdLibrary.deprecated_distributions
 
-  let rename_deprecated_function = rename_deprecated StdLib.deprecated_functions
+  let rename_deprecated_function =
+    rename_deprecated StdLibrary.deprecated_functions
 
   let distribution_suffix name =
     let open String in

@@ -10,7 +10,7 @@ module type Ast_Mir_translator = sig
   val trans_prog : string -> Ast.typed_program -> Program.Typed.t
 end
 
-module Make (StdLib : Std_library_utils.Library) = struct
+module Make (StdLibrary : Std_library_utils.Library) = struct
   let trans_fn_kind kind name =
     let fname = Utils.stdlib_distribution_name name in
     match kind with
@@ -113,7 +113,7 @@ module Make (StdLib : Std_library_utils.Library) = struct
       | None ->
           ( Ast.StanLib FnPlain
           , Set.to_list possible_names |> List.hd_exn
-          , if StdLib.is_stdlib_function_name (id.name ^ "_lpmf") then
+          , if StdLibrary.is_stdlib_function_name (id.name ^ "_lpmf") then
               UnsizedType.UInt
             else UnsizedType.UReal (* close enough *) ) in
     let trunc cond_op (x : Ast.typed_expression) y =
@@ -446,7 +446,7 @@ module Make (StdLib : Std_library_utils.Library) = struct
     | Ast.Tilde {arg; distribution; args; truncation} ->
         let suffix =
           Std_library_utils.dist_name_suffix
-            (module StdLib)
+            (module StdLibrary)
             ud_dists distribution.name in
         let name = distribution.name ^ suffix in
         let kind =

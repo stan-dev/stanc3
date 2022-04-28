@@ -83,10 +83,11 @@ let pp_math_sig ppf (rt, args, mem_pattern) =
 let pp_math_sigs ppf sigs = (Fmt.list ~sep:Fmt.cut pp_math_sig) ppf sigs
 let pretty_print_math_sigs = Fmt.str "@[<v>@,%a@]" pp_math_sigs
 
-let dist_name_suffix (module StdLib : Library) udf_names name =
+let dist_name_suffix (module StdLibrary : Library) udf_names name =
   let is_udf_name s =
     List.exists ~f:(fun (n, _) -> String.equal s n) udf_names in
   Utils.distribution_suffices
   |> List.filter ~f:(fun sfx ->
-         StdLib.is_stdlib_function_name (name ^ sfx) || is_udf_name (name ^ sfx) )
+         StdLibrary.is_stdlib_function_name (name ^ sfx)
+         || is_udf_name (name ^ sfx) )
   |> List.hd_exn

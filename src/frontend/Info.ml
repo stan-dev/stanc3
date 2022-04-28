@@ -56,7 +56,7 @@ module type Information = sig
   val info : Ast.typed_program -> string
 end
 
-module Make (StdLib : Std_library_utils.Library) : Information = struct
+module Make (StdLibrary : Std_library_utils.Library) : Information = struct
   let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
     let acc =
       match stmt.stmt with
@@ -70,7 +70,7 @@ module Make (StdLib : Std_library_utils.Library) : Information = struct
           else
             let suffix =
               Std_library_utils.dist_name_suffix
-                (module StdLib)
+                (module StdLibrary)
                 ud_dists distribution.name in
             let name = distribution.name ^ Utils.unnormalized_suffix suffix in
             (funs, Set.add distrs name)

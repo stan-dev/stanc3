@@ -2,7 +2,7 @@ open Core_kernel
 open Core_kernel.Poly
 open Middle
 
-module Make (StdLib : Frontend.Std_library_utils.Library) = struct
+module Make (StdLibrary : Frontend.Std_library_utils.Library) = struct
   (**
   Return a Var expression of the name for each type
    containing an eigen matrix
@@ -113,12 +113,12 @@ module Make (StdLib : Frontend.Std_library_utils.Library) = struct
   let query_stan_math_mem_pattern_support (name : string)
       (args : (UnsizedType.autodifftype * UnsizedType.t) list) =
     match name with
-    | x when StdLib.is_variadic_function_name x -> false
+    | x when StdLibrary.is_variadic_function_name x -> false
     | _ ->
         let name =
-          StdLib.string_operator_to_function_name
+          StdLibrary.string_operator_to_function_name
             (Utils.stdlib_distribution_name name) in
-        let namematches = StdLib.get_signatures name in
+        let namematches = StdLibrary.get_signatures name in
         let filteredmatches =
           List.filter
             ~f:(fun x ->

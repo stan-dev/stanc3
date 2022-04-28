@@ -23,4 +23,4 @@ module type Deprecation_analizer = sig
   val collect_warnings : typed_program -> Warnings.t list
 end
 
-module Make (StdLib : Std_library_utils.Library) : Deprecation_analizer
+module Make (StdLibrary : Std_library_utils.Library) : Deprecation_analizer

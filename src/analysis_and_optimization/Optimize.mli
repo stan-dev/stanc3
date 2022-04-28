@@ -94,4 +94,4 @@ module type Optimizer = sig
   (** Perform all optimizations in this module on the MIR in an appropriate order. *)
 end
 
-module Make (StdLib : Frontend.Std_library_utils.Library) : Optimizer
+module Make (StdLibrary : Frontend.Std_library_utils.Library) : Optimizer

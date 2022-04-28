@@ -92,8 +92,8 @@ module type PartialEvaluator = sig
   val eval_prog : Program.Typed.t -> Program.Typed.t
 end
 
-module Make (StdLib : Frontend.Std_library_utils.Library) = struct
-  module TC = Frontend.Typechecking.Make (StdLib)
+module Make (StdLibrary : Frontend.Std_library_utils.Library) = struct
+  module TC = Frontend.Typechecking.Make (StdLibrary)
 
   let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
     { e with

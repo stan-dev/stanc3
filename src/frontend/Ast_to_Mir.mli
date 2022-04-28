@@ -9,4 +9,4 @@ module type Ast_Mir_translator = sig
   val trans_prog : string -> Ast.typed_program -> Program.Typed.t
 end
 
-module Make (StdLib : Std_library_utils.Library) : Ast_Mir_translator
+module Make (StdLibrary : Std_library_utils.Library) : Ast_Mir_translator
