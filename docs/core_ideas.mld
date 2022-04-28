@@ -65,6 +65,31 @@ This takes some getting used to, and also can lead to some unhelpful type signat
 VSCode, because abbreviations are not always used in hover-over text. For example, [Expr.Typed.t], the MIR's typed
 expression type, actually has a signature of [Expr.Typed.Meta.t Expr.Fixed.t].
 
+{1 The [Library] interface and functors}
+
+Many modules of stanc are modeled as OCaml {{:https://ocaml.org/learn/tutorials/functors.html}functors},
+which take in another module as input and produce a module as output. For the most part,
+these functors expect an instance of the [Library] interface defined in
+[src/frontend/Std_library_utils.ml].
+
+This module primarily contains signatures for the Stan standard library. For most users,
+you can assume this will be filled in with [src/stan_math_backend/Stan_math_library.ml],
+the object representing the {{:https://github.com/stan-dev/math}stan-dev/math} C++ library.
+
+Usages of these functors are rather simple, e.g. in the core stanc driver the line
+
+{[
+module Typechecker = Typechecking.Make (Stan_math_library)
+]}
+
+defines a module [Typechecker] by supplying the functor [Typechecking.Make] with
+the Stan C++ library module. After this, [Typechecker.check_program] will typecheck
+an AST against those specific functions.
+
+As noted in the above tutorial link, the syntax of functors is often the hardest part
+of using and understanding them. The functors which accept [Library] are all relatively
+simple, and should serve as good examples to beginners with the concept.
+
 {1 The [Fmt] library and pretty-printing}
 
 We extensively use the {{:https://erratique.ch/software/fmt}Fmt} library for our pretty-printing and code

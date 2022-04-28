@@ -7,7 +7,7 @@
 For a function to be built into Stan, it has to be included in the Stan Math library and its signature has to be
 exposed to the compiler.
 
-To do the latter, we have to add a corresponding line in [src/middle/Stan_math_signatures.ml].
+To do the latter, we have to add a corresponding line in [src/stan_math_backend/Stan_math_library.ml].
 The compiler uses the signatures defined there to do type checking.
 
 
@@ -130,8 +130,9 @@ For example, the following line defines the signature [add(real, matrix) => matr
 Functions such as the ODE integrators or [reduce_sum], which take in user-functions and a variable-length
 list of arguments, are {b NOT} added to this list.
 
-These are instead treated as special cases in the [Typechecker] module in the frontend folder. It
-it best to consult an existing example of how these are done before proceeding.
+These are instead handled by special functions like [is_variadic_function_name]. They
+must also be given custom typechecking rules in the private sub-module [Variadic_typechecking].
+It is best to consult an existing example of how these are done before proceeding.
 
 {1 Testing}
 
