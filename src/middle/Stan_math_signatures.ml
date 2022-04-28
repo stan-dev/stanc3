@@ -53,7 +53,7 @@ type fkind = Lpmf | Lpdf | Rng | Cdf | Ccdf | UnaryVectorized
 
 type fun_arg = UnsizedType.autodifftype * UnsizedType.t
 
-type stan_math_table_values =
+type signature =
   UnsizedType.returntype * fun_arg list * Common.Helpers.mem_pattern
 
 let is_primitive = function
@@ -62,13 +62,12 @@ let is_primitive = function
   | _ -> false
 
 (** The signatures hash table *)
-let (stan_math_signatures : (string, stan_math_table_values list) Hashtbl.t) =
+let (stan_math_signatures : (string, signature list) Hashtbl.t) =
   String.Table.create ()
 
 (** All of the signatures that are added by hand, rather than the ones
     added "declaratively" *)
-let (manual_stan_math_signatures :
-      (string, stan_math_table_values list) Hashtbl.t ) =
+let (manual_stan_math_signatures : (string, signature list) Hashtbl.t) =
   String.Table.create ()
 
 (* XXX The correct word here isn't combination - what is it? *)
@@ -376,20 +375,6 @@ let is_stan_math_function_name name =
   let name = Utils.stdlib_distribution_name name in
   Hashtbl.mem stan_math_signatures name
 
-let is_soa_supported name args =
-  let name = Utils.stdlib_distribution_name name in
-  let value = Hashtbl.find stan_math_signatures name in
-  match value with
-  | Some (a : stan_math_table_values list) ->
-      let find_soa (_, table_args, mem_pat) =
-        let args_match = table_args = args in
-        match (args_match, mem_pat) with
-        | false, _ -> false
-        | true, Common.Helpers.AoS -> false
-        | true, SoA -> true in
-      List.exists ~f:find_soa a
-  | None -> false
-
 let dist_name_suffix udf_names name =
   let is_udf_name s = List.exists ~f:(fun (n, _) -> n = s) udf_names in
   match
@@ -522,19 +507,14 @@ let bare_types =
   [ UnsizedType.UInt; UReal; UComplex; UVector; URowVector; UMatrix
   ; UComplexVector; UComplexRowVector; UComplexMatrix ]
 
-let bare_types_size = List.length bare_types
 let vector_types = [UnsizedType.UReal; UArray UReal; UVector; URowVector]
-let vector_types_size = List.length vector_types
 let primitive_types = [UnsizedType.UInt; UReal]
-let primitive_types_size = List.length primitive_types
 
 let complex_types =
   [UnsizedType.UComplex; UComplexVector; UComplexRowVector; UComplexMatrix]
 
 let all_vector_types =
   [UnsizedType.UReal; UArray UReal; UVector; URowVector; UInt; UArray UInt]
-
-let all_vector_types_size = List.length all_vector_types
 
 let add_qualified (name, rt, argts, supports_soa) =
   Hashtbl.add_multi stan_math_signatures ~key:name
@@ -1089,9 +1069,17 @@ let () =
   add_unqualified ("csr_extract_v", ReturnType (UArray UInt), [UMatrix], AoS) ;
   add_unqualified ("csr_extract_u", ReturnType (UArray UInt), [UMatrix], AoS) ;
   add_unqualified
+    ("cumulative_sum", ReturnType (UArray UInt), [UArray UInt], AoS) ;
+  add_unqualified
     ("cumulative_sum", ReturnType (UArray UReal), [UArray UReal], AoS) ;
   add_unqualified ("cumulative_sum", ReturnType UVector, [UVector], SoA) ;
   add_unqualified ("cumulative_sum", ReturnType URowVector, [URowVector], SoA) ;
+  add_unqualified
+    ("cumulative_sum", ReturnType (UArray UComplex), [UArray UComplex], AoS) ;
+  add_unqualified
+    ("cumulative_sum", ReturnType UComplexVector, [UComplexVector], AoS) ;
+  add_unqualified
+    ("cumulative_sum", ReturnType UComplexRowVector, [UComplexRowVector], AoS) ;
   add_unqualified ("determinant", ReturnType UReal, [UMatrix], SoA) ;
   add_unqualified ("diag_matrix", ReturnType UMatrix, [UVector], AoS) ;
   add_unqualified

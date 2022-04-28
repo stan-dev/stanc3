@@ -75,13 +75,16 @@ let block_no_loc l = Stmt.Fixed.Pattern.Block (map_no_loc l)
 let slist_concat_no_loc l stmt =
   match l with [] -> stmt | l -> slist_no_loc (l @ [stmt])
 
-let replace_fresh_local_vars s' =
-  let f m = function
+let gen_inline_var (name : string) (id_var : string) =
+  Gensym.generate ~prefix:("inline_" ^ name ^ "_" ^ id_var ^ "_") ()
+
+let replace_fresh_local_vars (fname : string) stmt =
+  let f (m : (string, string) Core_kernel.Map.Poly.t) = function
     | Stmt.Fixed.Pattern.Decl {decl_adtype; decl_type; decl_id; initialize} ->
         let new_name =
           match Map.Poly.find m decl_id with
           | Some existing -> existing
-          | None -> Gensym.generate ~prefix:"inline_" () in
+          | None -> gen_inline_var fname decl_id in
         ( Stmt.Fixed.Pattern.Decl
             {decl_adtype; decl_id= new_name; decl_type; initialize}
         , Map.Poly.set m ~key:decl_id ~data:new_name )
@@ -89,7 +92,7 @@ let replace_fresh_local_vars s' =
         let new_name =
           match Map.Poly.find m loopvar with
           | Some existing -> existing
-          | None -> Gensym.generate ~prefix:"inline_" () in
+          | None -> gen_inline_var fname loopvar in
         ( Stmt.Fixed.Pattern.For {loopvar= new_name; lower; upper; body}
         , Map.Poly.set m ~key:loopvar ~data:new_name )
     | Assignment ((var_name, ut, l), e) ->
@@ -99,14 +102,24 @@ let replace_fresh_local_vars s' =
           | Some var_name -> var_name in
         (Stmt.Fixed.Pattern.Assignment ((var_name, ut, l), e), m)
     | x -> (x, m) in
-  let s, m = map_rec_state_stmt_loc f Map.Poly.empty s' in
+  let s, m = map_rec_state_stmt_loc f Map.Poly.empty stmt in
   name_subst_stmt m s
 
 let subst_args_stmt args es =
   let m = Map.Poly.of_alist_exn (List.zip_exn args es) in
   subst_stmt m
 
-(* TODO: only handle early returns if that's necessary *)
+(**
+ * Count the number of returns that happen in a statement
+ *)
+let rec count_returns Stmt.Fixed.{pattern; _} : int =
+  Stmt.Fixed.Pattern.fold
+    (fun acc _ -> acc)
+    (fun acc -> function
+      | Stmt.Fixed.{pattern= Return _; _} -> acc + 1
+      | stmt -> acc + count_returns stmt )
+    0 pattern
+
 (* The strategy here is to wrap the function body in a dummy loop, then replace
    returns with breaks. One issue is early return from internal loops - in
    those cases, a break would only break out of the inner loop. The solution is
@@ -114,13 +127,15 @@ let subst_args_stmt args es =
    then to check if that flag is set after each loop. Then, if a 'return' break
    is called from an inner loop, there's a cascade of breaks all the way out of
    the dummy loop. *)
-let handle_early_returns opt_var b =
-  let returned = Gensym.generate ~prefix:"inline_" () in
-  let f = function
+let handle_early_returns (fname : string) opt_var stmt =
+  let returned = gen_inline_var fname "early_ret_check" in
+  let generate_inner_breaks num_returns stmt_pattern =
+    match stmt_pattern with
     | Stmt.Fixed.Pattern.Return opt_ret -> (
       match (opt_var, opt_ret) with
-      | None, None -> Stmt.Fixed.Pattern.Break
-      | Some name, Some e ->
+      | None, None when num_returns > 1 -> Stmt.Fixed.Pattern.Break
+      | None, None -> Stmt.Fixed.Pattern.Block []
+      | Some name, Some e when num_returns > 1 ->
           SList
             [ Stmt.Fixed.
                 { pattern=
@@ -138,6 +153,7 @@ let handle_early_returns opt_var b =
                 { pattern= Assignment ((name, Expr.Typed.type_of e, []), e)
                 ; meta= Location_span.empty }
             ; {pattern= Break; meta= Location_span.empty} ]
+      | Some name, Some e -> Assignment ((name, Expr.Typed.type_of e, []), e)
       | Some _, None ->
           Common.FatalError.fatal_error_msg
             [%message
@@ -150,7 +166,7 @@ let handle_early_returns opt_var b =
               ( "Expected a void function but found a non-empty return \
                  statement."
                 : string )] )
-    | Stmt.Fixed.Pattern.For _ as loop ->
+    | Stmt.Fixed.Pattern.For _ as loop when num_returns > 1 ->
         Stmt.Fixed.Pattern.SList
           [ Stmt.Fixed.{pattern= loop; meta= Location_span.empty}
           ; Stmt.Fixed.
@@ -167,46 +183,51 @@ let handle_early_returns opt_var b =
                     , None )
               ; meta= Location_span.empty } ]
     | x -> x in
-  Stmt.Fixed.Pattern.SList
-    [ Stmt.Fixed.
-        { pattern=
-            Decl
-              { decl_adtype= DataOnly
-              ; decl_id= returned
-              ; decl_type= Sized SInt
-              ; initialize= true }
-        ; meta= Location_span.empty }
-    ; Stmt.Fixed.
-        { pattern=
-            Assignment
-              ( (returned, UInt, [])
-              , Expr.Fixed.
-                  { pattern= Lit (Int, "0")
-                  ; meta=
-                      Expr.Typed.Meta.
-                        { type_= UInt
-                        ; adlevel= DataOnly
-                        ; loc= Location_span.empty } } )
-        ; meta= Location_span.empty }
-    ; Stmt.Fixed.
-        { pattern=
-            Stmt.Fixed.Pattern.For
-              { loopvar= Gensym.generate ~prefix:"inline_" ()
-              ; lower=
-                  Expr.Fixed.
-                    { pattern= Lit (Int, "1")
+  let num_returns = count_returns stmt in
+  if num_returns > 1 then
+    Stmt.Fixed.Pattern.SList
+      [ Stmt.Fixed.
+          { pattern=
+              Decl
+                { decl_adtype= DataOnly
+                ; decl_id= returned
+                ; decl_type= Sized SInt
+                ; initialize= true }
+          ; meta= Location_span.empty }
+      ; Stmt.Fixed.
+          { pattern=
+              Assignment
+                ( (returned, UInt, [])
+                , Expr.Fixed.
+                    { pattern= Lit (Int, "0")
                     ; meta=
                         Expr.Typed.Meta.
                           { type_= UInt
                           ; adlevel= DataOnly
-                          ; loc= Location_span.empty } }
-              ; upper=
-                  { pattern= Lit (Int, "1")
-                  ; meta=
-                      {type_= UInt; adlevel= DataOnly; loc= Location_span.empty}
-                  }
-              ; body= map_rec_stmt_loc f b }
-        ; meta= Location_span.empty } ]
+                          ; loc= Location_span.empty } } )
+          ; meta= Location_span.empty }
+      ; Stmt.Fixed.
+          { pattern=
+              Stmt.Fixed.Pattern.For
+                { loopvar= gen_inline_var fname "iterator"
+                ; lower=
+                    Expr.Fixed.
+                      { pattern= Lit (Int, "1")
+                      ; meta=
+                          Expr.Typed.Meta.
+                            { type_= UInt
+                            ; adlevel= DataOnly
+                            ; loc= Location_span.empty } }
+                ; upper=
+                    { pattern= Lit (Int, "1")
+                    ; meta=
+                        { type_= UInt
+                        ; adlevel= DataOnly
+                        ; loc= Location_span.empty } }
+                ; body=
+                    map_rec_stmt_loc (generate_inner_breaks num_returns) stmt }
+          ; meta= Location_span.empty } ]
+  else (map_rec_stmt_loc (generate_inner_breaks num_returns) stmt).pattern
 
 let inline_list f es =
   let dse_list = List.map ~f es in
@@ -238,7 +259,8 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
             match suffix with
             | FnLpdf propto' when propto' && propto ->
                 ( Fun_kind.FnLpdf true
-                , Utils.with_unnormalized_suffix fname |> Option.value_exn )
+                , Utils.with_unnormalized_suffix fname
+                  |> Option.value ~default:fname )
             | FnLpdf _ -> (Fun_kind.FnLpdf false, fname)
             | _ -> (suffix, fname) in
           match Map.find fim fname' with
@@ -248,23 +270,29 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
                 | Fun_kind.UserDefined _ -> Fun_kind.UserDefined (fname, suffix)
                 | _ -> StanLib (fname, suffix, AoS) in
               (d_list, s_list, {e with pattern= FunApp (fun_kind, es)})
-          | Some (rt, args, b) ->
-              let x = Gensym.generate ~prefix:"inline_" () in
-              let handle = handle_early_returns (Some x) in
+          | Some (rt, args, body) ->
+              let inline_return_name = gen_inline_var fname "return" in
+              let handle =
+                handle_early_returns fname (Some inline_return_name) in
               let d_list2, s_list2, (e : Expr.Typed.t) =
+                let decl_type =
+                  Option.map ~f:Mir_utils.unsafe_unsized_to_sized_type rt
+                  |> Option.value_exn in
                 ( [ Stmt.Fixed.Pattern.Decl
                       { decl_adtype= adt
-                      ; decl_id= x
-                      ; decl_type= Option.value_exn rt
-                      ; initialize= true } ]
+                      ; decl_id= inline_return_name
+                      ; decl_type
+                      ; initialize= false } ]
                   (* We should minimize the code that's having its variables
                      replaced to avoid conflict with the (two) new dummy
                      variables introduced by inlining *)
-                , [handle (replace_fresh_local_vars (subst_args_stmt args es b))]
-                , { pattern= Var x
+                , [ handle
+                      (replace_fresh_local_vars fname
+                         (subst_args_stmt args es body) ) ]
+                , { pattern= Var inline_return_name
                   ; meta=
                       Expr.Typed.Meta.
-                        { type_= Type.to_unsized (Option.value_exn rt)
+                        { type_= Type.to_unsized decl_type
                         ; adlevel= adt
                         ; loc= Location_span.empty } } ) in
               let d_list = d_list @ d_list2 in
@@ -331,19 +359,21 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.{pattern; meta} =
   Stmt.Fixed.
     { pattern=
         ( match pattern with
-        | Assignment ((x, ut, l), e2) ->
-            let dl1, sl1, l =
-              inline_list (inline_function_index propto adt fim) l in
-            let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
+        | Assignment ((assignee, ut, idx_lst), rhs) ->
+            let dl1, sl1, new_idx_lst =
+              inline_list (inline_function_index propto adt fim) idx_lst in
+            let dl2, sl2, new_rhs =
+              inline_function_expression propto adt fim rhs in
             slist_concat_no_loc
               (dl2 @ dl1 @ sl2 @ sl1)
-              (Assignment ((x, ut, l), e2))
+              (Assignment ((assignee, ut, new_idx_lst), new_rhs))
         | TargetPE e ->
             let d, s, e = inline_function_expression propto adt fim e in
             slist_concat_no_loc (d @ s) (TargetPE e)
-        | NRFunApp (kind, es) ->
+        | NRFunApp (kind, exprs) ->
             let d_list, s_list, es =
-              inline_list (inline_function_expression propto adt fim) es in
+              inline_list (inline_function_expression propto adt fim) exprs
+            in
             slist_concat_no_loc (d_list @ s_list)
               ( match kind with
               | CompilerInternal _ -> NRFunApp (kind, es)
@@ -351,36 +381,36 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.{pattern; meta} =
                 match Map.find fim s with
                 | None -> NRFunApp (kind, es)
                 | Some (_, args, b) ->
-                    let b = replace_fresh_local_vars b in
-                    let b = handle_early_returns None b in
+                    let b = replace_fresh_local_vars s b in
+                    let b = handle_early_returns s None b in
                     (subst_args_stmt args es
                        {pattern= b; meta= Location_span.empty} )
                       .pattern ) )
         | Return e -> (
           match e with
           | None -> Return None
-          | Some e ->
-              let d, s, e = inline_function_expression propto adt fim e in
+          | Some expr ->
+              let d, s, e = inline_function_expression propto adt fim expr in
               slist_concat_no_loc (d @ s) (Return (Some e)) )
-        | IfElse (e, s1, s2) ->
-            let d, s, e = inline_function_expression propto adt fim e in
+        | IfElse (expr, s1, s2) ->
+            let d, s, e = inline_function_expression propto adt fim expr in
             slist_concat_no_loc (d @ s)
               (IfElse
                  ( e
                  , inline_function_statement propto adt fim s1
                  , Option.map ~f:(inline_function_statement propto adt fim) s2
                  ) )
-        | While (e, s) ->
-            let d', s', e = inline_function_expression propto adt fim e in
+        | While (expr, stmt) ->
+            let d', s', e = inline_function_expression propto adt fim expr in
             slist_concat_no_loc (d' @ s')
               (While
                  ( e
                  , match s' with
-                   | [] -> inline_function_statement propto adt fim s
+                   | [] -> inline_function_statement propto adt fim stmt
                    | _ ->
                        { pattern=
                            Block
-                             ( [inline_function_statement propto adt fim s]
+                             ( [inline_function_statement propto adt fim stmt]
                              @ map_no_loc s' )
                        ; meta= Location_span.empty } ) )
         | For {loopvar; lower; upper; body} ->
@@ -603,9 +633,9 @@ let propagation
             with type labels = int
              and type properties = (string, Middle.Expr.Typed.t) Map.Poly.t
                                    option ) ) (mir : Program.Typed.t) =
-  let transform s =
+  let transform stmt =
     let flowgraph, flowgraph_to_mir =
-      Monotone_framework.forward_flowgraph_of_stmt s in
+      Monotone_framework.forward_flowgraph_of_stmt stmt in
     let (module Flowgraph) = flowgraph in
     let values =
       Monotone_framework.propagation_mfp mir
@@ -1222,7 +1252,7 @@ let level_optimizations (lvl : optimization_level) : optimization_settings =
   match lvl with
   | O0 -> no_optimizations
   | O1 ->
-      { function_inlining= false
+      { function_inlining= true
       ; static_loop_unrolling= false
       ; one_step_loop_unrolling= false
       ; list_collapsing= true

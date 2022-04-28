@@ -1,12 +1,10 @@
-open Frontend
 open Analysis_and_optimization.Factor_graph
 open Core_kernel
 open Analysis_and_optimization.Dataflow_types
 
 let reject_example =
-  let ast =
-    Frontend_utils.typed_ast_of_string_exn
-      {|
+  Test_utils.mir_of_string
+    {|
         parameters {
           real x;
         }
@@ -41,8 +39,6 @@ let reject_example =
           }
         }
       |}
-  in
-  Ast_to_Mir.trans_prog "" ast
 
 let%expect_test "Factor graph reject example" =
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
@@ -66,9 +62,8 @@ let%expect_test "Factor graph reject example" =
     |}]
 
 let complex_example =
-  let ast =
-    Frontend_utils.typed_ast_of_string_exn
-      {|
+  Test_utils.mir_of_string
+    {|
         parameters {
           real a;
           real b;
@@ -93,8 +88,6 @@ let complex_example =
           target += z * e + f*f;
         }
       |}
-  in
-  Ast_to_Mir.trans_prog "" ast
 
 let%expect_test "Factor graph complex example" =
   let deps = prog_factor_graph complex_example in
@@ -322,9 +315,8 @@ let%expect_test "Factor graph complex example" =
     |}]
 
 let complex_example =
-  let ast =
-    Frontend_utils.typed_ast_of_string_exn
-      {|
+  Test_utils.mir_of_string
+    {|
         data {
           real x;
           real y;
@@ -349,8 +341,6 @@ let complex_example =
           f ~ normal(e, 1);
         }
       |}
-  in
-  Ast_to_Mir.trans_prog "" ast
 
 let%expect_test "Priors complex example" =
   let priors = list_priors complex_example in

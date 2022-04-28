@@ -138,7 +138,7 @@ let stan2cpp model_name model_string is_flag_set flag_val =
           (Result.Ok cpp, warnings, pedantic_mode_warnings)
       | Result.Error _ as e -> (e, parser_warnings, []) )
 
-let wrap_result ?printed_filename ~warnings = function
+let wrap_result ?printed_filename ~code ~warnings = function
   | Result.Ok s ->
       Js.Unsafe.obj
         [| ("result", Js.Unsafe.inject (Js.string s))
@@ -147,7 +147,10 @@ let wrap_result ?printed_filename ~warnings = function
                (Js.array (List.to_array (List.map ~f:Js.string warnings))) )
         |]
   | Error e ->
-      let e = Fmt.str "%a" (Errors.pp ?printed_filename) e in
+      let e =
+        Fmt.str "%a"
+          (Errors.pp ?printed_filename ?code:(Some (Js.to_string code)))
+          e in
       Js.Unsafe.obj
         [| ("errors", Js.Unsafe.inject (Array.map ~f:Js.string [|e|]))
          ; ("warnings", Js.Unsafe.inject Js.array_empty) |]
@@ -175,7 +178,7 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
     List.map
       ~f:(Fmt.str "%a" (Warnings.pp ?printed_filename))
       (warnings @ pedantic_mode_warnings) in
-  wrap_result ?printed_filename result ~warnings
+  wrap_result ?printed_filename ~code result ~warnings
 
 let dump_stan_math_signatures () =
   Js.string @@ Fmt.str "%a" Stan_math_signatures.pretty_print_all_math_sigs ()

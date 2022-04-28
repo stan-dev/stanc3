@@ -213,3 +213,5 @@ val update_expr_ad_levels : string Set.Poly.t -> Expr.Typed.t -> Expr.Typed.t
 
 val cleanup_empty_stmts :
   ('e, 's) Stmt.Fixed.t list -> ('e, 's) Stmt.Fixed.t list
+
+val unsafe_unsized_to_sized_type : Expr.Typed.t Type.t -> Expr.Typed.t Type.t

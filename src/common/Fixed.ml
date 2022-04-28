@@ -75,7 +75,7 @@ module Make (Pattern : Pattern.S) : S with module Pattern := Pattern = struct
   [@@deriving compare, map, fold, hash, sexp]
 
   let rec pp f ppf {pattern; meta} =
-    Fmt.pf ppf {|%a%a|} f meta (Pattern.pp (pp f)) pattern
+    Fmt.pf ppf "%a%a" f meta (Pattern.pp (pp f)) pattern
 
   include Foldable.Make (struct
     type nonrec 'a t = 'a t

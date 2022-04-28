@@ -2,7 +2,6 @@
 
 open Core_kernel
 open Core_kernel.Poly
-open Common.Helpers
 
 type t =
   | UInt
@@ -27,7 +26,7 @@ and autodifftype = DataOnly | AutoDiffable
 and returntype = Void | ReturnType of t [@@deriving compare, hash, sexp]
 
 let pp_autodifftype ppf = function
-  | DataOnly -> pp_keyword ppf "data "
+  | DataOnly -> Fmt.string ppf "data "
   | AutoDiffable -> ()
 
 let unsized_array_depth unsized_ty =
@@ -49,15 +48,15 @@ let rec unwind_array_type = function
   | ut -> (ut, 0)
 
 let rec pp ppf = function
-  | UInt -> pp_keyword ppf "int"
-  | UReal -> pp_keyword ppf "real"
-  | UComplex -> pp_keyword ppf "complex"
-  | UVector -> pp_keyword ppf "vector"
-  | URowVector -> pp_keyword ppf "row_vector"
-  | UMatrix -> pp_keyword ppf "matrix"
-  | UComplexVector -> pp_keyword ppf "complex_vector"
-  | UComplexRowVector -> pp_keyword ppf "complex_row_vector"
-  | UComplexMatrix -> pp_keyword ppf "complex_matrix"
+  | UInt -> Fmt.string ppf "int"
+  | UReal -> Fmt.string ppf "real"
+  | UComplex -> Fmt.string ppf "complex"
+  | UVector -> Fmt.string ppf "vector"
+  | URowVector -> Fmt.string ppf "row_vector"
+  | UMatrix -> Fmt.string ppf "matrix"
+  | UComplexVector -> Fmt.string ppf "complex_vector"
+  | UComplexRowVector -> Fmt.string ppf "complex_row_vector"
+  | UComplexMatrix -> Fmt.string ppf "complex_matrix"
   | UArray ut ->
       let ut2, d = unwind_array_type ut in
       let array_str = "[" ^ String.make d ',' ^ "]" in
@@ -66,8 +65,7 @@ let rec pp ppf = function
       Fmt.pf ppf {|@[<h>(%a) => %a@]|}
         Fmt.(list pp_fun_arg ~sep:comma)
         argtypes pp_returntype rt
-  | UMathLibraryFunction ->
-      (pp_angle_brackets Fmt.string) ppf "Stan Math function"
+  | UMathLibraryFunction -> Fmt.string ppf "<Stan Math function>"
 
 and pp_fun_arg ppf (ad_ty, unsized_ty) =
   match ad_ty with
