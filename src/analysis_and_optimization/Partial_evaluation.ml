@@ -87,12 +87,13 @@ let is_multi_index = function
   | Index.MultiIndex _ | Upfrom _ | Between _ | All -> true
   | Single _ -> false
 
-module type PartialEvaluator = sig
+module type PARTIAL_EVALUATOR = sig
   val try_eval_expr : Expr.Typed.t -> Expr.Typed.t
   val eval_prog : Program.Typed.t -> Program.Typed.t
 end
 
-module Make (StdLibrary : Frontend.Std_library_utils.Library) = struct
+module Make (StdLibrary : Frontend.Std_library_utils.Library) :
+  PARTIAL_EVALUATOR = struct
   module TC = Frontend.Typechecking.Make (StdLibrary)
 
   let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =

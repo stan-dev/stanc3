@@ -17,6 +17,7 @@ open Core_kernel
 open Core_kernel.Poly
 open Middle
 open Ast
+open Typechecking_intf
 module Env = Environment
 
 (* we only allow errors raised by this function *)
@@ -83,25 +84,7 @@ let reserved_keywords =
   ; "get_lp"; "print"; "reject"; "typedef"; "struct"; "var"; "export"; "extern"
   ; "static"; "auto" ]
 
-module type Typechecker = sig
-  val check_program_exn : untyped_program -> typed_program * Warnings.t list
-
-  val check_program :
-       untyped_program
-    -> (typed_program * Warnings.t list, Semantic_error.t) result
-
-  val operator_return_type :
-       Middle.Operator.t
-    -> (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t) list
-    -> (Middle.UnsizedType.returntype * Promotion.t list) option
-
-  val library_function_return_type :
-       string
-    -> (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t) list
-    -> Middle.UnsizedType.returntype option
-end
-
-module Make (StdLibrary : Std_library_utils.Library) : Typechecker = struct
+module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
   let std_library_tenv : Env.t =
     Env.make_from_library StdLibrary.function_signatures
 

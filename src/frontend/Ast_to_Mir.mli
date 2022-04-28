@@ -1,7 +1,7 @@
 (** Translate from the AST to the MIR *)
 open Middle
 
-module type Ast_Mir_translator = sig
+module type AST_MIR_TRANSLATOR = sig
   val gather_data :
        Ast.typed_program
     -> (Expr.Typed.t SizedType.t * Expr.Typed.t Transformation.t * string) list
@@ -9,4 +9,4 @@ module type Ast_Mir_translator = sig
   val trans_prog : string -> Ast.typed_program -> Program.Typed.t
 end
 
-module Make (StdLibrary : Std_library_utils.Library) : Ast_Mir_translator
+module Make (StdLibrary : Std_library_utils.Library) : AST_MIR_TRANSLATOR

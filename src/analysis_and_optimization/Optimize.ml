@@ -5,23 +5,7 @@ open Core_kernel.Poly
 open Common
 open Middle
 open Mir_utils
-
-type optimization_settings =
-  { function_inlining: bool
-  ; static_loop_unrolling: bool
-  ; one_step_loop_unrolling: bool
-  ; list_collapsing: bool
-  ; block_fixing: bool
-  ; allow_uninitialized_decls: bool
-  ; constant_propagation: bool
-  ; expression_propagation: bool
-  ; copy_propagation: bool
-  ; dead_code_elimination: bool
-  ; partial_evaluation: bool
-  ; lazy_code_motion: bool
-  ; optimize_ad_levels: bool
-  ; preserve_stability: bool
-  ; optimize_soa: bool }
+open Optimize_intf
 
 let settings_const b =
   { function_inlining= b
@@ -66,34 +50,7 @@ let level_optimizations (lvl : optimization_level) : optimization_settings =
       ; optimize_soa= true }
   | Oexperimental -> all_optimizations
 
-module type Optimizer = sig
-  val function_inlining : Program.Typed.t -> Program.Typed.t
-  val static_loop_unrolling : Program.Typed.t -> Program.Typed.t
-  val one_step_loop_unrolling : Program.Typed.t -> Program.Typed.t
-  val list_collapsing : Program.Typed.t -> Program.Typed.t
-  val block_fixing : Program.Typed.t -> Program.Typed.t
-
-  val constant_propagation :
-    ?preserve_stability:bool -> Program.Typed.t -> Program.Typed.t
-
-  val expression_propagation :
-    ?preserve_stability:bool -> Program.Typed.t -> Program.Typed.t
-
-  val copy_propagation : Program.Typed.t -> Program.Typed.t
-  val dead_code_elimination : Program.Typed.t -> Program.Typed.t
-  val partial_evaluation : Program.Typed.t -> Program.Typed.t
-
-  val lazy_code_motion :
-    ?preserve_stability:bool -> Program.Typed.t -> Program.Typed.t
-
-  val optimize_ad_levels : Program.Typed.t -> Program.Typed.t
-  val allow_uninitialized_decls : Program.Typed.t -> Program.Typed.t
-
-  val optimization_suite :
-    ?settings:optimization_settings -> Program.Typed.t -> Program.Typed.t
-end
-
-module Make (StdLibrary : Frontend.Std_library_utils.Library) : Optimizer =
+module Make (StdLibrary : Frontend.Std_library_utils.Library) : OPTIMIZER =
 struct
   module Mem = Mem_pattern.Make (StdLibrary)
   module Partial_evaluator = Partial_evaluation.Make (StdLibrary)
@@ -739,7 +696,7 @@ struct
   let propagation
       (propagation_transfer :
            (int, Stmt.Located.Non_recursive.t) Map.Poly.t
-        -> (module Monotone_framework_sigs.TRANSFER_FUNCTION
+        -> (module Monotone_framework_intf.TRANSFER_FUNCTION
               with type labels = int
                and type properties = (string, Middle.Expr.Typed.t) Map.Poly.t
                                      option ) ) (mir : Program.Typed.t) =
@@ -827,7 +784,7 @@ struct
       let dead_code_elim_stmt_base i stmt =
         (* NOTE: entry in the reverse flowgraph, so exit in the forward flowgraph *)
         let live_variables_s =
-          (Map.find_exn live_variables i).Monotone_framework_sigs.entry in
+          (Map.find_exn live_variables i).Monotone_framework_intf.entry in
         match stmt with
         | Stmt.Fixed.Pattern.Assignment ((x, _, []), rhs) ->
             if Set.Poly.mem live_variables_s x || cannot_remove_expr rhs then

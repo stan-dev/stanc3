@@ -5,7 +5,7 @@
 open Core_kernel
 open Ast
 
-module type Deprecation_analizer = sig
+module type DEPRECATION_ANALYZER = sig
   val find_udf_log_suffix :
     typed_statement -> (string * Middle.UnsizedType.t) option
 
@@ -23,4 +23,4 @@ module type Deprecation_analizer = sig
   val collect_warnings : typed_program -> Warnings.t list
 end
 
-module Make (StdLibrary : Std_library_utils.Library) : Deprecation_analizer
+module Make (StdLibrary : Std_library_utils.Library) : DEPRECATION_ANALYZER

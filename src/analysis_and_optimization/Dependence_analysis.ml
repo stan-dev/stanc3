@@ -4,7 +4,7 @@ open Middle
 open Dataflow_types
 open Mir_utils
 open Dataflow_utils
-open Monotone_framework_sigs
+open Monotone_framework_intf
 open Monotone_framework
 
 (***********************************)
@@ -119,9 +119,8 @@ let mir_reaching_definitions (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
   Map.Poly.map rd_map ~f:(fun {entry; exit} ->
       {entry= to_rd_set entry; exit= to_rd_set exit} )
 
-let all_labels
-    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH with type labels = int)
-    : int Set.Poly.t =
+let all_labels (module Flowgraph : FLOWGRAPH with type labels = int) :
+    int Set.Poly.t =
   let step set =
     Set.Poly.union set
       (union_map set ~f:(fun l -> Map.Poly.find_exn Flowgraph.successors l))

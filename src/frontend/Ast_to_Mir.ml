@@ -2,7 +2,7 @@ open Core_kernel
 open Core_kernel.Poly
 open Middle
 
-module type Ast_Mir_translator = sig
+module type AST_MIR_TRANSLATOR = sig
   val gather_data :
        Ast.typed_program
     -> (Expr.Typed.t SizedType.t * Expr.Typed.t Transformation.t * string) list
@@ -10,7 +10,8 @@ module type Ast_Mir_translator = sig
   val trans_prog : string -> Ast.typed_program -> Program.Typed.t
 end
 
-module Make (StdLibrary : Std_library_utils.Library) = struct
+module Make (StdLibrary : Std_library_utils.Library) : AST_MIR_TRANSLATOR =
+struct
   let trans_fn_kind kind name =
     let fname = Utils.stdlib_distribution_name name in
     match kind with

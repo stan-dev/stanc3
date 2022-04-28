@@ -13,7 +13,7 @@ let none =
   ; inline_includes= false
   ; braces= false }
 
-module type Canonicalizer = sig
+module type CANONICALIZER = sig
   val repair_syntax :
     untyped_program -> canonicalizer_settings -> untyped_program
 
@@ -21,7 +21,8 @@ module type Canonicalizer = sig
     typed_program -> canonicalizer_settings -> typed_program
 end
 
-module Make (Deprecation : Deprecation_analysis.Deprecation_analizer) = struct
+module Make (Deprecation : Deprecation_analysis.DEPRECATION_ANALYZER) :
+  CANONICALIZER = struct
   let rec repair_syntax_stmt user_dists {stmt; smeta} =
     match stmt with
     | Tilde {arg; distribution= {name; id_loc}; args; truncation} ->

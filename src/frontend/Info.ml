@@ -52,11 +52,11 @@ let includes_json () =
           ( List.rev !Preprocessor.included_files
           |> List.map ~f:(fun str -> `String str) ) ) ]
 
-module type Information = sig
+module type INFO = sig
   val info : Ast.typed_program -> string
 end
 
-module Make (StdLibrary : Std_library_utils.Library) : Information = struct
+module Make (StdLibrary : Std_library_utils.Library) : INFO = struct
   let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
     let acc =
       match stmt.stmt with

@@ -16,8 +16,8 @@
    distributions used.
 *)
 
-module type Information = sig
+module type INFO = sig
   val info : Ast.typed_program -> string
 end
 
-module Make (StdLibrary : Std_library_utils.Library) : Information
+module Make (StdLibrary : Std_library_utils.Library) : INFO
