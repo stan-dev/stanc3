@@ -2,7 +2,6 @@
 
 open Core_kernel
 open Common
-open Helpers
 
 type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
 [@@deriving sexp, hash, map]
@@ -58,11 +57,11 @@ let pp_fun_def pp_s ppf = function
         | Some body -> pp_s ppf body in
       match fdrt with
       | Some rt ->
-          Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} UnsizedType.pp rt fdname
+          Fmt.pf ppf "@[<v2>%a %s%a {@ %a@]@ }" UnsizedType.pp rt fdname
             Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
             fdargs pp_body_opt fdbody
       | None ->
-          Fmt.pf ppf {|@[<v2>%s %s%a {@ %a@]@ }|} "void" fdname
+          Fmt.pf ppf "@[<v2>void %s%a {@ %a@]@ }" fdname
             Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
             fdargs pp_body_opt fdbody )
 
@@ -74,23 +73,22 @@ let pp_io_block ppf = function
 let pp_block label pp_elem ppf = function
   | [] -> ()
   | elems ->
-      Fmt.pf ppf {|@[<v2>%a {@ %a@]@ }|} pp_keyword label
+      Fmt.pf ppf "@[<v2>%s {@ %a@]@ }@\n" label
         Fmt.(list ~sep:cut pp_elem)
-        elems ;
-      Format.pp_force_newline ppf ()
+        elems
 
-let pp_functions_block pp_s ppf {functions_block; _} =
+let pp_functions_block pp_s ppf functions_block =
   pp_block "functions" pp_s ppf functions_block
 
-let pp_prepare_data pp_s ppf {prepare_data; _} =
+let pp_prepare_data pp_s ppf prepare_data =
   pp_block "prepare_data" pp_s ppf prepare_data
 
-let pp_log_prob pp_s ppf {log_prob; _} = pp_block "log_prob" pp_s ppf log_prob
+let pp_log_prob pp_s ppf log_prob = pp_block "log_prob" pp_s ppf log_prob
 
-let pp_generate_quantities pp_s ppf {generate_quantities; _} =
+let pp_generate_quantities pp_s ppf generate_quantities =
   pp_block "generate_quantities" pp_s ppf generate_quantities
 
-let pp_transform_inits pp_s ppf {transform_inits; _} =
+let pp_transform_inits pp_s ppf transform_inits =
   pp_block "transform_inits" pp_s ppf transform_inits
 
 let pp_output_var pp_e ppf
@@ -101,27 +99,35 @@ let pp_output_var pp_e ppf
 let pp_input_var pp_e ppf (name, sized_ty) =
   Fmt.pf ppf "@[<h>%a %s;@]" (SizedType.pp pp_e) sized_ty name
 
-let pp_input_vars pp_e ppf {input_vars; _} =
+let pp_input_vars pp_e ppf input_vars =
   pp_block "input_vars" (pp_input_var pp_e) ppf input_vars
 
-let pp_output_vars pp_e ppf {output_vars; _} =
+let pp_output_vars pp_e ppf output_vars =
   pp_block "output_vars" (pp_output_var pp_e) ppf output_vars
 
-let pp pp_e pp_s ppf prog =
+let pp pp_e pp_s ppf
+    { functions_block
+    ; input_vars
+    ; prepare_data
+    ; log_prob
+    ; generate_quantities
+    ; transform_inits
+    ; output_vars
+    ; _ } =
   Format.open_vbox 0 ;
-  pp_functions_block (pp_fun_def pp_s) ppf prog ;
+  pp_functions_block (pp_fun_def pp_s) ppf functions_block ;
   Fmt.cut ppf () ;
-  pp_input_vars pp_e ppf prog ;
+  pp_input_vars pp_e ppf input_vars ;
   Fmt.cut ppf () ;
-  pp_prepare_data pp_s ppf prog ;
+  pp_prepare_data pp_s ppf prepare_data ;
   Fmt.cut ppf () ;
-  pp_log_prob pp_s ppf prog ;
+  pp_log_prob pp_s ppf log_prob ;
   Fmt.cut ppf () ;
-  pp_generate_quantities pp_s ppf prog ;
+  pp_generate_quantities pp_s ppf generate_quantities ;
   Fmt.cut ppf () ;
-  pp_transform_inits pp_s ppf prog ;
+  pp_transform_inits pp_s ppf transform_inits ;
   Fmt.cut ppf () ;
-  pp_output_vars pp_e ppf prog ;
+  pp_output_vars pp_e ppf output_vars ;
   Format.close_box ()
 
 (** Programs with typed expressions and locations *)
