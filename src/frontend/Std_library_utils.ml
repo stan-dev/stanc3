@@ -16,6 +16,15 @@ type deprecation_info =
   ; canonicalize_away: bool }
 [@@deriving sexp]
 
+(* We could consider breaking up this module more, so we would have
+   more type-level guarantees about what each Functor is able to do
+   with the library. Most of them only need is_stdlib_function_name,
+   maybe get_signatures.
+
+   The Stan_math_library could still satisfy all of them by
+   using [include]
+*)
+
 module type Library = sig
   (** This module is used as a parameter for many functors which
     rely on information about a backend-specific Stan library. *)
@@ -26,9 +35,11 @@ module type Library = sig
   val distribution_families : string list
 
   val is_stdlib_function_name : string -> bool
-  (** Equivalent to [Hashtbl.mem stan_math_signatures s]*)
+  (** Equivalent to [Hashtbl.mem function_signatures s]*)
 
   val get_signatures : string -> signature list
+  (** Equivalent to [Hashtbl.find_multi function_signatures s]*)
+
   val get_operator_signatures : Operator.t -> signature list
   val get_assignment_operator_signatures : Operator.t -> signature list
   val is_not_overloadable : string -> bool
@@ -43,6 +54,9 @@ module type Library = sig
     -> Environment.t
     -> Ast.typed_expression list
     -> Ast.typed_expression
+  (** This function is responsible for typechecking varadic function
+    calls. It needs to live in the Library since this is usually
+    bespoke per-function. *)
 
   val operator_to_function_names : Operator.t -> string list
   val string_operator_to_function_name : string -> string
@@ -50,11 +64,10 @@ module type Library = sig
   val deprecated_functions : deprecation_info String.Map.t
 end
 
-module NullLibrary : Library = struct
-  (** A "standard library" for stan which contains no functions.
+(** A "standard library" for Stan which contains no functions.
       Useful only for testing
    *)
-
+module NullLibrary : Library = struct
   let function_signatures : (string, signature list) Hashtbl.t =
     String.Table.create ()
 
@@ -77,10 +90,12 @@ module NullLibrary : Library = struct
   let deprecated_functions = String.Map.empty
 end
 
-let pp_math_sig ppf (rt, args, mem_pattern) =
+let pp_math_sig ppf ((rt, args, mem_pattern) : signature) =
   UnsizedType.pp ppf (UFun (args, rt, FnPlain, mem_pattern))
 
-let pp_math_sigs ppf sigs = (Fmt.list ~sep:Fmt.cut pp_math_sig) ppf sigs
+let pp_math_sigs ppf (sigs : signature list) =
+  (Fmt.list ~sep:Fmt.cut pp_math_sig) ppf sigs
+
 let pretty_print_math_sigs = Fmt.str "@[<v>@,%a@]" pp_math_sigs
 
 let dist_name_suffix (module StdLibrary : Library) udf_names name =
