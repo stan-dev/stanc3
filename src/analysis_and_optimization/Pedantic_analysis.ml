@@ -487,6 +487,7 @@ let settings_constant_prop =
   ; copy_propagation= true
   ; partial_evaluation= true }
 
+(** Pedantic mode is only really valid for the Stan Math backend *)
 module Optimizer = Optimize.Make (Stan_math_backend.Stan_math_library)
 
 (* Collect all pedantic mode warnings, sorted, to stderr *)

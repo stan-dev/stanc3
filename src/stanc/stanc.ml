@@ -3,20 +3,17 @@
 open Core_kernel
 open Core_kernel.Poly
 open Frontend
-open Stan_math_backend
-open Analysis_and_optimization
 open Middle
+open Analysis_and_optimization
+open Stan_math_backend
 
 (* Initialize functor modules with the Stan Math Library *)
-module CppLibrary : Std_library_utils.Library =
-  Stan_math_backend.Stan_math_library
-
-module Typechecker = Typechecking.Make (CppLibrary)
-module Deprecations = Deprecation_analysis.Make (CppLibrary)
+module Typechecker = Typechecking.Make (Stan_math_library)
+module Deprecations = Deprecation_analysis.Make (Stan_math_library)
 module Canonicalizer = Canonicalize.Make (Deprecations)
-module ModelInfo = Info.Make (CppLibrary)
-module Ast2Mir = Ast_to_Mir.Make (CppLibrary)
-module Optimizer = Optimize.Make (CppLibrary)
+module ModelInfo = Info.Make (Stan_math_library)
+module Ast2Mir = Ast_to_Mir.Make (Stan_math_library)
+module Optimizer = Optimize.Make (Stan_math_library)
 
 (** The main program. *)
 let version = "%%NAME%%3 %%VERSION%%"
