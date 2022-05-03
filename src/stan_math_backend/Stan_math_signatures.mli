@@ -3,13 +3,38 @@
     functions for dealing with those signatures.
 *)
 
-open Frontend
 open Middle
-open Std_library_utils
 open Core_kernel
+
+type fun_arg = UnsizedType.autodifftype * UnsizedType.t
+
+type signature =
+  UnsizedType.returntype * fun_arg list * Common.Helpers.mem_pattern
+
+type fkind = Lpmf | Lpdf | Rng | Cdf | Ccdf | UnaryVectorized
+[@@deriving show {with_path= false}]
+
+type dimensionality =
+  | DInt
+  | DReal
+  | DVector
+  | DMatrix
+  | DIntArray
+  (* Vectorizable int *)
+  | DVInt
+  (* Vectorizable real *)
+  | DVReal
+  (* DEPRECATED; vectorizable ints or reals *)
+  | DIntAndReals
+  (* Vectorizable vectors - for multivariate functions *)
+  | DVectors
+  | DDeepVectorized
 
 val function_signatures : (string, signature list) Hashtbl.t
 (** Mapping from names to signature(s) of functions *)
+
+val distributions :
+  (fkind list * string * dimensionality list * Common.Helpers.mem_pattern) list
 
 val distribution_families : string list
 
@@ -23,24 +48,9 @@ val get_operator_signatures : Operator.t -> signature list
 val get_assignment_operator_signatures : Operator.t -> signature list
 val is_not_overloadable : string -> bool
 val is_variadic_function_name : string -> bool
-val variadic_function_returntype : string -> UnsizedType.returntype option
-
-val check_variadic_fn :
-     Ast.identifier
-  -> is_cond_dist:bool
-  -> Location_span.t
-  -> Environment.originblock
-  -> Environment.t
-  -> Ast.typed_expression list
-  -> Ast.typed_expression
-(** This function is responsible for typechecking varadic function
-      calls. It needs to live in the Library since this is usually
-      bespoke per-function. *)
-
 val operator_to_function_names : Operator.t -> string list
 val string_operator_to_function_name : string -> string
-val deprecated_distributions : deprecation_info String.Map.t
-val deprecated_functions : deprecation_info String.Map.t
+
 (** These functions are used by the drivers to display
     all available functions and distributions. They are
     not part of the Library interface since different drivers

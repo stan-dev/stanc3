@@ -423,7 +423,8 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
   | Ast.Tilde {arg; distribution; args; truncation} ->
       let suffix =
-        Std_library_utils.dist_name_suffix Library.is_stdlib_function_name ud_dists distribution.name in
+        Std_library_utils.dist_name_suffix Library.is_stdlib_function_name
+          ud_dists distribution.name in
       let name = distribution.name ^ suffix in
       let kind =
         let possible_names =

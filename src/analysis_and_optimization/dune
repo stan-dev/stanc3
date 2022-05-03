@@ -2,6 +2,7 @@
  (name analysis_and_optimization)
  (public_name stanc.analysis)
  (libraries core_kernel str fmt common middle frontend stan_math_backend)
- (inline_tests)
+ (inline_tests
+  (libraries stan_math_library))
  (preprocess
   (pps ppx_jane ppx_deriving.map ppx_deriving.fold)))

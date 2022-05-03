@@ -5,7 +5,8 @@
   frontend
   middle
   analysis_and_optimization
-  stan_math_backend)
+  stan_math_backend
+  stan_math_library)
  (preprocess
   (pps js_of_ocaml-ppx ppx_jane))
  (modes js))

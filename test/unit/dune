@@ -4,6 +4,7 @@
   core_kernel
   frontend
   stan_math_backend
+  stan_math_library
   middle
   analysis_and_optimization)
  (inline_tests)

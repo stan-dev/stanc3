@@ -26,6 +26,5 @@ let dist_name_suffix (check : string -> bool) udf_names name =
   let is_udf_name s =
     List.exists ~f:(fun (n, _) -> String.equal s n) udf_names in
   Utils.distribution_suffices
-  |> List.filter ~f:(fun sfx ->
-         check (name ^ sfx) || is_udf_name (name ^ sfx) )
+  |> List.filter ~f:(fun sfx -> check (name ^ sfx) || is_udf_name (name ^ sfx))
   |> List.hd_exn

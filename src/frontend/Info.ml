@@ -52,7 +52,6 @@ let includes_json () =
           ( List.rev !Preprocessor.included_files
           |> List.map ~f:(fun str -> `String str) ) ) ]
 
-
 let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
   let acc =
     match stmt.stmt with
@@ -65,7 +64,8 @@ let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
           (funs, distrs)
         else
           let suffix =
-            Std_library_utils.dist_name_suffix Library.is_stdlib_function_name ud_dists distribution.name in
+            Std_library_utils.dist_name_suffix Library.is_stdlib_function_name
+              ud_dists distribution.name in
           let name = distribution.name ^ Utils.unnormalized_suffix suffix in
           (funs, Set.add distrs name)
     | _ -> (funs, distrs) in

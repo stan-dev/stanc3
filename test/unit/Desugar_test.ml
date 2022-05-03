@@ -1,9 +1,6 @@
 open Core_kernel
 open Analysis_and_optimization
 
-module Partial_evaluator =
-  Partial_evaluation.Make (Stan_math_backend.Stan_math_library)
-
 let print_tdata Middle.Program.{prepare_data; _} =
   Fmt.(str "@[<v>%a@]@," (list ~sep:cut Middle.Stmt.Located.pp) prepare_data)
   |> print_endline
