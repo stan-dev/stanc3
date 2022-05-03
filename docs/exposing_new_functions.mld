@@ -7,7 +7,7 @@
 For a function to be built into Stan, it has to be included in the Stan Math library and its signature has to be
 exposed to the compiler.
 
-To do the latter, we have to add a corresponding line in [src/stan_math_backend/Stan_math_library.ml].
+To do the latter, we have to add a corresponding line in [src/stan_math_backend/Stan_math_signatures.ml].
 The compiler uses the signatures defined there to do type checking.
 
 

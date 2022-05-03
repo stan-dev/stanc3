@@ -1,6 +1,13 @@
 (** This module stores a table of all signatures from the Stan
     math C++ library which are exposed to Stan, and some helper
     functions for dealing with those signatures.
+
+    It is used by
+    {!modules:
+
+    Stan_math_library
+    }
+    to create a [Library] instance which can be consumed by the frontend of the compiler.
 *)
 
 open Middle

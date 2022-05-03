@@ -1,3 +1,7 @@
+(** This is the {e implementation} of the Library virtual module
+    for the Stan Math C++ backend
+  *)
+
 open Core_kernel
 open Std_library_utils
 
