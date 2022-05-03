@@ -1476,11 +1476,11 @@ template <typename T2__, typename T3__,
                   stan::model::rvalue(p, "p",
                     stan::model::index_uni(i),
                       stan::model::index_uni((t_next - 1))))),
-              stan::model::rvalue(chi, "chi",
-                stan::model::index_uni(i), stan::model::index_uni(t_next)),
               (1 -
                 stan::model::rvalue(phi, "phi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next))),
             "assigning variable chi", stan::model::index_uni(i),
                                         stan::model::index_uni(t_curr));
         }
@@ -1896,14 +1896,14 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
                       stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
                         stan::model::index_uni((inline_prob_uncaptured_t_next_sym11__
                                                  - 1))))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym9__,
-                  "inline_prob_uncaptured_chi_sym9__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
-                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym11__)),
                 (1 -
                   stan::model::rvalue(phi, "phi",
                     stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
-                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym10__)))),
+                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym10__))),
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym9__,
+                  "inline_prob_uncaptured_chi_sym9__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
+                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym11__))),
               "assigning variable inline_prob_uncaptured_chi_sym9__", 
               stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
                 stan::model::index_uni(inline_prob_uncaptured_t_curr_sym10__));
@@ -2099,14 +2099,14 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
                       stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                         stan::model::index_uni((inline_prob_uncaptured_t_next_sym4__
                                                  - 1))))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym2__,
-                  "inline_prob_uncaptured_chi_sym2__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
-                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym4__)),
                 (1 -
                   stan::model::rvalue(phi, "phi",
                     stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
-                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym3__)))),
+                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym3__))),
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym2__,
+                  "inline_prob_uncaptured_chi_sym2__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
+                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym4__))),
               "assigning variable inline_prob_uncaptured_chi_sym2__", 
               stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                 stan::model::index_uni(inline_prob_uncaptured_t_curr_sym3__));
@@ -2862,11 +2862,11 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
           current_statement__ = 33;
           stan::model::assign(b_state_hat,
             stan::math::fma(b_v_prev,
-              stan::model::rvalue(v_prev, "v_prev",
-                stan::model::index_uni(j)),
               stan::model::rvalue(b_region, "b_region",
                 stan::model::index_uni(stan::model::rvalue(region, "region",
-                                         stan::model::index_uni(j))))),
+                                         stan::model::index_uni(j)))),
+              stan::model::rvalue(v_prev, "v_prev",
+                stan::model::index_uni(j))),
             "assigning variable b_state_hat", stan::model::index_uni(j));
         }
         current_statement__ = 35;
@@ -2883,14 +2883,14 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
                         (b_female_black *
                           stan::model::rvalue(female, "female",
                             stan::model::index_uni(i))),
-                        stan::model::rvalue(black, "black",
-                          stan::model::index_uni(i)),
                         stan::math::fma(b_black,
-                          stan::model::rvalue(black, "black",
-                            stan::model::index_uni(i)),
-                          stan::math::fma(b_female,
+                          stan::math::fma(b_female, b_0,
                             stan::model::rvalue(female, "female",
-                              stan::model::index_uni(i)), b_0))) +
+                              stan::model::index_uni(i))),
+                          stan::model::rvalue(black, "black",
+                            stan::model::index_uni(i))),
+                        stan::model::rvalue(black, "black",
+                          stan::model::index_uni(i))) +
                        stan::model::rvalue(b_age, "b_age",
                          stan::model::index_uni(stan::model::rvalue(age,
                                                   "age",
@@ -5395,27 +5395,27 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         stan::model::assign(y_hat,
           (((((stan::math::fma(
                  stan::model::rvalue(beta, "beta", stan::model::index_uni(4)),
-                 stan::model::rvalue(v_prev_full, "v_prev_full",
-                   stan::model::index_uni(i)),
                  stan::math::fma(
                    (stan::model::rvalue(beta, "beta",
                       stan::model::index_uni(5)) *
                      stan::model::rvalue(female, "female",
                        stan::model::index_uni(i))),
-                   stan::model::rvalue(black, "black",
-                     stan::model::index_uni(i)),
                    stan::math::fma(
                      stan::model::rvalue(beta, "beta",
                        stan::model::index_uni(3)),
-                     stan::model::rvalue(female, "female",
-                       stan::model::index_uni(i)),
                      stan::math::fma(
                        stan::model::rvalue(beta, "beta",
                          stan::model::index_uni(2)),
-                       stan::model::rvalue(black, "black",
-                         stan::model::index_uni(i)),
                        stan::model::rvalue(beta, "beta",
-                         stan::model::index_uni(1)))))) +
+                         stan::model::index_uni(1)),
+                       stan::model::rvalue(black, "black",
+                         stan::model::index_uni(i))),
+                     stan::model::rvalue(female, "female",
+                       stan::model::index_uni(i))),
+                   stan::model::rvalue(black, "black",
+                     stan::model::index_uni(i))),
+                 stan::model::rvalue(v_prev_full, "v_prev_full",
+                   stan::model::index_uni(i))) +
                 stan::model::rvalue(a, "a",
                   stan::model::index_uni(stan::model::rvalue(age, "age",
                                            stan::model::index_uni(i))))) +
@@ -5548,27 +5548,27 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         stan::model::assign(y_hat,
           (((((stan::math::fma(
                  stan::model::rvalue(beta, "beta", stan::model::index_uni(4)),
-                 stan::model::rvalue(v_prev_full, "v_prev_full",
-                   stan::model::index_uni(i)),
                  stan::math::fma(
                    (stan::model::rvalue(beta, "beta",
                       stan::model::index_uni(5)) *
                      stan::model::rvalue(female, "female",
                        stan::model::index_uni(i))),
-                   stan::model::rvalue(black, "black",
-                     stan::model::index_uni(i)),
                    stan::math::fma(
                      stan::model::rvalue(beta, "beta",
                        stan::model::index_uni(3)),
-                     stan::model::rvalue(female, "female",
-                       stan::model::index_uni(i)),
                      stan::math::fma(
                        stan::model::rvalue(beta, "beta",
                          stan::model::index_uni(2)),
-                       stan::model::rvalue(black, "black",
-                         stan::model::index_uni(i)),
                        stan::model::rvalue(beta, "beta",
-                         stan::model::index_uni(1)))))) +
+                         stan::model::index_uni(1)),
+                       stan::model::rvalue(black, "black",
+                         stan::model::index_uni(i))),
+                     stan::model::rvalue(female, "female",
+                       stan::model::index_uni(i))),
+                   stan::model::rvalue(black, "black",
+                     stan::model::index_uni(i))),
+                 stan::model::rvalue(v_prev_full, "v_prev_full",
+                   stan::model::index_uni(i))) +
                 stan::model::rvalue(a, "a",
                   stan::model::index_uni(stan::model::rvalue(age, "age",
                                            stan::model::index_uni(i))))) +
@@ -6333,9 +6333,9 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         stan::model::assign(y,
           stan::math::poisson_log_rng(
             ((stan::math::fma(beta1,
-                stan::model::rvalue(x, "x", stan::model::index_uni(i)),
                 (stan::model::rvalue(log_E, "log_E",
-                   stan::model::index_uni(i)) + beta0)) +
+                   stan::model::index_uni(i)) + beta0),
+                stan::model::rvalue(x, "x", stan::model::index_uni(i))) +
                stan::model::rvalue(phi, "phi", stan::model::index_uni(i))) +
               stan::model::rvalue(theta, "theta", stan::model::index_uni(i))),
             base_rng__), "assigning variable y", stan::model::index_uni(i));
@@ -6848,11 +6848,11 @@ template <typename T2__, typename T3__,
                   stan::model::rvalue(p, "p",
                     stan::model::index_uni(i),
                       stan::model::index_uni((t_next - 1))))),
-              stan::model::rvalue(chi, "chi",
-                stan::model::index_uni(i), stan::model::index_uni(t_next)),
               (1 -
                 stan::model::rvalue(phi, "phi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next))),
             "assigning variable chi", stan::model::index_uni(i),
                                         stan::model::index_uni(t_curr));
         }
@@ -7231,14 +7231,14 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                       stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
                         stan::model::index_uni((inline_prob_uncaptured_t_next_sym11__
                                                  - 1))))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym9__,
-                  "inline_prob_uncaptured_chi_sym9__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
-                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym11__)),
                 (1 -
                   stan::model::rvalue(phi, "phi",
                     stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
-                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym10__)))),
+                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym10__))),
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym9__,
+                  "inline_prob_uncaptured_chi_sym9__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
+                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym11__))),
               "assigning variable inline_prob_uncaptured_chi_sym9__", 
               stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
                 stan::model::index_uni(inline_prob_uncaptured_t_curr_sym10__));
@@ -7450,14 +7450,14 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                       stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                         stan::model::index_uni((inline_prob_uncaptured_t_next_sym4__
                                                  - 1))))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym2__,
-                  "inline_prob_uncaptured_chi_sym2__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
-                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym4__)),
                 (1 -
                   stan::model::rvalue(phi, "phi",
                     stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
-                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym3__)))),
+                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym3__))),
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym2__,
+                  "inline_prob_uncaptured_chi_sym2__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
+                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym4__))),
               "assigning variable inline_prob_uncaptured_chi_sym2__", 
               stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                 stan::model::index_uni(inline_prob_uncaptured_t_curr_sym3__));
@@ -8112,11 +8112,11 @@ template <typename T0__, typename T1__,
                 (1 -
                   stan::model::rvalue(p, "p",
                     stan::model::index_uni(i), stan::model::index_uni(t_next)))),
-              stan::model::rvalue(chi, "chi",
-                stan::model::index_uni(i), stan::model::index_uni(t_next)),
               (1 -
                 stan::model::rvalue(phi, "phi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next))),
             "assigning variable chi", stan::model::index_uni(i),
                                         stan::model::index_uni(t_curr));
         }
@@ -8809,14 +8809,14 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                     stan::model::rvalue(p, "p",
                       stan::model::index_uni(inline_prob_uncaptured_i_sym21__),
                         stan::model::index_uni(inline_prob_uncaptured_t_next_sym19__)))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym17__,
-                  "inline_prob_uncaptured_chi_sym17__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym21__),
-                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym19__)),
                 (1 -
                   stan::model::rvalue(phi, "phi",
                     stan::model::index_uni(inline_prob_uncaptured_i_sym21__),
-                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym18__)))),
+                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym18__))),
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym17__,
+                  "inline_prob_uncaptured_chi_sym17__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym21__),
+                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym19__))),
               "assigning variable inline_prob_uncaptured_chi_sym17__", 
               stan::model::index_uni(inline_prob_uncaptured_i_sym21__),
                 stan::model::index_uni(inline_prob_uncaptured_t_curr_sym18__));
@@ -9267,14 +9267,14 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                     stan::model::rvalue(p, "p",
                       stan::model::index_uni(inline_prob_uncaptured_i_sym8__),
                         stan::model::index_uni(inline_prob_uncaptured_t_next_sym6__)))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym4__,
-                  "inline_prob_uncaptured_chi_sym4__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym8__),
-                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym6__)),
                 (1 -
                   stan::model::rvalue(phi, "phi",
                     stan::model::index_uni(inline_prob_uncaptured_i_sym8__),
-                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym5__)))),
+                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym5__))),
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym4__,
+                  "inline_prob_uncaptured_chi_sym4__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym8__),
+                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym6__))),
               "assigning variable inline_prob_uncaptured_chi_sym4__", 
               stan::model::index_uni(inline_prob_uncaptured_i_sym8__),
                 stan::model::index_uni(inline_prob_uncaptured_t_curr_sym5__));
@@ -9355,12 +9355,11 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                   stan::model::rvalue(z, "z",
                     stan::model::index_uni(i),
                       stan::model::index_uni((t - 1))),
+                  (q *
+                    stan::model::rvalue(nu, "nu", stan::model::index_uni(t))),
                   stan::model::rvalue(phi, "phi",
                     stan::model::index_uni(i),
-                      stan::model::index_uni((t - 1))),
-                  (q *
-                    stan::model::rvalue(nu, "nu", stan::model::index_uni(t)))),
-                base_rng__),
+                      stan::model::index_uni((t - 1)))), base_rng__),
               "assigning variable z", stan::model::index_uni(i),
                                         stan::model::index_uni(t));
           }
@@ -11361,11 +11360,11 @@ template <typename T2__, typename T3__,
                   stan::model::rvalue(p, "p",
                     stan::model::index_uni(i),
                       stan::model::index_uni((t_next - 1))))),
-              stan::model::rvalue(chi, "chi",
-                stan::model::index_uni(i), stan::model::index_uni(t_next)),
               (1 -
                 stan::model::rvalue(phi, "phi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next))),
             "assigning variable chi", stan::model::index_uni(i),
                                         stan::model::index_uni(t_curr));
         }
@@ -11781,14 +11780,14 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
                       stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
                         stan::model::index_uni((inline_prob_uncaptured_t_next_sym11__
                                                  - 1))))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym9__,
-                  "inline_prob_uncaptured_chi_sym9__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
-                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym11__)),
                 (1 -
                   stan::model::rvalue(phi, "phi",
                     stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
-                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym10__)))),
+                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym10__))),
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym9__,
+                  "inline_prob_uncaptured_chi_sym9__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
+                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym11__))),
               "assigning variable inline_prob_uncaptured_chi_sym9__", 
               stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
                 stan::model::index_uni(inline_prob_uncaptured_t_curr_sym10__));
@@ -11984,14 +11983,14 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
                       stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                         stan::model::index_uni((inline_prob_uncaptured_t_next_sym4__
                                                  - 1))))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym2__,
-                  "inline_prob_uncaptured_chi_sym2__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
-                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym4__)),
                 (1 -
                   stan::model::rvalue(phi, "phi",
                     stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
-                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym3__)))),
+                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym3__))),
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym2__,
+                  "inline_prob_uncaptured_chi_sym2__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
+                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym4__))),
               "assigning variable inline_prob_uncaptured_chi_sym2__", 
               stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                 stan::model::index_uni(inline_prob_uncaptured_t_curr_sym3__));
@@ -13183,11 +13182,11 @@ template <typename T0__, typename T1__,
                 (1 -
                   stan::model::rvalue(p, "p",
                     stan::model::index_uni(i), stan::model::index_uni(t_next)))),
-              stan::model::rvalue(chi, "chi",
-                stan::model::index_uni(i), stan::model::index_uni(t_next)),
               (1 -
                 stan::model::rvalue(phi, "phi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next))),
             "assigning variable chi", stan::model::index_uni(i),
                                         stan::model::index_uni(t_curr));
         }
@@ -13901,14 +13900,14 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                     stan::model::rvalue(p, "p",
                       stan::model::index_uni(inline_prob_uncaptured_i_sym27__),
                         stan::model::index_uni(inline_prob_uncaptured_t_next_sym25__)))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym23__,
-                  "inline_prob_uncaptured_chi_sym23__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym27__),
-                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym25__)),
                 (1 -
                   stan::model::rvalue(phi, "phi",
                     stan::model::index_uni(inline_prob_uncaptured_i_sym27__),
-                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym24__)))),
+                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym24__))),
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym23__,
+                  "inline_prob_uncaptured_chi_sym23__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym27__),
+                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym25__))),
               "assigning variable inline_prob_uncaptured_chi_sym23__", 
               stan::model::index_uni(inline_prob_uncaptured_i_sym27__),
                 stan::model::index_uni(inline_prob_uncaptured_t_curr_sym24__));
@@ -14321,14 +14320,14 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                     stan::model::rvalue(p, "p",
                       stan::model::index_uni(inline_prob_uncaptured_i_sym8__),
                         stan::model::index_uni(inline_prob_uncaptured_t_next_sym6__)))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym4__,
-                  "inline_prob_uncaptured_chi_sym4__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym8__),
-                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym6__)),
                 (1 -
                   stan::model::rvalue(phi, "phi",
                     stan::model::index_uni(inline_prob_uncaptured_i_sym8__),
-                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym5__)))),
+                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym5__))),
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym4__,
+                  "inline_prob_uncaptured_chi_sym4__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym8__),
+                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym6__))),
               "assigning variable inline_prob_uncaptured_chi_sym4__", 
               stan::model::index_uni(inline_prob_uncaptured_i_sym8__),
                 stan::model::index_uni(inline_prob_uncaptured_t_curr_sym5__));
@@ -14400,11 +14399,11 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                   stan::model::rvalue(phi, "phi",
                     stan::model::index_uni(i),
                       stan::model::index_uni((t - 1))),
+                  (stan::model::rvalue(gamma, "gamma",
+                     stan::model::index_uni(t)) * q),
                   stan::model::rvalue(z, "z",
                     stan::model::index_uni(i),
-                      stan::model::index_uni((t - 1))),
-                  (stan::model::rvalue(gamma, "gamma",
-                     stan::model::index_uni(t)) * q));
+                      stan::model::index_uni((t - 1))));
           current_statement__ = 39;
           stan::model::assign(z, stan::math::bernoulli_rng(mu2, base_rng__),
             "assigning variable z", stan::model::index_uni(i),
@@ -15018,14 +15017,14 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
         x = stan::math::normal_rng(123, 1, base_rng__);
         current_statement__ = 5;
         z = stan::math::normal_rng(
-              stan::math::fma(stan::math::sqrt(j), 2, 1), 1, base_rng__);
+              stan::math::fma(stan::math::sqrt(j), 1, 2), 1, base_rng__);
       }
       current_statement__ = 7;
       i = std::numeric_limits<double>::quiet_NaN();
       
       
       current_statement__ = 7;
-      i = stan::math::normal_rng(stan::math::fma(stan::math::sqrt(j), 2, 1),
+      i = stan::math::normal_rng(stan::math::fma(stan::math::sqrt(j), 1, 2),
             1, base_rng__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -16186,11 +16185,11 @@ template <typename T2__, typename T3__,
                   stan::model::rvalue(p, "p",
                     stan::model::index_uni(i),
                       stan::model::index_uni((t_next - 1))))),
-              stan::model::rvalue(chi, "chi",
-                stan::model::index_uni(i), stan::model::index_uni(t_next)),
               (1 -
                 stan::model::rvalue(phi, "phi",
-                  stan::model::index_uni(i), stan::model::index_uni(t_curr)))),
+                  stan::model::index_uni(i), stan::model::index_uni(t_curr))),
+              stan::model::rvalue(chi, "chi",
+                stan::model::index_uni(i), stan::model::index_uni(t_next))),
             "assigning variable chi", stan::model::index_uni(i),
                                         stan::model::index_uni(t_curr));
         }
@@ -16549,14 +16548,14 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
                       stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
                         stan::model::index_uni((inline_prob_uncaptured_t_next_sym11__
                                                  - 1))))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym9__,
-                  "inline_prob_uncaptured_chi_sym9__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
-                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym11__)),
                 (1 -
                   stan::model::rvalue(phi, "phi",
                     stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
-                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym10__)))),
+                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym10__))),
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym9__,
+                  "inline_prob_uncaptured_chi_sym9__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
+                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym11__))),
               "assigning variable inline_prob_uncaptured_chi_sym9__", 
               stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
                 stan::model::index_uni(inline_prob_uncaptured_t_curr_sym10__));
@@ -16747,14 +16746,14 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
                       stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                         stan::model::index_uni((inline_prob_uncaptured_t_next_sym4__
                                                  - 1))))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym2__,
-                  "inline_prob_uncaptured_chi_sym2__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
-                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym4__)),
                 (1 -
                   stan::model::rvalue(phi, "phi",
                     stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
-                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym3__)))),
+                      stan::model::index_uni(inline_prob_uncaptured_t_curr_sym3__))),
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym2__,
+                  "inline_prob_uncaptured_chi_sym2__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
+                    stan::model::index_uni(inline_prob_uncaptured_t_next_sym4__))),
               "assigning variable inline_prob_uncaptured_chi_sym2__", 
               stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                 stan::model::index_uni(inline_prob_uncaptured_t_curr_sym3__));
@@ -17818,11 +17817,11 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       Eigen::Matrix<local_scalar_t__, -1, -1> logit_p =
          Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(R, T, DUMMY_VAR__);
       current_statement__ = 7;
-      stan::model::assign(logit_psi, stan::math::fma(beta_occ, X, alpha_occ),
+      stan::model::assign(logit_psi, stan::math::fma(beta_occ, alpha_occ, X),
         "assigning variable logit_psi");
       current_statement__ = 8;
       stan::model::assign(logit_p,
-        stan::math::rep_matrix(stan::math::fma(beta_p, X, alpha_p), T),
+        stan::math::rep_matrix(stan::math::fma(beta_p, alpha_p, X), T),
         "assigning variable logit_p");
       {
         current_statement__ = 33;
@@ -17916,11 +17915,11 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
         return ;
       } 
       current_statement__ = 7;
-      stan::model::assign(logit_psi, stan::math::fma(beta_occ, X, alpha_occ),
+      stan::model::assign(logit_psi, stan::math::fma(beta_occ, alpha_occ, X),
         "assigning variable logit_psi");
       current_statement__ = 8;
       stan::model::assign(logit_p,
-        stan::math::rep_matrix(stan::math::fma(beta_p, X, alpha_p), T),
+        stan::math::rep_matrix(stan::math::fma(beta_p, alpha_p, X), T),
         "assigning variable logit_p");
       if (emit_transformed_parameters__) {
         out__.write(logit_psi);
@@ -17960,7 +17959,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
           qT = stan::math::prod(q);
           current_statement__ = 19;
           stan::model::assign(psi_con,
-            ((psi * qT) / stan::math::fma(psi, qT, (1 - psi))),
+            ((psi * qT) / stan::math::fma(psi, (1 - psi), qT)),
             "assigning variable psi_con", stan::model::index_uni(i));
           current_statement__ = 20;
           stan::model::assign(z,
@@ -18521,11 +18520,11 @@ class off_small_model final : public model_base_crtp<off_small_model> {
          Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
       current_statement__ = 12;
       stan::model::assign(a1,
-        stan::math::fma(10, mu_a1, stan::math::multiply(sigma_a1, eta1)),
+        stan::math::fma(10, stan::math::multiply(sigma_a1, eta1), mu_a1),
         "assigning variable a1");
       current_statement__ = 13;
       stan::model::assign(a2,
-        stan::math::fma(0.1, mu_a2, stan::math::multiply(sigma_a2, eta2)),
+        stan::math::fma(0.1, stan::math::multiply(sigma_a2, eta2), mu_a2),
         "assigning variable a2");
       current_statement__ = 15;
       for (int i = 1; i <= N; ++i) {
@@ -18535,15 +18534,15 @@ class off_small_model final : public model_base_crtp<off_small_model> {
             stan::model::rvalue(a2, "a2",
               stan::model::index_uni(stan::model::rvalue(person, "person",
                                        stan::model::index_uni(i)))),
-            stan::model::rvalue(time, "time", stan::model::index_uni(i)),
             stan::math::fma(
               (beta *
                 stan::model::rvalue(time, "time", stan::model::index_uni(i))),
-              stan::model::rvalue(treatment, "treatment",
-                stan::model::index_uni(i)),
               stan::model::rvalue(a1, "a1",
                 stan::model::index_uni(stan::model::rvalue(person, "person",
-                                         stan::model::index_uni(i)))))),
+                                         stan::model::index_uni(i)))),
+              stan::model::rvalue(treatment, "treatment",
+                stan::model::index_uni(i))),
+            stan::model::rvalue(time, "time", stan::model::index_uni(i))),
           "assigning variable y_hat", stan::model::index_uni(i));
       }
       {
@@ -18643,11 +18642,11 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       } 
       current_statement__ = 12;
       stan::model::assign(a1,
-        stan::math::fma(10, mu_a1, stan::math::multiply(sigma_a1, eta1)),
+        stan::math::fma(10, stan::math::multiply(sigma_a1, eta1), mu_a1),
         "assigning variable a1");
       current_statement__ = 13;
       stan::model::assign(a2,
-        stan::math::fma(0.1, mu_a2, stan::math::multiply(sigma_a2, eta2)),
+        stan::math::fma(0.1, stan::math::multiply(sigma_a2, eta2), mu_a2),
         "assigning variable a2");
       current_statement__ = 15;
       for (int i = 1; i <= N; ++i) {
@@ -18657,15 +18656,15 @@ class off_small_model final : public model_base_crtp<off_small_model> {
             stan::model::rvalue(a2, "a2",
               stan::model::index_uni(stan::model::rvalue(person, "person",
                                        stan::model::index_uni(i)))),
-            stan::model::rvalue(time, "time", stan::model::index_uni(i)),
             stan::math::fma(
               (beta *
                 stan::model::rvalue(time, "time", stan::model::index_uni(i))),
-              stan::model::rvalue(treatment, "treatment",
-                stan::model::index_uni(i)),
               stan::model::rvalue(a1, "a1",
                 stan::model::index_uni(stan::model::rvalue(person, "person",
-                                         stan::model::index_uni(i)))))),
+                                         stan::model::index_uni(i)))),
+              stan::model::rvalue(treatment, "treatment",
+                stan::model::index_uni(i))),
+            stan::model::rvalue(time, "time", stan::model::index_uni(i))),
           "assigning variable y_hat", stan::model::index_uni(i));
       }
       if (emit_transformed_parameters__) {
@@ -20137,15 +20136,15 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         stan::model::assign(y_hat,
           stan::math::fma(
             stan::model::rvalue(beta, "beta", stan::model::index_uni(2)),
-            stan::model::rvalue(pre_test, "pre_test",
-              stan::model::index_uni(i)),
             stan::math::fma(
               stan::model::rvalue(beta, "beta", stan::model::index_uni(1)),
-              stan::model::rvalue(treatment, "treatment",
-                stan::model::index_uni(i)),
               stan::model::rvalue(a, "a",
                 stan::model::index_uni(stan::model::rvalue(pair, "pair",
-                                         stan::model::index_uni(i)))))),
+                                         stan::model::index_uni(i)))),
+              stan::model::rvalue(treatment, "treatment",
+                stan::model::index_uni(i))),
+            stan::model::rvalue(pre_test, "pre_test",
+              stan::model::index_uni(i))),
           "assigning variable y_hat", stan::model::index_uni(i));
       }
       {
@@ -20239,15 +20238,15 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         stan::model::assign(y_hat,
           stan::math::fma(
             stan::model::rvalue(beta, "beta", stan::model::index_uni(2)),
-            stan::model::rvalue(pre_test, "pre_test",
-              stan::model::index_uni(i)),
             stan::math::fma(
               stan::model::rvalue(beta, "beta", stan::model::index_uni(1)),
-              stan::model::rvalue(treatment, "treatment",
-                stan::model::index_uni(i)),
               stan::model::rvalue(a, "a",
                 stan::model::index_uni(stan::model::rvalue(pair, "pair",
-                                         stan::model::index_uni(i)))))),
+                                         stan::model::index_uni(i)))),
+              stan::model::rvalue(treatment, "treatment",
+                stan::model::index_uni(i))),
+            stan::model::rvalue(pre_test, "pre_test",
+              stan::model::index_uni(i))),
           "assigning variable y_hat", stan::model::index_uni(i));
       }
       if (emit_transformed_parameters__) {
@@ -20703,12 +20702,12 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
         stan::conditional_var_value_t<local_scalar_t__, 
           Eigen::Matrix<local_scalar_t__, -1, -1>> m6;
         current_statement__ = 4;
-        stan::model::assign(m6, stan::math::fma(m1, m2, m4),
+        stan::model::assign(m6, stan::math::fma(m1, m4, m2),
           "assigning variable m6");
         stan::conditional_var_value_t<local_scalar_t__, 
           Eigen::Matrix<local_scalar_t__, -1, -1>> m7;
         current_statement__ = 5;
-        stan::model::assign(m7, stan::math::fma(m1, m2, m4),
+        stan::model::assign(m7, stan::math::fma(m1, m4, m2),
           "assigning variable m7");
         current_statement__ = 6;
         lp_accum__.add(
@@ -21293,13 +21292,13 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
               stan::model::rvalue(N, "N", stan::model::index_uni(i)),
               stan::math::add(
                 stan::math::fma(alpha12,
-                  stan::model::rvalue(x1x2, "x1x2",
-                    stan::model::index_uni(i)),
                   stan::math::fma(alpha2,
-                    stan::model::rvalue(x2, "x2", stan::model::index_uni(i)),
-                    stan::math::fma(alpha1,
+                    stan::math::fma(alpha1, alpha0,
                       stan::model::rvalue(x1, "x1",
-                        stan::model::index_uni(i)), alpha0))),
+                        stan::model::index_uni(i))),
+                    stan::model::rvalue(x2, "x2", stan::model::index_uni(i))),
+                  stan::model::rvalue(x1x2, "x1x2",
+                    stan::model::index_uni(i))),
                 stan::model::rvalue(b, "b", stan::model::index_uni(i)))));
         }
       }

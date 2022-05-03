@@ -820,7 +820,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                             ( UnsizedType.is_eigen_type x.meta.type_
                             && UnsizedType.is_eigen_type y.meta.type_ ) ->
                     let lub_mem = lub_mem_pat [mem] in
-                    FunApp (StanLib ("fma", suffix, lub_mem), [x; y; z])
+                    FunApp (StanLib ("fma", suffix, lub_mem), [x; z; y])
                 | ( "Plus__"
                   , [ z
                     ; { pattern=
@@ -831,7 +831,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                             ( UnsizedType.is_eigen_type x.meta.type_
                             && UnsizedType.is_eigen_type y.meta.type_ ) ->
                     let lub_mem = lub_mem_pat [mem] in
-                    FunApp (StanLib ("fma", suffix, lub_mem), [x; y; z])
+                    FunApp (StanLib ("fma", suffix, lub_mem), [x; z; y])
                 | ( "Plus__"
                   , [ { pattern=
                           FunApp
@@ -841,7 +841,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                       ; _ }; z ] )
                   when not preserve_stability ->
                     let lub_mem = lub_mem_pat [mem] in
-                    FunApp (StanLib ("fma", suffix, lub_mem), [x; y; z])
+                    FunApp (StanLib ("fma", suffix, lub_mem), [x; z; y])
                 | ( "Plus__"
                   , [ z
                     ; { pattern=
@@ -852,7 +852,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                       ; _ } ] )
                   when not preserve_stability ->
                     let lub_mem = lub_mem_pat [mem] in
-                    FunApp (StanLib ("fma", suffix, lub_mem), [x; y; z])
+                    FunApp (StanLib ("fma", suffix, lub_mem), [x; z; y])
                 | ( "Minus__"
                   , [ x
                     ; {pattern= FunApp (StanLib ("gamma_p", FnPlain, mem), l); _}

@@ -400,6 +400,10 @@ Warning: Parameter f has constraints that don't make sense. The lower bound
 Warning: Parameter e has constraints that don't make sense. The lower bound
     should be strictly less than the upper bound.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_false_alarm.stan
+Warning in 'jacobian_false_alarm.stan', line 58, column 2: Left-hand side of
+    sampling statement (~) may contain a non-linear transform of a parameter
+    or local variable. If it does, you need to include a target += statement
+    with the log absolute determinant of the Jacobian of the transform.
 Warning: The parameter z has 7 priors.
 Warning: The parameter y has 9 priors.
 Warning: The parameter v has 8 priors.
@@ -426,10 +430,7 @@ Warning in 'jacobian_warning3.stan', line 5, column 2: Left-hand side of
     or local variable. If it does, you need to include a target += statement
     with the log absolute determinant of the Jacobian of the transform.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning4.stan
-Warning in 'jacobian_warning4.stan', line 5, column 2: Left-hand side of
-    sampling statement (~) may contain a non-linear transform of a parameter
-    or local variable. If it does, you need to include a target += statement
-    with the log absolute determinant of the Jacobian of the transform.
+
   $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning5.stan
 Warning in 'jacobian_warning5.stan', line 5, column 2: Left-hand side of
     sampling statement (~) may contain a non-linear transform of a parameter
