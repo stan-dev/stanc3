@@ -4,6 +4,10 @@ open Middle
 open Ast
 module Env = Environment
 
+let mk_fun_app ~is_cond_dist (kind, id, arguments) =
+  if is_cond_dist then CondDistApp (kind, id, arguments)
+  else FunApp (kind, id, arguments)
+
 let calculate_autodifftype current_block origin ut =
   match origin with
   | Env.(Param | TParam | Model | Functions)

@@ -6,66 +6,6 @@ open Common
 open Middle
 open Mir_utils
 
-type optimization_settings =
-  { function_inlining: bool
-  ; static_loop_unrolling: bool
-  ; one_step_loop_unrolling: bool
-  ; list_collapsing: bool
-  ; block_fixing: bool
-  ; allow_uninitialized_decls: bool
-  ; constant_propagation: bool
-  ; expression_propagation: bool
-  ; copy_propagation: bool
-  ; dead_code_elimination: bool
-  ; partial_evaluation: bool
-  ; lazy_code_motion: bool
-  ; optimize_ad_levels: bool
-  ; preserve_stability: bool
-  ; optimize_soa: bool }
-
-let settings_const b =
-  { function_inlining= b
-  ; static_loop_unrolling= b
-  ; one_step_loop_unrolling= b
-  ; list_collapsing= b
-  ; block_fixing= b
-  ; allow_uninitialized_decls= b
-  ; constant_propagation= b
-  ; expression_propagation= b
-  ; copy_propagation= b
-  ; dead_code_elimination= b
-  ; partial_evaluation= b
-  ; lazy_code_motion= b
-  ; optimize_ad_levels= b
-  ; preserve_stability= not b
-  ; optimize_soa= b }
-
-let all_optimizations : optimization_settings = settings_const true
-let no_optimizations : optimization_settings = settings_const false
-
-type optimization_level = O0 | O1 | Oexperimental
-
-let level_optimizations (lvl : optimization_level) : optimization_settings =
-  match lvl with
-  | O0 -> no_optimizations
-  | O1 ->
-      { function_inlining= true
-      ; static_loop_unrolling= false
-      ; one_step_loop_unrolling= false
-      ; list_collapsing= true
-      ; block_fixing= true
-      ; constant_propagation= true
-      ; expression_propagation= false
-      ; copy_propagation= true
-      ; dead_code_elimination= true
-      ; partial_evaluation= true
-      ; lazy_code_motion= false
-      ; allow_uninitialized_decls= true
-      ; optimize_ad_levels= false
-      ; preserve_stability= false
-      ; optimize_soa= true }
-  | Oexperimental -> all_optimizations
-
 (**
    Apply the transformation to each function body and to the rest of the program as one
    block.
@@ -1261,6 +1201,66 @@ let optimize_soa (mir : Program.Typed.t) =
           (Failure "Something went wrong with program transformation packing!")
   in
   {mir with log_prob= transform' mir.log_prob}
+
+type optimization_settings =
+  { function_inlining: bool
+  ; static_loop_unrolling: bool
+  ; one_step_loop_unrolling: bool
+  ; list_collapsing: bool
+  ; block_fixing: bool
+  ; allow_uninitialized_decls: bool
+  ; constant_propagation: bool
+  ; expression_propagation: bool
+  ; copy_propagation: bool
+  ; dead_code_elimination: bool
+  ; partial_evaluation: bool
+  ; lazy_code_motion: bool
+  ; optimize_ad_levels: bool
+  ; preserve_stability: bool
+  ; optimize_soa: bool }
+
+let settings_const b =
+  { function_inlining= b
+  ; static_loop_unrolling= b
+  ; one_step_loop_unrolling= b
+  ; list_collapsing= b
+  ; block_fixing= b
+  ; allow_uninitialized_decls= b
+  ; constant_propagation= b
+  ; expression_propagation= b
+  ; copy_propagation= b
+  ; dead_code_elimination= b
+  ; partial_evaluation= b
+  ; lazy_code_motion= b
+  ; optimize_ad_levels= b
+  ; preserve_stability= not b
+  ; optimize_soa= b }
+
+let all_optimizations : optimization_settings = settings_const true
+let no_optimizations : optimization_settings = settings_const false
+
+type optimization_level = O0 | O1 | Oexperimental
+
+let level_optimizations (lvl : optimization_level) : optimization_settings =
+  match lvl with
+  | O0 -> no_optimizations
+  | O1 ->
+      { function_inlining= true
+      ; static_loop_unrolling= false
+      ; one_step_loop_unrolling= false
+      ; list_collapsing= true
+      ; block_fixing= true
+      ; constant_propagation= true
+      ; expression_propagation= false
+      ; copy_propagation= true
+      ; dead_code_elimination= true
+      ; partial_evaluation= true
+      ; lazy_code_motion= false
+      ; allow_uninitialized_decls= true
+      ; optimize_ad_levels= false
+      ; preserve_stability= false
+      ; optimize_soa= true }
+  | Oexperimental -> all_optimizations
 
 let optimization_suite ?(settings = all_optimizations) mir =
   let preserve_stability = settings.preserve_stability in

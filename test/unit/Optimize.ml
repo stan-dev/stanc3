@@ -1,8 +1,8 @@
 open Core_kernel
+open Analysis_and_optimization.Optimize
 open Middle
 open Common
 open Analysis_and_optimization.Mir_utils
-open Analysis_and_optimization.Optimize
 
 let reset_and_mir_of_string s =
   Gensym.reset_danger_use_cautiously () ;

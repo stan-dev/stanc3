@@ -1,5 +1,6 @@
-(** This module is used as a parameter for many functors which
-    rely on information about a backend-specific Stan library. *)
+(** This is a {{:https://dune.readthedocs.io/en/latest/variants.html}virtual module}
+    which is filled in at link time with a module specifying a backend-specific
+    a backend-specific Stan library. *)
 
 open Middle
 open Core_kernel

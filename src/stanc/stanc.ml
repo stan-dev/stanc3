@@ -3,9 +3,9 @@
 open Core_kernel
 open Core_kernel.Poly
 open Frontend
-open Middle
 open Analysis_and_optimization
 open Stan_math_backend
+open Middle
 
 (** The main program. *)
 let version = "%%NAME%%3 %%VERSION%%"

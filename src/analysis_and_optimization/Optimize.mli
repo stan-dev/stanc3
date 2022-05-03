@@ -2,32 +2,6 @@
 
 open Middle
 
-(** Interface for turning individual optimizations on/off. Useful for testing
-    and for top-level interface flags. *)
-type optimization_settings =
-  { function_inlining: bool
-  ; static_loop_unrolling: bool
-  ; one_step_loop_unrolling: bool
-  ; list_collapsing: bool
-  ; block_fixing: bool
-  ; allow_uninitialized_decls: bool
-  ; constant_propagation: bool
-  ; expression_propagation: bool
-  ; copy_propagation: bool
-  ; dead_code_elimination: bool
-  ; partial_evaluation: bool
-  ; lazy_code_motion: bool
-  ; optimize_ad_levels: bool
-  ; preserve_stability: bool
-  ; optimize_soa: bool }
-
-val all_optimizations : optimization_settings
-val no_optimizations : optimization_settings
-
-type optimization_level = O0 | O1 | Oexperimental
-
-val level_optimizations : optimization_level -> optimization_settings
-
 val function_inlining : Program.Typed.t -> Program.Typed.t
 (** Inline all functions except for ones with forward declarations
     (e.g. recursive functions, mutually recursive functions, and
@@ -88,6 +62,32 @@ val allow_uninitialized_decls : Program.Typed.t -> Program.Typed.t
 (** Marks Decl types such that, if the first assignment after the decl
     assigns to the full object, allow the object to be constructed but
     not uninitialized.  *)
+
+(** Interface for turning individual optimizations on/off. Useful for testing
+    and for top-level interface flags. *)
+type optimization_settings =
+  { function_inlining: bool
+  ; static_loop_unrolling: bool
+  ; one_step_loop_unrolling: bool
+  ; list_collapsing: bool
+  ; block_fixing: bool
+  ; allow_uninitialized_decls: bool
+  ; constant_propagation: bool
+  ; expression_propagation: bool
+  ; copy_propagation: bool
+  ; dead_code_elimination: bool
+  ; partial_evaluation: bool
+  ; lazy_code_motion: bool
+  ; optimize_ad_levels: bool
+  ; preserve_stability: bool
+  ; optimize_soa: bool }
+
+val all_optimizations : optimization_settings
+val no_optimizations : optimization_settings
+
+type optimization_level = O0 | O1 | Oexperimental
+
+val level_optimizations : optimization_level -> optimization_settings
 
 val optimization_suite :
   ?settings:optimization_settings -> Program.Typed.t -> Program.Typed.t

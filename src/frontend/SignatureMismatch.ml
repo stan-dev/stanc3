@@ -407,7 +407,7 @@ let pp_assignmentoperator_sigs ppf (lt, errors) =
     | errors, _ -> Some (errors, true) in
   let pp_sigs ppf (signatures, omitted) =
     Fmt.pf ppf "@[<v>%a%a@]"
-      (Fmt.list ~sep:Fmt.cut Std_library_utils.pp_math_sig)
+      (Fmt.list ~sep:Fmt.cut Std_library_utils.pp_signature)
       signatures
       (if omitted then Fmt.pf else Fmt.nop)
       "@ (Additional signatures omitted)" in

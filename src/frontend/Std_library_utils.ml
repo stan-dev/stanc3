@@ -14,13 +14,11 @@ type deprecation_info =
   ; canonicalize_away: bool }
 [@@deriving sexp]
 
-let pp_math_sig ppf ((rt, args, mem_pattern) : signature) =
+let pp_signature ppf ((rt, args, mem_pattern) : signature) =
   UnsizedType.pp ppf (UFun (args, rt, FnPlain, mem_pattern))
 
-let pp_math_sigs ppf (sigs : signature list) =
-  (Fmt.list ~sep:Fmt.cut pp_math_sig) ppf sigs
-
-let pretty_print_math_sigs = Fmt.str "@[<v>@,%a@]" pp_math_sigs
+let pp_signatures ppf (sigs : signature list) =
+  (Fmt.list ~sep:Fmt.cut pp_signature) ppf sigs
 
 let dist_name_suffix (check : string -> bool) udf_names name =
   let is_udf_name s =
