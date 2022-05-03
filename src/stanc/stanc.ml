@@ -94,7 +94,7 @@ let options =
       , Arg.Set dump_mem_pattern
       , " For debugging purposes: print a list of matrix variables and their \
          memory type, either AoS (array of structs) or the more efficient SoA \
-         (struct of arrays) Only has an effect when optimizations are turned \
+         (struct of arrays). Only has an effect when optimizations are turned \
          on." )
     ; ( "--debug-transformed-mir"
       , Arg.Set dump_tx_mir
