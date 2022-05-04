@@ -258,3 +258,4 @@ let rec has_mem_pattern = function
       false
   | SVector _ | SRowVector _ | SMatrix _ -> true
   | SArray (t, _) -> has_mem_pattern t
+  | STuple ts -> List.exists ~f:has_mem_pattern ts
