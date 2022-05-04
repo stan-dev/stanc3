@@ -28,6 +28,7 @@ let dump_tx_mir = ref false
 let dump_tx_mir_pretty = ref false
 let dump_opt_mir = ref false
 let dump_opt_mir_pretty = ref false
+let dump_mem_pattern = ref false
 let dump_stan_math_sigs = ref false
 let dump_stan_math_distributions = ref false
 let opt_lvl = ref Optimize.O0
@@ -89,6 +90,12 @@ let options =
       , Arg.Set dump_opt_mir_pretty
       , " For debugging purposes: pretty print the MIR after it's been \
          optimized. Only has an effect when optimizations are turned on." )
+    ; ( "--debug-mem-patterns"
+      , Arg.Set dump_mem_pattern
+      , " For debugging purposes: print a list of matrix variables and their \
+         memory type, either AoS (array of structs) or the more efficient SoA \
+         (struct of arrays). Only has an effect when optimizations are turned \
+         on." )
     ; ( "--debug-transformed-mir"
       , Arg.Set dump_tx_mir
       , " For debugging purposes: print the MIR after the backend has \
@@ -316,17 +323,18 @@ let use_file filename =
       Sexp.pp_hum Format.std_formatter [%sexp (tx_mir : Middle.Program.Typed.t)] ;
     if !dump_tx_mir_pretty then Program.Typed.pp Format.std_formatter tx_mir ;
     let opt_mir =
-      let opt =
-        let set_optims =
-          let base_optims = Optimize.level_optimizations !opt_lvl in
-          if !no_soa_opt then {base_optims with optimize_soa= false}
-          else if !soa_opt then {base_optims with optimize_soa= true}
-          else base_optims in
-        Optimize.optimization_suite ~settings:set_optims tx_mir in
-      if !dump_opt_mir then
-        Sexp.pp_hum Format.std_formatter [%sexp (opt : Middle.Program.Typed.t)] ;
-      if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt ;
-      opt in
+      let set_optims =
+        let base_optims = Optimize.level_optimizations !opt_lvl in
+        if !no_soa_opt then {base_optims with optimize_soa= false}
+        else if !soa_opt then {base_optims with optimize_soa= true}
+        else base_optims in
+      Optimize.optimization_suite ~settings:set_optims tx_mir in
+    if !dump_mem_pattern then
+      Mem_pattern.pp_mem_patterns Format.std_formatter opt_mir ;
+    if !dump_opt_mir then
+      Sexp.pp_hum Format.std_formatter
+        [%sexp (opt_mir : Middle.Program.Typed.t)] ;
+    if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt_mir ;
     if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
     let cpp = Fmt.str "%a" Stan_math_code_gen.pp_prog opt_mir in
     Out_channel.write_all !output_file ~data:cpp ;

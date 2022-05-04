@@ -251,3 +251,10 @@ let modify_sizedtype_mem (mem_pattern : Common.Helpers.mem_pattern) st =
   match mem_pattern with
   | Common.Helpers.AoS -> demote_sizedtype_mem st
   | Common.Helpers.SoA -> promote_sizedtype_mem st
+
+let rec has_mem_pattern = function
+  | SInt | SReal | SComplex | SComplexVector _ | SComplexRowVector _
+   |SComplexMatrix _ ->
+      false
+  | SVector _ | SRowVector _ | SMatrix _ -> true
+  | SArray (t, _) -> has_mem_pattern t
