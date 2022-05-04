@@ -20,11 +20,16 @@ type dimensionality =
   | DVInt
   (* Vectorizable real *)
   | DVReal
+  | DVComplex
   (* DEPRECATED; vectorizable ints or reals *)
   | DIntAndReals
   (* Vectorizable vectors - for multivariate functions *)
   | DVectors
   | DDeepVectorized
+  | DComplexVectors
+  | DDeepComplexVectorized
+[@@warning "-37"]
+(* don't warn that some constructors are not yet used *)
 
 (* all base types with up 8 levels of nested containers -
                        just used for element-wise vectorized unary functions now *)
@@ -40,10 +45,21 @@ let rec expand_arg = function
   | DIntArray -> [UArray UInt]
   | DVInt -> [UInt; UArray UInt]
   | DVReal -> [UReal; UArray UReal; UVector; URowVector]
+  | DVComplex -> [UComplex; UArray UComplex; UComplexVector; UComplexRowVector]
   | DIntAndReals -> expand_arg DVReal @ expand_arg DVInt
   | DVectors -> [UVector; UArray UVector; URowVector; UArray URowVector]
+  | DComplexVectors ->
+      [ UComplexVector; UArray UComplexVector; UComplexRowVector
+      ; UArray UComplexRowVector ]
   | DDeepVectorized ->
       let all_base = [UnsizedType.UInt; UReal; URowVector; UVector; UMatrix] in
+      List.(
+        concat_map all_base ~f:(fun a ->
+            map (range 0 8) ~f:(fun i -> bare_array_type (a, i)) ))
+  | DDeepComplexVectorized ->
+      let all_base =
+        [UnsizedType.UComplex; UComplexRowVector; UComplexVector; UComplexMatrix]
+      in
       List.(
         concat_map all_base ~f:(fun a ->
             map (range 0 8) ~f:(fun i -> bare_array_type (a, i)) ))
@@ -619,6 +635,52 @@ let add_binary_vec_real_real name supports_soa =
             [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] )
         (List.range 0 8) )
     [UnsizedType.UReal]
+
+let add_binary_vec_complex_complex name supports_soa =
+  add_unqualified
+    (name, ReturnType UComplex, [UnsizedType.UComplex; UComplex], supports_soa) ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          add_unqualified
+            ( name
+            , ReturnType (bare_array_type (j, i))
+            , [bare_array_type (j, i); bare_array_type (j, i)]
+            , supports_soa ) )
+        [ UnsizedType.UArray UComplex; UComplexVector; UComplexRowVector
+        ; UComplexMatrix ] )
+    (List.range 0 8) ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          List.iter
+            ~f:(fun k ->
+              add_unqualified
+                ( name
+                , ReturnType (bare_array_type (k, j))
+                , [bare_array_type (k, j); i]
+                , supports_soa ) )
+            [ UnsizedType.UArray UComplex; UComplexVector; UComplexRowVector
+            ; UComplexMatrix ] )
+        (List.range 0 8) )
+    [UnsizedType.UComplex] ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          List.iter
+            ~f:(fun k ->
+              add_unqualified
+                ( name
+                , ReturnType (bare_array_type (k, j))
+                , [i; bare_array_type (k, j)]
+                , supports_soa ) )
+            [ UnsizedType.UArray UComplex; UComplexVector; UComplexRowVector
+            ; UComplexMatrix ] )
+        (List.range 0 8) )
+    [UnsizedType.UComplex]
 
 let add_binary_vec_int_real name supports_soa =
   List.iter
@@ -1983,8 +2045,7 @@ let () =
   add_unqualified ("polar", ReturnType UComplex, [UReal; UReal], AoS) ;
   add_nullary "positive_infinity" ;
   add_binary_vec "pow" AoS ;
-  add_unqualified ("pow", ReturnType UComplex, [UComplex; UReal], AoS) ;
-  add_unqualified ("pow", ReturnType UComplex, [UComplex; UComplex], AoS) ;
+  add_binary_vec_complex_complex "pow" AoS ;
   add_unqualified ("prod", ReturnType UInt, [UArray UInt], AoS) ;
   add_unqualified ("prod", ReturnType UReal, [UArray UReal], AoS) ;
   add_unqualified ("prod", ReturnType UReal, [UVector], AoS) ;
