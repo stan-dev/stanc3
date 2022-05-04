@@ -19,13 +19,22 @@ type t =
   | Syntax_error of syntax_error
   | Semantic_error of Semantic_error.t
 
-val pp : ?printed_filename:string -> t Fmt.t
-val to_string : t -> string
+val pp : ?printed_filename:string -> ?code:string -> t Fmt.t
+(** Pretty-printer for error type [t]. Replace occurances of
+  filename from locations with [printed_filename], if supplied.
+  If [code] is supplied, read context from that string. Otherwise,
+  it will attempt to open the original file.
+ *)
 
-val pp_syntax_error :
-  ?printed_filename:string -> Format.formatter -> syntax_error -> unit
-(** A syntax error message used when handling a SyntaxError *)
+val to_string : t -> string
+(** Format an error [t] as a string. Should only be used in testing!
+  For user facing code, prefer [pp]
+  *)
 
 val pp_semantic_error :
-  ?printed_filename:string -> Format.formatter -> Semantic_error.t -> unit
+     ?printed_filename:string
+  -> ?code:string
+  -> Format.formatter
+  -> Semantic_error.t
+  -> unit
 (** A semantic error message used when handling a SemanticError *)

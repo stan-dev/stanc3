@@ -6899,17 +6899,18 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       current_statement__ = 282;
       gq_complex = stan::math::polar(p_r, d_r);
       current_statement__ = 283;
-      gq_complex = stan::math::pow(z, gq_r);
+      gq_complex = stan::math::pow(z, stan::math::to_complex(gq_r, 0));
       current_statement__ = 284;
-      gq_complex = stan::math::pow(z, gq_i);
+      gq_complex = stan::math::pow(z, stan::math::to_complex(gq_i, 0));
       current_statement__ = 285;
       gq_complex = stan::math::pow(z, z);
       current_statement__ = 286;
-      gq_complex = stan::math::pow(p_complex, p_r);
+      gq_complex = stan::math::pow(p_complex, stan::math::to_complex(p_r, 0));
       current_statement__ = 287;
-      gq_complex = stan::math::pow(p_complex, d_r);
+      gq_complex = stan::math::pow(p_complex, stan::math::to_complex(d_r, 0));
       current_statement__ = 288;
-      gq_complex = stan::math::pow(p_complex, gq_r);
+      gq_complex = stan::math::pow(p_complex,
+                     stan::math::to_complex(gq_r, 0));
       current_statement__ = 289;
       gq_complex = stan::math::pow(p_complex, z);
       current_statement__ = 290;
@@ -6917,11 +6918,12 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       current_statement__ = 291;
       gq_complex = stan::math::pow(p_complex, p_complex);
       current_statement__ = 292;
-      gq_complex = stan::math::pow(d_complex, p_r);
+      gq_complex = stan::math::pow(d_complex, stan::math::to_complex(p_r, 0));
       current_statement__ = 293;
-      gq_complex = stan::math::pow(d_complex, d_r);
+      gq_complex = stan::math::pow(d_complex, stan::math::to_complex(d_r, 0));
       current_statement__ = 294;
-      gq_complex = stan::math::pow(d_complex, gq_r);
+      gq_complex = stan::math::pow(d_complex,
+                     stan::math::to_complex(gq_r, 0));
       current_statement__ = 295;
       gq_complex = stan::math::pow(d_complex, z);
       current_statement__ = 296;

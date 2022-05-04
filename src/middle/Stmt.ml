@@ -33,37 +33,32 @@ module Fixed = struct
 
     let pp pp_e pp_s ppf = function
       | Assignment ((assignee, _, idcs), rhs) ->
-          Fmt.pf ppf {|@[<h>%a =@ %a;@]|} (Index.pp_indexed pp_e)
-            (assignee, idcs) pp_e rhs
-      | TargetPE expr ->
-          Fmt.pf ppf {|@[<h>%a +=@ %a;@]|} pp_keyword "target" pp_e expr
+          Fmt.pf ppf "@[<h>%a =@ %a;@]" (Index.pp_indexed pp_e) (assignee, idcs)
+            pp_e rhs
+      | TargetPE expr -> Fmt.pf ppf "@[<h>target +=@ %a;@]" pp_e expr
       | NRFunApp (kind, args) ->
-          Fmt.pf ppf {|@[%a%a;@]|} (Fun_kind.pp pp_e) kind
+          Fmt.pf ppf "@[%a%a;@]" (Fun_kind.pp pp_e) kind
             Fmt.(list pp_e ~sep:comma |> parens)
             args
-      | Break -> pp_keyword ppf "break;"
-      | Continue -> pp_keyword ppf "continue;"
-      | Skip -> pp_keyword ppf ";"
-      | Return (Some expr) ->
-          Fmt.pf ppf {|%a %a;|} pp_keyword "return" pp_e expr
-      | Return _ -> pp_keyword ppf "return;"
+      | Break -> Fmt.string ppf "break;"
+      | Continue -> Fmt.string ppf "continue;"
+      | Skip -> Fmt.string ppf ";"
+      | Return (Some expr) -> Fmt.pf ppf "return %a;" pp_e expr
+      | Return _ -> Fmt.string ppf "return;"
       | IfElse (pred, s_true, Some s_false) ->
-          Fmt.pf ppf {|%a(%a) %a %a %a|} pp_builtin_syntax "if" pp_e pred pp_s
-            s_true pp_builtin_syntax "else" pp_s s_false
-      | IfElse (pred, s_true, _) ->
-          Fmt.pf ppf {|%a(%a) %a|} pp_builtin_syntax "if" pp_e pred pp_s s_true
-      | While (pred, stmt) ->
-          Fmt.pf ppf {|%a(%a) %a|} pp_builtin_syntax "while" pp_e pred pp_s stmt
+          Fmt.pf ppf "if(%a) %a else %a" pp_e pred pp_s s_true pp_s s_false
+      | IfElse (pred, s_true, _) -> Fmt.pf ppf "if(%a) %a" pp_e pred pp_s s_true
+      | While (pred, stmt) -> Fmt.pf ppf "while(%a) %a" pp_e pred pp_s stmt
       | For {loopvar; lower; upper; body} ->
-          Fmt.pf ppf {|%a(%s in %a:%a) %a|} pp_builtin_syntax "for" loopvar pp_e
-            lower pp_e upper pp_s body
+          Fmt.pf ppf "for(%s in %a:%a) %a" loopvar pp_e lower pp_e upper pp_s
+            body
       | Profile (_, stmts) ->
-          Fmt.pf ppf {|{@;<1 2>@[<v>%a@]@;}|} Fmt.(list pp_s ~sep:Fmt.cut) stmts
+          Fmt.pf ppf "{@;<1 2>@[<v>%a@]@;}" Fmt.(list pp_s ~sep:cut) stmts
       | Block stmts ->
-          Fmt.pf ppf {|{@;<1 2>@[<v>%a@]@;}|} Fmt.(list pp_s ~sep:Fmt.cut) stmts
-      | SList stmts -> Fmt.(list pp_s ~sep:Fmt.cut |> vbox) ppf stmts
+          Fmt.pf ppf "{@;<1 2>@[<v>%a@]@;}" Fmt.(list pp_s ~sep:cut) stmts
+      | SList stmts -> Fmt.(list pp_s ~sep:cut |> vbox) ppf stmts
       | Decl {decl_adtype; decl_id; decl_type; _} ->
-          Fmt.pf ppf {|%a%a %s;|} UnsizedType.pp_autodifftype decl_adtype
+          Fmt.pf ppf "%a%a %s;" UnsizedType.pp_autodifftype decl_adtype
             (Type.pp pp_e) decl_type decl_id
 
     include Foldable.Make2 (struct

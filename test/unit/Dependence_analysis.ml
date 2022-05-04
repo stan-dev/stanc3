@@ -1,14 +1,10 @@
 open Core_kernel
-open Frontend
 open Analysis_and_optimization.Dependence_analysis
 open Middle
 open Analysis_and_optimization.Dataflow_types
 
-let mir_of_string =
-  Fn.compose (Ast_to_Mir.trans_prog "") Frontend_utils.typed_ast_of_string_exn
-
 let example1_program =
-  mir_of_string
+  Test_utils.mir_of_string
     {|
         model
         {                                // 1
@@ -121,7 +117,7 @@ let%expect_test "Variable dependency example" =
     |}]
 
 let uninitialized_var_example =
-  mir_of_string
+  Test_utils.mir_of_string
     {|
         functions {
           int f(int y) {
