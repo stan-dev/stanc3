@@ -64,14 +64,17 @@ let rec expand_arg = function
         concat_map all_base ~f:(fun a ->
             map (range 0 8) ~f:(fun i -> bare_array_type (a, i)) ))
 
+type return_behavior = Leave | IntsToReals | ComplexToReals
+[@@deriving show {with_path= false}]
+
 type fkind =
   | Lpmf
   | Lpdf
-  | Log [@printer fun fmt _ -> fprintf fmt "log (deprecated)"]
+  | Log [@printer fun fmt _ -> fprintf fmt "Log (deprecated)"]
   | Rng
   | Cdf
   | Ccdf
-  | UnaryVectorized
+  | UnaryVectorized of return_behavior
 [@@deriving show {with_path= false}]
 
 type fun_arg = UnsizedType.autodifftype * UnsizedType.t
@@ -199,7 +202,7 @@ let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
     | Rng -> ["_rng"]
     | Cdf -> ["_cdf"; "_cdf_log"; "_lcdf"]
     | Ccdf -> ["_ccdf_log"; "_lccdf"]
-    | UnaryVectorized -> [""] in
+    | UnaryVectorized _ -> [""] in
   let add_ints = function DVReal -> DIntAndReals | x -> x in
   let all_expanded args = all_combinations (List.map ~f:expand_arg args) in
   let promoted_dim = function
@@ -208,7 +211,11 @@ let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
     | _ -> UReal in
   let find_rt rt args = function
     | Rng -> UnsizedType.ReturnType (rng_return_type rt args)
-    | UnaryVectorized -> ReturnType (ints_to_real (List.hd_exn args))
+    | UnaryVectorized Leave -> ReturnType (List.hd_exn args)
+    | UnaryVectorized IntsToReals ->
+        ReturnType (ints_to_real (List.hd_exn args))
+    | UnaryVectorized ComplexToReals ->
+        ReturnType (complex_to_real (List.hd_exn args))
     | _ -> ReturnType UReal in
   let create_from_fk_args fk arglists =
     List.concat_map arglists ~f:(fun args ->
@@ -222,7 +229,8 @@ let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
         let name = name ^ "_rng" in
         List.map (all_expanded args) ~f:(fun args ->
             (name, find_rt rt args Rng, args, mem_pattern) )
-    | UnaryVectorized -> create_from_fk_args UnaryVectorized (all_expanded args)
+    | UnaryVectorized use_int ->
+        create_from_fk_args (UnaryVectorized use_int) (all_expanded args)
     | fk -> create_from_fk_args fk (all_expanded args) in
   List.concat_map fnkinds ~f:add_fnkind
   |> List.filter ~f:(fun (n, _, _, _) -> not (Set.mem missing_math_functions n))
@@ -340,59 +348,62 @@ let distributions =
   ; ([Lpdf; Log], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf; Log], "wishart", [DMatrix; DReal; DMatrix], SoA) ]
 
+let basic_vectorized = UnaryVectorized IntsToReals
+
 let math_sigs =
-  [ ([UnaryVectorized], "acos", [DDeepVectorized], Common.Helpers.SoA)
-  ; ([UnaryVectorized], "acosh", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "asin", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "asinh", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "atan", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "atanh", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "cbrt", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "ceil", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "cos", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "cosh", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "digamma", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "erf", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "erfc", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "exp", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "exp2", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "expm1", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "fabs", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "floor", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "inv", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "inv_cloglog", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "inv_erfc", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "inv_logit", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "inv_Phi", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "inv_sqrt", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "inv_square", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "lambert_w0", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "lambert_wm1", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "lgamma", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "log", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "log10", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "log1m", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "log1m_exp", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "log1m_inv_logit", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "log1p", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "log1p_exp", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "log2", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "log_inv_logit", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "logit", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "Phi", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "Phi_approx", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "round", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "sin", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "sinh", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "sqrt", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "square", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "step", [DReal], SoA)
-  ; ([UnaryVectorized], "tan", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "tanh", [DDeepVectorized], SoA)
-    (* ; add_nullary ("target") *)
-  ; ([UnaryVectorized], "tgamma", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "trunc", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "trigamma", [DDeepVectorized], SoA) ]
+  [ ([basic_vectorized], "acos", [DDeepVectorized], Common.Helpers.SoA)
+  ; ([basic_vectorized], "acosh", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "asin", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "asinh", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "atan", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "atanh", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "cbrt", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "ceil", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "cos", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "cosh", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "digamma", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "erf", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "erfc", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "exp", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "exp2", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "expm1", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "fabs", [DDeepVectorized], SoA)
+  ; ([UnaryVectorized Leave], "abs", [DDeepVectorized], SoA)
+  ; ([UnaryVectorized ComplexToReals], "abs", [DDeepComplexVectorized], AoS)
+  ; ([basic_vectorized], "floor", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "inv", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "inv_cloglog", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "inv_erfc", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "inv_logit", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "inv_Phi", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "inv_sqrt", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "inv_square", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "lambert_w0", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "lambert_wm1", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "lgamma", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "log", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "log10", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "log1m", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "log1m_exp", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "log1m_inv_logit", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "log1p", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "log1p_exp", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "log2", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "log_inv_logit", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "logit", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "Phi", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "Phi_approx", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "round", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "sin", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "sinh", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "sqrt", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "square", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "step", [DReal], SoA)
+  ; ([basic_vectorized], "tan", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "tanh", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "tgamma", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "trunc", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "trigamma", [DDeepVectorized], SoA) ]
 
 let all_declarative_sigs = distributions @ math_sigs
 
@@ -859,9 +870,6 @@ let for_vector_types s = List.iter ~f:s vector_types
 let () =
   List.iter declarative_fnsigs ~f:(fun (key, rt, args, mem_pattern) ->
       Hashtbl.add_multi stan_math_signatures ~key ~data:(rt, args, mem_pattern) ) ;
-  add_unqualified ("abs", ReturnType UInt, [UInt], SoA) ;
-  add_unqualified ("abs", ReturnType UReal, [UReal], SoA) ;
-  add_unqualified ("abs", ReturnType UReal, [UComplex], AoS) ;
   add_unqualified ("acos", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("acosh", ReturnType UComplex, [UComplex], AoS) ;
   List.iter
