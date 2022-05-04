@@ -31,11 +31,15 @@ type dimensionality =
   | DVInt
   (* Vectorizable real *)
   | DVReal
+  | DVComplex
   (* DEPRECATED; vectorizable ints or reals *)
   | DIntAndReals
   (* Vectorizable vectors - for multivariate functions *)
   | DVectors
   | DDeepVectorized
+  | DComplexVectors
+  | DDeepComplexVectorized
+[@@warning "-37"]
 
 val function_signatures : (string, signature list) Hashtbl.t
 (** Mapping from names to signature(s) of functions *)
