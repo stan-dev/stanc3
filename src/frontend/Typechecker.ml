@@ -70,6 +70,9 @@ let reserved_keywords =
 
 let std_library_tenv : Env.t = Env.make_from_library Library.function_signatures
 
+let matching_library_function =
+  SignatureMismatch.matching_function std_library_tenv
+
 let verify_identifier id : unit =
   if id.name = !model_name then
     Semantic_error.ident_is_model_name id.id_loc id.name |> error
@@ -179,9 +182,7 @@ let library_function_return_type name arg_tys =
   match name with
   | x when Library.is_variadic_function_name x ->
       Library.variadic_function_returntype x
-  | _ ->
-      SignatureMismatch.matching_function std_library_tenv name arg_tys
-      |> match_to_rt_option
+  | _ -> matching_library_function name arg_tys |> match_to_rt_option
 
 let operator_return_type op arg_tys =
   match (op, arg_tys) with
@@ -191,7 +192,7 @@ let operator_return_type op arg_tys =
   | _ ->
       Library.operator_to_function_names op
       |> List.filter_map ~f:(fun name ->
-             SignatureMismatch.matching_function std_library_tenv name arg_tys
+             matching_library_function name arg_tys
              |> function
              | SignatureMismatch.UniqueMatch (rt, _, p) -> Some (rt, p)
              | _ -> None )
@@ -200,8 +201,7 @@ let operator_return_type op arg_tys =
 let assignmentoperator_return_type assop arg_tys =
   ( match assop with
   | Operator.Divide ->
-      SignatureMismatch.matching_function std_library_tenv "divide" arg_tys
-      |> match_to_rt_option
+      matching_library_function "divide" arg_tys |> match_to_rt_option
   | Plus | Minus | Times | EltTimes | EltDivide ->
       operator_return_type assop arg_tys |> Option.map ~f:fst
   | _ -> None )

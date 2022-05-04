@@ -1,6 +1,6 @@
 (** This is a {{:https://dune.readthedocs.io/en/latest/variants.html}virtual module}
     which is filled in at link time with a module specifying a backend-specific
-    a backend-specific Stan library. *)
+    Stan library. *)
 
 open Middle
 open Core_kernel
