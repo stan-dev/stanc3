@@ -64,4 +64,5 @@ Display all Stan math distributions exposed in the language
   von_mises: lpdf, rng, ccdf, cdf
   weibull: lpdf, rng, ccdf, cdf
   wiener: lpdf
+  wishart_cholesky: lpdf
   wishart: lpdf
