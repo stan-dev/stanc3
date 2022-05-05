@@ -2022,7 +2022,7 @@ model {
     target += log(1. - x_matrix);
     target += log(1 + exp(x_vector));
     target += log(1 + x_matrix);
-    target += log(fabs(determinant(x_matrix)));
+    target += log(abs(determinant(x_matrix)));
     target += log(exp(theta) - exp(theta));
     target += log(falling_factorial(phi, i));
     target += log(rising_factorial(phi, i));
