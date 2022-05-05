@@ -450,6 +450,10 @@ let distribution_warning (dist_info : dist_info) :
         [ constr_mismatch_warning cholesky_correlation Variate
         ; constr_mismatch_warning positive_range (Arg (1, shape_name)) ]
     (* Covariance Matrix Distributions *)
+    | "wishart_cholesky" ->
+        [ constr_mismatch_warning cholesky_covariance Variate
+        ; constr_mismatch_warning positive_range (Arg (1, dof_name))
+        ; constr_mismatch_warning cholesky_covariance (Arg (2, scale_mat_name)) ]
     | "wishart" ->
         [ constr_mismatch_warning covariance Variate
         ; constr_mismatch_warning positive_range (Arg (1, dof_name))
