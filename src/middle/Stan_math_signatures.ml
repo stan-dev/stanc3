@@ -37,6 +37,19 @@ type dimensionality =
 let rec bare_array_type (t, i) =
   match i with 0 -> t | j -> UnsizedType.UArray (bare_array_type (t, j - 1))
 
+let bare_types =
+  [ UnsizedType.UInt; UReal; UComplex; UVector; URowVector; UMatrix
+  ; UComplexVector; UComplexRowVector; UComplexMatrix ]
+
+let vector_types = [UnsizedType.UReal; UArray UReal; UVector; URowVector]
+let primitive_types = [UnsizedType.UInt; UReal]
+
+let complex_types =
+  [UnsizedType.UComplex; UComplexVector; UComplexRowVector; UComplexMatrix]
+
+let all_vector_types =
+  [UnsizedType.UReal; UArray UReal; UVector; URowVector; UInt; UArray UInt]
+
 let rec expand_arg = function
   | DInt -> [UnsizedType.UInt]
   | DReal -> [UReal]
@@ -57,14 +70,11 @@ let rec expand_arg = function
         concat_map all_base ~f:(fun a ->
             map (range 0 8) ~f:(fun i -> bare_array_type (a, i)) ))
   | DDeepComplexVectorized ->
-      let all_base =
-        [UnsizedType.UComplex; UComplexRowVector; UComplexVector; UComplexMatrix]
-      in
       List.(
-        concat_map all_base ~f:(fun a ->
+        concat_map complex_types ~f:(fun a ->
             map (range 0 8) ~f:(fun i -> bare_array_type (a, i)) ))
 
-type return_behavior = Leave | IntsToReals | ComplexToReals
+type return_behavior = SameAsArg | IntsToReals | ComplexToReals
 [@@deriving show {with_path= false}]
 
 type fkind =
@@ -211,7 +221,7 @@ let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
     | _ -> UReal in
   let find_rt rt args = function
     | Rng -> UnsizedType.ReturnType (rng_return_type rt args)
-    | UnaryVectorized Leave -> ReturnType (List.hd_exn args)
+    | UnaryVectorized SameAsArg -> ReturnType (List.hd_exn args)
     | UnaryVectorized IntsToReals ->
         ReturnType (ints_to_real (List.hd_exn args))
     | UnaryVectorized ComplexToReals ->
@@ -368,7 +378,9 @@ let math_sigs =
   ; ([basic_vectorized], "exp2", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "expm1", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "fabs", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized Leave], "abs", [DDeepVectorized], SoA)
+  ; ([UnaryVectorized ComplexToReals], "get_imag", [DDeepComplexVectorized], AoS)
+  ; ([UnaryVectorized ComplexToReals], "get_real", [DDeepComplexVectorized], AoS)
+  ; ([UnaryVectorized SameAsArg], "abs", [DDeepVectorized], SoA)
   ; ([UnaryVectorized ComplexToReals], "abs", [DDeepComplexVectorized], AoS)
   ; ([basic_vectorized], "floor", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "inv", [DDeepVectorized], SoA)
@@ -542,18 +554,6 @@ let pretty_print_math_lib_operator_sigs op =
   else operator_to_stan_math_fns op |> List.map ~f:pretty_print_math_sigs
 
 (* -- Some helper definitions to populate stan_math_signatures -- *)
-let bare_types =
-  [ UnsizedType.UInt; UReal; UComplex; UVector; URowVector; UMatrix
-  ; UComplexVector; UComplexRowVector; UComplexMatrix ]
-
-let vector_types = [UnsizedType.UReal; UArray UReal; UVector; URowVector]
-let primitive_types = [UnsizedType.UInt; UReal]
-
-let complex_types =
-  [UnsizedType.UComplex; UComplexVector; UComplexRowVector; UComplexMatrix]
-
-let all_vector_types =
-  [UnsizedType.UReal; UArray UReal; UVector; URowVector; UInt; UArray UInt]
 
 let add_qualified (name, rt, argts, supports_soa) =
   Hashtbl.add_multi stan_math_signatures ~key:name
@@ -1296,28 +1296,6 @@ let () =
     , ReturnType UReal
     , [UMatrix; UMatrix; UMatrix; UVector; UMatrix; UVector; UMatrix]
     , AoS ) ;
-  List.iter
-    ~f:(fun i ->
-      List.iter
-        ~f:(fun t ->
-          add_unqualified
-            ( "get_imag"
-            , ReturnType (bare_array_type (complex_to_real t, i))
-            , [bare_array_type (t, i)]
-            , AoS ) )
-        complex_types )
-    (List.range 0 8) ;
-  List.iter
-    ~f:(fun i ->
-      List.iter
-        ~f:(fun t ->
-          add_unqualified
-            ( "get_real"
-            , ReturnType (bare_array_type (complex_to_real t, i))
-            , [bare_array_type (t, i)]
-            , AoS ) )
-        complex_types )
-    (List.range 0 8) ;
   add_unqualified
     ("gp_dot_prod_cov", ReturnType UMatrix, [UArray UReal; UReal], AoS) ;
   add_unqualified
