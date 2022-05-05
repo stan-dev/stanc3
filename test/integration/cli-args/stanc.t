@@ -10,6 +10,7 @@ Show help
     --debug-mir-pretty              For debugging purposes: pretty-print the MIR.
     --debug-optimized-mir           For debugging purposes: print the MIR after it's been optimized. Only has an effect when optimizations are turned on.
     --debug-optimized-mir-pretty    For debugging purposes: pretty print the MIR after it's been optimized. Only has an effect when optimizations are turned on.
+    --debug-mem-patterns            For debugging purposes: print a list of matrix variables and their memory type, either AoS (array of structs) or the more efficient SoA (struct of arrays). Only has an effect when optimizations are turned on.
     --debug-transformed-mir         For debugging purposes: print the MIR after the backend has transformed it.
     --debug-transformed-mir-pretty  For debugging purposes: pretty print the MIR after the backend has transformed it.
     --dump-stan-math-signatures     Dump out the list of supported type signatures for Stan Math backend.
