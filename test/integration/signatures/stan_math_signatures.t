@@ -30278,6 +30278,7 @@ Display all Stan math signatures exposed in the language
   wiener_lpdf(array[] real, array[] real, array[] real, array[] real, vector) => real
   wiener_lpdf(array[] real, array[] real, array[] real, array[] real, row_vector) => real
   wiener_lpdf(array[] real, array[] real, array[] real, array[] real, array[] real) => real
+  wishart_cholesky_log(matrix, real, matrix) => real
   wishart_cholesky_lpdf(matrix, real, matrix) => real
   wishart_cholesky_rng(real, matrix) => matrix
   wishart_log(matrix, real, matrix) => real
