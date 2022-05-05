@@ -239,8 +239,6 @@ let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
         let name = name ^ "_rng" in
         List.map (all_expanded args) ~f:(fun args ->
             (name, find_rt rt args Rng, args, mem_pattern) )
-    | UnaryVectorized use_int ->
-        create_from_fk_args (UnaryVectorized use_int) (all_expanded args)
     | fk -> create_from_fk_args fk (all_expanded args) in
   List.concat_map fnkinds ~f:add_fnkind
   |> List.filter ~f:(fun (n, _, _, _) -> not (Set.mem missing_math_functions n))
