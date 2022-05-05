@@ -326,7 +326,7 @@ let distributions =
   ; (full_lpdf, "von_mises", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf, "weibull", [DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal], SoA)
-  ; ([Lpdf], "wishart_cholesky", [DMatrix; DReal; DMatrix], SoA) ]
+  ; ([Lpdf], "wishart_cholesky", [DMatrix; DReal; DMatrix], SoA) 
   ; ([Lpdf], "wishart", [DMatrix; DReal; DMatrix], SoA) ]
 
 let math_sigs =
