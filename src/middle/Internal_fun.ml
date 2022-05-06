@@ -14,7 +14,7 @@ type 'expr t =
   | FnReadParam of
       { constrain: 'expr Transformation.t
       ; dims: 'expr list
-      ; mem_pattern: Common.Helpers.mem_pattern }
+      ; mem_pattern: Mem_pattern.t }
   | FnWriteParam of {unconstrain_opt: 'expr Transformation.t option; var: 'expr}
   | FnValidateSize
   | FnValidateSizeSimplex
