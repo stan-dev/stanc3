@@ -481,7 +481,7 @@ let pp_overloads ppf {Program.output_vars; _} =
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -495,13 +495,13 @@ let pp_overloads ppf {Program.output_vars; _} =
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = %a;
-      const size_t num_transformed = %a;
-      const size_t num_gen_quantities = %a;
+      const size_t num_transformed = emit_transformed_parameters * %a;
+      const size_t num_gen_quantities = emit_generated_quantities * %a;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
