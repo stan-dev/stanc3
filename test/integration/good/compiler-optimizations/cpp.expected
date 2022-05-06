@@ -1860,7 +1860,7 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -1875,18 +1875,15 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (10 * 10);
-      const size_t num_transformed = (((((((10 * 10) +
-                                                         (10 * 10)) +
-                                                        (10 * 10)) +
-                                                       (10 * 10)) +
-                                                      (10 * 10)) + (10 * 10))
-                                                    + (10 * 10));
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 
+  (((((((10 * 10) + (10 * 10)) + (10 * 10)) + (10 * 10)) + (10 * 10)) +
+     (10 * 10)) + (10 * 10));
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -2601,7 +2598,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -2616,13 +2613,14 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (((1 + 1) + 1) + 1);
-      const size_t num_transformed = (N_t * 4);
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 
+  (N_t * 4);
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -4504,7 +4502,7 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -4519,17 +4517,14 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (1 + max_age);
-      const size_t num_transformed = (((nind *
-                                                          n_occ_minus_1) +
-                                                         (nind *
-                                                           n_occ_minus_1)) +
-                                                        (nind * n_occasions));
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 
+  (((nind * n_occ_minus_1) + (nind * n_occ_minus_1)) + (nind * n_occasions));
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -5641,7 +5636,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -5657,13 +5652,13 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       const size_t num_params__ = 
   (((((((((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + n_age)
        + n_edu) + n_region) + (n_age * n_edu)) + n_state);
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -6006,7 +6001,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -6020,13 +6015,13 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 0;
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -6359,7 +6354,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -6373,13 +6368,13 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 0;
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -6855,7 +6850,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -6870,13 +6865,13 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   ((2 + 2) + 1);
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -7277,7 +7272,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -7292,13 +7287,13 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   ((1 + J) + 1);
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -8447,7 +8442,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -8463,13 +8458,13 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       const size_t num_params__ = 
   ((((((((((n_age + n_edu) + n_age_edu) + n_state) + n_region_full) + 5) + 1)
        + 1) + 1) + 1) + 1);
-      const size_t num_transformed = N;
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * N;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -9220,7 +9215,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -9235,14 +9230,15 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (1 + phi_std_raw_1dim__);
-      const size_t num_transformed = (1 + N);
-      const size_t num_gen_quantities = 
+      const size_t num_transformed = emit_transformed_parameters * 
+  (1 + N);
+      const size_t num_gen_quantities = emit_generated_quantities * 
   (((((((1 + 1) + 1) + 1) + N) + N) + N) + N);
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -11067,7 +11063,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -11082,21 +11078,15 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (((1 + 1) + nind) + 1);
-      const size_t num_transformed = ((((nind *
-                                                                    n_occ_minus_1)
-                                                                   +
-                                                                   (nind *
-                                                                    n_occ_minus_1))
-                                                                  +
-                                                                  (nind *
-                                                                    n_occasions))
-                                                                 + 1);
-      const size_t num_gen_quantities = 1;
+      const size_t num_transformed = emit_transformed_parameters * 
+  ((((nind * n_occ_minus_1) + (nind * n_occ_minus_1)) + (nind * n_occasions))
+    + 1);
+      const size_t num_gen_quantities = emit_generated_quantities * 1;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -14550,7 +14540,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -14565,21 +14555,16 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (((((1 + 1) + 1) + n_occasions) + M) + 1);
-      const size_t num_transformed = 
+      const size_t num_transformed = emit_transformed_parameters * 
   (((((M * phi_2dim__) + (M * n_occasions)) + n_occasions) + n_occasions) +
     (M * n_occasions));
-      const size_t num_gen_quantities = ((((1 + 1) +
-                                                                    n_occasions)
-                                                                   +
-                                                                   n_occasions)
-                                                                  +
-                                                                  (M *
-                                                                    n_occasions));
+      const size_t num_gen_quantities = emit_generated_quantities * 
+  ((((1 + 1) + n_occasions) + n_occasions) + (M * n_occasions));
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -15639,7 +15624,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -15654,14 +15639,14 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (K + ((J * K) * K));
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 
   (I * K);
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -16271,7 +16256,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -16286,14 +16271,14 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (((((1 + 1) + 1) + 1) + N) + N);
-      const size_t num_transformed = 
+      const size_t num_transformed = emit_transformed_parameters * 
   (1 + N);
-      const size_t num_gen_quantities = 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -18174,7 +18159,7 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -18189,17 +18174,14 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (1 + max_age);
-      const size_t num_transformed = (((nind *
-                                                          n_occ_minus_1) +
-                                                         (nind *
-                                                           n_occ_minus_1)) +
-                                                        (nind * n_occasions));
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 
+  (((nind * n_occ_minus_1) + (nind * n_occ_minus_1)) + (nind * n_occasions));
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -18785,7 +18767,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -18800,13 +18782,14 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (5 + 5);
-      const size_t num_transformed = (5 + 5);
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 
+  (5 + 5);
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -22283,7 +22266,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -22298,16 +22281,16 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   ((((1 + 1) + n_occasions) + epsilon_1dim__) + 1);
-      const size_t num_transformed = 
+      const size_t num_transformed = emit_transformed_parameters * 
   (((M * phi_2dim__) + (M * n_occasions)) + (M * n_occasions));
-      const size_t num_gen_quantities = 
+      const size_t num_gen_quantities = emit_generated_quantities * 
   ((((((1 + 1) + n_occasions) + 1) + n_occasions) + n_occasions) +
     (M * n_occasions));
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -22640,7 +22623,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -22654,13 +22637,13 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 0;
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -22983,7 +22966,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -22997,13 +22980,13 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 1;
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -23355,7 +23338,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -23369,13 +23352,13 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = J;
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -25105,7 +25088,7 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -25120,15 +25103,14 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (1 + 1);
-      const size_t num_transformed = (((nind * n_occ_minus_1) +
-                                                   (nind * n_occ_minus_1)) +
-                                                  (nind * n_occasions));
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 
+  (((nind * n_occ_minus_1) + (nind * n_occ_minus_1)) + (nind * n_occasions));
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -25602,7 +25584,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -25616,14 +25598,14 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 1;
-      const size_t num_transformed = 1;
-      const size_t num_gen_quantities = 
+      const size_t num_transformed = emit_transformed_parameters * 1;
+      const size_t num_gen_quantities = emit_generated_quantities * 
   (1 + 1);
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -26486,7 +26468,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -26501,14 +26483,15 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (((1 + 1) + 1) + 1);
-      const size_t num_transformed = (R + (R * T));
-      const size_t num_gen_quantities = 
+      const size_t num_transformed = emit_transformed_parameters * 
+  (R + (R * T));
+      const size_t num_gen_quantities = emit_generated_quantities * 
   ((1 + R) + R);
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -27317,7 +27300,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -27332,14 +27315,14 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (((((((1 + J) + J) + 1) + 1) + 1) + 1) + 1);
-      const size_t num_transformed = 
+      const size_t num_transformed = emit_transformed_parameters * 
   ((J + J) + N);
-      const size_t num_gen_quantities = 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -28504,7 +28487,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -28519,13 +28502,13 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   ((((1 + 1) + (3 * 2)) + 2) + (2 * 2));
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -28880,7 +28863,7 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -28894,13 +28877,13 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 0;
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -29605,7 +29588,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -29620,13 +29603,13 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   ((((n_pair + 2) + 1) + 1) + 1);
-      const size_t num_transformed = N;
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * N;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -32773,7 +32756,7 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -32788,13 +32771,13 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   ((10 * 10) + (10 * 10));
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -33652,7 +33635,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -33667,13 +33650,13 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
   (((((1 + 1) + 1) + 1) + 1) + (I * K));
-      const size_t num_transformed = 1;
-      const size_t num_gen_quantities = 0;
+      const size_t num_transformed = emit_transformed_parameters * 1;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -34124,7 +34107,7 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -34138,14 +34121,14 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 1;
-      const size_t num_transformed = 
+      const size_t num_transformed = emit_transformed_parameters * 
   (((((1 + 1) + 1) + 1) + 1) + 1);
-      const size_t num_gen_quantities = 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -34725,7 +34708,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write, 
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
         std::numeric_limits<double>::quiet_NaN());
       write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -34739,13 +34722,13 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 0;
-      const size_t num_transformed = 0;
-      const size_t num_gen_quantities = 1;
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 1;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
-      vars = std::vector<double>(num_to_write, 
-        std::numeric_limits<double>::quiet_NaN());        
-      write_array_impl(base_rng, params_r, params_i, vars, 
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
         emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
