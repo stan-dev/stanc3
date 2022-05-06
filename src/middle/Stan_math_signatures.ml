@@ -339,7 +339,7 @@ let distributions =
   ; (full_lpdf_depr, "weibull", [DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf; Log], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf], "wishart_cholesky", [DMatrix; DReal; DMatrix], SoA)
-  ; ([Lpdf], "wishart", [DMatrix; DReal; DMatrix], SoA) ]
+  ; ([Lpdf; Log], "wishart", [DMatrix; DReal; DMatrix], SoA) ]
 
 let math_sigs =
   [ ([UnaryVectorized], "acos", [DDeepVectorized], Common.Helpers.SoA)
