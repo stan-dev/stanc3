@@ -26,7 +26,7 @@ let deprecated_distributions =
               | Lpmf -> Some (name ^ "_log", name ^ "_lpmf")
               | Cdf -> Some (name ^ "_cdf_log", name ^ "_lcdf")
               | Ccdf -> Some (name ^ "_ccdf_log", name ^ "_lccdf")
-              | Rng | UnaryVectorized -> None ) ) ) )
+              | Rng | Log | UnaryVectorized -> None ) ) ) )
 
 let stan_lib_deprecations =
   Map.merge_skewed deprecated_distributions deprecated_functions
