@@ -1233,6 +1233,8 @@ let () =
   add_unqualified ("dot_self", ReturnType UComplex, [UComplexVector], AoS) ;
   add_unqualified ("dot_self", ReturnType UComplex, [UComplexRowVector], AoS) ;
   add_nullary "e" ;
+  add_unqualified ("eigenvalues", ReturnType UComplexVector, [UMatrix], AoS) ;
+  add_unqualified ("eigenvectors", ReturnType UComplexMatrix, [UMatrix], AoS) ;
   add_unqualified ("eigenvalues_sym", ReturnType UVector, [UMatrix], AoS) ;
   add_unqualified ("eigenvectors_sym", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("generalized_inverse", ReturnType UMatrix, [UMatrix], SoA) ;

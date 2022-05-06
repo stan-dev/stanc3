@@ -4500,7 +4500,9 @@ Display all Stan math signatures exposed in the language
   double_exponential_rng(array[] real, array[] int) => array[] real
   double_exponential_rng(array[] real, array[] real) => array[] real
   e() => real
+  eigenvalues(matrix) => complex_vector
   eigenvalues_sym(matrix) => vector
+  eigenvectors(matrix) => complex_matrix
   eigenvectors_sym(matrix) => matrix
   elt_divide(int, int) => int
   elt_divide(real, real) => real
