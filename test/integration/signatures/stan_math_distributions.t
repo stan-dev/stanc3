@@ -54,15 +54,15 @@ Display all Stan math distributions exposed in the language
   poisson: lpmf, rng, ccdf, cdf, log (deprecated)
   poisson_log: lpmf, rng, log (deprecated)
   poisson_log_glm: lpmf
-  rayleigh: lpdf, rng, ccdf, cdf
-  scaled_inv_chi_square: lpdf, rng, ccdf, cdf
-  skew_normal: lpdf, rng, ccdf, cdf
-  skew_double_exponential: lpdf, rng, ccdf, cdf
-  student_t: lpdf, rng, ccdf, cdf
-  std_normal: lpdf, rng, ccdf, cdf
-  uniform: lpdf, rng, ccdf, cdf
-  von_mises: lpdf, rng, ccdf, cdf
-  weibull: lpdf, rng, ccdf, cdf
-  wiener: lpdf
-  wishart_cholesky: lpdf
-  wishart: lpdf
+  rayleigh: lpdf, rng, ccdf, cdf, log (deprecated)
+  scaled_inv_chi_square: lpdf, rng, ccdf, cdf, log (deprecated)
+  skew_normal: lpdf, rng, ccdf, cdf, log (deprecated)
+  skew_double_exponential: lpdf, rng, ccdf, cdf, log (deprecated)
+  student_t: lpdf, rng, ccdf, cdf, log (deprecated)
+  std_normal: lpdf, rng, ccdf, cdf, log (deprecated)
+  uniform: lpdf, rng, ccdf, cdf, log (deprecated)
+  von_mises: lpdf, rng, ccdf, cdf, log (deprecated)
+  weibull: lpdf, rng, ccdf, cdf, log (deprecated)
+  wiener: lpdf, log (deprecated)
+  wishart_cholesky: lpdf, rng
+  wishart: lpdf, log (deprecated)
