@@ -326,16 +326,18 @@ let distributions =
   ; (full_lpmf_depr, "poisson", [DVInt; DVReal], SoA)
   ; ([Lpmf; Rng; Log], "poisson_log", [DVInt; DVReal], SoA)
   ; ([Lpmf], "poisson_log_glm", [DVInt; DMatrix; DReal; DVector], SoA)
-  ; (full_lpdf, "rayleigh", [DVReal; DVReal], SoA)
-  ; (full_lpdf, "scaled_inv_chi_square", [DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "skew_normal", [DVReal; DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "skew_double_exponential", [DVReal; DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "student_t", [DVReal; DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "std_normal", [DVReal], SoA)
-  ; (full_lpdf, "uniform", [DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "von_mises", [DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "weibull", [DVReal; DVReal; DVReal], SoA)
-  ; ([Lpdf], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "rayleigh", [DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "scaled_inv_chi_square", [DVReal; DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "skew_normal", [DVReal; DVReal; DVReal; DVReal], SoA)
+  ; ( full_lpdf_depr
+    , "skew_double_exponential"
+    , [DVReal; DVReal; DVReal; DVReal]
+    , SoA ); (full_lpdf_depr, "student_t", [DVReal; DVReal; DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "std_normal", [DVReal], SoA)
+  ; (full_lpdf_depr, "uniform", [DVReal; DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "von_mises", [DVReal; DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "weibull", [DVReal; DVReal; DVReal], SoA)
+  ; ([Lpdf; Log], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf], "wishart_cholesky", [DMatrix; DReal; DMatrix], SoA)
   ; ([Lpdf], "wishart", [DMatrix; DReal; DMatrix], SoA) ]
 
