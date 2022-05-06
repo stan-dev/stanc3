@@ -18,7 +18,7 @@ type fun_arg = UnsizedType.autodifftype * UnsizedType.t
 type signature =
   UnsizedType.returntype * fun_arg list * Common.Helpers.mem_pattern
 
-type fkind = Lpmf | Lpdf | Rng | Cdf | Ccdf | UnaryVectorized
+type fkind = Lpmf | Lpdf | Log | Rng | Cdf | Ccdf | UnaryVectorized
 [@@deriving show {with_path= false}]
 
 type dimensionality =
