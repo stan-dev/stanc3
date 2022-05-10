@@ -1,6 +1,6 @@
 name: Build binaries
 
-on: 
+on:
   workflow_dispatch:
     inputs:
       branch:
@@ -9,92 +9,68 @@ on:
         default: 'master'
 
 jobs:
-  linux:
-    runs-on: ubuntu-latest
-    container:
-      image: ocaml/opam2:4.12
-      options: --user root
-    steps:    
-      - name: Checkout stanc3
-        uses: actions/checkout@v2
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos
+          - ubuntu
+        ocaml-compiler:
+          - 4.12.0
+
+    runs-on: ${{ matrix.os }}-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Use OCaml ${{ matrix.ocaml-compiler }}
+        uses: ocaml/setup-ocaml@v2
         with:
-          ref: ${{ github.event.inputs.branch }}
+          ocaml-compiler: ${{ matrix.ocaml-compiler }}
+      - run: bash -x scripts/install_build_deps.sh
 
-      - name: opam caching
-        id: opam-cache
-        uses: actions/cache@v2
-        with:
-          path: "~/.opam"
-          key: linux-stanc-binary-4.12.0
-
-      - name: Install dependencies
+      - name: Build
         run: |
-          opam init --disable-sandboxing -y
-          opam switch 4.12.0 || opam switch create 4.12.0
-          eval $(opam env)
-          opam repo add internet https://opam.ocaml.org
-          opam update
-          bash -x scripts/install_build_deps.sh
+          opam exec -- dune subst
+          opam exec -- dune build
 
-      - name: Build static Linux binaries
-        run: |
-          eval $(opam env)
-          dune subst
-          dune build @install --profile static
-          mv _build/default/src/stanc/stanc.exe linux-stanc
+      - run: mv _build/default/src/stanc/stanc.exe ${{ matrix.os }}-stanc
 
-      - name: Upload Linux stanc
+      - name: Upload ${{ matrix.os }} stanc
         uses: actions/upload-artifact@v2
         with:
-          name: linux-stanc
-          path: linux-stanc
-  windows:
+          name: ${{ matrix.os }}-stanc
+          path: ${{ matrix.os }}-stanc
+
+  build-cross:
     runs-on: ubuntu-latest
-    container:
-      image: stanorg/stanc3:debian
-      options: --user root
-    steps:    
-      - name: Checkout stanc3
-        uses: actions/checkout@v2
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install cross-compiler
+        run: sudo apt-get update; sudo apt-get install -y gcc-mingw-w64-x86-64
+
+      - name: Use OCaml 4.12.0
+        uses: ocaml/setup-ocaml@v2
         with:
-          ref: ${{ github.event.inputs.branch }}
+          cache-prefix: v1-windows
+          ocaml-compiler: ocaml-windows64.4.12.0
+          opam-repositories: |
+              windows: http://github.com/ocaml-cross/opam-cross-windows.git
+              default: https://github.com/ocaml/opam-repository.git
 
-      - name: opam caching
-        id: opam-cache
-        uses: actions/cache@v2
-        with:
-          path: "~/.opam"
-          key: windows-stanc-binary-4.12.0
+      - run: bash -x scripts/install_build_deps_windows.sh
 
-      - name: Install dependencies
+      - name: Build
         run: |
-          apt-get update -qq
-          apt-get install -y --no-install-recommends ca-certificates rsync git build-essential m4 sudo \
-          unzip pkg-config libpcre3-dev mingw-w64 gcc wget gawk bubblewrap
-          wget https://github.com/ocaml/opam/releases/download/2.0.4/opam-2.0.4-x86_64-linux
-          sudo install opam-2.0.4-x86_64-linux /usr/local/bin/opam
-          opam init $1 --disable-sandboxing -y
-          eval $(opam env)
-          opam switch stanc || opam switch create stanc ocaml-base-compiler.4.12.0
-          eval $(opam env)
-          bash -x scripts/install_build_deps_windows.sh
-          eval $(opam env)  
-          opam pin -y js_of_ocaml-ppx 3.11.0
-          opam install -y js_of_ocaml-ppx
+          opam exec -- dune subst
+          opam exec -- dune build -x windows
 
-      - name: Build Windows binaries
-        run: |
-          eval $(opam env)
-          dune subst
-          dune build -x windows
-          mv _build/default.windows/src/stanc/stanc.exe windows-stanc
-
-      - name: Build stanc.js
-        run: |
-          eval $(opam env)
-          dune subst    
-          dune build --profile release src/stancjs
-          mv _build/default/src/stancjs/stancjs.bc.js stanc.js
+      - run: mv _build/default.windows/src/stanc/stanc.exe windows-stanc
 
       - name: Upload Windows stanc
         uses: actions/upload-artifact@v2
@@ -102,45 +78,14 @@ jobs:
           name: windows-stanc
           path: windows-stanc
 
+      - run: bash -x scripts/install_js_deps.sh
+
+      - run: opam exec -- dune build --profile release src/stancjs
+
+      - run: mv _build/default/src/stancjs/stancjs.bc.js stanc.js
+
       - name: Upload stanc.js
         uses: actions/upload-artifact@v2
         with:
           name: stanc.js
           path: stanc.js
-  mac:
-    runs-on: macOS-latest
-    steps:    
-      - name: Checkout stanc3
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.inputs.branch }}
-
-      - name: opam caching
-        id: opam-cache
-        uses: actions/cache@v2
-        with:
-          path: "~/.opam"
-          key: macOS-stanc-binary-4.12.0
-
-      - name: Install dependencies
-        run: |
-          brew install gpatch
-          brew install opam
-          opam init --disable-sandboxing -y
-          eval $(opam env)
-          opam switch 4.12.0 || opam switch create 4.12.0          
-          eval $(opam env)
-          bash -x scripts/install_build_deps.sh
-
-      - name: Build MacOS binaries
-        run: |
-          eval $(opam env)
-          dune subst
-          dune build @install
-          mv _build/default/src/stanc/stanc.exe mac-stanc
-      
-      - name: Upload MacOS binaries
-        uses: actions/upload-artifact@v2
-        with:
-          name: mac-stanc
-          path: mac-stanc
