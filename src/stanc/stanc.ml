@@ -191,16 +191,12 @@ let options =
       )
     ; ( "--include-paths"
       , Arg.String
-          (fun str ->
-            Preprocessor.include_paths := String.split_on_chars ~on:[','] str )
+          (fun str -> Preprocessor.include_paths := String.split ~on:',' str)
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" )
     ; ( "--include_paths"
       , Arg.String
-          (fun str ->
-            Preprocessor.include_paths :=
-              !Preprocessor.include_paths @ String.split_on_chars ~on:[','] str
-            )
+          (fun str -> Preprocessor.include_paths := String.split ~on:',' str)
       , " Deprecated. Same as --include-paths. Will be removed in Stan 2.32.0"
       )
     ; ( "--use-opencl"
