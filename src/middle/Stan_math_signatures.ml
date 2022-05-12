@@ -310,7 +310,7 @@ let distributions =
   ; ([Lpdf; Log], "multi_normal_cholesky", [DVectors; DVectors; DMatrix], AoS)
   ; ([Lpdf; Log], "multi_normal_prec", [DVectors; DVectors; DMatrix], AoS)
   ; ([Lpdf; Log], "multi_student_t", [DVectors; DReal; DVectors; DMatrix], AoS)
-  ; ( [Lpdf; Log]
+  ; ( [Lpdf]
     , "multi_student_t_cholesky"
     , [DVectors; DReal; DVectors; DMatrix]
     , SoA ); (full_lpmf_depr, "neg_binomial", [DVInt; DVReal; DVReal], SoA)
