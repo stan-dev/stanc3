@@ -25,7 +25,7 @@
    %{targets}
    (run
     %{bin:run_bin_on_args}
-    "%{bin:stanc} -fsoa --debug-optimized-mir"
+    "%{bin:stanc} -fsoa --debug-optimized-mir --debug-mem-patterns"
     %{stanfiles}))))
 
 (rule

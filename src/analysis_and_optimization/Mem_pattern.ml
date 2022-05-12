@@ -681,3 +681,23 @@ module Make (StdLibrary : Frontend.Std_library_utils.Library) = struct
       (modifiable_set : string Set.Poly.t) =
     {stmt with pattern= modify_stmt_pattern pattern modifiable_set}
 end
+
+let collect_mem_pattern_variables stmts =
+  let take_stmt acc = function
+    | Stmt.Fixed.{pattern= Decl {decl_id; decl_type= Type.Sized stype; _}; _}
+      when SizedType.has_mem_pattern stype ->
+        (decl_id, stype) :: acc
+    | _ -> acc in
+  Mir_utils.fold_stmts ~take_expr:(fun acc _ -> acc) ~take_stmt ~init:[] stmts
+  |> List.rev
+
+let pp_mem_patterns ppf (Program.{log_prob; _} : Program.Typed.t) =
+  let pp_var ppf (name, stype) =
+    Fmt.pf ppf "%a %s: %a"
+      (SizedType.pp Expr.Typed.pp)
+      stype name Common.Helpers.pp_mem_pattern
+      (SizedType.get_mem_pattern stype) in
+  let mem_vars =
+    (* Collect all the sizedtypes which have a mem pattern *)
+    collect_mem_pattern_variables log_prob in
+  Fmt.(pf ppf "@[<v>%a@.@]" (list pp_var)) mem_vars

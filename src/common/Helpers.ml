@@ -13,6 +13,10 @@ open Core_kernel.Poly
  **)
 type mem_pattern = AoS | SoA [@@deriving sexp, compare, map, hash, fold]
 
+let pp_mem_pattern ppf = function
+  | AoS -> Fmt.string ppf "AoS"
+  | SoA -> Fmt.string ppf "SoA"
+
 let lub_mem_pat lst =
   let find_soa mem_pat = mem_pat = SoA in
   let any_soa = List.exists ~f:find_soa lst in

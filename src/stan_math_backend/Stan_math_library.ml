@@ -22,11 +22,16 @@ type dimensionality =
   | DVInt
   (* Vectorizable real *)
   | DVReal
+  | DVComplex
   (* DEPRECATED; vectorizable ints or reals *)
   | DIntAndReals
   (* Vectorizable vectors - for multivariate functions *)
   | DVectors
   | DDeepVectorized
+  | DComplexVectors
+  | DDeepComplexVectorized
+[@@warning "-37"]
+(* don't warn that some constructors are not yet used *)
 
 (* all base types with up 8 levels of nested containers -
                        just used for element-wise vectorized unary functions now *)
@@ -42,15 +47,33 @@ let rec expand_arg = function
   | DIntArray -> [UArray UInt]
   | DVInt -> [UInt; UArray UInt]
   | DVReal -> [UReal; UArray UReal; UVector; URowVector]
+  | DVComplex -> [UComplex; UArray UComplex; UComplexVector; UComplexRowVector]
   | DIntAndReals -> expand_arg DVReal @ expand_arg DVInt
   | DVectors -> [UVector; UArray UVector; URowVector; UArray URowVector]
+  | DComplexVectors ->
+      [ UComplexVector; UArray UComplexVector; UComplexRowVector
+      ; UArray UComplexRowVector ]
   | DDeepVectorized ->
       let all_base = [UnsizedType.UInt; UReal; URowVector; UVector; UMatrix] in
       List.(
         concat_map all_base ~f:(fun a ->
             map (range 0 8) ~f:(fun i -> bare_array_type (a, i)) ))
+  | DDeepComplexVectorized ->
+      let all_base =
+        [UnsizedType.UComplex; UComplexRowVector; UComplexVector; UComplexMatrix]
+      in
+      List.(
+        concat_map all_base ~f:(fun a ->
+            map (range 0 8) ~f:(fun i -> bare_array_type (a, i)) ))
 
-type fkind = Lpmf | Lpdf | Rng | Cdf | Ccdf | UnaryVectorized
+type fkind =
+  | Lpmf
+  | Lpdf
+  | Log [@printer fun fmt _ -> fprintf fmt "log (deprecated)"]
+  | Rng
+  | Cdf
+  | Ccdf
+  | UnaryVectorized
 [@@deriving show {with_path= false}]
 
 let is_primitive = function
@@ -166,12 +189,10 @@ let variadic_dae_fun_return_type = UnsizedType.UVector
 let variadic_dae_return_type = UnsizedType.UArray UnsizedType.UVector
 
 let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
-  let is_glm = String.is_suffix ~suffix:"_glm" name in
   let sfxes = function
-    | Lpmf when is_glm -> ["_lpmf"]
-    | Lpmf -> ["_lpmf"; "_log"]
-    | Lpdf when is_glm -> ["_lpdf"]
-    | Lpdf -> ["_lpdf"; "_log"]
+    | Lpmf -> ["_lpmf"]
+    | Lpdf -> ["_lpdf"]
+    | Log -> ["_log"]
     | Rng -> ["_rng"]
     | Cdf -> ["_cdf"; "_cdf_log"; "_lcdf"]
     | Ccdf -> ["_ccdf_log"; "_lccdf"]
@@ -210,6 +231,8 @@ let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
 
 let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
+let full_lpdf_depr = full_lpdf @ [Log]
+let full_lpmf_depr = full_lpmf @ [Log]
 let reduce_sum_functions = String.Set.of_list ["reduce_sum"; "reduce_sum_static"]
 let variadic_ode_adjoint_fn = "ode_adjoint_tol_ctl"
 
@@ -454,77 +477,83 @@ let check_variadic_fn id ~is_cond_dist loc current_block tenv tes =
         "Invalid variadic function for Stan Math backend" (id.name : string)]
 
 let distributions =
-  [ ( full_lpmf
+  [ ( full_lpmf_depr
     , "beta_binomial"
     , [DVInt; DVInt; DVReal; DVReal]
-    , Common.Helpers.SoA ); (full_lpdf, "beta", [DVReal; DVReal; DVReal], SoA)
-  ; ([Lpdf; Ccdf; Cdf], "beta_proportion", [DVReal; DVReal; DIntAndReals], SoA)
-  ; (full_lpmf, "bernoulli", [DVInt; DVReal], SoA)
-  ; ([Lpmf; Rng], "bernoulli_logit", [DVInt; DVReal], SoA)
+    , Common.Helpers.SoA )
+  ; (full_lpdf_depr, "beta", [DVReal; DVReal; DVReal], SoA)
+  ; ( [Lpdf; Ccdf; Cdf; Log]
+    , "beta_proportion"
+    , [DVReal; DVReal; DIntAndReals]
+    , SoA ); (full_lpmf_depr, "bernoulli", [DVInt; DVReal], SoA)
+  ; ([Lpmf; Rng; Log], "bernoulli_logit", [DVInt; DVReal], SoA)
   ; ([Lpmf], "bernoulli_logit_glm", [DVInt; DMatrix; DReal; DVector], SoA)
-  ; (full_lpmf, "binomial", [DVInt; DVInt; DVReal], SoA)
-  ; ([Lpmf], "binomial_logit", [DVInt; DVInt; DVReal], SoA)
-  ; ([Lpmf], "categorical", [DVInt; DVector], AoS)
-  ; ([Lpmf], "categorical_logit", [DVInt; DVector], AoS)
+  ; (full_lpmf_depr, "binomial", [DVInt; DVInt; DVReal], SoA)
+  ; ([Lpmf; Log], "binomial_logit", [DVInt; DVInt; DVReal], SoA)
+  ; ([Lpmf; Log], "categorical", [DVInt; DVector], AoS)
+  ; ([Lpmf; Log], "categorical_logit", [DVInt; DVector], AoS)
   ; ([Lpmf], "categorical_logit_glm", [DVInt; DMatrix; DVector; DMatrix], SoA)
-  ; (full_lpdf, "cauchy", [DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "chi_square", [DVReal; DVReal], SoA)
-  ; ([Lpdf], "dirichlet", [DVectors; DVectors], SoA)
-  ; (full_lpmf, "discrete_range", [DVInt; DVInt; DVInt], SoA)
-  ; (full_lpdf, "double_exponential", [DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "exp_mod_normal", [DVReal; DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "exponential", [DVReal; DVReal], SoA)
-  ; (full_lpdf, "frechet", [DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "gamma", [DVReal; DVReal; DVReal], SoA)
-  ; ( [Lpdf]
+  ; (full_lpdf_depr, "cauchy", [DVReal; DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "chi_square", [DVReal; DVReal], SoA)
+  ; ([Lpdf; Log], "dirichlet", [DVectors; DVectors], SoA)
+  ; (full_lpmf_depr, "discrete_range", [DVInt; DVInt; DVInt], SoA)
+  ; (full_lpdf_depr, "double_exponential", [DVReal; DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "exp_mod_normal", [DVReal; DVReal; DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "exponential", [DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "frechet", [DVReal; DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "gamma", [DVReal; DVReal; DVReal], SoA)
+  ; ( [Lpdf; Log]
     , "gaussian_dlm_obs"
     , [DMatrix; DMatrix; DMatrix; DMatrix; DMatrix; DVector; DMatrix]
-    , AoS ); (full_lpdf, "gumbel", [DVReal; DVReal; DVReal], SoA)
+    , AoS ); (full_lpdf_depr, "gumbel", [DVReal; DVReal; DVReal], SoA)
   ; ([Rng], "hmm_latent", [DIntArray; DMatrix; DMatrix; DVector], AoS)
-  ; ([Lpmf; Rng], "hypergeometric", [DInt; DInt; DInt; DInt], SoA)
-  ; (full_lpdf, "inv_chi_square", [DVReal; DVReal], SoA)
-  ; (full_lpdf, "inv_gamma", [DVReal; DVReal; DVReal], SoA)
-  ; ([Lpdf], "inv_wishart", [DMatrix; DReal; DMatrix], SoA)
-  ; ([Lpdf], "lkj_corr", [DMatrix; DReal], AoS)
-  ; ([Lpdf], "lkj_corr_cholesky", [DMatrix; DReal], AoS)
-  ; (full_lpdf, "logistic", [DVReal; DVReal; DVReal], SoA)
-  ; ([Lpdf; Rng; Cdf], "loglogistic", [DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "lognormal", [DVReal; DVReal; DVReal], SoA)
-  ; ([Lpdf], "multi_gp", [DMatrix; DMatrix; DVector], AoS)
-  ; ([Lpdf], "multi_gp_cholesky", [DMatrix; DMatrix; DVector], AoS)
-  ; ([Lpmf], "multinomial", [DIntArray; DVector], AoS)
-  ; ([Lpmf], "multinomial_logit", [DIntArray; DVector], AoS)
-  ; ([Lpdf], "multi_normal", [DVectors; DVectors; DMatrix], AoS)
-  ; ([Lpdf], "multi_normal_cholesky", [DVectors; DVectors; DMatrix], AoS)
-  ; ([Lpdf], "multi_normal_prec", [DVectors; DVectors; DMatrix], AoS)
-  ; ([Lpdf], "multi_student_t", [DVectors; DReal; DVectors; DMatrix], AoS)
-  ; (full_lpmf, "neg_binomial", [DVInt; DVReal; DVReal], SoA)
-  ; (full_lpmf, "neg_binomial_2", [DVInt; DVReal; DVReal], SoA)
-  ; ([Lpmf; Rng], "neg_binomial_2_log", [DVInt; DVReal; DVReal], SoA)
+  ; ([Lpmf; Rng; Log], "hypergeometric", [DInt; DInt; DInt; DInt], SoA)
+  ; (full_lpdf_depr, "inv_chi_square", [DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "inv_gamma", [DVReal; DVReal; DVReal], SoA)
+  ; ([Lpdf; Log], "inv_wishart", [DMatrix; DReal; DMatrix], SoA)
+  ; ([Lpdf; Log], "lkj_corr", [DMatrix; DReal], AoS)
+  ; ([Lpdf; Log], "lkj_corr_cholesky", [DMatrix; DReal], AoS)
+  ; (full_lpdf_depr, "logistic", [DVReal; DVReal; DVReal], SoA)
+  ; ([Lpdf; Rng; Cdf; Log], "loglogistic", [DVReal; DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "lognormal", [DVReal; DVReal; DVReal], SoA)
+  ; ([Lpdf; Log], "multi_gp", [DMatrix; DMatrix; DVector], AoS)
+  ; ([Lpdf; Log], "multi_gp_cholesky", [DMatrix; DMatrix; DVector], AoS)
+  ; ([Lpmf; Log], "multinomial", [DIntArray; DVector], AoS)
+  ; ([Lpmf; Log], "multinomial_logit", [DIntArray; DVector], AoS)
+  ; ([Lpdf; Log], "multi_normal", [DVectors; DVectors; DMatrix], AoS)
+  ; ([Lpdf; Log], "multi_normal_cholesky", [DVectors; DVectors; DMatrix], AoS)
+  ; ([Lpdf; Log], "multi_normal_prec", [DVectors; DVectors; DMatrix], AoS)
+  ; ([Lpdf; Log], "multi_student_t", [DVectors; DReal; DVectors; DMatrix], AoS)
+  ; (full_lpmf_depr, "neg_binomial", [DVInt; DVReal; DVReal], SoA)
+  ; (full_lpmf_depr, "neg_binomial_2", [DVInt; DVReal; DVReal], SoA)
+  ; ([Lpmf; Rng; Log], "neg_binomial_2_log", [DVInt; DVReal; DVReal], SoA)
   ; ( [Lpmf]
     , "neg_binomial_2_log_glm"
     , [DVInt; DMatrix; DReal; DVector; DReal]
-    , SoA ); (full_lpdf, "normal", [DVReal; DVReal; DVReal], SoA)
+    , SoA ); (full_lpdf_depr, "normal", [DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf], "normal_id_glm", [DVector; DMatrix; DReal; DVector; DReal], SoA)
-  ; ([Lpmf], "ordered_logistic", [DInt; DReal; DVector], SoA)
+  ; ([Lpmf; Log], "ordered_logistic", [DInt; DReal; DVector], SoA)
   ; ([Lpmf], "ordered_logistic_glm", [DVInt; DMatrix; DVector; DVector], SoA)
-  ; ([Lpmf], "ordered_probit", [DInt; DReal; DVector], SoA)
-  ; (full_lpdf, "pareto", [DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "pareto_type_2", [DVReal; DVReal; DVReal; DVReal], SoA)
-  ; (full_lpmf, "poisson", [DVInt; DVReal], SoA)
-  ; ([Lpmf; Rng], "poisson_log", [DVInt; DVReal], SoA)
+  ; ([Lpmf; Log], "ordered_probit", [DInt; DReal; DVector], SoA)
+  ; (full_lpdf_depr, "pareto", [DVReal; DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "pareto_type_2", [DVReal; DVReal; DVReal; DVReal], SoA)
+  ; (full_lpmf_depr, "poisson", [DVInt; DVReal], SoA)
+  ; ([Lpmf; Rng; Log], "poisson_log", [DVInt; DVReal], SoA)
   ; ([Lpmf], "poisson_log_glm", [DVInt; DMatrix; DReal; DVector], SoA)
-  ; (full_lpdf, "rayleigh", [DVReal; DVReal], SoA)
-  ; (full_lpdf, "scaled_inv_chi_square", [DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "skew_normal", [DVReal; DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "skew_double_exponential", [DVReal; DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "student_t", [DVReal; DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "std_normal", [DVReal], SoA)
-  ; (full_lpdf, "uniform", [DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "von_mises", [DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "weibull", [DVReal; DVReal; DVReal], SoA)
-  ; ([Lpdf], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal], SoA)
-  ; ([Lpdf], "wishart", [DMatrix; DReal; DMatrix], SoA) ]
+  ; (full_lpdf_depr, "rayleigh", [DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "scaled_inv_chi_square", [DVReal; DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "skew_normal", [DVReal; DVReal; DVReal; DVReal], SoA)
+  ; ( full_lpdf_depr
+    , "skew_double_exponential"
+    , [DVReal; DVReal; DVReal; DVReal]
+    , SoA ); (full_lpdf_depr, "student_t", [DVReal; DVReal; DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "std_normal", [DVReal], SoA)
+  ; (full_lpdf_depr, "uniform", [DVReal; DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "von_mises", [DVReal; DVReal; DVReal], SoA)
+  ; (full_lpdf_depr, "weibull", [DVReal; DVReal; DVReal], SoA)
+  ; ([Lpdf; Log], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal], SoA)
+  ; ([Lpdf], "wishart_cholesky", [DMatrix; DReal; DMatrix], SoA)
+  ; ([Lpdf; Log], "wishart", [DMatrix; DReal; DMatrix], SoA) ]
 
 let distribution_families =
   List.map ~f:(fun (_, name, _, _) -> name) distributions
@@ -704,7 +733,7 @@ let deprecated_distributions =
         | Lpmf -> Some (name ^ "_log", name ^ "_lpmf")
         | Cdf -> Some (name ^ "_cdf_log", name ^ "_lcdf")
         | Ccdf -> Some (name ^ "_ccdf_log", name ^ "_lccdf")
-        | Rng | UnaryVectorized -> None ) )
+        | Rng | Log | UnaryVectorized -> None ) )
   |> List.map ~f:(fun (x, y) ->
          ( x
          , { replacement= y
@@ -852,6 +881,52 @@ let add_binary_vec_real_real name supports_soa =
             [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] )
         (List.range 0 8) )
     [UnsizedType.UReal]
+
+let add_binary_vec_complex_complex name supports_soa =
+  add_unqualified
+    (name, ReturnType UComplex, [UnsizedType.UComplex; UComplex], supports_soa) ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          add_unqualified
+            ( name
+            , ReturnType (bare_array_type (j, i))
+            , [bare_array_type (j, i); bare_array_type (j, i)]
+            , supports_soa ) )
+        [ UnsizedType.UArray UComplex; UComplexVector; UComplexRowVector
+        ; UComplexMatrix ] )
+    (List.range 0 8) ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          List.iter
+            ~f:(fun k ->
+              add_unqualified
+                ( name
+                , ReturnType (bare_array_type (k, j))
+                , [bare_array_type (k, j); i]
+                , supports_soa ) )
+            [ UnsizedType.UArray UComplex; UComplexVector; UComplexRowVector
+            ; UComplexMatrix ] )
+        (List.range 0 8) )
+    [UnsizedType.UComplex] ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          List.iter
+            ~f:(fun k ->
+              add_unqualified
+                ( name
+                , ReturnType (bare_array_type (k, j))
+                , [i; bare_array_type (k, j)]
+                , supports_soa ) )
+            [ UnsizedType.UArray UComplex; UComplexVector; UComplexRowVector
+            ; UComplexMatrix ] )
+        (List.range 0 8) )
+    [UnsizedType.UComplex]
 
 let add_binary_vec_int_real name supports_soa =
   List.iter
@@ -1404,6 +1479,8 @@ let () =
   add_unqualified ("dot_self", ReturnType UComplex, [UComplexVector], AoS) ;
   add_unqualified ("dot_self", ReturnType UComplex, [UComplexRowVector], AoS) ;
   add_nullary "e" ;
+  add_unqualified ("eigenvalues", ReturnType UComplexVector, [UMatrix], AoS) ;
+  add_unqualified ("eigenvectors", ReturnType UComplexMatrix, [UMatrix], AoS) ;
   add_unqualified ("eigenvalues_sym", ReturnType UVector, [UMatrix], AoS) ;
   add_unqualified ("eigenvectors_sym", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("generalized_inverse", ReturnType UMatrix, [UMatrix], SoA) ;
@@ -1427,6 +1504,8 @@ let () =
   add_binary_vec_int_int "falling_factorial" SoA ;
   add_binary_vec_real_int "falling_factorial" SoA ;
   add_binary_vec "fdim" AoS ;
+  add_unqualified ("fft", ReturnType UComplexVector, [UComplexVector], AoS) ;
+  add_unqualified ("fft2", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
   add_ternary_vec "fma" SoA ;
   add_binary_vec "fmax" AoS ;
   add_binary_vec "fmin" AoS ;
@@ -1766,6 +1845,8 @@ let () =
       ; (DataOnly, UArray UInt); (DataOnly, UReal); (DataOnly, UReal)
       ; (DataOnly, UReal) ]
     , AoS ) ;
+  add_unqualified ("inv_fft", ReturnType UComplexVector, [UComplexVector], AoS) ;
+  add_unqualified ("inv_fft2", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
   add_unqualified ("inv_wishart_rng", ReturnType UMatrix, [UReal; UMatrix], AoS) ;
   add_unqualified ("inverse", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("inverse_spd", ReturnType UMatrix, [UMatrix], AoS) ;
@@ -1806,6 +1887,7 @@ let () =
   add_unqualified ("log10", ReturnType UComplex, [UComplex], AoS) ;
   add_nullary "log2" ;
   add_unqualified ("log_determinant", ReturnType UReal, [UMatrix], SoA) ;
+  add_unqualified ("log_determinant_spd", ReturnType UReal, [UMatrix], SoA) ;
   add_binary_vec "log_diff_exp" AoS ;
   add_binary_vec "log_falling_factorial" AoS ;
   add_binary_vec "log_inv_logit_diff" AoS ;
@@ -2216,8 +2298,7 @@ let () =
   add_unqualified ("polar", ReturnType UComplex, [UReal; UReal], AoS) ;
   add_nullary "positive_infinity" ;
   add_binary_vec "pow" AoS ;
-  add_unqualified ("pow", ReturnType UComplex, [UComplex; UReal], AoS) ;
-  add_unqualified ("pow", ReturnType UComplex, [UComplex; UComplex], AoS) ;
+  add_binary_vec_complex_complex "pow" AoS ;
   add_unqualified ("prod", ReturnType UInt, [UArray UInt], AoS) ;
   add_unqualified ("prod", ReturnType UReal, [UArray UReal], AoS) ;
   add_unqualified ("prod", ReturnType UReal, [UVector], AoS) ;
@@ -2686,6 +2767,8 @@ let () =
   add_unqualified ("variance", ReturnType UReal, [UVector], SoA) ;
   add_unqualified ("variance", ReturnType UReal, [URowVector], SoA) ;
   add_unqualified ("variance", ReturnType UReal, [UMatrix], SoA) ;
+  add_unqualified
+    ("wishart_cholesky_rng", ReturnType UMatrix, [UReal; UMatrix], AoS) ;
   add_unqualified ("wishart_rng", ReturnType UMatrix, [UReal; UMatrix], AoS) ;
   add_unqualified ("zeros_int_array", ReturnType (UArray UInt), [UInt], SoA) ;
   add_unqualified ("zeros_array", ReturnType (UArray UReal), [UInt], SoA) ;
