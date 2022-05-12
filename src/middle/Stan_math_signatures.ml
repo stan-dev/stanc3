@@ -310,7 +310,10 @@ let distributions =
   ; ([Lpdf; Log], "multi_normal_cholesky", [DVectors; DVectors; DMatrix], AoS)
   ; ([Lpdf; Log], "multi_normal_prec", [DVectors; DVectors; DMatrix], AoS)
   ; ([Lpdf; Log], "multi_student_t", [DVectors; DReal; DVectors; DMatrix], AoS)
-  ; (full_lpmf_depr, "neg_binomial", [DVInt; DVReal; DVReal], SoA)
+  ; ( [Lpdf; Log]
+    , "multi_student_t_cholesky"
+    , [DVectors; DReal; DVectors; DMatrix]
+    , SoA ); (full_lpmf_depr, "neg_binomial", [DVInt; DVReal; DVReal], SoA)
   ; (full_lpmf_depr, "neg_binomial_2", [DVInt; DVReal; DVReal], SoA)
   ; ([Lpmf; Rng; Log], "neg_binomial_2_log", [DVInt; DVReal; DVReal], SoA)
   ; ( [Lpmf]
@@ -1807,6 +1810,26 @@ let () =
     , AoS ) ;
   add_unqualified
     ( "multi_student_t_rng"
+    , ReturnType (UArray UVector)
+    , [UReal; UArray URowVector; UMatrix]
+    , AoS ) ;
+  add_unqualified
+    ( "multi_student_t_cholesky_rng"
+    , ReturnType UVector
+    , [UReal; UVector; UMatrix]
+    , AoS ) ;
+  add_unqualified
+    ( "multi_student_t_cholesky_rng"
+    , ReturnType (UArray UVector)
+    , [UReal; UArray UVector; UMatrix]
+    , AoS ) ;
+  add_unqualified
+    ( "multi_student_t_cholesky_rng"
+    , ReturnType UVector
+    , [UReal; URowVector; UMatrix]
+    , AoS ) ;
+  add_unqualified
+    ( "multi_student_t_cholesky_rng"
     , ReturnType (UArray UVector)
     , [UReal; UArray URowVector; UMatrix]
     , AoS ) ;
