@@ -763,7 +763,8 @@ let deprecated_functions =
     ; ("cov_exp_quad", std "gp_exp_quad_cov") (* ode integrators *)
     ; ("integrate_ode_rk45", ode "ode_rk45"); ("integrate_ode", ode "ode_rk45")
     ; ("integrate_ode_bdf", ode "ode_bdf")
-    ; ("integrate_ode_adams", ode "ode_adams") ]
+    ; ("integrate_ode_adams", ode "ode_adams")
+    ; ("if_else", std "the conditional operator (x ? y : z)") ]
 
 (* -- Some helper definitions to populate stan_math_signatures -- *)
 let bare_types =

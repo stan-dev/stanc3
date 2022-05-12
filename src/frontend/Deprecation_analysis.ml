@@ -114,14 +114,6 @@ struct
               , "Use of the `abs` function with real-valued arguments is \
                  deprecated; use function `fabs` instead." ) ] )
           e
-    | FunApp (StanLib FnPlain, {name= "if_else"; _}, l) ->
-        acc
-        @ [ ( emeta.loc
-            , "The function `if_else` is deprecated and will be removed in \
-               Stan 2.32.0. Use the conditional operator (x ? y : z) instead; \
-               this can be automatically changed using the canonicalize flag \
-               for stanc" ) ]
-        @ List.concat_map l ~f:(fun e -> collect_deprecated_expr [] e)
     | FunApp ((StanLib _ | UserDefined _), {name; _}, l) ->
         let w =
           match Map.find stan_lib_deprecations name with

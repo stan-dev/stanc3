@@ -88,6 +88,9 @@ module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
   let std_library_tenv : Env.t =
     Env.make_from_library StdLibrary.function_signatures
 
+  let matching_library_function =
+    SignatureMismatch.matching_function std_library_tenv
+
   let verify_identifier id : unit =
     if id.name = !model_name then
       Semantic_error.ident_is_model_name id.id_loc id.name |> error
@@ -198,9 +201,7 @@ module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
     match name with
     | x when StdLibrary.is_variadic_function_name x ->
         StdLibrary.variadic_function_returntype x
-    | _ ->
-        SignatureMismatch.matching_function std_library_tenv name arg_tys
-        |> match_to_rt_option
+    | _ -> matching_library_function name arg_tys |> match_to_rt_option
 
   let operator_return_type op arg_tys =
     match (op, arg_tys) with
@@ -211,7 +212,7 @@ module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
     | _ ->
         StdLibrary.operator_to_function_names op
         |> List.filter_map ~f:(fun name ->
-               SignatureMismatch.matching_function std_library_tenv name arg_tys
+               matching_library_function name arg_tys
                |> function
                | SignatureMismatch.UniqueMatch (rt, _, p) -> Some (rt, p)
                | _ -> None )
@@ -220,8 +221,7 @@ module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
   let assignmentoperator_return_type assop arg_tys =
     ( match assop with
     | Operator.Divide ->
-        SignatureMismatch.matching_function std_library_tenv "divide" arg_tys
-        |> match_to_rt_option
+        matching_library_function "divide" arg_tys |> match_to_rt_option
     | Plus | Minus | Times | EltTimes | EltDivide ->
         operator_return_type assop arg_tys |> Option.map ~f:fst
     | _ -> None )
