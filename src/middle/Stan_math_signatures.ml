@@ -354,6 +354,7 @@ let distributions =
   ; (full_lpdf_depr, "von_mises", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf_depr, "weibull", [DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf; Log], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal], SoA)
+  ; ([Lpdf], "wishart_cholesky", [DMatrix; DReal; DMatrix], SoA)
   ; ([Lpdf; Log], "wishart", [DMatrix; DReal; DMatrix], SoA) ]
 
 let basic_vectorized = UnaryVectorized IntsToReals
@@ -2517,6 +2518,8 @@ let () =
   add_unqualified ("variance", ReturnType UReal, [UVector], SoA) ;
   add_unqualified ("variance", ReturnType UReal, [URowVector], SoA) ;
   add_unqualified ("variance", ReturnType UReal, [UMatrix], SoA) ;
+  add_unqualified
+    ("wishart_cholesky_rng", ReturnType UMatrix, [UReal; UMatrix], AoS) ;
   add_unqualified ("wishart_rng", ReturnType UMatrix, [UReal; UMatrix], AoS) ;
   add_unqualified ("zeros_int_array", ReturnType (UArray UInt), [UInt], SoA) ;
   add_unqualified ("zeros_array", ReturnType (UArray UReal), [UInt], SoA) ;
