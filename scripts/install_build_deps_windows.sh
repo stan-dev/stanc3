@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# exit when any command fails
+set -e
+
 # Cross compiling for windows on debian
 eval $(opam env)
 

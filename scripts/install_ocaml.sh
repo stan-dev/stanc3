@@ -1,3 +1,8 @@
+#!/bin/bash
+
+# exit when any command fails
+set -e
+
 
 # Create and switch to 4.12.0
 # switch can only be created if it doesn't already exist

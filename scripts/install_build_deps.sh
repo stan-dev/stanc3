@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# exit when any command fails
+set -e
+
 eval $(opam env)
 
 opam pin -y dune 2.8.4 --no-action
