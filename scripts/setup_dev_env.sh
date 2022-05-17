@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# exit when any command fails
+set -e
 
 if ! command -v opam &> /dev/null
 then
