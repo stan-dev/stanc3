@@ -1,1 +1,0 @@
-bash -cl "opam install -y core_kernel-windows menhir-windows ppx_deriving-windows fmt-windows"
