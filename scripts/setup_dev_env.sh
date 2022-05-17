@@ -5,8 +5,10 @@ set -e
 
 if ! command -v opam &> /dev/null
 then
-    echo "OPAM not detected, installing now"
+    echo "OPAM not detected, installing now."
     bash -x ./install_opam.sh
+else
+    echo "OPAM already installed, not re-installing."
 fi
 
 bash -x ./install_ocaml.sh
