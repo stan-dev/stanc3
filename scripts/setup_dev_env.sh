@@ -23,6 +23,13 @@ case $yndev in
 	* ) echo "Continuing without dev dependencies, run ./install_dev_deps.sh to do this at a later time."
 esac
 
+read -p "Do you want to install a git pre-commit hook to run the formatter before commiting? (y/n) " ynhook
+
+case $ynhook in
+	[yY] ) bash -x ./hooks/install_hooks.sh
+		;;
+	* ) echo "Continuing without pre-commit hook, run ../hooks/install_hooks.sh to do this at a later time."
+esac
 
 echo "Do you want to install the tools to cross compile Windows binaries?"
 echo "This requires that you have installed the gcc-mingw-w64-x86-64 package ahead of time."
