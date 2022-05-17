@@ -432,6 +432,9 @@ let distribution_warning (dist_info : dist_info) :
     | "multi_student_t" ->
         [ constr_mismatch_warning positive_range (Arg (1, dof_name))
         ; constr_mismatch_warning covariance (Arg (3, scale_mat_name)) ]
+    | "multi_student_t_cholesky" ->
+        [ constr_mismatch_warning positive_range (Arg (1, dof_name))
+        ; constr_mismatch_warning cholesky_covariance (Arg (3, cov_name)) ]
     | "gaussian_dlm_obs" ->
         [ constr_mismatch_warning covariance
             (Arg (3, "observation covariance matrix"))

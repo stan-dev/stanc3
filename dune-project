@@ -14,7 +14,7 @@
   (fmt (= 0.8.8))
   (yojson (= 1.7.0))
   (ocamlformat (and :with-test (= 0.19.0)))
-  (merlin  :with-test)
+  (merlin :with-test)
   (utop :with-test)
   (ocp-indent :with-test)
   (patdiff :with-test)
