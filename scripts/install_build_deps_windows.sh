@@ -1,12 +1,13 @@
 #!/bin/bash
 
 # Cross compiling for windows on debian
+eval $(opam env)
 
 # Add windows repository
 opam repository add windows http://github.com/ocaml-cross/opam-cross-windows.git
 opam update windows
 
-#Request the compiler to be built with flambda optimizers
+# Request the compiler to be built with flambda optimizers
 opam install -y conf-flambda-windows
 
 # Install the compiler

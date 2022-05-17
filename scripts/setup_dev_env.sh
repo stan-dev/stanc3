@@ -1,15 +1,42 @@
 #!/bin/bash
 
+
+if ! command -v opam &> /dev/null
+then
+    echo "OPAM not detected, installing now"
+    bash -x ./install_opam.sh
+fi
+
 bash -x ./install_ocaml.sh
 bash -x ./install_build_deps.sh
-bash -x ./install_dev_deps.sh
+
+
+read -p "Do you want to install developer utilities for formatting and testing? (y/n) " yndev
+
+case $yndev in
+	[yY] ) bash -x ./install_dev_deps.sh
+		;;
+	* ) echo "Continuing without dev dependencies, run ./install_dev_deps.sh to do this at a later time."
+esac
+
+
+echo "Do you want to install the tools to cross compile Windows binaries?"
+echo "This requires that you have installed the gcc-mingw-w64-x86-64 package ahead of time."
+read -p "Install Windows cross compilation tools? (y/n) " ynwindows
+
+case $ynwindows in
+	[yY] ) bash -x ./install_build_deps_windows.sh
+		;;
+	* ) echo "Continuing without Windows cross compilation tools, run ./install_build_deps_windows.sh to do this at a later time."
+esac
+
+echo "Do you want to install the tools to compile the Javascript version of stanc3?"
+read -p "Install Javascript compilation tools? (y/n) " ynjs
+
+case $ynjs in
+	[yY] ) bash -x ./install_js_deps.sh
+		;;
+	* ) echo "Continuing without Javascript compilation tools, run ./install_js_deps.sh to do this at a later time."
+esac
 
 eval $(opam env)
-
-# The following looks at what packages we're missing to build stanc.exe
-# and tries to install them with opam.
-install_missing=$(dune external-lib-deps --missing src/stanc/stanc.exe 2>&1 | tail -n1 | cut -c 12-)
-
-echo "Trying to install missing deps for stanc with $install_missing"
-
-$install_missing
