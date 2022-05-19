@@ -296,6 +296,7 @@ let distributions =
   ; ([Lpmf; Rng; Log], "hypergeometric", [DInt; DInt; DInt; DInt], SoA)
   ; (full_lpdf_depr, "inv_chi_square", [DVReal; DVReal], SoA)
   ; (full_lpdf_depr, "inv_gamma", [DVReal; DVReal; DVReal], SoA)
+  ; ([Lpdf], "wishart_cholesky", [DMatrix; DReal; DMatrix], SoA)
   ; ([Lpdf; Log], "inv_wishart", [DMatrix; DReal; DMatrix], SoA)
   ; ([Lpdf; Log], "lkj_corr", [DMatrix; DReal], AoS)
   ; ([Lpdf; Log], "lkj_corr_cholesky", [DMatrix; DReal], AoS)
@@ -1617,6 +1618,8 @@ let () =
     , AoS ) ;
   add_unqualified ("inv_fft", ReturnType UComplexVector, [UComplexVector], AoS) ;
   add_unqualified ("inv_fft2", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
+  add_unqualified
+    ("inv_wishart_cholesky_rng", ReturnType UMatrix, [UReal; UMatrix], AoS) ;
   add_unqualified ("inv_wishart_rng", ReturnType UMatrix, [UReal; UMatrix], AoS) ;
   add_unqualified ("inverse", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("inverse_spd", ReturnType UMatrix, [UMatrix], AoS) ;
