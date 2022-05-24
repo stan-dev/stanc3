@@ -1087,7 +1087,7 @@ generated quantities {
 // GLM for a Gaussian outcome with no link function
 functions {
   /**
-   * Increments the log-posterior with the logarithm of a multivariate normal 
+   * Increments the log-posterior with the logarithm of a multivariate normal
    * likelihood with a scalar standard deviation for all errors
    * Equivalent to normal_lpdf(y | intercept + Q * R * beta, sigma) but faster
    * @param theta vector of coefficients (excluding intercept), equal to R * beta
@@ -1194,7 +1194,7 @@ model {
     if (K > 1) 
       target += beta_lpdf(R2 | half_K, eta);
     else 
-      target += beta_lpdf(square(R2) | half_K, eta) + sum(log(fabs(R2)));
+      target += beta_lpdf(square(R2) | half_K, eta) + sum(log(abs(R2)));
   }
   // implicit: log_omega is uniform over the real line for all j
 }
@@ -1282,7 +1282,7 @@ generated quantities {
 
 // GLM for an ordinal outcome with coherent priors
 functions {
-  /** 
+  /**
   * Evaluate a given CDF
   *
   * @param x The point to evaluate the CDF_polr at
@@ -1290,7 +1290,7 @@ functions {
   * @return A scalar on (0,1)
   */
   real CDF_polr(real x, int link) {
-    // links in MASS::polr() are in a different order than binomial() 
+    // links in MASS::polr() are in a different order than binomial()
     // logistic, probit, loglog, cloglog, cauchit
     if (link == 1) 
       return (inv_logit(x));
@@ -1307,7 +1307,7 @@ functions {
     return x; // never reached
   }
   
-  /** 
+  /**
   * Pointwise (pw) log-likelihood vector
   *
   * @param y The integer outcome variable.
@@ -1358,7 +1358,7 @@ functions {
     int C = rows(probabilities) - 1;
     vector[C] cutpoints;
     real running_sum = 0;
-    // links in MASS::polr() are in a different order than binomial() 
+    // links in MASS::polr() are in a different order than binomial()
     // logistic, probit, loglog, cloglog, cauchit
     if (link == 1) 
       for (c in 1 : C) {
@@ -1405,7 +1405,7 @@ functions {
     if (lower_ >= upper_) 
       reject("lower_ must be less than upper_");
     
-    // links in MASS::polr() are in a different order than binomial() 
+    // links in MASS::polr() are in a different order than binomial()
     // logistic, probit, loglog, cloglog, cauchit
     if (link == 1) 
       while (!(ystar > lower_ && ystar < upper_)) ystar = logistic_rng(eta,
@@ -1425,7 +1425,7 @@ functions {
     return ystar;
   }
   
-  /** 
+  /**
   * faster version of csr_matrix_times_vector
   * declared here and defined in C++
   *
@@ -1515,8 +1515,7 @@ model {
     if (K > 1) 
       target += beta_lpdf(R2 | half_K, regularization);
     else 
-      target += beta_lpdf(square(R2) | half_K, regularization)
-                + log(fabs(R2));
+      target += beta_lpdf(square(R2) | half_K, regularization) + log(abs(R2));
   }
   if (is_skewed == 1) 
     target += gamma_lpdf(alpha | shape, rate);

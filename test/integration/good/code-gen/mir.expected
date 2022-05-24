@@ -1286,7 +1286,7 @@
           ((pattern
             (Assignment (abs_diff UReal ())
              ((pattern
-               (FunApp (StanLib fabs FnPlain AoS)
+               (FunApp (StanLib abs FnPlain AoS)
                 (((pattern
                    (FunApp (StanLib Minus__ FnPlain AoS)
                     (((pattern (Var x))
@@ -1306,7 +1306,7 @@
                 (((pattern
                    (FunApp (StanLib Plus__ FnPlain AoS)
                     (((pattern
-                       (FunApp (StanLib fabs FnPlain AoS)
+                       (FunApp (StanLib abs FnPlain AoS)
                         (((pattern (Var x))
                           (meta
                            ((type_ UReal) (loc <opaque>)
@@ -1314,7 +1314,7 @@
                       (meta
                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                      ((pattern
-                       (FunApp (StanLib fabs FnPlain AoS)
+                       (FunApp (StanLib abs FnPlain AoS)
                         (((pattern (Var y))
                           (meta
                            ((type_ UReal) (loc <opaque>)

@@ -3516,8 +3516,8 @@ static constexpr std::array<const char*, 787> locations_array__ =
  " (in 'mother.stan', line 190, column 21 to line 192, column 3)",
  " (in 'mother.stan', line 195, column 4 to column 18)",
  " (in 'mother.stan', line 196, column 4 to column 19)",
- " (in 'mother.stan', line 197, column 4 to column 27)",
- " (in 'mother.stan', line 198, column 4 to column 40)",
+ " (in 'mother.stan', line 197, column 4 to column 26)",
+ " (in 'mother.stan', line 198, column 4 to column 38)",
  " (in 'mother.stan', line 200, column 6 to line 201, column 23)",
  " (in 'mother.stan', line 199, column 4 to line 201, column 23)",
  " (in 'mother.stan', line 203, column 6 to line 204, column 23)",
@@ -4672,9 +4672,9 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
       local_scalar_t__ abs_diff = DUMMY_VAR__;
       local_scalar_t__ avg_scale = DUMMY_VAR__;
       current_statement__ = 714;
-      abs_diff = stan::math::fabs((x - y));
+      abs_diff = stan::math::abs((x - y));
       current_statement__ = 715;
-      avg_scale = ((stan::math::fabs(x) + stan::math::fabs(y)) / 2);
+      avg_scale = ((stan::math::abs(x) + stan::math::abs(y)) / 2);
       current_statement__ = 717;
       if (stan::math::logical_gt((abs_diff / avg_scale), max_)) {
         current_statement__ = 716;
