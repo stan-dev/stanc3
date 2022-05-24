@@ -350,7 +350,7 @@ module Make (StdLibrary : Frontend.Std_library_utils.Library) :
                   | ( "log"
                     , [ { pattern=
                             FunApp
-                              ( StanLib ("fabs", FnPlain, mem1)
+                              ( StanLib (("fabs" | "abs"), FnPlain, mem1)
                               , [ { pattern=
                                       FunApp
                                         ( StanLib ("determinant", FnPlain, mem2)

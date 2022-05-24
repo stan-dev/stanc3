@@ -1,6 +1,6 @@
 transformed data {
   real mu;
-  mu = abs(-1.2);
+  mu = fabs(-1.2);
 }
 parameters {
   real y;
