@@ -82,14 +82,6 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
     ({expr; emeta} : (typed_expr_meta, fun_kind) expr_with) :
     (Location_span.t * string) list =
   match expr with
-  | FunApp (StanLib FnPlain, {name= "abs"; _}, [e])
-    when Middle.UnsizedType.is_real_type e.emeta.type_ ->
-      collect_deprecated_expr
-        ( acc
-        @ [ ( emeta.loc
-            , "Use of the `abs` function with real-valued arguments is \
-               deprecated; use function `fabs` instead." ) ] )
-        e
   | FunApp ((StanLib _ | UserDefined _), {name; _}, l) ->
       let w =
         match Map.find stan_lib_deprecations name with

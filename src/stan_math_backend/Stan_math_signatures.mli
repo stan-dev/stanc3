@@ -18,28 +18,18 @@ type fun_arg = UnsizedType.autodifftype * UnsizedType.t
 type signature =
   UnsizedType.returntype * fun_arg list * Common.Helpers.mem_pattern
 
-type fkind = Lpmf | Lpdf | Log | Rng | Cdf | Ccdf | UnaryVectorized
-[@@deriving show {with_path= false}]
+type dimensionality
+type return_behavior
 
-type dimensionality =
-  | DInt
-  | DReal
-  | DVector
-  | DMatrix
-  | DIntArray
-  (* Vectorizable int *)
-  | DVInt
-  (* Vectorizable real *)
-  | DVReal
-  | DVComplex
-  (* DEPRECATED; vectorizable ints or reals *)
-  | DIntAndReals
-  (* Vectorizable vectors - for multivariate functions *)
-  | DVectors
-  | DDeepVectorized
-  | DComplexVectors
-  | DDeepComplexVectorized
-[@@warning "-37"]
+type fkind = private
+  | Lpmf
+  | Lpdf
+  | Log
+  | Rng
+  | Cdf
+  | Ccdf
+  | UnaryVectorized of return_behavior
+[@@deriving show {with_path= false}]
 
 val function_signatures : (string, signature list) Hashtbl.t
 (** Mapping from names to signature(s) of functions *)

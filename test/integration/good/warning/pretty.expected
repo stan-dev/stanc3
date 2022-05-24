@@ -1,7 +1,7 @@
   $ ../../../../../install/default/bin/stanc --auto-format abs-deprecate.stan
 transformed data {
   real mu;
-  mu = abs(-1.2);
+  mu = fabs(-1.2);
 }
 parameters {
   real y;
@@ -10,8 +10,6 @@ model {
   y ~ normal(mu, 1);
 }
 
-Warning in 'abs-deprecate.stan', line 3, column 7: Use of the `abs` function
-    with real-valued arguments is deprecated; use function `fabs` instead.
   $ ../../../../../install/default/bin/stanc --auto-format binomial_coefficient_log.stan
 data {
   int d_int;

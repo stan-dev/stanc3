@@ -15,7 +15,7 @@ let deprecated_distributions =
         | Lpmf -> Some (name ^ "_log", name ^ "_lpmf")
         | Cdf -> Some (name ^ "_cdf_log", name ^ "_lcdf")
         | Ccdf -> Some (name ^ "_ccdf_log", name ^ "_lccdf")
-        | Rng | Log | UnaryVectorized -> None ) )
+        | Rng | Log | UnaryVectorized _ -> None ) )
   |> List.map ~f:(fun (x, y) ->
          ( x
          , { replacement= y
