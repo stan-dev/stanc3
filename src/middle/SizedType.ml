@@ -7,9 +7,9 @@ type 'a t =
   | SInt
   | SReal
   | SComplex
-  | SVector of Common.Helpers.mem_pattern * 'a
-  | SRowVector of Common.Helpers.mem_pattern * 'a
-  | SMatrix of Common.Helpers.mem_pattern * 'a * 'a
+  | SVector of Mem_pattern.t * 'a
+  | SRowVector of Mem_pattern.t * 'a
+  | SMatrix of Mem_pattern.t * 'a * 'a
   | SComplexVector of 'a
   | SComplexRowVector of 'a
   | SComplexMatrix of 'a * 'a
@@ -156,7 +156,7 @@ let%expect_test "dims" =
        (get_dims_io
           (SArray
              ( SMatrix
-                 (Common.Helpers.AoS, Expr.Helpers.str "x", Expr.Helpers.str "y")
+                 (Mem_pattern.AoS, Expr.Helpers.str "x", Expr.Helpers.str "y")
              , Expr.Helpers.str "z" ) ) ) )
   |> print_endline ;
   [%expect {| z, x, y |}]
@@ -181,15 +181,14 @@ let rec get_mem_pattern st =
   match st with
   | SInt | SReal | SComplex | SComplexVector _ | SComplexRowVector _
    |SComplexMatrix _ ->
-      Common.Helpers.AoS
+      Mem_pattern.AoS
   | SVector (mem, _) | SRowVector (mem, _) | SMatrix (mem, _, _) -> mem
   | SArray (t, _) -> get_mem_pattern t
 
 (**
  * Return true if SizedType contains a type tagged SoA
  *)
-let contains_soa st =
-  Common.Helpers.compare_mem_pattern (get_mem_pattern st) SoA = 0
+let contains_soa st = Mem_pattern.compare (get_mem_pattern st) SoA = 0
 
 (*Given a sizedtype, demote it's mem pattern from SoA to AoS*)
 let rec demote_sizedtype_mem st =
@@ -217,10 +216,10 @@ let rec promote_sizedtype_mem st =
   | _ -> st
 
 (*Given a mem_pattern and SizedType, modify the SizedType to AoS or SoA*)
-let modify_sizedtype_mem (mem_pattern : Common.Helpers.mem_pattern) st =
+let modify_sizedtype_mem (mem_pattern : Mem_pattern.t) st =
   match mem_pattern with
-  | Common.Helpers.AoS -> demote_sizedtype_mem st
-  | Common.Helpers.SoA -> promote_sizedtype_mem st
+  | AoS -> demote_sizedtype_mem st
+  | SoA -> promote_sizedtype_mem st
 
 let rec has_mem_pattern = function
   | SInt | SReal | SComplex | SComplexVector _ | SComplexRowVector _

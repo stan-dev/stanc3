@@ -12,8 +12,7 @@ type fun_arg = UnsizedType.autodifftype * UnsizedType.t
 
 (** Signatures consist of a return type, a list of arguments, and a flag
     for whether or not those arguments can be Struct of Arrays objects *)
-type signature =
-  UnsizedType.returntype * fun_arg list * Common.Helpers.mem_pattern
+type signature = UnsizedType.returntype * fun_arg list * Mem_pattern.t
 
 val stan_math_signatures : (string, signature list) Hashtbl.t
 (** Mapping from names to signature(s) of functions *)
@@ -41,7 +40,7 @@ type fkind = private
 [@@deriving show {with_path= false}]
 
 val distributions :
-  (fkind list * string * dimensionality list * Common.Helpers.mem_pattern) list
+  (fkind list * string * dimensionality list * Mem_pattern.t) list
 (** The distribution {e families} exposed by the math library *)
 
 val dist_name_suffix : (string * 'a) list -> string -> string
