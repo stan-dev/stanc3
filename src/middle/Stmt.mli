@@ -34,21 +34,6 @@ module Fixed : sig
   include Fixed.S2 with module First = Expr.Fixed and module Pattern := Pattern
 end
 
-module NoMeta : sig
-  module Meta : sig
-    type t = unit [@@deriving compare, sexp, hash]
-
-    include Specialized.Meta with type t := t
-  end
-
-  include
-    Specialized.S
-      with module Meta := Meta
-       and type t = (Expr.NoMeta.Meta.t, Meta.t) Fixed.t
-
-  val remove_meta : ('a, 'b) Fixed.t -> t
-end
-
 module Located : sig
   module Meta : sig
     type t = (Location_span.t[@sexp.opaque] [@compare.ignore])

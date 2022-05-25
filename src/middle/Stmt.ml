@@ -70,20 +70,6 @@ module Fixed = struct
   include Fixed.Make2 (First) (Pattern)
 end
 
-(** Statements with no meta-data *)
-module NoMeta = struct
-  module Meta = struct
-    type t = unit [@@deriving compare, sexp, hash]
-
-    let empty = ()
-    let pp _ _ = ()
-  end
-
-  include Specialized.Make2 (Fixed) (Expr.NoMeta) (Meta)
-
-  let remove_meta stmt = Fixed.map (fun _ -> ()) (fun _ -> ()) stmt
-end
-
 (** Statements with location information and types for contained expressions *)
 module Located = struct
   module Meta = struct

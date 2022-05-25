@@ -53,20 +53,6 @@ module Fixed = struct
   include Fixed.Make (Pattern)
 end
 
-(** Expressions without meta data *)
-module NoMeta = struct
-  module Meta = struct
-    type t = unit [@@deriving compare, sexp, hash]
-
-    let empty = ()
-    let pp _ _ = ()
-  end
-
-  include Specialized.Make (Fixed) (Meta)
-
-  let remove_meta expr = Fixed.map (Fn.const ()) expr
-end
-
 (** Expressions with associated location and type *)
 module Typed = struct
   module Meta = struct

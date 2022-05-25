@@ -24,18 +24,6 @@ module Fixed : sig
   include Fixed.S with module Pattern := Pattern
 end
 
-module NoMeta : sig
-  module Meta : sig
-    type t = unit [@@deriving compare, sexp, hash]
-
-    include Specialized.Meta with type t := unit
-  end
-
-  include Specialized.S with module Meta := Meta and type t = Meta.t Fixed.t
-
-  val remove_meta : 'a Fixed.t -> t
-end
-
 module Typed : sig
   module Meta : sig
     type t =
