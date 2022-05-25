@@ -40,6 +40,7 @@ Display all Stan math distributions exposed in the language
   multi_normal_cholesky: lpdf, log (deprecated)
   multi_normal_prec: lpdf, log (deprecated)
   multi_student_t: lpdf, log (deprecated)
+  multi_student_t_cholesky: lpdf
   neg_binomial: lpmf, rng, ccdf, cdf, log (deprecated)
   neg_binomial_2: lpmf, rng, ccdf, cdf, log (deprecated)
   neg_binomial_2_log: lpmf, rng, log (deprecated)

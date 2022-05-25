@@ -27,8 +27,16 @@ val pretty_print_all_math_sigs : unit Fmt.t
 val pretty_print_all_math_distributions : unit Fmt.t
 
 type dimensionality
+type return_behavior
 
-type fkind = Lpmf | Lpdf | Log | Rng | Cdf | Ccdf | UnaryVectorized
+type fkind = private
+  | Lpmf
+  | Lpdf
+  | Log
+  | Rng
+  | Cdf
+  | Ccdf
+  | UnaryVectorized of return_behavior
 [@@deriving show {with_path= false}]
 
 val distributions :

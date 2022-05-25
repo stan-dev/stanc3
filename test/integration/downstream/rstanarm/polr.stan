@@ -3,7 +3,7 @@
 
 // GLM for an ordinal outcome with coherent priors
 functions {
-  /** 
+  /**
   * Evaluate a given CDF
   *
   * @param x The point to evaluate the CDF_polr at
@@ -11,24 +11,24 @@ functions {
   * @return A scalar on (0,1)
   */
   real CDF_polr(real x, int link) {
-    // links in MASS::polr() are in a different order than binomial() 
+    // links in MASS::polr() are in a different order than binomial()
     // logistic, probit, loglog, cloglog, cauchit
-    if (link == 1) 
+    if (link == 1)
       return (inv_logit(x));
-    else if (link == 2) 
+    else if (link == 2)
       return (Phi(x));
-    else if (link == 3) 
+    else if (link == 3)
       return (gumbel_cdf(x | 0, 1));
-    else if (link == 4) 
+    else if (link == 4)
       return (inv_cloglog(x));
-    else if (link == 5) 
+    else if (link == 5)
       return (cauchy_cdf(x | 0, 1));
-    else 
+    else
       reject("Invalid link");
     return x; // never reached
   }
-  
-  /** 
+
+  /**
   * Pointwise (pw) log-likelihood vector
   *
   * @param y The integer outcome variable.
@@ -42,31 +42,31 @@ functions {
     int N = rows(eta);
     int J = rows(cutpoints) + 1;
     vector[N] ll;
-    if (link < 1 || link > 5) 
+    if (link < 1 || link > 5)
       reject("Invalid link");
-    
-    if (alpha == 1) 
+
+    if (alpha == 1)
       for (n in 1 : N) {
-        if (y[n] == 1) 
+        if (y[n] == 1)
           ll[n] = CDF_polr(cutpoints[1] - eta[n], link);
-        else if (y[n] == J) 
+        else if (y[n] == J)
           ll[n] = 1 - CDF_polr(cutpoints[J - 1] - eta[n], link);
-        else 
+        else
           ll[n] = CDF_polr(cutpoints[y[n]] - eta[n], link)
                   - CDF_polr(cutpoints[y[n] - 1] - eta[n], link);
       }
-    else 
+    else
       for (n in 1 : N) {
-        if (y[n] == 1) 
+        if (y[n] == 1)
           ll[n] = CDF_polr(cutpoints[1] - eta[n], link) ^ alpha;
-        else if (y[n] == J) 
+        else if (y[n] == J)
           ll[n] = 1 - CDF_polr(cutpoints[J - 1] - eta[n], link) ^ alpha;
-        else 
+        else
           reject("alpha not allowed with more than 2 outcome categories");
       }
     return log(ll);
   }
-  
+
   /**
   * Map from conditional probabilities to cutpoints
   *
@@ -79,38 +79,38 @@ functions {
     int C = rows(probabilities) - 1;
     vector[C] cutpoints;
     real running_sum = 0;
-    // links in MASS::polr() are in a different order than binomial() 
+    // links in MASS::polr() are in a different order than binomial()
     // logistic, probit, loglog, cloglog, cauchit
-    if (link == 1) 
+    if (link == 1)
       for (c in 1 : C) {
         running_sum += probabilities[c];
         cutpoints[c] = logit(running_sum);
       }
-    else if (link == 2) 
+    else if (link == 2)
       for (c in 1 : C) {
         running_sum += probabilities[c];
         cutpoints[c] = inv_Phi(running_sum);
       }
-    else if (link == 3) 
+    else if (link == 3)
       for (c in 1 : C) {
         running_sum += probabilities[c];
         cutpoints[c] = -log(-log(running_sum));
       }
-    else if (link == 4) 
+    else if (link == 4)
       for (c in 1 : C) {
         running_sum += probabilities[c];
         cutpoints[c] = log(-log1m(running_sum));
       }
-    else if (link == 5) 
+    else if (link == 5)
       for (c in 1 : C) {
         running_sum += probabilities[c];
         cutpoints[c] = tan(pi() * (running_sum - 0.5));
       }
-    else 
+    else
       reject("invalid link");
     return scale * cutpoints;
   }
-  
+
   /**
    * Randomly draw a value for utility
    *
@@ -123,30 +123,30 @@ functions {
   real draw_ystar_rng(real lower_, real upper_, real eta, int link) {
     int iter = 0;
     real ystar = not_a_number();
-    if (lower_ >= upper_) 
+    if (lower_ >= upper_)
       reject("lower_ must be less than upper_");
-    
-    // links in MASS::polr() are in a different order than binomial() 
+
+    // links in MASS::polr() are in a different order than binomial()
     // logistic, probit, loglog, cloglog, cauchit
-    if (link == 1) 
+    if (link == 1)
       while (!(ystar > lower_ && ystar < upper_)) ystar = logistic_rng(eta,
                                                                     1);
-    else if (link == 2) 
+    else if (link == 2)
       while (!(ystar > lower_ && ystar < upper_)) ystar = normal_rng(eta, 1);
-    else if (link == 3) 
+    else if (link == 3)
       while (!(ystar > lower_ && ystar < upper_)) ystar = gumbel_rng(eta, 1);
-    else if (link == 4) 
+    else if (link == 4)
       while (!(ystar > lower_ && ystar < upper_)) ystar = log(-log1m(
                                                               uniform_rng(
                                                               0, 1)));
-    else if (link == 5) 
+    else if (link == 5)
       while (!(ystar > lower_ && ystar < upper_)) ystar = cauchy_rng(eta, 1);
-    else 
+    else
       reject("invalid link");
     return ystar;
   }
-  
-  /** 
+
+  /**
   * faster version of csr_matrix_times_vector
   * declared here and defined in C++
   *
@@ -164,15 +164,15 @@ functions {
 data {
   // declares N, K, X, xbar, dense_X, nnz_x, w_x, v_x, u_x
   #include </data/NKX.stan>
-  
+
   int<lower=2> J; // number of outcome categories, which typically is > 2
   array[N] int<lower=1, upper=J> y; // ordinal outcome
   // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept
   #include </data/data_glm.stan>
-  
+
   // declares has_weights, weights, has_offset, offset_
   #include </data/weights_offset.stan>
-  
+
   // hyperparameter values
   real<lower=0> regularization;
   vector<lower=0>[J] prior_counts;
@@ -186,8 +186,8 @@ transformed data {
   real<lower=0> sqrt_Nm1 = sqrt(N - 1.0);
   int<lower=0, upper=1> is_constant = 1;
   vector[0] beta_smooth; // not used
-  for (j in 1 : J) 
-    if (prior_counts[j] != 1) 
+  for (j in 1 : J)
+    if (prior_counts[j] != 1)
       is_constant = 0;
 }
 parameters {
@@ -213,68 +213,68 @@ transformed parameters {
 }
 model {
   #include </model/make_eta.stan>
-  
+
   if (has_weights == 0 && prior_PD == 0) {
     // unweighted log-likelihoods
-    if (is_skewed == 0) 
+    if (is_skewed == 0)
       target += pw_polr(y, eta, cutpoints, link, 1.0);
-    else 
+    else
       target += pw_polr(y, eta, cutpoints, link, alpha[1]);
   } else if (prior_PD == 0) {
     // weighted log-likelihoods
-    if (is_skewed == 0) 
+    if (is_skewed == 0)
       target += dot_product(weights, pw_polr(y, eta, cutpoints, link, 1.0));
-    else 
+    else
       target += dot_product(weights,
                             pw_polr(y, eta, cutpoints, link, alpha[1]));
   }
-  
-  if (is_constant == 0) 
+
+  if (is_constant == 0)
     target += dirichlet_lpdf(pi | prior_counts);
   // implicit: u is uniform on the surface of a hypersphere
   if (prior_dist == 1) {
-    if (K > 1) 
+    if (K > 1)
       target += beta_lpdf(R2 | half_K, regularization);
-    else 
+    else
       target += beta_lpdf(square(R2) | half_K, regularization)
-                + log(fabs(R2));
+                + log(abs(R2));
   }
-  if (is_skewed == 1) 
+  if (is_skewed == 1)
     target += gamma_lpdf(alpha | shape, rate);
 }
 generated quantities {
   vector[J > 2 ? J : 1] mean_PPD = rep_vector(0, J > 2 ? J : 1);
   vector[do_residuals ? N : 0] residuals;
   vector[J - 1] zeta;
-  
+
   // xbar is actually post multiplied by R^-1
-  if (dense_X) 
+  if (dense_X)
     zeta = cutpoints + dot_product(xbar, beta);
-  else 
+  else
     zeta = cutpoints;
-  if (J == 2) 
+  if (J == 2)
     zeta *= -1.0;
   {
     #include </model/make_eta.stan>
-    
+
     for (n in 1 : N) {
       int y_tilde;
       vector[J] theta;
       real previous;
       real first = CDF_polr(cutpoints[1] - eta[n], link);
       previous = first;
-      if (is_skewed) 
+      if (is_skewed)
         theta[1] = first ^ alpha[1];
-      else 
+      else
         theta[1] = first;
       for (j in 2 : (J - 1)) {
         real current = CDF_polr(cutpoints[j] - eta[n], link);
         theta[j] = current - previous;
         previous = current;
       }
-      if (is_skewed == 0) 
+      if (is_skewed == 0)
         theta[J] = 1 - previous;
-      else 
+      else
         theta[J] = 1 - previous ^ alpha[1];
       if (previous <= 0 || previous >= 1) {
         // do nothing
@@ -284,16 +284,16 @@ generated quantities {
         y_tilde = categorical_rng(theta);
         mean_PPD[y_tilde] += 1;
       }
-      
+
       if (do_residuals) {
         real ystar;
-        if (y[n] == 1) 
+        if (y[n] == 1)
           ystar = draw_ystar_rng(negative_infinity(), cutpoints[1], eta[n],
                                  link);
-        else if (y[n] == J) 
+        else if (y[n] == J)
           ystar = draw_ystar_rng(cutpoints[J - 1], positive_infinity(
                                  ), eta[n], link);
-        else 
+        else
           ystar = draw_ystar_rng(cutpoints[y[n] - 1], cutpoints[y[n]],
                                  eta[n], link);
         residuals[n] = ystar - eta[n];

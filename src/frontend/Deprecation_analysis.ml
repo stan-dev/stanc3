@@ -6,7 +6,8 @@ let deprecated_functions =
   String.Map.of_alist_exn
     [ ("multiply_log", ("lmultiply", "2.32.0"))
     ; ("binomial_coefficient_log", ("lchoose", "2.32.0"))
-    ; ("cov_exp_quad", ("gp_exp_quad_cov", "2.32.0")) ]
+    ; ("cov_exp_quad", ("gp_exp_quad_cov", "2.32.0"))
+    ; ("fabs", ("abs", "2.33.0")) ]
 
 let deprecated_odes =
   String.Map.of_alist_exn
@@ -26,7 +27,7 @@ let deprecated_distributions =
               | Lpmf -> Some (name ^ "_log", name ^ "_lpmf")
               | Cdf -> Some (name ^ "_cdf_log", name ^ "_lcdf")
               | Ccdf -> Some (name ^ "_ccdf_log", name ^ "_lccdf")
-              | Rng | Log | UnaryVectorized -> None ) ) ) )
+              | Rng | Log | UnaryVectorized _ -> None ) ) ) )
 
 let stan_lib_deprecations =
   Map.merge_skewed deprecated_distributions deprecated_functions
@@ -100,14 +101,6 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
     ({expr; emeta} : (typed_expr_meta, fun_kind) expr_with) :
     (Location_span.t * string) list =
   match expr with
-  | FunApp (StanLib FnPlain, {name= "abs"; _}, [e])
-    when Middle.UnsizedType.is_real_type e.emeta.type_ ->
-      collect_deprecated_expr
-        ( acc
-        @ [ ( emeta.loc
-            , "Use of the `abs` function with real-valued arguments is \
-               deprecated; use function `fabs` instead." ) ] )
-        e
   | FunApp (StanLib FnPlain, {name= "if_else"; _}, l) ->
       acc
       @ [ ( emeta.loc
