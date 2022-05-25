@@ -5,9 +5,7 @@ open Core_kernel
 
 (* Types for the module representing the standard library *)
 type fun_arg = UnsizedType.autodifftype * UnsizedType.t
-
-type signature =
-  UnsizedType.returntype * fun_arg list * Common.Helpers.mem_pattern
+type signature = UnsizedType.returntype * fun_arg list * Mem_pattern.t
 
 type deprecation_info =
   { replacement: string

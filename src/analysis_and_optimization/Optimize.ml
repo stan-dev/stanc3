@@ -52,7 +52,7 @@ let level_optimizations (lvl : optimization_level) : optimization_settings =
 
 module Make (StdLibrary : Frontend.Std_library_utils.Library) : OPTIMIZER =
 struct
-  module Mem = Mem_pattern.Make (StdLibrary)
+  module Mem = Memory_patterns.Make (StdLibrary)
   module Partial_evaluator = Partial_evaluation.Make (StdLibrary)
 
   (**

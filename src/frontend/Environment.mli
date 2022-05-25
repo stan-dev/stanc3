@@ -33,7 +33,7 @@ val make_from_library :
      ( string
      , ( UnsizedType.returntype
        * (UnsizedType.autodifftype * UnsizedType.t) list
-       * Common.Helpers.mem_pattern )
+       * Mem_pattern.t )
        list )
      Core_kernel.Hashtbl.t
   -> t

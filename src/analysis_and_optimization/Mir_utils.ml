@@ -464,16 +464,16 @@ let cleanup_empty_stmts stmts =
 
 (**
  * Convert a Type.Unsized to a Type.Sized.
- * This function is useful in the inlining scheme as 
- * the Mem_patterns optimization cannot work with decl types 
- * for unsized types. (Steve: tmk the inline optimization is the only place 
- * we create Decl's with unsized types.) 
+ * This function is useful in the inlining scheme as
+ * the Mem_patterns optimization cannot work with decl types
+ * for unsized types. (Steve: tmk the inline optimization is the only place
+ * we create Decl's with unsized types.)
  *
  * Note that there is no true mapping from Sized types to Unsized types.
- * Any sizes are set to 0 and it is assumed that the intent 
- * of Types.Unsized with inner UFun types is to size the return 
- * type of the UFun. Any Decl that uses this type should 
- * have initialize set to false. 
+ * Any sizes are set to 0 and it is assumed that the intent
+ * of Types.Unsized with inner UFun types is to size the return
+ * type of the UFun. Any Decl that uses this type should
+ * have initialize set to false.
  *)
 let unsafe_unsized_to_sized_type (rt : Expr.Typed.t Type.t) =
   match rt with
@@ -486,7 +486,7 @@ let unsafe_unsized_to_sized_type (rt : Expr.Typed.t Type.t) =
         | UComplex -> SComplex
         | UArray t -> SArray (to_sized t, Expr.Helpers.int 0)
         | UMatrix ->
-            SMatrix (Common.Helpers.AoS, Expr.Helpers.int 0, Expr.Helpers.int 0)
+            SMatrix (Mem_pattern.AoS, Expr.Helpers.int 0, Expr.Helpers.int 0)
         | UVector -> SVector (AoS, Expr.Helpers.int 0)
         | URowVector -> SRowVector (AoS, Expr.Helpers.int 0)
         | UComplexMatrix ->
