@@ -4,7 +4,7 @@
 // GLM for a Gaussian outcome with no link function
 functions {
   /**
-   * Increments the log-posterior with the logarithm of a multivariate normal 
+   * Increments the log-posterior with the logarithm of a multivariate normal
    * likelihood with a scalar standard deviation for all errors
    * Equivalent to normal_lpdf(y | intercept + Q * R * beta, sigma) but faster
    * @param theta vector of coefficients (excluding intercept), equal to R * beta
@@ -33,7 +33,7 @@ data {
   int<lower=0, upper=1> prior_dist; // 0 = uniform for R^2, 1 = Beta(K/2,eta)
   int<lower=0, upper=1> prior_PD; // 0 = no, 1 = yes to drawing from the prior
   real<lower=0> eta; // shape hyperparameter
-  
+
   int<lower=1> J; // number of groups
   // the rest of these are indexed by group but should work even if J = 1
   array[J] int<lower=1> N; // number of observations
@@ -69,15 +69,15 @@ transformed parameters {
   for (j in 1 : J) {
     // marginal standard deviation of outcome for group j
     real Delta_y = prior_PD == 0 ? s_Y[j] * exp(log_omega[j]) : 1;
-    
+
     // coefficients in Q-space
-    if (K > 1) 
+    if (K > 1)
       theta[j] = u[j] * sqrt(R2[j]) * sqrt_Nm1[j] * Delta_y;
-    else 
+    else
       theta[j][1] = R2[j] * sqrt_Nm1[j] * Delta_y;
-    
+
     sigma[j] = Delta_y * sqrt(1 - R2[j]); // standard deviation of errors
-    
+
     if (has_intercept == 1) {
       if (prior_dist_for_intercept == 0)  // no information
         alpha[j] = z_alpha[j];
@@ -85,7 +85,7 @@ transformed parameters {
         alpha[j] = z_alpha[j] * Delta_y * sqrt_inv_N[j]
                    + prior_mean_for_intercept;
       else // arbitrary informative prior
-      
+
         alpha[j] = z_alpha[j] * prior_scale_for_intercept
                    + prior_mean_for_intercept;
     }
@@ -104,13 +104,13 @@ model {
     }
     // implicit: u[j] is uniform on the surface of a hypersphere
   }
-  if (has_intercept == 1 && prior_dist_for_intercept > 0) 
+  if (has_intercept == 1 && prior_dist_for_intercept > 0)
     target += normal_lpdf(z_alpha | 0, 1);
   if (prior_dist == 1) {
-    if (K > 1) 
+    if (K > 1)
       target += beta_lpdf(R2 | half_K, eta);
-    else 
-      target += beta_lpdf(square(R2) | half_K, eta) + sum(log(fabs(R2)));
+    else
+      target += beta_lpdf(square(R2) | half_K, eta) + sum(log(abs(R2)));
   }
   // implicit: log_omega is uniform over the real line for all j
 }

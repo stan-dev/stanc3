@@ -473,8 +473,13 @@ pipeline {
                 stage('Math functions expressions test') {
                     when {
                         beforeAgent true
-                        expression {
-                            !skipExpressionTests
+                        allOf {
+                            expression {
+                                !skipRemainingStages
+                            }
+                            expression {
+                                !skipExpressionTests
+                            }
                         }
                     }
                     agent {

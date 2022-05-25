@@ -1193,10 +1193,10 @@ let optimize_soa (mir : Program.Typed.t) =
       (l : int) (aos_variables : string Set.Poly.t) =
     let mir_node mir_idx = Map.find_exn flowgraph_to_mir mir_idx in
     match (mir_node l).pattern with
-    | stmt -> Mem_pattern.query_demotable_stmt aos_variables stmt in
+    | stmt -> Memory_patterns.query_demotable_stmt aos_variables stmt in
   let initial_variables =
     List.fold ~init:Set.Poly.empty
-      ~f:(Mem_pattern.query_initial_demotable_stmt false)
+      ~f:(Memory_patterns.query_initial_demotable_stmt false)
       mir.log_prob in
   (*
   let print_set s =
@@ -1204,10 +1204,11 @@ let optimize_soa (mir : Program.Typed.t) =
   let () = print_set initial_variables in
   *)
   let mod_exprs aos_exits mod_expr =
-    Mir_utils.map_rec_expr (Mem_pattern.modify_expr_pattern aos_exits) mod_expr
-  in
+    Mir_utils.map_rec_expr
+      (Memory_patterns.modify_expr_pattern aos_exits)
+      mod_expr in
   let modify_stmt_patt stmt_pattern variable_set =
-    Mem_pattern.modify_stmt_pattern stmt_pattern variable_set in
+    Memory_patterns.modify_stmt_pattern stmt_pattern variable_set in
   let transform stmt =
     optimize_minimal_variables ~gen_variables:gen_aos_variables
       ~update_expr:mod_exprs ~update_stmt:modify_stmt_patt ~initial_variables

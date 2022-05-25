@@ -1,8 +1,13 @@
 #!/bin/bash
 
-# Menhir is our parsing library and annoyingly its module name does not match
-# its library name, so we install it manually here.
+# exit when any command fails
+set -e
 
-opam pin -y dune 2.8.4
+eval $(opam env)
 
-opam install -y core_kernel.v0.14.2 menhir.20210929 ppx_deriving.5.2.1 fmt.0.8.8 yojson.1.7.0
+opam pin -y dune 2.8.4 --no-action
+opam pin -y core_kernel v0.14.2 --no-action
+
+opam install -y dune.2.8.4 core_kernel.v0.14.2 menhir.20210929 ppx_deriving.5.2.1 fmt.0.8.8 yojson.1.7.0
+
+eval $(opam env)

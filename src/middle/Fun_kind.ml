@@ -11,7 +11,7 @@ type 'propto suffix = FnPlain | FnRng | FnLpdf of 'propto | FnTarget
 let without_propto = map_suffix (function true | false -> ())
 
 type 'e t =
-  | StanLib of string * bool suffix * Common.Helpers.mem_pattern
+  | StanLib of string * bool suffix * Mem_pattern.t
   | CompilerInternal of 'e Internal_fun.t
   | UserDefined of string * bool suffix
 [@@deriving compare, sexp, hash, map, fold]

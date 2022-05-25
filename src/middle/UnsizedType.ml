@@ -19,7 +19,7 @@ type t =
       (autodifftype * t) list
       * returntype
       * bool Fun_kind.suffix
-      * Common.Helpers.mem_pattern
+      * Mem_pattern.t
   | UMathLibraryFunction
 [@@deriving compare, hash, sexp]
 

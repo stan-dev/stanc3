@@ -1723,6 +1723,7 @@ generated quantities {
   v = multi_student_t_rng(3.0, nu, Sigma);
   v_array = multi_student_t_rng(3.0, mu_array, Sigma);
   v_array = multi_student_t_rng(3.0, nu_array, Sigma);
+  Sigma = wishart_cholesky_rng(3.0, Sigma);
   Sigma = wishart_rng(3.0, Sigma);
   Sigma = inv_wishart_rng(3.0, Sigma);
   Sigma = lkj_corr_rng(3, 2.5);

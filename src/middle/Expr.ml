@@ -1,6 +1,5 @@
 open Core_kernel
 open Common
-open Helpers
 
 (** Pattern and fixed-point of MIR expressions *)
 module Fixed = struct
