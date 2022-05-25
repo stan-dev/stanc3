@@ -121,7 +121,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                     | None -> FunApp (StanLib (f, suffix, mem_type), l) )
                   | e -> e) in
               let lub_mem_pat lst =
-                Common.Helpers.lub_mem_pat (List.cons mem_type lst) in
+                Mem_pattern.lub_mem_pat (List.cons mem_type lst) in
               try_partially_evaluate_stanlib
                 ( match (f, l) with
                 (* TODO: deal with tilde statements and unnormalized distributions properly here *)

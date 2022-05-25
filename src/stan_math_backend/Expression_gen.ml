@@ -94,8 +94,7 @@ let pp_expr_type ppf e =
 let rec pp_possibly_var_decl ppf (adtype, ut, mem_pattern) =
   let scalar = local_scalar ut adtype in
   let pp_var_decl ppf p_ut =
-    if mem_pattern = Common.Helpers.SoA && adtype = UnsizedType.AutoDiffable
-    then
+    if mem_pattern = Mem_pattern.SoA && adtype = UnsizedType.AutoDiffable then
       pf ppf "@[<hov 2>stan::conditional_var_value_t<%s,@ @,%a>@]" scalar
         pp_unsizedtype_local (adtype, p_ut)
     else pf ppf "%a" pp_unsizedtype_local (adtype, p_ut) in
@@ -258,8 +257,7 @@ and gen_operator_app op ppf es_in =
   | Greater -> pp_binary_f ppf "stan::math::logical_gt" es
   | Geq -> pp_binary_f ppf "stan::math::logical_gte" es
 
-and gen_misc_special_math_app (f : string)
-    (mem_pattern : Common.Helpers.mem_pattern)
+and gen_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
     (ret_type : UnsizedType.returntype option) =
   match f with
   | "lmultiply" ->
@@ -272,7 +270,7 @@ and gen_misc_special_math_app (f : string)
   | f when Map.mem fn_renames f ->
       Some (fun ppf es -> pp_call ppf (Map.find_exn fn_renames f, pp_expr, es))
   | "rep_matrix" | "rep_vector" | "rep_row_vector" | "append_row" | "append_col"
-    when mem_pattern = Common.Helpers.SoA -> (
+    when mem_pattern = Mem_pattern.SoA -> (
       let is_autodiffable Expr.Fixed.{meta= Expr.Typed.Meta.{adlevel; _}; _} =
         adlevel = UnsizedType.AutoDiffable in
       match ret_type with
@@ -513,10 +511,10 @@ and pp_compiler_internal_fn ad ut f ppf es =
             (UnsizedType.AutoDiffable, ut, mem_pattern)
             (list ~sep:comma pp_expr) args )
   | FnDeepCopy ->
-      gen_fun_app FnPlain ppf "stan::model::deep_copy" es Common.Helpers.AoS
+      gen_fun_app FnPlain ppf "stan::model::deep_copy" es Mem_pattern.AoS
         (Some UnsizedType.Void)
   | _ ->
-      gen_fun_app FnPlain ppf (Internal_fun.to_string f) es Common.Helpers.AoS
+      gen_fun_app FnPlain ppf (Internal_fun.to_string f) es Mem_pattern.AoS
         (Some UnsizedType.Void)
 
 and pp_indexed ppf (vident, indices, pretty) =

@@ -126,7 +126,7 @@ let query_stan_math_mem_pattern_support (name : string)
             |> Result.is_ok )
           namematches in
       let is_soa ((_ : UnsizedType.returntype), _, mem) =
-        mem = Common.Helpers.SoA in
+        mem = Mem_pattern.SoA in
       List.exists ~f:is_soa filteredmatches
 
 (*Validate whether a function can support SoA matrices*)
@@ -488,12 +488,12 @@ let rec modify_kind ?force_demotion:(force = false)
   let is_all_in_list =
     is_nonzero_subset ~set:modifiable_set ~subset:expr_names in
   match kind with
-  | Fun_kind.StanLib (name, sfx, (_ : Common.Helpers.mem_pattern)) ->
+  | Fun_kind.StanLib (name, sfx, (_ : Mem_pattern.t)) ->
       if is_all_in_list || (not (is_fun_soa_supported name exprs)) || force then
         (*Force demotion of all subexprs*)
         let exprs' =
           List.map ~f:(modify_expr ~force_demotion:true expr_names) exprs in
-        (Fun_kind.StanLib (name, sfx, Common.Helpers.AoS), exprs')
+        (Fun_kind.StanLib (name, sfx, Mem_pattern.AoS), exprs')
       else
         ( Fun_kind.StanLib (name, sfx, SoA)
         , List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs
@@ -677,7 +677,7 @@ let pp_mem_patterns ppf (Program.{log_prob; _} : Program.Typed.t) =
   let pp_var ppf (name, stype) =
     Fmt.pf ppf "%a %s: %a"
       (SizedType.pp Expr.Typed.pp)
-      stype name Common.Helpers.pp_mem_pattern
+      stype name Middle.Mem_pattern.pp
       (SizedType.get_mem_pattern stype) in
   let mem_vars =
     (* Collect all the sizedtypes which have a mem pattern *)

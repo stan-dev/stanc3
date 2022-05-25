@@ -94,9 +94,7 @@ let is_primitive = function
   | _ -> false
 
 type fun_arg = UnsizedType.autodifftype * UnsizedType.t
-
-type signature =
-  UnsizedType.returntype * fun_arg list * Common.Helpers.mem_pattern
+type signature = UnsizedType.returntype * fun_arg list * Mem_pattern.t
 
 (** The signatures hash table *)
 let (function_signatures : (string, signature list) Hashtbl.t) =
@@ -230,8 +228,7 @@ let distributions =
   [ ( full_lpmf_depr
     , "beta_binomial"
     , [DVInt; DVInt; DVReal; DVReal]
-    , Common.Helpers.SoA )
-  ; (full_lpdf_depr, "beta", [DVReal; DVReal; DVReal], SoA)
+    , Mem_pattern.SoA ); (full_lpdf_depr, "beta", [DVReal; DVReal; DVReal], SoA)
   ; ( [Lpdf; Ccdf; Cdf; Log]
     , "beta_proportion"
     , [DVReal; DVReal; DIntAndReals]
@@ -314,7 +311,7 @@ let distribution_families =
 let basic_vectorized = UnaryVectorized IntsToReals
 
 let math_sigs =
-  [ ([basic_vectorized], "acos", [DDeepVectorized], Common.Helpers.SoA)
+  [ ([basic_vectorized], "acos", [DDeepVectorized], Mem_pattern.SoA)
   ; ([basic_vectorized], "acosh", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "asin", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "asinh", [DDeepVectorized], SoA)
@@ -421,7 +418,7 @@ let get_assignment_operator_signatures assop =
                    ( (assop = Operator.EltTimes || assop = Operator.EltDivide)
                    && UnsizedType.is_scalar_type rtype ) ->
            if rhs = UReal then
-             [ (UnsizedType.Void, [(ad1, lhs); (ad2, UInt)], Common.Helpers.SoA)
+             [ (UnsizedType.Void, [(ad1, lhs); (ad2, UInt)], Mem_pattern.SoA)
              ; (Void, [(ad1, lhs); (ad2, UReal)], SoA) ]
            else [(Void, [(ad1, lhs); (ad2, rhs)], SoA)]
        | _ -> [] )
@@ -478,7 +475,7 @@ let int_divide_type =
   UnsizedType.
     ( ReturnType UInt
     , [(AutoDiffable, UInt); (AutoDiffable, UInt)]
-    , Common.Helpers.AoS )
+    , Mem_pattern.AoS )
 
 let get_operator_signatures op =
   if op = Operator.IntDivide then [int_divide_type]
@@ -847,7 +844,7 @@ let () =
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType UVector
             , FnPlain
-            , Common.Helpers.AoS ) ); (AutoDiffable, UVector)
+            , Mem_pattern.AoS ) ); (AutoDiffable, UVector)
       ; (AutoDiffable, UVector); (DataOnly, UArray UReal)
       ; (DataOnly, UArray UInt); (DataOnly, UReal); (DataOnly, UReal)
       ; (DataOnly, UReal) ]
@@ -861,7 +858,7 @@ let () =
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType UVector
             , FnPlain
-            , Common.Helpers.AoS ) ); (AutoDiffable, UVector)
+            , Mem_pattern.AoS ) ); (AutoDiffable, UVector)
       ; (AutoDiffable, UVector); (DataOnly, UArray UReal)
       ; (DataOnly, UArray UInt) ]
     , AoS ) ;
@@ -874,7 +871,7 @@ let () =
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType UVector
             , FnPlain
-            , Common.Helpers.AoS ) ); (AutoDiffable, UVector)
+            , Mem_pattern.AoS ) ); (AutoDiffable, UVector)
       ; (AutoDiffable, UVector); (DataOnly, UArray UReal)
       ; (DataOnly, UArray UInt); (DataOnly, UReal); (DataOnly, UReal)
       ; (DataOnly, UReal) ]
@@ -1401,9 +1398,9 @@ let () =
               ; (DataOnly, UArray UInt) ]
             , ReturnType UReal
             , FnPlain
-            , Common.Helpers.AoS ) ); (AutoDiffable, UReal)
-      ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
-      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
+            , Mem_pattern.AoS ) ); (AutoDiffable, UReal); (AutoDiffable, UReal)
+      ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+      ; (DataOnly, UArray UInt) ]
     , AoS ) ;
   add_qualified
     ( "integrate_1d"
@@ -1415,9 +1412,9 @@ let () =
               ; (DataOnly, UArray UInt) ]
             , ReturnType UReal
             , FnPlain
-            , Common.Helpers.AoS ) ); (AutoDiffable, UReal)
-      ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
-      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal) ]
+            , Mem_pattern.AoS ) ); (AutoDiffable, UReal); (AutoDiffable, UReal)
+      ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+      ; (DataOnly, UArray UInt); (DataOnly, UReal) ]
     , AoS ) ;
   add_qualified
     ( "integrate_ode"
@@ -1429,7 +1426,7 @@ let () =
               ; (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal)
             , FnPlain
-            , Common.Helpers.AoS ) ); (AutoDiffable, UArray UReal)
+            , Mem_pattern.AoS ) ); (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
       ; (DataOnly, UArray UInt) ]
@@ -1444,7 +1441,7 @@ let () =
               ; (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal)
             , FnPlain
-            , Common.Helpers.AoS ) ); (AutoDiffable, UArray UReal)
+            , Mem_pattern.AoS ) ); (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
       ; (DataOnly, UArray UInt) ]
@@ -1459,7 +1456,7 @@ let () =
               ; (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal)
             , FnPlain
-            , Common.Helpers.AoS ) ); (AutoDiffable, UArray UReal)
+            , Mem_pattern.AoS ) ); (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
       ; (DataOnly, UArray UInt); (DataOnly, UReal); (DataOnly, UReal)
@@ -1475,7 +1472,7 @@ let () =
               ; (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal)
             , FnPlain
-            , Common.Helpers.AoS ) ); (AutoDiffable, UArray UReal)
+            , Mem_pattern.AoS ) ); (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
       ; (DataOnly, UArray UInt) ]
@@ -1490,7 +1487,7 @@ let () =
               ; (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal)
             , FnPlain
-            , Common.Helpers.AoS ) ); (AutoDiffable, UArray UReal)
+            , Mem_pattern.AoS ) ); (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
       ; (DataOnly, UArray UInt); (DataOnly, UReal); (DataOnly, UReal)
@@ -1506,7 +1503,7 @@ let () =
               ; (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal)
             , FnPlain
-            , Common.Helpers.AoS ) ); (AutoDiffable, UArray UReal)
+            , Mem_pattern.AoS ) ); (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
       ; (DataOnly, UArray UInt) ]
@@ -1521,7 +1518,7 @@ let () =
               ; (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal)
             , FnPlain
-            , Common.Helpers.AoS ) ); (AutoDiffable, UArray UReal)
+            , Mem_pattern.AoS ) ); (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
       ; (DataOnly, UArray UInt); (DataOnly, UReal); (DataOnly, UReal)
@@ -1619,7 +1616,7 @@ let () =
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType UVector
             , FnPlain
-            , Common.Helpers.AoS ) ); (AutoDiffable, UVector)
+            , Mem_pattern.AoS ) ); (AutoDiffable, UVector)
       ; (AutoDiffable, UArray UVector); (DataOnly, UArray (UArray UReal))
       ; (DataOnly, UArray (UArray UInt)) ]
     , AoS ) ;

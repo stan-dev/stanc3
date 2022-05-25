@@ -11,9 +11,9 @@ open Core_kernel.Poly
   * (fyi a var in the C++ code is an alias for var_value<double>)
   *
  **)
-type mem_pattern = AoS | SoA [@@deriving sexp, compare, map, hash, fold]
+type t = AoS | SoA [@@deriving sexp, compare, map, hash, fold]
 
-let pp_mem_pattern ppf = function
+let pp ppf = function
   | AoS -> Fmt.string ppf "AoS"
   | SoA -> Fmt.string ppf "SoA"
 

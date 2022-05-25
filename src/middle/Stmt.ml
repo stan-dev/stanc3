@@ -1,6 +1,5 @@
 open Core_kernel
 open Common
-open Helpers
 
 (** Fixed-point of statements *)
 module Fixed = struct

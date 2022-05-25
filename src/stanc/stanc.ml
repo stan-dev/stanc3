@@ -326,7 +326,7 @@ let use_file filename =
         else base_optims in
       Optimize.optimization_suite ~settings:set_optims tx_mir in
     if !dump_mem_pattern then
-      Mem_pattern.pp_mem_patterns Format.std_formatter opt_mir ;
+      Memory_patterns.pp_mem_patterns Format.std_formatter opt_mir ;
     if !dump_opt_mir then
       Sexp.pp_hum Format.std_formatter
         [%sexp (opt_mir : Middle.Program.Typed.t)] ;

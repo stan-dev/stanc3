@@ -14,10 +14,7 @@ open Middle
 open Core_kernel
 
 type fun_arg = UnsizedType.autodifftype * UnsizedType.t
-
-type signature =
-  UnsizedType.returntype * fun_arg list * Common.Helpers.mem_pattern
-
+type signature = UnsizedType.returntype * fun_arg list * Mem_pattern.t
 type dimensionality
 type return_behavior
 
@@ -35,7 +32,7 @@ val function_signatures : (string, signature list) Hashtbl.t
 (** Mapping from names to signature(s) of functions *)
 
 val distributions :
-  (fkind list * string * dimensionality list * Common.Helpers.mem_pattern) list
+  (fkind list * string * dimensionality list * Mem_pattern.t) list
 
 val distribution_families : string list
 

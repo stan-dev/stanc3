@@ -486,7 +486,7 @@ let unsafe_unsized_to_sized_type (rt : Expr.Typed.t Type.t) =
         | UComplex -> SComplex
         | UArray t -> SArray (to_sized t, Expr.Helpers.int 0)
         | UMatrix ->
-            SMatrix (Common.Helpers.AoS, Expr.Helpers.int 0, Expr.Helpers.int 0)
+            SMatrix (Mem_pattern.AoS, Expr.Helpers.int 0, Expr.Helpers.int 0)
         | UVector -> SVector (AoS, Expr.Helpers.int 0)
         | URowVector -> SRowVector (AoS, Expr.Helpers.int 0)
         | UComplexMatrix ->

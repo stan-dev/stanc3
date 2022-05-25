@@ -42,9 +42,7 @@ let%expect_test "outvar to json pretty" =
        vector[N] var_one[K];
      }
   *)
-  ( "var_one"
-  , SArray (SVector (Common.Helpers.AoS, var "N"), var "K")
-  , Parameters )
+  ("var_one", SArray (SVector (Mem_pattern.AoS, var "N"), var "K"), Parameters)
   |> out_var_json |> Yojson.Basic.pretty_to_string |> print_endline ;
   [%expect
     {|
