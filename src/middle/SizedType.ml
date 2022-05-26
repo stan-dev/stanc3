@@ -1,7 +1,6 @@
 (** Types which have a concrete size associated, e.g. [vector\[n\]] *)
 
 open Core_kernel
-open Common
 
 type 'a t =
   | SInt
@@ -67,18 +66,6 @@ let rec to_unsized = function
   | SComplexMatrix _ -> UComplexMatrix
   | SArray (t, _) -> UArray (to_unsized t)
   | STuple ts -> UTuple (List.map ~f:to_unsized ts)
-
-let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
-  | SInt | SReal | SComplex -> assocs
-  | SVector (_, e) | SRowVector (_, e) | SComplexVector e | SComplexRowVector e
-    ->
-      Expr.Labelled.associate ~init:assocs e
-  | SMatrix (_, e1, e2) | SComplexMatrix (e1, e2) ->
-      Expr.Labelled.(associate ~init:(associate ~init:assocs e1) e2)
-  | SArray (st, e) ->
-      associate ~init:(Expr.Labelled.associate ~init:assocs e) st
-  | STuple ts ->
-      List.fold ~init:assocs ~f:(fun assocs t -> associate ~init:assocs t) ts
 
 let rec inner_type st = match st with SArray (t, _) -> inner_type t | t -> t
 

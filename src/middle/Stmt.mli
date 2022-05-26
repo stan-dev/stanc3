@@ -1,7 +1,6 @@
 (** MIR types and modules corresponding to the statements of the language *)
 
 open Common
-open Label
 
 module Fixed : sig
   module Pattern : sig
@@ -38,21 +37,6 @@ module Fixed : sig
   include Fixed.S2 with module First = Expr.Fixed and module Pattern := Pattern
 end
 
-module NoMeta : sig
-  module Meta : sig
-    type t = unit [@@deriving compare, sexp, hash]
-
-    include Specialized.Meta with type t := t
-  end
-
-  include
-    Specialized.S
-      with module Meta := Meta
-       and type t = (Expr.NoMeta.Meta.t, Meta.t) Fixed.t
-
-  val remove_meta : ('a, 'b) Fixed.t -> t
-end
-
 module Located : sig
   module Meta : sig
     type t = (Location_span.t[@sexp.opaque] [@compare.ignore])
@@ -77,31 +61,6 @@ module Located : sig
       ; meta: (Meta.t[@sexp.opaque] [@compare.ignore]) }
     [@@deriving compare, sexp, hash]
   end
-end
-
-module Labelled : sig
-  module Meta : sig
-    type t =
-      { loc: (Location_span.t[@sexp.opaque] [@compare.ignore])
-      ; label: Int_label.t [@compare.ignore] }
-    [@@deriving compare, create, sexp, hash]
-
-    include Specialized.Meta with type t := t
-  end
-
-  include
-    Specialized.S
-      with module Meta := Meta
-       and type t = (Expr.Labelled.Meta.t, Meta.t) Fixed.t
-
-  val loc_of : t -> Location_span.t
-  val label_of : t -> Int_label.t
-  val label : ?init:int -> Located.t -> t
-
-  type associations =
-    {exprs: Expr.Labelled.t Int_label.Map.t; stmts: t Int_label.Map.t}
-
-  val associate : ?init:associations -> t -> associations
 end
 
 module Numbered : sig

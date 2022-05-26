@@ -113,7 +113,7 @@ let rec pp_initialize ppf (st, adtype) =
     *)
     | STuple ts ->
         pf ppf "%a{%a}" pp_st (st, adtype)
-          (list ~sep:(Fmt.unit ", ") pp_initialize)
+          (list ~sep:(Fmt.any ", ") pp_initialize)
           (List.zip_exn ts ads)
     | SArray (t, d) ->
         pf ppf "@[<hov 2>%a(@,%a,@ @,%a)@]" pp_st (st, adtype) pp_expr d
@@ -420,7 +420,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
         match lhs with LIndexed (lv, idcs) -> (lv, idcs) | _ -> (lhs, []) in
       pf ppf "@[<hov 2>stan::model::assign(@,%a,@ %a,@ %S%s%a@]);"
         pp_nonrange_lvalue lhs_base pp_expr rhs
-        (strf "assigning variable %a" pp_nonrange_lvalue
+        (str "assigning variable %a" pp_nonrange_lvalue
            lhs_base
            (* (list ~sep:comma (Pretty.pp_index Pretty.pp_expr_typed_located)) idcs *) )
         (if List.length lhs_idcs = 0 then "" else ", ")

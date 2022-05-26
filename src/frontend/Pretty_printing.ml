@@ -352,68 +352,61 @@ let pp_bracketed_transform ppf = function
   (* tuple transformations are handled in pp_transformed_type *) ->
       ()
 
-let rec pp_transformed_type ppf (pst, trans) =
+let rec pp_transformed_type ppf (st, trans) =
   let open Middle in
-  match pst with
-  | Type.Unsized ust ->
-      (* unsized types are untransformed *)
-      pf ppf "%a" pp_unsizedtype ust
-  | Type.Sized st -> (
-      let pp_possibly_transformed_type ppf (st, trans) =
-        let sizes_fmt =
-          match st with
-          | SizedType.SVector (_, e)
-           |SRowVector (_, e)
-           |SComplexVector e
-           |SComplexRowVector e ->
-              const (fun ppf -> pf ppf "[%a]" pp_expression) e
-          | SMatrix (_, e1, e2) | SComplexMatrix (e1, e2) ->
-              const
-                (fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression)
-                e2
-          | SArray _ | SInt | SReal | SComplex | STuple _ -> nop in
-        let cov_sizes_fmt =
-          match st with
-          | SMatrix (_, e1, e2) ->
-              if e1 = e2 then const (fun ppf -> pf ppf "[%a]" pp_expression) e1
-              else
-                const
-                  (fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression)
-                  e2
-          | _ -> nop in
-        match trans with
-        | Transformation.Identity -> pf ppf "%a" pp_sizedtype st
-        | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
-         |OffsetMultiplier _ ->
-            pf ppf "%a%a%a" pp_unsizedtype (SizedType.to_unsized st)
-              pp_bracketed_transform trans sizes_fmt ()
-        | Ordered -> pf ppf "ordered%a" sizes_fmt ()
-        | PositiveOrdered -> pf ppf "positive_ordered%a" sizes_fmt ()
-        | Simplex -> pf ppf "simplex%a" sizes_fmt ()
-        | UnitVector -> pf ppf "unit_vector%a" sizes_fmt ()
-        | CholeskyCorr -> pf ppf "cholesky_factor_corr%a" cov_sizes_fmt ()
-        | CholeskyCov -> pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
-        | Correlation -> pf ppf "corr_matrix%a" cov_sizes_fmt ()
-        | Covariance -> pf ppf "cov_matrix%a" cov_sizes_fmt ()
-        | TupleTransformation ts as trans ->
-            (* NB this calls the top-level function to handle internal arrays etc *)
-            let transTypes = Middle.Utils.zip_tuple_trans_exn pst trans in
-            pf ppf "(@[%a%s@])"
-              (list ~sep:comma pp_transformed_type)
-              transTypes
-              (if List.length ts = 1 then "," else "") in
+  let pp_possibly_transformed_type ppf (st, trans) =
+    let sizes_fmt =
       match st with
-      (* array goes before something like cov_matrix *)
-      | Middle.SizedType.SArray _ ->
-          let ty, ixs = unwind_sized_array_type st in
-          let ({emeta= {loc= {end_loc; _}; _}; _} : untyped_expression) =
-            List.last_exn ixs in
-          let ({emeta= {loc= {begin_loc; _}; _}; _} : untyped_expression) =
-            List.hd_exn ixs in
-          pf ppf "array[@[%a@]]@ %a" pp_list_of_expression
-            (ixs, {begin_loc; end_loc})
-            pp_possibly_transformed_type (ty, trans)
-      | _ -> pf ppf "%a" pp_possibly_transformed_type (st, trans) )
+      | SizedType.SVector (_, e)
+       |SRowVector (_, e)
+       |SComplexVector e
+       |SComplexRowVector e ->
+          const (fun ppf -> pf ppf "[%a]" pp_expression) e
+      | SMatrix (_, e1, e2) | SComplexMatrix (e1, e2) ->
+          const (fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression) e2
+      | SArray _ | SInt | SReal | SComplex | STuple _ -> nop in
+    let cov_sizes_fmt =
+      match st with
+      | SMatrix (_, e1, e2) ->
+          if e1 = e2 then const (fun ppf -> pf ppf "[%a]" pp_expression) e1
+          else
+            const
+              (fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression)
+              e2
+      | _ -> nop in
+    match trans with
+    | Transformation.Identity -> pf ppf "%a" pp_sizedtype st
+    | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
+     |OffsetMultiplier _ ->
+        pf ppf "%a%a%a" pp_unsizedtype (SizedType.to_unsized st)
+          pp_bracketed_transform trans sizes_fmt ()
+    | Ordered -> pf ppf "ordered%a" sizes_fmt ()
+    | PositiveOrdered -> pf ppf "positive_ordered%a" sizes_fmt ()
+    | Simplex -> pf ppf "simplex%a" sizes_fmt ()
+    | UnitVector -> pf ppf "unit_vector%a" sizes_fmt ()
+    | CholeskyCorr -> pf ppf "cholesky_factor_corr%a" cov_sizes_fmt ()
+    | CholeskyCov -> pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
+    | Correlation -> pf ppf "corr_matrix%a" cov_sizes_fmt ()
+    | Covariance -> pf ppf "cov_matrix%a" cov_sizes_fmt ()
+    | TupleTransformation ts as trans ->
+        (* NB this calls the top-level function to handle internal arrays etc *)
+        let transTypes = Middle.Utils.zip_stuple_trans_exn st trans in
+        pf ppf "(@[%a%s@])"
+          (list ~sep:comma pp_transformed_type)
+          transTypes
+          (if List.length ts = 1 then "," else "") in
+  match st with
+  (* array goes before something like cov_matrix *)
+  | Middle.SizedType.SArray _ ->
+      let ty, ixs = unwind_sized_array_type st in
+      let ({emeta= {loc= {end_loc; _}; _}; _} : untyped_expression) =
+        List.last_exn ixs in
+      let ({emeta= {loc= {begin_loc; _}; _}; _} : untyped_expression) =
+        List.hd_exn ixs in
+      pf ppf "array[@[%a@]]@ %a" pp_list_of_expression
+        (ixs, {begin_loc; end_loc})
+        pp_possibly_transformed_type (ty, trans)
+  | _ -> pf ppf "%a" pp_possibly_transformed_type (st, trans)
 
 let rec pp_indent_unless_block ppf ((s : untyped_statement), loc) =
   match s.stmt with

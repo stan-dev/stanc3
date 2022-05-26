@@ -78,20 +78,6 @@ module Fixed = struct
   include Fixed.Make2 (First) (Pattern)
 end
 
-(** Statements with no meta-data *)
-module NoMeta = struct
-  module Meta = struct
-    type t = unit [@@deriving compare, sexp, hash]
-
-    let empty = ()
-    let pp _ _ = ()
-  end
-
-  include Specialized.Make2 (Fixed) (Expr.NoMeta) (Meta)
-
-  let remove_meta stmt = Fixed.map (fun _ -> ()) (fun _ -> ()) stmt
-end
-
 (** Statements with location information and types for contained expressions *)
 module Located = struct
   module Meta = struct
@@ -121,95 +107,6 @@ module Located = struct
       ; meta: (Meta.t[@sexp.opaque] [@compare.ignore]) }
     [@@deriving compare, sexp, hash]
   end
-end
-
-(** Statements with location information and labels. Contained expressions have
-both are typed and labelled. *)
-module Labelled = struct
-  module Meta = struct
-    type t =
-      { loc: (Location_span.t[@sexp.opaque] [@compare.ignore])
-      ; label: Label.Int_label.t [@compare.ignore] }
-    [@@deriving compare, create, sexp, hash]
-
-    let empty =
-      create ~loc:Location_span.empty ~label:Label.Int_label.(prev init) ()
-
-    let pp _ _ = ()
-  end
-
-  include Specialized.Make2 (Fixed) (Expr.Labelled) (Meta)
-
-  let label_of Fixed.{meta= Meta.{label; _}; _} = label
-  let loc_of Fixed.{meta= Meta.{loc; _}; _} = loc
-
-  let label ?(init = Label.Int_label.init) (stmt : Located.t) : t =
-    let lbl = ref init in
-    let f Expr.Typed.Meta.{adlevel; type_; loc} =
-      let cur_lbl = !lbl in
-      lbl := Label.Int_label.next cur_lbl ;
-      Expr.Labelled.Meta.create ~type_ ~loc ~adlevel ~label:cur_lbl ()
-    and g loc =
-      let cur_lbl = !lbl in
-      lbl := Label.Int_label.next cur_lbl ;
-      Meta.create ~loc ~label:cur_lbl () in
-    Fixed.map f g stmt
-
-  type associations =
-    { exprs: Expr.Labelled.t Label.Int_label.Map.t
-    ; stmts: t Label.Int_label.Map.t }
-
-  let empty =
-    {exprs= Label.Int_label.Map.empty; stmts= Label.Int_label.Map.empty}
-
-  let rec associate ?init:(assocs = empty) ({pattern; _} as stmt : t) =
-    associate_pattern
-      { assocs with
-        stmts=
-          Label.Int_label.Map.add_exn assocs.stmts ~key:(label_of stmt)
-            ~data:stmt }
-      pattern
-
-  and associate_pattern assocs = function
-    | Fixed.Pattern.Break | Skip | Continue | Return None -> assocs
-    | Return (Some e) | TargetPE e ->
-        {assocs with exprs= Expr.Labelled.associate ~init:assocs.exprs e}
-    | NRFunApp (_, args) ->
-        { assocs with
-          exprs=
-            List.fold args ~init:assocs.exprs ~f:(fun accu x ->
-                Expr.Labelled.associate ~init:accu x ) }
-    | Assignment (lv, _, rhs) ->
-        let rec lvalue_exprs ~init = function
-          | Fixed.Pattern.LIndexed (lv, idxs) ->
-              List.fold ~f:Expr.Labelled.associate_index
-                ~init:(lvalue_exprs lv ~init) idxs
-          | _ -> init in
-        let exprs =
-          Expr.Labelled.(
-            associate rhs ~init:(lvalue_exprs ~init:assocs.exprs lv)) in
-        {assocs with exprs}
-    | IfElse (pred, body, None) | While (pred, body) ->
-        let exprs = Expr.Labelled.associate ~init:assocs.exprs pred in
-        associate ~init:{assocs with exprs} body
-    | IfElse (pred, ts, Some fs) ->
-        let exprs = Expr.Labelled.associate ~init:assocs.exprs pred in
-        let assocs' = {assocs with exprs} in
-        associate ~init:(associate ~init:assocs' ts) fs
-    | Decl {decl_type; _} -> associate_possibly_sized_type assocs decl_type
-    | For {lower; upper; body; _} ->
-        let exprs =
-          Expr.Labelled.(
-            associate ~init:(associate ~init:assocs.exprs lower) upper) in
-        let assocs' = {assocs with exprs} in
-        associate ~init:assocs' body
-    | Profile (_, xs) | Block xs | SList xs ->
-        List.fold ~f:(fun accu x -> associate ~init:accu x) ~init:assocs xs
-
-  and associate_possibly_sized_type assocs = function
-    | Type.Sized st ->
-        {assocs with exprs= SizedType.associate ~init:assocs.exprs st}
-    | Unsized _ -> assocs
 end
 
 module Numbered = struct

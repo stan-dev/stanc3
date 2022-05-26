@@ -1560,7 +1560,7 @@ and check_var_decl loc cf tenv sized_ty trans id init is_global =
   verify_transformed_param_ty loc cf is_global unsized_type ;
   let stmt =
     VarDecl
-      { decl_type= Sized checked_type
+      { decl_type= checked_type
       ; transformation= checked_trans
       ; identifier= id
       ; initial_value= tinit
@@ -1753,16 +1753,10 @@ and check_statement (cf : context_flags_record) (tenv : Env.t)
   | ForEach (id, e, s) -> (tenv, check_foreach loc cf tenv id e s)
   | Block stmts -> (tenv, check_block loc cf tenv stmts)
   | Profile (name, vdsl) -> (tenv, check_profile loc cf tenv name vdsl)
-  | VarDecl {decl_type= Unsized _; _} ->
-      (* currently unallowed by parser *)
-      Common.FatalError.fatal_error_msg
-        [%message "Don't support unsized declarations yet."]
   (* these two are special in that they're allowed to change the type environment *)
-  | VarDecl
-      {decl_type= Sized st; transformation; identifier; initial_value; is_global}
-    ->
-      check_var_decl loc cf tenv st transformation identifier initial_value
-        is_global
+  | VarDecl {decl_type; transformation; identifier; initial_value; is_global} ->
+      check_var_decl loc cf tenv decl_type transformation identifier
+        initial_value is_global
   | FunDef {returntype; funname; arguments; body} ->
       check_fundef loc cf tenv returntype funname arguments body
 

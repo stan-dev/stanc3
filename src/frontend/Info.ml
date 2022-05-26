@@ -24,7 +24,7 @@ let rec unsized_basetype_json t =
         `Assoc [("type", `String type_); ("dimensions", `Int dim)] in
       type_dims t |> to_json
 
-let basetype_dims t = Type.to_unsized t |> unsized_basetype_json
+let basetype_dims t = SizedType.to_unsized t |> unsized_basetype_json
 
 let get_var_decl {stmts; _} : t =
   `Assoc

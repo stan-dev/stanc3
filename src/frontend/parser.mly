@@ -350,7 +350,7 @@ decl(type_rule, rhs):
       (fun ~is_global ->
       [{ stmt=
           VarDecl {
-              decl_type= Sized (reducearray (fst ty, dims))
+              decl_type= (reducearray (fst ty, dims))
             ; transformation= snd ty
             ; identifier= id
             ; initial_value= rhs_opt
@@ -374,7 +374,7 @@ decl(type_rule, rhs):
         type. *)
       List.map vs ~f:(fun (id, rhs_opt) ->
         { stmt=
-          VarDecl { decl_type= Sized (fst ty)
+          VarDecl { decl_type= (fst ty)
                   ; transformation= snd ty
                   ; identifier= id
                   ; initial_value= rhs_opt

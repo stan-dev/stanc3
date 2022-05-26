@@ -159,13 +159,13 @@ type ('e, 's, 'l, 'f) statement =
   | Profile of string * 's list
   | Block of 's list
   | VarDecl of
-      { decl_type: 'e Middle.Type.t
+      { decl_type: 'e SizedType.t
       ; transformation: 'e Transformation.t
       ; identifier: identifier
       ; initial_value: 'e option
       ; is_global: bool }
   | FunDef of
-      { returntype: Middle.UnsizedType.returntype
+      { returntype: UnsizedType.returntype
       ; funname: identifier
       ; arguments:
           (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * identifier)
@@ -345,17 +345,16 @@ let rec get_loc_expr (e : untyped_expression) =
       e.emeta.loc.end_loc
   | FunApp (_, id, _) | CondDistApp (_, id, _) -> id.id_loc.end_loc
 
-let get_loc_dt (t : untyped_expression Type.t) =
+let get_loc_dt (t : untyped_expression SizedType.t) =
   match t with
-  | Type.Unsized _ | Sized (SInt | SReal | SComplex | STuple _) -> None
-  | Sized
-      ( SVector (_, e)
-      | SRowVector (_, e)
-      | SMatrix (_, e, _)
-      | SComplexVector e
-      | SComplexRowVector e
-      | SComplexMatrix (e, _)
-      | SArray (_, e) ) ->
+  | SInt | SReal | SComplex | STuple _ -> None
+  | SVector (_, e)
+   |SRowVector (_, e)
+   |SMatrix (_, e, _)
+   |SComplexVector e
+   |SComplexRowVector e
+   |SComplexMatrix (e, _)
+   |SArray (_, e) ->
       Some e.emeta.loc.begin_loc
 
 let get_loc_tf (t : untyped_expression Transformation.t) =
