@@ -15618,6 +15618,12 @@ Display all Stan math signatures exposed in the language
   neg_binomial_rng(array[] real, array[] real) => array[] int
   negative_infinity() => real
   norm(complex) => real
+  norm1(vector) => real
+  norm1(row_vector) => real
+  norm1(array[] real) => real
+  norm2(vector) => real
+  norm2(row_vector) => real
+  norm2(array[] real) => real
   normal_ccdf_log(real, real, real) => real
   normal_ccdf_log(real, real, vector) => real
   normal_ccdf_log(real, real, row_vector) => real

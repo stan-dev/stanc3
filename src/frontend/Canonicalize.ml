@@ -192,7 +192,7 @@ module Make (Deprecation : Deprecation_analysis.DEPRECATION_ANALYZER) :
           ; initial_value= init
           ; is_global } ->
           VarDecl
-            { decl_type= Middle.Type.map no_parens d
+            { decl_type= Middle.SizedType.map no_parens d
             ; transformation= Middle.Transformation.map keep_parens t
             ; identifier
             ; initial_value= Option.map ~f:no_parens init
