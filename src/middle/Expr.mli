@@ -24,18 +24,6 @@ module Fixed : sig
   include Fixed.S with module Pattern := Pattern
 end
 
-module NoMeta : sig
-  module Meta : sig
-    type t = unit [@@deriving compare, sexp, hash]
-
-    include Specialized.Meta with type t := unit
-  end
-
-  include Specialized.S with module Meta := Meta and type t = Meta.t Fixed.t
-
-  val remove_meta : 'a Fixed.t -> t
-end
-
 module Typed : sig
   module Meta : sig
     type t =
@@ -53,31 +41,6 @@ module Typed : sig
   val loc_of : t -> Location_span.t
   val adlevel_of : t -> UnsizedType.autodifftype
   val fun_arg : t -> UnsizedType.autodifftype * UnsizedType.t
-end
-
-module Labelled : sig
-  module Meta : sig
-    type t =
-      { type_: UnsizedType.t
-      ; loc: Location_span.t [@sexp.opaque] [@compare.ignore]
-      ; adlevel: UnsizedType.autodifftype
-      ; label: Label.Int_label.t }
-    [@@deriving compare, create, sexp, hash]
-
-    include Specialized.Meta with type t := t
-  end
-
-  include Specialized.S with module Meta := Meta and type t = Meta.t Fixed.t
-
-  val type_of : t -> UnsizedType.t
-  val loc_of : t -> Location_span.t
-  val adlevel_of : t -> UnsizedType.autodifftype
-  val label_of : t -> Label.Int_label.t
-  val label : ?init:int -> Typed.t -> t
-  val associate : ?init:t Label.Int_label.Map.t -> t -> t Label.Int_label.Map.t
-
-  val associate_index :
-    t Label.Int_label.Map.t -> t Index.t -> t Label.Int_label.Map.t
 end
 
 module Helpers : sig
