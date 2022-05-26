@@ -1826,6 +1826,12 @@ let () =
     , SoA ) ;
   add_nullary "negative_infinity" ;
   add_unqualified ("norm", ReturnType UReal, [UComplex], AoS) ;
+  add_unqualified ("norm1", ReturnType UReal, [UArray UReal], SoA) ;
+  add_unqualified ("norm1", ReturnType UReal, [UVector], SoA) ;
+  add_unqualified ("norm1", ReturnType UReal, [URowVector], SoA) ;
+  add_unqualified ("norm2", ReturnType UReal, [UArray UReal], SoA) ;
+  add_unqualified ("norm2", ReturnType UReal, [UVector], SoA) ;
+  add_unqualified ("norm2", ReturnType UReal, [URowVector], SoA) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal

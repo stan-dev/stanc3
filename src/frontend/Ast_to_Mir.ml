@@ -289,7 +289,7 @@ let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
       [check_id var]
   | _ -> []
 
-let check_sizedtype name =
+let check_sizedtype name st =
   let check x = function
     | {Expr.Fixed.pattern= Lit (Int, i); _} when float_of_string i >= 0. -> []
     | n ->
@@ -324,13 +324,11 @@ let check_sizedtype name =
         let e = trans_expr s in
         let ll, t = sizedtype t in
         (check s e @ ll, SizedType.SArray (t, e)) in
-  function
-  | Type.Sized st ->
-      let ll, st = sizedtype st in
-      (ll, Type.Sized st)
-  | Unsized ut -> ([], Unsized ut)
+  let ll, st = sizedtype st in
+  (ll, Type.Sized st)
 
-let trans_decl {transform_action; dadlevel} smeta decl_type transform identifier
+let trans_decl {transform_action; dadlevel} smeta
+    (decl_type : Ast.typed_expression SizedType.t) transform identifier
     initial_value =
   let decl_id = identifier.Ast.name in
   let rhs = Option.map ~f:trans_expr initial_value in
@@ -341,7 +339,7 @@ let trans_decl {transform_action; dadlevel} smeta decl_type transform identifier
       { Fixed.pattern= Var decl_id
       ; meta=
           Typed.Meta.create ~adlevel:dadlevel ~loc:smeta
-            ~type_:(Type.to_unsized decl_type)
+            ~type_:(SizedType.to_unsized decl_type)
             () } in
   let decl =
     Stmt.
@@ -632,7 +630,7 @@ let trans_block ud_dists declc block prog =
     match stmt with
     | { Ast.stmt=
           VarDecl
-            { decl_type= Sized type_
+            { decl_type= type_
             ; identifier
             ; transformation
             ; initial_value
@@ -707,10 +705,7 @@ let gather_data (p : Ast.typed_program) =
   List.filter_map data ~f:(function
     | { stmt=
           VarDecl
-            { decl_type= Sized sizedtype
-            ; transformation
-            ; identifier= {name; _}
-            ; _ }
+            {decl_type= sizedtype; transformation; identifier= {name; _}; _}
       ; _ } ->
         Some
           ( SizedType.map trans_expr sizedtype
@@ -732,7 +727,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   let trans_stmt = trans_stmt ud_dists in
   let get_name_size s =
     match s.Ast.stmt with
-    | Ast.VarDecl {decl_type= Sized st; identifier; transformation; _} ->
+    | Ast.VarDecl {decl_type= st; identifier; transformation; _} ->
         [(identifier.name, trans_sizedtype st, transformation)]
     | _ -> [] in
   let input_vars =
