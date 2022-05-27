@@ -1,11 +1,11 @@
 let derivation = import ./default.nix; in
 
 with (import (builtins.fetchTarball {
-  name = "nixpkgs-19.09";
-  # Tarball of tagged release of Nixpkgs 19.09
-  url = "https://github.com/NixOS/nixpkgs/archive/19.09.tar.gz";
+  name = "nixpkgs-21.11";
+  # Tarball of tagged release of Nixpkgs 21.11
+  url = "https://github.com/NixOS/nixpkgs/archive/21.11.tar.gz";
   # Tarball hash obtained using `nix-prefetch-url --unpack <url>`
-  sha256 = "0mhqhq21y5vrr1f30qd2bvydv4bbbslvyzclhw0kdxmkgg3z4c92";
+  sha256 = "162dywda2dvfj1248afxc45kcrg83appjd0nmdb541hl7rnncf02";
 }) {});
 
 stdenv.mkDerivation rec {
