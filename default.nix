@@ -6,7 +6,6 @@ with (import (builtins.fetchTarball {
   sha256 = "162dywda2dvfj1248afxc45kcrg83appjd0nmdb541hl7rnncf02";
 }) {});
 
-
 ocamlPackages.buildDunePackage rec {
   pname = "stanc";
   version = "2.29.0";
@@ -19,10 +18,16 @@ ocamlPackages.buildDunePackage rec {
 
   # Set to true and add the src regex "^test.*$" to run tests on every build
   doCheck = false;
+  # doCheck = true;
+
+  buildPhase = ''dune build -p stanc'';
 
   useDune2 = true;
 
   buildInputs = with ocamlPackages; [
+    stdenv
+    dune_2
+    ocaml
     yojson
     menhir
     menhirLib
