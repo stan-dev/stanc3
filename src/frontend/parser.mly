@@ -773,14 +773,14 @@ truncation:
        | None, None -> NoTruncate  }
 
 nested_statement:
-  | IF LPAREN e=expression RPAREN s1=vardecl_or_statement ELSE s2=statement
+  | IF LPAREN e=expression RPAREN s1=vardecl_or_statement ELSE s2=vardecl_or_statement
     {  grammar_logger "ifelse_statement" ; IfThenElse (e, s1, Some s2) }
   | IF LPAREN e=expression RPAREN s=vardecl_or_statement %prec below_ELSE
     {  grammar_logger "if_statement" ; IfThenElse (e, s, None) }
-  | WHILE LPAREN e=expression RPAREN s=statement
+  | WHILE LPAREN e=expression RPAREN s=vardecl_or_statement
     {  grammar_logger "while_statement" ; While (e, s) }
   | FOR LPAREN id=identifier IN e1=expression COLON e2=expression RPAREN
-    s=statement
+    s=vardecl_or_statement
     {
       grammar_logger "for_statement" ;
       For {loop_variable= id;
@@ -788,7 +788,7 @@ nested_statement:
            upper_bound= e2;
            loop_body= s;}
     }
-  | FOR LPAREN id=identifier IN e=expression RPAREN s=statement
+  | FOR LPAREN id=identifier IN e=expression RPAREN s=vardecl_or_statement
     {  grammar_logger "foreach_statement" ; ForEach (id, e, s) }
   | PROFILE LPAREN st=string_literal RPAREN LBRACE l=list(vardecl_or_statement) RBRACE
     {  grammar_logger "profile_statement" ; Profile (st, l) }
