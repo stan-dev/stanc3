@@ -124,6 +124,9 @@ type untyped_lval = (untyped_expression, located_meta) lval_with
 type typed_lval = (typed_expression, typed_expr_meta) lval_with
 [@@deriving sexp, hash, compare, map, fold]
 
+type 'e variable = {identifier: identifier; initial_value: 'e option}
+[@@deriving sexp, hash, compare, map, fold]
+
 (** Statement shapes, where we substitute untyped_expression and untyped_statement
     for 'e and 's respectively to get untyped_statement and typed_expression and
     typed_statement to get typed_statement    *)
@@ -158,9 +161,8 @@ type ('e, 's, 'l, 'f) statement =
   | VarDecl of
       { decl_type: 'e SizedType.t
       ; transformation: 'e Transformation.t
-      ; identifier: identifier
-      ; initial_value: 'e option
-      ; is_global: bool }
+      ; is_global: bool
+      ; variables: 'e variable list }
   | FunDef of
       { returntype: UnsizedType.returntype
       ; funname: identifier
@@ -364,10 +366,10 @@ let get_first_loc (s : untyped_statement) =
   | Assignment _ | Profile _ | Block _ | Tilde _ | Break | Continue
    |ReturnVoid | Print _ | Reject _ | Skip ->
       s.smeta.loc.begin_loc
-  | VarDecl {decl_type; transformation; identifier; _} -> (
+  | VarDecl {decl_type; transformation; variables; _} -> (
     match get_loc_dt decl_type with
     | Some loc -> loc
     | None -> (
       match get_loc_tf transformation with
       | Some loc -> loc
-      | None -> identifier.id_loc.begin_loc ) )
+      | None -> (List.hd_exn variables).identifier.id_loc.begin_loc ) )
