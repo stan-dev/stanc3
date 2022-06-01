@@ -83,8 +83,9 @@ let%expect_test "parse minus unary" =
         (((stmts
            (((stmt
               (VarDecl (decl_type SReal) (transformation Identity)
-               (identifier ((name x) (id_loc <opaque>))) (initial_value ())
-               (is_global false)))
+               (is_global false)
+               (variables
+                (((identifier ((name x) (id_loc <opaque>))) (initial_value ()))))))
              (smeta ((loc <opaque>))))
             ((stmt
               (Assignment
@@ -116,13 +117,22 @@ let%expect_test "parse unary over binary" =
       (((stmts
          (((stmt
             (VarDecl (decl_type SReal) (transformation Identity)
-             (identifier ((name x) (id_loc <opaque>)))
-             (initial_value
-              (((expr
-                 (BinOp
-                  ((expr
+             (is_global false)
+             (variables
+              (((identifier ((name x) (id_loc <opaque>)))
+                (initial_value
+                 (((expr
                     (BinOp
-                     ((expr (Variable ((name x) (id_loc <opaque>))))
+                     ((expr
+                       (BinOp
+                        ((expr (Variable ((name x) (id_loc <opaque>))))
+                         (emeta ((loc <opaque>))))
+                        Minus
+                        ((expr
+                          (PrefixOp PMinus
+                           ((expr (Variable ((name x) (id_loc <opaque>))))
+                            (emeta ((loc <opaque>))))))
+                         (emeta ((loc <opaque>))))))
                       (emeta ((loc <opaque>))))
                      Minus
                      ((expr
@@ -130,15 +140,7 @@ let%expect_test "parse unary over binary" =
                         ((expr (Variable ((name x) (id_loc <opaque>))))
                          (emeta ((loc <opaque>))))))
                       (emeta ((loc <opaque>))))))
-                   (emeta ((loc <opaque>))))
-                  Minus
-                  ((expr
-                    (PrefixOp PMinus
-                     ((expr (Variable ((name x) (id_loc <opaque>))))
-                      (emeta ((loc <opaque>))))))
-                   (emeta ((loc <opaque>))))))
-                (emeta ((loc <opaque>))))))
-             (is_global false)))
+                   (emeta ((loc <opaque>)))))))))))
            (smeta ((loc <opaque>))))))
         (xloc
          ((begin_loc
@@ -160,8 +162,9 @@ let%expect_test "parse indices, two different colons" =
          (decl_type
           (SMatrix AoS ((expr (IntNumeral 5)) (emeta ((loc <opaque>))))
            ((expr (IntNumeral 5)) (emeta ((loc <opaque>))))))
-         (transformation Identity) (identifier ((name x) (id_loc <opaque>)))
-         (initial_value ()) (is_global false)))
+         (transformation Identity) (is_global false)
+         (variables
+          (((identifier ((name x) (id_loc <opaque>))) (initial_value ()))))))
        (smeta ((loc <opaque>))))
       ((stmt
         (Print
@@ -388,16 +391,17 @@ let%expect_test "parse crazy truncation example" =
                 (SArray
                  (SArray SReal ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
                  ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))))
-               (transformation Identity) (identifier ((name T) (id_loc <opaque>)))
-               (initial_value
-                (((expr
-                   (ArrayExpr
-                    (((expr
-                       (ArrayExpr
-                        (((expr (RealNumeral 42.0)) (emeta ((loc <opaque>)))))))
-                      (emeta ((loc <opaque>)))))))
-                  (emeta ((loc <opaque>))))))
-               (is_global false)))
+               (transformation Identity) (is_global false)
+               (variables
+                (((identifier ((name T) (id_loc <opaque>)))
+                  (initial_value
+                   (((expr
+                      (ArrayExpr
+                       (((expr
+                          (ArrayExpr
+                           (((expr (RealNumeral 42.0)) (emeta ((loc <opaque>)))))))
+                         (emeta ((loc <opaque>)))))))
+                     (emeta ((loc <opaque>)))))))))))
              (smeta ((loc <opaque>))))
             ((stmt
               (Tilde (arg ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))

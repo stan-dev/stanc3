@@ -137,6 +137,15 @@ model {
   
 }
 
+  $ ../../../../../install/default/bin/stanc --auto-format good_nested_decl.stan
+functions {
+  real foo() {
+    if (1) 
+      real this_does_parse = 0, try_me;
+    return 0;
+  }
+}
+
   $ ../../../../../install/default/bin/stanc --auto-format good_semicolons.stan
 data {
   ;
