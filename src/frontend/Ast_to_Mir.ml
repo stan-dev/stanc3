@@ -710,17 +710,15 @@ let migrate_checks_to_end_of_block stmts =
 
 let gather_data (p : Ast.typed_program) =
   let data = Ast.get_stmts p.datablock in
-  List.filter_map data ~f:(function
+  List.concat_map data ~f:(function
     | {stmt= VarDecl {decl_type= sizedtype; transformation; variables; _}; _} ->
-        Some
-          (List.map
-             ~f:(fun {identifier; _} ->
-               ( SizedType.map trans_expr sizedtype
-               , Transformation.map trans_expr transformation
-               , identifier.name ) )
-             variables )
-    | _ -> None )
-  |> List.concat
+        List.map
+          ~f:(fun {identifier; _} ->
+            ( SizedType.map trans_expr sizedtype
+            , Transformation.map trans_expr transformation
+            , identifier.name ) )
+          variables
+    | _ -> [] )
 
 let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   let {Ast.functionblock; datablock; transformeddatablock; modelblock; _} = p in

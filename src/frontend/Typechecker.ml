@@ -1486,14 +1486,11 @@ and check_var_decl loc cf tenv sized_ty trans
     check_sizedtype {cf with in_toplevel_decl= is_global} tenv sized_ty in
   let unsized_type = SizedType.to_unsized checked_type in
   let checked_trans = check_transformation cf tenv unsized_type trans in
-  List.iter
-    ~f:(fun {identifier; _} ->
-      verify_identifier identifier ;
-      verify_name_fresh tenv identifier ~is_udf:false )
-    variables ;
   let tenv =
     List.fold ~init:tenv
       ~f:(fun tenv' {identifier; _} ->
+        verify_identifier identifier ;
+        verify_name_fresh tenv' identifier ~is_udf:false ;
         Env.add tenv' identifier.name unsized_type
           (`Variable
             {origin= cf.current_block; global= is_global; readonly= false} ) )
