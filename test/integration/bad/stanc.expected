@@ -424,6 +424,16 @@ Semantic error in 'continue5.stan', line 4, column 4 to column 13:
    -------------------------------------------------
 
 Continue statements may only be used in loops.
+  $ ../../../../install/default/bin/stanc decl-mutual-inits.stan
+Semantic error in 'decl-mutual-inits.stan', line 2, column 11 to column 12:
+   -------------------------------------------------
+     1:  transformed parameters {
+     2:    real x = y, y = x;
+                    ^
+     3:  }
+   -------------------------------------------------
+
+Identifier 'y' not in scope.
   $ ../../../../install/default/bin/stanc decl-reuse-name.stan
 Semantic error in 'decl-reuse-name.stan', line 2, column 13 to column 14:
    -------------------------------------------------
