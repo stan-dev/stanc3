@@ -474,17 +474,13 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
       pf ppf "profile(%s) {@,%a@,}" name
         (indented_box pp_list_of_statements)
         (vdsl, loc)
-  | VarDecl
-      { decl_type= pst
-      ; transformation= trans
-      ; identifier= id
-      ; initial_value= init
-      ; is_global= _ } ->
-      let pp_init ppf init =
-        match init with None -> () | Some e -> pf ppf " = %a" pp_expression e
-      in
-      pf ppf "@[<h>%a %a%a;@]" pp_transformed_type (pst, trans) pp_identifier id
-        pp_init init
+  | VarDecl {decl_type= pst; transformation= trans; variables; is_global= _} ->
+      let pp_var ppf {identifier; initial_value} =
+        pf ppf "%a%a" pp_identifier identifier
+          (option (fun ppf e -> pf ppf " = %a" pp_expression e))
+          initial_value in
+      pf ppf "@[<h>%a %a;@]" pp_transformed_type (pst, trans)
+        (list ~sep:comma pp_var) variables
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
       let loc_of (_, _, id) = id.id_loc in
       pf ppf "%a %a(%a" pp_returntype rt pp_identifier id

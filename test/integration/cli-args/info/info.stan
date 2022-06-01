@@ -17,7 +17,7 @@ data {
   int a;
   real b;
   vector[2] c;
-  row_vector[3] d;
+  row_vector[3] d1,d2;
   matrix[2,2] e;
   array[5] int f;
   array[6] real g;

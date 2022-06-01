@@ -149,33 +149,32 @@ function_block:
 data_block:
   | DATABLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
     { grammar_logger "data_block" ;
-      {stmts= List.concat tvd; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= tvd; xloc= Location_span.of_positions_exn $loc} }
 
 transformed_data_block:
   | TRANSFORMEDDATABLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
     { grammar_logger "transformed_data_block" ;
-      {stmts= List.concat tvds; xloc= Location_span.of_positions_exn $loc} }
-    (* NOTE: this allows mixing of statements and top_var_decls *)
+      {stmts= tvds; xloc= Location_span.of_positions_exn $loc} }
 
 parameters_block:
   | PARAMETERSBLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
     { grammar_logger "parameters_block" ;
-      {stmts= List.concat tvd; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= tvd; xloc= Location_span.of_positions_exn $loc} }
 
 transformed_parameters_block:
   | TRANSFORMEDPARAMETERSBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
     { grammar_logger "transformed_parameters_block" ;
-      {stmts= List.concat tvds; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= tvds; xloc= Location_span.of_positions_exn $loc} }
 
 model_block:
   | MODELBLOCK LBRACE vds=list(vardecl_or_statement) RBRACE
     { grammar_logger "model_block" ;
-      {stmts= List.concat vds; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= vds; xloc= Location_span.of_positions_exn $loc} }
 
 generated_quantities_block:
   | GENERATEDQUANTITIESBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
     { grammar_logger "generated_quantities_block" ;
-      {stmts= List.concat tvds; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= tvds; xloc= Location_span.of_positions_exn $loc} }
 
 (* function definitions *)
 identifier:
@@ -318,8 +317,8 @@ optional_assignment(rhs):
     { Option.map ~f:snd rhs_opt }
 
 id_and_optional_assignment(rhs):
-  | id=decl_identifier rhs_opt=optional_assignment(rhs)
-    { (id, rhs_opt) }
+  | identifier=decl_identifier initial_value=optional_assignment(rhs)
+    { Ast.{identifier; initial_value} }
 
 (*
  * All rules for declaration statements.
@@ -348,18 +347,19 @@ decl(type_rule, rhs):
       SEMICOLON
     { Input_warnings.array_syntax $loc;
       (fun ~is_global ->
-      [{ stmt=
+      { stmt=
           VarDecl {
               decl_type= (reducearray (fst ty, dims))
             ; transformation= snd ty
-            ; identifier= id
-            ; initial_value= rhs_opt
+            ; variables= [ { identifier= id
+                           ; initial_value= rhs_opt
+                           } ]
             ; is_global
             }
       ; smeta= {
           loc= Location_span.of_positions_exn $loc
         }
-    }])
+    })
     }
 
   (* This rule matches non-array declarations and also the new array syntax, e.g:
@@ -370,19 +370,18 @@ decl(type_rule, rhs):
   | ty=higher_type(type_rule)
     vs=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs)) SEMICOLON
     { (fun ~is_global ->
-    (* map over each variable in vs (often only one), assigning each the same
-        type. *)
-      List.map vs ~f:(fun (id, rhs_opt) ->
-        { stmt=
-          VarDecl { decl_type= (fst ty)
-                  ; transformation= snd ty
-                  ; identifier= id
-                  ; initial_value= rhs_opt
-                  ; is_global
-                  }
-        ; smeta= { loc=Location_span.of_positions_exn $sloc }
-        })
-  )}
+      { stmt=
+          VarDecl {
+              decl_type= fst ty
+            ; transformation= snd ty
+            ; variables=vs
+            ; is_global
+            }
+      ; smeta= {
+          loc= Location_span.of_positions_exn $sloc
+        }
+      })
+    }
 
 (* Take a type matched by type_rule and produce that type or any (possibly nested) container of that type *)
 (* Can't do the fully recursive array_type(higher_type) because arrays can't hold arrays *)
@@ -429,10 +428,9 @@ top_var_decl_no_assign:
     }
   | SEMICOLON
     { grammar_logger "top_var_decl_no_assign_skip";
-      [ { stmt= Skip
-        ; smeta= { loc= Location_span.of_positions_exn $loc
-        }
-      }]
+      { stmt= Skip
+      ; smeta= { loc= Location_span.of_positions_exn $loc }
+      }
     }
 
 sized_basic_type:
@@ -832,14 +830,14 @@ truncation:
        | None, None -> NoTruncate  }
 
 nested_statement:
-  | IF LPAREN e=expression RPAREN s1=statement ELSE s2=statement
+  | IF LPAREN e=expression RPAREN s1=vardecl_or_statement ELSE s2=vardecl_or_statement
     {  grammar_logger "ifelse_statement" ; IfThenElse (e, s1, Some s2) }
-  | IF LPAREN e=expression RPAREN s=statement %prec below_ELSE
+  | IF LPAREN e=expression RPAREN s=vardecl_or_statement %prec below_ELSE
     {  grammar_logger "if_statement" ; IfThenElse (e, s, None) }
-  | WHILE LPAREN e=expression RPAREN s=statement
+  | WHILE LPAREN e=expression RPAREN s=vardecl_or_statement
     {  grammar_logger "while_statement" ; While (e, s) }
   | FOR LPAREN id=identifier IN e1=expression COLON e2=expression RPAREN
-    s=statement
+    s=vardecl_or_statement
     {
       grammar_logger "for_statement" ;
       For {loop_variable= id;
@@ -847,22 +845,22 @@ nested_statement:
            upper_bound= e2;
            loop_body= s;}
     }
-  | FOR LPAREN id=identifier IN e=expression RPAREN s=statement
+  | FOR LPAREN id=identifier IN e=expression RPAREN s=vardecl_or_statement
     {  grammar_logger "foreach_statement" ; ForEach (id, e, s) }
   | PROFILE LPAREN st=string_literal RPAREN LBRACE l=list(vardecl_or_statement) RBRACE
-    {  grammar_logger "profile_statement" ; Profile (st, List.concat l) }
+    {  grammar_logger "profile_statement" ; Profile (st, l) }
   | LBRACE l=list(vardecl_or_statement)  RBRACE
-    {  grammar_logger "block_statement" ; Block (List.concat l) } (* NOTE: I am choosing to allow mixing of statements and var_decls *)
+    {  grammar_logger "block_statement" ; Block l } (* NOTE: I am choosing to allow mixing of statements and var_decls *)
 
 (* statement or var decls *)
 vardecl_or_statement:
   | s=statement
-    { grammar_logger "vardecl_or_statement_statement" ; [s] }
+    { grammar_logger "vardecl_or_statement_statement" ; s }
   | v=var_decl
     { grammar_logger "vardecl_or_statement_vardecl" ; v }
 
 top_vardecl_or_statement:
   | s=statement
-    { grammar_logger "top_vardecl_or_statement_statement" ; [s] }
+    { grammar_logger "top_vardecl_or_statement_statement" ; s }
   | v=top_var_decl
     { grammar_logger "top_vardecl_or_statement_top_vardecl" ; v }
