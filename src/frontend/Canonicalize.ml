@@ -185,17 +185,11 @@ module Make (Deprecation : Deprecation_analysis.DEPRECATION_ANALYZER) :
   let rec parens_stmt ({stmt; smeta} : typed_statement) : typed_statement =
     let stmt =
       match stmt with
-      | VarDecl
-          { decl_type= d
-          ; transformation= t
-          ; identifier
-          ; initial_value= init
-          ; is_global } ->
+      | VarDecl {decl_type= d; transformation= t; variables; is_global} ->
           VarDecl
             { decl_type= Middle.SizedType.map no_parens d
             ; transformation= Middle.Transformation.map keep_parens t
-            ; identifier
-            ; initial_value= Option.map ~f:no_parens init
+            ; variables= List.map ~f:(map_variable no_parens) variables
             ; is_global }
       | For {loop_variable; lower_bound; upper_bound; loop_body} ->
           For

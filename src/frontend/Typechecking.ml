@@ -1276,21 +1276,22 @@ module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
         let te = check e "Array sizes" in
         SArray (tst, te)
 
-  and check_var_decl_initial_value loc cf tenv id init_val_opt =
-    match init_val_opt with
+  and check_var_decl_initial_value loc cf tenv {identifier; initial_value} =
+    match initial_value with
     | Some e -> (
-        let lhs = check_lvalue cf tenv {lval= LVariable id; lmeta= {loc}} in
+        let lhs =
+          check_lvalue cf tenv {lval= LVariable identifier; lmeta= {loc}} in
         let rhs = check_expression cf tenv e in
         match
           SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_
             rhs.emeta.type_
         with
-        | Ok p -> Some (Promotion.promote rhs p)
+        | Ok p -> Ast.{identifier; initial_value= Some (Promotion.promote rhs p)}
         | Error _ ->
             Semantic_error.illtyped_assignment loc Equals lhs.lmeta.type_
               rhs.emeta.type_ []
             |> error )
-    | None -> None
+    | None -> Ast.{identifier; initial_value= None}
 
   and check_transformation cf tenv ut trans =
     let check e msg = check_expression_of_scalar_or_type cf tenv ut e msg in
@@ -1313,18 +1314,24 @@ module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
     | Correlation -> Correlation
     | Covariance -> Covariance
 
-  and check_var_decl loc cf tenv sized_ty trans id init is_global =
+  and check_var_decl loc cf tenv sized_ty trans
+      (variables : untyped_expression Ast.variable list) is_global =
     let checked_type =
       check_sizedtype {cf with in_toplevel_decl= is_global} tenv sized_ty in
     let unsized_type = SizedType.to_unsized checked_type in
     let checked_trans = check_transformation cf tenv unsized_type trans in
-    verify_identifier id ;
-    verify_name_fresh tenv id ~is_udf:false ;
-    let tenv =
-      Env.add tenv id.name unsized_type
-        (`Variable
-          {origin= cf.current_block; global= is_global; readonly= false} ) in
-    let tinit = check_var_decl_initial_value loc cf tenv id init in
+    let tenv, tvariables =
+      List.fold_map ~init:tenv
+        ~f:(fun tenv' ({identifier; _} as var) ->
+          verify_identifier identifier ;
+          verify_name_fresh tenv' identifier ~is_udf:false ;
+          let tenv'' =
+            Env.add tenv' identifier.name unsized_type
+              (`Variable
+                {origin= cf.current_block; global= is_global; readonly= false}
+                ) in
+          (tenv'', check_var_decl_initial_value loc cf tenv'' var) )
+        variables in
     verify_valid_transformation_for_type loc is_global checked_type
       checked_trans ;
     verify_transformed_param_ty loc cf is_global unsized_type ;
@@ -1332,8 +1339,7 @@ module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
       VarDecl
         { decl_type= checked_type
         ; transformation= checked_trans
-        ; identifier= id
-        ; initial_value= tinit
+        ; variables= tvariables
         ; is_global } in
     (tenv, mk_typed_statement ~stmt ~loc ~return_type:NoReturnType)
 
@@ -1522,10 +1528,8 @@ module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
     | Block stmts -> (tenv, check_block loc cf tenv stmts)
     | Profile (name, vdsl) -> (tenv, check_profile loc cf tenv name vdsl)
     (* these two are special in that they're allowed to change the type environment *)
-    | VarDecl {decl_type; transformation; identifier; initial_value; is_global}
-      ->
-        check_var_decl loc cf tenv decl_type transformation identifier
-          initial_value is_global
+    | VarDecl {decl_type; transformation; variables; is_global} ->
+        check_var_decl loc cf tenv decl_type transformation variables is_global
     | FunDef {returntype; funname; arguments; body} ->
         check_fundef loc cf tenv returntype funname arguments body
 

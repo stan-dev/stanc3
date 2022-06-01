@@ -30,7 +30,11 @@ let get_var_decl {stmts; _} : t =
          match stmt.Ast.stmt with
          | Ast.VarDecl decl ->
              let type_info = basetype_dims decl.decl_type in
-             (decl.identifier.name, type_info) :: acc
+             let decl_info =
+               List.map
+                 ~f:(fun {identifier; _} -> (identifier.name, type_info))
+                 decl.variables in
+             decl_info @ acc
          | _ -> acc )
        stmts )
 
