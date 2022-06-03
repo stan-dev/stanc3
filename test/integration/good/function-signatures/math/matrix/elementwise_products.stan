@@ -13,13 +13,13 @@ transformed data {
   matrix[d_int, d_int] transformed_data_matrix;
   vector[d_int] transformed_data_vector;
   row_vector[d_int] transformed_data_row_vector;
-  
+
   transformed_data_int = d_int .* d_int;
   transformed_data_real = d_real .* d_real;
   transformed_data_vector = d_vector .* d_vector;
   transformed_data_row_vector = d_row_vector .* d_row_vector;
   transformed_data_matrix = d_matrix .* d_matrix;
-  
+
   transformed_data_int = d_int ./ d_int;
   transformed_data_real = d_real ./ d_real;
   transformed_data_vector = d_vector ./ d_vector;
@@ -31,6 +31,27 @@ transformed data {
   transformed_data_vector = d_real ./ d_vector;
   transformed_data_row_vector = d_real ./ d_row_vector;
   transformed_data_matrix = d_real ./ d_matrix;
+  transformed_data_vector = d_vector / d_real;
+  transformed_data_row_vector = d_row_vector / d_real;
+  transformed_data_matrix = d_matrix / d_real;
+  transformed_data_vector = d_real / d_vector;
+  transformed_data_row_vector = d_real / d_row_vector;
+  transformed_data_matrix = d_real / d_matrix;
+
+  transformed_data_matrix = d_matrix .* d_real;
+  transformed_data_matrix = d_real .* d_matrix;
+  transformed_data_matrix = elt_multiply(d_matrix, d_real);
+  transformed_data_matrix = elt_multiply(d_real, d_matrix);
+
+  transformed_data_vector = d_vector .* d_real;
+  transformed_data_vector = d_real .* d_vector;
+  transformed_data_vector = elt_multiply(d_vector, d_real);
+  transformed_data_vector = elt_multiply(d_real, d_vector);
+
+  transformed_data_row_vector = d_row_vector .* d_real;
+  transformed_data_row_vector = d_real .* d_row_vector;
+  transformed_data_row_vector = elt_multiply(d_row_vector, d_real);
+  transformed_data_row_vector = elt_multiply(d_real, d_row_vector);
 }
 parameters {
   real p_real;
@@ -45,12 +66,12 @@ transformed parameters {
   matrix[d_int, d_int] transformed_param_matrix;
   vector[d_int] transformed_param_vector;
   row_vector[d_int] transformed_param_row_vector;
-  
+
   transformed_param_real = d_real .* d_real;
   transformed_param_vector = d_vector .* d_vector;
   transformed_param_row_vector = d_row_vector .* d_row_vector;
   transformed_param_matrix = d_matrix .* d_matrix;
-  
+
   transformed_param_real = d_real ./ d_real;
   transformed_param_vector = d_vector ./ d_vector;
   transformed_param_row_vector = d_row_vector ./ d_row_vector;
@@ -61,12 +82,18 @@ transformed parameters {
   transformed_param_vector = d_real ./ d_vector;
   transformed_param_row_vector = d_real ./ d_row_vector;
   transformed_param_matrix = d_real ./ d_matrix;
-  
+  transformed_param_vector = d_vector / d_real;
+  transformed_param_row_vector = d_row_vector / d_real;
+  transformed_param_matrix = d_matrix / d_real;
+  transformed_param_vector = d_real / d_vector;
+  transformed_param_row_vector = d_real / d_row_vector;
+  transformed_param_matrix = d_real / d_matrix;
+
   transformed_param_real = p_real .* d_real;
   transformed_param_vector = p_vector .* d_vector;
   transformed_param_row_vector = p_row_vector .* d_row_vector;
   transformed_param_matrix = p_matrix .* d_matrix;
-  
+
   transformed_param_real = p_real ./ d_real;
   transformed_param_vector = p_vector ./ d_vector;
   transformed_param_row_vector = p_row_vector ./ d_row_vector;
@@ -77,12 +104,18 @@ transformed parameters {
   transformed_param_vector = p_real ./ d_vector;
   transformed_param_row_vector = p_real ./ d_row_vector;
   transformed_param_matrix = p_real ./ d_matrix;
-  
+  transformed_param_vector = p_vector / d_real;
+  transformed_param_row_vector = p_row_vector / d_real;
+  transformed_param_matrix = p_matrix / d_real;
+  transformed_param_vector = p_real / d_vector;
+  transformed_param_row_vector = p_real / d_row_vector;
+  transformed_param_matrix = p_real / d_matrix;
+
   transformed_param_real = d_real .* p_real;
   transformed_param_vector = d_vector .* p_vector;
   transformed_param_row_vector = d_row_vector .* p_row_vector;
   transformed_param_matrix = d_matrix .* p_matrix;
-  
+
   transformed_param_real = d_real ./ p_real;
   transformed_param_vector = d_vector ./ p_vector;
   transformed_param_row_vector = d_row_vector ./ p_row_vector;
@@ -93,12 +126,18 @@ transformed parameters {
   transformed_param_vector = d_real ./ p_vector;
   transformed_param_row_vector = d_real ./ p_row_vector;
   transformed_param_matrix = d_real ./ p_matrix;
-  
+  transformed_param_vector = d_vector / p_real;
+  transformed_param_row_vector = d_row_vector / p_real;
+  transformed_param_matrix = d_matrix / p_real;
+  transformed_param_vector = d_real / p_vector;
+  transformed_param_row_vector = d_real / p_row_vector;
+  transformed_param_matrix = d_real / p_matrix;
+
   transformed_param_real = p_real .* p_real;
   transformed_param_vector = p_vector .* p_vector;
   transformed_param_row_vector = p_row_vector .* p_row_vector;
   transformed_param_matrix = p_matrix .* p_matrix;
-  
+
   transformed_param_real = p_real .* p_real;
   transformed_param_vector = p_vector ./ p_vector;
   transformed_param_row_vector = p_row_vector ./ p_row_vector;
@@ -109,6 +148,42 @@ transformed parameters {
   transformed_param_vector = p_real ./ p_vector;
   transformed_param_row_vector = p_real ./ p_row_vector;
   transformed_param_matrix = p_real ./ p_matrix;
+  transformed_param_vector = p_vector / p_real;
+  transformed_param_row_vector = p_row_vector / p_real;
+  transformed_param_matrix = p_matrix / p_real;
+  transformed_param_vector = p_real / p_vector;
+  transformed_param_row_vector = p_real / p_row_vector;
+  transformed_param_matrix = p_real / p_matrix;
+
+  transformed_param_matrix = p_matrix .* d_real;
+  transformed_param_matrix = d_real .* p_matrix;
+  transformed_param_matrix = elt_multiply(p_matrix, d_real);
+  transformed_param_matrix = elt_multiply(d_real, p_matrix);
+
+  transformed_param_matrix = d_matrix .* p_real;
+  transformed_param_matrix = p_real .* d_matrix;
+  transformed_param_matrix = elt_multiply(d_matrix, p_real);
+  transformed_param_matrix = elt_multiply(p_real, d_matrix);
+
+  transformed_param_vector = p_vector .* d_real;
+  transformed_param_vector = d_real .* p_vector;
+  transformed_param_vector = elt_multiply(p_vector, d_real);
+  transformed_param_vector = elt_multiply(d_real, p_vector);
+
+  transformed_param_vector = d_vector .* p_real;
+  transformed_param_vector = p_real .* d_vector;
+  transformed_param_vector = elt_multiply(d_vector, p_real);
+  transformed_param_vector = elt_multiply(p_real, d_vector);
+
+  transformed_param_row_vector = p_row_vector .* d_real;
+  transformed_param_row_vector = d_real .* p_row_vector;
+  transformed_param_row_vector = elt_multiply(p_row_vector, d_real);
+  transformed_param_row_vector = elt_multiply(d_real, p_row_vector);
+
+  transformed_param_row_vector = d_row_vector .* p_real;
+  transformed_param_row_vector = p_real .* d_row_vector;
+  transformed_param_row_vector = elt_multiply(d_row_vector, p_real);
+  transformed_param_row_vector = elt_multiply(p_real, d_row_vector);
 }
 model {
   y_p ~ normal(0, 1);

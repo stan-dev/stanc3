@@ -1554,9 +1554,12 @@ Ill-typed arguments supplied to infix operator /. Available signatures:
 
 (int, int) => int
 (real, real) => real
+(real, vector) => vector
 (vector, real) => vector
 (complex, complex) => complex
+(real, row_vector) => row_vector
 (row_vector, real) => row_vector
+(real, matrix) => matrix
 (matrix, real) => matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_divide_right_bad.stan
@@ -1577,9 +1580,12 @@ Ill-typed arguments supplied to infix operator /. Available signatures:
 
 (int, int) => int
 (real, real) => real
+(real, vector) => vector
 (vector, real) => vector
 (complex, complex) => complex
+(real, row_vector) => row_vector
 (row_vector, real) => row_vector
+(real, matrix) => matrix
 (matrix, real) => matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_elt_divide_bad.stan
@@ -1622,9 +1628,15 @@ Semantic error in 'op_elt_multiply_bad.stan', line 7, column 6 to column 12:
 Ill-typed arguments supplied to infix operator .*. Available signatures: 
 (int, int) => int
 (real, real) => real
+(real, vector) => vector
+(vector, real) => vector
 (vector, vector) => vector
 (complex, complex) => complex
+(real, row_vector) => row_vector
+(row_vector, real) => row_vector
 (row_vector, row_vector) => row_vector
+(real, matrix) => matrix
+(matrix, real) => matrix
 (matrix, matrix) => matrix
 (complex_vector, complex_vector) => complex_vector
 (complex_row_vector, complex_row_vector) => complex_row_vector
