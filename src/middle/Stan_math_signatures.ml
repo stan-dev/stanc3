@@ -144,6 +144,14 @@ let rec complex_to_real = function
   | UArray t -> UArray (complex_to_real t)
   | x -> x
 
+let rec real_to_complex = function
+  | UnsizedType.UReal -> UnsizedType.UComplex
+  | UVector -> UComplexVector
+  | URowVector -> UComplexRowVector
+  | UMatrix -> UComplexMatrix
+  | UArray t -> UArray (real_to_complex t)
+  | x -> x
+
 let reduce_sum_allowed_dimensionalities = [1; 2; 3; 4; 5; 6; 7]
 
 let reduce_sum_slice_types =
@@ -565,25 +573,25 @@ let add_binary name supports_soa =
   add_unqualified
     (name, ReturnType UReal, [UnsizedType.UReal; UReal], supports_soa)
 
-let add_binary_vec name supports_soa =
+let add_binary_vec_general ~return_fn ~vectors ~scalars name supports_soa =
   List.iter
     ~f:(fun i ->
       List.iter
         ~f:(fun j ->
-          add_unqualified
-            (name, ReturnType (ints_to_real i), [i; j], supports_soa) )
-        [UnsizedType.UInt; UReal] )
-    [UnsizedType.UInt; UReal] ;
+          add_unqualified (name, ReturnType (return_fn i), [i; j], supports_soa)
+          )
+        scalars )
+    scalars ;
   List.iter
     ~f:(fun i ->
       List.iter
         ~f:(fun j ->
           add_unqualified
             ( name
-            , ReturnType (ints_to_real (bare_array_type (j, i)))
+            , ReturnType (return_fn (bare_array_type (j, i)))
             , [bare_array_type (j, i); bare_array_type (j, i)]
             , supports_soa ) )
-        [UnsizedType.UArray UInt; UArray UReal; UVector; URowVector; UMatrix] )
+        vectors )
     (List.range 0 8) ;
   List.iter
     ~f:(fun i ->
@@ -593,13 +601,12 @@ let add_binary_vec name supports_soa =
             ~f:(fun k ->
               add_unqualified
                 ( name
-                , ReturnType (ints_to_real (bare_array_type (k, j)))
+                , ReturnType (return_fn (bare_array_type (k, j)))
                 , [bare_array_type (k, j); i]
                 , supports_soa ) )
-            [UnsizedType.UArray UInt; UArray UReal; UVector; URowVector; UMatrix]
-          )
+            vectors )
         (List.range 0 8) )
-    [UnsizedType.UInt; UReal] ;
+    scalars ;
   List.iter
     ~f:(fun i ->
       List.iter
@@ -608,102 +615,35 @@ let add_binary_vec name supports_soa =
             ~f:(fun k ->
               add_unqualified
                 ( name
-                , ReturnType (ints_to_real (bare_array_type (k, j)))
+                , ReturnType (return_fn (bare_array_type (k, j)))
                 , [i; bare_array_type (k, j)]
                 , supports_soa ) )
-            [UnsizedType.UArray UInt; UArray UReal; UVector; URowVector; UMatrix]
-          )
+            vectors )
         (List.range 0 8) )
-    [UnsizedType.UInt; UReal]
+    scalars
+
+let add_binary_vec name supports_soa =
+  add_binary_vec_general ~return_fn:ints_to_real
+    ~vectors:[UArray UInt; UArray UReal; UVector; URowVector; UMatrix]
+    ~scalars:[UInt; UReal] name supports_soa
 
 let add_binary_vec_real_real name supports_soa =
-  add_binary name supports_soa ;
-  List.iter
-    ~f:(fun i ->
-      List.iter
-        ~f:(fun j ->
-          add_unqualified
-            ( name
-            , ReturnType (bare_array_type (j, i))
-            , [bare_array_type (j, i); bare_array_type (j, i)]
-            , supports_soa ) )
-        [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] )
-    (List.range 0 8) ;
-  List.iter
-    ~f:(fun i ->
-      List.iter
-        ~f:(fun j ->
-          List.iter
-            ~f:(fun k ->
-              add_unqualified
-                ( name
-                , ReturnType (bare_array_type (k, j))
-                , [bare_array_type (k, j); i]
-                , supports_soa ) )
-            [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] )
-        (List.range 0 8) )
-    [UnsizedType.UReal] ;
-  List.iter
-    ~f:(fun i ->
-      List.iter
-        ~f:(fun j ->
-          List.iter
-            ~f:(fun k ->
-              add_unqualified
-                ( name
-                , ReturnType (bare_array_type (k, j))
-                , [i; bare_array_type (k, j)]
-                , supports_soa ) )
-            [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] )
-        (List.range 0 8) )
-    [UnsizedType.UReal]
+  add_binary_vec_general ~return_fn:Fun.id
+    ~vectors:[UArray UReal; UVector; URowVector; UMatrix]
+    ~scalars:[UReal] name supports_soa
 
 let add_binary_vec_complex_complex name supports_soa =
-  add_unqualified
-    (name, ReturnType UComplex, [UnsizedType.UComplex; UComplex], supports_soa) ;
-  List.iter
-    ~f:(fun i ->
-      List.iter
-        ~f:(fun j ->
-          add_unqualified
-            ( name
-            , ReturnType (bare_array_type (j, i))
-            , [bare_array_type (j, i); bare_array_type (j, i)]
-            , supports_soa ) )
-        [ UnsizedType.UArray UComplex; UComplexVector; UComplexRowVector
-        ; UComplexMatrix ] )
-    (List.range 0 8) ;
-  List.iter
-    ~f:(fun i ->
-      List.iter
-        ~f:(fun j ->
-          List.iter
-            ~f:(fun k ->
-              add_unqualified
-                ( name
-                , ReturnType (bare_array_type (k, j))
-                , [bare_array_type (k, j); i]
-                , supports_soa ) )
-            [ UnsizedType.UArray UComplex; UComplexVector; UComplexRowVector
-            ; UComplexMatrix ] )
-        (List.range 0 8) )
-    [UnsizedType.UComplex] ;
-  List.iter
-    ~f:(fun i ->
-      List.iter
-        ~f:(fun j ->
-          List.iter
-            ~f:(fun k ->
-              add_unqualified
-                ( name
-                , ReturnType (bare_array_type (k, j))
-                , [i; bare_array_type (k, j)]
-                , supports_soa ) )
-            [ UnsizedType.UArray UComplex; UComplexVector; UComplexRowVector
-            ; UComplexMatrix ] )
-        (List.range 0 8) )
-    [UnsizedType.UComplex]
+  add_binary_vec_general ~return_fn:Fun.id
+    ~vectors:[UArray UComplex; UComplexVector; UComplexRowVector; UComplexMatrix]
+    ~scalars:[UComplex] name supports_soa
 
+let add_binary_vec_reals_to_complex name supports_soa =
+  add_binary_vec_general ~return_fn:real_to_complex
+    ~vectors:[UArray UReal; UVector; URowVector; UMatrix]
+    ~scalars:[UReal] name supports_soa
+
+(* the following mix types in a way that doesn't
+   work with the general method used above *)
 let add_binary_vec_int_real name supports_soa =
   List.iter
     ~f:(fun i ->
@@ -2431,8 +2371,8 @@ let () =
     , [UComplexMatrix]
     , AoS ) ;
   add_unqualified ("to_complex", ReturnType UComplex, [], AoS) ;
-  add_unqualified ("to_complex", ReturnType UComplex, [UReal; UReal], AoS) ;
   add_unqualified ("to_complex", ReturnType UComplex, [UReal], AoS) ;
+  add_binary_vec_reals_to_complex "to_complex" AoS ;
   add_unqualified ("to_matrix", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("to_matrix", ReturnType UMatrix, [UMatrix; UInt; UInt], AoS) ;
   add_unqualified
