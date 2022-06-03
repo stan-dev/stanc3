@@ -10825,6 +10825,8 @@ Display all Stan math signatures exposed in the language
   inv_square(array[,,,,,,] vector) => array[,,,,,,] vector
   inv_square(array[,,,,,,] row_vector) => array[,,,,,,] row_vector
   inv_square(array[,,,,,,] matrix) => array[,,,,,,] matrix
+  inv_wishart_cholesky_lpdf(matrix, real, matrix) => real
+  inv_wishart_cholesky_rng(real, matrix) => matrix
   inv_wishart_log(matrix, real, matrix) => real
   inv_wishart_lpdf(matrix, real, matrix) => real
   inv_wishart_rng(real, matrix) => matrix

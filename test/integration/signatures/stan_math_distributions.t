@@ -26,6 +26,7 @@ Display all Stan math distributions exposed in the language
   hypergeometric: lpmf, rng, log (deprecated)
   inv_chi_square: lpdf, rng, ccdf, cdf, log (deprecated)
   inv_gamma: lpdf, rng, ccdf, cdf, log (deprecated)
+  inv_wishart_cholesky: lpdf
   inv_wishart: lpdf, log (deprecated)
   lkj_corr: lpdf, log (deprecated)
   lkj_corr_cholesky: lpdf, log (deprecated)
