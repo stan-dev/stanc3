@@ -1,25 +1,24 @@
-data { 
-  int d_int;
-  real d_real;
-}
 transformed data {
-  int transformed_data_int;
-  real transformed_data_real;
-
-   transformed_data_real = inv_inc_beta(d_int);
-   transformed_data_real = inv_inc_beta(d_real);
-}
+  real a;
+  a = inv_inc_beta(1, 1, 0.4);
+  a = inc_beta(1, 1, 0.3);
+  a = inc_beta(0, 3, 1);
+  a = inc_beta(1, 2.7, 0);
+  a = inc_beta(1, 0, 1);
+  a = inc_beta(2.7, 0, 0.8);
+}  
 parameters {
-  real p_real;
-  real y_p;
+  real<lower=0, upper=1> p;
+  real<lower=0> b;
 }
 transformed parameters {
-  real transformed_param_real;
-
-  transformed_param_real = inv_inc_beta(d_int);
-  transformed_param_real = inv_inc_beta(d_real);
-  transformed_param_real = inv_inc_beta(p_real);
+  real c;
+  c = inc_beta(b, b, p);
+  c = inc_beta(p, p, p);
+  c = inc_beta(0, b, p);
+  c = inc_beta(b, p, 0);
+  c = inc_beta(p, b, p);
 }
-model {  
-  y_p ~ normal(0,1);
+model {
+  b ~ normal(0, 1);
 }

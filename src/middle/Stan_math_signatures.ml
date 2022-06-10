@@ -394,7 +394,6 @@ let math_sigs =
   ; ([basic_vectorized], "inv", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "inv_cloglog", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "inv_erfc", [DDeepVectorized], SoA)
-  ; ([basic_vectorized], "inv_inc_beta", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "inv_logit", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "inv_Phi", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "inv_sqrt", [DDeepVectorized], SoA)
@@ -1540,6 +1539,7 @@ let () =
     , AoS ) ;
   add_unqualified ("inv_fft", ReturnType UComplexVector, [UComplexVector], AoS) ;
   add_unqualified ("inv_fft2", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
+  add_unqualified ("inv_inc_beta", ReturnType UReal, [UReal; UReal; UReal], SoA) ;
   add_unqualified
     ("inv_wishart_cholesky_rng", ReturnType UMatrix, [UReal; UMatrix], AoS) ;
   add_unqualified ("inv_wishart_rng", ReturnType UMatrix, [UReal; UMatrix], AoS) ;
