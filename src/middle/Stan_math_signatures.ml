@@ -394,6 +394,7 @@ let math_sigs =
   ; ([basic_vectorized], "inv", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "inv_cloglog", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "inv_erfc", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "inv_inc_beta", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "inv_logit", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "inv_Phi", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "inv_sqrt", [DDeepVectorized], SoA)
