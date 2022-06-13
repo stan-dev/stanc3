@@ -4066,9 +4066,12 @@ Display all Stan math signatures exposed in the language
   distance(row_vector, row_vector) => real
   divide(int, int) => int
   divide(real, real) => real
+  divide(real, vector) => vector
   divide(vector, real) => vector
   divide(complex, complex) => complex
+  divide(real, row_vector) => row_vector
   divide(row_vector, real) => row_vector
+  divide(real, matrix) => matrix
   divide(matrix, real) => matrix
   dot_product(vector, vector) => real
   dot_product(vector, row_vector) => real
@@ -4590,9 +4593,15 @@ Display all Stan math signatures exposed in the language
   elt_divide(complex_matrix, complex_matrix) => complex_matrix
   elt_multiply(int, int) => int
   elt_multiply(real, real) => real
+  elt_multiply(real, vector) => vector
+  elt_multiply(vector, real) => vector
   elt_multiply(vector, vector) => vector
   elt_multiply(complex, complex) => complex
+  elt_multiply(real, row_vector) => row_vector
+  elt_multiply(row_vector, real) => row_vector
   elt_multiply(row_vector, row_vector) => row_vector
+  elt_multiply(real, matrix) => matrix
+  elt_multiply(matrix, real) => matrix
   elt_multiply(matrix, matrix) => matrix
   elt_multiply(complex_vector, complex_vector) => complex_vector
   elt_multiply(complex_row_vector, complex_row_vector) => complex_row_vector
@@ -10705,6 +10714,7 @@ Display all Stan math signatures exposed in the language
   inv_gamma_rng(array[] real, row_vector) => array[] real
   inv_gamma_rng(array[] real, array[] int) => array[] real
   inv_gamma_rng(array[] real, array[] real) => array[] real
+  inv_inc_beta(real, real, real) => real
   inv_logit(int) => real
   inv_logit(real) => real
   inv_logit(vector) => vector
