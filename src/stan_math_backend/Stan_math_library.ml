@@ -1406,6 +1406,9 @@ let () =
   add_unqualified ("divide", ReturnType UVector, [UVector; UReal], SoA) ;
   add_unqualified ("divide", ReturnType URowVector, [URowVector; UReal], SoA) ;
   add_unqualified ("divide", ReturnType UMatrix, [UMatrix; UReal], SoA) ;
+  add_unqualified ("divide", ReturnType UVector, [UReal; UVector], SoA) ;
+  add_unqualified ("divide", ReturnType URowVector, [UReal; URowVector], SoA) ;
+  add_unqualified ("divide", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
   add_unqualified ("dot_product", ReturnType UReal, [UVector; UVector], SoA) ;
   add_unqualified
     ("dot_product", ReturnType UReal, [URowVector; URowVector], SoA) ;
@@ -1458,6 +1461,14 @@ let () =
   List.iter
     ~f:(fun x -> add_unqualified ("elt_multiply", ReturnType x, [x; x], SoA))
     bare_types ;
+  add_unqualified ("elt_multiply", ReturnType UVector, [UVector; UReal], SoA) ;
+  add_unqualified
+    ("elt_multiply", ReturnType URowVector, [URowVector; UReal], SoA) ;
+  add_unqualified ("elt_multiply", ReturnType UMatrix, [UMatrix; UReal], SoA) ;
+  add_unqualified ("elt_multiply", ReturnType UVector, [UReal; UVector], SoA) ;
+  add_unqualified
+    ("elt_multiply", ReturnType URowVector, [UReal; URowVector], SoA) ;
+  add_unqualified ("elt_multiply", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
   add_unqualified ("exp", ReturnType UComplex, [UComplex], AoS) ;
   add_binary_vec_int_int "falling_factorial" SoA ;
   add_binary_vec_real_int "falling_factorial" SoA ;
@@ -1783,6 +1794,7 @@ let () =
     , AoS ) ;
   add_unqualified ("inv_fft", ReturnType UComplexVector, [UComplexVector], AoS) ;
   add_unqualified ("inv_fft2", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
+  add_unqualified ("inv_inc_beta", ReturnType UReal, [UReal; UReal; UReal], SoA) ;
   add_unqualified
     ("inv_wishart_cholesky_rng", ReturnType UMatrix, [UReal; UMatrix], AoS) ;
   add_unqualified ("inv_wishart_rng", ReturnType UMatrix, [UReal; UMatrix], AoS) ;
