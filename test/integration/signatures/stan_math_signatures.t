@@ -10714,6 +10714,7 @@ Display all Stan math signatures exposed in the language
   inv_gamma_rng(array[] real, row_vector) => array[] real
   inv_gamma_rng(array[] real, array[] int) => array[] real
   inv_gamma_rng(array[] real, array[] real) => array[] real
+  inv_inc_beta(real, real, real) => real
   inv_logit(int) => real
   inv_logit(real) => real
   inv_logit(vector) => vector
