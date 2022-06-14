@@ -17,6 +17,7 @@ transformed data {
 parameters {
   real y_p;
   matrix[d_int,d_int] p_matrix;
+  complex_matrix[d_int,d_int] p_cmatrix;
 }
 transformed parameters {
   matrix[d_int,d_int] transformed_param_matrix;
