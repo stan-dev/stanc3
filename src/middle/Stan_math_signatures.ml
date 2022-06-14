@@ -821,6 +821,18 @@ let () =
   add_unqualified ("add", ReturnType UVector, [UReal; UVector], SoA) ;
   add_unqualified ("add", ReturnType URowVector, [UReal; URowVector], SoA) ;
   add_unqualified ("add", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
+  add_unqualified
+    ("add", ReturnType UComplexVector, [UComplexVector; UComplex], SoA) ;
+  add_unqualified
+    ("add", ReturnType UComplexRowVector, [UComplexRowVector; UComplex], SoA) ;
+  add_unqualified
+    ("add", ReturnType UComplexMatrix, [UComplexMatrix; UComplex], SoA) ;
+  add_unqualified
+    ("add", ReturnType UComplexVector, [UComplex; UComplexVector], SoA) ;
+  add_unqualified
+    ("add", ReturnType UComplexRowVector, [UComplex; UComplexRowVector], SoA) ;
+  add_unqualified
+    ("add", ReturnType UComplexMatrix, [UComplex; UComplexMatrix], SoA) ;
   add_unqualified ("add_diag", ReturnType UMatrix, [UMatrix; UReal], AoS) ;
   add_unqualified ("add_diag", ReturnType UMatrix, [UMatrix; UVector], AoS) ;
   add_unqualified ("add_diag", ReturnType UMatrix, [UMatrix; URowVector], AoS) ;
@@ -2318,6 +2330,24 @@ let () =
   add_unqualified ("subtract", ReturnType UVector, [UReal; UVector], SoA) ;
   add_unqualified ("subtract", ReturnType URowVector, [UReal; URowVector], SoA) ;
   add_unqualified ("subtract", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
+  add_unqualified
+    ("subtract", ReturnType UComplexVector, [UComplexVector; UComplex], SoA) ;
+  add_unqualified
+    ( "subtract"
+    , ReturnType UComplexRowVector
+    , [UComplexRowVector; UComplex]
+    , SoA ) ;
+  add_unqualified
+    ("subtract", ReturnType UComplexMatrix, [UComplexMatrix; UComplex], SoA) ;
+  add_unqualified
+    ("subtract", ReturnType UComplexVector, [UComplex; UComplexVector], SoA) ;
+  add_unqualified
+    ( "subtract"
+    , ReturnType UComplexRowVector
+    , [UComplex; UComplexRowVector]
+    , SoA ) ;
+  add_unqualified
+    ("subtract", ReturnType UComplexMatrix, [UComplex; UComplexMatrix], SoA) ;
   add_unqualified ("sum", ReturnType UInt, [UArray UInt], SoA) ;
   add_unqualified ("sum", ReturnType UReal, [UArray UReal], SoA) ;
   add_unqualified ("sum", ReturnType UReal, [UVector], SoA) ;

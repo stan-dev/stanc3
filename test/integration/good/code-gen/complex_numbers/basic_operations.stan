@@ -121,6 +121,22 @@ generated quantities {
 
   // reductions
   gq_c = sum(to_array_1d(cvec));
+  gq_c = sum(cvec);
+  gq_c = sum(crowvec);
+  gq_c = sum(cmat);
+
+
+  // broadcasting
+  gq_c_matrix = z - cmat;
+  gq_c_matrix = r - cmat;
+  gq_c_matrix = cmat - r;
+  gq_c_matrix = cmat - z;
+
+  gq_c_matrix = z + cmat;
+  gq_c_matrix = r + cmat;
+  gq_c_matrix = cmat + r;
+  gq_c_matrix = cmat + z;
+
 
   // TODO ldivide, pow, matrix_power
 
