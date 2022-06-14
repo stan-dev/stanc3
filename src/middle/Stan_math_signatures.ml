@@ -1211,6 +1211,10 @@ let () =
   add_unqualified ("eigenvalues", ReturnType UComplexVector, [UMatrix], AoS) ;
   add_unqualified ("eigenvectors", ReturnType UComplexMatrix, [UMatrix], AoS) ;
   add_unqualified ("eigenvalues_sym", ReturnType UVector, [UMatrix], AoS) ;
+  add_unqualified
+    ("eigenvalues_sym", ReturnType UComplexVector, [UComplexMatrix], AoS) ;
+  add_unqualified
+    ("eigenvectors_sym", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
   add_unqualified ("eigenvectors_sym", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("generalized_inverse", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("qr_Q", ReturnType UMatrix, [UMatrix], AoS) ;
@@ -1226,6 +1230,24 @@ let () =
   add_unqualified ("elt_divide", ReturnType UVector, [UReal; UVector], SoA) ;
   add_unqualified ("elt_divide", ReturnType URowVector, [UReal; URowVector], SoA) ;
   add_unqualified ("elt_divide", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
+  add_unqualified
+    ("elt_divide", ReturnType UComplexVector, [UComplexVector; UComplex], SoA) ;
+  add_unqualified
+    ( "elt_divide"
+    , ReturnType UComplexRowVector
+    , [UComplexRowVector; UComplex]
+    , SoA ) ;
+  add_unqualified
+    ("elt_divide", ReturnType UComplexMatrix, [UComplexMatrix; UComplex], SoA) ;
+  add_unqualified
+    ("elt_divide", ReturnType UComplexVector, [UComplex; UComplexVector], SoA) ;
+  add_unqualified
+    ( "elt_divide"
+    , ReturnType UComplexRowVector
+    , [UComplex; UComplexRowVector]
+    , SoA ) ;
+  add_unqualified
+    ("elt_divide", ReturnType UComplexMatrix, [UComplex; UComplexMatrix], SoA) ;
   List.iter
     ~f:(fun x -> add_unqualified ("elt_multiply", ReturnType x, [x; x], SoA))
     bare_types ;
@@ -2263,6 +2285,7 @@ let () =
   add_unqualified ("sin", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("sinh", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("singular_values", ReturnType UVector, [UMatrix], SoA) ;
+  add_unqualified ("singular_values", ReturnType UVector, [UComplexMatrix], AoS) ;
   List.iter
     ~f:(fun i ->
       List.iter
@@ -2358,7 +2381,9 @@ let () =
   add_unqualified ("sum", ReturnType UComplex, [UComplexRowVector], SoA) ;
   add_unqualified ("sum", ReturnType UComplex, [UComplexMatrix], SoA) ;
   add_unqualified ("svd_U", ReturnType UMatrix, [UMatrix], SoA) ;
+  add_unqualified ("svd_U", ReturnType UComplexMatrix, [UComplexMatrix], SoA) ;
   add_unqualified ("svd_V", ReturnType UMatrix, [UMatrix], SoA) ;
+  add_unqualified ("svd_V", ReturnType UComplexMatrix, [UComplexMatrix], SoA) ;
   add_unqualified
     ("symmetrize_from_lower_tri", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified

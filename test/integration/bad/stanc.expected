@@ -1623,8 +1623,14 @@ Ill-typed arguments supplied to infix operator ./. Available signatures:
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
 (complex_vector, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
 (complex_row_vector, complex_row_vector) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
+(complex_matrix, complex) => complex_matrix
 (complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_elt_multiply_bad.stan

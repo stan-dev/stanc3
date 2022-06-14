@@ -4580,8 +4580,10 @@ Display all Stan math signatures exposed in the language
   e() => real
   eigenvalues(matrix) => complex_vector
   eigenvalues_sym(matrix) => vector
+  eigenvalues_sym(complex_matrix) => complex_vector
   eigenvectors(matrix) => complex_matrix
   eigenvectors_sym(matrix) => matrix
+  eigenvectors_sym(complex_matrix) => complex_matrix
   elt_divide(int, int) => int
   elt_divide(real, real) => real
   elt_divide(real, vector) => vector
@@ -4594,8 +4596,14 @@ Display all Stan math signatures exposed in the language
   elt_divide(real, matrix) => matrix
   elt_divide(matrix, real) => matrix
   elt_divide(matrix, matrix) => matrix
+  elt_divide(complex, complex_vector) => complex_vector
+  elt_divide(complex_vector, complex) => complex_vector
   elt_divide(complex_vector, complex_vector) => complex_vector
+  elt_divide(complex, complex_row_vector) => complex_row_vector
+  elt_divide(complex_row_vector, complex) => complex_row_vector
   elt_divide(complex_row_vector, complex_row_vector) => complex_row_vector
+  elt_divide(complex, complex_matrix) => complex_matrix
+  elt_divide(complex_matrix, complex) => complex_matrix
   elt_divide(complex_matrix, complex_matrix) => complex_matrix
   elt_multiply(int, int) => int
   elt_multiply(real, real) => real
@@ -20265,6 +20273,7 @@ Display all Stan math signatures exposed in the language
   sin(array[,,,,,,] row_vector) => array[,,,,,,] row_vector
   sin(array[,,,,,,] matrix) => array[,,,,,,] matrix
   singular_values(matrix) => vector
+  singular_values(complex_matrix) => vector
   sinh(int) => real
   sinh(real) => real
   sinh(vector) => vector
@@ -26571,7 +26580,9 @@ Display all Stan math signatures exposed in the language
   sum(complex_matrix) => complex
   sum(array[] complex) => complex
   svd_U(matrix) => matrix
+  svd_U(complex_matrix) => complex_matrix
   svd_V(matrix) => matrix
+  svd_V(complex_matrix) => complex_matrix
   symmetrize_from_lower_tri(matrix) => matrix
   symmetrize_from_lower_tri(complex_matrix) => complex_matrix
   tail(vector, int) => vector

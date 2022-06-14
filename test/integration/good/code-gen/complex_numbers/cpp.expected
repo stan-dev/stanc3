@@ -9,7 +9,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 118> locations_array__ = 
+static constexpr std::array<const char*, 122> locations_array__ = 
 {" (found before start of program)",
  " (in 'basic_op_param.stan', line 5, column 2 to column 27)",
  " (in 'basic_op_param.stan', line 6, column 2 to column 25)",
@@ -23,7 +23,7 @@ static constexpr std::array<const char*, 118> locations_array__ =
  " (in 'basic_op_param.stan', line 54, column 2 to column 43)",
  " (in 'basic_op_param.stan', line 86, column 2 to column 47)",
  " (in 'basic_op_param.stan', line 118, column 2 to column 15)",
- " (in 'basic_op_param.stan', line 146, column 2 to column 28)",
+ " (in 'basic_op_param.stan', line 151, column 2 to column 28)",
  " (in 'basic_op_param.stan', line 21, column 2 to column 28)",
  " (in 'basic_op_param.stan', line 22, column 2 to column 27)",
  " (in 'basic_op_param.stan', line 23, column 2 to column 27)",
@@ -112,7 +112,11 @@ static constexpr std::array<const char*, 118> locations_array__ =
  " (in 'basic_op_param.stan', line 140, column 2 to column 25)",
  " (in 'basic_op_param.stan', line 141, column 2 to column 25)",
  " (in 'basic_op_param.stan', line 142, column 2 to column 25)",
- " (in 'basic_op_param.stan', line 147, column 2 to column 29)",
+ " (in 'basic_op_param.stan', line 144, column 2 to column 26)",
+ " (in 'basic_op_param.stan', line 145, column 2 to column 26)",
+ " (in 'basic_op_param.stan', line 146, column 2 to column 26)",
+ " (in 'basic_op_param.stan', line 147, column 2 to column 26)",
+ " (in 'basic_op_param.stan', line 152, column 2 to column 29)",
  " (in 'basic_op_param.stan', line 2, column 2 to column 8)",
  " (in 'basic_op_param.stan', line 5, column 17 to column 18)",
  " (in 'basic_op_param.stan', line 5, column 19 to column 20)",
@@ -126,8 +130,8 @@ static constexpr std::array<const char*, 118> locations_array__ =
  " (in 'basic_op_param.stan', line 18, column 19 to column 20)",
  " (in 'basic_op_param.stan', line 54, column 17 to column 18)",
  " (in 'basic_op_param.stan', line 86, column 21 to column 22)",
- " (in 'basic_op_param.stan', line 146, column 8 to column 9)",
- " (in 'basic_op_param.stan', line 146, column 10 to column 11)"};
+ " (in 'basic_op_param.stan', line 151, column 8 to column 9)",
+ " (in 'basic_op_param.stan', line 151, column 10 to column 11)"};
 
 
 
@@ -163,41 +167,41 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 103;
+      current_statement__ = 107;
       context__.validate_dims("data initialization","N","int",
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
       
-      current_statement__ = 103;
-      N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 104;
-      stan::math::validate_non_negative_index("cmat", "N", N);
-      current_statement__ = 105;
-      stan::math::validate_non_negative_index("cmat", "N", N);
-      current_statement__ = 106;
-      stan::math::validate_non_negative_index("cvec", "N", N);
       current_statement__ = 107;
-      stan::math::validate_non_negative_index("crowvec", "N", N);
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 108;
-      stan::math::validate_non_negative_index("mat", "N", N);
+      stan::math::validate_non_negative_index("cmat", "N", N);
       current_statement__ = 109;
-      stan::math::validate_non_negative_index("mat", "N", N);
+      stan::math::validate_non_negative_index("cmat", "N", N);
       current_statement__ = 110;
-      stan::math::validate_non_negative_index("vec", "N", N);
+      stan::math::validate_non_negative_index("cvec", "N", N);
       current_statement__ = 111;
-      stan::math::validate_non_negative_index("rowvec", "N", N);
+      stan::math::validate_non_negative_index("crowvec", "N", N);
       current_statement__ = 112;
-      stan::math::validate_non_negative_index("tp_c_matrix", "N", N);
+      stan::math::validate_non_negative_index("mat", "N", N);
       current_statement__ = 113;
-      stan::math::validate_non_negative_index("tp_c_matrix", "N", N);
+      stan::math::validate_non_negative_index("mat", "N", N);
       current_statement__ = 114;
-      stan::math::validate_non_negative_index("tp_c_vector", "N", N);
+      stan::math::validate_non_negative_index("vec", "N", N);
       current_statement__ = 115;
-      stan::math::validate_non_negative_index("tp_c_rowvector", "N", N);
+      stan::math::validate_non_negative_index("rowvec", "N", N);
       current_statement__ = 116;
-      stan::math::validate_non_negative_index("carray", "N", N);
+      stan::math::validate_non_negative_index("tp_c_matrix", "N", N);
       current_statement__ = 117;
+      stan::math::validate_non_negative_index("tp_c_matrix", "N", N);
+      current_statement__ = 118;
+      stan::math::validate_non_negative_index("tp_c_vector", "N", N);
+      current_statement__ = 119;
+      stan::math::validate_non_negative_index("tp_c_rowvector", "N", N);
+      current_statement__ = 120;
+      stan::math::validate_non_negative_index("carray", "N", N);
+      current_statement__ = 121;
       stan::math::validate_non_negative_index("carray", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -638,11 +642,27 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
       current_statement__ = 101;
       stan::model::assign(tp_c_matrix, stan::math::add(cmat, z),
         "assigning variable tp_c_matrix");
+      current_statement__ = 102;
+      stan::model::assign(tp_c_matrix, stan::math::elt_divide(z, cmat),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 103;
+      stan::model::assign(tp_c_matrix,
+        stan::math::elt_divide(
+          stan::math::promote_scalar<std::complex<local_scalar_t__>>(r),
+          cmat), "assigning variable tp_c_matrix");
+      current_statement__ = 104;
+      stan::model::assign(tp_c_matrix,
+        stan::math::elt_divide(cmat,
+          stan::math::promote_scalar<std::complex<local_scalar_t__>>(r)),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 105;
+      stan::model::assign(tp_c_matrix, stan::math::elt_divide(cmat, z),
+        "assigning variable tp_c_matrix");
       std::vector<std::vector<std::complex<local_scalar_t__>>> carray =
          std::vector<std::vector<std::complex<local_scalar_t__>>>(N, 
            std::vector<std::complex<local_scalar_t__>>(N, 
              std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
-      current_statement__ = 102;
+      current_statement__ = 106;
       stan::model::assign(carray, stan::math::to_array_2d(cmat),
         "assigning variable carray");
     } catch (const std::exception& e) {
@@ -1114,6 +1134,22 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
       stan::model::assign(tp_c_matrix, stan::math::add(cmat, z),
         "assigning variable tp_c_matrix");
       current_statement__ = 102;
+      stan::model::assign(tp_c_matrix, stan::math::elt_divide(z, cmat),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 103;
+      stan::model::assign(tp_c_matrix,
+        stan::math::elt_divide(
+          stan::math::promote_scalar<std::complex<local_scalar_t__>>(r),
+          cmat), "assigning variable tp_c_matrix");
+      current_statement__ = 104;
+      stan::model::assign(tp_c_matrix,
+        stan::math::elt_divide(cmat,
+          stan::math::promote_scalar<std::complex<local_scalar_t__>>(r)),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 105;
+      stan::model::assign(tp_c_matrix, stan::math::elt_divide(cmat, z),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 106;
       stan::model::assign(carray, stan::math::to_array_2d(cmat),
         "assigning variable carray");
       if (emit_transformed_parameters__) {
@@ -1573,7 +1609,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 117> locations_array__ = 
+static constexpr std::array<const char*, 121> locations_array__ = 
 {" (found before start of program)",
  " (in 'basic_operations.stan', line 16, column 2 to column 34)",
  " (in 'basic_operations.stan', line 19, column 2 to column 28)",
@@ -1666,8 +1702,12 @@ static constexpr std::array<const char*, 117> locations_array__ =
  " (in 'basic_operations.stan', line 136, column 2 to column 25)",
  " (in 'basic_operations.stan', line 137, column 2 to column 25)",
  " (in 'basic_operations.stan', line 138, column 2 to column 25)",
- " (in 'basic_operations.stan', line 144, column 2 to column 28)",
- " (in 'basic_operations.stan', line 145, column 2 to column 29)",
+ " (in 'basic_operations.stan', line 141, column 2 to column 26)",
+ " (in 'basic_operations.stan', line 142, column 2 to column 26)",
+ " (in 'basic_operations.stan', line 143, column 2 to column 26)",
+ " (in 'basic_operations.stan', line 144, column 2 to column 26)",
+ " (in 'basic_operations.stan', line 149, column 2 to column 28)",
+ " (in 'basic_operations.stan', line 150, column 2 to column 29)",
  " (in 'basic_operations.stan', line 2, column 2 to column 8)",
  " (in 'basic_operations.stan', line 3, column 17 to column 18)",
  " (in 'basic_operations.stan', line 3, column 19 to column 20)",
@@ -1689,8 +1729,8 @@ static constexpr std::array<const char*, 117> locations_array__ =
  " (in 'basic_operations.stan', line 16, column 19 to column 20)",
  " (in 'basic_operations.stan', line 52, column 17 to column 18)",
  " (in 'basic_operations.stan', line 84, column 21 to column 22)",
- " (in 'basic_operations.stan', line 144, column 8 to column 9)",
- " (in 'basic_operations.stan', line 144, column 10 to column 11)"};
+ " (in 'basic_operations.stan', line 149, column 8 to column 9)",
+ " (in 'basic_operations.stan', line 149, column 10 to column 11)"};
 
 
 
@@ -1739,19 +1779,19 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 94;
+      current_statement__ = 98;
       context__.validate_dims("data initialization","N","int",
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
       
-      current_statement__ = 94;
+      current_statement__ = 98;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 95;
+      current_statement__ = 99;
       stan::math::validate_non_negative_index("cmat", "N", N);
-      current_statement__ = 96;
+      current_statement__ = 100;
       stan::math::validate_non_negative_index("cmat", "N", N);
-      current_statement__ = 97;
+      current_statement__ = 101;
       context__.validate_dims("data initialization","cmat","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N), static_cast<size_t>(2)});
@@ -1763,26 +1803,26 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       
       {
         std::vector<std::complex<local_scalar_t__>> cmat_flat__;
-        current_statement__ = 97;
+        current_statement__ = 101;
         cmat_flat__ = context__.vals_c("cmat");
-        current_statement__ = 97;
+        current_statement__ = 101;
         pos__ = 1;
-        current_statement__ = 97;
+        current_statement__ = 101;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 97;
+          current_statement__ = 101;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 97;
+            current_statement__ = 101;
             stan::model::assign(cmat, cmat_flat__[(pos__ - 1)],
               "assigning variable cmat", stan::model::index_uni(sym2__),
                                            stan::model::index_uni(sym1__));
-            current_statement__ = 97;
+            current_statement__ = 101;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 98;
+      current_statement__ = 102;
       stan::math::validate_non_negative_index("cvec", "N", N);
-      current_statement__ = 99;
+      current_statement__ = 103;
       context__.validate_dims("data initialization","cvec","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(2)});
@@ -1794,22 +1834,22 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       
       {
         std::vector<std::complex<local_scalar_t__>> cvec_flat__;
-        current_statement__ = 99;
+        current_statement__ = 103;
         cvec_flat__ = context__.vals_c("cvec");
-        current_statement__ = 99;
+        current_statement__ = 103;
         pos__ = 1;
-        current_statement__ = 99;
+        current_statement__ = 103;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 99;
+          current_statement__ = 103;
           stan::model::assign(cvec, cvec_flat__[(pos__ - 1)],
             "assigning variable cvec", stan::model::index_uni(sym1__));
-          current_statement__ = 99;
+          current_statement__ = 103;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 100;
+      current_statement__ = 104;
       stan::math::validate_non_negative_index("crowvec", "N", N);
-      current_statement__ = 101;
+      current_statement__ = 105;
       context__.validate_dims("data initialization","crowvec","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(2)});
@@ -1821,20 +1861,20 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       
       {
         std::vector<std::complex<local_scalar_t__>> crowvec_flat__;
-        current_statement__ = 101;
+        current_statement__ = 105;
         crowvec_flat__ = context__.vals_c("crowvec");
-        current_statement__ = 101;
+        current_statement__ = 105;
         pos__ = 1;
-        current_statement__ = 101;
+        current_statement__ = 105;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 101;
+          current_statement__ = 105;
           stan::model::assign(crowvec, crowvec_flat__[(pos__ - 1)],
             "assigning variable crowvec", stan::model::index_uni(sym1__));
-          current_statement__ = 101;
+          current_statement__ = 105;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 102;
+      current_statement__ = 106;
       context__.validate_dims("data initialization","z","double",
            std::vector<size_t>{static_cast<size_t>(2)});
       z = 
@@ -1842,13 +1882,13 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
           std::numeric_limits<double>::quiet_NaN());
       
       
-      current_statement__ = 102;
+      current_statement__ = 106;
       z = context__.vals_c("z")[(1 - 1)];
-      current_statement__ = 103;
+      current_statement__ = 107;
       stan::math::validate_non_negative_index("mat", "N", N);
-      current_statement__ = 104;
+      current_statement__ = 108;
       stan::math::validate_non_negative_index("mat", "N", N);
-      current_statement__ = 105;
+      current_statement__ = 109;
       context__.validate_dims("data initialization","mat","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N)});
@@ -1860,26 +1900,26 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       
       {
         std::vector<local_scalar_t__> mat_flat__;
-        current_statement__ = 105;
+        current_statement__ = 109;
         mat_flat__ = context__.vals_r("mat");
-        current_statement__ = 105;
+        current_statement__ = 109;
         pos__ = 1;
-        current_statement__ = 105;
+        current_statement__ = 109;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 105;
+          current_statement__ = 109;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 105;
+            current_statement__ = 109;
             stan::model::assign(mat, mat_flat__[(pos__ - 1)],
               "assigning variable mat", stan::model::index_uni(sym2__),
                                           stan::model::index_uni(sym1__));
-            current_statement__ = 105;
+            current_statement__ = 109;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 106;
+      current_statement__ = 110;
       stan::math::validate_non_negative_index("vec", "N", N);
-      current_statement__ = 107;
+      current_statement__ = 111;
       context__.validate_dims("data initialization","vec","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       vec__ = 
@@ -1889,22 +1929,22 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       
       {
         std::vector<local_scalar_t__> vec_flat__;
-        current_statement__ = 107;
+        current_statement__ = 111;
         vec_flat__ = context__.vals_r("vec");
-        current_statement__ = 107;
+        current_statement__ = 111;
         pos__ = 1;
-        current_statement__ = 107;
+        current_statement__ = 111;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 107;
+          current_statement__ = 111;
           stan::model::assign(vec, vec_flat__[(pos__ - 1)],
             "assigning variable vec", stan::model::index_uni(sym1__));
-          current_statement__ = 107;
+          current_statement__ = 111;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 108;
+      current_statement__ = 112;
       stan::math::validate_non_negative_index("rowvec", "N", N);
-      current_statement__ = 109;
+      current_statement__ = 113;
       context__.validate_dims("data initialization","rowvec","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       rowvec__ = 
@@ -1915,38 +1955,38 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       
       {
         std::vector<local_scalar_t__> rowvec_flat__;
-        current_statement__ = 109;
+        current_statement__ = 113;
         rowvec_flat__ = context__.vals_r("rowvec");
-        current_statement__ = 109;
+        current_statement__ = 113;
         pos__ = 1;
-        current_statement__ = 109;
+        current_statement__ = 113;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 109;
+          current_statement__ = 113;
           stan::model::assign(rowvec, rowvec_flat__[(pos__ - 1)],
             "assigning variable rowvec", stan::model::index_uni(sym1__));
-          current_statement__ = 109;
+          current_statement__ = 113;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 110;
+      current_statement__ = 114;
       context__.validate_dims("data initialization","r","double",
            std::vector<size_t>{});
       r = std::numeric_limits<double>::quiet_NaN();
       
       
-      current_statement__ = 110;
-      r = context__.vals_r("r")[(1 - 1)];
-      current_statement__ = 111;
-      stan::math::validate_non_negative_index("gq_c_matrix", "N", N);
-      current_statement__ = 112;
-      stan::math::validate_non_negative_index("gq_c_matrix", "N", N);
-      current_statement__ = 113;
-      stan::math::validate_non_negative_index("gq_c_vector", "N", N);
       current_statement__ = 114;
-      stan::math::validate_non_negative_index("gq_c_rowvector", "N", N);
+      r = context__.vals_r("r")[(1 - 1)];
       current_statement__ = 115;
-      stan::math::validate_non_negative_index("carray", "N", N);
+      stan::math::validate_non_negative_index("gq_c_matrix", "N", N);
       current_statement__ = 116;
+      stan::math::validate_non_negative_index("gq_c_matrix", "N", N);
+      current_statement__ = 117;
+      stan::math::validate_non_negative_index("gq_c_vector", "N", N);
+      current_statement__ = 118;
+      stan::math::validate_non_negative_index("gq_c_rowvector", "N", N);
+      current_statement__ = 119;
+      stan::math::validate_non_negative_index("carray", "N", N);
+      current_statement__ = 120;
       stan::math::validate_non_negative_index("carray", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2379,12 +2419,26 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       current_statement__ = 91;
       stan::model::assign(gq_c_matrix, stan::math::add(cmat, z),
         "assigning variable gq_c_matrix");
+      current_statement__ = 92;
+      stan::model::assign(gq_c_matrix, stan::math::elt_divide(z, cmat),
+        "assigning variable gq_c_matrix");
+      current_statement__ = 93;
+      stan::model::assign(gq_c_matrix,
+        stan::math::elt_divide(stan::math::to_complex(r, 0), cmat),
+        "assigning variable gq_c_matrix");
+      current_statement__ = 94;
+      stan::model::assign(gq_c_matrix,
+        stan::math::elt_divide(cmat, stan::math::to_complex(r, 0)),
+        "assigning variable gq_c_matrix");
+      current_statement__ = 95;
+      stan::model::assign(gq_c_matrix, stan::math::elt_divide(cmat, z),
+        "assigning variable gq_c_matrix");
       std::vector<std::vector<std::complex<double>>> carray =
          std::vector<std::vector<std::complex<double>>>(N, 
            std::vector<std::complex<double>>(N, 
              std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
                std::numeric_limits<double>::quiet_NaN())));
-      current_statement__ = 93;
+      current_statement__ = 97;
       stan::model::assign(carray, stan::math::to_array_2d(cmat),
         "assigning variable carray");
       out__.write(gq_c_matrix);
@@ -2681,7 +2735,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 133> locations_array__ = 
+static constexpr std::array<const char*, 141> locations_array__ = 
 {" (found before start of program)",
  " (in 'basic_ops_mix.stan', line 15, column 2 to column 28)",
  " (in 'basic_ops_mix.stan', line 16, column 2 to column 26)",
@@ -2695,7 +2749,7 @@ static constexpr std::array<const char*, 133> locations_array__ =
  " (in 'basic_ops_mix.stan', line 62, column 2 to column 44)",
  " (in 'basic_ops_mix.stan', line 93, column 2 to column 48)",
  " (in 'basic_ops_mix.stan', line 123, column 2 to column 15)",
- " (in 'basic_ops_mix.stan', line 154, column 2 to column 28)",
+ " (in 'basic_ops_mix.stan', line 164, column 2 to column 28)",
  " (in 'basic_ops_mix.stan', line 31, column 2 to column 29)",
  " (in 'basic_ops_mix.stan', line 32, column 2 to column 28)",
  " (in 'basic_ops_mix.stan', line 33, column 2 to column 28)",
@@ -2771,10 +2825,10 @@ static constexpr std::array<const char*, 133> locations_array__ =
  " (in 'basic_ops_mix.stan', line 132, column 2 to column 26)",
  " (in 'basic_ops_mix.stan', line 133, column 2 to column 26)",
  " (in 'basic_ops_mix.stan', line 134, column 2 to column 26)",
- " (in 'basic_ops_mix.stan', line 136, column 2 to column 25)",
- " (in 'basic_ops_mix.stan', line 137, column 2 to column 25)",
- " (in 'basic_ops_mix.stan', line 138, column 2 to column 25)",
- " (in 'basic_ops_mix.stan', line 139, column 2 to column 25)",
+ " (in 'basic_ops_mix.stan', line 136, column 2 to column 26)",
+ " (in 'basic_ops_mix.stan', line 137, column 2 to column 26)",
+ " (in 'basic_ops_mix.stan', line 138, column 2 to column 26)",
+ " (in 'basic_ops_mix.stan', line 139, column 2 to column 26)",
  " (in 'basic_ops_mix.stan', line 141, column 2 to column 26)",
  " (in 'basic_ops_mix.stan', line 142, column 2 to column 25)",
  " (in 'basic_ops_mix.stan', line 143, column 2 to column 25)",
@@ -2783,7 +2837,15 @@ static constexpr std::array<const char*, 133> locations_array__ =
  " (in 'basic_ops_mix.stan', line 147, column 2 to column 25)",
  " (in 'basic_ops_mix.stan', line 148, column 2 to column 25)",
  " (in 'basic_ops_mix.stan', line 149, column 2 to column 26)",
- " (in 'basic_ops_mix.stan', line 155, column 2 to column 30)",
+ " (in 'basic_ops_mix.stan', line 151, column 2 to column 27)",
+ " (in 'basic_ops_mix.stan', line 152, column 2 to column 27)",
+ " (in 'basic_ops_mix.stan', line 153, column 2 to column 27)",
+ " (in 'basic_ops_mix.stan', line 154, column 2 to column 27)",
+ " (in 'basic_ops_mix.stan', line 156, column 2 to column 27)",
+ " (in 'basic_ops_mix.stan', line 157, column 2 to column 26)",
+ " (in 'basic_ops_mix.stan', line 158, column 2 to column 26)",
+ " (in 'basic_ops_mix.stan', line 159, column 2 to column 27)",
+ " (in 'basic_ops_mix.stan', line 165, column 2 to column 30)",
  " (in 'basic_ops_mix.stan', line 2, column 2 to column 8)",
  " (in 'basic_ops_mix.stan', line 3, column 17 to column 18)",
  " (in 'basic_ops_mix.stan', line 3, column 19 to column 20)",
@@ -2813,8 +2875,8 @@ static constexpr std::array<const char*, 133> locations_array__ =
  " (in 'basic_ops_mix.stan', line 28, column 19 to column 20)",
  " (in 'basic_ops_mix.stan', line 62, column 17 to column 18)",
  " (in 'basic_ops_mix.stan', line 93, column 21 to column 22)",
- " (in 'basic_ops_mix.stan', line 154, column 8 to column 9)",
- " (in 'basic_ops_mix.stan', line 154, column 10 to column 11)"};
+ " (in 'basic_ops_mix.stan', line 164, column 8 to column 9)",
+ " (in 'basic_ops_mix.stan', line 164, column 10 to column 11)"};
 
 
 
@@ -2863,19 +2925,19 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 102;
+      current_statement__ = 110;
       context__.validate_dims("data initialization","N","int",
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
       
-      current_statement__ = 102;
+      current_statement__ = 110;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 103;
+      current_statement__ = 111;
       stan::math::validate_non_negative_index("cmat", "N", N);
-      current_statement__ = 104;
+      current_statement__ = 112;
       stan::math::validate_non_negative_index("cmat", "N", N);
-      current_statement__ = 105;
+      current_statement__ = 113;
       context__.validate_dims("data initialization","cmat","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N), static_cast<size_t>(2)});
@@ -2887,26 +2949,26 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       
       {
         std::vector<std::complex<local_scalar_t__>> cmat_flat__;
-        current_statement__ = 105;
+        current_statement__ = 113;
         cmat_flat__ = context__.vals_c("cmat");
-        current_statement__ = 105;
+        current_statement__ = 113;
         pos__ = 1;
-        current_statement__ = 105;
+        current_statement__ = 113;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 105;
+          current_statement__ = 113;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 105;
+            current_statement__ = 113;
             stan::model::assign(cmat, cmat_flat__[(pos__ - 1)],
               "assigning variable cmat", stan::model::index_uni(sym2__),
                                            stan::model::index_uni(sym1__));
-            current_statement__ = 105;
+            current_statement__ = 113;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 106;
+      current_statement__ = 114;
       stan::math::validate_non_negative_index("cvec", "N", N);
-      current_statement__ = 107;
+      current_statement__ = 115;
       context__.validate_dims("data initialization","cvec","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(2)});
@@ -2918,22 +2980,22 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       
       {
         std::vector<std::complex<local_scalar_t__>> cvec_flat__;
-        current_statement__ = 107;
+        current_statement__ = 115;
         cvec_flat__ = context__.vals_c("cvec");
-        current_statement__ = 107;
+        current_statement__ = 115;
         pos__ = 1;
-        current_statement__ = 107;
+        current_statement__ = 115;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 107;
+          current_statement__ = 115;
           stan::model::assign(cvec, cvec_flat__[(pos__ - 1)],
             "assigning variable cvec", stan::model::index_uni(sym1__));
-          current_statement__ = 107;
+          current_statement__ = 115;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 108;
+      current_statement__ = 116;
       stan::math::validate_non_negative_index("crowvec", "N", N);
-      current_statement__ = 109;
+      current_statement__ = 117;
       context__.validate_dims("data initialization","crowvec","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(2)});
@@ -2945,20 +3007,20 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       
       {
         std::vector<std::complex<local_scalar_t__>> crowvec_flat__;
-        current_statement__ = 109;
+        current_statement__ = 117;
         crowvec_flat__ = context__.vals_c("crowvec");
-        current_statement__ = 109;
+        current_statement__ = 117;
         pos__ = 1;
-        current_statement__ = 109;
+        current_statement__ = 117;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 109;
+          current_statement__ = 117;
           stan::model::assign(crowvec, crowvec_flat__[(pos__ - 1)],
             "assigning variable crowvec", stan::model::index_uni(sym1__));
-          current_statement__ = 109;
+          current_statement__ = 117;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 110;
+      current_statement__ = 118;
       context__.validate_dims("data initialization","z","double",
            std::vector<size_t>{static_cast<size_t>(2)});
       z = 
@@ -2966,13 +3028,13 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
           std::numeric_limits<double>::quiet_NaN());
       
       
-      current_statement__ = 110;
+      current_statement__ = 118;
       z = context__.vals_c("z")[(1 - 1)];
-      current_statement__ = 111;
+      current_statement__ = 119;
       stan::math::validate_non_negative_index("mat", "N", N);
-      current_statement__ = 112;
+      current_statement__ = 120;
       stan::math::validate_non_negative_index("mat", "N", N);
-      current_statement__ = 113;
+      current_statement__ = 121;
       context__.validate_dims("data initialization","mat","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N)});
@@ -2984,26 +3046,26 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       
       {
         std::vector<local_scalar_t__> mat_flat__;
-        current_statement__ = 113;
+        current_statement__ = 121;
         mat_flat__ = context__.vals_r("mat");
-        current_statement__ = 113;
+        current_statement__ = 121;
         pos__ = 1;
-        current_statement__ = 113;
+        current_statement__ = 121;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 113;
+          current_statement__ = 121;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 113;
+            current_statement__ = 121;
             stan::model::assign(mat, mat_flat__[(pos__ - 1)],
               "assigning variable mat", stan::model::index_uni(sym2__),
                                           stan::model::index_uni(sym1__));
-            current_statement__ = 113;
+            current_statement__ = 121;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 114;
+      current_statement__ = 122;
       stan::math::validate_non_negative_index("vec", "N", N);
-      current_statement__ = 115;
+      current_statement__ = 123;
       context__.validate_dims("data initialization","vec","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       vec__ = 
@@ -3013,22 +3075,22 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       
       {
         std::vector<local_scalar_t__> vec_flat__;
-        current_statement__ = 115;
+        current_statement__ = 123;
         vec_flat__ = context__.vals_r("vec");
-        current_statement__ = 115;
+        current_statement__ = 123;
         pos__ = 1;
-        current_statement__ = 115;
+        current_statement__ = 123;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 115;
+          current_statement__ = 123;
           stan::model::assign(vec, vec_flat__[(pos__ - 1)],
             "assigning variable vec", stan::model::index_uni(sym1__));
-          current_statement__ = 115;
+          current_statement__ = 123;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 116;
+      current_statement__ = 124;
       stan::math::validate_non_negative_index("rowvec", "N", N);
-      current_statement__ = 117;
+      current_statement__ = 125;
       context__.validate_dims("data initialization","rowvec","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       rowvec__ = 
@@ -3039,54 +3101,54 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       
       {
         std::vector<local_scalar_t__> rowvec_flat__;
-        current_statement__ = 117;
+        current_statement__ = 125;
         rowvec_flat__ = context__.vals_r("rowvec");
-        current_statement__ = 117;
+        current_statement__ = 125;
         pos__ = 1;
-        current_statement__ = 117;
+        current_statement__ = 125;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 117;
+          current_statement__ = 125;
           stan::model::assign(rowvec, rowvec_flat__[(pos__ - 1)],
             "assigning variable rowvec", stan::model::index_uni(sym1__));
-          current_statement__ = 117;
+          current_statement__ = 125;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 118;
+      current_statement__ = 126;
       context__.validate_dims("data initialization","r","double",
            std::vector<size_t>{});
       r = std::numeric_limits<double>::quiet_NaN();
       
       
-      current_statement__ = 118;
-      r = context__.vals_r("r")[(1 - 1)];
-      current_statement__ = 119;
-      stan::math::validate_non_negative_index("cvmat", "N", N);
-      current_statement__ = 120;
-      stan::math::validate_non_negative_index("cvmat", "N", N);
-      current_statement__ = 121;
-      stan::math::validate_non_negative_index("cvvec", "N", N);
-      current_statement__ = 122;
-      stan::math::validate_non_negative_index("cvrowvec", "N", N);
-      current_statement__ = 123;
-      stan::math::validate_non_negative_index("vmat", "N", N);
-      current_statement__ = 124;
-      stan::math::validate_non_negative_index("vmat", "N", N);
-      current_statement__ = 125;
-      stan::math::validate_non_negative_index("vvec", "N", N);
       current_statement__ = 126;
-      stan::math::validate_non_negative_index("vrowvec", "N", N);
+      r = context__.vals_r("r")[(1 - 1)];
       current_statement__ = 127;
-      stan::math::validate_non_negative_index("tp_c_matrix", "N", N);
+      stan::math::validate_non_negative_index("cvmat", "N", N);
       current_statement__ = 128;
-      stan::math::validate_non_negative_index("tp_c_matrix", "N", N);
+      stan::math::validate_non_negative_index("cvmat", "N", N);
       current_statement__ = 129;
-      stan::math::validate_non_negative_index("tp_c_vector", "N", N);
+      stan::math::validate_non_negative_index("cvvec", "N", N);
       current_statement__ = 130;
-      stan::math::validate_non_negative_index("tp_c_rowvector", "N", N);
+      stan::math::validate_non_negative_index("cvrowvec", "N", N);
       current_statement__ = 131;
-      stan::math::validate_non_negative_index("carray", "N", N);
+      stan::math::validate_non_negative_index("vmat", "N", N);
       current_statement__ = 132;
+      stan::math::validate_non_negative_index("vmat", "N", N);
+      current_statement__ = 133;
+      stan::math::validate_non_negative_index("vvec", "N", N);
+      current_statement__ = 134;
+      stan::math::validate_non_negative_index("vrowvec", "N", N);
+      current_statement__ = 135;
+      stan::math::validate_non_negative_index("tp_c_matrix", "N", N);
+      current_statement__ = 136;
+      stan::math::validate_non_negative_index("tp_c_matrix", "N", N);
+      current_statement__ = 137;
+      stan::math::validate_non_negative_index("tp_c_vector", "N", N);
+      current_statement__ = 138;
+      stan::math::validate_non_negative_index("tp_c_rowvector", "N", N);
+      current_statement__ = 139;
+      stan::math::validate_non_negative_index("carray", "N", N);
+      current_statement__ = 140;
       stan::math::validate_non_negative_index("carray", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3485,18 +3547,18 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       stan::model::assign(tp_c_matrix, stan::math::subtract(cvmat, z),
         "assigning variable tp_c_matrix");
       current_statement__ = 89;
-      stan::model::assign(tp_c_matrix, stan::math::add(z, cmat),
+      stan::model::assign(tp_c_matrix, stan::math::add(z, cvmat),
         "assigning variable tp_c_matrix");
       current_statement__ = 90;
       stan::model::assign(tp_c_matrix,
-        stan::math::add(stan::math::to_complex(r, 0), cmat),
+        stan::math::add(stan::math::to_complex(r, 0), cvmat),
         "assigning variable tp_c_matrix");
       current_statement__ = 91;
       stan::model::assign(tp_c_matrix,
-        stan::math::add(cmat, stan::math::to_complex(r, 0)),
+        stan::math::add(cvmat, stan::math::to_complex(r, 0)),
         "assigning variable tp_c_matrix");
       current_statement__ = 92;
-      stan::model::assign(tp_c_matrix, stan::math::add(cmat, z),
+      stan::model::assign(tp_c_matrix, stan::math::add(cvmat, z),
         "assigning variable tp_c_matrix");
       current_statement__ = 93;
       stan::model::assign(tp_c_matrix, stan::math::subtract(zv, cmat),
@@ -3530,11 +3592,41 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       current_statement__ = 100;
       stan::model::assign(tp_c_matrix, stan::math::add(cmat, zv),
         "assigning variable tp_c_matrix");
+      current_statement__ = 101;
+      stan::model::assign(tp_c_matrix, stan::math::elt_divide(z, cvmat),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 102;
+      stan::model::assign(tp_c_matrix,
+        stan::math::elt_divide(stan::math::to_complex(r, 0), cvmat),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 103;
+      stan::model::assign(tp_c_matrix,
+        stan::math::elt_divide(cvmat, stan::math::to_complex(r, 0)),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 104;
+      stan::model::assign(tp_c_matrix, stan::math::elt_divide(cvmat, z),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 105;
+      stan::model::assign(tp_c_matrix, stan::math::elt_divide(zv, cmat),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 106;
+      stan::model::assign(tp_c_matrix,
+        stan::math::elt_divide(
+          stan::math::promote_scalar<std::complex<local_scalar_t__>>(v),
+          cmat), "assigning variable tp_c_matrix");
+      current_statement__ = 107;
+      stan::model::assign(tp_c_matrix,
+        stan::math::elt_divide(cmat,
+          stan::math::promote_scalar<std::complex<local_scalar_t__>>(v)),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 108;
+      stan::model::assign(tp_c_matrix, stan::math::elt_divide(cmat, zv),
+        "assigning variable tp_c_matrix");
       std::vector<std::vector<std::complex<local_scalar_t__>>> carray =
          std::vector<std::vector<std::complex<local_scalar_t__>>>(N, 
            std::vector<std::complex<local_scalar_t__>>(N, 
              std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
-      current_statement__ = 101;
+      current_statement__ = 109;
       stan::model::assign(carray, stan::math::to_array_2d(cvmat),
         "assigning variable carray");
     } catch (const std::exception& e) {
@@ -3963,18 +4055,18 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       stan::model::assign(tp_c_matrix, stan::math::subtract(cvmat, z),
         "assigning variable tp_c_matrix");
       current_statement__ = 89;
-      stan::model::assign(tp_c_matrix, stan::math::add(z, cmat),
+      stan::model::assign(tp_c_matrix, stan::math::add(z, cvmat),
         "assigning variable tp_c_matrix");
       current_statement__ = 90;
       stan::model::assign(tp_c_matrix,
-        stan::math::add(stan::math::to_complex(r, 0), cmat),
+        stan::math::add(stan::math::to_complex(r, 0), cvmat),
         "assigning variable tp_c_matrix");
       current_statement__ = 91;
       stan::model::assign(tp_c_matrix,
-        stan::math::add(cmat, stan::math::to_complex(r, 0)),
+        stan::math::add(cvmat, stan::math::to_complex(r, 0)),
         "assigning variable tp_c_matrix");
       current_statement__ = 92;
-      stan::model::assign(tp_c_matrix, stan::math::add(cmat, z),
+      stan::model::assign(tp_c_matrix, stan::math::add(cvmat, z),
         "assigning variable tp_c_matrix");
       current_statement__ = 93;
       stan::model::assign(tp_c_matrix, stan::math::subtract(zv, cmat),
@@ -4009,6 +4101,36 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       stan::model::assign(tp_c_matrix, stan::math::add(cmat, zv),
         "assigning variable tp_c_matrix");
       current_statement__ = 101;
+      stan::model::assign(tp_c_matrix, stan::math::elt_divide(z, cvmat),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 102;
+      stan::model::assign(tp_c_matrix,
+        stan::math::elt_divide(stan::math::to_complex(r, 0), cvmat),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 103;
+      stan::model::assign(tp_c_matrix,
+        stan::math::elt_divide(cvmat, stan::math::to_complex(r, 0)),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 104;
+      stan::model::assign(tp_c_matrix, stan::math::elt_divide(cvmat, z),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 105;
+      stan::model::assign(tp_c_matrix, stan::math::elt_divide(zv, cmat),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 106;
+      stan::model::assign(tp_c_matrix,
+        stan::math::elt_divide(
+          stan::math::promote_scalar<std::complex<local_scalar_t__>>(v),
+          cmat), "assigning variable tp_c_matrix");
+      current_statement__ = 107;
+      stan::model::assign(tp_c_matrix,
+        stan::math::elt_divide(cmat,
+          stan::math::promote_scalar<std::complex<local_scalar_t__>>(v)),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 108;
+      stan::model::assign(tp_c_matrix, stan::math::elt_divide(cmat, zv),
+        "assigning variable tp_c_matrix");
+      current_statement__ = 109;
       stan::model::assign(carray, stan::math::to_array_2d(cvmat),
         "assigning variable carray");
       if (emit_transformed_parameters__) {
