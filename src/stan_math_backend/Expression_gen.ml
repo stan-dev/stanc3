@@ -211,7 +211,10 @@ and gen_operator_app op ppf es_in =
   let remove_basic_promotion (e : 'a Expr.Fixed.t) =
     match e.pattern with Promotion (e, _, _) when is_scalar e -> e | _ -> e
   in
-  let es = List.map ~f:remove_basic_promotion es_in in
+  let es =
+    if List.for_all es_in ~f:is_scalar then
+      List.map ~f:remove_basic_promotion es_in
+    else es_in in
   match op with
   | Operator.Plus -> pp_scalar_binary ppf "+" "stan::math::add" es
   | PMinus ->
