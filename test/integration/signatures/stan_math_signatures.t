@@ -4079,6 +4079,12 @@ Display all Stan math signatures exposed in the language
   divide(row_vector, real) => row_vector
   divide(real, matrix) => matrix
   divide(matrix, real) => matrix
+  divide(complex, complex_vector) => complex_vector
+  divide(complex_vector, complex) => complex_vector
+  divide(complex, complex_row_vector) => complex_row_vector
+  divide(complex_row_vector, complex) => complex_row_vector
+  divide(complex, complex_matrix) => complex_matrix
+  divide(complex_matrix, complex) => complex_matrix
   dot_product(vector, vector) => real
   dot_product(vector, row_vector) => real
   dot_product(row_vector, vector) => real
@@ -4617,8 +4623,14 @@ Display all Stan math signatures exposed in the language
   elt_multiply(real, matrix) => matrix
   elt_multiply(matrix, real) => matrix
   elt_multiply(matrix, matrix) => matrix
+  elt_multiply(complex, complex_vector) => complex_vector
+  elt_multiply(complex_vector, complex) => complex_vector
   elt_multiply(complex_vector, complex_vector) => complex_vector
+  elt_multiply(complex, complex_row_vector) => complex_row_vector
+  elt_multiply(complex_row_vector, complex) => complex_row_vector
   elt_multiply(complex_row_vector, complex_row_vector) => complex_row_vector
+  elt_multiply(complex, complex_matrix) => complex_matrix
+  elt_multiply(complex_matrix, complex) => complex_matrix
   elt_multiply(complex_matrix, complex_matrix) => complex_matrix
   erf(int) => real
   erf(real) => real

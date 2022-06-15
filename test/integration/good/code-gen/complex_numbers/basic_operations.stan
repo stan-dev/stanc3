@@ -143,7 +143,21 @@ generated quantities {
   gq_c_matrix = cmat ./ r;
   gq_c_matrix = cmat ./ z;
 
-  // TODO ldivide, pow, matrix_power
+  gq_c_matrix = z .* cmat;
+  gq_c_matrix = r .* cmat;
+  gq_c_matrix = cmat .* r;
+  gq_c_matrix = cmat .* z;
+
+
+  gq_c_matrix = z / cmat;
+  gq_c_matrix = r / cmat;
+  gq_c_matrix = cmat / r;
+  gq_c_matrix = cmat / z;
+
+  gq_c_matrix = z * cmat;
+  gq_c_matrix = r * cmat;
+  gq_c_matrix = cmat * r;
+  gq_c_matrix = cmat * z;
 
   // transformations
   array[N,N] complex carray;

@@ -145,7 +145,21 @@ transformed parameters {
   tp_c_matrix = r ./ cmat;
   tp_c_matrix = cmat ./ r;
   tp_c_matrix = cmat ./ z;
-  // TODO ldivide, pow, matrix_power
+
+  tp_c_matrix = z .* cmat;
+  tp_c_matrix = r .* cmat;
+  tp_c_matrix = cmat .* r;
+  tp_c_matrix = cmat .* z;
+
+  tp_c_matrix = z / cmat;
+  tp_c_matrix = r / cmat;
+  tp_c_matrix = cmat / r;
+  tp_c_matrix = cmat / z;
+
+  tp_c_matrix = z * cmat;
+  tp_c_matrix = r * cmat;
+  tp_c_matrix = cmat * r;
+  tp_c_matrix = cmat * z;
 
   // transformations
   array[N,N] complex carray;

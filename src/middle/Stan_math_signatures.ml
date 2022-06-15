@@ -1168,7 +1168,6 @@ let () =
   add_unqualified ("distance", ReturnType UReal, [URowVector; URowVector], SoA) ;
   add_unqualified ("distance", ReturnType UReal, [UVector; URowVector], SoA) ;
   add_unqualified ("distance", ReturnType UReal, [URowVector; UVector], SoA) ;
-  add_unqualified ("divide", ReturnType UComplex, [UComplex; UComplex], AoS) ;
   add_unqualified ("divide", ReturnType UInt, [UInt; UInt], SoA) ;
   add_unqualified ("divide", ReturnType UReal, [UReal; UReal], SoA) ;
   add_unqualified ("divide", ReturnType UVector, [UVector; UReal], SoA) ;
@@ -1177,6 +1176,19 @@ let () =
   add_unqualified ("divide", ReturnType UVector, [UReal; UVector], SoA) ;
   add_unqualified ("divide", ReturnType URowVector, [UReal; URowVector], SoA) ;
   add_unqualified ("divide", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
+  add_unqualified ("divide", ReturnType UComplex, [UComplex; UComplex], AoS) ;
+  add_unqualified
+    ("divide", ReturnType UComplexVector, [UComplexVector; UComplex], AoS) ;
+  add_unqualified
+    ("divide", ReturnType UComplexRowVector, [UComplexRowVector; UComplex], AoS) ;
+  add_unqualified
+    ("divide", ReturnType UComplexMatrix, [UComplexMatrix; UComplex], AoS) ;
+  add_unqualified
+    ("divide", ReturnType UComplexVector, [UComplex; UComplexVector], AoS) ;
+  add_unqualified
+    ("divide", ReturnType UComplexRowVector, [UComplex; UComplexRowVector], AoS) ;
+  add_unqualified
+    ("divide", ReturnType UComplexMatrix, [UComplex; UComplexMatrix], AoS) ;
   add_unqualified ("dot_product", ReturnType UReal, [UVector; UVector], SoA) ;
   add_unqualified
     ("dot_product", ReturnType UReal, [URowVector; URowVector], SoA) ;
@@ -1259,6 +1271,24 @@ let () =
   add_unqualified
     ("elt_multiply", ReturnType URowVector, [UReal; URowVector], SoA) ;
   add_unqualified ("elt_multiply", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
+  add_unqualified
+    ("elt_multiply", ReturnType UComplexVector, [UComplexVector; UComplex], SoA) ;
+  add_unqualified
+    ( "elt_multiply"
+    , ReturnType UComplexRowVector
+    , [UComplexRowVector; UComplex]
+    , SoA ) ;
+  add_unqualified
+    ("elt_multiply", ReturnType UComplexMatrix, [UComplexMatrix; UComplex], SoA) ;
+  add_unqualified
+    ("elt_multiply", ReturnType UComplexVector, [UComplex; UComplexVector], SoA) ;
+  add_unqualified
+    ( "elt_multiply"
+    , ReturnType UComplexRowVector
+    , [UComplex; UComplexRowVector]
+    , SoA ) ;
+  add_unqualified
+    ("elt_multiply", ReturnType UComplexMatrix, [UComplex; UComplexMatrix], SoA) ;
   add_unqualified ("exp", ReturnType UComplex, [UComplex], AoS) ;
   add_binary_vec_int_int "falling_factorial" SoA ;
   add_binary_vec_real_int "falling_factorial" SoA ;
