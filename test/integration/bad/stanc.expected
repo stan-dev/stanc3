@@ -828,8 +828,14 @@ Ill-typed arguments supplied to infix operator -. Available signatures:
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
 (complex_vector, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
 (complex_row_vector, complex_row_vector) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
+(complex_matrix, complex) => complex_matrix
 (complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: vector, matrix.
   $ ../../../../install/default/bin/stanc err-nested-parens-close.stan
@@ -1532,8 +1538,14 @@ Ill-typed arguments supplied to infix operator +. Available signatures:
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
 (complex_vector, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
 (complex_row_vector, complex_row_vector) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
+(complex_matrix, complex) => complex_matrix
 (complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: matrix, vector.
   $ ../../../../install/default/bin/stanc op_divide_bad.stan
@@ -1554,10 +1566,19 @@ Ill-typed arguments supplied to infix operator /. Available signatures:
 
 (int, int) => int
 (real, real) => real
+(real, vector) => vector
 (vector, real) => vector
 (complex, complex) => complex
+(real, row_vector) => row_vector
 (row_vector, real) => row_vector
+(real, matrix) => matrix
 (matrix, real) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
+(complex_matrix, complex) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_divide_right_bad.stan
 Semantic error in 'op_divide_right_bad.stan', line 7, column 6 to column 11:
@@ -1577,10 +1598,19 @@ Ill-typed arguments supplied to infix operator /. Available signatures:
 
 (int, int) => int
 (real, real) => real
+(real, vector) => vector
 (vector, real) => vector
 (complex, complex) => complex
+(real, row_vector) => row_vector
 (row_vector, real) => row_vector
+(real, matrix) => matrix
 (matrix, real) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
+(complex_matrix, complex) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_elt_divide_bad.stan
 Semantic error in 'op_elt_divide_bad.stan', line 7, column 6 to column 12:
@@ -1605,8 +1635,14 @@ Ill-typed arguments supplied to infix operator ./. Available signatures:
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
 (complex_vector, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
 (complex_row_vector, complex_row_vector) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
+(complex_matrix, complex) => complex_matrix
 (complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_elt_multiply_bad.stan
@@ -1622,12 +1658,24 @@ Semantic error in 'op_elt_multiply_bad.stan', line 7, column 6 to column 12:
 Ill-typed arguments supplied to infix operator .*. Available signatures: 
 (int, int) => int
 (real, real) => real
+(real, vector) => vector
+(vector, real) => vector
 (vector, vector) => vector
 (complex, complex) => complex
+(real, row_vector) => row_vector
+(row_vector, real) => row_vector
 (row_vector, row_vector) => row_vector
+(real, matrix) => matrix
+(matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
 (complex_vector, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
 (complex_row_vector, complex_row_vector) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
+(complex_matrix, complex) => complex_matrix
 (complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_intdivide_bad.stan
@@ -1807,8 +1855,14 @@ Ill-typed arguments supplied to infix operator -. Available signatures:
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
 (complex_vector, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
 (complex_row_vector, complex_row_vector) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
+(complex_matrix, complex) => complex_matrix
 (complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: vector, matrix.
   $ ../../../../install/default/bin/stanc op_transpose_bad.stan

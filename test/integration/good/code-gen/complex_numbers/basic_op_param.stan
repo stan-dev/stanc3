@@ -123,8 +123,43 @@ transformed parameters {
 
   // reductions
   tp_c = sum(to_array_1d(cvec));
+  // reductions
+  tp_c = sum(to_array_1d(cvec));
+  tp_c = sum(cvec);
+  tp_c = sum(crowvec);
+  tp_c = sum(cmat);
 
-  // TODO ldivide, pow, matrix_power
+
+  // broadcasting
+  tp_c_matrix = z - cmat;
+  tp_c_matrix = r - cmat;
+  tp_c_matrix = cmat - r;
+  tp_c_matrix = cmat - z;
+
+  tp_c_matrix = z + cmat;
+  tp_c_matrix = r + cmat;
+  tp_c_matrix = cmat + r;
+  tp_c_matrix = cmat + z;
+
+  tp_c_matrix = z ./ cmat;
+  tp_c_matrix = r ./ cmat;
+  tp_c_matrix = cmat ./ r;
+  tp_c_matrix = cmat ./ z;
+
+  tp_c_matrix = z .* cmat;
+  tp_c_matrix = r .* cmat;
+  tp_c_matrix = cmat .* r;
+  tp_c_matrix = cmat .* z;
+
+  tp_c_matrix = z / cmat;
+  tp_c_matrix = r / cmat;
+  tp_c_matrix = cmat / r;
+  tp_c_matrix = cmat / z;
+
+  tp_c_matrix = z * cmat;
+  tp_c_matrix = r * cmat;
+  tp_c_matrix = cmat * r;
+  tp_c_matrix = cmat * z;
 
   // transformations
   array[N,N] complex carray;
