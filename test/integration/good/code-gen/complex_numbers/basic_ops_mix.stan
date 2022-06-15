@@ -127,7 +127,67 @@ transformed parameters {
   tp_c = crowvec * vvec;
   tp_c = rowvec * cvvec;
 
-  // TODO ldivide, pow, matrix_power
+  // broadcasting
+  tp_c_matrix = z - cvmat;
+  tp_c_matrix = r - cvmat;
+  tp_c_matrix = cvmat - r;
+  tp_c_matrix = cvmat - z;
+
+  tp_c_matrix = z + cvmat;
+  tp_c_matrix = r + cvmat;
+  tp_c_matrix = cvmat + r;
+  tp_c_matrix = cvmat + z;
+
+  tp_c_matrix = zv - cmat;
+  tp_c_matrix = v - cmat;
+  tp_c_matrix = cmat - v;
+  tp_c_matrix = cmat - zv;
+
+  tp_c_matrix = zv + cmat;
+  tp_c_matrix = v + cmat;
+  tp_c_matrix = cmat + v;
+  tp_c_matrix = cmat + zv;
+
+  tp_c_matrix = z ./ cvmat;
+  tp_c_matrix = r ./ cvmat;
+  tp_c_matrix = cvmat ./ r;
+  tp_c_matrix = cvmat ./ z;
+
+  tp_c_matrix = zv ./ cmat;
+  tp_c_matrix = v ./ cmat;
+  tp_c_matrix = cmat ./ v;
+  tp_c_matrix = cmat ./ zv;
+
+
+  tp_c_matrix = z .* cvmat;
+  tp_c_matrix = r .* cvmat;
+  tp_c_matrix = cvmat .* r;
+  tp_c_matrix = cvmat .* z;
+
+  tp_c_matrix = zv .* cmat;
+  tp_c_matrix = v .* cmat;
+  tp_c_matrix = cmat .* v;
+  tp_c_matrix = cmat .* zv;
+
+    tp_c_matrix = z / cvmat;
+  tp_c_matrix = r / cvmat;
+  tp_c_matrix = cvmat / r;
+  tp_c_matrix = cvmat / z;
+
+  tp_c_matrix = zv / cmat;
+  tp_c_matrix = v / cmat;
+  tp_c_matrix = cmat / v;
+  tp_c_matrix = cmat / zv;
+
+  tp_c_matrix = z * cvmat;
+  tp_c_matrix = r * cvmat;
+  tp_c_matrix = cvmat * r;
+  tp_c_matrix = cvmat * z;
+
+  tp_c_matrix = zv * cmat;
+  tp_c_matrix = v * cmat;
+  tp_c_matrix = cmat * v;
+  tp_c_matrix = cmat * zv;
 
   // transformations
   array[N,N] complex carray;
