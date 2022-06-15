@@ -749,6 +749,18 @@ let () =
   add_unqualified ("add", ReturnType UVector, [UReal; UVector], SoA) ;
   add_unqualified ("add", ReturnType URowVector, [UReal; URowVector], SoA) ;
   add_unqualified ("add", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
+  add_unqualified
+    ("add", ReturnType UComplexVector, [UComplexVector; UComplex], SoA) ;
+  add_unqualified
+    ("add", ReturnType UComplexRowVector, [UComplexRowVector; UComplex], SoA) ;
+  add_unqualified
+    ("add", ReturnType UComplexMatrix, [UComplexMatrix; UComplex], SoA) ;
+  add_unqualified
+    ("add", ReturnType UComplexVector, [UComplex; UComplexVector], SoA) ;
+  add_unqualified
+    ("add", ReturnType UComplexRowVector, [UComplex; UComplexRowVector], SoA) ;
+  add_unqualified
+    ("add", ReturnType UComplexMatrix, [UComplex; UComplexMatrix], SoA) ;
   add_unqualified ("add_diag", ReturnType UMatrix, [UMatrix; UReal], AoS) ;
   add_unqualified ("add_diag", ReturnType UMatrix, [UMatrix; UVector], AoS) ;
   add_unqualified ("add_diag", ReturnType UMatrix, [UMatrix; URowVector], AoS) ;
@@ -1084,7 +1096,6 @@ let () =
   add_unqualified ("distance", ReturnType UReal, [URowVector; URowVector], SoA) ;
   add_unqualified ("distance", ReturnType UReal, [UVector; URowVector], SoA) ;
   add_unqualified ("distance", ReturnType UReal, [URowVector; UVector], SoA) ;
-  add_unqualified ("divide", ReturnType UComplex, [UComplex; UComplex], AoS) ;
   add_unqualified ("divide", ReturnType UInt, [UInt; UInt], SoA) ;
   add_unqualified ("divide", ReturnType UReal, [UReal; UReal], SoA) ;
   add_unqualified ("divide", ReturnType UVector, [UVector; UReal], SoA) ;
@@ -1093,6 +1104,19 @@ let () =
   add_unqualified ("divide", ReturnType UVector, [UReal; UVector], SoA) ;
   add_unqualified ("divide", ReturnType URowVector, [UReal; URowVector], SoA) ;
   add_unqualified ("divide", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
+  add_unqualified ("divide", ReturnType UComplex, [UComplex; UComplex], AoS) ;
+  add_unqualified
+    ("divide", ReturnType UComplexVector, [UComplexVector; UComplex], AoS) ;
+  add_unqualified
+    ("divide", ReturnType UComplexRowVector, [UComplexRowVector; UComplex], AoS) ;
+  add_unqualified
+    ("divide", ReturnType UComplexMatrix, [UComplexMatrix; UComplex], AoS) ;
+  add_unqualified
+    ("divide", ReturnType UComplexVector, [UComplex; UComplexVector], AoS) ;
+  add_unqualified
+    ("divide", ReturnType UComplexRowVector, [UComplex; UComplexRowVector], AoS) ;
+  add_unqualified
+    ("divide", ReturnType UComplexMatrix, [UComplex; UComplexMatrix], AoS) ;
   add_unqualified ("dot_product", ReturnType UReal, [UVector; UVector], SoA) ;
   add_unqualified
     ("dot_product", ReturnType UReal, [URowVector; URowVector], SoA) ;
@@ -1127,6 +1151,10 @@ let () =
   add_unqualified ("eigenvalues", ReturnType UComplexVector, [UMatrix], AoS) ;
   add_unqualified ("eigenvectors", ReturnType UComplexMatrix, [UMatrix], AoS) ;
   add_unqualified ("eigenvalues_sym", ReturnType UVector, [UMatrix], AoS) ;
+  add_unqualified
+    ("eigenvalues_sym", ReturnType UComplexVector, [UComplexMatrix], AoS) ;
+  add_unqualified
+    ("eigenvectors_sym", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
   add_unqualified ("eigenvectors_sym", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("generalized_inverse", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("qr_Q", ReturnType UMatrix, [UMatrix], AoS) ;
@@ -1142,6 +1170,24 @@ let () =
   add_unqualified ("elt_divide", ReturnType UVector, [UReal; UVector], SoA) ;
   add_unqualified ("elt_divide", ReturnType URowVector, [UReal; URowVector], SoA) ;
   add_unqualified ("elt_divide", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
+  add_unqualified
+    ("elt_divide", ReturnType UComplexVector, [UComplexVector; UComplex], SoA) ;
+  add_unqualified
+    ( "elt_divide"
+    , ReturnType UComplexRowVector
+    , [UComplexRowVector; UComplex]
+    , SoA ) ;
+  add_unqualified
+    ("elt_divide", ReturnType UComplexMatrix, [UComplexMatrix; UComplex], SoA) ;
+  add_unqualified
+    ("elt_divide", ReturnType UComplexVector, [UComplex; UComplexVector], SoA) ;
+  add_unqualified
+    ( "elt_divide"
+    , ReturnType UComplexRowVector
+    , [UComplex; UComplexRowVector]
+    , SoA ) ;
+  add_unqualified
+    ("elt_divide", ReturnType UComplexMatrix, [UComplex; UComplexMatrix], SoA) ;
   List.iter
     ~f:(fun x -> add_unqualified ("elt_multiply", ReturnType x, [x; x], SoA))
     bare_types ;
@@ -1153,6 +1199,24 @@ let () =
   add_unqualified
     ("elt_multiply", ReturnType URowVector, [UReal; URowVector], SoA) ;
   add_unqualified ("elt_multiply", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
+  add_unqualified
+    ("elt_multiply", ReturnType UComplexVector, [UComplexVector; UComplex], SoA) ;
+  add_unqualified
+    ( "elt_multiply"
+    , ReturnType UComplexRowVector
+    , [UComplexRowVector; UComplex]
+    , SoA ) ;
+  add_unqualified
+    ("elt_multiply", ReturnType UComplexMatrix, [UComplexMatrix; UComplex], SoA) ;
+  add_unqualified
+    ("elt_multiply", ReturnType UComplexVector, [UComplex; UComplexVector], SoA) ;
+  add_unqualified
+    ( "elt_multiply"
+    , ReturnType UComplexRowVector
+    , [UComplex; UComplexRowVector]
+    , SoA ) ;
+  add_unqualified
+    ("elt_multiply", ReturnType UComplexMatrix, [UComplex; UComplexMatrix], SoA) ;
   add_unqualified ("exp", ReturnType UComplex, [UComplex], AoS) ;
   add_binary_vec_int_int "falling_factorial" SoA ;
   add_binary_vec_real_int "falling_factorial" SoA ;
@@ -2179,6 +2243,7 @@ let () =
   add_unqualified ("sin", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("sinh", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("singular_values", ReturnType UVector, [UMatrix], SoA) ;
+  add_unqualified ("singular_values", ReturnType UVector, [UComplexMatrix], AoS) ;
   List.iter
     ~f:(fun i ->
       List.iter
@@ -2246,6 +2311,24 @@ let () =
   add_unqualified ("subtract", ReturnType UVector, [UReal; UVector], SoA) ;
   add_unqualified ("subtract", ReturnType URowVector, [UReal; URowVector], SoA) ;
   add_unqualified ("subtract", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
+  add_unqualified
+    ("subtract", ReturnType UComplexVector, [UComplexVector; UComplex], SoA) ;
+  add_unqualified
+    ( "subtract"
+    , ReturnType UComplexRowVector
+    , [UComplexRowVector; UComplex]
+    , SoA ) ;
+  add_unqualified
+    ("subtract", ReturnType UComplexMatrix, [UComplexMatrix; UComplex], SoA) ;
+  add_unqualified
+    ("subtract", ReturnType UComplexVector, [UComplex; UComplexVector], SoA) ;
+  add_unqualified
+    ( "subtract"
+    , ReturnType UComplexRowVector
+    , [UComplex; UComplexRowVector]
+    , SoA ) ;
+  add_unqualified
+    ("subtract", ReturnType UComplexMatrix, [UComplex; UComplexMatrix], SoA) ;
   add_unqualified ("sum", ReturnType UInt, [UArray UInt], SoA) ;
   add_unqualified ("sum", ReturnType UReal, [UArray UReal], SoA) ;
   add_unqualified ("sum", ReturnType UReal, [UVector], SoA) ;
@@ -2256,7 +2339,9 @@ let () =
   add_unqualified ("sum", ReturnType UComplex, [UComplexRowVector], SoA) ;
   add_unqualified ("sum", ReturnType UComplex, [UComplexMatrix], SoA) ;
   add_unqualified ("svd_U", ReturnType UMatrix, [UMatrix], SoA) ;
+  add_unqualified ("svd_U", ReturnType UComplexMatrix, [UComplexMatrix], SoA) ;
   add_unqualified ("svd_V", ReturnType UMatrix, [UMatrix], SoA) ;
+  add_unqualified ("svd_V", ReturnType UComplexMatrix, [UComplexMatrix], SoA) ;
   add_unqualified
     ("symmetrize_from_lower_tri", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified
