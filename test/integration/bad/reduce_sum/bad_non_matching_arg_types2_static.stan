@@ -1,15 +1,15 @@
 functions {
-  real my_func(real[] y_slice, int start, int end, real mu, real sigma) {
+  real my_func(array[] real y_slice, int start, int end, real mu, real sigma) {
     return normal_lpdf(y_slice | mu, sigma);
-  }  
+  }
 }
 
 transformed data {
-  real b[5];
+  array[5] real b;
 }
 
 parameters {
-  real a[5];
+  array[5] real a;
 }
 
 model {

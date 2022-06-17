@@ -1,7 +1,7 @@
 parameters {
-  real y[3];
+  array[3] real y;
 
 }
 transformed parameters {
-  real z[size(y)];
+  array[size(y)] real z;
 }

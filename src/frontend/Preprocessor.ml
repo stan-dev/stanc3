@@ -2,6 +2,7 @@
 
 open Core_kernel
 open Lexing
+open Debugging
 module Str = Re.Str
 
 let dup_exists l =
@@ -12,6 +13,36 @@ let dup_exists l =
 let include_stack = Stack.create ()
 let include_paths : string list ref = ref []
 let included_files : string list ref = ref []
+let size () = Stack.length include_stack
+
+let init buf =
+  included_files := [] ;
+  Stack.clear include_stack ;
+  Stack.push include_stack buf
+
+let current_buffer () =
+  let buf = Stack.top_exn include_stack in
+  buf
+
+let pop_buffer () = Stack.pop_exn include_stack
+
+let update_start_positions pos =
+  Stack.iter ~f:(fun lexbuf -> lexbuf.lex_start_p <- pos) include_stack
+
+let restore_prior_lexbuf () =
+  let lexbuf = pop_buffer () in
+  let old_lexbuf = current_buffer () in
+  (* to get printing includes right we need to make sure that the 'start' of
+      our next token is on the following line
+  *)
+  let old_pos =
+    {old_lexbuf.lex_curr_p with pos_lnum= old_lexbuf.lex_curr_p.pos_lnum + 1}
+  in
+  lexer_logger "Switching to older lexbuf" ;
+  lexer_pos_logger old_lexbuf.lex_curr_p ;
+  lexbuf.lex_curr_p <- old_pos ;
+  lexbuf.lex_start_p <- old_pos ;
+  old_lexbuf
 
 let rec try_open_in paths fname pos =
   match paths with
@@ -40,9 +71,12 @@ let maybe_remove_quotes str =
     drop_suffix (drop_prefix str 1) 1
   else str
 
-let try_get_new_lexbuf fname pos =
+let try_get_new_lexbuf fname =
+  let lexbuf = Stack.top_exn include_stack in
+  let pos = lexbuf.lex_curr_p in
   let chan, file, path =
     try_open_in !include_paths (maybe_remove_quotes fname) pos in
+  lexer_logger ("opened " ^ file) ;
   let new_lexbuf = from_channel chan in
   new_lexbuf.lex_start_p <-
     {pos_fname= path; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
@@ -52,8 +86,8 @@ let try_get_new_lexbuf fname pos =
       (Errors.SyntaxError
          (Include
             ( Printf.sprintf "File %s recursively included itself." fname
-            , Middle.Location.of_position_exn
-                (lexeme_start_p (Stack.top_exn include_stack)) ) ) ) ;
+            , Middle.Location.of_position_exn (lexeme_start_p lexbuf) ) ) ) ;
   Stack.push include_stack new_lexbuf ;
+  update_start_positions new_lexbuf.lex_curr_p ;
   included_files := file :: !included_files ;
   new_lexbuf

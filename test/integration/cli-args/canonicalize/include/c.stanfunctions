@@ -1,0 +1,8 @@
+/**
+  A documentation comment
+*/
+int baz(real z){
+  if (1) return 2; // test
+  else return 3;
+  // trailing coment in c
+}

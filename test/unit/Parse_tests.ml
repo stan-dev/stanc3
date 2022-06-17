@@ -3,7 +3,7 @@ open Frontend
 
 let print_ast_of_string s =
   let ast =
-    Frontend_utils.untyped_ast_of_string s
+    Test_utils.untyped_ast_of_string s
     |> Result.map_error ~f:Errors.to_string
     |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)]
@@ -82,9 +82,10 @@ let%expect_test "parse minus unary" =
        (modelblock
         (((stmts
            (((stmt
-              (VarDecl (decl_type (Sized SReal)) (transformation Identity)
-               (identifier ((name x) (id_loc <opaque>))) (initial_value ())
-               (is_global false)))
+              (VarDecl (decl_type SReal) (transformation Identity)
+               (is_global false)
+               (variables
+                (((identifier ((name x) (id_loc <opaque>))) (initial_value ()))))))
              (smeta ((loc <opaque>))))
             ((stmt
               (Assignment
@@ -115,14 +116,23 @@ let%expect_test "parse unary over binary" =
      (modelblock
       (((stmts
          (((stmt
-            (VarDecl (decl_type (Sized SReal)) (transformation Identity)
-             (identifier ((name x) (id_loc <opaque>)))
-             (initial_value
-              (((expr
-                 (BinOp
-                  ((expr
+            (VarDecl (decl_type SReal) (transformation Identity)
+             (is_global false)
+             (variables
+              (((identifier ((name x) (id_loc <opaque>)))
+                (initial_value
+                 (((expr
                     (BinOp
-                     ((expr (Variable ((name x) (id_loc <opaque>))))
+                     ((expr
+                       (BinOp
+                        ((expr (Variable ((name x) (id_loc <opaque>))))
+                         (emeta ((loc <opaque>))))
+                        Minus
+                        ((expr
+                          (PrefixOp PMinus
+                           ((expr (Variable ((name x) (id_loc <opaque>))))
+                            (emeta ((loc <opaque>))))))
+                         (emeta ((loc <opaque>))))))
                       (emeta ((loc <opaque>))))
                      Minus
                      ((expr
@@ -130,15 +140,7 @@ let%expect_test "parse unary over binary" =
                         ((expr (Variable ((name x) (id_loc <opaque>))))
                          (emeta ((loc <opaque>))))))
                       (emeta ((loc <opaque>))))))
-                   (emeta ((loc <opaque>))))
-                  Minus
-                  ((expr
-                    (PrefixOp PMinus
-                     ((expr (Variable ((name x) (id_loc <opaque>))))
-                      (emeta ((loc <opaque>))))))
-                   (emeta ((loc <opaque>))))))
-                (emeta ((loc <opaque>))))))
-             (is_global false)))
+                   (emeta ((loc <opaque>)))))))))))
            (smeta ((loc <opaque>))))))
         (xloc
          ((begin_loc
@@ -158,11 +160,11 @@ let%expect_test "parse indices, two different colons" =
      (((stmt
         (VarDecl
          (decl_type
-          (Sized
-           (SMatrix AoS ((expr (IntNumeral 5)) (emeta ((loc <opaque>))))
-            ((expr (IntNumeral 5)) (emeta ((loc <opaque>)))))))
-         (transformation Identity) (identifier ((name x) (id_loc <opaque>)))
-         (initial_value ()) (is_global false)))
+          (SMatrix AoS ((expr (IntNumeral 5)) (emeta ((loc <opaque>))))
+           ((expr (IntNumeral 5)) (emeta ((loc <opaque>))))))
+         (transformation Identity) (is_global false)
+         (variables
+          (((identifier ((name x) (id_loc <opaque>))) (initial_value ()))))))
        (smeta ((loc <opaque>))))
       ((stmt
         (Print
@@ -372,7 +374,7 @@ let%expect_test "parse crazy truncation example" =
   print_ast_of_string
     "\n\
     \      model {\n\
-    \        real T[1,1] = {{42.0}};\n\
+    \        array[1,1] real T = {{42.0}};\n\
     \        1 ~ normal(0, 1) T[1, T[1,1]];\n\
     \        print(T[1,1]);\n\
     \      }\n\
@@ -386,20 +388,20 @@ let%expect_test "parse crazy truncation example" =
            (((stmt
               (VarDecl
                (decl_type
-                (Sized
-                 (SArray
-                  (SArray SReal ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
-                  ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))))
-               (transformation Identity) (identifier ((name T) (id_loc <opaque>)))
-               (initial_value
-                (((expr
-                   (ArrayExpr
-                    (((expr
-                       (ArrayExpr
-                        (((expr (RealNumeral 42.0)) (emeta ((loc <opaque>)))))))
-                      (emeta ((loc <opaque>)))))))
-                  (emeta ((loc <opaque>))))))
-               (is_global false)))
+                (SArray
+                 (SArray SReal ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
+                 ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))))
+               (transformation Identity) (is_global false)
+               (variables
+                (((identifier ((name T) (id_loc <opaque>)))
+                  (initial_value
+                   (((expr
+                      (ArrayExpr
+                       (((expr
+                          (ArrayExpr
+                           (((expr (RealNumeral 42.0)) (emeta ((loc <opaque>)))))))
+                         (emeta ((loc <opaque>)))))))
+                     (emeta ((loc <opaque>)))))))))))
              (smeta ((loc <opaque>))))
             ((stmt
               (Tilde (arg ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))

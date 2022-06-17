@@ -12,32 +12,21 @@ module Str = Re.Str
 type t = {filename: string; line_num: int; col_num: int; included_from: t option}
 [@@deriving sexp, hash]
 
-let compare loc1 loc2 =
-  let rec unfold = function
-    | {included_from= None; _} as loc -> [loc]
-    | {included_from= Some loc1; _} as loc2 -> loc2 :: unfold loc1 in
-  let rec go = function
-    | [], [] -> 0
-    | [], _ -> -1
-    | _, [] -> 1
-    | hd1 :: tl1, hd2 :: tl2 ->
-        let x = Int.compare hd1.line_num hd2.line_num in
-        if x <> 0 then x
-        else
-          let x = Int.compare hd1.col_num hd2.col_num in
-          if x <> 0 then x else go (tl1, tl2) in
-  go (List.rev (unfold loc1), List.rev (unfold loc2))
-
-(** Will attempt to {b open} the file and*)
-let pp_context_exn ppf {filename; line_num; col_num; _} =
-  let open In_channel in
-  let input = create filename in
+let pp_context_list ppf (lines, {line_num; col_num; _}) =
+  let advance l =
+    let front = List.hd !l in
+    match front with
+    | Some _ ->
+        l := List.tl_exn !l ;
+        front
+    | None -> None in
+  let input = ref lines in
   for _ = 1 to line_num - 3 do
-    ignore (input_line_exn input : string)
+    ignore (advance input : string option)
   done ;
   let get_line num =
     if num > 0 then
-      match input_line input with
+      match advance input with
       | Some input -> Printf.sprintf "%6d:  %s\n" num input
       | _ -> ""
     else "" in
@@ -47,14 +36,20 @@ let pp_context_exn ppf {filename; line_num; col_num; _} =
   let cursor_line = String.make (col_num + 9) ' ' ^ "^\n" in
   let line_after = get_line (line_num + 1) in
   let line_2_after = get_line (line_num + 2) in
-  close input ;
   Fmt.pf ppf
     "   -------------------------------------------------\n\
      %s%s%s%s%s%s   -------------------------------------------------\n"
     line_2_before line_before our_line cursor_line line_after line_2_after
 
-let context_to_string file =
-  try Some (Fmt.to_to_string pp_context_exn file) with _ -> None
+(** Turn the given location into a string holding the code of that location.
+    Code is retrieved by calling context_cb, which may do IO.
+    Exceptions in the callback or in the creation of the string
+    (possible if the context is incorrectly too short for the given location)
+    return [None] *)
+let context_to_string (context_cb : unit -> string list) (loc : t) :
+    string option =
+  Option.try_with (fun () ->
+      Fmt.to_to_string pp_context_list (context_cb (), loc) )
 
 let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 
@@ -74,6 +69,28 @@ let rec to_string ?printed_filename ?(print_file = true) ?(print_line = true)
         sprintf ", included from\n%s" (to_string ?printed_filename loc2)
     | None -> "" in
   sprintf "%s%scolumn %d%s" file line loc.col_num incl
+
+let compare loc1 loc2 =
+  let rec unfold = function
+    | {included_from= None; _} as loc -> [loc]
+    | {included_from= Some loc1; _} as loc2 ->
+        (* When pretty-printing comments it is possible to end up with multiple
+           locations at an identical point in the file when they originated in an include.
+           We artificially break this tie by pretending that included locations
+           were included from the one line down from where they truly were.
+        *)
+        loc2 :: unfold {loc1 with line_num= loc1.line_num + 1} in
+  let rec go = function
+    | [], [] -> 0
+    | [], _ -> -1
+    | _, [] -> 1
+    | hd1 :: tl1, hd2 :: tl2 ->
+        let x = Int.compare hd1.line_num hd2.line_num in
+        if x <> 0 then x
+        else
+          let x = Int.compare hd1.col_num hd2.col_num in
+          if x <> 0 then x else go (tl1, tl2) in
+  go (List.rev (unfold loc1), List.rev (unfold loc2))
 
 let trim_quotes s =
   let s = String.drop_prefix s 1 in

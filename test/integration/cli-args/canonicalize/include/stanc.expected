@@ -1,0 +1,64 @@
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. a.stanfunctions
+// line comment a
+/*weird block a*/
+void foo(real x) {
+  return;
+}
+// another line comment a
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. b.stanfunctions
+#include a.stanfunctions //include other functions
+
+// line comment b
+/*weird block b*/
+void bar(real y) {
+  return;
+}
+// another line comment b
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. c.stanfunctions
+/**
+  A documentation comment
+*/
+int baz(real z) {
+  if (1) 
+    return 2; // test
+  else 
+    return 3;
+  // trailing coment in c
+}
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. main.stan
+functions {
+  #include b.stanfunctions
+  #include c.stanfunctions
+}
+data {
+  /* ... declarations ... */
+}
+#include tdata.stan
+model {
+  x ~ bernoulli(0);
+  if (1) {
+    
+  } else {
+    #include tildes.inc
+  }
+}
+generated quantities {
+  real z;
+  if (1) {
+    
+  } else {
+    #include statements1.inc
+  }
+  
+  if (1) {
+    #include statements2.inc
+  }
+}
+
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. tdata.stan
+// I'm in another file!
+
+transformed data {
+  int x = 30;
+}
+

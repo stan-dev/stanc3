@@ -1,0 +1,41 @@
+(rule
+ (targets inlined.output)
+ (deps
+  (package stanc)
+  (:inc
+   (glob_files *.inc))
+  (:stanfiles
+   (glob_files *.stan*)))
+ (action
+  (with-outputs-to
+   %{targets}
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --auto-format --include-paths=. --canonicalize=includes"
+    %{stanfiles}))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff inlined.expected inlined.output)))
+
+(rule
+ (targets stanc.output)
+ (deps
+  (package stanc)
+  (:inc
+   (glob_files *.inc))
+  (:stanfiles
+   (glob_files *.stan*)))
+ (action
+  (with-outputs-to
+   %{targets}
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --auto-format --include-paths=."
+    %{stanfiles}))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff stanc.expected stanc.output)))

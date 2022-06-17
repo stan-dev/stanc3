@@ -1,15 +1,15 @@
   $ ../../../../install/default/bin/stanc array-expr-decl-bad1.stan
-Syntax error in 'array-expr-decl-bad1.stan', line 2, column 2 to column 16, parsing error:
+Syntax error in 'array-expr-decl-bad1.stan', line 2, column 9 to column 10, parsing error:
    -------------------------------------------------
      1:  data {
      2:    array[1:2,2,:] real x;
-           ^
+                  ^
      3:  }
    -------------------------------------------------
 
-Dimensions should be expressions, not multiple or range indexing.
+Ill-formed phrase. Found an expression. This can be followed by a ",", a "}", a ")", a "]", a "[" or an infix or postfix operator.
   $ ../../../../install/default/bin/stanc array-expr-decl-bad2.stan
-Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 15, parsing error:
+Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 10, parsing error:
    -------------------------------------------------
      1:  data {
      2:    blahblah[1,2] real x;
@@ -17,7 +17,11 @@ Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 15, pars
      3:  }
    -------------------------------------------------
 
-Found a declaration following an expression.
+Invalid type in declaration. Valid types:
+  int, real, vector, row_vector, matrix,
+  unit_vector, simplex, ordered, positive_ordered,
+  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov
+optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc array-expr-decl-bad3.stan
 Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
@@ -27,7 +31,11 @@ Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsi
      3:  }
    -------------------------------------------------
 
-Found a declaration following an expression.
+Invalid type in declaration. Valid types:
+  int, real, vector, row_vector, matrix,
+  unit_vector, simplex, ordered, positive_ordered,
+  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov
+optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc array-multi-decl-bad.stan
 Syntax error in 'array-multi-decl-bad.stan', line 2, column 11 to column 12, parsing error:
    -------------------------------------------------
@@ -50,10 +58,10 @@ Syntax error in 'array-multi-decl-bad2.stan', line 2, column 21 to column 22, pa
 Multiple declarations are not allowed when array dimensions are given in TYPE IDENTIFIER[DIMENSIONS] form.
 When all declarations share array dimensions, use 'array[DIMENSIONS] TYPE IDENTIFIER' form, otherwise use separate declarations.
   $ ../../../../install/default/bin/stanc array_expr_bad1.stan
-Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 32:
+Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 38:
    -------------------------------------------------
      1:  transformed data {
-     2:    real td_arr32[3,2] = { 1, 3 };
+     2:    array[3,2] real td_arr32 = { 1, 3 };
            ^
      3:  }
      4:  model {
@@ -61,16 +69,28 @@ Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 32:
 
 Ill-typed arguments supplied to assignment operator =: lhs has type array[,] real and rhs has type array[] int
   $ ../../../../install/default/bin/stanc array_expr_bad2.stan
-Semantic error in 'array_expr_bad2.stan', line 2, column 34 to column 35:
+Semantic error in 'array_expr_bad2.stan', line 2, column 40 to column 41:
    -------------------------------------------------
      1:  transformed data {
-     2:    real td_arr32[3,2] = {{ 1, 3 }, 1, 2 };
-                                           ^
+     2:    array[3,2] real td_arr32 = {{ 1, 3 }, 1, 2 };
+                                                 ^
      3:  }
      4:  model {
    -------------------------------------------------
 
 Array expression must have entries of consistent type. Expected array[] int but found int.
+  $ ../../../../install/default/bin/stanc assigment-to-function-stanmath.stan
+Semantic error in 'assigment-to-function-stanmath.stan', line 8, column 5 to column 15:
+   -------------------------------------------------
+     6:     void baz(){
+     7:       // NB: putting this in later blocks produce an error due to assigning to a global variable
+     8:       foo = pow;
+              ^
+     9:     }
+    10:  }
+   -------------------------------------------------
+
+Cannot assign a function type '<Stan Math function>' to variable 'foo'.
   $ ../../../../install/default/bin/stanc assign_real_to_int.stan
 Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 8:
    -------------------------------------------------
@@ -82,6 +102,18 @@ Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 8:
    -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator =: lhs has type int and rhs has type real
+  $ ../../../../install/default/bin/stanc assignment-to-function.stan
+Semantic error in 'assignment-to-function.stan', line 12, column 5 to column 15:
+   -------------------------------------------------
+    10:     void baz(){
+    11:       // NB: putting this in later blocks produce an error due to assigning to a global variable
+    12:       foo = bar;
+              ^
+    13:     }
+    14:  }
+   -------------------------------------------------
+
+Cannot assign a function type '(int) => real' to variable 'foo'.
   $ ../../../../install/default/bin/stanc bad_fundef_returntypes1.stan
 Semantic error in 'bad_fundef_returntypes1.stan', line 2, column 13 to line 6, column 3:
    -------------------------------------------------
@@ -126,12 +158,12 @@ Semantic error in 'bad_prob_fun_suffix.stan', line 10, column 2 to column 19:
     11:  }
    -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution 'foo' was found with the correct signature.
+Ill-typed arguments to '~' statement. No distribution 'foo' was found.
   $ ../../../../install/default/bin/stanc bad_var_assignment_type1.stan
 Semantic error in 'bad_var_assignment_type1.stan', line 4, column 2 to column 8:
    -------------------------------------------------
      2:    vector[5] y;
-     3:    real z[5];
+     3:    array[5] real z;
      4:    z = y;
            ^
      5:  }
@@ -143,7 +175,7 @@ Ill-typed arguments supplied to assignment operator =: lhs has type array[] real
 Semantic error in 'bad_var_assignment_type2.stan', line 6, column 2 to column 8:
    -------------------------------------------------
      4:  transformed data {
-     5:    real z[5];
+     5:    array[5] real z;
      6:    z = y;
            ^
      7:  }
@@ -184,7 +216,7 @@ Semantic error in 'binomial_coefficient_sample.stan', line 5, column 2 to column
      6:  }
    -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution 'binomial_coefficient' was found with the correct signature.
+Ill-typed arguments to '~' statement. No distribution 'binomial_coefficient' was found.
   $ ../../../../install/default/bin/stanc break1.stan
 Semantic error in 'break1.stan', line 4, column 2 to column 8:
    -------------------------------------------------
@@ -286,7 +318,7 @@ Semantic error in 'ccdf-sample.stan', line 5, column 2 to column 24:
      6:  }
    -------------------------------------------------
 
-CDF and CCDF functions may not be used with sampling notation. Use increment_log_prob(weibull_ccdf_log(...)) instead.
+CDF and CCDF functions may not be used with sampling notation. Use target += weibull_ccdf_log(...) instead.
   $ ../../../../install/default/bin/stanc cdf-sample.stan
 Semantic error in 'cdf-sample.stan', line 5, column 2 to column 23:
    -------------------------------------------------
@@ -297,7 +329,19 @@ Semantic error in 'cdf-sample.stan', line 5, column 2 to column 23:
      6:  }
    -------------------------------------------------
 
-CDF and CCDF functions may not be used with sampling notation. Use increment_log_prob(normal_cdf_log(...)) instead.
+CDF and CCDF functions may not be used with sampling notation. Use target += normal_cdf_log(...) instead.
+  $ ../../../../install/default/bin/stanc complex_mat_bad.stan
+Semantic error in 'complex_mat_bad.stan', line 7, column 2 to column 18:
+   -------------------------------------------------
+     5:  
+     6:  model {
+     7:    real x = Z[1,1];
+           ^
+     8:    target += x;
+     9:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to assignment operator =: lhs has type real and rhs has type complex
   $ ../../../../install/default/bin/stanc conditional_condition_bad_1.stan
 Semantic error in 'conditional_condition_bad_1.stan', line 6, column 6 to column 7:
    -------------------------------------------------
@@ -380,6 +424,26 @@ Semantic error in 'continue5.stan', line 4, column 4 to column 13:
    -------------------------------------------------
 
 Continue statements may only be used in loops.
+  $ ../../../../install/default/bin/stanc decl-mutual-inits.stan
+Semantic error in 'decl-mutual-inits.stan', line 2, column 11 to column 12:
+   -------------------------------------------------
+     1:  transformed parameters {
+     2:    real x = y, y = x;
+                    ^
+     3:  }
+   -------------------------------------------------
+
+Identifier 'y' not in scope.
+  $ ../../../../install/default/bin/stanc decl-reuse-name.stan
+Semantic error in 'decl-reuse-name.stan', line 2, column 13 to column 14:
+   -------------------------------------------------
+     1:  parameters {
+     2:    real x, y, x;
+                      ^
+     3:  }
+   -------------------------------------------------
+
+Identifier 'x' is already in use.
   $ ../../../../install/default/bin/stanc declare-define-param-block.stan
 Syntax error in 'declare-define-param-block.stan', line 6, column 11 to column 14, parsing error:
    -------------------------------------------------
@@ -421,7 +485,7 @@ Ill-typed arguments supplied to assignment operator =: lhs has type vector and r
 Syntax error in 'declare-define-var-double-3.stan', line 3, column 12 to column 15, parsing error:
    -------------------------------------------------
      1:  data {
-     2:    real a1[2];
+     2:    array[2] real a1;
      3:    real a2 = 1.0; // cannot assign in data block
                      ^
      4:  }
@@ -468,10 +532,10 @@ Semantic error in 'declare-define-var-int-2.stan', line 5, column 2 to column 18
 
 Ill-typed arguments supplied to assignment operator =: lhs has type int and rhs has type real
   $ ../../../../install/default/bin/stanc declare-define-var-int-3.stan
-Semantic error in 'declare-define-var-int-3.stan', line 2, column 2 to column 19:
+Semantic error in 'declare-define-var-int-3.stan', line 2, column 2 to column 25:
    -------------------------------------------------
      1:  transformed data {
-     2:    int td_a1[2] = 1;   // array = scalar - bad
+     2:    array[2] int td_a1 = 1;   // array = scalar - bad
            ^
      3:  }
      4:  parameters {
@@ -514,8 +578,6 @@ Semantic error in 'declare-define-var-vec-1.stan', line 6, column 2 to column 23
    -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator =: lhs has type vector and rhs has type row_vector
-  $ ../../../../install/default/bin/stanc empty.stan
-Warning: Empty file 'empty.stan' detected; this is a valid stan model but likely unintended!
   $ ../../../../install/default/bin/stanc err-bare-type-close-square.stan
 Syntax error in 'err-bare-type-close-square.stan', line 2, column 8 to column 11, parsing error:
    -------------------------------------------------
@@ -562,11 +624,11 @@ Syntax error in 'err-decl-double-params.stan', line 4, column 0 to column 1, par
 
 Ill-formed phrase. Found L-value. This can be completed in many ways.
   $ ../../../../install/default/bin/stanc err-decl-double.stan
-Syntax error in 'err-decl-double.stan', line 2, column 9 to column 10, parsing error:
+Syntax error in 'err-decl-double.stan', line 2, column 2 to column 8, parsing error:
    -------------------------------------------------
      1:  data {
      2:    double y;
-                  ^
+           ^
      3:  }
      4:  model {
    -------------------------------------------------
@@ -619,7 +681,7 @@ Syntax error in 'err-decl-vector-2.stan', line 2, column 10 to column 11, parsin
      4:  model {
    -------------------------------------------------
 
-"[" expression "]" expected for vector size.
+Expected "[" expression "]" for vector size.
   $ ../../../../install/default/bin/stanc err-decl-vector.stan
 Syntax error in 'err-decl-vector.stan', line 2, column 9 to column 10, parsing error:
    -------------------------------------------------
@@ -630,13 +692,13 @@ Syntax error in 'err-decl-vector.stan', line 2, column 9 to column 10, parsing e
      4:  model {
    -------------------------------------------------
 
-"[" expression "]" expected for vector size.
+Expected "[" expression "]" for vector size.
   $ ../../../../install/default/bin/stanc err-double-dims.stan
-Semantic error in 'err-double-dims.stan', line 2, column 9 to column 12:
+Semantic error in 'err-double-dims.stan', line 2, column 8 to column 11:
    -------------------------------------------------
      1:  transformed data {
-     2:    real y[2.3];
-                  ^
+     2:    array[2.3] real y;
+                 ^
      3:  }
      4:  model {
    -------------------------------------------------
@@ -684,13 +746,13 @@ Syntax error in 'err-expected-model.stan', line 8, column 0 to column 5, parsing
 
 Expected end of file after end of generated quantities block.
   $ ../../../../install/default/bin/stanc err-fun-bare-types-int.stan
-Syntax error in 'err-fun-bare-types-int.stan', line 2, column 7 to column 8, parsing error:
+Syntax error in 'err-fun-bare-types-int.stan', line 2, column 8 to column 9, parsing error:
    -------------------------------------------------
      1:  functions {
-     2:    real[3] foo() { 
-                ^
-     3:      real a[3]; 
-     4:      return a; 
+     2:    array[3] real foo() {
+                 ^
+     3:      array[3] real a;
+     4:      return a;
    -------------------------------------------------
 
 "[" (list of commas) "]" expected in unsized return type of function definition.
@@ -730,24 +792,11 @@ Syntax error in 'err-if-else.stan', line 3, column 8 to column 9, parsing error:
    -------------------------------------------------
 
 Expected ")" after test expression of conditional control flow construct.
-  $ ../../../../install/default/bin/stanc err-incr-log-prob-scope.stan
-Warning in 'err-incr-log-prob-scope.stan', line 4, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Semantic error in 'err-incr-log-prob-scope.stan', line 4, column 2 to column 24:
-   -------------------------------------------------
-     2:    real x;
-     3:    x = 2.0;
-     4:    increment_log_prob(x);
-           ^
-     5:  }
-     6:  
-   -------------------------------------------------
-
-Target can only be accessed in the model block, transformed paramters block, or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc err-integrate-ode-comma.stan
 Syntax error in 'err-integrate-ode-comma.stan', line 9, column 46 to column 51, parsing error:
    -------------------------------------------------
-     7:    real x[2];
-     8:    int x_int[4];
+     7:    array[2] real x;
+     8:    array[4] int x_int;
      9:    y = integrate_ode_rk45(foo,y0,t0,ts,theta,x x_int);
                                                        ^
     10:  }
@@ -772,8 +821,6 @@ Ill-typed arguments supplied to infix operator -. Available signatures:
 (real, vector) => vector
 (vector, real) => vector
 (vector, vector) => vector
-(complex, real) => complex
-(complex, complex) => complex
 (complex, complex) => complex
 (real, row_vector) => row_vector
 (row_vector, real) => row_vector
@@ -781,6 +828,15 @@ Ill-typed arguments supplied to infix operator -. Available signatures:
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
+(complex_vector, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
+(complex_row_vector, complex_row_vector) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
+(complex_matrix, complex) => complex_matrix
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: vector, matrix.
   $ ../../../../install/default/bin/stanc err-nested-parens-close.stan
 Syntax error in 'err-nested-parens-close.stan', line 3, column 12 to column 13, parsing error:
@@ -843,7 +899,7 @@ Ill-formed statement. Statement expected for true branch of conditional.
   $ ../../../../install/default/bin/stanc err-non-int-dims.stan
 Semantic error in 'err-non-int-dims.stan', line 4, column 10 to column 13:
    -------------------------------------------------
-     2:    real y[2,3];
+     2:    array[2,3] real y;
      3:    real x;
      4:    x = y[1,2.3];
                    ^
@@ -874,6 +930,18 @@ Syntax error in 'err-second-operand-plus.stan', line 4, column 0 to column 1, pa
    -------------------------------------------------
 
 Found an incomplete binary expression - are you missing the right hand side?
+  $ ../../../../install/default/bin/stanc err-target-plusequals-scope.stan
+Semantic error in 'err-target-plusequals-scope.stan', line 4, column 2 to column 14:
+   -------------------------------------------------
+     2:    real x;
+     3:    x = 2.0;
+     4:    target += x;
+           ^
+     5:  }
+     6:  
+   -------------------------------------------------
+
+Target can only be accessed in the model block, transformed paramters block, or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc err-transformed-params.stan
 Syntax error in 'err-transformed-params.stan', line 4, column 0 to column 11, parsing error:
    -------------------------------------------------
@@ -908,7 +976,7 @@ Variable declaration, statement or "}" expected.
 Syntax error in 'expect_statement_seq_close_brace_3.stan', line 8, column 0 to column 10, parsing error:
    -------------------------------------------------
      6:    }
-     7:    
+     7:  
      8:  parameters {
          ^
      9:    real y;
@@ -919,7 +987,7 @@ Ill-formed block. Expected a statement, variable declaration, or just "}".
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_4.stan
 Syntax error in 'expect_statement_seq_close_brace_4.stan', line 10, column 0 to column 0, parsing error:
    -------------------------------------------------
-     8:    int vs[2,3];
+     8:    array[2,3] int vs;
      9:  
          ^
    -------------------------------------------------
@@ -979,17 +1047,17 @@ Syntax error in 'functions-bad0.stan', line 2, column 11 to column 15, parsing e
 
 An argument declaration (unsized and unconstrained type followed by identifier) is expected.
   $ ../../../../install/default/bin/stanc functions-bad1.stan
-Semantic error in 'functions-bad1.stan', line 6, column 7 to column 11:
+Semantic error in 'functions-bad1.stan', line 6, column 2 to column 20:
    -------------------------------------------------
      4:      return x;
      5:    }
      6:    real flib(real x); // error redeclaring function
-                ^
+           ^
      7:  }
      8:  parameters {
    -------------------------------------------------
 
-Identifier 'flib' is already in use.
+Function 'flib' has already been declared to for signature (real) => real
   $ ../../../../install/default/bin/stanc functions-bad11.stan
 Semantic error in 'functions-bad11.stan', line 3, column 4 to column 20:
    -------------------------------------------------
@@ -1003,12 +1071,11 @@ Semantic error in 'functions-bad11.stan', line 3, column 4 to column 20:
 
 Target can only be accessed in the model block, transformed paramters block, or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc functions-bad12.stan
-Warning in 'functions-bad12.stan', line 3, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Semantic error in 'functions-bad12.stan', line 3, column 4 to column 42:
+Semantic error in 'functions-bad12.stan', line 3, column 4 to column 33:
    -------------------------------------------------
      1:  functions {
      2:    void badlp(real x) {
-     3:      increment_log_prob(normal_log(x,0,1));
+     3:      target += normal_lpdf(x|0,1);
              ^
      4:      return;
      5:    }
@@ -1028,46 +1095,45 @@ Semantic error in 'functions-bad13.stan', line 3, column 4 to column 10:
 
 Cannot assign to function argument or loop identifier 'x'.
   $ ../../../../install/default/bin/stanc functions-bad14.stan
-Semantic error in 'functions-bad14.stan', line 5, column 6 to column 9:
+Semantic error in 'functions-bad14.stan', line 5, column 2 to line 7, column 3:
    -------------------------------------------------
      3:      return x;
      4:    }
      5:    int abc(real x) {  // illegal redeclaration with same args
-               ^
+           ^
      6:      return 1;
      7:    }
    -------------------------------------------------
 
-Identifier 'abc' is already in use.
+Function 'abc' cannot be overloaded by return type only. Previously used return type real
   $ ../../../../install/default/bin/stanc functions-bad15.stan
-Warning in 'functions-bad15.stan', line 3, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Warning in 'functions-bad15.stan', line 10, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Semantic error in 'functions-bad15.stan', line 10, column 21 to column 38:
+Semantic error in 'functions-bad15.stan', line 10, column 12 to column 29:
    -------------------------------------------------
      8:  }
      9:  model {
-    10:    increment_log_prob(unit_normal_lp(y));
-                              ^
+    10:    target += unit_normal_lp(y);
+                     ^
     11:  }
    -------------------------------------------------
 
 A returning function was expected but a non-returning function 'unit_normal_lp' was supplied.
   $ ../../../../install/default/bin/stanc functions-bad16.stan
-Semantic error in 'functions-bad16.stan', line 2, column 7 to column 13:
+Semantic error in 'functions-bad16.stan', line 2, column 2 to line 4, column 3:
    -------------------------------------------------
      1:  functions {
      2:    real square(real x) {
-                ^
+           ^
      3:      return x * x;
      4:    }
    -------------------------------------------------
 
-Identifier 'square' clashes with Stan Math library function.
+Function 'square' is already declared in the Stan Math library with signature 
+(real) => real
   $ ../../../../install/default/bin/stanc functions-bad17.stan
 Semantic error in 'functions-bad17.stan', line 2, column 2 to line 4, column 3:
    -------------------------------------------------
      1:  functions {
-     2:    vector bizbuz_log(vector x) {
+     2:    vector bizbuz_lpdf(vector x) {
            ^
      3:      return exp(x);
      4:    }
@@ -1097,7 +1163,7 @@ Semantic error in 'functions-bad19.stan', line 4, column 2 to line 6, column 3:
      6:    }
    -------------------------------------------------
 
-Function 'my_fun3' has already been declared to have type (data real) => real
+Function 'my_fun3' has already been declared to for signature (real) => real
   $ ../../../../install/default/bin/stanc functions-bad2.stan
 Semantic error in 'functions-bad2.stan', line 8, column 7 to column 13:
    -------------------------------------------------
@@ -1121,7 +1187,7 @@ Semantic error in 'functions-bad20.stan', line 4, column 2 to line 6, column 3:
      6:    }
    -------------------------------------------------
 
-Function 'my_fun3' has already been declared to have type (real) => real
+Function 'my_fun3' has already been declared to for signature (data real) => real
   $ ../../../../install/default/bin/stanc functions-bad21.stan
 Semantic error in 'functions-bad21.stan', line 13, column 11 to column 21:
    -------------------------------------------------
@@ -1143,8 +1209,8 @@ Available signatures:
   $ ../../../../install/default/bin/stanc functions-bad22-ode.stan
 Semantic error in 'functions-bad22-ode.stan', line 15, column 11 to column 82:
    -------------------------------------------------
-    13:    real[,] do_integration_nested(real[] y0, real t0, data real[] ts, real[] theta, matrix xmat_r) {
-    14:      int x_i[0];
+    13:    array[,] real do_integration_nested(array[] real y0, real t0, data array[] real ts, array[] real theta, matrix xmat_r) {
+    14:      array[0] int x_i;
     15:      return(integrate_ode_rk45(sho, y0, t0, ts, theta, to_array_1d(xmat_r[1]), x_i));
                     ^
     16:    }
@@ -1282,12 +1348,11 @@ Semantic error in 'get-lp-target-data.stan', line 2, column 19 to column 27:
 
 Target can only be accessed in the model block, transformed paramters block, or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc get_lp_bad_scope1.stan
-Warning in 'get_lp_bad_scope1.stan', line 3, column 6: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 Semantic error in 'get_lp_bad_scope1.stan', line 3, column 6 to column 14:
    -------------------------------------------------
      1:  transformed data {
      2:    real y;
-     3:    y = get_lp();
+     3:    y = target();
                ^
      4:  }
      5:  parameters {
@@ -1295,12 +1360,11 @@ Semantic error in 'get_lp_bad_scope1.stan', line 3, column 6 to column 14:
 
 Target can only be accessed in the model block, transformed paramters block, or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc get_lp_bad_scope2.stan
-Warning in 'get_lp_bad_scope2.stan', line 3, column 15: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 Semantic error in 'get_lp_bad_scope2.stan', line 3, column 15 to column 23:
    -------------------------------------------------
      1:  functions {
      2:    real foo(real x) {
-     3:      return x + get_lp();
+     3:      return x + target();
                         ^
      4:    }
      5:  }
@@ -1318,7 +1382,7 @@ Syntax error in 'local_var_constraint.stan', line 5, column 12 to column 13, par
      7:  }
    -------------------------------------------------
 
-"[" expression"]" expected after "row_vector" in local (or model block) variable declaration. (No transformations/constraints allowed.)
+Expected "[" expression "]" for row vector size.
   $ ../../../../install/default/bin/stanc local_var_constraint2.stan
 Syntax error in 'local_var_constraint2.stan', line 5, column 8 to column 9, parsing error:
    -------------------------------------------------
@@ -1330,7 +1394,7 @@ Syntax error in 'local_var_constraint2.stan', line 5, column 8 to column 9, pars
      7:  }
    -------------------------------------------------
 
-"[" expression  "]" expected after "vector" in local (or model block) variable declaration. (No transformations/constraints allowed.)
+Expected "[" expression "]" for vector size.
   $ ../../../../install/default/bin/stanc local_var_constraint3.stan
 Syntax error in 'local_var_constraint3.stan', line 5, column 8 to column 9, parsing error:
    -------------------------------------------------
@@ -1342,7 +1406,7 @@ Syntax error in 'local_var_constraint3.stan', line 5, column 8 to column 9, pars
      7:  }
    -------------------------------------------------
 
-"[" expression "," expression "]" expected after "matrix" in local (or model block) variable declaration. (No transformations/constraints allowed.)
+Expected "[" expression "," expression "]" for sizes of matrix.
   $ ../../../../install/default/bin/stanc local_var_constraint4.stan
 Syntax error in 'local_var_constraint4.stan', line 5, column 6 to column 7, parsing error:
    -------------------------------------------------
@@ -1366,6 +1430,28 @@ Semantic error in 'lp-error.stan', line 5, column 2 to column 6:
    -------------------------------------------------
 
 Identifier 'lp__' clashes with reserved keyword.
+  $ ../../../../install/default/bin/stanc lvalue_indexes1.stan
+Semantic error in 'lvalue_indexes1.stan', line 6, column 4 to column 11:
+   -------------------------------------------------
+     4:  transformed data {
+     5:      array[5] vector[5] y;
+     6:      y[:][1] = x[:][1];
+             ^
+     7:  }
+   -------------------------------------------------
+
+Left hand side of an assignment cannot have nested multi-indexing.
+  $ ../../../../install/default/bin/stanc lvalue_indexes2.stan
+Semantic error in 'lvalue_indexes2.stan', line 6, column 4 to column 11:
+   -------------------------------------------------
+     4:  transformed data {
+     5:      vector[5] y;
+     6:      y[:][:] = x[:][:];
+             ^
+     7:  }
+   -------------------------------------------------
+
+Left hand side of an assignment cannot have nested multi-indexing.
   $ ../../../../install/default/bin/stanc matrix_expr_bad1.stan
 Semantic error in 'matrix_expr_bad1.stan', line 2, column 2 to column 34:
    -------------------------------------------------
@@ -1410,18 +1496,6 @@ Syntax error in 'matrix_expr_bad4.stan', line 2, column 44 to column 45, parsing
    -------------------------------------------------
 
 Ill-formed phrase. Found an expression. This can be followed by a ",", a "}", a ")", a "]", a "[" or an infix or postfix operator.
-  $ ../../../../install/default/bin/stanc multi_fun.stan
-Semantic error in 'multi_fun.stan', line 5, column 7 to column 10:
-   -------------------------------------------------
-     3:      return a;
-     4:    }
-     5:    real foo(real b) {
-                ^
-     6:      return b;
-     7:    }
-   -------------------------------------------------
-
-Identifier 'foo' is already in use.
   $ ../../../../install/default/bin/stanc multiply_sample.stan
 Semantic error in 'multiply_sample.stan', line 5, column 2 to column 18:
    -------------------------------------------------
@@ -1432,7 +1506,7 @@ Semantic error in 'multiply_sample.stan', line 5, column 2 to column 18:
      6:  }
    -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution 'multiply' was found with the correct signature.
+Ill-typed arguments to '~' statement. No distribution 'multiply' was found.
   $ ../../../../install/default/bin/stanc oneline-error.stan
 Syntax error in 'oneline-error.stan', line 1, column 20 to column 21, parsing error:
    -------------------------------------------------
@@ -1440,7 +1514,7 @@ Syntax error in 'oneline-error.stan', line 1, column 20 to column 21, parsing er
                              ^
    -------------------------------------------------
 
-"[" expression "]" expected for vector size.
+Expected "[" expression "]" for vector size.
   $ ../../../../install/default/bin/stanc op_addition_bad.stan
 Semantic error in 'op_addition_bad.stan', line 7, column 6 to column 11:
    -------------------------------------------------
@@ -1464,11 +1538,20 @@ Ill-typed arguments supplied to infix operator +. Available signatures:
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
+(complex_vector, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
+(complex_row_vector, complex_row_vector) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
+(complex_matrix, complex) => complex_matrix
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: matrix, vector.
   $ ../../../../install/default/bin/stanc op_divide_bad.stan
 Semantic error in 'op_divide_bad.stan', line 7, column 6 to column 11:
    -------------------------------------------------
-     5:    int b[4];
+     5:    array[4] int b;
      6:    matrix[3,3] c;
      7:    c = b / a;
                ^
@@ -1478,19 +1561,29 @@ Semantic error in 'op_divide_bad.stan', line 7, column 6 to column 11:
 Ill-typed arguments supplied to infix operator /. Available signatures: 
 (row_vector, matrix) => row_vector
 (matrix, matrix) => matrix
+(complex_row_vector, complex_matrix) => complex_row_vector
+(complex_matrix, complex_matrix) => complex_matrix
 
 (int, int) => int
 (real, real) => real
+(real, vector) => vector
 (vector, real) => vector
-(complex, real) => complex
 (complex, complex) => complex
+(real, row_vector) => row_vector
 (row_vector, real) => row_vector
+(real, matrix) => matrix
 (matrix, real) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
+(complex_matrix, complex) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_divide_right_bad.stan
 Semantic error in 'op_divide_right_bad.stan', line 7, column 6 to column 11:
    -------------------------------------------------
-     5:    int b[4];
+     5:    array[4] int b;
      6:    matrix[3,3] c;
      7:    c = b / a;
                ^
@@ -1500,19 +1593,29 @@ Semantic error in 'op_divide_right_bad.stan', line 7, column 6 to column 11:
 Ill-typed arguments supplied to infix operator /. Available signatures: 
 (row_vector, matrix) => row_vector
 (matrix, matrix) => matrix
+(complex_row_vector, complex_matrix) => complex_row_vector
+(complex_matrix, complex_matrix) => complex_matrix
 
 (int, int) => int
 (real, real) => real
+(real, vector) => vector
 (vector, real) => vector
-(complex, real) => complex
 (complex, complex) => complex
+(real, row_vector) => row_vector
 (row_vector, real) => row_vector
+(real, matrix) => matrix
 (matrix, real) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
+(complex_matrix, complex) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_elt_divide_bad.stan
 Semantic error in 'op_elt_divide_bad.stan', line 7, column 6 to column 12:
    -------------------------------------------------
-     5:    int b[4];
+     5:    array[4] int b;
      6:    matrix[3,3] c;
      7:    c = b ./ a;
                ^
@@ -1525,17 +1628,27 @@ Ill-typed arguments supplied to infix operator ./. Available signatures:
 (real, vector) => vector
 (vector, real) => vector
 (vector, vector) => vector
+(complex, complex) => complex
 (real, row_vector) => row_vector
 (row_vector, real) => row_vector
 (row_vector, row_vector) => row_vector
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
+(complex_vector, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
+(complex_row_vector, complex_row_vector) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
+(complex_matrix, complex) => complex_matrix
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_elt_multiply_bad.stan
 Semantic error in 'op_elt_multiply_bad.stan', line 7, column 6 to column 12:
    -------------------------------------------------
-     5:    int b[4];
+     5:    array[4] int b;
      6:    matrix[3,3] c;
      7:    c = b .* a;
                ^
@@ -1545,14 +1658,30 @@ Semantic error in 'op_elt_multiply_bad.stan', line 7, column 6 to column 12:
 Ill-typed arguments supplied to infix operator .*. Available signatures: 
 (int, int) => int
 (real, real) => real
+(real, vector) => vector
+(vector, real) => vector
 (vector, vector) => vector
+(complex, complex) => complex
+(real, row_vector) => row_vector
+(row_vector, real) => row_vector
 (row_vector, row_vector) => row_vector
+(real, matrix) => matrix
+(matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
+(complex_vector, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
+(complex_row_vector, complex_row_vector) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
+(complex_matrix, complex) => complex_matrix
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_intdivide_bad.stan
 Semantic error in 'op_intdivide_bad.stan', line 7, column 6 to column 13:
    -------------------------------------------------
-     5:    int b[4];
+     5:    array[4] int b;
      6:    matrix[3,3] c;
      7:    c = b %/% a;
                ^
@@ -1607,7 +1736,7 @@ Instead supplied arguments of incompatible type: real, int.
   $ ../../../../install/default/bin/stanc op_logical_negation_bad.stan
 Semantic error in 'op_logical_negation_bad.stan', line 7, column 6 to column 8:
    -------------------------------------------------
-     5:    int b[4];
+     5:    array[4] int b;
      6:    matrix[3,3] c;
      7:    c = !b;
                ^
@@ -1621,7 +1750,7 @@ Instead supplied argument of incompatible type: array[] int.
   $ ../../../../install/default/bin/stanc op_mdivide_left_bad.stan
 Semantic error in 'op_mdivide_left_bad.stan', line 7, column 6 to column 11:
    -------------------------------------------------
-     5:    int b[4];
+     5:    array[4] int b;
      6:    matrix[3,3] c;
      7:    c = b \ a;
                ^
@@ -1635,7 +1764,7 @@ Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_minus_bad.stan
 Semantic error in 'op_minus_bad.stan', line 7, column 6 to column 8:
    -------------------------------------------------
-     5:    int b[4];
+     5:    array[4] int b;
      6:    matrix[3,3] c;
      7:    c = -b;
                ^
@@ -1649,11 +1778,14 @@ Ill-typed arguments supplied to prefix operator -. Available signatures:
 (complex) => complex
 (row_vector) => row_vector
 (matrix) => matrix
+(complex_vector) => complex_vector
+(complex_row_vector) => complex_row_vector
+(complex_matrix) => complex_matrix
 Instead supplied argument of incompatible type: array[] int.
   $ ../../../../install/default/bin/stanc op_modulus_bad.stan
 Semantic error in 'op_modulus_bad.stan', line 7, column 6 to column 11:
    -------------------------------------------------
-     5:    int b[4];
+     5:    array[4] int b;
      6:    matrix[3,3] c;
      7:    c = b % a;
                ^
@@ -1666,7 +1798,7 @@ Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_multiplication_bad.stan
 Semantic error in 'op_multiplication_bad.stan', line 7, column 6 to column 11:
    -------------------------------------------------
-     5:    int b[4];
+     5:    array[4] int b;
      6:    matrix[3,3] c;
      7:    c = b * a;
                ^
@@ -1680,8 +1812,8 @@ Ill-typed arguments supplied to infix operator *. Available signatures:
 (real, vector) => vector
 (vector, real) => vector
 (matrix, vector) => vector
-(complex, real) => complex
 (complex, complex) => complex
+(complex_row_vector, complex_vector) => complex
 (real, row_vector) => row_vector
 (row_vector, real) => row_vector
 (row_vector, matrix) => row_vector
@@ -1689,6 +1821,16 @@ Ill-typed arguments supplied to infix operator *. Available signatures:
 (vector, row_vector) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
+(complex_matrix, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
+(complex_row_vector, complex_matrix) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
+(complex_vector, complex_row_vector) => complex_matrix
+(complex_matrix, complex) => complex_matrix
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_subtraction_bad.stan
 Semantic error in 'op_subtraction_bad.stan', line 7, column 6 to column 11:
@@ -1706,8 +1848,6 @@ Ill-typed arguments supplied to infix operator -. Available signatures:
 (real, vector) => vector
 (vector, real) => vector
 (vector, vector) => vector
-(complex, real) => complex
-(complex, complex) => complex
 (complex, complex) => complex
 (real, row_vector) => row_vector
 (row_vector, real) => row_vector
@@ -1715,11 +1855,20 @@ Ill-typed arguments supplied to infix operator -. Available signatures:
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
+(complex, complex_vector) => complex_vector
+(complex_vector, complex) => complex_vector
+(complex_vector, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex_row_vector, complex) => complex_row_vector
+(complex_row_vector, complex_row_vector) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
+(complex_matrix, complex) => complex_matrix
+(complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: vector, matrix.
   $ ../../../../install/default/bin/stanc op_transpose_bad.stan
 Semantic error in 'op_transpose_bad.stan', line 7, column 6 to column 8:
    -------------------------------------------------
-     5:    int b[4];
+     5:    array[4] int b;
      6:    matrix[3,3] c;
      7:    c = b';
                ^
@@ -1730,6 +1879,9 @@ Ill-typed arguments supplied to postfix operator '. Available signatures:
 (row_vector) => vector
 (vector) => row_vector
 (matrix) => matrix
+(complex_row_vector) => complex_vector
+(complex_vector) => complex_row_vector
+(complex_matrix) => complex_matrix
 Instead supplied argument of incompatible type: array[] int.
   $ ../../../../install/default/bin/stanc print-void.stan
 Semantic error in 'print-void.stan', line 8, column 8 to column 14:
@@ -1787,29 +1939,6 @@ Semantic error in 'prob-poisson_log-trunc-low.stan', line 11, column 2 to column
    -------------------------------------------------
 
 Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
-  $ ../../../../install/default/bin/stanc propto-bad1.stan
-Semantic error in 'propto-bad1.stan', line 2, column 14 to column 37:
-   -------------------------------------------------
-     1:  model {
-     2:      target += normal_lupdf(1| {0}, 1);
-                       ^
-     3:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function 'normal_lupdf':
-(int, array[] int, int)
-Available signatures:
-(real, real, real) => real
-  The second argument must be real but got array[] int
-(real, real, array[] real) => real
-  The second argument must be real but got array[] int
-(real, real, vector) => real
-  The second argument must be real but got array[] int
-(real, real, row_vector) => real
-  The second argument must be real but got array[] int
-(real, vector, real) => real
-  The second argument must be vector but got array[] int
-(Additional signatures omitted)
   $ ../../../../install/default/bin/stanc real-pdf.stan
 Semantic error in 'real-pdf.stan', line 2, column 2 to line 4, column 3:
    -------------------------------------------------
@@ -1836,7 +1965,7 @@ Probability mass functions require integer variates (first argument). Instead fo
 Semantic error in 'real_idx.stan', line 3, column 4 to column 7:
    -------------------------------------------------
      1:  transformed data {
-     2:    real a[10];
+     2:    array[10] real a;
      3:    a[1.0] = 5;
              ^
      4:  }
@@ -1844,108 +1973,42 @@ Semantic error in 'real_idx.stan', line 3, column 4 to column 7:
    -------------------------------------------------
 
 Index must be of type int or int[] or must be a range. Instead found type real.
-  $ ../../../../install/default/bin/stanc redefine-ccdf1.stan
-Semantic error in 'redefine-ccdf1.stan', line 2, column 7 to column 23:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_ccdf_log(int n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_ccdf_log' clashes with Stan Math library function.
-  $ ../../../../install/default/bin/stanc redefine-ccdf2.stan
-Semantic error in 'redefine-ccdf2.stan', line 2, column 7 to column 20:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_lccdf(int n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_lccdf' clashes with Stan Math library function.
   $ ../../../../install/default/bin/stanc redefine-ccdf3.stan
-Semantic error in 'redefine-ccdf3.stan', line 5, column 7 to column 19:
+Semantic error in 'redefine-ccdf3.stan', line 5, column 2 to line 7, column 3:
    -------------------------------------------------
      3:      return -x^2;
      4:    }
      5:    real foo_ccdf_log(int n, real x) {
-                ^
+           ^
      6:      return -x^2;
      7:    }
    -------------------------------------------------
 
-Identifier 'foo_lccdf' is already in use.
-  $ ../../../../install/default/bin/stanc redefine-cdf1.stan
-Semantic error in 'redefine-cdf1.stan', line 2, column 7 to column 22:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_cdf_log(int n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_cdf_log' clashes with Stan Math library function.
-  $ ../../../../install/default/bin/stanc redefine-cdf2.stan
-Semantic error in 'redefine-cdf2.stan', line 2, column 7 to column 19:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_lcdf(int n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_lcdf' clashes with Stan Math library function.
+Function 'foo_ccdf_log' has already been declared to for signature (int, real) => real
   $ ../../../../install/default/bin/stanc redefine-cdf3.stan
-Semantic error in 'redefine-cdf3.stan', line 5, column 7 to column 18:
+Semantic error in 'redefine-cdf3.stan', line 5, column 2 to line 7, column 3:
    -------------------------------------------------
      3:      return -x^2;
      4:    }
      5:    real foo_cdf_log(int n, real x) {
-                ^
+           ^
      6:      return -x^2;
      7:    }
    -------------------------------------------------
 
-Identifier 'foo_lcdf' is already in use.
-  $ ../../../../install/default/bin/stanc redefine-prob1.stan
-Semantic error in 'redefine-prob1.stan', line 2, column 7 to column 19:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_lpdf(real n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_lpmf' clashes with Stan Math library function.
-  $ ../../../../install/default/bin/stanc redefine-prob2.stan
-Semantic error in 'redefine-prob2.stan', line 2, column 7 to column 19:
-   -------------------------------------------------
-     1:  functions {
-     2:    real poisson_lpmf(int n, real x) {
-                ^
-     3:      return -x^2;
-     4:    }
-   -------------------------------------------------
-
-Identifier 'poisson_lpmf' clashes with Stan Math library function.
+Function 'foo_cdf_log' has already been declared to for signature (int, real) => real
   $ ../../../../install/default/bin/stanc redefine-prob3.stan
-Semantic error in 'redefine-prob3.stan', line 5, column 7 to column 15:
+Semantic error in 'redefine-prob3.stan', line 5, column 2 to line 7, column 3:
    -------------------------------------------------
      3:      return -y^2;
      4:    }
      5:    real foo_lpmf(int y) {
-                ^
+           ^
      6:      return y^2 / 2;
      7:    }
    -------------------------------------------------
 
-Identifier 'foo_log' is already in use.
+Function 'foo_lpmf' has already been declared to for signature (int) => real
   $ ../../../../install/default/bin/stanc rng_loc1.stan
 Semantic error in 'rng_loc1.stan', line 3, column 11 to column 29:
    -------------------------------------------------
@@ -2043,53 +2106,51 @@ Semantic error in 'row_vector_expr_bad2.stan', line 5, column 25 to column 26:
 
 Row_vector expression must have all int or real entries. Found type row_vector.
   $ ../../../../install/default/bin/stanc shadow.stan
-Semantic error in 'shadow.stan', line 2, column 7 to column 12:
+Semantic error in 'shadow.stan', line 2, column 3 to line 4, column 4:
    -------------------------------------------------
      1:  functions {
      2:     int log10(int x) {
-                ^
+            ^
      3:      return 1;
      4:     }
    -------------------------------------------------
 
-Identifier 'log10' clashes with Stan Math library function.
+Function 'log10' cannot be overloaded by return type only. Previously used return type real
   $ ../../../../install/default/bin/stanc signature_function_known.stan
-Warning in 'signature_function_known.stan', line 8, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Semantic error in 'signature_function_known.stan', line 8, column 21 to column 50:
+Semantic error in 'signature_function_known.stan', line 8, column 12 to column 42:
    -------------------------------------------------
      6:  }
      7:  model {
-     8:    increment_log_prob(bernoulli_logit_log(x, theta));
-                              ^
+     8:    target += bernoulli_logit_lpmf(x, theta);
+                     ^
      9:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'bernoulli_logit_log':
+Ill-typed arguments supplied to function 'bernoulli_logit_lpmf':
 (vector, vector)
 Available signatures:
-(int, real) => real
-  The first argument must be int but got vector
-(int, array[] real) => real
+(int, row_vector) => real
   The first argument must be int but got vector
 (int, vector) => real
   The first argument must be int but got vector
-(int, row_vector) => real
+(int, array[] real) => real
   The first argument must be int but got vector
-(array[] int, real) => real
+(int, real) => real
+  The first argument must be int but got vector
+(array[] int, row_vector) => real
   The first argument must be array[] int but got vector
 (Additional signatures omitted)
   $ ../../../../install/default/bin/stanc signature_function_unknown.stan
-Warning in 'signature_function_unknown.stan', line 8, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-Semantic error in 'signature_function_unknown.stan', line 8, column 21 to column 45:
+Semantic error in 'signature_function_unknown.stan', line 8, column 12 to column 37:
    -------------------------------------------------
      6:  }
      7:  model {
-     8:    increment_log_prob(foo_whatev_log(x, theta));
-                              ^
+     8:    target += foo_whatev_lpdf(x, theta);
+                     ^
      9:  }
    -------------------------------------------------
 
-A returning function was expected but an undeclared identifier 'foo_whatev_log' was supplied.
+A returning function was expected but an undeclared identifier 'foo_whatev_lpdf' was supplied.
   $ ../../../../install/default/bin/stanc signature_sampling_known.stan
 Semantic error in 'signature_sampling_known.stan', line 8, column 2 to column 29:
    -------------------------------------------------
@@ -2100,7 +2161,35 @@ Semantic error in 'signature_sampling_known.stan', line 8, column 2 to column 29
      9:  }
    -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution 'bernoulli_logit' was found with the correct signature.
+Ill-typed arguments supplied to function 'bernoulli_logit':
+(vector, vector)
+Available signatures:
+(int, row_vector) => real
+  The first argument must be int but got vector
+(int, vector) => real
+  The first argument must be int but got vector
+(int, array[] real) => real
+  The first argument must be int but got vector
+(int, real) => real
+  The first argument must be int but got vector
+(array[] int, row_vector) => real
+  The first argument must be array[] int but got vector
+(Additional signatures omitted)
+  $ ../../../../install/default/bin/stanc signature_sampling_udf.stan
+Semantic error in 'signature_sampling_udf.stan', line 8, column 2 to column 19:
+   -------------------------------------------------
+     6:  
+     7:  model {
+     8:    1.0 ~ foo(3.5,3);
+           ^
+     9:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'foo':
+(real, real, int)
+Available signatures:
+(real, int, real) => real
+  The second argument must be int but got real
   $ ../../../../install/default/bin/stanc signature_sampling_unknown.stan
 Semantic error in 'signature_sampling_unknown.stan', line 8, column 2 to column 24:
    -------------------------------------------------
@@ -2111,7 +2200,7 @@ Semantic error in 'signature_sampling_unknown.stan', line 8, column 2 to column 
      9:  }
    -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution 'foo_whatev' was found with the correct signature.
+Ill-typed arguments to '~' statement. No distribution 'foo_whatev' was found.
   $ ../../../../install/default/bin/stanc stanc_helper.stan
 Semantic error in 'stanc_helper.stan', line 5, column 2 to column 18:
    -------------------------------------------------
@@ -2122,7 +2211,7 @@ Semantic error in 'stanc_helper.stan', line 5, column 2 to column 18:
      6:  }
    -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution 'ormal' was found with the correct signature.
+Ill-typed arguments to '~' statement. No distribution 'ormal' was found.
   $ ../../../../install/default/bin/stanc string_literal_newline.stan
 Syntax error in 'string_literal_newline.stan', line 3, column 1, lexing error:
    -------------------------------------------------
@@ -2149,7 +2238,7 @@ Identifier 'target' clashes with reserved keyword.
   $ ../../../../install/default/bin/stanc ternaryif-fntype.stan
 Semantic error in 'ternaryif-fntype.stan', line 13, column 6 to column 28:
    -------------------------------------------------
-    11:      vector[1] true_states[1];
+    11:      array[1] vector[1] true_states;
     12:      true_states = ode_rk45(
     13:        t0 < 0 ? rflow : gflow, [1]', t0, {1.}
                ^
@@ -2173,7 +2262,7 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
   $ ../../../../install/default/bin/stanc too-many-indices.stan
 Semantic error in 'too-many-indices.stan', line 4, column 16 to column 31:
    -------------------------------------------------
-     2:    matrix[2,3] a[2] = { [ [1,2,3], [4,5,6] ],
+     2:    array[2] matrix[2,3] a = { [ [1,2,3], [4,5,6] ],
      3:  		       [ [2,2,3], [2,5,6] ] };
      4:    vector[2] b = a[1, 1, 1:2, 1];
                          ^
@@ -2286,7 +2375,7 @@ Target can only be accessed in the model block, transformed paramters block, or 
 Semantic error in 'validate_array_expr_bad1.stan', line 6, column 2 to column 41:
    -------------------------------------------------
      4:  model {
-     5:    int int_1_a[5];
+     5:    array[5] int int_1_a;
      6:    int_1_a = { 1.0, 2.0, 3.0, 4.0 , 5.0 };  // type mismatch
            ^
      7:    y ~ normal(0,1);
@@ -2298,7 +2387,7 @@ Ill-typed arguments supplied to assignment operator =: lhs has type array[] int 
 Semantic error in 'validate_array_expr_bad2.stan', line 6, column 2 to column 24:
    -------------------------------------------------
      4:  model {
-     5:    int int_1_a[3];
+     5:    array[3] int int_1_a;
      6:    int_1_a = { { 1*1 } };  // dim mismatch
            ^
      7:    y ~ normal(0,1);
@@ -2310,7 +2399,7 @@ Ill-typed arguments supplied to assignment operator =: lhs has type array[] int 
 Syntax error in 'validate_array_expr_bad3.stan', line 6, column 14 to column 15, parsing error:
    -------------------------------------------------
      4:  model {
-     5:    int int_1_a[3];
+     5:    array[3] int int_1_a;
      6:    int_1_a = { };  // cannot be empty
                        ^
      7:    y ~ normal(0,1);
@@ -2319,12 +2408,12 @@ Syntax error in 'validate_array_expr_bad3.stan', line 6, column 14 to column 15,
 
 Expression expected after "{" in array expression.
   $ ../../../../install/default/bin/stanc validate_array_expr_bad3a.stan
-Syntax error in 'validate_array_expr_bad3a.stan', line 5, column 30 to column 31, parsing error:
+Syntax error in 'validate_array_expr_bad3a.stan', line 5, column 36 to column 37, parsing error:
    -------------------------------------------------
      3:  }
      4:  model {
-     5:    real loc_real_dim2[2,1] = {{},{}}; // cannot be empty
-                                       ^
+     5:    array[2,1] real loc_real_dim2 = {{},{}}; // cannot be empty
+                                             ^
      6:    y ~ normal(0,1);
      7:  }
    -------------------------------------------------
@@ -2334,7 +2423,7 @@ Expression expected after "{" in array expression.
 Semantic error in 'validate_conditional_op_bad-1.stan', line 5, column 7 to column 19:
    -------------------------------------------------
      3:    real ty;
-     4:    row_vector[6] twa2[2,2];
+     4:    array[2,2] row_vector[6] twa2;
      5:    tx = twa2 ? 2 : 3;   // BAD
                 ^
      6:  }
@@ -2346,7 +2435,7 @@ Condition in ternary expression must be primitive int; found type=array[,] row_v
 Semantic error in 'validate_conditional_op_bad-2.stan', line 5, column 7 to column 20:
    -------------------------------------------------
      3:    real ty;
-     4:    row_vector[6] twa2[2,2];
+     4:    array[2,2] row_vector[6] twa2;
      5:    tx = 0 ? ty : twa2;   // BAD
                 ^
      6:  }
@@ -2605,7 +2694,7 @@ Semantic error in 'validate_validate_int_expr_bad10.stan', line 9, column 24 to 
     11:    cov_matrix[3] k;
    -------------------------------------------------
 
-Matrix sizes must be of type int. Instead found type real.
+Matrix column size must be of type int. Instead found type real.
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad11.stan
 Semantic error in 'validate_validate_int_expr_bad11.stan', line 10, column 22 to column 25:
    -------------------------------------------------
@@ -2617,7 +2706,7 @@ Semantic error in 'validate_validate_int_expr_bad11.stan', line 10, column 22 to
     12:    corr_matrix[3] l;
    -------------------------------------------------
 
-Matrix sizes must be of type int. Instead found type real.
+Matrix row size must be of type int. Instead found type real.
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad12.stan
 Semantic error in 'validate_validate_int_expr_bad12.stan', line 11, column 13 to column 16:
    -------------------------------------------------
@@ -2629,7 +2718,7 @@ Semantic error in 'validate_validate_int_expr_bad12.stan', line 11, column 13 to
     13:  }
    -------------------------------------------------
 
-Matrix sizes must be of type int. Instead found type real.
+Matrix row size must be of type int. Instead found type real.
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad13.stan
 Semantic error in 'validate_validate_int_expr_bad13.stan', line 12, column 14 to column 17:
    -------------------------------------------------
@@ -2641,7 +2730,7 @@ Semantic error in 'validate_validate_int_expr_bad13.stan', line 12, column 14 to
     14:  parameters {
    -------------------------------------------------
 
-Matrix sizes must be of type int. Instead found type real.
+Matrix row size must be of type int. Instead found type real.
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad2.stan
 Semantic error in 'validate_validate_int_expr_bad2.stan', line 3, column 13 to column 16:
    -------------------------------------------------
@@ -2665,7 +2754,7 @@ Semantic error in 'validate_validate_int_expr_bad3.stan', line 4, column 9 to co
      6:    simplex[3] e;
    -------------------------------------------------
 
-Matrix sizes must be of type int. Instead found type real.
+Matrix row size must be of type int. Instead found type real.
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad4.stan
 Semantic error in 'validate_validate_int_expr_bad4.stan', line 4, column 11 to column 14:
    -------------------------------------------------
@@ -2677,7 +2766,7 @@ Semantic error in 'validate_validate_int_expr_bad4.stan', line 4, column 11 to c
      6:    simplex[3] e;
    -------------------------------------------------
 
-Matrix sizes must be of type int. Instead found type real.
+Matrix column size must be of type int. Instead found type real.
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad5.stan
 Semantic error in 'validate_validate_int_expr_bad5.stan', line 5, column 14 to column 17:
    -------------------------------------------------
@@ -2737,26 +2826,26 @@ Semantic error in 'validate_validate_int_expr_bad9.stan', line 9, column 22 to c
     11:    cov_matrix[3] k;
    -------------------------------------------------
 
-Matrix sizes must be of type int. Instead found type real.
+Matrix row size must be of type int. Instead found type real.
   $ ../../../../install/default/bin/stanc var-decl-bad-1.stan
-Semantic error in 'var-decl-bad-1.stan', line 3, column 14 to column 15:
+Semantic error in 'var-decl-bad-1.stan', line 3, column 13 to column 14:
    -------------------------------------------------
      1:  parameters {
-     2:    real x[3];
-     3:    real y[size(x)];
-                       ^
+     2:    array[3] real x;
+     3:    array[size(x)] real y;
+                      ^
      4:  }
      5:  model {
    -------------------------------------------------
 
 Non-data variables are not allowed in top level size declarations.
   $ ../../../../install/default/bin/stanc var-decl-bad-2.stan
-Semantic error in 'var-decl-bad-2.stan', line 3, column 9 to column 23:
+Semantic error in 'var-decl-bad-2.stan', line 3, column 8 to column 22:
    -------------------------------------------------
      1:  parameters {
-     2:    real x[3];
-     3:    real y[poisson_rng(3)];
-                  ^
+     2:    array[3] real x;
+     3:    array[poisson_rng(3)] real y;
+                 ^
      4:  }
      5:  model {
    -------------------------------------------------

@@ -19,3 +19,29 @@ let deprecated token (pos, message) =
     Middle.Location_span.of_positions_opt begin_pos end_pos
     |> Option.value ~default:Middle.Location_span.empty in
   add_warning span message
+
+let array_syntax ?(unsized = false) (pos1, pos2) =
+  let placement = if unsized then "a type" else "a variable name" in
+  add_warning
+    (Option.value ~default:Middle.Location_span.empty
+       (Middle.Location_span.of_positions_opt pos1 pos2) )
+    ( "Declaration of arrays by placing brackets after " ^ placement
+    ^ " is deprecated and will be removed in Stan 2.32.0. Instead use the \
+       array keyword before the type. This can be changed automatically using \
+       the auto-format flag to stanc" )
+
+let drop_array_future () =
+  match !warnings with
+  | ( _
+    , "Variable name 'array' will be a reserved word starting in Stan 2.32.0. \
+       Please rename it!" )
+    :: tl ->
+      warnings := tl
+  | _ -> ()
+
+let future_keyword kwrd version (pos1, pos2) =
+  add_warning
+    (Option.value ~default:Middle.Location_span.empty
+       (Middle.Location_span.of_positions_opt pos1 pos2) )
+    ( "Variable name '" ^ kwrd ^ "' will be a reserved word starting in Stan "
+    ^ version ^ ". Please rename it!" )

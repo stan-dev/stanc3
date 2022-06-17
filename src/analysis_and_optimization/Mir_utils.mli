@@ -28,13 +28,10 @@ val parameter_names_set :
   ?include_transformed:bool -> Program.Typed.t -> string Set.Poly.t
 
 val fold_expr :
-     take_expr:('c -> Expr.Typed.Meta.t Expr.Fixed.t -> 'c)
-  -> init:'c
-  -> Expr.Typed.t
-  -> 'c
+  take_expr:('c -> Expr.Typed.t -> 'c) -> init:'c -> Expr.Typed.t -> 'c
 
 val fold_stmts :
-     take_expr:('c -> Expr.Typed.Meta.t Expr.Fixed.t -> 'c)
+     take_expr:('c -> Expr.Typed.t -> 'c)
   -> take_stmt:('c -> Stmt.Located.t -> 'c)
   -> init:'c
   -> Stmt.Located.t List.t
@@ -137,6 +134,11 @@ val index_var_set :
    For use in RHS sets, not LHS assignment sets, except in a target term
 *)
 
+val expr_var_names_set : Expr.Typed.t -> string Core_kernel.Set.Poly.t
+(** 
+   Return the names of the variables in an expression.
+*)
+
 val stmt_rhs :
   (Expr.Typed.t, 's) Stmt.Fixed.Pattern.t -> Expr.Typed.t Set.Poly.t
 (**
@@ -211,3 +213,5 @@ val update_expr_ad_levels : string Set.Poly.t -> Expr.Typed.t -> Expr.Typed.t
 
 val cleanup_empty_stmts :
   ('e, 's) Stmt.Fixed.t list -> ('e, 's) Stmt.Fixed.t list
+
+val unsafe_unsized_to_sized_type : Expr.Typed.t Type.t -> Expr.Typed.t Type.t

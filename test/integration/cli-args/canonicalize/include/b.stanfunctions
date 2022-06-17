@@ -1,0 +1,6 @@
+#include "a.stanfunctions" //include other functions
+// line comment b
+   void /*weird block b*/bar(real y){
+     return;
+   }
+// another line comment b

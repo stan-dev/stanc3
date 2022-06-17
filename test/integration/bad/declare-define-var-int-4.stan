@@ -1,5 +1,5 @@
 data {
-  int a1[2];
+  array[2] int a1;
 }
 transformed data {
   int td_a1 = a1;   // scalar = array - bad

@@ -44,16 +44,14 @@ transformed data {
   real z;
   int n;
   
-  z = if_else(n, x, y);
+  z = ((n) ? x : y);
   
-  z = binomial_coefficient_log(x, y);
+  z = lchoose(x, y);
 }
 model {
   
 }
 
-Warning in 'good_funs.stan', line 7, column 6: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'good_funs.stan', line 9, column 6: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
   $ ../../../../../install/default/bin/stanc --auto-format good_intercept_var.stan
 data {
   int<lower=0> m1; // make sure didn't mess up spacing
@@ -137,6 +135,15 @@ transformed data {
 }
 model {
   
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format good_nested_decl.stan
+functions {
+  real foo() {
+    if (1) 
+      real this_does_parse = 0, try_me;
+    return 0;
+  }
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format good_semicolons.stan
@@ -552,12 +559,14 @@ functions {
   real relative_diff(real x, real y, real max_, real min_) {
     real abs_diff;
     real avg_scale;
-    abs_diff = fabs(x - y);
-    avg_scale = (fabs(x) + fabs(y)) / 2;
+    abs_diff = abs(x - y);
+    avg_scale = (abs(x) + abs(y)) / 2;
     if ((abs_diff / avg_scale) > max_) 
-      reject("user-specified rejection, difference above ", max_, " x:", x, " y:", y);
+      reject("user-specified rejection, difference above ", max_, " x:", x,
+             " y:", y);
     if ((abs_diff / avg_scale) < min_) 
-      reject("user-specified rejection, difference below ", min_, " x:", x, " y:", y);
+      reject("user-specified rejection, difference below ", min_, " x:", x,
+             " y:", y);
     return abs_diff / avg_scale;
   }
 }

@@ -1,21 +1,21 @@
 functions {
-  real[] sho(real t,
-             real[] y,
-             real[] theta,
-             real[] x_r,
-             int[] x_i) {
-    real dydt[2];
+  array[] real sho(real t,
+             array[] real y,
+             array[] real theta,
+             array[] real x_r,
+             array[] int x_i) {
+    array[2] real dydt;
     dydt[1] = y[2];
     dydt[2] = -y[1] - theta[1] * y[2];
     return dydt;
   }
 
-  real[,] do_integration_nested(real[] y0, real t0, data real[] ts, real[] theta, matrix xmat_r) {
-    int x_i[0];
+  array[,] real do_integration_nested(array[] real y0, real t0, data array[] real ts, array[] real theta, matrix xmat_r) {
+    array[0] int x_i;
     return(integrate_ode_rk45(sho, y0, t0, ts, theta, to_array_1d(xmat_r[1]), x_i));
   }
 
-  real[,] do_integration(real[] y0, real t0, real[] ts, real[] theta, matrix xmat_r, real[] x_r) {
+  array[,] real do_integration(array[] real y0, real t0, array[] real ts, array[] real theta, matrix xmat_r, array[] real x_r) {
     matrix[2,2] xmat_sub_r;
     xmat_sub_r = block(xmat_r, 1, 1, 2, 2);
     return(do_integration_nested(y0, t0, ts, theta, xmat_sub_r));
@@ -23,21 +23,21 @@ functions {
 }
 data {
   int<lower=1> T;
-  real y[T,2];
+  array[T,2] real y;
   real t0;
-  real ts[T];
+  array[T] real ts;
 }
 transformed data {
-  real x_r[1];
+  array[1] real x_r;
   matrix[2,2] xmat_r;
 }
 parameters {
-  real y0[2];
+  array[2] real y0;
   vector<lower=0>[2] sigma;
-  real theta[1];
+  array[1] real theta;
 }
 transformed parameters {
-  real y_hat[T,2];
+  array[T,2] real y_hat;
   y_hat = do_integration(y0, t0, ts, theta, xmat_r, x_r);
 }
 model {

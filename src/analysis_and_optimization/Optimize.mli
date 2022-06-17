@@ -25,10 +25,12 @@ val block_fixing : Program.Typed.t -> Program.Typed.t
     constructors are replaced with Block constructors.
     This should probably be run before we generate code. *)
 
-val constant_propagation : Program.Typed.t -> Program.Typed.t
+val constant_propagation :
+  ?preserve_stability:bool -> Program.Typed.t -> Program.Typed.t
 (** Propagate constant values through variable assignments *)
 
-val expression_propagation : Program.Typed.t -> Program.Typed.t
+val expression_propagation :
+  ?preserve_stability:bool -> Program.Typed.t -> Program.Typed.t
 (** Propagate arbitrary expressions through variable assignments.
     This can be useful for opening up new possibilities for partial evaluation.
     It should be followed by some CSE or lazy code motion pass, however. *)
@@ -45,7 +47,8 @@ val partial_evaluation : Program.Typed.t -> Program.Typed.t
 (** Partially evaluate expressions in the program. This includes simplification using
     algebraic identities of logical and arithmetic operators as well as Stan math functions. *)
 
-val lazy_code_motion : Program.Typed.t -> Program.Typed.t
+val lazy_code_motion :
+  ?preserve_stability:bool -> Program.Typed.t -> Program.Typed.t
 (** Perform partial redundancy elmination using the lazy code motion algorithm. This
     subsumes common subexpression elimination and loop-invariant code motion. *)
 
@@ -74,11 +77,16 @@ type optimization_settings =
   ; dead_code_elimination: bool
   ; partial_evaluation: bool
   ; lazy_code_motion: bool
-  ; optimize_ad_levels: bool }
+  ; optimize_ad_levels: bool
+  ; preserve_stability: bool
+  ; optimize_soa: bool }
 
 val all_optimizations : optimization_settings
 val no_optimizations : optimization_settings
-val settings_default : optimization_settings
+
+type optimization_level = O0 | O1 | Oexperimental
+
+val level_optimizations : optimization_level -> optimization_settings
 
 val optimization_suite :
   ?settings:optimization_settings -> Program.Typed.t -> Program.Typed.t

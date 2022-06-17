@@ -6,13 +6,10 @@ open Middle
 
 exception Rejected of Location_span.t * string
 
-let preserve_stability = false
-
-let is_int i Expr.Fixed.{pattern; _} =
-  let nums = List.map ~f:(fun s -> string_of_int i ^ s) [""; "."; ".0"] in
+let rec is_int query Expr.Fixed.{pattern; _} =
   match pattern with
-  | (Lit (Int, i) | Lit (Real, i)) when List.mem nums i ~equal:String.equal ->
-      true
+  | Lit (Int, i) | Lit (Real, i) -> float_of_string i = float_of_int query
+  | Promotion (e, _, _) -> is_int query e
   | _ -> false
 
 let apply_prefix_operator_int (op : string) i =
@@ -23,7 +20,9 @@ let apply_prefix_operator_int (op : string) i =
         | "PPlus__" -> i
         | "PMinus__" -> -i
         | "PNot__" -> if i = 0 then 1 else 0
-        | s -> Common.FatalError.fatal_error_msg [%message s] ) )
+        | s ->
+            Common.FatalError.fatal_error_msg
+              [%message "Not an int prefix operator: " s] ) )
 
 let apply_prefix_operator_real (op : string) i =
   Expr.Fixed.Pattern.Lit
@@ -32,7 +31,9 @@ let apply_prefix_operator_real (op : string) i =
         ( match op with
         | "PPlus__" -> i
         | "PMinus__" -> -.i
-        | s -> Common.FatalError.fatal_error_msg [%message s] ) )
+        | s ->
+            Common.FatalError.fatal_error_msg
+              [%message "Not a real prefix operator: " s] ) )
 
 let apply_operator_int (op : string) i1 i2 =
   Expr.Fixed.Pattern.Lit
@@ -50,7 +51,9 @@ let apply_operator_int (op : string) i1 i2 =
         | "Leq__" -> Bool.to_int (i1 <= i2)
         | "Greater__" -> Bool.to_int (i1 > i2)
         | "Geq__" -> Bool.to_int (i1 >= i2)
-        | s -> Common.FatalError.fatal_error_msg [%message s] ) )
+        | s ->
+            Common.FatalError.fatal_error_msg
+              [%message "Not an int operator: " s] ) )
 
 let apply_arithmetic_operator_real (op : string) r1 r2 =
   Expr.Fixed.Pattern.Lit
@@ -61,7 +64,9 @@ let apply_arithmetic_operator_real (op : string) r1 r2 =
         | "Minus__" -> r1 -. r2
         | "Times__" -> r1 *. r2
         | "Divide__" -> r1 /. r2
-        | s -> Common.FatalError.fatal_error_msg [%message s] ) )
+        | s ->
+            Common.FatalError.fatal_error_msg
+              [%message "Not a real operator: " s] ) )
 
 let apply_logical_operator_real (op : string) r1 r2 =
   Expr.Fixed.Pattern.Lit
@@ -74,19 +79,23 @@ let apply_logical_operator_real (op : string) r1 r2 =
         | "Leq__" -> Bool.to_int (r1 <= r2)
         | "Greater__" -> Bool.to_int (r1 > r2)
         | "Geq__" -> Bool.to_int (r1 >= r2)
-        | s -> Common.FatalError.fatal_error_msg [%message s] ) )
+        | s ->
+            Common.FatalError.fatal_error_msg
+              [%message "Not a logical operator: " s] ) )
 
 let is_multi_index = function
   | Index.MultiIndex _ | Upfrom _ | Between _ | All -> true
   | Single _ -> false
 
-let rec eval_expr (e : Expr.Typed.t) =
+let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
   { e with
     pattern=
       ( match e.pattern with
       | Var _ | Lit (_, _) -> e.pattern
+      | Promotion (expr, ut, ad) ->
+          Promotion (eval_expr ~preserve_stability expr, ut, ad)
       | FunApp (kind, l) -> (
-          let l = List.map ~f:eval_expr l in
+          let l = List.map ~f:(eval_expr ~preserve_stability) l in
           match kind with
           | UserDefined _ | CompilerInternal _ -> FunApp (kind, l)
           | StanLib (f, suffix, mem_type) ->
@@ -97,10 +106,11 @@ let rec eval_expr (e : Expr.Typed.t) =
                 Operator.of_string_opt name
                 |> Option.value_map
                      ~f:(fun op ->
-                       Stan_math_signatures.operator_stan_math_return_type op
-                         argument_types )
+                       Frontend.Typechecker.operator_stan_math_return_type op
+                         argument_types
+                       |> Option.map ~f:fst )
                      ~default:
-                       (Stan_math_signatures.stan_math_returntype name
+                       (Frontend.Typechecker.stan_math_return_type name
                           argument_types ) in
               let try_partially_evaluate_stanlib e =
                 Expr.Fixed.Pattern.(
@@ -111,7 +121,7 @@ let rec eval_expr (e : Expr.Typed.t) =
                     | None -> FunApp (StanLib (f, suffix, mem_type), l) )
                   | e -> e) in
               let lub_mem_pat lst =
-                Common.Helpers.lub_mem_pat (List.cons mem_type lst) in
+                Mem_pattern.lub_mem_pat (List.cons mem_type lst) in
               try_partially_evaluate_stanlib
                 ( match (f, l) with
                 (* TODO: deal with tilde statements and unnormalized distributions properly here *)
@@ -325,7 +335,7 @@ let rec eval_expr (e : Expr.Typed.t) =
                 | ( "log"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("fabs", FnPlain, mem1)
+                            ( StanLib (("fabs" | "abs"), FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
                                       ( StanLib ("determinant", FnPlain, mem2)
@@ -756,6 +766,33 @@ let rec eval_expr (e : Expr.Typed.t) =
                       ; _ } ] ) ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp (StanLib ("trace_quad_form", suffix, lub_mem), [a; b])
+                | ( ("Plus__" | "add")
+                  , [ ({pattern= Lit (Imaginary, i); _} as im)
+                    ; ({pattern= Lit ((Real | Int), _); _} as r) ] )
+                 |( ("Plus__" | "add")
+                  , [ ({pattern= Lit ((Real | Int), _); _} as r)
+                    ; ({pattern= Lit (Imaginary, i); _} as im) ] )
+                 |( ("Plus__" | "add")
+                  , [ ({pattern= Lit (Imaginary, i); _} as im)
+                    ; { pattern=
+                          Promotion
+                            ( ({pattern= Lit ((Real | Int), _); _} as r)
+                            , UComplex
+                            , _ )
+                      ; _ } ] )
+                 |( ("Plus__" | "add")
+                  , [ { pattern=
+                          Promotion
+                            ( ({pattern= Lit ((Real | Int), _); _} as r)
+                            , UComplex
+                            , _ )
+                      ; _ }; ({pattern= Lit (Imaginary, i); _} as im) ] ) ->
+                    let im_part =
+                      Expr.Fixed.
+                        { pattern= Lit (Real, i)
+                        ; meta= {im.meta with type_= UReal} } in
+                    FunApp
+                      (StanLib ("to_complex", suffix, mem_type), [r; im_part])
                 | ( "Minus__"
                   , [x; {pattern= FunApp (StanLib ("erf", FnPlain, mem), l); _}]
                   )
@@ -778,10 +815,40 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ { pattern=
                           FunApp (StanLib ("Times__", FnPlain, mem), [x; y])
                       ; _ }; z ] )
-                 |( "Plus__"
+                  when (not preserve_stability)
+                       && not
+                            ( UnsizedType.is_eigen_type x.meta.type_
+                            && UnsizedType.is_eigen_type y.meta.type_ ) ->
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp (StanLib ("fma", suffix, lub_mem), [x; y; z])
+                | ( "Plus__"
                   , [ z
                     ; { pattern=
                           FunApp (StanLib ("Times__", FnPlain, mem), [x; y])
+                      ; _ } ] )
+                  when (not preserve_stability)
+                       && not
+                            ( UnsizedType.is_eigen_type x.meta.type_
+                            && UnsizedType.is_eigen_type y.meta.type_ ) ->
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp (StanLib ("fma", suffix, lub_mem), [x; y; z])
+                | ( "Plus__"
+                  , [ { pattern=
+                          FunApp
+                            ( StanLib
+                                (("elt_multiply" | "EltTimes__"), FnPlain, mem)
+                            , [x; y] )
+                      ; _ }; z ] )
+                  when not preserve_stability ->
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp (StanLib ("fma", suffix, lub_mem), [x; y; z])
+                | ( "Plus__"
+                  , [ z
+                    ; { pattern=
+                          FunApp
+                            ( StanLib
+                                (("elt_multiply" | "EltTimes__"), FnPlain, mem)
+                            , [x; y] )
                       ; _ } ] )
                   when not preserve_stability ->
                     let lub_mem = lub_mem_pat [mem] in
@@ -951,12 +1018,18 @@ let rec eval_expr (e : Expr.Typed.t) =
                   | _ -> FunApp (kind, l) )
                 | _ -> FunApp (kind, l) ) )
       | TernaryIf (e1, e2, e3) -> (
-        match (eval_expr e1, eval_expr e2, eval_expr e3) with
+        match
+          ( eval_expr ~preserve_stability e1
+          , eval_expr ~preserve_stability e2
+          , eval_expr ~preserve_stability e3 )
+        with
         | x, _, e3' when is_int 0 x -> e3'.pattern
         | {pattern= Lit (Int, _); _}, e2', _ -> e2'.pattern
         | e1', e2', e3' -> TernaryIf (e1', e2', e3') )
       | EAnd (e1, e2) -> (
-        match (eval_expr e1, eval_expr e2) with
+        match
+          (eval_expr ~preserve_stability e1, eval_expr ~preserve_stability e2)
+        with
         | {pattern= Lit (Int, s1); _}, {pattern= Lit (Int, s2); _} ->
             let i1, i2 = (Int.of_string s1, Int.of_string s2) in
             Lit (Int, Int.to_string (Bool.to_int (i1 <> 0 && i2 <> 0)))
@@ -965,7 +1038,9 @@ let rec eval_expr (e : Expr.Typed.t) =
             Lit (Int, Int.to_string (Bool.to_int (r1 <> 0. && r2 <> 0.)))
         | e1', e2' -> EAnd (e1', e2') )
       | EOr (e1, e2) -> (
-        match (eval_expr e1, eval_expr e2) with
+        match
+          (eval_expr ~preserve_stability e1, eval_expr ~preserve_stability e2)
+        with
         | {pattern= Lit (Int, s1); _}, {pattern= Lit (Int, s2); _} ->
             let i1, i2 = (Int.of_string s1, Int.of_string s2) in
             Lit (Int, Int.to_string (Bool.to_int (i1 <> 0 || i2 <> 0)))

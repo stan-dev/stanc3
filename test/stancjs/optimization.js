@@ -11,22 +11,39 @@ transformed data {
 `
 var opt_test = stanc.stanc("optimization", opt_model, []);
 var ind = opt_test.result.search("int t = 1; t <= 5; \\+\\+t");
-if (ind == -1) {
-    console.log("ERROR: Optimization without the O flag!")
-}
+console.assert(ind > -1, "ERROR: Optimization without the O flag!")
 
 var opt_test = stanc.stanc("optimization", opt_model, ["O"]);
 var ind = opt_test.result.search("int t = 1; t <= 5; \\+\\+t");
-if (ind > -1) {
-    console.log("ERROR: No optimization without the O flag!")
+console.assert(ind < 0, "ERROR: No optimization without the O flag!")
+
+var ad_model = `
+data {
+    matrix[10, 10] X_d;
 }
+parameters {
+    matrix[10, 10] X_p;
+}
+
+transformed parameters {
+    matrix[10, 10] X_tp1 = X_d;
+}
+`
+
+var opt_test = stanc.stanc("optimization", ad_model, ["O1"]);
+var ind = opt_test.result.search("\\<double, -1, -1\\> X_tp1");
+console.assert(ind > -1, "ERROR: No AD optimization with the O1 flag!")
+
+var opt_test = stanc.stanc("optimization", ad_model, ["O0"]);
+var ind = opt_test.result.search("\\<local_scalar_t__, -1, -1\\> X_tp1");
+console.assert(ind > -1, "ERROR: AD optimization without the O1 flag!")
 
 var glm_model = `
 data {
     int<lower=1> k;
     int<lower=0> n;
     matrix[n, k] X;
-    int y[n];
+    array[n] int y;
   }
 
   parameters {
@@ -42,16 +59,14 @@ data {
 var no_opencl_test = stanc.stanc("no_opencl", glm_model);
 utils.print_error(no_opencl_test)
 var ind = no_opencl_test.result.search("matrix_cl<int> y_opencl__");
-if (ind > -1) {
-    console.log("ERROR: OpenCL code found without the use-opencl flag!")
-}
+console.assert(ind < 0, "ERROR: OpenCL code found without the use-opencl flag!")
+
 
 var opencl_test = stanc.stanc("opencl", glm_model, ["use-opencl"]);
 utils.print_error(opencl_test)
 var ind = opencl_test.result.search("matrix_cl<int> y_opencl__");
-if (ind == -1) {
-    console.log("ERROR: No OpenCL code found with the use-opencl flag!")
-}
+console.assert(ind > -1, "ERROR: No OpenCL code found with the use-opencl flag!")
+
 
 // multiple flags
 
@@ -64,7 +79,7 @@ data {
     int<lower=1> k;
     int<lower=0> n;
     matrix[n, k] X;
-    int y[n];
+    array[n] int y;
 }
 
 transformed data {
@@ -86,6 +101,5 @@ utils.print_error(opencl_test)
 var opencl_test = stanc.stanc("opencl", glm_model2, ["use-opencl", "allow-undefined"]);
 utils.print_error(opencl_test)
 var ind = opencl_test.result.search("matrix_cl<int> y_opencl__");
-if (ind == -1) {
-    console.log("ERROR: No OpenCL code found with the use-opencl flag!")
-}
+console.assert(ind > -1, "ERROR: No OpenCL code found with the use-opencl flag!")
+

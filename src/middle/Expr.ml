@@ -1,7 +1,5 @@
 open Core_kernel
-open Core_kernel.Poly
 open Common
-open Helpers
 
 (** Pattern and fixed-point of MIR expressions *)
 module Fixed = struct
@@ -17,6 +15,7 @@ module Fixed = struct
       | EAnd of 'a * 'a
       | EOr of 'a * 'a
       | Indexed of 'a * 'a Index.t list
+      | Promotion of 'a * UnsizedType.t * UnsizedType.autodifftype
     [@@deriving sexp, hash, map, compare, fold]
 
     let pp pp_e ppf = function
@@ -33,15 +32,16 @@ module Fixed = struct
             Fmt.(list pp_e ~sep:Fmt.comma)
             args
       | TernaryIf (pred, texpr, fexpr) ->
-          Fmt.pf ppf {|@[%a@ %a@,%a@,%a@ %a@]|} pp_e pred pp_builtin_syntax "?"
-            pp_e texpr pp_builtin_syntax ":" pp_e fexpr
+          Fmt.pf ppf "(@[%a@ ?@ %a@ :@ %a@])" pp_e pred pp_e texpr pp_e fexpr
       | Indexed (expr, indices) ->
-          Fmt.pf ppf {|@[%a%a@]|} pp_e expr
+          Fmt.pf ppf "@[%a%a@]" pp_e expr
             ( if List.is_empty indices then fun _ _ -> ()
             else Fmt.(list (Index.pp pp_e) ~sep:comma |> brackets) )
             indices
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
       | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
+      | Promotion (from, ut, _) ->
+          Fmt.pf ppf "promote(@[%a,@ %a@])" pp_e from UnsizedType.pp ut
 
     include Foldable.Make (struct
       type nonrec 'a t = 'a t
@@ -51,20 +51,6 @@ module Fixed = struct
   end
 
   include Fixed.Make (Pattern)
-end
-
-(** Expressions without meta data *)
-module NoMeta = struct
-  module Meta = struct
-    type t = unit [@@deriving compare, sexp, hash]
-
-    let empty = ()
-    let pp _ _ = ()
-  end
-
-  include Specialized.Make (Fixed) (Meta)
-
-  let remove_meta expr = Fixed.map (Fn.const ()) expr
 end
 
 (** Expressions with associated location and type *)
@@ -88,81 +74,29 @@ module Typed = struct
   let type_of Fixed.{meta= Meta.{type_; _}; _} = type_
   let loc_of Fixed.{meta= Meta.{loc; _}; _} = loc
   let adlevel_of Fixed.{meta= Meta.{adlevel; _}; _} = adlevel
-end
-
-(** Expressions with associated location, type and label *)
-module Labelled = struct
-  module Meta = struct
-    type t =
-      { type_: UnsizedType.t
-      ; loc: (Location_span.t[@sexp.opaque] [@compare.ignore])
-      ; adlevel: UnsizedType.autodifftype
-      ; label: Label.Int_label.t [@compare.ignore] }
-    [@@deriving compare, create, sexp, hash]
-
-    let empty =
-      create ~type_:UnsizedType.UInt ~adlevel:UnsizedType.DataOnly
-        ~loc:Location_span.empty
-        ~label:Label.Int_label.(prev init)
-        ()
-
-    let pp _ _ = ()
-  end
-
-  include Specialized.Make (Fixed) (Meta)
-
-  let type_of Fixed.{meta= Meta.{type_; _}; _} = type_
-  let label_of Fixed.{meta= Meta.{label; _}; _} = label
-  let adlevel_of Fixed.{meta= Meta.{adlevel; _}; _} = adlevel
-  let loc_of Fixed.{meta= Meta.{loc; _}; _} = loc
-
-  (** Traverse a typed expression adding unique labels using locally mutable
-      state
-  *)
-  let label ?(init = Label.Int_label.init) (expr : Typed.t) : t =
-    let lbl = ref init in
-    Fixed.map
-      (fun Typed.Meta.{adlevel; type_; loc} ->
-        let cur_lbl = !lbl in
-        lbl := Label.Int_label.next cur_lbl ;
-        Meta.create ~label:cur_lbl ~adlevel ~type_ ~loc () )
-      expr
-
-  (** Build a map from expression labels to expressions *)
-  let rec associate ?init:(assocs = Label.Int_label.Map.empty)
-      ({pattern; _} as expr : t) =
-    let assocs_result : t Label.Int_label.Map.t Map_intf.Or_duplicate.t =
-      Label.Int_label.Map.add ~key:(label_of expr) ~data:expr
-        (associate_pattern assocs @@ pattern) in
-    match assocs_result with `Ok x -> x | `Duplicate -> assocs
-
-  and associate_pattern assocs = function
-    | Fixed.Pattern.Lit _ | Var _ -> assocs
-    | FunApp (_, args) ->
-        List.fold args ~init:assocs ~f:(fun accu x -> associate ~init:accu x)
-    | EAnd (e1, e2) | EOr (e1, e2) ->
-        associate ~init:(associate ~init:assocs e2) e1
-    | TernaryIf (e1, e2, e3) ->
-        associate ~init:(associate ~init:(associate ~init:assocs e3) e2) e1
-    | Indexed (e, idxs) ->
-        List.fold idxs ~init:(associate ~init:assocs e) ~f:associate_index
-
-  and associate_index assocs = function
-    | All -> assocs
-    | Single e | Upfrom e | MultiIndex e -> associate ~init:assocs e
-    | Between (e1, e2) -> associate ~init:(associate ~init:assocs e2) e1
+  let fun_arg Fixed.{meta= Meta.{type_; adlevel; _}; _} = (adlevel, type_)
 end
 
 module Helpers = struct
   let int i = {Fixed.meta= Typed.Meta.empty; pattern= Lit (Int, string_of_int i)}
 
   let float i =
-    {Fixed.meta= Typed.Meta.empty; pattern= Lit (Real, string_of_float i)}
+    { Fixed.meta= {Typed.Meta.empty with type_= UReal}
+    ; pattern= Lit (Real, Float.to_string i) }
+
+  let complex (r, i) =
+    { Fixed.meta= {Typed.Meta.empty with type_= UComplex}
+    ; pattern= FunApp (StanLib ("to_complex", FnPlain, AoS), [float r; float i])
+    }
 
   let str i = {Fixed.meta= Typed.Meta.empty; pattern= Lit (Str, i)}
   let variable v = {Fixed.meta= Typed.Meta.empty; pattern= Var v}
   let zero = int 0
   let one = int 1
+
+  let unary_op op e =
+    { Fixed.meta= Typed.Meta.empty
+    ; pattern= FunApp (StanLib (Operator.to_string op, FnPlain, AoS), [e]) }
 
   let binop e1 op e2 =
     { Fixed.meta= Typed.Meta.empty
@@ -174,6 +108,51 @@ module Helpers = struct
     | [] -> default
     | head :: rest ->
         List.fold ~init:head ~f:(fun accum next -> binop accum op next) rest
+
+  let row_vector l =
+    { Fixed.meta= {Typed.Meta.empty with type_= URowVector}
+    ; pattern= FunApp (CompilerInternal FnMakeRowVec, List.map ~f:float l) }
+
+  let vector l =
+    let v = unary_op Transpose (row_vector l) in
+    {v with meta= {Typed.Meta.empty with type_= UVector}}
+
+  let matrix l =
+    { Fixed.meta= {Typed.Meta.empty with type_= UMatrix}
+    ; pattern= FunApp (CompilerInternal FnMakeRowVec, List.map ~f:row_vector l)
+    }
+
+  let complex_row_vector l =
+    { Fixed.meta= {Typed.Meta.empty with type_= UComplexRowVector}
+    ; pattern= FunApp (CompilerInternal FnMakeRowVec, List.map ~f:complex l) }
+
+  let complex_vector l =
+    let v = unary_op Transpose (complex_row_vector l) in
+    {v with meta= {Typed.Meta.empty with type_= UComplexVector}}
+
+  let complex_matrix_from_rows l =
+    { Fixed.meta= {Typed.Meta.empty with type_= UComplexMatrix}
+    ; pattern= FunApp (CompilerInternal FnMakeRowVec, l) }
+
+  let matrix_from_rows l =
+    { Fixed.meta= {Typed.Meta.empty with type_= UMatrix}
+    ; pattern= FunApp (CompilerInternal FnMakeRowVec, l) }
+
+  let array_expr l =
+    let type_ =
+      List.hd l |> Option.value_map ~f:Typed.type_of ~default:UnsizedType.UReal
+    in
+    { Fixed.meta= {Typed.Meta.empty with type_= UArray type_}
+    ; pattern= FunApp (CompilerInternal FnMakeArray, l) }
+
+  let try_unpack e =
+    match e.Fixed.pattern with
+    | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l) -> Some l
+    | FunApp
+        ( StanLib ("Transpose__", FnPlain, _)
+        , [{pattern= FunApp (CompilerInternal FnMakeRowVec, l); _}] ) ->
+        Some l
+    | _ -> None
 
   let loop_bottom = one
 
@@ -191,7 +170,9 @@ module Helpers = struct
 
   let%test "expr contains fn" =
     internal_funapp FnReadData [] ()
-    |> contains_fn_kind (fun kind -> kind = CompilerInternal FnReadData)
+    |> contains_fn_kind (function
+         | CompilerInternal FnReadData -> true
+         | _ -> false )
 
   let rec infer_type_of_indexed ut indices =
     match (ut, indices) with
@@ -203,9 +184,19 @@ module Helpers = struct
      |UMatrix, [MultiIndex _]
      |UMatrix, [Single _] ->
         UVector
+    | UComplexMatrix, [All; Single _]
+     |UComplexMatrix, [Upfrom _; Single _]
+     |UComplexMatrix, [Between _; Single _]
+     |UComplexMatrix, [MultiIndex _]
+     |UComplexMatrix, [Single _] ->
+        UComplexVector
     | UArray t, Single _ :: tl -> infer_type_of_indexed t tl
     | UArray t, _ :: tl -> UArray (infer_type_of_indexed t tl)
     | UMatrix, [Single _; Single _] | UVector, [_] | URowVector, [_] -> UReal
+    | UComplexMatrix, [Single _; Single _]
+     |UComplexVector, [_]
+     |UComplexRowVector, [_] ->
+        UComplex
     | _ ->
         FatalError.fatal_error_msg [%message "Can't index" (ut : UnsizedType.t)]
 
@@ -220,7 +211,8 @@ module Helpers = struct
       | Indexed (e, indices) -> Indexed (e, indices @ [i])
       | _ ->
           (* These should go away with Ryan's LHS *)
-          Common.FatalError.fatal_error () in
+          Common.FatalError.fatal_error_msg
+            [%message "Expected Var or Indexed but found " (e : Typed.t)] in
     Fixed.{meta; pattern}
 
   (** TODO: Make me tail recursive *)
@@ -240,7 +232,7 @@ module Helpers = struct
     ; ( UArray UMatrix
       , [Upfrom loop_bottom; Single loop_bottom; Single loop_bottom] ) ]
     |> List.map ~f:(fun (ut, idx) -> infer_type_of_indexed ut idx)
-    |> Fmt.(strf "@[<hov>%a@]" (list ~sep:comma UnsizedType.pp))
+    |> Fmt.(str "@[<hov>%a@]" (list ~sep:comma UnsizedType.pp))
     |> print_endline ;
     [%expect
       {|

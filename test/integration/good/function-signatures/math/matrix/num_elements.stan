@@ -1,31 +1,40 @@
 data {
   vector[2] x3x;
   row_vector[2] x4x;
-  matrix[2,3] x5x;
+  matrix[2, 3] x5x;
 
-  int x1y[3];
-  real x2y[3];
-  vector[2] x3y[3];
-  row_vector[2] x4y[3];
-  matrix[2,3] x5y[3];
+  complex_vector[2] cx3x;
+  complex_row_vector[2] cx4x;
+  complex_matrix[2, 3] cx5x;
 
-  int x1z[3,4];
-  real x2z[3,4];
-  vector[2] x3z[3,4];
-  row_vector[2] x4z[3,4];
-  matrix[2,3] x5z[3,4];
+  array[3] int x1y;
+  array[3] real x2y;
+  array[3] vector[2] x3y;
+  array[3] row_vector[2] x4y;
+  array[3] matrix[2, 3] x5y;
 
-  int x1w[3,4,5];
-  real x2w[3,4,5];
-  vector[2] x3w[3,4,5];
-  row_vector[2] x4w[3,4,5];
-  matrix[2,3] x5w[3,4,5];
+  array[3, 4] int x1z;
+  array[3, 4] real x2z;
+  array[3, 4] vector[2] x3z;
+  array[3, 4] row_vector[2] x4z;
+  array[3, 4] matrix[2, 3] x5z;
+
+  array[3, 4, 5] int x1w;
+  array[3, 4, 5] real x2w;
+  array[3, 4, 5] vector[2] x3w;
+  array[3, 4, 5] row_vector[2] x4w;
+  array[3, 4, 5] matrix[2, 3] x5w;
 }
 transformed data {
   int val;
 
+  val = num_elements(x3x);
   val = num_elements(x4x);
   val = num_elements(x5x);
+
+  val = num_elements(cx3x);
+  val = num_elements(cx4x);
+  val = num_elements(cx5x);
 
   val = num_elements(x1y);
   val = num_elements(x2y);
@@ -47,28 +56,32 @@ transformed data {
 }
 parameters {
   real y;
-  
+
   vector[2] p_x3x;
   row_vector[2] p_x4x;
-  matrix[2,3] p_x5x;
+  matrix[2, 3] p_x5x;
 
-  real p_x1y[3];
-  real p_x2y[3];
-  vector[2] p_x3y[3];
-  row_vector[2] p_x4y[3];
-  matrix[2,3] p_x5y[3];
+  complex_vector[2] p_cx3x;
+  complex_row_vector[2] p_cx4x;
+  complex_matrix[2, 3] p_cx5x;
 
-  real p_x1z[3,4];
-  real p_x2z[3,4];
-  vector[2] p_x3z[3,4];
-  row_vector[2] p_x4z[3,4];
-  matrix[2,3] p_x5z[3,4];
+  array[3] real p_x1y;
+  array[3] real p_x2y;
+  array[3] vector[2] p_x3y;
+  array[3] row_vector[2] p_x4y;
+  array[3] matrix[2, 3] p_x5y;
 
-  real p_x1w[3,4,5];
-  real p_x2w[3,4,5];
-  vector[2] p_x3w[3,4,5];
-  row_vector[2] p_x4w[3,4,5];
-  matrix[2,3] p_x5w[3,4,5];
+  array[3, 4] real p_x1z;
+  array[3, 4] real p_x2z;
+  array[3, 4] vector[2] p_x3z;
+  array[3, 4] row_vector[2] p_x4z;
+  array[3, 4] matrix[2, 3] p_x5z;
+
+  array[3, 4, 5] real p_x1w;
+  array[3, 4, 5] real p_x2w;
+  array[3, 4, 5] vector[2] p_x3w;
+  array[3, 4, 5] row_vector[2] p_x4w;
+  array[3, 4, 5] matrix[2, 3] p_x5w;
 }
 transformed parameters {
   real p_val;
@@ -76,6 +89,10 @@ transformed parameters {
   p_val = num_elements(x3x);
   p_val = num_elements(x4x);
   p_val = num_elements(x5x);
+
+  p_val = num_elements(cx3x);
+  p_val = num_elements(cx4x);
+  p_val = num_elements(cx5x);
 
   p_val = num_elements(x1y);
   p_val = num_elements(x2y);
@@ -94,6 +111,14 @@ transformed parameters {
   p_val = num_elements(x3w);
   p_val = num_elements(x4w);
   p_val = num_elements(x5w);
+
+  p_val = num_elements(p_x3x);
+  p_val = num_elements(p_x4x);
+  p_val = num_elements(p_x5x);
+
+  p_val = num_elements(p_cx3x);
+  p_val = num_elements(p_cx4x);
+  p_val = num_elements(p_cx5x);
 
   p_val = num_elements(p_x1y);
   p_val = num_elements(p_x2y);
@@ -114,5 +139,6 @@ transformed parameters {
   p_val = num_elements(p_x5w);
 }
 model {
-  y ~ normal(0,1);
+  y ~ normal(0, 1);
 }
+

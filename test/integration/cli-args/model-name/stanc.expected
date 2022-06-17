@@ -1,0 +1,16 @@
+  $ ../../../../../install/default/bin/stanc --name=foo  8start_with_number.stan
+
+  $ ../../../../../install/default/bin/stanc --name=foo  bad.stan
+Semantic error in 'bad.stan', line 3, column 6 to column 9:
+   -------------------------------------------------
+     1:  data {
+     2:    // declare matching model name should fail
+     3:    int foo;  
+               ^
+     4:  }
+     5:  parameters {
+   -------------------------------------------------
+
+Identifier 'foo' clashes with model name.
+  $ ../../../../../install/default/bin/stanc --name=foo  good.stan
+
