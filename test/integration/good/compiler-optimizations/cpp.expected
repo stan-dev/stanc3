@@ -18445,10 +18445,10 @@ const
 class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
 
  private:
-  Eigen::Matrix<double, -1, -1> lcm_sym5____;
+  Eigen::Matrix<double, -1, -1> lcm_sym5___data__;
   int N;
   int M;
-  Eigen::Matrix<double, -1, -1> bar__; 
+  Eigen::Matrix<double, -1, -1> bar_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, -1>> lcm_sym5__{nullptr, 0, 0};
   Eigen::Map<Eigen::Matrix<double, -1, -1>> bar{nullptr, 0, 0};
  
@@ -18495,10 +18495,10 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
       current_statement__ = 6;
       stan::math::validate_non_negative_index("bar", "M", 11);
       current_statement__ = 7;
-      bar__ = 
+      bar_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(10, 11,
           std::numeric_limits<double>::quiet_NaN());
-      new (&bar) Eigen::Map<Eigen::Matrix<double, -1, -1>>(bar__.data(), 10, 11);
+      new (&bar) Eigen::Map<Eigen::Matrix<double, -1, -1>>(bar_data__.data(), 10, 11);
         
       
       current_statement__ = 7;
