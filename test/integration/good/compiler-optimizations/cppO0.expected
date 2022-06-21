@@ -28,7 +28,7 @@ static constexpr std::array<const char*, 11> locations_array__ =
 class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_deep_dependence_model> {
 
  private:
-  Eigen::Matrix<double, -1, -1> X_d__; 
+  Eigen::Matrix<double, -1, -1> X_d_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, -1>> X_d{nullptr, 0, 0};
  
  public:
@@ -60,10 +60,10 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
       context__.validate_dims("data initialization","X_d","double",
            std::vector<size_t>{static_cast<size_t>(10),
             static_cast<size_t>(10)});
-      X_d__ = 
+      X_d_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      new (&X_d) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d__.data(), 10, 10);
+      new (&X_d) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d_data__.data(), 10, 10);
         
       
       {
@@ -1305,7 +1305,7 @@ static constexpr std::array<const char*, 6> locations_array__ =
 class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> {
 
  private:
-  Eigen::Matrix<double, -1, -1> X_data__; 
+  Eigen::Matrix<double, -1, -1> X_data_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, -1>> X_data{nullptr, 0, 0};
  
  public:
@@ -1337,10 +1337,10 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
       context__.validate_dims("data initialization","X_data","double",
            std::vector<size_t>{static_cast<size_t>(10),
             static_cast<size_t>(10)});
-      X_data__ = 
+      X_data_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      new (&X_data) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_data__.data(), 10, 10);
+      new (&X_data) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_data_data__.data(), 10, 10);
         
       
       {
@@ -2811,7 +2811,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
   std::vector<int> region;
   std::vector<int> state;
   std::vector<int> y;
-  Eigen::Matrix<double, -1, 1> v_prev__; 
+  Eigen::Matrix<double, -1, 1> v_prev_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> v_prev{nullptr, 0};
  
  public:
@@ -2992,10 +2992,10 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       current_statement__ = 59;
       context__.validate_dims("data initialization","v_prev","double",
            std::vector<size_t>{static_cast<size_t>(n_state)});
-      v_prev__ = 
+      v_prev_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(n_state,
           std::numeric_limits<double>::quiet_NaN());
-      new (&v_prev) Eigen::Map<Eigen::Matrix<double, -1, 1>>(v_prev__.data(), n_state);
+      new (&v_prev) Eigen::Map<Eigen::Matrix<double, -1, 1>>(v_prev_data__.data(), n_state);
         
       
       {
@@ -4449,7 +4449,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
 
  private:
   int N;
-  Eigen::Matrix<double, -1, 1> y__; 
+  Eigen::Matrix<double, -1, 1> y_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> y{nullptr, 0};
  
  public:
@@ -4492,10 +4492,10 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       current_statement__ = 11;
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      y__ = 
+      y_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
+      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_data__.data(), N);
       
       {
         std::vector<local_scalar_t__> y_flat__;
@@ -5362,12 +5362,12 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
   int n_state;
   std::vector<int> age;
   std::vector<int> age_edu;
-  Eigen::Matrix<double, -1, 1> black__;
+  Eigen::Matrix<double, -1, 1> black_data__;
   std::vector<int> edu;
-  Eigen::Matrix<double, -1, 1> female__;
+  Eigen::Matrix<double, -1, 1> female_data__;
   std::vector<int> region_full;
   std::vector<int> state;
-  Eigen::Matrix<double, -1, 1> v_prev_full__;
+  Eigen::Matrix<double, -1, 1> v_prev_full_data__;
   std::vector<int> y; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> black{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> female{nullptr, 0};
@@ -5494,10 +5494,10 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 33;
       context__.validate_dims("data initialization","black","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      black__ = 
+      black_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&black) Eigen::Map<Eigen::Matrix<double, -1, 1>>(black__.data(), N);
+      new (&black) Eigen::Map<Eigen::Matrix<double, -1, 1>>(black_data__.data(), N);
         
       
       {
@@ -5538,10 +5538,10 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 37;
       context__.validate_dims("data initialization","female","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      female__ = 
+      female_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&female) Eigen::Map<Eigen::Matrix<double, -1, 1>>(female__.data(), N);
+      new (&female) Eigen::Map<Eigen::Matrix<double, -1, 1>>(female_data__.data(), N);
         
       
       {
@@ -5598,10 +5598,10 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 43;
       context__.validate_dims("data initialization","v_prev_full","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      v_prev_full__ = 
+      v_prev_full_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&v_prev_full) Eigen::Map<Eigen::Matrix<double, -1, 1>>(v_prev_full__.data(), N);
+      new (&v_prev_full) Eigen::Map<Eigen::Matrix<double, -1, 1>>(v_prev_full_data__.data(), N);
         
       
       {
@@ -6349,8 +6349,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
   int N_edges;
   std::vector<int> node1;
   std::vector<int> node2;
-  Eigen::Matrix<double, -1, 1> E__;
-  Eigen::Matrix<double, -1, 1> log_E__;
+  Eigen::Matrix<double, -1, 1> E_data__;
+  Eigen::Matrix<double, -1, 1> log_E_data__;
   int phi_std_raw_1dim__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> E{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> log_E{nullptr, 0};
@@ -6433,10 +6433,10 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 37;
       context__.validate_dims("data initialization","E","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      E__ = 
+      E_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&E) Eigen::Map<Eigen::Matrix<double, -1, 1>>(E__.data(), N);
+      new (&E) Eigen::Map<Eigen::Matrix<double, -1, 1>>(E_data__.data(), N);
       
       {
         std::vector<local_scalar_t__> E_flat__;
@@ -6458,10 +6458,10 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 38;
       stan::math::validate_non_negative_index("log_E", "N", N);
       current_statement__ = 39;
-      log_E__ = 
+      log_E_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&log_E) Eigen::Map<Eigen::Matrix<double, -1, 1>>(log_E__.data(), N);
+      new (&log_E) Eigen::Map<Eigen::Matrix<double, -1, 1>>(log_E_data__.data(), N);
         
       
       current_statement__ = 39;
@@ -9652,7 +9652,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
   int I;
   int J;
   std::vector<std::vector<int>> y;
-  Eigen::Matrix<double, -1, 1> alpha__;
+  Eigen::Matrix<double, -1, 1> alpha_data__;
   std::vector<Eigen::Matrix<double, -1, 1>> beta; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> alpha{nullptr, 0};
  
@@ -9752,10 +9752,10 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       current_statement__ = 29;
       context__.validate_dims("data initialization","alpha","double",
            std::vector<size_t>{static_cast<size_t>(K)});
-      alpha__ = 
+      alpha_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(K,
           std::numeric_limits<double>::quiet_NaN());
-      new (&alpha) Eigen::Map<Eigen::Matrix<double, -1, 1>>(alpha__.data(), K);
+      new (&alpha) Eigen::Map<Eigen::Matrix<double, -1, 1>>(alpha_data__.data(), K);
         
       
       {
@@ -10330,7 +10330,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
   std::vector<int> node1;
   std::vector<int> node2;
   std::vector<int> y;
-  Eigen::Matrix<double, -1, 1> x__; 
+  Eigen::Matrix<double, -1, 1> x_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> x{nullptr, 0};
  
  public:
@@ -10423,10 +10423,10 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       current_statement__ = 21;
       context__.validate_dims("data initialization","x","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      x__ = 
+      x_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&x) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x__.data(), N);
+      new (&x) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x_data__.data(), N);
       
       {
         std::vector<local_scalar_t__> x_flat__;
@@ -11949,7 +11949,7 @@ const
 class function_in_function_inline_model final : public model_base_crtp<function_in_function_inline_model> {
 
  private:
-  Eigen::Matrix<double, -1, 1> phi__; 
+  Eigen::Matrix<double, -1, 1> phi_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> phi{nullptr, 0};
  
  public:
@@ -11980,10 +11980,11 @@ class function_in_function_inline_model final : public model_base_crtp<function_
       current_statement__ = 3;
       context__.validate_dims("data initialization","phi","double",
            std::vector<size_t>{static_cast<size_t>(10)});
-      phi__ = 
+      phi_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(10,
           std::numeric_limits<double>::quiet_NaN());
-      new (&phi) Eigen::Map<Eigen::Matrix<double, -1, 1>>(phi__.data(), 10);
+      new (&phi) Eigen::Map<Eigen::Matrix<double, -1, 1>>(phi_data__.data(), 10);
+        
       
       {
         std::vector<local_scalar_t__> phi_flat__;
@@ -17233,7 +17234,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
   int R;
   int T;
   std::vector<std::vector<int>> y;
-  Eigen::Matrix<double, -1, 1> X__;
+  Eigen::Matrix<double, -1, 1> X_data__;
   std::vector<int> sum_y;
   int occ_obs; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> X{nullptr, 0};
@@ -17324,10 +17325,10 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       current_statement__ = 40;
       context__.validate_dims("data initialization","X","double",
            std::vector<size_t>{static_cast<size_t>(R)});
-      X__ = 
+      X_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(R,
           std::numeric_limits<double>::quiet_NaN());
-      new (&X) Eigen::Map<Eigen::Matrix<double, -1, 1>>(X__.data(), R);
+      new (&X) Eigen::Map<Eigen::Matrix<double, -1, 1>>(X_data__.data(), R);
       
       {
         std::vector<local_scalar_t__> X_flat__;
@@ -17930,9 +17931,9 @@ class off_small_model final : public model_base_crtp<off_small_model> {
   int J;
   int N;
   std::vector<int> person;
-  Eigen::Matrix<double, -1, 1> time__;
-  Eigen::Matrix<double, -1, 1> treatment__;
-  Eigen::Matrix<double, -1, 1> y__; 
+  Eigen::Matrix<double, -1, 1> time_data__;
+  Eigen::Matrix<double, -1, 1> treatment_data__;
+  Eigen::Matrix<double, -1, 1> y_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> time{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> treatment{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> y{nullptr, 0};
@@ -18001,10 +18002,11 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 27;
       context__.validate_dims("data initialization","time","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      time__ = 
+      time_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&time) Eigen::Map<Eigen::Matrix<double, -1, 1>>(time__.data(), N);
+      new (&time) Eigen::Map<Eigen::Matrix<double, -1, 1>>(time_data__.data(), N);
+        
       
       {
         std::vector<local_scalar_t__> time_flat__;
@@ -18026,10 +18028,10 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 29;
       context__.validate_dims("data initialization","treatment","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      treatment__ = 
+      treatment_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&treatment) Eigen::Map<Eigen::Matrix<double, -1, 1>>(treatment__.data(), N);
+      new (&treatment) Eigen::Map<Eigen::Matrix<double, -1, 1>>(treatment_data__.data(), N);
         
       
       {
@@ -18052,10 +18054,10 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 31;
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      y__ = 
+      y_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
+      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_data__.data(), N);
       
       {
         std::vector<local_scalar_t__> y_flat__;
@@ -19960,9 +19962,9 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
   int N;
   int n_pair;
   std::vector<int> pair;
-  Eigen::Matrix<double, -1, 1> pre_test__;
-  Eigen::Matrix<double, -1, 1> treatment__;
-  Eigen::Matrix<double, -1, 1> y__; 
+  Eigen::Matrix<double, -1, 1> pre_test_data__;
+  Eigen::Matrix<double, -1, 1> treatment_data__;
+  Eigen::Matrix<double, -1, 1> y_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> pre_test{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> treatment{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> y{nullptr, 0};
@@ -20031,10 +20033,10 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 22;
       context__.validate_dims("data initialization","pre_test","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      pre_test__ = 
+      pre_test_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&pre_test) Eigen::Map<Eigen::Matrix<double, -1, 1>>(pre_test__.data(), N);
+      new (&pre_test) Eigen::Map<Eigen::Matrix<double, -1, 1>>(pre_test_data__.data(), N);
         
       
       {
@@ -20057,10 +20059,10 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 24;
       context__.validate_dims("data initialization","treatment","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      treatment__ = 
+      treatment_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&treatment) Eigen::Map<Eigen::Matrix<double, -1, 1>>(treatment__.data(), N);
+      new (&treatment) Eigen::Map<Eigen::Matrix<double, -1, 1>>(treatment_data__.data(), N);
         
       
       {
@@ -20088,10 +20090,10 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 26;
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      y__ = 
+      y_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
+      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_data__.data(), N);
       
       {
         std::vector<local_scalar_t__> y_flat__;
@@ -20575,8 +20577,8 @@ static constexpr std::array<const char*, 11> locations_array__ =
 class partial_eval_multiply_model final : public model_base_crtp<partial_eval_multiply_model> {
 
  private:
-  Eigen::Matrix<double, -1, -1> m1__;
-  Eigen::Matrix<double, -1, -1> m4__;
+  Eigen::Matrix<double, -1, -1> m1_data__;
+  Eigen::Matrix<double, -1, -1> m4_data__;
   std::vector<int> idx;
   std::vector<int> idy; 
   Eigen::Map<Eigen::Matrix<double, -1, -1>> m1{nullptr, 0, 0};
@@ -20611,10 +20613,10 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
       context__.validate_dims("data initialization","m1","double",
            std::vector<size_t>{static_cast<size_t>(10),
             static_cast<size_t>(10)});
-      m1__ = 
+      m1_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      new (&m1) Eigen::Map<Eigen::Matrix<double, -1, -1>>(m1__.data(), 10, 10);
+      new (&m1) Eigen::Map<Eigen::Matrix<double, -1, -1>>(m1_data__.data(), 10, 10);
         
       
       {
@@ -20640,10 +20642,10 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
       context__.validate_dims("data initialization","m4","double",
            std::vector<size_t>{static_cast<size_t>(10),
             static_cast<size_t>(10)});
-      m4__ = 
+      m4_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      new (&m4) Eigen::Map<Eigen::Matrix<double, -1, -1>>(m4__.data(), 10, 10);
+      new (&m4) Eigen::Map<Eigen::Matrix<double, -1, -1>>(m4_data__.data(), 10, 10);
         
       
       {
@@ -21118,10 +21120,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
   int I;
   std::vector<int> n;
   std::vector<int> N;
-  Eigen::Matrix<double, -1, 1> x1__;
-  Eigen::Matrix<double, -1, 1> x2__;
+  Eigen::Matrix<double, -1, 1> x1_data__;
+  Eigen::Matrix<double, -1, 1> x2_data__;
   int K;
-  Eigen::Matrix<double, -1, 1> x1x2__; 
+  Eigen::Matrix<double, -1, 1> x1x2_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> x1{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> x2{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> x1x2{nullptr, 0};
@@ -21190,10 +21192,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 24;
       context__.validate_dims("data initialization","x1","double",
            std::vector<size_t>{static_cast<size_t>(I)});
-      x1__ = 
+      x1_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(I,
           std::numeric_limits<double>::quiet_NaN());
-      new (&x1) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x1__.data(), I);
+      new (&x1) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x1_data__.data(), I);
       
       {
         std::vector<local_scalar_t__> x1_flat__;
@@ -21215,10 +21217,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 26;
       context__.validate_dims("data initialization","x2","double",
            std::vector<size_t>{static_cast<size_t>(I)});
-      x2__ = 
+      x2_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(I,
           std::numeric_limits<double>::quiet_NaN());
-      new (&x2) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x2__.data(), I);
+      new (&x2) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x2_data__.data(), I);
       
       {
         std::vector<local_scalar_t__> x2_flat__;
@@ -21242,10 +21244,11 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 28;
       stan::math::validate_non_negative_index("x1x2", "I", I);
       current_statement__ = 29;
-      x1x2__ = 
+      x1x2_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(I,
           std::numeric_limits<double>::quiet_NaN());
-      new (&x1x2) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x1x2__.data(), I);
+      new (&x1x2) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x1x2_data__.data(), I);
+        
       
       current_statement__ = 30;
       K = 8;
