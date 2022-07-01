@@ -1,6 +1,53 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v2.30.0 (1 July 2022)
+======================================================================
+
+Complex:
+ - Added complex containers: `complex_matrix`, `complex_vector`, and `complex_row_vector` with basic arithmetic support. (#1133)
+ - Fixed indexing of a complex container to return the correct type. (#1158)
+ - Added many common linear algebra functions and container operations for complex types. (#1166)
+ - Fixed an issue reading in `complex_matrix` in the data block. (#1168)
+ - Added vectorized signatures for `get_real` and `get_imag`, e.g. `get_real(complex_matrix) => matrix`. (#1169)
+ - Added `fft`, `inv_fft`, `fft2`, and `inv_fft2` to the language. (#1170)
+ - `pow` (and subsequently the `^` operator) now have overloads for complex containers. (#1186)
+ - `to_complex` is now vectorized. This means signatures like `to_complex(matrix, matrix) => complex_matrix` are now available. (#1208)
+ - Added signatures for addition, subtraction and division which mix scalars and complex vector types, broadcasting the scalar as appropriate. (#1212)
+ - Added `svd_U`, `svd_V`, `singular_values`, `eigenvalues_sym`, and `eigenvectors_sym` for complex inputs. (#1212)
+
+New functions:
+ - Added `L1` and `L2` norms. (#1140)
+ - Added `log_determinant_spd` which is faster when the input matrix is known to be symmetric and positive definite. (#1178)
+ - Added `wishart_cholesky_lpdf` and `wishart_cholesky_rng` distribution functions. (#1188)
+ - Added `multi_student_t_cholesky_lpdf` and `multi_student_t_cholesky_rng` distribution functions. (#1197)
+ - Added `inv_wishart_cholesky_lpdf` and `inv_wishart_cholesky_rng` distribution functions. (#1202)
+ - Exposes inv_inc_beta. (#1211)
+
+Misc:
+ - Re-enabled function inlining optimizations at O1. (#1097)
+ - Modified the optimizer to turn statements like `3 + 4i` into `to_complex(3,4)` directly. (#1112)
+ - Added `cumulative_sum(Vector/RowVector)` for `var<Matrix>` types. (#1152)
+ - Improved compile times by accumulating all template requirements into a single `require_all_t` on user defined functions. (#1157)
+ - The `--info` and `--debug-generate-data` commands now use the Yojson library for it's output. (#1161, #1175)
+ - Bugfixed for output values in `write_array` that should be `NaN`. (#1165)
+ - `--dump-stan-math-signatures` now prints an entire signature on one line, no matter how long it is. (#1167)
+ - Fix --debug-generate-data for ordered vector data types. (#1173)
+ - Exposed an overload for `cumulative_sum` which takes and returns an array of integers. (#1174)
+ - The javascript interface (stancjs) now generates errors which look more like stanc3's by pointing out where in the supplied code the error occurred. (#1177)
+ - Cleaned up the internal structuring of modules in the compiler. (#1179)
+ - Cleaned up code for pretty printing the Middle Intermediate Representation (MIR). (#1180)
+ - Added `--debug-mem-patterns` flag, which will print out the memory type of variables (either Array of Structs or the more efficient Struct of Arrays pattern) when optimization is enabled. (#1185)
+ - Allowed the adding of new distributions without requiring them to support deprecated suffixes. (#1191)
+ - Added `eigenvectors` and `eigenvalues` functions which return the complex-valued eigenvectors or eigenvalues of a real (asymmetrix) matrix. (#1192)
+ - `abs` is now vectorized for container types. `fabs` is now deprecated, as all usages can be replaced with `abs` thanks to array promotion rules. (#1195)
+ - Made installing the developer tools for the Stanc repository an interactive script with error handling. (#1200)
+ - Internally clean up how variable declarations are represented. (#1203)
+ - Simplified internal representations in the compiler. (#1204)
+ - The pretty-printer now preserves multiple declarations in one line like `int a, b;` rather than splitting them into two declarations. (#1207)
+ - Declarations are now allowed in places they previously would not parse, such as the only statement in the body of an if statement. (#1207)
+ - `./`, `/` `.*`, and `*` now have consistent behavior with scalar arguments. (#1209)
+
 v2.29.2 (25 March 2022)
 ======================================================================
 
