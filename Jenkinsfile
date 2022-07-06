@@ -367,7 +367,7 @@ pipeline {
                                 git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                             """
                             utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
-                            utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", 'feature/tuple-assign')
+                            utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
                             utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
                             sh """
                                 cd performance-tests-cmdstan
@@ -434,7 +434,7 @@ pipeline {
                                 git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                             """
                             utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
-                            utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", 'feature/tuple-assign')
+                            utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
                             utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
                             sh """
                                 cd performance-tests-cmdstan
