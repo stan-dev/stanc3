@@ -35,7 +35,7 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
     writeFile(file:"performance-tests-cmdstan/cmdstan/make/local", text:"CXX=${CXX}")
 
     utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
-    utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", 'feature/tuple-assign')
+    utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
     utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
 
     sh """
