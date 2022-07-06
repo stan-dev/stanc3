@@ -1860,13 +1860,13 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
 
  private:
   int N;
-  Eigen::Matrix<std::complex<double>, -1, -1> cmat__;
-  Eigen::Matrix<std::complex<double>, -1, 1> cvec__;
-  Eigen::Matrix<std::complex<double>, 1, -1> crowvec__;
+  Eigen::Matrix<std::complex<double>, -1, -1> cmat_data__;
+  Eigen::Matrix<std::complex<double>, -1, 1> cvec_data__;
+  Eigen::Matrix<std::complex<double>, 1, -1> crowvec_data__;
   std::complex<double> z;
-  Eigen::Matrix<double, -1, -1> mat__;
-  Eigen::Matrix<double, -1, 1> vec__;
-  Eigen::Matrix<double, 1, -1> rowvec__;
+  Eigen::Matrix<double, -1, -1> mat_data__;
+  Eigen::Matrix<double, -1, 1> vec_data__;
+  Eigen::Matrix<double, 1, -1> rowvec_data__;
   double r; 
   Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>> cmat{nullptr, 0, 0};
   Eigen::Map<Eigen::Matrix<std::complex<double>, -1, 1>> cvec{nullptr, 0};
@@ -1916,10 +1916,10 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       context__.validate_dims("data initialization","cmat","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N), static_cast<size_t>(2)});
-      cmat__ = 
+      cmat_data__ = 
         Eigen::Matrix<std::complex<double>, -1, -1>::Constant(N, N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&cmat) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>>(cmat__.data(), N, N);
+      new (&cmat) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>>(cmat_data__.data(), N, N);
         
       
       {
@@ -1947,10 +1947,10 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       context__.validate_dims("data initialization","cvec","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(2)});
-      cvec__ = 
+      cvec_data__ = 
         Eigen::Matrix<std::complex<double>, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&cvec) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, 1>>(cvec__.data(), N);
+      new (&cvec) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, 1>>(cvec_data__.data(), N);
         
       
       {
@@ -1974,10 +1974,10 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       context__.validate_dims("data initialization","crowvec","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(2)});
-      crowvec__ = 
+      crowvec_data__ = 
         Eigen::Matrix<std::complex<double>, 1, -1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&crowvec) Eigen::Map<Eigen::Matrix<std::complex<double>, 1, -1>>(crowvec__.data(), N);
+      new (&crowvec) Eigen::Map<Eigen::Matrix<std::complex<double>, 1, -1>>(crowvec_data__.data(), N);
         
       
       {
@@ -2013,10 +2013,10 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       context__.validate_dims("data initialization","mat","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N)});
-      mat__ = 
+      mat_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(N, N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&mat) Eigen::Map<Eigen::Matrix<double, -1, -1>>(mat__.data(), N, N);
+      new (&mat) Eigen::Map<Eigen::Matrix<double, -1, -1>>(mat_data__.data(), N, N);
         
       
       {
@@ -2043,10 +2043,11 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       current_statement__ = 123;
       context__.validate_dims("data initialization","vec","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      vec__ = 
+      vec_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&vec) Eigen::Map<Eigen::Matrix<double, -1, 1>>(vec__.data(), N);
+      new (&vec) Eigen::Map<Eigen::Matrix<double, -1, 1>>(vec_data__.data(), N);
+        
       
       {
         std::vector<local_scalar_t__> vec_flat__;
@@ -2068,10 +2069,10 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       current_statement__ = 125;
       context__.validate_dims("data initialization","rowvec","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      rowvec__ = 
+      rowvec_data__ = 
         Eigen::Matrix<double, 1, -1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&rowvec) Eigen::Map<Eigen::Matrix<double, 1, -1>>(rowvec__.data(), N);
+      new (&rowvec) Eigen::Map<Eigen::Matrix<double, 1, -1>>(rowvec_data__.data(), N);
         
       
       {
@@ -3073,13 +3074,13 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
 
  private:
   int N;
-  Eigen::Matrix<std::complex<double>, -1, -1> cmat__;
-  Eigen::Matrix<std::complex<double>, -1, 1> cvec__;
-  Eigen::Matrix<std::complex<double>, 1, -1> crowvec__;
+  Eigen::Matrix<std::complex<double>, -1, -1> cmat_data__;
+  Eigen::Matrix<std::complex<double>, -1, 1> cvec_data__;
+  Eigen::Matrix<std::complex<double>, 1, -1> crowvec_data__;
   std::complex<double> z;
-  Eigen::Matrix<double, -1, -1> mat__;
-  Eigen::Matrix<double, -1, 1> vec__;
-  Eigen::Matrix<double, 1, -1> rowvec__;
+  Eigen::Matrix<double, -1, -1> mat_data__;
+  Eigen::Matrix<double, -1, 1> vec_data__;
+  Eigen::Matrix<double, 1, -1> rowvec_data__;
   double r; 
   Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>> cmat{nullptr, 0, 0};
   Eigen::Map<Eigen::Matrix<std::complex<double>, -1, 1>> cvec{nullptr, 0};
@@ -3129,10 +3130,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       context__.validate_dims("data initialization","cmat","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N), static_cast<size_t>(2)});
-      cmat__ = 
+      cmat_data__ = 
         Eigen::Matrix<std::complex<double>, -1, -1>::Constant(N, N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&cmat) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>>(cmat__.data(), N, N);
+      new (&cmat) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>>(cmat_data__.data(), N, N);
         
       
       {
@@ -3160,10 +3161,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       context__.validate_dims("data initialization","cvec","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(2)});
-      cvec__ = 
+      cvec_data__ = 
         Eigen::Matrix<std::complex<double>, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&cvec) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, 1>>(cvec__.data(), N);
+      new (&cvec) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, 1>>(cvec_data__.data(), N);
         
       
       {
@@ -3187,10 +3188,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       context__.validate_dims("data initialization","crowvec","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(2)});
-      crowvec__ = 
+      crowvec_data__ = 
         Eigen::Matrix<std::complex<double>, 1, -1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&crowvec) Eigen::Map<Eigen::Matrix<std::complex<double>, 1, -1>>(crowvec__.data(), N);
+      new (&crowvec) Eigen::Map<Eigen::Matrix<std::complex<double>, 1, -1>>(crowvec_data__.data(), N);
         
       
       {
@@ -3226,10 +3227,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       context__.validate_dims("data initialization","mat","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N)});
-      mat__ = 
+      mat_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(N, N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&mat) Eigen::Map<Eigen::Matrix<double, -1, -1>>(mat__.data(), N, N);
+      new (&mat) Eigen::Map<Eigen::Matrix<double, -1, -1>>(mat_data__.data(), N, N);
         
       
       {
@@ -3256,10 +3257,11 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       current_statement__ = 147;
       context__.validate_dims("data initialization","vec","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      vec__ = 
+      vec_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&vec) Eigen::Map<Eigen::Matrix<double, -1, 1>>(vec__.data(), N);
+      new (&vec) Eigen::Map<Eigen::Matrix<double, -1, 1>>(vec_data__.data(), N);
+        
       
       {
         std::vector<local_scalar_t__> vec_flat__;
@@ -3281,10 +3283,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       current_statement__ = 149;
       context__.validate_dims("data initialization","rowvec","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      rowvec__ = 
+      rowvec_data__ = 
         Eigen::Matrix<double, 1, -1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&rowvec) Eigen::Map<Eigen::Matrix<double, 1, -1>>(rowvec__.data(), N);
+      new (&rowvec) Eigen::Map<Eigen::Matrix<double, 1, -1>>(rowvec_data__.data(), N);
         
       
       {
@@ -4995,15 +4997,15 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
  private:
   int N;
   std::complex<double> z;
-  Eigen::Matrix<std::complex<double>, -1, 1> z1__;
-  Eigen::Matrix<std::complex<double>, 1, -1> z2__;
-  Eigen::Matrix<std::complex<double>, -1, -1> z3__;
+  Eigen::Matrix<std::complex<double>, -1, 1> z1_data__;
+  Eigen::Matrix<std::complex<double>, 1, -1> z2_data__;
+  Eigen::Matrix<std::complex<double>, -1, -1> z3_data__;
   int M;
   std::vector<std::complex<double>> z4;
   std::vector<Eigen::Matrix<std::complex<double>, -1, 1>> z5;
   std::vector<Eigen::Matrix<std::complex<double>, 1, -1>> z6;
   std::vector<Eigen::Matrix<std::complex<double>, -1, -1>> z7;
-  Eigen::Matrix<std::complex<double>, -1, -1> z8__; 
+  Eigen::Matrix<std::complex<double>, -1, -1> z8_data__; 
   Eigen::Map<Eigen::Matrix<std::complex<double>, -1, 1>> z1{nullptr, 0};
   Eigen::Map<Eigen::Matrix<std::complex<double>, 1, -1>> z2{nullptr, 0};
   Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>> z3{nullptr, 0, 0};
@@ -5058,10 +5060,10 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       context__.validate_dims("data initialization","z1","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(2)});
-      z1__ = 
+      z1_data__ = 
         Eigen::Matrix<std::complex<double>, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&z1) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, 1>>(z1__.data(), N);
+      new (&z1) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, 1>>(z1_data__.data(), N);
         
       
       {
@@ -5085,10 +5087,10 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       context__.validate_dims("data initialization","z2","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(2)});
-      z2__ = 
+      z2_data__ = 
         Eigen::Matrix<std::complex<double>, 1, -1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&z2) Eigen::Map<Eigen::Matrix<std::complex<double>, 1, -1>>(z2__.data(), N);
+      new (&z2) Eigen::Map<Eigen::Matrix<std::complex<double>, 1, -1>>(z2_data__.data(), N);
         
       
       {
@@ -5114,10 +5116,10 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       context__.validate_dims("data initialization","z3","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N), static_cast<size_t>(2)});
-      z3__ = 
+      z3_data__ = 
         Eigen::Matrix<std::complex<double>, -1, -1>::Constant(N, N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&z3) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>>(z3__.data(), N, N);
+      new (&z3) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>>(z3_data__.data(), N, N);
         
       
       {
@@ -5288,10 +5290,10 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       context__.validate_dims("data initialization","z8","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(M), static_cast<size_t>(2)});
-      z8__ = 
+      z8_data__ = 
         Eigen::Matrix<std::complex<double>, -1, -1>::Constant(N, M,
           std::numeric_limits<double>::quiet_NaN());
-      new (&z8) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>>(z8__.data(), N, M);
+      new (&z8) Eigen::Map<Eigen::Matrix<std::complex<double>, -1, -1>>(z8_data__.data(), N, M);
         
       
       {
