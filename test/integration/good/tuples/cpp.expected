@@ -6000,8 +6000,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
         "assigning variable V2");
       current_statement__ = 9;
       stan::model::assign(CV,
-        stan::math::promote_scalar<std::tuple<Eigen::Matrix<std::complex<double>, -1, 1>,
-                                              double>>(V2),
+        stan::math::promote_scalar<std::tuple<std::complex<double>, double>>(V2),
         "assigning variable CV");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

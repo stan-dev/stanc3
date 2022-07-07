@@ -5166,7 +5166,7 @@
           (meta
            ((type_ (UTuple (UVector UInt))) (loc <opaque>)
             (adlevel (TupleAD (DataOnly DataOnly))))))
-         (UTuple (UComplexVector UReal)) (TupleAD (DataOnly DataOnly))))
+         (UTuple (UComplex UReal)) (TupleAD (DataOnly DataOnly))))
        (meta
         ((type_ (UTuple (UComplexVector UReal))) (loc <opaque>)
          (adlevel (TupleAD (DataOnly DataOnly))))))))

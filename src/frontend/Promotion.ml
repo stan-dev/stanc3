@@ -14,7 +14,7 @@ type t =
   | RealToComplex
   | TuplePromotion of t list
 
-let rec promote_unsized_type (typ : UnsizedType.t)
+let rec promote_unsized_type ~scalar (typ : UnsizedType.t)
     (ad : UnsizedType.autodifftype) (prom : t) =
   match (prom, typ, ad) with
   | IntToReal, UInt, _ -> (UnsizedType.UReal, ad)
@@ -23,19 +23,18 @@ let rec promote_unsized_type (typ : UnsizedType.t)
   | IntToComplex, UInt, _ | RealToComplex, UReal, _ -> (UComplex, ad)
   | TuplePromotion proms, UTuple ts, TupleAD ads ->
       let typs, ads =
-        List.unzip @@ List.map3_exn ~f:promote_unsized_type ts ads proms in
+        List.unzip
+        @@ List.map3_exn ~f:(promote_unsized_type ~scalar) ts ads proms in
       (UTuple typs, TupleAD ads)
   | _, UArray t, _ ->
-      let t, ads = promote_unsized_type t ad prom in
+      let t, ads = promote_unsized_type ~scalar t ad prom in
       (UArray t, ads)
   | RealToComplex, _, _ when UnsizedType.is_eigen_type typ ->
-      (* TUPLE TODO: does this do the right thing when you have
-         tuple(complex_vector,) = (vector,)
-         ?
-      *)
-      (UnsizedType.promote_container typ UComplex, ad)
+      if scalar then (UComplex, ad)
+      else (UnsizedType.promote_container typ UComplex, ad)
   | ToComplexVar, _, _ when UnsizedType.is_eigen_type typ ->
-      (UnsizedType.promote_container typ UComplex, AutoDiffable)
+      if scalar then (UComplex, AutoDiffable)
+      else (UnsizedType.promote_container typ UComplex, AutoDiffable)
   | (IntToReal | ToVar | ToComplexVar | IntToComplex), _, _ ->
       failwith "TRAPPED 1" (* TUPLE TODO: PROMOTION *)
   | _, _, TupleAD _ -> failwith "trapped 3" (* TUPLE TODO: PROMOTION *)
@@ -72,15 +71,15 @@ let promote_inner (exp : Ast.typed_expression) prom =
           {emeta with type_= UnsizedType.promote_container emeta.type_ UComplex}
       }
   | TuplePromotion _ -> (
-      let scalar = fst (UnsizedType.unwind_array_type emeta.type_) in
-      match scalar with
+      let element = fst (UnsizedType.unwind_array_type emeta.type_) in
+      match element with
       | UTuple _ ->
           let prom_type, prom_ad =
-            promote_unsized_type scalar emeta.ad_level prom in
+            promote_unsized_type ~scalar:true element emeta.ad_level prom in
+          let type_, ad_level =
+            promote_unsized_type ~scalar:false element emeta.ad_level prom in
           { expr= Promotion (exp, prom_type, prom_ad)
-          ; emeta=
-              { emeta with
-                type_= UnsizedType.promote_container emeta.type_ prom_type } }
+          ; emeta= {emeta with type_; ad_level} }
       | _ -> exp
       (* TUPLE MAYBE: PROMOTION *) )
   | _ -> exp
