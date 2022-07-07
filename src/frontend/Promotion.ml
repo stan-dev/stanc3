@@ -28,7 +28,7 @@ let rec promote_unsized_type ~scalar (typ : UnsizedType.t)
       (UTuple typs, TupleAD ads)
   | _, UArray t, _ ->
       let t, ads = promote_unsized_type ~scalar t ad prom in
-      (UArray t, ads)
+      if scalar then (t, ads) else (UArray t, ads)
   | RealToComplex, _, _ when UnsizedType.is_eigen_type typ ->
       if scalar then (UComplex, ad)
       else (UnsizedType.promote_container typ UComplex, ad)
