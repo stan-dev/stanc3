@@ -121,6 +121,10 @@ let rec common_type = function
   | UComplexMatrix, UMatrix | UMatrix, UComplexMatrix -> Some UComplexMatrix
   | UArray t1, UArray t2 ->
       common_type (t1, t2) |> Option.map ~f:(fun t -> UArray t)
+  | UTuple ts1, UTuple ts2 ->
+      ( try List.zip_exn ts1 ts2 |> List.map ~f:common_type |> Option.all
+        with _ -> None )
+      |> Option.map ~f:(fun ts -> UTuple ts)
   | t1, t2 when t1 = t2 -> Some t1
   | _, _ -> None
 
@@ -151,9 +155,10 @@ let promote_container ut scalar =
   let rec loop ut =
     match (ut, scalar) with
     | (UInt | UReal), (UReal | UComplex) -> scalar
-    | URowVector, UComplexRowVector -> UComplexRowVector
-    | UVector, UComplexVector -> UComplexVector
-    | UMatrix, UComplexMatrix -> UComplexMatrix
+    | UTuple _, UTuple _ -> scalar
+    | URowVector, (UComplexRowVector | UComplex) -> UComplexRowVector
+    | UVector, (UComplexVector | UComplex) -> UComplexVector
+    | UMatrix, (UComplexMatrix | UComplex) -> UComplexMatrix
     | UArray ut2, _ -> UArray (loop ut2)
     | _, _ -> ut in
   loop ut

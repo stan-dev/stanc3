@@ -50,13 +50,13 @@ matrix[10, 10] A_p: AoS
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable A_complex_tp) UMatrix
+     (Assignment (LVariable A_complex_tp) UComplexMatrix
       ((pattern
         (Promotion
          ((pattern (Var A_p))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
          UComplex AutoDiffable))
-       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+       (meta ((type_ UComplexMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))))
  (generate_quantities
   (((pattern
@@ -122,13 +122,13 @@ matrix[10, 10] A_p: AoS
       ()))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable A_complex_tp) UMatrix
+     (Assignment (LVariable A_complex_tp) UComplexMatrix
       ((pattern
         (Promotion
          ((pattern (Var A_p))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
          UComplex AutoDiffable))
-       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+       (meta ((type_ UComplexMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (IfElse

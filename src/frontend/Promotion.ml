@@ -12,8 +12,34 @@ type t =
   | ToComplexVar (* used in arrays, not functions *)
   | IntToComplex
   | RealToComplex
-(* TUPLE TODO
-   | TuplePromotion of t list *)
+  | TuplePromotion of t list
+
+let rec promote_unsized_type (typ : UnsizedType.t)
+    (ad : UnsizedType.autodifftype) (prom : t) =
+  match (prom, typ, ad) with
+  | IntToReal, UInt, _ -> (UnsizedType.UReal, ad)
+  | ToVar, (UReal | UInt), _ -> (UReal, AutoDiffable)
+  | ToComplexVar, (UComplex | UReal | UInt), _ -> (UComplex, AutoDiffable)
+  | IntToComplex, UInt, _ | RealToComplex, UReal, _ -> (UComplex, ad)
+  | TuplePromotion proms, UTuple ts, TupleAD ads ->
+      let typs, ads =
+        List.unzip @@ List.map3_exn ~f:promote_unsized_type ts ads proms in
+      (UTuple typs, TupleAD ads)
+  | _, UArray t, _ ->
+      let t, ads = promote_unsized_type t ad prom in
+      (UArray t, ads)
+  | RealToComplex, _, _ when UnsizedType.is_eigen_type typ ->
+      (* TUPLE TODO: does this do the right thing when you have
+         tuple(complex_vector,) = (vector,)
+         ?
+      *)
+      (UnsizedType.promote_container typ UComplex, ad)
+  | ToComplexVar, _, _ when UnsizedType.is_eigen_type typ ->
+      (UnsizedType.promote_container typ UComplex, AutoDiffable)
+  | (IntToReal | ToVar | ToComplexVar | IntToComplex), _, _ ->
+      failwith "TRAPPED 1" (* TUPLE TODO: PROMOTION *)
+  | _, _, TupleAD _ -> failwith "trapped 3" (* TUPLE TODO: PROMOTION *)
+  | _, _, _ -> (typ, ad)
 
 let promote_inner (exp : Ast.typed_expression) prom =
   let emeta = exp.emeta in
@@ -45,6 +71,18 @@ let promote_inner (exp : Ast.typed_expression) prom =
       ; emeta=
           {emeta with type_= UnsizedType.promote_container emeta.type_ UComplex}
       }
+  | TuplePromotion _ -> (
+      let scalar = fst (UnsizedType.unwind_array_type emeta.type_) in
+      match scalar with
+      | UTuple _ ->
+          let prom_type, prom_ad =
+            promote_unsized_type scalar emeta.ad_level prom in
+          { expr= Promotion (exp, prom_type, prom_ad)
+          ; emeta=
+              { emeta with
+                type_= UnsizedType.promote_container emeta.type_ prom_type } }
+      | _ -> exp
+      (* TUPLE MAYBE: PROMOTION *) )
   | _ -> exp
 
 let rec promote (exp : Ast.typed_expression) prom =
@@ -72,6 +110,17 @@ let rec promote (exp : Ast.typed_expression) prom =
         | UComplex -> UComplexRowVector
         | _ -> URowVector in
       {expr= RowVectorExpr pes; emeta= {exp.emeta with type_; ad_level}}
+  | TupleExpr (_ :: _ as es) -> (
+    match prom with
+    | TuplePromotion ts ->
+        let pes = List.map2_exn ~f:promote es ts in
+        let type_ =
+          UnsizedType.UTuple (List.map ~f:(fun e -> e.emeta.type_) pes) in
+        let ad_level =
+          UnsizedType.TupleAD (List.map ~f:(fun e -> e.emeta.ad_level) pes)
+        in
+        {expr= TupleExpr pes; emeta= {exp.emeta with type_; ad_level}}
+    | _ -> exp (* TUPLE MAYBE: PROMOTION *) )
   | _ -> promote_inner exp prom
 
 let promote_list es promotions = List.map2_exn es promotions ~f:promote
@@ -99,6 +148,11 @@ let rec get_type_promotion_exn (ad_orig, ty_orig) (ad_expect, ty_expect) =
       RealToComplex
   | UArray nt1, UArray nt2 ->
       get_type_promotion_exn (ad_orig, nt1) (ad_expect, nt2)
+  | UTuple ts1, UTuple ts2 ->
+      TuplePromotion
+        (List.map2_exn
+           ~f:(fun t1 t2 -> get_type_promotion_exn (ad_orig, t1) (ad_expect, t2))
+           ts1 ts2 )
   | t1, t2 when t1 = t2 -> NoPromotion
   | _, _ ->
       Common.FatalError.fatal_error_msg
@@ -110,8 +164,9 @@ let rec get_type_promotion_exn (ad_orig, ty_orig) (ad_expect, ty_expect) =
 (** Calculate the "cost"/number of promotions performed.
     Used to disambiguate function signatures
 *)
-let promotion_cost p =
+let rec promotion_cost p =
   match p with
   | NoPromotion | ToVar | ToComplexVar -> 0
   | RealToComplex | IntToReal -> 1
   | IntToComplex -> 2
+  | TuplePromotion ts -> List.sum (module Int) ~f:promotion_cost ts

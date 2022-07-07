@@ -6052,4 +6052,4 @@ program: MODELBLOCK LBRACE LPAREN COMPLEX COMMA COMPLEX RPAREN UNREACHABLE
 ## tuple_type(sized_basic_type)
 ##
 
-Should be impossible! Please report a bug with this model attached.
+Expected identifier as part of top-level variable declaration.

@@ -306,12 +306,10 @@ let get_consistent_types ad_level type_ es =
     UnsizedType.lub_ad_type
       (ad_level :: List.map ~f:(fun e -> e.emeta.ad_level) es) in
   let f state e =
-    match state with
-    | Error e -> Error e
-    | Ok ty -> (
-      match UnsizedType.common_type (ty, e.emeta.type_) with
-      | Some ty -> Ok ty
-      | None -> Error (ty, e.emeta) ) in
+    Result.bind state ~f:(fun ty ->
+        match UnsizedType.common_type (ty, e.emeta.type_) with
+        | Some ty -> Ok ty
+        | None -> Error (ty, e.emeta) ) in
   List.fold ~init:(Ok type_) ~f es
   |> Result.map ~f:(fun ty ->
          let promotions =

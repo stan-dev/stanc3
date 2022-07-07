@@ -155,6 +155,15 @@ let rec check_same_type depth t1 t2 =
       |> Result.map_error ~f:(function
            | TypeMismatch _ -> TypeMismatch (t1, t2, None)
            | e -> e )
+  | UTuple nts1, UTuple nts2 -> (
+    match List.map2 ~f:(check_same_type depth) nts1 nts2 with
+    | List.Or_unequal_lengths.Unequal_lengths ->
+        Error (TypeMismatch (t1, t2, None))
+    | Ok proms_res -> (
+      match Result.all proms_res with
+      | Ok proms -> Ok (TuplePromotion proms)
+      | Error (TypeMismatch _) -> Error (TypeMismatch (t1, t2, None))
+      | Error e -> Error e ) )
   | UFun (_, _, s1, _), UFun (_, _, s2, _)
     when Fun_kind.without_propto s1 <> Fun_kind.without_propto s2 ->
       Error
