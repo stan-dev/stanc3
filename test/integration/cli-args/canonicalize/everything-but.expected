@@ -181,29 +181,29 @@ Warning in 'deprecated.stan', line 5, column 12: assignment operator <- is
     deprecated in the Stan language and will be removed in Stan 2.32.0; use =
     instead. This can be done automatically with the canonicalize flag for
     stanc
-Warning in 'deprecated.stan', line 34, column 2: Declaration of arrays by
+Warning in 'deprecated.stan', line 35, column 2: Declaration of arrays by
     placing brackets after a variable name is deprecated and will be removed
     in Stan 2.32.0. Instead use the array keyword before the type. This can
     be changed automatically using the auto-format flag to stanc
-Warning in 'deprecated.stan', line 54, column 4: increment_log_prob(...); is
+Warning in 'deprecated.stan', line 56, column 4: increment_log_prob(...); is
     deprecated and will be removed in Stan 2.32.0. Use target += ...;
     instead. This can be done automatically with the canonicalize flag for
     stanc
-Warning in 'deprecated.stan', line 58, column 4: increment_log_prob(...); is
+Warning in 'deprecated.stan', line 60, column 4: increment_log_prob(...); is
     deprecated and will be removed in Stan 2.32.0. Use target += ...;
     instead. This can be done automatically with the canonicalize flag for
     stanc
-Warning in 'deprecated.stan', line 78, column 20: get_lp() function is
+Warning in 'deprecated.stan', line 81, column 20: get_lp() function is
     deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
     can be done automatically with the canonicalize flag for stanc
-Semantic error in 'deprecated.stan', line 46, column 6 to column 18:
+Semantic error in 'deprecated.stan', line 48, column 6 to column 18:
    -------------------------------------------------
-    44:    target += binomial_coefficient_log(10, 10);
-    45:  
-    46:    c ~ poisson_lpmf(3.0);
+    46:    target += binomial_coefficient_log(10, 10);
+    47:  
+    48:    c ~ poisson_lpmf(3.0);
                ^
-    47:    c ~ poisson_log(3.0);
-    48:    c ~ poisson_log_log(3.0);
+    49:    c ~ poisson_log(3.0);
+    50:    c ~ poisson_log_log(3.0);
    -------------------------------------------------
 
 ~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.

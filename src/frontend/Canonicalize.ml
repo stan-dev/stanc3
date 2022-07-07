@@ -85,7 +85,27 @@ let rec replace_deprecated_expr
           , replace_boolean_real ~parens:true deprecated_userdefined e2 )
     | BinOp (({expr= BinOp (_, op1, _); _} as e1), op2, e2)
       when Middle.Operator.(is_cmp op1 && is_cmp op2) ->
-        BinOp ({e1 with expr= Paren e1}, op2, e2)
+        BinOp
+          ( { e1 with
+              expr= Paren (replace_deprecated_expr deprecated_userdefined e1) }
+          , op2
+          , replace_deprecated_expr deprecated_userdefined e2 )
+    | BinOp
+        ( ({emeta= {type_= UInt; _}; _} as e1)
+        , Divide
+        , ({emeta= {type_= UInt; _}; _} as e2) ) ->
+        BinOp
+          ( replace_deprecated_expr deprecated_userdefined e1
+          , IntDivide
+          , replace_deprecated_expr deprecated_userdefined e2 )
+    | BinOp
+        ( ({emeta= {type_= UArray UMatrix | UMatrix; _}; _} as e1)
+        , Pow
+        , ({emeta= {type_= UInt | UReal; _}; _} as e2) ) ->
+        BinOp
+          ( replace_deprecated_expr deprecated_userdefined e1
+          , EltPow
+          , replace_deprecated_expr deprecated_userdefined e2 )
     | _ ->
         map_expression
           (replace_deprecated_expr deprecated_userdefined)

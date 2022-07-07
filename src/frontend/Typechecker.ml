@@ -800,7 +800,8 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                  desired you can write the division as"
                 hint () Fmt.text
                 "If rounding is intended please use the integer division \
-                 operator %/%." in
+                 operator %/%. This can be automatically changed using the \
+                 canonicalize flag for stanc" in
             add_warning x.emeta.loc s
         | (UArray UMatrix | UMatrix), (UInt | UReal), Pow ->
             let s =

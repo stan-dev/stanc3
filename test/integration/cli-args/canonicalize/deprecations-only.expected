@@ -160,12 +160,14 @@ transformed data {
   real b = 1.5;
   int c = abs(a);
   real d = abs(b);
+  int e = a %/% c;
   array[0] int x_i;
   array[0] real x_r;
   matrix[N, N] K = gp_exp_quad_cov(x_quad, 1.0, 1.0);
   array[5, 5] real idxs;
   idxs[1][ : ] = idxs[1][ : ];
   idxs[ : , 1] = idxs[ : ][2];
+  matrix[N, N] S = K .^ 2;
 }
 parameters {
   real x;
@@ -194,6 +196,7 @@ model {
   }
   
   int bool = !(b != 0.0) < 2 && (d != 0.0) || (x != 0.0);
+  bool = ((1 < 2) > 3) < 4;
   
   target += normal_lpdf(x | 0, 1) + normal_lcdf(2 | 0, 1)
             + normal_lccdf(3 | 0, 1);
@@ -220,11 +223,28 @@ generated quantities {
                                                      x_r, x_i);
 }
 
-Warning in 'deprecated.stan', line 36, column 2: Nested multi-indexing on the
+Warning in 'deprecated.stan', line 31, column 10: Found int division:
+      a / c
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      a * 1.0 / c
+    If rounding is intended please use the integer division operator %/%.
+    This
+    can be automatically changed using the canonicalize flag for stanc
+Warning in 'deprecated.stan', line 37, column 2: Nested multi-indexing on the
     left hand side of assignment does not behave the same as nested indexing
     in expressions. This is considered a bug and will be disallowed in Stan
     2.32.0. The indexing can be automatically fixed using the canonicalize
     flag for stanc.
+Warning in 'deprecated.stan', line 38, column 18: Found matrix^scalar:
+      K ^ 2
+    matrix ^ number is interpreted as element-wise exponentiation. If this
+    is
+    intended, you can silence this warning by using elementwise operator .^
+    If you intended matrix exponentiation, use the
+    function
+    matrix_power(matrix,int) instead.
   $ ../../../../../install/default/bin/stanc --auto-format --canonicalize deprecations funs.stanfunctions
 // comment test comment
 void test(int x, int y) {
