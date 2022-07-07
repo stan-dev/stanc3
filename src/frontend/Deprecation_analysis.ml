@@ -137,6 +137,40 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
                 ) ]
           | _ -> [] ) in
       acc @ w @ List.concat_map l ~f:(fun e -> collect_deprecated_expr [] e)
+  | PrefixOp (PNot, ({emeta= {type_= UReal; loc; _}; _} as e)) ->
+      let acc =
+        acc
+        @ [ ( loc
+            , "Using a real as a boolean value is deprecated and will be \
+               disallowed in Stan 2.34. Use an explicit != 0 comparison \
+               instead." ) ] in
+      collect_deprecated_expr acc e
+  | BinOp (({emeta= {type_= UReal; loc; _}; _} as e1), (And | Or), e2)
+   |BinOp (e1, (And | Or), ({emeta= {type_= UReal; loc; _}; _} as e2)) ->
+      let acc =
+        acc
+        @ [ ( loc
+            , "Using a real as a boolean value is deprecated and will be \
+               disallowed in Stan 2.34. Use an explicit != 0 comparison \
+               instead." ) ] in
+      let acc = collect_deprecated_expr acc e1 in
+      let acc = collect_deprecated_expr acc e2 in
+      acc
+  | BinOp ({expr= BinOp (e1, op1, e2); emeta= {loc; _}}, op2, e3)
+    when Operator.(is_cmp op1 && is_cmp op2) ->
+      let pp = Operator.pp in
+      let acc =
+        acc
+        @ [ ( loc
+            , Fmt.str
+                "Found x %a y %a z. This is interpreted as (x %a y) %a z but \
+                 that will change in Stan 2.34. Consider if the intended \
+                 meaning was x %a y && y %a z"
+                pp op1 pp op2 pp op1 pp op2 pp op1 pp op2 ) ] in
+      let acc = collect_deprecated_expr acc e1 in
+      let acc = collect_deprecated_expr acc e2 in
+      let acc = collect_deprecated_expr acc e3 in
+      acc
   | _ -> fold_expression collect_deprecated_expr (fun l _ -> l) acc expr
 
 let collect_deprecated_lval acc l =
@@ -162,6 +196,21 @@ let rec collect_deprecated_stmt (acc : (Location_span.t * string) list) {stmt; _
                  inside of it." ) ] in
       collect_deprecated_stmt acc body
   | FunDef {body; _} -> collect_deprecated_stmt acc body
+  | IfThenElse ({emeta= {type_= UReal; loc; _}; _}, ifb, elseb) ->
+      let acc =
+        acc
+        @ [ ( loc
+            , "Condition of type real is deprecated and will be disallowed in \
+               Stan 2.34. Use an explicit != 0 comparison instead." ) ] in
+      let acc = collect_deprecated_stmt acc ifb in
+      Option.value_map ~default:acc ~f:(collect_deprecated_stmt acc) elseb
+  | While ({emeta= {type_= UReal; loc; _}; _}, body) ->
+      let acc =
+        acc
+        @ [ ( loc
+            , "Condition of type real is deprecated and will be disallowed in \
+               Stan 2.34. Use an explicit != 0 comparison instead." ) ] in
+      collect_deprecated_stmt acc body
   | _ ->
       fold_statement collect_deprecated_expr collect_deprecated_stmt
         collect_deprecated_lval

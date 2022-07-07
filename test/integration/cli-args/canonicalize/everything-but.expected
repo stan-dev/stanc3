@@ -193,7 +193,7 @@ Warning in 'deprecated.stan', line 58, column 4: increment_log_prob(...); is
     deprecated and will be removed in Stan 2.32.0. Use target += ...;
     instead. This can be done automatically with the canonicalize flag for
     stanc
-Warning in 'deprecated.stan', line 73, column 20: get_lp() function is
+Warning in 'deprecated.stan', line 78, column 20: get_lp() function is
     deprecated. It will be removed in Stan 2.32.0. Use target() instead. This
     can be done automatically with the canonicalize flag for stanc
 Semantic error in 'deprecated.stan', line 46, column 6 to column 18:

@@ -2545,7 +2545,7 @@ Warning in 'pound-comment-deprecated.stan', line 2, column 2: Comments
   $ ../../../../../install/default/bin/stanc --auto-format unreachable_statement.stan
 functions {
   void foo(real x) {
-    if (x) 
+    if (x == 0.0) 
       ; // bug - misplaced ; makes the next statement unconditional
     reject("Cannot be 0");
     return;

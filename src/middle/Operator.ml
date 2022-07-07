@@ -28,6 +28,10 @@ type t =
   | Transpose
 [@@deriving sexp, hash, compare]
 
+let is_cmp = function
+  | Equals | NEquals | Less | Leq | Greater | Geq -> true
+  | _ -> false
+
 let pp ppf = function
   | Plus | PPlus -> Fmt.pf ppf "+"
   | Minus | PMinus -> Fmt.pf ppf "-"
