@@ -21796,9 +21796,7 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
       local_scalar_t__ param;
       current_statement__ = 1;
       param = in__.template read<local_scalar_t__>();
-      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> local =
-         std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(2, 
-           Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(5, DUMMY_VAR__));
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> local;
       current_statement__ = 2;
       stan::model::assign(local, inputs, "assigning variable local");
       current_statement__ = 7;

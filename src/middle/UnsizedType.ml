@@ -61,6 +61,10 @@ let rec unwind_array_type = function
   | UArray ut -> ( match unwind_array_type ut with ut2, d -> (ut2, d + 1) )
   | ut -> (ut, 0)
 
+let rec wind_array_type = function
+  | typ, 0 -> typ
+  | typ, n -> wind_array_type (UArray typ, n - 1)
+
 let rec pp ppf = function
   | UInt -> Fmt.string ppf "int"
   | UReal -> Fmt.string ppf "real"

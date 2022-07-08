@@ -27374,6 +27374,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     (void) function__;  // suppress unused var warning
     
     try {
+      double lcm_sym58__;
       double lcm_sym57__;
       double lcm_sym56__;
       double lcm_sym55__;
@@ -27885,7 +27886,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           }
         }
         double dataonlyvar;
-        current_statement__ = 80;
         dataonlyvar = 3;
         current_statement__ = 81;
         lp_accum__.add(dataonlyvar);
@@ -28093,25 +28093,25 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     
     param_names__.emplace_back(std::string() + "theta");
     param_names__.emplace_back(std::string() + "phi");
-    for (int sym58__ = 1; sym58__ <= 2; ++sym58__) {
+    for (int sym59__ = 1; sym59__ <= 2; ++sym59__) {
       {
-        for (int sym59__ = 1; sym59__ <= 3; ++sym59__) {
+        for (int sym60__ = 1; sym60__ <= 3; ++sym60__) {
           {
-            param_names__.emplace_back(std::string() + "x_matrix" + '.' + std::to_string(sym59__) + '.' + std::to_string(sym58__));
+            param_names__.emplace_back(std::string() + "x_matrix" + '.' + std::to_string(sym60__) + '.' + std::to_string(sym59__));
           } 
         }
       } 
     }
-    for (int sym58__ = 1; sym58__ <= 2; ++sym58__) {
+    for (int sym59__ = 1; sym59__ <= 2; ++sym59__) {
       {
-        param_names__.emplace_back(std::string() + "x_vector" + '.' + std::to_string(sym58__));
+        param_names__.emplace_back(std::string() + "x_vector" + '.' + std::to_string(sym59__));
       } 
     }
-    for (int sym58__ = 1; sym58__ <= 2; ++sym58__) {
+    for (int sym59__ = 1; sym59__ <= 2; ++sym59__) {
       {
-        for (int sym59__ = 1; sym59__ <= 2; ++sym59__) {
+        for (int sym60__ = 1; sym60__ <= 2; ++sym60__) {
           {
-            param_names__.emplace_back(std::string() + "x_cov" + '.' + std::to_string(sym59__) + '.' + std::to_string(sym58__));
+            param_names__.emplace_back(std::string() + "x_cov" + '.' + std::to_string(sym60__) + '.' + std::to_string(sym59__));
           } 
         }
       } 
@@ -28134,23 +28134,23 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     
     param_names__.emplace_back(std::string() + "theta");
     param_names__.emplace_back(std::string() + "phi");
-    for (int sym58__ = 1; sym58__ <= 2; ++sym58__) {
+    for (int sym59__ = 1; sym59__ <= 2; ++sym59__) {
       {
-        for (int sym59__ = 1; sym59__ <= 3; ++sym59__) {
+        for (int sym60__ = 1; sym60__ <= 3; ++sym60__) {
           {
-            param_names__.emplace_back(std::string() + "x_matrix" + '.' + std::to_string(sym59__) + '.' + std::to_string(sym58__));
+            param_names__.emplace_back(std::string() + "x_matrix" + '.' + std::to_string(sym60__) + '.' + std::to_string(sym59__));
           } 
         }
       } 
     }
-    for (int sym58__ = 1; sym58__ <= 2; ++sym58__) {
+    for (int sym59__ = 1; sym59__ <= 2; ++sym59__) {
       {
-        param_names__.emplace_back(std::string() + "x_vector" + '.' + std::to_string(sym58__));
+        param_names__.emplace_back(std::string() + "x_vector" + '.' + std::to_string(sym59__));
       } 
     }
-    for (int sym58__ = 1; sym58__ <= 3; ++sym58__) {
+    for (int sym59__ = 1; sym59__ <= 3; ++sym59__) {
       {
-        param_names__.emplace_back(std::string() + "x_cov" + '.' + std::to_string(sym58__));
+        param_names__.emplace_back(std::string() + "x_cov" + '.' + std::to_string(sym59__));
       } 
     }
     if (emit_transformed_parameters__) {

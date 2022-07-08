@@ -1505,6 +1505,8 @@ and check_var_decl_initial_value loc cf tenv {identifier; initial_value} =
       let lhs =
         check_lvalue cf tenv {lval= LVariable identifier; lmeta= {loc}} in
       let rhs = check_expression cf tenv e in
+      let rhs =
+        {rhs with emeta= {rhs.emeta with ad_level= lhs.lmeta.ad_level}} in
       match
         SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_
           rhs.emeta.type_

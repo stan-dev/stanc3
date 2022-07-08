@@ -12155,7 +12155,7 @@ matrix[10, 10] mul_two_aos: AoS
    ((pattern
      (Assignment (LVariable empty_user_func_aos) UMatrix
       ((pattern (FunApp (UserDefined empty_user_func FnPlain) ()))
-       (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id inner_empty_user_func_aos)
@@ -12399,7 +12399,7 @@ matrix[10, 10] mul_two_aos: AoS
    ((pattern
      (Assignment (LVariable empty_user_func_aos) UMatrix
       ((pattern (FunApp (UserDefined empty_user_func FnPlain) ()))
-       (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (Assignment (LVariable inner_empty_user_func_aos) UMatrix

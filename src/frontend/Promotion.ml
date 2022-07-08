@@ -13,6 +13,7 @@ type t =
   | IntToComplex
   | RealToComplex
   | TuplePromotion of t list
+[@@deriving sexp]
 
 let rec promote_unsized_type ~scalar (typ : UnsizedType.t)
     (ad : UnsizedType.autodifftype) (prom : t) =
@@ -26,17 +27,29 @@ let rec promote_unsized_type ~scalar (typ : UnsizedType.t)
         List.unzip
         @@ List.map3_exn ~f:(promote_unsized_type ~scalar) ts ads proms in
       (UTuple typs, TupleAD ads)
+  | TuplePromotion proms, UTuple ts, ad ->
+      let typs, ads =
+        List.unzip
+        @@ List.map2_exn
+             ~f:(fun ts proms -> promote_unsized_type ~scalar ts ad proms)
+             ts proms in
+      (UTuple typs, TupleAD ads)
   | _, UArray t, _ ->
       let t, ads = promote_unsized_type ~scalar t ad prom in
       if scalar then (t, ads) else (UArray t, ads)
+  | ToVar, _, _ when UnsizedType.is_eigen_type typ ->
+      if scalar then (UReal, AutoDiffable) else (typ, AutoDiffable)
   | RealToComplex, _, _ when UnsizedType.is_eigen_type typ ->
       if scalar then (UComplex, ad)
       else (UnsizedType.promote_container typ UComplex, ad)
   | ToComplexVar, _, _ when UnsizedType.is_eigen_type typ ->
       if scalar then (UComplex, AutoDiffable)
       else (UnsizedType.promote_container typ UComplex, AutoDiffable)
+  | NoPromotion, _, _ ->
+      if scalar then (UnsizedType.internal_scalar typ, ad) else (typ, ad)
   | (IntToReal | ToVar | ToComplexVar | IntToComplex), _, _ ->
       failwith "TRAPPED 1" (* TUPLE TODO: PROMOTION *)
+  | TuplePromotion _, _, _ -> failwith "trapped 6" (* TUPLE TODO: PROMOTION *)
   | _, _, TupleAD _ -> failwith "trapped 3" (* TUPLE TODO: PROMOTION *)
   | _, _, _ -> (typ, ad)
 
@@ -71,13 +84,14 @@ let promote_inner (exp : Ast.typed_expression) prom =
           {emeta with type_= UnsizedType.promote_container emeta.type_ UComplex}
       }
   | TuplePromotion _ -> (
-      let element = fst (UnsizedType.unwind_array_type emeta.type_) in
+      let element, size = UnsizedType.unwind_array_type emeta.type_ in
       match element with
       | UTuple _ ->
           let prom_type, prom_ad =
             promote_unsized_type ~scalar:true element emeta.ad_level prom in
           let type_, ad_level =
             promote_unsized_type ~scalar:false element emeta.ad_level prom in
+          let type_ = UnsizedType.wind_array_type (type_, size) in
           { expr= Promotion (exp, prom_type, prom_ad)
           ; emeta= {emeta with type_; ad_level} }
       | _ -> exp

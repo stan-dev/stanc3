@@ -64,6 +64,8 @@ let is_data_matrix_or_not_int_type = function
 let template_parameter_names (args : Program.fun_arg_decl) =
   List.mapi args ~f:(fun i arg ->
       match is_data_matrix_or_not_int_type arg with
+      (* TUPLE TODO: We need one template param per
+         (flattened) tuple item. Gonna be a bit of a pain. *)
       | true -> Some (sprintf "T%d__" i)
       | false -> None )
 

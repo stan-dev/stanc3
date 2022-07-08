@@ -5102,6 +5102,43 @@
        (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
+     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id arrs)
+      (decl_type
+       (Sized
+        (SArray
+         (STuple
+          (SInt
+           (SArray SInt
+            ((pattern (Lit Int 2))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+         ((pattern (Lit Int 4))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Decl
+      (decl_adtype
+       (TupleAD
+        ((TupleAD (DataOnly DataOnly)) DataOnly
+         (TupleAD (DataOnly DataOnly)))))
+      (decl_id nested)
+      (decl_type
+       (Sized
+        (STuple
+         ((STuple
+           (SInt
+            (SArray SInt
+             ((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          SInt
+          (STuple
+           ((SVector AoS
+             ((pattern (Lit Int 3))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+            SInt))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id basic)
       (decl_type
        (Sized
@@ -5210,7 +5247,7 @@
     (meta <opaque>))))
  (log_prob
   (((pattern
-     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id arrs)
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id d2)
       (decl_type
        (Sized
         (STuple
@@ -5223,22 +5260,129 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable arrs)
+     (Assignment (LVariable d2)
       (UTuple ((UArray UComplex) (UArray UComplex)))
       ((pattern
         (Promotion
          ((pattern (Var d))
           (meta
            ((type_ (UTuple ((UArray UInt) (UArray UInt)))) (loc <opaque>)
-            (adlevel (TupleAD (DataOnly DataOnly))))))
-         (UTuple (UComplex UComplex)) (TupleAD (DataOnly DataOnly))))
+            (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+         (UTuple (UComplex UComplex)) (TupleAD (AutoDiffable AutoDiffable))))
        (meta
         ((type_ (UTuple ((UArray UComplex) (UArray UComplex))))
-         (loc <opaque>) (adlevel (TupleAD (DataOnly DataOnly))))))))
+         (loc <opaque>) (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id V3)
+      (decl_type
+       (Sized
+        (STuple
+         ((SVector AoS
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          SReal))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable V3) (UTuple (UVector UReal))
+      ((pattern
+        (Promotion
+         ((pattern (Var V2))
+          (meta
+           ((type_ (UTuple (UVector UInt))) (loc <opaque>)
+            (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+         (UTuple (UReal UReal)) (TupleAD (AutoDiffable AutoDiffable))))
+       (meta
+        ((type_ (UTuple (UVector UReal))) (loc <opaque>)
+         (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable)))
+      (decl_id arrs2)
+      (decl_type
+       (Sized
+        (SArray
+         (STuple
+          (SReal
+           (SArray SComplex
+            ((pattern (Lit Int 2))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+         ((pattern (Lit Int 4))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable arrs2)
+      (UArray (UTuple (UReal (UArray UComplex))))
+      ((pattern
+        (Promotion
+         ((pattern (Var arrs))
+          (meta
+           ((type_ (UArray (UTuple (UInt (UArray UInt))))) (loc <opaque>)
+            (adlevel AutoDiffable))))
+         (UTuple (UReal UComplex)) (TupleAD (AutoDiffable AutoDiffable))))
+       (meta
+        ((type_ (UArray (UTuple (UReal (UArray UComplex))))) (loc <opaque>)
+         (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl
+      (decl_adtype
+       (TupleAD
+        ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+         (TupleAD (AutoDiffable AutoDiffable)))))
+      (decl_id nested2)
+      (decl_type
+       (Sized
+        (STuple
+         ((STuple
+           (SReal
+            (SArray SComplex
+             ((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          SReal
+          (STuple
+           ((SVector AoS
+             ((pattern (Lit Int 3))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+            SReal))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable nested2)
+      (UTuple
+       ((UTuple (UReal (UArray UComplex))) UReal (UTuple (UVector UReal))))
+      ((pattern
+        (Promotion
+         ((pattern (Var nested))
+          (meta
+           ((type_
+             (UTuple
+              ((UTuple (UInt (UArray UInt))) UInt (UTuple (UVector UInt)))))
+            (loc <opaque>)
+            (adlevel
+             (TupleAD
+              ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+               (TupleAD (AutoDiffable AutoDiffable))))))))
+         (UTuple ((UTuple (UReal UComplex)) UReal (UTuple (UReal UReal))))
+         (TupleAD
+          ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+           (TupleAD (AutoDiffable AutoDiffable))))))
+       (meta
+        ((type_
+          (UTuple
+           ((UTuple (UReal (UArray UComplex))) UReal
+            (UTuple (UVector UReal)))))
+         (loc <opaque>)
+         (adlevel
+          (TupleAD
+           ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+            (TupleAD (AutoDiffable AutoDiffable))))))))))
     (meta <opaque>))))
  (generate_quantities
   (((pattern
-     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id arrs)
+     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id d2)
       (decl_type
        (Sized
         (STuple
@@ -5248,6 +5392,54 @@
           (SArray SComplex
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id V3)
+      (decl_type
+       (Sized
+        (STuple
+         ((SVector AoS
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          SReal))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id arrs2)
+      (decl_type
+       (Sized
+        (SArray
+         (STuple
+          (SReal
+           (SArray SComplex
+            ((pattern (Lit Int 2))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+         ((pattern (Lit Int 4))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Decl
+      (decl_adtype
+       (TupleAD
+        ((TupleAD (DataOnly DataOnly)) DataOnly
+         (TupleAD (DataOnly DataOnly)))))
+      (decl_id nested2)
+      (decl_type
+       (Sized
+        (STuple
+         ((STuple
+           (SReal
+            (SArray SComplex
+             ((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          SReal
+          (STuple
+           ((SVector AoS
+             ((pattern (Lit Int 3))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+            SReal))))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -5267,18 +5459,76 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable arrs)
+     (Assignment (LVariable d2)
       (UTuple ((UArray UComplex) (UArray UComplex)))
       ((pattern
         (Promotion
          ((pattern (Var d))
           (meta
            ((type_ (UTuple ((UArray UInt) (UArray UInt)))) (loc <opaque>)
-            (adlevel (TupleAD (DataOnly DataOnly))))))
-         (UTuple (UComplex UComplex)) (TupleAD (DataOnly DataOnly))))
+            (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+         (UTuple (UComplex UComplex)) (TupleAD (AutoDiffable AutoDiffable))))
        (meta
         ((type_ (UTuple ((UArray UComplex) (UArray UComplex))))
-         (loc <opaque>) (adlevel (TupleAD (DataOnly DataOnly))))))))
+         (loc <opaque>) (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable V3) (UTuple (UVector UReal))
+      ((pattern
+        (Promotion
+         ((pattern (Var V2))
+          (meta
+           ((type_ (UTuple (UVector UInt))) (loc <opaque>)
+            (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+         (UTuple (UReal UReal)) (TupleAD (AutoDiffable AutoDiffable))))
+       (meta
+        ((type_ (UTuple (UVector UReal))) (loc <opaque>)
+         (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable arrs2)
+      (UArray (UTuple (UReal (UArray UComplex))))
+      ((pattern
+        (Promotion
+         ((pattern (Var arrs))
+          (meta
+           ((type_ (UArray (UTuple (UInt (UArray UInt))))) (loc <opaque>)
+            (adlevel AutoDiffable))))
+         (UTuple (UReal UComplex)) (TupleAD (AutoDiffable AutoDiffable))))
+       (meta
+        ((type_ (UArray (UTuple (UReal (UArray UComplex))))) (loc <opaque>)
+         (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable nested2)
+      (UTuple
+       ((UTuple (UReal (UArray UComplex))) UReal (UTuple (UVector UReal))))
+      ((pattern
+        (Promotion
+         ((pattern (Var nested))
+          (meta
+           ((type_
+             (UTuple
+              ((UTuple (UInt (UArray UInt))) UInt (UTuple (UVector UInt)))))
+            (loc <opaque>)
+            (adlevel
+             (TupleAD
+              ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+               (TupleAD (AutoDiffable AutoDiffable))))))))
+         (UTuple ((UTuple (UReal UComplex)) UReal (UTuple (UReal UReal))))
+         (TupleAD
+          ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+           (TupleAD (AutoDiffable AutoDiffable))))))
+       (meta
+        ((type_
+          (UTuple
+           ((UTuple (UReal (UArray UComplex))) UReal
+            (UTuple (UVector UReal)))))
+         (loc <opaque>)
+         (adlevel
+          (TupleAD
+           ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+            (TupleAD (AutoDiffable AutoDiffable))))))))))
     (meta <opaque>))
    ((pattern
      (IfElse
@@ -5306,7 +5556,7 @@
                           (Indexed
                            ((pattern
                              (TupleProjection
-                              ((pattern (Var arrs))
+                              ((pattern (Var d2))
                                (meta
                                 ((type_
                                   (UTuple
@@ -5348,7 +5598,7 @@
                           (Indexed
                            ((pattern
                              (TupleProjection
-                              ((pattern (Var arrs))
+                              ((pattern (Var d2))
                                (meta
                                 ((type_
                                   (UTuple
@@ -5369,6 +5619,272 @@
                      ()))
                    (meta <opaque>)))))
                (meta <opaque>)))))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp
+             (CompilerInternal
+              (FnWriteParam (unconstrain_opt ())
+               (var
+                ((pattern
+                  (TupleProjection
+                   ((pattern (Var V3))
+                    (meta
+                     ((type_ (UTuple (UVector UReal))) (loc <opaque>)
+                      (adlevel DataOnly))))
+                   1))
+                 (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
+             ()))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp
+             (CompilerInternal
+              (FnWriteParam (unconstrain_opt ())
+               (var
+                ((pattern
+                  (TupleProjection
+                   ((pattern (Var V3))
+                    (meta
+                     ((type_ (UTuple (UVector UReal))) (loc <opaque>)
+                      (adlevel DataOnly))))
+                   2))
+                 (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+             ()))
+           (meta <opaque>))
+          ((pattern
+            (For (loopvar sym1__)
+             (lower
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             (upper
+              ((pattern (Lit Int 4))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             (body
+              ((pattern
+                (Block
+                 (((pattern
+                    (NRFunApp
+                     (CompilerInternal
+                      (FnWriteParam (unconstrain_opt ())
+                       (var
+                        ((pattern
+                          (TupleProjection
+                           ((pattern
+                             (Indexed
+                              ((pattern (Var arrs2))
+                               (meta
+                                ((type_
+                                  (UArray (UTuple (UReal (UArray UComplex)))))
+                                 (loc <opaque>) (adlevel DataOnly))))
+                              ((Single
+                                ((pattern (Var sym1__))
+                                 (meta
+                                  ((type_ UInt) (loc <opaque>)
+                                   (adlevel DataOnly))))))))
+                            (meta
+                             ((type_ (UTuple (UReal (UArray UComplex))))
+                              (loc <opaque>) (adlevel DataOnly))))
+                           1))
+                         (meta
+                          ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                     ()))
+                   (meta <opaque>))
+                  ((pattern
+                    (For (loopvar sym2__)
+                     (lower
+                      ((pattern (Lit Int 1))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                     (upper
+                      ((pattern (Lit Int 2))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                     (body
+                      ((pattern
+                        (Block
+                         (((pattern
+                            (NRFunApp
+                             (CompilerInternal
+                              (FnWriteParam (unconstrain_opt ())
+                               (var
+                                ((pattern
+                                  (Indexed
+                                   ((pattern
+                                     (TupleProjection
+                                      ((pattern
+                                        (Indexed
+                                         ((pattern (Var arrs2))
+                                          (meta
+                                           ((type_
+                                             (UArray
+                                              (UTuple
+                                               (UReal (UArray UComplex)))))
+                                            (loc <opaque>)
+                                            (adlevel DataOnly))))
+                                         ((Single
+                                           ((pattern (Var sym1__))
+                                            (meta
+                                             ((type_ UInt) (loc <opaque>)
+                                              (adlevel DataOnly))))))))
+                                       (meta
+                                        ((type_
+                                          (UTuple (UReal (UArray UComplex))))
+                                         (loc <opaque>) (adlevel DataOnly))))
+                                      2))
+                                    (meta
+                                     ((type_ (UArray UComplex))
+                                      (loc <opaque>) (adlevel DataOnly))))
+                                   ((Single
+                                     ((pattern (Var sym2__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>)
+                                        (adlevel DataOnly))))))))
+                                 (meta
+                                  ((type_ UComplex) (loc <opaque>)
+                                   (adlevel DataOnly)))))))
+                             ()))
+                           (meta <opaque>)))))
+                       (meta <opaque>)))))
+                   (meta <opaque>)))))
+               (meta <opaque>)))))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp
+             (CompilerInternal
+              (FnWriteParam (unconstrain_opt ())
+               (var
+                ((pattern
+                  (TupleProjection
+                   ((pattern
+                     (TupleProjection
+                      ((pattern (Var nested2))
+                       (meta
+                        ((type_
+                          (UTuple
+                           ((UTuple (UReal (UArray UComplex))) UReal
+                            (UTuple (UVector UReal)))))
+                         (loc <opaque>) (adlevel DataOnly))))
+                      1))
+                    (meta
+                     ((type_ (UTuple (UReal (UArray UComplex))))
+                      (loc <opaque>) (adlevel DataOnly))))
+                   1))
+                 (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+             ()))
+           (meta <opaque>))
+          ((pattern
+            (For (loopvar sym1__)
+             (lower
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             (upper
+              ((pattern (Lit Int 2))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             (body
+              ((pattern
+                (Block
+                 (((pattern
+                    (NRFunApp
+                     (CompilerInternal
+                      (FnWriteParam (unconstrain_opt ())
+                       (var
+                        ((pattern
+                          (Indexed
+                           ((pattern
+                             (TupleProjection
+                              ((pattern
+                                (TupleProjection
+                                 ((pattern (Var nested2))
+                                  (meta
+                                   ((type_
+                                     (UTuple
+                                      ((UTuple (UReal (UArray UComplex)))
+                                       UReal (UTuple (UVector UReal)))))
+                                    (loc <opaque>) (adlevel DataOnly))))
+                                 1))
+                               (meta
+                                ((type_ (UTuple (UReal (UArray UComplex))))
+                                 (loc <opaque>) (adlevel DataOnly))))
+                              2))
+                            (meta
+                             ((type_ (UArray UComplex)) (loc <opaque>)
+                              (adlevel DataOnly))))
+                           ((Single
+                             ((pattern (Var sym1__))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))))))
+                         (meta
+                          ((type_ UComplex) (loc <opaque>)
+                           (adlevel DataOnly)))))))
+                     ()))
+                   (meta <opaque>)))))
+               (meta <opaque>)))))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp
+             (CompilerInternal
+              (FnWriteParam (unconstrain_opt ())
+               (var
+                ((pattern
+                  (TupleProjection
+                   ((pattern (Var nested2))
+                    (meta
+                     ((type_
+                       (UTuple
+                        ((UTuple (UReal (UArray UComplex))) UReal
+                         (UTuple (UVector UReal)))))
+                      (loc <opaque>) (adlevel DataOnly))))
+                   2))
+                 (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+             ()))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp
+             (CompilerInternal
+              (FnWriteParam (unconstrain_opt ())
+               (var
+                ((pattern
+                  (TupleProjection
+                   ((pattern
+                     (TupleProjection
+                      ((pattern (Var nested2))
+                       (meta
+                        ((type_
+                          (UTuple
+                           ((UTuple (UReal (UArray UComplex))) UReal
+                            (UTuple (UVector UReal)))))
+                         (loc <opaque>) (adlevel DataOnly))))
+                      3))
+                    (meta
+                     ((type_ (UTuple (UVector UReal))) (loc <opaque>)
+                      (adlevel DataOnly))))
+                   1))
+                 (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
+             ()))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp
+             (CompilerInternal
+              (FnWriteParam (unconstrain_opt ())
+               (var
+                ((pattern
+                  (TupleProjection
+                   ((pattern
+                     (TupleProjection
+                      ((pattern (Var nested2))
+                       (meta
+                        ((type_
+                          (UTuple
+                           ((UTuple (UReal (UArray UComplex))) UReal
+                            (UTuple (UVector UReal)))))
+                         (loc <opaque>) (adlevel DataOnly))))
+                      3))
+                    (meta
+                     ((type_ (UTuple (UVector UReal))) (loc <opaque>)
+                      (adlevel DataOnly))))
+                   2))
+                 (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+             ()))
            (meta <opaque>)))))
        (meta <opaque>))
       ()))
@@ -5555,7 +6071,7 @@
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
  (output_vars
-  ((arrs
+  ((d2
     ((out_unconstrained_st
       (STuple
        ((SArray SComplex
@@ -5574,6 +6090,71 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
      (out_block TransformedParameters)
      (out_trans (TupleTransformation (Identity Identity)))))
+   (V3
+    ((out_unconstrained_st
+      (STuple
+       ((SVector AoS
+         ((pattern (Lit Int 3))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+        SReal)))
+     (out_constrained_st
+      (STuple
+       ((SVector AoS
+         ((pattern (Lit Int 3))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+        SReal)))
+     (out_block TransformedParameters)
+     (out_trans (TupleTransformation (Identity Identity)))))
+   (arrs2
+    ((out_unconstrained_st
+      (STuple
+       (SReal
+        (SArray SComplex
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+     (out_constrained_st
+      (SArray
+       (STuple
+        (SReal
+         (SArray SComplex
+          ((pattern (Lit Int 2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       ((pattern (Lit Int 4))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block TransformedParameters)
+     (out_trans (TupleTransformation (Identity Identity)))))
+   (nested2
+    ((out_unconstrained_st
+      (STuple
+       ((STuple
+         (SReal
+          (SArray SComplex
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+        SReal
+        (STuple
+         ((SVector AoS
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          SReal)))))
+     (out_constrained_st
+      (STuple
+       ((STuple
+         (SReal
+          (SArray SComplex
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+        SReal
+        (STuple
+         ((SVector AoS
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          SReal)))))
+     (out_block TransformedParameters)
+     (out_trans
+      (TupleTransformation
+       ((TupleTransformation (Identity Identity)) Identity
+        (TupleTransformation (Identity Identity)))))))
    (y
     ((out_unconstrained_st SInt) (out_constrained_st SInt)
      (out_block GeneratedQuantities) (out_trans Identity)))

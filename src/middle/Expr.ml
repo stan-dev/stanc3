@@ -42,8 +42,9 @@ module Fixed = struct
       | TupleProjection (expr, ix) -> Fmt.pf ppf "@[%a.%d@]" pp_e expr ix
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
       | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
-      | Promotion (from, ut, _) ->
-          Fmt.pf ppf "promote(@[%a,@ %a@])" pp_e from UnsizedType.pp ut
+      | Promotion (from, ut, ad) ->
+          Fmt.pf ppf "promote(@[%a,@ %a,@ %a@])" pp_e from UnsizedType.pp ut
+            UnsizedType.pp_autodifftype ad
 
     include Foldable.Make (struct
       type nonrec 'a t = 'a t

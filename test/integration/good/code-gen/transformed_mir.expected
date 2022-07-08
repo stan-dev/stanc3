@@ -12644,7 +12644,7 @@
             (FunApp (UserDefined foo_bar1 FnPlain)
              (((pattern (Var J))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
         (meta <opaque>))
        ((pattern
          (TargetPE
