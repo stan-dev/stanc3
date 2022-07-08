@@ -29,7 +29,7 @@ module Fixed = struct
             (Option.value_exn (Operator.of_string_opt name))
             pp_e rhs
       | FunApp (fun_kind, args) ->
-          Fmt.pf ppf "%a(%a)" (Fun_kind.pp pp_e) fun_kind
+          Fmt.pf ppf "%a(@[<hov>%a@])" (Fun_kind.pp pp_e) fun_kind
             Fmt.(list pp_e ~sep:Fmt.comma)
             args
       | TernaryIf (pred, texpr, fexpr) ->
@@ -43,8 +43,8 @@ module Fixed = struct
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
       | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
       | Promotion (from, ut, ad) ->
-          Fmt.pf ppf "promote(@[%a,@ %a,@ %a@])" pp_e from UnsizedType.pp ut
-            UnsizedType.pp_autodifftype ad
+          Fmt.pf ppf "promote(@[<hov>%a,@ %a,@ %a@])" pp_e from UnsizedType.pp
+            ut UnsizedType.pp_tuple_autodifftype ad
 
     include Foldable.Make (struct
       type nonrec 'a t = 'a t

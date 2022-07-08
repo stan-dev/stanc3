@@ -2129,7 +2129,7 @@ vector[Nr] h_sigma: SoA
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern (Lit Real 0.0))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (Assignment
@@ -2182,7 +2182,7 @@ vector[Nr] h_sigma: SoA
               ((pattern (Lit Int 1))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
+       (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (Assignment
@@ -3665,7 +3665,7 @@ vector[Nr] h_sigma: SoA
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern (Lit Real 0.0))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (Assignment
@@ -3718,7 +3718,7 @@ vector[Nr] h_sigma: SoA
               ((pattern (Lit Int 1))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
+       (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (Assignment
@@ -7728,7 +7728,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           UVector
           ((pattern (Lit Real 2.0))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
         (meta <opaque>))
        ((pattern
          (NRFunApp (CompilerInternal FnValidateSize)

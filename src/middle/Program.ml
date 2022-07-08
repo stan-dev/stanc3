@@ -92,8 +92,9 @@ let pp_transform_inits pp_s ppf transform_inits =
 
 let pp_output_var pp_e ppf
     (name, {out_unconstrained_st; out_constrained_st; out_block; _}) =
-  Fmt.pf ppf "@[<h>%a %a %s; //%a@]" pp_io_block out_block (SizedType.pp pp_e)
-    out_constrained_st name (SizedType.pp pp_e) out_unconstrained_st
+  Fmt.pf ppf "@[<hov 2>%a %a %s;@ //%a@]" pp_io_block out_block
+    (SizedType.pp pp_e) out_constrained_st name (SizedType.pp pp_e)
+    out_unconstrained_st
 
 let pp_input_var pp_e ppf (name, sized_ty) =
   Fmt.pf ppf "@[<h>%a %s;@]" (SizedType.pp pp_e) sized_ty name

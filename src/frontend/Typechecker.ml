@@ -1013,7 +1013,11 @@ let check_assignment_operator loc assop lhs rhs =
       SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_
         rhs.emeta.type_
     with
-    | Ok p -> Promotion.promote rhs p
+    | Ok p ->
+        let rhs =
+          (* Hack: need RHS to properly get promoted to var if needed *)
+          {rhs with emeta= {rhs.emeta with ad_level= lhs.lmeta.ad_level}} in
+        Promotion.promote rhs p
     | Error _ -> err Operator.Equals |> error )
   | OperatorAssign op -> (
       let args = List.map ~f:arg_type [Ast.expr_of_lvalue lhs; rhs] in
@@ -1506,6 +1510,7 @@ and check_var_decl_initial_value loc cf tenv {identifier; initial_value} =
         check_lvalue cf tenv {lval= LVariable identifier; lmeta= {loc}} in
       let rhs = check_expression cf tenv e in
       let rhs =
+        (* Hack: need the RHS to be promoted correctly to vars if needed *)
         {rhs with emeta= {rhs.emeta with ad_level= lhs.lmeta.ad_level}} in
       match
         SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_

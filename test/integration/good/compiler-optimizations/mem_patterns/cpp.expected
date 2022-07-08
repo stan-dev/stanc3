@@ -3670,7 +3670,7 @@ udf_fun_functor__::operator()(const T0__& A, std::ostream* pstream__)  const
                   stan::math::transpose(
   stan::math::multiply(p_aos_mat_pass_func_outer_single_indexed1,
     p_aos_mat_pass_func_outer_single_indexed2)),
-                  "transpose(multiply(p_aos_mat_pass_func_outer_single_indexed1,\np_aos_mat_pass_func_outer_single_indexed2))",
+                  "transpose(multiply(p_aos_mat_pass_func_outer_single_indexed1,\n                   p_aos_mat_pass_func_outer_single_indexed2))",
                   stan::model::index_uni(mask_fun(i, pstream__)),
                     stan::model::index_uni(mask_fun(i, pstream__)))), 1.0));
           current_statement__ = 55;

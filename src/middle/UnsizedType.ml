@@ -30,15 +30,16 @@ and returntype = Void | ReturnType of t [@@deriving compare, hash, sexp]
 
 let rec pp_tuple_autodifftype ppf = function
   | DataOnly -> Fmt.string ppf "data"
-  | AutoDiffable -> Fmt.string ppf "autodiffable"
+  | AutoDiffable -> Fmt.string ppf "var"
   | TupleAD ad ->
-      Fmt.pf ppf "Tuple(%a)" Fmt.(list ~sep:comma pp_tuple_autodifftype) ad
+      Fmt.pf ppf "tuple_ad@[(%a)@]"
+        Fmt.(list ~sep:comma pp_tuple_autodifftype)
+        ad
 
 let pp_autodifftype ppf = function
   | DataOnly -> Fmt.string ppf "data "
   | AutoDiffable -> ()
-  | TupleAD ad ->
-      Fmt.pf ppf "Tuple(%a)" Fmt.(list ~sep:comma pp_tuple_autodifftype) ad
+  | tup -> pp_tuple_autodifftype ppf tup
 
 let unsized_array_depth unsized_ty =
   let rec aux depth = function
