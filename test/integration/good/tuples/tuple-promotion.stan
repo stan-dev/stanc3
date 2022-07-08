@@ -1,5 +1,6 @@
 data {
   vector[3] V;
+  (array[3] int, array[3] int) d;
 }
 
 transformed data {
@@ -10,9 +11,13 @@ transformed data {
   CV = V2;
 }
 
+transformed parameters {
+  (array[3] complex, array[3] complex) arrs = d;
+}
+
 generated quantities {
-    int y = 1;
-   (real, real) x = (y, 3);
-   (complex, real) z = x;
-   (complex, real) z2 = z;
+  int y = 1;
+  (real, real) x = (y, 3);
+  (complex, real) z = x;
+  (complex, real) z2 = z;
 }

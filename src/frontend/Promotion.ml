@@ -119,7 +119,7 @@ let rec promote (exp : Ast.typed_expression) prom =
           UnsizedType.TupleAD (List.map ~f:(fun e -> e.emeta.ad_level) pes)
         in
         {expr= TupleExpr pes; emeta= {exp.emeta with type_; ad_level}}
-    | _ -> exp (* TUPLE MAYBE: PROMOTION *) )
+    | _ -> exp )
   | _ -> promote_inner exp prom
 
 let promote_list es promotions = List.map2_exn es promotions ~f:promote
