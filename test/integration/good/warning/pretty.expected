@@ -2019,8 +2019,6 @@ Warning in 'int_div_user.stan', line 7, column 6: Found int division:
     the division as
       a[1] * 1.0 / b[2]
     If rounding is intended please use the integer division operator %/%.
-    This
-    can be automatically changed using the canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc --auto-format integrate_1d_good.stan
 functions {
   real foo(real x, real xc, array[] real theta, array[] real x_r,
@@ -2638,5 +2636,3 @@ Warning in 'validate_division_int_warning.stan', line 7, column 6: Found int
     the division as
       j * 1.0 / k
     If rounding is intended please use the integer division operator %/%.
-    This
-    can be automatically changed using the canonicalize flag for stanc

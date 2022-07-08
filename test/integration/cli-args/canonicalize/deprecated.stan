@@ -28,14 +28,12 @@ transformed data {
   real b = 1.5;
   int c = abs(a);
   real d = abs(b);
-  int e = a / c;
   array[0] int x_i;
   array[0] real x_r;
   matrix[N, N] K = cov_exp_quad(x_quad, 1.0, 1.0);
   real idxs[5,5];
   idxs[1][:] = idxs[1][:];
   idxs[:][1] = idxs[:][2];
-  matrix[N,N] S = K^2;
  }
 parameters {
   real x;
@@ -64,7 +62,6 @@ model {
   }
 
   int bool = !b < 2 && d || x;
-  bool = 1 < 2 > 3 < 4;
 
   target += normal_log(x, 0, 1)
     + normal_cdf_log(2, 0, 1)
