@@ -1572,6 +1572,17 @@ Warning in 'deprecated_syntax.stan', line 54, column 4: assignment operator
     <- is deprecated in the Stan language and will be removed in Stan 2.32.0;
     use = instead. This can be done automatically with the canonicalize flag
     for stanc
+Warning in 'deprecated_syntax.stan', line 60, column 6: Found 1 < 2 < 3. This
+    is interpreted as (1 < 2) < 3. Consider if the intended meaning was 
+    1 < 2 && 2 < 3 instead.
+    You can silence this warning by adding explicit parenthesis. This can be
+    automatically changed using the canonicalize flag for stanc
+Warning in 'deprecated_syntax.stan', line 60, column 6: Found 1 < 2 < 3 < 4.
+    This is interpreted as (1 < 2 < 3) < 4. Consider if the intended meaning
+    was 
+    1 < 2 < 3 && 3 < 4 instead.
+    You can silence this warning by adding explicit parenthesis. This can be
+    automatically changed using the canonicalize flag for stanc
 Warning in 'deprecated_syntax.stan', line 2, column 9: Use of the _log suffix
     in user defined probability functions is deprecated and will be removed
     in Stan 2.32.0, use name 'foo_lpdf' instead if you intend on using this
@@ -1598,17 +1609,6 @@ Warning in 'deprecated_syntax.stan', line 40, column 21: Use of bernoulli_cdf
 Warning in 'deprecated_syntax.stan', line 49, column 11: multiply_log is
     deprecated and will be removed in Stan 2.32.0. Use lmultiply instead.
     This can be automatically changed using the canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 60, column 6: Found 1 < 2 < 3 < 4.
-    This is interpreted as (1 < 2 < 3) < 4. Consider if the intended meaning
-    was 
-    1 < 2 < 3 && 3 < 4 but if it wasn't Stan 2.34 will require explicit
-    parenthesis. This can be automatically changed using the canonicalize
-    flag for stanc
-Warning in 'deprecated_syntax.stan', line 60, column 6: Found 1 < 2 < 3. This
-    is interpreted as (1 < 2) < 3. Consider if the intended meaning was 
-    1 < 2 && 2 < 3 but if it wasn't Stan 2.34 will require explicit
-    parenthesis. This can be automatically changed using the canonicalize
-    flag for stanc
 Warning in 'deprecated_syntax.stan', line 63, column 9: Condition of type
     real is deprecated and will be disallowed in Stan 2.34. Use an explicit
     != 0 comparison instead. This can be automatically changed using the

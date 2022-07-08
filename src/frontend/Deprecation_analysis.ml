@@ -158,31 +158,6 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
       let acc = collect_deprecated_expr acc e1 in
       let acc = collect_deprecated_expr acc e2 in
       acc
-  | BinOp (({expr= BinOp (e1, op1, e2); emeta= {loc; _}} as e), op2, e3)
-    when Operator.(is_cmp op1 && is_cmp op2) ->
-      let pp_e = Pretty_printing.pp_typed_expression in
-      let pp = Operator.pp in
-      let acc =
-        acc
-        @ [ ( loc
-            , Fmt.str
-                "Found %a. This is interpreted as %a. Consider if the intended \
-                 meaning was %a but if it wasn't Stan 2.34 will require \
-                 explicit parenthesis. This can be automatically changed using \
-                 the canonicalize flag for stanc"
-                (fun ppf () ->
-                  Fmt.pf ppf "@[<hov>%a %a %a@]" pp_e e pp op2 pp_e e3 )
-                ()
-                (fun ppf () ->
-                  Fmt.pf ppf "@[<hov>(%a) %a %a@]" pp_e e pp op2 pp_e e3 )
-                ()
-                (fun ppf () ->
-                  Fmt.pf ppf "@[<hov>%a %a %a && %a %a %a@]" pp_e e1 pp op1 pp_e
-                    e2 pp_e e2 pp op2 pp_e e3 )
-                () ) ] in
-      let acc = collect_deprecated_expr acc e in
-      let acc = collect_deprecated_expr acc e3 in
-      acc
   | _ -> fold_expression collect_deprecated_expr (fun l _ -> l) acc expr
 
 let collect_deprecated_lval acc l =
