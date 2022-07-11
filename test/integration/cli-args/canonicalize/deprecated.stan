@@ -46,7 +46,7 @@ model {
   c ~ poisson_lpmf(3.0);
   c ~ poisson_log(3.0);
   c ~ poisson_log_log(3.0);
-  if (a) {
+  if (b) {
     x ~ normal(0, 1);
     x ~ normal_log(0, 1);
     x ~ normal_log_log(0, 1);
@@ -57,6 +57,11 @@ model {
     x ~ exponential_log(1);
     increment_log_prob(foo_cdf_log(x, 1));
   }
+  while (0.0) {
+    
+  }
+
+  int bool = !b < 2 && d || x;
 
   target += normal_log(x, 0, 1)
     + normal_cdf_log(2, 0, 1)

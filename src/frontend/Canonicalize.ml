@@ -75,11 +75,38 @@ let rec replace_deprecated_expr
               , {name; id_loc}
               , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e
               ) )
+    | PrefixOp (PNot, e) ->
+        PrefixOp
+          (PNot, replace_boolean_real ~parens:true deprecated_userdefined e)
+    | BinOp (e1, ((And | Or) as op), e2) ->
+        BinOp
+          ( replace_boolean_real ~parens:true deprecated_userdefined e1
+          , op
+          , replace_boolean_real ~parens:true deprecated_userdefined e2 )
     | _ ->
         map_expression
           (replace_deprecated_expr deprecated_userdefined)
           ident expr in
   {expr; emeta}
+
+and replace_boolean_real ?(parens = false) deprecated_userdefined e =
+  match e with
+  | {emeta= {type_= UReal; _}; _} when parens ->
+      { emeta= {e.emeta with type_= UInt}
+      ; expr=
+          Paren (replace_boolean_real ~parens:false deprecated_userdefined e) }
+  | {emeta= {type_= UReal; _}; _} ->
+      { emeta= {e.emeta with type_= UInt}
+      ; expr=
+          BinOp
+            ( replace_deprecated_expr deprecated_userdefined e
+            , NEquals
+            , { expr= RealNumeral "0.0"
+              ; emeta=
+                  { type_= UInt
+                  ; loc= Middle.Location_span.empty
+                  ; ad_level= DataOnly } } ) }
+  | _ -> replace_deprecated_expr deprecated_userdefined e
 
 let rec replace_deprecated_lval deprecated_userdefined {lval; lmeta} =
   let is_multiindex = function
@@ -130,6 +157,16 @@ let rec replace_deprecated_stmt
           ; funname= {name= newname; id_loc}
           ; arguments
           ; body= replace_deprecated_stmt deprecated_userdefined body }
+    | IfThenElse (({emeta= {type_= UReal; _}; _} as cond), ifb, elseb) ->
+        IfThenElse
+          ( replace_boolean_real deprecated_userdefined cond
+          , replace_deprecated_stmt deprecated_userdefined ifb
+          , Option.map ~f:(replace_deprecated_stmt deprecated_userdefined) elseb
+          )
+    | While (({emeta= {type_= UReal; _}; _} as cond), body) ->
+        While
+          ( replace_boolean_real deprecated_userdefined cond
+          , replace_deprecated_stmt deprecated_userdefined body )
     | _ ->
         map_statement
           (replace_deprecated_expr deprecated_userdefined)
@@ -144,6 +181,10 @@ let rec no_parens {expr; emeta} =
   | Variable _ | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetLP
    |GetTarget ->
       {expr; emeta}
+  | BinOp (({expr= BinOp (_, op1, _); _} as e1), op2, e2)
+    when Middle.Operator.(is_cmp op1 && is_cmp op2) ->
+      { expr= BinOp ({e1 with expr= Paren (no_parens e1)}, op2, keep_parens e2)
+      ; emeta }
   | TernaryIf _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
       {expr= map_expression keep_parens ident expr; emeta}
   | Indexed (e, l) ->
