@@ -1,8 +1,8 @@
-// functions {
-//    real dummy((array[] int, array[] real) test){
-//     return sum(test.2);
-//    }
-// }
+functions {
+   real dummy((array[] real, array[] real) test){
+    return sum(test.1) + sum(test.2);
+   }
+}
 
 data {
   vector[3] V;
@@ -20,8 +20,7 @@ transformed data {
   (vector[3], int) V2 = (V, 2);
   CV = V2;
 
-  // real t = dummy(d);
-  // TUPLE TODO
+  real t = dummy(d);
 }
 
 transformed parameters {
@@ -31,6 +30,8 @@ transformed parameters {
   array[4] (real, array[2] complex) arrs2 = arrs;
 
   ((real, array[2] complex), real, (vector[3], real)) nested2 = nested;
+  ((real, array[2] complex), real, (vector[3], real)) nested3;
+  nested3 = nested;
 }
 
 generated quantities {

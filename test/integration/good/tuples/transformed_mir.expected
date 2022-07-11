@@ -4975,7 +4975,50 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))))))
  (prog_name tuple_params_model) (prog_path tuple-params.stan))
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-promotion.stan
-((functions_block ())
+((functions_block
+  (((fdrt (UReal)) (fdname dummy) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable test (UTuple ((UArray UReal) (UArray UReal))))))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (Return
+             (((pattern
+                (FunApp (StanLib Plus__ FnPlain AoS)
+                 (((pattern
+                    (FunApp (StanLib sum FnPlain AoS)
+                     (((pattern
+                        (TupleProjection
+                         ((pattern (Var test))
+                          (meta
+                           ((type_ (UTuple ((UArray UReal) (UArray UReal))))
+                            (loc <opaque>)
+                            (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+                         1))
+                       (meta
+                        ((type_ (UArray UReal)) (loc <opaque>)
+                         (adlevel AutoDiffable)))))))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                  ((pattern
+                    (FunApp (StanLib sum FnPlain AoS)
+                     (((pattern
+                        (TupleProjection
+                         ((pattern (Var test))
+                          (meta
+                           ((type_ (UTuple ((UArray UReal) (UArray UReal))))
+                            (loc <opaque>)
+                            (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+                         2))
+                       (meta
+                        ((type_ (UArray UReal)) (loc <opaque>)
+                         (adlevel AutoDiffable)))))))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))))
  (input_vars
   ((V
     (SVector AoS
@@ -5244,6 +5287,26 @@
        (meta
         ((type_ (UTuple (UComplexVector UReal))) (loc <opaque>)
          (adlevel (TupleAD (DataOnly DataOnly))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id t) (decl_type (Sized SReal))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable t) UReal
+      ((pattern
+        (FunApp (UserDefined dummy FnPlain)
+         (((pattern
+            (Promotion
+             ((pattern (Var d))
+              (meta
+               ((type_ (UTuple ((UArray UInt) (UArray UInt)))) (loc <opaque>)
+                (adlevel (TupleAD (DataOnly DataOnly))))))
+             (UTuple (UReal UReal)) (TupleAD (DataOnly DataOnly))))
+           (meta
+            ((type_ (UTuple ((UArray UReal) (UArray UReal)))) (loc <opaque>)
+             (adlevel (TupleAD (DataOnly DataOnly)))))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
  (log_prob
   (((pattern
@@ -5379,6 +5442,60 @@
           (TupleAD
            ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
             (TupleAD (AutoDiffable AutoDiffable))))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl
+      (decl_adtype
+       (TupleAD
+        ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+         (TupleAD (AutoDiffable AutoDiffable)))))
+      (decl_id nested3)
+      (decl_type
+       (Sized
+        (STuple
+         ((STuple
+           (SReal
+            (SArray SComplex
+             ((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          SReal
+          (STuple
+           ((SVector AoS
+             ((pattern (Lit Int 3))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+            SReal))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable nested3)
+      (UTuple
+       ((UTuple (UReal (UArray UComplex))) UReal (UTuple (UVector UReal))))
+      ((pattern
+        (Promotion
+         ((pattern (Var nested))
+          (meta
+           ((type_
+             (UTuple
+              ((UTuple (UInt (UArray UInt))) UInt (UTuple (UVector UInt)))))
+            (loc <opaque>)
+            (adlevel
+             (TupleAD
+              ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+               (TupleAD (AutoDiffable AutoDiffable))))))))
+         (UTuple ((UTuple (UReal UComplex)) UReal (UTuple (UReal UReal))))
+         (TupleAD
+          ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+           (TupleAD (AutoDiffable AutoDiffable))))))
+       (meta
+        ((type_
+          (UTuple
+           ((UTuple (UReal (UArray UComplex))) UReal
+            (UTuple (UVector UReal)))))
+         (loc <opaque>)
+         (adlevel
+          (TupleAD
+           ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+            (TupleAD (AutoDiffable AutoDiffable))))))))))
     (meta <opaque>))))
  (generate_quantities
   (((pattern
@@ -5426,6 +5543,29 @@
         ((TupleAD (DataOnly DataOnly)) DataOnly
          (TupleAD (DataOnly DataOnly)))))
       (decl_id nested2)
+      (decl_type
+       (Sized
+        (STuple
+         ((STuple
+           (SReal
+            (SArray SComplex
+             ((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          SReal
+          (STuple
+           ((SVector AoS
+             ((pattern (Lit Int 3))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+            SReal))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Decl
+      (decl_adtype
+       (TupleAD
+        ((TupleAD (DataOnly DataOnly)) DataOnly
+         (TupleAD (DataOnly DataOnly)))))
+      (decl_id nested3)
       (decl_type
        (Sized
         (STuple
@@ -5501,6 +5641,37 @@
     (meta <opaque>))
    ((pattern
      (Assignment (LVariable nested2)
+      (UTuple
+       ((UTuple (UReal (UArray UComplex))) UReal (UTuple (UVector UReal))))
+      ((pattern
+        (Promotion
+         ((pattern (Var nested))
+          (meta
+           ((type_
+             (UTuple
+              ((UTuple (UInt (UArray UInt))) UInt (UTuple (UVector UInt)))))
+            (loc <opaque>)
+            (adlevel
+             (TupleAD
+              ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+               (TupleAD (AutoDiffable AutoDiffable))))))))
+         (UTuple ((UTuple (UReal UComplex)) UReal (UTuple (UReal UReal))))
+         (TupleAD
+          ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+           (TupleAD (AutoDiffable AutoDiffable))))))
+       (meta
+        ((type_
+          (UTuple
+           ((UTuple (UReal (UArray UComplex))) UReal
+            (UTuple (UVector UReal)))))
+         (loc <opaque>)
+         (adlevel
+          (TupleAD
+           ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+            (TupleAD (AutoDiffable AutoDiffable))))))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable nested3)
       (UTuple
        ((UTuple (UReal (UArray UComplex))) UReal (UTuple (UVector UReal))))
       ((pattern
@@ -5885,6 +6056,145 @@
                    2))
                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
              ()))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp
+             (CompilerInternal
+              (FnWriteParam (unconstrain_opt ())
+               (var
+                ((pattern
+                  (TupleProjection
+                   ((pattern
+                     (TupleProjection
+                      ((pattern (Var nested3))
+                       (meta
+                        ((type_
+                          (UTuple
+                           ((UTuple (UReal (UArray UComplex))) UReal
+                            (UTuple (UVector UReal)))))
+                         (loc <opaque>) (adlevel DataOnly))))
+                      1))
+                    (meta
+                     ((type_ (UTuple (UReal (UArray UComplex))))
+                      (loc <opaque>) (adlevel DataOnly))))
+                   1))
+                 (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+             ()))
+           (meta <opaque>))
+          ((pattern
+            (For (loopvar sym1__)
+             (lower
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             (upper
+              ((pattern (Lit Int 2))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             (body
+              ((pattern
+                (Block
+                 (((pattern
+                    (NRFunApp
+                     (CompilerInternal
+                      (FnWriteParam (unconstrain_opt ())
+                       (var
+                        ((pattern
+                          (Indexed
+                           ((pattern
+                             (TupleProjection
+                              ((pattern
+                                (TupleProjection
+                                 ((pattern (Var nested3))
+                                  (meta
+                                   ((type_
+                                     (UTuple
+                                      ((UTuple (UReal (UArray UComplex)))
+                                       UReal (UTuple (UVector UReal)))))
+                                    (loc <opaque>) (adlevel DataOnly))))
+                                 1))
+                               (meta
+                                ((type_ (UTuple (UReal (UArray UComplex))))
+                                 (loc <opaque>) (adlevel DataOnly))))
+                              2))
+                            (meta
+                             ((type_ (UArray UComplex)) (loc <opaque>)
+                              (adlevel DataOnly))))
+                           ((Single
+                             ((pattern (Var sym1__))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))))))
+                         (meta
+                          ((type_ UComplex) (loc <opaque>)
+                           (adlevel DataOnly)))))))
+                     ()))
+                   (meta <opaque>)))))
+               (meta <opaque>)))))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp
+             (CompilerInternal
+              (FnWriteParam (unconstrain_opt ())
+               (var
+                ((pattern
+                  (TupleProjection
+                   ((pattern (Var nested3))
+                    (meta
+                     ((type_
+                       (UTuple
+                        ((UTuple (UReal (UArray UComplex))) UReal
+                         (UTuple (UVector UReal)))))
+                      (loc <opaque>) (adlevel DataOnly))))
+                   2))
+                 (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+             ()))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp
+             (CompilerInternal
+              (FnWriteParam (unconstrain_opt ())
+               (var
+                ((pattern
+                  (TupleProjection
+                   ((pattern
+                     (TupleProjection
+                      ((pattern (Var nested3))
+                       (meta
+                        ((type_
+                          (UTuple
+                           ((UTuple (UReal (UArray UComplex))) UReal
+                            (UTuple (UVector UReal)))))
+                         (loc <opaque>) (adlevel DataOnly))))
+                      3))
+                    (meta
+                     ((type_ (UTuple (UVector UReal))) (loc <opaque>)
+                      (adlevel DataOnly))))
+                   1))
+                 (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
+             ()))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp
+             (CompilerInternal
+              (FnWriteParam (unconstrain_opt ())
+               (var
+                ((pattern
+                  (TupleProjection
+                   ((pattern
+                     (TupleProjection
+                      ((pattern (Var nested3))
+                       (meta
+                        ((type_
+                          (UTuple
+                           ((UTuple (UReal (UArray UComplex))) UReal
+                            (UTuple (UVector UReal)))))
+                         (loc <opaque>) (adlevel DataOnly))))
+                      3))
+                    (meta
+                     ((type_ (UTuple (UVector UReal))) (loc <opaque>)
+                      (adlevel DataOnly))))
+                   2))
+                 (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+             ()))
            (meta <opaque>)))))
        (meta <opaque>))
       ()))
@@ -6124,6 +6434,38 @@
      (out_block TransformedParameters)
      (out_trans (TupleTransformation (Identity Identity)))))
    (nested2
+    ((out_unconstrained_st
+      (STuple
+       ((STuple
+         (SReal
+          (SArray SComplex
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+        SReal
+        (STuple
+         ((SVector AoS
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          SReal)))))
+     (out_constrained_st
+      (STuple
+       ((STuple
+         (SReal
+          (SArray SComplex
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+        SReal
+        (STuple
+         ((SVector AoS
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          SReal)))))
+     (out_block TransformedParameters)
+     (out_trans
+      (TupleTransformation
+       ((TupleTransformation (Identity Identity)) Identity
+        (TupleTransformation (Identity Identity)))))))
+   (nested3
     ((out_unconstrained_st
       (STuple
        ((STuple

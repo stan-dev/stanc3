@@ -5891,16 +5891,18 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 17> locations_array__ = 
+static constexpr std::array<const char*, 22> locations_array__ = 
 {" (found before start of program)",
- " (in 'tuple-promotion.stan', line 28, column 2 to column 46)",
- " (in 'tuple-promotion.stan', line 29, column 2 to column 28)",
- " (in 'tuple-promotion.stan', line 31, column 2 to column 49)",
- " (in 'tuple-promotion.stan', line 33, column 2 to column 71)",
- " (in 'tuple-promotion.stan', line 37, column 2 to column 12)",
- " (in 'tuple-promotion.stan', line 38, column 2 to column 26)",
- " (in 'tuple-promotion.stan', line 39, column 2 to column 24)",
- " (in 'tuple-promotion.stan', line 40, column 2 to column 25)",
+ " (in 'tuple-promotion.stan', line 27, column 2 to column 46)",
+ " (in 'tuple-promotion.stan', line 28, column 2 to column 28)",
+ " (in 'tuple-promotion.stan', line 30, column 2 to column 49)",
+ " (in 'tuple-promotion.stan', line 32, column 2 to column 71)",
+ " (in 'tuple-promotion.stan', line 33, column 2 to column 62)",
+ " (in 'tuple-promotion.stan', line 34, column 2 to column 19)",
+ " (in 'tuple-promotion.stan', line 38, column 2 to column 12)",
+ " (in 'tuple-promotion.stan', line 39, column 2 to column 26)",
+ " (in 'tuple-promotion.stan', line 40, column 2 to column 24)",
+ " (in 'tuple-promotion.stan', line 41, column 2 to column 25)",
  " (in 'tuple-promotion.stan', line 8, column 2 to column 14)",
  " (in 'tuple-promotion.stan', line 9, column 2 to column 33)",
  " (in 'tuple-promotion.stan', line 13, column 2 to column 36)",
@@ -5908,9 +5910,48 @@ static constexpr std::array<const char*, 17> locations_array__ =
  " (in 'tuple-promotion.stan', line 17, column 2 to column 45)",
  " (in 'tuple-promotion.stan', line 19, column 2 to column 40)",
  " (in 'tuple-promotion.stan', line 20, column 2 to column 31)",
- " (in 'tuple-promotion.stan', line 21, column 2 to column 10)"};
+ " (in 'tuple-promotion.stan', line 21, column 2 to column 10)",
+ " (in 'tuple-promotion.stan', line 23, column 2 to column 20)",
+ " (in 'tuple-promotion.stan', line 3, column 4 to column 37)",
+ " (in 'tuple-promotion.stan', line 2, column 48 to line 4, column 4)"};
 
+struct dummy_functor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::tuple<std::vector<T0__>,
+  std::vector<T0__>>& test,
+             std::ostream* pstream__) const;
+};
 
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  dummy(const std::tuple<std::vector<T0__>,
+std::vector<T0__>>& test,
+        std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<T0__>;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 20;
+      return (stan::math::sum(std::get<0>(test)) +
+               stan::math::sum(std::get<1>(test)));
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
+stan::promote_args_t<T0__>
+dummy_functor__::operator()(const std::tuple<std::vector<T0__>,
+std::vector<T0__>>& test,
+                            std::ostream* pstream__)  const
+{
+  return dummy(test, pstream__);
+}
 
 
 class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model> {
@@ -5923,7 +5964,8 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
              std::tuple<Eigen::Matrix<double, -1, 1>, int>> nested;
   std::tuple<std::vector<double>, std::complex<double>> basic;
   std::tuple<Eigen::Matrix<std::complex<double>, -1, 1>, double> CV;
-  std::tuple<Eigen::Matrix<double, -1, 1>, int> V2; 
+  std::tuple<Eigen::Matrix<double, -1, 1>, int> V2;
+  double t; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> V{nullptr, 0};
  
  public:
@@ -5951,7 +5993,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 9;
+      current_statement__ = 11;
       context__.validate_dims("data initialization","V","double",
            std::vector<size_t>{static_cast<size_t>(3)});
       V_data__ = 
@@ -5961,20 +6003,20 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
       
       {
         std::vector<local_scalar_t__> V_flat__;
-        current_statement__ = 9;
+        current_statement__ = 11;
         V_flat__ = context__.vals_r("V");
-        current_statement__ = 9;
+        current_statement__ = 11;
         pos__ = 1;
-        current_statement__ = 9;
+        current_statement__ = 11;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 9;
+          current_statement__ = 11;
           stan::model::assign(V, V_flat__[(pos__ - 1)],
             "assigning variable V", stan::model::index_uni(sym1__));
-          current_statement__ = 9;
+          current_statement__ = 11;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 10;
+      current_statement__ = 12;
       context__.validate_dims("data initialization","d","double",
            std::vector<size_t>{static_cast<size_t>(2),
             static_cast<size_t>(3), static_cast<size_t>(3)});
@@ -5984,18 +6026,18 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
         std::vector<int>(3, std::numeric_limits<int>::min())};
       
       
-      current_statement__ = 10;
+      current_statement__ = 12;
       std::get<0>(d) = context__.vals_i("d.1");
-      current_statement__ = 10;
+      current_statement__ = 12;
       std::get<1>(d) = context__.vals_i("d.2");
-      current_statement__ = 11;
+      current_statement__ = 13;
       arrs = 
         std::vector<std::tuple<int, std::vector<int>>>(4, 
           std::tuple<int, std::vector<int>>{std::numeric_limits<int>::min(), 
           std::vector<int>(2, std::numeric_limits<int>::min())});
       
       
-      current_statement__ = 12;
+      current_statement__ = 14;
       nested = 
         std::tuple<std::tuple<int, std::vector<int>>, int,
                    std::tuple<Eigen::Matrix<double, -1, 1>, int>>{std::tuple<
@@ -6007,7 +6049,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
                                              std::numeric_limits<double>::quiet_NaN()), std::numeric_limits<int>::min()}};
       
       
-      current_statement__ = 13;
+      current_statement__ = 15;
       basic = 
         std::tuple<std::vector<double>, std::complex<double>>{std::vector<double>(
                                                                 2, 
@@ -6016,36 +6058,43 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
           std::numeric_limits<double>::quiet_NaN())};
       
       
-      current_statement__ = 13;
+      current_statement__ = 15;
       stan::model::assign(basic,
         std::forward_as_tuple(std::vector<double>{1, 2},
                               stan::math::to_complex(3, 0)),
         "assigning variable basic");
-      current_statement__ = 14;
+      current_statement__ = 16;
       CV = 
         std::tuple<Eigen::Matrix<std::complex<double>, -1, 1>, double>{
         Eigen::Matrix<std::complex<double>, -1, 1>::Constant(3,
           std::numeric_limits<double>::quiet_NaN()), std::numeric_limits<double>::quiet_NaN()};
       
       
-      current_statement__ = 14;
+      current_statement__ = 16;
       stan::model::assign(CV,
         std::forward_as_tuple(stan::math::promote_scalar<std::complex<double>>(V),
                               2), "assigning variable CV");
-      current_statement__ = 15;
+      current_statement__ = 17;
       V2 = 
         std::tuple<Eigen::Matrix<double, -1, 1>, int>{Eigen::Matrix<double, -1, 1>::Constant(
                                                         3,
                                                         std::numeric_limits<double>::quiet_NaN()), std::numeric_limits<int>::min()};
       
       
-      current_statement__ = 15;
+      current_statement__ = 17;
       stan::model::assign(V2, std::forward_as_tuple(V, 2),
         "assigning variable V2");
-      current_statement__ = 16;
+      current_statement__ = 18;
       stan::model::assign(CV,
         stan::math::promote_scalar<std::tuple<std::complex<double>, double>>(V2),
         "assigning variable CV");
+      current_statement__ = 19;
+      t = std::numeric_limits<double>::quiet_NaN();
+      
+      
+      current_statement__ = 19;
+      t = dummy(
+            stan::math::promote_scalar<std::tuple<double, double>>(d), pstream__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -6131,6 +6180,29 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
                                               std::tuple<local_scalar_t__,
                                                          local_scalar_t__>>>(nested),
         "assigning variable nested2");
+      std::tuple<
+        std::tuple<local_scalar_t__,
+          std::vector<std::complex<local_scalar_t__>>>, local_scalar_t__,
+        std::tuple<Eigen::Matrix<local_scalar_t__, -1, 1>, local_scalar_t__>> nested3 =
+         std::tuple<std::tuple<local_scalar_t__,
+                               std::vector<std::complex<local_scalar_t__>>>,
+                    local_scalar_t__,
+                    std::tuple<Eigen::Matrix<local_scalar_t__, -1, 1>,
+                               local_scalar_t__>>{std::tuple<local_scalar_t__,
+                                                             std::vector<std::complex<local_scalar_t__>>>{DUMMY_VAR__, 
+        std::vector<std::complex<local_scalar_t__>>(2, 
+          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__))}, DUMMY_VAR__, std::tuple<
+        Eigen::Matrix<local_scalar_t__, -1, 1>, local_scalar_t__>{Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
+                                                                    3,
+                                                                    DUMMY_VAR__), DUMMY_VAR__}};
+      current_statement__ = 6;
+      stan::model::assign(nested3,
+        stan::math::promote_scalar<std::tuple<std::tuple<local_scalar_t__,
+                                                         std::complex<local_scalar_t__>>,
+                                              local_scalar_t__,
+                                              std::tuple<local_scalar_t__,
+                                                         local_scalar_t__>>>(nested),
+        "assigning variable nested3");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -6195,6 +6267,17 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
         Eigen::Matrix<double, -1, 1>, double>{Eigen::Matrix<double, -1, 1>::Constant(
                                                 3,
                                                 std::numeric_limits<double>::quiet_NaN()), std::numeric_limits<double>::quiet_NaN()}};
+      std::tuple<std::tuple<double, std::vector<std::complex<double>>>,
+        double, std::tuple<Eigen::Matrix<double, -1, 1>, double>> nested3 =
+         std::tuple<std::tuple<double, std::vector<std::complex<double>>>,
+                    double, std::tuple<Eigen::Matrix<double, -1, 1>, double>>{std::tuple<
+        double, std::vector<std::complex<double>>>{std::numeric_limits<double>::quiet_NaN(), 
+        std::vector<std::complex<double>>(2, 
+          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+            std::numeric_limits<double>::quiet_NaN()))}, std::numeric_limits<double>::quiet_NaN(), std::tuple<
+        Eigen::Matrix<double, -1, 1>, double>{Eigen::Matrix<double, -1, 1>::Constant(
+                                                3,
+                                                std::numeric_limits<double>::quiet_NaN()), std::numeric_limits<double>::quiet_NaN()}};
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
             emit_generated_quantities__)))) {
@@ -6223,6 +6306,14 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
                                               std::tuple<local_scalar_t__,
                                                          local_scalar_t__>>>(nested),
         "assigning variable nested2");
+      current_statement__ = 6;
+      stan::model::assign(nested3,
+        stan::math::promote_scalar<std::tuple<std::tuple<local_scalar_t__,
+                                                         std::complex<local_scalar_t__>>,
+                                              local_scalar_t__,
+                                              std::tuple<local_scalar_t__,
+                                                         local_scalar_t__>>>(nested),
+        "assigning variable nested3");
       if (emit_transformed_parameters__) {
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           out__.write(std::get<0>(d2)[(sym1__ - 1)]);
@@ -6245,29 +6336,36 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
         out__.write(std::get<1>(nested2));
         out__.write(std::get<0>(std::get<2>(nested2)));
         out__.write(std::get<1>(std::get<2>(nested2)));
+        out__.write(std::get<0>(std::get<0>(nested3)));
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          out__.write(std::get<1>(std::get<0>(nested3))[(sym1__ - 1)]);
+        }
+        out__.write(std::get<1>(nested3));
+        out__.write(std::get<0>(std::get<2>(nested3)));
+        out__.write(std::get<1>(std::get<2>(nested3)));
       } 
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       } 
       int y = std::numeric_limits<int>::min();
-      current_statement__ = 5;
+      current_statement__ = 7;
       y = 1;
       std::tuple<double, double> x =
          std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
-      current_statement__ = 6;
+      current_statement__ = 8;
       stan::model::assign(x, std::forward_as_tuple(y, 3),
         "assigning variable x");
       std::tuple<std::complex<double>, double> z =
          std::tuple<std::complex<double>, double>{std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
                                                     std::numeric_limits<double>::quiet_NaN()), std::numeric_limits<double>::quiet_NaN()};
-      current_statement__ = 7;
+      current_statement__ = 9;
       stan::model::assign(z,
         stan::math::promote_scalar<std::tuple<std::complex<double>, double>>(x),
         "assigning variable z");
       std::tuple<std::complex<double>, double> z2 =
          std::tuple<std::complex<double>, double>{std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
                                                     std::numeric_limits<double>::quiet_NaN()), std::numeric_limits<double>::quiet_NaN()};
-      current_statement__ = 8;
+      current_statement__ = 10;
       stan::model::assign(z2, z, "assigning variable z2");
       out__.write(y);
       out__.write(std::get<0>(x));
@@ -6303,8 +6401,8 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__ = std::vector<std::string>{"d2", "V3", "arrs2", "nested2", "y",
-      "x", "z", "z2"};
+    names__ = std::vector<std::string>{"d2", "V3", "arrs2", "nested2",
+      "nested3", "y", "x", "z", "z2"};
     
     } // get_param_names() 
     
@@ -6324,6 +6422,9 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
       std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(3)},
       std::vector<size_t>{static_cast<size_t>(4), static_cast<size_t>(2),
                           static_cast<size_t>(2), static_cast<size_t>(2)},
+      std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(2),
+                          static_cast<size_t>(2), static_cast<size_t>(2),
+                          static_cast<size_t>(2), static_cast<size_t>(3)},
       std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(2),
                           static_cast<size_t>(2), static_cast<size_t>(2),
                           static_cast<size_t>(2), static_cast<size_t>(3)},
@@ -6378,6 +6479,20 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
         } 
       }
       param_names__.emplace_back(std::string() + "nested2:3:2");
+      param_names__.emplace_back(std::string() + "nested3:1:1");
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.emplace_back(std::string() + "nested3:1:2" + '.' + std::to_string(sym1__) + '.' + "real");
+          param_names__.emplace_back(std::string() + "nested3:1:2" + '.' + std::to_string(sym1__) + '.' + "imag");
+        } 
+      }
+      param_names__.emplace_back(std::string() + "nested3:2");
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        {
+          param_names__.emplace_back(std::string() + "nested3:3:1" + '.' + std::to_string(sym1__));
+        } 
+      }
+      param_names__.emplace_back(std::string() + "nested3:3:2");
     }
     
     if (emit_generated_quantities__) {
@@ -6441,6 +6556,20 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
         } 
       }
       param_names__.emplace_back(std::string() + "nested2:3:2");
+      param_names__.emplace_back(std::string() + "nested3:1:1");
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.emplace_back(std::string() + "nested3:1:2" + '.' + std::to_string(sym1__) + '.' + "real");
+          param_names__.emplace_back(std::string() + "nested3:1:2" + '.' + std::to_string(sym1__) + '.' + "imag");
+        } 
+      }
+      param_names__.emplace_back(std::string() + "nested3:2");
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        {
+          param_names__.emplace_back(std::string() + "nested3:3:1" + '.' + std::to_string(sym1__));
+        } 
+      }
+      param_names__.emplace_back(std::string() + "nested3:3:2");
     }
     
     if (emit_generated_quantities__) {
@@ -6459,13 +6588,13 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
     
   inline std::string get_constrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"d2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}]},\"block\":\"transformed_parameters\"},{\"name\":\"V3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]},\"block\":\"transformed_parameters\"},{\"name\":\"arrs2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]}},\"block\":\"transformed_parameters\"},{\"name\":\"nested2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]}]},\"block\":\"transformed_parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"d2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}]},\"block\":\"transformed_parameters\"},{\"name\":\"V3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]},\"block\":\"transformed_parameters\"},{\"name\":\"arrs2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]}},\"block\":\"transformed_parameters\"},{\"name\":\"nested2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]}]},\"block\":\"transformed_parameters\"},{\"name\":\"nested3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]}]},\"block\":\"transformed_parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"}]");
     
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"d2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}]},\"block\":\"transformed_parameters\"},{\"name\":\"V3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]},\"block\":\"transformed_parameters\"},{\"name\":\"arrs2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},\"block\":\"transformed_parameters\"},{\"name\":\"nested2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]}]},\"block\":\"transformed_parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"d2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}]},\"block\":\"transformed_parameters\"},{\"name\":\"V3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]},\"block\":\"transformed_parameters\"},{\"name\":\"arrs2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},\"block\":\"transformed_parameters\"},{\"name\":\"nested2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]}]},\"block\":\"transformed_parameters\"},{\"name\":\"nested3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]}]},\"block\":\"transformed_parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"}]");
     
     } // get_unconstrained_sizedtypes() 
     
@@ -6480,8 +6609,8 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 0;
       const size_t num_transformed = emit_transformed_parameters * 
-  (((((3 * 2) + (3 * 2)) + (3 + 1)) + (4 * (1 + (2 * 2)))) +
-    (((1 + (2 * 2)) + 1) + (3 + 1)));
+  ((((((3 * 2) + (3 * 2)) + (3 + 1)) + (4 * (1 + (2 * 2)))) +
+     (((1 + (2 * 2)) + 1) + (3 + 1))) + (((1 + (2 * 2)) + 1) + (3 + 1)));
       const size_t num_gen_quantities = emit_generated_quantities * 
   (((1 + (1 + 1)) + (2 + 1)) + (2 + 1));
       const size_t num_to_write = num_params__ + num_transformed +
@@ -6502,8 +6631,8 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 0;
       const size_t num_transformed = emit_transformed_parameters * 
-  (((((3 * 2) + (3 * 2)) + (3 + 1)) + (4 * (1 + (2 * 2)))) +
-    (((1 + (2 * 2)) + 1) + (3 + 1)));
+  ((((((3 * 2) + (3 * 2)) + (3 + 1)) + (4 * (1 + (2 * 2)))) +
+     (((1 + (2 * 2)) + 1) + (3 + 1))) + (((1 + (2 * 2)) + 1) + (3 + 1)));
       const size_t num_gen_quantities = emit_generated_quantities * 
   (((1 + (1 + 1)) + (2 + 1)) + (2 + 1));
       const size_t num_to_write = num_params__ + num_transformed +
@@ -6563,9 +6692,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
      vars.resize(num_params_r__);
      transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
-    
-};
-}
+     }; } 
 using stan_model = tuple_promotion_model_namespace::tuple_promotion_model;
 
 #ifndef USING_R
