@@ -198,7 +198,7 @@ model {
   c ~ poisson(3.0);
   c ~ poisson_log(3.0);
   c ~ poisson_log(3.0);
-  if (a) {
+  if (b != 0.0) {
     x ~ normal(0, 1);
     x ~ normal_log(0, 1);
     x ~ normal_log(0, 1);
@@ -209,6 +209,11 @@ model {
     x ~ exponential(1);
     target += foo_lcdf(x | 1);
   }
+  while (0.0 != 0.0) {
+    
+  }
+  
+  int bool = !(b != 0.0) < 2 && (d != 0.0) || (x != 0.0);
   
   target += normal_lpdf(x | 0, 1) + normal_lcdf(2 | 0, 1)
             + normal_lccdf(3 | 0, 1);
@@ -272,8 +277,20 @@ model {
   real y;
   y = ((y_raw > 0) ? 1 : -1) - y_raw;
   y = ((y_raw > 0) ? 1 : -1) - y_raw;
+  
+  int bool = ((1 < 2) > 3) < 4;
 }
 
+Warning in 'parenthesize.stan', line 23, column 13: Found 1 < 2 < 3. This is
+    interpreted as (1 < 2) < 3. Consider if the intended meaning was 
+    1 > 2 && 2 < 3 instead.
+    You can silence this warning by adding explicit parenthesis. This can be
+    automatically changed using the canonicalize flag for stanc
+Warning in 'parenthesize.stan', line 23, column 13: Found 1 < 2 > 3 > 4. This
+    is interpreted as (1 < 2 > 3) > 4. Consider if the intended meaning was 
+    1 < 2 < 3 && 3 > 4 instead.
+    You can silence this warning by adding explicit parenthesis. This can be
+    automatically changed using the canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc --print-canonical squaremc.stan
 /*
  * BUGS Volume 3, funshapes, square minus circle
