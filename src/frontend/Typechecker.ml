@@ -606,6 +606,29 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                 "If you intended matrix exponentiation, use the function \
                  matrix_power(matrix,int) instead." in
             add_warning x.emeta.loc s
+        | _ when Operator.is_cmp op -> (
+          match le.expr with
+          | BinOp (e1, op2, e2) when Operator.is_cmp op2 ->
+              let pp_e = Pretty_printing.pp_typed_expression in
+              let pp = Operator.pp in
+              add_warning loc
+                (Fmt.str
+                   "Found %a. This is interpreted as %a. Consider if the \
+                    intended meaning was %a instead.@ You can silence this \
+                    warning by adding explicit parenthesis. This can be \
+                    automatically changed using the canonicalize flag for \
+                    stanc"
+                   (fun ppf () ->
+                     Fmt.pf ppf "@[<hov>%a %a %a@]" pp_e le pp op2 pp_e re )
+                   ()
+                   (fun ppf () ->
+                     Fmt.pf ppf "@[<hov>(%a) %a %a@]" pp_e le pp op2 pp_e re )
+                   ()
+                   (fun ppf () ->
+                     Fmt.pf ppf "@[<hov>%a %a %a && %a %a %a@]" pp_e e1 pp op
+                       pp_e e2 pp_e e2 pp op2 pp_e re )
+                   () )
+          | _ -> () )
         | _ -> () in
       binop_type_warnings le re ; check_binop loc op le re
   | PrefixOp (op, e) -> ce e |> check_prefixop loc op

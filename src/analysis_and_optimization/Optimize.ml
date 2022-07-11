@@ -500,8 +500,7 @@ let function_inlining (mir : Program.Typed.t) =
         (inline_function_statement true UnsizedType.AutoDiffable
            autodiff_inline_map ) in
   { mir with
-    prepare_data= dataonly_inline_function_statements mir.prepare_data
-  ; transform_inits= autodiffable_inline_function_statements mir.transform_inits
+    transform_inits= autodiffable_inline_function_statements mir.transform_inits
   ; log_prob= autodiffable_inline_function_statements mir.log_prob
   ; generate_quantities=
       dataonly_inline_function_statements mir.generate_quantities }

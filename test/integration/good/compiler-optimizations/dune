@@ -33,7 +33,8 @@
    lupdf-inlining.stan
    unenforce-initialize.stan
    partial_eval_multiply.stan
-   inline-functions-varmat.stan))
+   inline-functions-varmat.stan
+   inline-tdata.stan))
  (action
   (with-stdout-to
    %{targets}
@@ -79,7 +80,8 @@
    unenforce-initialize.stan
    unenforce-initialize-should-fail.stan
    partial_eval_multiply.stan
-   inline-functions-varmat.stan))
+   inline-functions-varmat.stan
+   inline-tdata.stan))
  (action
   (with-stdout-to
    %{targets}
