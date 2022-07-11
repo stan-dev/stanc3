@@ -57,5 +57,15 @@ model {
   target += foo_t_log(1,3);
   1 ~ foo(3);
 
+  if (1 < 2 < 3 < 4) {
+    // multiple comparisons
+  }
+  while (z) {
+    // real as boolean value
+    if (x && !z || xyz[3]) {
+      // more boolean reals
+    }
+  }
+
 }
 
