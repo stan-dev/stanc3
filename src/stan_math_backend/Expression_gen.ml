@@ -498,8 +498,10 @@ and pp_compiler_internal_fn ad ut f ppf es =
   let pp_array_literal ut ppf es =
     pf ppf "std::vector<%a>{@,%a}" pp_unsizedtype_local (ad, ut)
       (list ~sep:comma pp_expr) es in
-  let pp_tuple_literal ppf es =
-    pf ppf "std::forward_as_tuple(@[%a@])" (list ~sep:comma pp_expr) es in
+  let pp_tuple_literal ppf (es, local_types) =
+    pf ppf "std::make_tuple@[<hov 2><@[%a@]>@,(@[%a@])@]"
+      (list ~sep:comma pp_unsizedtype_local)
+      local_types (list ~sep:comma pp_expr) es in
   match f with
   | Internal_fun.FnMakeArray ->
       let ut =
@@ -564,7 +566,17 @@ and pp_compiler_internal_fn ad ut f ppf es =
   | FnDeepCopy ->
       gen_fun_app FnPlain ppf "stan::model::deep_copy" es Mem_pattern.AoS
         (Some UnsizedType.Void)
-  | FnMakeTuple -> pp_tuple_literal ppf es
+  | FnMakeTuple ->
+      let local_types =
+        match (ad, ut) with
+        | TupleAD ads, UTuple ts -> List.zip_exn ads ts
+        | _ ->
+            Common.FatalError.fatal_error_msg
+              [%message
+                "Tuple literal must have tuple type and AD but found "
+                  (ut : UnsizedType.t)
+                  (ad : UnsizedType.autodifftype)] in
+      pp_tuple_literal ppf (es, local_types)
   | _ ->
       gen_fun_app FnPlain ppf (Internal_fun.to_string f) es Mem_pattern.AoS
         (Some UnsizedType.Void)

@@ -6970,27 +6970,6 @@
           (adlevel (TupleAD (DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id s) (decl_type (Sized SReal))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (LVariable s) UReal
-      ((pattern
-        (FunApp (UserDefined tsum FnPlain)
-         (((pattern
-            (FunApp (CompilerInternal FnMakeTuple)
-             (((pattern (Var a1))
-               (meta
-                ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
-              ((pattern (Var a2))
-               (meta
-                ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
-           (meta
-            ((type_ (UTuple ((UArray UInt) (UArray UReal)))) (loc <opaque>)
-             (adlevel (TupleAD (DataOnly DataOnly)))))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
      (NRFunApp (UserDefined foo2 FnPlain)
       (((pattern
          (FunApp (CompilerInternal FnMakeArray)
@@ -7011,15 +6990,6 @@
         (meta
          ((type_ (UArray (UTuple (UMatrix)))) (loc <opaque>)
           (adlevel (TupleAD (DataOnly)))))))))
-    (meta <opaque>))
-   ((pattern
-     (NRFunApp
-      (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
-        (var
-         ((pattern (Var s))
-          (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-      ()))
     (meta <opaque>))))
  (transform_inits
   (((pattern
@@ -7031,11 +7001,8 @@
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
- (output_vars
-  ((s
-    ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block GeneratedQuantities) (out_trans Identity)))))
- (prog_name tuple_templating_model) (prog_path tuple-templating.stan))
+ (output_vars ()) (prog_name tuple_templating_model)
+ (prog_path tuple-templating.stan))
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuples-constraints-data.stan
 ((functions_block ()) (input_vars ((x (STuple (SInt SReal)))))
  (prepare_data
