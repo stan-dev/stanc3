@@ -499,7 +499,7 @@ and pp_compiler_internal_fn ad ut f ppf es =
     pf ppf "std::vector<%a>{@,%a}" pp_unsizedtype_local (ad, ut)
       (list ~sep:comma pp_expr) es in
   let pp_tuple_literal ppf (es, local_types) =
-    pf ppf "std::make_tuple@[<hov 2><@[%a@]>@,(@[%a@])@]"
+    pf ppf "std::foward_as_tuple@[<hov 2><@[%a@]>@,(@[%a@])@]"
       (list ~sep:comma pp_unsizedtype_local)
       local_types (list ~sep:comma pp_expr) es in
   match f with

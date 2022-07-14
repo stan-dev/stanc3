@@ -63,39 +63,42 @@ let is_data_matrix_or_not_int_type = function
  *)
 let template_parameter_names (args : Program.fun_arg_decl) =
   List.mapi args ~f:(fun i arg ->
-      match is_data_matrix_or_not_int_type arg with
-      (* TUPLE TODO: We need one template param per
-         (flattened) tuple item. Gonna be a bit of a pain. *)
-      | true -> Some (sprintf "T%d__" i)
-      | false -> None )
+      match arg with
+      | _, _, t when UnsizedType.is_int_type t -> []
+      | UnsizedType.DataOnly, _, ut when not (UnsizedType.is_eigen_type ut) ->
+          [] (* TUPLE TODO: Need a template for each tuple arg *)
+      | _ -> [sprintf "T%d__" i] )
 
 let requires (_, _, ut) t =
+  let tmpl = List.hd_exn t in
   match ut with
   | UnsizedType.URowVector ->
-      [ Require ("stan::is_row_vector", t)
-      ; Require ("stan::is_vt_not_complex", t) ]
+      [ Require ("stan::is_row_vector", tmpl)
+      ; Require ("stan::is_vt_not_complex", tmpl) ]
   | UComplexRowVector ->
-      [Require ("stan::is_row_vector", t); Require ("stan::is_vt_complex", t)]
+      [ Require ("stan::is_row_vector", tmpl)
+      ; Require ("stan::is_vt_complex", tmpl) ]
   | UVector ->
-      [ Require ("stan::is_col_vector", t)
-      ; Require ("stan::is_vt_not_complex", t) ]
+      [ Require ("stan::is_col_vector", tmpl)
+      ; Require ("stan::is_vt_not_complex", tmpl) ]
   | UComplexVector ->
-      [Require ("stan::is_col_vector", t); Require ("stan::is_vt_complex", t)]
+      [ Require ("stan::is_col_vector", tmpl)
+      ; Require ("stan::is_vt_complex", tmpl) ]
   | UMatrix ->
-      [ Require ("stan::is_eigen_matrix_dynamic", t)
-      ; Require ("stan::is_vt_not_complex", t) ]
+      [ Require ("stan::is_eigen_matrix_dynamic", tmpl)
+      ; Require ("stan::is_vt_not_complex", tmpl) ]
   | UComplexMatrix ->
-      [ Require ("stan::is_eigen_matrix_dynamic", t)
-      ; Require ("stan::is_vt_complex", t) ]
+      [ Require ("stan::is_eigen_matrix_dynamic", tmpl)
+      ; Require ("stan::is_vt_complex", tmpl) ]
       (* NB: Not unwinding array types due to the way arrays of eigens are printed *)
-  | _ -> [Require ("stan::is_stan_scalar", t)]
+  | _ -> [Require ("stan::is_stan_scalar", tmpl)]
 
-let optional_require_templates (name_ops : string option list)
+let optional_require_templates (name_ops : string list list)
     (args : Program.fun_arg_decl) =
   List.map2_exn name_ops args ~f:(fun name_op fun_arg ->
       match name_op with
-      | Some param_name -> requires fun_arg param_name
-      | None -> [] )
+      | [] -> []
+      | param_names -> requires fun_arg param_names )
 
 let return_optional_arg_types (args : Program.fun_arg_decl) =
   List.mapi args ~f:(fun i ((_, _, ut) as arg) ->
@@ -106,7 +109,7 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
 
 let%expect_test "arg types templated correctly" =
   [(AutoDiffable, "xreal", UReal); (DataOnly, "yint", UInt)]
-  |> template_parameter_names |> List.filter_opt |> String.concat ~sep:","
+  |> template_parameter_names |> List.concat |> String.concat ~sep:","
   |> print_endline ;
   [%expect {| T0__ |}]
 
@@ -160,8 +163,9 @@ let pp_eigen_arg_to_ref ppf arg_types =
 let pp_arg ppf (custom_scalar_opt, (_, name, ut)) =
   let scalar =
     match custom_scalar_opt with
-    | Some scalar -> scalar
-    | None -> stantype_prim_str ut in
+    | [scalar] -> scalar
+    | [] -> stantype_prim_str ut
+    | _ -> failwith "bad 1" in
   (* we add the _arg suffix for any Eigen types *)
   pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
     name
@@ -169,8 +173,9 @@ let pp_arg ppf (custom_scalar_opt, (_, name, ut)) =
 let pp_arg_eigen_suffix ppf (custom_scalar_opt, (_, name, ut)) =
   let scalar =
     match custom_scalar_opt with
-    | Some scalar -> scalar
-    | None -> stantype_prim_str ut in
+    | [scalar] -> scalar
+    | [] -> stantype_prim_str ut
+    | _ -> failwith "bad 2" in
   (* we add the _arg suffix for any Eigen types *)
   let opt_arg_suffix =
     if UnsizedType.is_eigen_type ut then name ^ "_arg__" else name in
@@ -189,7 +194,7 @@ let templates_and_args (is_possibly_eigen_expr : bool)
   let arg_type_templates = template_parameter_names fdargs in
   let require_arg_templates =
     optional_require_templates arg_type_templates fdargs in
-  ( List.filter_opt arg_type_templates
+  ( List.concat arg_type_templates
   , List.concat require_arg_templates
   , if not is_possibly_eigen_expr then
       List.map

@@ -6953,43 +6953,6 @@
       ((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
        (meta <opaque>))
       ()))
-    (meta <opaque>))
-   ((pattern
-     (NRFunApp (UserDefined foo FnPlain)
-      (((pattern
-         (FunApp (CompilerInternal FnMakeTuple)
-          (((pattern
-             (FunApp (StanLib Plus__ FnPlain AoS)
-              (((pattern (Var m1))
-                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
-               ((pattern (Var m2))
-                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
-        (meta
-         ((type_ (UTuple (UMatrix))) (loc <opaque>)
-          (adlevel (TupleAD (DataOnly)))))))))
-    (meta <opaque>))
-   ((pattern
-     (NRFunApp (UserDefined foo2 FnPlain)
-      (((pattern
-         (FunApp (CompilerInternal FnMakeArray)
-          (((pattern
-             (FunApp (CompilerInternal FnMakeTuple)
-              (((pattern
-                 (FunApp (StanLib Plus__ FnPlain AoS)
-                  (((pattern (Var m1))
-                    (meta
-                     ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
-                   ((pattern (Var m2))
-                    (meta
-                     ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
-                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta
-             ((type_ (UTuple (UMatrix))) (loc <opaque>)
-              (adlevel (TupleAD (DataOnly)))))))))
-        (meta
-         ((type_ (UArray (UTuple (UMatrix)))) (loc <opaque>)
-          (adlevel (TupleAD (DataOnly)))))))))
     (meta <opaque>))))
  (transform_inits
   (((pattern

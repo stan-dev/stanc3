@@ -22,9 +22,9 @@ data {
 
 generated quantities {
   // eigen expression inside tuple
-  foo((m1+m2,));
+  // foo((m1+m2,));
   // different types inside tuple
   // real s = tsum((a1,a2));
   // eigen expression inside tuple inside array
-  foo2({(m1+m2,)});
+  // foo2({(m1+m2,)});
 }

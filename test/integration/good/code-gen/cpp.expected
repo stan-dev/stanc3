@@ -834,9 +834,9 @@ std::vector<std::vector<T1__>>>>>& x2,
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       current_statement__ = 9;
-      return std::make_tuple<int, std::vector<std::tuple<int, double>>>
-                              (1, std::vector<std::tuple<int, double>>{
-                               std::make_tuple<int, double>(2, 3.4)});
+      return std::foward_as_tuple<int, std::vector<std::tuple<int, double>>>
+                                   (1, std::vector<std::tuple<int, double>>{
+                                    std::foward_as_tuple<int, double>(2, 3.4)});
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -958,10 +958,11 @@ class complex_tuples_model final : public model_base_crtp<complex_tuples_model> 
       
       current_statement__ = 8;
       stan::model::assign(d,
-        std::make_tuple<int, double, std::vector<std::tuple<double, double>>>
-                         (1, 2.5, std::vector<std::tuple<int, int>>{
-                          std::make_tuple<int, int>(1, 2),
-                          std::make_tuple<int, int>(3, 4)}),
+        std::foward_as_tuple<int, double, std::vector<std::tuple<double,
+                             double>>>
+                              (1, 2.5, std::vector<std::tuple<int, int>>{
+                               std::foward_as_tuple<int, int>(1, 2),
+                               std::foward_as_tuple<int, int>(3, 4)}),
         "assigning variable d");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
