@@ -59,8 +59,7 @@ let rec pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
       string ppf scalar
   | UComplex -> pf ppf "std::complex<%s>" scalar
   | UArray t when UnsizedType.contains_tuple t ->
-      (* TUPLE TODO: still not sure about these, need to print with scalar *)
-      (* Expressions are not accepted for arrays of Eigen::Matrix *)
+      (* TUPLE MAYBE: still not sure about these, need to print with scalar *)
       pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar_eigen_exprs
         (scalar, t)
   | UArray t ->
@@ -120,7 +119,6 @@ let requires ut t =
  *)
 let template_parameters (args : Program.fun_arg_decl) =
   let arg_name = str "%a" pp_arg_type in
-  (* TODO also return type to print, like eigen::whatever or T1*)
   let rec template_p start i (ad, typ) =
     match (ad, typ) with
     | _, t when UnsizedType.is_int_type t -> ([], [], arg_name (None, typ))
@@ -305,7 +303,7 @@ let gen_pp_sig fdargs fdrt extra_templates extra ppf (name, args, variadic) =
     @ mk_extra_args extra_templates extra
     @ ["std::ostream* pstream__"]
     @ variadic_args in
-  pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs ;
+  pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma text) arg_strs ;
   Format.close_box ()
 
 (** Print the C++ function definition.
@@ -612,9 +610,8 @@ let%expect_test "udf-expressions" =
                                   stan::is_stan_scalar<T3__>>* = nullptr>
     Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, stan::base_type_t<T1__>,
                          stan::base_type_t<T2__>, T3__>, -1, -1>
-    sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,
-         const std::vector<Eigen::Matrix<T3__, -1, -1>>& w,
-         std::ostream* pstream__) {
+    sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__, const
+         std::vector<Eigen::Matrix<T3__, -1, -1>>& w, std::ostream* pstream__) {
       using local_scalar_t__ =
               stan::promote_args_t<stan::base_type_t<T0__>,
                                    stan::base_type_t<T1__>,

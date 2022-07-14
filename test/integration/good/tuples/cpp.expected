@@ -824,8 +824,8 @@ template <typename T0__0__,
 template <typename T0__0__,
           stan::require_all_t<stan::is_stan_scalar<T0__0__>>*>
 void
-foo_functor__::operator()(const std::tuple<const T0__0__&>& x,
-                          std::ostream* pstream__)  const
+foo_functor__::operator()(const std::tuple<const T0__0__&>& x, std::ostream*
+                          pstream__)  const
 {
   return foo(x, pstream__);
 }
@@ -3134,13 +3134,13 @@ static constexpr std::array<const char*, 5> locations_array__ =
 
 struct foo_functor__ {
   double
-  operator()(const std::tuple<const double&, const double&>& x,
-             std::ostream* pstream__) const;
+  operator()(const std::tuple<const double&, const double&>& x, std::ostream*
+             pstream__) const;
 };
 
 double
-  foo(const std::tuple<const double&, const double&>& x,
-      std::ostream* pstream__) {
+  foo(const std::tuple<const double&, const double&>& x, std::ostream*
+      pstream__) {
     using local_scalar_t__ = double;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
@@ -5921,16 +5921,16 @@ struct dummy_functor__ {
             stan::require_all_t<stan::is_stan_scalar<T0__0__>,
                                 stan::is_stan_scalar<T0__1__>>* = nullptr>
   stan::promote_args_t<T0__0__, T0__1__>
-  operator()(const std::tuple<const std::vector<T0__0__>&, const std::vector<T0__1__>&>& test,
-             std::ostream* pstream__) const;
+  operator()(const std::tuple<const std::vector<T0__0__>&, const
+             std::vector<T0__1__>&>& test, std::ostream* pstream__) const;
 };
 
 template <typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::is_stan_scalar<T0__0__>,
                               stan::is_stan_scalar<T0__1__>>* = nullptr>
   stan::promote_args_t<T0__0__, T0__1__>
-  dummy(const std::tuple<const std::vector<T0__0__>&, const std::vector<T0__1__>&>& test,
-        std::ostream* pstream__) {
+  dummy(const std::tuple<const std::vector<T0__0__>&, const
+        std::vector<T0__1__>&>& test, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__0__, T0__1__>;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
@@ -5949,8 +5949,9 @@ template <typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::is_stan_scalar<T0__0__>,
                               stan::is_stan_scalar<T0__1__>>*>
 stan::promote_args_t<T0__0__, T0__1__>
-dummy_functor__::operator()(const std::tuple<const std::vector<T0__0__>&, const std::vector<T0__1__>&>& test,
-                            std::ostream* pstream__)  const
+dummy_functor__::operator()(const std::tuple<const std::vector<T0__0__>&,
+                            const std::vector<T0__1__>&>& test, std::ostream*
+                            pstream__)  const
 {
   return dummy(test, pstream__);
 }
@@ -6756,16 +6757,16 @@ struct tsum_functor__ {
   template <typename T0__1__,
             stan::require_all_t<stan::is_stan_scalar<T0__1__>>* = nullptr>
   stan::promote_args_t<T0__1__>
-  operator()(const std::tuple<const std::vector<int>&, const std::vector<T0__1__>&>& s,
-             std::ostream* pstream__) const;
+  operator()(const std::tuple<const std::vector<int>&, const
+             std::vector<T0__1__>&>& s, std::ostream* pstream__) const;
 };
 struct foo2_functor__ {
   template <typename T0__0__,
             stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
                                 stan::is_vt_not_complex<T0__0__>>* = nullptr>
   void
-  operator()(const std::vector<std::tuple<const T0__0__&>>& test,
-             std::ostream* pstream__) const;
+  operator()(const std::vector<std::tuple<const T0__0__&>>& test, std::ostream*
+             pstream__) const;
 };
 struct foo3_functor__ {
   template <typename T0__0__, typename T0__1__,
@@ -6808,8 +6809,8 @@ template <typename T0__0__,
 template <typename T0__1__,
           stan::require_all_t<stan::is_stan_scalar<T0__1__>>* = nullptr>
   stan::promote_args_t<T0__1__>
-  tsum(const std::tuple<const std::vector<int>&, const std::vector<T0__1__>&>& s,
-       std::ostream* pstream__) {
+  tsum(const std::tuple<const std::vector<int>&, const
+       std::vector<T0__1__>&>& s, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__1__>;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
@@ -6827,8 +6828,8 @@ template <typename T0__0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
                               stan::is_vt_not_complex<T0__0__>>* = nullptr>
   void
-  foo2(const std::vector<std::tuple<const T0__0__&>>& test,
-       std::ostream* pstream__) {
+  foo2(const std::vector<std::tuple<const T0__0__&>>& test, std::ostream*
+       pstream__) {
     using local_scalar_t__ =
             stan::promote_args_t<stan::base_type_t<T0__0__>>;
     int current_statement__ = 0; 
@@ -6853,8 +6854,8 @@ template <typename T0__0__, typename T0__1__,
                               stan::is_eigen_matrix_dynamic<T0__1__>,
                               stan::is_vt_not_complex<T0__1__>>* = nullptr>
   void
-  foo3(const std::tuple<const T0__0__&, const T0__1__&>& test,
-       std::ostream* pstream__) {
+  foo3(const std::tuple<const T0__0__&, const T0__1__&>& test, std::ostream*
+       pstream__) {
     using local_scalar_t__ =
             stan::promote_args_t<T0__0__, stan::base_type_t<T0__1__>>;
     int current_statement__ = 0; 
@@ -6875,8 +6876,9 @@ template <typename T0__0__, typename T0__1__,
 template <typename T0__1__,
           stan::require_all_t<stan::is_stan_scalar<T0__1__>>*>
 stan::promote_args_t<T0__1__>
-tsum_functor__::operator()(const std::tuple<const std::vector<int>&, const std::vector<T0__1__>&>& s,
-                           std::ostream* pstream__)  const
+tsum_functor__::operator()(const std::tuple<const std::vector<int>&, const
+                           std::vector<T0__1__>&>& s, std::ostream* pstream__) 
+const
 {
   return tsum(s, pstream__);
 }
@@ -6885,8 +6887,8 @@ template <typename T0__0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
                               stan::is_vt_not_complex<T0__0__>>*>
 void
-foo2_functor__::operator()(const std::vector<std::tuple<const T0__0__&>>& test,
-                           std::ostream* pstream__)  const
+foo2_functor__::operator()(const std::vector<std::tuple<const T0__0__&>>&
+                           test, std::ostream* pstream__)  const
 {
   return foo2(test, pstream__);
 }
@@ -6896,8 +6898,8 @@ template <typename T0__0__, typename T0__1__,
                               stan::is_eigen_matrix_dynamic<T0__1__>,
                               stan::is_vt_not_complex<T0__1__>>*>
 void
-foo3_functor__::operator()(const std::tuple<const T0__0__&, const T0__1__&>& test,
-                           std::ostream* pstream__)  const
+foo3_functor__::operator()(const std::tuple<const T0__0__&, const T0__1__&>&
+                           test, std::ostream* pstream__)  const
 {
   return foo3(test, pstream__);
 }

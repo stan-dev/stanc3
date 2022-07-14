@@ -263,24 +263,23 @@ template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 void
-test_lp_functor__::operator()(const T0__& a, T_lp__& lp__,
-                              T_lp_accum__& lp_accum__,
-                              std::ostream* pstream__)  const
+test_lp_functor__::operator()(const T0__& a, T_lp__& lp__, T_lp_accum__&
+                              lp_accum__, std::ostream* pstream__)  const
 {
   return test_lp<propto__>(a, lp__, lp_accum__, pstream__);
 }
 
 double
-int_array_fun_functor__::operator()(const std::vector<int>& a,
-                                    std::ostream* pstream__)  const
+int_array_fun_functor__::operator()(const std::vector<int>& a, std::ostream*
+                                    pstream__)  const
 {
   return int_array_fun(a, pstream__);
 }
 
 template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
-array_fun_functor__::operator()(const std::vector<T0__>& a,
-                                std::ostream* pstream__)  const
+array_fun_functor__::operator()(const std::vector<T0__>& a, std::ostream*
+                                pstream__)  const
 {
   return array_fun(a, pstream__);
 }
@@ -297,8 +296,8 @@ template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
-my_vector_mul_by_5_functor__::operator()(const T0__& x,
-                                         std::ostream* pstream__)  const
+my_vector_mul_by_5_functor__::operator()(const T0__& x, std::ostream*
+                                         pstream__)  const
 {
   return my_vector_mul_by_5(x, pstream__);
 }
@@ -307,8 +306,8 @@ template <bool propto__, typename T0__, typename T1__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T1__>>*>
 stan::promote_args_t<T0__, T1__>
-test_lpdf_functor__::operator()(const T0__& a, const T1__& b,
-                                std::ostream* pstream__)  const
+test_lpdf_functor__::operator()(const T0__& a, const T1__& b, std::ostream*
+                                pstream__)  const
 {
   return test_lpdf<propto__>(a, b, pstream__);
 }
@@ -316,8 +315,8 @@ test_lpdf_functor__::operator()(const T0__& a, const T1__& b,
 template <typename T0__, typename RNG,
           stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
-test_rng_functor__::operator()(const T0__& a, RNG& base_rng__,
-                               std::ostream* pstream__)  const
+test_rng_functor__::operator()(const T0__& a, RNG& base_rng__, std::ostream*
+                               pstream__)  const
 {
   return test_rng(a, base_rng__, pstream__);
 }
@@ -660,24 +659,23 @@ template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 void
-test_lp_functor__::operator()(const T0__& a, T_lp__& lp__,
-                              T_lp_accum__& lp_accum__,
-                              std::ostream* pstream__)  const
+test_lp_functor__::operator()(const T0__& a, T_lp__& lp__, T_lp_accum__&
+                              lp_accum__, std::ostream* pstream__)  const
 {
   return test_lp<propto__>(a, lp__, lp_accum__, pstream__);
 }
 
 double
-int_array_fun_functor__::operator()(const std::vector<int>& a,
-                                    std::ostream* pstream__)  const
+int_array_fun_functor__::operator()(const std::vector<int>& a, std::ostream*
+                                    pstream__)  const
 {
   return int_array_fun(a, pstream__);
 }
 
 template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
-array_fun_functor__::operator()(const std::vector<T0__>& a,
-                                std::ostream* pstream__)  const
+array_fun_functor__::operator()(const std::vector<T0__>& a, std::ostream*
+                                pstream__)  const
 {
   return array_fun(a, pstream__);
 }
@@ -694,8 +692,8 @@ template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
-my_vector_mul_by_5_functor__::operator()(const T0__& x,
-                                         std::ostream* pstream__)  const
+my_vector_mul_by_5_functor__::operator()(const T0__& x, std::ostream*
+                                         pstream__)  const
 {
   return my_vector_mul_by_5(x, pstream__);
 }
@@ -704,8 +702,8 @@ template <bool propto__, typename T0__, typename T1__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T1__>>*>
 stan::promote_args_t<T0__, T1__>
-test_lpdf_functor__::operator()(const T0__& a, const T1__& b,
-                                std::ostream* pstream__)  const
+test_lpdf_functor__::operator()(const T0__& a, const T1__& b, std::ostream*
+                                pstream__)  const
 {
   return test_lpdf<propto__>(a, b, pstream__);
 }
@@ -713,8 +711,8 @@ test_lpdf_functor__::operator()(const T0__& a, const T1__& b,
 template <typename T0__, typename RNG,
           stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
-test_rng_functor__::operator()(const T0__& a, RNG& base_rng__,
-                               std::ostream* pstream__)  const
+test_rng_functor__::operator()(const T0__& a, RNG& base_rng__, std::ostream*
+                               pstream__)  const
 {
   return test_rng(a, base_rng__, pstream__);
 }
@@ -823,9 +821,9 @@ struct integrand_ode_functor__ {
                                 stan::is_stan_scalar<T2__>,
                                 stan::is_stan_scalar<T3__>>* = nullptr>
   std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
-  operator()(const T0__& r, const std::vector<T1__>& f,
-             const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
-             const std::vector<int>& x_i, std::ostream* pstream__) const;
+  operator()(const T0__& r, const std::vector<T1__>& f, const
+             std::vector<T2__>& theta, const std::vector<T3__>& x_r, const
+             std::vector<int>& x_i, std::ostream* pstream__) const;
 };
 struct ode_integrate_functor__ {
   double
@@ -864,9 +862,9 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T2__>,
                               stan::is_stan_scalar<T3__>>* = nullptr>
   std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
-  integrand_ode(const T0__& r, const std::vector<T1__>& f,
-                const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
-                const std::vector<int>& x_i, std::ostream* pstream__) {
+  integrand_ode(const T0__& r, const std::vector<T1__>& f, const
+                std::vector<T2__>& theta, const std::vector<T3__>& x_r, const
+                std::vector<int>& x_i, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
@@ -917,12 +915,11 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T2__>,
                               stan::is_stan_scalar<T3__>>*>
 std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
-integrand_ode_functor__::operator()(const T0__& r,
-                                    const std::vector<T1__>& f,
-                                    const std::vector<T2__>& theta,
-                                    const std::vector<T3__>& x_r,
-                                    const std::vector<int>& x_i,
-                                    std::ostream* pstream__)  const
+integrand_ode_functor__::operator()(const T0__& r, const std::vector<T1__>&
+                                    f, const std::vector<T2__>& theta, const
+                                    std::vector<T3__>& x_r, const
+                                    std::vector<int>& x_i, std::ostream*
+                                    pstream__)  const
 {
   return integrand_ode(r, f, theta, x_r, x_i, pstream__);
 }
