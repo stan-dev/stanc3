@@ -6586,6 +6586,24 @@
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
        (meta <opaque>))))
+    (fdloc <opaque>))
+   ((fdrt ()) (fdname foo3) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable test (UTuple (UReal UMatrix)))))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (NRFunApp (CompilerInternal FnPrint)
+             (((pattern
+                (TupleProjection
+                 ((pattern (Var test))
+                  (meta
+                   ((type_ (UTuple (UReal UMatrix))) (loc <opaque>)
+                    (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+                 1))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
     (fdloc <opaque>))))
  (input_vars
   ((N SInt)
@@ -6955,6 +6973,21 @@
       ()))
     (meta <opaque>))
    ((pattern
+     (NRFunApp (UserDefined foo FnPlain)
+      (((pattern
+         (FunApp (CompilerInternal FnMakeTuple)
+          (((pattern
+             (FunApp (StanLib Plus__ FnPlain AoS)
+              (((pattern (Var m1))
+                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Var m2))
+                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+        (meta
+         ((type_ (UTuple (UMatrix))) (loc <opaque>)
+          (adlevel (TupleAD (DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
      (Decl (decl_adtype DataOnly) (decl_id s) (decl_type (Sized SReal))
       (initialize true)))
     (meta <opaque>))
@@ -6974,6 +7007,28 @@
             ((type_ (UTuple ((UArray UInt) (UArray UReal)))) (loc <opaque>)
              (adlevel (TupleAD (DataOnly DataOnly)))))))))
        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (UserDefined foo2 FnPlain)
+      (((pattern
+         (FunApp (CompilerInternal FnMakeArray)
+          (((pattern
+             (FunApp (CompilerInternal FnMakeTuple)
+              (((pattern
+                 (FunApp (StanLib Plus__ FnPlain AoS)
+                  (((pattern (Var m1))
+                    (meta
+                     ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
+                   ((pattern (Var m2))
+                    (meta
+                     ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta
+             ((type_ (UTuple (UMatrix))) (loc <opaque>)
+              (adlevel (TupleAD (DataOnly)))))))))
+        (meta
+         ((type_ (UArray (UTuple (UMatrix)))) (loc <opaque>)
+          (adlevel (TupleAD (DataOnly)))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
