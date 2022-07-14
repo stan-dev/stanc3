@@ -498,10 +498,14 @@ and pp_compiler_internal_fn ad ut f ppf es =
   let pp_array_literal ut ppf es =
     pf ppf "std::vector<%a>{@,%a}" pp_unsizedtype_local (ad, ut)
       (list ~sep:comma pp_expr) es in
-  let pp_tuple_literal ppf (es, local_types) =
-    pf ppf "std::forward_as_tuple@[<hov 2><@[%a@]>@,(@[%a@])@]"
+  let pp_tuple_literal ppf (es, _) =
+    pf ppf "std::forward_as_tuple@[<hov 2>@,(@[%a@])@]"
+      (*
+      TUPLE MAYBE?
       (list ~sep:comma pp_unsizedtype_local)
-      local_types (list ~sep:comma pp_expr) es in
+         local_types *)
+      (list ~sep:comma pp_expr)
+      es in
   match f with
   | Internal_fun.FnMakeArray ->
       let ut =

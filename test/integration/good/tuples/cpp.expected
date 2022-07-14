@@ -188,7 +188,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         current_statement__ = 1;
         stan::model::assign(arr,
-          std::forward_as_tuple<local_scalar_t__, local_scalar_t__>
+          std::forward_as_tuple
                                  (in__.template read<local_scalar_t__>(),
                                   in__.template read<local_scalar_t__>()),
           "assigning variable arr", stan::model::index_uni(sym1__));
@@ -214,7 +214,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           current_statement__ = 2;
           stan::model::assign(std::get<1>(arr2[(sym1__ - 1)]),
-            std::forward_as_tuple<local_scalar_t__, local_scalar_t__>
+            std::forward_as_tuple
                                    (in__.template read<local_scalar_t__>(),
                                     in__.template read<local_scalar_t__>()),
             "assigning variable std::get<1>(arr2[(sym1__ - 1)])", stan::model::index_uni(sym2__));
@@ -232,7 +232,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         current_statement__ = 3;
         stan::model::assign(std::get<1>(arr3),
-          std::forward_as_tuple<local_scalar_t__, local_scalar_t__>
+          std::forward_as_tuple
                                  (in__.template read<local_scalar_t__>(),
                                   in__.template read<local_scalar_t__>()),
           "assigning variable std::get<1>(arr3)", stan::model::index_uni(sym1__));
@@ -269,8 +269,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         for (int sym2__ = 1; sym2__ <= 14; ++sym2__) {
           current_statement__ = 4;
           stan::model::assign(std::get<1>(arr4[(sym1__ - 1)]),
-            std::forward_as_tuple<local_scalar_t__,
-                                  Eigen::Matrix<local_scalar_t__, -1, 1>>
+            std::forward_as_tuple
                                    (in__.template read<local_scalar_t__>(),
                                     in__.template read_constrain_simplex<
                                       Eigen::Matrix<local_scalar_t__, -1, 1>, 
@@ -317,7 +316,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         current_statement__ = 1;
         stan::model::assign(arr,
-          std::forward_as_tuple<local_scalar_t__, local_scalar_t__>
+          std::forward_as_tuple
                                  (in__.template read<local_scalar_t__>(),
                                   in__.template read<local_scalar_t__>()),
           "assigning variable arr", stan::model::index_uni(sym1__));
@@ -338,7 +337,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           current_statement__ = 2;
           stan::model::assign(std::get<1>(arr2[(sym1__ - 1)]),
-            std::forward_as_tuple<local_scalar_t__, local_scalar_t__>
+            std::forward_as_tuple
                                    (in__.template read<local_scalar_t__>(),
                                     in__.template read<local_scalar_t__>()),
             "assigning variable std::get<1>(arr2[(sym1__ - 1)])", stan::model::index_uni(sym2__));
@@ -354,7 +353,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         current_statement__ = 3;
         stan::model::assign(std::get<1>(arr3),
-          std::forward_as_tuple<local_scalar_t__, local_scalar_t__>
+          std::forward_as_tuple
                                  (in__.template read<local_scalar_t__>(),
                                   in__.template read<local_scalar_t__>()),
           "assigning variable std::get<1>(arr3)", stan::model::index_uni(sym1__));
@@ -384,8 +383,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         for (int sym2__ = 1; sym2__ <= 14; ++sym2__) {
           current_statement__ = 4;
           stan::model::assign(std::get<1>(arr4[(sym1__ - 1)]),
-            std::forward_as_tuple<local_scalar_t__,
-                                  Eigen::Matrix<local_scalar_t__, -1, 1>>
+            std::forward_as_tuple
                                    (in__.template read<local_scalar_t__>(),
                                     in__.template read_constrain_simplex<
                                       Eigen::Matrix<local_scalar_t__, -1, 1>, 
@@ -875,7 +873,7 @@ const
       
       
       current_statement__ = 2;
-      stan::model::assign(x, std::forward_as_tuple<double>(3.5),
+      stan::model::assign(x, std::forward_as_tuple(3.5),
         "assigning variable x");
       current_statement__ = 3;
       foo(x, pstream__);
@@ -1193,7 +1191,7 @@ class simple_model final : public model_base_crtp<simple_model> {
       
       
       current_statement__ = 1;
-      stan::model::assign(x, std::forward_as_tuple<double, int>(3.14, 2),
+      stan::model::assign(x, std::forward_as_tuple(3.14, 2),
         "assigning variable x");
       current_statement__ = 2;
       if (pstream__) {
@@ -1519,8 +1517,7 @@ class simple2_model final : public model_base_crtp<simple2_model> {
       
       current_statement__ = 1;
       stan::model::assign(x,
-        std::forward_as_tuple<std::vector<double>, int>
-                               (std::vector<double>{1.01, 3.14}, 2),
+        std::forward_as_tuple(std::vector<double>{1.01, 3.14}, 2),
         "assigning variable x");
       current_statement__ = 2;
       if (pstream__) {
@@ -1850,7 +1847,7 @@ class simple3_model final : public model_base_crtp<simple3_model> {
       
       current_statement__ = 1;
       stan::model::assign(x,
-        std::forward_as_tuple<std::vector<std::vector<double>>, int>
+        std::forward_as_tuple
                                (std::vector<std::vector<double>>{
                                 std::vector<double>{1.01, 3.14},
                                 std::vector<double>{1.01, 3.14},
@@ -2535,7 +2532,7 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__};
       current_statement__ = 1;
       stan::model::assign(ps,
-        std::forward_as_tuple<local_scalar_t__, local_scalar_t__>
+        std::forward_as_tuple
                                (in__.template read_constrain_lb<
                                   local_scalar_t__, jacobian__>(0, lp__),
                                 in__.template read_constrain_lb<
@@ -2577,7 +2574,7 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
          std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 1;
       stan::model::assign(ps,
-        std::forward_as_tuple<local_scalar_t__, local_scalar_t__>
+        std::forward_as_tuple
                                (in__.template read_constrain_lb<
                                   local_scalar_t__, jacobian__>(0, lp__),
                                 in__.template read_constrain_lb<
@@ -3583,7 +3580,7 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__};
       current_statement__ = 1;
       stan::model::assign(ps,
-        std::forward_as_tuple<local_scalar_t__, local_scalar_t__>
+        std::forward_as_tuple
                                (in__.template read_constrain_lb<
                                   local_scalar_t__, jacobian__>(0, lp__),
                                 in__.template read_constrain_lb<
@@ -3638,7 +3635,7 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
          std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 1;
       stan::model::assign(ps,
-        std::forward_as_tuple<local_scalar_t__, local_scalar_t__>
+        std::forward_as_tuple
                                (in__.template read_constrain_lb<
                                   local_scalar_t__, jacobian__>(0, lp__),
                                 in__.template read_constrain_lb<
@@ -5218,7 +5215,7 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__};
       current_statement__ = 1;
       stan::model::assign(ps,
-        std::forward_as_tuple<local_scalar_t__, local_scalar_t__>
+        std::forward_as_tuple
                                (in__.template read<local_scalar_t__>(),
                                 in__.template read<local_scalar_t__>()),
         "assigning variable ps");
@@ -5232,12 +5229,9 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
           DUMMY_VAR__)}};
       current_statement__ = 2;
       stan::model::assign(ps2,
-        std::forward_as_tuple<local_scalar_t__,
-                              std::tuple<local_scalar_t__,
-                                         Eigen::Matrix<local_scalar_t__, -1, -1>>>
+        std::forward_as_tuple
                                (in__.template read<local_scalar_t__>(),
-                                std::forward_as_tuple<local_scalar_t__,
-                                                      Eigen::Matrix<local_scalar_t__, -1, -1>>
+                                std::forward_as_tuple
                                                        (in__.template read<
                                                           local_scalar_t__>(),
                                                         in__.template read<
@@ -5280,7 +5274,7 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
          std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 1;
       stan::model::assign(ps,
-        std::forward_as_tuple<local_scalar_t__, local_scalar_t__>
+        std::forward_as_tuple
                                (in__.template read<local_scalar_t__>(),
                                 in__.template read<local_scalar_t__>()),
         "assigning variable ps");
@@ -5291,12 +5285,9 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
           std::numeric_limits<double>::quiet_NaN())}};
       current_statement__ = 2;
       stan::model::assign(ps2,
-        std::forward_as_tuple<local_scalar_t__,
-                              std::tuple<local_scalar_t__,
-                                         Eigen::Matrix<local_scalar_t__, -1, -1>>>
+        std::forward_as_tuple
                                (in__.template read<local_scalar_t__>(),
-                                std::forward_as_tuple<local_scalar_t__,
-                                                      Eigen::Matrix<local_scalar_t__, -1, -1>>
+                                std::forward_as_tuple
                                                        (in__.template read<
                                                           local_scalar_t__>(),
                                                         in__.template read<
@@ -5647,7 +5638,7 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__};
       current_statement__ = 1;
       stan::model::assign(ps,
-        std::forward_as_tuple<local_scalar_t__, local_scalar_t__>
+        std::forward_as_tuple
                                (in__.template read<local_scalar_t__>(),
                                 in__.template read_constrain_lb<
                                   local_scalar_t__, jacobian__>(0, lp__)),
@@ -5688,7 +5679,7 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
          std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 1;
       stan::model::assign(ps,
-        std::forward_as_tuple<local_scalar_t__, local_scalar_t__>
+        std::forward_as_tuple
                                (in__.template read<local_scalar_t__>(),
                                 in__.template read_constrain_lb<
                                   local_scalar_t__, jacobian__>(0, lp__)),
@@ -6090,7 +6081,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
       
       current_statement__ = 15;
       stan::model::assign(basic,
-        std::forward_as_tuple<std::vector<double>, std::complex<double>>
+        std::forward_as_tuple
                                (std::vector<double>{1, 2},
                                 stan::math::to_complex(3, 0)),
         "assigning variable basic");
@@ -6103,8 +6094,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
       
       current_statement__ = 16;
       stan::model::assign(CV,
-        std::forward_as_tuple<Eigen::Matrix<std::complex<double>, -1, 1>,
-                              double>
+        std::forward_as_tuple
                                (stan::math::promote_scalar<std::complex<double>>(V),
                                 2), "assigning variable CV");
       current_statement__ = 17;
@@ -6115,8 +6105,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
       
       
       current_statement__ = 17;
-      stan::model::assign(V2,
-        std::forward_as_tuple<Eigen::Matrix<double, -1, 1>, int>(V, 2),
+      stan::model::assign(V2, std::forward_as_tuple(V, 2),
         "assigning variable V2");
       current_statement__ = 18;
       stan::model::assign(CV,
@@ -6387,7 +6376,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
       std::tuple<double, double> x =
          std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 8;
-      stan::model::assign(x, std::forward_as_tuple<double, double>(y, 3),
+      stan::model::assign(x, std::forward_as_tuple(y, 3),
         "assigning variable x");
       std::tuple<std::complex<double>, double> z =
          std::tuple<std::complex<double>, double>{std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
