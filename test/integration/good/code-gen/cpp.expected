@@ -806,27 +806,17 @@ static constexpr std::array<const char*, 11> locations_array__ =
  " (in 'complex-tuples.stan', line 2, column 85 to line 4, column 3)"};
 
 struct f_functor__ {
-  template <typename T1__,
-            stan::require_all_t<stan::is_stan_scalar<T1__>>* = nullptr>
-  std::tuple<stan::promote_args_t<T1__>,
-  std::vector<std::tuple<stan::promote_args_t<T1__>,
-  stan::promote_args_t<T1__>>>>
+  std::tuple<int, std::vector<std::tuple<int, double>>>
   operator()(const int& x,
-             const std::vector<std::vector<std::tuple<std::vector<std::tuple<T1__, T1__>>,
-  std::vector<std::vector<T1__>>>>>& x2,
+             const std::vector<std::vector<std::tuple<const std::vector<std::tuple<const int&, const int&>>&, const std::vector<std::vector<int>>&>>>& x2,
              std::ostream* pstream__) const;
 };
 
-template <typename T1__,
-          stan::require_all_t<stan::is_stan_scalar<T1__>>* = nullptr>
-  std::tuple<stan::promote_args_t<T1__>,
-  std::vector<std::tuple<stan::promote_args_t<T1__>,
-  stan::promote_args_t<T1__>>>>
+std::tuple<int, std::vector<std::tuple<int, double>>>
   f(const int& x,
-    const std::vector<std::vector<std::tuple<std::vector<std::tuple<T1__, T1__>>,
-std::vector<std::vector<T1__>>>>>& x2,
+    const std::vector<std::vector<std::tuple<const std::vector<std::tuple<const int&, const int&>>&, const std::vector<std::vector<int>>&>>>& x2,
     std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T1__>;
+    using local_scalar_t__ = double;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
@@ -834,20 +824,15 @@ std::vector<std::vector<T1__>>>>>& x2,
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       current_statement__ = 9;
-      return std::forward_as_tuple
-                                    (1, std::vector<std::tuple<int, double>>{
+      return std::forward_as_tuple(1, std::vector<std::tuple<int, double>>{
                                      std::forward_as_tuple(2, 3.4)});
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T1__, stan::require_all_t<stan::is_stan_scalar<T1__>>*>
-std::tuple<stan::promote_args_t<T1__>,
-std::vector<std::tuple<stan::promote_args_t<T1__>,
-stan::promote_args_t<T1__>>>>
+std::tuple<int, std::vector<std::tuple<int, double>>>
 f_functor__::operator()(const int& x,
-                        const std::vector<std::vector<std::tuple<std::vector<std::tuple<T1__, T1__>>,
-std::vector<std::vector<T1__>>>>>& x2,
+                        const std::vector<std::vector<std::tuple<const std::vector<std::tuple<const int&, const int&>>&, const std::vector<std::vector<int>>&>>>& x2,
                         std::ostream* pstream__)  const
 {
   return f(x, x2, pstream__);
@@ -958,8 +943,7 @@ class complex_tuples_model final : public model_base_crtp<complex_tuples_model> 
       
       current_statement__ = 8;
       stan::model::assign(d,
-        std::forward_as_tuple
-                               (1, 2.5, std::vector<std::tuple<int, int>>{
+        std::forward_as_tuple(1, 2.5, std::vector<std::tuple<int, int>>{
                                 std::forward_as_tuple(1, 2),
                                 std::forward_as_tuple(3, 4)}),
         "assigning variable d");

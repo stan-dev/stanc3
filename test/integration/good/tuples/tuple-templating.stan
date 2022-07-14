@@ -10,6 +10,10 @@ functions {
   void foo2(array[] (matrix,) test){
     print(test[1].1);
   }
+
+  // void foo3((real, matrix) test){
+  //   print(test.1);
+  // }
 }
 
 data {
@@ -22,9 +26,10 @@ data {
 
 generated quantities {
   // eigen expression inside tuple
+  // - TUPLE TODO - fails due to const correctness issue?
   // foo((m1+m2,));
   // different types inside tuple
-  // real s = tsum((a1,a2));
+  real s = tsum((a1,a2));
   // eigen expression inside tuple inside array
-  // foo2({(m1+m2,)});
+  // // foo2({(m1+m2,)});
 }

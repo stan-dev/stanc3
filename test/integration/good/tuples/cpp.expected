@@ -188,8 +188,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         current_statement__ = 1;
         stan::model::assign(arr,
-          std::forward_as_tuple
-                                 (in__.template read<local_scalar_t__>(),
+          std::forward_as_tuple(in__.template read<local_scalar_t__>(),
                                   in__.template read<local_scalar_t__>()),
           "assigning variable arr", stan::model::index_uni(sym1__));
       }
@@ -214,8 +213,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           current_statement__ = 2;
           stan::model::assign(std::get<1>(arr2[(sym1__ - 1)]),
-            std::forward_as_tuple
-                                   (in__.template read<local_scalar_t__>(),
+            std::forward_as_tuple(in__.template read<local_scalar_t__>(),
                                     in__.template read<local_scalar_t__>()),
             "assigning variable std::get<1>(arr2[(sym1__ - 1)])", stan::model::index_uni(sym2__));
         }
@@ -232,8 +230,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         current_statement__ = 3;
         stan::model::assign(std::get<1>(arr3),
-          std::forward_as_tuple
-                                 (in__.template read<local_scalar_t__>(),
+          std::forward_as_tuple(in__.template read<local_scalar_t__>(),
                                   in__.template read<local_scalar_t__>()),
           "assigning variable std::get<1>(arr3)", stan::model::index_uni(sym1__));
       }
@@ -269,8 +266,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         for (int sym2__ = 1; sym2__ <= 14; ++sym2__) {
           current_statement__ = 4;
           stan::model::assign(std::get<1>(arr4[(sym1__ - 1)]),
-            std::forward_as_tuple
-                                   (in__.template read<local_scalar_t__>(),
+            std::forward_as_tuple(in__.template read<local_scalar_t__>(),
                                     in__.template read_constrain_simplex<
                                       Eigen::Matrix<local_scalar_t__, -1, 1>, 
                                       jacobian__>(lp__, 2)),
@@ -316,8 +312,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         current_statement__ = 1;
         stan::model::assign(arr,
-          std::forward_as_tuple
-                                 (in__.template read<local_scalar_t__>(),
+          std::forward_as_tuple(in__.template read<local_scalar_t__>(),
                                   in__.template read<local_scalar_t__>()),
           "assigning variable arr", stan::model::index_uni(sym1__));
       }
@@ -337,8 +332,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           current_statement__ = 2;
           stan::model::assign(std::get<1>(arr2[(sym1__ - 1)]),
-            std::forward_as_tuple
-                                   (in__.template read<local_scalar_t__>(),
+            std::forward_as_tuple(in__.template read<local_scalar_t__>(),
                                     in__.template read<local_scalar_t__>()),
             "assigning variable std::get<1>(arr2[(sym1__ - 1)])", stan::model::index_uni(sym2__));
         }
@@ -353,8 +347,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         current_statement__ = 3;
         stan::model::assign(std::get<1>(arr3),
-          std::forward_as_tuple
-                                 (in__.template read<local_scalar_t__>(),
+          std::forward_as_tuple(in__.template read<local_scalar_t__>(),
                                   in__.template read<local_scalar_t__>()),
           "assigning variable std::get<1>(arr3)", stan::model::index_uni(sym1__));
       }
@@ -383,8 +376,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         for (int sym2__ = 1; sym2__ <= 14; ++sym2__) {
           current_statement__ = 4;
           stan::model::assign(std::get<1>(arr4[(sym1__ - 1)]),
-            std::forward_as_tuple
-                                   (in__.template read<local_scalar_t__>(),
+            std::forward_as_tuple(in__.template read<local_scalar_t__>(),
                                     in__.template read_constrain_simplex<
                                       Eigen::Matrix<local_scalar_t__, -1, 1>, 
                                       jacobian__>(lp__, 2)),
@@ -807,16 +799,16 @@ static constexpr std::array<const char*, 6> locations_array__ =
  " (in 'onepl.stan', line 3, column 21 to line 5, column 3)"};
 
 struct foo_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  template <typename T0__0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__0__>>* = nullptr>
   void
-  operator()(const std::tuple<T0__>& x, std::ostream* pstream__) const;
+  operator()(const std::tuple<const T0__0__&>& x, std::ostream* pstream__) const;
 };
 
-template <typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr> void
-  foo(const std::tuple<T0__>& x, std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T0__>;
+template <typename T0__0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__0__>>* = nullptr> void
+  foo(const std::tuple<const T0__0__&>& x, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<T0__0__>;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
@@ -829,10 +821,11 @@ template <typename T0__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
+template <typename T0__0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__0__>>*>
 void
-foo_functor__::operator()(const std::tuple<T0__>& x, std::ostream* pstream__) 
-const
+foo_functor__::operator()(const std::tuple<const T0__0__&>& x,
+                          std::ostream* pstream__)  const
 {
   return foo(x, pstream__);
 }
@@ -1847,8 +1840,7 @@ class simple3_model final : public model_base_crtp<simple3_model> {
       
       current_statement__ = 1;
       stan::model::assign(x,
-        std::forward_as_tuple
-                               (std::vector<std::vector<double>>{
+        std::forward_as_tuple(std::vector<std::vector<double>>{
                                 std::vector<double>{1.01, 3.14},
                                 std::vector<double>{1.01, 3.14},
                                 std::vector<double>{1.01, 3.14}}, 2),
@@ -2532,9 +2524,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__};
       current_statement__ = 1;
       stan::model::assign(ps,
-        std::forward_as_tuple
-                               (in__.template read_constrain_lb<
-                                  local_scalar_t__, jacobian__>(0, lp__),
+        std::forward_as_tuple(in__.template read_constrain_lb<
+                                local_scalar_t__, jacobian__>(0, lp__),
                                 in__.template read_constrain_lb<
                                   local_scalar_t__, jacobian__>(0, lp__)),
         "assigning variable ps");
@@ -2574,9 +2565,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
          std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 1;
       stan::model::assign(ps,
-        std::forward_as_tuple
-                               (in__.template read_constrain_lb<
-                                  local_scalar_t__, jacobian__>(0, lp__),
+        std::forward_as_tuple(in__.template read_constrain_lb<
+                                local_scalar_t__, jacobian__>(0, lp__),
                                 in__.template read_constrain_lb<
                                   local_scalar_t__, jacobian__>(0, lp__)),
         "assigning variable ps");
@@ -3144,12 +3134,13 @@ static constexpr std::array<const char*, 5> locations_array__ =
 
 struct foo_functor__ {
   double
-  operator()(const std::tuple<double,
-  double>& x, std::ostream* pstream__) const;
+  operator()(const std::tuple<const double&, const double&>& x,
+             std::ostream* pstream__) const;
 };
 
-double foo(const std::tuple<double,
-double>& x, std::ostream* pstream__) {
+double
+  foo(const std::tuple<const double&, const double&>& x,
+      std::ostream* pstream__) {
     using local_scalar_t__ = double;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
@@ -3164,8 +3155,7 @@ double>& x, std::ostream* pstream__) {
     }
     }
 double
-foo_functor__::operator()(const std::tuple<double,
-double>& x,
+foo_functor__::operator()(const std::tuple<const double&, const double&>& x,
                           std::ostream* pstream__)  const
 {
   return foo(x, pstream__);
@@ -3580,9 +3570,8 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__};
       current_statement__ = 1;
       stan::model::assign(ps,
-        std::forward_as_tuple
-                               (in__.template read_constrain_lb<
-                                  local_scalar_t__, jacobian__>(0, lp__),
+        std::forward_as_tuple(in__.template read_constrain_lb<
+                                local_scalar_t__, jacobian__>(0, lp__),
                                 in__.template read_constrain_lb<
                                   local_scalar_t__, jacobian__>(0, lp__)),
         "assigning variable ps");
@@ -3635,9 +3624,8 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
          std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 1;
       stan::model::assign(ps,
-        std::forward_as_tuple
-                               (in__.template read_constrain_lb<
-                                  local_scalar_t__, jacobian__>(0, lp__),
+        std::forward_as_tuple(in__.template read_constrain_lb<
+                                local_scalar_t__, jacobian__>(0, lp__),
                                 in__.template read_constrain_lb<
                                   local_scalar_t__, jacobian__>(0, lp__)),
         "assigning variable ps");
@@ -5215,8 +5203,7 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__};
       current_statement__ = 1;
       stan::model::assign(ps,
-        std::forward_as_tuple
-                               (in__.template read<local_scalar_t__>(),
+        std::forward_as_tuple(in__.template read<local_scalar_t__>(),
                                 in__.template read<local_scalar_t__>()),
         "assigning variable ps");
       std::tuple<local_scalar_t__,
@@ -5229,11 +5216,9 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
           DUMMY_VAR__)}};
       current_statement__ = 2;
       stan::model::assign(ps2,
-        std::forward_as_tuple
-                               (in__.template read<local_scalar_t__>(),
-                                std::forward_as_tuple
-                                                       (in__.template read<
-                                                          local_scalar_t__>(),
+        std::forward_as_tuple(in__.template read<local_scalar_t__>(),
+                                std::forward_as_tuple(in__.template read<
+                                                        local_scalar_t__>(),
                                                         in__.template read<
                                                           Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                                           10, 10))),
@@ -5274,8 +5259,7 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
          std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 1;
       stan::model::assign(ps,
-        std::forward_as_tuple
-                               (in__.template read<local_scalar_t__>(),
+        std::forward_as_tuple(in__.template read<local_scalar_t__>(),
                                 in__.template read<local_scalar_t__>()),
         "assigning variable ps");
       std::tuple<double, std::tuple<double, Eigen::Matrix<double, -1, -1>>> ps2 =
@@ -5285,11 +5269,9 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
           std::numeric_limits<double>::quiet_NaN())}};
       current_statement__ = 2;
       stan::model::assign(ps2,
-        std::forward_as_tuple
-                               (in__.template read<local_scalar_t__>(),
-                                std::forward_as_tuple
-                                                       (in__.template read<
-                                                          local_scalar_t__>(),
+        std::forward_as_tuple(in__.template read<local_scalar_t__>(),
+                                std::forward_as_tuple(in__.template read<
+                                                        local_scalar_t__>(),
                                                         in__.template read<
                                                           Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                                           10, 10))),
@@ -5638,8 +5620,7 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__};
       current_statement__ = 1;
       stan::model::assign(ps,
-        std::forward_as_tuple
-                               (in__.template read<local_scalar_t__>(),
+        std::forward_as_tuple(in__.template read<local_scalar_t__>(),
                                 in__.template read_constrain_lb<
                                   local_scalar_t__, jacobian__>(0, lp__)),
         "assigning variable ps");
@@ -5679,8 +5660,7 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
          std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 1;
       stan::model::assign(ps,
-        std::forward_as_tuple
-                               (in__.template read<local_scalar_t__>(),
+        std::forward_as_tuple(in__.template read<local_scalar_t__>(),
                                 in__.template read_constrain_lb<
                                   local_scalar_t__, jacobian__>(0, lp__)),
         "assigning variable ps");
@@ -5937,21 +5917,21 @@ static constexpr std::array<const char*, 22> locations_array__ =
  " (in 'tuple-promotion.stan', line 2, column 48 to line 4, column 4)"};
 
 struct dummy_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::tuple<std::vector<T0__>,
-  std::vector<T0__>>& test,
+  template <typename T0__0__, typename T0__1__,
+            stan::require_all_t<stan::is_stan_scalar<T0__0__>,
+                                stan::is_stan_scalar<T0__1__>>* = nullptr>
+  stan::promote_args_t<T0__0__, T0__1__>
+  operator()(const std::tuple<const std::vector<T0__0__>&, const std::vector<T0__1__>&>& test,
              std::ostream* pstream__) const;
 };
 
-template <typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  dummy(const std::tuple<std::vector<T0__>,
-std::vector<T0__>>& test,
+template <typename T0__0__, typename T0__1__,
+          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
+                              stan::is_stan_scalar<T0__1__>>* = nullptr>
+  stan::promote_args_t<T0__0__, T0__1__>
+  dummy(const std::tuple<const std::vector<T0__0__>&, const std::vector<T0__1__>&>& test,
         std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T0__>;
+    using local_scalar_t__ = stan::promote_args_t<T0__0__, T0__1__>;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
@@ -5965,10 +5945,11 @@ std::vector<T0__>>& test,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
-stan::promote_args_t<T0__>
-dummy_functor__::operator()(const std::tuple<std::vector<T0__>,
-std::vector<T0__>>& test,
+template <typename T0__0__, typename T0__1__,
+          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
+                              stan::is_stan_scalar<T0__1__>>*>
+stan::promote_args_t<T0__0__, T0__1__>
+dummy_functor__::operator()(const std::tuple<const std::vector<T0__0__>&, const std::vector<T0__1__>&>& test,
                             std::ostream* pstream__)  const
 {
   return dummy(test, pstream__);
@@ -6081,8 +6062,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
       
       current_statement__ = 15;
       stan::model::assign(basic,
-        std::forward_as_tuple
-                               (std::vector<double>{1, 2},
+        std::forward_as_tuple(std::vector<double>{1, 2},
                                 stan::math::to_complex(3, 0)),
         "assigning variable basic");
       current_statement__ = 16;
@@ -6094,8 +6074,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
       
       current_statement__ = 16;
       stan::model::assign(CV,
-        std::forward_as_tuple
-                               (stan::math::promote_scalar<std::complex<double>>(V),
+        std::forward_as_tuple(stan::math::promote_scalar<std::complex<double>>(V),
                                 2), "assigning variable CV");
       current_statement__ = 17;
       V2 = 
@@ -6748,19 +6727,20 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 18> locations_array__ = 
+static constexpr std::array<const char*, 19> locations_array__ = 
 {" (found before start of program)",
- " (in 'tuple-templating.stan', line 16, column 2 to column 8)",
- " (in 'tuple-templating.stan', line 17, column 9 to column 10)",
- " (in 'tuple-templating.stan', line 17, column 11 to column 12)",
- " (in 'tuple-templating.stan', line 17, column 2 to column 17)",
- " (in 'tuple-templating.stan', line 18, column 9 to column 10)",
- " (in 'tuple-templating.stan', line 18, column 11 to column 12)",
- " (in 'tuple-templating.stan', line 18, column 2 to column 17)",
- " (in 'tuple-templating.stan', line 19, column 8 to column 9)",
- " (in 'tuple-templating.stan', line 19, column 2 to column 18)",
- " (in 'tuple-templating.stan', line 20, column 8 to column 9)",
- " (in 'tuple-templating.stan', line 20, column 2 to column 19)",
+ " (in 'tuple-templating.stan', line 32, column 2 to column 25)",
+ " (in 'tuple-templating.stan', line 20, column 2 to column 8)",
+ " (in 'tuple-templating.stan', line 21, column 9 to column 10)",
+ " (in 'tuple-templating.stan', line 21, column 11 to column 12)",
+ " (in 'tuple-templating.stan', line 21, column 2 to column 17)",
+ " (in 'tuple-templating.stan', line 22, column 9 to column 10)",
+ " (in 'tuple-templating.stan', line 22, column 11 to column 12)",
+ " (in 'tuple-templating.stan', line 22, column 2 to column 17)",
+ " (in 'tuple-templating.stan', line 23, column 8 to column 9)",
+ " (in 'tuple-templating.stan', line 23, column 2 to column 18)",
+ " (in 'tuple-templating.stan', line 24, column 8 to column 9)",
+ " (in 'tuple-templating.stan', line 24, column 2 to column 19)",
  " (in 'tuple-templating.stan', line 3, column 4 to column 18)",
  " (in 'tuple-templating.stan', line 2, column 26 to line 4, column 3)",
  " (in 'tuple-templating.stan', line 7, column 4 to column 20)",
@@ -6769,40 +6749,41 @@ static constexpr std::array<const char*, 18> locations_array__ =
  " (in 'tuple-templating.stan', line 10, column 35 to line 12, column 3)"};
 
 struct tsum_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::tuple<std::vector<T0__>,
-  std::vector<T0__>>& s,
+  template <typename T0__1__,
+            stan::require_all_t<stan::is_stan_scalar<T0__1__>>* = nullptr>
+  stan::promote_args_t<T0__1__>
+  operator()(const std::tuple<const std::vector<int>&, const std::vector<T0__1__>&>& s,
              std::ostream* pstream__) const;
 };
 struct foo2_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  template <typename T0__0__,
+            stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
+                                stan::is_vt_not_complex<T0__0__>>* = nullptr>
   void
-  operator()(const std::vector<std::tuple<Eigen::Matrix<T0__, -1, -1>>>& test,
+  operator()(const std::vector<std::tuple<const T0__0__&>>& test,
              std::ostream* pstream__) const;
 };
 struct foo_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  template <typename T0__0__,
+            stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
+                                stan::is_vt_not_complex<T0__0__>>* = nullptr>
   void
-  operator()(const std::tuple<Eigen::Matrix<T0__, -1, -1>>& test,
-             std::ostream* pstream__) const;
+  operator()(const std::tuple<const T0__0__&>& test, std::ostream* pstream__) const;
 };
 
-template <typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr> void
-  foo(const std::tuple<Eigen::Matrix<T0__, -1, -1>>& test,
-      std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T0__>;
+template <typename T0__0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
+                              stan::is_vt_not_complex<T0__0__>>* = nullptr>
+  void foo(const std::tuple<const T0__0__&>& test, std::ostream* pstream__) {
+    using local_scalar_t__ =
+            stan::promote_args_t<stan::base_type_t<T0__0__>>;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 12;
+      current_statement__ = 13;
       if (pstream__) {
         stan::math::stan_print(pstream__, std::get<0>(test));
         stan::math::stan_print(pstream__, "\n");
@@ -6811,37 +6792,39 @@ template <typename T0__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  tsum(const std::tuple<std::vector<T0__>,
-std::vector<T0__>>& s,
+template <typename T0__1__,
+          stan::require_all_t<stan::is_stan_scalar<T0__1__>>* = nullptr>
+  stan::promote_args_t<T0__1__>
+  tsum(const std::tuple<const std::vector<int>&, const std::vector<T0__1__>&>& s,
        std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T0__>;
+    using local_scalar_t__ = stan::promote_args_t<T0__1__>;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 14;
+      current_statement__ = 15;
       return stan::math::sum(std::get<1>(s));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr> void
-  foo2(const std::vector<std::tuple<Eigen::Matrix<T0__, -1, -1>>>& test,
+template <typename T0__0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
+                              stan::is_vt_not_complex<T0__0__>>* = nullptr>
+  void
+  foo2(const std::vector<std::tuple<const T0__0__&>>& test,
        std::ostream* pstream__) {
-    using local_scalar_t__ = stan::promote_args_t<T0__>;
+    using local_scalar_t__ =
+            stan::promote_args_t<stan::base_type_t<T0__0__>>;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
     (void) propto__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 16;
+      current_statement__ = 17;
       if (pstream__) {
         stan::math::stan_print(pstream__, std::get<0>(stan::model::rvalue(
                                                         test, "test",
@@ -6852,26 +6835,30 @@ template <typename T0__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
-stan::promote_args_t<T0__>
-tsum_functor__::operator()(const std::tuple<std::vector<T0__>,
-std::vector<T0__>>& s,
+template <typename T0__1__,
+          stan::require_all_t<stan::is_stan_scalar<T0__1__>>*>
+stan::promote_args_t<T0__1__>
+tsum_functor__::operator()(const std::tuple<const std::vector<int>&, const std::vector<T0__1__>&>& s,
                            std::ostream* pstream__)  const
 {
   return tsum(s, pstream__);
 }
 
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
+template <typename T0__0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
+                              stan::is_vt_not_complex<T0__0__>>*>
 void
-foo2_functor__::operator()(const std::vector<std::tuple<Eigen::Matrix<T0__, -1, -1>>>& test,
+foo2_functor__::operator()(const std::vector<std::tuple<const T0__0__&>>& test,
                            std::ostream* pstream__)  const
 {
   return foo2(test, pstream__);
 }
 
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
+template <typename T0__0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
+                              stan::is_vt_not_complex<T0__0__>>*>
 void
-foo_functor__::operator()(const std::tuple<Eigen::Matrix<T0__, -1, -1>>& test,
+foo_functor__::operator()(const std::tuple<const T0__0__&>& test,
                           std::ostream* pstream__)  const
 {
   return foo(test, pstream__);
@@ -6914,19 +6901,19 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 1;
+      current_statement__ = 2;
       context__.validate_dims("data initialization","N","int",
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
       
-      current_statement__ = 1;
-      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 2;
-      stan::math::validate_non_negative_index("m1", "N", N);
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 3;
       stan::math::validate_non_negative_index("m1", "N", N);
       current_statement__ = 4;
+      stan::math::validate_non_negative_index("m1", "N", N);
+      current_statement__ = 5;
       context__.validate_dims("data initialization","m1","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N)});
@@ -6938,28 +6925,28 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
       
       {
         std::vector<local_scalar_t__> m1_flat__;
-        current_statement__ = 4;
+        current_statement__ = 5;
         m1_flat__ = context__.vals_r("m1");
-        current_statement__ = 4;
+        current_statement__ = 5;
         pos__ = 1;
-        current_statement__ = 4;
+        current_statement__ = 5;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 4;
+          current_statement__ = 5;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 4;
+            current_statement__ = 5;
             stan::model::assign(m1, m1_flat__[(pos__ - 1)],
               "assigning variable m1", stan::model::index_uni(sym2__),
                                          stan::model::index_uni(sym1__));
-            current_statement__ = 4;
+            current_statement__ = 5;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 5;
-      stan::math::validate_non_negative_index("m2", "N", N);
       current_statement__ = 6;
       stan::math::validate_non_negative_index("m2", "N", N);
       current_statement__ = 7;
+      stan::math::validate_non_negative_index("m2", "N", N);
+      current_statement__ = 8;
       context__.validate_dims("data initialization","m2","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N)});
@@ -6971,42 +6958,42 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
       
       {
         std::vector<local_scalar_t__> m2_flat__;
-        current_statement__ = 7;
+        current_statement__ = 8;
         m2_flat__ = context__.vals_r("m2");
-        current_statement__ = 7;
+        current_statement__ = 8;
         pos__ = 1;
-        current_statement__ = 7;
+        current_statement__ = 8;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 7;
+          current_statement__ = 8;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 7;
+            current_statement__ = 8;
             stan::model::assign(m2, m2_flat__[(pos__ - 1)],
               "assigning variable m2", stan::model::index_uni(sym2__),
                                          stan::model::index_uni(sym1__));
-            current_statement__ = 7;
+            current_statement__ = 8;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 8;
-      stan::math::validate_non_negative_index("a1", "N", N);
       current_statement__ = 9;
+      stan::math::validate_non_negative_index("a1", "N", N);
+      current_statement__ = 10;
       context__.validate_dims("data initialization","a1","int",
            std::vector<size_t>{static_cast<size_t>(N)});
       a1 = std::vector<int>(N, std::numeric_limits<int>::min());
       
       
-      current_statement__ = 9;
-      a1 = context__.vals_i("a1");
       current_statement__ = 10;
-      stan::math::validate_non_negative_index("a2", "N", N);
+      a1 = context__.vals_i("a1");
       current_statement__ = 11;
+      stan::math::validate_non_negative_index("a2", "N", N);
+      current_statement__ = 12;
       context__.validate_dims("data initialization","a2","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       a2 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       
-      current_statement__ = 11;
+      current_statement__ = 12;
       a2 = context__.vals_r("a2");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7074,6 +7061,10 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       } 
+      double s = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 1;
+      s = tsum(std::forward_as_tuple(a1, a2), pstream__);
+      out__.write(s);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -7101,13 +7092,13 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__ = std::vector<std::string>{};
+    names__ = std::vector<std::string>{"s"};
     
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
-    dimss__ = std::vector<std::vector<size_t>>{};
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{}};
     
     } // get_dims() 
     
@@ -7123,7 +7114,7 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
     }
     
     if (emit_generated_quantities__) {
-      
+      param_names__.emplace_back(std::string() + "s");
     }
     
     } // constrained_param_names() 
@@ -7140,20 +7131,20 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
     }
     
     if (emit_generated_quantities__) {
-      
+      param_names__.emplace_back(std::string() + "s");
     }
     
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
     
-    return std::string("[]");
+    return std::string("[{\"name\":\"s\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
     
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     
-    return std::string("[]");
+    return std::string("[{\"name\":\"s\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
     
     } // get_unconstrained_sizedtypes() 
     
@@ -7168,7 +7159,7 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 0;
       const size_t num_transformed = emit_transformed_parameters * 0;
-      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 1;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
@@ -7187,7 +7178,7 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 0;
       const size_t num_transformed = emit_transformed_parameters * 0;
-      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 1;
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       vars = std::vector<double>(num_to_write,

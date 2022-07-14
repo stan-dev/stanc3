@@ -64,7 +64,8 @@ let to_var s = Expr.{Fixed.pattern= Var s; meta= Typed.Meta.empty}
 
 let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   match ut with
-  | UnsizedType.UInt | UReal -> string ppf scalar
+  | UnsizedType.UInt -> string ppf "int"
+  | UReal -> string ppf scalar
   | UComplex -> pf ppf "std::complex<%s>" scalar
   | UArray t -> pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
@@ -77,23 +78,6 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   | UComplexMatrix -> pf ppf "Eigen::Matrix<std::complex<%s>, -1, -1>" scalar
   | UComplexRowVector -> pf ppf "Eigen::Matrix<std::complex<%s>, 1, -1>" scalar
   | UComplexVector -> pf ppf "Eigen::Matrix<std::complex<%s>, -1, 1>" scalar
-  | UMathLibraryFunction | UFun _ ->
-      Common.FatalError.fatal_error_msg
-        [%message "Function types not implemented"]
-
-let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
-  match ut with
-  | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector | UComplexVector
-   |UComplexMatrix | UComplexRowVector ->
-      string ppf scalar
-  | UComplex -> pf ppf "std::complex<%s>" scalar
-  | UArray t ->
-      (* Expressions are not accepted for arrays of Eigen::Matrix *)
-      pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
-  | UTuple ts ->
-      pf ppf "std::tuple<%a>"
-        (list ~sep:comma pp_unsizedtype_custom_scalar)
-        (List.map ~f:(fun t -> (scalar, t)) ts)
   | UMathLibraryFunction | UFun _ ->
       Common.FatalError.fatal_error_msg
         [%message "Function types not implemented"]
@@ -499,7 +483,7 @@ and pp_compiler_internal_fn ad ut f ppf es =
     pf ppf "std::vector<%a>{@,%a}" pp_unsizedtype_local (ad, ut)
       (list ~sep:comma pp_expr) es in
   let pp_tuple_literal ppf (es, _) =
-    pf ppf "std::forward_as_tuple@[<hov 2>@,(@[%a@])@]"
+    pf ppf "std::forward_as_tuple(@[<hov 2>%a)@]"
       (*
       TUPLE MAYBE?
       (list ~sep:comma pp_unsizedtype_local)

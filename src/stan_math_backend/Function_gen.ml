@@ -12,6 +12,7 @@ type template_parameter =
   | Require of string * string
       (** A C++ type trait and the name which needs to satisfy that *)
   | Bool of string  (** A named boolean template type *)
+[@@deriving sexp]
 
 let pp_template_parameter ppf template_parameter =
   match template_parameter with
@@ -51,25 +52,45 @@ type found_functor =
   ; signature: string
   ; defn: string }
 
-(** Detect if argument requires C++ template *)
-let is_data_matrix_or_not_int_type = function
-  | UnsizedType.DataOnly, _, ut -> UnsizedType.is_eigen_type ut
-  | _, _, t when UnsizedType.is_int_type t -> false
-  | _ -> true
+let rec pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
+  match ut with
+  | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector | UComplexVector
+   |UComplexMatrix | UComplexRowVector ->
+      string ppf scalar
+  | UComplex -> pf ppf "std::complex<%s>" scalar
+  | UArray t when UnsizedType.contains_tuple t ->
+      (* TUPLE TODO: still not sure about these, need to print with scalar *)
+      (* Expressions are not accepted for arrays of Eigen::Matrix *)
+      pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar_eigen_exprs
+        (scalar, t)
+  | UArray t ->
+      (* Expressions are not accepted for arrays of Eigen::Matrix *)
+      pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
+  | UTuple _ -> pf ppf "std::tuple<%s>" scalar
+  | UMathLibraryFunction | UFun _ ->
+      Common.FatalError.fatal_error_msg
+        [%message "Function types not implemented"]
 
-(** Print template arguments for C++ functions that need templates
-  @param args A pack of [Program.fun_arg_decl] containing functions to detect templates.
-  @return A list of arguments with template parameter names added.
+let pp_arg_type ppf (custom_scalar, ut) =
+  let scalar =
+    match custom_scalar with None -> stantype_prim_str ut | Some s -> s in
+  pf ppf "const %a&" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
+
+(** Print the type of an object.
+  @param ppf A pretty printer
+  @param custom_scalar_opt A string representing a types inner scalar value.
+  @param name The name of the object
+  @param ut The unsized type of the object
  *)
-let template_parameter_names (args : Program.fun_arg_decl) =
-  List.mapi args ~f:(fun i arg ->
-      match arg with
-      | _, _, t when UnsizedType.is_int_type t -> []
-      | UnsizedType.DataOnly, _, ut when not (UnsizedType.is_eigen_type ut) ->
-          [] (* TUPLE TODO: Need a template for each tuple arg *)
-      | _ -> [sprintf "T%d__" i] )
+let pp_arg_eigen_suffix ~is_possibly_eigen_expr ppf (type_, (_, name, ut)) =
+  (* we add the _arg suffix for any Eigen types *)
+  let opt_arg_suffix =
+    if UnsizedType.is_eigen_type ut && is_possibly_eigen_expr then
+      name ^ "_arg__"
+    else name in
+  pf ppf "%s %s" type_ opt_arg_suffix
 
-let requires (_, _, ut) t =
+let requires ut t =
   let tmpl = List.hd_exn t in
   match ut with
   | UnsizedType.URowVector ->
@@ -90,28 +111,95 @@ let requires (_, _, ut) t =
   | UComplexMatrix ->
       [ Require ("stan::is_eigen_matrix_dynamic", tmpl)
       ; Require ("stan::is_vt_complex", tmpl) ]
-      (* NB: Not unwinding array types due to the way arrays of eigens are printed *)
+  (* NB: Not unwinding array types due to the way arrays of eigens are printed *)
   | _ -> [Require ("stan::is_stan_scalar", tmpl)]
 
-let optional_require_templates (name_ops : string list list)
-    (args : Program.fun_arg_decl) =
-  List.map2_exn name_ops args ~f:(fun name_op fun_arg ->
-      match name_op with
-      | [] -> []
-      | param_names -> requires fun_arg param_names )
+(** Print template arguments for C++ functions that need templates
+  @param args A pack of [Program.fun_arg_decl] containing functions to detect templates.
+  @return A list of arguments with template parameter names added.
+ *)
+let template_parameters (args : Program.fun_arg_decl) =
+  let arg_name = str "%a" pp_arg_type in
+  (* TODO also return type to print, like eigen::whatever or T1*)
+  let rec template_p start i (ad, typ) =
+    match (ad, typ) with
+    | _, t when UnsizedType.is_int_type t -> ([], [], arg_name (None, typ))
+    | _, ut when UnsizedType.contains_tuple ut -> (
+        let internal, _ = UnsizedType.unwind_array_type ut in
+        match internal with
+        | UTuple tys ->
+            let temps, reqs, sclrs =
+              List.map ~f:(fun ty -> (ad, ty)) tys
+              |> List.mapi ~f:(template_p (sprintf "%s%d__" start i))
+              |> List.unzip3 in
+            let templates = List.concat temps in
+            let requires = List.concat reqs in
+            let scalars = String.concat ~sep:", " sclrs in
+            (templates, requires, arg_name (Some scalars, typ))
+        | _ -> failwith "bad 4" )
+    | UnsizedType.DataOnly, ut when not (UnsizedType.is_eigen_type ut) ->
+        ([], [], arg_name (None, typ))
+    | _ ->
+        let template = sprintf "%s%d__" start i in
+        ([template], requires typ [template], arg_name (Some template, typ))
+  in
+  List.mapi args ~f:(fun i (ad, _, ty) -> template_p "T" i (ad, ty))
 
 let return_optional_arg_types (args : Program.fun_arg_decl) =
-  List.mapi args ~f:(fun i ((_, _, ut) as arg) ->
-      if UnsizedType.is_eigen_type ut && is_data_matrix_or_not_int_type arg then
-        Some (sprintf "stan::base_type_t<T%d__>" i)
-      else if is_data_matrix_or_not_int_type arg then Some (sprintf "T%d__" i)
-      else None )
+  let rec template_p start i (ad, typ) =
+    match (ad, typ) with
+    | _, t when UnsizedType.is_int_type t -> []
+    | _, ut when UnsizedType.contains_tuple ut -> (
+        let internal, _ = UnsizedType.unwind_array_type ut in
+        match internal with
+        | UTuple tys ->
+            let temps =
+              List.map ~f:(fun ty -> (ad, ty)) tys
+              |> List.mapi ~f:(template_p (sprintf "%s%d__" start i)) in
+            let templates = List.concat temps in
+            templates
+        | _ -> failwith "bad 5" )
+    | UnsizedType.DataOnly, ut when not (UnsizedType.is_eigen_type ut) -> []
+    | _ ->
+        if UnsizedType.is_eigen_type typ then
+          [sprintf "stan::base_type_t<%s%d__>" start i]
+        else [sprintf "%s%d__" start i] in
+  List.mapi args ~f:(fun i (ad, _, ty) -> template_p "T" i (ad, ty))
 
 let%expect_test "arg types templated correctly" =
   [(AutoDiffable, "xreal", UReal); (DataOnly, "yint", UInt)]
-  |> template_parameter_names |> List.concat |> String.concat ~sep:","
-  |> print_endline ;
+  |> template_parameters |> List.map ~f:fst3 |> List.concat
+  |> String.concat ~sep:"," |> print_endline ;
   [%expect {| T0__ |}]
+
+let%expect_test "arg types tuple template" =
+  let templates, reqs, type_ =
+    [(AutoDiffable, "xreal", UTuple [UReal; UMatrix])]
+    |> template_parameters |> List.unzip3 in
+  templates |> List.concat |> String.concat ~sep:"," |> print_endline ;
+  reqs |> List.concat |> List.sexp_of_t sexp_of_template_parameter |> print_s ;
+  type_ |> String.concat ~sep:"," |> print_endline ;
+  [%expect
+    {|
+    T0__0__,T0__1__
+    ((Require stan::is_stan_scalar T0__0__)
+     (Require stan::is_eigen_matrix_dynamic T0__1__)
+     (Require stan::is_vt_not_complex T0__1__))
+    const std::tuple<const T0__0__&, const T0__1__&>& |}]
+
+let%expect_test "arg types tuple template" =
+  let templates, reqs, type_ =
+    [(AutoDiffable, "xreal", UArray (UTuple [UArray UInt; UMatrix]))]
+    |> template_parameters |> List.unzip3 in
+  templates |> List.concat |> String.concat ~sep:"," |> print_endline ;
+  reqs |> List.concat |> List.sexp_of_t sexp_of_template_parameter |> print_s ;
+  type_ |> String.concat ~sep:"," |> print_endline ;
+  [%expect
+    {|
+  T0__1__
+  ((Require stan::is_eigen_matrix_dynamic T0__1__)
+   (Require stan::is_vt_not_complex T0__1__))
+  const std::vector<std::tuple<const std::vector<int>&, const T0__1__&>>& |}]
 
 (** Print the code for promoting stan real types
   @param ppf A pretty printer$
@@ -132,7 +220,7 @@ let pp_promoted_scalar ppf args =
             pf ppf "@[stan::promote_args_t<@[%a%a@]>@]" (list ~sep:comma string)
               hd chunk_till_empty list_tail in
       promote_args_chunked ppf
-        List.(chunks_of ~length:5 (filter_opt (return_optional_arg_types args)))
+        List.(chunks_of ~length:5 (concat (return_optional_arg_types args)))
 
 (** Pretty-prints a function's return-type, taking into account templated argument
   promotion.*)
@@ -154,34 +242,6 @@ let pp_eigen_arg_to_ref ppf arg_types =
          if UnsizedType.is_eigen_type ut then Some name else None )
        arg_types )
 
-(** Print the type of an object.
-  @param ppf A pretty printer
-  @param custom_scalar_opt A string representing a types inner scalar value.
-  @param name The name of the object
-  @param ut The unsized type of the object
- *)
-let pp_arg ppf (custom_scalar_opt, (_, name, ut)) =
-  let scalar =
-    match custom_scalar_opt with
-    | [scalar] -> scalar
-    | [] -> stantype_prim_str ut
-    | _ -> failwith "bad 1" in
-  (* we add the _arg suffix for any Eigen types *)
-  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
-    name
-
-let pp_arg_eigen_suffix ppf (custom_scalar_opt, (_, name, ut)) =
-  let scalar =
-    match custom_scalar_opt with
-    | [scalar] -> scalar
-    | [] -> stantype_prim_str ut
-    | _ -> failwith "bad 2" in
-  (* we add the _arg suffix for any Eigen types *)
-  let opt_arg_suffix =
-    if UnsizedType.is_eigen_type ut then name ^ "_arg__" else name in
-  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
-    opt_arg_suffix
-
 let typename parameter_name = Typename parameter_name
 
 (** Construct an object with it's needed templates for function signatures.
@@ -191,19 +251,15 @@ let typename parameter_name = Typename parameter_name
 let templates_and_args (is_possibly_eigen_expr : bool)
     (fdargs : Program.fun_arg_decl) :
     string list * template_parameter list * string list =
-  let arg_type_templates = template_parameter_names fdargs in
-  let require_arg_templates =
-    optional_require_templates arg_type_templates fdargs in
+  let arg_type_templates, require_arg_templates, arg_types =
+    template_parameters fdargs |> List.unzip3 in
   ( List.concat arg_type_templates
   , List.concat require_arg_templates
-  , if not is_possibly_eigen_expr then
-      List.map
-        ~f:(fun a -> str "%a" pp_arg a)
-        (List.zip_exn arg_type_templates fdargs)
-    else
-      List.map
-        ~f:(fun a -> str "%a" pp_arg_eigen_suffix a)
-        (List.zip_exn arg_type_templates fdargs) )
+  , List.map2_exn
+      ~f:(fun type_string arg ->
+        str "%a" (pp_arg_eigen_suffix ~is_possibly_eigen_expr) (type_string, arg)
+        )
+      arg_types fdargs )
 
 let mk_extra_args templates args =
   List.map ~f:(fun (t, v) -> t ^ "& " ^ v) (List.zip_exn templates args)
