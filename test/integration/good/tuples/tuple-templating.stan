@@ -14,6 +14,10 @@ functions {
   void foo3((real, matrix) test){
     print(test.1);
   }
+
+  void overly_complicated((array[] matrix, (int, matrix)) t1, array[](int, matrix)t2){
+    print(t1.2.2);
+  }
 }
 
 data {
@@ -26,10 +30,12 @@ data {
 
 generated quantities {
   // eigen expression inside tuple
-  // - TUPLE TODO - fails due to const correctness issue?
   foo((m1+m2,));
   // different types inside tuple
   real s = tsum((a1,a2));
   // eigen expression inside tuple inside array
   foo2({(m1+m2,)});
+
+  // a whole bunch of painful
+  overly_complicated(({m1+m2}, (1, m1)), {(1,m1), (2, m2)});
 }

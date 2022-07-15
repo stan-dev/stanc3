@@ -6728,22 +6728,23 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 23> locations_array__ = 
+static constexpr std::array<const char*, 26> locations_array__ = 
 {" (found before start of program)",
- " (in 'tuple-templating.stan', line 30, column 2 to column 16)",
- " (in 'tuple-templating.stan', line 32, column 2 to column 25)",
- " (in 'tuple-templating.stan', line 34, column 2 to column 19)",
- " (in 'tuple-templating.stan', line 20, column 2 to column 8)",
- " (in 'tuple-templating.stan', line 21, column 9 to column 10)",
- " (in 'tuple-templating.stan', line 21, column 11 to column 12)",
- " (in 'tuple-templating.stan', line 21, column 2 to column 17)",
- " (in 'tuple-templating.stan', line 22, column 9 to column 10)",
- " (in 'tuple-templating.stan', line 22, column 11 to column 12)",
- " (in 'tuple-templating.stan', line 22, column 2 to column 17)",
- " (in 'tuple-templating.stan', line 23, column 8 to column 9)",
- " (in 'tuple-templating.stan', line 23, column 2 to column 18)",
- " (in 'tuple-templating.stan', line 24, column 8 to column 9)",
- " (in 'tuple-templating.stan', line 24, column 2 to column 19)",
+ " (in 'tuple-templating.stan', line 33, column 2 to column 16)",
+ " (in 'tuple-templating.stan', line 35, column 2 to column 25)",
+ " (in 'tuple-templating.stan', line 37, column 2 to column 19)",
+ " (in 'tuple-templating.stan', line 40, column 2 to column 60)",
+ " (in 'tuple-templating.stan', line 24, column 2 to column 8)",
+ " (in 'tuple-templating.stan', line 25, column 9 to column 10)",
+ " (in 'tuple-templating.stan', line 25, column 11 to column 12)",
+ " (in 'tuple-templating.stan', line 25, column 2 to column 17)",
+ " (in 'tuple-templating.stan', line 26, column 9 to column 10)",
+ " (in 'tuple-templating.stan', line 26, column 11 to column 12)",
+ " (in 'tuple-templating.stan', line 26, column 2 to column 17)",
+ " (in 'tuple-templating.stan', line 27, column 8 to column 9)",
+ " (in 'tuple-templating.stan', line 27, column 2 to column 18)",
+ " (in 'tuple-templating.stan', line 28, column 8 to column 9)",
+ " (in 'tuple-templating.stan', line 28, column 2 to column 19)",
  " (in 'tuple-templating.stan', line 3, column 4 to column 18)",
  " (in 'tuple-templating.stan', line 2, column 26 to line 4, column 3)",
  " (in 'tuple-templating.stan', line 7, column 4 to column 20)",
@@ -6751,7 +6752,9 @@ static constexpr std::array<const char*, 23> locations_array__ =
  " (in 'tuple-templating.stan', line 11, column 4 to column 21)",
  " (in 'tuple-templating.stan', line 10, column 35 to line 12, column 3)",
  " (in 'tuple-templating.stan', line 15, column 4 to column 18)",
- " (in 'tuple-templating.stan', line 14, column 32 to line 16, column 3)"};
+ " (in 'tuple-templating.stan', line 14, column 32 to line 16, column 3)",
+ " (in 'tuple-templating.stan', line 19, column 4 to column 18)",
+ " (in 'tuple-templating.stan', line 18, column 85 to line 20, column 3)"};
 
 struct tsum_functor__ {
   template <typename T0__1__,
@@ -6777,6 +6780,19 @@ struct foo3_functor__ {
   operator()(const std::tuple<const T0__0__&, const T0__1__&>& test,
              std::ostream* pstream__) const;
 };
+struct overly_complicated_functor__ {
+  template <typename T0__0__, typename T0__1__1__, typename T1__1__,
+            stan::require_all_t<stan::is_stan_scalar<T0__0__>,
+                                stan::is_eigen_matrix_dynamic<T0__1__1__>,
+                                stan::is_vt_not_complex<T0__1__1__>,
+                                stan::is_eigen_matrix_dynamic<T1__1__>,
+                                stan::is_vt_not_complex<T1__1__>>* = nullptr>
+  void
+  operator()(const std::tuple<const std::vector<Eigen::Matrix<T0__0__, -1,
+             -1>>&, const std::tuple<const int&, const T0__1__1__&>&>& t1,
+             const std::vector<std::tuple<const int&, const T1__1__&>>& t2,
+             std::ostream* pstream__) const;
+};
 struct foo_functor__ {
   template <typename T0__0__,
             stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
@@ -6797,7 +6813,7 @@ template <typename T0__0__,
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 15;
+      current_statement__ = 16;
       if (pstream__) {
         stan::math::stan_print(pstream__, std::get<0>(test));
         stan::math::stan_print(pstream__, "\n");
@@ -6818,7 +6834,7 @@ template <typename T0__1__,
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 17;
+      current_statement__ = 18;
       return stan::math::sum(std::get<1>(s));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6838,7 +6854,7 @@ template <typename T0__0__,
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 19;
+      current_statement__ = 20;
       if (pstream__) {
         stan::math::stan_print(pstream__, std::get<0>(stan::model::rvalue(
                                                         test, "test",
@@ -6864,9 +6880,39 @@ template <typename T0__0__, typename T0__1__,
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      current_statement__ = 21;
+      current_statement__ = 22;
       if (pstream__) {
         stan::math::stan_print(pstream__, std::get<0>(test));
+        stan::math::stan_print(pstream__, "\n");
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__0__, typename T0__1__1__, typename T1__1__,
+          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
+                              stan::is_eigen_matrix_dynamic<T0__1__1__>,
+                              stan::is_vt_not_complex<T0__1__1__>,
+                              stan::is_eigen_matrix_dynamic<T1__1__>,
+                              stan::is_vt_not_complex<T1__1__>>* = nullptr>
+  void
+  overly_complicated(const std::tuple<const
+                     std::vector<Eigen::Matrix<T0__0__, -1, -1>>&, const
+                     std::tuple<const int&, const T0__1__1__&>&>& t1, const
+                     std::vector<std::tuple<const int&, const T1__1__&>>& t2,
+                     std::ostream* pstream__) {
+    using local_scalar_t__ =
+            stan::promote_args_t<T0__0__, stan::base_type_t<T0__1__1__>,
+                                 stan::base_type_t<T1__1__>>;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 24;
+      if (pstream__) {
+        stan::math::stan_print(pstream__, std::get<1>(std::get<1>(t1)));
         stan::math::stan_print(pstream__, "\n");
       }
     } catch (const std::exception& e) {
@@ -6902,6 +6948,24 @@ foo3_functor__::operator()(const std::tuple<const T0__0__&, const T0__1__&>&
                            test, std::ostream* pstream__)  const
 {
   return foo3(test, pstream__);
+}
+
+template <typename T0__0__, typename T0__1__1__, typename T1__1__,
+          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
+                              stan::is_eigen_matrix_dynamic<T0__1__1__>,
+                              stan::is_vt_not_complex<T0__1__1__>,
+                              stan::is_eigen_matrix_dynamic<T1__1__>,
+                              stan::is_vt_not_complex<T1__1__>>*>
+void
+overly_complicated_functor__::operator()(const std::tuple<const
+                                         std::vector<Eigen::Matrix<T0__0__,
+                                         -1, -1>>&, const std::tuple<const
+                                         int&, const T0__1__1__&>&>& t1,
+                                         const std::vector<std::tuple<const
+                                         int&, const T1__1__&>>& t2,
+                                         std::ostream* pstream__)  const
+{
+  return overly_complicated(t1, t2, pstream__);
 }
 
 template <typename T0__0__,
@@ -6951,19 +7015,19 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 4;
+      current_statement__ = 5;
       context__.validate_dims("data initialization","N","int",
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
       
-      current_statement__ = 4;
-      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 5;
-      stan::math::validate_non_negative_index("m1", "N", N);
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 6;
       stan::math::validate_non_negative_index("m1", "N", N);
       current_statement__ = 7;
+      stan::math::validate_non_negative_index("m1", "N", N);
+      current_statement__ = 8;
       context__.validate_dims("data initialization","m1","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N)});
@@ -6975,28 +7039,28 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
       
       {
         std::vector<local_scalar_t__> m1_flat__;
-        current_statement__ = 7;
+        current_statement__ = 8;
         m1_flat__ = context__.vals_r("m1");
-        current_statement__ = 7;
+        current_statement__ = 8;
         pos__ = 1;
-        current_statement__ = 7;
+        current_statement__ = 8;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 7;
+          current_statement__ = 8;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 7;
+            current_statement__ = 8;
             stan::model::assign(m1, m1_flat__[(pos__ - 1)],
               "assigning variable m1", stan::model::index_uni(sym2__),
                                          stan::model::index_uni(sym1__));
-            current_statement__ = 7;
+            current_statement__ = 8;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 8;
-      stan::math::validate_non_negative_index("m2", "N", N);
       current_statement__ = 9;
       stan::math::validate_non_negative_index("m2", "N", N);
       current_statement__ = 10;
+      stan::math::validate_non_negative_index("m2", "N", N);
+      current_statement__ = 11;
       context__.validate_dims("data initialization","m2","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N)});
@@ -7008,42 +7072,42 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
       
       {
         std::vector<local_scalar_t__> m2_flat__;
-        current_statement__ = 10;
+        current_statement__ = 11;
         m2_flat__ = context__.vals_r("m2");
-        current_statement__ = 10;
+        current_statement__ = 11;
         pos__ = 1;
-        current_statement__ = 10;
+        current_statement__ = 11;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 10;
+          current_statement__ = 11;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 10;
+            current_statement__ = 11;
             stan::model::assign(m2, m2_flat__[(pos__ - 1)],
               "assigning variable m2", stan::model::index_uni(sym2__),
                                          stan::model::index_uni(sym1__));
-            current_statement__ = 10;
+            current_statement__ = 11;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 11;
-      stan::math::validate_non_negative_index("a1", "N", N);
       current_statement__ = 12;
+      stan::math::validate_non_negative_index("a1", "N", N);
+      current_statement__ = 13;
       context__.validate_dims("data initialization","a1","int",
            std::vector<size_t>{static_cast<size_t>(N)});
       a1 = std::vector<int>(N, std::numeric_limits<int>::min());
       
       
-      current_statement__ = 12;
-      a1 = context__.vals_i("a1");
       current_statement__ = 13;
-      stan::math::validate_non_negative_index("a2", "N", N);
+      a1 = context__.vals_i("a1");
       current_statement__ = 14;
+      stan::math::validate_non_negative_index("a2", "N", N);
+      current_statement__ = 15;
       context__.validate_dims("data initialization","a2","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       a2 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       
-      current_statement__ = 14;
+      current_statement__ = 15;
       a2 = context__.vals_r("a2");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7119,6 +7183,14 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
       current_statement__ = 3;
       foo2(std::vector<std::tuple<Eigen::Matrix<double, -1, -1>>>{
         std::forward_as_tuple(stan::math::add(m1, m2))}, pstream__);
+      current_statement__ = 4;
+      overly_complicated(
+        std::forward_as_tuple(std::vector<Eigen::Matrix<double, -1, -1>>{
+                                stan::math::add(m1, m2)},
+                                std::forward_as_tuple(1, m1)),
+        std::vector<std::tuple<int, Eigen::Matrix<double, -1, -1>>>{
+        std::forward_as_tuple(1, m1),
+        std::forward_as_tuple(2, m2)}, pstream__);
       out__.write(s);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

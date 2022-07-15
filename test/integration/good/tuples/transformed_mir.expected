@@ -6604,6 +6604,36 @@
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
        (meta <opaque>))))
+    (fdloc <opaque>))
+   ((fdrt ()) (fdname overly_complicated) (fdsuffix FnPlain)
+    (fdargs
+     ((AutoDiffable t1 (UTuple ((UArray UMatrix) (UTuple (UInt UMatrix)))))
+      (AutoDiffable t2 (UArray (UTuple (UInt UMatrix))))))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (NRFunApp (CompilerInternal FnPrint)
+             (((pattern
+                (TupleProjection
+                 ((pattern
+                   (TupleProjection
+                    ((pattern (Var t1))
+                     (meta
+                      ((type_
+                        (UTuple ((UArray UMatrix) (UTuple (UInt UMatrix)))))
+                       (loc <opaque>)
+                       (adlevel
+                        (TupleAD
+                         (AutoDiffable (TupleAD (DataOnly AutoDiffable))))))))
+                    2))
+                  (meta
+                   ((type_ (UTuple (UInt UMatrix))) (loc <opaque>)
+                    (adlevel (TupleAD (DataOnly AutoDiffable))))))
+                 2))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
     (fdloc <opaque>))))
  (input_vars
   ((N SInt)
@@ -7029,6 +7059,60 @@
         (meta
          ((type_ (UArray (UTuple (UMatrix)))) (loc <opaque>)
           (adlevel (TupleAD (DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (UserDefined overly_complicated FnPlain)
+      (((pattern
+         (FunApp (CompilerInternal FnMakeTuple)
+          (((pattern
+             (FunApp (CompilerInternal FnMakeArray)
+              (((pattern
+                 (FunApp (StanLib Plus__ FnPlain AoS)
+                  (((pattern (Var m1))
+                    (meta
+                     ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
+                   ((pattern (Var m2))
+                    (meta
+                     ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta
+             ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern
+             (FunApp (CompilerInternal FnMakeTuple)
+              (((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Var m1))
+                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta
+             ((type_ (UTuple (UInt UMatrix))) (loc <opaque>)
+              (adlevel (TupleAD (DataOnly DataOnly)))))))))
+        (meta
+         ((type_ (UTuple ((UArray UMatrix) (UTuple (UInt UMatrix)))))
+          (loc <opaque>)
+          (adlevel (TupleAD (DataOnly (TupleAD (DataOnly DataOnly))))))))
+       ((pattern
+         (FunApp (CompilerInternal FnMakeArray)
+          (((pattern
+             (FunApp (CompilerInternal FnMakeTuple)
+              (((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Var m1))
+                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta
+             ((type_ (UTuple (UInt UMatrix))) (loc <opaque>)
+              (adlevel (TupleAD (DataOnly DataOnly))))))
+           ((pattern
+             (FunApp (CompilerInternal FnMakeTuple)
+              (((pattern (Lit Int 2))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Var m2))
+                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta
+             ((type_ (UTuple (UInt UMatrix))) (loc <opaque>)
+              (adlevel (TupleAD (DataOnly DataOnly)))))))))
+        (meta
+         ((type_ (UArray (UTuple (UInt UMatrix)))) (loc <opaque>)
+          (adlevel (TupleAD (DataOnly DataOnly)))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
