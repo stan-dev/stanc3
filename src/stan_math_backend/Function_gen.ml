@@ -73,7 +73,7 @@ let rec pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
 let pp_arg_type ppf (custom_scalar, ut) =
   let scalar =
     match custom_scalar with None -> stantype_prim_str ut | Some s -> s in
-  pf ppf "const %a&" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
+  pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut)
 
 (** Print the type of an object.
   @param ppf A pretty printer
@@ -87,7 +87,7 @@ let pp_arg_eigen_suffix ~is_possibly_eigen_expr ppf (type_, (_, name, ut)) =
     if UnsizedType.is_eigen_type ut && is_possibly_eigen_expr then
       name ^ "_arg__"
     else name in
-  pf ppf "%s %s" type_ opt_arg_suffix
+  pf ppf "const %s& %s" type_ opt_arg_suffix
 
 let requires ut t =
   let tmpl = List.hd_exn t in
@@ -183,7 +183,7 @@ let%expect_test "arg types tuple template" =
     ((Require stan::is_stan_scalar T0__0__)
      (Require stan::is_eigen_matrix_dynamic T0__1__)
      (Require stan::is_vt_not_complex T0__1__))
-    const std::tuple<const T0__0__&, const T0__1__&>& |}]
+    std::tuple<T0__0__, T0__1__> |}]
 
 let%expect_test "arg types tuple template" =
   let templates, reqs, type_ =
@@ -197,7 +197,7 @@ let%expect_test "arg types tuple template" =
   T0__1__
   ((Require stan::is_eigen_matrix_dynamic T0__1__)
    (Require stan::is_vt_not_complex T0__1__))
-  const std::vector<std::tuple<const std::vector<int>&, const T0__1__&>>& |}]
+  std::vector<std::tuple<std::vector<int>, T0__1__>> |}]
 
 (** Print the code for promoting stan real types
   @param ppf A pretty printer$

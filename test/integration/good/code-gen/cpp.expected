@@ -807,15 +807,16 @@ static constexpr std::array<const char*, 11> locations_array__ =
 
 struct f_functor__ {
   std::tuple<int, std::vector<std::tuple<int, double>>>
-  operator()(const int& x, const std::vector<std::vector<std::tuple<const
-             std::vector<std::tuple<const int&, const int&>>&, const
-             std::vector<std::vector<int>>&>>>& x2, std::ostream* pstream__) const;
+  operator()(const int& x, const
+             std::vector<std::vector<std::tuple<std::vector<std::tuple<int,
+             int>>, std::vector<std::vector<int>>>>>& x2, std::ostream*
+             pstream__) const;
 };
 
 std::tuple<int, std::vector<std::tuple<int, double>>>
-  f(const int& x, const std::vector<std::vector<std::tuple<const
-    std::vector<std::tuple<const int&, const int&>>&, const
-    std::vector<std::vector<int>>&>>>& x2, std::ostream* pstream__) {
+  f(const int& x, const
+    std::vector<std::vector<std::tuple<std::vector<std::tuple<int, int>>,
+    std::vector<std::vector<int>>>>>& x2, std::ostream* pstream__) {
     using local_scalar_t__ = double;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
@@ -832,9 +833,8 @@ std::tuple<int, std::vector<std::tuple<int, double>>>
     }
 std::tuple<int, std::vector<std::tuple<int, double>>>
 f_functor__::operator()(const int& x, const
-                        std::vector<std::vector<std::tuple<const
-                        std::vector<std::tuple<const int&, const int&>>&,
-                        const std::vector<std::vector<int>>&>>>& x2,
+                        std::vector<std::vector<std::tuple<std::vector<std::tuple<int,
+                        int>>, std::vector<std::vector<int>>>>>& x2,
                         std::ostream* pstream__)  const
 {
   return f(x, x2, pstream__);
