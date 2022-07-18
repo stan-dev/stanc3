@@ -187,9 +187,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       current_statement__ = 1;
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         current_statement__ = 1;
-        stan::model::assign(arr, std::tuple<local_scalar_t__,
-          local_scalar_t__>(in__.template read<local_scalar_t__>(),
-                              in__.template read<local_scalar_t__>()),
+        stan::model::assign(arr,
+          std::tuple<local_scalar_t__, local_scalar_t__>
+          (in__.template read<local_scalar_t__>(),
+             in__.template read<local_scalar_t__>()),
           "assigning variable arr", stan::model::index_uni(sym1__));
       }
       std::vector<
@@ -213,9 +214,9 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           current_statement__ = 2;
           stan::model::assign(std::get<1>(arr2[(sym1__ - 1)]),
-            std::tuple<local_scalar_t__,
-            local_scalar_t__>(in__.template read<local_scalar_t__>(),
-                                in__.template read<local_scalar_t__>()),
+            std::tuple<local_scalar_t__, local_scalar_t__>
+            (in__.template read<local_scalar_t__>(),
+               in__.template read<local_scalar_t__>()),
             "assigning variable std::get<1>(arr2[(sym1__ - 1)])", stan::model::index_uni(sym2__));
         }
       }
@@ -230,9 +231,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       current_statement__ = 3;
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         current_statement__ = 3;
-        stan::model::assign(std::get<1>(arr3), std::tuple<local_scalar_t__,
-          local_scalar_t__>(in__.template read<local_scalar_t__>(),
-                              in__.template read<local_scalar_t__>()),
+        stan::model::assign(std::get<1>(arr3),
+          std::tuple<local_scalar_t__, local_scalar_t__>
+          (in__.template read<local_scalar_t__>(),
+             in__.template read<local_scalar_t__>()),
           "assigning variable std::get<1>(arr3)", stan::model::index_uni(sym1__));
       }
       std::vector<
@@ -268,11 +270,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           current_statement__ = 4;
           stan::model::assign(std::get<1>(arr4[(sym1__ - 1)]),
             std::tuple<local_scalar_t__,
-            Eigen::Matrix<local_scalar_t__, -1, 1>>(in__.template read<
-                                                      local_scalar_t__>(),
-                                                      in__.template read_constrain_simplex<
-                                                        Eigen::Matrix<local_scalar_t__, -1, 1>,
-                                                        jacobian__>(lp__, 2)),
+                         Eigen::Matrix<local_scalar_t__, -1, 1>>
+            (in__.template read<local_scalar_t__>(),
+               in__.template read_constrain_simplex<
+                 Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__, 2)),
             "assigning variable std::get<1>(arr4[(sym1__ - 1)])", stan::model::index_uni(sym2__));
         }
       }
@@ -314,9 +315,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       current_statement__ = 1;
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         current_statement__ = 1;
-        stan::model::assign(arr, std::tuple<local_scalar_t__,
-          local_scalar_t__>(in__.template read<local_scalar_t__>(),
-                              in__.template read<local_scalar_t__>()),
+        stan::model::assign(arr,
+          std::tuple<local_scalar_t__, local_scalar_t__>
+          (in__.template read<local_scalar_t__>(),
+             in__.template read<local_scalar_t__>()),
           "assigning variable arr", stan::model::index_uni(sym1__));
       }
       std::vector<
@@ -335,9 +337,9 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           current_statement__ = 2;
           stan::model::assign(std::get<1>(arr2[(sym1__ - 1)]),
-            std::tuple<local_scalar_t__,
-            local_scalar_t__>(in__.template read<local_scalar_t__>(),
-                                in__.template read<local_scalar_t__>()),
+            std::tuple<local_scalar_t__, local_scalar_t__>
+            (in__.template read<local_scalar_t__>(),
+               in__.template read<local_scalar_t__>()),
             "assigning variable std::get<1>(arr2[(sym1__ - 1)])", stan::model::index_uni(sym2__));
         }
       }
@@ -350,9 +352,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       current_statement__ = 3;
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         current_statement__ = 3;
-        stan::model::assign(std::get<1>(arr3), std::tuple<local_scalar_t__,
-          local_scalar_t__>(in__.template read<local_scalar_t__>(),
-                              in__.template read<local_scalar_t__>()),
+        stan::model::assign(std::get<1>(arr3),
+          std::tuple<local_scalar_t__, local_scalar_t__>
+          (in__.template read<local_scalar_t__>(),
+             in__.template read<local_scalar_t__>()),
           "assigning variable std::get<1>(arr3)", stan::model::index_uni(sym1__));
       }
       std::vector<
@@ -381,11 +384,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           current_statement__ = 4;
           stan::model::assign(std::get<1>(arr4[(sym1__ - 1)]),
             std::tuple<local_scalar_t__,
-            Eigen::Matrix<local_scalar_t__, -1, 1>>(in__.template read<
-                                                      local_scalar_t__>(),
-                                                      in__.template read_constrain_simplex<
-                                                        Eigen::Matrix<local_scalar_t__, -1, 1>,
-                                                        jacobian__>(lp__, 2)),
+                         Eigen::Matrix<local_scalar_t__, -1, 1>>
+            (in__.template read<local_scalar_t__>(),
+               in__.template read_constrain_simplex<
+                 Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__, 2)),
             "assigning variable std::get<1>(arr4[(sym1__ - 1)])", stan::model::index_uni(sym2__));
         }
       }
@@ -1515,8 +1517,9 @@ class simple2_model final : public model_base_crtp<simple2_model> {
       
       
       current_statement__ = 1;
-      stan::model::assign(x, std::tuple<std::vector<double>,
-        int>(std::vector<double>{1.01, 3.14}, 2), "assigning variable x");
+      stan::model::assign(x,
+        std::tuple<std::vector<double>, int>
+        (std::vector<double>{1.01, 3.14}, 2), "assigning variable x");
       current_statement__ = 2;
       if (pstream__) {
         stan::math::stan_print(pstream__, stan::model::rvalue(std::get<0>(x),
@@ -1844,10 +1847,11 @@ class simple3_model final : public model_base_crtp<simple3_model> {
       
       
       current_statement__ = 1;
-      stan::model::assign(x, std::tuple<std::vector<std::vector<double>>,
-        int>(std::vector<std::vector<double>>{std::vector<double>{1.01,
-               3.14}, std::vector<double>{1.01, 3.14}, std::vector<double>{
-               1.01, 3.14}}, 2), "assigning variable x");
+      stan::model::assign(x,
+        std::tuple<std::vector<std::vector<double>>, int>
+        (std::vector<std::vector<double>>{std::vector<double>{1.01, 3.14},
+           std::vector<double>{1.01, 3.14}, std::vector<double>{1.01, 3.14}},
+           2), "assigning variable x");
       current_statement__ = 2;
       if (pstream__) {
         stan::math::stan_print(pstream__, stan::model::rvalue(std::get<0>(x),
@@ -2526,11 +2530,12 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
       std::tuple<local_scalar_t__, local_scalar_t__> ps =
          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__};
       current_statement__ = 1;
-      stan::model::assign(ps, std::tuple<local_scalar_t__,
-        local_scalar_t__>(in__.template read_constrain_lb<local_scalar_t__, 
-                            jacobian__>(0, lp__),
-                            in__.template read_constrain_lb<local_scalar_t__, 
-                              jacobian__>(0, lp__)), "assigning variable ps");
+      stan::model::assign(ps,
+        std::tuple<local_scalar_t__, local_scalar_t__>
+        (in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+           lp__),
+           in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+             lp__)), "assigning variable ps");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -2566,11 +2571,12 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
       std::tuple<double, double> ps =
          std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 1;
-      stan::model::assign(ps, std::tuple<local_scalar_t__,
-        local_scalar_t__>(in__.template read_constrain_lb<local_scalar_t__, 
-                            jacobian__>(0, lp__),
-                            in__.template read_constrain_lb<local_scalar_t__, 
-                              jacobian__>(0, lp__)), "assigning variable ps");
+      stan::model::assign(ps,
+        std::tuple<local_scalar_t__, local_scalar_t__>
+        (in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+           lp__),
+           in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+             lp__)), "assigning variable ps");
       out__.write(std::get<0>(ps));
       out__.write(std::get<1>(ps));
       if (stan::math::logical_negation((stan::math::primitive_value(
@@ -3567,11 +3573,12 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
       std::tuple<local_scalar_t__, local_scalar_t__> ps =
          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__};
       current_statement__ = 1;
-      stan::model::assign(ps, std::tuple<local_scalar_t__,
-        local_scalar_t__>(in__.template read_constrain_lb<local_scalar_t__, 
-                            jacobian__>(0, lp__),
-                            in__.template read_constrain_lb<local_scalar_t__, 
-                              jacobian__>(0, lp__)), "assigning variable ps");
+      stan::model::assign(ps,
+        std::tuple<local_scalar_t__, local_scalar_t__>
+        (in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+           lp__),
+           in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+             lp__)), "assigning variable ps");
       {
         current_statement__ = 2;
         lp_accum__.add(
@@ -3620,11 +3627,12 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
       std::tuple<double, double> ps =
          std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 1;
-      stan::model::assign(ps, std::tuple<local_scalar_t__,
-        local_scalar_t__>(in__.template read_constrain_lb<local_scalar_t__, 
-                            jacobian__>(0, lp__),
-                            in__.template read_constrain_lb<local_scalar_t__, 
-                              jacobian__>(0, lp__)), "assigning variable ps");
+      stan::model::assign(ps,
+        std::tuple<local_scalar_t__, local_scalar_t__>
+        (in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+           lp__),
+           in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+             lp__)), "assigning variable ps");
       out__.write(std::get<0>(ps));
       out__.write(std::get<1>(ps));
       if (stan::math::logical_negation((stan::math::primitive_value(
@@ -5198,10 +5206,10 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
       std::tuple<local_scalar_t__, local_scalar_t__> ps =
          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__};
       current_statement__ = 1;
-      stan::model::assign(ps, std::tuple<local_scalar_t__,
-        local_scalar_t__>(in__.template read<local_scalar_t__>(),
-                            in__.template read<local_scalar_t__>()),
-        "assigning variable ps");
+      stan::model::assign(ps,
+        std::tuple<local_scalar_t__, local_scalar_t__>
+        (in__.template read<local_scalar_t__>(),
+           in__.template read<local_scalar_t__>()), "assigning variable ps");
       std::tuple<local_scalar_t__,
         std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>> ps2 =
          std::tuple<local_scalar_t__,
@@ -5211,15 +5219,16 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10,
           DUMMY_VAR__)}};
       current_statement__ = 2;
-      stan::model::assign(ps2, std::tuple<local_scalar_t__,
-        std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
-        in__.template read<local_scalar_t__>(), std::tuple<local_scalar_t__,
-          Eigen::Matrix<local_scalar_t__, -1, -1>>(in__.template read<
-                                                     local_scalar_t__>(),
-                                                     in__.template read<
-                                                       Eigen::Matrix<local_scalar_t__, -1, -1>>(
-                                                       10, 10))),
-        "assigning variable ps2");
+      stan::model::assign(ps2,
+        std::tuple<local_scalar_t__,
+                     std::tuple<local_scalar_t__,
+                                Eigen::Matrix<local_scalar_t__, -1, -1>>>
+        (in__.template read<local_scalar_t__>(),
+           std::tuple<local_scalar_t__,
+                        Eigen::Matrix<local_scalar_t__, -1, -1>>
+           (in__.template read<local_scalar_t__>(),
+              in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(10,
+                10))), "assigning variable ps2");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -5255,25 +5264,26 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
       std::tuple<double, double> ps =
          std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 1;
-      stan::model::assign(ps, std::tuple<local_scalar_t__,
-        local_scalar_t__>(in__.template read<local_scalar_t__>(),
-                            in__.template read<local_scalar_t__>()),
-        "assigning variable ps");
+      stan::model::assign(ps,
+        std::tuple<local_scalar_t__, local_scalar_t__>
+        (in__.template read<local_scalar_t__>(),
+           in__.template read<local_scalar_t__>()), "assigning variable ps");
       std::tuple<double, std::tuple<double, Eigen::Matrix<double, -1, -1>>> ps2 =
          std::tuple<double, std::tuple<double, Eigen::Matrix<double, -1, -1>>>{std::numeric_limits<double>::quiet_NaN(), std::tuple<
         double, Eigen::Matrix<double, -1, -1>>{std::numeric_limits<double>::quiet_NaN(), 
         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN())}};
       current_statement__ = 2;
-      stan::model::assign(ps2, std::tuple<local_scalar_t__,
-        std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
-        in__.template read<local_scalar_t__>(), std::tuple<local_scalar_t__,
-          Eigen::Matrix<local_scalar_t__, -1, -1>>(in__.template read<
-                                                     local_scalar_t__>(),
-                                                     in__.template read<
-                                                       Eigen::Matrix<local_scalar_t__, -1, -1>>(
-                                                       10, 10))),
-        "assigning variable ps2");
+      stan::model::assign(ps2,
+        std::tuple<local_scalar_t__,
+                     std::tuple<local_scalar_t__,
+                                Eigen::Matrix<local_scalar_t__, -1, -1>>>
+        (in__.template read<local_scalar_t__>(),
+           std::tuple<local_scalar_t__,
+                        Eigen::Matrix<local_scalar_t__, -1, -1>>
+           (in__.template read<local_scalar_t__>(),
+              in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(10,
+                10))), "assigning variable ps2");
       out__.write(std::get<0>(ps));
       out__.write(std::get<1>(ps));
       out__.write(std::get<0>(ps2));
@@ -5617,10 +5627,11 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
       std::tuple<local_scalar_t__, local_scalar_t__> ps =
          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__};
       current_statement__ = 1;
-      stan::model::assign(ps, std::tuple<local_scalar_t__,
-        local_scalar_t__>(in__.template read<local_scalar_t__>(),
-                            in__.template read_constrain_lb<local_scalar_t__, 
-                              jacobian__>(0, lp__)), "assigning variable ps");
+      stan::model::assign(ps,
+        std::tuple<local_scalar_t__, local_scalar_t__>
+        (in__.template read<local_scalar_t__>(),
+           in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+             lp__)), "assigning variable ps");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -5656,10 +5667,11 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
       std::tuple<double, double> ps =
          std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 1;
-      stan::model::assign(ps, std::tuple<local_scalar_t__,
-        local_scalar_t__>(in__.template read<local_scalar_t__>(),
-                            in__.template read_constrain_lb<local_scalar_t__, 
-                              jacobian__>(0, lp__)), "assigning variable ps");
+      stan::model::assign(ps,
+        std::tuple<local_scalar_t__, local_scalar_t__>
+        (in__.template read<local_scalar_t__>(),
+           in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+             lp__)), "assigning variable ps");
       out__.write(std::get<0>(ps));
       out__.write(std::get<1>(ps));
       if (stan::math::logical_negation((stan::math::primitive_value(
@@ -6058,9 +6070,9 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
       
       
       current_statement__ = 15;
-      stan::model::assign(basic, std::tuple<std::vector<double>,
-        std::complex<double>>(std::vector<double>{1, 2},
-                                stan::math::to_complex(3, 0)),
+      stan::model::assign(basic,
+        std::tuple<std::vector<double>, std::complex<double>>
+        (std::vector<double>{1, 2}, stan::math::to_complex(3, 0)),
         "assigning variable basic");
       current_statement__ = 16;
       CV = 
@@ -6071,8 +6083,8 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
       
       current_statement__ = 16;
       stan::model::assign(CV,
-        std::tuple<Eigen::Matrix<std::complex<double>, -1, 1>,
-        double>(stan::math::promote_scalar<std::complex<double>>(V), 2),
+        std::tuple<Eigen::Matrix<std::complex<double>, -1, 1>, double>
+        (stan::math::promote_scalar<std::complex<double>>(V), 2),
         "assigning variable CV");
       current_statement__ = 17;
       V2 = 
@@ -6082,7 +6094,8 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
       
       
       current_statement__ = 17;
-      stan::model::assign(V2, std::forward_as_tuple(V, 2),
+      stan::model::assign(V2,
+        std::tuple<Eigen::Matrix<double, -1, 1>, int>(V, 2),
         "assigning variable V2");
       current_statement__ = 18;
       stan::model::assign(CV,
@@ -7172,21 +7185,20 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
         std::tuple<Eigen::Matrix<double, -1, -1>>(stan::math::add(m1, m2)), pstream__);
       double s = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
-      s = tsum(std::forward_as_tuple(a1, a2), pstream__);
+      s = tsum(
+            std::tuple<std::vector<int>, std::vector<double>>(a1, a2), pstream__);
       current_statement__ = 3;
       foo2(std::vector<std::tuple<Eigen::Matrix<double, -1, -1>>>{
         std::tuple<Eigen::Matrix<double, -1, -1>>(stan::math::add(m1, m2))}, pstream__);
       current_statement__ = 4;
       overly_complicated(
         std::tuple<std::vector<Eigen::Matrix<double, -1, -1>>,
-        std::tuple<int, Eigen::Matrix<double, -1, -1>>>(std::vector<Eigen::Matrix<double, -1, -1>>{
-                                                          stan::math::add(m1,
-                                                            m2)},
-                                                          std::forward_as_tuple(
-                                                          1, m1)),
+                     std::tuple<int, Eigen::Matrix<double, -1, -1>>>
+        (std::vector<Eigen::Matrix<double, -1, -1>>{stan::math::add(m1, m2)},
+           std::tuple<int, Eigen::Matrix<double, -1, -1>>(1, m1)),
         std::vector<std::tuple<int, Eigen::Matrix<double, -1, -1>>>{
-        std::forward_as_tuple(1, m1),
-        std::forward_as_tuple(2, m2)}, pstream__);
+        std::tuple<int, Eigen::Matrix<double, -1, -1>>(1, m1),
+        std::tuple<int, Eigen::Matrix<double, -1, -1>>(2, m2)}, pstream__);
       out__.write(s);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

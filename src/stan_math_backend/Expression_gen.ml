@@ -483,15 +483,18 @@ and pp_compiler_internal_fn ad ut f ppf es =
     pf ppf "std::vector<%a>{@,%a}" pp_unsizedtype_local (ad, ut)
       (list ~sep:comma pp_expr) es in
   let pp_tuple_literal ppf (es, local_types) =
+    (* NB: This causes some inefficencies such as eagerly
+         evaluating eigen expressions and copying data vectors *)
     let is_simple (e : Expr.Typed.t) =
       match e.pattern with
-      | Var _ | Lit _ -> true
-      | Promotion ({pattern= Var _ | Lit _; _}, _, _) when is_scalar e -> true
+      | Var _ -> e.meta.adlevel <> DataOnly
+      | Lit _ -> true
+      | Promotion ({pattern= Var _ | Lit _; _}, _, _) -> is_scalar e
       | _ -> false in
     if List.for_all ~f:is_simple es then
       pf ppf "std::forward_as_tuple(@[<hov 2>%a)@]" (list ~sep:comma pp_expr) es
     else
-      pf ppf "std::tuple<%a>(@[<hov 2>%a)@]"
+      pf ppf "@[std::tuple<@[<hov 2>%a>@]@,(@[<hov 2>%a)@]@]"
         (list ~sep:comma pp_unsizedtype_local)
         local_types (list ~sep:comma pp_expr) es in
   match f with
