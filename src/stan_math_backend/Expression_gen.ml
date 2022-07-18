@@ -482,14 +482,18 @@ and pp_compiler_internal_fn ad ut f ppf es =
   let pp_array_literal ut ppf es =
     pf ppf "std::vector<%a>{@,%a}" pp_unsizedtype_local (ad, ut)
       (list ~sep:comma pp_expr) es in
-  let pp_tuple_literal ppf (es, _) =
-    pf ppf "std::forward_as_tuple(@[<hov 2>%a)@]"
-      (*
-      TUPLE MAYBE?
-      (list ~sep:comma pp_unsizedtype_local)
-         local_types *)
-      (list ~sep:comma pp_expr)
-      es in
+  let pp_tuple_literal ppf (es, local_types) =
+    let is_simple (e : Expr.Typed.t) =
+      match e.pattern with
+      | Var _ | Lit _ -> true
+      | Promotion ({pattern= Var _ | Lit _; _}, _, _) when is_scalar e -> true
+      | _ -> false in
+    if List.for_all ~f:is_simple es then
+      pf ppf "std::forward_as_tuple(@[<hov 2>%a)@]" (list ~sep:comma pp_expr) es
+    else
+      pf ppf "std::tuple<%a>(@[<hov 2>%a)@]"
+        (list ~sep:comma pp_unsizedtype_local)
+        local_types (list ~sep:comma pp_expr) es in
   match f with
   | Internal_fun.FnMakeArray ->
       let ut =
