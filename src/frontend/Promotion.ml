@@ -48,9 +48,26 @@ let rec promote_unsized_type ~scalar (typ : UnsizedType.t)
   | NoPromotion, _, _ ->
       if scalar then (UnsizedType.internal_scalar typ, ad) else (typ, ad)
   | (IntToReal | ToVar | ToComplexVar | IntToComplex), _, _ ->
-      failwith "TRAPPED 1" (* TUPLE TODO: PROMOTION *)
-  | TuplePromotion _, _, _ -> failwith "trapped 6" (* TUPLE TODO: PROMOTION *)
-  | _, _, TupleAD _ -> failwith "trapped 3" (* TUPLE TODO: PROMOTION *)
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Failed to promote type, unexpected type:"
+            (prom : t)
+            (typ : UnsizedType.t)
+            (ad : UnsizedType.autodifftype)]
+  | TuplePromotion _, _, _ ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Found Tuple Promotion for a non-tuple type:"
+            (prom : t)
+            (typ : UnsizedType.t)
+            (ad : UnsizedType.autodifftype)]
+  | _, _, TupleAD _ ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Found Tuple Autodiff in promotion for a non-tuple type:"
+            (prom : t)
+            (typ : UnsizedType.t)
+            (ad : UnsizedType.autodifftype)]
   | _, _, _ -> (typ, ad)
 
 let promote_inner (exp : Ast.typed_expression) prom =

@@ -134,7 +134,14 @@ let template_parameters (args : Program.fun_arg_decl) =
             let requires = List.concat reqs in
             let scalars = String.concat ~sep:", " sclrs in
             (templates, requires, arg_name (Some scalars, typ))
-        | _ -> failwith "bad 4" )
+        | _ ->
+            Common.FatalError.fatal_error_msg
+              [%message
+                "Impossible: type passes UnsizedType.contains_tuple but \
+                 unwrapped scalar is not tuple"
+                  (typ : UnsizedType.t)
+                  (internal : UnsizedType.t)
+                  (ad : UnsizedType.autodifftype)] )
     | UnsizedType.DataOnly, ut when not (UnsizedType.is_eigen_type ut) ->
         ([], [], arg_name (None, typ))
     | _ ->
@@ -156,7 +163,14 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
               |> List.mapi ~f:(template_p (sprintf "%s%d__" start i)) in
             let templates = List.concat temps in
             templates
-        | _ -> failwith "bad 5" )
+        | _ ->
+            Common.FatalError.fatal_error_msg
+              [%message
+                "Impossible: type passes UnsizedType.contains_tuple but \
+                 unwrapped scalar is not tuple"
+                  (typ : UnsizedType.t)
+                  (internal : UnsizedType.t)
+                  (ad : UnsizedType.autodifftype)] )
     | UnsizedType.DataOnly, ut when not (UnsizedType.is_eigen_type ut) -> []
     | _ ->
         if UnsizedType.is_eigen_type typ then
