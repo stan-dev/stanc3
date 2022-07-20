@@ -46,15 +46,18 @@ let rec pp_initialize ppf (st, adtype) =
       | SComplex ->
           let scalar = local_scalar (SizedType.to_unsized st) adtype in
           pf ppf "@[<hov 2>std::complex<%s>(%s,@ %s)@]" scalar init_nan init_nan
-      | SComplexVector size
-       |SComplexRowVector size
-       |SVector (_, size)
-       |SRowVector (_, size) ->
+      | SComplexVector size | SComplexRowVector size ->
+          pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a)@]" pp_st (st, adtype) pp_expr
+            size pp_initialize (SComplex, adtype)
+      | SVector (_, size) | SRowVector (_, size) ->
           pf ppf "@[<hov 2>%a::Constant(@,%a,@ %s)@]" pp_st (st, adtype) pp_expr
             size init_nan
-      | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) ->
+      | SMatrix (_, d1, d2) ->
           pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %s)@]" pp_st (st, adtype)
             pp_expr d1 pp_expr d2 init_nan
+      | SComplexMatrix (d1, d2) ->
+          pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %a)@]" pp_st (st, adtype)
+            pp_expr d1 pp_expr d2 pp_initialize (SComplex, adtype)
       | SArray (t, d) ->
           pf ppf "@[<hov 2>%a(@,%a,@ @,%a)@]" pp_st (st, adtype) pp_expr d
             pp_initialize (t, adtype)
@@ -70,15 +73,18 @@ let rec pp_initialize ppf (st, adtype) =
       | SComplex ->
           let scalar = local_scalar (SizedType.to_unsized st) adtype in
           pf ppf "std::complex<%s>(%s, %s)" scalar init_nan init_nan
-      | SVector (AoS, size)
-       |SRowVector (AoS, size)
-       |SComplexVector size
-       |SComplexRowVector size ->
+      | SVector (AoS, size) | SRowVector (AoS, size) ->
           pf ppf "@[<hov 2>%a::Constant(@,%a,@ %s)@]" pp_st (st, adtype) pp_expr
             size init_nan
-      | SMatrix (AoS, d1, d2) | SComplexMatrix (d1, d2) ->
+      | SComplexVector size | SComplexRowVector size ->
+          pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a)@]" pp_st (st, adtype) pp_expr
+            size pp_initialize (SComplex, adtype)
+      | SMatrix (AoS, d1, d2) ->
           pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %s)@]" pp_st (st, adtype)
             pp_expr d1 pp_expr d2 init_nan
+      | SComplexMatrix (d1, d2) ->
+          pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %a)@]" pp_st (st, adtype)
+            pp_expr d1 pp_expr d2 pp_initialize (SComplex, adtype)
       | SVector (SoA, size) ->
           pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
             pp_initialize
@@ -100,17 +106,6 @@ let rec pp_initialize ppf (st, adtype) =
             [%message "AutoDiff Tuple without Tuple AD type in codegen"] )
   | TupleAD ads -> (
     match st with
-    (* TUPLE MAYBE
-        bmw: this changed a lot since original PR
-
-       We seem to be using ADlevel for a lot more, and TupleAD is a headache.
-
-           c++ initialization
-           This is setting the initial value, which is filling the size if eigen
-           Should be recursive
-           From https://en.cppreference.com/w/cpp/utility/tuple:
-           std::tuple<type,..>{value,..};
-    *)
     | STuple ts ->
         pf ppf "%a{%a}" pp_st (st, adtype)
           (list ~sep:(Fmt.any ", ") pp_initialize)

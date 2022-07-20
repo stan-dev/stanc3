@@ -6078,7 +6078,8 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
       CV = 
         std::tuple<Eigen::Matrix<std::complex<double>, -1, 1>, double>{
         Eigen::Matrix<std::complex<double>, -1, 1>::Constant(3,
-          std::numeric_limits<double>::quiet_NaN()), std::numeric_limits<double>::quiet_NaN()};
+          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+            std::numeric_limits<double>::quiet_NaN())), std::numeric_limits<double>::quiet_NaN()};
       
       
       current_statement__ = 16;
