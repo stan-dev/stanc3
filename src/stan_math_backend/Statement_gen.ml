@@ -43,15 +43,18 @@ let rec pp_initialize ppf (st, adtype) =
     | SComplex ->
         let scalar = local_scalar (SizedType.to_unsized st) adtype in
         pf ppf "@[<hov 2>std::complex<%s>(%s,@ %s)@]" scalar init_nan init_nan
-    | SComplexVector size
-     |SComplexRowVector size
-     |SVector (_, size)
-     |SRowVector (_, size) ->
+    | SComplexVector size | SComplexRowVector size ->
+        pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a)@]" pp_st (st, adtype) pp_expr
+          size pp_initialize (SComplex, adtype)
+    | SVector (_, size) | SRowVector (_, size) ->
         pf ppf "@[<hov 2>%a::Constant(@,%a,@ %s)@]" pp_st (st, adtype) pp_expr
           size init_nan
-    | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) ->
+    | SMatrix (_, d1, d2) ->
         pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %s)@]" pp_st (st, adtype)
           pp_expr d1 pp_expr d2 init_nan
+    | SComplexMatrix (d1, d2) ->
+        pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %a)@]" pp_st (st, adtype)
+          pp_expr d1 pp_expr d2 pp_initialize (SComplex, adtype)
     | SArray (t, d) ->
         pf ppf "@[<hov 2>%a(@,%a,@ @,%a)@]" pp_st (st, adtype) pp_expr d
           pp_initialize (t, adtype)
