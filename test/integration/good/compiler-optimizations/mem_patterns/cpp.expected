@@ -81,7 +81,7 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
               10);
       Eigen::Matrix<std::complex<local_scalar_t__>, -1, -1> A_complex_tp =
          Eigen::Matrix<std::complex<local_scalar_t__>, -1, -1>::Constant(10,
-           10, DUMMY_VAR__);
+           10, std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       current_statement__ = 2;
       stan::model::assign(A_complex_tp, A_p,
         "assigning variable A_complex_tp");
@@ -125,7 +125,8 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
               10);
       Eigen::Matrix<std::complex<double>, -1, -1> A_complex_tp =
          Eigen::Matrix<std::complex<double>, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
+           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+             std::numeric_limits<double>::quiet_NaN()));
       out__.write(A_p);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
