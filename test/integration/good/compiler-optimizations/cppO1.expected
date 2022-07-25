@@ -12239,8 +12239,7 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
       {
         current_statement__ = 1;
         stan::math::validate_non_negative_index("eta", "N", N);
-        stan::conditional_var_value_t<local_scalar_t__, 
-          Eigen::Matrix<local_scalar_t__, -1, 1>> eta;
+        Eigen::Matrix<local_scalar_t__, -1, 1> eta;
         current_statement__ = 2;
         stan::model::assign(eta, stan::math::rep_vector(0.0, N),
           "assigning variable eta");
