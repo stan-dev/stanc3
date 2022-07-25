@@ -449,7 +449,12 @@ let unused_params_warnings (factor_graph : factor_graph) (mir : Program.Typed.t)
     (list_unused_params factor_graph mir)
 
 let non_one_priors_message (pname : string) (n : int) : string =
-  if n = 0 then Printf.sprintf "The parameter %s has no priors." pname
+  if n = 0 then
+    Printf.sprintf
+      "The parameter %s has no priors. This means either no prior is provided, \
+       or the prior(s) depend on data variables. In the later case, this may \
+       be a false positive."
+      pname
   else Printf.sprintf "The parameter %s has %d priors." pname n
 
 let non_one_priors_warnings (factor_graph : factor_graph) (mir : Program.Typed.t)

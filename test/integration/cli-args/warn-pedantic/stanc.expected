@@ -307,21 +307,41 @@ Warning in 'distribution-warnings.stan', line 27, column 20: A bernoulli
     but unb_p was not constrained to be [0,1].
 Warning in 'distribution-warnings.stan', line 27, column 2: The parameter
     unb_d is on the left-hand side of more than one tilde statement.
-Warning: The parameter x_unit has no priors.
-Warning: The parameter x_pos has no priors.
-Warning: The parameter x has no priors.
+Warning: The parameter x_unit has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
+Warning: The parameter x_pos has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
+Warning: The parameter x has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
 Warning: The parameter vec has 2 priors.
 Warning: The parameter unit_p has 2 priors.
 Warning: The parameter unb_p has 15 priors.
 Warning: The parameter sim has 2 priors.
-Warning: The parameter pos_vec has no priors.
+Warning: The parameter pos_vec has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
 Warning: The parameter pos_p has 19 priors.
-Warning: The parameter ord has no priors.
-Warning: The parameter mat has no priors.
-Warning: The parameter cov has no priors.
-Warning: The parameter corr has no priors.
-Warning: The parameter chol_cov has no priors.
-Warning: The parameter chol_corr has no priors.
+Warning: The parameter ord has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
+Warning: The parameter mat has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
+Warning: The parameter cov has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
+Warning: The parameter corr has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
+Warning: The parameter chol_cov has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
+Warning: The parameter chol_corr has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  distribution_bounds.stan
 Warning in 'distribution_bounds.stan', line 10, column 2: Parameter c is
     given a lognormal distribution, which has strictly positive support, but
@@ -334,7 +354,9 @@ Warning in 'function-param-control-flow.stan', line 3, column 4: A control
     flow statement inside function func depends on argument b. At
     'function-param-control-flow.stan', line 18, column 21 to column 26, the
     value of b depends on parameter(s): sigma.
-Warning: The parameter sigma has no priors.
+Warning: The parameter sigma has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  gamma-args.stan
 Warning in 'gamma-args.stan', line 11, column 21: A inv_gamma distribution is
     given parameter b as a scale parameter (argument 2), but b was not
@@ -455,9 +477,17 @@ Warning in 'jacobian_warning_user.stan', line 5, column 2: Left-hand side of
     sampling statement (~) may contain a non-linear transform of a parameter
     or local variable. If it does, you need to include a target += statement
     with the log absolute determinant of the Jacobian of the transform.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  missing-prior-false-alarm.stan
+Warning: The parameter theta has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  missing_priors.stan
-Warning: The parameter tau has no priors.
-Warning: The parameter mu has no priors.
+Warning: The parameter tau has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
+Warning: The parameter mu has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  multi-tilde.stan
 Warning in 'multi-tilde.stan', line 6, column 2: The parameter x is on the
     left-hand side of more than one tilde statement.
@@ -473,10 +503,18 @@ Warning in 'non-one-priors.stan', line 14, column 16: A normal distribution
   $ ../../../../../install/default/bin/stanc --warn-pedantic  non-one-priors2.stan
 Warning in 'non-one-priors2.stan', line 21, column 2: The parameter f is on
     the left-hand side of more than one tilde statement.
-Warning: The parameter f has no priors.
-Warning: The parameter e has no priors.
-Warning: The parameter d has no priors.
-Warning: The parameter c has no priors.
+Warning: The parameter f has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
+Warning: The parameter e has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
+Warning: The parameter d has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
+Warning: The parameter c has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
 Warning: The parameter b has 2 priors.
 Warning: The parameter a has 3 priors.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  param-depend-control.stan
