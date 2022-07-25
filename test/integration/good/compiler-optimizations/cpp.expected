@@ -17984,7 +17984,7 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
         Eigen::Matrix<double, -1, 1> eta =
            Eigen::Matrix<double, -1, 1>::Constant(N,
              std::numeric_limits<double>::quiet_NaN());
-        stan::model::assign(lcm_sym25__, rep_vector(0.0, N),
+        stan::model::assign(lcm_sym25__, stan::math::rep_vector(0.0, N),
           "assigning variable lcm_sym25__");
         double out = std::numeric_limits<double>::quiet_NaN();
         local_scalar_t__ inline_summer_return_sym7__;
