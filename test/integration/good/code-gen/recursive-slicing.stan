@@ -8,7 +8,7 @@ vector test2(vector gamma);
       return rep_vector(D, 0);
     else
       return test2(gamma[1:D - 1]);
-  }
+ }
 // reported in cmdstan#1109
 matrix matrix_pow(matrix a, int n);
 matrix matrix_pow(matrix a, int n) {
@@ -27,6 +27,34 @@ real foo(matrix a){
 real foo(real b){
   matrix[10,10] B = rep_matrix(b,10,10);
   return foo(B[:,2:4]);
+}
+
+
+// mutual recursion
+
+vector test3(vector gamma);
+vector test4(vector gamma);
+vector test4(vector gamma) {
+   int D = num_elements(gamma);
+
+   if (D == 1)
+      return rep_vector(D, 0);
+    else
+      return test3(gamma[1:D - 1]);
+  }
+vector test3(vector gamma) {
+  return test4(gamma);
+}
+
+// non-returning fun app
+void test6(vector alpha);
+void test6(vector alpha){
+   int D = num_elements(alpha);
+
+   if (D == 1)
+      print(alpha[1]);
+    else
+      test6(alpha[1:D - 1]);
 }
 
 }
