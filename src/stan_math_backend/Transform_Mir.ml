@@ -30,7 +30,7 @@ let rec change_kwrds_stmts s =
     | x -> map Fn.id change_kwrds_stmts x in
   {s with pattern}
 
-let eval_eigen e =
+let eval_eigen_indexed e =
   let open Expr.Fixed in
   let f ({pattern; meta} as expr) =
     match (pattern, UnsizedType.is_eigen_type (Expr.Typed.type_of expr)) with
@@ -39,13 +39,12 @@ let eval_eigen e =
     | _ -> expr in
   rewrite_bottom_up ~f e
 
-let eval_recursive_calls fn_name e =
+let eval_udf_indexed_calls e =
   let open Expr.Fixed in
   let f ({pattern; _} as expr) =
     match pattern with
-    | FunApp ((UserDefined (fname, _) as kind), args)
-      when String.equal fname fn_name ->
-        {expr with pattern= FunApp (kind, List.map ~f:eval_eigen args)}
+    | FunApp ((UserDefined (_, _) as kind), args) ->
+        {expr with pattern= FunApp (kind, List.map ~f:eval_eigen_indexed args)}
     | _ -> expr in
   rewrite_bottom_up ~f e
 
@@ -499,17 +498,24 @@ let trans_prog (p : Program.Typed.t) =
       |> map translate_funapps_and_kwrds map_stmt
       |> map Fn.id change_kwrds_stmts) in
   let p = Program.map Fn.id map_fn_names p in
-  (* Eval recursive calls to prevent infinite template expansion *)
-  let eval_recursion (s : 'a Program.fun_def) =
-    let rec map_stmt {Stmt.Fixed.pattern; meta} =
-      { Stmt.Fixed.pattern=
-          Stmt.Fixed.Pattern.map
-            (eval_recursive_calls s.fdname)
-            map_stmt pattern
-      ; meta } in
+  (* Eval indexed eigen types in UDF calls to prevent
+     infinite template expansion if the call is recursive
+  *)
+  let rec map_stmt {Stmt.Fixed.pattern; meta} =
+    match pattern with
+    | NRFunApp ((UserDefined _ as kind), args) ->
+        { Stmt.Fixed.meta
+        ; pattern= NRFunApp (kind, List.map ~f:eval_eigen_indexed args) }
+    | _ ->
+        { Stmt.Fixed.pattern=
+            Stmt.Fixed.Pattern.map eval_udf_indexed_calls map_stmt pattern
+        ; meta } in
+  let eval_udf_indexed_stmts (s : 'a Program.fun_def) =
     {s with fdbody= Option.map ~f:map_stmt s.fdbody} in
   let p =
-    {p with functions_block= List.map ~f:eval_recursion p.functions_block} in
+    { p with
+      functions_block= List.map ~f:eval_udf_indexed_stmts p.functions_block }
+  in
   let init_pos =
     [ Stmt.Fixed.Pattern.Decl
         { decl_adtype= DataOnly
