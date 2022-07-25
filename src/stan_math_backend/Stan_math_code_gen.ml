@@ -26,17 +26,8 @@ open Function_gen
 
 let standalone_functions = ref false
 
-let stanc_args_to_print =
-  let sans_model_and_hpp_paths x =
-    not
-      String.(
-        is_suffix ~suffix:".stan" x
-        && not (is_prefix ~prefix:"--filename-in-msg" x)
-        || is_prefix ~prefix:"--o" x) in
-  (* Ignore the "--o" arg, the stan file and the binary name (bin/stanc). *)
-  Array.to_list Sys.argv |> List.tl_exn
-  |> List.filter ~f:sans_model_and_hpp_paths
-  |> String.concat ~sep:" "
+(* set by drivers *)
+let stanc_args_to_print = ref ""
 
 (** Print name of model function.
   @param prog_name Name of the Stan program.
@@ -622,7 +613,7 @@ let pp_model ppf ({Program.prog_name; _} as p) =
     return std::vector<std::string>{"stanc_version = %s", "stancflags = %s"};
   }
   |}
-    "%%NAME%%3 %%VERSION%%" stanc_args_to_print ;
+    "%%NAME%%3 %%VERSION%%" !stanc_args_to_print ;
   pf ppf "@ %a@]@]@ };" pp_model_public p
 
 let usings =
