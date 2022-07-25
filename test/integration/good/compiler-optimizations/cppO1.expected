@@ -12242,7 +12242,8 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
         stan::conditional_var_value_t<local_scalar_t__, 
           Eigen::Matrix<local_scalar_t__, -1, 1>> eta;
         current_statement__ = 2;
-        stan::model::assign(eta, rep_vector(0.0, N), "assigning variable eta");
+        stan::model::assign(eta, stan::math::rep_vector(0.0, N),
+          "assigning variable eta");
         local_scalar_t__ out = DUMMY_VAR__;
         local_scalar_t__ inline_summer_return_sym7__;
         {
