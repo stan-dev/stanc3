@@ -30,6 +30,25 @@ let rec change_kwrds_stmts s =
     | x -> map Fn.id change_kwrds_stmts x in
   {s with pattern}
 
+let eval_eigen e =
+  let open Expr.Fixed in
+  let f ({pattern; meta} as expr) =
+    match (pattern, UnsizedType.is_eigen_type (Expr.Typed.type_of expr)) with
+    | Indexed _, true ->
+        {meta; pattern= FunApp (StanLib ("eval", FnPlain, AoS), [expr])}
+    | _ -> expr in
+  rewrite_bottom_up ~f e
+
+let eval_recursive_calls fn_name e =
+  let open Expr.Fixed in
+  let f ({pattern; _} as expr) =
+    match pattern with
+    | FunApp ((UserDefined (fname, _) as kind), args)
+      when String.equal fname fn_name ->
+        {expr with pattern= FunApp (kind, List.map ~f:eval_eigen args)}
+    | _ -> expr in
+  rewrite_bottom_up ~f e
+
 let opencl_trigger_restrictions =
   String.Map.of_alist_exn
     [ ( "bernoulli_lpmf"
@@ -480,6 +499,17 @@ let trans_prog (p : Program.Typed.t) =
       |> map translate_funapps_and_kwrds map_stmt
       |> map Fn.id change_kwrds_stmts) in
   let p = Program.map Fn.id map_fn_names p in
+  (* Eval recursive calls to prevent infinite template expansion *)
+  let eval_recursion (s : 'a Program.fun_def) =
+    let rec map_stmt fname {Stmt.Fixed.pattern; meta} =
+      { Stmt.Fixed.pattern=
+          Stmt.Fixed.Pattern.map
+            (eval_recursive_calls fname)
+            (map_stmt fname) pattern
+      ; meta } in
+    {s with fdbody= Option.map ~f:(map_stmt s.fdname) s.fdbody} in
+  let p =
+    {p with functions_block= List.map ~f:eval_recursion p.functions_block} in
   let init_pos =
     [ Stmt.Fixed.Pattern.Decl
         { decl_adtype= DataOnly
