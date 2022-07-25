@@ -289,6 +289,9 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
                 , [ handle
                       (replace_fresh_local_vars fname
                          (subst_args_stmt args es body) ) ]
+                  (* [ handle
+                        (subst_args_stmt args es
+                           (replace_fresh_local_vars fname body) ) ] *)
                 , { pattern= Var inline_return_name
                   ; meta=
                       Expr.Typed.Meta.
