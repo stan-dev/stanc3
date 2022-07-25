@@ -189,7 +189,8 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
     |> Option.map ~f:Array.to_list
     |> Option.value ~default:[]
     |> List.filter ~f:sans_model_and_hpp_paths
-    |> String.concat ~sep:", " in
+    |> List.map ~f:(fun o -> "--" ^ o)
+    |> String.concat ~sep:" " in
   Stan_math_code_gen.stanc_args_to_print := stanc_args_to_print ;
   let result, warnings, pedantic_mode_warnings =
     stan2cpp (Js.to_string name) (Js.to_string code) is_flag_set flag_val in
