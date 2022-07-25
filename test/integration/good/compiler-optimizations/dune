@@ -34,7 +34,8 @@
    unenforce-initialize.stan
    partial_eval_multiply.stan
    inline-functions-varmat.stan
-   inline-tdata.stan))
+   inline-tdata.stan
+   function-in-function-loops.stan))
  (action
   (with-stdout-to
    %{targets}
@@ -81,7 +82,8 @@
    unenforce-initialize-should-fail.stan
    partial_eval_multiply.stan
    inline-functions-varmat.stan
-   inline-tdata.stan))
+   inline-tdata.stan
+   function-in-function-loops.stan))
  (action
   (with-stdout-to
    %{targets}
