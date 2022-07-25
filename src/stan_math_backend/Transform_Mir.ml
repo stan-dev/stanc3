@@ -501,13 +501,13 @@ let trans_prog (p : Program.Typed.t) =
   let p = Program.map Fn.id map_fn_names p in
   (* Eval recursive calls to prevent infinite template expansion *)
   let eval_recursion (s : 'a Program.fun_def) =
-    let rec map_stmt fname {Stmt.Fixed.pattern; meta} =
+    let rec map_stmt {Stmt.Fixed.pattern; meta} =
       { Stmt.Fixed.pattern=
           Stmt.Fixed.Pattern.map
-            (eval_recursive_calls fname)
-            (map_stmt fname) pattern
+            (eval_recursive_calls s.fdname)
+            map_stmt pattern
       ; meta } in
-    {s with fdbody= Option.map ~f:(map_stmt s.fdname) s.fdbody} in
+    {s with fdbody= Option.map ~f:map_stmt s.fdbody} in
   let p =
     {p with functions_block= List.map ~f:eval_recursion p.functions_block} in
   let init_pos =
