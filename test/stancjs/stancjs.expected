@@ -243,6 +243,7 @@ Semantic error in 'string', line 3, column 8 to column 11:
 
 Function is declared without specifying a definition.
 
+"stancflags = --use-opencl --allow-undefined"
 $ node pedantic.js
 ["Warning in 'string', line 7, column 17: Argument 10000 suggests there may be\n    parameters that are not unit scale; consider rescaling with a multiplier\n    (see manual section 22.12).","Warning: The parameter k was declared but was not used in the density\n    calculation."]
 []

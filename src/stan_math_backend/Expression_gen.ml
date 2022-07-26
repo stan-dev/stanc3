@@ -280,10 +280,13 @@ and gen_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
             (fun ppf es ->
               match List.exists ~f:is_autodiffable es with
               | true ->
-                  pf ppf "%s<%a>(@,%a)" f pp_possibly_var_decl
+                  pf ppf "%s<%a>(@,%a)" (stan_namespace_qualify f)
+                    pp_possibly_var_decl
                     (UnsizedType.AutoDiffable, t, mem_pattern)
                     (list ~sep:comma pp_expr) es
-              | false -> pf ppf "%s(@,%a)" f (list ~sep:comma pp_expr) es )
+              | false ->
+                  pf ppf "%s(@,%a)" (stan_namespace_qualify f)
+                    (list ~sep:comma pp_expr) es )
       | Some Void -> None
       | None -> None )
   | _ -> None

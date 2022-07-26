@@ -185,6 +185,21 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
       Array.find flags ~f:(String.is_prefix ~prefix)
       >>= String.chop_prefix ~prefix) in
   let printed_filename = flag_val "filename-in-msg" in
+  let stanc_args_to_print =
+    let sans_model_and_hpp_paths x =
+      not
+        String.(
+          is_suffix ~suffix:".stan" x
+          && not (is_prefix ~prefix:"filename-in-msg" x)
+          || is_prefix ~prefix:"o=" x) in
+    (* Ignore the "--o" arg, the stan file and the binary name (bin/stanc). *)
+    flags
+    |> Option.map ~f:Array.to_list
+    |> Option.value ~default:[]
+    |> List.filter ~f:sans_model_and_hpp_paths
+    |> List.map ~f:(fun o -> "--" ^ o)
+    |> String.concat ~sep:" " in
+  Stan_math_code_gen.stanc_args_to_print := stanc_args_to_print ;
   let result, warnings, pedantic_mode_warnings =
     stan2cpp (Js.to_string name) (Js.to_string code) is_flag_set flag_val in
   let warnings =

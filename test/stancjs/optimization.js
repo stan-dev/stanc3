@@ -103,3 +103,5 @@ utils.print_error(opencl_test)
 var ind = opencl_test.result.search("matrix_cl<int> y_opencl__");
 console.assert(ind > -1, "ERROR: No OpenCL code found with the use-opencl flag!")
 
+// test that the stanc flags are placed in the model correctly
+console.log(opencl_test.result.match(/"stancflags = .*"/)[0])

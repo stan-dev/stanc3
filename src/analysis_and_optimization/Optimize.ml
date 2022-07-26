@@ -343,8 +343,8 @@ struct
                        replaced to avoid conflict with the (two) new dummy
                        variables introduced by inlining *)
                   , [ handle
-                        (replace_fresh_local_vars fname
-                           (subst_args_stmt args es body) ) ]
+                        (subst_args_stmt args es
+                           (replace_fresh_local_vars fname body) ) ]
                   , { pattern= Var inline_return_name
                     ; meta=
                         Expr.Typed.Meta.
