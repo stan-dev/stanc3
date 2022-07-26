@@ -2401,6 +2401,17 @@ let () =
   add_unqualified ("to_complex", ReturnType UComplex, [], AoS) ;
   add_unqualified ("to_complex", ReturnType UComplex, [UReal], AoS) ;
   add_binary_vec_reals_to_complex "to_complex" AoS ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun t ->
+          add_qualified
+            ( "to_int"
+            , ReturnType (bare_array_type (UInt, i))
+            , [(UnsizedType.DataOnly, bare_array_type (t, i))]
+            , AoS ) )
+        [UnsizedType.UReal; UInt] )
+    (List.range 0 8) ;
   add_unqualified ("to_matrix", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("to_matrix", ReturnType UMatrix, [UMatrix; UInt; UInt], AoS) ;
   add_unqualified

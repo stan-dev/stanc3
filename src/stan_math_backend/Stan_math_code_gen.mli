@@ -3,6 +3,11 @@ val model_prefix : string
     Currently "model_"
   *)
 
+val stanc_args_to_print : string ref
+(** A string containing the arguments used to produce this .hpp
+    Set by the drivers 
+*)
+
 val standalone_functions : bool ref
 (** Flag to generate just function code, used in RStan *)
 

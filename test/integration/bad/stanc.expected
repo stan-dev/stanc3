@@ -159,6 +159,58 @@ Semantic error in 'bad_prob_fun_suffix.stan', line 10, column 2 to column 19:
    -------------------------------------------------
 
 Ill-typed arguments to '~' statement. No distribution 'foo' was found.
+  $ ../../../../install/default/bin/stanc bad_to_int1.stan
+Semantic error in 'bad_to_int1.stan', line 6, column 19 to column 28:
+   -------------------------------------------------
+     4:  
+     5:  model {
+     6:    array[3] int Y = to_int(X);
+                            ^
+     7:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'to_int':
+(array[] real)
+Available signatures:
+(data array[] real) => array[] int
+  The first argument must be data-only. (Local variables are assumed to
+  depend on parameters; same goes for function inputs unless they are marked
+  with the keyword 'data'.)
+(data int) => int
+  The first argument must be int but got array[] real
+(data real) => int
+  The first argument must be real but got array[] real
+(data array[] int) => array[] int
+  The first argument must be array[] int but got array[] real
+(data array[,] int) => array[,] int
+  The first argument must be array[,] int but got array[] real
+(Additional signatures omitted)
+  $ ../../../../install/default/bin/stanc bad_to_int2.stan
+Semantic error in 'bad_to_int2.stan', line 3, column 19 to column 28:
+   -------------------------------------------------
+     1:  model {
+     2:    array[3] real X;
+     3:    array[3] int Y = to_int(X);
+                            ^
+     4:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'to_int':
+(array[] real)
+Available signatures:
+(data array[] real) => array[] int
+  The first argument must be data-only. (Local variables are assumed to
+  depend on parameters; same goes for function inputs unless they are marked
+  with the keyword 'data'.)
+(data int) => int
+  The first argument must be int but got array[] real
+(data real) => int
+  The first argument must be real but got array[] real
+(data array[] int) => array[] int
+  The first argument must be array[] int but got array[] real
+(data array[,] int) => array[,] int
+  The first argument must be array[,] int but got array[] real
+(Additional signatures omitted)
   $ ../../../../install/default/bin/stanc bad_var_assignment_type1.stan
 Semantic error in 'bad_var_assignment_type1.stan', line 4, column 2 to column 8:
    -------------------------------------------------

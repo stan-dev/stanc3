@@ -355,6 +355,18 @@ let main () =
       Format.std_formatter () ;
     exit 0 ) ;
   if !model_file = "" then model_file_err () ;
+  let stanc_args_to_print =
+    let sans_model_and_hpp_paths x =
+      not
+        String.(
+          is_suffix ~suffix:".stan" x
+          && not (is_prefix ~prefix:"--filename-in-msg" x)
+          || is_prefix ~prefix:"--o" x) in
+    (* Ignore the "--o" arg, the stan file and the binary name (bin/stanc). *)
+    Array.to_list Sys.argv |> List.tl_exn
+    |> List.filter ~f:sans_model_and_hpp_paths
+    |> String.concat ~sep:" " in
+  Stan_math_code_gen.stanc_args_to_print := stanc_args_to_print ;
   (* if we only have functions, always compile as standalone *)
   if String.is_suffix !model_file ~suffix:".stanfunctions" then (
     Stan_math_code_gen.standalone_functions := true ;
