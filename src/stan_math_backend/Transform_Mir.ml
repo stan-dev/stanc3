@@ -31,6 +31,32 @@ let rec change_kwrds_stmts s =
     | x -> map Fn.id change_kwrds_stmts x in
   {s with pattern}
 
+(** A list of functions which return an Eigen block expression *)
+let eigen_block_expr_fns =
+  ["head"; "tail"; "segment"; "col"; "row"; "block"; "sub_row"; "sub_col"]
+  |> String.Set.of_list
+
+let eval_eigen_blocks e =
+  let open Expr.Fixed in
+  let f ({pattern; meta} as expr) =
+    match (pattern, UnsizedType.is_eigen_type (Expr.Typed.type_of expr)) with
+    | Indexed _, true ->
+        {meta; pattern= FunApp (StanLib ("eval", FnPlain, AoS), [expr])}
+    | FunApp (StanLib (fname, _, _), _), true
+      when Set.mem eigen_block_expr_fns fname ->
+        {meta; pattern= FunApp (StanLib ("eval", FnPlain, AoS), [expr])}
+    | _ -> expr in
+  rewrite_bottom_up ~f e
+
+let eval_udf_indexed_calls e =
+  let open Expr.Fixed in
+  let f ({pattern; _} as expr) =
+    match pattern with
+    | FunApp ((UserDefined (_, _) as kind), args) ->
+        {expr with pattern= FunApp (kind, List.map ~f:eval_eigen_blocks args)}
+    | _ -> expr in
+  rewrite_bottom_up ~f e
+
 let opencl_trigger_restrictions =
   String.Map.of_alist_exn
     [ ( "bernoulli_lpmf"
@@ -651,6 +677,33 @@ let trans_prog (p : Program.Typed.t) =
       |> map translate_funapps_and_kwrds map_stmt
       |> map Fn.id change_kwrds_stmts) in
   let p = Program.map Fn.id map_fn_names p in
+  (* Eval indexed eigen types in UDF calls to prevent
+     infinite template expansion if the call is recursive
+  *)
+  let possibly_recursive_fns =
+    List.filter_map
+      ~f:(function
+        | {fdname; fdargs; fdbody= None; _} -> Some (fdname, fdargs) | _ -> None
+        )
+      p.functions_block
+    |> Set.Poly.of_list in
+  let rec map_stmt {Stmt.Fixed.pattern; meta} =
+    match pattern with
+    | NRFunApp ((UserDefined _ as kind), args) ->
+        { Stmt.Fixed.meta
+        ; pattern= NRFunApp (kind, List.map ~f:eval_eigen_blocks args) }
+    | _ ->
+        { Stmt.Fixed.pattern=
+            Stmt.Fixed.Pattern.map eval_udf_indexed_calls map_stmt pattern
+        ; meta } in
+  let eval_udf_indexed_stmts (s : 'a Program.fun_def) =
+    if Set.mem possibly_recursive_fns (s.fdname, s.fdargs) then
+      {s with fdbody= Option.map ~f:map_stmt s.fdbody}
+    else s in
+  let p =
+    { p with
+      functions_block= List.map ~f:eval_udf_indexed_stmts p.functions_block }
+  in
   let init_pos =
     [ Stmt.Fixed.Pattern.Decl
         { decl_adtype= DataOnly
