@@ -57,6 +57,16 @@ void test6(vector alpha){
       test6(alpha[1:D - 1]);
 }
 
+ vector test7(vector gamma) ;
+ vector test7(vector gamma) {
+   int D = num_elements(gamma);
+
+   if (D == 1)
+      return rep_vector(D, 0);
+    else
+      return test7(head(gamma,D - 1));
+  }
+
 }
 data {
   int N;

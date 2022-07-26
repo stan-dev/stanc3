@@ -23154,14 +23154,14 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 35> locations_array__ = 
+static constexpr std::array<const char*, 40> locations_array__ = 
 {" (found before start of program)",
- " (in 'recursive-slicing.stan', line 66, column 2 to column 22)",
- " (in 'recursive-slicing.stan', line 69, column 2 to column 33)",
- " (in 'recursive-slicing.stan', line 62, column 2 to column 8)",
- " (in 'recursive-slicing.stan', line 63, column 2 to column 12)",
- " (in 'recursive-slicing.stan', line 66, column 9 to column 14)",
- " (in 'recursive-slicing.stan', line 69, column 9 to column 10)",
+ " (in 'recursive-slicing.stan', line 76, column 2 to column 22)",
+ " (in 'recursive-slicing.stan', line 79, column 2 to column 33)",
+ " (in 'recursive-slicing.stan', line 72, column 2 to column 8)",
+ " (in 'recursive-slicing.stan', line 73, column 2 to column 12)",
+ " (in 'recursive-slicing.stan', line 76, column 9 to column 14)",
+ " (in 'recursive-slicing.stan', line 79, column 9 to column 10)",
  " (in 'recursive-slicing.stan', line 5, column 3 to column 31)",
  " (in 'recursive-slicing.stan', line 10, column 6 to column 35)",
  " (in 'recursive-slicing.stan', line 8, column 6 to column 30)",
@@ -23189,7 +23189,12 @@ static constexpr std::array<const char*, 35> locations_array__ =
  " (in 'recursive-slicing.stan', line 57, column 6 to column 28)",
  " (in 'recursive-slicing.stan', line 55, column 6 to column 22)",
  " (in 'recursive-slicing.stan', line 54, column 3 to line 57, column 28)",
- " (in 'recursive-slicing.stan', line 51, column 24 to line 58, column 1)"};
+ " (in 'recursive-slicing.stan', line 51, column 24 to line 58, column 1)",
+ " (in 'recursive-slicing.stan', line 62, column 3 to column 31)",
+ " (in 'recursive-slicing.stan', line 67, column 6 to column 38)",
+ " (in 'recursive-slicing.stan', line 65, column 6 to column 30)",
+ " (in 'recursive-slicing.stan', line 64, column 3 to line 67, column 38)",
+ " (in 'recursive-slicing.stan', line 61, column 28 to line 68, column 3)"};
 
 struct matrix_pow_functor__ {
   template <typename T0__,
@@ -23229,6 +23234,13 @@ struct foo_functor__ {
                                 stan::is_vt_not_complex<T0__>>* = nullptr>
   stan::promote_args_t<stan::base_type_t<T0__>>
   operator()(const T0__& a, std::ostream* pstream__) const;
+};
+struct test7_functor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+  operator()(const T0__& gamma, std::ostream* pstream__) const;
 };
 struct test3_functor__ {
   template <typename T0__,
@@ -23454,6 +23466,40 @@ template <typename T0__,
     }
     }
 template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+  test7(const T0__& gamma_arg__, std::ostream* pstream__) ; 
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+  test7(const T0__& gamma_arg__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
+    int current_statement__ = 0; 
+    const auto& gamma = stan::math::to_ref(gamma_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int D = std::numeric_limits<int>::min();
+      current_statement__ = 35;
+      D = stan::math::num_elements(gamma);
+      current_statement__ = 38;
+      if (stan::math::logical_eq(D, 1)) {
+        current_statement__ = 37;
+        return stan::math::rep_vector(D, 0);
+      } else {
+        current_statement__ = 36;
+        return test7(
+                 stan::math::eval(stan::math::head(gamma, (D - 1))), pstream__);
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, -1>
@@ -23506,6 +23552,16 @@ stan::promote_args_t<stan::base_type_t<T0__>>
 foo_functor__::operator()(const T0__& a, std::ostream* pstream__)  const
 {
   return foo(a, pstream__);
+}
+
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+test7_functor__::operator()(const T0__& gamma, std::ostream* pstream__) 
+const
+{
+  return test7(gamma, pstream__);
 }
 
 template <typename T0__,
