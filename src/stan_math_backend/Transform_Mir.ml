@@ -30,11 +30,19 @@ let rec change_kwrds_stmts s =
     | x -> map Fn.id change_kwrds_stmts x in
   {s with pattern}
 
-let eval_eigen_indexed e =
+(** A list of functions which return an Eigen block expression *)
+let eigen_block_expr_fns =
+  ["head"; "tail"; "segment"; "col"; "row"; "block"; "sub_row"; "sub_col"]
+  |> String.Set.of_list
+
+let eval_eigen_blocks e =
   let open Expr.Fixed in
   let f ({pattern; meta} as expr) =
     match (pattern, UnsizedType.is_eigen_type (Expr.Typed.type_of expr)) with
     | Indexed _, true ->
+        {meta; pattern= FunApp (StanLib ("eval", FnPlain, AoS), [expr])}
+    | FunApp (StanLib (fname, _, _), _), true
+      when Set.mem eigen_block_expr_fns fname ->
         {meta; pattern= FunApp (StanLib ("eval", FnPlain, AoS), [expr])}
     | _ -> expr in
   rewrite_bottom_up ~f e
@@ -44,7 +52,7 @@ let eval_udf_indexed_calls e =
   let f ({pattern; _} as expr) =
     match pattern with
     | FunApp ((UserDefined (_, _) as kind), args) ->
-        {expr with pattern= FunApp (kind, List.map ~f:eval_eigen_indexed args)}
+        {expr with pattern= FunApp (kind, List.map ~f:eval_eigen_blocks args)}
     | _ -> expr in
   rewrite_bottom_up ~f e
 
@@ -512,7 +520,7 @@ let trans_prog (p : Program.Typed.t) =
     match pattern with
     | NRFunApp ((UserDefined _ as kind), args) ->
         { Stmt.Fixed.meta
-        ; pattern= NRFunApp (kind, List.map ~f:eval_eigen_indexed args) }
+        ; pattern= NRFunApp (kind, List.map ~f:eval_eigen_blocks args) }
     | _ ->
         { Stmt.Fixed.pattern=
             Stmt.Fixed.Pattern.map eval_udf_indexed_calls map_stmt pattern
