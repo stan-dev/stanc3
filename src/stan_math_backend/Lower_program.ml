@@ -1,8 +1,8 @@
 open Core_kernel
 open Core_kernel.Poly
 open Middle
-open! Lower_expr
-open! Lower_stmt
+open Lower_expr
+open Lower_stmt
 open Lower_functions
 open Cpp
 

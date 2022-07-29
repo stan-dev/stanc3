@@ -1,8 +1,8 @@
-open! Core_kernel
-open! Core_kernel.Poly
-open! Middle
+open Core_kernel
+open Core_kernel.Poly
+open Middle
 open Cpp
-open! Lower_expr
+open Lower_expr
 
 let lower_st st adtype =
   lower_unsizedtype_local adtype (SizedType.to_unsized st)
@@ -294,9 +294,6 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   | Profile (name, ls) -> [lower_profile name (lower_statements ls)]
 
 and lower_statements = List.concat_map ~f:lower_statement
-
-let pp_statement ppf s =
-  Fmt.(list ~sep:cut Cpp.Printing.pp_stmt) ppf (lower_statement s)
 
 module Testing = struct
   let%expect_test "set size mat array" =

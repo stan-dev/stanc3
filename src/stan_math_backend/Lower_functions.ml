@@ -1,5 +1,5 @@
 open Core_kernel
-open! Core_kernel.Poly
+open Core_kernel.Poly
 open Middle
 open Lower_expr
 open Lower_stmt
@@ -370,14 +370,6 @@ let lower_standalone_fun_def namespace_fun
         return_stmt (Exprs.templated_fun_call internal_fname template call_args)
       in
       [mark_function_comment; FunDef (fn_sig ~body:[ret] ())]
-
-let pp_functions_functors ppf (p : Program.Numbered.t) =
-  Fmt.(list ~sep:cut Cpp.Printing.pp_defn) ppf (collect_functors_functions p)
-
-let pp_standalone_fun_def namespace_fun ppf p =
-  Fmt.(list ~sep:cut Cpp.Printing.pp_defn)
-    ppf
-    (lower_standalone_fun_def namespace_fun p)
 
 module Testing = struct
   (* Testing code *)

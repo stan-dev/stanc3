@@ -575,8 +575,6 @@ and lower_expr (Expr.Fixed.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
 
 and lower_exprs = List.map ~f:lower_expr
 
-let pp_expr ppf e = Cpp.Printing.pp_expr ppf (lower_expr e)
-
 module Testing = struct
   (* these functions are just for testing *)
   let dummy_locate pattern =
