@@ -846,12 +846,10 @@ module Testing = struct
     |> print_endline ;
     [%expect
       {|
-      inline std::string model_name() const final
-      {
+      inline std::string model_name() const final {
         return "foobar";
       }
-      inline std::vector<std::string> model_compile_info() const noexcept
-      {
+      inline std::vector<std::string> model_compile_info() const noexcept {
         return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
                  "stancflags = "};
       } |}]
@@ -867,13 +865,11 @@ module Testing = struct
         // Boilerplate
         stan::model::model_base&
         new_model(stan::io::var_context& data_context, unsigned int seed,
-                  std::ostream* msg_stream)
-        {
+                  std::ostream* msg_stream) {
           stan_model* m = new stan_model(data_context, seed, msg_stream);
           return *m;
         }
-        stan::math::profile_map& get_stan_profile_data()
-        {
+        stan::math::profile_map& get_stan_profile_data() {
           return foobar_namespace::profiles__;
         }
         #endif |}]

@@ -476,16 +476,23 @@ module Printing = struct
       ; args
       ; cv_qualifiers
       ; body } =
-    pf ppf "@[%a%s%a@ %a(@[<hov>%a@])%a@]%a"
-      (list (pp_template ~default:init))
-      t
-      (if inline then "inline " else "")
-      pp_type_ return_type pp_identifier name
-      (list ~sep:comma (pair ~sep:Fmt.sp pp_type_ pp_identifier))
-      args (list ~sep:nop pp_cv) cv_qualifiers
-      (option ~none:Fmt.semi (fun ppf stmts ->
-           pf ppf "@,@[<v 2>{@,%a@]@,}" (list ~sep:cut pp_stmt) stmts ) )
-      body
+    match body with
+    | Some stmts ->
+        pf ppf "@[<v 2>@[%a%s%a@ %a(@[<hov>%a@])%a@] {@,%a@]@,}"
+          (list (pp_template ~default:init))
+          t
+          (if inline then "inline " else "")
+          pp_type_ return_type pp_identifier name
+          (list ~sep:comma (pair ~sep:Fmt.sp pp_type_ pp_identifier))
+          args (list ~sep:nop pp_cv) cv_qualifiers (list ~sep:cut pp_stmt) stmts
+    | None ->
+        pf ppf "@[%a%s%a@ %a(@[<hov>%a@])%a@];"
+          (list (pp_template ~default:init))
+          t
+          (if inline then "inline " else "")
+          pp_type_ return_type pp_identifier name
+          (list ~sep:comma (pair ~sep:Fmt.sp pp_type_ pp_identifier))
+          args (list ~sep:nop pp_cv) cv_qualifiers
 
   let pp_destructor ppf (name, body) =
     pf ppf "@[~%s()@ {%a}@]" name (list ~sep:cut pp_stmt) body
@@ -632,10 +639,8 @@ module Tests = struct
               template <typename T0__,
                         stan::require_all_t<stan::is_foobar<T0__>>* = nullptr>
               inline void foobar();
-
               template <typename T0__, stan::require_all_t<stan::is_foobar<T0__>>*>
-              inline void foobar()
-              {
+              inline void foobar() {
                 try {
                   /* A potentially
                      long comment

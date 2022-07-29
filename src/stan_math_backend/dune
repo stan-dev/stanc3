@@ -6,10 +6,10 @@
   mangle
   cpp_Json
   cpp_str
-  expression_gen
-  function_gen
-  locations
-  statement_gen)
+  lower_expr
+  lower_stmt
+  lower_functions
+  locations)
  (inline_tests)
  (preprocess
-  (pps ppx_jane ppx_deriving.map ppx_deriving.fold)))
+  (pps ppx_jane ppx_deriving.map ppx_deriving.fold ppx_deriving.make)))

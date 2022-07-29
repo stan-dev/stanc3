@@ -31,24 +31,6 @@ let prepare_prog (mir : Program.Typed.t) : Program.Numbered.t * state_t =
          (Hashtbl.to_alist label_to_location) ) in
   (mir, location_list)
 
-let pp_globals ppf location_list =
-  let location_list =
-    " (found before start of program)"
-    :: ( List.filter ~f:(fun x -> x <> Location_span.empty) location_list
-       |> List.map ~f:(fun x -> " (in " ^ Location_span.to_string x ^ ")") )
-  in
-  let location_count = List.length location_list in
-  Fmt.pf ppf
-    "@ stan::math::profile_map profiles__;@ static constexpr std::array<const \
-     char*, @[<hov>%d@]> locations_array__ = @ {@[<hov>%a@]};@ "
-    location_count
-    Fmt.(list ~sep:comma (fmt "%S"))
-    location_list
-
-let pp_smeta ppf location_num =
-  if location_num = no_span_num then ()
-  else Fmt.pf ppf "current_statement__ = %d;@;" location_num
-
 let gen_globals location_list =
   let open Cpp in
   let location_list =
