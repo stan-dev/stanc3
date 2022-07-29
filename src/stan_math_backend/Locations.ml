@@ -48,3 +48,28 @@ let pp_globals ppf location_list =
 let pp_smeta ppf location_num =
   if location_num = no_span_num then ()
   else Fmt.pf ppf "current_statement__ = %d;@;" location_num
+
+let gen_globals location_list =
+  let open Cpp in
+  let location_list =
+    " (found before start of program)"
+    :: ( List.filter ~f:(fun x -> x <> Location_span.empty) location_list
+       |> List.map ~f:(fun x -> " (in " ^ Location_span.to_string x ^ ")") )
+    |> List.map ~f:Exprs.literal_string in
+  let location_count = List.length location_list in
+  let arr_type = Types.str_array location_count in
+  [ TopVarDef
+      (make_var_defn ~type_:(Type_literal "stan::math::profile_map")
+         ~name:"profiles__" () )
+  ; TopVarDef
+      (make_var_defn ~static:true ~constexpr:true ~type_:arr_type
+         ~name:"locations_array__"
+         ~init:(Assignment (ArrayLiteral location_list)) () ) ]
+
+let create_loc_assignment location_num =
+  let open Cpp in
+  if location_num = no_span_num then []
+  else
+    [ Expression
+        (Assign (Var "current_statement__", Literal (string_of_int location_num))
+        ) ]
