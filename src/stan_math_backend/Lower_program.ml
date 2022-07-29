@@ -689,7 +689,7 @@ let gen_transform_inits {Program.output_vars; _} =
         (make_var_defn ~type_:(Type_literal "Eigen::Index") ~name:"flat_iter__"
            ~init:(Assignment (Literal "0")) () )
     ; ForEach
-        ( (Auto, "&&param_name__")
+        ( (Ref (Ref Auto), "param_name__")
         , Var "names__"
         , Block
             [ VarDef

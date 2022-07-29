@@ -51,7 +51,6 @@ namespace ode_adjoint_test_model_model_namespace {
     Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T3__>,-1,1>
     operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
                const int& b, const T3__& a) const;
-    
   };
   struct f_0_arg_odefunctor__ {
     template <typename T0__, typename T1__,
@@ -60,7 +59,6 @@ namespace ode_adjoint_test_model_model_namespace {
                                   stan::is_vt_not_complex<T1__>>* = nullptr>
     Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,1>
     operator()(const T0__& t, const T1__& z, std::ostream* pstream__) const;
-    
   };
   struct f_1_arg_odefunctor__ {
     template <typename T0__, typename T1__, typename T2__,
@@ -71,7 +69,6 @@ namespace ode_adjoint_test_model_model_namespace {
     Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>,-1,1>
     operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
                const T2__& a) const;
-    
   };
   struct f_1_arg_functor__ {
     template <typename T0__, typename T1__, typename T2__,
@@ -82,7 +79,6 @@ namespace ode_adjoint_test_model_model_namespace {
     Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>,-1,1>
     operator()(const T0__& t, const T1__& z, const T2__& a, std::ostream*
                pstream__) const;
-    
   };
   struct f_0_arg_functor__ {
     template <typename T0__, typename T1__,
@@ -91,7 +87,6 @@ namespace ode_adjoint_test_model_model_namespace {
                                   stan::is_vt_not_complex<T1__>>* = nullptr>
     Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,1>
     operator()(const T0__& t, const T1__& z, std::ostream* pstream__) const;
-    
   };
   struct f_2_arg_functor__ {
     template <typename T0__, typename T1__, typename T3__,
@@ -102,15 +97,13 @@ namespace ode_adjoint_test_model_model_namespace {
     Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T3__>,-1,1>
     operator()(const T0__& t, const T1__& z, const int& b, const T3__& a,
                std::ostream* pstream__) const;
-    
   };
   template <typename T0__, typename T1__,
             stan::require_all_t<stan::is_stan_scalar<T0__>,
                                 stan::is_col_vector<T1__>,
                                 stan::is_vt_not_complex<T1__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,1>
-  f_0_arg(const T0__& t, const T1__& z_arg__, std::ostream* pstream__)
-  {
+  f_0_arg(const T0__& t, const T1__& z_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__,
                                stan::base_type_t<T1__>>;
     int current_statement__ = 0;
@@ -134,8 +127,7 @@ namespace ode_adjoint_test_model_model_namespace {
                                 stan::is_vt_not_complex<T1__>>*>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,1>
   f_0_arg_functor__::operator()(const T0__& t, const T1__& z, std::ostream*
-                                pstream__) const
-  {
+                                pstream__) const {
     return f_0_arg(t, z, pstream__);
   }
   template <typename T0__, typename T1__,
@@ -144,8 +136,7 @@ namespace ode_adjoint_test_model_model_namespace {
                                 stan::is_vt_not_complex<T1__>>*>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,1>
   f_0_arg_odefunctor__::operator()(const T0__& t, const T1__& z,
-                                   std::ostream* pstream__) const
-  {
+                                   std::ostream* pstream__) const {
     return f_0_arg(t, z, pstream__);
   }
   template <typename T0__, typename T1__, typename T2__,
@@ -155,8 +146,7 @@ namespace ode_adjoint_test_model_model_namespace {
                                 stan::is_stan_scalar<T2__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>,-1,1>
   f_1_arg(const T0__& t, const T1__& z_arg__, const T2__& a, std::ostream*
-          pstream__)
-  {
+          pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__,
                                stan::base_type_t<T1__>, T2__>;
     int current_statement__ = 0;
@@ -181,8 +171,7 @@ namespace ode_adjoint_test_model_model_namespace {
                                 stan::is_stan_scalar<T2__>>*>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>,-1,1>
   f_1_arg_functor__::operator()(const T0__& t, const T1__& z, const T2__& a,
-                                std::ostream* pstream__) const
-  {
+                                std::ostream* pstream__) const {
     return f_1_arg(t, z, a, pstream__);
   }
   template <typename T0__, typename T1__, typename T2__,
@@ -192,8 +181,7 @@ namespace ode_adjoint_test_model_model_namespace {
                                 stan::is_stan_scalar<T2__>>*>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>,-1,1>
   f_1_arg_odefunctor__::operator()(const T0__& t, const T1__& z,
-                                   std::ostream* pstream__, const T2__& a) const
-  {
+                                   std::ostream* pstream__, const T2__& a) const {
     return f_1_arg(t, z, a, pstream__);
   }
   template <typename T0__, typename T1__, typename T3__,
@@ -203,8 +191,7 @@ namespace ode_adjoint_test_model_model_namespace {
                                 stan::is_stan_scalar<T3__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T3__>,-1,1>
   f_2_arg(const T0__& t, const T1__& z_arg__, const int& b, const T3__& a,
-          std::ostream* pstream__)
-  {
+          std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__,
                                stan::base_type_t<T1__>, T3__>;
     int current_statement__ = 0;
@@ -229,8 +216,7 @@ namespace ode_adjoint_test_model_model_namespace {
                                 stan::is_stan_scalar<T3__>>*>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T3__>,-1,1>
   f_2_arg_functor__::operator()(const T0__& t, const T1__& z, const int& b,
-                                const T3__& a, std::ostream* pstream__) const
-  {
+                                const T3__& a, std::ostream* pstream__) const {
     return f_2_arg(t, z, b, a, pstream__);
   }
   template <typename T0__, typename T1__, typename T3__,
@@ -241,8 +227,7 @@ namespace ode_adjoint_test_model_model_namespace {
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T3__>,-1,1>
   f_2_arg_odefunctor__::operator()(const T0__& t, const T1__& z,
                                    std::ostream* pstream__, const int& b,
-                                   const T3__& a) const
-  {
+                                   const T3__& a) const {
     return f_2_arg(t, z, b, a, pstream__);
   }
   class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_test_model_model>{
@@ -350,12 +335,10 @@ namespace ode_adjoint_test_model_model_namespace {
             locations_array__[current_statement__]);
         }
         num_params_r__ = 1 + N + 1 + N;}
-      inline std::string model_name() const final
-      {
+      inline std::string model_name() const final {
         return "ode_adjoint_test_model_model";
       }
-      inline std::vector<std::string> model_compile_info() const noexcept
-      {
+      inline std::vector<std::string> model_compile_info() const noexcept {
         return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
                  "stancflags = --print-cpp"};
       }
@@ -365,8 +348,7 @@ namespace ode_adjoint_test_model_model_namespace {
                 VecI>* = nullptr>
       inline stan::scalar_type_t<VecR>
       log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
-                    pstream__ = nullptr) const
-      {
+                    pstream__ = nullptr) const {
         using T__ = stan::scalar_type_t<VecR>;
         using local_scalar_t__ = T__;
         T__ lp__(0.0);
@@ -442,8 +424,7 @@ namespace ode_adjoint_test_model_model_namespace {
                        VecVar& vars__, const bool
                        emit_transformed_parameters__ = true, const bool
                        emit_generated_quantities__ = true, std::ostream*
-                       pstream__ = nullptr) const
-      {
+                       pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -540,8 +521,7 @@ namespace ode_adjoint_test_model_model_namespace {
                 VecI>* = nullptr>
       inline void
       transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar&
-                           vars__, std::ostream* pstream__ = nullptr) const
-      {
+                           vars__, std::ostream* pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -576,12 +556,10 @@ namespace ode_adjoint_test_model_model_namespace {
             locations_array__[current_statement__]);
         }
       }
-      inline void get_param_names(std::vector<std::string>& names__) const
-      {
+      inline void get_param_names(std::vector<std::string>& names__) const {
         names__ = std::vector<std::string>{"y", "y0", "t0", "times", "z"};
       }
-      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
-      {
+      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
         dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
                     std::vector<size_t>{static_cast<size_t>(N)},
                     std::vector<size_t>{},
@@ -592,8 +570,7 @@ namespace ode_adjoint_test_model_model_namespace {
       inline void
       constrained_param_names(std::vector<std::string>& param_names__, bool
                               emit_transformed_parameters__ = true, bool
-                              emit_generated_quantities__ = true) const final
-      {
+                              emit_generated_quantities__ = true) const final {
         param_names__.emplace_back(std::string() + "y");
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
           param_names__.emplace_back(std::string() + "y0" + '.' +
@@ -623,8 +600,7 @@ namespace ode_adjoint_test_model_model_namespace {
       inline void
       unconstrained_param_names(std::vector<std::string>& param_names__, bool
                                 emit_transformed_parameters__ = true, bool
-                                emit_generated_quantities__ = true) const final
-      {
+                                emit_generated_quantities__ = true) const final {
         param_names__.emplace_back(std::string() + "y");
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
           param_names__.emplace_back(std::string() + "y0" + '.' +
@@ -651,12 +627,10 @@ namespace ode_adjoint_test_model_model_namespace {
           }
         
       }
-      inline std::string get_constrained_sizedtypes() const
-      {
+      inline std::string get_constrained_sizedtypes() const {
         return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y0\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"t0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"times\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"transformed_parameters\"}]");
       }
-      inline std::string get_unconstrained_sizedtypes() const
-      {
+      inline std::string get_unconstrained_sizedtypes() const {
         return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y0\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"t0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"times\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"transformed_parameters\"}]");
       }
       // Begin method overload boilerplate
@@ -665,8 +639,7 @@ namespace ode_adjoint_test_model_model_namespace {
                   Eigen::Matrix<double,-1,1>& vars, const bool
                   emit_transformed_parameters = true, const bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = (((1 + N) + 1) + N);
         const size_t num_transformed = emit_transformed_parameters * ((M *
           N));
@@ -684,8 +657,7 @@ namespace ode_adjoint_test_model_model_namespace {
                   std::vector<int>& params_i, std::vector<double>& vars, bool
                   emit_transformed_parameters = true, bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = (((1 + N) + 1) + N);
         const size_t num_transformed = emit_transformed_parameters * ((M *
           N));
@@ -699,23 +671,21 @@ namespace ode_adjoint_test_model_model_namespace {
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream*
-               pstream = nullptr) const
-      {
+               pstream = nullptr) const {
         Eigen::Matrix<int,-1,1> params_i;
         return log_prob_impl<propto__, jacobian__>(params_r, params_i,
                  pstream);
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
-               std::ostream* pstream = nullptr) const
-      {
-        return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+               std::ostream* pstream = nullptr) const {
+        return log_prob_impl<propto__, jacobian__>(params_r, params_i,
+                 pstream);
       }
       inline void
       transform_inits(const stan::io::var_context& context,
                       Eigen::Matrix<double,-1,1>& params_r, std::ostream*
-                      pstream = nullptr) const final
-      {
+                      pstream = nullptr) const final {
         std::vector<double> params_r_vec(params_r.size());
         std::vector<int> params_i;
         transform_inits(context, params_i, params_r_vec, pstream);
@@ -725,8 +695,7 @@ namespace ode_adjoint_test_model_model_namespace {
       inline void
       transform_inits(const stan::io::var_context& context, std::vector<int>&
                       params_i, std::vector<double>& vars, std::ostream*
-                      pstream__ = nullptr) const
-      {
+                      pstream__ = nullptr) const {
         constexpr std::array<const char*, 4> names__{"y", "y0", "t0", "times"};
         const std::array<Eigen::Index, 4> constrain_param_sizes__{1, N, 1, N};
         const auto num_constrained_params__ =
@@ -735,7 +704,7 @@ namespace ode_adjoint_test_model_model_namespace {
         std::vector<double> params_r_flat__(num_constrained_params__);
         Eigen::Index size_iter__ = 0;
         Eigen::Index flat_iter__ = 0;
-        for(auto &&param_name__: names__) {
+        for(auto&& param_name__: names__) {
           const auto param_vec__ = context.vals_r(param_name__);
           for(Eigen::Index i = 0; i <
               constrain_param_sizes__[size_iter__]; ++i) {
@@ -753,13 +722,11 @@ using stan_model = ode_adjoint_test_model_model_namespace::ode_adjoint_test_mode
 // Boilerplate
 stan::model::model_base&
 new_model(stan::io::var_context& data_context, unsigned int seed,
-          std::ostream* msg_stream)
-{
+          std::ostream* msg_stream) {
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
-stan::math::profile_map& get_stan_profile_data()
-{
+stan::math::profile_map& get_stan_profile_data() {
   return ode_adjoint_test_model_model_namespace::profiles__;
 }
 #endif
@@ -842,7 +809,6 @@ namespace overloaded_ode_model_namespace {
     operator()(const T0__& t, const T1__& y, std::ostream* pstream__,
                const T2__& beta, const T3__& kappa, const T4__& gamma,
                const T5__& xi, const T6__& delta) const;
-    
     template <typename T0__, typename T1__, typename T2__, typename T3__,
               typename T4__, typename T5__, typename T6__,
               stan::require_all_t<stan::is_stan_scalar<T0__>,
@@ -858,7 +824,6 @@ namespace overloaded_ode_model_namespace {
     operator()(const T0__& t, const T1__& y, std::ostream* pstream__,
                const T2__& beta, const T3__& kappa, const T4__& gamma,
                const T5__& xi, const T6__& delta, const int& unused) const;
-    
   };
   struct simple_SIR_functor__ {
     template <typename T0__, typename T1__, typename T2__, typename T3__,
@@ -876,7 +841,6 @@ namespace overloaded_ode_model_namespace {
     operator()(const T0__& t, const T1__& y, const T2__& beta, const T3__&
                kappa, const T4__& gamma, const T5__& xi, const T6__& delta,
                std::ostream* pstream__) const;
-    
     template <typename T0__, typename T1__, typename T2__, typename T3__,
               typename T4__, typename T5__, typename T6__,
               stan::require_all_t<stan::is_stan_scalar<T0__>,
@@ -892,7 +856,6 @@ namespace overloaded_ode_model_namespace {
     operator()(const T0__& t, const T1__& y, const T2__& beta, const T3__&
                kappa, const T4__& gamma, const T5__& xi, const T6__& delta,
                const int& unused, std::ostream* pstream__) const;
-    
   };
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             typename T4__, typename T5__, typename T6__,
@@ -908,8 +871,7 @@ namespace overloaded_ode_model_namespace {
                   T3__, T4__, stan::promote_args_t<T5__, T6__>>,-1,1>
   simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta,
              const T3__& kappa, const T4__& gamma, const T5__& xi,
-             const T6__& delta, std::ostream* pstream__)
-  {
+             const T6__& delta, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__,
                                stan::base_type_t<T1__>, T2__, T3__, T4__,
                                stan::promote_args_t<T5__, T6__>>;
@@ -967,8 +929,7 @@ namespace overloaded_ode_model_namespace {
   simple_SIR_functor__::operator()(const T0__& t, const T1__& y, const T2__&
                                    beta, const T3__& kappa, const T4__&
                                    gamma, const T5__& xi, const T6__& delta,
-                                   std::ostream* pstream__) const
-  {
+                                   std::ostream* pstream__) const {
     return simple_SIR(t, y, beta, kappa, gamma, xi, delta, pstream__);
   }
   template <typename T0__, typename T1__, typename T2__, typename T3__,
@@ -987,8 +948,7 @@ namespace overloaded_ode_model_namespace {
                                       std::ostream* pstream__, const T2__&
                                       beta, const T3__& kappa, const T4__&
                                       gamma, const T5__& xi, const T6__&
-                                      delta) const
-  {
+                                      delta) const {
     return simple_SIR(t, y, beta, kappa, gamma, xi, delta, pstream__);
   }
   template <typename T0__, typename T1__, typename T2__, typename T3__,
@@ -1005,8 +965,7 @@ namespace overloaded_ode_model_namespace {
                   T3__, T4__, stan::promote_args_t<T5__, T6__>>,-1,1>
   simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta,
              const T3__& kappa, const T4__& gamma, const T5__& xi,
-             const T6__& delta, const int& unused, std::ostream* pstream__)
-  {
+             const T6__& delta, const int& unused, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__,
                                stan::base_type_t<T1__>, T2__, T3__, T4__,
                                stan::promote_args_t<T5__, T6__>>;
@@ -1071,8 +1030,7 @@ namespace overloaded_ode_model_namespace {
   simple_SIR_functor__::operator()(const T0__& t, const T1__& y, const T2__&
                                    beta, const T3__& kappa, const T4__&
                                    gamma, const T5__& xi, const T6__& delta,
-                                   const int& unused, std::ostream* pstream__) const
-  {
+                                   const int& unused, std::ostream* pstream__) const {
     return simple_SIR(t, y, beta, kappa, gamma, xi, delta, unused, pstream__);
   }
   template <typename T0__, typename T1__, typename T2__, typename T3__,
@@ -1091,8 +1049,7 @@ namespace overloaded_ode_model_namespace {
                                       std::ostream* pstream__, const T2__&
                                       beta, const T3__& kappa, const T4__&
                                       gamma, const T5__& xi, const T6__&
-                                      delta, const int& unused) const
-  {
+                                      delta, const int& unused) const {
     return simple_SIR(t, y, beta, kappa, gamma, xi, delta, unused, pstream__);
   }
   class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
@@ -1207,12 +1164,10 @@ namespace overloaded_ode_model_namespace {
             locations_array__[current_statement__]);
         }
         num_params_r__ = 1 + 1 + 1 + 1;}
-      inline std::string model_name() const final
-      {
+      inline std::string model_name() const final {
         return "overloaded_ode_model";
       }
-      inline std::vector<std::string> model_compile_info() const noexcept
-      {
+      inline std::vector<std::string> model_compile_info() const noexcept {
         return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
                  "stancflags = --print-cpp"};
       }
@@ -1222,8 +1177,7 @@ namespace overloaded_ode_model_namespace {
                 VecI>* = nullptr>
       inline stan::scalar_type_t<VecR>
       log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
-                    pstream__ = nullptr) const
-      {
+                    pstream__ = nullptr) const {
         using T__ = stan::scalar_type_t<VecR>;
         using local_scalar_t__ = T__;
         T__ lp__(0.0);
@@ -1362,8 +1316,7 @@ namespace overloaded_ode_model_namespace {
                        VecVar& vars__, const bool
                        emit_transformed_parameters__ = true, const bool
                        emit_generated_quantities__ = true, std::ostream*
-                       pstream__ = nullptr) const
-      {
+                       pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -1463,8 +1416,7 @@ namespace overloaded_ode_model_namespace {
                 VecI>* = nullptr>
       inline void
       transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar&
-                           vars__, std::ostream* pstream__ = nullptr) const
-      {
+                           vars__, std::ostream* pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -1492,13 +1444,11 @@ namespace overloaded_ode_model_namespace {
             locations_array__[current_statement__]);
         }
       }
-      inline void get_param_names(std::vector<std::string>& names__) const
-      {
+      inline void get_param_names(std::vector<std::string>& names__) const {
         names__ = std::vector<std::string>{"beta", "gamma", "xi", "delta",
                     "y", "y2"};
       }
-      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
-      {
+      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
         dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
                     std::vector<size_t>{}, std::vector<size_t>{},
                     std::vector<size_t>{},
@@ -1510,8 +1460,7 @@ namespace overloaded_ode_model_namespace {
       inline void
       constrained_param_names(std::vector<std::string>& param_names__, bool
                               emit_transformed_parameters__ = true, bool
-                              emit_generated_quantities__ = true) const final
-      {
+                              emit_generated_quantities__ = true) const final {
         param_names__.emplace_back(std::string() + "beta");
         param_names__.emplace_back(std::string() + "gamma");
         param_names__.emplace_back(std::string() + "xi");
@@ -1541,8 +1490,7 @@ namespace overloaded_ode_model_namespace {
       inline void
       unconstrained_param_names(std::vector<std::string>& param_names__, bool
                                 emit_transformed_parameters__ = true, bool
-                                emit_generated_quantities__ = true) const final
-      {
+                                emit_generated_quantities__ = true) const final {
         param_names__.emplace_back(std::string() + "beta");
         param_names__.emplace_back(std::string() + "gamma");
         param_names__.emplace_back(std::string() + "xi");
@@ -1569,12 +1517,10 @@ namespace overloaded_ode_model_namespace {
           }
         
       }
-      inline std::string get_constrained_sizedtypes() const
-      {
+      inline std::string get_constrained_sizedtypes() const {
         return std::string("[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"xi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N_t) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N_t) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}},\"block\":\"transformed_parameters\"}]");
       }
-      inline std::string get_unconstrained_sizedtypes() const
-      {
+      inline std::string get_unconstrained_sizedtypes() const {
         return std::string("[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"xi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N_t) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N_t) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}},\"block\":\"transformed_parameters\"}]");
       }
       // Begin method overload boilerplate
@@ -1583,8 +1529,7 @@ namespace overloaded_ode_model_namespace {
                   Eigen::Matrix<double,-1,1>& vars, const bool
                   emit_transformed_parameters = true, const bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = (((1 + 1) + 1) + 1);
         const size_t num_transformed = emit_transformed_parameters * (((N_t *
           4) + (N_t * 4)));
@@ -1602,8 +1547,7 @@ namespace overloaded_ode_model_namespace {
                   std::vector<int>& params_i, std::vector<double>& vars, bool
                   emit_transformed_parameters = true, bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = (((1 + 1) + 1) + 1);
         const size_t num_transformed = emit_transformed_parameters * (((N_t *
           4) + (N_t * 4)));
@@ -1617,23 +1561,21 @@ namespace overloaded_ode_model_namespace {
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream*
-               pstream = nullptr) const
-      {
+               pstream = nullptr) const {
         Eigen::Matrix<int,-1,1> params_i;
         return log_prob_impl<propto__, jacobian__>(params_r, params_i,
                  pstream);
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
-               std::ostream* pstream = nullptr) const
-      {
-        return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+               std::ostream* pstream = nullptr) const {
+        return log_prob_impl<propto__, jacobian__>(params_r, params_i,
+                 pstream);
       }
       inline void
       transform_inits(const stan::io::var_context& context,
                       Eigen::Matrix<double,-1,1>& params_r, std::ostream*
-                      pstream = nullptr) const final
-      {
+                      pstream = nullptr) const final {
         std::vector<double> params_r_vec(params_r.size());
         std::vector<int> params_i;
         transform_inits(context, params_i, params_r_vec, pstream);
@@ -1643,8 +1585,7 @@ namespace overloaded_ode_model_namespace {
       inline void
       transform_inits(const stan::io::var_context& context, std::vector<int>&
                       params_i, std::vector<double>& vars, std::ostream*
-                      pstream__ = nullptr) const
-      {
+                      pstream__ = nullptr) const {
         constexpr std::array<const char*, 4> names__{"beta", "gamma", "xi",
                                                       "delta"};
         const std::array<Eigen::Index, 4> constrain_param_sizes__{1, 1, 1, 1};
@@ -1654,7 +1595,7 @@ namespace overloaded_ode_model_namespace {
         std::vector<double> params_r_flat__(num_constrained_params__);
         Eigen::Index size_iter__ = 0;
         Eigen::Index flat_iter__ = 0;
-        for(auto &&param_name__: names__) {
+        for(auto&& param_name__: names__) {
           const auto param_vec__ = context.vals_r(param_name__);
           for(Eigen::Index i = 0; i <
               constrain_param_sizes__[size_iter__]; ++i) {
@@ -1671,13 +1612,11 @@ namespace overloaded_ode_model_namespace {
 // Boilerplate
 stan::model::model_base&
 new_model(stan::io::var_context& data_context, unsigned int seed,
-          std::ostream* msg_stream)
-{
+          std::ostream* msg_stream) {
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
-stan::math::profile_map& get_stan_profile_data()
-{
+stan::math::profile_map& get_stan_profile_data() {
   return overloaded_ode_model_namespace::profiles__;
 }
 #endif

@@ -507,12 +507,10 @@ namespace optimize_glm_model_namespace {
             locations_array__[current_statement__]);
         }
         num_params_r__ = k + k + k + 1 + 1 + 1 + (n * k) + (n * k) + n;}
-      inline std::string model_name() const final
-      {
+      inline std::string model_name() const final {
         return "optimize_glm_model";
       }
-      inline std::vector<std::string> model_compile_info() const noexcept
-      {
+      inline std::vector<std::string> model_compile_info() const noexcept {
         return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
                  "stancflags = --print-cpp --use-opencl"};
       }
@@ -522,8 +520,7 @@ namespace optimize_glm_model_namespace {
                 VecI>* = nullptr>
       inline stan::scalar_type_t<VecR>
       log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
-                    pstream__ = nullptr) const
-      {
+                    pstream__ = nullptr) const {
         using T__ = stan::scalar_type_t<VecR>;
         using local_scalar_t__ = T__;
         T__ lp__(0.0);
@@ -1275,8 +1272,7 @@ namespace optimize_glm_model_namespace {
                        VecVar& vars__, const bool
                        emit_transformed_parameters__ = true, const bool
                        emit_generated_quantities__ = true, std::ostream*
-                       pstream__ = nullptr) const
-      {
+                       pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -1373,8 +1369,7 @@ namespace optimize_glm_model_namespace {
                 VecI>* = nullptr>
       inline void
       transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar&
-                           vars__, std::ostream* pstream__ = nullptr) const
-      {
+                           vars__, std::ostream* pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -1449,13 +1444,11 @@ namespace optimize_glm_model_namespace {
             locations_array__[current_statement__]);
         }
       }
-      inline void get_param_names(std::vector<std::string>& names__) const
-      {
+      inline void get_param_names(std::vector<std::string>& names__) const {
         names__ = std::vector<std::string>{"alpha_v", "beta", "cuts",
                     "sigma", "alpha", "phi", "X_p", "beta_m", "X_rv_p"};
       }
-      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
-      {
+      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
         dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
                                                      static_cast<size_t>(k)},
                     std::vector<size_t>{static_cast<size_t>(k)},
@@ -1471,8 +1464,7 @@ namespace optimize_glm_model_namespace {
       inline void
       constrained_param_names(std::vector<std::string>& param_names__, bool
                               emit_transformed_parameters__ = true, bool
-                              emit_generated_quantities__ = true) const final
-      {
+                              emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= k; ++sym1__) {
           param_names__.emplace_back(std::string() + "alpha_v" + '.' +
             std::to_string(sym1__));
@@ -1518,8 +1510,7 @@ namespace optimize_glm_model_namespace {
       inline void
       unconstrained_param_names(std::vector<std::string>& param_names__, bool
                                 emit_transformed_parameters__ = true, bool
-                                emit_generated_quantities__ = true) const final
-      {
+                                emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= k; ++sym1__) {
           param_names__.emplace_back(std::string() + "alpha_v" + '.' +
             std::to_string(sym1__));
@@ -1562,12 +1553,10 @@ namespace optimize_glm_model_namespace {
           }
         
       }
-      inline std::string get_constrained_sizedtypes() const
-      {
+      inline std::string get_constrained_sizedtypes() const {
         return std::string("[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n) + "},\"block\":\"parameters\"}]");
       }
-      inline std::string get_unconstrained_sizedtypes() const
-      {
+      inline std::string get_unconstrained_sizedtypes() const {
         return std::string("[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n) + "},\"block\":\"parameters\"}]");
       }
       // Begin method overload boilerplate
@@ -1576,8 +1565,7 @@ namespace optimize_glm_model_namespace {
                   Eigen::Matrix<double,-1,1>& vars, const bool
                   emit_transformed_parameters = true, const bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = ((((((((k + k) + k) + 1) + 1) + 1) + (n *
           k)) + (n * k)) + n);
         const size_t num_transformed = emit_transformed_parameters * (0);
@@ -1595,8 +1583,7 @@ namespace optimize_glm_model_namespace {
                   std::vector<int>& params_i, std::vector<double>& vars, bool
                   emit_transformed_parameters = true, bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = ((((((((k + k) + k) + 1) + 1) + 1) + (n *
           k)) + (n * k)) + n);
         const size_t num_transformed = emit_transformed_parameters * (0);
@@ -1610,23 +1597,21 @@ namespace optimize_glm_model_namespace {
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream*
-               pstream = nullptr) const
-      {
+               pstream = nullptr) const {
         Eigen::Matrix<int,-1,1> params_i;
         return log_prob_impl<propto__, jacobian__>(params_r, params_i,
                  pstream);
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
-               std::ostream* pstream = nullptr) const
-      {
-        return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+               std::ostream* pstream = nullptr) const {
+        return log_prob_impl<propto__, jacobian__>(params_r, params_i,
+                 pstream);
       }
       inline void
       transform_inits(const stan::io::var_context& context,
                       Eigen::Matrix<double,-1,1>& params_r, std::ostream*
-                      pstream = nullptr) const final
-      {
+                      pstream = nullptr) const final {
         std::vector<double> params_r_vec(params_r.size());
         std::vector<int> params_i;
         transform_inits(context, params_i, params_r_vec, pstream);
@@ -1636,8 +1621,7 @@ namespace optimize_glm_model_namespace {
       inline void
       transform_inits(const stan::io::var_context& context, std::vector<int>&
                       params_i, std::vector<double>& vars, std::ostream*
-                      pstream__ = nullptr) const
-      {
+                      pstream__ = nullptr) const {
         constexpr std::array<const char*, 9> names__{"alpha_v", "beta",
                                                       "cuts", "sigma",
                                                       "alpha", "phi", "X_p",
@@ -1652,7 +1636,7 @@ namespace optimize_glm_model_namespace {
         std::vector<double> params_r_flat__(num_constrained_params__);
         Eigen::Index size_iter__ = 0;
         Eigen::Index flat_iter__ = 0;
-        for(auto &&param_name__: names__) {
+        for(auto&& param_name__: names__) {
           const auto param_vec__ = context.vals_r(param_name__);
           for(Eigen::Index i = 0; i <
               constrain_param_sizes__[size_iter__]; ++i) {
@@ -1669,13 +1653,11 @@ namespace optimize_glm_model_namespace {
 // Boilerplate
 stan::model::model_base&
 new_model(stan::io::var_context& data_context, unsigned int seed,
-          std::ostream* msg_stream)
-{
+          std::ostream* msg_stream) {
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
-stan::math::profile_map& get_stan_profile_data()
-{
+stan::math::profile_map& get_stan_profile_data() {
   return optimize_glm_model_namespace::profiles__;
 }
 #endif

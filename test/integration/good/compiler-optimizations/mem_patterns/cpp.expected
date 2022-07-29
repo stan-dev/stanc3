@@ -39,12 +39,10 @@ namespace complex_fails_model_namespace {
             locations_array__[current_statement__]);
         }
         num_params_r__ = (10 * 10);}
-      inline std::string model_name() const final
-      {
+      inline std::string model_name() const final {
         return "complex_fails_model";
       }
-      inline std::vector<std::string> model_compile_info() const noexcept
-      {
+      inline std::vector<std::string> model_compile_info() const noexcept {
         return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
                  "stancflags = -fsoa --print-cpp"};
       }
@@ -54,8 +52,7 @@ namespace complex_fails_model_namespace {
                 VecI>* = nullptr>
       inline stan::scalar_type_t<VecR>
       log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
-                    pstream__ = nullptr) const
-      {
+                    pstream__ = nullptr) const {
         using T__ = stan::scalar_type_t<VecR>;
         using local_scalar_t__ = T__;
         T__ lp__(0.0);
@@ -101,8 +98,7 @@ namespace complex_fails_model_namespace {
                        VecVar& vars__, const bool
                        emit_transformed_parameters__ = true, const bool
                        emit_generated_quantities__ = true, std::ostream*
-                       pstream__ = nullptr) const
-      {
+                       pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -165,8 +161,7 @@ namespace complex_fails_model_namespace {
                 VecI>* = nullptr>
       inline void
       transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar&
-                           vars__, std::ostream* pstream__ = nullptr) const
-      {
+                           vars__, std::ostream* pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -193,12 +188,10 @@ namespace complex_fails_model_namespace {
             locations_array__[current_statement__]);
         }
       }
-      inline void get_param_names(std::vector<std::string>& names__) const
-      {
+      inline void get_param_names(std::vector<std::string>& names__) const {
         names__ = std::vector<std::string>{"A_p", "A_complex_tp"};
       }
-      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
-      {
+      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
         dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
                                                      static_cast<size_t>(10),
                                                      static_cast<size_t>(10)},
@@ -208,8 +201,7 @@ namespace complex_fails_model_namespace {
       inline void
       constrained_param_names(std::vector<std::string>& param_names__, bool
                               emit_transformed_parameters__ = true, bool
-                              emit_generated_quantities__ = true) const final
-      {
+                              emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
             param_names__.emplace_back(std::string() + "A_p" + '.' +
@@ -239,8 +231,7 @@ namespace complex_fails_model_namespace {
       inline void
       unconstrained_param_names(std::vector<std::string>& param_names__, bool
                                 emit_transformed_parameters__ = true, bool
-                                emit_generated_quantities__ = true) const final
-      {
+                                emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
             param_names__.emplace_back(std::string() + "A_p" + '.' +
@@ -267,12 +258,10 @@ namespace complex_fails_model_namespace {
           }
         
       }
-      inline std::string get_constrained_sizedtypes() const
-      {
+      inline std::string get_constrained_sizedtypes() const {
         return std::string("[{\"name\":\"A_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"A_complex_tp\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
       }
-      inline std::string get_unconstrained_sizedtypes() const
-      {
+      inline std::string get_unconstrained_sizedtypes() const {
         return std::string("[{\"name\":\"A_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"A_complex_tp\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
       }
       // Begin method overload boilerplate
@@ -281,8 +270,7 @@ namespace complex_fails_model_namespace {
                   Eigen::Matrix<double,-1,1>& vars, const bool
                   emit_transformed_parameters = true, const bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = (10 * 10);
         const size_t num_transformed = emit_transformed_parameters * (((10 *
           10) * 2));
@@ -300,8 +288,7 @@ namespace complex_fails_model_namespace {
                   std::vector<int>& params_i, std::vector<double>& vars, bool
                   emit_transformed_parameters = true, bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = (10 * 10);
         const size_t num_transformed = emit_transformed_parameters * (((10 *
           10) * 2));
@@ -315,23 +302,21 @@ namespace complex_fails_model_namespace {
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream*
-               pstream = nullptr) const
-      {
+               pstream = nullptr) const {
         Eigen::Matrix<int,-1,1> params_i;
         return log_prob_impl<propto__, jacobian__>(params_r, params_i,
                  pstream);
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
-               std::ostream* pstream = nullptr) const
-      {
-        return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+               std::ostream* pstream = nullptr) const {
+        return log_prob_impl<propto__, jacobian__>(params_r, params_i,
+                 pstream);
       }
       inline void
       transform_inits(const stan::io::var_context& context,
                       Eigen::Matrix<double,-1,1>& params_r, std::ostream*
-                      pstream = nullptr) const final
-      {
+                      pstream = nullptr) const final {
         std::vector<double> params_r_vec(params_r.size());
         std::vector<int> params_i;
         transform_inits(context, params_i, params_r_vec, pstream);
@@ -341,8 +326,7 @@ namespace complex_fails_model_namespace {
       inline void
       transform_inits(const stan::io::var_context& context, std::vector<int>&
                       params_i, std::vector<double>& vars, std::ostream*
-                      pstream__ = nullptr) const
-      {
+                      pstream__ = nullptr) const {
         constexpr std::array<const char*, 1> names__{"A_p"};
         const std::array<Eigen::Index, 1> constrain_param_sizes__{(10 * 10)};
         const auto num_constrained_params__ =
@@ -351,7 +335,7 @@ namespace complex_fails_model_namespace {
         std::vector<double> params_r_flat__(num_constrained_params__);
         Eigen::Index size_iter__ = 0;
         Eigen::Index flat_iter__ = 0;
-        for(auto &&param_name__: names__) {
+        for(auto&& param_name__: names__) {
           const auto param_vec__ = context.vals_r(param_name__);
           for(Eigen::Index i = 0; i <
               constrain_param_sizes__[size_iter__]; ++i) {
@@ -368,13 +352,11 @@ namespace complex_fails_model_namespace {
 // Boilerplate
 stan::model::model_base&
 new_model(stan::io::var_context& data_context, unsigned int seed,
-          std::ostream* msg_stream)
-{
+          std::ostream* msg_stream) {
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
-stan::math::profile_map& get_stan_profile_data()
-{
+stan::math::profile_map& get_stan_profile_data() {
   return complex_fails_model_namespace::profiles__;
 }
 #endif
@@ -768,12 +750,10 @@ namespace constraints_model_namespace {
           N + N + N + N + N + ((N * (N - 1)) / 2) + (N + ((N * (N - 1)) / 2))
           + ((((K * (K - 1)) / 2) + K) + ((K - K) * K)) + ((K * (K - 1)) /
           2);}
-      inline std::string model_name() const final
-      {
+      inline std::string model_name() const final {
         return "constraints_model";
       }
-      inline std::vector<std::string> model_compile_info() const noexcept
-      {
+      inline std::vector<std::string> model_compile_info() const noexcept {
         return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
                  "stancflags = -fsoa --print-cpp"};
       }
@@ -783,8 +763,7 @@ namespace constraints_model_namespace {
                 VecI>* = nullptr>
       inline stan::scalar_type_t<VecR>
       log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
-                    pstream__ = nullptr) const
-      {
+                    pstream__ = nullptr) const {
         using T__ = stan::scalar_type_t<VecR>;
         using local_scalar_t__ = T__;
         T__ lp__(0.0);
@@ -1218,8 +1197,7 @@ namespace constraints_model_namespace {
                        VecVar& vars__, const bool
                        emit_transformed_parameters__ = true, const bool
                        emit_generated_quantities__ = true, std::ostream*
-                       pstream__ = nullptr) const
-      {
+                       pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -1569,8 +1547,7 @@ namespace constraints_model_namespace {
                 VecI>* = nullptr>
       inline void
       transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar&
-                           vars__, std::ostream* pstream__ = nullptr) const
-      {
+                           vars__, std::ostream* pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -1758,8 +1735,7 @@ namespace constraints_model_namespace {
             locations_array__[current_statement__]);
         }
       }
-      inline void get_param_names(std::vector<std::string>& names__) const
-      {
+      inline void get_param_names(std::vector<std::string>& names__) const {
         names__ = std::vector<std::string>{"high_low_est", "b", "h", "ar",
                     "ma", "phi_beta", "sigma2", "Intercept", "mean_price",
                     "sigma_price", "theta", "upper_test", "lower_upper_test",
@@ -1770,8 +1746,7 @@ namespace constraints_model_namespace {
                     "sigma", "prices", "prices_diff", "mu", "err",
                     "h_i_mean", "h_i_sigma", "h_sigma"};
       }
-      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
-      {
+      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
         dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
                                                      static_cast<size_t>(N)},
                     std::vector<size_t>{static_cast<size_t>(K)},
@@ -1809,8 +1784,7 @@ namespace constraints_model_namespace {
       inline void
       constrained_param_names(std::vector<std::string>& param_names__, bool
                               emit_transformed_parameters__ = true, bool
-                              emit_generated_quantities__ = true) const final
-      {
+                              emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
           param_names__.emplace_back(std::string() + "high_low_est" + '.' +
             std::to_string(sym1__));
@@ -1935,8 +1909,7 @@ namespace constraints_model_namespace {
       inline void
       unconstrained_param_names(std::vector<std::string>& param_names__, bool
                                 emit_transformed_parameters__ = true, bool
-                                emit_generated_quantities__ = true) const final
-      {
+                                emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
           param_names__.emplace_back(std::string() + "high_low_est" + '.' +
             std::to_string(sym1__));
@@ -2051,12 +2024,10 @@ namespace constraints_model_namespace {
           }
         
       }
-      inline std::string get_constrained_sizedtypes() const
-      {
+      inline std::string get_constrained_sizedtypes() const {
         return std::string("[{\"name\":\"high_low_est\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"h\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"parameters\"},{\"name\":\"ar\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"ma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"Intercept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_price\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"sigma_price\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"lower_upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"row_vec_lower_upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"offset_mult_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"ordered_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"unit_vec_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"pos_ordered_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"corr_matrix_test\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cov_matrix_test\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"chol_fac_cov_test\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(K) + ",\"cols\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"chol_fac_corr_test\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(K) + ",\"cols\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"prices\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"prices_diff\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"err\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_mean\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"}]");
       }
-      inline std::string get_unconstrained_sizedtypes() const
-      {
+      inline std::string get_unconstrained_sizedtypes() const {
         return std::string("[{\"name\":\"high_low_est\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"h\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"parameters\"},{\"name\":\"ar\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"ma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"Intercept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_price\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"sigma_price\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"lower_upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"row_vec_lower_upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"offset_mult_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"ordered_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"unit_vec_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"pos_ordered_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"corr_matrix_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((N * (N - 1)) /2)) + "},\"block\":\"parameters\"},{\"name\":\"cov_matrix_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((N + ((N * (N - 1)) /2))) + "},\"block\":\"parameters\"},{\"name\":\"chol_fac_cov_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((K * (K - 1)) / 2) + K) + ((K - K) *K))) + "},\"block\":\"parameters\"},{\"name\":\"chol_fac_corr_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((K * (K - 1)) /2)) + "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"prices\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"prices_diff\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"err\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_mean\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"}]");
       }
       // Begin method overload boilerplate
@@ -2065,8 +2036,7 @@ namespace constraints_model_namespace {
                   Eigen::Matrix<double,-1,1>& vars, const bool
                   emit_transformed_parameters = true, const bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = (((((((((((((((((((((N + K) + Nr) + 2) +
           1) + 1) + 1) + 1) + N) + N) + 1) + N) + N) + N) + N) + N) + N) + N)
           + (N * N)) + (N * N)) + (K * K)) + (K * K));
@@ -2086,8 +2056,7 @@ namespace constraints_model_namespace {
                   std::vector<int>& params_i, std::vector<double>& vars, bool
                   emit_transformed_parameters = true, bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = (((((((((((((((((((((N + K) + Nr) + 2) +
           1) + 1) + 1) + 1) + N) + N) + 1) + N) + N) + N) + N) + N) + N) + N)
           + (N * N)) + (N * N)) + (K * K)) + (K * K));
@@ -2103,23 +2072,21 @@ namespace constraints_model_namespace {
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream*
-               pstream = nullptr) const
-      {
+               pstream = nullptr) const {
         Eigen::Matrix<int,-1,1> params_i;
         return log_prob_impl<propto__, jacobian__>(params_r, params_i,
                  pstream);
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
-               std::ostream* pstream = nullptr) const
-      {
-        return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+               std::ostream* pstream = nullptr) const {
+        return log_prob_impl<propto__, jacobian__>(params_r, params_i,
+                 pstream);
       }
       inline void
       transform_inits(const stan::io::var_context& context,
                       Eigen::Matrix<double,-1,1>& params_r, std::ostream*
-                      pstream = nullptr) const final
-      {
+                      pstream = nullptr) const final {
         std::vector<double> params_r_vec(params_r.size());
         std::vector<int> params_i;
         transform_inits(context, params_i, params_r_vec, pstream);
@@ -2129,8 +2096,7 @@ namespace constraints_model_namespace {
       inline void
       transform_inits(const stan::io::var_context& context, std::vector<int>&
                       params_i, std::vector<double>& vars, std::ostream*
-                      pstream__ = nullptr) const
-      {
+                      pstream__ = nullptr) const {
         constexpr std::array<const char*, 22> names__{"high_low_est", "b",
                                                        "h", "ar", "ma",
                                                        "phi_beta", "sigma2",
@@ -2164,7 +2130,7 @@ namespace constraints_model_namespace {
         std::vector<double> params_r_flat__(num_constrained_params__);
         Eigen::Index size_iter__ = 0;
         Eigen::Index flat_iter__ = 0;
-        for(auto &&param_name__: names__) {
+        for(auto&& param_name__: names__) {
           const auto param_vec__ = context.vals_r(param_name__);
           for(Eigen::Index i = 0; i <
               constrain_param_sizes__[size_iter__]; ++i) {
@@ -2181,13 +2147,11 @@ namespace constraints_model_namespace {
 // Boilerplate
 stan::model::model_base&
 new_model(stan::io::var_context& data_context, unsigned int seed,
-          std::ostream* msg_stream)
-{
+          std::ostream* msg_stream) {
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
-stan::math::profile_map& get_stan_profile_data()
-{
+stan::math::profile_map& get_stan_profile_data() {
   return constraints_model_namespace::profiles__;
 }
 #endif
@@ -2243,12 +2207,10 @@ namespace deep_dependence_model_namespace {
             locations_array__[current_statement__]);
         }
         num_params_r__ = (10 * 10);}
-      inline std::string model_name() const final
-      {
+      inline std::string model_name() const final {
         return "deep_dependence_model";
       }
-      inline std::vector<std::string> model_compile_info() const noexcept
-      {
+      inline std::vector<std::string> model_compile_info() const noexcept {
         return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
                  "stancflags = -fsoa --print-cpp"};
       }
@@ -2258,8 +2220,7 @@ namespace deep_dependence_model_namespace {
                 VecI>* = nullptr>
       inline stan::scalar_type_t<VecR>
       log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
-                    pstream__ = nullptr) const
-      {
+                    pstream__ = nullptr) const {
         using T__ = stan::scalar_type_t<VecR>;
         using local_scalar_t__ = T__;
         T__ lp__(0.0);
@@ -2354,8 +2315,7 @@ namespace deep_dependence_model_namespace {
                        VecVar& vars__, const bool
                        emit_transformed_parameters__ = true, const bool
                        emit_generated_quantities__ = true, std::ostream*
-                       pstream__ = nullptr) const
-      {
+                       pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -2472,8 +2432,7 @@ namespace deep_dependence_model_namespace {
                 VecI>* = nullptr>
       inline void
       transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar&
-                           vars__, std::ostream* pstream__ = nullptr) const
-      {
+                           vars__, std::ostream* pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -2500,13 +2459,11 @@ namespace deep_dependence_model_namespace {
             locations_array__[current_statement__]);
         }
       }
-      inline void get_param_names(std::vector<std::string>& names__) const
-      {
+      inline void get_param_names(std::vector<std::string>& names__) const {
         names__ = std::vector<std::string>{"X_p", "X_tp1", "X_tp2", "X_tp3",
                     "X_tp4", "X_tp5", "X_tp6", "X_tp7"};
       }
-      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
-      {
+      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
         dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
                                                      static_cast<size_t>(10),
                                                      static_cast<size_t>(10)},
@@ -2528,8 +2485,7 @@ namespace deep_dependence_model_namespace {
       inline void
       constrained_param_names(std::vector<std::string>& param_names__, bool
                               emit_transformed_parameters__ = true, bool
-                              emit_generated_quantities__ = true) const final
-      {
+                              emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
             param_names__.emplace_back(std::string() + "X_p" + '.' +
@@ -2591,8 +2547,7 @@ namespace deep_dependence_model_namespace {
       inline void
       unconstrained_param_names(std::vector<std::string>& param_names__, bool
                                 emit_transformed_parameters__ = true, bool
-                                emit_generated_quantities__ = true) const final
-      {
+                                emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
             param_names__.emplace_back(std::string() + "X_p" + '.' +
@@ -2651,12 +2606,10 @@ namespace deep_dependence_model_namespace {
           }
         
       }
-      inline std::string get_constrained_sizedtypes() const
-      {
+      inline std::string get_constrained_sizedtypes() const {
         return std::string("[{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"X_tp1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp3\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp4\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp5\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp6\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp7\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
       }
-      inline std::string get_unconstrained_sizedtypes() const
-      {
+      inline std::string get_unconstrained_sizedtypes() const {
         return std::string("[{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"X_tp1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp3\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp4\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp5\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp6\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp7\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
       }
       // Begin method overload boilerplate
@@ -2665,8 +2618,7 @@ namespace deep_dependence_model_namespace {
                   Eigen::Matrix<double,-1,1>& vars, const bool
                   emit_transformed_parameters = true, const bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = (10 * 10);
         const size_t num_transformed = emit_transformed_parameters *
           ((((((((10 * 10) + (10 * 10)) + (10 * 10)) + (10 * 10)) + (10 *
@@ -2685,8 +2637,7 @@ namespace deep_dependence_model_namespace {
                   std::vector<int>& params_i, std::vector<double>& vars, bool
                   emit_transformed_parameters = true, bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = (10 * 10);
         const size_t num_transformed = emit_transformed_parameters *
           ((((((((10 * 10) + (10 * 10)) + (10 * 10)) + (10 * 10)) + (10 *
@@ -2701,23 +2652,21 @@ namespace deep_dependence_model_namespace {
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream*
-               pstream = nullptr) const
-      {
+               pstream = nullptr) const {
         Eigen::Matrix<int,-1,1> params_i;
         return log_prob_impl<propto__, jacobian__>(params_r, params_i,
                  pstream);
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
-               std::ostream* pstream = nullptr) const
-      {
-        return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+               std::ostream* pstream = nullptr) const {
+        return log_prob_impl<propto__, jacobian__>(params_r, params_i,
+                 pstream);
       }
       inline void
       transform_inits(const stan::io::var_context& context,
                       Eigen::Matrix<double,-1,1>& params_r, std::ostream*
-                      pstream = nullptr) const final
-      {
+                      pstream = nullptr) const final {
         std::vector<double> params_r_vec(params_r.size());
         std::vector<int> params_i;
         transform_inits(context, params_i, params_r_vec, pstream);
@@ -2727,8 +2676,7 @@ namespace deep_dependence_model_namespace {
       inline void
       transform_inits(const stan::io::var_context& context, std::vector<int>&
                       params_i, std::vector<double>& vars, std::ostream*
-                      pstream__ = nullptr) const
-      {
+                      pstream__ = nullptr) const {
         constexpr std::array<const char*, 1> names__{"X_p"};
         const std::array<Eigen::Index, 1> constrain_param_sizes__{(10 * 10)};
         const auto num_constrained_params__ =
@@ -2737,7 +2685,7 @@ namespace deep_dependence_model_namespace {
         std::vector<double> params_r_flat__(num_constrained_params__);
         Eigen::Index size_iter__ = 0;
         Eigen::Index flat_iter__ = 0;
-        for(auto &&param_name__: names__) {
+        for(auto&& param_name__: names__) {
           const auto param_vec__ = context.vals_r(param_name__);
           for(Eigen::Index i = 0; i <
               constrain_param_sizes__[size_iter__]; ++i) {
@@ -2755,13 +2703,11 @@ using stan_model = deep_dependence_model_namespace::deep_dependence_model;
 // Boilerplate
 stan::model::model_base&
 new_model(stan::io::var_context& data_context, unsigned int seed,
-          std::ostream* msg_stream)
-{
+          std::ostream* msg_stream) {
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
-stan::math::profile_map& get_stan_profile_data()
-{
+stan::math::profile_map& get_stan_profile_data() {
   return deep_dependence_model_namespace::profiles__;
 }
 #endif
@@ -2895,14 +2841,11 @@ namespace indexing_model_namespace {
                                   stan::is_vt_not_complex<T0__>>* = nullptr>
     Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
     operator()(const T0__& A, std::ostream* pstream__) const;
-    
   };
   struct mask_fun_functor__ {
     int operator()(const int& i, std::ostream* pstream__) const;
-    
   };
-  int mask_fun(const int& i, std::ostream* pstream__)
-  {
+  int mask_fun(const int& i, std::ostream* pstream__) {
     using local_scalar_t__ = double;
     int current_statement__ = 0;
     static constexpr bool propto__ = true;
@@ -2919,16 +2862,14 @@ namespace indexing_model_namespace {
     }
   }
   int
-  mask_fun_functor__::operator()(const int& i, std::ostream* pstream__) const
-  {
+  mask_fun_functor__::operator()(const int& i, std::ostream* pstream__) const {
     return mask_fun(i, pstream__);
   }
   template <typename T0__,
             stan::require_all_t<stan::is_col_vector<T0__>,
                                 stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
-  udf_fun(const T0__& A_arg__, std::ostream* pstream__)
-  {
+  udf_fun(const T0__& A_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
     int current_statement__ = 0;
     const auto& A = stan::math::to_ref(A_arg__);
@@ -2949,8 +2890,7 @@ namespace indexing_model_namespace {
             stan::require_all_t<stan::is_col_vector<T0__>,
                                 stan::is_vt_not_complex<T0__>>*>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
-  udf_fun_functor__::operator()(const T0__& A, std::ostream* pstream__) const
-  {
+  udf_fun_functor__::operator()(const T0__& A, std::ostream* pstream__) const {
     return udf_fun(A, pstream__);
   }
   class indexing_model final : public model_base_crtp<indexing_model>{
@@ -3159,12 +3099,10 @@ namespace indexing_model_namespace {
         num_params_r__ = 1 + M + (N * M) + (10 * N) + (N * M) + N + (N * M) +
           N + N + N + (N * M) + M + M + M + M + (N * M) + (N * M) + (N * M) +
           (N * M) + (N * M) + (N * M);}
-      inline std::string model_name() const final
-      {
+      inline std::string model_name() const final {
         return "indexing_model";
       }
-      inline std::vector<std::string> model_compile_info() const noexcept
-      {
+      inline std::vector<std::string> model_compile_info() const noexcept {
         return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
                  "stancflags = -fsoa --print-cpp"};
       }
@@ -3174,8 +3112,7 @@ namespace indexing_model_namespace {
                 VecI>* = nullptr>
       inline stan::scalar_type_t<VecR>
       log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
-                    pstream__ = nullptr) const
-      {
+                    pstream__ = nullptr) const {
         using T__ = stan::scalar_type_t<VecR>;
         using local_scalar_t__ = T__;
         T__ lp__(0.0);
@@ -3695,8 +3632,7 @@ p_aos_mat_pass_func_outer_single_indexed2))",
                        VecVar& vars__, const bool
                        emit_transformed_parameters__ = true, const bool
                        emit_generated_quantities__ = true, std::ostream*
-                       pstream__ = nullptr) const
-      {
+                       pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -3954,8 +3890,7 @@ p_aos_mat_pass_func_outer_single_indexed2))",
                 VecI>* = nullptr>
       inline void
       transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar&
-                           vars__, std::ostream* pstream__ = nullptr) const
-      {
+                           vars__, std::ostream* pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -4198,8 +4133,7 @@ p_aos_mat_pass_func_outer_single_indexed2))",
             locations_array__[current_statement__]);
         }
       }
-      inline void get_param_names(std::vector<std::string>& names__) const
-      {
+      inline void get_param_names(std::vector<std::string>& names__) const {
         names__ = std::vector<std::string>{"alpha", "p_soa_vec_v",
                     "p_soa_mat", "p_soa_arr_vec_v", "p_soa_mat_uni_col_idx",
                     "p_soa_vec_uni_idx", "p_soa_loop_mat_uni_col_idx",
@@ -4218,8 +4152,7 @@ p_aos_mat_pass_func_outer_single_indexed2))",
                     "tp_aos_fail_func_vec_v",
                     "tp_aos_fail_assign_from_top_idx"};
       }
-      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
-      {
+      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
         dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
                     std::vector<size_t>{static_cast<size_t>(M)},
                     std::vector<size_t>{static_cast<size_t>(N),
@@ -4261,8 +4194,7 @@ p_aos_mat_pass_func_outer_single_indexed2))",
       inline void
       constrained_param_names(std::vector<std::string>& param_names__, bool
                               emit_transformed_parameters__ = true, bool
-                              emit_generated_quantities__ = true) const final
-      {
+                              emit_generated_quantities__ = true) const final {
         param_names__.emplace_back(std::string() + "alpha");
         for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
           param_names__.emplace_back(std::string() + "p_soa_vec_v" + '.' +
@@ -4406,8 +4338,7 @@ p_aos_mat_pass_func_outer_single_indexed2))",
       inline void
       unconstrained_param_names(std::vector<std::string>& param_names__, bool
                                 emit_transformed_parameters__ = true, bool
-                                emit_generated_quantities__ = true) const final
-      {
+                                emit_generated_quantities__ = true) const final {
         param_names__.emplace_back(std::string() + "alpha");
         for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
           param_names__.emplace_back(std::string() + "p_soa_vec_v" + '.' +
@@ -4548,12 +4479,10 @@ p_aos_mat_pass_func_outer_single_indexed2))",
           }
         
       }
-      inline std::string get_constrained_sizedtypes() const
-      {
+      inline std::string get_constrained_sizedtypes() const {
         return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_arr_vec_v\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"p_soa_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_lhs_loop_mul\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_rhs_loop_mul\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_used_with_aos_in_excluded_fun\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_multi_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_assign_to_aos\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_tp_fails_func\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_vec_v_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_fail_assign_from_top_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_mat_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_pass_func_outer_single_indexed1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_pass_func_outer_single_indexed2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_fail_uni_uni_idx1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_fail_uni_uni_idx2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_aos\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_soa_single_idx_uninit\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_func_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_assign_from_top_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"}]");
       }
-      inline std::string get_unconstrained_sizedtypes() const
-      {
+      inline std::string get_unconstrained_sizedtypes() const {
         return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_arr_vec_v\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"p_soa_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_lhs_loop_mul\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_rhs_loop_mul\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_used_with_aos_in_excluded_fun\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_multi_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_assign_to_aos\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_tp_fails_func\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_vec_v_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_fail_assign_from_top_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_mat_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_pass_func_outer_single_indexed1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_pass_func_outer_single_indexed2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_fail_uni_uni_idx1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_fail_uni_uni_idx2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_aos\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_soa_single_idx_uninit\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_func_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_assign_from_top_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"}]");
       }
       // Begin method overload boilerplate
@@ -4562,8 +4491,7 @@ p_aos_mat_pass_func_outer_single_indexed2))",
                   Eigen::Matrix<double,-1,1>& vars, const bool
                   emit_transformed_parameters = true, const bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = ((((((((((((((((((((1 + M) + (N * M)) +
           (10 * N)) + (N * M)) + N) + (N * M)) + N) + N) + N) + (N * M)) + M)
           + M) + M) + M) + (N * M)) + (N * M)) + (N * M)) + (N * M)) + (N *
@@ -4584,8 +4512,7 @@ p_aos_mat_pass_func_outer_single_indexed2))",
                   std::vector<int>& params_i, std::vector<double>& vars, bool
                   emit_transformed_parameters = true, bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = ((((((((((((((((((((1 + M) + (N * M)) +
           (10 * N)) + (N * M)) + N) + (N * M)) + N) + N) + N) + (N * M)) + M)
           + M) + M) + M) + (N * M)) + (N * M)) + (N * M)) + (N * M)) + (N *
@@ -4602,23 +4529,21 @@ p_aos_mat_pass_func_outer_single_indexed2))",
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream*
-               pstream = nullptr) const
-      {
+               pstream = nullptr) const {
         Eigen::Matrix<int,-1,1> params_i;
         return log_prob_impl<propto__, jacobian__>(params_r, params_i,
                  pstream);
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
-               std::ostream* pstream = nullptr) const
-      {
-        return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+               std::ostream* pstream = nullptr) const {
+        return log_prob_impl<propto__, jacobian__>(params_r, params_i,
+                 pstream);
       }
       inline void
       transform_inits(const stan::io::var_context& context,
                       Eigen::Matrix<double,-1,1>& params_r, std::ostream*
-                      pstream = nullptr) const final
-      {
+                      pstream = nullptr) const final {
         std::vector<double> params_r_vec(params_r.size());
         std::vector<int> params_i;
         transform_inits(context, params_i, params_r_vec, pstream);
@@ -4628,8 +4553,7 @@ p_aos_mat_pass_func_outer_single_indexed2))",
       inline void
       transform_inits(const stan::io::var_context& context, std::vector<int>&
                       params_i, std::vector<double>& vars, std::ostream*
-                      pstream__ = nullptr) const
-      {
+                      pstream__ = nullptr) const {
         constexpr std::array<const char*, 21> names__{"alpha", "p_soa_vec_v",
                                                        "p_soa_mat",
                                                        "p_soa_arr_vec_v",
@@ -4670,7 +4594,7 @@ p_aos_mat_pass_func_outer_single_indexed2))",
         std::vector<double> params_r_flat__(num_constrained_params__);
         Eigen::Index size_iter__ = 0;
         Eigen::Index flat_iter__ = 0;
-        for(auto &&param_name__: names__) {
+        for(auto&& param_name__: names__) {
           const auto param_vec__ = context.vals_r(param_name__);
           for(Eigen::Index i = 0; i <
               constrain_param_sizes__[size_iter__]; ++i) {
@@ -4687,13 +4611,11 @@ p_aos_mat_pass_func_outer_single_indexed2))",
 // Boilerplate
 stan::model::model_base&
 new_model(stan::io::var_context& data_context, unsigned int seed,
-          std::ostream* msg_stream)
-{
+          std::ostream* msg_stream) {
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
-stan::math::profile_map& get_stan_profile_data()
-{
+stan::math::profile_map& get_stan_profile_data() {
   return indexing_model_namespace::profiles__;
 }
 #endif
@@ -4773,12 +4695,10 @@ namespace indexing2_model_namespace {
             locations_array__[current_statement__]);
         }
         num_params_r__ = 1 + 10;}
-      inline std::string model_name() const final
-      {
+      inline std::string model_name() const final {
         return "indexing2_model";
       }
-      inline std::vector<std::string> model_compile_info() const noexcept
-      {
+      inline std::vector<std::string> model_compile_info() const noexcept {
         return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
                  "stancflags = -fsoa --print-cpp"};
       }
@@ -4788,8 +4708,7 @@ namespace indexing2_model_namespace {
                 VecI>* = nullptr>
       inline stan::scalar_type_t<VecR>
       log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
-                    pstream__ = nullptr) const
-      {
+                    pstream__ = nullptr) const {
         using T__ = stan::scalar_type_t<VecR>;
         using local_scalar_t__ = T__;
         T__ lp__(0.0);
@@ -4879,8 +4798,7 @@ namespace indexing2_model_namespace {
                        VecVar& vars__, const bool
                        emit_transformed_parameters__ = true, const bool
                        emit_generated_quantities__ = true, std::ostream*
-                       pstream__ = nullptr) const
-      {
+                       pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -4935,8 +4853,7 @@ namespace indexing2_model_namespace {
                 VecI>* = nullptr>
       inline void
       transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar&
-                           vars__, std::ostream* pstream__ = nullptr) const
-      {
+                           vars__, std::ostream* pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -4964,20 +4881,17 @@ namespace indexing2_model_namespace {
             locations_array__[current_statement__]);
         }
       }
-      inline void get_param_names(std::vector<std::string>& names__) const
-      {
+      inline void get_param_names(std::vector<std::string>& names__) const {
         names__ = std::vector<std::string>{"alpha", "p_aos_loop_single_idx"};
       }
-      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
-      {
+      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
         dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
                     std::vector<size_t>{static_cast<size_t>(10)}};
       }
       inline void
       constrained_param_names(std::vector<std::string>& param_names__, bool
                               emit_transformed_parameters__ = true, bool
-                              emit_generated_quantities__ = true) const final
-      {
+                              emit_generated_quantities__ = true) const final {
         param_names__.emplace_back(std::string() + "alpha");
         for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           param_names__.emplace_back(std::string() + "p_aos_loop_single_idx"
@@ -4997,8 +4911,7 @@ namespace indexing2_model_namespace {
       inline void
       unconstrained_param_names(std::vector<std::string>& param_names__, bool
                                 emit_transformed_parameters__ = true, bool
-                                emit_generated_quantities__ = true) const final
-      {
+                                emit_generated_quantities__ = true) const final {
         param_names__.emplace_back(std::string() + "alpha");
         for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           param_names__.emplace_back(std::string() + "p_aos_loop_single_idx"
@@ -5015,12 +4928,10 @@ namespace indexing2_model_namespace {
           }
         
       }
-      inline std::string get_constrained_sizedtypes() const
-      {
+      inline std::string get_constrained_sizedtypes() const {
         return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_single_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(10) + "},\"block\":\"parameters\"}]");
       }
-      inline std::string get_unconstrained_sizedtypes() const
-      {
+      inline std::string get_unconstrained_sizedtypes() const {
         return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_single_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(10) + "},\"block\":\"parameters\"}]");
       }
       // Begin method overload boilerplate
@@ -5029,8 +4940,7 @@ namespace indexing2_model_namespace {
                   Eigen::Matrix<double,-1,1>& vars, const bool
                   emit_transformed_parameters = true, const bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = (1 + 10);
         const size_t num_transformed = emit_transformed_parameters * (0);
         const size_t num_gen_quantities = emit_generated_quantities * (0);
@@ -5047,8 +4957,7 @@ namespace indexing2_model_namespace {
                   std::vector<int>& params_i, std::vector<double>& vars, bool
                   emit_transformed_parameters = true, bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = (1 + 10);
         const size_t num_transformed = emit_transformed_parameters * (0);
         const size_t num_gen_quantities = emit_generated_quantities * (0);
@@ -5061,23 +4970,21 @@ namespace indexing2_model_namespace {
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream*
-               pstream = nullptr) const
-      {
+               pstream = nullptr) const {
         Eigen::Matrix<int,-1,1> params_i;
         return log_prob_impl<propto__, jacobian__>(params_r, params_i,
                  pstream);
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
-               std::ostream* pstream = nullptr) const
-      {
-        return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+               std::ostream* pstream = nullptr) const {
+        return log_prob_impl<propto__, jacobian__>(params_r, params_i,
+                 pstream);
       }
       inline void
       transform_inits(const stan::io::var_context& context,
                       Eigen::Matrix<double,-1,1>& params_r, std::ostream*
-                      pstream = nullptr) const final
-      {
+                      pstream = nullptr) const final {
         std::vector<double> params_r_vec(params_r.size());
         std::vector<int> params_i;
         transform_inits(context, params_i, params_r_vec, pstream);
@@ -5087,8 +4994,7 @@ namespace indexing2_model_namespace {
       inline void
       transform_inits(const stan::io::var_context& context, std::vector<int>&
                       params_i, std::vector<double>& vars, std::ostream*
-                      pstream__ = nullptr) const
-      {
+                      pstream__ = nullptr) const {
         constexpr std::array<const char*, 2> names__{"alpha",
                                                       "p_aos_loop_single_idx"};
         const std::array<Eigen::Index, 2> constrain_param_sizes__{1, 10};
@@ -5098,7 +5004,7 @@ namespace indexing2_model_namespace {
         std::vector<double> params_r_flat__(num_constrained_params__);
         Eigen::Index size_iter__ = 0;
         Eigen::Index flat_iter__ = 0;
-        for(auto &&param_name__: names__) {
+        for(auto&& param_name__: names__) {
           const auto param_vec__ = context.vals_r(param_name__);
           for(Eigen::Index i = 0; i <
               constrain_param_sizes__[size_iter__]; ++i) {
@@ -5115,13 +5021,11 @@ namespace indexing2_model_namespace {
 // Boilerplate
 stan::model::model_base&
 new_model(stan::io::var_context& data_context, unsigned int seed,
-          std::ostream* msg_stream)
-{
+          std::ostream* msg_stream) {
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
-stan::math::profile_map& get_stan_profile_data()
-{
+stan::math::profile_map& get_stan_profile_data() {
   return indexing2_model_namespace::profiles__;
 }
 #endif
@@ -5151,7 +5055,6 @@ namespace reductions_allowed_model_namespace {
                                   stan::is_vt_not_complex<T0__>>* = nullptr>
     Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
     operator()(const T0__& x, std::ostream* pstream__) const;
-    
   };
   struct okay_reduction_functor__ {
     template <typename T0__, typename T1__,
@@ -5160,14 +5063,12 @@ namespace reductions_allowed_model_namespace {
                                   stan::is_vt_not_complex<T1__>>* = nullptr>
     Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,-1>
     operator()(const T0__& sum_x, const T1__& y, std::ostream* pstream__) const;
-    
   };
   template <typename T0__,
             stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                                 stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
-  nono_func(const T0__& x_arg__, std::ostream* pstream__)
-  {
+  nono_func(const T0__& x_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
     int current_statement__ = 0;
     const auto& x = stan::math::to_ref(x_arg__);
@@ -5188,8 +5089,7 @@ namespace reductions_allowed_model_namespace {
             stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                                 stan::is_vt_not_complex<T0__>>*>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
-  nono_func_functor__::operator()(const T0__& x, std::ostream* pstream__) const
-  {
+  nono_func_functor__::operator()(const T0__& x, std::ostream* pstream__) const {
     return nono_func(x, pstream__);
   }
   template <typename T0__, typename T1__,
@@ -5198,8 +5098,7 @@ namespace reductions_allowed_model_namespace {
                                 stan::is_vt_not_complex<T1__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,-1>
   okay_reduction(const T0__& sum_x, const T1__& y_arg__, std::ostream*
-                 pstream__)
-  {
+                 pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__,
                                stan::base_type_t<T1__>>;
     int current_statement__ = 0;
@@ -5223,8 +5122,7 @@ namespace reductions_allowed_model_namespace {
                                 stan::is_vt_not_complex<T1__>>*>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,-1>
   okay_reduction_functor__::operator()(const T0__& sum_x, const T1__& y,
-                                       std::ostream* pstream__) const
-  {
+                                       std::ostream* pstream__) const {
     return okay_reduction(sum_x, y, pstream__);
   }
   class reductions_allowed_model final : public model_base_crtp<reductions_allowed_model>{
@@ -5263,12 +5161,10 @@ namespace reductions_allowed_model_namespace {
             locations_array__[current_statement__]);
         }
         num_params_r__ = (5 * 10) + (5 * 10) + (5 * 10);}
-      inline std::string model_name() const final
-      {
+      inline std::string model_name() const final {
         return "reductions_allowed_model";
       }
-      inline std::vector<std::string> model_compile_info() const noexcept
-      {
+      inline std::vector<std::string> model_compile_info() const noexcept {
         return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
                  "stancflags = -fsoa --print-cpp"};
       }
@@ -5278,8 +5174,7 @@ namespace reductions_allowed_model_namespace {
                 VecI>* = nullptr>
       inline stan::scalar_type_t<VecR>
       log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
-                    pstream__ = nullptr) const
-      {
+                    pstream__ = nullptr) const {
         using T__ = stan::scalar_type_t<VecR>;
         using local_scalar_t__ = T__;
         T__ lp__(0.0);
@@ -5362,8 +5257,7 @@ namespace reductions_allowed_model_namespace {
                        VecVar& vars__, const bool
                        emit_transformed_parameters__ = true, const bool
                        emit_generated_quantities__ = true, std::ostream*
-                       pstream__ = nullptr) const
-      {
+                       pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -5460,8 +5354,7 @@ namespace reductions_allowed_model_namespace {
                 VecI>* = nullptr>
       inline void
       transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar&
-                           vars__, std::ostream* pstream__ = nullptr) const
-      {
+                           vars__, std::ostream* pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -5510,14 +5403,12 @@ namespace reductions_allowed_model_namespace {
             locations_array__[current_statement__]);
         }
       }
-      inline void get_param_names(std::vector<std::string>& names__) const
-      {
+      inline void get_param_names(std::vector<std::string>& names__) const {
         names__ = std::vector<std::string>{"soa_x", "aos_x", "aos_y",
                     "tp_real_from_soa", "tp_matrix_aos_from_mix",
                     "tp_matrix_from_udf_reduced_soa"};
       }
-      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
-      {
+      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
         dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
                                                      static_cast<size_t>(5),
                                                      static_cast<size_t>(10)},
@@ -5534,8 +5425,7 @@ namespace reductions_allowed_model_namespace {
       inline void
       constrained_param_names(std::vector<std::string>& param_names__, bool
                               emit_transformed_parameters__ = true, bool
-                              emit_generated_quantities__ = true) const final
-      {
+                              emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
             param_names__.emplace_back(std::string() + "soa_x" + '.' +
@@ -5582,8 +5472,7 @@ namespace reductions_allowed_model_namespace {
       inline void
       unconstrained_param_names(std::vector<std::string>& param_names__, bool
                                 emit_transformed_parameters__ = true, bool
-                                emit_generated_quantities__ = true) const final
-      {
+                                emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
             param_names__.emplace_back(std::string() + "soa_x" + '.' +
@@ -5627,12 +5516,10 @@ namespace reductions_allowed_model_namespace {
           }
         
       }
-      inline std::string get_constrained_sizedtypes() const
-      {
+      inline std::string get_constrained_sizedtypes() const {
         return std::string("[{\"name\":\"soa_x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"aos_x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"aos_y\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_soa\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_matrix_aos_from_mix\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_matrix_from_udf_reduced_soa\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
       }
-      inline std::string get_unconstrained_sizedtypes() const
-      {
+      inline std::string get_unconstrained_sizedtypes() const {
         return std::string("[{\"name\":\"soa_x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"aos_x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"aos_y\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_soa\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_matrix_aos_from_mix\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_matrix_from_udf_reduced_soa\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
       }
       // Begin method overload boilerplate
@@ -5641,8 +5528,7 @@ namespace reductions_allowed_model_namespace {
                   Eigen::Matrix<double,-1,1>& vars, const bool
                   emit_transformed_parameters = true, const bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = (((5 * 10) + (5 * 10)) + (5 * 10));
         const size_t num_transformed = emit_transformed_parameters * (((1 +
           (5 * 10)) + (5 * 10)));
@@ -5660,8 +5546,7 @@ namespace reductions_allowed_model_namespace {
                   std::vector<int>& params_i, std::vector<double>& vars, bool
                   emit_transformed_parameters = true, bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = (((5 * 10) + (5 * 10)) + (5 * 10));
         const size_t num_transformed = emit_transformed_parameters * (((1 +
           (5 * 10)) + (5 * 10)));
@@ -5675,23 +5560,21 @@ namespace reductions_allowed_model_namespace {
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream*
-               pstream = nullptr) const
-      {
+               pstream = nullptr) const {
         Eigen::Matrix<int,-1,1> params_i;
         return log_prob_impl<propto__, jacobian__>(params_r, params_i,
                  pstream);
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
-               std::ostream* pstream = nullptr) const
-      {
-        return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+               std::ostream* pstream = nullptr) const {
+        return log_prob_impl<propto__, jacobian__>(params_r, params_i,
+                 pstream);
       }
       inline void
       transform_inits(const stan::io::var_context& context,
                       Eigen::Matrix<double,-1,1>& params_r, std::ostream*
-                      pstream = nullptr) const final
-      {
+                      pstream = nullptr) const final {
         std::vector<double> params_r_vec(params_r.size());
         std::vector<int> params_i;
         transform_inits(context, params_i, params_r_vec, pstream);
@@ -5701,9 +5584,9 @@ namespace reductions_allowed_model_namespace {
       inline void
       transform_inits(const stan::io::var_context& context, std::vector<int>&
                       params_i, std::vector<double>& vars, std::ostream*
-                      pstream__ = nullptr) const
-      {
-        constexpr std::array<const char*, 3> names__{"soa_x", "aos_x", "aos_y"};
+                      pstream__ = nullptr) const {
+        constexpr std::array<const char*, 3> names__{"soa_x", "aos_x",
+                                                      "aos_y"};
         const std::array<Eigen::Index, 3> constrain_param_sizes__{(5 * 10),
                                                                    (5 * 10),
                                                                    (5 * 10)};
@@ -5713,7 +5596,7 @@ namespace reductions_allowed_model_namespace {
         std::vector<double> params_r_flat__(num_constrained_params__);
         Eigen::Index size_iter__ = 0;
         Eigen::Index flat_iter__ = 0;
-        for(auto &&param_name__: names__) {
+        for(auto&& param_name__: names__) {
           const auto param_vec__ = context.vals_r(param_name__);
           for(Eigen::Index i = 0; i <
               constrain_param_sizes__[size_iter__]; ++i) {
@@ -5731,13 +5614,11 @@ using stan_model = reductions_allowed_model_namespace::reductions_allowed_model;
 // Boilerplate
 stan::model::model_base&
 new_model(stan::io::var_context& data_context, unsigned int seed,
-          std::ostream* msg_stream)
-{
+          std::ostream* msg_stream) {
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
-stan::math::profile_map& get_stan_profile_data()
-{
+stan::math::profile_map& get_stan_profile_data() {
   return reductions_allowed_model_namespace::profiles__;
 }
 #endif
@@ -5768,14 +5649,11 @@ namespace return_types_and_udfs_demotes_model_namespace {
                                   stan::is_vt_not_complex<T0__>>* = nullptr>
     Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
     operator()(const T0__& A, std::ostream* pstream__) const;
-    
   };
   struct empty_user_func_functor__ {
     Eigen::Matrix<double,-1,-1> operator()(std::ostream* pstream__) const;
-    
   };
-  Eigen::Matrix<double,-1,-1> empty_user_func(std::ostream* pstream__)
-  {
+  Eigen::Matrix<double,-1,-1> empty_user_func(std::ostream* pstream__) {
     using local_scalar_t__ = double;
     int current_statement__ = 0;
     static constexpr bool propto__ = true;
@@ -5794,16 +5672,14 @@ namespace return_types_and_udfs_demotes_model_namespace {
     }
   }
   Eigen::Matrix<double,-1,-1>
-  empty_user_func_functor__::operator()(std::ostream* pstream__) const
-  {
+  empty_user_func_functor__::operator()(std::ostream* pstream__) const {
     return empty_user_func(pstream__);
   }
   template <typename T0__,
             stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                                 stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
-  mat_ret_user_func(const T0__& A_arg__, std::ostream* pstream__)
-  {
+  mat_ret_user_func(const T0__& A_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
     int current_statement__ = 0;
     const auto& A = stan::math::to_ref(A_arg__);
@@ -5825,8 +5701,7 @@ namespace return_types_and_udfs_demotes_model_namespace {
                                 stan::is_vt_not_complex<T0__>>*>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
   mat_ret_user_func_functor__::operator()(const T0__& A, std::ostream*
-                                          pstream__) const
-  {
+                                          pstream__) const {
     return mat_ret_user_func(A, pstream__);
   }
   class return_types_and_udfs_demotes_model final : public model_base_crtp<return_types_and_udfs_demotes_model>{
@@ -5859,12 +5734,10 @@ namespace return_types_and_udfs_demotes_model_namespace {
             locations_array__[current_statement__]);
         }
         num_params_r__ = (10 * 10) + (10 * 10);}
-      inline std::string model_name() const final
-      {
+      inline std::string model_name() const final {
         return "return_types_and_udfs_demotes_model";
       }
-      inline std::vector<std::string> model_compile_info() const noexcept
-      {
+      inline std::vector<std::string> model_compile_info() const noexcept {
         return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
                  "stancflags = -fsoa --print-cpp"};
       }
@@ -5874,8 +5747,7 @@ namespace return_types_and_udfs_demotes_model_namespace {
                 VecI>* = nullptr>
       inline stan::scalar_type_t<VecR>
       log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
-                    pstream__ = nullptr) const
-      {
+                    pstream__ = nullptr) const {
         using T__ = stan::scalar_type_t<VecR>;
         using local_scalar_t__ = T__;
         T__ lp__(0.0);
@@ -5963,8 +5835,7 @@ namespace return_types_and_udfs_demotes_model_namespace {
                        VecVar& vars__, const bool
                        emit_transformed_parameters__ = true, const bool
                        emit_generated_quantities__ = true, std::ostream*
-                       pstream__ = nullptr) const
-      {
+                       pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -6068,8 +5939,7 @@ namespace return_types_and_udfs_demotes_model_namespace {
                 VecI>* = nullptr>
       inline void
       transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar&
-                           vars__, std::ostream* pstream__ = nullptr) const
-      {
+                           vars__, std::ostream* pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -6109,15 +5979,13 @@ namespace return_types_and_udfs_demotes_model_namespace {
             locations_array__[current_statement__]);
         }
       }
-      inline void get_param_names(std::vector<std::string>& names__) const
-      {
+      inline void get_param_names(std::vector<std::string>& names__) const {
         names__ = std::vector<std::string>{"row_soa", "udf_input_aos",
                     "user_func_aos", "empty_user_func_aos",
                     "inner_empty_user_func_aos", "int_aos_mul_aos",
                     "mul_two_aos"};
       }
-      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
-      {
+      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
         dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
                                                      static_cast<size_t>(10),
                                                      static_cast<size_t>(10)},
@@ -6137,8 +6005,7 @@ namespace return_types_and_udfs_demotes_model_namespace {
       inline void
       constrained_param_names(std::vector<std::string>& param_names__, bool
                               emit_transformed_parameters__ = true, bool
-                              emit_generated_quantities__ = true) const final
-      {
+                              emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
             param_names__.emplace_back(std::string() + "row_soa" + '.' +
@@ -6199,8 +6066,7 @@ namespace return_types_and_udfs_demotes_model_namespace {
       inline void
       unconstrained_param_names(std::vector<std::string>& param_names__, bool
                                 emit_transformed_parameters__ = true, bool
-                                emit_generated_quantities__ = true) const final
-      {
+                                emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
             param_names__.emplace_back(std::string() + "row_soa" + '.' +
@@ -6258,12 +6124,10 @@ namespace return_types_and_udfs_demotes_model_namespace {
           }
         
       }
-      inline std::string get_constrained_sizedtypes() const
-      {
+      inline std::string get_constrained_sizedtypes() const {
         return std::string("[{\"name\":\"row_soa\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"udf_input_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"empty_user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"inner_empty_user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"int_aos_mul_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mul_two_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
       }
-      inline std::string get_unconstrained_sizedtypes() const
-      {
+      inline std::string get_unconstrained_sizedtypes() const {
         return std::string("[{\"name\":\"row_soa\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"udf_input_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"empty_user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"inner_empty_user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"int_aos_mul_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mul_two_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
       }
       // Begin method overload boilerplate
@@ -6272,8 +6136,7 @@ namespace return_types_and_udfs_demotes_model_namespace {
                   Eigen::Matrix<double,-1,1>& vars, const bool
                   emit_transformed_parameters = true, const bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = ((10 * 10) + (10 * 10));
         const size_t num_transformed = emit_transformed_parameters * ((((((10
           * 10) + (10 * 10)) + (10 * 10)) + (10 * 10)) + (10 * 10)));
@@ -6291,8 +6154,7 @@ namespace return_types_and_udfs_demotes_model_namespace {
                   std::vector<int>& params_i, std::vector<double>& vars, bool
                   emit_transformed_parameters = true, bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = ((10 * 10) + (10 * 10));
         const size_t num_transformed = emit_transformed_parameters * ((((((10
           * 10) + (10 * 10)) + (10 * 10)) + (10 * 10)) + (10 * 10)));
@@ -6306,23 +6168,21 @@ namespace return_types_and_udfs_demotes_model_namespace {
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream*
-               pstream = nullptr) const
-      {
+               pstream = nullptr) const {
         Eigen::Matrix<int,-1,1> params_i;
         return log_prob_impl<propto__, jacobian__>(params_r, params_i,
                  pstream);
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
-               std::ostream* pstream = nullptr) const
-      {
-        return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+               std::ostream* pstream = nullptr) const {
+        return log_prob_impl<propto__, jacobian__>(params_r, params_i,
+                 pstream);
       }
       inline void
       transform_inits(const stan::io::var_context& context,
                       Eigen::Matrix<double,-1,1>& params_r, std::ostream*
-                      pstream = nullptr) const final
-      {
+                      pstream = nullptr) const final {
         std::vector<double> params_r_vec(params_r.size());
         std::vector<int> params_i;
         transform_inits(context, params_i, params_r_vec, pstream);
@@ -6332,8 +6192,7 @@ namespace return_types_and_udfs_demotes_model_namespace {
       inline void
       transform_inits(const stan::io::var_context& context, std::vector<int>&
                       params_i, std::vector<double>& vars, std::ostream*
-                      pstream__ = nullptr) const
-      {
+                      pstream__ = nullptr) const {
         constexpr std::array<const char*, 2> names__{"row_soa",
                                                       "udf_input_aos"};
         const std::array<Eigen::Index, 2> constrain_param_sizes__{(10 * 10),
@@ -6344,7 +6203,7 @@ namespace return_types_and_udfs_demotes_model_namespace {
         std::vector<double> params_r_flat__(num_constrained_params__);
         Eigen::Index size_iter__ = 0;
         Eigen::Index flat_iter__ = 0;
-        for(auto &&param_name__: names__) {
+        for(auto&& param_name__: names__) {
           const auto param_vec__ = context.vals_r(param_name__);
           for(Eigen::Index i = 0; i <
               constrain_param_sizes__[size_iter__]; ++i) {
@@ -6362,13 +6221,11 @@ using stan_model = return_types_and_udfs_demotes_model_namespace::return_types_a
 // Boilerplate
 stan::model::model_base&
 new_model(stan::io::var_context& data_context, unsigned int seed,
-          std::ostream* msg_stream)
-{
+          std::ostream* msg_stream) {
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
-stan::math::profile_map& get_stan_profile_data()
-{
+stan::math::profile_map& get_stan_profile_data() {
   return return_types_and_udfs_demotes_model_namespace::profiles__;
 }
 #endif
@@ -6418,12 +6275,10 @@ namespace single_indexing_model_namespace {
             locations_array__[current_statement__]);
         }
         num_params_r__ = (10 * 10) + (10 * 10);}
-      inline std::string model_name() const final
-      {
+      inline std::string model_name() const final {
         return "single_indexing_model";
       }
-      inline std::vector<std::string> model_compile_info() const noexcept
-      {
+      inline std::vector<std::string> model_compile_info() const noexcept {
         return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
                  "stancflags = -fsoa --print-cpp"};
       }
@@ -6433,8 +6288,7 @@ namespace single_indexing_model_namespace {
                 VecI>* = nullptr>
       inline stan::scalar_type_t<VecR>
       log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
-                    pstream__ = nullptr) const
-      {
+                    pstream__ = nullptr) const {
         using T__ = stan::scalar_type_t<VecR>;
         using local_scalar_t__ = T__;
         T__ lp__(0.0);
@@ -6519,8 +6373,7 @@ namespace single_indexing_model_namespace {
                        VecVar& vars__, const bool
                        emit_transformed_parameters__ = true, const bool
                        emit_generated_quantities__ = true, std::ostream*
-                       pstream__ = nullptr) const
-      {
+                       pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -6608,8 +6461,7 @@ namespace single_indexing_model_namespace {
                 VecI>* = nullptr>
       inline void
       transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar&
-                           vars__, std::ostream* pstream__ = nullptr) const
-      {
+                           vars__, std::ostream* pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -6647,13 +6499,11 @@ namespace single_indexing_model_namespace {
             locations_array__[current_statement__]);
         }
       }
-      inline void get_param_names(std::vector<std::string>& names__) const
-      {
+      inline void get_param_names(std::vector<std::string>& names__) const {
         names__ = std::vector<std::string>{"aos_p", "soa_p",
                     "tp_real_from_soa"};
       }
-      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
-      {
+      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
         dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
                                                      static_cast<size_t>(10),
                                                      static_cast<size_t>(10)},
@@ -6664,8 +6514,7 @@ namespace single_indexing_model_namespace {
       inline void
       constrained_param_names(std::vector<std::string>& param_names__, bool
                               emit_transformed_parameters__ = true, bool
-                              emit_generated_quantities__ = true) const final
-      {
+                              emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
             param_names__.emplace_back(std::string() + "aos_p" + '.' +
@@ -6692,8 +6541,7 @@ namespace single_indexing_model_namespace {
       inline void
       unconstrained_param_names(std::vector<std::string>& param_names__, bool
                                 emit_transformed_parameters__ = true, bool
-                                emit_generated_quantities__ = true) const final
-      {
+                                emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
             param_names__.emplace_back(std::string() + "aos_p" + '.' +
@@ -6717,12 +6565,10 @@ namespace single_indexing_model_namespace {
           }
         
       }
-      inline std::string get_constrained_sizedtypes() const
-      {
+      inline std::string get_constrained_sizedtypes() const {
         return std::string("[{\"name\":\"aos_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"soa_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_soa\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
       }
-      inline std::string get_unconstrained_sizedtypes() const
-      {
+      inline std::string get_unconstrained_sizedtypes() const {
         return std::string("[{\"name\":\"aos_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"soa_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_soa\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
       }
       // Begin method overload boilerplate
@@ -6731,8 +6577,7 @@ namespace single_indexing_model_namespace {
                   Eigen::Matrix<double,-1,1>& vars, const bool
                   emit_transformed_parameters = true, const bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = ((10 * 10) + (10 * 10));
         const size_t num_transformed = emit_transformed_parameters * (1);
         const size_t num_gen_quantities = emit_generated_quantities * (0);
@@ -6749,8 +6594,7 @@ namespace single_indexing_model_namespace {
                   std::vector<int>& params_i, std::vector<double>& vars, bool
                   emit_transformed_parameters = true, bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = ((10 * 10) + (10 * 10));
         const size_t num_transformed = emit_transformed_parameters * (1);
         const size_t num_gen_quantities = emit_generated_quantities * (0);
@@ -6763,23 +6607,21 @@ namespace single_indexing_model_namespace {
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream*
-               pstream = nullptr) const
-      {
+               pstream = nullptr) const {
         Eigen::Matrix<int,-1,1> params_i;
         return log_prob_impl<propto__, jacobian__>(params_r, params_i,
                  pstream);
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
-               std::ostream* pstream = nullptr) const
-      {
-        return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+               std::ostream* pstream = nullptr) const {
+        return log_prob_impl<propto__, jacobian__>(params_r, params_i,
+                 pstream);
       }
       inline void
       transform_inits(const stan::io::var_context& context,
                       Eigen::Matrix<double,-1,1>& params_r, std::ostream*
-                      pstream = nullptr) const final
-      {
+                      pstream = nullptr) const final {
         std::vector<double> params_r_vec(params_r.size());
         std::vector<int> params_i;
         transform_inits(context, params_i, params_r_vec, pstream);
@@ -6789,8 +6631,7 @@ namespace single_indexing_model_namespace {
       inline void
       transform_inits(const stan::io::var_context& context, std::vector<int>&
                       params_i, std::vector<double>& vars, std::ostream*
-                      pstream__ = nullptr) const
-      {
+                      pstream__ = nullptr) const {
         constexpr std::array<const char*, 2> names__{"aos_p", "soa_p"};
         const std::array<Eigen::Index, 2> constrain_param_sizes__{(10 * 10),
                                                                    (10 * 10)};
@@ -6800,7 +6641,7 @@ namespace single_indexing_model_namespace {
         std::vector<double> params_r_flat__(num_constrained_params__);
         Eigen::Index size_iter__ = 0;
         Eigen::Index flat_iter__ = 0;
-        for(auto &&param_name__: names__) {
+        for(auto&& param_name__: names__) {
           const auto param_vec__ = context.vals_r(param_name__);
           for(Eigen::Index i = 0; i <
               constrain_param_sizes__[size_iter__]; ++i) {
@@ -6818,13 +6659,11 @@ using stan_model = single_indexing_model_namespace::single_indexing_model;
 // Boilerplate
 stan::model::model_base&
 new_model(stan::io::var_context& data_context, unsigned int seed,
-          std::ostream* msg_stream)
-{
+          std::ostream* msg_stream) {
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
-stan::math::profile_map& get_stan_profile_data()
-{
+stan::math::profile_map& get_stan_profile_data() {
   return single_indexing_model_namespace::profiles__;
 }
 #endif
@@ -6852,7 +6691,6 @@ namespace tp_reused_model_namespace {
                                   stan::is_vt_not_complex<T0__>>* = nullptr>
     Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
     operator()(const T0__& x, std::ostream* pstream__) const;
-    
   };
   struct okay_reduction_functor__ {
     template <typename T0__, typename T1__,
@@ -6861,14 +6699,12 @@ namespace tp_reused_model_namespace {
                                   stan::is_vt_not_complex<T1__>>* = nullptr>
     Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,-1>
     operator()(const T0__& sum_x, const T1__& y, std::ostream* pstream__) const;
-    
   };
   template <typename T0__,
             stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                                 stan::is_vt_not_complex<T0__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
-  nono_func(const T0__& x_arg__, std::ostream* pstream__)
-  {
+  nono_func(const T0__& x_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
     int current_statement__ = 0;
     const auto& x = stan::math::to_ref(x_arg__);
@@ -6889,8 +6725,7 @@ namespace tp_reused_model_namespace {
             stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                                 stan::is_vt_not_complex<T0__>>*>
   Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
-  nono_func_functor__::operator()(const T0__& x, std::ostream* pstream__) const
-  {
+  nono_func_functor__::operator()(const T0__& x, std::ostream* pstream__) const {
     return nono_func(x, pstream__);
   }
   template <typename T0__, typename T1__,
@@ -6899,8 +6734,7 @@ namespace tp_reused_model_namespace {
                                 stan::is_vt_not_complex<T1__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,-1>
   okay_reduction(const T0__& sum_x, const T1__& y_arg__, std::ostream*
-                 pstream__)
-  {
+                 pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__,
                                stan::base_type_t<T1__>>;
     int current_statement__ = 0;
@@ -6924,8 +6758,7 @@ namespace tp_reused_model_namespace {
                                 stan::is_vt_not_complex<T1__>>*>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,-1>
   okay_reduction_functor__::operator()(const T0__& sum_x, const T1__& y,
-                                       std::ostream* pstream__) const
-  {
+                                       std::ostream* pstream__) const {
     return okay_reduction(sum_x, y, pstream__);
   }
   class tp_reused_model final : public model_base_crtp<tp_reused_model>{
@@ -6963,12 +6796,10 @@ namespace tp_reused_model_namespace {
             locations_array__[current_statement__]);
         }
         num_params_r__ = (5 * 10) + (5 * 10);}
-      inline std::string model_name() const final
-      {
+      inline std::string model_name() const final {
         return "tp_reused_model";
       }
-      inline std::vector<std::string> model_compile_info() const noexcept
-      {
+      inline std::vector<std::string> model_compile_info() const noexcept {
         return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
                  "stancflags = -fsoa --print-cpp"};
       }
@@ -6978,8 +6809,7 @@ namespace tp_reused_model_namespace {
                 VecI>* = nullptr>
       inline stan::scalar_type_t<VecR>
       log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
-                    pstream__ = nullptr) const
-      {
+                    pstream__ = nullptr) const {
         using T__ = stan::scalar_type_t<VecR>;
         using local_scalar_t__ = T__;
         T__ lp__(0.0);
@@ -7034,8 +6864,7 @@ namespace tp_reused_model_namespace {
                        VecVar& vars__, const bool
                        emit_transformed_parameters__ = true, const bool
                        emit_generated_quantities__ = true, std::ostream*
-                       pstream__ = nullptr) const
-      {
+                       pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -7107,8 +6936,7 @@ namespace tp_reused_model_namespace {
                 VecI>* = nullptr>
       inline void
       transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar&
-                           vars__, std::ostream* pstream__ = nullptr) const
-      {
+                           vars__, std::ostream* pstream__ = nullptr) const {
         using local_scalar_t__ = double;
         stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
         stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -7148,13 +6976,11 @@ namespace tp_reused_model_namespace {
             locations_array__[current_statement__]);
         }
       }
-      inline void get_param_names(std::vector<std::string>& names__) const
-      {
+      inline void get_param_names(std::vector<std::string>& names__) const {
         names__ = std::vector<std::string>{"first_pass_soa_x", "aos_x",
                     "tp_matrix_aos"};
       }
-      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
-      {
+      inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
         dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
                                                      static_cast<size_t>(5),
                                                      static_cast<size_t>(10)},
@@ -7166,8 +6992,7 @@ namespace tp_reused_model_namespace {
       inline void
       constrained_param_names(std::vector<std::string>& param_names__, bool
                               emit_transformed_parameters__ = true, bool
-                              emit_generated_quantities__ = true) const final
-      {
+                              emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
             param_names__.emplace_back(std::string() + "first_pass_soa_x" +
@@ -7200,8 +7025,7 @@ namespace tp_reused_model_namespace {
       inline void
       unconstrained_param_names(std::vector<std::string>& param_names__, bool
                                 emit_transformed_parameters__ = true, bool
-                                emit_generated_quantities__ = true) const final
-      {
+                                emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
             param_names__.emplace_back(std::string() + "first_pass_soa_x" +
@@ -7231,12 +7055,10 @@ namespace tp_reused_model_namespace {
           }
         
       }
-      inline std::string get_constrained_sizedtypes() const
-      {
+      inline std::string get_constrained_sizedtypes() const {
         return std::string("[{\"name\":\"first_pass_soa_x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"aos_x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"tp_matrix_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
       }
-      inline std::string get_unconstrained_sizedtypes() const
-      {
+      inline std::string get_unconstrained_sizedtypes() const {
         return std::string("[{\"name\":\"first_pass_soa_x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"aos_x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"tp_matrix_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
       }
       // Begin method overload boilerplate
@@ -7245,8 +7067,7 @@ namespace tp_reused_model_namespace {
                   Eigen::Matrix<double,-1,1>& vars, const bool
                   emit_transformed_parameters = true, const bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = ((5 * 10) + (5 * 10));
         const size_t num_transformed = emit_transformed_parameters * ((5 *
           10));
@@ -7264,8 +7085,7 @@ namespace tp_reused_model_namespace {
                   std::vector<int>& params_i, std::vector<double>& vars, bool
                   emit_transformed_parameters = true, bool
                   emit_generated_quantities = true, std::ostream*
-                  pstream = nullptr) const
-      {
+                  pstream = nullptr) const {
         const size_t num_params__ = ((5 * 10) + (5 * 10));
         const size_t num_transformed = emit_transformed_parameters * ((5 *
           10));
@@ -7279,23 +7099,21 @@ namespace tp_reused_model_namespace {
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream*
-               pstream = nullptr) const
-      {
+               pstream = nullptr) const {
         Eigen::Matrix<int,-1,1> params_i;
         return log_prob_impl<propto__, jacobian__>(params_r, params_i,
                  pstream);
       }
       template <bool propto__, bool jacobian__, typename T_> inline T_
       log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
-               std::ostream* pstream = nullptr) const
-      {
-        return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+               std::ostream* pstream = nullptr) const {
+        return log_prob_impl<propto__, jacobian__>(params_r, params_i,
+                 pstream);
       }
       inline void
       transform_inits(const stan::io::var_context& context,
                       Eigen::Matrix<double,-1,1>& params_r, std::ostream*
-                      pstream = nullptr) const final
-      {
+                      pstream = nullptr) const final {
         std::vector<double> params_r_vec(params_r.size());
         std::vector<int> params_i;
         transform_inits(context, params_i, params_r_vec, pstream);
@@ -7305,8 +7123,7 @@ namespace tp_reused_model_namespace {
       inline void
       transform_inits(const stan::io::var_context& context, std::vector<int>&
                       params_i, std::vector<double>& vars, std::ostream*
-                      pstream__ = nullptr) const
-      {
+                      pstream__ = nullptr) const {
         constexpr std::array<const char*, 2> names__{"first_pass_soa_x",
                                                       "aos_x"};
         const std::array<Eigen::Index, 2> constrain_param_sizes__{(5 * 10),
@@ -7317,7 +7134,7 @@ namespace tp_reused_model_namespace {
         std::vector<double> params_r_flat__(num_constrained_params__);
         Eigen::Index size_iter__ = 0;
         Eigen::Index flat_iter__ = 0;
-        for(auto &&param_name__: names__) {
+        for(auto&& param_name__: names__) {
           const auto param_vec__ = context.vals_r(param_name__);
           for(Eigen::Index i = 0; i <
               constrain_param_sizes__[size_iter__]; ++i) {
@@ -7334,13 +7151,11 @@ namespace tp_reused_model_namespace {
 // Boilerplate
 stan::model::model_base&
 new_model(stan::io::var_context& data_context, unsigned int seed,
-          std::ostream* msg_stream)
-{
+          std::ostream* msg_stream) {
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
-stan::math::profile_map& get_stan_profile_data()
-{
+stan::math::profile_map& get_stan_profile_data() {
   return tp_reused_model_namespace::profiles__;
 }
 #endif
