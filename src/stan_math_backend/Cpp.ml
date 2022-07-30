@@ -81,7 +81,7 @@ module Exprs = struct
     | _ -> MethodCall (Parens obj, name, templates, args)
 
   let to_var s = Var s
-  let literal_string s = Literal ("\"" ^ s ^ "\"")
+  let literal_string s = Literal ("\"" ^ Cpp_str.escaped s ^ "\"")
   let std_vector_expr t es = InitializerExpr (Vector t, es)
   let fun_call s es = FunCall (s, [], es)
   let templated_fun_call s ts es = FunCall (s, ts, es)

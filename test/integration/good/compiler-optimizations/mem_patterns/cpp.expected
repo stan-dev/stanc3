@@ -3527,8 +3527,7 @@ namespace indexing_model_namespace {
                                      stan::math::multiply(
                                        p_aos_mat_pass_func_outer_single_indexed1,
                                        p_aos_mat_pass_func_outer_single_indexed2)),
-                                   "transpose(multiply(p_aos_mat_pass_func_outer_single_indexed1,
-p_aos_mat_pass_func_outer_single_indexed2))",
+                                   "transpose(multiply(p_aos_mat_pass_func_outer_single_indexed1,\np_aos_mat_pass_func_outer_single_indexed2))",
                                    stan::model::index_uni(
                                      mask_fun(i, pstream__)),
                                    stan::model::index_uni(

@@ -521,7 +521,7 @@ and lower_expr (Expr.Fixed.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
   let open Exprs in
   match pattern with
   | Var s -> Var s
-  | Lit (Str, s) -> literal_string (Cpp_str.escaped s)
+  | Lit (Str, s) -> literal_string s
   | Lit (Imaginary, s) ->
       fun_call "stan::math::to_complex" [Literal "0"; Literal s]
   | Lit ((Real | Int), s) -> Literal s

@@ -458,10 +458,7 @@ let gen_outvar_metadata name outvars =
   let json_str = Cpp_Json.out_var_interpolated_json_str outvars in
   FunDef
     (make_fun_defn ~inline:true ~return_type:Types.string ~name
-       ~body:
-         [ Return
-             (Some (Constructor (Types.string, [Exprs.literal_string json_str])))
-         ]
+       ~body:[Return (Some (Constructor (Types.string, [Literal json_str])))]
        ~cv_qualifiers:[Const] () )
 
 (** Print the [get_unconstrained_sizedtypes] method of the model class *)
