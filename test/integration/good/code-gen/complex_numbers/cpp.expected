@@ -8313,15 +8313,17 @@ namespace complex_vectors_model_namespace {
           current_statement__ = 2;
           stan::model::assign(zs,
             stan::math::to_matrix(
-              std::vector<Eigen::Matrix<std::complex<double>,1,-1>>{(Eigen::Matrix<double,1,-1>(2) <<
+              std::vector<Eigen::Matrix<std::complex<double>,1,-1>>{(Eigen::Matrix<std::complex<double>,1,-1>(2) <<
                                                                      
                                                                     stan::math::to_complex(
                                                                     1, 0),
                                                                     stan::math::to_complex(
                                                                     2, 0)).finished(),
-                (Eigen::Matrix<double,1,-1>(2) <<
-                                                 stan::math::to_complex(3, 0),
-                                                 stan::math::to_complex(4, 0)).finished()}),
+                (Eigen::Matrix<std::complex<double>,1,-1>(2) <<
+                                                               stan::math::to_complex(
+                                                                 3, 0),
+                                                               stan::math::to_complex(
+                                                                 4, 0)).finished()}),
             "assigning variable zs");
           Eigen::Matrix<local_scalar_t__,1,-1> x =
             Eigen::Matrix<local_scalar_t__,1,-1>::Constant(2, DUMMY_VAR__);
@@ -8409,15 +8411,17 @@ namespace complex_vectors_model_namespace {
           current_statement__ = 2;
           stan::model::assign(zs,
             stan::math::to_matrix(
-              std::vector<Eigen::Matrix<std::complex<double>,1,-1>>{(Eigen::Matrix<double,1,-1>(2) <<
+              std::vector<Eigen::Matrix<std::complex<double>,1,-1>>{(Eigen::Matrix<std::complex<double>,1,-1>(2) <<
                                                                      
                                                                     stan::math::to_complex(
                                                                     1, 0),
                                                                     stan::math::to_complex(
                                                                     2, 0)).finished(),
-                (Eigen::Matrix<double,1,-1>(2) <<
-                                                 stan::math::to_complex(3, 0),
-                                                 stan::math::to_complex(4, 0)).finished()}),
+                (Eigen::Matrix<std::complex<double>,1,-1>(2) <<
+                                                               stan::math::to_complex(
+                                                                 3, 0),
+                                                               stan::math::to_complex(
+                                                                 4, 0)).finished()}),
             "assigning variable zs");
           current_statement__ = 3;
           stan::model::assign(x,

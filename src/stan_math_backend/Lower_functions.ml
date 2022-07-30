@@ -191,8 +191,9 @@ let extra_suffix_args fdsuffix =
     Functor {b declarations} need to be collated, and are therefore stored in the
     functors hashtable *)
 let lower_fun_def (functors : (string, struct_defn) Hashtbl.t)
-    (forward_decls : (string * (type_ * string) list) Hash_set.t)
-    (funs_used_in_reduce_sum : String.Set.t)
+    (forward_decls :
+      (string * (UnsizedType.autodifftype * string * UnsizedType.t) list)
+      Hash_set.t ) (funs_used_in_reduce_sum : String.Set.t)
     (funs_used_in_variadic_ode : String.Set.t)
     (funs_used_in_variadic_dae : String.Set.t)
     Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _} : fun_defn list =
@@ -213,7 +214,7 @@ let lower_fun_def (functors : (string, struct_defn) Hashtbl.t)
   let cpp_args = cpp_arg_gen templated_args `None in
   (* We want to print the [* = nullptr] at most once, and preferrably on a forward decl *)
   let init_template_requires =
-    Option.is_none fdbody || not (Hash_set.mem forward_decls (fdname, cpp_args))
+    Option.is_none fdbody || not (Hash_set.mem forward_decls (fdname, fdargs))
   in
   let almost_fn =
     make_fun_defn
@@ -224,7 +225,7 @@ let lower_fun_def (functors : (string, struct_defn) Hashtbl.t)
   match fdbody with
   | None ->
       (* Side Effect: *)
-      Hash_set.add forward_decls (fdname, cpp_args) ;
+      Hash_set.add forward_decls (fdname, fdargs) ;
       [almost_fn ()]
   | Some fdbody ->
       let register_functor variadic_fun_type =

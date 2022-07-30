@@ -444,7 +444,7 @@ and lower_compiler_internal ad ut f es =
               (lower_unsizedtype_local ad URowVector)
               (lower_exprs es) ]
     | UComplexRowVector ->
-        let st = local_scalar ut (promote_adtype es) in
+        let st = Types.complex (local_scalar ut (promote_adtype es)) in
         vector_literal st es
     | UComplexMatrix ->
         fun_call "stan::math::to_matrix"

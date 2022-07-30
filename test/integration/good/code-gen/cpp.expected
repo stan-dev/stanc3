@@ -20566,7 +20566,7 @@ namespace overloading_templating_model_namespace {
   }
   template <typename T0__,
             stan::require_all_t<stan::is_row_vector<T0__>,
-                                stan::is_vt_not_complex<T0__>>*>
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
   stan::promote_args_t<stan::base_type_t<T0__>>
   foo(const T0__& p_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -20622,7 +20622,7 @@ namespace overloading_templating_model_namespace {
   }
   template <typename T0__,
             stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
-                                stan::is_vt_not_complex<T0__>>*>
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
   stan::promote_args_t<stan::base_type_t<T0__>>
   foo(const T0__& p_arg__, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;

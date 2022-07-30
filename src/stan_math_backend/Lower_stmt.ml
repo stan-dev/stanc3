@@ -266,7 +266,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   | Skip -> [Semicolon]
   | IfElse (cond, ifbranch, elsebranch) ->
       [ IfElse
-          ( lower_expr cond
+          ( lower_bool_expr cond
           , Stmts.block (lower_statement ifbranch)
           , Option.map ~f:(Fn.compose Stmts.block lower_statement) elsebranch )
       ]
