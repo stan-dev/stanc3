@@ -406,7 +406,7 @@ module Printing = struct
       match init with
       | Uninitialized -> ()
       | Assignment e -> pf ppf "@ =@ %a" pp_expr e
-      | Construction es -> pf ppf "(@[<hov 1>%a@])" (list ~sep:comma pp_expr) es
+      | Construction es -> pf ppf "(%a)" (list ~sep:comma pp_expr) es
       | InitalizerList es ->
           pf ppf "{@[<hov 1>%a@]}" (list ~sep:comma pp_expr) es in
     let static = if static then "static " else "" in
@@ -559,6 +559,8 @@ module Printing = struct
     | Namespace (id, defns) ->
         pf ppf "@[<v 2>namespace %s {@,%a@]@,}" id (list ~sep:cut pp_defn) defns
     | Preprocessor d -> pp_directive ppf d
+
+  let pp_program = vbox (list ~sep:cut pp_defn)
 end
 
 module Tests = struct

@@ -109,9 +109,7 @@ namespace simple_function_model_namespace {
           current_statement__ = 28;
           {
             stan::math::profile<local_scalar_t__> profile__("sum",
-                                                             const_cast<
-                                                               stan::math::profile_map&>(
-                                                               profiles__));
+              const_cast<stan::math::profile_map&>(profiles__));
             current_statement__ = 27;
             sum_y = stan::math::sum(y);
           }
@@ -178,9 +176,7 @@ namespace simple_function_model_namespace {
             current_statement__ = 11;
             {
               stan::math::profile<local_scalar_t__> profile__("cov_exp_quad",
-                                                               const_cast<
-                                                                 stan::math::profile_map&>(
-                                                                 profiles__));
+                const_cast<stan::math::profile_map&>(profiles__));
               current_statement__ = 10;
               stan::model::assign(cov,
                 stan::math::add(stan::math::gp_exp_quad_cov(x, alpha, rho),
@@ -190,9 +186,7 @@ namespace simple_function_model_namespace {
             current_statement__ = 13;
             {
               stan::math::profile<local_scalar_t__> profile__("cholesky_decompose",
-                                                               const_cast<
-                                                                 stan::math::profile_map&>(
-                                                                 profiles__));
+                const_cast<stan::math::profile_map&>(profiles__));
               current_statement__ = 12;
               stan::model::assign(L_cov, stan::math::cholesky_decompose(cov),
                 "assigning variable L_cov");
@@ -200,15 +194,11 @@ namespace simple_function_model_namespace {
             current_statement__ = 20;
             {
               stan::math::profile<local_scalar_t__> profile__("likelihood",
-                                                               const_cast<
-                                                                 stan::math::profile_map&>(
-                                                                 profiles__));
+                const_cast<stan::math::profile_map&>(profiles__));
               current_statement__ = 17;
               {
                 stan::math::profile<local_scalar_t__> profile__("priors",
-                                                                 const_cast<
-                                                                   stan::math::profile_map&>(
-                                                                   profiles__));
+                  const_cast<stan::math::profile_map&>(profiles__));
                 current_statement__ = 14;
                 lp_accum__.add(stan::math::gamma_lpdf<propto__>(rho, 25, 4));
                 current_statement__ = 15;
@@ -219,9 +209,7 @@ namespace simple_function_model_namespace {
               current_statement__ = 19;
               {
                 stan::math::profile<local_scalar_t__> profile__("multi_normal_cholesky",
-                                                                 const_cast<
-                                                                   stan::math::profile_map&>(
-                                                                   profiles__));
+                  const_cast<stan::math::profile_map&>(profiles__));
                 current_statement__ = 18;
                 lp_accum__.add(stan::math::multi_normal_cholesky_lpdf<
                                  propto__>(y, stan::math::rep_vector(0, N),
@@ -462,7 +450,8 @@ namespace simple_function_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = simple_function_model_namespace::simple_function_model;
 #ifndef USING_R
 // Boilerplate

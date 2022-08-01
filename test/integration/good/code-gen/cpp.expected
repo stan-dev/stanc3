@@ -410,7 +410,9 @@ namespace _8_schools_ncp_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = _8_schools_ncp_model_namespace::_8_schools_ncp_model;
+  };
+}
+using stan_model = _8_schools_ncp_model_namespace::_8_schools_ncp_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -712,7 +714,8 @@ namespace _8start_with_number_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = _8start_with_number_model_namespace::_8start_with_number_model;
 #ifndef USING_R
 // Boilerplate
@@ -1771,7 +1774,8 @@ namespace cpp_reserved_words_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = cpp_reserved_words_model_namespace::cpp_reserved_words_model;
 #ifndef USING_R
 // Boilerplate
@@ -2197,7 +2201,8 @@ namespace eight_schools_ncp_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = eight_schools_ncp_model_namespace::eight_schools_ncp_model;
 #ifndef USING_R
 // Boilerplate
@@ -2626,7 +2631,8 @@ namespace mixed_type_arrays_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = mixed_type_arrays_model_namespace::mixed_type_arrays_model;
 #ifndef USING_R
 // Boilerplate
@@ -11832,7 +11838,9 @@ namespace mother_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = mother_model_namespace::mother_model;
+  };
+}
+using stan_model = mother_model_namespace::mother_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -13710,7 +13718,9 @@ namespace motherHOF_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = motherHOF_model_namespace::motherHOF_model;
+  };
+}
+using stan_model = motherHOF_model_namespace::motherHOF_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -18284,7 +18294,8 @@ namespace new_integrate_interface_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = new_integrate_interface_model_namespace::new_integrate_interface_model;
 #ifndef USING_R
 // Boilerplate
@@ -18927,7 +18938,8 @@ namespace old_integrate_interface_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = old_integrate_interface_model_namespace::old_integrate_interface_model;
 #ifndef USING_R
 // Boilerplate
@@ -20407,7 +20419,9 @@ namespace optimize_glm_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = optimize_glm_model_namespace::optimize_glm_model;
+  };
+}
+using stan_model = optimize_glm_model_namespace::optimize_glm_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -21158,7 +21172,8 @@ namespace overloading_templating_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = overloading_templating_model_namespace::overloading_templating_model;
 #ifndef USING_R
 // Boilerplate
@@ -21564,7 +21579,8 @@ namespace param_constraint_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = param_constraint_model_namespace::param_constraint_model;
 #ifndef USING_R
 // Boilerplate
@@ -21866,7 +21882,9 @@ namespace print_unicode_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = print_unicode_model_namespace::print_unicode_model;
+  };
+}
+using stan_model = print_unicode_model_namespace::print_unicode_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -22136,8 +22154,8 @@ namespace promotion_model_namespace {
         if(emit_generated_quantities__)
           {
             param_names__.emplace_back(std::string() + "z");
-            param_names__.emplace_back(std::string() + "zi" + "real");
-            param_names__.emplace_back(std::string() + "zi" + "imag");
+            param_names__.emplace_back(std::string() + "zi" + '.' + "real");
+            param_names__.emplace_back(std::string() + "zi" + '.' + "imag");
             for(int sym1__ = 1; sym1__ <= 4; ++sym1__) {
               param_names__.emplace_back(std::string() + "zs" + '.' +
                 std::to_string(sym1__));
@@ -22158,8 +22176,8 @@ namespace promotion_model_namespace {
         if(emit_generated_quantities__)
           {
             param_names__.emplace_back(std::string() + "z");
-            param_names__.emplace_back(std::string() + "zi" + "real");
-            param_names__.emplace_back(std::string() + "zi" + "imag");
+            param_names__.emplace_back(std::string() + "zi" + '.' + "real");
+            param_names__.emplace_back(std::string() + "zi" + '.' + "imag");
             for(int sym1__ = 1; sym1__ <= 4; ++sym1__) {
               param_names__.emplace_back(std::string() + "zs" + '.' +
                 std::to_string(sym1__));
@@ -22257,7 +22275,9 @@ namespace promotion_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = promotion_model_namespace::promotion_model;
+  };
+}
+using stan_model = promotion_model_namespace::promotion_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -23031,7 +23051,8 @@ namespace recursive_slicing_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = recursive_slicing_model_namespace::recursive_slicing_model;
 #ifndef USING_R
 // Boilerplate
@@ -23603,7 +23624,9 @@ namespace reduce_sum_m1_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = reduce_sum_m1_model_namespace::reduce_sum_m1_model;
+  };
+}
+using stan_model = reduce_sum_m1_model_namespace::reduce_sum_m1_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -26142,7 +26165,9 @@ namespace reduce_sum_m2_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = reduce_sum_m2_model_namespace::reduce_sum_m2_model;
+  };
+}
+using stan_model = reduce_sum_m2_model_namespace::reduce_sum_m2_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -30198,7 +30223,9 @@ namespace reduce_sum_m3_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = reduce_sum_m3_model_namespace::reduce_sum_m3_model;
+  };
+}
+using stan_model = reduce_sum_m3_model_namespace::reduce_sum_m3_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -30575,9 +30602,7 @@ namespace shadowing_model_namespace {
           current_statement__ = 44;
           {
             stan::math::profile<local_scalar_t__> profile__("shadow-1",
-                                                             const_cast<
-                                                               stan::math::profile_map&>(
-                                                               profiles__));
+              const_cast<stan::math::profile_map&>(profiles__));
             current_statement__ = 43;
             mu = (mu + profile_map);
           }
@@ -30819,9 +30844,7 @@ namespace shadowing_model_namespace {
           current_statement__ = 44;
           {
             stan::math::profile<local_scalar_t__> profile__("shadow-1",
-                                                             const_cast<
-                                                               stan::math::profile_map&>(
-                                                               profiles__));
+              const_cast<stan::math::profile_map&>(profiles__));
             current_statement__ = 43;
             mu = (mu + profile_map);
           }
@@ -31276,7 +31299,9 @@ namespace shadowing_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = shadowing_model_namespace::shadowing_model;
+  };
+}
+using stan_model = shadowing_model_namespace::shadowing_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -31733,7 +31758,8 @@ namespace single_argument_lpmf_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = single_argument_lpmf_model_namespace::single_argument_lpmf_model;
 #ifndef USING_R
 // Boilerplate
@@ -32076,7 +32102,9 @@ namespace tilde_block_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = tilde_block_model_namespace::tilde_block_model;
+  };
+}
+using stan_model = tilde_block_model_namespace::tilde_block_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -34568,7 +34596,9 @@ namespace transform_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = transform_model_namespace::transform_model;
+  };
+}
+using stan_model = transform_model_namespace::transform_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -35010,7 +35040,9 @@ namespace truncate_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = truncate_model_namespace::truncate_model;
+  };
+}
+using stan_model = truncate_model_namespace::truncate_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -35341,7 +35373,8 @@ namespace udf_tilde_stmt_conflict_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = udf_tilde_stmt_conflict_model_namespace::udf_tilde_stmt_conflict_model;
 #ifndef USING_R
 // Boilerplate
@@ -35681,7 +35714,9 @@ namespace user_constrain_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = user_constrain_model_namespace::user_constrain_model;
+  };
+}
+using stan_model = user_constrain_model_namespace::user_constrain_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -36035,7 +36070,8 @@ namespace variable_named_context_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = variable_named_context_model_namespace::variable_named_context_model;
 #ifndef USING_R
 // Boilerplate

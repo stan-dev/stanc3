@@ -277,7 +277,9 @@ namespace filename_good_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = filename_good_model_namespace::filename_good_model;
+  };
+}
+using stan_model = filename_good_model_namespace::filename_good_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&

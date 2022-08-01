@@ -104,9 +104,7 @@ let lower_model_private {Program.prepare_data; _} =
   let data_decls = List.concat_map ~f:top_level_decls prepare_data in
   (*Filter out Any data that is not an Eigen matrix*)
   let get_eigen_map (name, ut) =
-    if UnsizedType.is_eigen_type ut && not (Transform_Mir.is_opencl_var name)
-    then true
-    else false in
+    UnsizedType.is_eigen_type ut && not (Transform_Mir.is_opencl_var name) in
   let eigen_map_decls = (List.filter ~f:get_eigen_map) data_decls in
   List.map ~f:lower_data_decl data_decls
   @ List.map ~f:lower_map_decl eigen_map_decls
@@ -350,39 +348,28 @@ let gen_get_dims {Program.output_vars; _} =
        ~body:[Expression (Assign (Var "dimss__", result_vector))]
        ~cv_qualifiers:[Const] () )
 
+let emplace_name_stmt name idcs =
+  let null_string = Constructor (Types.string, []) in
+  let dot = Literal "'.'" in
+  let to_string e =
+    match e with Literal _ -> e | _ -> Exprs.fun_call "std::to_string" [e] in
+  let open Expression_syntax in
+  let param_names__ = Var "param_names__" in
+  Expression
+    param_names__.@?(( "emplace_back"
+                     , [ null_string
+                         + List.fold ~init:(literal_string name)
+                             ~f:(fun acc idx -> acc + dot + to_string idx)
+                             idcs ] ))
+
 let emplace_name name idcs =
   let name = Mangle.remove_prefix name in
-  let to_string e = Exprs.fun_call "std::to_string" [Var e] in
-  let param_names__ = Var "param_names__" in
-  let null_string = Constructor (Types.string, []) in
-  let dot = Literal "'.'" in
-  let open Expression_syntax in
-  [ Expression
-      param_names__.@?(( "emplace_back"
-                       , [ null_string
-                           + List.fold ~init:(literal_string name)
-                               ~f:(fun acc idx -> acc + dot + to_string idx)
-                               idcs ] )) ]
+  [emplace_name_stmt name (List.map ~f:Exprs.to_var idcs)]
 
 let emplace_complex_name name idcs =
-  let name = Mangle.remove_prefix name in
-  let to_string e = Exprs.fun_call "std::to_string" [Var e] in
-  let param_names__ = Var "param_names__" in
-  let null_string = Constructor (Types.string, []) in
-  let dot = Literal "'.'" in
-  let open Expression_syntax in
-  [ Expression
-      param_names__.@?(( "emplace_back"
-                       , [ null_string + literal_string name
-                           + List.fold_left ~init:(literal_string "real")
-                               ~f:(fun acc idx -> to_string idx + dot + acc)
-                               idcs ] ))
-  ; Expression
-      param_names__.@?(( "emplace_back"
-                       , [ null_string + literal_string name
-                           + List.fold_left ~init:(literal_string "imag")
-                               ~f:(fun acc idx -> to_string idx + dot + acc)
-                               idcs ] )) ]
+  let idcs_vars = List.map ~f:Exprs.to_var idcs in
+  [ emplace_name_stmt name (idcs_vars @ [Exprs.literal_string "real"])
+  ; emplace_name_stmt name (idcs_vars @ [Exprs.literal_string "imag"]) ]
 
 let rec gen_indexing_loop ?(index_ids = []) iteratee dims gen_body =
   let iter d gen_body =
@@ -839,7 +826,7 @@ module Testing = struct
 
   let%expect_test "model public basics" =
     model_public_basics "foobar"
-    |> str "@[<v>%a" (list ~sep:cut Cpp.Printing.pp_defn)
+    |> str "%a" Cpp.Printing.pp_program
     |> print_endline ;
     [%expect
       {|
@@ -853,7 +840,7 @@ module Testing = struct
 
   let%expect_test "boilerplate" =
     new_model_boilerplate "foobar"
-    |> str "@[<v>%a" (list Cpp.Printing.pp_defn)
+    |> str "%a" Cpp.Printing.pp_program
     |> print_endline ;
     [%expect
       {|
@@ -890,10 +877,10 @@ module Testing = struct
       {|
           for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
             for(int sym2__ = 1; sym2__ <= D; ++sym2__) {
-              param_names__.emplace_back(std::string() + "foo" + std::to_string(sym1__)
-                + '.' + std::to_string(sym2__) + '.' + "real");
-              param_names__.emplace_back(std::string() + "foo" + std::to_string(sym1__)
-                + '.' + std::to_string(sym2__) + '.' + "imag");
+              param_names__.emplace_back(std::string() + "foo" + '.' +
+                std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
+              param_names__.emplace_back(std::string() + "foo" + '.' +
+                std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
             }
           } |}]
 end

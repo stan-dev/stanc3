@@ -213,11 +213,11 @@ namespace complex_fails_model_namespace {
             for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
                 param_names__.emplace_back(std::string() + "A_complex_tp" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
-                  + "real");
+                  '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__)
+                  + '.' + "real");
                 param_names__.emplace_back(std::string() + "A_complex_tp" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
-                  + "imag");
+                  '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__)
+                  + '.' + "imag");
               }
             }
           }
@@ -243,11 +243,11 @@ namespace complex_fails_model_namespace {
             for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
                 param_names__.emplace_back(std::string() + "A_complex_tp" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
-                  + "real");
+                  '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__)
+                  + '.' + "real");
                 param_names__.emplace_back(std::string() + "A_complex_tp" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
-                  + "imag");
+                  '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__)
+                  + '.' + "imag");
               }
             }
           }
@@ -347,7 +347,9 @@ namespace complex_fails_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = complex_fails_model_namespace::complex_fails_model;
+  };
+}
+using stan_model = complex_fails_model_namespace::complex_fails_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -2142,7 +2144,9 @@ namespace constraints_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = constraints_model_namespace::constraints_model;
+  };
+}
+using stan_model = constraints_model_namespace::constraints_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -2697,7 +2701,8 @@ namespace deep_dependence_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = deep_dependence_model_namespace::deep_dependence_model;
 #ifndef USING_R
 // Boilerplate
@@ -4605,7 +4610,9 @@ namespace indexing_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = indexing_model_namespace::indexing_model;
+  };
+}
+using stan_model = indexing_model_namespace::indexing_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -5015,7 +5022,9 @@ namespace indexing2_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = indexing2_model_namespace::indexing2_model;
+  };
+}
+using stan_model = indexing2_model_namespace::indexing2_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -5220,9 +5229,8 @@ namespace reductions_allowed_model_namespace {
               DUMMY_VAR__);
           current_statement__ = 5;
           stan::model::assign(tp_matrix_aos_from_mix,
-            (stan::math::eval(
-               stan::math::logical_gt(stan::math::sum(soa_x), 0)) ? stan::math::eval(
-                                                                    nono_func(
+            (stan::math::logical_gt(stan::math::sum(soa_x), 0) ? stan::math::eval(
+                                                                   nono_func(
                                                                     stan::math::add(
                                                                     aos_x,
                                                                     aos_y),
@@ -5317,9 +5325,8 @@ namespace reductions_allowed_model_namespace {
             stan::math::sum(soa_x));
           current_statement__ = 5;
           stan::model::assign(tp_matrix_aos_from_mix,
-            (stan::math::eval(
-               stan::math::logical_gt(stan::math::sum(soa_x), 0)) ? stan::math::eval(
-                                                                    nono_func(
+            (stan::math::logical_gt(stan::math::sum(soa_x), 0) ? stan::math::eval(
+                                                                   nono_func(
                                                                     stan::math::add(
                                                                     aos_x,
                                                                     aos_y),
@@ -5607,7 +5614,8 @@ namespace reductions_allowed_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = reductions_allowed_model_namespace::reductions_allowed_model;
 #ifndef USING_R
 // Boilerplate
@@ -6214,7 +6222,8 @@ namespace return_types_and_udfs_demotes_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = return_types_and_udfs_demotes_model_namespace::return_types_and_udfs_demotes_model;
 #ifndef USING_R
 // Boilerplate
@@ -6652,7 +6661,8 @@ namespace single_indexing_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = single_indexing_model_namespace::single_indexing_model;
 #ifndef USING_R
 // Boilerplate
@@ -7145,7 +7155,9 @@ namespace tp_reused_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = tp_reused_model_namespace::tp_reused_model;
+  };
+}
+using stan_model = tp_reused_model_namespace::tp_reused_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&

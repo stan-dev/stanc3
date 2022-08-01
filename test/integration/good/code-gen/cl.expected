@@ -1648,7 +1648,9 @@ namespace optimize_glm_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = optimize_glm_model_namespace::optimize_glm_model;
+  };
+}
+using stan_model = optimize_glm_model_namespace::optimize_glm_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&

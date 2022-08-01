@@ -533,7 +533,8 @@ namespace simple_function_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = simple_function_model_namespace::simple_function_model;
 #ifndef USING_R
 // Boilerplate
@@ -648,16 +649,20 @@ namespace ternary_if_model_namespace {
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
           current_statement__ = 5;
           stan::model::assign(c,
-            (stan::math::eval(stan::math::logical_gt(stan::math::sum(a), 1)) ? 
-            stan::math::eval(stan::math::add(stan::math::multiply(2.0, a), b)) : 
+            (stan::math::logical_gt(stan::math::sum(a), 1) ? stan::math::eval(
+                                                               stan::math::add(
+                                                                 stan::math::multiply(
+                                                                   2.0, a), b)) : 
             stan::math::eval(stan::math::multiply(2.0, a))),
             "assigning variable c");
           Eigen::Matrix<local_scalar_t__,-1,1> d =
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
           current_statement__ = 6;
           stan::model::assign(d,
-            (stan::math::eval(stan::math::logical_gt(stan::math::sum(a), 1)) ? 
-            stan::math::eval(stan::math::add(stan::math::multiply(2, a), b)) : 
+            (stan::math::logical_gt(stan::math::sum(a), 1) ? stan::math::eval(
+                                                               stan::math::add(
+                                                                 stan::math::multiply(
+                                                                   2, a), b)) : 
             stan::math::eval(stan::math::multiply(2, a))),
             "assigning variable d");
           std::complex<local_scalar_t__> z =
@@ -753,14 +758,18 @@ namespace ternary_if_model_namespace {
           
           current_statement__ = 5;
           stan::model::assign(c,
-            (stan::math::eval(stan::math::logical_gt(stan::math::sum(a), 1)) ? 
-            stan::math::eval(stan::math::add(stan::math::multiply(2.0, a), b)) : 
+            (stan::math::logical_gt(stan::math::sum(a), 1) ? stan::math::eval(
+                                                               stan::math::add(
+                                                                 stan::math::multiply(
+                                                                   2.0, a), b)) : 
             stan::math::eval(stan::math::multiply(2.0, a))),
             "assigning variable c");
           current_statement__ = 6;
           stan::model::assign(d,
-            (stan::math::eval(stan::math::logical_gt(stan::math::sum(a), 1)) ? 
-            stan::math::eval(stan::math::add(stan::math::multiply(2, a), b)) : 
+            (stan::math::logical_gt(stan::math::sum(a), 1) ? stan::math::eval(
+                                                               stan::math::add(
+                                                                 stan::math::multiply(
+                                                                   2, a), b)) : 
             stan::math::eval(stan::math::multiply(2, a))),
             "assigning variable d");
           current_statement__ = 7;
@@ -852,8 +861,8 @@ namespace ternary_if_model_namespace {
             std::to_string(sym1__));
         }
         param_names__.emplace_back(std::string() + "r");
-        param_names__.emplace_back(std::string() + "zp" + "real");
-        param_names__.emplace_back(std::string() + "zp" + "imag");
+        param_names__.emplace_back(std::string() + "zp" + '.' + "real");
+        param_names__.emplace_back(std::string() + "zp" + '.' + "imag");
         if(emit_transformed_parameters__)
           {
             for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
@@ -864,8 +873,8 @@ namespace ternary_if_model_namespace {
               param_names__.emplace_back(std::string() + "d" + '.' +
                 std::to_string(sym1__));
             }
-            param_names__.emplace_back(std::string() + "z" + "real");
-            param_names__.emplace_back(std::string() + "z" + "imag");
+            param_names__.emplace_back(std::string() + "z" + '.' + "real");
+            param_names__.emplace_back(std::string() + "z" + '.' + "imag");
           }
         
         if(emit_generated_quantities__)
@@ -887,8 +896,8 @@ namespace ternary_if_model_namespace {
             std::to_string(sym1__));
         }
         param_names__.emplace_back(std::string() + "r");
-        param_names__.emplace_back(std::string() + "zp" + "real");
-        param_names__.emplace_back(std::string() + "zp" + "imag");
+        param_names__.emplace_back(std::string() + "zp" + '.' + "real");
+        param_names__.emplace_back(std::string() + "zp" + '.' + "imag");
         if(emit_transformed_parameters__)
           {
             for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
@@ -899,8 +908,8 @@ namespace ternary_if_model_namespace {
               param_names__.emplace_back(std::string() + "d" + '.' +
                 std::to_string(sym1__));
             }
-            param_names__.emplace_back(std::string() + "z" + "real");
-            param_names__.emplace_back(std::string() + "z" + "imag");
+            param_names__.emplace_back(std::string() + "z" + '.' + "real");
+            param_names__.emplace_back(std::string() + "z" + '.' + "imag");
           }
         
         if(emit_generated_quantities__)
@@ -998,7 +1007,9 @@ namespace ternary_if_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = ternary_if_model_namespace::ternary_if_model;
+  };
+}
+using stan_model = ternary_if_model_namespace::ternary_if_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&

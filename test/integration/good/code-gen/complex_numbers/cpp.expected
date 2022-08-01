@@ -1431,28 +1431,28 @@ namespace basic_op_param_model_namespace {
                               emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            param_names__.emplace_back(std::string() + "cmat" +
-              std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.' +
+            param_names__.emplace_back(std::string() + "cmat" + '.' +
+              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
               "real");
-            param_names__.emplace_back(std::string() + "cmat" +
-              std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.' +
+            param_names__.emplace_back(std::string() + "cmat" + '.' +
+              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
               "imag");
           }
         }
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "cvec" +
+          param_names__.emplace_back(std::string() + "cvec" + '.' +
             std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "cvec" +
+          param_names__.emplace_back(std::string() + "cvec" + '.' +
             std::to_string(sym1__) + '.' + "imag");
         }
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "crowvec" +
+          param_names__.emplace_back(std::string() + "crowvec" + '.' +
             std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "crowvec" +
+          param_names__.emplace_back(std::string() + "crowvec" + '.' +
             std::to_string(sym1__) + '.' + "imag");
         }
-        param_names__.emplace_back(std::string() + "z" + "real");
-        param_names__.emplace_back(std::string() + "z" + "imag");
+        param_names__.emplace_back(std::string() + "z" + '.' + "real");
+        param_names__.emplace_back(std::string() + "z" + '.' + "imag");
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
             param_names__.emplace_back(std::string() + "mat" + '.' +
@@ -1473,34 +1473,34 @@ namespace basic_op_param_model_namespace {
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
                 param_names__.emplace_back(std::string() + "tp_c_matrix" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
-                  + "real");
+                  '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__)
+                  + '.' + "real");
                 param_names__.emplace_back(std::string() + "tp_c_matrix" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
-                  + "imag");
+                  '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__)
+                  + '.' + "imag");
               }
             }
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-              param_names__.emplace_back(std::string() + "tp_c_vector" +
-                std::to_string(sym1__) + '.' + "real");
-              param_names__.emplace_back(std::string() + "tp_c_vector" +
-                std::to_string(sym1__) + '.' + "imag");
+              param_names__.emplace_back(std::string() + "tp_c_vector" + '.'
+                + std::to_string(sym1__) + '.' + "real");
+              param_names__.emplace_back(std::string() + "tp_c_vector" + '.'
+                + std::to_string(sym1__) + '.' + "imag");
             }
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               param_names__.emplace_back(std::string() + "tp_c_rowvector" +
-                std::to_string(sym1__) + '.' + "real");
+                '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "tp_c_rowvector" +
-                std::to_string(sym1__) + '.' + "imag");
+                '.' + std::to_string(sym1__) + '.' + "imag");
             }
-            param_names__.emplace_back(std::string() + "tp_c" + "real");
-            param_names__.emplace_back(std::string() + "tp_c" + "imag");
+            param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
+            param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-                param_names__.emplace_back(std::string() + "carray" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
+                param_names__.emplace_back(std::string() + "carray" + '.' +
+                  std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
                   + "real");
-                param_names__.emplace_back(std::string() + "carray" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
+                param_names__.emplace_back(std::string() + "carray" + '.' +
+                  std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
                   + "imag");
               }
             }
@@ -1518,28 +1518,28 @@ namespace basic_op_param_model_namespace {
                                 emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            param_names__.emplace_back(std::string() + "cmat" +
-              std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.' +
+            param_names__.emplace_back(std::string() + "cmat" + '.' +
+              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
               "real");
-            param_names__.emplace_back(std::string() + "cmat" +
-              std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.' +
+            param_names__.emplace_back(std::string() + "cmat" + '.' +
+              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
               "imag");
           }
         }
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "cvec" +
+          param_names__.emplace_back(std::string() + "cvec" + '.' +
             std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "cvec" +
+          param_names__.emplace_back(std::string() + "cvec" + '.' +
             std::to_string(sym1__) + '.' + "imag");
         }
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "crowvec" +
+          param_names__.emplace_back(std::string() + "crowvec" + '.' +
             std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "crowvec" +
+          param_names__.emplace_back(std::string() + "crowvec" + '.' +
             std::to_string(sym1__) + '.' + "imag");
         }
-        param_names__.emplace_back(std::string() + "z" + "real");
-        param_names__.emplace_back(std::string() + "z" + "imag");
+        param_names__.emplace_back(std::string() + "z" + '.' + "real");
+        param_names__.emplace_back(std::string() + "z" + '.' + "imag");
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
             param_names__.emplace_back(std::string() + "mat" + '.' +
@@ -1560,34 +1560,34 @@ namespace basic_op_param_model_namespace {
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
                 param_names__.emplace_back(std::string() + "tp_c_matrix" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
-                  + "real");
+                  '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__)
+                  + '.' + "real");
                 param_names__.emplace_back(std::string() + "tp_c_matrix" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
-                  + "imag");
+                  '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__)
+                  + '.' + "imag");
               }
             }
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-              param_names__.emplace_back(std::string() + "tp_c_vector" +
-                std::to_string(sym1__) + '.' + "real");
-              param_names__.emplace_back(std::string() + "tp_c_vector" +
-                std::to_string(sym1__) + '.' + "imag");
+              param_names__.emplace_back(std::string() + "tp_c_vector" + '.'
+                + std::to_string(sym1__) + '.' + "real");
+              param_names__.emplace_back(std::string() + "tp_c_vector" + '.'
+                + std::to_string(sym1__) + '.' + "imag");
             }
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               param_names__.emplace_back(std::string() + "tp_c_rowvector" +
-                std::to_string(sym1__) + '.' + "real");
+                '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "tp_c_rowvector" +
-                std::to_string(sym1__) + '.' + "imag");
+                '.' + std::to_string(sym1__) + '.' + "imag");
             }
-            param_names__.emplace_back(std::string() + "tp_c" + "real");
-            param_names__.emplace_back(std::string() + "tp_c" + "imag");
+            param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
+            param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-                param_names__.emplace_back(std::string() + "carray" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
+                param_names__.emplace_back(std::string() + "carray" + '.' +
+                  std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
                   + "real");
-                param_names__.emplace_back(std::string() + "carray" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
+                param_names__.emplace_back(std::string() + "carray" + '.' +
+                  std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
                   + "imag");
               }
             }
@@ -1697,7 +1697,9 @@ namespace basic_op_param_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = basic_op_param_model_namespace::basic_op_param_model;
+  };
+}
+using stan_model = basic_op_param_model_namespace::basic_op_param_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -2685,34 +2687,34 @@ namespace basic_operations_model_namespace {
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
                 param_names__.emplace_back(std::string() + "gq_c_matrix" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
-                  + "real");
+                  '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__)
+                  + '.' + "real");
                 param_names__.emplace_back(std::string() + "gq_c_matrix" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
-                  + "imag");
+                  '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__)
+                  + '.' + "imag");
               }
             }
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-              param_names__.emplace_back(std::string() + "gq_c_vector" +
-                std::to_string(sym1__) + '.' + "real");
-              param_names__.emplace_back(std::string() + "gq_c_vector" +
-                std::to_string(sym1__) + '.' + "imag");
+              param_names__.emplace_back(std::string() + "gq_c_vector" + '.'
+                + std::to_string(sym1__) + '.' + "real");
+              param_names__.emplace_back(std::string() + "gq_c_vector" + '.'
+                + std::to_string(sym1__) + '.' + "imag");
             }
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               param_names__.emplace_back(std::string() + "gq_c_rowvector" +
-                std::to_string(sym1__) + '.' + "real");
+                '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "gq_c_rowvector" +
-                std::to_string(sym1__) + '.' + "imag");
+                '.' + std::to_string(sym1__) + '.' + "imag");
             }
-            param_names__.emplace_back(std::string() + "gq_c" + "real");
-            param_names__.emplace_back(std::string() + "gq_c" + "imag");
+            param_names__.emplace_back(std::string() + "gq_c" + '.' + "real");
+            param_names__.emplace_back(std::string() + "gq_c" + '.' + "imag");
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-                param_names__.emplace_back(std::string() + "carray" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
+                param_names__.emplace_back(std::string() + "carray" + '.' +
+                  std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
                   + "real");
-                param_names__.emplace_back(std::string() + "carray" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
+                param_names__.emplace_back(std::string() + "carray" + '.' +
+                  std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
                   + "imag");
               }
             }
@@ -2733,34 +2735,34 @@ namespace basic_operations_model_namespace {
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
                 param_names__.emplace_back(std::string() + "gq_c_matrix" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
-                  + "real");
+                  '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__)
+                  + '.' + "real");
                 param_names__.emplace_back(std::string() + "gq_c_matrix" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
-                  + "imag");
+                  '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__)
+                  + '.' + "imag");
               }
             }
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-              param_names__.emplace_back(std::string() + "gq_c_vector" +
-                std::to_string(sym1__) + '.' + "real");
-              param_names__.emplace_back(std::string() + "gq_c_vector" +
-                std::to_string(sym1__) + '.' + "imag");
+              param_names__.emplace_back(std::string() + "gq_c_vector" + '.'
+                + std::to_string(sym1__) + '.' + "real");
+              param_names__.emplace_back(std::string() + "gq_c_vector" + '.'
+                + std::to_string(sym1__) + '.' + "imag");
             }
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               param_names__.emplace_back(std::string() + "gq_c_rowvector" +
-                std::to_string(sym1__) + '.' + "real");
+                '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "gq_c_rowvector" +
-                std::to_string(sym1__) + '.' + "imag");
+                '.' + std::to_string(sym1__) + '.' + "imag");
             }
-            param_names__.emplace_back(std::string() + "gq_c" + "real");
-            param_names__.emplace_back(std::string() + "gq_c" + "imag");
+            param_names__.emplace_back(std::string() + "gq_c" + '.' + "real");
+            param_names__.emplace_back(std::string() + "gq_c" + '.' + "imag");
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-                param_names__.emplace_back(std::string() + "carray" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
+                param_names__.emplace_back(std::string() + "carray" + '.' +
+                  std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
                   + "real");
-                param_names__.emplace_back(std::string() + "carray" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
+                param_names__.emplace_back(std::string() + "carray" + '.' +
+                  std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
                   + "imag");
               }
             }
@@ -2856,7 +2858,8 @@ namespace basic_operations_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = basic_operations_model_namespace::basic_operations_model;
 #ifndef USING_R
 // Boilerplate
@@ -4658,28 +4661,28 @@ namespace basic_ops_mix_model_namespace {
                               emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            param_names__.emplace_back(std::string() + "cvmat" +
-              std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.' +
+            param_names__.emplace_back(std::string() + "cvmat" + '.' +
+              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
               "real");
-            param_names__.emplace_back(std::string() + "cvmat" +
-              std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.' +
+            param_names__.emplace_back(std::string() + "cvmat" + '.' +
+              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
               "imag");
           }
         }
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "cvvec" +
+          param_names__.emplace_back(std::string() + "cvvec" + '.' +
             std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "cvvec" +
+          param_names__.emplace_back(std::string() + "cvvec" + '.' +
             std::to_string(sym1__) + '.' + "imag");
         }
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "cvrowvec" +
+          param_names__.emplace_back(std::string() + "cvrowvec" + '.' +
             std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "cvrowvec" +
+          param_names__.emplace_back(std::string() + "cvrowvec" + '.' +
             std::to_string(sym1__) + '.' + "imag");
         }
-        param_names__.emplace_back(std::string() + "zv" + "real");
-        param_names__.emplace_back(std::string() + "zv" + "imag");
+        param_names__.emplace_back(std::string() + "zv" + '.' + "real");
+        param_names__.emplace_back(std::string() + "zv" + '.' + "imag");
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
             param_names__.emplace_back(std::string() + "vmat" + '.' +
@@ -4700,34 +4703,34 @@ namespace basic_ops_mix_model_namespace {
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
                 param_names__.emplace_back(std::string() + "tp_c_matrix" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
-                  + "real");
+                  '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__)
+                  + '.' + "real");
                 param_names__.emplace_back(std::string() + "tp_c_matrix" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
-                  + "imag");
+                  '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__)
+                  + '.' + "imag");
               }
             }
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-              param_names__.emplace_back(std::string() + "tp_c_vector" +
-                std::to_string(sym1__) + '.' + "real");
-              param_names__.emplace_back(std::string() + "tp_c_vector" +
-                std::to_string(sym1__) + '.' + "imag");
+              param_names__.emplace_back(std::string() + "tp_c_vector" + '.'
+                + std::to_string(sym1__) + '.' + "real");
+              param_names__.emplace_back(std::string() + "tp_c_vector" + '.'
+                + std::to_string(sym1__) + '.' + "imag");
             }
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               param_names__.emplace_back(std::string() + "tp_c_rowvector" +
-                std::to_string(sym1__) + '.' + "real");
+                '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "tp_c_rowvector" +
-                std::to_string(sym1__) + '.' + "imag");
+                '.' + std::to_string(sym1__) + '.' + "imag");
             }
-            param_names__.emplace_back(std::string() + "tp_c" + "real");
-            param_names__.emplace_back(std::string() + "tp_c" + "imag");
+            param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
+            param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-                param_names__.emplace_back(std::string() + "carray" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
+                param_names__.emplace_back(std::string() + "carray" + '.' +
+                  std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
                   + "real");
-                param_names__.emplace_back(std::string() + "carray" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
+                param_names__.emplace_back(std::string() + "carray" + '.' +
+                  std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
                   + "imag");
               }
             }
@@ -4745,28 +4748,28 @@ namespace basic_ops_mix_model_namespace {
                                 emit_generated_quantities__ = true) const final {
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            param_names__.emplace_back(std::string() + "cvmat" +
-              std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.' +
+            param_names__.emplace_back(std::string() + "cvmat" + '.' +
+              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
               "real");
-            param_names__.emplace_back(std::string() + "cvmat" +
-              std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.' +
+            param_names__.emplace_back(std::string() + "cvmat" + '.' +
+              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
               "imag");
           }
         }
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "cvvec" +
+          param_names__.emplace_back(std::string() + "cvvec" + '.' +
             std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "cvvec" +
+          param_names__.emplace_back(std::string() + "cvvec" + '.' +
             std::to_string(sym1__) + '.' + "imag");
         }
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "cvrowvec" +
+          param_names__.emplace_back(std::string() + "cvrowvec" + '.' +
             std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "cvrowvec" +
+          param_names__.emplace_back(std::string() + "cvrowvec" + '.' +
             std::to_string(sym1__) + '.' + "imag");
         }
-        param_names__.emplace_back(std::string() + "zv" + "real");
-        param_names__.emplace_back(std::string() + "zv" + "imag");
+        param_names__.emplace_back(std::string() + "zv" + '.' + "real");
+        param_names__.emplace_back(std::string() + "zv" + '.' + "imag");
         for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
             param_names__.emplace_back(std::string() + "vmat" + '.' +
@@ -4787,34 +4790,34 @@ namespace basic_ops_mix_model_namespace {
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
                 param_names__.emplace_back(std::string() + "tp_c_matrix" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
-                  + "real");
+                  '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__)
+                  + '.' + "real");
                 param_names__.emplace_back(std::string() + "tp_c_matrix" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
-                  + "imag");
+                  '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__)
+                  + '.' + "imag");
               }
             }
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-              param_names__.emplace_back(std::string() + "tp_c_vector" +
-                std::to_string(sym1__) + '.' + "real");
-              param_names__.emplace_back(std::string() + "tp_c_vector" +
-                std::to_string(sym1__) + '.' + "imag");
+              param_names__.emplace_back(std::string() + "tp_c_vector" + '.'
+                + std::to_string(sym1__) + '.' + "real");
+              param_names__.emplace_back(std::string() + "tp_c_vector" + '.'
+                + std::to_string(sym1__) + '.' + "imag");
             }
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               param_names__.emplace_back(std::string() + "tp_c_rowvector" +
-                std::to_string(sym1__) + '.' + "real");
+                '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "tp_c_rowvector" +
-                std::to_string(sym1__) + '.' + "imag");
+                '.' + std::to_string(sym1__) + '.' + "imag");
             }
-            param_names__.emplace_back(std::string() + "tp_c" + "real");
-            param_names__.emplace_back(std::string() + "tp_c" + "imag");
+            param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
+            param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
             for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-                param_names__.emplace_back(std::string() + "carray" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
+                param_names__.emplace_back(std::string() + "carray" + '.' +
+                  std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
                   + "real");
-                param_names__.emplace_back(std::string() + "carray" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
+                param_names__.emplace_back(std::string() + "carray" + '.' +
+                  std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
                   + "imag");
               }
             }
@@ -4925,7 +4928,9 @@ namespace basic_ops_mix_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = basic_ops_mix_model_namespace::basic_ops_mix_model;
+  };
+}
+using stan_model = basic_ops_mix_model_namespace::basic_ops_mix_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -5518,7 +5523,9 @@ namespace complex_data_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = complex_data_model_namespace::complex_data_model;
+  };
+}
+using stan_model = complex_data_model_namespace::complex_data_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -7942,43 +7949,47 @@ namespace complex_scalar_model_namespace {
                               emit_transformed_parameters__ = true, bool
                               emit_generated_quantities__ = true) const final {
         param_names__.emplace_back(std::string() + "p_r");
-        param_names__.emplace_back(std::string() + "p_complex" + "real");
-        param_names__.emplace_back(std::string() + "p_complex" + "imag");
+        param_names__.emplace_back(std::string() + "p_complex" + '.' +
+          "real");
+        param_names__.emplace_back(std::string() + "p_complex" + '.' +
+          "imag");
         for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          param_names__.emplace_back(std::string() + "p_complex_array" +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "p_complex_array" +
-            std::to_string(sym1__) + '.' + "imag");
+          param_names__.emplace_back(std::string() + "p_complex_array" + '.'
+            + std::to_string(sym1__) + '.' + "real");
+          param_names__.emplace_back(std::string() + "p_complex_array" + '.'
+            + std::to_string(sym1__) + '.' + "imag");
         }
         for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
             param_names__.emplace_back(std::string() + "p_complex_array_2d" +
-              std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.' +
-              "real");
+              '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) +
+              '.' + "real");
             param_names__.emplace_back(std::string() + "p_complex_array_2d" +
-              std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.' +
-              "imag");
+              '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) +
+              '.' + "imag");
           }
         }
         if(emit_transformed_parameters__)
           {
             param_names__.emplace_back(std::string() + "tp_r");
-            param_names__.emplace_back(std::string() + "tp_complex" + "real");
-            param_names__.emplace_back(std::string() + "tp_complex" + "imag");
+            param_names__.emplace_back(std::string() + "tp_complex" + '.' +
+              "real");
+            param_names__.emplace_back(std::string() + "tp_complex" + '.' +
+              "imag");
             for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
               param_names__.emplace_back(std::string() + "tp_complex_array" +
-                std::to_string(sym1__) + '.' + "real");
+                '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "tp_complex_array" +
-                std::to_string(sym1__) + '.' + "imag");
+                '.' + std::to_string(sym1__) + '.' + "imag");
             }
             for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
                 param_names__.emplace_back(std::string() +
-                  "tp_complex_array_2d" + std::to_string(sym1__) + '.' +
-                  std::to_string(sym2__) + '.' + "real");
+                  "tp_complex_array_2d" + '.' + std::to_string(sym2__) + '.'
+                  + std::to_string(sym1__) + '.' + "real");
                 param_names__.emplace_back(std::string() +
-                  "tp_complex_array_2d" + std::to_string(sym1__) + '.' +
-                  std::to_string(sym2__) + '.' + "imag");
+                  "tp_complex_array_2d" + '.' + std::to_string(sym2__) + '.'
+                  + std::to_string(sym1__) + '.' + "imag");
               }
             }
           }
@@ -7987,28 +7998,30 @@ namespace complex_scalar_model_namespace {
           {
             param_names__.emplace_back(std::string() + "gq_i");
             param_names__.emplace_back(std::string() + "gq_r");
-            param_names__.emplace_back(std::string() + "gq_complex" + "real");
-            param_names__.emplace_back(std::string() + "gq_complex" + "imag");
+            param_names__.emplace_back(std::string() + "gq_complex" + '.' +
+              "real");
+            param_names__.emplace_back(std::string() + "gq_complex" + '.' +
+              "imag");
             for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
               param_names__.emplace_back(std::string() + "gq_complex_array" +
-                std::to_string(sym1__) + '.' + "real");
+                '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "gq_complex_array" +
-                std::to_string(sym1__) + '.' + "imag");
+                '.' + std::to_string(sym1__) + '.' + "imag");
             }
             for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
                 param_names__.emplace_back(std::string() +
-                  "gq_complex_array_2d" + std::to_string(sym1__) + '.' +
-                  std::to_string(sym2__) + '.' + "real");
+                  "gq_complex_array_2d" + '.' + std::to_string(sym2__) + '.'
+                  + std::to_string(sym1__) + '.' + "real");
                 param_names__.emplace_back(std::string() +
-                  "gq_complex_array_2d" + std::to_string(sym1__) + '.' +
-                  std::to_string(sym2__) + '.' + "imag");
+                  "gq_complex_array_2d" + '.' + std::to_string(sym2__) + '.'
+                  + std::to_string(sym1__) + '.' + "imag");
               }
             }
-            param_names__.emplace_back(std::string() + "z" + "real");
-            param_names__.emplace_back(std::string() + "z" + "imag");
-            param_names__.emplace_back(std::string() + "y" + "real");
-            param_names__.emplace_back(std::string() + "y" + "imag");
+            param_names__.emplace_back(std::string() + "z" + '.' + "real");
+            param_names__.emplace_back(std::string() + "z" + '.' + "imag");
+            param_names__.emplace_back(std::string() + "y" + '.' + "real");
+            param_names__.emplace_back(std::string() + "y" + '.' + "imag");
             for(int sym1__ = 1; sym1__ <= 0; ++sym1__) {
               param_names__.emplace_back(std::string() + "i_arr" + '.' +
                 std::to_string(sym1__));
@@ -8017,10 +8030,10 @@ namespace complex_scalar_model_namespace {
               param_names__.emplace_back(std::string() + "i_arr_1" + '.' +
                 std::to_string(sym1__));
             }
-            param_names__.emplace_back(std::string() + "zi" + "real");
-            param_names__.emplace_back(std::string() + "zi" + "imag");
-            param_names__.emplace_back(std::string() + "yi" + "real");
-            param_names__.emplace_back(std::string() + "yi" + "imag");
+            param_names__.emplace_back(std::string() + "zi" + '.' + "real");
+            param_names__.emplace_back(std::string() + "zi" + '.' + "imag");
+            param_names__.emplace_back(std::string() + "yi" + '.' + "real");
+            param_names__.emplace_back(std::string() + "yi" + '.' + "imag");
             param_names__.emplace_back(std::string() + "x");
           }
         
@@ -8030,43 +8043,47 @@ namespace complex_scalar_model_namespace {
                                 emit_transformed_parameters__ = true, bool
                                 emit_generated_quantities__ = true) const final {
         param_names__.emplace_back(std::string() + "p_r");
-        param_names__.emplace_back(std::string() + "p_complex" + "real");
-        param_names__.emplace_back(std::string() + "p_complex" + "imag");
+        param_names__.emplace_back(std::string() + "p_complex" + '.' +
+          "real");
+        param_names__.emplace_back(std::string() + "p_complex" + '.' +
+          "imag");
         for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          param_names__.emplace_back(std::string() + "p_complex_array" +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "p_complex_array" +
-            std::to_string(sym1__) + '.' + "imag");
+          param_names__.emplace_back(std::string() + "p_complex_array" + '.'
+            + std::to_string(sym1__) + '.' + "real");
+          param_names__.emplace_back(std::string() + "p_complex_array" + '.'
+            + std::to_string(sym1__) + '.' + "imag");
         }
         for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
             param_names__.emplace_back(std::string() + "p_complex_array_2d" +
-              std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.' +
-              "real");
+              '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) +
+              '.' + "real");
             param_names__.emplace_back(std::string() + "p_complex_array_2d" +
-              std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.' +
-              "imag");
+              '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) +
+              '.' + "imag");
           }
         }
         if(emit_transformed_parameters__)
           {
             param_names__.emplace_back(std::string() + "tp_r");
-            param_names__.emplace_back(std::string() + "tp_complex" + "real");
-            param_names__.emplace_back(std::string() + "tp_complex" + "imag");
+            param_names__.emplace_back(std::string() + "tp_complex" + '.' +
+              "real");
+            param_names__.emplace_back(std::string() + "tp_complex" + '.' +
+              "imag");
             for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
               param_names__.emplace_back(std::string() + "tp_complex_array" +
-                std::to_string(sym1__) + '.' + "real");
+                '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "tp_complex_array" +
-                std::to_string(sym1__) + '.' + "imag");
+                '.' + std::to_string(sym1__) + '.' + "imag");
             }
             for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
                 param_names__.emplace_back(std::string() +
-                  "tp_complex_array_2d" + std::to_string(sym1__) + '.' +
-                  std::to_string(sym2__) + '.' + "real");
+                  "tp_complex_array_2d" + '.' + std::to_string(sym2__) + '.'
+                  + std::to_string(sym1__) + '.' + "real");
                 param_names__.emplace_back(std::string() +
-                  "tp_complex_array_2d" + std::to_string(sym1__) + '.' +
-                  std::to_string(sym2__) + '.' + "imag");
+                  "tp_complex_array_2d" + '.' + std::to_string(sym2__) + '.'
+                  + std::to_string(sym1__) + '.' + "imag");
               }
             }
           }
@@ -8075,28 +8092,30 @@ namespace complex_scalar_model_namespace {
           {
             param_names__.emplace_back(std::string() + "gq_i");
             param_names__.emplace_back(std::string() + "gq_r");
-            param_names__.emplace_back(std::string() + "gq_complex" + "real");
-            param_names__.emplace_back(std::string() + "gq_complex" + "imag");
+            param_names__.emplace_back(std::string() + "gq_complex" + '.' +
+              "real");
+            param_names__.emplace_back(std::string() + "gq_complex" + '.' +
+              "imag");
             for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
               param_names__.emplace_back(std::string() + "gq_complex_array" +
-                std::to_string(sym1__) + '.' + "real");
+                '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "gq_complex_array" +
-                std::to_string(sym1__) + '.' + "imag");
+                '.' + std::to_string(sym1__) + '.' + "imag");
             }
             for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
                 param_names__.emplace_back(std::string() +
-                  "gq_complex_array_2d" + std::to_string(sym1__) + '.' +
-                  std::to_string(sym2__) + '.' + "real");
+                  "gq_complex_array_2d" + '.' + std::to_string(sym2__) + '.'
+                  + std::to_string(sym1__) + '.' + "real");
                 param_names__.emplace_back(std::string() +
-                  "gq_complex_array_2d" + std::to_string(sym1__) + '.' +
-                  std::to_string(sym2__) + '.' + "imag");
+                  "gq_complex_array_2d" + '.' + std::to_string(sym2__) + '.'
+                  + std::to_string(sym1__) + '.' + "imag");
               }
             }
-            param_names__.emplace_back(std::string() + "z" + "real");
-            param_names__.emplace_back(std::string() + "z" + "imag");
-            param_names__.emplace_back(std::string() + "y" + "real");
-            param_names__.emplace_back(std::string() + "y" + "imag");
+            param_names__.emplace_back(std::string() + "z" + '.' + "real");
+            param_names__.emplace_back(std::string() + "z" + '.' + "imag");
+            param_names__.emplace_back(std::string() + "y" + '.' + "real");
+            param_names__.emplace_back(std::string() + "y" + '.' + "imag");
             for(int sym1__ = 1; sym1__ <= 0; ++sym1__) {
               param_names__.emplace_back(std::string() + "i_arr" + '.' +
                 std::to_string(sym1__));
@@ -8105,10 +8124,10 @@ namespace complex_scalar_model_namespace {
               param_names__.emplace_back(std::string() + "i_arr_1" + '.' +
                 std::to_string(sym1__));
             }
-            param_names__.emplace_back(std::string() + "zi" + "real");
-            param_names__.emplace_back(std::string() + "zi" + "imag");
-            param_names__.emplace_back(std::string() + "yi" + "real");
-            param_names__.emplace_back(std::string() + "yi" + "imag");
+            param_names__.emplace_back(std::string() + "zi" + '.' + "real");
+            param_names__.emplace_back(std::string() + "zi" + '.' + "imag");
+            param_names__.emplace_back(std::string() + "yi" + '.' + "real");
+            param_names__.emplace_back(std::string() + "yi" + '.' + "imag");
             param_names__.emplace_back(std::string() + "x");
           }
         
@@ -8210,7 +8229,9 @@ namespace complex_scalar_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = complex_scalar_model_namespace::complex_scalar_model;
+  };
+}
+using stan_model = complex_scalar_model_namespace::complex_scalar_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -8489,18 +8510,18 @@ namespace complex_vectors_model_namespace {
         if(emit_transformed_parameters__)
           {
             for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-              param_names__.emplace_back(std::string() + "z" +
+              param_names__.emplace_back(std::string() + "z" + '.' +
                 std::to_string(sym1__) + '.' + "real");
-              param_names__.emplace_back(std::string() + "z" +
+              param_names__.emplace_back(std::string() + "z" + '.' +
                 std::to_string(sym1__) + '.' + "imag");
             }
             for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-                param_names__.emplace_back(std::string() + "zs" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
+                param_names__.emplace_back(std::string() + "zs" + '.' +
+                  std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
                   + "real");
-                param_names__.emplace_back(std::string() + "zs" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
+                param_names__.emplace_back(std::string() + "zs" + '.' +
+                  std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
                   + "imag");
               }
             }
@@ -8509,9 +8530,9 @@ namespace complex_vectors_model_namespace {
                 std::to_string(sym1__));
             }
             for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-              param_names__.emplace_back(std::string() + "zx" +
+              param_names__.emplace_back(std::string() + "zx" + '.' +
                 std::to_string(sym1__) + '.' + "real");
-              param_names__.emplace_back(std::string() + "zx" +
+              param_names__.emplace_back(std::string() + "zx" + '.' +
                 std::to_string(sym1__) + '.' + "imag");
             }
           }
@@ -8529,18 +8550,18 @@ namespace complex_vectors_model_namespace {
         if(emit_transformed_parameters__)
           {
             for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-              param_names__.emplace_back(std::string() + "z" +
+              param_names__.emplace_back(std::string() + "z" + '.' +
                 std::to_string(sym1__) + '.' + "real");
-              param_names__.emplace_back(std::string() + "z" +
+              param_names__.emplace_back(std::string() + "z" + '.' +
                 std::to_string(sym1__) + '.' + "imag");
             }
             for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
               for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-                param_names__.emplace_back(std::string() + "zs" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
+                param_names__.emplace_back(std::string() + "zs" + '.' +
+                  std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
                   + "real");
-                param_names__.emplace_back(std::string() + "zs" +
-                  std::to_string(sym1__) + '.' + std::to_string(sym2__) + '.'
+                param_names__.emplace_back(std::string() + "zs" + '.' +
+                  std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
                   + "imag");
               }
             }
@@ -8549,9 +8570,9 @@ namespace complex_vectors_model_namespace {
                 std::to_string(sym1__));
             }
             for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-              param_names__.emplace_back(std::string() + "zx" +
+              param_names__.emplace_back(std::string() + "zx" + '.' +
                 std::to_string(sym1__) + '.' + "real");
-              param_names__.emplace_back(std::string() + "zx" +
+              param_names__.emplace_back(std::string() + "zx" + '.' +
                 std::to_string(sym1__) + '.' + "imag");
             }
           }
@@ -8651,7 +8672,8 @@ namespace complex_vectors_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = complex_vectors_model_namespace::complex_vectors_model;
 #ifndef USING_R
 // Boilerplate
@@ -9281,7 +9303,8 @@ namespace user_function_templating_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = user_function_templating_model_namespace::user_function_templating_model;
 #ifndef USING_R
 // Boilerplate

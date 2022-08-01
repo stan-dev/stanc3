@@ -716,7 +716,8 @@ namespace ode_adjoint_test_model_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}
+  };
+}
 using stan_model = ode_adjoint_test_model_model_namespace::ode_adjoint_test_model_model;
 #ifndef USING_R
 // Boilerplate
@@ -1607,7 +1608,9 @@ namespace overloaded_ode_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = overloaded_ode_model_namespace::overloaded_ode_model;
+  };
+}
+using stan_model = overloaded_ode_model_namespace::overloaded_ode_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&

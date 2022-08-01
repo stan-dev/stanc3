@@ -129,8 +129,7 @@ let stan2cpp model_name model_string is_flag_set flag_val =
           r.return
             (Result.Ok (Fmt.str "%a" Program.Typed.pp tx_mir), warnings, []) ;
         let cpp = Lower_program.lower_program opt_mir in
-        let cpp_str =
-          Fmt.(to_to_string (list ~sep:cut Cpp.Printing.pp_defn)) cpp in
+        let cpp_str = Fmt.(to_to_string Cpp.Printing.pp_program) cpp in
         let uninit_warnings =
           if is_flag_set "warn-uninitialized" then
             Pedantic_analysis.warn_uninitialized mir

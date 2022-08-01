@@ -7567,7 +7567,9 @@ namespace distributions_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = distributions_model_namespace::distributions_model;
+  };
+}
+using stan_model = distributions_model_namespace::distributions_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&
@@ -8266,7 +8268,9 @@ namespace restricted_model_namespace {
         vars.resize(num_params_r__);
         transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
       }
-  };}using stan_model = restricted_model_namespace::restricted_model;
+  };
+}
+using stan_model = restricted_model_namespace::restricted_model;
 #ifndef USING_R
 // Boilerplate
 stan::model::model_base&

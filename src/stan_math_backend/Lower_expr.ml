@@ -537,8 +537,8 @@ and lower_expr (Expr.Fixed.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
   | EOr (e1, e2) -> lower_logical_op Or e1 e2
   | Indexed (e, []) -> lower_expr e
   | TernaryIf (ec, et, ef) ->
-      let maybe_eval e =
-        if UnsizedType.is_eigen_type meta.type_ then
+      let maybe_eval (e : Expr.Typed.t) =
+        if UnsizedType.is_eigen_type e.meta.type_ then
           fun_call "stan::math::eval" [lower_expr e]
         else lower_expr e in
       Parens (TernaryIf (maybe_eval ec, maybe_eval et, maybe_eval ef))
