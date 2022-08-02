@@ -1,3 +1,5 @@
+(** Lowering of Stan statements to C++ *)
+
 open Core_kernel
 open Core_kernel.Poly
 open Middle

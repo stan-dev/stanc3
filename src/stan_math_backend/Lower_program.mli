@@ -1,3 +1,5 @@
+(** Stan-program-specific C++ generation *)
+
 open Middle
 
 val standalone_functions : bool ref

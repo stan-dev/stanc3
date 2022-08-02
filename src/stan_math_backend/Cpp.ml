@@ -1,7 +1,10 @@
+(** A set of data types representing the C++ we generate *)
+
 open Core_kernel
 
 type identifier = string [@@deriving sexp]
 
+(** C++ types *)
 type type_ =
   | Auto
   | Void
@@ -53,22 +56,23 @@ type operator =
 type unary_op = PMinus | Incr [@@deriving sexp]
 
 type expr =
-  | Literal of string
+  | Literal of string  (** printed as-is *)
   | Var of identifier
   | Parens of expr
   | FunCall of identifier * type_ list * expr list
   | MethodCall of expr * identifier * type_ list * expr list
   | StaticMethodCall of type_ * identifier * type_ list * expr list
-  | Constructor of type_ * expr list
+  | Constructor of type_ * expr list  (** printed as [type(expr1, expr2, ...)]*)
   | InitializerExpr of type_ * expr list
+      (** printed as [type{expr1, expr2, ...}]*)
   | ArrayLiteral of expr list
   | TernaryIf of expr * expr * expr
   | Cast of type_ * expr
   | Index of expr * expr
   | New of string option * type_ * expr list
-  | Assign of expr * expr (* NB: Not all exprs are valid lvalues! *)
+  | Assign of expr * expr  (** NB: Not all exprs are valid lvalues! *)
   | Unary of unary_op * expr
-  | StreamInsertion of expr * expr list
+  | StreamInsertion of expr * expr list  (** Corresponds to [operator<<] *)
   | BinOp of expr * operator * expr
 [@@deriving sexp]
 
@@ -152,6 +156,8 @@ type stmt =
 [@@deriving sexp]
 
 module Stmts = struct
+  (** Helpers for common statement constructs *)
+
   let block stmts = match stmts with [(Block _ as b)] -> b | _ -> Block stmts
 
   let rethrow_located stmts =
@@ -290,6 +296,8 @@ let make_struct_defn ~param ~name ~body () = {param; struct_name= name; body}
 type program = defn list [@@deriving sexp]
 
 module Printing = struct
+  (** Pretty-printing of the C++ type *)
+
   open Fmt
 
   let trailing_space (t : 'a Fmt.t) : 'a Fmt.t = fun ppf -> pf ppf "%a@ " t
@@ -324,7 +332,8 @@ module Printing = struct
           (if default then " = nullptr" else "")
 
   (**
-   Pretty print a full C++ `template <parameter-list>`
+   Pretty print a list of templates as [template <parameter-list>].name
+   This function pools together [RequireIs] nodes into a [require_all_t]
   *)
   let pp_template ~default ppf template_parameters =
     let pp_basic_template ppf = function
