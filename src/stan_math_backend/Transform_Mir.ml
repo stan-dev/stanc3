@@ -202,7 +202,9 @@ let rec data_read smeta ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
   | UVector | URowVector | UMatrix | UComplexMatrix | UComplexRowVector
    |UComplexVector | UArray _ ->
       let decl, assign, flat_var =
-        let decl_id_flat = decl_id ^ "_flat__" in
+        let decl_id_flat =
+          Str.global_replace (Str.regexp_string ".") "_dot_" decl_id ^ "_flat__"
+        in
         ( Stmt.Fixed.Pattern.Decl
             { decl_adtype= AutoDiffable
             ; decl_id= decl_id_flat
@@ -227,8 +229,8 @@ let rec data_read smeta ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
           { Expr.Fixed.pattern= Indexed (flat_var, [Single pos_var])
           ; meta= Expr.Typed.Meta.{flat_var.meta with type_= scalar} } in
         SList
-          ( Stmt.Helpers.assign_indexed (SizedType.to_unsized st) decl_id smeta
-              read_indexed var
+          ( Stmt.Helpers.assign_indexed (SizedType.to_unsized st) decl_id_lval
+              smeta read_indexed var
           :: pos_increment )
         |> swrap in
       let pos_reset =

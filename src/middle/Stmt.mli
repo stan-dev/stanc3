@@ -144,7 +144,7 @@ module Helpers : sig
 
   val assign_indexed :
        UnsizedType.t
-    -> string
+    -> 'b Fixed.First.t Fixed.Pattern.lvalue
     -> 'a
     -> ('b Expr.Fixed.t -> 'b Expr.Fixed.t)
     -> 'b Expr.Fixed.t

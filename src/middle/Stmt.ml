@@ -299,13 +299,11 @@ module Helpers = struct
       | _ -> for_scalar st bodyfn var smeta in
     go st (fun st var -> bodyfn st (invert_index_order var)) var smeta
 
-  let assign_indexed decl_type vident meta varfn var =
+  let assign_indexed decl_type lval meta varfn var =
     let indices = Expr.Helpers.collect_indices var in
     Fixed.
       { meta
-      ; pattern=
-          Assignment (LIndexed (LVariable vident, indices), decl_type, varfn var)
-      }
+      ; pattern= Assignment (LIndexed (lval, indices), decl_type, varfn var) }
 
   let rec get_lhs_name (lval : 'a Fixed.Pattern.lvalue) =
     match lval with
