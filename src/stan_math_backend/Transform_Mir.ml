@@ -190,6 +190,7 @@ let rec data_read smeta ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
                   SList
                     (data_read smeta
                        ( LIndexed
+                           (* TUPLE TODO this index is wrong for arrays inside tuples *)
                            ( decl_id_lval
                            , List.map
                                ~f:(fun e -> Index.Single e)
