@@ -499,7 +499,8 @@ Syntax error in 'bad_decl1.stan', line 2, column 14 to column 15, parsing error:
      3:  }
    -------------------------------------------------
 
-Expected identifier. Multiple declarations must have the same type.
+Expected a new identifier after comma in declaration.
+All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
   $ ../../../../../install/default/bin/stanc bad_decl2.stan
 Syntax error in 'bad_decl2.stan', line 2, column 13 to column 14, parsing error:
    -------------------------------------------------
@@ -510,6 +511,19 @@ Syntax error in 'bad_decl2.stan', line 2, column 13 to column 14, parsing error:
    -------------------------------------------------
 
 Expected non-array type after "array" declaration.
+  $ ../../../../../install/default/bin/stanc bad_decl3.stan
+Syntax error in 'bad_decl3.stan', line 3, column 28 to column 29, parsing error:
+   -------------------------------------------------
+     1:  functions {
+     2:      void test(real alpha, real tau, real beta, real delta) {
+     3:        real t, x = tau, beta * alpha; // this errors saying
+                                     ^
+     4:        return;
+     5:      }
+   -------------------------------------------------
+
+Expected a new identifier after comma in declaration.
+All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
   $ ../../../../../install/default/bin/stanc bad_periods_data.stan
 Syntax error in 'bad_periods_data.stan', line 2, column 7, lexing error:
    -------------------------------------------------

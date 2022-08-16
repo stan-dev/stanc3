@@ -23,7 +23,8 @@ Syntax error in 'incomplete3.stan', line 2, column 0 to column 0, parsing error:
          ^
    -------------------------------------------------
 
-Expected identifier. Multiple declarations must have the same type.
+Expected a new identifier after comma in declaration.
+All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
   $ ../../../../../install/default/bin/stanc incomplete4.stan
 Syntax error in 'incomplete4.stan', line 2, column 35 to column 40, parsing error:
    -------------------------------------------------

@@ -5346,6 +5346,10 @@ program: DATABLOCK LBRACE REAL IDENTIFIER LBRACK IDENTIFIER RBRACK ASSIGN UNREAC
 Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
 after variable declaration.
 
+program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA INT WHILE
+## Concrete syntax: model { real foo , int while
+program: DATABLOCK LBRACE REAL IDENTIFIER COMMA INT WHILE
+## Concrete syntax: data { real foo , int while
 program: DATABLOCK LBRACE REAL IDENTIFIER COMMA UNREACHABLE
 ## Concrete syntax: data { real foo , <<<<UNREACHABLE>>>
 program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA UNREACHABLE
@@ -5360,7 +5364,8 @@ program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA UNREACHABLE
 ## id_and_optional_assignment(expression) COMMA
 ##
 
-Expected identifier after comma in multiple declaration.
+Expected a new identifier after comma in declaration.
+All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
 
 program: TRANSFORMEDDATABLOCK LBRACE REAL IDENTIFIER LBRACK ARRAY RBRACK ASSIGN ARRAY COMMA
 ## Concrete syntax: transformed data { real foo [ array ] = array ,
@@ -5528,36 +5533,6 @@ program: TRANSFORMEDDATABLOCK LBRACE ARRAY IDENTIFIER
 
 Expected "[" array sizes "]" followed by type after "array".
 
-program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA INT WHILE
-## Concrete syntax: model { real foo , int while
-program: DATABLOCK LBRACE REAL IDENTIFIER COMMA INT WHILE
-##
-## Concrete syntax: data { real foo , int while
-##
-## Ends in an error in state: 826.
-##
-## id_and_optional_assignment(no_assign) -> decl_identifier . optional_assignment(no_assign) [ SEMICOLON COMMA ]
-##
-## The known suffix of the stack is as follows:
-## decl_identifier
-##
-
-Expected identifier. Multiple declarations must have the same type.
-
-functions_only: ARRAY LBRACK RBRACK WHILE
-##
-## Concrete syntax: array [ ] while
-##
-## Ends in an error in state: 18.
-##
-## unsized_type -> ARRAY unsized_dims . basic_type [ WHILE VOID VECTOR UPPER UNITVECTOR TRUNCATE TARGET SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER INT IN IF IDENTIFIER GETLP FUNCTIONBLOCK FOR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
-## unsized_type -> ARRAY unsized_dims . LPAREN unsized_type COMMA loption(separated_nonempty_list(COMMA,unsized_type)) RPAREN [ WHILE VOID VECTOR UPPER UNITVECTOR TRUNCATE TARGET SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER INT IN IF IDENTIFIER GETLP FUNCTIONBLOCK FOR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## ARRAY unsized_dims
-##
-
-Expected non-array type after "array" declaration.
 
 program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK ARRAY RBRACK VECTOR LBRACK IMAGNUMERAL RBRACK AND
 ## Concrete syntax: transformed data { array [ array ] vector [ 1i ] &&
@@ -5977,6 +5952,8 @@ program: TRANSFORMEDDATABLOCK LBRACE DOTNUMERAL WHILE
 
 Ill-formed expression. Found part of an expression, expected either an operator or the end of the expression.
 
+functions_only: ARRAY LBRACK RBRACK WHILE
+## Concrete syntax: array [ ] while
 program: MODELBLOCK LBRACE ARRAY LBRACK INTNUMERAL RBRACK IDENTIFIER
 ## Concrete syntax: model { array [ 24 ] foo
 program: DATABLOCK LBRACE ARRAY LBRACK INTNUMERAL RBRACK IDENTIFIER
@@ -5994,9 +5971,9 @@ program: DATABLOCK LBRACE ARRAY LBRACK INTNUMERAL RBRACK IDENTIFIER
 
 Expected non-array type after "array" declaration.
 
-program: DATABLOCK LBRACE ARRAY LBRACK SEMICOLON
+program: DATABLOCK LBRACE ARRAY LBRACK WHILE
 ##
-## Concrete syntax: data { array [ ;
+## Concrete syntax: data { array [ while
 ##
 ## Ends in an error in state: 398.
 ##
