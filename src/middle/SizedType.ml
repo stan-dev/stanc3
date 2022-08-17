@@ -246,3 +246,16 @@ let rec has_mem_pattern = function
   | SVector _ | SRowVector _ | SMatrix _ -> true
   | SArray (t, _) -> has_mem_pattern t
   | STuple ts -> List.exists ~f:has_mem_pattern ts
+
+let rec build_sarray dims st =
+  match dims with [] -> st | d :: dims -> build_sarray dims (SArray (st, d))
+
+let flatten_tuple_io st =
+  let rec loop st =
+    match st with
+    | STuple ts -> List.concat_map ~f:loop ts
+    | SArray _ when contains_tuple st ->
+        let scalar, dims = get_container_dims st in
+        List.map ~f:(fun t -> build_sarray dims t) (loop scalar)
+    | _ -> [st] in
+  loop st

@@ -46,9 +46,13 @@ let includes = "#include <stan/model/model_header.hpp>"
  @param name The name of the object.
  @param st The SizedType of the object.
  *)
-let pp_validate_data ppf (name, st) =
-  (* TUPLE TODO: This needs to be adapted for tuples *)
+let rec pp_validate_data ppf (name, st) =
   if String.is_suffix ~suffix:"__" name then ()
+  else if SizedType.contains_tuple st then
+    let names =
+      UnsizedType.enumerate_tuple_names_io name (SizedType.to_unsized st) in
+    let sts = SizedType.flatten_tuple_io st in
+    List.iter ~f:(pp_validate_data ppf) (List.zip_exn names sts)
   else
     let pp_stdvector ppf args =
       let pp_cast ppf x = pf ppf "static_cast<size_t>(%a)" pp_expr x in

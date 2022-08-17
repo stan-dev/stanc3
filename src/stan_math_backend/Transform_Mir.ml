@@ -149,27 +149,33 @@ let rec data_read smeta ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
   let scalar = base_type st in
   let flat_type = UnsizedType.UArray scalar in
   let decl_id = Stmt.Helpers.get_lhs_name decl_id_lval in
-  let decl_var =
+  let decl_var_expr decl_id =
     { Expr.Fixed.pattern= Var decl_id
     ; meta= Expr.Typed.Meta.{loc= smeta; type_= unsized; adlevel= DataOnly} }
   in
+  let decl_var = decl_var_expr decl_id in
   let swrap stmt = {Stmt.Fixed.pattern= stmt; meta= smeta} in
   let pos_var = {Expr.Fixed.pattern= Var pos; meta= Expr.Typed.Meta.empty} in
-  let readfnapp var =
+  let flat_name decl_id =
+    Str.global_replace (Str.regexp_string ".") "_dot_" decl_id ^ "_flat__" in
+  let readfnapp decl_id flat_type =
     Expr.Helpers.internal_funapp FnReadData
-      [{var with pattern= Lit (Str, remove_prefix decl_id)}]
-      Expr.Typed.Meta.{var.meta with type_= flat_type} in
+      [{decl_var with pattern= Lit (Str, remove_prefix decl_id)}]
+      Expr.Typed.Meta.{decl_var.meta with type_= flat_type} in
   match unsized with
   | UInt | UReal | UComplex ->
       [ Assignment
           ( decl_id_lval
           , unsized
           , { Expr.Fixed.pattern=
-                Indexed (readfnapp decl_var, [Single Expr.Helpers.loop_bottom])
+                Indexed
+                  ( readfnapp decl_id flat_type
+                  , [Single Expr.Helpers.loop_bottom] )
             ; meta= {decl_var.meta with type_= unsized} } )
         |> swrap ]
   | UArray UInt | UArray UReal ->
-      [Assignment (decl_id_lval, flat_type, readfnapp decl_var) |> swrap]
+      [ Assignment (decl_id_lval, flat_type, readfnapp decl_id flat_type)
+        |> swrap ]
   | UTuple _ ->
       let get_subtypes = match st with STuple subs -> subs | _ -> [] in
       let sub_sts =
@@ -177,25 +183,41 @@ let rec data_read smeta ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
           ~f:(fun iter x ->
             (Stmt.Fixed.Pattern.LTupleProjection (decl_id_lval, iter + 1), x) )
           get_subtypes in
-      List.concat (List.map ~f:(data_read smeta) sub_sts)
+      List.concat_map ~f:(data_read smeta) sub_sts
   | UArray _ when UnsizedType.contains_tuple unsized ->
       (* TUPLE TODO: we will actually want to do this case
          (arrays of tuples) using the flat__ style *)
       let nonarray_st, array_dims = SizedType.get_container_dims st in
+      let get_subtypes =
+        match nonarray_st with STuple subs -> subs | _ -> [] in
+      let sub_sts =
+        List.mapi
+          ~f:(fun iter x ->
+            (Stmt.Fixed.Pattern.LTupleProjection (decl_id_lval, iter + 1), x) )
+          get_subtypes in
       [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
           (fun loopvars ->
             Stmt.Fixed.
               { meta= smeta
               ; pattern=
                   SList
-                    (data_read smeta
-                       ( LIndexed
-                           (* TUPLE TODO this index is wrong for arrays inside tuples *)
-                           ( decl_id_lval
-                           , List.map
-                               ~f:(fun e -> Index.Single e)
-                               (List.rev loopvars) )
-                       , nonarray_st ) ) } )
+                    (List.concat_map
+                       ~f:(fun (lval, st) ->
+                         let array_st = SizedType.build_sarray array_dims st in
+                         match st with
+                         | SizedType.SInt | SReal | SComplex
+                          |SArray (SInt, _)
+                          |SArray (SReal, _) ->
+                             data_read smeta (lval, array_st)
+                         | _ ->
+                             data_read smeta
+                               ( LIndexed
+                                   ( lval
+                                   , List.map
+                                       ~f:(fun e -> Index.Single e)
+                                       (List.rev loopvars) )
+                               , array_st ) )
+                       sub_sts ) } )
           smeta ]
   | UFun _ | UMathLibraryFunction ->
       Common.FatalError.fatal_error_msg
@@ -203,9 +225,7 @@ let rec data_read smeta ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
   | UVector | URowVector | UMatrix | UComplexMatrix | UComplexRowVector
    |UComplexVector | UArray _ ->
       let decl, assign, flat_var =
-        let decl_id_flat =
-          Str.global_replace (Str.regexp_string ".") "_dot_" decl_id ^ "_flat__"
-        in
+        let decl_id_flat = flat_name decl_id in
         ( Stmt.Fixed.Pattern.Decl
             { decl_adtype= AutoDiffable
             ; decl_id= decl_id_flat
@@ -215,7 +235,7 @@ let rec data_read smeta ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
         , Assignment
             ( Stmt.Fixed.Pattern.LVariable decl_id_flat
             , flat_type
-            , readfnapp decl_var )
+            , readfnapp decl_id flat_type )
           |> swrap
         , { Expr.Fixed.pattern= Var decl_id_flat
           ; meta=
