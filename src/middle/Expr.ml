@@ -150,7 +150,10 @@ module Helpers = struct
 
   let tuple_expr l =
     let type_ = UnsizedType.UTuple (List.map ~f:Typed.type_of l) in
-    { Fixed.meta= {Typed.Meta.empty with type_}
+    { Fixed.meta=
+        { Typed.Meta.empty with
+          type_
+        ; adlevel= UnsizedType.fill_adtype_for_type DataOnly type_ }
     ; pattern= FunApp (CompilerInternal FnMakeTuple, l) }
 
   let try_unpack e =

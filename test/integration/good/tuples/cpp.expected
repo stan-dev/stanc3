@@ -68,12 +68,27 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()});
       
       
-      current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      {
+        std::vector<local_scalar_t__> darr_dot_1_flat__;
         current_statement__ = 5;
-        std::get<0>(darr) = context__.vals_r("darr.1");
+        darr_dot_1_flat__ = context__.vals_r("darr.1");
+        local_scalar_t__ darr_dot_1_flat___temp__;
+        std::vector<local_scalar_t__> darr_dot_2_flat__;
         current_statement__ = 5;
-        std::get<1>(darr) = context__.vals_r("darr.2");
+        darr_dot_2_flat__ = context__.vals_r("darr.2");
+        local_scalar_t__ darr_dot_2_flat___temp__;
+        current_statement__ = 5;
+        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+          current_statement__ = 5;
+          darr_dot_1_flat___temp__ = darr_dot_1_flat__[(sym1__ - 1)];
+          current_statement__ = 5;
+          darr_dot_2_flat___temp__ = darr_dot_2_flat__[(sym1__ - 1)];
+          current_statement__ = 5;
+          stan::model::assign(darr,
+            std::tuple<double, double>
+            (darr_dot_1_flat___temp__, darr_dot_2_flat___temp__),
+            "assigning variable darr", stan::model::index_uni(sym1__));
+        }
       }
       current_statement__ = 6;
       context__.validate_dims("data initialization","darr2.1","double",
@@ -92,59 +107,37 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()})});
       
       
-      current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      {
+        std::vector<local_scalar_t__> darr2_dot_1_flat__;
         current_statement__ = 6;
-        std::get<0>(darr2) = context__.vals_r("darr2.1");
+        darr2_dot_1_flat__ = context__.vals_r("darr2.1");
+        local_scalar_t__ darr2_dot_1_flat___temp__;
+        std::vector<local_scalar_t__> darr2_dot_2_dot_1_flat__;
         current_statement__ = 6;
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+        darr2_dot_2_dot_1_flat__ = context__.vals_r("darr2.2.1");
+        std::vector<local_scalar_t__> darr2_dot_2_dot_1_flat___temp__;
+        std::vector<local_scalar_t__> darr2_dot_2_dot_2_flat__;
+        current_statement__ = 6;
+        darr2_dot_2_dot_2_flat__ = context__.vals_r("darr2.2.2");
+        std::vector<local_scalar_t__> darr2_dot_2_dot_2_flat___temp__;
+        current_statement__ = 6;
+        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           current_statement__ = 6;
-          for (int sym3__ = 1; sym3__ <= 10; ++sym3__) {
-            {
-              std::vector<local_scalar_t__> darr2_dot_2_dot_1_flat__;
-              current_statement__ = 6;
-              darr2_dot_2_dot_1_flat__ = context__.vals_r("darr2.2.1");
-              current_statement__ = 6;
-              pos__ = 1;
-              current_statement__ = 6;
-              for (int sym4__ = 1; sym4__ <= 10; ++sym4__) {
-                current_statement__ = 6;
-                for (int sym5__ = 1; sym5__ <= 10; ++sym5__) {
-                  current_statement__ = 6;
-                  stan::model::assign(
-                    std::get<0>(std::get<1>(darr2)[(sym1__ - 1)]),
-                    darr2_dot_2_dot_1_flat__[(pos__ - 1)],
-                    "assigning variable std::get<0>(std::get<1>(darr2)[(sym1__ - 1)])", 
-                    stan::model::index_uni(sym5__),
-                      stan::model::index_uni(sym4__));
-                  current_statement__ = 6;
-                  pos__ = (pos__ + 1);
-                }
-              }
-            }
-            {
-              std::vector<local_scalar_t__> darr2_dot_2_dot_2_flat__;
-              current_statement__ = 6;
-              darr2_dot_2_dot_2_flat__ = context__.vals_r("darr2.2.2");
-              current_statement__ = 6;
-              pos__ = 1;
-              current_statement__ = 6;
-              for (int sym4__ = 1; sym4__ <= 10; ++sym4__) {
-                current_statement__ = 6;
-                for (int sym5__ = 1; sym5__ <= 10; ++sym5__) {
-                  current_statement__ = 6;
-                  stan::model::assign(
-                    std::get<1>(std::get<1>(darr2)[(sym1__ - 1)]),
-                    darr2_dot_2_dot_2_flat__[(pos__ - 1)],
-                    "assigning variable std::get<1>(std::get<1>(darr2)[(sym1__ - 1)])", 
-                    stan::model::index_uni(sym5__),
-                      stan::model::index_uni(sym4__));
-                  current_statement__ = 6;
-                  pos__ = (pos__ + 1);
-                }
-              }
-            }
-          }
+          darr2_dot_1_flat___temp__ = darr2_dot_1_flat__[(sym1__ - 1)];
+          current_statement__ = 6;
+          stan::model::assign(darr2_dot_2_dot_1_flat___temp__,
+            darr2_dot_2_dot_1_flat__[(sym1__ - 1)],
+            "assigning variable darr2_dot_2_dot_1_flat___temp__");
+          current_statement__ = 6;
+          stan::model::assign(darr2_dot_2_dot_2_flat___temp__,
+            darr2_dot_2_dot_2_flat__[(sym1__ - 1)],
+            "assigning variable darr2_dot_2_dot_2_flat___temp__");
+          current_statement__ = 6;
+          stan::model::assign(darr2,
+            std::tuple<double, std::vector<double>, std::vector<double>>
+            (darr2_dot_1_flat___temp__, darr2_dot_2_dot_1_flat___temp__,
+               darr2_dot_2_dot_2_flat___temp__),
+            "assigning variable darr2", stan::model::index_uni(sym1__));
         }
       }
       current_statement__ = 7;
@@ -162,12 +155,30 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       
       current_statement__ = 7;
       std::get<0>(darr3) = context__.vals_r("darr3.1")[(1 - 1)];
-      current_statement__ = 7;
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      {
+        std::vector<local_scalar_t__> darr3_dot_2_dot_1_flat__;
         current_statement__ = 7;
-        std::get<0>(std::get<1>(darr3)) = context__.vals_r("darr3.2.1");
+        darr3_dot_2_dot_1_flat__ = context__.vals_r("darr3.2.1");
+        local_scalar_t__ darr3_dot_2_dot_1_flat___temp__;
+        std::vector<local_scalar_t__> darr3_dot_2_dot_2_flat__;
         current_statement__ = 7;
-        std::get<1>(std::get<1>(darr3)) = context__.vals_r("darr3.2.2");
+        darr3_dot_2_dot_2_flat__ = context__.vals_r("darr3.2.2");
+        local_scalar_t__ darr3_dot_2_dot_2_flat___temp__;
+        current_statement__ = 7;
+        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+          current_statement__ = 7;
+          darr3_dot_2_dot_1_flat___temp__ = darr3_dot_2_dot_1_flat__[
+              (sym1__ - 1)];
+          current_statement__ = 7;
+          darr3_dot_2_dot_2_flat___temp__ = darr3_dot_2_dot_2_flat__[
+              (sym1__ - 1)];
+          current_statement__ = 7;
+          stan::model::assign(std::get<1>(darr3),
+            std::tuple<double, double>
+            (darr3_dot_2_dot_1_flat___temp__,
+               darr3_dot_2_dot_2_flat___temp__),
+            "assigning variable std::get<1>(darr3)", stan::model::index_uni(sym1__));
+        }
       }
       current_statement__ = 8;
       context__.validate_dims("data initialization","darr4.1","double",
@@ -190,77 +201,40 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             std::tuple<double, int>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<int>::min()})});
       
       
-      current_statement__ = 8;
-      for (int sym1__ = 1; sym1__ <= 11; ++sym1__) {
-        {
-          std::vector<local_scalar_t__> darr4_dot_1_flat__;
-          current_statement__ = 8;
-          darr4_dot_1_flat__ = context__.vals_r("darr4.1");
-          current_statement__ = 8;
-          pos__ = 1;
-          current_statement__ = 8;
-          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            current_statement__ = 8;
-            for (int sym3__ = 1; sym3__ <= 11; ++sym3__) {
-              current_statement__ = 8;
-              stan::model::assign(std::get<0>(darr4),
-                darr4_dot_1_flat__[(pos__ - 1)],
-                "assigning variable std::get<0>(darr4)", stan::model::index_uni(sym3__),
-                                                           stan::model::index_uni(sym2__));
-              current_statement__ = 8;
-              pos__ = (pos__ + 1);
-            }
-          }
-        }
+      {
+        std::vector<local_scalar_t__> darr4_dot_1_flat__;
         current_statement__ = 8;
-        for (int sym2__ = 1; sym2__ <= 14; ++sym2__) {
+        darr4_dot_1_flat__ = context__.vals_r("darr4.1");
+        std::vector<local_scalar_t__> darr4_dot_1_flat___temp__;
+        std::vector<local_scalar_t__> darr4_dot_2_dot_1_flat__;
+        current_statement__ = 8;
+        darr4_dot_2_dot_1_flat__ = context__.vals_r("darr4.2.1");
+        std::vector<local_scalar_t__> darr4_dot_2_dot_1_flat___temp__;
+        std::vector<int> darr4_dot_2_dot_2_flat__;
+        current_statement__ = 8;
+        darr4_dot_2_dot_2_flat__ = context__.vals_i("darr4.2.2");
+        std::vector<int> darr4_dot_2_dot_2_flat___temp__;
+        current_statement__ = 8;
+        for (int sym1__ = 1; sym1__ <= 11; ++sym1__) {
           current_statement__ = 8;
-          for (int sym3__ = 1; sym3__ <= 11; ++sym3__) {
-            {
-              std::vector<local_scalar_t__> darr4_dot_2_dot_1_flat__;
-              current_statement__ = 8;
-              darr4_dot_2_dot_1_flat__ = context__.vals_r("darr4.2.1");
-              current_statement__ = 8;
-              pos__ = 1;
-              current_statement__ = 8;
-              for (int sym4__ = 1; sym4__ <= 11; ++sym4__) {
-                current_statement__ = 8;
-                for (int sym5__ = 1; sym5__ <= 14; ++sym5__) {
-                  current_statement__ = 8;
-                  stan::model::assign(
-                    std::get<0>(std::get<1>(darr4)[(sym1__ - 1)]),
-                    darr4_dot_2_dot_1_flat__[(pos__ - 1)],
-                    "assigning variable std::get<0>(std::get<1>(darr4)[(sym1__ - 1)])", 
-                    stan::model::index_uni(sym5__),
-                      stan::model::index_uni(sym4__));
-                  current_statement__ = 8;
-                  pos__ = (pos__ + 1);
-                }
-              }
-            }
-            {
-              std::vector<int> darr4_dot_2_dot_2_flat__;
-              current_statement__ = 8;
-              darr4_dot_2_dot_2_flat__ = context__.vals_i("darr4.2.2");
-              current_statement__ = 8;
-              pos__ = 1;
-              current_statement__ = 8;
-              for (int sym4__ = 1; sym4__ <= 11; ++sym4__) {
-                current_statement__ = 8;
-                for (int sym5__ = 1; sym5__ <= 14; ++sym5__) {
-                  current_statement__ = 8;
-                  stan::model::assign(
-                    std::get<1>(std::get<1>(darr4)[(sym1__ - 1)]),
-                    darr4_dot_2_dot_2_flat__[(pos__ - 1)],
-                    "assigning variable std::get<1>(std::get<1>(darr4)[(sym1__ - 1)])", 
-                    stan::model::index_uni(sym5__),
-                      stan::model::index_uni(sym4__));
-                  current_statement__ = 8;
-                  pos__ = (pos__ + 1);
-                }
-              }
-            }
-          }
+          stan::model::assign(darr4_dot_1_flat___temp__,
+            darr4_dot_1_flat__[(sym1__ - 1)],
+            "assigning variable darr4_dot_1_flat___temp__");
+          current_statement__ = 8;
+          stan::model::assign(darr4_dot_2_dot_1_flat___temp__,
+            darr4_dot_2_dot_1_flat__[(sym1__ - 1)],
+            "assigning variable darr4_dot_2_dot_1_flat___temp__");
+          current_statement__ = 8;
+          stan::model::assign(darr4_dot_2_dot_2_flat___temp__,
+            darr4_dot_2_dot_2_flat__[(sym1__ - 1)],
+            "assigning variable darr4_dot_2_dot_2_flat___temp__");
+          current_statement__ = 8;
+          stan::model::assign(darr4,
+            std::tuple<std::vector<double>, std::vector<double>,
+                         std::vector<int>>
+            (darr4_dot_1_flat___temp__, darr4_dot_2_dot_1_flat___temp__,
+               darr4_dot_2_dot_2_flat___temp__),
+            "assigning variable darr4", stan::model::index_uni(sym1__));
         }
       }
     } catch (const std::exception& e) {
@@ -2307,30 +2281,42 @@ class tuple_complicated_data_model final : public model_base_crtp<tuple_complica
             std::numeric_limits<double>::quiet_NaN())});
       
       
-      current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      {
+        std::vector<int> tuple2_dot_1_flat__;
         current_statement__ = 2;
-        std::get<0>(tuple2) = context__.vals_i("tuple2.1");
-        {
-          std::vector<local_scalar_t__> tuple2_dot_2_flat__;
+        tuple2_dot_1_flat__ = context__.vals_i("tuple2.1");
+        int tuple2_dot_1_flat___temp__;
+        std::vector<local_scalar_t__> tuple2_dot_2_flat__;
+        current_statement__ = 2;
+        tuple2_dot_2_flat__ = context__.vals_r("tuple2.2");
+        Eigen::Matrix<local_scalar_t__, -1, 1> tuple2_dot_2_flat___temp__;
+        current_statement__ = 2;
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           current_statement__ = 2;
-          tuple2_dot_2_flat__ = context__.vals_r("tuple2.2");
-          current_statement__ = 2;
-          pos__ = 1;
-          current_statement__ = 2;
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          tuple2_dot_1_flat___temp__ = tuple2_dot_1_flat__[(sym1__ - 1)];
+          {
+            std::vector<local_scalar_t__> tuple2_dot_2_flat___temp___flat__;
             current_statement__ = 2;
-            for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            stan::model::assign(tuple2_dot_2_flat___temp___flat__,
+              tuple2_dot_2_flat__[(sym1__ - 1)],
+              "assigning variable tuple2_dot_2_flat___temp___flat__");
+            current_statement__ = 2;
+            pos__ = 1;
+            current_statement__ = 2;
+            for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
               current_statement__ = 2;
-              stan::model::assign(std::get<1>(tuple2)[(sym1__ - 1)],
-                tuple2_dot_2_flat__[(pos__ - 1)],
-                "assigning variable std::get<1>(tuple2)[(sym1__ - 1)]", 
-                stan::model::index_uni(sym3__),
-                  stan::model::index_uni(sym2__));
+              stan::model::assign(tuple2_dot_2_flat___temp__,
+                tuple2_dot_2_flat___temp___flat__[(pos__ - 1)],
+                "assigning variable tuple2_dot_2_flat___temp__", stan::model::index_uni(sym2__));
               current_statement__ = 2;
               pos__ = (pos__ + 1);
             }
           }
+          current_statement__ = 2;
+          stan::model::assign(tuple2,
+            std::tuple<int, Eigen::Matrix<double, -1, 1>>
+            (tuple2_dot_1_flat___temp__, tuple2_dot_2_flat___temp__),
+            "assigning variable tuple2", stan::model::index_uni(sym1__));
         }
       }
       current_statement__ = 3;
@@ -2355,12 +2341,30 @@ class tuple_complicated_data_model final : public model_base_crtp<tuple_complica
       std::get<0>(tuple3) = context__.vals_r("tuple3.1");
       current_statement__ = 3;
       std::get<1>(tuple3) = context__.vals_i("tuple3.2")[(1 - 1)];
-      current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      {
+        std::vector<local_scalar_t__> tuple3_dot_3_dot_1_flat__;
         current_statement__ = 3;
-        std::get<0>(std::get<2>(tuple3)) = context__.vals_r("tuple3.3.1");
+        tuple3_dot_3_dot_1_flat__ = context__.vals_r("tuple3.3.1");
+        local_scalar_t__ tuple3_dot_3_dot_1_flat___temp__;
+        std::vector<int> tuple3_dot_3_dot_2_flat__;
         current_statement__ = 3;
-        std::get<1>(std::get<2>(tuple3)) = context__.vals_i("tuple3.3.2");
+        tuple3_dot_3_dot_2_flat__ = context__.vals_i("tuple3.3.2");
+        int tuple3_dot_3_dot_2_flat___temp__;
+        current_statement__ = 3;
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          current_statement__ = 3;
+          tuple3_dot_3_dot_1_flat___temp__ = tuple3_dot_3_dot_1_flat__[
+              (sym1__ - 1)];
+          current_statement__ = 3;
+          tuple3_dot_3_dot_2_flat___temp__ = tuple3_dot_3_dot_2_flat__[
+              (sym1__ - 1)];
+          current_statement__ = 3;
+          stan::model::assign(std::get<2>(tuple3),
+            std::tuple<double, int>
+            (tuple3_dot_3_dot_1_flat___temp__,
+               tuple3_dot_3_dot_2_flat___temp__),
+            "assigning variable std::get<2>(tuple3)", stan::model::index_uni(sym1__));
+        }
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
