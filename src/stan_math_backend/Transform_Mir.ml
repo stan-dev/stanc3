@@ -199,6 +199,14 @@ let rec data_read ?origin ?name smeta
           (SizedType.to_unsized nonarray_st) in
       (* TODO need to make all of these only for this current level
          Somehow need lower arrays to use multiple flats from different positions... oh jeez
+
+         Flats for all sub-parts
+         positions for all sub-parts
+         temps for current level only
+         Some way of figuring out where recursive calls should look up individual variables.
+          - Won't be the same for different parts of a nested tuple
+          - might want a separate function which is mostly like this one, only called after
+            first array of tuples?
       *)
       let flat_vars = List.map ~f:flat_name flat_io_names in
       let flat_types = SizedType.flatten_tuple_io nonarray_st in

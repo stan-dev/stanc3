@@ -9,16 +9,18 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 9> locations_array__ = 
+static constexpr std::array<const char*, 11> locations_array__ = 
 {" (found before start of program)",
- " (in 'arrays-tuples-nested.stan', line 10, column 2 to column 29)",
- " (in 'arrays-tuples-nested.stan', line 11, column 2 to column 48)",
- " (in 'arrays-tuples-nested.stan', line 12, column 2 to column 38)",
- " (in 'arrays-tuples-nested.stan', line 13, column 2 to column 64)",
- " (in 'arrays-tuples-nested.stan', line 2, column 2 to column 30)",
- " (in 'arrays-tuples-nested.stan', line 3, column 2 to column 49)",
+ " (in 'arrays-tuples-nested.stan', line 15, column 2 to column 33)",
+ " (in 'arrays-tuples-nested.stan', line 16, column 2 to column 42)",
+ " (in 'arrays-tuples-nested.stan', line 17, column 2 to column 59)",
+ " (in 'arrays-tuples-nested.stan', line 18, column 2 to column 74)",
+ " (in 'arrays-tuples-nested.stan', line 19, column 2 to column 72)",
+ " (in 'arrays-tuples-nested.stan', line 20, column 2 to column 68)",
+ " (in 'arrays-tuples-nested.stan', line 3, column 2 to column 30)",
  " (in 'arrays-tuples-nested.stan', line 4, column 2 to column 39)",
- " (in 'arrays-tuples-nested.stan', line 5, column 2 to column 58)"};
+ " (in 'arrays-tuples-nested.stan', line 5, column 2 to column 53)",
+ " (in 'arrays-tuples-nested.stan', line 6, column 2 to column 70)"};
 
 
 
@@ -26,11 +28,12 @@ static constexpr std::array<const char*, 9> locations_array__ =
 class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_nested_model> {
 
  private:
-  std::vector<std::tuple<double, double>> darr;
-  std::vector<std::tuple<double, std::vector<std::tuple<double, double>>>> darr2;
-  std::tuple<double, std::vector<std::tuple<double, double>>> darr3;
-  std::vector<std::tuple<std::vector<double>,
-                         std::vector<std::tuple<double, int>>>> darr4; 
+  std::tuple<std::vector<double>, int> basic;
+  std::tuple<int, std::tuple<double, Eigen::Matrix<double, -1, 1>>> tuple_tuple;
+  std::vector<std::tuple<int, std::vector<double>,
+                         Eigen::Matrix<double, -1, 1>>> arr_tuple;
+  std::tuple<std::vector<double>, int,
+             std::vector<std::tuple<double, std::vector<int>>>> tuple_arr_tuple; 
   
  
  public:
@@ -58,258 +61,220 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 5;
-      context__.validate_dims("data initialization","darr.1","double",
-           std::vector<size_t>{static_cast<size_t>(10)});
-      context__.validate_dims("data initialization","darr.2","double",
-           std::vector<size_t>{static_cast<size_t>(10)});
-      darr = 
-        std::vector<std::tuple<double, double>>(10, 
-          std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()});
-      
-      
-      {
-        std::vector<local_scalar_t__> darr_dot_1_flat__;
-        current_statement__ = 5;
-        darr_dot_1_flat__ = context__.vals_r("darr.1");
-        local_scalar_t__ darr_dot_1_temp__;
-        int darr_dot_1_temp__pos__;
-        current_statement__ = 5;
-        darr_dot_1_temp__pos__ = 1;
-        std::vector<local_scalar_t__> darr_dot_2_flat__;
-        current_statement__ = 5;
-        darr_dot_2_flat__ = context__.vals_r("darr.2");
-        local_scalar_t__ darr_dot_2_temp__;
-        int darr_dot_2_temp__pos__;
-        current_statement__ = 5;
-        darr_dot_2_temp__pos__ = 1;
-        current_statement__ = 5;
-        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          current_statement__ = 5;
-          darr_dot_1_temp__ = darr_dot_1_flat__[(darr_dot_1_temp__pos__ - 1)];
-          current_statement__ = 5;
-          darr_dot_1_temp__pos__ = (darr_dot_1_temp__pos__ + 1);
-          current_statement__ = 5;
-          darr_dot_2_temp__ = darr_dot_2_flat__[(darr_dot_2_temp__pos__ - 1)];
-          current_statement__ = 5;
-          darr_dot_2_temp__pos__ = (darr_dot_2_temp__pos__ + 1);
-          current_statement__ = 5;
-          stan::model::assign(darr,
-            std::tuple<double, double>(darr_dot_1_temp__, darr_dot_2_temp__),
-            "assigning variable darr", stan::model::index_uni(sym1__));
-        }
-      }
-      current_statement__ = 6;
-      context__.validate_dims("data initialization","darr2.1","double",
-           std::vector<size_t>{static_cast<size_t>(10)});
-      context__.validate_dims("data initialization","darr2.2.1","double",
-           std::vector<size_t>{static_cast<size_t>(10),
-            static_cast<size_t>(10)});
-      context__.validate_dims("data initialization","darr2.2.2","double",
-           std::vector<size_t>{static_cast<size_t>(10),
-            static_cast<size_t>(10)});
-      darr2 = 
-        std::vector<std::tuple<double,
-                               std::vector<std::tuple<double, double>>>>(10, 
-          std::tuple<double, std::vector<std::tuple<double, double>>>{std::numeric_limits<double>::quiet_NaN(), 
-          std::vector<std::tuple<double, double>>(10, 
-            std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()})});
-      
-      
-      {
-        std::vector<local_scalar_t__> darr2_dot_1_flat__;
-        current_statement__ = 6;
-        darr2_dot_1_flat__ = context__.vals_r("darr2.1");
-        local_scalar_t__ darr2_dot_1_temp__;
-        int darr2_dot_1_temp__pos__;
-        current_statement__ = 6;
-        darr2_dot_1_temp__pos__ = 1;
-        std::vector<local_scalar_t__> darr2_dot_2_dot_1_flat__;
-        current_statement__ = 6;
-        darr2_dot_2_dot_1_flat__ = context__.vals_r("darr2.2.1");
-        std::vector<local_scalar_t__> darr2_dot_2_dot_1_temp__;
-        int darr2_dot_2_dot_1_temp__pos__;
-        current_statement__ = 6;
-        darr2_dot_2_dot_1_temp__pos__ = 1;
-        std::vector<local_scalar_t__> darr2_dot_2_dot_2_flat__;
-        current_statement__ = 6;
-        darr2_dot_2_dot_2_flat__ = context__.vals_r("darr2.2.2");
-        std::vector<local_scalar_t__> darr2_dot_2_dot_2_temp__;
-        int darr2_dot_2_dot_2_temp__pos__;
-        current_statement__ = 6;
-        darr2_dot_2_dot_2_temp__pos__ = 1;
-        current_statement__ = 6;
-        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          current_statement__ = 6;
-          darr2_dot_1_temp__ = darr2_dot_1_flat__[(darr2_dot_1_temp__pos__ -
-                                                    1)];
-          current_statement__ = 6;
-          darr2_dot_1_temp__pos__ = (darr2_dot_1_temp__pos__ + 1);
-          current_statement__ = 6;
-          stan::model::assign(darr2_dot_2_dot_1_temp__,
-            stan::model::rvalue(darr2_dot_2_dot_1_flat__,
-              "darr2_dot_2_dot_1_flat__",
-              stan::model::index_min_max(darr2_dot_2_dot_1_temp__pos__, 
-                (darr2_dot_2_dot_1_temp__pos__ + (10 * 1)))),
-            "assigning variable darr2_dot_2_dot_1_temp__");
-          current_statement__ = 6;
-          darr2_dot_2_dot_1_temp__pos__ = (darr2_dot_2_dot_1_temp__pos__ +
-                                            (10 * 1));
-          current_statement__ = 6;
-          stan::model::assign(darr2_dot_2_dot_2_temp__,
-            stan::model::rvalue(darr2_dot_2_dot_2_flat__,
-              "darr2_dot_2_dot_2_flat__",
-              stan::model::index_min_max(darr2_dot_2_dot_2_temp__pos__, 
-                (darr2_dot_2_dot_2_temp__pos__ + (10 * 1)))),
-            "assigning variable darr2_dot_2_dot_2_temp__");
-          current_statement__ = 6;
-          darr2_dot_2_dot_2_temp__pos__ = (darr2_dot_2_dot_2_temp__pos__ +
-                                            (10 * 1));
-          current_statement__ = 6;
-          stan::model::assign(darr2,
-            std::tuple<double, std::vector<double>, std::vector<double>>
-            (darr2_dot_1_temp__, darr2_dot_2_dot_1_temp__,
-               darr2_dot_2_dot_2_temp__),
-            "assigning variable darr2", stan::model::index_uni(sym1__));
-        }
-      }
       current_statement__ = 7;
-      context__.validate_dims("data initialization","darr3.1","double",
+      context__.validate_dims("data initialization","basic.1","double",
+           std::vector<size_t>{static_cast<size_t>(10)});
+      context__.validate_dims("data initialization","basic.2","int",
            std::vector<size_t>{});
-      context__.validate_dims("data initialization","darr3.2.1","double",
-           std::vector<size_t>{static_cast<size_t>(10)});
-      context__.validate_dims("data initialization","darr3.2.2","double",
-           std::vector<size_t>{static_cast<size_t>(10)});
-      darr3 = 
-        std::tuple<double, std::vector<std::tuple<double, double>>>{std::numeric_limits<double>::quiet_NaN(), 
-        std::vector<std::tuple<double, double>>(10, 
-          std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()})};
+      basic = 
+        std::tuple<std::vector<double>, int>{std::vector<double>(10, 
+                                               std::numeric_limits<double>::quiet_NaN()), std::numeric_limits<int>::min()};
       
       
       current_statement__ = 7;
-      std::get<0>(darr3) = context__.vals_r("darr3.1")[(1 - 1)];
+      std::get<0>(basic) = context__.vals_r("basic.1");
+      current_statement__ = 7;
+      std::get<1>(basic) = context__.vals_i("basic.2")[(1 - 1)];
+      current_statement__ = 8;
+      context__.validate_dims("data initialization","tuple_tuple.1","int",
+           std::vector<size_t>{});
+      context__.validate_dims("data initialization","tuple_tuple.2.1",
+          "double", std::vector<size_t>{});
+      context__.validate_dims("data initialization","tuple_tuple.2.2",
+          "double", std::vector<size_t>{static_cast<size_t>(2)});
+      tuple_tuple = 
+        std::tuple<int, std::tuple<double, Eigen::Matrix<double, -1, 1>>>{std::numeric_limits<int>::min(), std::tuple<
+        double, Eigen::Matrix<double, -1, 1>>{std::numeric_limits<double>::quiet_NaN(), 
+        Eigen::Matrix<double, -1, 1>::Constant(2,
+          std::numeric_limits<double>::quiet_NaN())}};
+      
+      
+      current_statement__ = 8;
+      std::get<0>(tuple_tuple) = context__.vals_i("tuple_tuple.1")[(1 - 1)];
+      current_statement__ = 8;
+      std::get<0>(std::get<1>(tuple_tuple)) = context__.vals_r("tuple_tuple.2.1")[
+          (1 - 1)];
       {
-        std::vector<local_scalar_t__> darr3_dot_2_dot_1_flat__;
-        current_statement__ = 7;
-        darr3_dot_2_dot_1_flat__ = context__.vals_r("darr3.2.1");
-        local_scalar_t__ darr3_dot_2_dot_1_temp__;
-        int darr3_dot_2_dot_1_temp__pos__;
-        current_statement__ = 7;
-        darr3_dot_2_dot_1_temp__pos__ = 1;
-        std::vector<local_scalar_t__> darr3_dot_2_dot_2_flat__;
-        current_statement__ = 7;
-        darr3_dot_2_dot_2_flat__ = context__.vals_r("darr3.2.2");
-        local_scalar_t__ darr3_dot_2_dot_2_temp__;
-        int darr3_dot_2_dot_2_temp__pos__;
-        current_statement__ = 7;
-        darr3_dot_2_dot_2_temp__pos__ = 1;
-        current_statement__ = 7;
-        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          current_statement__ = 7;
-          darr3_dot_2_dot_1_temp__ = darr3_dot_2_dot_1_flat__[(darr3_dot_2_dot_1_temp__pos__
-                                                                - 1)];
-          current_statement__ = 7;
-          darr3_dot_2_dot_1_temp__pos__ = (darr3_dot_2_dot_1_temp__pos__ + 1);
-          current_statement__ = 7;
-          darr3_dot_2_dot_2_temp__ = darr3_dot_2_dot_2_flat__[(darr3_dot_2_dot_2_temp__pos__
-                                                                - 1)];
-          current_statement__ = 7;
-          darr3_dot_2_dot_2_temp__pos__ = (darr3_dot_2_dot_2_temp__pos__ + 1);
-          current_statement__ = 7;
-          stan::model::assign(std::get<1>(darr3),
-            std::tuple<double, double>
-            (darr3_dot_2_dot_1_temp__, darr3_dot_2_dot_2_temp__),
-            "assigning variable std::get<1>(darr3)", stan::model::index_uni(sym1__));
+        std::vector<local_scalar_t__> tuple_tuple_dot_2_dot_2_flat__;
+        current_statement__ = 8;
+        tuple_tuple_dot_2_dot_2_flat__ = context__.vals_r("tuple_tuple.2.2");
+        current_statement__ = 8;
+        pos__ = 1;
+        current_statement__ = 8;
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          current_statement__ = 8;
+          stan::model::assign(std::get<1>(std::get<1>(tuple_tuple)),
+            tuple_tuple_dot_2_dot_2_flat__[(pos__ - 1)],
+            "assigning variable std::get<1>(std::get<1>(tuple_tuple))", 
+            stan::model::index_uni(sym1__));
+          current_statement__ = 8;
+          pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 8;
-      context__.validate_dims("data initialization","darr4.1","double",
-           std::vector<size_t>{static_cast<size_t>(11),
-            static_cast<size_t>(10)});
-      context__.validate_dims("data initialization","darr4.2.1","double",
-           std::vector<size_t>{static_cast<size_t>(11),
-            static_cast<size_t>(14)});
-      context__.validate_dims("data initialization","darr4.2.2","int",
-           std::vector<size_t>{static_cast<size_t>(11),
-            static_cast<size_t>(14)});
-      darr4 = 
-        std::vector<std::tuple<std::vector<double>,
-                               std::vector<std::tuple<double, int>>>>(11, 
-          std::tuple<std::vector<double>,
-                     std::vector<std::tuple<double, int>>>{std::vector<double>(
-                                                             10, 
-                                                             std::numeric_limits<double>::quiet_NaN()), 
-          std::vector<std::tuple<double, int>>(14, 
-            std::tuple<double, int>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<int>::min()})});
+      current_statement__ = 9;
+      context__.validate_dims("data initialization","arr_tuple.1","int",
+           std::vector<size_t>{static_cast<size_t>(3)});
+      context__.validate_dims("data initialization","arr_tuple.2","double",
+           std::vector<size_t>{static_cast<size_t>(3),
+            static_cast<size_t>(4)});
+      context__.validate_dims("data initialization","arr_tuple.3","double",
+           std::vector<size_t>{static_cast<size_t>(3),
+            static_cast<size_t>(3)});
+      arr_tuple = 
+        std::vector<std::tuple<int, std::vector<double>,
+                               Eigen::Matrix<double, -1, 1>>>(3, 
+          std::tuple<int, std::vector<double>, Eigen::Matrix<double, -1, 1>>{std::numeric_limits<int>::min(), 
+          std::vector<double>(4, std::numeric_limits<double>::quiet_NaN()), 
+          Eigen::Matrix<double, -1, 1>::Constant(3,
+            std::numeric_limits<double>::quiet_NaN())});
       
       
       {
-        std::vector<local_scalar_t__> darr4_dot_1_flat__;
-        current_statement__ = 8;
-        darr4_dot_1_flat__ = context__.vals_r("darr4.1");
-        std::vector<local_scalar_t__> darr4_dot_1_temp__;
-        int darr4_dot_1_temp__pos__;
-        current_statement__ = 8;
-        darr4_dot_1_temp__pos__ = 1;
-        std::vector<local_scalar_t__> darr4_dot_2_dot_1_flat__;
-        current_statement__ = 8;
-        darr4_dot_2_dot_1_flat__ = context__.vals_r("darr4.2.1");
-        std::vector<local_scalar_t__> darr4_dot_2_dot_1_temp__;
-        int darr4_dot_2_dot_1_temp__pos__;
-        current_statement__ = 8;
-        darr4_dot_2_dot_1_temp__pos__ = 1;
-        std::vector<int> darr4_dot_2_dot_2_flat__;
-        current_statement__ = 8;
-        darr4_dot_2_dot_2_flat__ = context__.vals_i("darr4.2.2");
-        std::vector<int> darr4_dot_2_dot_2_temp__;
-        int darr4_dot_2_dot_2_temp__pos__;
-        current_statement__ = 8;
-        darr4_dot_2_dot_2_temp__pos__ = 1;
-        current_statement__ = 8;
-        for (int sym1__ = 1; sym1__ <= 11; ++sym1__) {
-          current_statement__ = 8;
-          stan::model::assign(darr4_dot_1_temp__,
-            stan::model::rvalue(darr4_dot_1_flat__, "darr4_dot_1_flat__",
-              stan::model::index_min_max(darr4_dot_1_temp__pos__, (darr4_dot_1_temp__pos__
-                                                                    +
-                                                                    (10 * 1)))),
-            "assigning variable darr4_dot_1_temp__");
-          current_statement__ = 8;
-          darr4_dot_1_temp__pos__ = (darr4_dot_1_temp__pos__ + (10 * 1));
-          current_statement__ = 8;
-          stan::model::assign(darr4_dot_2_dot_1_temp__,
-            stan::model::rvalue(darr4_dot_2_dot_1_flat__,
-              "darr4_dot_2_dot_1_flat__",
-              stan::model::index_min_max(darr4_dot_2_dot_1_temp__pos__, 
-                (darr4_dot_2_dot_1_temp__pos__ + (14 * 1)))),
-            "assigning variable darr4_dot_2_dot_1_temp__");
-          current_statement__ = 8;
-          darr4_dot_2_dot_1_temp__pos__ = (darr4_dot_2_dot_1_temp__pos__ +
-                                            (14 * 1));
-          current_statement__ = 8;
-          stan::model::assign(darr4_dot_2_dot_2_temp__,
-            stan::model::rvalue(darr4_dot_2_dot_2_flat__,
-              "darr4_dot_2_dot_2_flat__",
-              stan::model::index_min_max(darr4_dot_2_dot_2_temp__pos__, 
-                (darr4_dot_2_dot_2_temp__pos__ + (14 * 1)))),
-            "assigning variable darr4_dot_2_dot_2_temp__");
-          current_statement__ = 8;
-          darr4_dot_2_dot_2_temp__pos__ = (darr4_dot_2_dot_2_temp__pos__ +
-                                            (14 * 1));
-          current_statement__ = 8;
-          stan::model::assign(darr4,
-            std::tuple<std::vector<double>, std::vector<double>,
-                         std::vector<int>>
-            (darr4_dot_1_temp__, darr4_dot_2_dot_1_temp__,
-               darr4_dot_2_dot_2_temp__),
-            "assigning variable darr4", stan::model::index_uni(sym1__));
+        std::vector<int> arr_tuple_dot_1_flat__;
+        current_statement__ = 9;
+        arr_tuple_dot_1_flat__ = context__.vals_i("arr_tuple.1");
+        int arr_tuple_dot_1_temp__;
+        int arr_tuple_dot_1_temp__pos__;
+        current_statement__ = 9;
+        arr_tuple_dot_1_temp__pos__ = 1;
+        std::vector<local_scalar_t__> arr_tuple_dot_2_flat__;
+        current_statement__ = 9;
+        arr_tuple_dot_2_flat__ = context__.vals_r("arr_tuple.2");
+        std::vector<local_scalar_t__> arr_tuple_dot_2_temp__;
+        int arr_tuple_dot_2_temp__pos__;
+        current_statement__ = 9;
+        arr_tuple_dot_2_temp__pos__ = 1;
+        std::vector<local_scalar_t__> arr_tuple_dot_3_flat__;
+        current_statement__ = 9;
+        arr_tuple_dot_3_flat__ = context__.vals_r("arr_tuple.3");
+        Eigen::Matrix<local_scalar_t__, -1, 1> arr_tuple_dot_3_temp__;
+        int arr_tuple_dot_3_temp__pos__;
+        current_statement__ = 9;
+        arr_tuple_dot_3_temp__pos__ = 1;
+        current_statement__ = 9;
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 9;
+          arr_tuple_dot_1_temp__ = arr_tuple_dot_1_flat__[(arr_tuple_dot_1_temp__pos__
+                                                            - 1)];
+          current_statement__ = 9;
+          arr_tuple_dot_1_temp__pos__ = (arr_tuple_dot_1_temp__pos__ + 1);
+          current_statement__ = 9;
+          stan::model::assign(arr_tuple_dot_2_temp__,
+            stan::model::rvalue(arr_tuple_dot_2_flat__,
+              "arr_tuple_dot_2_flat__",
+              stan::model::index_min_max(arr_tuple_dot_2_temp__pos__, 
+                (arr_tuple_dot_2_temp__pos__ + (4 * 1)))),
+            "assigning variable arr_tuple_dot_2_temp__");
+          current_statement__ = 9;
+          arr_tuple_dot_2_temp__pos__ = (arr_tuple_dot_2_temp__pos__ +
+                                          (4 * 1));
+          {
+            std::vector<local_scalar_t__> arr_tuple_dot_3_temp___flat__;
+            current_statement__ = 9;
+            stan::model::assign(arr_tuple_dot_3_temp___flat__,
+              stan::model::rvalue(arr_tuple_dot_3_flat__,
+                "arr_tuple_dot_3_flat__",
+                stan::model::index_min_max(arr_tuple_dot_3_temp__pos__, 
+                  (arr_tuple_dot_3_temp__pos__ + 3))),
+              "assigning variable arr_tuple_dot_3_temp___flat__");
+            current_statement__ = 9;
+            pos__ = 1;
+            current_statement__ = 9;
+            for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+              current_statement__ = 9;
+              stan::model::assign(arr_tuple_dot_3_temp__,
+                arr_tuple_dot_3_temp___flat__[(pos__ - 1)],
+                "assigning variable arr_tuple_dot_3_temp__", stan::model::index_uni(sym2__));
+              current_statement__ = 9;
+              pos__ = (pos__ + 1);
+            }
+          }
+          current_statement__ = 9;
+          arr_tuple_dot_3_temp__pos__ = (arr_tuple_dot_3_temp__pos__ + 3);
+          current_statement__ = 9;
+          stan::model::assign(arr_tuple,
+            std::tuple<int, std::vector<double>,
+                         Eigen::Matrix<double, -1, 1>>
+            (arr_tuple_dot_1_temp__, arr_tuple_dot_2_temp__,
+               arr_tuple_dot_3_temp__),
+            "assigning variable arr_tuple", stan::model::index_uni(sym1__));
+        }
+      }
+      current_statement__ = 10;
+      context__.validate_dims("data initialization","tuple_arr_tuple.1",
+          "double", std::vector<size_t>{static_cast<size_t>(2)});
+      context__.validate_dims("data initialization","tuple_arr_tuple.2",
+          "int", std::vector<size_t>{});
+      context__.validate_dims("data initialization","tuple_arr_tuple.3.1",
+          "double", std::vector<size_t>{static_cast<size_t>(3)});
+      context__.validate_dims("data initialization","tuple_arr_tuple.3.2",
+          "int",
+           std::vector<size_t>{static_cast<size_t>(3),
+            static_cast<size_t>(4)});
+      tuple_arr_tuple = 
+        std::tuple<std::vector<double>, int,
+                   std::vector<std::tuple<double, std::vector<int>>>>{
+        std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()), std::numeric_limits<int>::min(), 
+        std::vector<std::tuple<double, std::vector<int>>>(3, 
+          std::tuple<double, std::vector<int>>{std::numeric_limits<double>::quiet_NaN(), 
+          std::vector<int>(4, std::numeric_limits<int>::min())})};
+      
+      
+      current_statement__ = 10;
+      std::get<0>(tuple_arr_tuple) = context__.vals_r("tuple_arr_tuple.1");
+      current_statement__ = 10;
+      std::get<1>(tuple_arr_tuple) = context__.vals_i("tuple_arr_tuple.2")[
+          (1 - 1)];
+      {
+        std::vector<local_scalar_t__> tuple_arr_tuple_dot_3_dot_1_flat__;
+        current_statement__ = 10;
+        tuple_arr_tuple_dot_3_dot_1_flat__ = context__.vals_r("tuple_arr_tuple.3.1");
+        local_scalar_t__ tuple_arr_tuple_dot_3_dot_1_temp__;
+        int tuple_arr_tuple_dot_3_dot_1_temp__pos__;
+        current_statement__ = 10;
+        tuple_arr_tuple_dot_3_dot_1_temp__pos__ = 1;
+        std::vector<int> tuple_arr_tuple_dot_3_dot_2_flat__;
+        current_statement__ = 10;
+        tuple_arr_tuple_dot_3_dot_2_flat__ = context__.vals_i("tuple_arr_tuple.3.2");
+        std::vector<int> tuple_arr_tuple_dot_3_dot_2_temp__;
+        int tuple_arr_tuple_dot_3_dot_2_temp__pos__;
+        current_statement__ = 10;
+        tuple_arr_tuple_dot_3_dot_2_temp__pos__ = 1;
+        current_statement__ = 10;
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 10;
+          tuple_arr_tuple_dot_3_dot_1_temp__ = tuple_arr_tuple_dot_3_dot_1_flat__[
+              (tuple_arr_tuple_dot_3_dot_1_temp__pos__ - 1)];
+          current_statement__ = 10;
+          tuple_arr_tuple_dot_3_dot_1_temp__pos__ = (tuple_arr_tuple_dot_3_dot_1_temp__pos__
+                                                      + 1);
+          current_statement__ = 10;
+          stan::model::assign(tuple_arr_tuple_dot_3_dot_2_temp__,
+            stan::model::rvalue(tuple_arr_tuple_dot_3_dot_2_flat__,
+              "tuple_arr_tuple_dot_3_dot_2_flat__",
+              stan::model::index_min_max(tuple_arr_tuple_dot_3_dot_2_temp__pos__, 
+                (tuple_arr_tuple_dot_3_dot_2_temp__pos__ + (4 * 1)))),
+            "assigning variable tuple_arr_tuple_dot_3_dot_2_temp__");
+          current_statement__ = 10;
+          tuple_arr_tuple_dot_3_dot_2_temp__pos__ = (tuple_arr_tuple_dot_3_dot_2_temp__pos__
+                                                      + (4 * 1));
+          current_statement__ = 10;
+          stan::model::assign(std::get<2>(tuple_arr_tuple),
+            std::tuple<double, std::vector<int>>
+            (tuple_arr_tuple_dot_3_dot_1_temp__,
+               tuple_arr_tuple_dot_3_dot_2_temp__),
+            "assigning variable std::get<2>(tuple_arr_tuple)", stan::model::index_uni(sym1__));
         }
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = ((1 + 1)) + ((1 + (1 + 1))) + ((1 + (1 + 1))) + 
-      (((10 * 1) + (1 + (2 - 1))));
+    num_params_r__ = (((10 * 1) + 1)) + ((1 + (1 + 2))) + (((2 + (4 * 1)) +
+                                                             3)) + ((((2 * 1)
+                                                                    + 1) +
+                                                                    (1 +
+                                                                    (4 * 1)))) + 
+      (((1 + 1) + (1 + (2 + 4)))) + ((1 + (1 + 5)));
     
   }
   
@@ -331,100 +296,163 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     (void) function__;  // suppress unused var warning
     
     try {
-      std::vector<std::tuple<local_scalar_t__, local_scalar_t__>> arr =
-         std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>(10, 
-           std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__});
+      std::tuple<std::vector<local_scalar_t__>, local_scalar_t__> basic_p =
+         std::tuple<std::vector<local_scalar_t__>, local_scalar_t__>{
+        std::vector<local_scalar_t__>(10, DUMMY_VAR__), DUMMY_VAR__};
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        current_statement__ = 1;
-        stan::model::assign(arr,
-          std::tuple<local_scalar_t__, local_scalar_t__>
+      stan::model::assign(basic_p,
+        std::tuple<std::vector<local_scalar_t__>, local_scalar_t__>
+        (in__.template read<std::vector<local_scalar_t__>>(10),
+           in__.template read<local_scalar_t__>()),
+        "assigning variable basic_p");
+      std::tuple<local_scalar_t__,
+        std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>> tuple_tuple_p =
+         std::tuple<local_scalar_t__,
+                    std::tuple<local_scalar_t__,
+                               Eigen::Matrix<local_scalar_t__, -1, 1>>>{DUMMY_VAR__, std::tuple<
+        local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>{DUMMY_VAR__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__)}};
+      current_statement__ = 2;
+      stan::model::assign(tuple_tuple_p,
+        std::tuple<local_scalar_t__,
+                     std::tuple<local_scalar_t__,
+                                Eigen::Matrix<local_scalar_t__, -1, 1>>>
+        (in__.template read<local_scalar_t__>(),
+           std::tuple<local_scalar_t__,
+                        Eigen::Matrix<local_scalar_t__, -1, 1>>
+           (in__.template read<local_scalar_t__>(),
+              in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2))),
+        "assigning variable tuple_tuple_p");
+      std::vector<
+        std::tuple<std::complex<local_scalar_t__>,
+          std::vector<local_scalar_t__>,
+          Eigen::Matrix<local_scalar_t__, -1, 1>>> arr_tuple_p =
+         std::vector<std::tuple<std::complex<local_scalar_t__>,
+                                std::vector<local_scalar_t__>,
+                                Eigen::Matrix<local_scalar_t__, -1, 1>>>(3, 
+           std::tuple<std::complex<local_scalar_t__>,
+                      std::vector<local_scalar_t__>,
+                      Eigen::Matrix<local_scalar_t__, -1, 1>>{std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__), 
+           std::vector<local_scalar_t__>(4, DUMMY_VAR__), Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
+                                                            3, DUMMY_VAR__)});
+      current_statement__ = 3;
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        current_statement__ = 3;
+        stan::model::assign(arr_tuple_p,
+          std::tuple<std::complex<local_scalar_t__>,
+                       std::vector<local_scalar_t__>,
+                       Eigen::Matrix<local_scalar_t__, -1, 1>>
+          (in__.template read<std::complex<local_scalar_t__>>(),
+             in__.template read<std::vector<local_scalar_t__>>(4),
+             in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(3)),
+          "assigning variable arr_tuple_p", stan::model::index_uni(sym1__));
+      }
+      std::tuple<std::vector<local_scalar_t__>, local_scalar_t__,
+        std::vector<
+          std::tuple<local_scalar_t__, std::vector<local_scalar_t__>>>> tuple_arr_tuple_p =
+         std::tuple<std::vector<local_scalar_t__>, local_scalar_t__,
+                    std::vector<std::tuple<local_scalar_t__,
+                                           std::vector<local_scalar_t__>>>>{
+        std::vector<local_scalar_t__>(2, DUMMY_VAR__), DUMMY_VAR__, std::vector<std::tuple<
+                                                                    local_scalar_t__,
+                                                                    std::vector<local_scalar_t__>>>(
+                                                                    3, 
+                                                                    std::tuple<
+                                                                    local_scalar_t__,
+                                                                    std::vector<local_scalar_t__>>{DUMMY_VAR__, 
+                                                                    std::vector<
+                                                                    local_scalar_t__>(
+                                                                    4, 
+                                                                    DUMMY_VAR__)})};
+      current_statement__ = 4;
+      std::get<0>(tuple_arr_tuple_p) = in__.template read<
+                                         std::vector<local_scalar_t__>>(2);
+      current_statement__ = 4;
+      std::get<1>(tuple_arr_tuple_p) = in__.template read<local_scalar_t__>();
+      current_statement__ = 4;
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        current_statement__ = 4;
+        stan::model::assign(std::get<2>(tuple_arr_tuple_p),
+          std::tuple<local_scalar_t__, std::vector<local_scalar_t__>>
           (in__.template read<local_scalar_t__>(),
-             in__.template read<local_scalar_t__>()),
-          "assigning variable arr", stan::model::index_uni(sym1__));
+             in__.template read<std::vector<local_scalar_t__>>(4)),
+          "assigning variable std::get<2>(tuple_arr_tuple_p)", stan::model::index_uni(sym1__));
+      }
+      std::vector<
+        std::tuple<local_scalar_t__, local_scalar_t__,
+          std::tuple<local_scalar_t__,
+            std::tuple<std::complex<local_scalar_t__>,
+              Eigen::Matrix<local_scalar_t__, -1, 1>>>>> arr_tuple_tuple_p =
+         std::vector<std::tuple<local_scalar_t__, local_scalar_t__,
+                                std::tuple<local_scalar_t__,
+                                           std::tuple<std::complex<local_scalar_t__>,
+                                                      Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(
+           2, 
+           std::tuple<local_scalar_t__, local_scalar_t__,
+                      std::tuple<local_scalar_t__,
+                                 std::tuple<std::complex<local_scalar_t__>,
+                                            Eigen::Matrix<local_scalar_t__, -1, 1>>>>{DUMMY_VAR__, DUMMY_VAR__, std::tuple<
+           local_scalar_t__,
+           std::tuple<std::complex<local_scalar_t__>,
+                      Eigen::Matrix<local_scalar_t__, -1, 1>>>{DUMMY_VAR__, std::tuple<
+           std::complex<local_scalar_t__>,
+           Eigen::Matrix<local_scalar_t__, -1, 1>>{std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__), 
+           Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(4, DUMMY_VAR__)}}});
+      current_statement__ = 5;
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 5;
+        stan::model::assign(arr_tuple_tuple_p,
+          std::tuple<local_scalar_t__, local_scalar_t__,
+                       std::tuple<local_scalar_t__,
+                                  std::tuple<std::complex<local_scalar_t__>,
+                                             Eigen::Matrix<local_scalar_t__, -1, 1>>>>
+          (in__.template read<local_scalar_t__>(),
+             in__.template read<local_scalar_t__>(),
+             std::tuple<local_scalar_t__,
+                          std::tuple<std::complex<local_scalar_t__>,
+                                     Eigen::Matrix<local_scalar_t__, -1, 1>>>
+             (in__.template read<local_scalar_t__>(),
+                std::tuple<std::complex<local_scalar_t__>,
+                             Eigen::Matrix<local_scalar_t__, -1, 1>>
+                (in__.template read<std::complex<local_scalar_t__>>(),
+                   in__.template read<
+                     Eigen::Matrix<local_scalar_t__, -1, 1>>(4)))),
+          "assigning variable arr_tuple_tuple_p", stan::model::index_uni(sym1__));
       }
       std::vector<
         std::tuple<local_scalar_t__,
-          std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>>> arr2 =
-         std::vector<std::tuple<local_scalar_t__,
-                                std::vector<std::tuple<local_scalar_t__,
-                                                       local_scalar_t__>>>>(
-           10, 
-           std::tuple<local_scalar_t__,
-                      std::vector<std::tuple<local_scalar_t__,
-                                             local_scalar_t__>>>{DUMMY_VAR__, 
-           std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>(10, 
-             std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__})});
-      current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        current_statement__ = 2;
-        std::get<0>(arr2[(sym1__ - 1)]) = in__.template read<
-                                            local_scalar_t__>();
-        current_statement__ = 2;
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-          current_statement__ = 2;
-          stan::model::assign(std::get<1>(arr2[(sym1__ - 1)]),
-            std::tuple<local_scalar_t__, local_scalar_t__>
-            (in__.template read<local_scalar_t__>(),
-               in__.template read<local_scalar_t__>()),
-            "assigning variable std::get<1>(arr2[(sym1__ - 1)])", stan::model::index_uni(sym2__));
-        }
-      }
-      std::tuple<local_scalar_t__,
-        std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>> arr3 =
-         std::tuple<local_scalar_t__,
-                    std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>>{DUMMY_VAR__, 
-        std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>(10, 
-          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__})};
-      current_statement__ = 3;
-      std::get<0>(arr3) = in__.template read<local_scalar_t__>();
-      current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        current_statement__ = 3;
-        stan::model::assign(std::get<1>(arr3),
-          std::tuple<local_scalar_t__, local_scalar_t__>
-          (in__.template read<local_scalar_t__>(),
-             in__.template read<local_scalar_t__>()),
-          "assigning variable std::get<1>(arr3)", stan::model::index_uni(sym1__));
-      }
-      std::vector<
-        std::tuple<std::vector<local_scalar_t__>,
           std::vector<
             std::tuple<local_scalar_t__,
-              Eigen::Matrix<local_scalar_t__, -1, 1>>>>> arr4 =
-         std::vector<std::tuple<std::vector<local_scalar_t__>,
+              Eigen::Matrix<local_scalar_t__, -1, 1>>>>> arr_tuple_arr_tuple_p =
+         std::vector<std::tuple<local_scalar_t__,
                                 std::vector<std::tuple<local_scalar_t__,
                                                        Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(
-           11, 
-           std::tuple<std::vector<local_scalar_t__>,
+           3, 
+           std::tuple<local_scalar_t__,
                       std::vector<std::tuple<local_scalar_t__,
-                                             Eigen::Matrix<local_scalar_t__, -1, 1>>>>{
-           std::vector<local_scalar_t__>(10, DUMMY_VAR__), std::vector<std::tuple<
-                                                             local_scalar_t__,
-                                                             Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-                                                             14, 
-                                                             std::tuple<
-                                                             local_scalar_t__,
-                                                             Eigen::Matrix<local_scalar_t__, -1, 1>>{DUMMY_VAR__, 
-                                                             Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
-                                                               2,
-                                                               DUMMY_VAR__)})});
-      current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= 11; ++sym1__) {
-        current_statement__ = 4;
-        std::get<0>(arr4[(sym1__ - 1)]) = in__.template read<
-                                            std::vector<local_scalar_t__>>(
-                                            10);
-        current_statement__ = 4;
-        for (int sym2__ = 1; sym2__ <= 14; ++sym2__) {
-          current_statement__ = 4;
-          stan::model::assign(std::get<1>(arr4[(sym1__ - 1)]),
+                                             Eigen::Matrix<local_scalar_t__, -1, 1>>>>{DUMMY_VAR__, 
+           std::vector<std::tuple<local_scalar_t__,
+                                  Eigen::Matrix<local_scalar_t__, -1, 1>>>(4, 
+             std::tuple<local_scalar_t__,
+                        Eigen::Matrix<local_scalar_t__, -1, 1>>{DUMMY_VAR__, 
+             Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(5, DUMMY_VAR__)})});
+      current_statement__ = 6;
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        current_statement__ = 6;
+        std::get<0>(arr_tuple_arr_tuple_p[(sym1__ - 1)]) = in__.template read<
+                                                             local_scalar_t__>(
+                                                             );
+        current_statement__ = 6;
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          current_statement__ = 6;
+          stan::model::assign(
+            std::get<1>(arr_tuple_arr_tuple_p[(sym1__ - 1)]),
             std::tuple<local_scalar_t__,
                          Eigen::Matrix<local_scalar_t__, -1, 1>>
             (in__.template read<local_scalar_t__>(),
-               in__.template read_constrain_simplex<
-                 Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__, 2)),
-            "assigning variable std::get<1>(arr4[(sym1__ - 1)])", stan::model::index_uni(sym2__));
+               in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(5)),
+            "assigning variable std::get<1>(arr_tuple_arr_tuple_p[(sym1__ - 1)])", 
+            stan::model::index_uni(sym2__));
         }
       }
     } catch (const std::exception& e) {
@@ -459,113 +487,186 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     (void) function__;  // suppress unused var warning
     
     try {
-      std::vector<std::tuple<double, double>> arr =
-         std::vector<std::tuple<double, double>>(10, 
-           std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()});
+      std::tuple<std::vector<double>, double> basic_p =
+         std::tuple<std::vector<double>, double>{std::vector<double>(10, 
+                                                   std::numeric_limits<double>::quiet_NaN()), std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        current_statement__ = 1;
-        stan::model::assign(arr,
-          std::tuple<local_scalar_t__, local_scalar_t__>
-          (in__.template read<local_scalar_t__>(),
-             in__.template read<local_scalar_t__>()),
-          "assigning variable arr", stan::model::index_uni(sym1__));
-      }
-      std::vector<
-        std::tuple<double, std::vector<std::tuple<double, double>>>> arr2 =
-         std::vector<std::tuple<double,
-                                std::vector<std::tuple<double, double>>>>(10, 
-           std::tuple<double, std::vector<std::tuple<double, double>>>{std::numeric_limits<double>::quiet_NaN(), 
-           std::vector<std::tuple<double, double>>(10, 
-             std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()})});
+      stan::model::assign(basic_p,
+        std::tuple<std::vector<local_scalar_t__>, local_scalar_t__>
+        (in__.template read<std::vector<local_scalar_t__>>(10),
+           in__.template read<local_scalar_t__>()),
+        "assigning variable basic_p");
+      std::tuple<double, std::tuple<double, Eigen::Matrix<double, -1, 1>>> tuple_tuple_p =
+         std::tuple<double, std::tuple<double, Eigen::Matrix<double, -1, 1>>>{std::numeric_limits<double>::quiet_NaN(), std::tuple<
+        double, Eigen::Matrix<double, -1, 1>>{std::numeric_limits<double>::quiet_NaN(), 
+        Eigen::Matrix<double, -1, 1>::Constant(2,
+          std::numeric_limits<double>::quiet_NaN())}};
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        current_statement__ = 2;
-        std::get<0>(arr2[(sym1__ - 1)]) = in__.template read<
-                                            local_scalar_t__>();
-        current_statement__ = 2;
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-          current_statement__ = 2;
-          stan::model::assign(std::get<1>(arr2[(sym1__ - 1)]),
-            std::tuple<local_scalar_t__, local_scalar_t__>
-            (in__.template read<local_scalar_t__>(),
-               in__.template read<local_scalar_t__>()),
-            "assigning variable std::get<1>(arr2[(sym1__ - 1)])", stan::model::index_uni(sym2__));
-        }
-      }
-      std::tuple<double, std::vector<std::tuple<double, double>>> arr3 =
-         std::tuple<double, std::vector<std::tuple<double, double>>>{std::numeric_limits<double>::quiet_NaN(), 
-        std::vector<std::tuple<double, double>>(10, 
-          std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()})};
+      stan::model::assign(tuple_tuple_p,
+        std::tuple<local_scalar_t__,
+                     std::tuple<local_scalar_t__,
+                                Eigen::Matrix<local_scalar_t__, -1, 1>>>
+        (in__.template read<local_scalar_t__>(),
+           std::tuple<local_scalar_t__,
+                        Eigen::Matrix<local_scalar_t__, -1, 1>>
+           (in__.template read<local_scalar_t__>(),
+              in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2))),
+        "assigning variable tuple_tuple_p");
+      std::vector<
+        std::tuple<std::complex<double>, std::vector<double>,
+          Eigen::Matrix<double, -1, 1>>> arr_tuple_p =
+         std::vector<std::tuple<std::complex<double>, std::vector<double>,
+                                Eigen::Matrix<double, -1, 1>>>(3, 
+           std::tuple<std::complex<double>, std::vector<double>,
+                      Eigen::Matrix<double, -1, 1>>{std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+                                                      std::numeric_limits<double>::quiet_NaN()), 
+           std::vector<double>(4, std::numeric_limits<double>::quiet_NaN()), 
+           Eigen::Matrix<double, -1, 1>::Constant(3,
+             std::numeric_limits<double>::quiet_NaN())});
       current_statement__ = 3;
-      std::get<0>(arr3) = in__.template read<local_scalar_t__>();
-      current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         current_statement__ = 3;
-        stan::model::assign(std::get<1>(arr3),
-          std::tuple<local_scalar_t__, local_scalar_t__>
+        stan::model::assign(arr_tuple_p,
+          std::tuple<std::complex<local_scalar_t__>,
+                       std::vector<local_scalar_t__>,
+                       Eigen::Matrix<local_scalar_t__, -1, 1>>
+          (in__.template read<std::complex<local_scalar_t__>>(),
+             in__.template read<std::vector<local_scalar_t__>>(4),
+             in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(3)),
+          "assigning variable arr_tuple_p", stan::model::index_uni(sym1__));
+      }
+      std::tuple<std::vector<double>, double,
+        std::vector<std::tuple<double, std::vector<double>>>> tuple_arr_tuple_p =
+         std::tuple<std::vector<double>, double,
+                    std::vector<std::tuple<double, std::vector<double>>>>{
+        std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()), std::numeric_limits<double>::quiet_NaN(), 
+        std::vector<std::tuple<double, std::vector<double>>>(3, 
+          std::tuple<double, std::vector<double>>{std::numeric_limits<double>::quiet_NaN(), 
+          std::vector<double>(4, std::numeric_limits<double>::quiet_NaN())})};
+      current_statement__ = 4;
+      std::get<0>(tuple_arr_tuple_p) = in__.template read<
+                                         std::vector<local_scalar_t__>>(2);
+      current_statement__ = 4;
+      std::get<1>(tuple_arr_tuple_p) = in__.template read<local_scalar_t__>();
+      current_statement__ = 4;
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        current_statement__ = 4;
+        stan::model::assign(std::get<2>(tuple_arr_tuple_p),
+          std::tuple<local_scalar_t__, std::vector<local_scalar_t__>>
           (in__.template read<local_scalar_t__>(),
-             in__.template read<local_scalar_t__>()),
-          "assigning variable std::get<1>(arr3)", stan::model::index_uni(sym1__));
+             in__.template read<std::vector<local_scalar_t__>>(4)),
+          "assigning variable std::get<2>(tuple_arr_tuple_p)", stan::model::index_uni(sym1__));
       }
       std::vector<
-        std::tuple<std::vector<double>,
-          std::vector<std::tuple<double, Eigen::Matrix<double, -1, 1>>>>> arr4 =
-         std::vector<std::tuple<std::vector<double>,
+        std::tuple<double, double,
+          std::tuple<double,
+            std::tuple<std::complex<double>, Eigen::Matrix<double, -1, 1>>>>> arr_tuple_tuple_p =
+         std::vector<std::tuple<double, double,
+                                std::tuple<double,
+                                           std::tuple<std::complex<double>,
+                                                      Eigen::Matrix<double, -1, 1>>>>>(
+           2, 
+           std::tuple<double, double,
+                      std::tuple<double,
+                                 std::tuple<std::complex<double>,
+                                            Eigen::Matrix<double, -1, 1>>>>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN(), std::tuple<
+           double,
+           std::tuple<std::complex<double>, Eigen::Matrix<double, -1, 1>>>{std::numeric_limits<double>::quiet_NaN(), std::tuple<
+           std::complex<double>, Eigen::Matrix<double, -1, 1>>{std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+                                                                 std::numeric_limits<double>::quiet_NaN()), 
+           Eigen::Matrix<double, -1, 1>::Constant(4,
+             std::numeric_limits<double>::quiet_NaN())}}});
+      current_statement__ = 5;
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 5;
+        stan::model::assign(arr_tuple_tuple_p,
+          std::tuple<local_scalar_t__, local_scalar_t__,
+                       std::tuple<local_scalar_t__,
+                                  std::tuple<std::complex<local_scalar_t__>,
+                                             Eigen::Matrix<local_scalar_t__, -1, 1>>>>
+          (in__.template read<local_scalar_t__>(),
+             in__.template read<local_scalar_t__>(),
+             std::tuple<local_scalar_t__,
+                          std::tuple<std::complex<local_scalar_t__>,
+                                     Eigen::Matrix<local_scalar_t__, -1, 1>>>
+             (in__.template read<local_scalar_t__>(),
+                std::tuple<std::complex<local_scalar_t__>,
+                             Eigen::Matrix<local_scalar_t__, -1, 1>>
+                (in__.template read<std::complex<local_scalar_t__>>(),
+                   in__.template read<
+                     Eigen::Matrix<local_scalar_t__, -1, 1>>(4)))),
+          "assigning variable arr_tuple_tuple_p", stan::model::index_uni(sym1__));
+      }
+      std::vector<
+        std::tuple<double,
+          std::vector<std::tuple<double, Eigen::Matrix<double, -1, 1>>>>> arr_tuple_arr_tuple_p =
+         std::vector<std::tuple<double,
                                 std::vector<std::tuple<double,
                                                        Eigen::Matrix<double, -1, 1>>>>>(
-           11, 
-           std::tuple<std::vector<double>,
+           3, 
+           std::tuple<double,
                       std::vector<std::tuple<double,
-                                             Eigen::Matrix<double, -1, 1>>>>{
-           std::vector<double>(10, std::numeric_limits<double>::quiet_NaN()), 
-           std::vector<std::tuple<double, Eigen::Matrix<double, -1, 1>>>(14, 
+                                             Eigen::Matrix<double, -1, 1>>>>{std::numeric_limits<double>::quiet_NaN(), 
+           std::vector<std::tuple<double, Eigen::Matrix<double, -1, 1>>>(4, 
              std::tuple<double, Eigen::Matrix<double, -1, 1>>{std::numeric_limits<double>::quiet_NaN(), 
-             Eigen::Matrix<double, -1, 1>::Constant(2,
+             Eigen::Matrix<double, -1, 1>::Constant(5,
                std::numeric_limits<double>::quiet_NaN())})});
-      current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= 11; ++sym1__) {
-        current_statement__ = 4;
-        std::get<0>(arr4[(sym1__ - 1)]) = in__.template read<
-                                            std::vector<local_scalar_t__>>(
-                                            10);
-        current_statement__ = 4;
-        for (int sym2__ = 1; sym2__ <= 14; ++sym2__) {
-          current_statement__ = 4;
-          stan::model::assign(std::get<1>(arr4[(sym1__ - 1)]),
+      current_statement__ = 6;
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        current_statement__ = 6;
+        std::get<0>(arr_tuple_arr_tuple_p[(sym1__ - 1)]) = in__.template read<
+                                                             local_scalar_t__>(
+                                                             );
+        current_statement__ = 6;
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          current_statement__ = 6;
+          stan::model::assign(
+            std::get<1>(arr_tuple_arr_tuple_p[(sym1__ - 1)]),
             std::tuple<local_scalar_t__,
                          Eigen::Matrix<local_scalar_t__, -1, 1>>
             (in__.template read<local_scalar_t__>(),
-               in__.template read_constrain_simplex<
-                 Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__, 2)),
-            "assigning variable std::get<1>(arr4[(sym1__ - 1)])", stan::model::index_uni(sym2__));
+               in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(5)),
+            "assigning variable std::get<1>(arr_tuple_arr_tuple_p[(sym1__ - 1)])", 
+            stan::model::index_uni(sym2__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        out__.write(std::get<0>(arr[(sym1__ - 1)]));
-        out__.write(std::get<1>(arr[(sym1__ - 1)]));
+      out__.write(std::get<0>(basic_p));
+      out__.write(std::get<1>(basic_p));
+      out__.write(std::get<0>(tuple_tuple_p));
+      out__.write(std::get<0>(std::get<1>(tuple_tuple_p)));
+      out__.write(std::get<1>(std::get<1>(tuple_tuple_p)));
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        out__.write(std::get<0>(arr_tuple_p[(sym1__ - 1)]));
+        out__.write(std::get<1>(arr_tuple_p[(sym1__ - 1)]));
+        out__.write(std::get<2>(arr_tuple_p[(sym1__ - 1)]));
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        out__.write(std::get<0>(arr2[(sym1__ - 1)]));
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-          out__.write(
-            std::get<0>(std::get<1>(arr2[(sym1__ - 1)])[(sym2__ - 1)]));
-          out__.write(
-            std::get<1>(std::get<1>(arr2[(sym1__ - 1)])[(sym2__ - 1)]));
-        }
+      out__.write(std::get<0>(tuple_arr_tuple_p));
+      out__.write(std::get<1>(tuple_arr_tuple_p));
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        out__.write(
+          std::get<0>(std::get<2>(tuple_arr_tuple_p)[(sym1__ - 1)]));
+        out__.write(
+          std::get<1>(std::get<2>(tuple_arr_tuple_p)[(sym1__ - 1)]));
       }
-      out__.write(std::get<0>(arr3));
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        out__.write(std::get<0>(std::get<1>(arr3)[(sym1__ - 1)]));
-        out__.write(std::get<1>(std::get<1>(arr3)[(sym1__ - 1)]));
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        out__.write(std::get<0>(arr_tuple_tuple_p[(sym1__ - 1)]));
+        out__.write(std::get<1>(arr_tuple_tuple_p[(sym1__ - 1)]));
+        out__.write(
+          std::get<0>(std::get<2>(arr_tuple_tuple_p[(sym1__ - 1)])));
+        out__.write(
+          std::get<0>(std::get<1>(std::get<2>(arr_tuple_tuple_p[(sym1__ - 1)]))));
+        out__.write(
+          std::get<1>(std::get<1>(std::get<2>(arr_tuple_tuple_p[(sym1__ - 1)]))));
       }
-      for (int sym1__ = 1; sym1__ <= 11; ++sym1__) {
-        out__.write(std::get<0>(arr4[(sym1__ - 1)]));
-        for (int sym2__ = 1; sym2__ <= 14; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        out__.write(std::get<0>(arr_tuple_arr_tuple_p[(sym1__ - 1)]));
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
           out__.write(
-            std::get<0>(std::get<1>(arr4[(sym1__ - 1)])[(sym2__ - 1)]));
+            std::get<0>(std::get<1>(arr_tuple_arr_tuple_p[(sym1__ - 1)])[
+            (sym2__ - 1)]));
           out__.write(
-            std::get<1>(std::get<1>(arr4[(sym1__ - 1)])[(sym2__ - 1)]));
+            std::get<1>(std::get<1>(arr_tuple_arr_tuple_p[(sym1__ - 1)])[
+            (sym2__ - 1)]));
         }
       }
       if (stan::math::logical_negation((stan::math::primitive_value(
@@ -596,112 +697,199 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      std::vector<std::tuple<local_scalar_t__, local_scalar_t__>> arr =
-         std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>(10, 
-           std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__});
+      std::tuple<std::vector<local_scalar_t__>, local_scalar_t__> basic_p =
+         std::tuple<std::vector<local_scalar_t__>, local_scalar_t__>{
+        std::vector<local_scalar_t__>(10, DUMMY_VAR__), DUMMY_VAR__};
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        std::get<0>(arr[(sym1__ - 1)]) = in__.read<local_scalar_t__>();
-        std::get<1>(arr[(sym1__ - 1)]) = in__.read<local_scalar_t__>();
+        stan::model::assign(std::get<0>(basic_p),
+          in__.read<local_scalar_t__>(),
+          "assigning variable std::get<0>(basic_p)", stan::model::index_uni(sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        out__.write(std::get<0>(arr[(sym1__ - 1)]));
-        out__.write(std::get<1>(arr[(sym1__ - 1)]));
+      std::get<1>(basic_p) = in__.read<local_scalar_t__>();
+      out__.write(std::get<0>(basic_p));
+      out__.write(std::get<1>(basic_p));
+      std::tuple<local_scalar_t__,
+        std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>> tuple_tuple_p =
+         std::tuple<local_scalar_t__,
+                    std::tuple<local_scalar_t__,
+                               Eigen::Matrix<local_scalar_t__, -1, 1>>>{DUMMY_VAR__, std::tuple<
+        local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>{DUMMY_VAR__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__)}};
+      std::get<0>(tuple_tuple_p) = in__.read<local_scalar_t__>();
+      std::get<0>(std::get<1>(tuple_tuple_p)) = in__.read<local_scalar_t__>();
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        stan::model::assign(std::get<1>(std::get<1>(tuple_tuple_p)),
+          in__.read<local_scalar_t__>(),
+          "assigning variable std::get<1>(std::get<1>(tuple_tuple_p))", 
+          stan::model::index_uni(sym1__));
+      }
+      out__.write(std::get<0>(tuple_tuple_p));
+      out__.write(std::get<0>(std::get<1>(tuple_tuple_p)));
+      out__.write(std::get<1>(std::get<1>(tuple_tuple_p)));
+      std::vector<
+        std::tuple<std::complex<local_scalar_t__>,
+          std::vector<local_scalar_t__>,
+          Eigen::Matrix<local_scalar_t__, -1, 1>>> arr_tuple_p =
+         std::vector<std::tuple<std::complex<local_scalar_t__>,
+                                std::vector<local_scalar_t__>,
+                                Eigen::Matrix<local_scalar_t__, -1, 1>>>(3, 
+           std::tuple<std::complex<local_scalar_t__>,
+                      std::vector<local_scalar_t__>,
+                      Eigen::Matrix<local_scalar_t__, -1, 1>>{std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__), 
+           std::vector<local_scalar_t__>(4, DUMMY_VAR__), Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
+                                                            3, DUMMY_VAR__)});
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        std::get<0>(arr_tuple_p[(sym1__ - 1)]) = in__.read<
+                                                   local_scalar_t__>();
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          stan::model::assign(std::get<1>(arr_tuple_p[(sym1__ - 1)]),
+            in__.read<local_scalar_t__>(),
+            "assigning variable std::get<1>(arr_tuple_p[(sym1__ - 1)])", 
+            stan::model::index_uni(sym2__));
+        }
+        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          stan::model::assign(std::get<2>(arr_tuple_p[(sym1__ - 1)]),
+            in__.read<local_scalar_t__>(),
+            "assigning variable std::get<2>(arr_tuple_p[(sym1__ - 1)])", 
+            stan::model::index_uni(sym2__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        out__.write(std::get<0>(arr_tuple_p[(sym1__ - 1)]));
+        out__.write(std::get<1>(arr_tuple_p[(sym1__ - 1)]));
+        out__.write(std::get<2>(arr_tuple_p[(sym1__ - 1)]));
+      }
+      std::tuple<std::vector<local_scalar_t__>, local_scalar_t__,
+        std::vector<
+          std::tuple<local_scalar_t__, std::vector<local_scalar_t__>>>> tuple_arr_tuple_p =
+         std::tuple<std::vector<local_scalar_t__>, local_scalar_t__,
+                    std::vector<std::tuple<local_scalar_t__,
+                                           std::vector<local_scalar_t__>>>>{
+        std::vector<local_scalar_t__>(2, DUMMY_VAR__), DUMMY_VAR__, std::vector<std::tuple<
+                                                                    local_scalar_t__,
+                                                                    std::vector<local_scalar_t__>>>(
+                                                                    3, 
+                                                                    std::tuple<
+                                                                    local_scalar_t__,
+                                                                    std::vector<local_scalar_t__>>{DUMMY_VAR__, 
+                                                                    std::vector<
+                                                                    local_scalar_t__>(
+                                                                    4, 
+                                                                    DUMMY_VAR__)})};
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        stan::model::assign(std::get<0>(tuple_arr_tuple_p),
+          in__.read<local_scalar_t__>(),
+          "assigning variable std::get<0>(tuple_arr_tuple_p)", stan::model::index_uni(sym1__));
+      }
+      std::get<1>(tuple_arr_tuple_p) = in__.read<local_scalar_t__>();
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        std::get<0>(std::get<2>(tuple_arr_tuple_p)[(sym1__ - 1)]) = in__.read<
+                                                                    local_scalar_t__>();
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          stan::model::assign(
+            std::get<1>(std::get<2>(tuple_arr_tuple_p)[(sym1__ - 1)]),
+            in__.read<local_scalar_t__>(),
+            "assigning variable std::get<1>(std::get<2>(tuple_arr_tuple_p)[(sym1__ - 1)])", 
+            stan::model::index_uni(sym2__));
+        }
+      }
+      out__.write(std::get<0>(tuple_arr_tuple_p));
+      out__.write(std::get<1>(tuple_arr_tuple_p));
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        out__.write(
+          std::get<0>(std::get<2>(tuple_arr_tuple_p)[(sym1__ - 1)]));
+        out__.write(
+          std::get<1>(std::get<2>(tuple_arr_tuple_p)[(sym1__ - 1)]));
+      }
+      std::vector<
+        std::tuple<local_scalar_t__, local_scalar_t__,
+          std::tuple<local_scalar_t__,
+            std::tuple<std::complex<local_scalar_t__>,
+              Eigen::Matrix<local_scalar_t__, -1, 1>>>>> arr_tuple_tuple_p =
+         std::vector<std::tuple<local_scalar_t__, local_scalar_t__,
+                                std::tuple<local_scalar_t__,
+                                           std::tuple<std::complex<local_scalar_t__>,
+                                                      Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(
+           2, 
+           std::tuple<local_scalar_t__, local_scalar_t__,
+                      std::tuple<local_scalar_t__,
+                                 std::tuple<std::complex<local_scalar_t__>,
+                                            Eigen::Matrix<local_scalar_t__, -1, 1>>>>{DUMMY_VAR__, DUMMY_VAR__, std::tuple<
+           local_scalar_t__,
+           std::tuple<std::complex<local_scalar_t__>,
+                      Eigen::Matrix<local_scalar_t__, -1, 1>>>{DUMMY_VAR__, std::tuple<
+           std::complex<local_scalar_t__>,
+           Eigen::Matrix<local_scalar_t__, -1, 1>>{std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__), 
+           Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(4, DUMMY_VAR__)}}});
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        std::get<0>(arr_tuple_tuple_p[(sym1__ - 1)]) = in__.read<
+                                                         local_scalar_t__>();
+        std::get<1>(arr_tuple_tuple_p[(sym1__ - 1)]) = in__.read<
+                                                         local_scalar_t__>();
+        std::get<0>(std::get<2>(arr_tuple_tuple_p[(sym1__ - 1)])) = in__.read<
+                                                                    local_scalar_t__>();
+        std::get<0>(std::get<1>(std::get<2>(arr_tuple_tuple_p[(sym1__ - 1)]))) = 
+            in__.read<local_scalar_t__>();
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          stan::model::assign(
+            std::get<1>(std::get<1>(std::get<2>(arr_tuple_tuple_p[(sym1__ -
+                                                                    1)]))),
+            in__.read<local_scalar_t__>(),
+            "assigning variable std::get<1>(std::get<1>(std::get<2>(arr_tuple_tuple_p[\n(sym1__ - 1)])))", 
+            stan::model::index_uni(sym2__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        out__.write(std::get<0>(arr_tuple_tuple_p[(sym1__ - 1)]));
+        out__.write(std::get<1>(arr_tuple_tuple_p[(sym1__ - 1)]));
+        out__.write(
+          std::get<0>(std::get<2>(arr_tuple_tuple_p[(sym1__ - 1)])));
+        out__.write(
+          std::get<0>(std::get<1>(std::get<2>(arr_tuple_tuple_p[(sym1__ - 1)]))));
+        out__.write(
+          std::get<1>(std::get<1>(std::get<2>(arr_tuple_tuple_p[(sym1__ - 1)]))));
       }
       std::vector<
         std::tuple<local_scalar_t__,
-          std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>>> arr2 =
-         std::vector<std::tuple<local_scalar_t__,
-                                std::vector<std::tuple<local_scalar_t__,
-                                                       local_scalar_t__>>>>(
-           10, 
-           std::tuple<local_scalar_t__,
-                      std::vector<std::tuple<local_scalar_t__,
-                                             local_scalar_t__>>>{DUMMY_VAR__, 
-           std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>(10, 
-             std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__})});
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        std::get<0>(arr2[(sym1__ - 1)]) = in__.read<local_scalar_t__>();
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-          std::get<0>(std::get<1>(arr2[(sym1__ - 1)])[(sym2__ - 1)]) = 
-              in__.read<local_scalar_t__>();
-          std::get<1>(std::get<1>(arr2[(sym1__ - 1)])[(sym2__ - 1)]) = 
-              in__.read<local_scalar_t__>();
-        }
-      }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        out__.write(std::get<0>(arr2[(sym1__ - 1)]));
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-          out__.write(
-            std::get<0>(std::get<1>(arr2[(sym1__ - 1)])[(sym2__ - 1)]));
-          out__.write(
-            std::get<1>(std::get<1>(arr2[(sym1__ - 1)])[(sym2__ - 1)]));
-        }
-      }
-      std::tuple<local_scalar_t__,
-        std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>> arr3 =
-         std::tuple<local_scalar_t__,
-                    std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>>{DUMMY_VAR__, 
-        std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>(10, 
-          std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__, DUMMY_VAR__})};
-      std::get<0>(arr3) = in__.read<local_scalar_t__>();
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        std::get<0>(std::get<1>(arr3)[(sym1__ - 1)]) = in__.read<
-                                                         local_scalar_t__>();
-        std::get<1>(std::get<1>(arr3)[(sym1__ - 1)]) = in__.read<
-                                                         local_scalar_t__>();
-      }
-      out__.write(std::get<0>(arr3));
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        out__.write(std::get<0>(std::get<1>(arr3)[(sym1__ - 1)]));
-        out__.write(std::get<1>(std::get<1>(arr3)[(sym1__ - 1)]));
-      }
-      std::vector<
-        std::tuple<std::vector<local_scalar_t__>,
           std::vector<
             std::tuple<local_scalar_t__,
-              Eigen::Matrix<local_scalar_t__, -1, 1>>>>> arr4 =
-         std::vector<std::tuple<std::vector<local_scalar_t__>,
+              Eigen::Matrix<local_scalar_t__, -1, 1>>>>> arr_tuple_arr_tuple_p =
+         std::vector<std::tuple<local_scalar_t__,
                                 std::vector<std::tuple<local_scalar_t__,
                                                        Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(
-           11, 
-           std::tuple<std::vector<local_scalar_t__>,
+           3, 
+           std::tuple<local_scalar_t__,
                       std::vector<std::tuple<local_scalar_t__,
-                                             Eigen::Matrix<local_scalar_t__, -1, 1>>>>{
-           std::vector<local_scalar_t__>(10, DUMMY_VAR__), std::vector<std::tuple<
-                                                             local_scalar_t__,
-                                                             Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-                                                             14, 
-                                                             std::tuple<
-                                                             local_scalar_t__,
-                                                             Eigen::Matrix<local_scalar_t__, -1, 1>>{DUMMY_VAR__, 
-                                                             Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
-                                                               2,
-                                                               DUMMY_VAR__)})});
-      for (int sym1__ = 1; sym1__ <= 11; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-          stan::model::assign(std::get<0>(arr4[(sym1__ - 1)]),
-            in__.read<local_scalar_t__>(),
-            "assigning variable std::get<0>(arr4[(sym1__ - 1)])", stan::model::index_uni(sym2__));
-        }
-        for (int sym2__ = 1; sym2__ <= 14; ++sym2__) {
-          std::get<0>(std::get<1>(arr4[(sym1__ - 1)])[(sym2__ - 1)]) = 
-              in__.read<local_scalar_t__>();
-          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+                                             Eigen::Matrix<local_scalar_t__, -1, 1>>>>{DUMMY_VAR__, 
+           std::vector<std::tuple<local_scalar_t__,
+                                  Eigen::Matrix<local_scalar_t__, -1, 1>>>(4, 
+             std::tuple<local_scalar_t__,
+                        Eigen::Matrix<local_scalar_t__, -1, 1>>{DUMMY_VAR__, 
+             Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(5, DUMMY_VAR__)})});
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        std::get<0>(arr_tuple_arr_tuple_p[(sym1__ - 1)]) = in__.read<
+                                                             local_scalar_t__>();
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          std::get<0>(std::get<1>(arr_tuple_arr_tuple_p[(sym1__ - 1)])[
+              (sym2__ - 1)]) = in__.read<local_scalar_t__>();
+          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
             stan::model::assign(
-              std::get<1>(std::get<1>(arr4[(sym1__ - 1)])[(sym2__ - 1)]),
-              in__.read<local_scalar_t__>(),
-              "assigning variable std::get<1>(std::get<1>(arr4[(sym1__ - 1)])[(sym2__ - 1)])", 
+              std::get<1>(std::get<1>(arr_tuple_arr_tuple_p[(sym1__ - 1)])[
+              (sym2__ - 1)]), in__.read<local_scalar_t__>(),
+              "assigning variable std::get<1>(std::get<1>(arr_tuple_arr_tuple_p[(sym1__ - 1)])[\n(sym2__ - 1)])", 
               stan::model::index_uni(sym3__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 11; ++sym1__) {
-        out__.write(std::get<0>(arr4[(sym1__ - 1)]));
-        for (int sym2__ = 1; sym2__ <= 14; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        out__.write(std::get<0>(arr_tuple_arr_tuple_p[(sym1__ - 1)]));
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
           out__.write(
-            std::get<0>(std::get<1>(arr4[(sym1__ - 1)])[(sym2__ - 1)]));
-          out__.write_free_simplex(
-            std::get<1>(std::get<1>(arr4[(sym1__ - 1)])[(sym2__ - 1)]));
+            std::get<0>(std::get<1>(arr_tuple_arr_tuple_p[(sym1__ - 1)])[
+            (sym2__ - 1)]));
+          out__.write(
+            std::get<1>(std::get<1>(arr_tuple_arr_tuple_p[(sym1__ - 1)])[
+            (sym2__ - 1)]));
         }
       }
     } catch (const std::exception& e) {
@@ -711,24 +899,33 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__ = std::vector<std::string>{"arr", "arr2", "arr3", "arr4"};
+    names__ = std::vector<std::string>{"basic_p", "tuple_tuple_p",
+      "arr_tuple_p", "tuple_arr_tuple_p", "arr_tuple_tuple_p",
+      "arr_tuple_arr_tuple_p"};
     
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
-                                                                   static_cast<size_t>(10)
-                                                                   ,
                                                                    static_cast<size_t>(2)
+                                                                   ,
+                                                                   static_cast<size_t>(10)
                                                                    },
-      std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(2),
-                          static_cast<size_t>(10), static_cast<size_t>(2)},
-      std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(10),
+      std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(2),
                           static_cast<size_t>(2)},
-      std::vector<size_t>{static_cast<size_t>(11), static_cast<size_t>(2),
-                          static_cast<size_t>(10), static_cast<size_t>(14),
-                          static_cast<size_t>(2), static_cast<size_t>(2)}};
+      std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(3),
+                          static_cast<size_t>(2), static_cast<size_t>(4),
+                          static_cast<size_t>(3)},
+      std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(2),
+                          static_cast<size_t>(3), static_cast<size_t>(2),
+                          static_cast<size_t>(4)},
+      std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(3),
+                          static_cast<size_t>(2), static_cast<size_t>(2),
+                          static_cast<size_t>(2), static_cast<size_t>(4)},
+      std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(2),
+                          static_cast<size_t>(4), static_cast<size_t>(2),
+                          static_cast<size_t>(5)}};
     
     } // get_dims() 
     
@@ -740,23 +937,41 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     
     for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
       {
-        param_names__.emplace_back(std::string() + "arr" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "basic_p:1" + '.' + std::to_string(sym1__));
       } 
     }
-    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+    param_names__.emplace_back(std::string() + "basic_p:2");
+    param_names__.emplace_back(std::string() + "tuple_tuple_p:1");
+    param_names__.emplace_back(std::string() + "tuple_tuple_p:2:1");
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
-        param_names__.emplace_back(std::string() + "arr2" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "tuple_tuple_p:2:2" + '.' + std::to_string(sym1__));
       } 
     }
-    param_names__.emplace_back(std::string() + "arr3:1");
-    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
       {
-        param_names__.emplace_back(std::string() + "arr3:2" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "arr_tuple_p" + '.' + std::to_string(sym1__));
       } 
     }
-    for (int sym1__ = 1; sym1__ <= 11; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
-        param_names__.emplace_back(std::string() + "arr4" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "tuple_arr_tuple_p:1" + '.' + std::to_string(sym1__));
+      } 
+    }
+    param_names__.emplace_back(std::string() + "tuple_arr_tuple_p:2");
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      {
+        param_names__.emplace_back(std::string() + "tuple_arr_tuple_p:3" + '.' + std::to_string(sym1__));
+      } 
+    }
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      {
+        param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' + std::to_string(sym1__));
+      } 
+    }
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      {
+        param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p" + '.' + std::to_string(sym1__));
       } 
     }
     if (emit_transformed_parameters__) {
@@ -775,23 +990,58 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                                         bool emit_generated_quantities__ = true) const
     final {
     
-    param_names__.emplace_back(std::string() + "arr:1");
-    param_names__.emplace_back(std::string() + "arr:2");
-    param_names__.emplace_back(std::string() + "arr2:1");
-    param_names__.emplace_back(std::string() + "arr2:2:1");
-    param_names__.emplace_back(std::string() + "arr2:2:2");
-    param_names__.emplace_back(std::string() + "arr3:1");
-    param_names__.emplace_back(std::string() + "arr3:2:1");
-    param_names__.emplace_back(std::string() + "arr3:2:2");
     for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
       {
-        param_names__.emplace_back(std::string() + "arr4:1" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "basic_p:1" + '.' + std::to_string(sym1__));
       } 
     }
-    param_names__.emplace_back(std::string() + "arr4:2:1");
-    for (int sym1__ = 1; sym1__ <= (2 - 1); ++sym1__) {
+    param_names__.emplace_back(std::string() + "basic_p:2");
+    param_names__.emplace_back(std::string() + "tuple_tuple_p:1");
+    param_names__.emplace_back(std::string() + "tuple_tuple_p:2:1");
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
-        param_names__.emplace_back(std::string() + "arr4:2:2" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "tuple_tuple_p:2:2" + '.' + std::to_string(sym1__));
+      } 
+    }
+    param_names__.emplace_back(std::string() + "arr_tuple_p:1" + '.' + "real");
+    param_names__.emplace_back(std::string() + "arr_tuple_p:1" + '.' + "imag");
+    for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+      {
+        param_names__.emplace_back(std::string() + "arr_tuple_p:2" + '.' + std::to_string(sym1__));
+      } 
+    }
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      {
+        param_names__.emplace_back(std::string() + "arr_tuple_p:3" + '.' + std::to_string(sym1__));
+      } 
+    }
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      {
+        param_names__.emplace_back(std::string() + "tuple_arr_tuple_p:1" + '.' + std::to_string(sym1__));
+      } 
+    }
+    param_names__.emplace_back(std::string() + "tuple_arr_tuple_p:2");
+    param_names__.emplace_back(std::string() + "tuple_arr_tuple_p:3:1");
+    for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+      {
+        param_names__.emplace_back(std::string() + "tuple_arr_tuple_p:3:2" + '.' + std::to_string(sym1__));
+      } 
+    }
+    param_names__.emplace_back(std::string() + "arr_tuple_tuple_p:1");
+    param_names__.emplace_back(std::string() + "arr_tuple_tuple_p:2");
+    param_names__.emplace_back(std::string() + "arr_tuple_tuple_p:3:1");
+    param_names__.emplace_back(std::string() + "arr_tuple_tuple_p:3:2:1" + '.' + "real");
+    param_names__.emplace_back(std::string() + "arr_tuple_tuple_p:3:2:1" + '.' + "imag");
+    for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+      {
+        param_names__.emplace_back(std::string() + "arr_tuple_tuple_p:3:2:2" + '.' + std::to_string(sym1__));
+      } 
+    }
+    param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p:1");
+    param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p:2:1");
+    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+      {
+        param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p:2:2" + '.' + std::to_string(sym1__));
       } 
     }
     if (emit_transformed_parameters__) {
@@ -806,13 +1056,13 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     
   inline std::string get_constrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"arr\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]}},\"block\":\"parameters\"},{\"name\":\"arr2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]}}]}},\"block\":\"parameters\"},{\"name\":\"arr3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]}}]},\"block\":\"parameters\"},{\"name\":\"arr4\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(11) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"array\",\"length\":" + std::to_string(14) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(2) + "}]}}]}},\"block\":\"parameters\"}]");
+    return std::string("[{\"name\":\"basic_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"tuple_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(2) + "}]}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"vector\",\"length\":" + std::to_string(3) + "}]}},\"block\":\"parameters\"},{\"name\":\"tuple_arr_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}}]}}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}]}]}]}},\"block\":\"parameters\"},{\"name\":\"arr_tuple_arr_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(5) + "}]}}]}},\"block\":\"parameters\"}]");
     
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"arr\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"arr2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]}]},\"block\":\"parameters\"},{\"name\":\"arr3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]}]},\"block\":\"parameters\"},{\"name\":\"arr4\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string((2 - 1)) + "}]}]},\"block\":\"parameters\"}]");
+    return std::string("[{\"name\":\"basic_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"tuple_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(2) + "}]}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"vector\",\"length\":" + std::to_string(3) + "}]},\"block\":\"parameters\"},{\"name\":\"tuple_arr_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}}]}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}]}]}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_arr_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(5) + "}]}]},\"block\":\"parameters\"}]");
     
     } // get_unconstrained_sizedtypes() 
     
@@ -826,8 +1076,9 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  ((((10 * (1 + 1)) + (10 * (1 + (10 * (1 + 1))))) + (1 + (10 * (1 + 1)))) +
-    (11 * ((10 * 1) + (14 * (1 + 2)))));
+  (((((((10 * 1) + 1) + (1 + (1 + 2))) + (3 * ((2 + (4 * 1)) + 3))) +
+      (((2 * 1) + 1) + (3 * (1 + (4 * 1))))) +
+     (2 * ((1 + 1) + (1 + (2 + 4))))) + (3 * (1 + (4 * (1 + 5)))));
       const size_t num_transformed = emit_transformed_parameters * 0;
       const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
@@ -847,8 +1098,9 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       const size_t num_params__ = 
-  ((((10 * (1 + 1)) + (10 * (1 + (10 * (1 + 1))))) + (1 + (10 * (1 + 1)))) +
-    (11 * ((10 * 1) + (14 * (1 + 2)))));
+  (((((((10 * 1) + 1) + (1 + (1 + 2))) + (3 * ((2 + (4 * 1)) + 3))) +
+      (((2 * 1) + 1) + (3 * (1 + (4 * 1))))) +
+     (2 * ((1 + 1) + (1 + (2 + 4))))) + (3 * (1 + (4 * (1 + 5)))));
       const size_t num_transformed = emit_transformed_parameters * 0;
       const size_t num_gen_quantities = emit_generated_quantities * 0;
       const size_t num_to_write = num_params__ + num_transformed +
@@ -888,13 +1140,15 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-     constexpr std::array<const char*, 4> names__{"arr", "arr2", "arr3",
-      "arr4"};
-      const std::array<Eigen::Index, 4> 
-             constrain_param_sizes__{((10 * (1 + 1))),
-                                     ((10 * (1 + (10 * (1 + 1))))),
-                                     ((1 + (10 * (1 + 1)))),
-                                     ((11 * ((10 * 1) + (14 * (1 + 2)))))};
+     constexpr std::array<const char*, 6> names__{"basic_p", "tuple_tuple_p",
+      "arr_tuple_p", "tuple_arr_tuple_p", "arr_tuple_tuple_p",
+      "arr_tuple_arr_tuple_p"};
+      const std::array<Eigen::Index, 6> 
+             constrain_param_sizes__{(((10 * 1) + 1)), ((1 + (1 + 2))),
+                                     ((3 * ((2 + (4 * 1)) + 3))),
+                                     ((((2 * 1) + 1) + (3 * (1 + (4 * 1))))),
+                                     ((2 * ((1 + 1) + (1 + (2 + 4))))),
+                                     ((3 * (1 + (4 * (1 + 5)))))};
       const auto num_constrained_params__ = std::accumulate(
         constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
     
@@ -2263,457 +2517,6 @@ stan::model::model_base& new_model(
 
 stan::math::profile_map& get_stan_profile_data() {
   return simple3_model_namespace::profiles__;
-}
-
-#endif
-
-
-
-  $ ../../../../../install/default/bin/stanc -fsoa --print-cpp tuple-complicated-data.stan
-
-// Code generated by %%NAME%% %%VERSION%%
-#include <stan/model/model_header.hpp>
-namespace tuple_complicated_data_model_namespace {
-
-using stan::model::model_base_crtp;
-using namespace stan::math;
-
-
-stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 4> locations_array__ = 
-{" (found before start of program)",
- " (in 'tuple-complicated-data.stan', line 3, column 2 to column 30)",
- " (in 'tuple-complicated-data.stan', line 5, column 2 to column 35)",
- " (in 'tuple-complicated-data.stan', line 7, column 2 to column 52)"};
-
-
-
-
-class tuple_complicated_data_model final : public model_base_crtp<tuple_complicated_data_model> {
-
- private:
-  std::tuple<std::vector<double>, int> tuple;
-  std::vector<std::tuple<int, Eigen::Matrix<double, -1, 1>>> tuple2;
-  std::tuple<std::vector<double>, int, std::vector<std::tuple<double, int>>> tuple3; 
-  
- 
- public:
-  ~tuple_complicated_data_model() { }
-  
-  inline std::string model_name() const final { return "tuple_complicated_data_model"; }
-
-  inline std::vector<std::string> model_compile_info() const noexcept {
-    return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = -fsoa --print-cpp"};
-  }
-  
-  
-  tuple_complicated_data_model(stan::io::var_context& context__,
-                               unsigned int random_seed__ = 0,
-                               std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
-    int current_statement__ = 0;
-    using local_scalar_t__ = double ;
-    boost::ecuyer1988 base_rng__ = 
-        stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static constexpr const char* function__ = "tuple_complicated_data_model_namespace::tuple_complicated_data_model";
-    (void) function__;  // suppress unused var warning
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-      current_statement__ = 1;
-      context__.validate_dims("data initialization","tuple.1","double",
-           std::vector<size_t>{static_cast<size_t>(10)});
-      context__.validate_dims("data initialization","tuple.2","int",
-           std::vector<size_t>{});
-      tuple = 
-        std::tuple<std::vector<double>, int>{std::vector<double>(10, 
-                                               std::numeric_limits<double>::quiet_NaN()), std::numeric_limits<int>::min()};
-      
-      
-      current_statement__ = 1;
-      std::get<0>(tuple) = context__.vals_r("tuple.1");
-      current_statement__ = 1;
-      std::get<1>(tuple) = context__.vals_i("tuple.2")[(1 - 1)];
-      current_statement__ = 2;
-      context__.validate_dims("data initialization","tuple2.1","int",
-           std::vector<size_t>{static_cast<size_t>(3)});
-      context__.validate_dims("data initialization","tuple2.2","double",
-           std::vector<size_t>{static_cast<size_t>(3),
-            static_cast<size_t>(3)});
-      tuple2 = 
-        std::vector<std::tuple<int, Eigen::Matrix<double, -1, 1>>>(3, 
-          std::tuple<int, Eigen::Matrix<double, -1, 1>>{std::numeric_limits<int>::min(), 
-          Eigen::Matrix<double, -1, 1>::Constant(3,
-            std::numeric_limits<double>::quiet_NaN())});
-      
-      
-      {
-        std::vector<int> tuple2_dot_1_flat__;
-        current_statement__ = 2;
-        tuple2_dot_1_flat__ = context__.vals_i("tuple2.1");
-        int tuple2_dot_1_temp__;
-        int tuple2_dot_1_temp__pos__;
-        current_statement__ = 2;
-        tuple2_dot_1_temp__pos__ = 1;
-        std::vector<local_scalar_t__> tuple2_dot_2_flat__;
-        current_statement__ = 2;
-        tuple2_dot_2_flat__ = context__.vals_r("tuple2.2");
-        Eigen::Matrix<local_scalar_t__, -1, 1> tuple2_dot_2_temp__;
-        int tuple2_dot_2_temp__pos__;
-        current_statement__ = 2;
-        tuple2_dot_2_temp__pos__ = 1;
-        current_statement__ = 2;
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 2;
-          tuple2_dot_1_temp__ = tuple2_dot_1_flat__[(tuple2_dot_1_temp__pos__
-                                                      - 1)];
-          current_statement__ = 2;
-          tuple2_dot_1_temp__pos__ = (tuple2_dot_1_temp__pos__ + 1);
-          {
-            std::vector<local_scalar_t__> tuple2_dot_2_temp___flat__;
-            current_statement__ = 2;
-            stan::model::assign(tuple2_dot_2_temp___flat__,
-              stan::model::rvalue(tuple2_dot_2_flat__, "tuple2_dot_2_flat__",
-                stan::model::index_min_max(tuple2_dot_2_temp__pos__, 
-                  (tuple2_dot_2_temp__pos__ + 3))),
-              "assigning variable tuple2_dot_2_temp___flat__");
-            current_statement__ = 2;
-            pos__ = 1;
-            current_statement__ = 2;
-            for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-              current_statement__ = 2;
-              stan::model::assign(tuple2_dot_2_temp__,
-                tuple2_dot_2_temp___flat__[(pos__ - 1)],
-                "assigning variable tuple2_dot_2_temp__", stan::model::index_uni(sym2__));
-              current_statement__ = 2;
-              pos__ = (pos__ + 1);
-            }
-          }
-          current_statement__ = 2;
-          tuple2_dot_2_temp__pos__ = (tuple2_dot_2_temp__pos__ + 3);
-          current_statement__ = 2;
-          stan::model::assign(tuple2,
-            std::tuple<int, Eigen::Matrix<double, -1, 1>>
-            (tuple2_dot_1_temp__, tuple2_dot_2_temp__),
-            "assigning variable tuple2", stan::model::index_uni(sym1__));
-        }
-      }
-      current_statement__ = 3;
-      context__.validate_dims("data initialization","tuple3.1","double",
-           std::vector<size_t>{static_cast<size_t>(2)});
-      context__.validate_dims("data initialization","tuple3.2","int",
-           std::vector<size_t>{});
-      context__.validate_dims("data initialization","tuple3.3.1","double",
-           std::vector<size_t>{static_cast<size_t>(2)});
-      context__.validate_dims("data initialization","tuple3.3.2","int",
-           std::vector<size_t>{static_cast<size_t>(2)});
-      tuple3 = 
-        std::tuple<std::vector<double>, int,
-                   std::vector<std::tuple<double, int>>>{std::vector<double>(
-                                                           2, 
-                                                           std::numeric_limits<double>::quiet_NaN()), std::numeric_limits<int>::min(), 
-        std::vector<std::tuple<double, int>>(2, 
-          std::tuple<double, int>{std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<int>::min()})};
-      
-      
-      current_statement__ = 3;
-      std::get<0>(tuple3) = context__.vals_r("tuple3.1");
-      current_statement__ = 3;
-      std::get<1>(tuple3) = context__.vals_i("tuple3.2")[(1 - 1)];
-      {
-        std::vector<local_scalar_t__> tuple3_dot_3_dot_1_flat__;
-        current_statement__ = 3;
-        tuple3_dot_3_dot_1_flat__ = context__.vals_r("tuple3.3.1");
-        local_scalar_t__ tuple3_dot_3_dot_1_temp__;
-        int tuple3_dot_3_dot_1_temp__pos__;
-        current_statement__ = 3;
-        tuple3_dot_3_dot_1_temp__pos__ = 1;
-        std::vector<int> tuple3_dot_3_dot_2_flat__;
-        current_statement__ = 3;
-        tuple3_dot_3_dot_2_flat__ = context__.vals_i("tuple3.3.2");
-        int tuple3_dot_3_dot_2_temp__;
-        int tuple3_dot_3_dot_2_temp__pos__;
-        current_statement__ = 3;
-        tuple3_dot_3_dot_2_temp__pos__ = 1;
-        current_statement__ = 3;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 3;
-          tuple3_dot_3_dot_1_temp__ = tuple3_dot_3_dot_1_flat__[(tuple3_dot_3_dot_1_temp__pos__
-                                                                  - 1)];
-          current_statement__ = 3;
-          tuple3_dot_3_dot_1_temp__pos__ = (tuple3_dot_3_dot_1_temp__pos__ +
-                                             1);
-          current_statement__ = 3;
-          tuple3_dot_3_dot_2_temp__ = tuple3_dot_3_dot_2_flat__[(tuple3_dot_3_dot_2_temp__pos__
-                                                                  - 1)];
-          current_statement__ = 3;
-          tuple3_dot_3_dot_2_temp__pos__ = (tuple3_dot_3_dot_2_temp__pos__ +
-                                             1);
-          current_statement__ = 3;
-          stan::model::assign(std::get<2>(tuple3),
-            std::tuple<double, int>
-            (tuple3_dot_3_dot_1_temp__, tuple3_dot_3_dot_2_temp__),
-            "assigning variable std::get<2>(tuple3)", stan::model::index_uni(sym1__));
-        }
-      }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-    num_params_r__ = 0U;
-    
-  }
-  
-  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-  stan::require_vector_like_t<VecR>* = nullptr, 
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
-                                                 VecI& params_i__,
-                                                 std::ostream* pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
-    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
-    int current_statement__ = 0;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr const char* function__ = "tuple_complicated_data_model_namespace::log_prob";
-    (void) function__;  // suppress unused var warning
-    
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-    lp_accum__.add(lp__);
-    return lp_accum__.sum();
-    } // log_prob_impl() 
-    
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
-  inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
-                               VecI& params_i__, VecVar& vars__,
-                               const bool emit_transformed_parameters__ = true,
-                               const bool emit_generated_quantities__ = true,
-                               std::ostream* pstream__ = nullptr) const {
-    using local_scalar_t__ = double;
-    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> out__(vars__);
-    static constexpr bool propto__ = true;
-    (void) propto__;
-    double lp__ = 0.0;
-    (void) lp__;  // dummy to suppress unused var warning
-    int current_statement__ = 0; 
-    stan::math::accumulator<double> lp_accum__;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    constexpr bool jacobian__ = false;
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr const char* function__ = "tuple_complicated_data_model_namespace::write_array";
-    (void) function__;  // suppress unused var warning
-    
-    try {
-      if (stan::math::logical_negation((stan::math::primitive_value(
-            emit_transformed_parameters__) || stan::math::primitive_value(
-            emit_generated_quantities__)))) {
-        return ;
-      } 
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      } 
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-    } // write_array_impl() 
-    
-  template <typename VecVar, typename VecI, 
-  stan::require_vector_t<VecVar>* = nullptr, 
-  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& vars__,
-                                   std::ostream* pstream__ = nullptr) const {
-    using local_scalar_t__ = double;
-    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> out__(vars__);
-    int current_statement__ = 0;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-    } // transform_inits_impl() 
-    
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{};
-    
-    } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{};
-    
-    } // get_dims() 
-    
-  inline void constrained_param_names(
-                                      std::vector<std::string>& param_names__,
-                                      bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const
-    final {
-    
-    
-    if (emit_transformed_parameters__) {
-      
-    }
-    
-    if (emit_generated_quantities__) {
-      
-    }
-    
-    } // constrained_param_names() 
-    
-  inline void unconstrained_param_names(
-                                        std::vector<std::string>& param_names__,
-                                        bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const
-    final {
-    
-    
-    if (emit_transformed_parameters__) {
-      
-    }
-    
-    if (emit_generated_quantities__) {
-      
-    }
-    
-    } // unconstrained_param_names() 
-    
-  inline std::string get_constrained_sizedtypes() const {
-    
-    return std::string("[]");
-    
-    } // get_constrained_sizedtypes() 
-    
-  inline std::string get_unconstrained_sizedtypes() const {
-    
-    return std::string("[]");
-    
-    } // get_unconstrained_sizedtypes() 
-    
-  
-    // Begin method overload boilerplate
-    template <typename RNG>
-    inline void write_array(RNG& base_rng,
-                            Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
-                            Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
-                            const bool emit_transformed_parameters = true,
-                            const bool emit_generated_quantities = true,
-                            std::ostream* pstream = nullptr) const {
-      const size_t num_params__ = 0;
-      const size_t num_transformed = emit_transformed_parameters * 0;
-      const size_t num_gen_quantities = emit_generated_quantities * 0;
-      const size_t num_to_write = num_params__ + num_transformed +
-        num_gen_quantities;
-      std::vector<int> params_i;
-      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
-        std::numeric_limits<double>::quiet_NaN());
-      write_array_impl(base_rng, params_r, params_i, vars,
-        emit_transformed_parameters, emit_generated_quantities, pstream);
-    }
-
-    template <typename RNG>
-    inline void write_array(RNG& base_rng, std::vector<double>& params_r,
-                            std::vector<int>& params_i,
-                            std::vector<double>& vars,
-                            bool emit_transformed_parameters = true,
-                            bool emit_generated_quantities = true,
-                            std::ostream* pstream = nullptr) const {
-      const size_t num_params__ = 0;
-      const size_t num_transformed = emit_transformed_parameters * 0;
-      const size_t num_gen_quantities = emit_generated_quantities * 0;
-      const size_t num_to_write = num_params__ + num_transformed +
-        num_gen_quantities;
-      vars = std::vector<double>(num_to_write,
-        std::numeric_limits<double>::quiet_NaN());
-      write_array_impl(base_rng, params_r, params_i, vars,
-        emit_transformed_parameters, emit_generated_quantities, pstream);
-    }
-
-    template <bool propto__, bool jacobian__, typename T_>
-    inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-                       std::ostream* pstream = nullptr) const {
-      Eigen::Matrix<int, -1, 1> params_i;
-      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
-    }
-
-    template <bool propto__, bool jacobian__, typename T__>
-    inline T__ log_prob(std::vector<T__>& params_r,
-                        std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const {
-      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
-    }
-
-
-    inline void transform_inits(const stan::io::var_context& context,
-                         Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec(params_r.size());
-      std::vector<int> params_i;
-      transform_inits(context, params_i, params_r_vec, pstream);
-      params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
-        params_r_vec.data(), params_r_vec.size());
-    }
-
-  inline void transform_inits(const stan::io::var_context& context,
-                              std::vector<int>& params_i,
-                              std::vector<double>& vars,
-                              std::ostream* pstream__ = nullptr) const {
-     constexpr std::array<const char*, 0> names__{};
-      const std::array<Eigen::Index, 0> 
-       constrain_param_sizes__{};
-      const auto num_constrained_params__ = std::accumulate(
-        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
-    
-     std::vector<double> params_r_flat__(num_constrained_params__);
-     Eigen::Index size_iter__ = 0;
-     Eigen::Index flat_iter__ = 0;
-     for (auto&& param_name__ : names__) {
-       const auto param_vec__ = context.vals_r(param_name__);
-       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-         params_r_flat__[flat_iter__] = param_vec__[i];
-         ++flat_iter__;
-       }
-       ++size_iter__;
-     }
-     vars.resize(num_params_r__);
-     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
-    } // transform_inits() 
-    
-};
-}
-
-using stan_model = tuple_complicated_data_model_namespace::tuple_complicated_data_model;
-
-#ifndef USING_R
-
-// Boilerplate
-stan::model::model_base& new_model(
-        stan::io::var_context& data_context,
-        unsigned int seed,
-        std::ostream* msg_stream) {
-  stan_model* m = new stan_model(data_context, seed, msg_stream);
-  return *m;
-}
-
-stan::math::profile_map& get_stan_profile_data() {
-  return tuple_complicated_data_model_namespace::profiles__;
 }
 
 #endif
