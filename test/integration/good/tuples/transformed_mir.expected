@@ -67,8 +67,17 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id darr_dot_1_flat___temp__)
+         (Decl (decl_adtype AutoDiffable) (decl_id darr_dot_1_temp__)
           (decl_type (Sized SReal)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype DataOnly) (decl_id darr_dot_1_temp__pos__)
+          (decl_type (Unsized UInt)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (LVariable darr_dot_1_temp__pos__) UInt
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id darr_dot_2_flat__)
@@ -85,8 +94,17 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id darr_dot_2_flat___temp__)
+         (Decl (decl_adtype AutoDiffable) (decl_id darr_dot_2_temp__)
           (decl_type (Sized SReal)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype DataOnly) (decl_id darr_dot_2_temp__pos__)
+          (decl_type (Unsized UInt)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (LVariable darr_dot_2_temp__pos__) UInt
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (For (loopvar sym1__)
@@ -100,7 +118,7 @@
            ((pattern
              (Block
               (((pattern
-                 (Assignment (LVariable darr_dot_1_flat___temp__) UReal
+                 (Assignment (LVariable darr_dot_1_temp__) UReal
                   ((pattern
                     (Indexed
                      ((pattern (Var darr_dot_1_flat__))
@@ -108,13 +126,25 @@
                        ((type_ (UArray UReal)) (loc <opaque>)
                         (adlevel DataOnly))))
                      ((Single
-                       ((pattern (Var sym1__))
+                       ((pattern (Var darr_dot_1_temp__pos__))
                         (meta
                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
-                 (Assignment (LVariable darr_dot_2_flat___temp__) UReal
+                 (Assignment (LVariable darr_dot_1_temp__pos__) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var darr_dot_1_temp__pos__))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 1))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment (LVariable darr_dot_2_temp__) UReal
                   ((pattern
                     (Indexed
                      ((pattern (Var darr_dot_2_flat__))
@@ -122,10 +152,22 @@
                        ((type_ (UArray UReal)) (loc <opaque>)
                         (adlevel DataOnly))))
                      ((Single
-                       ((pattern (Var sym1__))
+                       ((pattern (Var darr_dot_2_temp__pos__))
                         (meta
                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment (LVariable darr_dot_2_temp__pos__) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var darr_dot_2_temp__pos__))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 1))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
                  (Assignment
@@ -136,10 +178,10 @@
                   (UArray (UTuple (UReal UReal)))
                   ((pattern
                     (FunApp (CompilerInternal FnMakeTuple)
-                     (((pattern (Var darr_dot_1_flat___temp__))
+                     (((pattern (Var darr_dot_1_temp__))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern (Var darr_dot_2_flat___temp__))
+                      ((pattern (Var darr_dot_2_temp__))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta
@@ -182,8 +224,17 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id darr2_dot_1_flat___temp__)
+         (Decl (decl_adtype AutoDiffable) (decl_id darr2_dot_1_temp__)
           (decl_type (Sized SReal)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype DataOnly) (decl_id darr2_dot_1_temp__pos__)
+          (decl_type (Unsized UInt)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (LVariable darr2_dot_1_temp__pos__) UInt
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id darr2_dot_2_dot_1_flat__)
@@ -201,14 +252,22 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable)
-          (decl_id darr2_dot_2_dot_1_flat___temp__)
+         (Decl (decl_adtype AutoDiffable) (decl_id darr2_dot_2_dot_1_temp__)
           (decl_type
            (Sized
             (SArray SReal
              ((pattern (Lit Int 10))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype DataOnly) (decl_id darr2_dot_2_dot_1_temp__pos__)
+          (decl_type (Unsized UInt)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (LVariable darr2_dot_2_dot_1_temp__pos__) UInt
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id darr2_dot_2_dot_2_flat__)
@@ -226,14 +285,22 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable)
-          (decl_id darr2_dot_2_dot_2_flat___temp__)
+         (Decl (decl_adtype AutoDiffable) (decl_id darr2_dot_2_dot_2_temp__)
           (decl_type
            (Sized
             (SArray SReal
              ((pattern (Lit Int 10))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype DataOnly) (decl_id darr2_dot_2_dot_2_temp__pos__)
+          (decl_type (Unsized UInt)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (LVariable darr2_dot_2_dot_2_temp__pos__) UInt
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (For (loopvar sym1__)
@@ -247,7 +314,7 @@
            ((pattern
              (Block
               (((pattern
-                 (Assignment (LVariable darr2_dot_1_flat___temp__) UReal
+                 (Assignment (LVariable darr2_dot_1_temp__) UReal
                   ((pattern
                     (Indexed
                      ((pattern (Var darr2_dot_1_flat__))
@@ -255,13 +322,25 @@
                        ((type_ (UArray UReal)) (loc <opaque>)
                         (adlevel DataOnly))))
                      ((Single
-                       ((pattern (Var sym1__))
+                       ((pattern (Var darr2_dot_1_temp__pos__))
                         (meta
                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
-                 (Assignment (LVariable darr2_dot_2_dot_1_flat___temp__)
+                 (Assignment (LVariable darr2_dot_1_temp__pos__) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var darr2_dot_1_temp__pos__))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 1))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment (LVariable darr2_dot_2_dot_1_temp__)
                   (UArray UReal)
                   ((pattern
                     (Indexed
@@ -269,16 +348,54 @@
                       (meta
                        ((type_ (UArray (UArray UReal))) (loc <opaque>)
                         (adlevel DataOnly))))
-                     ((Single
-                       ((pattern (Var sym1__))
+                     ((Between
+                       ((pattern (Var darr2_dot_2_dot_1_temp__pos__))
+                        (meta
+                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                       ((pattern
+                         (FunApp (StanLib Plus__ FnPlain AoS)
+                          (((pattern (Var darr2_dot_2_dot_1_temp__pos__))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                           ((pattern
+                             (FunApp (StanLib Times__ FnPlain AoS)
+                              (((pattern (Lit Int 10))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly))))
+                               ((pattern (Lit Int 1))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly)))))))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                         (meta
                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                    (meta
-                    ((type_ (UArray UReal)) (loc <opaque>)
+                    ((type_ (UArray (UArray UReal))) (loc <opaque>)
                      (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
-                 (Assignment (LVariable darr2_dot_2_dot_2_flat___temp__)
+                 (Assignment (LVariable darr2_dot_2_dot_1_temp__pos__) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var darr2_dot_2_dot_1_temp__pos__))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern
+                        (FunApp (StanLib Times__ FnPlain AoS)
+                         (((pattern (Lit Int 10))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                          ((pattern (Lit Int 1))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment (LVariable darr2_dot_2_dot_2_temp__)
                   (UArray UReal)
                   ((pattern
                     (Indexed
@@ -286,13 +403,51 @@
                       (meta
                        ((type_ (UArray (UArray UReal))) (loc <opaque>)
                         (adlevel DataOnly))))
-                     ((Single
-                       ((pattern (Var sym1__))
+                     ((Between
+                       ((pattern (Var darr2_dot_2_dot_2_temp__pos__))
+                        (meta
+                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                       ((pattern
+                         (FunApp (StanLib Plus__ FnPlain AoS)
+                          (((pattern (Var darr2_dot_2_dot_2_temp__pos__))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                           ((pattern
+                             (FunApp (StanLib Times__ FnPlain AoS)
+                              (((pattern (Lit Int 10))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly))))
+                               ((pattern (Lit Int 1))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly)))))))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                         (meta
                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                    (meta
-                    ((type_ (UArray UReal)) (loc <opaque>)
+                    ((type_ (UArray (UArray UReal))) (loc <opaque>)
                      (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment (LVariable darr2_dot_2_dot_2_temp__pos__) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var darr2_dot_2_dot_2_temp__pos__))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern
+                        (FunApp (StanLib Times__ FnPlain AoS)
+                         (((pattern (Lit Int 10))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                          ((pattern (Lit Int 1))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
                  (Assignment
@@ -303,14 +458,14 @@
                   (UArray (UTuple (UReal (UArray (UTuple (UReal UReal))))))
                   ((pattern
                     (FunApp (CompilerInternal FnMakeTuple)
-                     (((pattern (Var darr2_dot_1_flat___temp__))
+                     (((pattern (Var darr2_dot_1_temp__))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern (Var darr2_dot_2_dot_1_flat___temp__))
+                      ((pattern (Var darr2_dot_2_dot_1_temp__))
                        (meta
                         ((type_ (UArray UReal)) (loc <opaque>)
                          (adlevel DataOnly))))
-                      ((pattern (Var darr2_dot_2_dot_2_flat___temp__))
+                      ((pattern (Var darr2_dot_2_dot_2_temp__))
                        (meta
                         ((type_ (UArray UReal)) (loc <opaque>)
                          (adlevel DataOnly)))))))
@@ -365,9 +520,17 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable)
-          (decl_id darr3_dot_2_dot_1_flat___temp__) (decl_type (Sized SReal))
-          (initialize false)))
+         (Decl (decl_adtype AutoDiffable) (decl_id darr3_dot_2_dot_1_temp__)
+          (decl_type (Sized SReal)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype DataOnly) (decl_id darr3_dot_2_dot_1_temp__pos__)
+          (decl_type (Unsized UInt)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (LVariable darr3_dot_2_dot_1_temp__pos__) UInt
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id darr3_dot_2_dot_2_flat__)
@@ -384,9 +547,17 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable)
-          (decl_id darr3_dot_2_dot_2_flat___temp__) (decl_type (Sized SReal))
-          (initialize false)))
+         (Decl (decl_adtype AutoDiffable) (decl_id darr3_dot_2_dot_2_temp__)
+          (decl_type (Sized SReal)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype DataOnly) (decl_id darr3_dot_2_dot_2_temp__pos__)
+          (decl_type (Unsized UInt)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (LVariable darr3_dot_2_dot_2_temp__pos__) UInt
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (For (loopvar sym1__)
@@ -400,8 +571,7 @@
            ((pattern
              (Block
               (((pattern
-                 (Assignment (LVariable darr3_dot_2_dot_1_flat___temp__)
-                  UReal
+                 (Assignment (LVariable darr3_dot_2_dot_1_temp__) UReal
                   ((pattern
                     (Indexed
                      ((pattern (Var darr3_dot_2_dot_1_flat__))
@@ -409,14 +579,25 @@
                        ((type_ (UArray UReal)) (loc <opaque>)
                         (adlevel DataOnly))))
                      ((Single
-                       ((pattern (Var sym1__))
+                       ((pattern (Var darr3_dot_2_dot_1_temp__pos__))
                         (meta
                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
-                 (Assignment (LVariable darr3_dot_2_dot_2_flat___temp__)
-                  UReal
+                 (Assignment (LVariable darr3_dot_2_dot_1_temp__pos__) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var darr3_dot_2_dot_1_temp__pos__))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 1))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment (LVariable darr3_dot_2_dot_2_temp__) UReal
                   ((pattern
                     (Indexed
                      ((pattern (Var darr3_dot_2_dot_2_flat__))
@@ -424,10 +605,22 @@
                        ((type_ (UArray UReal)) (loc <opaque>)
                         (adlevel DataOnly))))
                      ((Single
-                       ((pattern (Var sym1__))
+                       ((pattern (Var darr3_dot_2_dot_2_temp__pos__))
                         (meta
                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment (LVariable darr3_dot_2_dot_2_temp__pos__) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var darr3_dot_2_dot_2_temp__pos__))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 1))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
                  (Assignment
@@ -438,10 +631,10 @@
                   (UArray (UTuple (UReal UReal)))
                   ((pattern
                     (FunApp (CompilerInternal FnMakeTuple)
-                     (((pattern (Var darr3_dot_2_dot_1_flat___temp__))
+                     (((pattern (Var darr3_dot_2_dot_1_temp__))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern (Var darr3_dot_2_dot_2_flat___temp__))
+                      ((pattern (Var darr3_dot_2_dot_2_temp__))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta
@@ -487,13 +680,22 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id darr4_dot_1_flat___temp__)
+         (Decl (decl_adtype AutoDiffable) (decl_id darr4_dot_1_temp__)
           (decl_type
            (Sized
             (SArray SReal
              ((pattern (Lit Int 10))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype DataOnly) (decl_id darr4_dot_1_temp__pos__)
+          (decl_type (Unsized UInt)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (LVariable darr4_dot_1_temp__pos__) UInt
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id darr4_dot_2_dot_1_flat__)
@@ -512,14 +714,22 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable)
-          (decl_id darr4_dot_2_dot_1_flat___temp__)
+         (Decl (decl_adtype AutoDiffable) (decl_id darr4_dot_2_dot_1_temp__)
           (decl_type
            (Sized
             (SArray SReal
              ((pattern (Lit Int 14))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype DataOnly) (decl_id darr4_dot_2_dot_1_temp__pos__)
+          (decl_type (Unsized UInt)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (LVariable darr4_dot_2_dot_1_temp__pos__) UInt
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id darr4_dot_2_dot_2_flat__)
@@ -538,14 +748,22 @@
            (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable)
-          (decl_id darr4_dot_2_dot_2_flat___temp__)
+         (Decl (decl_adtype AutoDiffable) (decl_id darr4_dot_2_dot_2_temp__)
           (decl_type
            (Sized
             (SArray SInt
              ((pattern (Lit Int 14))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype DataOnly) (decl_id darr4_dot_2_dot_2_temp__pos__)
+          (decl_type (Unsized UInt)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (LVariable darr4_dot_2_dot_2_temp__pos__) UInt
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (For (loopvar sym1__)
@@ -559,24 +777,61 @@
            ((pattern
              (Block
               (((pattern
-                 (Assignment (LVariable darr4_dot_1_flat___temp__)
-                  (UArray UReal)
+                 (Assignment (LVariable darr4_dot_1_temp__) (UArray UReal)
                   ((pattern
                     (Indexed
                      ((pattern (Var darr4_dot_1_flat__))
                       (meta
                        ((type_ (UArray (UArray UReal))) (loc <opaque>)
                         (adlevel DataOnly))))
-                     ((Single
-                       ((pattern (Var sym1__))
+                     ((Between
+                       ((pattern (Var darr4_dot_1_temp__pos__))
+                        (meta
+                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                       ((pattern
+                         (FunApp (StanLib Plus__ FnPlain AoS)
+                          (((pattern (Var darr4_dot_1_temp__pos__))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                           ((pattern
+                             (FunApp (StanLib Times__ FnPlain AoS)
+                              (((pattern (Lit Int 10))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly))))
+                               ((pattern (Lit Int 1))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly)))))))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                         (meta
                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                    (meta
-                    ((type_ (UArray UReal)) (loc <opaque>)
+                    ((type_ (UArray (UArray UReal))) (loc <opaque>)
                      (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
-                 (Assignment (LVariable darr4_dot_2_dot_1_flat___temp__)
+                 (Assignment (LVariable darr4_dot_1_temp__pos__) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var darr4_dot_1_temp__pos__))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern
+                        (FunApp (StanLib Times__ FnPlain AoS)
+                         (((pattern (Lit Int 10))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                          ((pattern (Lit Int 1))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment (LVariable darr4_dot_2_dot_1_temp__)
                   (UArray UReal)
                   ((pattern
                     (Indexed
@@ -584,16 +839,54 @@
                       (meta
                        ((type_ (UArray (UArray UReal))) (loc <opaque>)
                         (adlevel DataOnly))))
-                     ((Single
-                       ((pattern (Var sym1__))
+                     ((Between
+                       ((pattern (Var darr4_dot_2_dot_1_temp__pos__))
+                        (meta
+                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                       ((pattern
+                         (FunApp (StanLib Plus__ FnPlain AoS)
+                          (((pattern (Var darr4_dot_2_dot_1_temp__pos__))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                           ((pattern
+                             (FunApp (StanLib Times__ FnPlain AoS)
+                              (((pattern (Lit Int 14))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly))))
+                               ((pattern (Lit Int 1))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly)))))))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                         (meta
                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                    (meta
-                    ((type_ (UArray UReal)) (loc <opaque>)
+                    ((type_ (UArray (UArray UReal))) (loc <opaque>)
                      (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
-                 (Assignment (LVariable darr4_dot_2_dot_2_flat___temp__)
+                 (Assignment (LVariable darr4_dot_2_dot_1_temp__pos__) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var darr4_dot_2_dot_1_temp__pos__))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern
+                        (FunApp (StanLib Times__ FnPlain AoS)
+                         (((pattern (Lit Int 14))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                          ((pattern (Lit Int 1))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment (LVariable darr4_dot_2_dot_2_temp__)
                   (UArray UInt)
                   ((pattern
                     (Indexed
@@ -601,12 +894,51 @@
                       (meta
                        ((type_ (UArray (UArray UInt))) (loc <opaque>)
                         (adlevel DataOnly))))
-                     ((Single
-                       ((pattern (Var sym1__))
+                     ((Between
+                       ((pattern (Var darr4_dot_2_dot_2_temp__pos__))
+                        (meta
+                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                       ((pattern
+                         (FunApp (StanLib Plus__ FnPlain AoS)
+                          (((pattern (Var darr4_dot_2_dot_2_temp__pos__))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                           ((pattern
+                             (FunApp (StanLib Times__ FnPlain AoS)
+                              (((pattern (Lit Int 14))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly))))
+                               ((pattern (Lit Int 1))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly)))))))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                         (meta
                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                    (meta
-                    ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
+                    ((type_ (UArray (UArray UInt))) (loc <opaque>)
+                     (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment (LVariable darr4_dot_2_dot_2_temp__pos__) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var darr4_dot_2_dot_2_temp__pos__))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern
+                        (FunApp (StanLib Times__ FnPlain AoS)
+                         (((pattern (Lit Int 14))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                          ((pattern (Lit Int 1))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
                  (Assignment
@@ -618,15 +950,15 @@
                    (UTuple ((UArray UReal) (UArray (UTuple (UReal UInt))))))
                   ((pattern
                     (FunApp (CompilerInternal FnMakeTuple)
-                     (((pattern (Var darr4_dot_1_flat___temp__))
+                     (((pattern (Var darr4_dot_1_temp__))
                        (meta
                         ((type_ (UArray UReal)) (loc <opaque>)
                          (adlevel DataOnly))))
-                      ((pattern (Var darr4_dot_2_dot_1_flat___temp__))
+                      ((pattern (Var darr4_dot_2_dot_1_temp__))
                        (meta
                         ((type_ (UArray UReal)) (loc <opaque>)
                          (adlevel DataOnly))))
-                      ((pattern (Var darr4_dot_2_dot_2_flat___temp__))
+                      ((pattern (Var darr4_dot_2_dot_2_temp__))
                        (meta
                         ((type_ (UArray UInt)) (loc <opaque>)
                          (adlevel DataOnly)))))))
@@ -3170,9 +3502,17 @@
            (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable)
-          (decl_id tuple2_dot_1_flat___temp__) (decl_type (Sized SInt))
-          (initialize false)))
+         (Decl (decl_adtype AutoDiffable) (decl_id tuple2_dot_1_temp__)
+          (decl_type (Sized SInt)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype DataOnly) (decl_id tuple2_dot_1_temp__pos__)
+          (decl_type (Unsized UInt)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (LVariable tuple2_dot_1_temp__pos__) UInt
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id tuple2_dot_2_flat__)
@@ -3189,14 +3529,22 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable)
-          (decl_id tuple2_dot_2_flat___temp__)
+         (Decl (decl_adtype AutoDiffable) (decl_id tuple2_dot_2_temp__)
           (decl_type
            (Sized
             (SVector AoS
              ((pattern (Lit Int 3))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype DataOnly) (decl_id tuple2_dot_2_temp__pos__)
+          (decl_type (Unsized UInt)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (LVariable tuple2_dot_2_temp__pos__) UInt
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (For (loopvar sym1__)
@@ -3210,7 +3558,7 @@
            ((pattern
              (Block
               (((pattern
-                 (Assignment (LVariable tuple2_dot_1_flat___temp__) UInt
+                 (Assignment (LVariable tuple2_dot_1_temp__) UInt
                   ((pattern
                     (Indexed
                      ((pattern (Var tuple2_dot_1_flat__))
@@ -3218,22 +3566,33 @@
                        ((type_ (UArray UInt)) (loc <opaque>)
                         (adlevel DataOnly))))
                      ((Single
-                       ((pattern (Var sym1__))
+                       ((pattern (Var tuple2_dot_1_temp__pos__))
                         (meta
                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment (LVariable tuple2_dot_1_temp__pos__) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var tuple2_dot_1_temp__pos__))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 1))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
                  (Block
                   (((pattern
                      (Decl (decl_adtype AutoDiffable)
-                      (decl_id tuple2_dot_2_flat___temp___flat__)
+                      (decl_id tuple2_dot_2_temp___flat__)
                       (decl_type (Unsized (UArray UReal)))
                       (initialize false)))
                     (meta <opaque>))
                    ((pattern
-                     (Assignment
-                      (LVariable tuple2_dot_2_flat___temp___flat__)
+                     (Assignment (LVariable tuple2_dot_2_temp___flat__)
                       (UArray UReal)
                       ((pattern
                         (Indexed
@@ -3241,12 +3600,25 @@
                           (meta
                            ((type_ (UArray UVector)) (loc <opaque>)
                             (adlevel DataOnly))))
-                         ((Single
-                           ((pattern (Var sym1__))
+                         ((Between
+                           ((pattern (Var tuple2_dot_2_temp__pos__))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                           ((pattern
+                             (FunApp (StanLib Plus__ FnPlain AoS)
+                              (((pattern (Var tuple2_dot_2_temp__pos__))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly))))
+                               ((pattern (Lit Int 3))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly)))))))
                             (meta
                              ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                        (meta
-                        ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
+                        ((type_ (UArray UVector)) (loc <opaque>)
+                         (adlevel DataOnly))))))
                     (meta <opaque>))
                    ((pattern
                      (Assignment (LVariable pos__) UInt
@@ -3269,8 +3641,7 @@
                          (Block
                           (((pattern
                              (Assignment
-                              (LIndexed
-                               (LVariable tuple2_dot_2_flat___temp__)
+                              (LIndexed (LVariable tuple2_dot_2_temp__)
                                ((Single
                                  ((pattern (Var sym2__))
                                   (meta
@@ -3279,8 +3650,7 @@
                               UVector
                               ((pattern
                                 (Indexed
-                                 ((pattern
-                                   (Var tuple2_dot_2_flat___temp___flat__))
+                                 ((pattern (Var tuple2_dot_2_temp___flat__))
                                   (meta
                                    ((type_ (UArray UReal)) (loc <opaque>)
                                     (adlevel DataOnly))))
@@ -3313,6 +3683,18 @@
                     (meta <opaque>)))))
                 (meta <opaque>))
                ((pattern
+                 (Assignment (LVariable tuple2_dot_2_temp__pos__) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var tuple2_dot_2_temp__pos__))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 3))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
                  (Assignment
                   (LIndexed (LVariable tuple2)
                    ((Single
@@ -3321,10 +3703,10 @@
                   (UArray (UTuple (UInt UVector)))
                   ((pattern
                     (FunApp (CompilerInternal FnMakeTuple)
-                     (((pattern (Var tuple2_dot_1_flat___temp__))
+                     (((pattern (Var tuple2_dot_1_temp__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern (Var tuple2_dot_2_flat___temp__))
+                      ((pattern (Var tuple2_dot_2_temp__))
                        (meta
                         ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta
@@ -3390,9 +3772,18 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable)
-          (decl_id tuple3_dot_3_dot_1_flat___temp__)
+         (Decl (decl_adtype AutoDiffable) (decl_id tuple3_dot_3_dot_1_temp__)
           (decl_type (Sized SReal)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype DataOnly)
+          (decl_id tuple3_dot_3_dot_1_temp__pos__) (decl_type (Unsized UInt))
+          (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (LVariable tuple3_dot_3_dot_1_temp__pos__) UInt
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id tuple3_dot_3_dot_2_flat__)
@@ -3409,9 +3800,18 @@
            (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable)
-          (decl_id tuple3_dot_3_dot_2_flat___temp__) (decl_type (Sized SInt))
+         (Decl (decl_adtype AutoDiffable) (decl_id tuple3_dot_3_dot_2_temp__)
+          (decl_type (Sized SInt)) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype DataOnly)
+          (decl_id tuple3_dot_3_dot_2_temp__pos__) (decl_type (Unsized UInt))
           (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (LVariable tuple3_dot_3_dot_2_temp__pos__) UInt
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (For (loopvar sym1__)
@@ -3425,8 +3825,7 @@
            ((pattern
              (Block
               (((pattern
-                 (Assignment (LVariable tuple3_dot_3_dot_1_flat___temp__)
-                  UReal
+                 (Assignment (LVariable tuple3_dot_3_dot_1_temp__) UReal
                   ((pattern
                     (Indexed
                      ((pattern (Var tuple3_dot_3_dot_1_flat__))
@@ -3434,14 +3833,25 @@
                        ((type_ (UArray UReal)) (loc <opaque>)
                         (adlevel DataOnly))))
                      ((Single
-                       ((pattern (Var sym1__))
+                       ((pattern (Var tuple3_dot_3_dot_1_temp__pos__))
                         (meta
                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
-                 (Assignment (LVariable tuple3_dot_3_dot_2_flat___temp__)
-                  UInt
+                 (Assignment (LVariable tuple3_dot_3_dot_1_temp__pos__) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var tuple3_dot_3_dot_1_temp__pos__))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 1))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment (LVariable tuple3_dot_3_dot_2_temp__) UInt
                   ((pattern
                     (Indexed
                      ((pattern (Var tuple3_dot_3_dot_2_flat__))
@@ -3449,9 +3859,21 @@
                        ((type_ (UArray UInt)) (loc <opaque>)
                         (adlevel DataOnly))))
                      ((Single
-                       ((pattern (Var sym1__))
+                       ((pattern (Var tuple3_dot_3_dot_2_temp__pos__))
                         (meta
                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment (LVariable tuple3_dot_3_dot_2_temp__pos__) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var tuple3_dot_3_dot_2_temp__pos__))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 1))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
@@ -3463,10 +3885,10 @@
                   (UArray (UTuple (UReal UInt)))
                   ((pattern
                     (FunApp (CompilerInternal FnMakeTuple)
-                     (((pattern (Var tuple3_dot_3_dot_1_flat___temp__))
+                     (((pattern (Var tuple3_dot_3_dot_1_temp__))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern (Var tuple3_dot_3_dot_2_flat___temp__))
+                      ((pattern (Var tuple3_dot_3_dot_2_temp__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta

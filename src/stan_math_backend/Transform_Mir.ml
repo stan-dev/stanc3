@@ -197,8 +197,12 @@ let rec data_read ?origin ?name smeta
       let flat_io_names =
         UnsizedType.enumerate_tuple_names_io decl_id
           (SizedType.to_unsized nonarray_st) in
+      (* TODO need to make all of these only for this current level *)
       let flat_vars = List.map ~f:flat_name flat_io_names in
       let flat_types = SizedType.flatten_tuple_io nonarray_st in
+      let make_temp name =
+        Str.global_replace (Str.regexp_string ".") "_dot_" name ^ "_temp__"
+      in
       (*
       1. Make flat decls for each item of this tuple
       2. Declare a temp for each item of this tuple
@@ -209,7 +213,7 @@ let rec data_read ?origin ?name smeta
       let flat_decls =
         List.map3_exn
           ~f:(fun variable_name io_name st ->
-            let temp_name = variable_name ^ "_temp__" in
+            let temp_name = make_temp io_name in
             let typ = SizedType.to_unsized st in
             let scalar_type = UnsizedType.internal_scalar typ in
             let array_type =
@@ -230,6 +234,15 @@ let rec data_read ?origin ?name smeta
                 ; decl_id= temp_name
                 ; decl_type= Sized st
                 ; initialize= false }
+              |> swrap
+            ; Stmt.Fixed.Pattern.Decl
+                { decl_adtype= DataOnly
+                ; decl_id= temp_name ^ "pos__"
+                ; decl_type= Unsized UInt
+                ; initialize= false }
+              |> swrap
+            ; Stmt.Fixed.Pattern.Assignment
+                (LVariable (temp_name ^ "pos__"), UInt, Expr.Helpers.loop_bottom)
               |> swrap ] )
           flat_vars flat_io_names flat_types
         |> List.concat in
@@ -244,11 +257,11 @@ let rec data_read ?origin ?name smeta
                   (List.map2_exn
                      ~f:(fun n st ->
                        Expr.Fixed.
-                         { pattern= Var (n ^ "_temp__")
+                         { pattern= Var (make_temp n)
                          ; meta=
                              { Expr.Typed.Meta.empty with
                                type_= SizedType.to_unsized st } } )
-                     flat_vars flat_types ) )
+                     flat_io_names flat_types ) )
             |> swrap ] in
         [ Stmt.Helpers.mk_nested_for (List.rev dims)
             (fun loopvars ->
@@ -258,7 +271,12 @@ let rec data_read ?origin ?name smeta
                     SList
                       ( ( List.map3_exn
                             ~f:(fun variable_name io_name st ->
-                              let temp_name = variable_name ^ "_temp__" in
+                              let temp_name = make_temp io_name in
+                              let pos_name = temp_name ^ "pos__" in
+                              let end_position =
+                                Expr.Helpers.(
+                                  binop (variable pos_name) Plus
+                                    (SizedType.io_size st)) in
                               let origin_name =
                                 Expr.Helpers.variable variable_name in
                               let origin_name =
@@ -269,15 +287,24 @@ let rec data_read ?origin ?name smeta
                                         UnsizedType.wind_array_type
                                           ( SizedType.to_unsized st
                                           , List.length dims ) } } in
-                              data_read ~name:io_name smeta
-                                ~origin:
-                                  (* TUPLE TODO: this actually needs to be a (new?) pos variable *)
-                                  (List.fold (List.rev loopvars)
-                                     ~f:(fun e a ->
-                                       Expr.Helpers.add_int_index e
-                                         (Index.Single a) )
-                                     ~init:origin_name )
-                                (LVariable temp_name, st) )
+                              let origin =
+                                if
+                                  UnsizedType.is_scalar_type
+                                    (SizedType.to_unsized st)
+                                then
+                                  Expr.Helpers.add_int_index origin_name
+                                    (Index.Single
+                                       (Expr.Helpers.variable pos_name) )
+                                else
+                                  Expr.Helpers.add_int_index origin_name
+                                    (Index.Between
+                                       ( Expr.Helpers.variable pos_name
+                                       , end_position ) ) in
+                              data_read ~name:io_name smeta ~origin
+                                (LVariable temp_name, st)
+                              @ [ Stmt.Fixed.Pattern.Assignment
+                                    (LVariable pos_name, UInt, end_position)
+                                  |> swrap ] )
                             flat_vars flat_io_names flat_types
                         |> List.concat )
                       @ final_assignment loopvars ) } )
