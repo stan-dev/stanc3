@@ -197,7 +197,9 @@ let rec data_read ?origin ?name smeta
       let flat_io_names =
         UnsizedType.enumerate_tuple_names_io decl_id
           (SizedType.to_unsized nonarray_st) in
-      (* TODO need to make all of these only for this current level *)
+      (* TODO need to make all of these only for this current level
+         Somehow need lower arrays to use multiple flats from different positions... oh jeez
+      *)
       let flat_vars = List.map ~f:flat_name flat_io_names in
       let flat_types = SizedType.flatten_tuple_io nonarray_st in
       let make_temp name =
@@ -310,7 +312,6 @@ let rec data_read ?origin ?name smeta
                       @ final_assignment loopvars ) } )
             smeta ] in
       [Block (flat_decls @ loop) |> swrap]
-      (*  *)
   | UFun _ | UMathLibraryFunction ->
       Common.FatalError.fatal_error_msg
         [%message "Cannot read a function type."]
