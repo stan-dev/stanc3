@@ -31,7 +31,9 @@ let nan_type (st, adtype) =
   | UnsizedType.AutoDiffable, _ -> "DUMMY_VAR__"
   | DataOnly, _ -> "std::numeric_limits<double>::quiet_NaN()"
   | TupleAD _, _ ->
-      Common.FatalError.fatal_error_msg [%message "pp_set_size TUPLES STUB"]
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Attempted to get NaN type for Tuple" (st : Expr.Typed.t SizedType.t)]
 
 (*Pretty printer for the right hand side of expressions to initialize objects.
  * For scalar types this sets the value to NaN and for containers initializes the memory.
@@ -173,8 +175,7 @@ let pp_assign_data ppf
     | SizedType.SVector _ | SRowVector _ | SMatrix _ | SComplexVector _
      |SComplexRowVector _ | SComplexMatrix _ ->
         pf ppf "%s_data__" decl_id
-    | SInt | SReal | SComplex | SArray _ | STuple _ ->
-        (* TUPLE MAYBE *) pf ppf "%s" decl_id in
+    | SInt | SReal | SComplex | SArray _ | STuple _ -> pf ppf "%s" decl_id in
   pf ppf "@[<hov 2>%a = @,%a;@]@,@[<hov 2>%a@]@," pp_underlying (decl_id, st)
     pp_assign_sized
     ( st

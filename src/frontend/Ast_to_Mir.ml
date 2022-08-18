@@ -203,7 +203,6 @@ let check_transform_shape decl_id decl_var meta = function
       @ same_shape decl_id decl_var "upper" e2 meta
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
    |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _ ->
-      (* TUPLE MAYBE *)
       []
 
 let copy_indices indexed (var : Expr.Typed.t) =

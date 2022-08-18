@@ -176,7 +176,6 @@ let rec is_complex_type ut =
   | UComplex | UComplexMatrix | UComplexRowVector | UComplexVector -> true
   | UArray ut -> is_complex_type ut
   | _ -> false
-(* TUPLE MAYBE do we consider tuples with complex elements complex *)
 
 let rec internal_scalar ut =
   match ut with

@@ -84,7 +84,6 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
 
 let rec pp_unsizedtype_local ppf (adtype, ut) =
   match (adtype, ut) with
-  (* TUPLE MAYBE - i think this is what is necessary to handle different AD types*)
   | UnsizedType.TupleAD ads, UnsizedType.UTuple ts ->
       let tuple_zip = List.map2_exn ~f:(fun x y -> (x, y)) ads ts in
       pf ppf "std::tuple<@[%a@]>"

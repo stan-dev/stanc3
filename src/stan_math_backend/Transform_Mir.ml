@@ -218,7 +218,6 @@ let rec data_read_inside_tuple enclosing_tuple_name origin_type smeta
           ~f:(fun i _ -> enclosing_tuple_name ^ "." ^ string_of_int (i + 1))
           get_subtypes in
       List.map2_exn
-      (* TUPLE MAYBE : might need to also map over new names, types *)
         ~f:(fun name sts -> data_read_inside_tuple name origin_type smeta sts)
         enclosing_names sub_sts
       |> List.concat

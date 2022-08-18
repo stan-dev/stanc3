@@ -77,21 +77,22 @@ let rec inner_type st = match st with SArray (t, _) -> inner_type t | t -> t
 let rec get_dims_io st =
   let two = Expr.Helpers.int 2 in
   match st with
-  (* TUPLE TODO get_dims_io
-
-     THIS IS WRONG FOR TUPLES
-     We should use io_size wherever possible
-  *)
   | SInt | SReal -> []
-  | STuple ts ->
-      let subts = List.map ~f:get_dims_io ts in
-      Expr.Helpers.int (List.length subts) :: List.concat subts
   | SComplex -> [two]
   | SVector (_, d) | SRowVector (_, d) -> [d]
   | SMatrix (_, dim1, dim2) -> [dim1; dim2]
   | SComplexVector d | SComplexRowVector d -> [d; two]
   | SComplexMatrix (dim1, dim2) -> [dim1; dim2; two]
   | SArray (t, dim) -> dim :: get_dims_io t
+  | STuple ts ->
+      (* TUPLE TODO get_dims_io
+
+         THIS IS WRONG FOR TUPLES
+         We should use io_size wherever possible
+         and make this a failwith
+      *)
+      let subts = List.map ~f:get_dims_io ts in
+      Expr.Helpers.int (List.length subts) :: List.concat subts
 
 let rec io_size st =
   let two = Expr.Helpers.int 2 in
