@@ -153,6 +153,12 @@ let make_tuple_temp name = munge_tuple_name name ^ "_temp__"
     but rather than calling ReadDataFn, this indexes
     into the flattened versions of the tuple data
     created by [data_read] when it encounters an array of tuples
+
+    @param enclosing_tuple_name The name (in the sense of [Stmt.Helpers.get_lhs_name])
+      of the element of the tuple this recursive call is handling. This is
+      used to generate the appropriate [_flat__] variable to pull from
+    @param origin_type The type of the flat variable for this call, if one exists.
+      In situations where this is an array of tuples still, this type is unused.
   *)
 let rec data_read_inside_tuple enclosing_tuple_name origin_type smeta
     ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
@@ -160,15 +166,13 @@ let rec data_read_inside_tuple enclosing_tuple_name origin_type smeta
   let scalar = base_type st in
   let flat_type = UnsizedType.UArray scalar in
   let decl_id = Stmt.Helpers.get_lhs_name decl_id_lval in
-  let decl_var_expr decl_id =
+  let decl_var =
     { Expr.Fixed.pattern= Var decl_id
     ; meta= Expr.Typed.Meta.{loc= smeta; type_= unsized; adlevel= DataOnly} }
   in
-  let decl_var = decl_var_expr decl_id in
   let swrap stmt = {Stmt.Fixed.pattern= stmt; meta= smeta} in
   let pos_var = {Expr.Fixed.pattern= Var pos; meta= Expr.Typed.Meta.empty} in
-  let flat_name decl_id =
-    Str.global_replace (Str.regexp_string ".") "_dot_" decl_id ^ "_flat__" in
+  let flat_name decl_id = munge_tuple_name decl_id ^ "_flat__" in
   let enclosing_tuple_flat, enclosing_tuple_pos =
     let name = munge_tuple_name enclosing_tuple_name in
     (name ^ "_flat__", name ^ "_flat__pos__") in
@@ -225,9 +229,7 @@ let rec data_read_inside_tuple enclosing_tuple_name origin_type smeta
         | STuple sts ->
             ( List.mapi
                 ~f:(fun i _ ->
-                  munge_tuple_name enclosing_tuple_name
-                  ^ "."
-                  ^ string_of_int (i + 1) )
+                  enclosing_tuple_name ^ "." ^ string_of_int (i + 1) )
                 sts
             , sts )
         | _ -> ([], []) in
@@ -328,11 +330,10 @@ let rec data_read ?origin ?name smeta
   let scalar = base_type st in
   let flat_type = UnsizedType.UArray scalar in
   let decl_id = Stmt.Helpers.get_lhs_name decl_id_lval in
-  let decl_var_expr decl_id =
+  let decl_var =
     { Expr.Fixed.pattern= Var decl_id
     ; meta= Expr.Typed.Meta.{loc= smeta; type_= unsized; adlevel= DataOnly} }
   in
-  let decl_var = decl_var_expr decl_id in
   let swrap stmt = {Stmt.Fixed.pattern= stmt; meta= smeta} in
   let pos_var = {Expr.Fixed.pattern= Var pos; meta= Expr.Typed.Meta.empty} in
   let flat_name decl_id = munge_tuple_name decl_id ^ "_flat__" in
@@ -370,14 +371,17 @@ let rec data_read ?origin ?name smeta
           get_subtypes in
       List.concat_map ~f:(data_read smeta) sub_sts
   | UArray _ when UnsizedType.contains_tuple unsized ->
-      let nonarray_st, dims = SizedType.get_container_dims st in
-      (*
-      1. Make flat decls for everything
-      2. Declare a temp for each item of this tuple
-      3. in a loop:
-        i. recursively call with the flats as origin and the temp as the destination
-        ii. assign those temps to the indexed tuple
+      (* The IO format for tuples is complicated in this case.
+         Therefore, we need to do the following
+         1. Make "_flat__" decls for everything
+         2. Declare a temp for each item of this tuple
+         3. in a loop:
+           i. call [data_read_inside_tuple] with the temp variable as the destination
+             this function does essentially the same things recursively, but it doesn't create
+             more "_flat__" variables for deeper nested arrays-of-tuples.
+           ii. assign those temps (forwarding as tuple) to this variable, properly indexed.
       *)
+      let nonarray_st, dims = SizedType.get_container_dims st in
       let flat_decls =
         (* Here we need to go recursively all the way down the tuple *)
         let flat_io_names =
