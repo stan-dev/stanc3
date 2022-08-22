@@ -518,6 +518,9 @@ let pp_overloads ppf {Program.output_vars; _} =
 
 (** Print the [get_constrained_sizedtypes] method of the model class *)
 let pp_transform_inits ppf {Program.output_vars; _} =
+  (* TUPLE TODO This method currently does not correctly read in tuples.
+      It will need to look something like the level of complexity of [Transform_inits.data_read]
+  *)
   let params =
     [ "const stan::io::var_context& context"; "std::vector<int>& params_i"
     ; "std::vector<double>& vars"; "std::ostream* pstream__ = nullptr" ] in
