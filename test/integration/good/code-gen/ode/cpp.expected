@@ -611,6 +611,28 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     
     } // get_dims() 
     
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
+                       const bool emit_transformed_parameters__ = true,
+                       const bool emit_generated_quantities__ = true) const {
+    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+      std::vector<size_t>{static_cast<size_t>(N)}, std::vector<size_t>{
+      }, std::vector<size_t>{static_cast<size_t>(N)}};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::vector<size_t>> temp
+        {std::vector<size_t>{static_cast<size_t>(M), static_cast<size_t>(N)}};
+      dimss__.reserve(dimss__.size() + temp.size());
+      dimss__.insert(dimss__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_dims() 
+    
   inline void constrained_param_names(
                                       std::vector<std::string>& param_names__,
                                       bool emit_transformed_parameters__ = true,
@@ -1558,6 +1580,29 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
       },
       std::vector<size_t>{static_cast<size_t>(N_t), static_cast<size_t>(4)},
       std::vector<size_t>{static_cast<size_t>(N_t), static_cast<size_t>(4)}};
+    
+    } // get_dims() 
+    
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
+                       const bool emit_transformed_parameters__ = true,
+                       const bool emit_generated_quantities__ = true) const {
+    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+      std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
+      }};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::vector<size_t>> temp
+        {std::vector<size_t>{static_cast<size_t>(N_t), static_cast<size_t>(4)},
+        std::vector<size_t>{static_cast<size_t>(N_t), static_cast<size_t>(4)}};
+      dimss__.reserve(dimss__.size() + temp.size());
+      dimss__.insert(dimss__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
     
     } // get_dims() 
     
