@@ -7195,6 +7195,26 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"p_real", "p_real_array", "p_matrix",
+      "p_vector", "p_row_vector", "y_p"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"transformed_param_real"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
@@ -7909,6 +7929,26 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     
     names__ = std::vector<std::string>{"p_real", "p_real_array", "p_matrix",
       "p_vector", "p_row_vector", "y_p", "transformed_param_real"};
+    
+    } // get_param_names() 
+    
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"p_real", "p_real_array", "p_matrix",
+      "p_vector", "p_row_vector", "y_p"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"transformed_param_real"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
     
     } // get_param_names() 
     

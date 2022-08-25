@@ -181,6 +181,7 @@ let pp_method ppf rt name params intro ?(outro = nop)
  *)
 let pp_get_param_names ppf {Program.output_vars; _} =
   let add_param = fmt "%S" in
+  (* old -- kept as overload for compat until model_base changes *)
   let extract_name var = Mangle.remove_prefix (fst var) in
   pp_method ppf "void" "get_param_names"
     ["std::vector<std::string>& names__"]
@@ -189,7 +190,38 @@ let pp_get_param_names ppf {Program.output_vars; _} =
       pf ppf "@[<hov 2>names__ = std::vector<std::string>{%a};@]@,"
         (list ~sep:comma add_param)
         (List.map ~f:extract_name output_vars) )
-    ~cv_attr:["const"]
+    ~cv_attr:["const"] ;
+  Format.pp_print_cut ppf () ;
+  (* new/controllable *)
+  let params, tparams, gqs =
+    List.partition3_map output_vars ~f:(function
+      | id, {Program.out_block= Parameters; _} -> `Fst (Mangle.remove_prefix id)
+      | id, {out_block= TransformedParameters; _} ->
+          `Snd (Mangle.remove_prefix id)
+      | id, {out_block= GeneratedQuantities; _} ->
+          `Trd (Mangle.remove_prefix id) ) in
+  let pp_extend_vector ppf params =
+    if List.is_empty params then nop ppf params
+    else
+      pf ppf
+        "@[<hov 2>std::vector<std::string> temp {%a};@]@,\
+         names__.reserve(names__.size() + temp.size());@,\
+         names__.insert(names__.end(), temp.begin(), temp.end());@,"
+        (list ~sep:comma add_param)
+        params in
+  let body ppf =
+    pf ppf "@[<hov 2>names__ = std::vector<std::string>{%a};@]@,"
+      (list ~sep:comma add_param)
+      params ;
+    pf ppf "@,if (emit_transformed_parameters__) %a@," pp_block
+      (pp_extend_vector, tparams) ;
+    pf ppf "@,if (emit_generated_quantities__) %a@," pp_block
+      (pp_extend_vector, gqs) in
+  pp_method ppf "void" "get_param_names"
+    [ "std::vector<std::string>& names__"
+    ; "const bool emit_transformed_parameters__ = true"
+    ; "const bool emit_generated_quantities__ = true" ]
+    nop body ~cv_attr:["const"]
 
 (** Print the [get_dims] method of the model class. *)
 let pp_get_dims ppf {Program.output_vars; _} =

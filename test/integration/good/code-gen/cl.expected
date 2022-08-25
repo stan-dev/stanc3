@@ -1549,6 +1549,23 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"alpha_v", "beta", "cuts", "sigma",
+      "alpha", "phi", "X_p", "beta_m", "X_rv_p"};
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{

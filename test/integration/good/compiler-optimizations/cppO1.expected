@@ -292,6 +292,26 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"X_p"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"X_tp1", "X_tp2", "X_tp3", "X_tp4",
+        "X_tp5", "X_tp6", "X_tp7"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
@@ -1071,6 +1091,25 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__ = std::vector<std::string>{"beta", "gamma", "xi", "delta", "y"};
+    
+    } // get_param_names() 
+    
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"beta", "gamma", "xi", "delta"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"y"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
     
     } // get_param_names() 
     
@@ -2123,6 +2162,25 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"mean_p", "beta"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"phi", "p", "chi"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
@@ -3077,6 +3135,25 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"sigma", "sigma_age", "sigma_edu",
+      "sigma_state", "sigma_region", "sigma_age_edu", "b_0", "b_female",
+      "b_black", "b_female_black", "b_v_prev", "b_age", "b_edu", "b_region",
+      "b_age_edu", "b_hat"};
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
@@ -3529,6 +3606,22 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{};
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{};
@@ -3874,6 +3967,22 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__ = std::vector<std::string>{};
+    
+    } // get_param_names() 
+    
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{};
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
     
     } // get_param_names() 
     
@@ -4299,6 +4408,22 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"mu", "sigma", "theta"};
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
@@ -4718,6 +4843,22 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__ = std::vector<std::string>{"mu", "theta", "tau"};
+    
+    } // get_param_names() 
+    
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"mu", "theta", "tau"};
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
     
     } // get_param_names() 
     
@@ -5628,6 +5769,26 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"a", "b", "c", "d", "e", "beta",
+      "sigma_a", "sigma_b", "sigma_c", "sigma_d", "sigma_e"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"y_hat"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
@@ -6338,6 +6499,29 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     names__ = std::vector<std::string>{"tau_phi", "phi_std_raw", "sigma_phi",
       "phi", "beta0", "beta1", "tau_theta", "sigma_theta", "theta",
       "theta_std", "x", "y"};
+    
+    } // get_param_names() 
+    
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"tau_phi", "phi_std_raw"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"sigma_phi", "phi"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      std::vector<std::string> temp {"beta0", "beta1", "tau_theta",
+        "sigma_theta", "theta", "theta_std", "x", "y"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
     
     } // get_param_names() 
     
@@ -7432,6 +7616,29 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     
     names__ = std::vector<std::string>{"mean_phi", "mean_p", "epsilon",
       "sigma", "phi", "p", "chi", "mu", "sigma2"};
+    
+    } // get_param_names() 
+    
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"mean_phi", "mean_p", "epsilon",
+      "sigma"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"phi", "p", "chi", "mu"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      std::vector<std::string> temp {"sigma2"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
     
     } // get_param_names() 
     
@@ -9366,6 +9573,29 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"mean_phi", "mean_p", "psi", "beta",
+      "epsilon", "sigma"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"phi", "p", "b", "nu", "chi"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      std::vector<std::string> temp {"sigma2", "Nsuper", "N", "B", "z"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
@@ -10150,6 +10380,25 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"pi", "theta"};
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      std::vector<std::string> temp {"log_Pr_z"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
@@ -10760,6 +11009,26 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     
     names__ = std::vector<std::string>{"beta0", "beta1", "tau_theta",
       "tau_phi", "theta_std", "phi_std_raw", "sigma_phi", "phi"};
+    
+    } // get_param_names() 
+    
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"beta0", "beta1", "tau_theta",
+      "tau_phi", "theta_std", "phi_std_raw"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"sigma_phi", "phi"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
     
     } // get_param_names() 
     
@@ -11826,6 +12095,25 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"mean_p", "beta"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"phi", "p", "chi"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
@@ -12346,6 +12634,22 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__ = std::vector<std::string>{};
+    
+    } // get_param_names() 
+    
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{};
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
     
     } // get_param_names() 
     
@@ -12870,6 +13174,27 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"p_single_ret_vec",
+      "p_multi_ret_vec"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"tp_single_ret_vec",
+        "tp_multi_ret_vec"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
@@ -13298,6 +13623,22 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"alpha"};
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{}};
@@ -13716,6 +14057,25 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__ = std::vector<std::string>{"R", "out"};
+    
+    } // get_param_names() 
+    
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"R", "out"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
     
     } // get_param_names() 
     
@@ -15601,6 +15961,30 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"mean_phi", "mean_p", "gamma",
+      "epsilon", "sigma"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"phi", "p", "chi"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      std::vector<std::string> temp {"sigma2", "psi", "b", "Nsuper", "N",
+        "B", "z"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
@@ -16104,6 +16488,22 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{};
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{};
@@ -16440,6 +16840,22 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__ = std::vector<std::string>{"x"};
+    
+    } // get_param_names() 
+    
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"x"};
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
     
     } // get_param_names() 
     
@@ -16793,6 +17209,22 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__ = std::vector<std::string>{"theta"};
+    
+    } // get_param_names() 
+    
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"theta"};
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
     
     } // get_param_names() 
     
@@ -17752,6 +18184,25 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"mean_phi", "mean_p"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"phi", "p", "chi"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
@@ -18302,6 +18753,28 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__ = std::vector<std::string>{"mu", "tp", "lbaz", "lbar"};
+    
+    } // get_param_names() 
+    
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"mu"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"tp"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      std::vector<std::string> temp {"lbaz", "lbar"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
     
     } // get_param_names() 
     
@@ -18950,6 +19423,29 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     
     names__ = std::vector<std::string>{"alpha_occ", "beta_occ", "alpha_p",
       "beta_p", "logit_psi", "logit_p", "occ_fs", "psi_con", "z"};
+    
+    } // get_param_names() 
+    
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"alpha_occ", "beta_occ", "alpha_p",
+      "beta_p"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"logit_psi", "logit_p"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      std::vector<std::string> temp {"occ_fs", "psi_con", "z"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
     
     } // get_param_names() 
     
@@ -19668,6 +20164,26 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     
     names__ = std::vector<std::string>{"beta", "eta1", "eta2", "mu_a1",
       "mu_a2", "sigma_a1", "sigma_a2", "sigma_y", "a1", "a2", "y_hat"};
+    
+    } // get_param_names() 
+    
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"beta", "eta1", "eta2", "mu_a1",
+      "mu_a2", "sigma_a1", "sigma_a2", "sigma_y"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"a1", "a2", "y_hat"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
     
     } // get_param_names() 
     
@@ -20604,6 +21120,23 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"theta", "phi", "x_matrix",
+      "x_vector", "x_cov"};
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
@@ -21245,6 +21778,26 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"a", "beta", "mu_a", "sigma_a",
+      "sigma_y"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"y_hat"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
@@ -21748,6 +22301,22 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__ = std::vector<std::string>{"m2", "m3"};
+    
+    } // get_param_names() 
+    
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"m2", "m3"};
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
     
     } // get_param_names() 
     
@@ -22373,6 +22942,26 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"alpha0", "alpha1", "alpha2",
+      "alpha12", "tau", "b"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"sigma"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
@@ -22790,6 +23379,25 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"param"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"local"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
@@ -23190,6 +23798,26 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     
     } // get_param_names() 
     
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{"y"};
+    
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp {"no_init", "init_from_param",
+        "dependent_no_init", "used_on_lhs", "no_init_if", "for_loop_var"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // get_param_names() 
+    
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
@@ -23554,6 +24182,25 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__ = std::vector<std::string>{"x"};
+    
+    } // get_param_names() 
+    
+  inline void get_param_names(std::vector<std::string>& names__,
+                              const bool emit_transformed_parameters__ = true,
+                              const bool emit_generated_quantities__ = true) const {
+    
+    names__ = std::vector<std::string>{};
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      std::vector<std::string> temp {"x"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+      
+    }
     
     } // get_param_names() 
     
