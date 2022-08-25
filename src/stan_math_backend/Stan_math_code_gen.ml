@@ -176,21 +176,11 @@ let pp_method ppf rt name params intro ?(outro = nop)
   outro ppf () ;
   pf ppf "@,} // %s() @,@]" name
 
-let pp_extend_vector name type_ pp_elt ppf elts =
-  if List.is_empty elts then nop ppf elts
-  else
-    pf ppf
-      "@[<hov 2>%s temp@ {%a};@]@,\
-       %s.reserve(%s.size() + temp.size());@,\
-       %s.insert(%s.end(), temp.begin(), temp.end());@,"
-      type_ (list ~sep:comma pp_elt) elts name name name name
-
 (** Print the [get_param_names] method of the model class
   @param ppf A pretty printer.
  *)
 let pp_get_param_names ppf {Program.output_vars; _} =
   let add_param = fmt "%S" in
-  (* old -- kept as overload for compat until model_base changes *)
   let extract_name var = Mangle.remove_prefix (fst var) in
   pp_method ppf "void" "get_param_names"
     ["std::vector<std::string>& names__"]
@@ -199,30 +189,7 @@ let pp_get_param_names ppf {Program.output_vars; _} =
       pf ppf "@[<hov 2>names__ = std::vector<std::string>{%a};@]@,"
         (list ~sep:comma add_param)
         (List.map ~f:extract_name output_vars) )
-    ~cv_attr:["const"] ;
-  Format.pp_print_cut ppf () ;
-  (* new/controllable *)
-  let params, tparams, gqs =
-    List.partition3_map output_vars ~f:(function
-      | id, {Program.out_block= Parameters; _} -> `Fst (Mangle.remove_prefix id)
-      | id, {out_block= TransformedParameters; _} ->
-          `Snd (Mangle.remove_prefix id)
-      | id, {out_block= GeneratedQuantities; _} ->
-          `Trd (Mangle.remove_prefix id) ) in
-  let body ppf =
-    pf ppf "@[<hov 2>names__ = std::vector<std::string>{%a};@]@,"
-      (list ~sep:comma add_param)
-      params ;
-    pf ppf "@,if (emit_transformed_parameters__) %a@," pp_block
-      (pp_extend_vector "names__" "std::vector<std::string>" add_param, tparams) ;
-    pf ppf "@,if (emit_generated_quantities__) %a@," pp_block
-      (pp_extend_vector "names__" "std::vector<std::string>" add_param, gqs)
-  in
-  pp_method ppf "void" "get_param_names"
-    [ "std::vector<std::string>& names__"
-    ; "const bool emit_transformed_parameters__ = true"
-    ; "const bool emit_generated_quantities__ = true" ]
-    nop body ~cv_attr:["const"]
+    ~cv_attr:["const"]
 
 (** Print the [get_dims] method of the model class. *)
 let pp_get_dims ppf {Program.output_vars; _} =
@@ -232,7 +199,6 @@ let pp_get_dims ppf {Program.output_vars; _} =
     pf ppf "std::vector<size_t>{@[<hov>@,%a@]}" (list ~sep:comma pp_cast)
       inner_dims in
   let pp_add_pack ppf dims = pf ppf "%a" pp_pack dims in
-  (* old -- kept as overload for compat until model_base changes *)
   let dim_list =
     List.(
       map ~f:(fun (_, {Program.out_constrained_st= st; _}) -> st) output_vars)
@@ -246,34 +212,7 @@ let pp_get_dims ppf {Program.output_vars; _} =
     (fun ppf ->
       pf ppf "@[<hov 2>dimss__ = std::vector<std::vector<size_t>>{%a};@]@,"
         pp_output_var dim_list )
-    ~cv_attr:["const"] ;
-  Format.pp_print_cut ppf () ;
-  (* new/controllable *)
-  let params, tparams, gqs =
-    List.partition3_map output_vars ~f:(function
-      | _, {Program.out_block= Parameters; Program.out_constrained_st= st; _} ->
-          `Fst (SizedType.get_dims_io st)
-      | _, {out_block= TransformedParameters; Program.out_constrained_st= st; _}
-        ->
-          `Snd (SizedType.get_dims_io st)
-      | _, {out_block= GeneratedQuantities; Program.out_constrained_st= st; _}
-        ->
-          `Trd (SizedType.get_dims_io st) ) in
-  let body ppf =
-    pf ppf "@[<hov 2>dimss__ = std::vector<std::vector<size_t>>{%a};@]@,"
-      (list ~sep:comma pp_add_pack)
-      params ;
-    pf ppf "@,if (emit_transformed_parameters__) %a@," pp_block
-      ( pp_extend_vector "dimss__" "std::vector<std::vector<size_t>>" pp_add_pack
-      , tparams ) ;
-    pf ppf "@,if (emit_generated_quantities__) %a@," pp_block
-      ( pp_extend_vector "dimss__" "std::vector<std::vector<size_t>>" pp_add_pack
-      , gqs ) in
-  pp_method ppf "void" "get_dims"
-    [ "std::vector<std::vector<size_t>>& dimss__"
-    ; "const bool emit_transformed_parameters__ = true"
-    ; "const bool emit_generated_quantities__ = true" ]
-    nop body ~cv_attr:["const"]
+    ~cv_attr:["const"]
 
 let pp_method_b ppf rt name params intro ?(outro = nop) ?(cv_attr = ["const"])
     body =
