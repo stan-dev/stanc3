@@ -195,13 +195,15 @@ pipeline {
                         }
                     }
                     steps {
-                        unstash "Stanc3Setup"
-                        runShell("""
-                            eval \$(opam env)
-                            dune runtest
-                        """)
+                        dir("${env.WORKSPACE}/dune-tests"){
+                            unstash "Stanc3Setup"
+                            runShell("""
+                                eval \$(opam env)
+                                dune runtest
+                            """)
+                        }
                     }
-                    post { always { runShell("rm -rf ./*") }}
+                    post { always { runShell("rm -rf ${env.WORKSPACE}/dune-tests/*") }}
                 }
                 stage("stancjs tests") {
                     agent {
@@ -212,13 +214,15 @@ pipeline {
                         }
                     }
                     steps {
-                        unstash "Stanc3Setup"
-                        runShell("""
-                            eval \$(opam env)
-                            dune build @runjstest
-                        """)
+                        dir("${env.WORKSPACE}/stancjs-tests"){
+                            unstash "Stanc3Setup"
+                            runShell("""
+                                eval \$(opam env)
+                                dune build @runjstest
+                            """)
+                        }
                     }
-                    post { always { runShell("rm -rf ./*") }}
+                    post { always { runShell("rm -rf ${env.WORKSPACE}/stancjs-tests/*") }}
                 }
             }
         }
@@ -240,20 +244,22 @@ pipeline {
                         }
                     }
                     steps {
-                        unstash "Stanc3Setup"
-                        script {
-                            runPerformanceTests("../test/integration/good", params.stanc_flags)
-                        }
+                        dir("${env.WORKSPACE}/compile-tests-good"){
+                            unstash "Stanc3Setup"
+                            script {
+                                runPerformanceTests("../test/integration/good", params.stanc_flags)
+                            }
 
-                        xunit([GoogleTest(
-                            deleteOutputFiles: false,
-                            failIfNotNew: true,
-                            pattern: 'performance-tests-cmdstan/performance.xml',
-                            skipNoTestFiles: false,
-                            stopProcessingIfError: false)
-                        ])
+                            xunit([GoogleTest(
+                                deleteOutputFiles: false,
+                                failIfNotNew: true,
+                                pattern: 'performance-tests-cmdstan/performance.xml',
+                                skipNoTestFiles: false,
+                                stopProcessingIfError: false)
+                            ])
+                        }
                     }
-                    post { always { runShell("rm -rf ./*") }}
+                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-tests-good/*") }}
                 }
 
                 stage("Compile tests - example-models") {
@@ -270,20 +276,22 @@ pipeline {
                         }
                     }
                     steps {
-                        script {
-                            unstash "Stanc3Setup"
-                            runPerformanceTests("example-models", params.stanc_flags)
-                        }
+                        dir("${env.WORKSPACE}/compile-tests-example"){
+                            script {
+                                unstash "Stanc3Setup"
+                                runPerformanceTests("example-models", params.stanc_flags)
+                            }
 
-                        xunit([GoogleTest(
-                            deleteOutputFiles: false,
-                            failIfNotNew: true,
-                            pattern: 'performance-tests-cmdstan/performance.xml',
-                            skipNoTestFiles: false,
-                            stopProcessingIfError: false)
-                        ])
+                            xunit([GoogleTest(
+                                deleteOutputFiles: false,
+                                failIfNotNew: true,
+                                pattern: 'performance-tests-cmdstan/performance.xml',
+                                skipNoTestFiles: false,
+                                stopProcessingIfError: false)
+                            ])
+                        }
                     }
-                    post { always { runShell("rm -rf ./*") }}
+                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-tests-example/*") }}
                 }
 
                 stage("Compile tests - good at O=1") {
@@ -305,20 +313,22 @@ pipeline {
                         }
                     }
                     steps {
-                        unstash "Stanc3Setup"
-                        script {
-                            runPerformanceTests("../test/integration/good", "--O1")
-                        }
+                        dir("${env.WORKSPACE}/compile-good-O1"){
+                            unstash "Stanc3Setup"
+                            script {
+                                runPerformanceTests("../test/integration/good", "--O1")
+                            }
 
-                        xunit([GoogleTest(
-                            deleteOutputFiles: false,
-                            failIfNotNew: true,
-                            pattern: 'performance-tests-cmdstan/performance.xml',
-                            skipNoTestFiles: false,
-                            stopProcessingIfError: false)
-                        ])
+                            xunit([GoogleTest(
+                                deleteOutputFiles: false,
+                                failIfNotNew: true,
+                                pattern: 'performance-tests-cmdstan/performance.xml',
+                                skipNoTestFiles: false,
+                                stopProcessingIfError: false)
+                            ])
+                        }
                     }
-                    post { always { runShell("rm -rf ./*") }}
+                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-good-O1/*") }}
                 }
 
                 stage("Compile tests - example-models at O=1") {
@@ -340,20 +350,22 @@ pipeline {
                         }
                     }
                     steps {
-                        script {
-                            unstash "Stanc3Setup"
-                            runPerformanceTests("example-models", "--O1")
-                        }
+                        dir("${env.WORKSPACE}/compile-example-O1"){
+                            script {
+                                unstash "Stanc3Setup"
+                                runPerformanceTests("example-models", "--O1")
+                            }
 
-                        xunit([GoogleTest(
-                            deleteOutputFiles: false,
-                            failIfNotNew: true,
-                            pattern: 'performance-tests-cmdstan/performance.xml',
-                            skipNoTestFiles: false,
-                            stopProcessingIfError: false)
-                        ])
+                            xunit([GoogleTest(
+                                deleteOutputFiles: false,
+                                failIfNotNew: true,
+                                pattern: 'performance-tests-cmdstan/performance.xml',
+                                skipNoTestFiles: false,
+                                stopProcessingIfError: false)
+                            ])
+                        }
                     }
-                    post { always { runShell("rm -rf ./*") }}
+                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-example-O1/*") }}
                 }
 
                 stage("Model end-to-end tests") {
@@ -375,48 +387,50 @@ pipeline {
                         }
                     }
                     steps {
-                        script {
-                            unstash "Stanc3Setup"
-                            unstash 'ubuntu-exe'
-                            sh """
-                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                            """
-                            utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
-                            utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
-                            utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
-                            sh """
-                                cd performance-tests-cmdstan
-                                git show HEAD --stat
-                                echo "example-models/regression_tests/mother.stan" > all.tests
-                                cat known_good_perf_all.tests >> all.tests
-                                echo "" >> all.tests
-                                cat shotgun_perf_all.tests >> all.tests
-                                cat all.tests
-                                echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-                                echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
-                                cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                                CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
-                            """
+                        dir("${env.WORKSPACE}/compile-end-to-end"){
+                            script {
+                                unstash "Stanc3Setup"
+                                unstash 'ubuntu-exe'
+                                sh """
+                                    git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                                """
+                                utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
+                                utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
+                                utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
+                                sh """
+                                    cd performance-tests-cmdstan
+                                    git show HEAD --stat
+                                    echo "example-models/regression_tests/mother.stan" > all.tests
+                                    cat known_good_perf_all.tests >> all.tests
+                                    echo "" >> all.tests
+                                    cat shotgun_perf_all.tests >> all.tests
+                                    cat all.tests
+                                    echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+                                    echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
+                                    cd cmdstan; make clean-all; git show HEAD --stat; cd ..
+                                    CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
+                                """
+                            }
+
+                            xunit([GoogleTest(
+                                deleteOutputFiles: false,
+                                failIfNotNew: true,
+                                pattern: 'performance-tests-cmdstan/performance.xml',
+                                skipNoTestFiles: false,
+                                stopProcessingIfError: false)
+                            ])
+
+                            archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+
+                            perfReport modePerformancePerTestCase: true,
+                                sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                                modeThroughput: false,
+                                excludeResponseTime: true,
+                                errorFailedThreshold: 100,
+                                errorUnstableThreshold: 100
                         }
-
-                        xunit([GoogleTest(
-                            deleteOutputFiles: false,
-                            failIfNotNew: true,
-                            pattern: 'performance-tests-cmdstan/performance.xml',
-                            skipNoTestFiles: false,
-                            stopProcessingIfError: false)
-                        ])
-
-                        archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-
-                        perfReport modePerformancePerTestCase: true,
-                            sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                            modeThroughput: false,
-                            excludeResponseTime: true,
-                            errorFailedThreshold: 100,
-                            errorUnstableThreshold: 100
                     }
-                    post { always { runShell("rm -rf ./*") }}
+                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end/*") }}
                 }
                 stage("Model end-to-end tests at O=1") {
                     when {
@@ -443,48 +457,50 @@ pipeline {
                         }
                     }
                     steps {
-                        script {
-                            unstash "Stanc3Setup"
-                            unstash 'ubuntu-exe'
-                            sh """
-                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                            """
-                            utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
-                            utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
-                            utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
-                            sh """
-                                cd performance-tests-cmdstan
-                                git show HEAD --stat
-                                echo "example-models/regression_tests/mother.stan" > all.tests
-                                cat known_good_perf_all.tests >> all.tests
-                                echo "" >> all.tests
-                                cat shotgun_perf_all.tests >> all.tests
-                                cat all.tests
-                                echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-                                echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
-                                cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                                CXX="${CXX}" ./compare-optimizer.sh "--tests-file all.tests --num-samples=10" "--O1" "\$(readlink -f ../bin/stanc)"
-                            """
+                        dir("${env.WORKSPACE}/compile-end-to-end-O=1"){
+                            script {
+                                unstash "Stanc3Setup"
+                                unstash 'ubuntu-exe'
+                                sh """
+                                    git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                                """
+                                utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
+                                utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
+                                utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
+                                sh """
+                                    cd performance-tests-cmdstan
+                                    git show HEAD --stat
+                                    echo "example-models/regression_tests/mother.stan" > all.tests
+                                    cat known_good_perf_all.tests >> all.tests
+                                    echo "" >> all.tests
+                                    cat shotgun_perf_all.tests >> all.tests
+                                    cat all.tests
+                                    echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+                                    echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
+                                    cd cmdstan; make clean-all; git show HEAD --stat; cd ..
+                                    CXX="${CXX}" ./compare-optimizer.sh "--tests-file all.tests --num-samples=10" "--O1" "\$(readlink -f ../bin/stanc)"
+                                """
+                            }
+
+                            xunit([GoogleTest(
+                                deleteOutputFiles: false,
+                                failIfNotNew: true,
+                                pattern: 'performance-tests-cmdstan/performance.xml',
+                                skipNoTestFiles: false,
+                                stopProcessingIfError: false)
+                            ])
+
+                            archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+
+                            perfReport modePerformancePerTestCase: true,
+                                sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                                modeThroughput: false,
+                                excludeResponseTime: true,
+                                errorFailedThreshold: 100,
+                                errorUnstableThreshold: 100
                         }
-
-                        xunit([GoogleTest(
-                            deleteOutputFiles: false,
-                            failIfNotNew: true,
-                            pattern: 'performance-tests-cmdstan/performance.xml',
-                            skipNoTestFiles: false,
-                            stopProcessingIfError: false)
-                        ])
-
-                        archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-
-                        perfReport modePerformancePerTestCase: true,
-                            sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                            modeThroughput: false,
-                            excludeResponseTime: true,
-                            errorFailedThreshold: 100,
-                            errorUnstableThreshold: 100
                     }
-                    post { always { runShell("rm -rf ./*") }}
+                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end-O=1/*") }}
                 }
                 stage('Math functions expressions test') {
                     when {
@@ -505,31 +521,32 @@ pipeline {
                         }
                     }
                     steps {
-                        unstash "Stanc3Setup"
-                        unstash 'ubuntu-exe'
-
-                        script {
-                            sh """
-                                git clone --recursive https://github.com/stan-dev/math.git
-                            """
-                            utils.checkout_pr("math", "math", params.math_pr)
-                            sh """
-                                cp bin/stanc math/test/expressions/stanc
-                            """
-
-                            dir("math") {
+                        dir("${env.WORKSPACE}/compile-expressions"){
+                            unstash "Stanc3Setup"
+                            unstash 'ubuntu-exe'
+                            script {
                                 sh """
-                                    echo O=0 >> make/local
-                                    echo "CXX=${env.CXX} -Werror " >> make/local
+                                    git clone --recursive https://github.com/stan-dev/math.git
                                 """
-                                withEnv(['PATH+TBB=./lib/tbb']) {
-                                    try { sh "./runTests.py -j${env.PARALLEL} test/expressions" }
-                                    finally { junit 'test/**/*.xml' }
+                                utils.checkout_pr("math", "math", params.math_pr)
+                                sh """
+                                    cp bin/stanc math/test/expressions/stanc
+                                """
+
+                                dir("math") {
+                                    sh """
+                                        echo O=0 >> make/local
+                                        echo "CXX=${env.CXX} -Werror " >> make/local
+                                    """
+                                    withEnv(['PATH+TBB=./lib/tbb']) {
+                                        try { sh "./runTests.py -j${env.PARALLEL} test/expressions" }
+                                        finally { junit 'test/**/*.xml' }
+                                    }
                                 }
                             }
                         }
                     }
-                    post { always { deleteDir() } }
+                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-expressions/*") }}
                 }
             }
         }
