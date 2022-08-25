@@ -108,8 +108,8 @@ pipeline {
 //                     def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
 //                     skipRemainingStages = utils.verifyChanges(runTestPaths, "master")
 
-                    def compileTests = ['test/integration/good'].join(" ")
-                    skipCompileTests = utils.verifyChanges(compileTests, "master")
+//                     def compileTests = ['test/integration/good'].join(" ")
+//                     skipCompileTests = utils.verifyChanges(compileTests, "master")
 
                     def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
                     skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1, "master")
