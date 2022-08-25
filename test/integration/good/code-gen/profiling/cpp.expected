@@ -324,12 +324,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"rho", "alpha", "sigma"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -345,13 +339,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{}, std::vector<size_t>{}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,

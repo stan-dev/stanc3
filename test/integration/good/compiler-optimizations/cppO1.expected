@@ -285,13 +285,6 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"X_p", "X_tp1", "X_tp2", "X_tp3",
-      "X_tp4", "X_tp5", "X_tp6", "X_tp7"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -311,23 +304,6 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
-                                                                   static_cast<size_t>(10)
-                                                                   ,
-                                                                   static_cast<size_t>(10)
-                                                                   },
-      std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)},
-      std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)},
-      std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)},
-      std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)},
-      std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)},
-      std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)},
-      std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -1118,12 +1094,6 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"beta", "gamma", "xi", "delta", "y"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -1142,15 +1112,6 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
-      },
-      std::vector<size_t>{static_cast<size_t>(N_t), static_cast<size_t>(4)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -2208,12 +2169,6 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"mean_p", "beta", "phi", "p", "chi"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -2232,19 +2187,6 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(max_age)},
-      std::vector<size_t>{static_cast<size_t>(nind),
-                          static_cast<size_t>(n_occ_minus_1)},
-      std::vector<size_t>{static_cast<size_t>(nind),
-                          static_cast<size_t>(n_occ_minus_1)},
-      std::vector<size_t>{static_cast<size_t>(nind),
-                          static_cast<size_t>(n_occasions)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -3204,15 +3146,6 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"sigma", "sigma_age", "sigma_edu",
-      "sigma_state", "sigma_region", "sigma_age_edu", "b_0", "b_female",
-      "b_black", "b_female_black", "b_v_prev", "b_age", "b_edu", "b_region",
-      "b_age_edu", "b_hat"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -3231,22 +3164,6 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
-      }, std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
-      }, std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
-      }, std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(n_age)},
-      std::vector<size_t>{static_cast<size_t>(n_edu)},
-      std::vector<size_t>{static_cast<size_t>(n_region)},
-      std::vector<size_t>{static_cast<size_t>(n_age),
-                          static_cast<size_t>(n_edu)},
-      std::vector<size_t>{static_cast<size_t>(n_state)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -3704,12 +3621,6 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -3725,12 +3636,6 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -4084,12 +3989,6 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -4105,12 +4004,6 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -4538,12 +4431,6 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"mu", "sigma", "theta"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -4559,16 +4446,6 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
-                                                                   static_cast<size_t>(2)
-                                                                   },
-      std::vector<size_t>{static_cast<size_t>(2)}, std::vector<size_t>{
-      }};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -4996,12 +4873,6 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"mu", "theta", "tau"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -5017,14 +4888,6 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(J)}, std::vector<size_t>{
-      }};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -5936,13 +5799,6 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"a", "b", "c", "d", "e", "beta",
-      "sigma_a", "sigma_b", "sigma_c", "sigma_d", "sigma_e", "y_hat"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -5962,21 +5818,6 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
-                                                                   static_cast<size_t>(n_age)
-                                                                   },
-      std::vector<size_t>{static_cast<size_t>(n_edu)},
-      std::vector<size_t>{static_cast<size_t>(n_age_edu)},
-      std::vector<size_t>{static_cast<size_t>(n_state)},
-      std::vector<size_t>{static_cast<size_t>(n_region_full)},
-      std::vector<size_t>{static_cast<size_t>(5)}, std::vector<size_t>{
-      }, std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
-      }, std::vector<size_t>{}, std::vector<size_t>{static_cast<size_t>(N)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -6697,14 +6538,6 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"tau_phi", "phi_std_raw", "sigma_phi",
-      "phi", "beta0", "beta1", "tau_theta", "sigma_theta", "theta",
-      "theta_std", "x", "y"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -6727,19 +6560,6 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(phi_std_raw_1dim__)},
-      std::vector<size_t>{}, std::vector<size_t>{static_cast<size_t>(N)},
-      std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
-      }, std::vector<size_t>{}, std::vector<size_t>{static_cast<size_t>(N)},
-      std::vector<size_t>{static_cast<size_t>(N)},
-      std::vector<size_t>{static_cast<size_t>(N)},
-      std::vector<size_t>{static_cast<size_t>(N)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -7844,13 +7664,6 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"mean_phi", "mean_p", "epsilon",
-      "sigma", "phi", "p", "chi", "mu", "sigma2"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -7873,21 +7686,6 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{}, std::vector<size_t>{static_cast<size_t>(nind)},
-      std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(nind),
-                          static_cast<size_t>(n_occ_minus_1)},
-      std::vector<size_t>{static_cast<size_t>(nind),
-                          static_cast<size_t>(n_occ_minus_1)},
-      std::vector<size_t>{static_cast<size_t>(nind),
-                          static_cast<size_t>(n_occasions)},
-      std::vector<size_t>{}, std::vector<size_t>{}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -9828,14 +9626,6 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"mean_phi", "mean_p", "psi", "beta",
-      "epsilon", "sigma", "phi", "p", "b", "nu", "chi", "sigma2", "Nsuper",
-      "N", "B", "z"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -9858,29 +9648,6 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{}, std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(n_occasions)},
-      std::vector<size_t>{static_cast<size_t>(M)}, std::vector<size_t>{
-      },
-      std::vector<size_t>{static_cast<size_t>(M),
-                          static_cast<size_t>(phi_2dim__)},
-      std::vector<size_t>{static_cast<size_t>(M),
-                          static_cast<size_t>(n_occasions)},
-      std::vector<size_t>{static_cast<size_t>(n_occasions)},
-      std::vector<size_t>{static_cast<size_t>(n_occasions)},
-      std::vector<size_t>{static_cast<size_t>(M),
-                          static_cast<size_t>(n_occasions)},
-      std::vector<size_t>{}, std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(n_occasions)},
-      std::vector<size_t>{static_cast<size_t>(n_occasions)},
-      std::vector<size_t>{static_cast<size_t>(M),
-                          static_cast<size_t>(n_occasions)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -10676,12 +10443,6 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"pi", "theta", "log_Pr_z"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -10700,17 +10461,6 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
-                                                                   static_cast<size_t>(K)
-                                                                   },
-      std::vector<size_t>{static_cast<size_t>(J), static_cast<size_t>(K),
-                          static_cast<size_t>(K)},
-      std::vector<size_t>{static_cast<size_t>(I), static_cast<size_t>(K)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -11331,13 +11081,6 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"beta0", "beta1", "tau_theta",
-      "tau_phi", "theta_std", "phi_std_raw", "sigma_phi", "phi"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -11357,16 +11100,6 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
-      }, std::vector<size_t>{static_cast<size_t>(N)},
-      std::vector<size_t>{static_cast<size_t>(N)}, std::vector<size_t>{
-      }, std::vector<size_t>{static_cast<size_t>(N)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -12438,12 +12171,6 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"mean_p", "beta", "phi", "p", "chi"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -12462,19 +12189,6 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(max_age)},
-      std::vector<size_t>{static_cast<size_t>(nind),
-                          static_cast<size_t>(n_occ_minus_1)},
-      std::vector<size_t>{static_cast<size_t>(nind),
-                          static_cast<size_t>(n_occ_minus_1)},
-      std::vector<size_t>{static_cast<size_t>(nind),
-                          static_cast<size_t>(n_occasions)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -13006,12 +12720,6 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -13027,12 +12735,6 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -13558,13 +13260,6 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"p_single_ret_vec", "p_multi_ret_vec",
-      "tp_single_ret_vec", "tp_multi_ret_vec"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -13585,17 +13280,6 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
-                                                                   static_cast<size_t>(5)
-                                                                   },
-      std::vector<size_t>{static_cast<size_t>(5)},
-      std::vector<size_t>{static_cast<size_t>(5)},
-      std::vector<size_t>{static_cast<size_t>(5)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -14032,12 +13716,6 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"alpha"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -14053,12 +13731,6 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -14485,12 +14157,6 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"R", "out"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -14509,15 +14175,6 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
-                                                                   static_cast<size_t>(N)
-                                                                   },
-      std::vector<size_t>{static_cast<size_t>(N)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -16405,14 +16062,6 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"mean_phi", "mean_p", "gamma",
-      "epsilon", "sigma", "phi", "p", "chi", "sigma2", "psi", "b", "Nsuper",
-      "N", "B", "z"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -16436,29 +16085,6 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(n_occasions)},
-      std::vector<size_t>{static_cast<size_t>(epsilon_1dim__)},
-      std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(M),
-                          static_cast<size_t>(phi_2dim__)},
-      std::vector<size_t>{static_cast<size_t>(M),
-                          static_cast<size_t>(n_occasions)},
-      std::vector<size_t>{static_cast<size_t>(M),
-                          static_cast<size_t>(n_occasions)},
-      std::vector<size_t>{}, std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(n_occasions)},
-      std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(n_occasions)},
-      std::vector<size_t>{static_cast<size_t>(n_occasions)},
-      std::vector<size_t>{static_cast<size_t>(M),
-                          static_cast<size_t>(n_occasions)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -16973,12 +16599,6 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -16994,12 +16614,6 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -17344,12 +16958,6 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"x"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -17365,12 +16973,6 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -17729,12 +17331,6 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"theta"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -17750,14 +17346,6 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
-                                                                   static_cast<size_t>(J)
-                                                                   }};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -18718,13 +18306,6 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"mean_phi", "mean_p", "phi", "p",
-      "chi"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -18743,19 +18324,6 @@ last_capture_functor__::operator()(const std::vector<int>& y_i,
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(nind),
-                          static_cast<size_t>(n_occ_minus_1)},
-      std::vector<size_t>{static_cast<size_t>(nind),
-                          static_cast<size_t>(n_occ_minus_1)},
-      std::vector<size_t>{static_cast<size_t>(nind),
-                          static_cast<size_t>(n_occasions)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -19317,12 +18885,6 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"mu", "tp", "lbaz", "lbar"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -19344,14 +18906,6 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
-      }};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -20009,13 +19563,6 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"alpha_occ", "beta_occ", "alpha_p",
-      "beta_p", "logit_psi", "logit_p", "occ_fs", "psi_con", "z"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -20038,17 +19585,6 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
-      }, std::vector<size_t>{static_cast<size_t>(R)},
-      std::vector<size_t>{static_cast<size_t>(R), static_cast<size_t>(T)},
-      std::vector<size_t>{}, std::vector<size_t>{static_cast<size_t>(R)},
-      std::vector<size_t>{static_cast<size_t>(R)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -20778,13 +20314,6 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"beta", "eta1", "eta2", "mu_a1",
-      "mu_a2", "sigma_a1", "sigma_a2", "sigma_y", "a1", "a2", "y_hat"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -20804,18 +20333,6 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(J)},
-      std::vector<size_t>{static_cast<size_t>(J)}, std::vector<size_t>{
-      }, std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
-      }, std::vector<size_t>{}, std::vector<size_t>{static_cast<size_t>(J)},
-      std::vector<size_t>{static_cast<size_t>(J)},
-      std::vector<size_t>{static_cast<size_t>(N)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -21757,13 +21274,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"theta", "phi", "x_matrix",
-      "x_vector", "x_cov"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -21780,16 +21290,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(2)},
-      std::vector<size_t>{static_cast<size_t>(2)},
-      std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(2)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -22435,13 +21935,6 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"a", "beta", "mu_a", "sigma_a",
-      "sigma_y", "y_hat"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -22461,17 +21954,6 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
-                                                                   static_cast<size_t>(n_pair)
-                                                                   },
-      std::vector<size_t>{static_cast<size_t>(2)}, std::vector<size_t>{
-      }, std::vector<size_t>{}, std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(N)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -22986,12 +22468,6 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"m2", "m3"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -23007,17 +22483,6 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
-                                                                   static_cast<size_t>(10)
-                                                                   ,
-                                                                   static_cast<size_t>(10)
-                                                                   },
-      std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -23644,13 +23109,6 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"alpha0", "alpha1", "alpha2",
-      "alpha12", "tau", "b", "sigma"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -23670,16 +23128,6 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
-      }, std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(I), static_cast<size_t>(K)},
-      std::vector<size_t>{}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -24104,12 +23552,6 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"param", "local"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -24128,13 +23570,6 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(5)}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -24542,13 +23977,6 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"y", "no_init", "init_from_param",
-      "dependent_no_init", "used_on_lhs", "no_init_if", "for_loop_var"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -24568,15 +23996,6 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
-      }, std::vector<size_t>{}, std::vector<size_t>{},
-      std::vector<size_t>{}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -24951,12 +24370,6 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"x"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -24975,12 +24388,6 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,

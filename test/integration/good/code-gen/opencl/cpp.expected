@@ -7188,13 +7188,6 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"p_real", "p_real_array", "p_matrix",
-      "p_vector", "p_row_vector", "y_p", "transformed_param_real"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -7214,18 +7207,6 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(d_int)},
-      std::vector<size_t>{static_cast<size_t>(d_int),
-                          static_cast<size_t>(d_int)},
-      std::vector<size_t>{static_cast<size_t>(d_int)},
-      std::vector<size_t>{static_cast<size_t>(d_int)}, std::vector<size_t>{
-      }, std::vector<size_t>{}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
@@ -7950,13 +7931,6 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     }
     } // transform_inits_impl() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__ = std::vector<std::string>{"p_real", "p_real_array", "p_matrix",
-      "p_vector", "p_row_vector", "y_p", "transformed_param_real"};
-    
-    } // get_param_names() 
-    
   inline void get_param_names(std::vector<std::string>& names__,
                               const bool emit_transformed_parameters__ = true,
                               const bool emit_generated_quantities__ = true) const {
@@ -7976,18 +7950,6 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     }
     
     } // get_param_names() 
-    
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
-      std::vector<size_t>{static_cast<size_t>(d_int)},
-      std::vector<size_t>{static_cast<size_t>(d_int),
-                          static_cast<size_t>(d_int)},
-      std::vector<size_t>{static_cast<size_t>(d_int)},
-      std::vector<size_t>{static_cast<size_t>(d_int)}, std::vector<size_t>{
-      }, std::vector<size_t>{}};
-    
-    } // get_dims() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__,
                        const bool emit_transformed_parameters__ = true,
