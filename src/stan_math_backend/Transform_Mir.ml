@@ -27,7 +27,11 @@ let rec change_kwrds_stmts s =
     | Assignment (lhs, t, e2) ->
         Assignment
           (Stmt.Helpers.map_lhs_variable ~f:add_prefix_to_kwrds lhs, t, e2)
-    | For e -> For {e with loopvar= add_prefix_to_kwrds e.loopvar}
+    | For e ->
+        For
+          { e with
+            loopvar= add_prefix_to_kwrds e.loopvar
+          ; body= change_kwrds_stmts e.body }
     | x -> map Fn.id change_kwrds_stmts x in
   {s with pattern}
 
