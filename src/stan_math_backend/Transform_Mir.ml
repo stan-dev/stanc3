@@ -26,7 +26,11 @@ let rec change_kwrds_stmts s =
         NRFunApp (UserDefined (add_prefix_to_kwrds s, sfx), e)
     | Assignment ((s, t, e1), e2) ->
         Assignment ((add_prefix_to_kwrds s, t, e1), e2)
-    | For e -> For {e with loopvar= add_prefix_to_kwrds e.loopvar}
+    | For e ->
+        For
+          { e with
+            loopvar= add_prefix_to_kwrds e.loopvar
+          ; body= change_kwrds_stmts e.body }
     | x -> map Fn.id change_kwrds_stmts x in
   {s with pattern}
 
