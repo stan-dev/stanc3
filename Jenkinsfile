@@ -568,7 +568,7 @@ pipeline {
                                 opam update || true
                                 bash -x scripts/install_build_deps.sh
                                 dune subst
-                                dune build @install
+                                dune build @install --root=.
                             """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
                             stash name:'mac-exe', includes:'bin/*'
@@ -596,7 +596,7 @@ pipeline {
                                 opam update || true
                                 bash -x scripts/install_build_deps.sh
                                 dune subst
-                                dune build @install
+                                dune build @install --root=.
                             """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
                             stash name:'mac-exe', includes:'bin/*'
@@ -626,7 +626,7 @@ pipeline {
                             runShell("""
                                 eval \$(opam env)
                                 dune subst
-                                dune build --profile release src/stancjs
+                                dune build --root=. --profile release src/stancjs
                             """)
                             sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
                             sh "mv `find _build -name index.html` bin/load_stanc.html"
@@ -657,7 +657,7 @@ pipeline {
                             runShell("""
                                 eval \$(opam env)
                                 dune subst
-                                dune build @install --profile static
+                                dune build @install --profile static --root=.
                             """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
                             stash name:'linux-exe', includes:'bin/*'
@@ -876,7 +876,7 @@ pipeline {
                             runShell("""
                                 eval \$(opam env)
                                 dune subst
-                                dune build -x windows
+                                dune build -x windows --root=.
                             """)
                             sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
                             stash name:'windows-exe', includes:'bin/*'
