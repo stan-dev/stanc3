@@ -994,7 +994,6 @@ pipeline {
     post {
        always {
           script {
-            runShell("rm -rf ${env.WORKSPACE}/*")
             utils.mailBuildResults()
           }
         }
