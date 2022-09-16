@@ -195,15 +195,12 @@ pipeline {
                         }
                     }
                     steps {
-                        dir("${env.WORKSPACE}/dune-tests"){
-                            unstash "Stanc3Setup"
-                            runShell("""
-                                eval \$(opam env)
-                                dune runtest
-                            """)
-                        }
+                        unstash "Stanc3Setup"
+                        runShell("""
+                            eval \$(opam env)
+                            dune runtest
+                        """)
                     }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/dune-tests/*") }}
                 }
                 stage("stancjs tests") {
                     agent {
@@ -214,15 +211,12 @@ pipeline {
                         }
                     }
                     steps {
-                        dir("${env.WORKSPACE}/stancjs-tests"){
-                            unstash "Stanc3Setup"
-                            runShell("""
-                                eval \$(opam env)
-                                dune build @runjstest
-                            """)
-                        }
+                        unstash "Stanc3Setup"
+                        runShell("""
+                            eval \$(opam env)
+                            dune build @runjstest
+                        """)
                     }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/stancjs-tests/*") }}
                 }
             }
         }
@@ -999,7 +993,9 @@ pipeline {
     }
     post {
        always {
-          script {utils.mailBuildResults()}
+          script {
+            utils.mailBuildResults()
+          }
         }
     }
 }
