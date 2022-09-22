@@ -8829,6 +8829,10 @@ program: DATABLOCK LBRACE REAL IDENTIFIER LBRACK IDENTIFIER RBRACK ASSIGN UNREAC
 Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
 after variable declaration.
 
+program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA INT WHILE
+## Concrete syntax: model { real foo , int while
+program: DATABLOCK LBRACE REAL IDENTIFIER COMMA INT WHILE
+## Concrete syntax: data { real foo , int while
 program: DATABLOCK LBRACE REAL IDENTIFIER COMMA UNREACHABLE
 ## Concrete syntax: data { real foo , <<<<UNREACHABLE>>>
 program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA UNREACHABLE
@@ -8843,7 +8847,8 @@ program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA UNREACHABLE
 ## id_and_optional_assignment(expression) COMMA
 ##
 
-Expected identifier after comma in multiple declaration.
+Expected a new identifier after comma in declaration.
+All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
 
 program: TRANSFORMEDDATABLOCK LBRACE REAL IDENTIFIER LBRACK ARRAY RBRACK ASSIGN ARRAY COMMA
 ## Concrete syntax: transformed data { real foo [ array ] = array ,
@@ -9042,22 +9047,6 @@ program: TRANSFORMEDDATABLOCK LBRACE ARRAY IDENTIFIER
 ##
 
 Expected "[" array sizes "]" followed by type after "array".
-
-program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA INT WHILE
-## Concrete syntax: model { real foo , int while
-program: DATABLOCK LBRACE REAL IDENTIFIER COMMA INT WHILE
-##
-## Concrete syntax: data { real foo , int while
-##
-## Ends in an error in state: 748.
-##
-## id_and_optional_assignment(no_assign) -> decl_identifier . optional_assignment(no_assign) [ SEMICOLON COMMA ]
-##
-## The known suffix of the stack is as follows:
-## decl_identifier
-##
-
-Expected identifier. Multiple declarations must have the same type.
 
 functions_only: ARRAY LBRACK RBRACK WHILE
 ##
