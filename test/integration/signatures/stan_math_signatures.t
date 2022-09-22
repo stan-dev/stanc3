@@ -3740,6 +3740,10 @@ Display all Stan math signatures exposed in the language
   columns_dot_self(complex_vector) => complex_row_vector
   columns_dot_self(complex_row_vector) => complex_row_vector
   columns_dot_self(complex_matrix) => complex_row_vector
+  complex_schur_decompose_t(matrix) => complex_matrix
+  complex_schur_decompose_t(complex_matrix) => complex_matrix
+  complex_schur_decompose_u(matrix) => complex_matrix
+  complex_schur_decompose_u(complex_matrix) => complex_matrix
   conj(complex) => complex
   cos(int) => real
   cos(real) => real

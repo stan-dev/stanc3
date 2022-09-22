@@ -1536,7 +1536,8 @@ Syntax error in 'matrix_expr_bad3.stan', line 2, column 40 to column 41, parsing
      4:  model {
    -------------------------------------------------
 
-Expected identifier after comma in multiple declaration.
+Expected a new identifier after comma in declaration.
+All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
   $ ../../../../install/default/bin/stanc matrix_expr_bad4.stan
 Syntax error in 'matrix_expr_bad4.stan', line 2, column 44 to column 45, parsing error:
    -------------------------------------------------
