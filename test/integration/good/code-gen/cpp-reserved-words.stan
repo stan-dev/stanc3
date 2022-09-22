@@ -1,7 +1,9 @@
 functions {
   void alignas(int asm){}
   void alignof(int char){}
-  void and(int STAN_MAJOR){}
+  int and(int STAN_MAJOR){
+    return STAN_MAJOR;
+  }
   void and_eq(real STAN_MINOR){}
   void asm(vector class){}
   void bitand(int constexpr){}
@@ -65,7 +67,7 @@ model {
   real thread_local;
 }
 
-generated quantities {  
+generated quantities {
   real throw;
   real try;
   real typeid;
@@ -79,10 +81,14 @@ generated quantities {
   real xor;
   real xor_eq;
   real fvar;
-  real STAN_MAJOR;
-  real STAN_MINOR;
-  real STAN_PATCH;
   real STAN_MATH_MAJOR;
   real STAN_MATH_MINOR;
   real STAN_MATH_PATCH;
+
+  for(STAN_MAJOR in 1:2){
+    int STAN_MINOR = 3;
+    int STAN_PATCH = STAN_MINOR;
+    alignas(STAN_PATCH);
+    STAN_MINOR=and(STAN_PATCH);
+  }
 }
