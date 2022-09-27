@@ -102,7 +102,7 @@ pipeline {
                         checkout([
                           $class: 'GitSCM',
                           branches: scm.branches,
-                          extensions: scm.extensions + [[$class: 'CloneOption', noTags: false]],
+                          extensions: [[$class: 'CloneOption', noTags: false]],
                           userRemoteConfigs: scm.userRemoteConfigs,
                         ])
                     }
