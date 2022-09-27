@@ -91,7 +91,8 @@ pipeline {
         stage('Verify changes') {
             agent {
                 docker {
-                    image 'stanorg/ci:gpu'
+                    image 'stanorg/stanc3:debianfi'
+                    args "--entrypoint=\'\'"
                     label 'linux'
                 }
             }
