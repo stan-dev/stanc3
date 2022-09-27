@@ -567,7 +567,7 @@ pipeline {
                                 eval \$(opam env --switch=4.12.0)
                                 opam update || true
                                 bash -x scripts/install_build_deps.sh
-                                dune subst
+                                dune subst --root=.
                                 dune build @install --root=.
                             """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
@@ -595,7 +595,7 @@ pipeline {
                                 eval \$(opam env --switch=4.12.0)
                                 opam update || true
                                 bash -x scripts/install_build_deps.sh
-                                dune subst
+                                dune subst --root=.
                                 dune build @install --root=.
                             """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
@@ -625,7 +625,7 @@ pipeline {
                             unstash "Stanc3Setup"
                             runShell("""
                                 eval \$(opam env)
-                                dune subst
+                                dune subst --root=.
                                 dune build --root=. --profile release src/stancjs
                             """)
                             sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
@@ -656,7 +656,7 @@ pipeline {
                             unstash "Stanc3Setup"
                             runShell("""
                                 eval \$(opam env)
-                                dune subst
+                                dune subst --root=.
                                 dune build @install --profile static --root=.
                             """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
@@ -687,7 +687,7 @@ pipeline {
                             unstash "Stanc3Setup"
                             runShell("""
                                 eval \$(opam env)
-                                dune subst
+                                dune subst --root=.
                             """)
                             sh "bash -x scripts/build_multiarch_stanc3.sh mips64el"
 
@@ -720,7 +720,7 @@ pipeline {
                             unstash "Stanc3Setup"
                             runShell("""
                                 eval \$(opam env)
-                                dune subst
+                                dune subst --root=.
                             """)
                             sh "bash -x scripts/build_multiarch_stanc3.sh ppc64el"
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
@@ -751,7 +751,7 @@ pipeline {
                             unstash "Stanc3Setup"
                             runShell("""
                                 eval \$(opam env)
-                                dune subst
+                                dune subst --root=.
                             """)
                             sh "bash -x scripts/build_multiarch_stanc3.sh s390x"
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
@@ -782,7 +782,7 @@ pipeline {
                             unstash "Stanc3Setup"
                             runShell("""
                                 eval \$(opam env)
-                                dune subst
+                                dune subst --root=.
                             """)
                             sh "bash -x scripts/build_multiarch_stanc3.sh arm64"
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
@@ -813,7 +813,7 @@ pipeline {
                             unstash "Stanc3Setup"
                             runShell("""
                                 eval \$(opam env)
-                                dune subst
+                                dune subst --root=.
                             """)
                             sh "bash -x scripts/build_multiarch_stanc3.sh armhf"
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
@@ -844,7 +844,7 @@ pipeline {
                             unstash "Stanc3Setup"
                             runShell("""
                                 eval \$(opam env)
-                                dune subst
+                                dune subst --root=.
                             """)
                             sh "bash -x scripts/build_multiarch_stanc3.sh armel"
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
@@ -875,7 +875,7 @@ pipeline {
                             unstash "Stanc3Setup"
                             runShell("""
                                 eval \$(opam env)
-                                dune subst
+                                dune subst --root=.
                                 dune build -x windows --root=.
                             """)
                             sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
