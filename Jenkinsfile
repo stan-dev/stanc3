@@ -98,8 +98,16 @@ pipeline {
             }
             steps {
                 script {
-                    retry(3) { checkout scm }
+                    retry(3) {
+                        checkout([
+                          $class: 'GitSCM',
+                          branches: scm.branches,
+                          extensions: [[$class: 'CloneOption', noTags: false]],
+                          userRemoteConfigs: scm.userRemoteConfigs,
+                        ])
+                    }
                     sh 'git clean -xffd'
+
                     runShell """
                         eval \$(opam env)
                         dune subst
