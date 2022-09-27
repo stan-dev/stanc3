@@ -850,6 +850,10 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/windows"){
                             unstash "Stanc3Setup"
+                            runShell("""
+                                eval \$(opam env)
+                                dune build -x windows --root=.
+                            """)
                             sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
                             stash name:'windows-exe', includes:'bin/*'
                         }
