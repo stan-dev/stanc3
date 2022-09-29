@@ -634,7 +634,8 @@ let gen_transform_inits {Program.output_vars; _} =
     List.filter_map ~f:get_constrained_param_st output_vars in
   let names_array =
     VarDef
-      (make_var_defn ~constexpr:true ~type_:(Types.str_array list_len)
+      (make_var_defn ~constexpr:true
+         ~type_:(Types.const_char_array list_len)
          ~name:"names__"
          ~init:
            (InitalizerList

@@ -36,7 +36,7 @@ module Types = struct
   let string = Type_literal "std::string"
   let size_t = Type_literal "size_t"
   let const_ref t = Const (Ref t)
-  let str_array i = Array (Const (Pointer (Type_literal "char")), i)
+  let const_char_array i = Array (Const (Pointer (Type_literal "char")), i)
 end
 
 type operator =
@@ -596,7 +596,7 @@ module Tests = struct
   let%expect_test "types" =
     let ts =
       let open Types in
-      [ matrix (complex local_scalar); str_array 43
+      [ matrix (complex local_scalar); const_char_array 43
       ; std_vector (std_vector Double); const_ref (TemplateType "T0__") ] in
     let open Fmt in
     pf stdout "@[<v>%a@]" (list ~sep:comma Printing.pp_type_) ts ;

@@ -39,7 +39,7 @@ let gen_globals location_list =
        |> List.map ~f:(fun x -> " (in " ^ Location_span.to_string x ^ ")") )
     |> List.map ~f:Exprs.literal_string in
   let location_count = List.length location_list in
-  let arr_type = Types.str_array location_count in
+  let arr_type = Types.const_char_array location_count in
   [ TopVarDef
       (make_var_defn ~type_:(Type_literal "stan::math::profile_map")
          ~name:"profiles__" () )
