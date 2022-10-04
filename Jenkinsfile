@@ -574,7 +574,7 @@ pipeline {
                             withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
                                 runShell("""
                                     export PATH=/Users/jenkins/brew/bin:\$PATH
-                                    eval \$(opam env --switch=4.12.0 --set-switch)
+                                    eval \$(opam env --switch=/Users/jenkins/.opam/4.12.0-mac10.11 --set-switch)
                                     opam update || true
                                     bash -x scripts/install_build_deps.sh
                                     dune build @install --root=.
@@ -582,6 +582,7 @@ pipeline {
                             }
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
                             stash name:'mac-exe', includes:'bin/*'
+                            archiveArtifacts artifacts: 'bin/*'
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/osx/*") }}
