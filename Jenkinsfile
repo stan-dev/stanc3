@@ -191,6 +191,7 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*") }}
         }
+
         stage("OCaml tests") {
             when {
                 beforeAgent true
@@ -570,14 +571,15 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/osx"){
                             unstash "Stanc3Setup"
-                            runShell("""
-                                export PATH=/Users/jenkins/brew/bin:\$PATH
-                                opam switch 4.12.0
-                                eval \$(opam env --switch=4.12.0)
-                                opam update || true
-                                bash -x scripts/install_build_deps.sh
-                                dune build @install --root=.
-                            """)
+                            withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
+                                runShell("""
+                                    export PATH=/Users/jenkins/brew/bin:\$PATH
+                                    eval \$(opam env --switch=/Users/jenkins/.opam/4.12.0-mac10.11 --set-switch)
+                                    opam update || true
+                                    bash -x scripts/install_build_deps.sh
+                                    dune build @install --root=.
+                                """)
+                            }
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
                             stash name:'mac-exe', includes:'bin/*'
                         }
@@ -837,6 +839,7 @@ pipeline {
                     }
                     post {always { runShell("rm -rf ${env.WORKSPACE}/windows/*")}}
                 }
+
             }
         }
 
