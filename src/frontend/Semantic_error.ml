@@ -677,7 +677,7 @@ let invalid_sampling_cdf_or_ccdf loc name =
 let invalid_sampling_no_such_dist loc name =
   StatementError (loc, StatementError.InvalidSamplingNoSuchDistribution name)
 
-let target_plusequals_outisde_model_or_logprob loc =
+let target_plusequals_outside_model_or_logprob loc =
   StatementError (loc, StatementError.TargetPlusEqualsOutsideModelOrLogProb)
 
 let invalid_truncation_cdf_or_ccdf loc =
@@ -695,7 +695,7 @@ let continue_outside_loop loc =
 let expression_return_outside_returning_fn loc =
   StatementError (loc, StatementError.ExpressionReturnOutsideReturningFn)
 
-let void_ouside_nonreturning_fn loc =
+let void_outside_nonreturning_fn loc =
   StatementError (loc, StatementError.VoidReturnOutsideNonReturningFn)
 
 let non_data_variable_size_decl loc =

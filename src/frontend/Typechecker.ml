@@ -437,7 +437,7 @@ let verify_fn_target_plus_equals cf loc id =
     && not
          ( cf.in_lp_fun_def || cf.current_block = Model
          || cf.current_block = TParam )
-  then Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
+  then Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
 (** Rng functions cannot be used in Tp or Model and only
     in function defs with the right suffix
@@ -864,7 +864,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
           ( cf.in_lp_fun_def || cf.current_block = Model
           || cf.current_block = TParam )
       then
-        Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
+        Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
       else
         mk_typed_expression ~expr:GetLP
           ~ad_level:(calculate_autodifftype cf cf.current_block UReal)
@@ -876,7 +876,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
           ( cf.in_lp_fun_def || cf.current_block = Model
           || cf.current_block = TParam )
       then
-        Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
+        Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
       else
         mk_typed_expression ~expr:GetTarget
           ~ad_level:(calculate_autodifftype cf cf.current_block UReal)
@@ -924,7 +924,7 @@ let verify_nrfn_target loc cf id =
     && not
          ( cf.in_lp_fun_def || cf.current_block = Model
          || cf.current_block = TParam )
-  then Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
+  then Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
 let check_nrfn loc tenv id es =
   match Env.find tenv id.name with
@@ -1084,7 +1084,7 @@ let verify_target_pe_expr_type loc e =
 
 let verify_target_pe_usage loc cf =
   if cf.in_lp_fun_def || cf.current_block = Model then ()
-  else Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
+  else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
 let check_target_pe loc cf tenv e =
   let te = check_expression cf tenv e in
@@ -1117,7 +1117,7 @@ let verify_sampling_cdf_ccdf loc id =
 (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
 let verify_valid_sampling_pos loc cf =
   if cf.in_lp_fun_def || cf.current_block = Model then ()
-  else Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
+  else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
 let verify_sampling_distribution loc tenv id arguments =
   let name = id.name in
@@ -1222,7 +1222,7 @@ let check_return loc cf tenv e =
 
 let check_returnvoid loc cf =
   if (not cf.in_fun_def) || cf.in_returning_fun_def then
-    Semantic_error.void_ouside_nonreturning_fn loc |> error
+    Semantic_error.void_outside_nonreturning_fn loc |> error
   else mk_typed_statement ~stmt:ReturnVoid ~return_type:(Complete Void) ~loc
 
 let check_printable cf tenv = function
