@@ -1575,7 +1575,7 @@ and get_fn_decl_or_defn loc tenv id arg_tys rt body =
   match body with
   | {stmt= Skip; _} ->
       if exists_matching_fn_declared tenv id arg_tys rt then
-        Semantic_error.fn_decl_without_def loc |> error
+        Semantic_error.fn_decl_without_def loc id.name true |> error
       else `UserDeclared id.id_loc
   | _ -> `UserDefined
 
@@ -1728,14 +1728,14 @@ let verify_fun_def_body_in_block = function
   | _ -> ()
 
 let verify_functions_have_defn tenv function_block_stmts_opt =
-  let error_on_undefined funs =
+  let error_on_undefined name funs =
     List.iter funs ~f:(fun f ->
         match f with
         | Env.{kind= `UserDeclared loc; _} ->
-            Semantic_error.fn_decl_without_def loc |> error
+            Semantic_error.fn_decl_without_def loc name false |> error
         | _ -> () ) in
   if !check_that_all_functions_have_definition then
-    Env.iter tenv error_on_undefined ;
+    Env.iteri tenv error_on_undefined ;
   match function_block_stmts_opt with
   | Some {stmts= []; _} | None -> ()
   | Some {stmts= ls; _} -> List.iter ~f:verify_fun_def_body_in_block ls

@@ -364,7 +364,7 @@ module StatementError = struct
         string * UnsizedType.returntype * UnsizedType.returntype
     | FuncDeclRedefined of string * UnsizedType.t * bool
     | FunDeclExists of string
-    | FunDeclNoDefn
+    | FunDeclNoDefn of string * bool
     | FunDeclNeedsBlock
     | NonRealProbFunDef
     | ProbDensityNonRealVariate of UnsizedType.t option
@@ -442,14 +442,16 @@ module StatementError = struct
     | FuncDeclRedefined (name, ut, stan_math) ->
         Fmt.pf ppf "Function '%s' %s signature %a" name
           ( if stan_math then "is already declared in the Stan Math library with"
-          else "has already been declared to for" )
+          else "has already been declared for" )
           UnsizedType.pp ut
     | FunDeclExists name ->
         Fmt.pf ppf
           "Function '%s' has already been declared. A definition is expected."
           name
-    | FunDeclNoDefn ->
-        Fmt.pf ppf "Function is declared without specifying a definition."
+    | FunDeclNoDefn (name, redeclaration) ->
+        Fmt.pf ppf
+          "Function '%s' is %sdeclared without specifying a definition." name
+          (if redeclaration then "re-" else "")
     | FunDeclNeedsBlock ->
         Fmt.pf ppf "Function definitions must be wrapped in curly braces."
     | NonRealProbFunDef ->
@@ -715,7 +717,8 @@ let fn_decl_redefined loc name ~stan_math ut =
 let fn_decl_exists loc name =
   StatementError (loc, StatementError.FunDeclExists name)
 
-let fn_decl_without_def loc = StatementError (loc, StatementError.FunDeclNoDefn)
+let fn_decl_without_def loc name previous =
+  StatementError (loc, StatementError.FunDeclNoDefn (name, previous))
 
 let fn_decl_needs_block loc =
   StatementError (loc, StatementError.FunDeclNeedsBlock)
