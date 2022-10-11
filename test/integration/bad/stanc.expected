@@ -1398,7 +1398,7 @@ Semantic error in 'functions-bad8.stan', line 3, column 2 to column 18:
      4:  }
    -------------------------------------------------
 
-Function 'bar' is re-declared without specifying a definition.
+Function 'bar' has already been declared. A definition is expected.
   $ ../../../../install/default/bin/stanc functions-bad9.stan
 Semantic error in 'functions-bad9.stan', line 2, column 7 to column 10:
    -------------------------------------------------
