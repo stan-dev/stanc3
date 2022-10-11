@@ -364,7 +364,7 @@ module StatementError = struct
         string * UnsizedType.returntype * UnsizedType.returntype
     | FuncDeclRedefined of string * UnsizedType.t * bool
     | FunDeclExists of string
-    | FunDeclNoDefn of string * bool
+    | FunDeclNoDefn of string
     | FunDeclNeedsBlock
     | NonRealProbFunDef
     | ProbDensityNonRealVariate of UnsizedType.t option
@@ -448,10 +448,9 @@ module StatementError = struct
         Fmt.pf ppf
           "Function '%s' has already been declared. A definition is expected."
           name
-    | FunDeclNoDefn (name, redeclaration) ->
-        Fmt.pf ppf
-          "Function '%s' is %sdeclared without specifying a definition." name
-          (if redeclaration then "re-" else "")
+    | FunDeclNoDefn name ->
+        Fmt.pf ppf "Function '%s' is declared without specifying a definition."
+          name
     | FunDeclNeedsBlock ->
         Fmt.pf ppf "Function definitions must be wrapped in curly braces."
     | NonRealProbFunDef ->
@@ -717,8 +716,8 @@ let fn_decl_redefined loc name ~stan_math ut =
 let fn_decl_exists loc name =
   StatementError (loc, StatementError.FunDeclExists name)
 
-let fn_decl_without_def loc name previous =
-  StatementError (loc, StatementError.FunDeclNoDefn (name, previous))
+let fn_decl_without_def loc name =
+  StatementError (loc, StatementError.FunDeclNoDefn name)
 
 let fn_decl_needs_block loc =
   StatementError (loc, StatementError.FunDeclNeedsBlock)
