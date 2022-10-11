@@ -1399,6 +1399,17 @@ Semantic error in 'functions-bad8.stan', line 3, column 2 to column 18:
    -------------------------------------------------
 
 Function 'bar' is re-declared without specifying a definition.
+  $ ../../../../install/default/bin/stanc functions-bad9.stan
+Semantic error in 'functions-bad9.stan', line 2, column 7 to column 10:
+   -------------------------------------------------
+     1:  functions {
+     2:    void bar(int x);
+                ^
+     3:    void bar(int x, real y);
+     4:  }
+   -------------------------------------------------
+
+Function 'bar' is declared without specifying a definition.
   $ ../../../../install/default/bin/stanc get-lp-target-data.stan
 Semantic error in 'get-lp-target-data.stan', line 2, column 19 to column 27:
    -------------------------------------------------

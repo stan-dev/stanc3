@@ -1729,7 +1729,7 @@ let verify_fun_def_body_in_block = function
 
 let verify_functions_have_defn tenv function_block_stmts_opt =
   let error_on_undefined name funs =
-    List.iter funs ~f:(fun f ->
+    List.iter (List.rev funs) ~f:(fun f ->
         match f with
         | Env.{kind= `UserDeclared loc; _} ->
             Semantic_error.fn_decl_without_def loc name false |> error
