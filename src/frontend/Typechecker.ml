@@ -815,6 +815,29 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                 "If you intended matrix exponentiation, use the function \
                  matrix_power(matrix,int) instead." in
             add_warning x.emeta.loc s
+        | _ when Operator.is_cmp op -> (
+          match le.expr with
+          | BinOp (e1, op2, e2) when Operator.is_cmp op2 ->
+              let pp_e = Pretty_printing.pp_typed_expression in
+              let pp = Operator.pp in
+              add_warning loc
+                (Fmt.str
+                   "Found %a. This is interpreted as %a. Consider if the \
+                    intended meaning was %a instead.@ You can silence this \
+                    warning by adding explicit parenthesis. This can be \
+                    automatically changed using the canonicalize flag for \
+                    stanc"
+                   (fun ppf () ->
+                     Fmt.pf ppf "@[<hov>%a %a %a@]" pp_e le pp op2 pp_e re )
+                   ()
+                   (fun ppf () ->
+                     Fmt.pf ppf "@[<hov>(%a) %a %a@]" pp_e le pp op2 pp_e re )
+                   ()
+                   (fun ppf () ->
+                     Fmt.pf ppf "@[<hov>%a %a %a && %a %a %a@]" pp_e e1 pp op
+                       pp_e e2 pp_e e2 pp op2 pp_e re )
+                   () )
+          | _ -> () )
         | _ -> () in
       binop_type_warnings le re ; check_binop loc op le re
   | PrefixOp (op, e) -> ce e |> check_prefixop loc op
@@ -1199,7 +1222,7 @@ let check_return loc cf tenv e =
 
 let check_returnvoid loc cf =
   if (not cf.in_fun_def) || cf.in_returning_fun_def then
-    Semantic_error.void_ouside_nonreturning_fn loc |> error
+    Semantic_error.void_outside_nonreturning_fn loc |> error
   else mk_typed_statement ~stmt:ReturnVoid ~return_type:(Complete Void) ~loc
 
 let check_printable cf tenv = function
@@ -1552,7 +1575,7 @@ and get_fn_decl_or_defn loc tenv id arg_tys rt body =
   match body with
   | {stmt= Skip; _} ->
       if exists_matching_fn_declared tenv id arg_tys rt then
-        Semantic_error.fn_decl_without_def loc |> error
+        Semantic_error.fn_decl_exists loc id.name |> error
       else `UserDeclared id.id_loc
   | _ -> `UserDefined
 
@@ -1705,14 +1728,14 @@ let verify_fun_def_body_in_block = function
   | _ -> ()
 
 let verify_functions_have_defn tenv function_block_stmts_opt =
-  let error_on_undefined funs =
-    List.iter funs ~f:(fun f ->
+  let error_on_undefined name funs =
+    List.iter (List.rev funs) ~f:(fun f ->
         match f with
         | Env.{kind= `UserDeclared loc; _} ->
-            Semantic_error.fn_decl_without_def loc |> error
+            Semantic_error.fn_decl_without_def loc name |> error
         | _ -> () ) in
   if !check_that_all_functions_have_definition then
-    Env.iter tenv error_on_undefined ;
+    Env.iteri tenv error_on_undefined ;
   match function_block_stmts_opt with
   | Some {stmts= []; _} | None -> ()
   | Some {stmts= ls; _} -> List.iter ~f:verify_fun_def_body_in_block ls

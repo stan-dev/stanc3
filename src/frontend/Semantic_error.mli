@@ -130,7 +130,7 @@ val multivariate_truncation : Location_span.t -> t
 val break_outside_loop : Location_span.t -> t
 val continue_outside_loop : Location_span.t -> t
 val expression_return_outside_returning_fn : Location_span.t -> t
-val void_ouside_nonreturning_fn : Location_span.t -> t
+val void_outside_nonreturning_fn : Location_span.t -> t
 val non_data_variable_size_decl : Location_span.t -> t
 val non_int_bounds : Location_span.t -> t
 val complex_transform : Location_span.t -> t
@@ -147,7 +147,7 @@ val fn_decl_redefined :
   Location_span.t -> string -> stan_math:bool -> UnsizedType.t -> t
 
 val fn_decl_exists : Location_span.t -> string -> t
-val fn_decl_without_def : Location_span.t -> t
+val fn_decl_without_def : Location_span.t -> string -> t
 val fn_decl_needs_block : Location_span.t -> t
 val non_real_prob_fn_def : Location_span.t -> t
 val prob_density_non_real_variate : Location_span.t -> UnsizedType.t option -> t

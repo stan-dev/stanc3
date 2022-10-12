@@ -43,15 +43,18 @@ let rec pp_initialize ppf (st, adtype) =
     | SComplex ->
         let scalar = local_scalar (SizedType.to_unsized st) adtype in
         pf ppf "@[<hov 2>std::complex<%s>(%s,@ %s)@]" scalar init_nan init_nan
-    | SComplexVector size
-     |SComplexRowVector size
-     |SVector (_, size)
-     |SRowVector (_, size) ->
+    | SComplexVector size | SComplexRowVector size ->
+        pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a)@]" pp_st (st, adtype) pp_expr
+          size pp_initialize (SComplex, adtype)
+    | SVector (_, size) | SRowVector (_, size) ->
         pf ppf "@[<hov 2>%a::Constant(@,%a,@ %s)@]" pp_st (st, adtype) pp_expr
           size init_nan
-    | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) ->
+    | SMatrix (_, d1, d2) ->
         pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %s)@]" pp_st (st, adtype)
           pp_expr d1 pp_expr d2 init_nan
+    | SComplexMatrix (d1, d2) ->
+        pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %a)@]" pp_st (st, adtype)
+          pp_expr d1 pp_expr d2 pp_initialize (SComplex, adtype)
     | SArray (t, d) ->
         pf ppf "@[<hov 2>%a(@,%a,@ @,%a)@]" pp_st (st, adtype) pp_expr d
           pp_initialize (t, adtype)
@@ -63,15 +66,18 @@ let rec pp_initialize ppf (st, adtype) =
     | SComplex ->
         let scalar = local_scalar (SizedType.to_unsized st) adtype in
         pf ppf "std::complex<%s>(%s, %s)" scalar init_nan init_nan
-    | SVector (AoS, size)
-     |SRowVector (AoS, size)
-     |SComplexVector size
-     |SComplexRowVector size ->
+    | SVector (AoS, size) | SRowVector (AoS, size) ->
         pf ppf "@[<hov 2>%a::Constant(@,%a,@ %s)@]" pp_st (st, adtype) pp_expr
           size init_nan
-    | SMatrix (AoS, d1, d2) | SComplexMatrix (d1, d2) ->
+    | SComplexVector size | SComplexRowVector size ->
+        pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a)@]" pp_st (st, adtype) pp_expr
+          size pp_initialize (SComplex, adtype)
+    | SMatrix (AoS, d1, d2) ->
         pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %s)@]" pp_st (st, adtype)
           pp_expr d1 pp_expr d2 init_nan
+    | SComplexMatrix (d1, d2) ->
+        pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %a)@]" pp_st (st, adtype)
+          pp_expr d1 pp_expr d2 pp_initialize (SComplex, adtype)
     | SVector (SoA, size) ->
         pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
           pp_initialize
@@ -133,17 +139,18 @@ let pp_assign_data ppf
      |SRowVector (_, d)
      |SComplexVector d
      |SComplexRowVector d ->
-        pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a);@]@," decl_id
-          pp_st (st, DataOnly) decl_id pp_expr d
+        pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s_data__.data(), %a);@]@,"
+          decl_id pp_st (st, DataOnly) decl_id pp_expr d
     | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) ->
-        pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a, %a);@]@,"
+        pf ppf
+          "@[<hov 2>new (&%s) Eigen::Map<%a>(%s_data__.data(), %a, %a);@]@,"
           decl_id pp_st (st, DataOnly) decl_id pp_expr d1 pp_expr d2
     | _ -> () in
   let pp_underlying ppf (decl_id, st) =
     match st with
     | SizedType.SVector _ | SRowVector _ | SMatrix _ | SComplexVector _
      |SComplexRowVector _ | SComplexMatrix _ ->
-        pf ppf "%s__" decl_id
+        pf ppf "%s_data__" decl_id
     | SInt | SReal | SComplex | SArray _ -> pf ppf "%s" decl_id in
   pf ppf "@[<hov 2>%a = @,%a;@]@,@[<hov 2>%a@]@," pp_underlying (decl_id, st)
     pp_assign_sized (st, DataOnly, true) pp_placement_new (decl_id, st)
@@ -180,10 +187,10 @@ let%expect_test "set size map mat" =
   |> print_endline ;
   [%expect
     {|
-    dmat__ =
+    dmat_data__ =
       Eigen::Matrix<double, -1, -1>::Constant(2, 3,
         std::numeric_limits<double>::quiet_NaN());
-    new (&dmat) Eigen::Map<Eigen::Matrix<double, -1, -1>>(dmat__.data(), 2, 3); |}]
+    new (&dmat) Eigen::Map<Eigen::Matrix<double, -1, -1>>(dmat_data__.data(), 2, 3); |}]
 
 let%expect_test "set size map int" =
   str "@[<v>%a@]" pp_assign_data ("dint", SInt, true) |> print_endline ;
@@ -216,7 +223,7 @@ let pp_data_decl ppf (vident, ut) =
     match ut with
     | UnsizedType.URowVector | UVector | UMatrix | UComplexRowVector
      |UComplexVector | UComplexMatrix ->
-        pf ppf "%a %s__;" pp_type (DataOnly, ut) vident
+        pf ppf "%a %s_data__;" pp_type (DataOnly, ut) vident
     | _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident )
   | (true, _), _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident
 

@@ -53,6 +53,8 @@ let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
   let acc =
     match stmt.stmt with
     | NRFunApp (StanLib _, f, _) -> (Set.add funs f.name, distrs)
+    | Print _ -> (Set.add funs "print", distrs)
+    | Reject _ -> (Set.add funs "reject", distrs)
     | Tilde {distribution; _} ->
         let possible_names =
           List.map ~f:(( ^ ) distribution.name) Utils.distribution_suffices

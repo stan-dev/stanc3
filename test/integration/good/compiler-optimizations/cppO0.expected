@@ -28,7 +28,7 @@ static constexpr std::array<const char*, 11> locations_array__ =
 class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_deep_dependence_model> {
 
  private:
-  Eigen::Matrix<double, -1, -1> X_d__; 
+  Eigen::Matrix<double, -1, -1> X_d_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, -1>> X_d{nullptr, 0, 0};
  
  public:
@@ -60,10 +60,10 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
       context__.validate_dims("data initialization","X_d","double",
            std::vector<size_t>{static_cast<size_t>(10),
             static_cast<size_t>(10)});
-      X_d__ = 
+      X_d_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      new (&X_d) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d__.data(), 10, 10);
+      new (&X_d) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d_data__.data(), 10, 10);
         
       
       {
@@ -1305,7 +1305,7 @@ static constexpr std::array<const char*, 6> locations_array__ =
 class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> {
 
  private:
-  Eigen::Matrix<double, -1, -1> X_data__; 
+  Eigen::Matrix<double, -1, -1> X_data_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, -1>> X_data{nullptr, 0, 0};
  
  public:
@@ -1337,10 +1337,10 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
       context__.validate_dims("data initialization","X_data","double",
            std::vector<size_t>{static_cast<size_t>(10),
             static_cast<size_t>(10)});
-      X_data__ = 
+      X_data_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      new (&X_data) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_data__.data(), 10, 10);
+      new (&X_data) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_data_data__.data(), 10, 10);
         
       
       {
@@ -2811,7 +2811,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
   std::vector<int> region;
   std::vector<int> state;
   std::vector<int> y;
-  Eigen::Matrix<double, -1, 1> v_prev__; 
+  Eigen::Matrix<double, -1, 1> v_prev_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> v_prev{nullptr, 0};
  
  public:
@@ -2992,10 +2992,10 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       current_statement__ = 59;
       context__.validate_dims("data initialization","v_prev","double",
            std::vector<size_t>{static_cast<size_t>(n_state)});
-      v_prev__ = 
+      v_prev_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(n_state,
           std::numeric_limits<double>::quiet_NaN());
-      new (&v_prev) Eigen::Map<Eigen::Matrix<double, -1, 1>>(v_prev__.data(), n_state);
+      new (&v_prev) Eigen::Map<Eigen::Matrix<double, -1, 1>>(v_prev_data__.data(), n_state);
         
       
       {
@@ -4449,7 +4449,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
 
  private:
   int N;
-  Eigen::Matrix<double, -1, 1> y__; 
+  Eigen::Matrix<double, -1, 1> y_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> y{nullptr, 0};
  
  public:
@@ -4492,10 +4492,10 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       current_statement__ = 11;
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      y__ = 
+      y_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
+      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_data__.data(), N);
       
       {
         std::vector<local_scalar_t__> y_flat__;
@@ -5362,12 +5362,12 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
   int n_state;
   std::vector<int> age;
   std::vector<int> age_edu;
-  Eigen::Matrix<double, -1, 1> black__;
+  Eigen::Matrix<double, -1, 1> black_data__;
   std::vector<int> edu;
-  Eigen::Matrix<double, -1, 1> female__;
+  Eigen::Matrix<double, -1, 1> female_data__;
   std::vector<int> region_full;
   std::vector<int> state;
-  Eigen::Matrix<double, -1, 1> v_prev_full__;
+  Eigen::Matrix<double, -1, 1> v_prev_full_data__;
   std::vector<int> y; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> black{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> female{nullptr, 0};
@@ -5494,10 +5494,10 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 33;
       context__.validate_dims("data initialization","black","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      black__ = 
+      black_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&black) Eigen::Map<Eigen::Matrix<double, -1, 1>>(black__.data(), N);
+      new (&black) Eigen::Map<Eigen::Matrix<double, -1, 1>>(black_data__.data(), N);
         
       
       {
@@ -5538,10 +5538,10 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 37;
       context__.validate_dims("data initialization","female","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      female__ = 
+      female_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&female) Eigen::Map<Eigen::Matrix<double, -1, 1>>(female__.data(), N);
+      new (&female) Eigen::Map<Eigen::Matrix<double, -1, 1>>(female_data__.data(), N);
         
       
       {
@@ -5598,10 +5598,10 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 43;
       context__.validate_dims("data initialization","v_prev_full","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      v_prev_full__ = 
+      v_prev_full_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&v_prev_full) Eigen::Map<Eigen::Matrix<double, -1, 1>>(v_prev_full__.data(), N);
+      new (&v_prev_full) Eigen::Map<Eigen::Matrix<double, -1, 1>>(v_prev_full_data__.data(), N);
         
       
       {
@@ -6349,8 +6349,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
   int N_edges;
   std::vector<int> node1;
   std::vector<int> node2;
-  Eigen::Matrix<double, -1, 1> E__;
-  Eigen::Matrix<double, -1, 1> log_E__;
+  Eigen::Matrix<double, -1, 1> E_data__;
+  Eigen::Matrix<double, -1, 1> log_E_data__;
   int phi_std_raw_1dim__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> E{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> log_E{nullptr, 0};
@@ -6433,10 +6433,10 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 37;
       context__.validate_dims("data initialization","E","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      E__ = 
+      E_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&E) Eigen::Map<Eigen::Matrix<double, -1, 1>>(E__.data(), N);
+      new (&E) Eigen::Map<Eigen::Matrix<double, -1, 1>>(E_data__.data(), N);
       
       {
         std::vector<local_scalar_t__> E_flat__;
@@ -6458,10 +6458,10 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 38;
       stan::math::validate_non_negative_index("log_E", "N", N);
       current_statement__ = 39;
-      log_E__ = 
+      log_E_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&log_E) Eigen::Map<Eigen::Matrix<double, -1, 1>>(log_E__.data(), N);
+      new (&log_E) Eigen::Map<Eigen::Matrix<double, -1, 1>>(log_E_data__.data(), N);
         
       
       current_statement__ = 39;
@@ -9652,7 +9652,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
   int I;
   int J;
   std::vector<std::vector<int>> y;
-  Eigen::Matrix<double, -1, 1> alpha__;
+  Eigen::Matrix<double, -1, 1> alpha_data__;
   std::vector<Eigen::Matrix<double, -1, 1>> beta; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> alpha{nullptr, 0};
  
@@ -9752,10 +9752,10 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       current_statement__ = 29;
       context__.validate_dims("data initialization","alpha","double",
            std::vector<size_t>{static_cast<size_t>(K)});
-      alpha__ = 
+      alpha_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(K,
           std::numeric_limits<double>::quiet_NaN());
-      new (&alpha) Eigen::Map<Eigen::Matrix<double, -1, 1>>(alpha__.data(), K);
+      new (&alpha) Eigen::Map<Eigen::Matrix<double, -1, 1>>(alpha_data__.data(), K);
         
       
       {
@@ -10330,7 +10330,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
   std::vector<int> node1;
   std::vector<int> node2;
   std::vector<int> y;
-  Eigen::Matrix<double, -1, 1> x__; 
+  Eigen::Matrix<double, -1, 1> x_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> x{nullptr, 0};
  
  public:
@@ -10423,10 +10423,10 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       current_statement__ = 21;
       context__.validate_dims("data initialization","x","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      x__ = 
+      x_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&x) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x__.data(), N);
+      new (&x) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x_data__.data(), N);
       
       {
         std::vector<local_scalar_t__> x_flat__;
@@ -11949,7 +11949,7 @@ const
 class function_in_function_inline_model final : public model_base_crtp<function_in_function_inline_model> {
 
  private:
-  Eigen::Matrix<double, -1, 1> phi__; 
+  Eigen::Matrix<double, -1, 1> phi_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> phi{nullptr, 0};
  
  public:
@@ -11980,10 +11980,11 @@ class function_in_function_inline_model final : public model_base_crtp<function_
       current_statement__ = 3;
       context__.validate_dims("data initialization","phi","double",
            std::vector<size_t>{static_cast<size_t>(10)});
-      phi__ = 
+      phi_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(10,
           std::numeric_limits<double>::quiet_NaN());
-      new (&phi) Eigen::Map<Eigen::Matrix<double, -1, 1>>(phi__.data(), 10);
+      new (&phi) Eigen::Map<Eigen::Matrix<double, -1, 1>>(phi_data__.data(), 10);
+        
       
       {
         std::vector<local_scalar_t__> phi_flat__;
@@ -12258,6 +12259,434 @@ stan::model::model_base& new_model(
 
 stan::math::profile_map& get_stan_profile_data() {
   return function_in_function_inline_model_namespace::profiles__;
+}
+
+#endif
+
+
+
+  $ ../../../../../install/default/bin/stanc --print-cpp --O0 function-in-function-loops.stan
+
+// Code generated by %%NAME%% %%VERSION%%
+#include <stan/model/model_header.hpp>
+namespace function_in_function_loops_model_namespace {
+
+using stan::model::model_base_crtp;
+using namespace stan::math;
+
+
+stan::math::profile_map profiles__;
+static constexpr std::array<const char*, 17> locations_array__ = 
+{" (found before start of program)",
+ " (in 'function-in-function-loops.stan', line 25, column 9 to column 10)",
+ " (in 'function-in-function-loops.stan', line 25, column 2 to column 37)",
+ " (in 'function-in-function-loops.stan', line 26, column 2 to column 25)",
+ " (in 'function-in-function-loops.stan', line 27, column 2 to column 16)",
+ " (in 'function-in-function-loops.stan', line 21, column 2 to column 8)",
+ " (in 'function-in-function-loops.stan', line 6, column 6 to column 15)",
+ " (in 'function-in-function-loops.stan', line 4, column 6 to column 15)",
+ " (in 'function-in-function-loops.stan', line 3, column 4 to line 6, column 15)",
+ " (in 'function-in-function-loops.stan', line 2, column 27 to line 7, column 3)",
+ " (in 'function-in-function-loops.stan', line 10, column 4 to column 21)",
+ " (in 'function-in-function-loops.stan', line 11, column 4 to column 25)",
+ " (in 'function-in-function-loops.stan', line 13, column 8 to column 43)",
+ " (in 'function-in-function-loops.stan', line 12, column 21 to line 14, column 5)",
+ " (in 'function-in-function-loops.stan', line 12, column 4 to line 14, column 5)",
+ " (in 'function-in-function-loops.stan', line 15, column 4 to column 23)",
+ " (in 'function-in-function-loops.stan', line 9, column 24 to line 16, column 3)"};
+
+struct do_something_functor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const T0__& x, std::ostream* pstream__) const;
+};
+struct summer_functor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
+  stan::promote_args_t<stan::base_type_t<T0__>>
+  operator()(const T0__& et, std::ostream* pstream__) const;
+};
+
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  do_something(const T0__& x, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<T0__>;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 8;
+      if (stan::math::logical_eq(2, 3)) {
+        current_statement__ = 7;
+        return x;
+      } else {
+        current_statement__ = 6;
+        return x;
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
+  stan::promote_args_t<stan::base_type_t<T0__>>
+  summer(const T0__& et_arg__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
+    int current_statement__ = 0; 
+    const auto& et = stan::math::to_ref(et_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int N = std::numeric_limits<int>::min();
+      current_statement__ = 10;
+      N = stan::math::size(et);
+      local_scalar_t__ running_sum = DUMMY_VAR__;
+      current_statement__ = 11;
+      running_sum = 0;
+      current_statement__ = 14;
+      for (int n = 1; n <= N; ++n) {
+        current_statement__ = 12;
+        running_sum = (running_sum +
+                        do_something(
+                          stan::model::rvalue(et, "et",
+                            stan::model::index_uni(n)), pstream__));
+      }
+      current_statement__ = 15;
+      return running_sum;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
+stan::promote_args_t<T0__>
+do_something_functor__::operator()(const T0__& x, std::ostream* pstream__) 
+const
+{
+  return do_something(x, pstream__);
+}
+
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
+stan::promote_args_t<stan::base_type_t<T0__>>
+summer_functor__::operator()(const T0__& et, std::ostream* pstream__)  const
+{
+  return summer(et, pstream__);
+}
+
+
+class function_in_function_loops_model final : public model_base_crtp<function_in_function_loops_model> {
+
+ private:
+  int N; 
+  
+ 
+ public:
+  ~function_in_function_loops_model() { }
+  
+  inline std::string model_name() const final { return "function_in_function_loops_model"; }
+
+  inline std::vector<std::string> model_compile_info() const noexcept {
+    return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp --O0"};
+  }
+  
+  
+  function_in_function_loops_model(stan::io::var_context& context__,
+                                   unsigned int random_seed__ = 0,
+                                   std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
+    using local_scalar_t__ = double ;
+    boost::ecuyer1988 base_rng__ = 
+        stan::services::util::create_rng(random_seed__, 0);
+    (void) base_rng__;  // suppress unused var warning
+    static constexpr const char* function__ = "function_in_function_loops_model_namespace::function_in_function_loops_model";
+    (void) function__;  // suppress unused var warning
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+      current_statement__ = 5;
+      context__.validate_dims("data initialization","N","int",
+           std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
+      
+      
+      current_statement__ = 5;
+      N = context__.vals_i("N")[(1 - 1)];
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    num_params_r__ = 0U;
+    
+  }
+  
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
+                                                 VecI& params_i__,
+                                                 std::ostream* pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    static constexpr const char* function__ = "function_in_function_loops_model_namespace::log_prob";
+    (void) function__;  // suppress unused var warning
+    
+    try {
+      {
+        current_statement__ = 1;
+        stan::math::validate_non_negative_index("eta", "N", N);
+        Eigen::Matrix<local_scalar_t__, -1, 1> eta =
+           Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
+        current_statement__ = 2;
+        stan::model::assign(eta, stan::math::rep_vector(0.0, N),
+          "assigning variable eta");
+        local_scalar_t__ out = DUMMY_VAR__;
+        current_statement__ = 3;
+        out = summer(eta, pstream__);
+        current_statement__ = 4;
+        lp_accum__.add(out);
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+    } // log_prob_impl() 
+    
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
+                               VecI& params_i__, VecVar& vars__,
+                               const bool emit_transformed_parameters__ = true,
+                               const bool emit_generated_quantities__ = true,
+                               std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    double lp__ = 0.0;
+    (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
+    stan::math::accumulator<double> lp_accum__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    constexpr bool jacobian__ = false;
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    static constexpr const char* function__ = "function_in_function_loops_model_namespace::write_array";
+    (void) function__;  // suppress unused var warning
+    
+    try {
+      if (stan::math::logical_negation((stan::math::primitive_value(
+            emit_transformed_parameters__) || stan::math::primitive_value(
+            emit_generated_quantities__)))) {
+        return ;
+      } 
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      } 
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    } // write_array_impl() 
+    
+  template <typename VecVar, typename VecI, 
+  stan::require_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
+                                   std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    } // transform_inits_impl() 
+    
+  inline void get_param_names(std::vector<std::string>& names__) const {
+    
+    names__ = std::vector<std::string>{};
+    
+    } // get_param_names() 
+    
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+    
+    dimss__ = std::vector<std::vector<size_t>>{};
+    
+    } // get_dims() 
+    
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const
+    final {
+    
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // constrained_param_names() 
+    
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const
+    final {
+    
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // unconstrained_param_names() 
+    
+  inline std::string get_constrained_sizedtypes() const {
+    
+    return std::string("[]");
+    
+    } // get_constrained_sizedtypes() 
+    
+  inline std::string get_unconstrained_sizedtypes() const {
+    
+    return std::string("[]");
+    
+    } // get_unconstrained_sizedtypes() 
+    
+  
+    // Begin method overload boilerplate
+    template <typename RNG>
+    inline void write_array(RNG& base_rng,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                            const bool emit_transformed_parameters = true,
+                            const bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      const size_t num_params__ = 0;
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      std::vector<int> params_i;
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
+        emit_transformed_parameters, emit_generated_quantities, pstream);
+    }
+
+    template <typename RNG>
+    inline void write_array(RNG& base_rng, std::vector<double>& params_r,
+                            std::vector<int>& params_i,
+                            std::vector<double>& vars,
+                            bool emit_transformed_parameters = true,
+                            bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      const size_t num_params__ = 0;
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
+        emit_transformed_parameters, emit_generated_quantities, pstream);
+    }
+
+    template <bool propto__, bool jacobian__, typename T_>
+    inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+                       std::ostream* pstream = nullptr) const {
+      Eigen::Matrix<int, -1, 1> params_i;
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+    }
+
+    template <bool propto__, bool jacobian__, typename T__>
+    inline T__ log_prob(std::vector<T__>& params_r,
+                        std::vector<int>& params_i,
+                        std::ostream* pstream = nullptr) const {
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+    }
+
+
+    inline void transform_inits(const stan::io::var_context& context,
+                         Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
+                         std::ostream* pstream = nullptr) const final {
+      std::vector<double> params_r_vec(params_r.size());
+      std::vector<int> params_i;
+      transform_inits(context, params_i, params_r_vec, pstream);
+      params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
+        params_r_vec.data(), params_r_vec.size());
+    }
+
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+     constexpr std::array<const char*, 0> names__{};
+      const std::array<Eigen::Index, 0> constrain_param_sizes__{};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
+    
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
+       }
+       ++size_iter__;
+     }
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+     }; } 
+using stan_model = function_in_function_loops_model_namespace::function_in_function_loops_model;
+
+#ifndef USING_R
+
+// Boilerplate
+stan::model::model_base& new_model(
+        stan::io::var_context& data_context,
+        unsigned int seed,
+        std::ostream* msg_stream) {
+  stan_model* m = new stan_model(data_context, seed, msg_stream);
+  return *m;
+}
+
+stan::math::profile_map& get_stan_profile_data() {
+  return function_in_function_loops_model_namespace::profiles__;
 }
 
 #endif
@@ -12771,6 +13200,799 @@ stan::model::model_base& new_model(
 
 stan::math::profile_map& get_stan_profile_data() {
   return inline_functions_varmat_model_namespace::profiles__;
+}
+
+#endif
+
+
+
+  $ ../../../../../install/default/bin/stanc --print-cpp --O0 inline-tdata.stan
+
+// Code generated by %%NAME%% %%VERSION%%
+#include <stan/model/model_header.hpp>
+namespace inline_tdata_model_namespace {
+
+using stan::model::model_base_crtp;
+using namespace stan::math;
+
+
+stan::math::profile_map profiles__;
+static constexpr std::array<const char*, 10> locations_array__ = 
+{" (found before start of program)",
+ " (in 'inline-tdata.stan', line 14, column 2 to column 13)",
+ " (in 'inline-tdata.stan', line 18, column 2 to column 32)",
+ " (in 'inline-tdata.stan', line 8, column 3 to column 14)",
+ " (in 'inline-tdata.stan', line 9, column 3 to column 14)",
+ " (in 'inline-tdata.stan', line 10, column 10 to column 11)",
+ " (in 'inline-tdata.stan', line 10, column 12 to column 13)",
+ " (in 'inline-tdata.stan', line 10, column 3 to column 31)",
+ " (in 'inline-tdata.stan', line 3, column 4 to column 31)",
+ " (in 'inline-tdata.stan', line 2, column 26 to line 4, column 3)"};
+
+struct foo_functor__ {
+  Eigen::Matrix<double, -1, -1>
+  operator()(const int& N, const int& M, std::ostream* pstream__) const;
+};
+
+Eigen::Matrix<double, -1, -1>
+  foo(const int& N, const int& M, std::ostream* pstream__) {
+    using local_scalar_t__ = double;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 8;
+      return stan::math::rep_matrix(1, N, M);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+Eigen::Matrix<double, -1, -1>
+foo_functor__::operator()(const int& N, const int& M, std::ostream* pstream__) 
+const
+{
+  return foo(N, M, pstream__);
+}
+
+
+class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
+
+ private:
+  int N;
+  int M;
+  Eigen::Matrix<double, -1, -1> bar_data__; 
+  Eigen::Map<Eigen::Matrix<double, -1, -1>> bar{nullptr, 0, 0};
+ 
+ public:
+  ~inline_tdata_model() { }
+  
+  inline std::string model_name() const final { return "inline_tdata_model"; }
+
+  inline std::vector<std::string> model_compile_info() const noexcept {
+    return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp --O0"};
+  }
+  
+  
+  inline_tdata_model(stan::io::var_context& context__,
+                     unsigned int random_seed__ = 0,
+                     std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
+    using local_scalar_t__ = double ;
+    boost::ecuyer1988 base_rng__ = 
+        stan::services::util::create_rng(random_seed__, 0);
+    (void) base_rng__;  // suppress unused var warning
+    static constexpr const char* function__ = "inline_tdata_model_namespace::inline_tdata_model";
+    (void) function__;  // suppress unused var warning
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+      current_statement__ = 3;
+      N = std::numeric_limits<int>::min();
+      
+      
+      current_statement__ = 3;
+      N = 10;
+      current_statement__ = 4;
+      M = std::numeric_limits<int>::min();
+      
+      
+      current_statement__ = 4;
+      M = 11;
+      current_statement__ = 5;
+      stan::math::validate_non_negative_index("bar", "N", N);
+      current_statement__ = 6;
+      stan::math::validate_non_negative_index("bar", "M", M);
+      current_statement__ = 7;
+      bar_data__ = 
+        Eigen::Matrix<double, -1, -1>::Constant(N, M,
+          std::numeric_limits<double>::quiet_NaN());
+      new (&bar) Eigen::Map<Eigen::Matrix<double, -1, -1>>(bar_data__.data(), N, M);
+        
+      
+      current_statement__ = 7;
+      stan::model::assign(bar, foo(N, M, pstream__), "assigning variable bar");
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    num_params_r__ = 1;
+    
+  }
+  
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
+                                                 VecI& params_i__,
+                                                 std::ostream* pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    static constexpr const char* function__ = "inline_tdata_model_namespace::log_prob";
+    (void) function__;  // suppress unused var warning
+    
+    try {
+      local_scalar_t__ alpha = DUMMY_VAR__;
+      current_statement__ = 1;
+      alpha = in__.template read<local_scalar_t__>();
+      {
+        current_statement__ = 2;
+        lp_accum__.add(
+          stan::math::normal_lpdf<propto__>(stan::math::sum(bar), alpha, 0.1));
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+    } // log_prob_impl() 
+    
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
+                               VecI& params_i__, VecVar& vars__,
+                               const bool emit_transformed_parameters__ = true,
+                               const bool emit_generated_quantities__ = true,
+                               std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    double lp__ = 0.0;
+    (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
+    stan::math::accumulator<double> lp_accum__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    constexpr bool jacobian__ = false;
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    static constexpr const char* function__ = "inline_tdata_model_namespace::write_array";
+    (void) function__;  // suppress unused var warning
+    
+    try {
+      double alpha = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 1;
+      alpha = in__.template read<local_scalar_t__>();
+      out__.write(alpha);
+      if (stan::math::logical_negation((stan::math::primitive_value(
+            emit_transformed_parameters__) || stan::math::primitive_value(
+            emit_generated_quantities__)))) {
+        return ;
+      } 
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      } 
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    } // write_array_impl() 
+    
+  template <typename VecVar, typename VecI, 
+  stan::require_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
+                                   std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+      local_scalar_t__ alpha = DUMMY_VAR__;
+      alpha = in__.read<local_scalar_t__>();
+      out__.write(alpha);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    } // transform_inits_impl() 
+    
+  inline void get_param_names(std::vector<std::string>& names__) const {
+    
+    names__ = std::vector<std::string>{"alpha"};
+    
+    } // get_param_names() 
+    
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{}};
+    
+    } // get_dims() 
+    
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const
+    final {
+    
+    param_names__.emplace_back(std::string() + "alpha");
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // constrained_param_names() 
+    
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const
+    final {
+    
+    param_names__.emplace_back(std::string() + "alpha");
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // unconstrained_param_names() 
+    
+  inline std::string get_constrained_sizedtypes() const {
+    
+    return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+    
+    } // get_constrained_sizedtypes() 
+    
+  inline std::string get_unconstrained_sizedtypes() const {
+    
+    return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+    
+    } // get_unconstrained_sizedtypes() 
+    
+  
+    // Begin method overload boilerplate
+    template <typename RNG>
+    inline void write_array(RNG& base_rng,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                            const bool emit_transformed_parameters = true,
+                            const bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      const size_t num_params__ = 1;
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      std::vector<int> params_i;
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
+        emit_transformed_parameters, emit_generated_quantities, pstream);
+    }
+
+    template <typename RNG>
+    inline void write_array(RNG& base_rng, std::vector<double>& params_r,
+                            std::vector<int>& params_i,
+                            std::vector<double>& vars,
+                            bool emit_transformed_parameters = true,
+                            bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      const size_t num_params__ = 1;
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
+        emit_transformed_parameters, emit_generated_quantities, pstream);
+    }
+
+    template <bool propto__, bool jacobian__, typename T_>
+    inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+                       std::ostream* pstream = nullptr) const {
+      Eigen::Matrix<int, -1, 1> params_i;
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+    }
+
+    template <bool propto__, bool jacobian__, typename T__>
+    inline T__ log_prob(std::vector<T__>& params_r,
+                        std::vector<int>& params_i,
+                        std::ostream* pstream = nullptr) const {
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+    }
+
+
+    inline void transform_inits(const stan::io::var_context& context,
+                         Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
+                         std::ostream* pstream = nullptr) const final {
+      std::vector<double> params_r_vec(params_r.size());
+      std::vector<int> params_i;
+      transform_inits(context, params_i, params_r_vec, pstream);
+      params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
+        params_r_vec.data(), params_r_vec.size());
+    }
+
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+     constexpr std::array<const char*, 1> names__{"alpha"};
+      const std::array<Eigen::Index, 1> constrain_param_sizes__{1};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
+    
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
+       }
+       ++size_iter__;
+     }
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+     }; } 
+using stan_model = inline_tdata_model_namespace::inline_tdata_model;
+
+#ifndef USING_R
+
+// Boilerplate
+stan::model::model_base& new_model(
+        stan::io::var_context& data_context,
+        unsigned int seed,
+        std::ostream* msg_stream) {
+  stan_model* m = new stan_model(data_context, seed, msg_stream);
+  return *m;
+}
+
+stan::math::profile_map& get_stan_profile_data() {
+  return inline_tdata_model_namespace::profiles__;
+}
+
+#endif
+
+
+
+  $ ../../../../../install/default/bin/stanc --print-cpp --O0 inliner-same-names.stan
+
+// Code generated by %%NAME%% %%VERSION%%
+#include <stan/model/model_header.hpp>
+namespace inliner_same_names_model_namespace {
+
+using stan::model::model_base_crtp;
+using namespace stan::math;
+
+
+stan::math::profile_map profiles__;
+static constexpr std::array<const char*, 12> locations_array__ = 
+{" (found before start of program)",
+ " (in 'inliner-same-names.stan', line 16, column 2 to column 14)",
+ " (in 'inliner-same-names.stan', line 17, column 2 to column 16)",
+ " (in 'inliner-same-names.stan', line 18, column 2 to column 15)",
+ " (in 'inliner-same-names.stan', line 13, column 2 to column 8)",
+ " (in 'inliner-same-names.stan', line 16, column 9 to column 10)",
+ " (in 'inliner-same-names.stan', line 17, column 9 to column 10)",
+ " (in 'inliner-same-names.stan', line 5, column 4 to column 30)",
+ " (in 'inliner-same-names.stan', line 7, column 11 to column 13)",
+ " (in 'inliner-same-names.stan', line 7, column 4 to column 22)",
+ " (in 'inliner-same-names.stan', line 9, column 4 to column 15)",
+ " (in 'inliner-same-names.stan', line 2, column 24 to line 10, column 3)"};
+
+struct foo_functor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+  operator()(const T0__& oR, std::ostream* pstream__) const;
+};
+
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+  foo(const T0__& oR_arg__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
+    int current_statement__ = 0; 
+    const auto& oR = stan::math::to_ref(oR_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int ot = std::numeric_limits<int>::min();
+      current_statement__ = 7;
+      ot = stan::math::num_elements(oR);
+      current_statement__ = 8;
+      stan::math::validate_non_negative_index("R", "ot", ot);
+      Eigen::Matrix<local_scalar_t__, -1, 1> R =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(ot, DUMMY_VAR__);
+      current_statement__ = 9;
+      stan::model::assign(R, oR, "assigning variable R");
+      current_statement__ = 10;
+      return R;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+foo_functor__::operator()(const T0__& oR, std::ostream* pstream__)  const
+{
+  return foo(oR, pstream__);
+}
+
+
+class inliner_same_names_model final : public model_base_crtp<inliner_same_names_model> {
+
+ private:
+  int N; 
+  
+ 
+ public:
+  ~inliner_same_names_model() { }
+  
+  inline std::string model_name() const final { return "inliner_same_names_model"; }
+
+  inline std::vector<std::string> model_compile_info() const noexcept {
+    return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp --O0"};
+  }
+  
+  
+  inliner_same_names_model(stan::io::var_context& context__,
+                           unsigned int random_seed__ = 0,
+                           std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
+    using local_scalar_t__ = double ;
+    boost::ecuyer1988 base_rng__ = 
+        stan::services::util::create_rng(random_seed__, 0);
+    (void) base_rng__;  // suppress unused var warning
+    static constexpr const char* function__ = "inliner_same_names_model_namespace::inliner_same_names_model";
+    (void) function__;  // suppress unused var warning
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+      current_statement__ = 4;
+      context__.validate_dims("data initialization","N","int",
+           std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
+      
+      
+      current_statement__ = 4;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 5;
+      stan::math::validate_non_negative_index("R", "N", N);
+      current_statement__ = 6;
+      stan::math::validate_non_negative_index("out", "N", N);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    num_params_r__ = 0U;
+    
+  }
+  
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
+                                                 VecI& params_i__,
+                                                 std::ostream* pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    static constexpr const char* function__ = "inliner_same_names_model_namespace::log_prob";
+    (void) function__;  // suppress unused var warning
+    
+    try {
+      Eigen::Matrix<local_scalar_t__, -1, 1> R =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> out =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
+      current_statement__ = 3;
+      stan::model::assign(out, foo(R, pstream__), "assigning variable out");
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+    } // log_prob_impl() 
+    
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
+                               VecI& params_i__, VecVar& vars__,
+                               const bool emit_transformed_parameters__ = true,
+                               const bool emit_generated_quantities__ = true,
+                               std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    double lp__ = 0.0;
+    (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
+    stan::math::accumulator<double> lp_accum__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    constexpr bool jacobian__ = false;
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    static constexpr const char* function__ = "inliner_same_names_model_namespace::write_array";
+    (void) function__;  // suppress unused var warning
+    
+    try {
+      Eigen::Matrix<double, -1, 1> R =
+         Eigen::Matrix<double, -1, 1>::Constant(N,
+           std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, 1> out =
+         Eigen::Matrix<double, -1, 1>::Constant(N,
+           std::numeric_limits<double>::quiet_NaN());
+      if (stan::math::logical_negation((stan::math::primitive_value(
+            emit_transformed_parameters__) || stan::math::primitive_value(
+            emit_generated_quantities__)))) {
+        return ;
+      } 
+      current_statement__ = 3;
+      stan::model::assign(out, foo(R, pstream__), "assigning variable out");
+      if (emit_transformed_parameters__) {
+        out__.write(R);
+        out__.write(out);
+      } 
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      } 
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    } // write_array_impl() 
+    
+  template <typename VecVar, typename VecI, 
+  stan::require_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
+                                   std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    } // transform_inits_impl() 
+    
+  inline void get_param_names(std::vector<std::string>& names__) const {
+    
+    names__ = std::vector<std::string>{"R", "out"};
+    
+    } // get_param_names() 
+    
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
+                                                                   static_cast<size_t>(N)
+                                                                   },
+      std::vector<size_t>{static_cast<size_t>(N)}};
+    
+    } // get_dims() 
+    
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const
+    final {
+    
+    
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        {
+          param_names__.emplace_back(std::string() + "R" + '.' + std::to_string(sym1__));
+        } 
+      }
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        {
+          param_names__.emplace_back(std::string() + "out" + '.' + std::to_string(sym1__));
+        } 
+      }
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // constrained_param_names() 
+    
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const
+    final {
+    
+    
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        {
+          param_names__.emplace_back(std::string() + "R" + '.' + std::to_string(sym1__));
+        } 
+      }
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        {
+          param_names__.emplace_back(std::string() + "out" + '.' + std::to_string(sym1__));
+        } 
+      }
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // unconstrained_param_names() 
+    
+  inline std::string get_constrained_sizedtypes() const {
+    
+    return std::string("[{\"name\":\"R\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"out\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"}]");
+    
+    } // get_constrained_sizedtypes() 
+    
+  inline std::string get_unconstrained_sizedtypes() const {
+    
+    return std::string("[{\"name\":\"R\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"out\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"}]");
+    
+    } // get_unconstrained_sizedtypes() 
+    
+  
+    // Begin method overload boilerplate
+    template <typename RNG>
+    inline void write_array(RNG& base_rng,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                            const bool emit_transformed_parameters = true,
+                            const bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      const size_t num_params__ = 0;
+      const size_t num_transformed = emit_transformed_parameters * 
+  (N + N);
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      std::vector<int> params_i;
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
+        emit_transformed_parameters, emit_generated_quantities, pstream);
+    }
+
+    template <typename RNG>
+    inline void write_array(RNG& base_rng, std::vector<double>& params_r,
+                            std::vector<int>& params_i,
+                            std::vector<double>& vars,
+                            bool emit_transformed_parameters = true,
+                            bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      const size_t num_params__ = 0;
+      const size_t num_transformed = emit_transformed_parameters * 
+  (N + N);
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
+        emit_transformed_parameters, emit_generated_quantities, pstream);
+    }
+
+    template <bool propto__, bool jacobian__, typename T_>
+    inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+                       std::ostream* pstream = nullptr) const {
+      Eigen::Matrix<int, -1, 1> params_i;
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+    }
+
+    template <bool propto__, bool jacobian__, typename T__>
+    inline T__ log_prob(std::vector<T__>& params_r,
+                        std::vector<int>& params_i,
+                        std::ostream* pstream = nullptr) const {
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+    }
+
+
+    inline void transform_inits(const stan::io::var_context& context,
+                         Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
+                         std::ostream* pstream = nullptr) const final {
+      std::vector<double> params_r_vec(params_r.size());
+      std::vector<int> params_i;
+      transform_inits(context, params_i, params_r_vec, pstream);
+      params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
+        params_r_vec.data(), params_r_vec.size());
+    }
+
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+     constexpr std::array<const char*, 0> names__{};
+      const std::array<Eigen::Index, 0> constrain_param_sizes__{};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
+    
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
+       }
+       ++size_iter__;
+     }
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+     }; } 
+using stan_model = inliner_same_names_model_namespace::inliner_same_names_model;
+
+#ifndef USING_R
+
+// Boilerplate
+stan::model::model_base& new_model(
+        stan::io::var_context& data_context,
+        unsigned int seed,
+        std::ostream* msg_stream) {
+  stan_model* m = new stan_model(data_context, seed, msg_stream);
+  return *m;
+}
+
+stan::math::profile_map& get_stan_profile_data() {
+  return inliner_same_names_model_namespace::profiles__;
 }
 
 #endif
@@ -16852,7 +18074,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
   int R;
   int T;
   std::vector<std::vector<int>> y;
-  Eigen::Matrix<double, -1, 1> X__;
+  Eigen::Matrix<double, -1, 1> X_data__;
   std::vector<int> sum_y;
   int occ_obs; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> X{nullptr, 0};
@@ -16943,10 +18165,10 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       current_statement__ = 40;
       context__.validate_dims("data initialization","X","double",
            std::vector<size_t>{static_cast<size_t>(R)});
-      X__ = 
+      X_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(R,
           std::numeric_limits<double>::quiet_NaN());
-      new (&X) Eigen::Map<Eigen::Matrix<double, -1, 1>>(X__.data(), R);
+      new (&X) Eigen::Map<Eigen::Matrix<double, -1, 1>>(X_data__.data(), R);
       
       {
         std::vector<local_scalar_t__> X_flat__;
@@ -17549,9 +18771,9 @@ class off_small_model final : public model_base_crtp<off_small_model> {
   int J;
   int N;
   std::vector<int> person;
-  Eigen::Matrix<double, -1, 1> time__;
-  Eigen::Matrix<double, -1, 1> treatment__;
-  Eigen::Matrix<double, -1, 1> y__; 
+  Eigen::Matrix<double, -1, 1> time_data__;
+  Eigen::Matrix<double, -1, 1> treatment_data__;
+  Eigen::Matrix<double, -1, 1> y_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> time{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> treatment{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> y{nullptr, 0};
@@ -17620,10 +18842,11 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 27;
       context__.validate_dims("data initialization","time","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      time__ = 
+      time_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&time) Eigen::Map<Eigen::Matrix<double, -1, 1>>(time__.data(), N);
+      new (&time) Eigen::Map<Eigen::Matrix<double, -1, 1>>(time_data__.data(), N);
+        
       
       {
         std::vector<local_scalar_t__> time_flat__;
@@ -17645,10 +18868,10 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 29;
       context__.validate_dims("data initialization","treatment","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      treatment__ = 
+      treatment_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&treatment) Eigen::Map<Eigen::Matrix<double, -1, 1>>(treatment__.data(), N);
+      new (&treatment) Eigen::Map<Eigen::Matrix<double, -1, 1>>(treatment_data__.data(), N);
         
       
       {
@@ -17671,10 +18894,10 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 31;
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      y__ = 
+      y_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
+      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_data__.data(), N);
       
       {
         std::vector<local_scalar_t__> y_flat__;
@@ -19579,9 +20802,9 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
   int N;
   int n_pair;
   std::vector<int> pair;
-  Eigen::Matrix<double, -1, 1> pre_test__;
-  Eigen::Matrix<double, -1, 1> treatment__;
-  Eigen::Matrix<double, -1, 1> y__; 
+  Eigen::Matrix<double, -1, 1> pre_test_data__;
+  Eigen::Matrix<double, -1, 1> treatment_data__;
+  Eigen::Matrix<double, -1, 1> y_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> pre_test{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> treatment{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> y{nullptr, 0};
@@ -19650,10 +20873,10 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 22;
       context__.validate_dims("data initialization","pre_test","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      pre_test__ = 
+      pre_test_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&pre_test) Eigen::Map<Eigen::Matrix<double, -1, 1>>(pre_test__.data(), N);
+      new (&pre_test) Eigen::Map<Eigen::Matrix<double, -1, 1>>(pre_test_data__.data(), N);
         
       
       {
@@ -19676,10 +20899,10 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 24;
       context__.validate_dims("data initialization","treatment","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      treatment__ = 
+      treatment_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&treatment) Eigen::Map<Eigen::Matrix<double, -1, 1>>(treatment__.data(), N);
+      new (&treatment) Eigen::Map<Eigen::Matrix<double, -1, 1>>(treatment_data__.data(), N);
         
       
       {
@@ -19707,10 +20930,10 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 26;
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      y__ = 
+      y_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
+      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_data__.data(), N);
       
       {
         std::vector<local_scalar_t__> y_flat__;
@@ -20194,8 +21417,8 @@ static constexpr std::array<const char*, 11> locations_array__ =
 class partial_eval_multiply_model final : public model_base_crtp<partial_eval_multiply_model> {
 
  private:
-  Eigen::Matrix<double, -1, -1> m1__;
-  Eigen::Matrix<double, -1, -1> m4__;
+  Eigen::Matrix<double, -1, -1> m1_data__;
+  Eigen::Matrix<double, -1, -1> m4_data__;
   std::vector<int> idx;
   std::vector<int> idy; 
   Eigen::Map<Eigen::Matrix<double, -1, -1>> m1{nullptr, 0, 0};
@@ -20230,10 +21453,10 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
       context__.validate_dims("data initialization","m1","double",
            std::vector<size_t>{static_cast<size_t>(10),
             static_cast<size_t>(10)});
-      m1__ = 
+      m1_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      new (&m1) Eigen::Map<Eigen::Matrix<double, -1, -1>>(m1__.data(), 10, 10);
+      new (&m1) Eigen::Map<Eigen::Matrix<double, -1, -1>>(m1_data__.data(), 10, 10);
         
       
       {
@@ -20259,10 +21482,10 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
       context__.validate_dims("data initialization","m4","double",
            std::vector<size_t>{static_cast<size_t>(10),
             static_cast<size_t>(10)});
-      m4__ = 
+      m4_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      new (&m4) Eigen::Map<Eigen::Matrix<double, -1, -1>>(m4__.data(), 10, 10);
+      new (&m4) Eigen::Map<Eigen::Matrix<double, -1, -1>>(m4_data__.data(), 10, 10);
         
       
       {
@@ -20737,10 +21960,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
   int I;
   std::vector<int> n;
   std::vector<int> N;
-  Eigen::Matrix<double, -1, 1> x1__;
-  Eigen::Matrix<double, -1, 1> x2__;
+  Eigen::Matrix<double, -1, 1> x1_data__;
+  Eigen::Matrix<double, -1, 1> x2_data__;
   int K;
-  Eigen::Matrix<double, -1, 1> x1x2__; 
+  Eigen::Matrix<double, -1, 1> x1x2_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> x1{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> x2{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> x1x2{nullptr, 0};
@@ -20809,10 +22032,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 24;
       context__.validate_dims("data initialization","x1","double",
            std::vector<size_t>{static_cast<size_t>(I)});
-      x1__ = 
+      x1_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(I,
           std::numeric_limits<double>::quiet_NaN());
-      new (&x1) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x1__.data(), I);
+      new (&x1) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x1_data__.data(), I);
       
       {
         std::vector<local_scalar_t__> x1_flat__;
@@ -20834,10 +22057,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 26;
       context__.validate_dims("data initialization","x2","double",
            std::vector<size_t>{static_cast<size_t>(I)});
-      x2__ = 
+      x2_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(I,
           std::numeric_limits<double>::quiet_NaN());
-      new (&x2) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x2__.data(), I);
+      new (&x2) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x2_data__.data(), I);
       
       {
         std::vector<local_scalar_t__> x2_flat__;
@@ -20861,10 +22084,11 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 28;
       stan::math::validate_non_negative_index("x1x2", "I", I);
       current_statement__ = 29;
-      x1x2__ = 
+      x1x2_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(I,
           std::numeric_limits<double>::quiet_NaN());
-      new (&x1x2) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x1x2__.data(), I);
+      new (&x1x2) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x1x2_data__.data(), I);
+        
       
       current_statement__ = 30;
       K = 8;

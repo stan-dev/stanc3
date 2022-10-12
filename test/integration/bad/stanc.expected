@@ -159,6 +159,58 @@ Semantic error in 'bad_prob_fun_suffix.stan', line 10, column 2 to column 19:
    -------------------------------------------------
 
 Ill-typed arguments to '~' statement. No distribution 'foo' was found.
+  $ ../../../../install/default/bin/stanc bad_to_int1.stan
+Semantic error in 'bad_to_int1.stan', line 6, column 19 to column 28:
+   -------------------------------------------------
+     4:  
+     5:  model {
+     6:    array[3] int Y = to_int(X);
+                            ^
+     7:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'to_int':
+(array[] real)
+Available signatures:
+(data array[] real) => array[] int
+  The first argument must be data-only. (Local variables are assumed to
+  depend on parameters; same goes for function inputs unless they are marked
+  with the keyword 'data'.)
+(data int) => int
+  The first argument must be int but got array[] real
+(data real) => int
+  The first argument must be real but got array[] real
+(data array[] int) => array[] int
+  The first argument must be array[] int but got array[] real
+(data array[,] int) => array[,] int
+  The first argument must be array[,] int but got array[] real
+(Additional signatures omitted)
+  $ ../../../../install/default/bin/stanc bad_to_int2.stan
+Semantic error in 'bad_to_int2.stan', line 3, column 19 to column 28:
+   -------------------------------------------------
+     1:  model {
+     2:    array[3] real X;
+     3:    array[3] int Y = to_int(X);
+                            ^
+     4:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'to_int':
+(array[] real)
+Available signatures:
+(data array[] real) => array[] int
+  The first argument must be data-only. (Local variables are assumed to
+  depend on parameters; same goes for function inputs unless they are marked
+  with the keyword 'data'.)
+(data int) => int
+  The first argument must be int but got array[] real
+(data real) => int
+  The first argument must be real but got array[] real
+(data array[] int) => array[] int
+  The first argument must be array[] int but got array[] real
+(data array[,] int) => array[,] int
+  The first argument must be array[,] int but got array[] real
+(Additional signatures omitted)
   $ ../../../../install/default/bin/stanc bad_var_assignment_type1.stan
 Semantic error in 'bad_var_assignment_type1.stan', line 4, column 2 to column 8:
    -------------------------------------------------
@@ -1057,7 +1109,7 @@ Semantic error in 'functions-bad1.stan', line 6, column 2 to column 20:
      8:  parameters {
    -------------------------------------------------
 
-Function 'flib' has already been declared to for signature (real) => real
+Function 'flib' has already been declared for signature (real) => real
   $ ../../../../install/default/bin/stanc functions-bad11.stan
 Semantic error in 'functions-bad11.stan', line 3, column 4 to column 20:
    -------------------------------------------------
@@ -1163,7 +1215,7 @@ Semantic error in 'functions-bad19.stan', line 4, column 2 to line 6, column 3:
      6:    }
    -------------------------------------------------
 
-Function 'my_fun3' has already been declared to for signature (real) => real
+Function 'my_fun3' has already been declared for signature (real) => real
   $ ../../../../install/default/bin/stanc functions-bad2.stan
 Semantic error in 'functions-bad2.stan', line 8, column 7 to column 13:
    -------------------------------------------------
@@ -1175,7 +1227,7 @@ Semantic error in 'functions-bad2.stan', line 8, column 7 to column 13:
     10:  }
    -------------------------------------------------
 
-Function is declared without specifying a definition.
+Function 'barfoo' is declared without specifying a definition.
   $ ../../../../install/default/bin/stanc functions-bad20.stan
 Semantic error in 'functions-bad20.stan', line 4, column 2 to line 6, column 3:
    -------------------------------------------------
@@ -1187,7 +1239,7 @@ Semantic error in 'functions-bad20.stan', line 4, column 2 to line 6, column 3:
      6:    }
    -------------------------------------------------
 
-Function 'my_fun3' has already been declared to for signature (data real) => real
+Function 'my_fun3' has already been declared for signature (data real) => real
   $ ../../../../install/default/bin/stanc functions-bad21.stan
 Semantic error in 'functions-bad21.stan', line 13, column 11 to column 21:
    -------------------------------------------------
@@ -1336,6 +1388,28 @@ Semantic error in 'functions-bad7.stan', line 14, column 6 to column 20:
    -------------------------------------------------
 
 Target can only be accessed in the model block, transformed paramters block, or in definitions of functions with the suffix _lp.
+  $ ../../../../install/default/bin/stanc functions-bad8.stan
+Semantic error in 'functions-bad8.stan', line 3, column 2 to column 18:
+   -------------------------------------------------
+     1:  functions {
+     2:    void bar(int x);
+     3:    void bar(int x);
+           ^
+     4:  }
+   -------------------------------------------------
+
+Function 'bar' has already been declared. A definition is expected.
+  $ ../../../../install/default/bin/stanc functions-bad9.stan
+Semantic error in 'functions-bad9.stan', line 2, column 7 to column 10:
+   -------------------------------------------------
+     1:  functions {
+     2:    void bar(int x);
+                ^
+     3:    void bar(int x, real y);
+     4:  }
+   -------------------------------------------------
+
+Function 'bar' is declared without specifying a definition.
   $ ../../../../install/default/bin/stanc get-lp-target-data.stan
 Semantic error in 'get-lp-target-data.stan', line 2, column 19 to column 27:
    -------------------------------------------------
@@ -1484,7 +1558,8 @@ Syntax error in 'matrix_expr_bad3.stan', line 2, column 40 to column 41, parsing
      4:  model {
    -------------------------------------------------
 
-Expected identifier after comma in multiple declaration.
+Expected a new identifier after comma in declaration.
+All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
   $ ../../../../install/default/bin/stanc matrix_expr_bad4.stan
 Syntax error in 'matrix_expr_bad4.stan', line 2, column 44 to column 45, parsing error:
    -------------------------------------------------
@@ -1984,7 +2059,7 @@ Semantic error in 'redefine-ccdf3.stan', line 5, column 2 to line 7, column 3:
      7:    }
    -------------------------------------------------
 
-Function 'foo_ccdf_log' has already been declared to for signature (int, real) => real
+Function 'foo_ccdf_log' has already been declared for signature (int, real) => real
   $ ../../../../install/default/bin/stanc redefine-cdf3.stan
 Semantic error in 'redefine-cdf3.stan', line 5, column 2 to line 7, column 3:
    -------------------------------------------------
@@ -1996,7 +2071,7 @@ Semantic error in 'redefine-cdf3.stan', line 5, column 2 to line 7, column 3:
      7:    }
    -------------------------------------------------
 
-Function 'foo_cdf_log' has already been declared to for signature (int, real) => real
+Function 'foo_cdf_log' has already been declared for signature (int, real) => real
   $ ../../../../install/default/bin/stanc redefine-prob3.stan
 Semantic error in 'redefine-prob3.stan', line 5, column 2 to line 7, column 3:
    -------------------------------------------------
@@ -2008,7 +2083,7 @@ Semantic error in 'redefine-prob3.stan', line 5, column 2 to line 7, column 3:
      7:    }
    -------------------------------------------------
 
-Function 'foo_lpmf' has already been declared to for signature (int) => real
+Function 'foo_lpmf' has already been declared for signature (int) => real
   $ ../../../../install/default/bin/stanc rng_loc1.stan
 Semantic error in 'rng_loc1.stan', line 3, column 11 to column 29:
    -------------------------------------------------

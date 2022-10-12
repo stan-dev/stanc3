@@ -790,82 +790,86 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 75> locations_array__ = 
+static constexpr std::array<const char*, 79> locations_array__ = 
 {" (found before start of program)",
- " (in 'cpp-reserved-words.stan', line 33, column 2 to column 16)",
- " (in 'cpp-reserved-words.stan', line 34, column 2 to column 13)",
- " (in 'cpp-reserved-words.stan', line 35, column 2 to column 14)",
- " (in 'cpp-reserved-words.stan', line 36, column 2 to column 12)",
+ " (in 'cpp-reserved-words.stan', line 35, column 2 to column 16)",
+ " (in 'cpp-reserved-words.stan', line 36, column 2 to column 13)",
  " (in 'cpp-reserved-words.stan', line 37, column 2 to column 14)",
  " (in 'cpp-reserved-words.stan', line 38, column 2 to column 12)",
- " (in 'cpp-reserved-words.stan', line 39, column 2 to column 15)",
- " (in 'cpp-reserved-words.stan', line 40, column 2 to column 17)",
- " (in 'cpp-reserved-words.stan', line 41, column 2 to column 11)",
- " (in 'cpp-reserved-words.stan', line 42, column 2 to column 16)",
+ " (in 'cpp-reserved-words.stan', line 39, column 2 to column 14)",
+ " (in 'cpp-reserved-words.stan', line 40, column 2 to column 12)",
+ " (in 'cpp-reserved-words.stan', line 41, column 2 to column 15)",
+ " (in 'cpp-reserved-words.stan', line 42, column 2 to column 17)",
  " (in 'cpp-reserved-words.stan', line 43, column 2 to column 11)",
- " (in 'cpp-reserved-words.stan', line 44, column 2 to column 14)",
- " (in 'cpp-reserved-words.stan', line 45, column 2 to column 15)",
- " (in 'cpp-reserved-words.stan', line 46, column 2 to column 16)",
- " (in 'cpp-reserved-words.stan', line 47, column 2 to column 10)",
- " (in 'cpp-reserved-words.stan', line 69, column 2 to column 13)",
- " (in 'cpp-reserved-words.stan', line 70, column 2 to column 11)",
- " (in 'cpp-reserved-words.stan', line 71, column 2 to column 14)",
- " (in 'cpp-reserved-words.stan', line 72, column 2 to column 16)",
- " (in 'cpp-reserved-words.stan', line 73, column 2 to column 13)",
+ " (in 'cpp-reserved-words.stan', line 44, column 2 to column 16)",
+ " (in 'cpp-reserved-words.stan', line 45, column 2 to column 11)",
+ " (in 'cpp-reserved-words.stan', line 46, column 2 to column 14)",
+ " (in 'cpp-reserved-words.stan', line 47, column 2 to column 15)",
+ " (in 'cpp-reserved-words.stan', line 48, column 2 to column 16)",
+ " (in 'cpp-reserved-words.stan', line 49, column 2 to column 10)",
+ " (in 'cpp-reserved-words.stan', line 71, column 2 to column 13)",
+ " (in 'cpp-reserved-words.stan', line 72, column 2 to column 11)",
+ " (in 'cpp-reserved-words.stan', line 73, column 2 to column 14)",
  " (in 'cpp-reserved-words.stan', line 74, column 2 to column 16)",
  " (in 'cpp-reserved-words.stan', line 75, column 2 to column 13)",
- " (in 'cpp-reserved-words.stan', line 76, column 2 to column 15)",
- " (in 'cpp-reserved-words.stan', line 77, column 2 to column 16)",
+ " (in 'cpp-reserved-words.stan', line 76, column 2 to column 16)",
+ " (in 'cpp-reserved-words.stan', line 77, column 2 to column 13)",
  " (in 'cpp-reserved-words.stan', line 78, column 2 to column 15)",
- " (in 'cpp-reserved-words.stan', line 79, column 2 to column 11)",
- " (in 'cpp-reserved-words.stan', line 80, column 2 to column 14)",
- " (in 'cpp-reserved-words.stan', line 81, column 2 to column 12)",
- " (in 'cpp-reserved-words.stan', line 82, column 2 to column 18)",
- " (in 'cpp-reserved-words.stan', line 83, column 2 to column 18)",
- " (in 'cpp-reserved-words.stan', line 84, column 2 to column 18)",
+ " (in 'cpp-reserved-words.stan', line 79, column 2 to column 16)",
+ " (in 'cpp-reserved-words.stan', line 80, column 2 to column 15)",
+ " (in 'cpp-reserved-words.stan', line 81, column 2 to column 11)",
+ " (in 'cpp-reserved-words.stan', line 82, column 2 to column 14)",
+ " (in 'cpp-reserved-words.stan', line 83, column 2 to column 12)",
+ " (in 'cpp-reserved-words.stan', line 84, column 2 to column 23)",
  " (in 'cpp-reserved-words.stan', line 85, column 2 to column 23)",
  " (in 'cpp-reserved-words.stan', line 86, column 2 to column 23)",
- " (in 'cpp-reserved-words.stan', line 87, column 2 to column 23)",
- " (in 'cpp-reserved-words.stan', line 51, column 2 to column 13)",
- " (in 'cpp-reserved-words.stan', line 52, column 2 to column 15)",
- " (in 'cpp-reserved-words.stan', line 53, column 2 to column 17)",
- " (in 'cpp-reserved-words.stan', line 54, column 2 to column 14)",
- " (in 'cpp-reserved-words.stan', line 55, column 2 to column 16)",
- " (in 'cpp-reserved-words.stan', line 56, column 2 to column 24)",
- " (in 'cpp-reserved-words.stan', line 57, column 2 to column 13)",
- " (in 'cpp-reserved-words.stan', line 58, column 2 to column 14)",
- " (in 'cpp-reserved-words.stan', line 59, column 2 to column 14)",
- " (in 'cpp-reserved-words.stan', line 60, column 2 to column 21)",
- " (in 'cpp-reserved-words.stan', line 61, column 2 to column 19)",
- " (in 'cpp-reserved-words.stan', line 62, column 2 to column 14)",
- " (in 'cpp-reserved-words.stan', line 63, column 2 to column 16)",
- " (in 'cpp-reserved-words.stan', line 64, column 2 to column 12)",
- " (in 'cpp-reserved-words.stan', line 65, column 2 to column 20)",
- " (in 'cpp-reserved-words.stan', line 18, column 2 to column 13)",
- " (in 'cpp-reserved-words.stan', line 19, column 2 to column 13)",
+ " (in 'cpp-reserved-words.stan', line 89, column 4 to column 23)",
+ " (in 'cpp-reserved-words.stan', line 90, column 4 to column 32)",
+ " (in 'cpp-reserved-words.stan', line 91, column 4 to column 24)",
+ " (in 'cpp-reserved-words.stan', line 92, column 4 to column 31)",
+ " (in 'cpp-reserved-words.stan', line 88, column 24 to line 93, column 3)",
+ " (in 'cpp-reserved-words.stan', line 88, column 2 to line 93, column 3)",
+ " (in 'cpp-reserved-words.stan', line 53, column 2 to column 13)",
+ " (in 'cpp-reserved-words.stan', line 54, column 2 to column 15)",
+ " (in 'cpp-reserved-words.stan', line 55, column 2 to column 17)",
+ " (in 'cpp-reserved-words.stan', line 56, column 2 to column 14)",
+ " (in 'cpp-reserved-words.stan', line 57, column 2 to column 16)",
+ " (in 'cpp-reserved-words.stan', line 58, column 2 to column 24)",
+ " (in 'cpp-reserved-words.stan', line 59, column 2 to column 13)",
+ " (in 'cpp-reserved-words.stan', line 60, column 2 to column 14)",
+ " (in 'cpp-reserved-words.stan', line 61, column 2 to column 14)",
+ " (in 'cpp-reserved-words.stan', line 62, column 2 to column 21)",
+ " (in 'cpp-reserved-words.stan', line 63, column 2 to column 19)",
+ " (in 'cpp-reserved-words.stan', line 64, column 2 to column 14)",
+ " (in 'cpp-reserved-words.stan', line 65, column 2 to column 16)",
+ " (in 'cpp-reserved-words.stan', line 66, column 2 to column 12)",
+ " (in 'cpp-reserved-words.stan', line 67, column 2 to column 20)",
  " (in 'cpp-reserved-words.stan', line 20, column 2 to column 13)",
- " (in 'cpp-reserved-words.stan', line 21, column 2 to column 17)",
- " (in 'cpp-reserved-words.stan', line 22, column 2 to column 18)",
- " (in 'cpp-reserved-words.stan', line 23, column 2 to column 16)",
- " (in 'cpp-reserved-words.stan', line 24, column 2 to column 15)",
- " (in 'cpp-reserved-words.stan', line 25, column 2 to column 14)",
- " (in 'cpp-reserved-words.stan', line 26, column 2 to column 10)",
+ " (in 'cpp-reserved-words.stan', line 21, column 2 to column 13)",
+ " (in 'cpp-reserved-words.stan', line 22, column 2 to column 13)",
+ " (in 'cpp-reserved-words.stan', line 23, column 2 to column 17)",
+ " (in 'cpp-reserved-words.stan', line 24, column 2 to column 18)",
+ " (in 'cpp-reserved-words.stan', line 25, column 2 to column 16)",
+ " (in 'cpp-reserved-words.stan', line 26, column 2 to column 15)",
  " (in 'cpp-reserved-words.stan', line 27, column 2 to column 14)",
- " (in 'cpp-reserved-words.stan', line 28, column 2 to column 20)",
- " (in 'cpp-reserved-words.stan', line 29, column 2 to column 12)",
+ " (in 'cpp-reserved-words.stan', line 28, column 2 to column 10)",
+ " (in 'cpp-reserved-words.stan', line 29, column 2 to column 14)",
+ " (in 'cpp-reserved-words.stan', line 30, column 2 to column 20)",
+ " (in 'cpp-reserved-words.stan', line 31, column 2 to column 12)",
  " (in 'cpp-reserved-words.stan', line 2, column 23 to column 25)",
  " (in 'cpp-reserved-words.stan', line 3, column 24 to column 26)",
- " (in 'cpp-reserved-words.stan', line 4, column 26 to column 28)",
- " (in 'cpp-reserved-words.stan', line 5, column 30 to column 32)",
- " (in 'cpp-reserved-words.stan', line 6, column 24 to column 26)",
- " (in 'cpp-reserved-words.stan', line 7, column 28 to column 30)",
- " (in 'cpp-reserved-words.stan', line 8, column 14 to column 16)",
- " (in 'cpp-reserved-words.stan', line 9, column 13 to column 15)",
- " (in 'cpp-reserved-words.stan', line 10, column 13 to column 15)",
- " (in 'cpp-reserved-words.stan', line 11, column 14 to column 16)",
+ " (in 'cpp-reserved-words.stan', line 5, column 4 to column 22)",
+ " (in 'cpp-reserved-words.stan', line 4, column 25 to line 6, column 3)",
+ " (in 'cpp-reserved-words.stan', line 7, column 30 to column 32)",
+ " (in 'cpp-reserved-words.stan', line 8, column 24 to column 26)",
+ " (in 'cpp-reserved-words.stan', line 9, column 28 to column 30)",
+ " (in 'cpp-reserved-words.stan', line 10, column 14 to column 16)",
+ " (in 'cpp-reserved-words.stan', line 11, column 13 to column 15)",
  " (in 'cpp-reserved-words.stan', line 12, column 13 to column 15)",
- " (in 'cpp-reserved-words.stan', line 13, column 17 to column 19)",
- " (in 'cpp-reserved-words.stan', line 14, column 17 to column 19)"};
+ " (in 'cpp-reserved-words.stan', line 13, column 14 to column 16)",
+ " (in 'cpp-reserved-words.stan', line 14, column 13 to column 15)",
+ " (in 'cpp-reserved-words.stan', line 15, column 17 to column 19)",
+ " (in 'cpp-reserved-words.stan', line 16, column 17 to column 19)"};
 
 struct _stan_asm_functor__ {
   template <typename T0__,
@@ -905,7 +909,7 @@ struct _stan_and_eq_functor__ {
   operator()(const T0__& _stan_STAN_MINOR, std::ostream* pstream__) const;
 };
 struct _stan_and_functor__ {
-  void
+  int
   operator()(const int& _stan_STAN_MAJOR, std::ostream* pstream__) const;
 };
 struct _stan_char_functor__ {
@@ -951,7 +955,7 @@ void _stan_alignof(const int& _stan_char, std::ostream* pstream__) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-void _stan_and(const int& _stan_STAN_MAJOR, std::ostream* pstream__) {
+int _stan_and(const int& _stan_STAN_MAJOR, std::ostream* pstream__) {
     using local_scalar_t__ = double;
     int current_statement__ = 0; 
     static constexpr bool propto__ = true;
@@ -959,7 +963,8 @@ void _stan_and(const int& _stan_STAN_MAJOR, std::ostream* pstream__) {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      
+      current_statement__ = 67;
+      return _stan_STAN_MAJOR;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -1154,7 +1159,7 @@ _stan_and_eq_functor__::operator()(const T0__& _stan_STAN_MINOR,
   return _stan_and_eq(_stan_STAN_MINOR, pstream__);
 }
 
-void
+int
 _stan_and_functor__::operator()(const int& _stan_STAN_MAJOR,
                                 std::ostream* pstream__)  const
 {
@@ -1224,101 +1229,101 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 50;
+      current_statement__ = 53;
       context__.validate_dims("data initialization","class","double",
            std::vector<size_t>{});
       _stan_class = std::numeric_limits<double>::quiet_NaN();
       
       
-      current_statement__ = 50;
+      current_statement__ = 53;
       _stan_class = context__.vals_r("class")[(1 - 1)];
-      current_statement__ = 51;
+      current_statement__ = 54;
       context__.validate_dims("data initialization","compl","double",
            std::vector<size_t>{});
       _stan_compl = std::numeric_limits<double>::quiet_NaN();
       
       
-      current_statement__ = 51;
+      current_statement__ = 54;
       _stan_compl = context__.vals_r("compl")[(1 - 1)];
-      current_statement__ = 52;
+      current_statement__ = 55;
       context__.validate_dims("data initialization","const","double",
            std::vector<size_t>{});
       _stan_const = std::numeric_limits<double>::quiet_NaN();
       
       
-      current_statement__ = 52;
+      current_statement__ = 55;
       _stan_const = context__.vals_r("const")[(1 - 1)];
-      current_statement__ = 53;
+      current_statement__ = 56;
       context__.validate_dims("data initialization","constexpr","double",
            std::vector<size_t>{});
       _stan_constexpr = std::numeric_limits<double>::quiet_NaN();
       
       
-      current_statement__ = 53;
+      current_statement__ = 56;
       _stan_constexpr = context__.vals_r("constexpr")[(1 - 1)];
-      current_statement__ = 54;
+      current_statement__ = 57;
       context__.validate_dims("data initialization","const_cast","double",
            std::vector<size_t>{});
       _stan_const_cast = std::numeric_limits<double>::quiet_NaN();
       
       
-      current_statement__ = 54;
+      current_statement__ = 57;
       _stan_const_cast = context__.vals_r("const_cast")[(1 - 1)];
-      current_statement__ = 55;
+      current_statement__ = 58;
       context__.validate_dims("data initialization","decltype","double",
            std::vector<size_t>{});
       _stan_decltype = std::numeric_limits<double>::quiet_NaN();
       
       
-      current_statement__ = 55;
+      current_statement__ = 58;
       _stan_decltype = context__.vals_r("decltype")[(1 - 1)];
-      current_statement__ = 56;
+      current_statement__ = 59;
       context__.validate_dims("data initialization","default","double",
            std::vector<size_t>{});
       _stan_default = std::numeric_limits<double>::quiet_NaN();
       
       
-      current_statement__ = 56;
+      current_statement__ = 59;
       _stan_default = context__.vals_r("default")[(1 - 1)];
-      current_statement__ = 57;
+      current_statement__ = 60;
       context__.validate_dims("data initialization","delete","double",
            std::vector<size_t>{});
       _stan_delete = std::numeric_limits<double>::quiet_NaN();
       
       
-      current_statement__ = 57;
+      current_statement__ = 60;
       _stan_delete = context__.vals_r("delete")[(1 - 1)];
-      current_statement__ = 58;
+      current_statement__ = 61;
       context__.validate_dims("data initialization","do","double",
            std::vector<size_t>{});
       _stan_do = std::numeric_limits<double>::quiet_NaN();
       
       
-      current_statement__ = 58;
+      current_statement__ = 61;
       _stan_do = context__.vals_r("do")[(1 - 1)];
-      current_statement__ = 59;
+      current_statement__ = 62;
       context__.validate_dims("data initialization","double","double",
            std::vector<size_t>{});
       _stan_double = std::numeric_limits<double>::quiet_NaN();
       
       
-      current_statement__ = 59;
+      current_statement__ = 62;
       _stan_double = context__.vals_r("double")[(1 - 1)];
-      current_statement__ = 60;
+      current_statement__ = 63;
       context__.validate_dims("data initialization","dynamic_cast","double",
            std::vector<size_t>{});
       _stan_dynamic_cast = std::numeric_limits<double>::quiet_NaN();
       
       
-      current_statement__ = 60;
+      current_statement__ = 63;
       _stan_dynamic_cast = context__.vals_r("dynamic_cast")[(1 - 1)];
-      current_statement__ = 61;
+      current_statement__ = 64;
       context__.validate_dims("data initialization","enum","double",
            std::vector<size_t>{});
       _stan_enum = std::numeric_limits<double>::quiet_NaN();
       
       
-      current_statement__ = 61;
+      current_statement__ = 64;
       _stan_enum = context__.vals_r("enum")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1521,15 +1526,26 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       double _stan_xor = std::numeric_limits<double>::quiet_NaN();
       double _stan_xor_eq = std::numeric_limits<double>::quiet_NaN();
       double _stan_fvar = std::numeric_limits<double>::quiet_NaN();
-      double _stan_STAN_MAJOR = std::numeric_limits<double>::quiet_NaN();
-      double _stan_STAN_MINOR = std::numeric_limits<double>::quiet_NaN();
-      double _stan_STAN_PATCH = std::numeric_limits<double>::quiet_NaN();
       double _stan_STAN_MATH_MAJOR =
          std::numeric_limits<double>::quiet_NaN();
       double _stan_STAN_MATH_MINOR =
          std::numeric_limits<double>::quiet_NaN();
       double _stan_STAN_MATH_PATCH =
          std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 37;
+      for (int _stan_STAN_MAJOR = 1; _stan_STAN_MAJOR <= 2;
+           ++_stan_STAN_MAJOR) {
+        int _stan_STAN_MINOR = std::numeric_limits<int>::min();
+        current_statement__ = 32;
+        _stan_STAN_MINOR = 3;
+        int _stan_STAN_PATCH = std::numeric_limits<int>::min();
+        current_statement__ = 33;
+        _stan_STAN_PATCH = _stan_STAN_MINOR;
+        current_statement__ = 34;
+        _stan_alignas(_stan_STAN_PATCH, pstream__);
+        current_statement__ = 35;
+        _stan_STAN_MINOR = _stan_and(_stan_STAN_PATCH, pstream__);
+      }
       out__.write(_stan_throw);
       out__.write(_stan_try);
       out__.write(_stan_typeid);
@@ -1543,9 +1559,6 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       out__.write(_stan_xor);
       out__.write(_stan_xor_eq);
       out__.write(_stan_fvar);
-      out__.write(_stan_STAN_MAJOR);
-      out__.write(_stan_STAN_MINOR);
-      out__.write(_stan_STAN_PATCH);
       out__.write(_stan_STAN_MATH_MAJOR);
       out__.write(_stan_STAN_MATH_MINOR);
       out__.write(_stan_STAN_MATH_PATCH);
@@ -1625,8 +1638,8 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       "inline", "long", "mutable", "namespace", "new", "noexcept", "not",
       "not_eq", "nullptr", "operator", "or", "throw", "try", "typeid",
       "typename", "union", "unsigned", "using", "virtual", "volatile",
-      "wchar_t", "xor", "xor_eq", "fvar", "STAN_MAJOR", "STAN_MINOR",
-      "STAN_PATCH", "STAN_MATH_MAJOR", "STAN_MATH_MINOR", "STAN_MATH_PATCH"};
+      "wchar_t", "xor", "xor_eq", "fvar", "STAN_MATH_MAJOR",
+      "STAN_MATH_MINOR", "STAN_MATH_PATCH"};
     
     } // get_param_names() 
     
@@ -1634,7 +1647,6 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
       std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
-      }, std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
       }, std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
       }, std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
       }, std::vector<size_t>{}, std::vector<size_t>{}, std::vector<size_t>{
@@ -1687,9 +1699,6 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       param_names__.emplace_back(std::string() + "xor");
       param_names__.emplace_back(std::string() + "xor_eq");
       param_names__.emplace_back(std::string() + "fvar");
-      param_names__.emplace_back(std::string() + "STAN_MAJOR");
-      param_names__.emplace_back(std::string() + "STAN_MINOR");
-      param_names__.emplace_back(std::string() + "STAN_PATCH");
       param_names__.emplace_back(std::string() + "STAN_MATH_MAJOR");
       param_names__.emplace_back(std::string() + "STAN_MATH_MINOR");
       param_names__.emplace_back(std::string() + "STAN_MATH_PATCH");
@@ -1736,9 +1745,6 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       param_names__.emplace_back(std::string() + "xor");
       param_names__.emplace_back(std::string() + "xor_eq");
       param_names__.emplace_back(std::string() + "fvar");
-      param_names__.emplace_back(std::string() + "STAN_MAJOR");
-      param_names__.emplace_back(std::string() + "STAN_MINOR");
-      param_names__.emplace_back(std::string() + "STAN_PATCH");
       param_names__.emplace_back(std::string() + "STAN_MATH_MAJOR");
       param_names__.emplace_back(std::string() + "STAN_MATH_MINOR");
       param_names__.emplace_back(std::string() + "STAN_MATH_PATCH");
@@ -1748,13 +1754,13 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     
   inline std::string get_constrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"explicit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"float\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"friend\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"goto\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"inline\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"long\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mutable\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"namespace\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"new\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"noexcept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not_eq\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"nullptr\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"operator\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"or\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"throw\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"try\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typeid\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typename\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"union\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"unsigned\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"using\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"virtual\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"volatile\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"wchar_t\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor_eq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"fvar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"explicit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"float\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"friend\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"goto\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"inline\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"long\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mutable\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"namespace\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"new\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"noexcept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not_eq\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"nullptr\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"operator\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"or\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"throw\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"try\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typeid\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typename\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"union\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"unsigned\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"using\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"virtual\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"volatile\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"wchar_t\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor_eq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"fvar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
     
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"explicit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"float\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"friend\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"goto\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"inline\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"long\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mutable\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"namespace\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"new\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"noexcept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not_eq\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"nullptr\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"operator\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"or\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"throw\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"try\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typeid\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typename\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"union\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"unsigned\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"using\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"virtual\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"volatile\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"wchar_t\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor_eq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"fvar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"explicit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"float\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"friend\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"goto\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"inline\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"long\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mutable\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"namespace\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"new\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"noexcept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not_eq\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"nullptr\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"operator\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"or\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"throw\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"try\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typeid\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typename\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"union\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"unsigned\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"using\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"virtual\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"volatile\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"wchar_t\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor_eq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"fvar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
     
     } // get_unconstrained_sizedtypes() 
     
@@ -1772,8 +1778,8 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
      + 1) + 1);
       const size_t num_transformed = emit_transformed_parameters * 0;
       const size_t num_gen_quantities = emit_generated_quantities * 
-  ((((((((((((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1)
-          + 1) + 1) + 1) + 1) + 1) + 1) + 1);
+  (((((((((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
+       1) + 1) + 1) + 1);
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       std::vector<int> params_i;
@@ -1795,8 +1801,8 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
      + 1) + 1);
       const size_t num_transformed = emit_transformed_parameters * 0;
       const size_t num_gen_quantities = emit_generated_quantities * 
-  ((((((((((((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1)
-          + 1) + 1) + 1) + 1) + 1) + 1) + 1);
+  (((((((((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
+       1) + 1) + 1) + 1);
       const size_t num_to_write = num_params__ + num_transformed +
         num_gen_quantities;
       vars = std::vector<double>(num_to_write,
@@ -6275,18 +6281,18 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
   double J;
   std::vector<double> d_real_1d_ar;
   std::vector<std::vector<std::vector<double>>> d_real_3d_ar;
-  Eigen::Matrix<double, -1, 1> d_vec__;
+  Eigen::Matrix<double, -1, 1> d_vec_data__;
   std::vector<Eigen::Matrix<double, -1, 1>> d_1d_vec;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> d_3d_vec;
-  Eigen::Matrix<double, 1, -1> d_row_vec__;
+  Eigen::Matrix<double, 1, -1> d_row_vec_data__;
   std::vector<Eigen::Matrix<double, 1, -1>> d_1d_row_vec;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> d_3d_row_vec;
   std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> d_ar_mat;
-  Eigen::Matrix<double, -1, 1> d_simplex__;
+  Eigen::Matrix<double, -1, 1> d_simplex_data__;
   std::vector<Eigen::Matrix<double, -1, 1>> d_1d_simplex;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> d_3d_simplex;
-  Eigen::Matrix<double, -1, -1> d_cfcov_54__;
-  Eigen::Matrix<double, -1, -1> d_cfcov_33__;
+  Eigen::Matrix<double, -1, -1> d_cfcov_54_data__;
+  Eigen::Matrix<double, -1, -1> d_cfcov_33_data__;
   std::vector<Eigen::Matrix<double, -1, -1>> d_cfcov_33_ar;
   int d_int;
   std::vector<int> d_int_array;
@@ -6296,15 +6302,15 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
   std::vector<double> d_real_array;
   std::vector<std::vector<double>> d_real_array_2d;
   std::vector<std::vector<std::vector<double>>> d_real_array_3d;
-  Eigen::Matrix<double, -1, -1> d_matrix__;
+  Eigen::Matrix<double, -1, -1> d_matrix_data__;
   std::vector<Eigen::Matrix<double, -1, -1>> d_matrix_array;
   std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> d_matrix_array_2d;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>> d_matrix_array_3d;
-  Eigen::Matrix<double, -1, 1> d_vector__;
+  Eigen::Matrix<double, -1, 1> d_vector_data__;
   std::vector<Eigen::Matrix<double, -1, 1>> d_vector_array;
   std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> d_vector_array_2d;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> d_vector_array_3d;
-  Eigen::Matrix<double, 1, -1> d_row_vector__;
+  Eigen::Matrix<double, 1, -1> d_row_vector_data__;
   std::vector<Eigen::Matrix<double, 1, -1>> d_row_vector_array;
   std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> d_row_vector_array_2d;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> d_row_vector_array_3d;
@@ -6315,13 +6321,13 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
   double td_b;
   double td_c;
   std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> td_ar_mat;
-  Eigen::Matrix<double, -1, 1> td_simplex__;
+  Eigen::Matrix<double, -1, 1> td_simplex_data__;
   std::vector<Eigen::Matrix<double, -1, 1>> td_1d_simplex;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> td_3d_simplex;
-  Eigen::Matrix<double, -1, -1> td_cfcov_54__;
-  Eigen::Matrix<double, -1, -1> td_cfcov_33__;
-  Eigen::Matrix<double, -1, 1> x__;
-  Eigen::Matrix<double, -1, 1> y__;
+  Eigen::Matrix<double, -1, -1> td_cfcov_54_data__;
+  Eigen::Matrix<double, -1, -1> td_cfcov_33_data__;
+  Eigen::Matrix<double, -1, 1> x_data__;
+  Eigen::Matrix<double, -1, 1> y_data__;
   std::vector<double> dat;
   std::vector<int> dat_int;
   std::vector<std::vector<double>> x_r;
@@ -6332,15 +6338,15 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
   std::vector<double> transformed_data_real_array;
   std::vector<std::vector<double>> transformed_data_real_array_2d;
   std::vector<std::vector<std::vector<double>>> transformed_data_real_array_3d;
-  Eigen::Matrix<double, -1, -1> transformed_data_matrix__;
+  Eigen::Matrix<double, -1, -1> transformed_data_matrix_data__;
   std::vector<Eigen::Matrix<double, -1, -1>> transformed_data_matrix_array;
   std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> transformed_data_matrix_array_2d;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>> transformed_data_matrix_array_3d;
-  Eigen::Matrix<double, -1, 1> transformed_data_vector__;
+  Eigen::Matrix<double, -1, 1> transformed_data_vector_data__;
   std::vector<Eigen::Matrix<double, -1, 1>> transformed_data_vector_array;
   std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> transformed_data_vector_array_2d;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> transformed_data_vector_array_3d;
-  Eigen::Matrix<double, 1, -1> transformed_data_row_vector__;
+  Eigen::Matrix<double, 1, -1> transformed_data_row_vector_data__;
   std::vector<Eigen::Matrix<double, 1, -1>> transformed_data_row_vector_array;
   std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> transformed_data_row_vector_array_2d;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> transformed_data_row_vector_array_3d; 
@@ -6542,10 +6548,10 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       current_statement__ = 207;
       context__.validate_dims("data initialization","d_vec","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      d_vec__ = 
+      d_vec_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&d_vec) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vec__.data(), N);
+      new (&d_vec) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vec_data__.data(), N);
         
       
       {
@@ -6650,10 +6656,10 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       current_statement__ = 217;
       context__.validate_dims("data initialization","d_row_vec","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      d_row_vec__ = 
+      d_row_vec_data__ = 
         Eigen::Matrix<double, 1, -1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&d_row_vec) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vec__.data(), N);
+      new (&d_row_vec) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vec_data__.data(), N);
         
       
       {
@@ -6803,10 +6809,10 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       current_statement__ = 228;
       context__.validate_dims("data initialization","d_simplex","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      d_simplex__ = 
+      d_simplex_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&d_simplex) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_simplex__.data(), N);
+      new (&d_simplex) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_simplex_data__.data(), N);
         
       
       {
@@ -6918,10 +6924,10 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       context__.validate_dims("data initialization","d_cfcov_54","double",
            std::vector<size_t>{static_cast<size_t>(5),
             static_cast<size_t>(4)});
-      d_cfcov_54__ = 
+      d_cfcov_54_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(5, 4,
           std::numeric_limits<double>::quiet_NaN());
-      new (&d_cfcov_54) Eigen::Map<Eigen::Matrix<double, -1, -1>>(d_cfcov_54__.data(), 5, 4);
+      new (&d_cfcov_54) Eigen::Map<Eigen::Matrix<double, -1, -1>>(d_cfcov_54_data__.data(), 5, 4);
         
       
       {
@@ -6949,10 +6955,10 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       context__.validate_dims("data initialization","d_cfcov_33","double",
            std::vector<size_t>{static_cast<size_t>(3),
             static_cast<size_t>(3)});
-      d_cfcov_33__ = 
+      d_cfcov_33_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(3, 3,
           std::numeric_limits<double>::quiet_NaN());
-      new (&d_cfcov_33) Eigen::Map<Eigen::Matrix<double, -1, -1>>(d_cfcov_33__.data(), 3, 3);
+      new (&d_cfcov_33) Eigen::Map<Eigen::Matrix<double, -1, -1>>(d_cfcov_33_data__.data(), 3, 3);
         
       
       {
@@ -7200,10 +7206,10 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       context__.validate_dims("data initialization","d_matrix","double",
            std::vector<size_t>{static_cast<size_t>(d_int),
             static_cast<size_t>(d_int)});
-      d_matrix__ = 
+      d_matrix_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(d_int, d_int,
           std::numeric_limits<double>::quiet_NaN());
-      new (&d_matrix) Eigen::Map<Eigen::Matrix<double, -1, -1>>(d_matrix__.data(), d_int, d_int);
+      new (&d_matrix) Eigen::Map<Eigen::Matrix<double, -1, -1>>(d_matrix_data__.data(), d_int, d_int);
         
       
       {
@@ -7380,10 +7386,10 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       current_statement__ = 271;
       context__.validate_dims("data initialization","d_vector","double",
            std::vector<size_t>{static_cast<size_t>(d_int)});
-      d_vector__ = 
+      d_vector_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(d_int,
           std::numeric_limits<double>::quiet_NaN());
-      new (&d_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vector__.data(), d_int);
+      new (&d_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vector_data__.data(), d_int);
         
       
       {
@@ -7534,10 +7540,10 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       current_statement__ = 282;
       context__.validate_dims("data initialization","d_row_vector","double",
            std::vector<size_t>{static_cast<size_t>(d_int)});
-      d_row_vector__ = 
+      d_row_vector_data__ = 
         Eigen::Matrix<double, 1, -1>::Constant(d_int,
           std::numeric_limits<double>::quiet_NaN());
-      new (&d_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vector__.data(), d_int);
+      new (&d_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vector_data__.data(), d_int);
         
       
       {
@@ -7731,10 +7737,10 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       current_statement__ = 301;
       stan::math::validate_non_negative_index("td_simplex", "N", N);
       current_statement__ = 302;
-      td_simplex__ = 
+      td_simplex_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&td_simplex) Eigen::Map<Eigen::Matrix<double, -1, 1>>(td_simplex__.data(), N);
+      new (&td_simplex) Eigen::Map<Eigen::Matrix<double, -1, 1>>(td_simplex_data__.data(), N);
         
       
       current_statement__ = 303;
@@ -7767,30 +7773,30 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       
       
       current_statement__ = 311;
-      td_cfcov_54__ = 
+      td_cfcov_54_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(5, 5,
           std::numeric_limits<double>::quiet_NaN());
-      new (&td_cfcov_54) Eigen::Map<Eigen::Matrix<double, -1, -1>>(td_cfcov_54__.data(), 5, 5);
+      new (&td_cfcov_54) Eigen::Map<Eigen::Matrix<double, -1, -1>>(td_cfcov_54_data__.data(), 5, 5);
         
       
       current_statement__ = 312;
-      td_cfcov_33__ = 
+      td_cfcov_33_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(3, 3,
           std::numeric_limits<double>::quiet_NaN());
-      new (&td_cfcov_33) Eigen::Map<Eigen::Matrix<double, -1, -1>>(td_cfcov_33__.data(), 3, 3);
+      new (&td_cfcov_33) Eigen::Map<Eigen::Matrix<double, -1, -1>>(td_cfcov_33_data__.data(), 3, 3);
         
       
       current_statement__ = 313;
-      x__ = 
+      x_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(2,
           std::numeric_limits<double>::quiet_NaN());
-      new (&x) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x__.data(), 2);
+      new (&x) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x_data__.data(), 2);
       
       current_statement__ = 314;
-      y__ = 
+      y_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(2,
           std::numeric_limits<double>::quiet_NaN());
-      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), 2);
+      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_data__.data(), 2);
       
       current_statement__ = 315;
       dat = std::vector<double>(0, std::numeric_limits<double>::quiet_NaN());
@@ -8010,10 +8016,10 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       stan::math::validate_non_negative_index("transformed_data_matrix",
                                               "d_int", d_int);
       current_statement__ = 373;
-      transformed_data_matrix__ = 
+      transformed_data_matrix_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(d_int, d_int,
           std::numeric_limits<double>::quiet_NaN());
-      new (&transformed_data_matrix) Eigen::Map<Eigen::Matrix<double, -1, -1>>(transformed_data_matrix__.data(), d_int, d_int);
+      new (&transformed_data_matrix) Eigen::Map<Eigen::Matrix<double, -1, -1>>(transformed_data_matrix_data__.data(), d_int, d_int);
         
       
       current_statement__ = 374;
@@ -8072,10 +8078,10 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       stan::math::validate_non_negative_index("transformed_data_vector",
                                               "d_int", d_int);
       current_statement__ = 387;
-      transformed_data_vector__ = 
+      transformed_data_vector_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(d_int,
           std::numeric_limits<double>::quiet_NaN());
-      new (&transformed_data_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(transformed_data_vector__.data(), d_int);
+      new (&transformed_data_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(transformed_data_vector_data__.data(), d_int);
         
       
       current_statement__ = 388;
@@ -8125,10 +8131,10 @@ int foo_functor__::operator()(const int& n, std::ostream* pstream__)  const
       stan::math::validate_non_negative_index("transformed_data_row_vector",
                                               "d_int", d_int);
       current_statement__ = 398;
-      transformed_data_row_vector__ = 
+      transformed_data_row_vector_data__ = 
         Eigen::Matrix<double, 1, -1>::Constant(d_int,
           std::numeric_limits<double>::quiet_NaN());
-      new (&transformed_data_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(transformed_data_row_vector__.data(), d_int);
+      new (&transformed_data_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(transformed_data_row_vector_data__.data(), d_int);
         
       
       current_statement__ = 399;
@@ -12773,7 +12779,7 @@ const
   std::vector<int> x_int;
   std::vector<double> x_d_r;
   std::vector<int> x_d_i;
-  Eigen::Matrix<double, -1, 1> shared_params_d__;
+  Eigen::Matrix<double, -1, 1> shared_params_d_data__;
   std::vector<Eigen::Matrix<double, -1, 1>> job_params_d;
   std::vector<std::vector<double>> data_r;
   std::vector<std::vector<int>> data_i; 
@@ -12886,10 +12892,10 @@ const
       current_statement__ = 133;
       context__.validate_dims("data initialization","shared_params_d",
           "double", std::vector<size_t>{static_cast<size_t>(3)});
-      shared_params_d__ = 
+      shared_params_d_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(3,
           std::numeric_limits<double>::quiet_NaN());
-      new (&shared_params_d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(shared_params_d__.data(), 3);
+      new (&shared_params_d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(shared_params_d_data__.data(), 3);
         
       
       {
@@ -15093,7 +15099,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
   int id;
   double rd;
   std::vector<double> rad;
-  Eigen::Matrix<double, -1, 1> vd__;
+  Eigen::Matrix<double, -1, 1> vd_data__;
   std::vector<Eigen::Matrix<double, -1, 1>> zd; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> vd{nullptr, 0};
  
@@ -15161,10 +15167,10 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       current_statement__ = 607;
       context__.validate_dims("data initialization","vd","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      vd__ = 
+      vd_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&vd) Eigen::Map<Eigen::Matrix<double, -1, 1>>(vd__.data(), N);
+      new (&vd) Eigen::Map<Eigen::Matrix<double, -1, 1>>(vd_data__.data(), N);
       
       {
         std::vector<local_scalar_t__> vd_flat__;
@@ -19730,19 +19736,19 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
  private:
   int k;
   int n;
-  Eigen::Matrix<double, -1, -1> X_d__;
+  Eigen::Matrix<double, -1, -1> X_d_data__;
   std::vector<Eigen::Matrix<double, -1, -1>> X_d_a;
-  Eigen::Matrix<double, -1, 1> y_v_d__;
-  Eigen::Matrix<double, 1, -1> X_rv_d__;
+  Eigen::Matrix<double, -1, 1> y_v_d_data__;
+  Eigen::Matrix<double, 1, -1> X_rv_d_data__;
   std::vector<int> y_vi_d;
   std::vector<int> y2_vi_d;
   int y_s_d;
   double y_r_d;
   int k_td;
   int n_td;
-  Eigen::Matrix<double, -1, -1> X_d_td__;
-  Eigen::Matrix<double, -1, 1> y_v_d_td__;
-  Eigen::Matrix<double, 1, -1> X_rv_d_td__;
+  Eigen::Matrix<double, -1, -1> X_d_td_data__;
+  Eigen::Matrix<double, -1, 1> y_v_d_td_data__;
+  Eigen::Matrix<double, 1, -1> X_rv_d_td_data__;
   std::vector<int> y_vi_d_td;
   std::vector<int> y2_vi_d_td;
   int y_s_d_td;
@@ -19807,10 +19813,10 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       context__.validate_dims("data initialization","X_d","double",
            std::vector<size_t>{static_cast<size_t>(n),
             static_cast<size_t>(k)});
-      X_d__ = 
+      X_d_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(n, k,
           std::numeric_limits<double>::quiet_NaN());
-      new (&X_d) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d__.data(), n, k);
+      new (&X_d) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d_data__.data(), n, k);
         
       
       {
@@ -19874,10 +19880,10 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 185;
       context__.validate_dims("data initialization","y_v_d","double",
            std::vector<size_t>{static_cast<size_t>(n)});
-      y_v_d__ = 
+      y_v_d_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(n,
           std::numeric_limits<double>::quiet_NaN());
-      new (&y_v_d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_v_d__.data(), n);
+      new (&y_v_d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_v_d_data__.data(), n);
         
       
       {
@@ -19900,10 +19906,10 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 187;
       context__.validate_dims("data initialization","X_rv_d","double",
            std::vector<size_t>{static_cast<size_t>(n)});
-      X_rv_d__ = 
+      X_rv_d_data__ = 
         Eigen::Matrix<double, 1, -1>::Constant(n,
           std::numeric_limits<double>::quiet_NaN());
-      new (&X_rv_d) Eigen::Map<Eigen::Matrix<double, 1, -1>>(X_rv_d__.data(), n);
+      new (&X_rv_d) Eigen::Map<Eigen::Matrix<double, 1, -1>>(X_rv_d_data__.data(), n);
         
       
       {
@@ -19970,28 +19976,28 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 197;
       stan::math::validate_non_negative_index("X_d_td", "k", k);
       current_statement__ = 198;
-      X_d_td__ = 
+      X_d_td_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(n, k,
           std::numeric_limits<double>::quiet_NaN());
-      new (&X_d_td) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d_td__.data(), n, k);
+      new (&X_d_td) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d_td_data__.data(), n, k);
         
       
       current_statement__ = 199;
       stan::math::validate_non_negative_index("y_v_d_td", "n", n);
       current_statement__ = 200;
-      y_v_d_td__ = 
+      y_v_d_td_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(n,
           std::numeric_limits<double>::quiet_NaN());
-      new (&y_v_d_td) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_v_d_td__.data(), n);
+      new (&y_v_d_td) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_v_d_td_data__.data(), n);
         
       
       current_statement__ = 201;
       stan::math::validate_non_negative_index("X_rv_d_td", "n", n);
       current_statement__ = 202;
-      X_rv_d_td__ = 
+      X_rv_d_td_data__ = 
         Eigen::Matrix<double, 1, -1>::Constant(n,
           std::numeric_limits<double>::quiet_NaN());
-      new (&X_rv_d_td) Eigen::Map<Eigen::Matrix<double, 1, -1>>(X_rv_d_td__.data(), n);
+      new (&X_rv_d_td) Eigen::Map<Eigen::Matrix<double, 1, -1>>(X_rv_d_td_data__.data(), n);
         
       
       current_statement__ = 203;
@@ -21580,8 +21586,8 @@ const
 class overloading_templating_model final : public model_base_crtp<overloading_templating_model> {
 
  private:
-  Eigen::Matrix<double, -1, 1> a__;
-  Eigen::Matrix<double, -1, -1> M__; 
+  Eigen::Matrix<double, -1, 1> a_data__;
+  Eigen::Matrix<double, -1, -1> M_data__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> a{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, -1>> M{nullptr, 0, 0};
  
@@ -21611,19 +21617,20 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       current_statement__ = 15;
-      a__ = 
+      a_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(5,
           std::numeric_limits<double>::quiet_NaN());
-      new (&a) Eigen::Map<Eigen::Matrix<double, -1, 1>>(a__.data(), 5);
+      new (&a) Eigen::Map<Eigen::Matrix<double, -1, 1>>(a_data__.data(), 5);
       
       current_statement__ = 15;
       stan::model::assign(a, (Eigen::Matrix<double,-1,1>(5) << 0.1, 0.1, 0.1,
         0.1, 0.1).finished(), "assigning variable a");
       current_statement__ = 16;
-      M__ = 
+      M_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(5, 5,
           std::numeric_limits<double>::quiet_NaN());
-      new (&M) Eigen::Map<Eigen::Matrix<double, -1, -1>>(M__.data(), 5, 5);
+      new (&M) Eigen::Map<Eigen::Matrix<double, -1, -1>>(M_data__.data(), 5, 5);
+        
       
       current_statement__ = 16;
       stan::model::assign(M, stan::math::to_matrix(
@@ -23136,6 +23143,799 @@ stan::model::model_base& new_model(
 
 stan::math::profile_map& get_stan_profile_data() {
   return promotion_model_namespace::profiles__;
+}
+
+#endif
+
+
+
+  $ ../../../../../install/default/bin/stanc --print-cpp recursive-slicing.stan
+
+// Code generated by %%NAME%% %%VERSION%%
+#include <stan/model/model_header.hpp>
+namespace recursive_slicing_model_namespace {
+
+using stan::model::model_base_crtp;
+using namespace stan::math;
+
+
+stan::math::profile_map profiles__;
+static constexpr std::array<const char*, 40> locations_array__ = 
+{" (found before start of program)",
+ " (in 'recursive-slicing.stan', line 76, column 2 to column 22)",
+ " (in 'recursive-slicing.stan', line 79, column 2 to column 33)",
+ " (in 'recursive-slicing.stan', line 72, column 2 to column 8)",
+ " (in 'recursive-slicing.stan', line 73, column 2 to column 12)",
+ " (in 'recursive-slicing.stan', line 76, column 9 to column 14)",
+ " (in 'recursive-slicing.stan', line 79, column 9 to column 10)",
+ " (in 'recursive-slicing.stan', line 5, column 3 to column 31)",
+ " (in 'recursive-slicing.stan', line 10, column 6 to column 35)",
+ " (in 'recursive-slicing.stan', line 8, column 6 to column 30)",
+ " (in 'recursive-slicing.stan', line 7, column 3 to line 10, column 35)",
+ " (in 'recursive-slicing.stan', line 4, column 28 to line 11, column 2)",
+ " (in 'recursive-slicing.stan', line 18, column 4 to column 59)",
+ " (in 'recursive-slicing.stan', line 17, column 9 to line 19, column 3)",
+ " (in 'recursive-slicing.stan', line 16, column 4 to column 47)",
+ " (in 'recursive-slicing.stan', line 15, column 14 to line 17, column 3)",
+ " (in 'recursive-slicing.stan', line 15, column 2 to line 19, column 3)",
+ " (in 'recursive-slicing.stan', line 14, column 35 to line 20, column 1)",
+ " (in 'recursive-slicing.stan', line 24, column 2 to column 11)",
+ " (in 'recursive-slicing.stan', line 23, column 18 to line 25, column 1)",
+ " (in 'recursive-slicing.stan', line 28, column 2 to column 40)",
+ " (in 'recursive-slicing.stan', line 29, column 2 to column 23)",
+ " (in 'recursive-slicing.stan', line 27, column 16 to line 30, column 1)",
+ " (in 'recursive-slicing.stan', line 38, column 3 to column 31)",
+ " (in 'recursive-slicing.stan', line 43, column 6 to column 35)",
+ " (in 'recursive-slicing.stan', line 41, column 6 to column 30)",
+ " (in 'recursive-slicing.stan', line 40, column 3 to line 43, column 35)",
+ " (in 'recursive-slicing.stan', line 37, column 27 to line 44, column 3)",
+ " (in 'recursive-slicing.stan', line 46, column 2 to column 22)",
+ " (in 'recursive-slicing.stan', line 45, column 27 to line 47, column 1)",
+ " (in 'recursive-slicing.stan', line 52, column 3 to column 31)",
+ " (in 'recursive-slicing.stan', line 57, column 6 to column 28)",
+ " (in 'recursive-slicing.stan', line 55, column 6 to column 22)",
+ " (in 'recursive-slicing.stan', line 54, column 3 to line 57, column 28)",
+ " (in 'recursive-slicing.stan', line 51, column 24 to line 58, column 1)",
+ " (in 'recursive-slicing.stan', line 62, column 3 to column 31)",
+ " (in 'recursive-slicing.stan', line 67, column 6 to column 38)",
+ " (in 'recursive-slicing.stan', line 65, column 6 to column 30)",
+ " (in 'recursive-slicing.stan', line 64, column 3 to line 67, column 38)",
+ " (in 'recursive-slicing.stan', line 61, column 28 to line 68, column 3)"};
+
+struct matrix_pow_functor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, -1>
+  operator()(const T0__& a, const int& n, std::ostream* pstream__) const;
+};
+struct test4_functor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+  operator()(const T0__& gamma, std::ostream* pstream__) const;
+};
+struct test6_functor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
+  void
+  operator()(const T0__& alpha, std::ostream* pstream__) const;
+};
+struct test2_functor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+  operator()(const T0__& gamma, std::ostream* pstream__) const;
+};
+struct foo_functor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const T0__& b, std::ostream* pstream__) const;
+  template <typename T0__,
+            stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
+  stan::promote_args_t<stan::base_type_t<T0__>>
+  operator()(const T0__& a, std::ostream* pstream__) const;
+};
+struct test7_functor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+  operator()(const T0__& gamma, std::ostream* pstream__) const;
+};
+struct test3_functor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+  operator()(const T0__& gamma, std::ostream* pstream__) const;
+};
+
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+  test2(const T0__& gamma_arg__, std::ostream* pstream__) ; 
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+  test2(const T0__& gamma_arg__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
+    int current_statement__ = 0; 
+    const auto& gamma = stan::math::to_ref(gamma_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int D = std::numeric_limits<int>::min();
+      current_statement__ = 7;
+      D = stan::math::num_elements(gamma);
+      current_statement__ = 10;
+      if (stan::math::logical_eq(D, 1)) {
+        current_statement__ = 9;
+        return stan::math::rep_vector(D, 0);
+      } else {
+        current_statement__ = 8;
+        return test2(
+                 stan::math::eval(
+                   stan::model::rvalue(gamma, "gamma",
+                     stan::model::index_min_max(1, (D - 1)))), pstream__);
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, -1>
+  matrix_pow(const T0__& a_arg__, const int& n, std::ostream* pstream__) ; 
+template <typename T0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, -1>
+  matrix_pow(const T0__& a_arg__, const int& n, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
+    int current_statement__ = 0; 
+    const auto& a = stan::math::to_ref(a_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 16;
+      if (stan::math::logical_eq(n, 0)) {
+        current_statement__ = 14;
+        return stan::math::diag_matrix(
+                 stan::math::rep_vector(1, stan::math::rows(a)));
+      } else {
+        current_statement__ = 12;
+        return stan::math::multiply(a,
+                 matrix_pow(
+                   stan::math::eval(
+                     stan::model::rvalue(a, "a",
+                       stan::model::index_min_max(1, stan::math::rows(a)),
+                         stan::model::index_min_max(1, stan::math::cols(a)))),
+                   (n - 1), pstream__));
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
+  stan::promote_args_t<stan::base_type_t<T0__>>
+  foo(const T0__& a_arg__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
+    int current_statement__ = 0; 
+    const auto& a = stan::math::to_ref(a_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 18;
+      return 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__> foo(const T0__& b, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<T0__>;
+    int current_statement__ = 0; 
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      Eigen::Matrix<local_scalar_t__, -1, -1> B =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(10, 10,
+           DUMMY_VAR__);
+      current_statement__ = 20;
+      stan::model::assign(B, stan::math::rep_matrix(b, 10, 10),
+        "assigning variable B");
+      current_statement__ = 21;
+      return foo(
+               stan::model::rvalue(B, "B",
+                 stan::model::index_omni(), stan::model::index_min_max(2, 4)), pstream__);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+  test3(const T0__& gamma_arg__, std::ostream* pstream__) ; 
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+  test4(const T0__& gamma_arg__, std::ostream* pstream__) ; 
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+  test4(const T0__& gamma_arg__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
+    int current_statement__ = 0; 
+    const auto& gamma = stan::math::to_ref(gamma_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int D = std::numeric_limits<int>::min();
+      current_statement__ = 23;
+      D = stan::math::num_elements(gamma);
+      current_statement__ = 26;
+      if (stan::math::logical_eq(D, 1)) {
+        current_statement__ = 25;
+        return stan::math::rep_vector(D, 0);
+      } else {
+        current_statement__ = 24;
+        return test3(
+                 stan::math::eval(
+                   stan::model::rvalue(gamma, "gamma",
+                     stan::model::index_min_max(1, (D - 1)))), pstream__);
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+  test3(const T0__& gamma_arg__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
+    int current_statement__ = 0; 
+    const auto& gamma = stan::math::to_ref(gamma_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      current_statement__ = 28;
+      return test4(gamma, pstream__);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr> void
+  test6(const T0__& alpha_arg__, std::ostream* pstream__) ; 
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*> void
+  test6(const T0__& alpha_arg__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
+    int current_statement__ = 0; 
+    const auto& alpha = stan::math::to_ref(alpha_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int D = std::numeric_limits<int>::min();
+      current_statement__ = 30;
+      D = stan::math::num_elements(alpha);
+      current_statement__ = 33;
+      if (stan::math::logical_eq(D, 1)) {
+        current_statement__ = 32;
+        if (pstream__) {
+          stan::math::stan_print(pstream__, stan::model::rvalue(alpha,
+                                              "alpha",
+                                              stan::model::index_uni(1)));
+          stan::math::stan_print(pstream__, "\n");
+        }
+      } else {
+        current_statement__ = 31;
+        test6(
+          stan::math::eval(
+            stan::model::rvalue(alpha, "alpha",
+              stan::model::index_min_max(1, (D - 1)))), pstream__);
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+  test7(const T0__& gamma_arg__, std::ostream* pstream__) ; 
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+  test7(const T0__& gamma_arg__, std::ostream* pstream__) {
+    using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
+    int current_statement__ = 0; 
+    const auto& gamma = stan::math::to_ref(gamma_arg__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int D = std::numeric_limits<int>::min();
+      current_statement__ = 35;
+      D = stan::math::num_elements(gamma);
+      current_statement__ = 38;
+      if (stan::math::logical_eq(D, 1)) {
+        current_statement__ = 37;
+        return stan::math::rep_vector(D, 0);
+      } else {
+        current_statement__ = 36;
+        return test7(
+                 stan::math::eval(stan::math::head(gamma, (D - 1))), pstream__);
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    }
+template <typename T0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, -1>
+matrix_pow_functor__::operator()(const T0__& a, const int& n,
+                                 std::ostream* pstream__)  const
+{
+  return matrix_pow(a, n, pstream__);
+}
+
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+test4_functor__::operator()(const T0__& gamma, std::ostream* pstream__) 
+const
+{
+  return test4(gamma, pstream__);
+}
+
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
+void test6_functor__::operator()(const T0__& alpha, std::ostream* pstream__) 
+const
+{
+  return test6(alpha, pstream__);
+}
+
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+test2_functor__::operator()(const T0__& gamma, std::ostream* pstream__) 
+const
+{
+  return test2(gamma, pstream__);
+}
+
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
+stan::promote_args_t<T0__>
+foo_functor__::operator()(const T0__& b, std::ostream* pstream__)  const
+{
+  return foo(b, pstream__);
+}
+
+template <typename T0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
+stan::promote_args_t<stan::base_type_t<T0__>>
+foo_functor__::operator()(const T0__& a, std::ostream* pstream__)  const
+{
+  return foo(a, pstream__);
+}
+
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+test7_functor__::operator()(const T0__& gamma, std::ostream* pstream__) 
+const
+{
+  return test7(gamma, pstream__);
+}
+
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>, -1, 1>
+test3_functor__::operator()(const T0__& gamma, std::ostream* pstream__) 
+const
+{
+  return test3(gamma, pstream__);
+}
+
+
+class recursive_slicing_model final : public model_base_crtp<recursive_slicing_model> {
+
+ private:
+  int N;
+  int times; 
+  
+ 
+ public:
+  ~recursive_slicing_model() { }
+  
+  inline std::string model_name() const final { return "recursive_slicing_model"; }
+
+  inline std::vector<std::string> model_compile_info() const noexcept {
+    return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
+  }
+  
+  
+  recursive_slicing_model(stan::io::var_context& context__,
+                          unsigned int random_seed__ = 0,
+                          std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
+    using local_scalar_t__ = double ;
+    boost::ecuyer1988 base_rng__ = 
+        stan::services::util::create_rng(random_seed__, 0);
+    (void) base_rng__;  // suppress unused var warning
+    static constexpr const char* function__ = "recursive_slicing_model_namespace::recursive_slicing_model";
+    (void) function__;  // suppress unused var warning
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+      current_statement__ = 3;
+      context__.validate_dims("data initialization","N","int",
+           std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
+      
+      
+      current_statement__ = 3;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 4;
+      context__.validate_dims("data initialization","times","int",
+           std::vector<size_t>{});
+      times = std::numeric_limits<int>::min();
+      
+      
+      current_statement__ = 4;
+      times = context__.vals_i("times")[(1 - 1)];
+      current_statement__ = 5;
+      stan::math::validate_non_negative_index("gamma", "times", times);
+      current_statement__ = 6;
+      stan::math::validate_non_negative_index("z_hat", "N", N);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    num_params_r__ = times;
+    
+  }
+  
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
+                                                 VecI& params_i__,
+                                                 std::ostream* pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    static constexpr const char* function__ = "recursive_slicing_model_namespace::log_prob";
+    (void) function__;  // suppress unused var warning
+    
+    try {
+      Eigen::Matrix<local_scalar_t__, -1, 1> gamma =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(times, DUMMY_VAR__);
+      current_statement__ = 1;
+      gamma = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                times);
+      Eigen::Matrix<local_scalar_t__, -1, 1> z_hat =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
+      current_statement__ = 2;
+      stan::model::assign(z_hat, test2(gamma, pstream__),
+        "assigning variable z_hat");
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+    } // log_prob_impl() 
+    
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
+                               VecI& params_i__, VecVar& vars__,
+                               const bool emit_transformed_parameters__ = true,
+                               const bool emit_generated_quantities__ = true,
+                               std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    double lp__ = 0.0;
+    (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
+    stan::math::accumulator<double> lp_accum__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    constexpr bool jacobian__ = false;
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    static constexpr const char* function__ = "recursive_slicing_model_namespace::write_array";
+    (void) function__;  // suppress unused var warning
+    
+    try {
+      Eigen::Matrix<double, -1, 1> gamma =
+         Eigen::Matrix<double, -1, 1>::Constant(times,
+           std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 1;
+      gamma = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                times);
+      Eigen::Matrix<double, -1, 1> z_hat =
+         Eigen::Matrix<double, -1, 1>::Constant(N,
+           std::numeric_limits<double>::quiet_NaN());
+      out__.write(gamma);
+      if (stan::math::logical_negation((stan::math::primitive_value(
+            emit_transformed_parameters__) || stan::math::primitive_value(
+            emit_generated_quantities__)))) {
+        return ;
+      } 
+      current_statement__ = 2;
+      stan::model::assign(z_hat, test2(gamma, pstream__),
+        "assigning variable z_hat");
+      if (emit_transformed_parameters__) {
+        out__.write(z_hat);
+      } 
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      } 
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    } // write_array_impl() 
+    
+  template <typename VecVar, typename VecI, 
+  stan::require_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
+                                   std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+      Eigen::Matrix<local_scalar_t__, -1, 1> gamma =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(times, DUMMY_VAR__);
+      for (int sym1__ = 1; sym1__ <= times; ++sym1__) {
+        stan::model::assign(gamma, in__.read<local_scalar_t__>(),
+          "assigning variable gamma", stan::model::index_uni(sym1__));
+      }
+      out__.write(gamma);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    } // transform_inits_impl() 
+    
+  inline void get_param_names(std::vector<std::string>& names__) const {
+    
+    names__ = std::vector<std::string>{"gamma", "z_hat"};
+    
+    } // get_param_names() 
+    
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
+                                                                   static_cast<size_t>(times)
+                                                                   },
+      std::vector<size_t>{static_cast<size_t>(N)}};
+    
+    } // get_dims() 
+    
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const
+    final {
+    
+    for (int sym1__ = 1; sym1__ <= times; ++sym1__) {
+      {
+        param_names__.emplace_back(std::string() + "gamma" + '.' + std::to_string(sym1__));
+      } 
+    }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        {
+          param_names__.emplace_back(std::string() + "z_hat" + '.' + std::to_string(sym1__));
+        } 
+      }
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // constrained_param_names() 
+    
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const
+    final {
+    
+    for (int sym1__ = 1; sym1__ <= times; ++sym1__) {
+      {
+        param_names__.emplace_back(std::string() + "gamma" + '.' + std::to_string(sym1__));
+      } 
+    }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        {
+          param_names__.emplace_back(std::string() + "z_hat" + '.' + std::to_string(sym1__));
+        } 
+      }
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // unconstrained_param_names() 
+    
+  inline std::string get_constrained_sizedtypes() const {
+    
+    return std::string("[{\"name\":\"gamma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(times) + "},\"block\":\"parameters\"},{\"name\":\"z_hat\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"}]");
+    
+    } // get_constrained_sizedtypes() 
+    
+  inline std::string get_unconstrained_sizedtypes() const {
+    
+    return std::string("[{\"name\":\"gamma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(times) + "},\"block\":\"parameters\"},{\"name\":\"z_hat\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"}]");
+    
+    } // get_unconstrained_sizedtypes() 
+    
+  
+    // Begin method overload boilerplate
+    template <typename RNG>
+    inline void write_array(RNG& base_rng,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                            const bool emit_transformed_parameters = true,
+                            const bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      const size_t num_params__ = times;
+      const size_t num_transformed = emit_transformed_parameters * N;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      std::vector<int> params_i;
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
+        emit_transformed_parameters, emit_generated_quantities, pstream);
+    }
+
+    template <typename RNG>
+    inline void write_array(RNG& base_rng, std::vector<double>& params_r,
+                            std::vector<int>& params_i,
+                            std::vector<double>& vars,
+                            bool emit_transformed_parameters = true,
+                            bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      const size_t num_params__ = times;
+      const size_t num_transformed = emit_transformed_parameters * N;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
+        emit_transformed_parameters, emit_generated_quantities, pstream);
+    }
+
+    template <bool propto__, bool jacobian__, typename T_>
+    inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+                       std::ostream* pstream = nullptr) const {
+      Eigen::Matrix<int, -1, 1> params_i;
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+    }
+
+    template <bool propto__, bool jacobian__, typename T__>
+    inline T__ log_prob(std::vector<T__>& params_r,
+                        std::vector<int>& params_i,
+                        std::ostream* pstream = nullptr) const {
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+    }
+
+
+    inline void transform_inits(const stan::io::var_context& context,
+                         Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
+                         std::ostream* pstream = nullptr) const final {
+      std::vector<double> params_r_vec(params_r.size());
+      std::vector<int> params_i;
+      transform_inits(context, params_i, params_r_vec, pstream);
+      params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
+        params_r_vec.data(), params_r_vec.size());
+    }
+
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+     constexpr std::array<const char*, 1> names__{"gamma"};
+      const std::array<Eigen::Index, 1> constrain_param_sizes__{times};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
+    
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
+       }
+       ++size_iter__;
+     }
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+     }; } 
+using stan_model = recursive_slicing_model_namespace::recursive_slicing_model;
+
+#ifndef USING_R
+
+// Boilerplate
+stan::model::model_base& new_model(
+        stan::io::var_context& data_context,
+        unsigned int seed,
+        std::ostream* msg_stream) {
+  stan_model* m = new stan_model(data_context, seed, msg_stream);
+  return *m;
+}
+
+stan::math::profile_map& get_stan_profile_data() {
+  return recursive_slicing_model_namespace::profiles__;
 }
 
 #endif
@@ -28724,9 +29524,9 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
   std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> y7d;
   std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> y8d;
   double y9d;
-  Eigen::Matrix<double, -1, 1> y10d__;
-  Eigen::Matrix<double, 1, -1> y11d__;
-  Eigen::Matrix<double, -1, -1> y12d__;
+  Eigen::Matrix<double, -1, 1> y10d_data__;
+  Eigen::Matrix<double, 1, -1> y11d_data__;
+  Eigen::Matrix<double, -1, -1> y12d_data__;
   int y13d;
   std::vector<int> y14d;
   std::vector<std::vector<int>> y15d;
@@ -29082,10 +29882,11 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 98;
       context__.validate_dims("data initialization","y10d","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      y10d__ = 
+      y10d_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&y10d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y10d__.data(), N);
+      new (&y10d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y10d_data__.data(), N);
+        
       
       {
         std::vector<local_scalar_t__> y10d_flat__;
@@ -29107,10 +29908,11 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 100;
       context__.validate_dims("data initialization","y11d","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      y11d__ = 
+      y11d_data__ = 
         Eigen::Matrix<double, 1, -1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&y11d) Eigen::Map<Eigen::Matrix<double, 1, -1>>(y11d__.data(), N);
+      new (&y11d) Eigen::Map<Eigen::Matrix<double, 1, -1>>(y11d_data__.data(), N);
+        
       
       {
         std::vector<local_scalar_t__> y11d_flat__;
@@ -29135,10 +29937,10 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       context__.validate_dims("data initialization","y12d","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N)});
-      y12d__ = 
+      y12d_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(N, N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&y12d) Eigen::Map<Eigen::Matrix<double, -1, -1>>(y12d__.data(), N, N);
+      new (&y12d) Eigen::Map<Eigen::Matrix<double, -1, -1>>(y12d_data__.data(), N, N);
         
       
       {
@@ -30801,7 +31603,7 @@ rhs_functor__::operator()(const T0__& t, const T1__& y, const T2__& alpha,
  class shadowing_model final : public model_base_crtp<shadowing_model> {
 
  private:
-  Eigen::Matrix<double, -1, 1> x__;
+  Eigen::Matrix<double, -1, 1> x_data__;
   int result_1dim__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> x{nullptr, 0};
  
@@ -30833,10 +31635,10 @@ rhs_functor__::operator()(const T0__& t, const T1__& y, const T2__& alpha,
       current_statement__ = 46;
       context__.validate_dims("data initialization","x","double",
            std::vector<size_t>{static_cast<size_t>(4)});
-      x__ = 
+      x_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(4,
           std::numeric_limits<double>::quiet_NaN());
-      new (&x) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x__.data(), 4);
+      new (&x) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x_data__.data(), 4);
       
       {
         std::vector<local_scalar_t__> x_flat__;
@@ -36450,6 +37252,388 @@ stan::model::model_base& new_model(
 
 stan::math::profile_map& get_stan_profile_data() {
   return user_constrain_model_namespace::profiles__;
+}
+
+#endif
+
+
+
+  $ ../../../../../install/default/bin/stanc --print-cpp variable_named_context.stan
+
+// Code generated by %%NAME%% %%VERSION%%
+#include <stan/model/model_header.hpp>
+namespace variable_named_context_model_namespace {
+
+using stan::model::model_base_crtp;
+using namespace stan::math;
+
+
+stan::math::profile_map profiles__;
+static constexpr std::array<const char*, 7> locations_array__ = 
+{" (found before start of program)",
+ " (in 'variable_named_context.stan', line 7, column 2 to column 10)",
+ " (in 'variable_named_context.stan', line 8, column 2 to column 22)",
+ " (in 'variable_named_context.stan', line 12, column 2 to column 29)",
+ " (in 'variable_named_context.stan', line 2, column 2 to column 17)",
+ " (in 'variable_named_context.stan', line 3, column 9 to column 10)",
+ " (in 'variable_named_context.stan', line 3, column 2 to column 20)"};
+
+
+
+
+class variable_named_context_model final : public model_base_crtp<variable_named_context_model> {
+
+ private:
+  int N;
+  Eigen::Matrix<double, -1, 1> context_data__; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> context{nullptr, 0};
+ 
+ public:
+  ~variable_named_context_model() { }
+  
+  inline std::string model_name() const final { return "variable_named_context_model"; }
+
+  inline std::vector<std::string> model_compile_info() const noexcept {
+    return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
+  }
+  
+  
+  variable_named_context_model(stan::io::var_context& context__,
+                               unsigned int random_seed__ = 0,
+                               std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
+    using local_scalar_t__ = double ;
+    boost::ecuyer1988 base_rng__ = 
+        stan::services::util::create_rng(random_seed__, 0);
+    (void) base_rng__;  // suppress unused var warning
+    static constexpr const char* function__ = "variable_named_context_model_namespace::variable_named_context_model";
+    (void) function__;  // suppress unused var warning
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+      current_statement__ = 4;
+      context__.validate_dims("data initialization","N","int",
+           std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
+      
+      
+      current_statement__ = 4;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 4;
+      stan::math::check_greater_or_equal(function__, "N", N, 0);
+      current_statement__ = 5;
+      stan::math::validate_non_negative_index("context", "N", N);
+      current_statement__ = 6;
+      context__.validate_dims("data initialization","context","double",
+           std::vector<size_t>{static_cast<size_t>(N)});
+      context_data__ = 
+        Eigen::Matrix<double, -1, 1>::Constant(N,
+          std::numeric_limits<double>::quiet_NaN());
+      new (&context) Eigen::Map<Eigen::Matrix<double, -1, 1>>(context_data__.data(), N);
+        
+      
+      {
+        std::vector<local_scalar_t__> context_flat__;
+        current_statement__ = 6;
+        context_flat__ = context__.vals_r("context");
+        current_statement__ = 6;
+        pos__ = 1;
+        current_statement__ = 6;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 6;
+          stan::model::assign(context, context_flat__[(pos__ - 1)],
+            "assigning variable context", stan::model::index_uni(sym1__));
+          current_statement__ = 6;
+          pos__ = (pos__ + 1);
+        }
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    num_params_r__ = 1 + 1;
+    
+  }
+  
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
+                                                 VecI& params_i__,
+                                                 std::ostream* pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    static constexpr const char* function__ = "variable_named_context_model_namespace::log_prob";
+    (void) function__;  // suppress unused var warning
+    
+    try {
+      local_scalar_t__ mu = DUMMY_VAR__;
+      current_statement__ = 1;
+      mu = in__.template read<local_scalar_t__>();
+      local_scalar_t__ sigma = DUMMY_VAR__;
+      current_statement__ = 2;
+      sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
+                0, lp__);
+      {
+        current_statement__ = 3;
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(context, mu, sigma));
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+    } // log_prob_impl() 
+    
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
+                               VecI& params_i__, VecVar& vars__,
+                               const bool emit_transformed_parameters__ = true,
+                               const bool emit_generated_quantities__ = true,
+                               std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
+    double lp__ = 0.0;
+    (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
+    stan::math::accumulator<double> lp_accum__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    constexpr bool jacobian__ = false;
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    static constexpr const char* function__ = "variable_named_context_model_namespace::write_array";
+    (void) function__;  // suppress unused var warning
+    
+    try {
+      double mu = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 1;
+      mu = in__.template read<local_scalar_t__>();
+      double sigma = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 2;
+      sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
+                0, lp__);
+      out__.write(mu);
+      out__.write(sigma);
+      if (stan::math::logical_negation((stan::math::primitive_value(
+            emit_transformed_parameters__) || stan::math::primitive_value(
+            emit_generated_quantities__)))) {
+        return ;
+      } 
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      } 
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    } // write_array_impl() 
+    
+  template <typename VecVar, typename VecI, 
+  stan::require_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
+                                   std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+      local_scalar_t__ mu = DUMMY_VAR__;
+      mu = in__.read<local_scalar_t__>();
+      out__.write(mu);
+      local_scalar_t__ sigma = DUMMY_VAR__;
+      sigma = in__.read<local_scalar_t__>();
+      out__.write_free_lb(0, sigma);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    } // transform_inits_impl() 
+    
+  inline void get_param_names(std::vector<std::string>& names__) const {
+    
+    names__ = std::vector<std::string>{"mu", "sigma"};
+    
+    } // get_param_names() 
+    
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+      std::vector<size_t>{}};
+    
+    } // get_dims() 
+    
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const
+    final {
+    
+    param_names__.emplace_back(std::string() + "mu");
+    param_names__.emplace_back(std::string() + "sigma");
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // constrained_param_names() 
+    
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const
+    final {
+    
+    param_names__.emplace_back(std::string() + "mu");
+    param_names__.emplace_back(std::string() + "sigma");
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // unconstrained_param_names() 
+    
+  inline std::string get_constrained_sizedtypes() const {
+    
+    return std::string("[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+    
+    } // get_constrained_sizedtypes() 
+    
+  inline std::string get_unconstrained_sizedtypes() const {
+    
+    return std::string("[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+    
+    } // get_unconstrained_sizedtypes() 
+    
+  
+    // Begin method overload boilerplate
+    template <typename RNG>
+    inline void write_array(RNG& base_rng,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                            const bool emit_transformed_parameters = true,
+                            const bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      const size_t num_params__ = 
+  (1 + 1);
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      std::vector<int> params_i;
+      vars = Eigen::Matrix<double, Eigen::Dynamic, 1>::Constant(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
+        emit_transformed_parameters, emit_generated_quantities, pstream);
+    }
+
+    template <typename RNG>
+    inline void write_array(RNG& base_rng, std::vector<double>& params_r,
+                            std::vector<int>& params_i,
+                            std::vector<double>& vars,
+                            bool emit_transformed_parameters = true,
+                            bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      const size_t num_params__ = 
+  (1 + 1);
+      const size_t num_transformed = emit_transformed_parameters * 0;
+      const size_t num_gen_quantities = emit_generated_quantities * 0;
+      const size_t num_to_write = num_params__ + num_transformed +
+        num_gen_quantities;
+      vars = std::vector<double>(num_to_write,
+        std::numeric_limits<double>::quiet_NaN());
+      write_array_impl(base_rng, params_r, params_i, vars,
+        emit_transformed_parameters, emit_generated_quantities, pstream);
+    }
+
+    template <bool propto__, bool jacobian__, typename T_>
+    inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+                       std::ostream* pstream = nullptr) const {
+      Eigen::Matrix<int, -1, 1> params_i;
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+    }
+
+    template <bool propto__, bool jacobian__, typename T__>
+    inline T__ log_prob(std::vector<T__>& params_r,
+                        std::vector<int>& params_i,
+                        std::ostream* pstream = nullptr) const {
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+    }
+
+
+    inline void transform_inits(const stan::io::var_context& context,
+                         Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
+                         std::ostream* pstream = nullptr) const final {
+      std::vector<double> params_r_vec(params_r.size());
+      std::vector<int> params_i;
+      transform_inits(context, params_i, params_r_vec, pstream);
+      params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
+        params_r_vec.data(), params_r_vec.size());
+    }
+
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+     constexpr std::array<const char*, 2> names__{"mu", "sigma"};
+      const std::array<Eigen::Index, 2> constrain_param_sizes__{1, 1};
+      const auto num_constrained_params__ = std::accumulate(
+        constrain_param_sizes__.begin(), constrain_param_sizes__.end(), 0);
+    
+     std::vector<double> params_r_flat__(num_constrained_params__);
+     Eigen::Index size_iter__ = 0;
+     Eigen::Index flat_iter__ = 0;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+         params_r_flat__[flat_iter__] = param_vec__[i];
+         ++flat_iter__;
+       }
+       ++size_iter__;
+     }
+     vars.resize(num_params_r__);
+     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
+};
+}
+
+using stan_model = variable_named_context_model_namespace::variable_named_context_model;
+
+#ifndef USING_R
+
+// Boilerplate
+stan::model::model_base& new_model(
+        stan::io::var_context& data_context,
+        unsigned int seed,
+        std::ostream* msg_stream) {
+  stan_model* m = new stan_model(data_context, seed, msg_stream);
+  return *m;
+}
+
+stan::math::profile_map& get_stan_profile_data() {
+  return variable_named_context_model_namespace::profiles__;
 }
 
 #endif

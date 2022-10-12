@@ -20,5 +20,6 @@ model {
   y = (((y_raw > 0) ? 1 : -1)) - y_raw;
   y = ((((y_raw > 0) ? 1 : -1))) - y_raw;
 
+  int bool = 1 < 2 > 3 < 4;
 }
 

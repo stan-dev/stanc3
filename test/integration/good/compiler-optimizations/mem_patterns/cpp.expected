@@ -81,7 +81,7 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
               10);
       Eigen::Matrix<std::complex<local_scalar_t__>, -1, -1> A_complex_tp =
          Eigen::Matrix<std::complex<local_scalar_t__>, -1, -1>::Constant(10,
-           10, DUMMY_VAR__);
+           10, std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       current_statement__ = 2;
       stan::model::assign(A_complex_tp, A_p,
         "assigning variable A_complex_tp");
@@ -125,7 +125,8 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
               10);
       Eigen::Matrix<std::complex<double>, -1, -1> A_complex_tp =
          Eigen::Matrix<std::complex<double>, -1, -1>::Constant(10, 10,
-           std::numeric_limits<double>::quiet_NaN());
+           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+             std::numeric_limits<double>::quiet_NaN()));
       out__.write(A_p);
       if (stan::math::logical_negation((stan::math::primitive_value(
             emit_transformed_parameters__) || stan::math::primitive_value(
@@ -503,10 +504,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
  private:
   int N;
   int K;
-  Eigen::Matrix<double, -1, 1> diff_low_mid__;
-  Eigen::Matrix<double, -1, 1> diff_high_mid__;
-  Eigen::Matrix<double, -1, 1> mid_price__;
-  Eigen::Matrix<double, -1, -1> X_all__;
+  Eigen::Matrix<double, -1, 1> diff_low_mid_data__;
+  Eigen::Matrix<double, -1, 1> diff_high_mid_data__;
+  Eigen::Matrix<double, -1, 1> mid_price_data__;
+  Eigen::Matrix<double, -1, -1> X_all_data__;
   double phi_prior_a;
   double phi_prior_b;
   double mu_prior_mu;
@@ -569,10 +570,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 54;
       context__.validate_dims("data initialization","diff_low_mid","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      diff_low_mid__ = 
+      diff_low_mid_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&diff_low_mid) Eigen::Map<Eigen::Matrix<double, -1, 1>>(diff_low_mid__.data(), N);
+      new (&diff_low_mid) Eigen::Map<Eigen::Matrix<double, -1, 1>>(diff_low_mid_data__.data(), N);
         
       
       {
@@ -595,10 +596,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 56;
       context__.validate_dims("data initialization","diff_high_mid","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      diff_high_mid__ = 
+      diff_high_mid_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&diff_high_mid) Eigen::Map<Eigen::Matrix<double, -1, 1>>(diff_high_mid__.data(), N);
+      new (&diff_high_mid) Eigen::Map<Eigen::Matrix<double, -1, 1>>(diff_high_mid_data__.data(), N);
         
       
       {
@@ -622,10 +623,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 58;
       context__.validate_dims("data initialization","mid_price","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      mid_price__ = 
+      mid_price_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&mid_price) Eigen::Map<Eigen::Matrix<double, -1, 1>>(mid_price__.data(), N);
+      new (&mid_price) Eigen::Map<Eigen::Matrix<double, -1, 1>>(mid_price_data__.data(), N);
         
       
       {
@@ -651,10 +652,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       context__.validate_dims("data initialization","X_all","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(K)});
-      X_all__ = 
+      X_all_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(N, K,
           std::numeric_limits<double>::quiet_NaN());
-      new (&X_all) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_all__.data(), N, K);
+      new (&X_all) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_all_data__.data(), N, K);
         
       
       {
@@ -1158,7 +1159,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         stan::math::pow((1 - stan::math::square(phi)), -0.5),
         "assigning variable h_i_sigma", stan::model::index_uni(1));
       current_statement__ = 38;
-      stan::model::assign(h_i_sigma, rep_vector(1.0, (Nr - 1)),
+      stan::model::assign(h_i_sigma, stan::math::rep_vector(1.0, (Nr - 1)),
         "assigning variable h_i_sigma", stan::model::index_min_max(2, Nr));
       current_statement__ = 39;
       stan::model::assign(h_i_mean,
@@ -3047,8 +3048,8 @@ udf_fun_functor__::operator()(const T0__& A, std::ostream* pstream__)  const
  private:
   int N;
   int M;
-  Eigen::Matrix<double, -1, -1> dat_x__;
-  Eigen::Matrix<double, -1, 1> y__;
+  Eigen::Matrix<double, -1, -1> dat_x_data__;
+  Eigen::Matrix<double, -1, 1> y_data__;
   std::vector<int> idx_tester; 
   Eigen::Map<Eigen::Matrix<double, -1, -1>> dat_x{nullptr, 0, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> y{nullptr, 0};
@@ -3102,10 +3103,10 @@ udf_fun_functor__::operator()(const T0__& A, std::ostream* pstream__)  const
       context__.validate_dims("data initialization","dat_x","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(M)});
-      dat_x__ = 
+      dat_x_data__ = 
         Eigen::Matrix<double, -1, -1>::Constant(N, M,
           std::numeric_limits<double>::quiet_NaN());
-      new (&dat_x) Eigen::Map<Eigen::Matrix<double, -1, -1>>(dat_x__.data(), N, M);
+      new (&dat_x) Eigen::Map<Eigen::Matrix<double, -1, -1>>(dat_x_data__.data(), N, M);
         
       
       {
@@ -3132,10 +3133,10 @@ udf_fun_functor__::operator()(const T0__& A, std::ostream* pstream__)  const
       current_statement__ = 75;
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      y__ = 
+      y_data__ = 
         Eigen::Matrix<double, -1, 1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
+      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_data__.data(), N);
       
       {
         std::vector<local_scalar_t__> y_flat__;
@@ -3474,8 +3475,8 @@ udf_fun_functor__::operator()(const T0__& A, std::ostream* pstream__)  const
         "assigning variable tp_soa_single_idx_uninit", stan::model::index_uni(1));
       current_statement__ = 28;
       stan::model::assign(tp_soa_single_idx_uninit,
-        rep_vector<stan::conditional_var_value_t<local_scalar_t__, 
-                     Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+        stan::math::rep_vector<stan::conditional_var_value_t<local_scalar_t__,
+                                 Eigen::Matrix<local_scalar_t__, -1, 1>>>(
           tp_real_from_aos, (M - 1)),
         "assigning variable tp_soa_single_idx_uninit", stan::model::index_min_max(2, M));
       Eigen::Matrix<local_scalar_t__, -1, 1> tp_aos_fail_func_vec_v =
@@ -4887,9 +4888,9 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
                std::numeric_limits<double>::quiet_NaN()));
         current_statement__ = 4;
         stan::model::assign(tp_soa_multi_idx_assign_in_loop,
-          rep_vector<stan::conditional_var_value_t<local_scalar_t__, 
-                       Eigen::Matrix<local_scalar_t__, -1, 1>>>(alpha, N),
-          "assigning variable tp_soa_multi_idx_assign_in_loop");
+          stan::math::rep_vector<stan::conditional_var_value_t<local_scalar_t__,
+                                   Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+            alpha, N), "assigning variable tp_soa_multi_idx_assign_in_loop");
         current_statement__ = 7;
         for (int i = 1; i <= 10; ++i) {
           current_statement__ = 5;
