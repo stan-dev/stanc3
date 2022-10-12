@@ -351,7 +351,7 @@ module StatementError = struct
         string * UnsizedType.returntype * UnsizedType.returntype
     | FuncDeclRedefined of string * UnsizedType.t * bool
     | FunDeclExists of string
-    | FunDeclNoDefn
+    | FunDeclNoDefn of string
     | FunDeclNeedsBlock
     | NonRealProbFunDef
     | ProbDensityNonRealVariate of UnsizedType.t option
@@ -429,14 +429,15 @@ module StatementError = struct
     | FuncDeclRedefined (name, ut, stan_math) ->
         Fmt.pf ppf "Function '%s' %s signature %a" name
           ( if stan_math then "is already declared in the Stan Math library with"
-          else "has already been declared to for" )
+          else "has already been declared for" )
           UnsizedType.pp ut
     | FunDeclExists name ->
         Fmt.pf ppf
           "Function '%s' has already been declared. A definition is expected."
           name
-    | FunDeclNoDefn ->
-        Fmt.pf ppf "Function is declared without specifying a definition."
+    | FunDeclNoDefn name ->
+        Fmt.pf ppf "Function '%s' is declared without specifying a definition."
+          name
     | FunDeclNeedsBlock ->
         Fmt.pf ppf "Function definitions must be wrapped in curly braces."
     | NonRealProbFunDef ->
@@ -638,7 +639,7 @@ let invalid_sampling_cdf_or_ccdf loc name =
 let invalid_sampling_no_such_dist loc name =
   StatementError (loc, StatementError.InvalidSamplingNoSuchDistribution name)
 
-let target_plusequals_outisde_model_or_logprob loc =
+let target_plusequals_outside_model_or_logprob loc =
   StatementError (loc, StatementError.TargetPlusEqualsOutsideModelOrLogProb)
 
 let invalid_truncation_cdf_or_ccdf loc =
@@ -656,7 +657,7 @@ let continue_outside_loop loc =
 let expression_return_outside_returning_fn loc =
   StatementError (loc, StatementError.ExpressionReturnOutsideReturningFn)
 
-let void_ouside_nonreturning_fn loc =
+let void_outside_nonreturning_fn loc =
   StatementError (loc, StatementError.VoidReturnOutsideNonReturningFn)
 
 let non_data_variable_size_decl loc =
@@ -677,7 +678,8 @@ let fn_decl_redefined loc name ~stan_math ut =
 let fn_decl_exists loc name =
   StatementError (loc, StatementError.FunDeclExists name)
 
-let fn_decl_without_def loc = StatementError (loc, StatementError.FunDeclNoDefn)
+let fn_decl_without_def loc name =
+  StatementError (loc, StatementError.FunDeclNoDefn name)
 
 let fn_decl_needs_block loc =
   StatementError (loc, StatementError.FunDeclNeedsBlock)

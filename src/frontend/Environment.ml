@@ -44,7 +44,7 @@ let add env key type_ kind = Map.add_multi env ~key ~data:{type_; kind}
 let set_raw env key data = Map.set env ~key ~data
 let find env key = Map.find_multi env key
 let mem env key = Map.mem env key
-let iter env f = Map.iter env ~f
+let iteri env f = Map.iteri env ~f:(fun ~key ~data -> f key data)
 
 module Distance = struct
   (**  Wagner–Fischer algorithm for edit distance

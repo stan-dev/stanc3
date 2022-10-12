@@ -9,7 +9,7 @@ Semantic error in 'string', line 3, column 8 to column 11:
      5:  transformed data {
    -------------------------------------------------
 
-Function is declared without specifying a definition.
+Function 'foo' is declared without specifying a definition.
 
 $ node auto-format.js
 parameters {
@@ -241,7 +241,7 @@ Semantic error in 'string', line 3, column 8 to column 11:
      5:  
    -------------------------------------------------
 
-Function is declared without specifying a definition.
+Function 'foo' is declared without specifying a definition.
 
 "stancflags = --use-opencl --allow-undefined"
 $ node pedantic.js
