@@ -65,6 +65,8 @@ module Make (StdLibrary : Std_library_utils.Library) : INFO = struct
     let acc =
       match stmt.stmt with
       | NRFunApp (StanLib _, f, _) -> (Set.add funs f.name, distrs)
+      | Print _ -> (Set.add funs "print", distrs)
+      | Reject _ -> (Set.add funs "reject", distrs)
       | Tilde {distribution; _} ->
           let possible_names =
             List.map ~f:(( ^ ) distribution.name) Utils.distribution_suffices
