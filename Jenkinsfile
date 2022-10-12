@@ -191,6 +191,7 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*") }}
         }
+
         stage("OCaml tests") {
             when {
                 beforeAgent true
@@ -561,59 +562,29 @@ pipeline {
 
         stage('Build binaries') {
             parallel {
-                // Builds on Flatiron macOS - recent macOS version
-                stage("Build & test Mac OS X binary - develop") {
+                stage("Build & test Mac OS X binary") {
                     when {
                         beforeAgent true
-                        allOf {
-                            expression { !skipRebuildingBinaries }
-                            anyOf { branch 'develop'; changeRequest() }
-                        }
+                        expression { !skipRebuildingBinaries }
                     }
                     agent { label 'osx' }
                     steps {
-                        dir("${env.WORKSPACE}/osx-develop"){
+                        dir("${env.WORKSPACE}/osx"){
                             unstash "Stanc3Setup"
-                            runShell("""
-                                export PATH=/Users/jenkins/brew/bin:\$PATH
-                                opam switch 4.12.0
-                                eval \$(opam env --switch=4.12.0)
-                                opam update || true
-                                bash -x scripts/install_build_deps.sh
-                                dune build @install --root=.
-                            """)
+                            withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
+                                runShell("""
+                                    export PATH=/Users/jenkins/brew/bin:\$PATH
+                                    eval \$(opam env --switch=/Users/jenkins/.opam/4.12.0-mac10.11 --set-switch)
+                                    opam update || true
+                                    bash -x scripts/install_build_deps.sh
+                                    dune build @install --root=.
+                                """)
+                            }
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
                             stash name:'mac-exe', includes:'bin/*'
                         }
                     }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/osx-develop/*") }}
-                }
-
-                // Builds on gelman macOS - version 10.11.6
-                stage("Build & test Mac OS X binary - release") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                            expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master' }
-                        }
-                    }
-                    agent { label 'gg-osx' }
-                    steps {
-                        dir("${env.WORKSPACE}/osx-release"){
-                            unstash "Stanc3Setup"
-                            runShell("""
-                                opam switch 4.12.0
-                                eval \$(opam env --switch=4.12.0)
-                                opam update || true
-                                bash -x scripts/install_build_deps.sh
-                                dune build @install --root=.
-                            """)
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
-                            stash name:'mac-exe', includes:'bin/*'
-                         }
-                    }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/osx-release/*") }}
+                    post { always { runShell("rm -rf ${env.WORKSPACE}/osx/*") }}
                 }
 
                 stage("Build stanc.js") {
@@ -868,6 +839,7 @@ pipeline {
                     }
                     post {always { runShell("rm -rf ${env.WORKSPACE}/windows/*")}}
                 }
+
             }
         }
 
