@@ -379,6 +379,7 @@ let math_sigs =
   ; ([basic_vectorized], "ceil", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "cos", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "cosh", [DDeepVectorized], SoA)
+  ; ([UnaryVectorized SameAsArg], "conj", [DDeepComplexVectorized], AoS)
   ; ([basic_vectorized], "digamma", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "erf", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "erfc", [DDeepVectorized], SoA)
@@ -1064,7 +1065,20 @@ let () =
     ("columns_dot_self", ReturnType UComplexRowVector, [UComplexRowVector], AoS) ;
   add_unqualified
     ("columns_dot_self", ReturnType UComplexRowVector, [UComplexMatrix], AoS) ;
-  add_unqualified ("conj", ReturnType UComplex, [UComplex], AoS) ;
+  add_unqualified
+    ( "complex_schur_decompose_t"
+    , ReturnType UComplexMatrix
+    , [UComplexMatrix]
+    , AoS ) ;
+  add_unqualified
+    ("complex_schur_decompose_t", ReturnType UComplexMatrix, [UMatrix], AoS) ;
+  add_unqualified
+    ( "complex_schur_decompose_u"
+    , ReturnType UComplexMatrix
+    , [UComplexMatrix]
+    , AoS ) ;
+  add_unqualified
+    ("complex_schur_decompose_u", ReturnType UComplexMatrix, [UMatrix], AoS) ;
   add_unqualified ("cos", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("cosh", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified

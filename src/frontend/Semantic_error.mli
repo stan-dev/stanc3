@@ -127,13 +127,13 @@ val cannot_assign_to_multiindex : Location_span.t -> t
 val invalid_sampling_pdf_or_pmf : Location_span.t -> t
 val invalid_sampling_cdf_or_ccdf : Location_span.t -> string -> t
 val invalid_sampling_no_such_dist : Location_span.t -> string -> t
-val target_plusequals_outisde_model_or_logprob : Location_span.t -> t
+val target_plusequals_outside_model_or_logprob : Location_span.t -> t
 val invalid_truncation_cdf_or_ccdf : Location_span.t -> t
 val multivariate_truncation : Location_span.t -> t
 val break_outside_loop : Location_span.t -> t
 val continue_outside_loop : Location_span.t -> t
 val expression_return_outside_returning_fn : Location_span.t -> t
-val void_ouside_nonreturning_fn : Location_span.t -> t
+val void_outside_nonreturning_fn : Location_span.t -> t
 val non_data_variable_size_decl : Location_span.t -> t
 val non_int_bounds : Location_span.t -> t
 val complex_transform : Location_span.t -> t
@@ -150,7 +150,7 @@ val fn_decl_redefined :
   Location_span.t -> string -> stan_math:bool -> UnsizedType.t -> t
 
 val fn_decl_exists : Location_span.t -> string -> t
-val fn_decl_without_def : Location_span.t -> t
+val fn_decl_without_def : Location_span.t -> string -> t
 val fn_decl_needs_block : Location_span.t -> t
 val non_real_prob_fn_def : Location_span.t -> t
 val prob_density_non_real_variate : Location_span.t -> UnsizedType.t option -> t

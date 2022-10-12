@@ -91,14 +91,27 @@ pipeline {
         stage('Verify changes') {
             agent {
                 docker {
-                    image 'stanorg/ci:gpu'
+                    image 'stanorg/stanc3:debianfi'
+                    args "--entrypoint=\'\'"
                     label 'linux'
                 }
             }
             steps {
                 script {
-                    retry(3) { checkout scm }
+                    retry(3) {
+                        checkout([
+                          $class: 'GitSCM',
+                          branches: scm.branches,
+                          extensions: [[$class: 'CloneOption', noTags: false]],
+                          userRemoteConfigs: scm.userRemoteConfigs,
+                        ])
+                    }
                     sh 'git clean -xffd'
+
+                    runShell """
+                        eval \$(opam env)
+                        dune subst
+                    """
 
                     stash 'Stanc3Setup'
 
@@ -178,6 +191,7 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*") }}
         }
+
         stage("OCaml tests") {
             when {
                 beforeAgent true
@@ -195,15 +209,12 @@ pipeline {
                         }
                     }
                     steps {
-                        dir("${env.WORKSPACE}/dune-tests"){
-                            unstash "Stanc3Setup"
-                            runShell("""
-                                eval \$(opam env)
-                                dune runtest
-                            """)
-                        }
+                        unstash "Stanc3Setup"
+                        runShell("""
+                            eval \$(opam env)
+                            dune runtest
+                        """)
                     }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/dune-tests/*") }}
                 }
                 stage("stancjs tests") {
                     agent {
@@ -214,15 +225,12 @@ pipeline {
                         }
                     }
                     steps {
-                        dir("${env.WORKSPACE}/stancjs-tests"){
-                            unstash "Stanc3Setup"
-                            runShell("""
-                                eval \$(opam env)
-                                dune build @runjstest
-                            """)
-                        }
+                        unstash "Stanc3Setup"
+                        runShell("""
+                            eval \$(opam env)
+                            dune build @runjstest
+                        """)
                     }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/stancjs-tests/*") }}
                 }
             }
         }
@@ -554,61 +562,29 @@ pipeline {
 
         stage('Build binaries') {
             parallel {
-                // Builds on Flatiron macOS - recent macOS version
-                stage("Build & test Mac OS X binary - develop") {
+                stage("Build & test Mac OS X binary") {
                     when {
                         beforeAgent true
-                        allOf {
-                            expression { !skipRebuildingBinaries }
-                            anyOf { branch 'develop'; changeRequest() }
-                        }
+                        expression { !skipRebuildingBinaries }
                     }
                     agent { label 'osx' }
                     steps {
-                        dir("${env.WORKSPACE}/osx-develop"){
+                        dir("${env.WORKSPACE}/osx"){
                             unstash "Stanc3Setup"
-                            runShell("""
-                                export PATH=/Users/jenkins/brew/bin:\$PATH
-                                opam switch 4.12.0
-                                eval \$(opam env --switch=4.12.0)
-                                opam update || true
-                                bash -x scripts/install_build_deps.sh
-                                dune subst
-                                dune build @install
-                            """)
+                            withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
+                                runShell("""
+                                    export PATH=/Users/jenkins/brew/bin:\$PATH
+                                    eval \$(opam env --switch=/Users/jenkins/.opam/4.12.0-mac10.11 --set-switch)
+                                    opam update || true
+                                    bash -x scripts/install_build_deps.sh
+                                    dune build @install --root=.
+                                """)
+                            }
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
                             stash name:'mac-exe', includes:'bin/*'
                         }
                     }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/osx-develop/*") }}
-                }
-
-                // Builds on gelman macOS - version 10.11.6
-                stage("Build & test Mac OS X binary - release") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                            expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master' }
-                        }
-                    }
-                    agent { label 'gg-osx' }
-                    steps {
-                        dir("${env.WORKSPACE}/osx-release"){
-                            unstash "Stanc3Setup"
-                            runShell("""
-                                opam switch 4.12.0
-                                eval \$(opam env --switch=4.12.0)
-                                opam update || true
-                                bash -x scripts/install_build_deps.sh
-                                dune subst
-                                dune build @install
-                            """)
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
-                            stash name:'mac-exe', includes:'bin/*'
-                         }
-                    }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/osx-release/*") }}
+                    post { always { runShell("rm -rf ${env.WORKSPACE}/osx/*") }}
                 }
 
                 stage("Build stanc.js") {
@@ -631,8 +607,7 @@ pipeline {
                             unstash "Stanc3Setup"
                             runShell("""
                                 eval \$(opam env)
-                                dune subst
-                                dune build --profile release src/stancjs
+                                dune build --root=. --profile release src/stancjs
                             """)
                             sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
                             sh "mv `find _build -name index.html` bin/load_stanc.html"
@@ -662,8 +637,7 @@ pipeline {
                             unstash "Stanc3Setup"
                             runShell("""
                                 eval \$(opam env)
-                                dune subst
-                                dune build @install --profile static
+                                dune build @install --profile static --root=.
                             """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
                             stash name:'linux-exe', includes:'bin/*'
@@ -691,10 +665,6 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-mips64el"){
                             unstash "Stanc3Setup"
-                            runShell("""
-                                eval \$(opam env)
-                                dune subst
-                            """)
                             sh "bash -x scripts/build_multiarch_stanc3.sh mips64el"
 
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
@@ -724,10 +694,6 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-ppc64el"){
                             unstash "Stanc3Setup"
-                            runShell("""
-                                eval \$(opam env)
-                                dune subst
-                            """)
                             sh "bash -x scripts/build_multiarch_stanc3.sh ppc64el"
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
                             stash name:'linux-ppc64el-exe', includes:'bin/*'
@@ -755,10 +721,6 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-s390x"){
                             unstash "Stanc3Setup"
-                            runShell("""
-                                eval \$(opam env)
-                                dune subst
-                            """)
                             sh "bash -x scripts/build_multiarch_stanc3.sh s390x"
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
                             stash name:'linux-s390x-exe', includes:'bin/*'
@@ -786,10 +748,6 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-arm64"){
                             unstash "Stanc3Setup"
-                            runShell("""
-                                eval \$(opam env)
-                                dune subst
-                            """)
                             sh "bash -x scripts/build_multiarch_stanc3.sh arm64"
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
                             stash name:'linux-arm64-exe', includes:'bin/*'
@@ -817,10 +775,6 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-armhf"){
                             unstash "Stanc3Setup"
-                            runShell("""
-                                eval \$(opam env)
-                                dune subst
-                            """)
                             sh "bash -x scripts/build_multiarch_stanc3.sh armhf"
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
                             stash name:'linux-armhf-exe', includes:'bin/*'
@@ -848,10 +802,6 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-armel"){
                             unstash "Stanc3Setup"
-                            runShell("""
-                                eval \$(opam env)
-                                dune subst
-                            """)
                             sh "bash -x scripts/build_multiarch_stanc3.sh armel"
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
                             stash name:'linux-armel-exe', includes:'bin/*'
@@ -881,8 +831,7 @@ pipeline {
                             unstash "Stanc3Setup"
                             runShell("""
                                 eval \$(opam env)
-                                dune subst
-                                dune build -x windows
+                                dune build -x windows --root=.
                             """)
                             sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
                             stash name:'windows-exe', includes:'bin/*'
@@ -890,6 +839,7 @@ pipeline {
                     }
                     post {always { runShell("rm -rf ${env.WORKSPACE}/windows/*")}}
                 }
+
             }
         }
 
@@ -999,7 +949,9 @@ pipeline {
     }
     post {
        always {
-          script {utils.mailBuildResults()}
+          script {
+            utils.mailBuildResults()
+          }
         }
     }
 }
