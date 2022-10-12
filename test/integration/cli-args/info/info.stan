@@ -57,6 +57,10 @@ model {
     target += std_normal_lupdf(y);
     target += reduce_sum(f_lpdf, g, 1);
     y ~ goo();
+    print("hello world");
+    if (0) {
+      reject("goodbye");
+    }
 }
 
 generated quantities {
