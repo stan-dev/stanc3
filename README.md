@@ -97,9 +97,14 @@ The pretty-printer in the frontend uses the AST and attempts to keep user syntax
 
     The AST intends to keep very close to Stan-level semantics and syntax in every way.
 
-2. `src/middle/Program.ml` contains the MIR (Middle Intermediate Language - we're saving room at the bottom for later). `src/frontend/Ast_to_Mir.ml` performs the lowering and attempts to strip out as much Stan-specific semantics and syntax as possible, though this is still something of a work-in-progress.
+2. `src/middle/Program.ml` contains the MIR (Middle Intermediate Language). `src/frontend/Ast_to_Mir.ml` performs the lowering and attempts to strip out as much Stan-specific semantics and syntax as possible, though this is still something of a work-in-progress.
 
     The MIR uses the same two-level types idea to add metadata, notably expression types and autodiff levels as well as locations on many things. The MIR is used as the output data type from the frontend and the input for dataflow analysis, optimization (which also outputs MIR), and code generation.
+
+
+Besides these two, there is also a minimal representation of C++ used in code generation found in `src/stan_math_backend/Cpp.ml`.
+This is intentionally simpler than both the above structures and than a true C++ AST and is tailored pretty specifically
+to the C++ generated in our model class.
 
 ## Design goals
 * **Multiple phases** - each with human-readable intermediate representations for easy debugging and optimization design.

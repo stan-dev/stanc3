@@ -27,13 +27,25 @@ module Types = struct
   (** Helpers for constructing types *)
 
   let local_scalar = Type_literal "local_scalar_t__"
+
+  (** A [std::vector<t>] *)
   let std_vector t = Vector t
+
   let bool = Type_literal "bool"
   let complex s = Complex s
+
+  (** An [Eigen::Matrix<s, -1, 1>]*)
   let vector s = Matrix (s, -1, 1)
+
+  (** An [Eigen::Matrix<s, 1, -1>]*)
   let row_vector s = Matrix (s, 1, -1)
+
+  (** An [Eigen::Matrix<s, -1, -1>]*)
   let matrix s = Matrix (s, -1, -1)
+
+  (** A [std::string]*)
   let string = Type_literal "std::string"
+
   let size_t = Type_literal "size_t"
   let const_ref t = Const (Ref t)
   let const_char_array i = Array (Const (Pointer (Type_literal "char")), i)
@@ -79,19 +91,33 @@ type expr =
 module Exprs = struct
   (** Some helper values and functions *)
 
+  (** Call a method on object, wrapping it in parentheses if
+      it is not a variable
+  *)
   let method_call obj name templates args =
     match obj with
     | Var _ -> MethodCall (obj, name, templates, args)
     | _ -> MethodCall (Parens obj, name, templates, args)
 
   let to_var s = Var s
+
+  (** Turn an OCaml string into a quoted and escaped C++ string*)
   let literal_string s = Literal ("\"" ^ Cpp_str.escaped s ^ "\"")
+
+  (** Equivalent to [std::vector<t>{e1,...,en}] *)
   let std_vector_expr t es = InitializerExpr (Vector t, es)
+
   let fun_call s es = FunCall (s, [], es)
   let templated_fun_call s ts es = FunCall (s, ts, es)
+
+  (** Helper for [std::numeric_limits<double>::quiet_NaN()] *)
   let quiet_NaN = fun_call "std::numeric_limits<double>::quiet_NaN" []
+
+  (** Helper for [std::numeric_limits<int>::min()] *)
   let int_min = fun_call "std::numeric_limits<int>::min" []
 
+  (** Fold a list of expressions together with a C++ operator,
+      useful for e.g. adding a list of numbers. *)
   let binop_list es ~f ~default : expr =
     match es with
     | [] -> default
@@ -104,21 +130,54 @@ module Expression_syntax = struct
 
   include Exprs
 
+  (** A pun for the C++ [operator<<] *)
   let ( << ) a b = StreamInsertion (a, b)
+
+  (** Method call: Call a no-argument method
+
+      E.g. [foo.bar()]
+  *)
   let ( .@!() ) obj name = method_call obj name [] []
+
+  (** Method call: Call the named method with args
+
+      E.g. [foo.bar(A1,...An)]
+  *)
   let ( .@?() ) obj (name, args) = method_call obj name [] args
 
+  (** Method call: Call the named method with template types and args
+
+      E.g. [foo.bar<T1,...,Tn>(A1,...An)]
+  *)
   let ( .@<>() ) obj (name, templates, args) =
     method_call obj name templates args
 
+  (** Static method call: Call the named method with no arguments.
+
+    E.g. [Foo::bar()]
+  *)
   let ( |::! ) ty name = StaticMethodCall (ty, name, [], [])
+
+  (** Static method call: Call the named method with args
+
+    E.g. [Foo::bar(A1,...An)]
+  *)
   let ( |::? ) ty (name, args) = StaticMethodCall (ty, name, [], args)
 
+  (** Static method call: Call the named method with template types and args
+
+    E.g. [Foo::bar<T1,...,Tn>(A1,...An)]
+  *)
   let ( |::<> ) ty (name, templates, args) =
     StaticMethodCall (ty, name, templates, args)
 
+  (** Pun for C++ [operator+(a,b)] *)
   let ( + ) a b = BinOp (a, Add, b)
+
+  (** Pun for C++ [operator-(a,b)] *)
   let ( - ) a b = BinOp (a, Subtract, b)
+
+  (** Pun for C++ [operator*(a,b)] *)
   let ( * ) a b = BinOp (a, Multiply, b)
 end
 
@@ -158,8 +217,11 @@ type stmt =
 module Stmts = struct
   (** Helpers for common statement constructs *)
 
+  (** Wrap the list of statements in a block if it isn't a singleton block already *)
   let block stmts = match stmts with [(Block _ as b)] -> b | _ -> Block stmts
 
+  (** Set up the try/catch logic for throwing an exception with
+      its location set to the Stan program location. *)
   let rethrow_located stmts =
     TryCatch
       ( block stmts
@@ -182,11 +244,14 @@ module Stmts = struct
 
   let if_block cond stmts = IfElse (cond, block stmts, None)
 
+  (** Supress warnings for a variable which may not be used. *)
   let unused s =
     [Comment "supress unused var warning"; Expression (Cast (Void, Var s))]
 end
 
 module Decls = struct
+  (** Declarations which get re-used often in the generated model *)
+
   let current_statement =
     VarDef
       (make_var_defn ~type_:Int ~name:"current_statement__"
@@ -257,6 +322,8 @@ type directive =
   | IfNDef of string * defn list
   | MacroApply of string * string list
 
+(** The Stan model class always has a non-default constructor and
+      destructor *)
 and class_defn =
   { class_name: identifier
   ; final: bool
@@ -293,6 +360,7 @@ let make_class_defn ~name ~base ?(final = true) ~private_members ~public_members
 
 let make_struct_defn ~param ~name ~body () = {param; struct_name= name; body}
 
+(** Much like in C++, we define a translation unit as a list of definitions *)
 type program = defn list [@@deriving sexp]
 
 module Printing = struct

@@ -28,7 +28,10 @@ to a new developer.
 
 - {{!page-exposing_new_functions}
   Page on exposing a new function of the Stan Math library}
-  
+
+- {{!page-cpp_ir}
+  Page on how we implement C++ code generation with a structured type and mini-DSL}
+
 - {{:https://github.com/stan-dev/stanc3/wiki/Software-Engineering-best-practices}
   Wiki on generic software best practices}
 
