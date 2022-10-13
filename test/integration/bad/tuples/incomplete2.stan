@@ -1,1 +1,1 @@
-data { ( array [ foo ] real foo
+data { tuple( array [ foo ] real foo

@@ -1,14 +1,11 @@
-
 functions {
-  real foo(data (real, real) x){
+  real foo(data tuple(real, real) x) {
     return x.1;
   }
 }
-
 data {
-  (real, real) d;
+  tuple(real, real) d;
 }
-
 model {
   target += foo(d);
 }

@@ -1,12 +1,12 @@
 
 functions {
-  real foo(data (real, real) x){
+  real foo(data tuple(real, real) x){
     return x.1;
   }
 }
 
 parameters {
-  (real, real) ps;
+  tuple(real, real) ps;
 }
 
 model {

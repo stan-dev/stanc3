@@ -1,15 +1,12 @@
 functions {
-
-  void foo((real,) x){
+  void foo(tuple(real,) x) {
     return;
   }
 }
-
-
 transformed data {
-   (real,) x;
-
+  tuple(real,) x;
+  
   x = (3.5,);
-
-   foo(x);
+  
+  foo(x);
 }

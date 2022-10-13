@@ -20,7 +20,8 @@ Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 10, pars
 Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
   unit_vector, simplex, ordered, positive_ordered,
-  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov
+  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
+  tuple(...)
 optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc array-expr-decl-bad3.stan
 Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsing error:
@@ -34,7 +35,8 @@ Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsi
 Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
   unit_vector, simplex, ordered, positive_ordered,
-  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov
+  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
+  tuple(...)
 optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc array-multi-decl-bad.stan
 Syntax error in 'array-multi-decl-bad.stan', line 2, column 11 to column 12, parsing error:
@@ -688,7 +690,8 @@ Syntax error in 'err-decl-double.stan', line 2, column 2 to column 8, parsing er
 Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
   unit_vector, simplex, ordered, positive_ordered,
-  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov
+  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
+  tuple(...)
 optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc err-decl-matrix-2.stan
 Semantic error in 'err-decl-matrix-2.stan', line 2, column 13 to column 17:

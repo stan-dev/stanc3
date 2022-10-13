@@ -794,16 +794,16 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 11> locations_array__ = 
 {" (found before start of program)",
- " (in 'complex-tuples.stan', line 8, column 2 to column 16)",
- " (in 'complex-tuples.stan', line 9, column 2 to column 26)",
- " (in 'complex-tuples.stan', line 10, column 2 to column 57)",
- " (in 'complex-tuples.stan', line 11, column 2 to column 10)",
- " (in 'complex-tuples.stan', line 12, column 2 to column 16)",
- " (in 'complex-tuples.stan', line 13, column 2 to column 14)",
- " (in 'complex-tuples.stan', line 14, column 2 to column 31)",
- " (in 'complex-tuples.stan', line 16, column 2 to column 64)",
+ " (in 'complex-tuples.stan', line 7, column 2 to column 21)",
+ " (in 'complex-tuples.stan', line 8, column 2 to column 31)",
+ " (in 'complex-tuples.stan', line 9, column 2 to column 67)",
+ " (in 'complex-tuples.stan', line 10, column 2 to column 10)",
+ " (in 'complex-tuples.stan', line 11, column 2 to column 16)",
+ " (in 'complex-tuples.stan', line 12, column 2 to column 14)",
+ " (in 'complex-tuples.stan', line 13, column 2 to column 31)",
+ " (in 'complex-tuples.stan', line 15, column 2 to column 74)",
  " (in 'complex-tuples.stan', line 3, column 4 to column 27)",
- " (in 'complex-tuples.stan', line 2, column 85 to line 4, column 3)"};
+ " (in 'complex-tuples.stan', line 2, column 105 to line 4, column 3)"};
 
 struct f_functor__ {
   std::tuple<int, std::vector<std::tuple<int, double>>>

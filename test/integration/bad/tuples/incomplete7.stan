@@ -1,3 +1,3 @@
 functions {
-   (real, int, ) foo()
+   tuple(real, int, ) foo()
 }

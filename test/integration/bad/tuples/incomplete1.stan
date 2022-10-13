@@ -1,2 +1,2 @@
 data {
-  ( array [ foo ] real , while
+  tuple( array [ foo ] real , while

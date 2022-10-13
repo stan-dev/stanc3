@@ -1,4 +1,4 @@
 transformed data {
-  (int, int) x;
+  tuple(int, int) x;
   x.1 = 5;
 }

@@ -1,4 +1,4 @@
 parameters {
-  (real, real) ps;
-  (real, (real, matrix[10,10])) ps2;
+  tuple(real, real) ps;
+  tuple(real, tuple(real, matrix[10, 10])) ps2;
 }

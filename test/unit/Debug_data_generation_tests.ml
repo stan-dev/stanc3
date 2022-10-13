@@ -705,10 +705,10 @@ let%expect_test "Tuples program" =
     Test_utils.typed_ast_of_string_exn
       {|
       data {
-        (real, int) d;
-        (array[2] real, int, matrix[3,3]) complicated;
-        (real, (real, real)) n;
-        array[3] (real, array[4] (int, int)) nested;
+        tuple(real, int) d;
+        tuple(array[2] real, int, matrix[3,3]) complicated;
+        tuple(real, tuple(real, real)) n;
+        array[3] tuple(real, array[4] tuple(int, int)) nested;
       }
       |}
   in

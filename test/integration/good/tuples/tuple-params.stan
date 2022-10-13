@@ -1,3 +1,3 @@
 parameters {
-  (real, real<lower=0>) ps;
+  tuple(real, real<lower=0>) ps;
 }

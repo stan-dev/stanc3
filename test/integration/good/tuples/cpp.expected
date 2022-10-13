@@ -11,20 +11,20 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 15> locations_array__ = 
 {" (found before start of program)",
- " (in 'arrays-tuples-nested.stan', line 13, column 2 to column 33)",
- " (in 'arrays-tuples-nested.stan', line 14, column 2 to column 42)",
- " (in 'arrays-tuples-nested.stan', line 15, column 2 to column 59)",
- " (in 'arrays-tuples-nested.stan', line 16, column 2 to column 74)",
- " (in 'arrays-tuples-nested.stan', line 17, column 2 to column 72)",
- " (in 'arrays-tuples-nested.stan', line 18, column 2 to column 68)",
- " (in 'arrays-tuples-nested.stan', line 19, column 2 to column 79)",
- " (in 'arrays-tuples-nested.stan', line 2, column 2 to column 30)",
- " (in 'arrays-tuples-nested.stan', line 3, column 2 to column 39)",
- " (in 'arrays-tuples-nested.stan', line 4, column 2 to column 53)",
- " (in 'arrays-tuples-nested.stan', line 5, column 2 to column 70)",
- " (in 'arrays-tuples-nested.stan', line 6, column 2 to column 65)",
- " (in 'arrays-tuples-nested.stan', line 7, column 2 to column 65)",
- " (in 'arrays-tuples-nested.stan', line 8, column 2 to column 76)"};
+ " (in 'arrays-tuples-nested.stan', line 12, column 2 to column 38)",
+ " (in 'arrays-tuples-nested.stan', line 13, column 2 to column 52)",
+ " (in 'arrays-tuples-nested.stan', line 14, column 2 to column 64)",
+ " (in 'arrays-tuples-nested.stan', line 15, column 2 to column 84)",
+ " (in 'arrays-tuples-nested.stan', line 16, column 2 to column 87)",
+ " (in 'arrays-tuples-nested.stan', line 17, column 2 to column 78)",
+ " (in 'arrays-tuples-nested.stan', line 18, column 2 to line 19, column 81)",
+ " (in 'arrays-tuples-nested.stan', line 2, column 2 to column 35)",
+ " (in 'arrays-tuples-nested.stan', line 3, column 2 to column 49)",
+ " (in 'arrays-tuples-nested.stan', line 4, column 2 to column 58)",
+ " (in 'arrays-tuples-nested.stan', line 5, column 2 to column 80)",
+ " (in 'arrays-tuples-nested.stan', line 6, column 2 to column 80)",
+ " (in 'arrays-tuples-nested.stan', line 7, column 2 to column 75)",
+ " (in 'arrays-tuples-nested.stan', line 8, column 2 to line 9, column 79)"};
 
 
 
@@ -1852,11 +1852,11 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 6> locations_array__ = 
 {" (found before start of program)",
- " (in 'onepl.stan', line 10, column 3 to column 13)",
- " (in 'onepl.stan', line 12, column 2 to column 13)",
- " (in 'onepl.stan', line 14, column 3 to column 10)",
- " (in 'onepl.stan', line 4, column 4 to column 11)",
- " (in 'onepl.stan', line 3, column 21 to line 5, column 3)"};
+ " (in 'onepl.stan', line 7, column 2 to column 17)",
+ " (in 'onepl.stan', line 9, column 2 to column 13)",
+ " (in 'onepl.stan', line 11, column 2 to column 9)",
+ " (in 'onepl.stan', line 3, column 4 to column 11)",
+ " (in 'onepl.stan', line 2, column 27 to line 4, column 3)"};
 
 struct foo_functor__ {
   template <typename T0__0__,
@@ -2201,7 +2201,7 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 3> locations_array__ = 
 {" (found before start of program)",
- " (in 'simple.stan', line 2, column 2 to column 28)",
+ " (in 'simple.stan', line 2, column 2 to column 33)",
  " (in 'simple.stan', line 3, column 2 to column 13)"};
 
 
@@ -2525,7 +2525,7 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 3> locations_array__ = 
 {" (found before start of program)",
- " (in 'simple2.stan', line 2, column 2 to column 45)",
+ " (in 'simple2.stan', line 2, column 2 to column 50)",
  " (in 'simple2.stan', line 3, column 2 to column 16)"};
 
 
@@ -2852,8 +2852,8 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 3> locations_array__ = 
 {" (found before start of program)",
- " (in 'simple3.stan', line 2, column 2 to column 77)",
- " (in 'simple3.stan', line 3, column 2 to column 16)"};
+ " (in 'simple3.stan', line 2, column 2 to line 4, column 39)",
+ " (in 'simple3.stan', line 5, column 2 to column 16)"};
 
 
 
@@ -3184,7 +3184,7 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 2> locations_array__ = 
 {" (found before start of program)",
- " (in 'tuple-constraints-data2.stan', line 2, column 2 to column 50)"};
+ " (in 'tuple-constraints-data2.stan', line 2, column 2 to column 60)"};
 
 
 
@@ -3521,7 +3521,7 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 2> locations_array__ = 
 {" (found before start of program)",
- " (in 'tuple-constraints-params.stan', line 2, column 2 to column 36)"};
+ " (in 'tuple-constraints-params.stan', line 2, column 2 to column 41)"};
 
 
 
@@ -3863,7 +3863,7 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 2> locations_array__ = 
 {" (found before start of program)",
- " (in 'tuple-constraints.stan', line 2, column 2 to column 34)"};
+ " (in 'tuple-constraints.stan', line 2, column 2 to column 39)"};
 
 
 
@@ -4191,10 +4191,10 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 5> locations_array__ = 
 {" (found before start of program)",
- " (in 'tuple-dataonly.stan', line 13, column 2 to column 19)",
- " (in 'tuple-dataonly.stan', line 9, column 2 to column 17)",
- " (in 'tuple-dataonly.stan', line 4, column 4 to column 15)",
- " (in 'tuple-dataonly.stan', line 3, column 31 to line 5, column 3)"};
+ " (in 'tuple-dataonly.stan', line 10, column 2 to column 19)",
+ " (in 'tuple-dataonly.stan', line 7, column 2 to column 22)",
+ " (in 'tuple-dataonly.stan', line 3, column 4 to column 15)",
+ " (in 'tuple-dataonly.stan', line 2, column 37 to line 4, column 3)"};
 
 struct foo_functor__ {
   double
@@ -4542,10 +4542,10 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 5> locations_array__ = 
 {" (found before start of program)",
- " (in 'tuple-full.stan', line 5, column 2 to column 36)",
+ " (in 'tuple-full.stan', line 5, column 2 to column 41)",
  " (in 'tuple-full.stan', line 8, column 2 to column 25)",
  " (in 'tuple-full.stan', line 10, column 2 to column 41)",
- " (in 'tuple-full.stan', line 2, column 2 to column 59)"};
+ " (in 'tuple-full.stan', line 2, column 2 to column 69)"};
 
 
 
@@ -4924,7 +4924,7 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 3> locations_array__ = 
 {" (found before start of program)",
- " (in 'tuple-ix-assign.stan', line 2, column 2 to column 15)",
+ " (in 'tuple-ix-assign.stan', line 2, column 2 to column 20)",
  " (in 'tuple-ix-assign.stan', line 3, column 2 to column 10)"};
 
 
@@ -5242,7 +5242,7 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 3> locations_array__ = 
 {" (found before start of program)",
- " (in 'tuple-ix-assign2.stan', line 2, column 2 to column 25)",
+ " (in 'tuple-ix-assign2.stan', line 2, column 2 to column 30)",
  " (in 'tuple-ix-assign2.stan', line 3, column 2 to column 13)"};
 
 
@@ -5562,7 +5562,7 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 3> locations_array__ = 
 {" (found before start of program)",
- " (in 'tuple-ix-assign3.stan', line 2, column 2 to column 25)",
+ " (in 'tuple-ix-assign3.stan', line 2, column 2 to column 30)",
  " (in 'tuple-ix-assign3.stan', line 3, column 2 to column 13)"};
 
 
@@ -5881,7 +5881,7 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 3> locations_array__ = 
 {" (found before start of program)",
- " (in 'tuple-ix-assign4.stan', line 2, column 2 to column 44)",
+ " (in 'tuple-ix-assign4.stan', line 2, column 2 to column 54)",
  " (in 'tuple-ix-assign4.stan', line 3, column 2 to column 15)"};
 
 
@@ -6202,8 +6202,8 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 3> locations_array__ = 
 {" (found before start of program)",
- " (in 'tuple-nested-param.stan', line 2, column 2 to column 18)",
- " (in 'tuple-nested-param.stan', line 3, column 2 to column 36)"};
+ " (in 'tuple-nested-param.stan', line 2, column 2 to column 23)",
+ " (in 'tuple-nested-param.stan', line 3, column 2 to column 47)"};
 
 
 
@@ -6624,7 +6624,7 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 2> locations_array__ = 
 {" (found before start of program)",
- " (in 'tuple-params.stan', line 2, column 2 to column 27)"};
+ " (in 'tuple-params.stan', line 2, column 2 to column 32)"};
 
 
 
@@ -6963,27 +6963,27 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 22> locations_array__ = 
 {" (found before start of program)",
- " (in 'tuple-promotion.stan', line 27, column 2 to column 46)",
- " (in 'tuple-promotion.stan', line 28, column 2 to column 28)",
- " (in 'tuple-promotion.stan', line 30, column 2 to column 49)",
- " (in 'tuple-promotion.stan', line 32, column 2 to column 71)",
- " (in 'tuple-promotion.stan', line 33, column 2 to column 62)",
- " (in 'tuple-promotion.stan', line 34, column 2 to column 19)",
- " (in 'tuple-promotion.stan', line 38, column 2 to column 12)",
- " (in 'tuple-promotion.stan', line 39, column 2 to column 26)",
- " (in 'tuple-promotion.stan', line 40, column 2 to column 24)",
- " (in 'tuple-promotion.stan', line 41, column 2 to column 25)",
- " (in 'tuple-promotion.stan', line 8, column 2 to column 14)",
- " (in 'tuple-promotion.stan', line 9, column 2 to column 33)",
- " (in 'tuple-promotion.stan', line 13, column 2 to column 36)",
- " (in 'tuple-promotion.stan', line 15, column 2 to column 54)",
+ " (in 'tuple-promotion.stan', line 24, column 2 to column 51)",
+ " (in 'tuple-promotion.stan', line 25, column 2 to column 33)",
+ " (in 'tuple-promotion.stan', line 27, column 2 to column 54)",
+ " (in 'tuple-promotion.stan', line 29, column 2 to column 86)",
+ " (in 'tuple-promotion.stan', line 30, column 2 to column 77)",
+ " (in 'tuple-promotion.stan', line 31, column 2 to column 19)",
+ " (in 'tuple-promotion.stan', line 34, column 2 to column 12)",
+ " (in 'tuple-promotion.stan', line 35, column 2 to column 31)",
+ " (in 'tuple-promotion.stan', line 36, column 2 to column 29)",
+ " (in 'tuple-promotion.stan', line 37, column 2 to column 30)",
+ " (in 'tuple-promotion.stan', line 7, column 2 to column 14)",
+ " (in 'tuple-promotion.stan', line 8, column 2 to column 38)",
+ " (in 'tuple-promotion.stan', line 11, column 2 to column 41)",
+ " (in 'tuple-promotion.stan', line 13, column 2 to column 69)",
+ " (in 'tuple-promotion.stan', line 15, column 2 to column 52)",
  " (in 'tuple-promotion.stan', line 17, column 2 to column 45)",
- " (in 'tuple-promotion.stan', line 19, column 2 to column 40)",
- " (in 'tuple-promotion.stan', line 20, column 2 to column 31)",
- " (in 'tuple-promotion.stan', line 21, column 2 to column 10)",
- " (in 'tuple-promotion.stan', line 23, column 2 to column 20)",
+ " (in 'tuple-promotion.stan', line 18, column 2 to column 36)",
+ " (in 'tuple-promotion.stan', line 19, column 2 to column 10)",
+ " (in 'tuple-promotion.stan', line 21, column 2 to column 20)",
  " (in 'tuple-promotion.stan', line 3, column 4 to column 37)",
- " (in 'tuple-promotion.stan', line 2, column 48 to line 4, column 4)"};
+ " (in 'tuple-promotion.stan', line 2, column 53 to line 4, column 3)"};
 
 struct dummy_functor__ {
   template <typename T0__0__, typename T0__1__,
@@ -7803,31 +7803,31 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 26> locations_array__ = 
 {" (found before start of program)",
- " (in 'tuple-templating.stan', line 33, column 2 to column 16)",
- " (in 'tuple-templating.stan', line 35, column 2 to column 25)",
- " (in 'tuple-templating.stan', line 37, column 2 to column 19)",
- " (in 'tuple-templating.stan', line 40, column 2 to column 60)",
+ " (in 'tuple-templating.stan', line 32, column 2 to column 18)",
+ " (in 'tuple-templating.stan', line 34, column 2 to column 26)",
+ " (in 'tuple-templating.stan', line 36, column 2 to column 21)",
+ " (in 'tuple-templating.stan', line 39, column 2 to column 63)",
  " (in 'tuple-templating.stan', line 24, column 2 to column 8)",
  " (in 'tuple-templating.stan', line 25, column 9 to column 10)",
- " (in 'tuple-templating.stan', line 25, column 11 to column 12)",
- " (in 'tuple-templating.stan', line 25, column 2 to column 17)",
+ " (in 'tuple-templating.stan', line 25, column 12 to column 13)",
+ " (in 'tuple-templating.stan', line 25, column 2 to column 18)",
  " (in 'tuple-templating.stan', line 26, column 9 to column 10)",
- " (in 'tuple-templating.stan', line 26, column 11 to column 12)",
- " (in 'tuple-templating.stan', line 26, column 2 to column 17)",
+ " (in 'tuple-templating.stan', line 26, column 12 to column 13)",
+ " (in 'tuple-templating.stan', line 26, column 2 to column 18)",
  " (in 'tuple-templating.stan', line 27, column 8 to column 9)",
  " (in 'tuple-templating.stan', line 27, column 2 to column 18)",
  " (in 'tuple-templating.stan', line 28, column 8 to column 9)",
  " (in 'tuple-templating.stan', line 28, column 2 to column 19)",
  " (in 'tuple-templating.stan', line 3, column 4 to column 18)",
- " (in 'tuple-templating.stan', line 2, column 26 to line 4, column 3)",
+ " (in 'tuple-templating.stan', line 2, column 32 to line 4, column 3)",
  " (in 'tuple-templating.stan', line 7, column 4 to column 20)",
- " (in 'tuple-templating.stan', line 6, column 42 to line 8, column 3)",
+ " (in 'tuple-templating.stan', line 6, column 48 to line 8, column 3)",
  " (in 'tuple-templating.stan', line 11, column 4 to column 21)",
- " (in 'tuple-templating.stan', line 10, column 35 to line 12, column 3)",
+ " (in 'tuple-templating.stan', line 10, column 41 to line 12, column 3)",
  " (in 'tuple-templating.stan', line 15, column 4 to column 18)",
- " (in 'tuple-templating.stan', line 14, column 32 to line 16, column 3)",
- " (in 'tuple-templating.stan', line 19, column 4 to column 18)",
- " (in 'tuple-templating.stan', line 18, column 85 to line 20, column 3)"};
+ " (in 'tuple-templating.stan', line 14, column 38 to line 16, column 3)",
+ " (in 'tuple-templating.stan', line 20, column 4 to column 18)",
+ " (in 'tuple-templating.stan', line 19, column 57 to line 21, column 3)"};
 
 struct tsum_functor__ {
   template <typename T0__1__,
@@ -8469,7 +8469,7 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 2> locations_array__ = 
 {" (found before start of program)",
- " (in 'tuples-constraints-data.stan', line 2, column 2 to column 34)"};
+ " (in 'tuples-constraints-data.stan', line 2, column 2 to column 39)"};
 
 
 
