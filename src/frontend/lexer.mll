@@ -139,6 +139,7 @@ rule token = parse
   | "row_vector"              { lexer_logger "row_vector" ; Parser.ROWVECTOR }
   | "complex_vector"          { lexer_logger "complex_vector" ; Parser.COMPLEXVECTOR }
   | "complex_row_vector"      { lexer_logger "complex_row_vector" ; Parser.COMPLEXROWVECTOR }
+  | "tuple"                   { lexer_logger "tuple" ; Parser.TUPLE }
   | "array"                   { lexer_logger "array" ; Parser.ARRAY }
   | "matrix"                  { lexer_logger "matrix" ; Parser.MATRIX }
   | "complex_matrix"          { lexer_logger "complex_matrix" ; Parser.COMPLEXMATRIX }

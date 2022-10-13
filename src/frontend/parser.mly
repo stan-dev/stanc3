@@ -44,7 +44,7 @@ let (!=) = Stdlib.(!=)
 %token RETURN "return" IF "if" ELSE "else" WHILE "while" FOR "for" IN "in"
        BREAK "break" CONTINUE "continue" PROFILE "profile"
 %token VOID "void" INT "int" REAL "real" COMPLEX "complex" VECTOR "vector"
-       ROWVECTOR "row_vector" ARRAY "array" MATRIX "matrix" ORDERED "ordered"
+       ROWVECTOR "row_vector" ARRAY "array" TUPLE "tuple" MATRIX "matrix" ORDERED "ordered"
        COMPLEXVECTOR "complex_vector" COMPLEXROWVECTOR "complex_row_vector"
        POSITIVEORDERED "positive_ordered" SIMPLEX "simplex" UNITVECTOR "unit_vector"
        CHOLESKYFACTORCORR "cholesky_factor_corr" CHOLESKYFACTORCOV "cholesky_factor_cov"
@@ -237,6 +237,8 @@ reserved_word:
   | TARGET { build_id "target" $loc }
   | GETLP { build_id "get_lp" $loc }
   | PROFILE { build_id "profile" $loc }
+  | TUPLE { build_id "tuple" $loc }
+
 
 function_def:
   | rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)
@@ -276,7 +278,7 @@ unsized_type:
     { t }
 
 %inline unsized_tuple_type:
-  | LPAREN hd=unsized_type COMMA ts=separated_list(COMMA, unsized_type) RPAREN
+  | TUPLE LPAREN hd=unsized_type COMMA ts=separated_list(COMMA, unsized_type) RPAREN
     {  UnsizedType.UTuple (hd::ts)
     }
 
@@ -402,7 +404,7 @@ array_type(type_rule):
   }
 
 tuple_type(type_rule):
-  | LPAREN head=higher_type(type_rule) COMMA rest=separated_list(COMMA, higher_type(type_rule)) RPAREN
+  | TUPLE LPAREN head=higher_type(type_rule) COMMA rest=separated_list(COMMA, higher_type(type_rule)) RPAREN
   { grammar_logger "tuple_type" ;
     let ts = head::rest in
     let types, trans = List.unzip ts in

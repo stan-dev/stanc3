@@ -82,8 +82,8 @@ let rec pp ppf = function
       Fmt.pf ppf "array%s %a" array_str pp ut2
   | UTuple ts -> (
     match ts with
-    | [t] -> Fmt.pf ppf "(@[%a,@])" pp t
-    | _ -> Fmt.pf ppf "(@[%a@])" Fmt.(list ~sep:comma pp) ts )
+    | [t] -> Fmt.pf ppf "tuple(@[%a,@])" pp t
+    | _ -> Fmt.pf ppf "tuple(@[%a@])" Fmt.(list ~sep:comma pp) ts )
   | UFun (argtypes, rt, _, _) ->
       Fmt.pf ppf {|@[<h>(%a) => %a@]|}
         Fmt.(list pp_fun_arg ~sep:comma)

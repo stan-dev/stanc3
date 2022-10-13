@@ -326,8 +326,8 @@ let rec pp_sizedtype ppf = function
       pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
   | STuple ts -> (
     match ts with
-    | [t] -> pf ppf "(@[%a,@])" pp_sizedtype t
-    | _ -> pf ppf "(@[%a@])" (list ~sep:comma pp_sizedtype) ts )
+    | [t] -> pf ppf "tuple(@[%a,@])" pp_sizedtype t
+    | _ -> pf ppf "tuple(@[%a@])" (list ~sep:comma pp_sizedtype) ts )
   | SComplexVector e -> pf ppf "complex_vector[%a]" pp_expression e
   | SComplexRowVector e -> pf ppf "complex_row_vector[%a]" pp_expression e
   | SComplexMatrix (e1, e2) ->
@@ -391,7 +391,7 @@ let rec pp_transformed_type ppf (st, trans) =
     | TupleTransformation ts as trans ->
         (* NB this calls the top-level function to handle internal arrays etc *)
         let transTypes = Middle.Utils.zip_stuple_trans_exn st trans in
-        pf ppf "(@[%a%s@])"
+        pf ppf "tuple(@[%a%s@])"
           (list ~sep:comma pp_transformed_type)
           transTypes
           (if List.length ts = 1 then "," else "") in

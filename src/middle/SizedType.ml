@@ -38,7 +38,7 @@ let rec pp pp_e ppf = function
       Fmt.pf ppf "array%a"
         Fmt.(pair ~sep:comma (fun ppf st -> pp pp_e ppf st) pp_e |> brackets)
         (st, expr)
-  | STuple ts -> Fmt.pf ppf "(@[%a@])" Fmt.(list ~sep:comma (pp pp_e)) ts
+  | STuple ts -> Fmt.pf ppf "tuple(@[%a@])" Fmt.(list ~sep:comma (pp pp_e)) ts
 
 let collect_exprs st =
   let rec aux accu = function
