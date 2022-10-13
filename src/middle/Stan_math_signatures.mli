@@ -28,6 +28,11 @@ type variadic_signature =
   ; required_fn_args: fun_arg list }
 
 val stan_math_variadic_signatures : (string, variadic_signature) Hashtbl.t
+(** Mapping from names to description of a variadic function.
+
+  Note that these function names cannot be overloaded, and usually require
+  customized code-gen in the backend.
+*)
 
 val is_stan_math_variadic_function_name : string -> bool
 (** Equivalent to [Hashtbl.mem stan_math_variadic_signatures s]*)
