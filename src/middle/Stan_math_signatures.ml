@@ -90,6 +90,13 @@ type fkind =
 type fun_arg = UnsizedType.autodifftype * UnsizedType.t
 type signature = UnsizedType.returntype * fun_arg list * Mem_pattern.t
 
+type variadic_signature =
+  { return_type: UnsizedType.t
+  ; control_args: fun_arg list
+  ; required_fn_rt: UnsizedType.t
+  ; required_fn_args: fun_arg list }
+[@@deriving create]
+
 let is_primitive = function
   | UnsizedType.UReal -> true
   | UInt -> true
@@ -102,6 +109,13 @@ let (stan_math_signatures : (string, signature list) Hashtbl.t) =
 (** All of the signatures that are added by hand, rather than the ones
     added "declaratively" *)
 let (manual_stan_math_signatures : (string, signature list) Hashtbl.t) =
+  String.Table.create ()
+
+(** The variadic signatures hash table
+
+    These functions cannot be overloaded.
+*)
+let (stan_math_variadic_signatures : (string, variadic_signature) Hashtbl.t) =
   String.Table.create ()
 
 (* XXX The correct word here isn't combination - what is it? *)
@@ -152,64 +166,6 @@ let rec real_to_complex = function
   | UArray t -> UArray (real_to_complex t)
   | x -> x
 
-let reduce_sum_allowed_dimensionalities = [1; 2; 3; 4; 5; 6; 7]
-
-let reduce_sum_slice_types =
-  let base_slice_type i =
-    [ bare_array_type (UnsizedType.UReal, i)
-    ; bare_array_type (UnsizedType.UInt, i)
-    ; bare_array_type (UnsizedType.UMatrix, i)
-    ; bare_array_type (UnsizedType.UVector, i)
-    ; bare_array_type (UnsizedType.URowVector, i) ] in
-  List.concat (List.map ~f:base_slice_type reduce_sum_allowed_dimensionalities)
-
-(* Variadic ODE *)
-let variadic_ode_adjoint_ctl_tol_arg_types =
-  [ (UnsizedType.DataOnly, UnsizedType.UReal)
-    (* real relative_tolerance_forward *)
-  ; (DataOnly, UVector) (* vector absolute_tolerance_forward *)
-  ; (DataOnly, UReal) (* real relative_tolerance_backward *)
-  ; (DataOnly, UVector) (* real absolute_tolerance_backward *)
-  ; (DataOnly, UReal) (* real relative_tolerance_quadrature *)
-  ; (DataOnly, UReal) (* real absolute_tolerance_quadrature *)
-  ; (DataOnly, UInt) (* int max_num_steps *)
-  ; (DataOnly, UInt) (* int num_steps_between_checkpoints *)
-  ; (DataOnly, UInt) (* int interpolation_polynomial *)
-  ; (DataOnly, UInt) (* int solver_forward *); (DataOnly, UInt)
-    (* int solver_backward *) ]
-
-let variadic_ode_tol_arg_types =
-  [ (UnsizedType.DataOnly, UnsizedType.UReal); (DataOnly, UReal)
-  ; (DataOnly, UInt) ]
-
-let variadic_ode_mandatory_arg_types =
-  [ (UnsizedType.AutoDiffable, UnsizedType.UVector); (AutoDiffable, UReal)
-  ; (AutoDiffable, UArray UReal) ]
-
-let variadic_ode_mandatory_fun_args =
-  [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
-  ; (UnsizedType.AutoDiffable, UnsizedType.UVector) ]
-
-let variadic_ode_fun_return_type = UnsizedType.UVector
-let variadic_ode_return_type = UnsizedType.UArray UnsizedType.UVector
-
-let variadic_dae_tol_arg_types =
-  [ (UnsizedType.DataOnly, UnsizedType.UReal); (DataOnly, UReal)
-  ; (DataOnly, UInt) ]
-
-let variadic_dae_mandatory_arg_types =
-  [ (UnsizedType.AutoDiffable, UnsizedType.UVector); (* yy *)
-    (UnsizedType.AutoDiffable, UnsizedType.UVector); (* yp *)
-    (AutoDiffable, UReal); (AutoDiffable, UArray UReal) ]
-
-let variadic_dae_mandatory_fun_args =
-  [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
-  ; (UnsizedType.AutoDiffable, UnsizedType.UVector)
-  ; (UnsizedType.AutoDiffable, UnsizedType.UVector) ]
-
-let variadic_dae_fun_return_type = UnsizedType.UVector
-let variadic_dae_return_type = UnsizedType.UArray UnsizedType.UVector
-
 let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
   let sfxes = function
     | Lpmf -> ["_lpmf"]
@@ -258,31 +214,6 @@ let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
 let full_lpdf_depr = full_lpdf @ [Log]
 let full_lpmf_depr = full_lpmf @ [Log]
-let reduce_sum_functions = String.Set.of_list ["reduce_sum"; "reduce_sum_static"]
-let variadic_ode_adjoint_fn = "ode_adjoint_tol_ctl"
-
-let variadic_ode_nonadjoint_fns =
-  String.Set.of_list
-    [ "ode_bdf_tol"; "ode_rk45_tol"; "ode_adams_tol"; "ode_bdf"; "ode_rk45"
-    ; "ode_adams"; "ode_ckrk"; "ode_ckrk_tol" ]
-
-let ode_tolerances_suffix = "_tol"
-let is_reduce_sum_fn f = Set.mem reduce_sum_functions f
-let is_variadic_ode_nonadjoint_fn f = Set.mem variadic_ode_nonadjoint_fns f
-
-let is_variadic_ode_fn f =
-  Set.mem variadic_ode_nonadjoint_fns f || f = variadic_ode_adjoint_fn
-
-let is_variadic_ode_nonadjoint_tol_fn f =
-  is_variadic_ode_nonadjoint_fn f
-  && String.is_suffix f ~suffix:ode_tolerances_suffix
-
-let variadic_dae_fns = String.Set.of_list ["dae_tol"; "dae"]
-let dae_tolerances_suffix = "_tol"
-let is_variadic_dae_fn f = Set.mem variadic_dae_fns f
-
-let is_variadic_dae_tol_fn f =
-  is_variadic_dae_fn f && String.is_suffix f ~suffix:dae_tolerances_suffix
 
 let distributions =
   [ ( full_lpmf_depr
@@ -434,6 +365,9 @@ let declarative_fnsigs =
 let is_stan_math_function_name name =
   let name = Utils.stdlib_distribution_name name in
   Hashtbl.mem stan_math_signatures name
+
+let is_stan_math_variadic_function_name name =
+  Hashtbl.mem stan_math_variadic_signatures name
 
 let dist_name_suffix udf_names name =
   let is_udf_name s = List.exists ~f:(fun (n, _) -> n = s) udf_names in
@@ -2621,6 +2555,117 @@ let () =
   Hashtbl.iteri manual_stan_math_signatures ~f:(fun ~key ~data ->
       List.iter data ~f:(fun data ->
           Hashtbl.add_multi stan_math_signatures ~key ~data ) )
+
+(* variadics *)
+
+let reduce_sum_allowed_dimensionalities = [1; 2; 3; 4; 5; 6; 7]
+
+let reduce_sum_slice_types =
+  let base_slice_type i =
+    [ bare_array_type (UnsizedType.UReal, i)
+    ; bare_array_type (UnsizedType.UInt, i)
+    ; bare_array_type (UnsizedType.UMatrix, i)
+    ; bare_array_type (UnsizedType.UVector, i)
+    ; bare_array_type (UnsizedType.URowVector, i) ] in
+  List.concat (List.map ~f:base_slice_type reduce_sum_allowed_dimensionalities)
+
+(* Variadic ODE *)
+let variadic_ode_adjoint_ctl_tol_arg_types =
+  [ (UnsizedType.DataOnly, UnsizedType.UReal)
+    (* real relative_tolerance_forward *)
+  ; (DataOnly, UVector) (* vector absolute_tolerance_forward *)
+  ; (DataOnly, UReal) (* real relative_tolerance_backward *)
+  ; (DataOnly, UVector) (* real absolute_tolerance_backward *)
+  ; (DataOnly, UReal) (* real relative_tolerance_quadrature *)
+  ; (DataOnly, UReal) (* real absolute_tolerance_quadrature *)
+  ; (DataOnly, UInt) (* int max_num_steps *)
+  ; (DataOnly, UInt) (* int num_steps_between_checkpoints *)
+  ; (DataOnly, UInt) (* int interpolation_polynomial *)
+  ; (DataOnly, UInt) (* int solver_forward *); (DataOnly, UInt)
+    (* int solver_backward *) ]
+
+let variadic_ode_tol_arg_types =
+  [ (UnsizedType.DataOnly, UnsizedType.UReal); (DataOnly, UReal)
+  ; (DataOnly, UInt) ]
+
+let variadic_ode_mandatory_arg_types =
+  [ (UnsizedType.AutoDiffable, UnsizedType.UVector); (AutoDiffable, UReal)
+  ; (AutoDiffable, UArray UReal) ]
+
+let variadic_ode_mandatory_fun_args =
+  [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
+  ; (UnsizedType.AutoDiffable, UnsizedType.UVector) ]
+
+let variadic_ode_fun_return_type = UnsizedType.UVector
+let variadic_ode_return_type = UnsizedType.UArray UnsizedType.UVector
+
+let variadic_dae_tol_arg_types =
+  [ (UnsizedType.DataOnly, UnsizedType.UReal); (DataOnly, UReal)
+  ; (DataOnly, UInt) ]
+
+let variadic_dae_mandatory_arg_types =
+  [ (UnsizedType.AutoDiffable, UnsizedType.UVector); (* yy *)
+    (UnsizedType.AutoDiffable, UnsizedType.UVector); (* yp *)
+    (AutoDiffable, UReal); (AutoDiffable, UArray UReal) ]
+
+let variadic_dae_mandatory_fun_args =
+  [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
+  ; (UnsizedType.AutoDiffable, UnsizedType.UVector)
+  ; (UnsizedType.AutoDiffable, UnsizedType.UVector) ]
+
+let reduce_sum_functions = String.Set.of_list ["reduce_sum"; "reduce_sum_static"]
+let variadic_ode_adjoint_fn = "ode_adjoint_tol_ctl"
+
+let variadic_ode_nonadjoint_fns =
+  String.Set.of_list
+    [ "ode_bdf_tol"; "ode_rk45_tol"; "ode_adams_tol"; "ode_bdf"; "ode_rk45"
+    ; "ode_adams"; "ode_ckrk"; "ode_ckrk_tol" ]
+
+let ode_tolerances_suffix = "_tol"
+let is_reduce_sum_fn f = Set.mem reduce_sum_functions f
+
+let is_variadic_ode_fn f =
+  Set.mem variadic_ode_nonadjoint_fns f || f = variadic_ode_adjoint_fn
+
+let variadic_dae_fns = String.Set.of_list ["dae_tol"; "dae"]
+let dae_tolerances_suffix = "_tol"
+let is_variadic_dae_fn f = Set.mem variadic_dae_fns f
+let variadic_dae_fun_return_type = UnsizedType.UVector
+let variadic_dae_return_type = UnsizedType.UArray UnsizedType.UVector
+
+let add_variadic_fn name ~return_type ?control_args ~required_fn_rt
+    ?required_fn_args () =
+  Hashtbl.add_exn stan_math_variadic_signatures ~key:name
+    ~data:
+      (create_variadic_signature ~return_type ?control_args ?required_fn_args
+         ~required_fn_rt () )
+
+let () =
+  (* DAEs *)
+  add_variadic_fn "dae" ~return_type:variadic_dae_return_type
+    ~control_args:variadic_dae_mandatory_arg_types
+    ~required_fn_args:variadic_dae_mandatory_fun_args
+    ~required_fn_rt:variadic_dae_fun_return_type () ;
+  add_variadic_fn "dae_tol" ~return_type:variadic_dae_return_type
+    ~control_args:(variadic_dae_mandatory_arg_types @ variadic_dae_tol_arg_types)
+    ~required_fn_args:variadic_dae_mandatory_fun_args
+    ~required_fn_rt:variadic_dae_fun_return_type () ;
+  (* non-adjoint ODES - same for all *)
+  let add_ode name =
+    add_variadic_fn name ~return_type:variadic_ode_return_type
+      ~control_args:
+        ( if String.is_suffix name ~suffix:ode_tolerances_suffix then
+          variadic_ode_mandatory_arg_types @ variadic_ode_tol_arg_types
+        else variadic_ode_mandatory_arg_types )
+      ~required_fn_rt:variadic_ode_fun_return_type
+      ~required_fn_args:variadic_ode_mandatory_fun_args () in
+  Set.iter ~f:add_ode variadic_ode_nonadjoint_fns ;
+  (* Adjoint ODE function *)
+  add_variadic_fn variadic_ode_adjoint_fn ~return_type:variadic_ode_return_type
+    ~control_args:
+      (variadic_ode_mandatory_arg_types @ variadic_ode_adjoint_ctl_tol_arg_types)
+    ~required_fn_rt:variadic_ode_fun_return_type
+    ~required_fn_args:variadic_ode_mandatory_fun_args ()
 
 let%expect_test "dist name suffix" =
   dist_name_suffix [] "normal" |> print_endline ;

@@ -26,7 +26,7 @@ module TypeError = struct
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
         * SignatureMismatch.function_mismatch
-    | IllTypedVariadicDE of
+    | IllTypedVariadic of
         string
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
@@ -133,7 +133,7 @@ module TypeError = struct
     | IllTypedReduceSumGeneric (name, arg_tys, expected_args, error) ->
         SignatureMismatch.pp_signature_mismatch ppf
           (name, arg_tys, ([((ReturnType UReal, expected_args), error)], false))
-    | IllTypedVariadicDE (name, arg_tys, args, error, return_type) ->
+    | IllTypedVariadic (name, arg_tys, args, error, return_type) ->
         SignatureMismatch.pp_signature_mismatch ppf
           ( name
           , arg_tys
@@ -565,25 +565,8 @@ let illtyped_reduce_sum_generic loc name arg_tys expected_args error =
     , TypeError.IllTypedReduceSumGeneric (name, arg_tys, expected_args, error)
     )
 
-let illtyped_variadic_ode loc name arg_tys args error =
-  TypeError
-    ( loc
-    , TypeError.IllTypedVariadicDE
-        ( name
-        , arg_tys
-        , args
-        , error
-        , Stan_math_signatures.variadic_ode_fun_return_type ) )
-
-let illtyped_variadic_dae loc name arg_tys args error =
-  TypeError
-    ( loc
-    , TypeError.IllTypedVariadicDE
-        ( name
-        , arg_tys
-        , args
-        , error
-        , Stan_math_signatures.variadic_dae_fun_return_type ) )
+let illtyped_variadic loc name arg_tys args fn_rt error =
+  TypeError (loc, TypeError.IllTypedVariadic (name, arg_tys, args, error, fn_rt))
 
 let ambiguous_function_promotion loc name arg_tys signatures =
   TypeError
