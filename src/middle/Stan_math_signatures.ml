@@ -93,7 +93,6 @@ type signature = UnsizedType.returntype * fun_arg list * Mem_pattern.t
 type variadic_signature =
   { return_type: UnsizedType.t
   ; control_args: fun_arg list
-  ; allow_fn_lpdf: bool [@default false]
   ; required_fn_rt: UnsizedType.t
   ; required_fn_args: fun_arg list }
 [@@deriving create]
@@ -2634,12 +2633,12 @@ let is_variadic_dae_fn f = Set.mem variadic_dae_fns f
 let variadic_dae_fun_return_type = UnsizedType.UVector
 let variadic_dae_return_type = UnsizedType.UArray UnsizedType.UVector
 
-let add_variadic_fn name ~return_type ?control_args ?allow_fn_lpdf
-    ~required_fn_rt ?required_fn_args () =
+let add_variadic_fn name ~return_type ?control_args ~required_fn_rt
+    ?required_fn_args () =
   Hashtbl.add_exn stan_math_variadic_signatures ~key:name
     ~data:
-      (create_variadic_signature ~return_type ?control_args ?allow_fn_lpdf
-         ?required_fn_args ~required_fn_rt () )
+      (create_variadic_signature ~return_type ?control_args ?required_fn_args
+         ~required_fn_rt () )
 
 let () =
   (* DAEs *)

@@ -190,16 +190,13 @@ let match_to_rt_option = function
   | _ -> None
 
 let stan_math_return_type name arg_tys =
-  match name with
-  | x when Stan_math_signatures.is_reduce_sum_fn x ->
+  match
+    Hashtbl.find Stan_math_signatures.stan_math_variadic_signatures name
+  with
+  | Some {return_type; _} -> Some (UnsizedType.ReturnType return_type)
+  | None when Stan_math_signatures.is_reduce_sum_fn name ->
       Some (UnsizedType.ReturnType UReal)
-  | x when Stan_math_signatures.is_stan_math_variadic_function_name x ->
-      Some
-        (UnsizedType.ReturnType
-           (Hashtbl.find_exn Stan_math_signatures.stan_math_variadic_signatures
-              x )
-             .return_type )
-  | _ ->
+  | None ->
       SignatureMismatch.matching_stanlib_function name arg_tys
       |> match_to_rt_option
 
@@ -589,15 +586,8 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
     let mandatory_fun_args =
       UnsizedType.
         [(AutoDiffable, UArray UReal); (DataOnly, UInt); (DataOnly, UInt)] in
-    SignatureMismatch.check_variadic_args true mandatory_args mandatory_fun_args
-      UReal (get_arg_types tes) in
-  let fail () =
-    let expected_args, err =
-      basic_mismatch () |> Result.error |> Option.value_exn in
-    Semantic_error.illtyped_reduce_sum_generic loc id.name
-      (List.map ~f:type_of_expr_typed tes)
-      expected_args err
-    |> error in
+    SignatureMismatch.check_variadic_args ~allow_lpdf:true mandatory_args
+      mandatory_fun_args UReal (get_arg_types tes) in
   let matching remaining_es fn =
     match fn with
     | Env.
@@ -614,7 +604,7 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
         let arg_types =
           (calculate_autodifftype cf Functions ftype, ftype)
           :: get_arg_types remaining_es in
-        SignatureMismatch.check_variadic_args true mandatory_args
+        SignatureMismatch.check_variadic_args ~allow_lpdf:true mandatory_args
           mandatory_fun_args UReal arg_types
     | _ -> basic_mismatch () in
   match tes with
@@ -636,31 +626,24 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
           (List.map ~f:type_of_expr_typed tes)
           expected_args err
         |> error )
-  | _ -> fail ()
+  | _ ->
+      let expected_args, err =
+        basic_mismatch () |> Result.error |> Option.value_exn in
+      Semantic_error.illtyped_reduce_sum_generic loc id.name
+        (List.map ~f:type_of_expr_typed tes)
+        expected_args err
+      |> error
 
 and check_variadic ~is_cond_dist loc cf tenv id tes =
   let Stan_math_signatures.
-        { control_args
-        ; required_fn_args
-        ; required_fn_rt
-        ; allow_fn_lpdf
-        ; return_type } =
+        {control_args; required_fn_args; required_fn_rt; return_type} =
     Hashtbl.find_exn Stan_math_signatures.stan_math_variadic_signatures id.name
   in
-  let fail () =
-    let expected_args, err =
-      SignatureMismatch.check_variadic_args allow_fn_lpdf control_args
-        required_fn_args required_fn_rt (get_arg_types tes)
-      |> Result.error |> Option.value_exn in
-    Semantic_error.illtyped_variadic loc id.name
-      (List.map ~f:type_of_expr_typed tes)
-      expected_args required_fn_rt err
-    |> error in
   let matching remaining_es Env.{type_= ftype; _} =
     let arg_types =
       (calculate_autodifftype cf Functions ftype, ftype)
       :: get_arg_types remaining_es in
-    SignatureMismatch.check_variadic_args allow_fn_lpdf control_args
+    SignatureMismatch.check_variadic_args ~allow_lpdf:false control_args
       required_fn_args required_fn_rt arg_types in
   match tes with
   | {expr= Variable fname; _} :: remaining_es -> (
@@ -680,7 +663,15 @@ and check_variadic ~is_cond_dist loc cf tenv id tes =
           (List.map ~f:type_of_expr_typed tes)
           expected_args required_fn_rt err
         |> error )
-  | _ -> fail ()
+  | _ ->
+      let expected_args, err =
+        SignatureMismatch.check_variadic_args ~allow_lpdf:false control_args
+          required_fn_args required_fn_rt (get_arg_types tes)
+        |> Result.error |> Option.value_exn in
+      Semantic_error.illtyped_variadic loc id.name
+        (List.map ~f:type_of_expr_typed tes)
+        expected_args required_fn_rt err
+      |> error
 
 and check_funapp loc cf tenv ~is_cond_dist id (es : Ast.typed_expression list) =
   let name_check =

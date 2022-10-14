@@ -23,7 +23,6 @@ val is_stan_math_function_name : string -> bool
 type variadic_signature =
   { return_type: UnsizedType.t
   ; control_args: fun_arg list
-  ; allow_fn_lpdf: bool
   ; required_fn_rt: UnsizedType.t
   ; required_fn_args: fun_arg list }
 
