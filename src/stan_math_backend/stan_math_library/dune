@@ -3,6 +3,6 @@
  (public_name stanc.stan_math_library)
  (libraries core_kernel middle stan_math_backend)
  (implements frontend)
- (private_modules variadic_typechecking)
+ (private_modules special_typechecking)
  (preprocess
   (pps ppx_jane ppx_deriving.fold ppx_deriving.map ppx_deriving.show)))

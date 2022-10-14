@@ -15,6 +15,24 @@ let calculate_autodifftype current_block origin ut =
       UnsizedType.AutoDiffable
   | _ -> DataOnly
 
+let make_function_variable current_block loc id = function
+  | UnsizedType.UFun (args, rt, FnLpdf _, mem_pattern) ->
+      let type_ =
+        UnsizedType.UFun
+          (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in
+      mk_typed_expression ~expr:(Variable id)
+        ~ad_level:(calculate_autodifftype current_block Functions type_)
+        ~type_ ~loc
+  | UnsizedType.UFun _ as type_ ->
+      mk_typed_expression ~expr:(Variable id)
+        ~ad_level:(calculate_autodifftype current_block Functions type_)
+        ~type_ ~loc
+  | type_ ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Attempting to create function variable out of "
+            (type_ : UnsizedType.t)]
+
 let arg_type x = (x.emeta.ad_level, x.emeta.type_)
 let get_arg_types = List.map ~f:arg_type
 let type_of_expr_typed ue = ue.emeta.type_

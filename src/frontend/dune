@@ -7,7 +7,7 @@
   ; we need to specify an implementation of the virtual library for testing
   (libraries stan_math_library))
  (preprocess
-  (pps ppx_jane ppx_deriving.fold ppx_deriving.map)))
+  (pps ppx_jane ppx_deriving.fold ppx_deriving.map ppx_deriving.create)))
 
 (ocamllex lexer)
 

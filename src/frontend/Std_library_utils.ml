@@ -5,6 +5,13 @@ open Core_kernel
 type fun_arg = UnsizedType.autodifftype * UnsizedType.t
 type signature = UnsizedType.returntype * fun_arg list * Mem_pattern.t
 
+type variadic_signature =
+  { return_type: UnsizedType.t
+  ; control_args: fun_arg list
+  ; required_fn_rt: UnsizedType.t
+  ; required_fn_args: fun_arg list }
+[@@deriving create]
+
 type deprecation_info =
   { replacement: string
   ; version: string

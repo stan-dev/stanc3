@@ -44,8 +44,6 @@ val get_signatures : string -> signature list
 
 val get_operator_signatures : Operator.t -> signature list
 val get_assignment_operator_signatures : Operator.t -> signature list
-val is_not_overloadable : string -> bool
-val is_variadic_function_name : string -> bool
 val operator_to_function_names : Operator.t -> string list
 val string_operator_to_function_name : string -> string
 
@@ -64,14 +62,14 @@ val pretty_print_all_math_distributions : unit Fmt.t
 
 (* reduce_sum helpers *)
 val is_reduce_sum_fn : string -> bool
+val is_special_function_name : string -> bool
 
 (* variadic ODE helpers *)
 val is_variadic_ode_fn : string -> bool
-val is_variadic_ode_nonadjoint_tol_fn : string -> bool
 val ode_tolerances_suffix : string
 val variadic_ode_adjoint_fn : string
+val variadic_ode_nonadjoint_fns : String.Set.t
 
 (* variadic DAE helpers *)
 val is_variadic_dae_fn : string -> bool
-val is_variadic_dae_tol_fn : string -> bool
 val dae_tolerances_suffix : string

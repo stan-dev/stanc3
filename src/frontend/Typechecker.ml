@@ -179,10 +179,11 @@ let match_to_rt_option = function
   | _ -> None
 
 let library_function_return_type name arg_tys =
-  match name with
-  | x when Library.is_variadic_function_name x ->
-      Library.variadic_function_returntype x
-  | _ -> matching_library_function name arg_tys |> match_to_rt_option
+  match Hashtbl.find Library.variadic_signatures name with
+  | Some {return_type; _} -> Some (UnsizedType.ReturnType return_type)
+  | None when Library.is_special_function_name name ->
+      Library.special_function_returntype name
+  | None -> matching_library_function name arg_tys |> match_to_rt_option
 
 let operator_return_type op arg_tys =
   match (op, arg_tys) with
@@ -516,9 +517,52 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
 
 let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
     =
-  if Library.is_variadic_function_name id.name then
-    Library.check_variadic_fn id ~is_cond_dist loc cf.current_block tenv tes
+  if Library.is_special_function_name id.name then
+    Library.check_special_fn ~is_cond_dist loc cf.current_block tenv id tes
+  else if Library.is_variadic_function_name id.name then
+    check_variadic ~is_cond_dist loc cf.current_block tenv id tes
   else check_normal_fn ~is_cond_dist loc tenv id tes
+
+and check_variadic ~is_cond_dist loc cf tenv id tes =
+  let Std_library_utils.
+        {control_args; required_fn_args; required_fn_rt; return_type} =
+    Hashtbl.find_exn Library.variadic_signatures id.name in
+  let matching remaining_es Env.{type_= ftype; _} =
+    let arg_types =
+      (calculate_autodifftype cf Functions ftype, ftype)
+      :: get_arg_types remaining_es in
+    SignatureMismatch.check_variadic_args ~allow_lpdf:false control_args
+      required_fn_args required_fn_rt arg_types in
+  match tes with
+  | {expr= Variable fname; _} :: remaining_es -> (
+    match
+      SignatureMismatch.find_matching_first_order_fn tenv
+        (matching remaining_es) fname
+    with
+    | SignatureMismatch.UniqueMatch (ftype, promotions) ->
+        let tes = make_function_variable cf loc fname ftype :: remaining_es in
+        mk_typed_expression
+          ~expr:
+            (mk_fun_app ~is_cond_dist
+               (StanLib FnPlain, id, Promotion.promote_list tes promotions) )
+          ~ad_level:(expr_ad_lub tes) ~type_:return_type ~loc
+    | AmbiguousMatch ps ->
+        Semantic_error.ambiguous_function_promotion loc fname.name None ps
+        |> error
+    | SignatureErrors (expected_args, err) ->
+        Semantic_error.illtyped_variadic_fn loc id.name
+          (List.map ~f:type_of_expr_typed tes)
+          expected_args err required_fn_rt
+        |> error )
+  | _ ->
+      let expected_args, err =
+        SignatureMismatch.check_variadic_args ~allow_lpdf:false control_args
+          required_fn_args required_fn_rt (get_arg_types tes)
+        |> Result.error |> Option.value_exn in
+      Semantic_error.illtyped_variadic_fn loc id.name
+        (List.map ~f:type_of_expr_typed tes)
+        expected_args err required_fn_rt
+      |> error
 
 and check_funapp loc cf tenv ~is_cond_dist id (es : Ast.typed_expression list) =
   let name_check =

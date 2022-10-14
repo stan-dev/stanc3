@@ -56,7 +56,7 @@ val matching_function :
 *)
 
 val check_variadic_args :
-     bool
+     allow_lpdf:bool
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> UnsizedType.t

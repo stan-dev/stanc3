@@ -11,6 +11,12 @@ val function_signatures : (string, signature list) Hashtbl.t
     Used in [Environment] to produce the base type environment
 *)
 
+val variadic_signatures : (string, variadic_signature) Hashtbl.t
+(** Mapping from names to description of a variadic function.
+Note that these function names cannot be overloaded, and usually require
+customized code-gen in the backend.
+*)
+
 val distribution_families : string list
 (** A list of the families of distribution are available,
     e.g. "normal", "bernoulli". Used to produce better
@@ -41,22 +47,27 @@ val is_not_overloadable : string -> bool
 *)
 
 val is_variadic_function_name : string -> bool
-(** Variadic functions are {b not} included in the normal signatures
+(** Variadic functions are handled as generally as possible
+    using the above hashtable
+*)
+
+val is_special_function_name : string -> bool
+(** Special functions like [reduce_sum] are {b not} included in the normal signatures
     above, but instead recognized by this function and special-cased during
     typechecking
 *)
 
-val variadic_function_returntype : string -> UnsizedType.returntype option
+val special_function_returntype : string -> UnsizedType.returntype option
 (** We currently have the restriction that variadic functions must have the same
     return type regardless of their argument types. This function should return that type,
     or None if it is given a name that is not a variadic function. *)
 
-val check_variadic_fn :
-     Ast.identifier
-  -> is_cond_dist:bool
+val check_special_fn :
+     is_cond_dist:bool
   -> Location_span.t
   -> Environment.originblock
   -> Environment.t
+  -> Ast.identifier
   -> Ast.typed_expression list
   -> Ast.typed_expression
 (** This function is responsible for typechecking varadic function

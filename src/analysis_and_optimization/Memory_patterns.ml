@@ -113,6 +113,7 @@ let query_stan_math_mem_pattern_support (name : string)
     (args : (UnsizedType.autodifftype * UnsizedType.t) list) =
   match name with
   | x when Frontend.Library.is_variadic_function_name x -> false
+  | x when Frontend.Library.is_special_function_name x -> false
   | _ ->
       let name =
         Frontend.Library.string_operator_to_function_name

@@ -245,7 +245,7 @@ let matching_function env name args =
            UnsizedType.compare_returntype ret1 ret2 ) in
   find_compatible_rt function_types args
 
-let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
+let check_variadic_args ~allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
     fun_return args =
   let minimal_func_type =
     UnsizedType.UFun (mandatory_fun_arg_tys, ReturnType fun_return, FnPlain, AoS)

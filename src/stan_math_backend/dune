@@ -12,4 +12,9 @@
   statement_gen)
  (inline_tests)
  (preprocess
-  (pps ppx_jane ppx_deriving.map ppx_deriving.fold ppx_deriving.show)))
+  (pps
+   ppx_jane
+   ppx_deriving.map
+   ppx_deriving.fold
+   ppx_deriving.show
+   ppx_deriving.create)))

@@ -88,13 +88,13 @@ type fkind =
   | UnaryVectorized of return_behavior
 [@@deriving show {with_path= false}]
 
+type fun_arg = UnsizedType.autodifftype * UnsizedType.t
+type signature = UnsizedType.returntype * fun_arg list * Mem_pattern.t
+
 let is_primitive = function
   | UnsizedType.UReal -> true
   | UInt -> true
   | _ -> false
-
-type fun_arg = UnsizedType.autodifftype * UnsizedType.t
-type signature = UnsizedType.returntype * fun_arg list * Mem_pattern.t
 
 (** The signatures hash table *)
 let (function_signatures : (string, signature list) Hashtbl.t) =
@@ -201,36 +201,6 @@ let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
 let full_lpdf_depr = full_lpdf @ [Log]
 let full_lpmf_depr = full_lpmf @ [Log]
-let reduce_sum_functions = String.Set.of_list ["reduce_sum"; "reduce_sum_static"]
-let variadic_ode_adjoint_fn = "ode_adjoint_tol_ctl"
-
-let variadic_ode_nonadjoint_fns =
-  String.Set.of_list
-    [ "ode_bdf_tol"; "ode_rk45_tol"; "ode_adams_tol"; "ode_bdf"; "ode_rk45"
-    ; "ode_adams"; "ode_ckrk"; "ode_ckrk_tol" ]
-
-let ode_tolerances_suffix = "_tol"
-let is_reduce_sum_fn f = Set.mem reduce_sum_functions f
-let is_variadic_ode_nonadjoint_fn f = Set.mem variadic_ode_nonadjoint_fns f
-
-let is_variadic_ode_fn f =
-  Set.mem variadic_ode_nonadjoint_fns f || f = variadic_ode_adjoint_fn
-
-let is_variadic_ode_nonadjoint_tol_fn f =
-  is_variadic_ode_nonadjoint_fn f
-  && String.is_suffix f ~suffix:ode_tolerances_suffix
-
-let variadic_dae_fns = String.Set.of_list ["dae_tol"; "dae"]
-let dae_tolerances_suffix = "_tol"
-let is_variadic_dae_fn f = Set.mem variadic_dae_fns f
-
-let is_variadic_dae_tol_fn f =
-  is_variadic_dae_fn f && String.is_suffix f ~suffix:dae_tolerances_suffix
-
-let is_variadic_function_name name =
-  is_reduce_sum_fn name || is_variadic_dae_fn name || is_variadic_ode_fn name
-
-let is_not_overloadable = is_variadic_function_name
 
 let distributions =
   [ ( full_lpmf_depr
@@ -2549,6 +2519,25 @@ let () =
   Hashtbl.iteri manual_stan_math_signatures ~f:(fun ~key ~data ->
       List.iter data ~f:(fun data ->
           Hashtbl.add_multi function_signatures ~key ~data ) )
+
+let reduce_sum_functions = String.Set.of_list ["reduce_sum"; "reduce_sum_static"]
+let variadic_ode_adjoint_fn = "ode_adjoint_tol_ctl"
+
+let variadic_ode_nonadjoint_fns =
+  String.Set.of_list
+    [ "ode_bdf_tol"; "ode_rk45_tol"; "ode_adams_tol"; "ode_bdf"; "ode_rk45"
+    ; "ode_adams"; "ode_ckrk"; "ode_ckrk_tol" ]
+
+let ode_tolerances_suffix = "_tol"
+let is_reduce_sum_fn f = Set.mem reduce_sum_functions f
+
+let is_variadic_ode_fn f =
+  Set.mem variadic_ode_nonadjoint_fns f || f = variadic_ode_adjoint_fn
+
+let variadic_dae_fns = String.Set.of_list ["dae_tol"; "dae"]
+let dae_tolerances_suffix = "_tol"
+let is_variadic_dae_fn f = Set.mem variadic_dae_fns f
+let is_special_function_name = is_reduce_sum_fn
 
 let%expect_test "declarative distributions" =
   let special_suffixes =

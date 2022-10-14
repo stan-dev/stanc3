@@ -8,6 +8,8 @@ open Std_library_utils
 (** Many of the required functions are exposed in the backend specific file, so we include it *)
 include Stan_math_backend.Stan_math_signatures
 
+include Special_typechecking
+
 let deprecated_distributions =
   List.concat_map distributions ~f:(fun (fnkinds, name, _, _) ->
       List.filter_map fnkinds ~f:(function
@@ -51,20 +53,10 @@ let deprecated_functions =
 (** This function is responsible for typechecking varadic function
       calls. It needs to live in the Library since this is usually
       bespoke per-function. *)
-let check_variadic_fn id ~is_cond_dist loc current_block tenv tes =
-  if is_reduce_sum_fn id.Ast.name then
-    Variadic_typechecking.check_reduce_sum ~is_cond_dist loc current_block tenv
-      id tes
-  else if is_variadic_ode_fn id.name then
-    Variadic_typechecking.check_variadic_ode ~is_cond_dist loc current_block
-      tenv id tes
-  else if is_variadic_dae_fn id.name then
-    Variadic_typechecking.check_variadic_dae ~is_cond_dist loc current_block
-      tenv id tes
-  else
-    Common.FatalError.fatal_error_msg
-      [%message
-        "Invalid variadic function for Stan Math backend" (id.name : string)]
+let check_special_fn = check_reduce_sum
 
-let variadic_function_returntype =
-  Variadic_typechecking.variadic_function_returntype
+let is_special_function_name = is_reduce_sum_fn
+
+let special_function_returntype name =
+  if is_reduce_sum_fn name then Some (Middle.UnsizedType.ReturnType UReal)
+  else None
