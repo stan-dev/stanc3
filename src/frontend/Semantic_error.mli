@@ -58,14 +58,6 @@ val illtyped_reduce_sum_generic :
   -> SignatureMismatch.function_mismatch
   -> t
 
-val illtyped_variadic_ode :
-     Location_span.t
-  -> string
-  -> UnsizedType.t list
-  -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> SignatureMismatch.function_mismatch
-  -> t
-
 val ambiguous_function_promotion :
      Location_span.t
   -> string
@@ -74,11 +66,12 @@ val ambiguous_function_promotion :
      list
   -> t
 
-val illtyped_variadic_dae :
+val illtyped_variadic :
      Location_span.t
   -> string
   -> UnsizedType.t list
   -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> UnsizedType.t
   -> SignatureMismatch.function_mismatch
   -> t
 

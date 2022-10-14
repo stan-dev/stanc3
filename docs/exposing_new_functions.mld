@@ -130,8 +130,15 @@ For example, the following line defines the signature [add(real, matrix) => matr
 Functions such as the ODE integrators or [reduce_sum], which take in user-functions and a variable-length
 list of arguments, are {b NOT} added to this list.
 
-These are instead treated as special cases in the [Typechecker] module in the frontend folder. It
-it best to consult an existing example of how these are done before proceeding.
+"Nice" variadic functions are added to the hashtable [Stan_math_signatures.stan_math_variadic_signatures].
+This is probably sufficient for most variadic functions, e.g. all the ODE solvers and DAE solvers are done
+via this method.
+[reduce_sum] is not "nice", since it is both variadic and {e polymorphic}, requiring certain arguments to have the same
+(but {e not predetermined}) type. Therefore, [reduce_sum] is treated as special case in the [Typechecker]
+module in the frontend folder.
+
+Note that higher-order functions also usually require changes to the C++ code generation to work properly.
+It is best to consult an existing example of how these are done before proceeding.
 
 {1 Testing}
 
