@@ -215,6 +215,7 @@ pipeline {
                             dune runtest
                         """)
                     }
+                    post { always { runShell("rm -rf ./*") }}
                 }
                 stage("stancjs tests") {
                     agent {
@@ -227,11 +228,11 @@ pipeline {
                     steps {
                         unstash "Stanc3Setup"
                         runShell("""
-                            rm src/stan_math_backend/stan_math_library/*_typechecking.ml
                             eval \$(opam env)
                             dune build @runjstest
                         """)
                     }
+                    post { always { runShell("rm -rf ./*") }}
                 }
             }
         }
