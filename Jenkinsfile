@@ -213,7 +213,7 @@ pipeline {
                             unstash "Stanc3Setup"
                             runShell("""
                                 eval \$(opam env)
-                                dune --root=. runtest
+                                dune runtest --root=.
                             """)
                         }
                     }
@@ -232,7 +232,7 @@ pipeline {
                             unstash "Stanc3Setup"
                             runShell("""
                                 eval \$(opam env)
-                                dune --root=. build @runjstest
+                                dune build @runjstest --root=.
                             """)
                         }
                     }
