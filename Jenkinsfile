@@ -215,7 +215,6 @@ pipeline {
                             dune runtest
                         """)
                     }
-                    post { always { runShell("rm -rf ./*") }}
                 }
                 stage("stancjs tests") {
                     agent {
@@ -232,7 +231,6 @@ pipeline {
                             dune build @runjstest
                         """)
                     }
-                    post { always { runShell("rm -rf ./*") }}
                 }
             }
         }
