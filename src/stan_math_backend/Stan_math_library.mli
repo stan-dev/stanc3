@@ -23,11 +23,9 @@ val is_reduce_sum_fn : string -> bool
 
 (* variadic ODE helpers *)
 val is_variadic_ode_fn : string -> bool
-val is_variadic_ode_nonadjoint_tol_fn : string -> bool
 val ode_tolerances_suffix : string
 val variadic_ode_adjoint_fn : string
 
 (* variadic DAE helpers *)
 val is_variadic_dae_fn : string -> bool
-val is_variadic_dae_tol_fn : string -> bool
 val dae_tolerances_suffix : string

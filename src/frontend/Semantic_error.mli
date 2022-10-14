@@ -47,6 +47,14 @@ val returning_fn_expected_undeclared_dist_suffix_found :
 val returning_fn_expected_wrong_dist_suffix_found :
   Location_span.t -> string * string -> t
 
+val ambiguous_function_promotion :
+     Location_span.t
+  -> string
+  -> UnsizedType.t list option
+  -> (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
+     list
+  -> t
+
 val illtyped_variadic_fn :
      Location_span.t
   -> string
@@ -54,14 +62,6 @@ val illtyped_variadic_fn :
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> SignatureMismatch.function_mismatch
   -> UnsizedType.t
-  -> t
-
-val ambiguous_function_promotion :
-     Location_span.t
-  -> string
-  -> UnsizedType.t list option
-  -> (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
-     list
   -> t
 
 val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t

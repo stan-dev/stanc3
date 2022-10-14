@@ -36,4 +36,11 @@ val calculate_autodifftype :
   -> Middle.UnsizedType.t
   -> Middle.UnsizedType.autodifftype
 
+val make_function_variable :
+     Environment.originblock
+  -> Middle.Location_span.t
+  -> identifier
+  -> Middle.UnsizedType.t
+  -> Ast.typed_expression
+
 module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER

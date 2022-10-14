@@ -114,6 +114,7 @@ module Make (StdLibrary : Frontend.Std_library_utils.Library) = struct
       (args : (UnsizedType.autodifftype * UnsizedType.t) list) =
     match name with
     | x when StdLibrary.is_variadic_function_name x -> false
+    | x when StdLibrary.is_special_function_name x -> false
     | _ ->
         let name =
           StdLibrary.string_operator_to_function_name

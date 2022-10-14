@@ -7,6 +7,13 @@ open Core_kernel
 type fun_arg = UnsizedType.autodifftype * UnsizedType.t
 type signature = UnsizedType.returntype * fun_arg list * Mem_pattern.t
 
+type variadic_signature =
+  { return_type: UnsizedType.t
+  ; control_args: fun_arg list
+  ; required_fn_rt: UnsizedType.t
+  ; required_fn_args: fun_arg list }
+[@@deriving create]
+
 type deprecation_info =
   { replacement: string
   ; version: string
@@ -30,6 +37,12 @@ module type Library = sig
   val function_signatures : (string, signature list) Hashtbl.t
   (** Mapping from names to signature(s) of functions *)
 
+  val variadic_signatures : (string, variadic_signature) Hashtbl.t
+  (** Mapping from names to description of a variadic function.
+  Note that these function names cannot be overloaded, and usually require
+  customized code-gen in the backend.
+*)
+
   val distribution_families : string list
 
   val is_stdlib_function_name : string -> bool
@@ -42,14 +55,15 @@ module type Library = sig
   val get_assignment_operator_signatures : Operator.t -> signature list
   val is_not_overloadable : string -> bool
   val is_variadic_function_name : string -> bool
-  val variadic_function_returntype : string -> UnsizedType.returntype option
+  val is_special_function_name : string -> bool
+  val special_function_returntype : string -> UnsizedType.returntype option
 
-  val check_variadic_fn :
-       Ast.identifier
-    -> is_cond_dist:bool
+  val check_special_fn :
+       is_cond_dist:bool
     -> Location_span.t
     -> Environment.originblock
     -> Environment.t
+    -> Ast.identifier
     -> Ast.typed_expression list
     -> Ast.typed_expression
   (** This function is responsible for typechecking varadic function
@@ -69,6 +83,9 @@ module NullLibrary : Library = struct
   let function_signatures : (string, signature list) Hashtbl.t =
     String.Table.create ()
 
+  let variadic_signatures : (string, variadic_signature) Hashtbl.t =
+    String.Table.create ()
+
   let distribution_families : string list = []
   let is_stdlib_function_name _ = false
   let get_signatures _ = []
@@ -76,9 +93,10 @@ module NullLibrary : Library = struct
   let get_operator_signatures _ = []
   let is_not_overloadable _ = false
   let is_variadic_function_name _ = false
-  let variadic_function_returntype _ = None
+  let is_special_function_name _ = false
+  let special_function_returntype _ = None
 
-  let check_variadic_fn _ ~is_cond_dist _ _ _ _ : Ast.typed_expression =
+  let check_special_fn ~is_cond_dist _ _ _ _ _ : Ast.typed_expression =
     ignore (is_cond_dist : bool) ;
     Common.FatalError.fatal_error_msg [%message "Impossible"]
 
