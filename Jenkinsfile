@@ -113,7 +113,7 @@ pipeline {
                         dune subst
                     """
 
-                    stash 'Stanc3Setup'
+                    stash 'Stanc3Setup-debug'
 
                     def stanMathSigs = ['test/integration/signatures/stan_math_signatures.t'].join(" ")
                     skipExpressionTests = utils.verifyChanges(stanMathSigs, "master")
@@ -149,7 +149,7 @@ pipeline {
                 }
             }
             steps {
-                unstash "Stanc3Setup"
+                unstash "Stanc3Setup-debug"
                 runShell("""
                     eval \$(opam env)
                     dune build @install
@@ -176,7 +176,7 @@ pipeline {
                 }
             }
             steps {
-                unstash "Stanc3Setup"
+                unstash "Stanc3Setup-debug"
                 sh """
                     eval \$(opam env)
                     make format  ||
@@ -209,7 +209,7 @@ pipeline {
                         }
                     }
                     steps {
-                        unstash "Stanc3Setup"
+                        unstash "Stanc3Setup-debug"
                         runShell("""
                             eval \$(opam env)
                             dune runtest
@@ -225,7 +225,7 @@ pipeline {
                         }
                     }
                     steps {
-                        unstash "Stanc3Setup"
+                        unstash "Stanc3Setup-debug"
                         runShell("""
                             eval \$(opam env)
                             dune build @runjstest
@@ -253,7 +253,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/compile-tests-good"){
-                            unstash "Stanc3Setup"
+                            unstash "Stanc3Setup-debug"
                             script {
                                 runPerformanceTests("../test/integration/good", params.stanc_flags)
                             }
@@ -286,7 +286,7 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/compile-tests-example"){
                             script {
-                                unstash "Stanc3Setup"
+                                unstash "Stanc3Setup-debug"
                                 runPerformanceTests("example-models", params.stanc_flags)
                             }
 
@@ -322,7 +322,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/compile-good-O1"){
-                            unstash "Stanc3Setup"
+                            unstash "Stanc3Setup-debug"
                             script {
                                 runPerformanceTests("../test/integration/good", "--O1")
                             }
@@ -360,7 +360,7 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/compile-example-O1"){
                             script {
-                                unstash "Stanc3Setup"
+                                unstash "Stanc3Setup-debug"
                                 runPerformanceTests("example-models", "--O1")
                             }
 
@@ -397,7 +397,7 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/compile-end-to-end"){
                             script {
-                                unstash "Stanc3Setup"
+                                unstash "Stanc3Setup-debug"
                                 unstash 'ubuntu-exe'
                                 sh """
                                     git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
@@ -467,7 +467,7 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/compile-end-to-end-O=1"){
                             script {
-                                unstash "Stanc3Setup"
+                                unstash "Stanc3Setup-debug"
                                 unstash 'ubuntu-exe'
                                 sh """
                                     git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
@@ -530,7 +530,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/compile-expressions"){
-                            unstash "Stanc3Setup"
+                            unstash "Stanc3Setup-debug"
                             unstash 'ubuntu-exe'
                             script {
                                 sh """
@@ -570,7 +570,7 @@ pipeline {
                     agent { label 'osx' }
                     steps {
                         dir("${env.WORKSPACE}/osx"){
-                            unstash "Stanc3Setup"
+                            unstash "Stanc3Setup-debug"
                             withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
                                 runShell("""
                                     export PATH=/Users/jenkins/brew/bin:\$PATH
@@ -604,7 +604,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/stancjs"){
-                            unstash "Stanc3Setup"
+                            unstash "Stanc3Setup-debug"
                             runShell("""
                                 eval \$(opam env)
                                 dune build --root=. --profile release src/stancjs
@@ -634,7 +634,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux"){
-                            unstash "Stanc3Setup"
+                            unstash "Stanc3Setup-debug"
                             runShell("""
                                 eval \$(opam env)
                                 dune build @install --profile static --root=.
@@ -664,7 +664,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-mips64el"){
-                            unstash "Stanc3Setup"
+                            unstash "Stanc3Setup-debug"
                             sh "bash -x scripts/build_multiarch_stanc3.sh mips64el"
 
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
@@ -693,7 +693,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-ppc64el"){
-                            unstash "Stanc3Setup"
+                            unstash "Stanc3Setup-debug"
                             sh "bash -x scripts/build_multiarch_stanc3.sh ppc64el"
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
                             stash name:'linux-ppc64el-exe', includes:'bin/*'
@@ -720,7 +720,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-s390x"){
-                            unstash "Stanc3Setup"
+                            unstash "Stanc3Setup-debug"
                             sh "bash -x scripts/build_multiarch_stanc3.sh s390x"
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
                             stash name:'linux-s390x-exe', includes:'bin/*'
@@ -747,7 +747,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-arm64"){
-                            unstash "Stanc3Setup"
+                            unstash "Stanc3Setup-debug"
                             sh "bash -x scripts/build_multiarch_stanc3.sh arm64"
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
                             stash name:'linux-arm64-exe', includes:'bin/*'
@@ -774,7 +774,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-armhf"){
-                            unstash "Stanc3Setup"
+                            unstash "Stanc3Setup-debug"
                             sh "bash -x scripts/build_multiarch_stanc3.sh armhf"
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
                             stash name:'linux-armhf-exe', includes:'bin/*'
@@ -801,7 +801,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-armel"){
-                            unstash "Stanc3Setup"
+                            unstash "Stanc3Setup-debug"
                             sh "bash -x scripts/build_multiarch_stanc3.sh armel"
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
                             stash name:'linux-armel-exe', includes:'bin/*'
@@ -828,7 +828,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/windows"){
-                            unstash "Stanc3Setup"
+                            unstash "Stanc3Setup-debug"
                             runShell("""
                                 eval \$(opam env)
                                 dune build -x windows --root=.
