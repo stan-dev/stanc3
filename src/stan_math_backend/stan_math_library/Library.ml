@@ -8,7 +8,7 @@ open Std_library_utils
 (** Many of the required functions are exposed in the backend specific file, so we include it *)
 include Stan_math_backend.Stan_math_signatures
 
-include Special_typechecking
+include Stan_math_extras
 
 let deprecated_distributions =
   List.concat_map distributions ~f:(fun (fnkinds, name, _, _) ->
