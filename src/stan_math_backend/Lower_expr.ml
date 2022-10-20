@@ -16,8 +16,9 @@ let fn_renames =
     ; (FnNegInf, "stan::math::negative_infinity")
     ; (FnResizeToMatch, "stan::math::resize_to_match")
     ; (FnNaN, "std::numeric_limits<double>::quiet_NaN") ]
-  @ [ ("lchoose", "stan::math::binomial_coefficient_log")
-    ; ("lmultiply", "stan::math::multiply_log") ]
+  @ [ ("lmultiply", "stan::math::multiply_log")
+    ; ("lchoose", "stan::math::binomial_coefficient_log")
+    ; ("std_normal_qf", "stan::math::inv_Phi") ]
   |> String.Map.of_alist_exn
 
 let constraint_to_string = function
