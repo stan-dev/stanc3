@@ -96,7 +96,7 @@ let lower_returntype arg_types rt =
 let lower_eigen_args_to_ref arg_types =
   let lower_ref name =
     VarDef
-      (make_var_defn ~type_:(Types.const_ref Auto) ~name
+      (make_variable_defn ~type_:(Types.const_ref Auto) ~name
          ~init:
            (Assignment
               (Exprs.fun_call "stan::math::to_ref" [Var (name ^ "_arg__")]) )
@@ -146,7 +146,7 @@ let lower_fun_body fdargs fdsuffix fdbody =
     | Fun_kind.FnLpdf _ | FnTarget -> []
     | FnPlain | FnRng ->
         VarDef
-          (make_var_defn ~static:true ~constexpr:true ~type_:Types.bool
+          (make_variable_defn ~static:true ~constexpr:true ~type_:Types.bool
              ~name:"propto__" ~init:(Assignment (Literal "true")) () )
         :: Stmts.unused "propto__" in
   let body = lower_statement fdbody in

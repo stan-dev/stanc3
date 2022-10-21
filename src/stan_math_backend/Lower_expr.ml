@@ -220,7 +220,7 @@ and lower_operator_app op es_in =
   match op with
   | Operator.Plus -> lower_scalar_binary Add "stan::math::add" es
   | PMinus ->
-      if is_scalar (first es) then Unary (PMinus, lower_expr (first es))
+      if is_scalar (first es) then PMinus (lower_expr (first es))
       else Exprs.fun_call "stan::math::minus" [lower_expr (first es)]
   | PPlus -> lower_expr (first es)
   | Transpose ->
@@ -435,7 +435,9 @@ and lower_compiler_internal ad ut f es =
               [%message
                 "Array literal must have array type but found "
                   (ut : UnsizedType.t)] in
-      Exprs.std_vector_expr (lower_unsizedtype_local ad ut) (lower_exprs es)
+      Exprs.std_vector_init_expr
+        (lower_unsizedtype_local ad ut)
+        (lower_exprs es)
   | FnMakeRowVec -> (
     match ut with
     | UnsizedType.URowVector ->
@@ -443,7 +445,7 @@ and lower_compiler_internal ad ut f es =
         vector_literal st es
     | UMatrix ->
         fun_call "stan::math::to_matrix"
-          [ std_vector_expr
+          [ std_vector_init_expr
               (lower_unsizedtype_local ad URowVector)
               (lower_exprs es) ]
     | UComplexRowVector ->
@@ -451,7 +453,7 @@ and lower_compiler_internal ad ut f es =
         vector_literal st es
     | UComplexMatrix ->
         fun_call "stan::math::to_matrix"
-          [ std_vector_expr
+          [ std_vector_init_expr
               (lower_unsizedtype_local ad UComplexRowVector)
               (lower_exprs es) ]
     | _ ->

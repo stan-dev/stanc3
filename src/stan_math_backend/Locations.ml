@@ -41,10 +41,10 @@ let gen_globals location_list =
   let location_count = List.length location_list in
   let arr_type = Types.const_char_array location_count in
   [ TopVarDef
-      (make_var_defn ~type_:(Type_literal "stan::math::profile_map")
+      (make_variable_defn ~type_:(Type_literal "stan::math::profile_map")
          ~name:"profiles__" () )
   ; TopVarDef
-      (make_var_defn ~static:true ~constexpr:true ~type_:arr_type
+      (make_variable_defn ~static:true ~constexpr:true ~type_:arr_type
          ~name:"locations_array__"
          ~init:(Assignment (ArrayLiteral location_list)) () ) ]
 

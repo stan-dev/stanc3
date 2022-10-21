@@ -13,6 +13,7 @@ type type_ =
   | Complex of type_
   | TemplateType of identifier
   | Vector of type_
+      (** A std::vector. For Eigen Vectors, use [Matrix] with a row or column size of 1 *)
   | Array of type_ * int
   | Type_literal of identifier  (** Used for things like Eigen::Index *)
   | Matrix of type_ * int * int
@@ -65,8 +66,6 @@ type operator =
   | Or
 [@@deriving sexp]
 
-type unary_op = PMinus | Incr [@@deriving sexp]
-
 type expr =
   | Literal of string  (** printed as-is *)
   | Var of identifier
@@ -81,11 +80,15 @@ type expr =
   | TernaryIf of expr * expr * expr
   | Cast of type_ * expr
   | Index of expr * expr
-  | New of string option * type_ * expr list
+  | AllocNew of type_ * expr list
+  | OperatorNew of string * type_ * expr list
+      (** See {{:https://en.cppreference.com/w/cpp/memory/new/operator_new}operator new} for distinctions between
+          allocating and placing [new]s*)
   | Assign of expr * expr  (** NB: Not all exprs are valid lvalues! *)
-  | Unary of unary_op * expr
   | StreamInsertion of expr * expr list  (** Corresponds to [operator<<] *)
   | BinOp of expr * operator * expr
+  | PMinus of expr
+  | Increment of expr
 [@@deriving sexp]
 
 module Exprs = struct
@@ -105,23 +108,16 @@ module Exprs = struct
   let literal_string s = Literal ("\"" ^ Cpp_str.escaped s ^ "\"")
 
   (** Equivalent to [std::vector<t>{e1,...,en}] *)
-  let std_vector_expr t es = InitializerExpr (Vector t, es)
+  let std_vector_init_expr t elements = InitializerExpr (Vector t, elements)
 
-  let fun_call s es = FunCall (s, [], es)
-  let templated_fun_call s ts es = FunCall (s, ts, es)
+  let fun_call name args = FunCall (name, [], args)
+  let templated_fun_call name templates args = FunCall (name, templates, args)
 
   (** Helper for [std::numeric_limits<double>::quiet_NaN()] *)
   let quiet_NaN = fun_call "std::numeric_limits<double>::quiet_NaN" []
 
   (** Helper for [std::numeric_limits<int>::min()] *)
   let int_min = fun_call "std::numeric_limits<int>::min" []
-
-  (** Fold a list of expressions together with a C++ operator,
-      useful for e.g. adding a list of numbers. *)
-  let binop_list es ~f ~default : expr =
-    match es with
-    | [] -> default
-    | head :: rest -> List.fold ~init:head ~f:(fun a b -> Parens (f a b)) rest
 end
 
 module Expression_syntax = struct
@@ -188,7 +184,7 @@ type init =
   | Uninitialized
 [@@deriving sexp]
 
-type var_defn =
+type variable_defn =
   { static: bool [@default false]
   ; constexpr: bool [@default false]
   ; type_: type_
@@ -198,8 +194,8 @@ type var_defn =
 
 type stmt =
   | Expression of expr
-  | VarDef of var_defn
-  | For of var_defn * expr * expr * stmt
+  | VarDef of variable_defn
+  | For of variable_defn * expr * expr * stmt
   | ForEach of (type_ * identifier) * expr * stmt
   | While of expr * stmt
   | IfElse of expr * stmt * stmt option
@@ -237,9 +233,10 @@ module Stmts = struct
 
   let fori loopvar lower upper body =
     let init =
-      make_var_defn ~type_:Int ~name:loopvar ~init:(Assignment lower) () in
+      make_variable_defn ~type_:Int ~name:loopvar ~init:(Assignment lower) ()
+    in
     let stop = BinOp (Var loopvar, LEq, upper) in
-    let incr = Unary (Incr, Var loopvar) in
+    let incr = Increment (Var loopvar) in
     For (init, stop, incr, body)
 
   let if_block cond stmts = IfElse (cond, block stmts, None)
@@ -254,19 +251,19 @@ module Decls = struct
 
   let current_statement =
     VarDef
-      (make_var_defn ~type_:Int ~name:"current_statement__"
+      (make_variable_defn ~type_:Int ~name:"current_statement__"
          ~init:(Assignment (Literal "0")) () )
 
   let dummy_var =
     VarDef
-      (make_var_defn ~type_:Types.local_scalar ~name:"DUMMY_VAR__"
+      (make_variable_defn ~type_:Types.local_scalar ~name:"DUMMY_VAR__"
          ~init:(Construction [Exprs.quiet_NaN])
          () )
     :: Stmts.unused "DUMMY_VAR__"
 
   let serializer_in =
     VarDef
-      (make_var_defn
+      (make_variable_defn
          ~type_:(TypeTrait ("stan::io::deserializer", [Types.local_scalar]))
          ~name:"in__"
          ~init:(Construction [Var "params_r__"; Var "params_i__"])
@@ -274,7 +271,7 @@ module Decls = struct
 
   let serializer_out =
     VarDef
-      (make_var_defn
+      (make_variable_defn
          ~type_:(TypeTrait ("stan::io::serializer", [Types.local_scalar]))
          ~name:"out__"
          ~init:(Construction [Var "vars__"])
@@ -282,7 +279,7 @@ module Decls = struct
 
   let lp_accum t =
     VarDef
-      (make_var_defn
+      (make_variable_defn
          ~type_:(TypeTrait ("stan::math::accumulator", [t]))
          ~name:"lp_accum__" () )
 end
@@ -302,9 +299,9 @@ type cv_qualifiers = Const | Final | NoExcept [@@deriving sexp]
 type fun_defn =
   { templates_init: template_parameter list list * bool [@default [[]], false]
         (** Double list since some functions (mainly reduce_sum functors) need two sets of templates *)
-  ; name: identifier
   ; inline: bool [@default false]
   ; return_type: type_
+  ; name: identifier
   ; args: (type_ * string) list
   ; cv_qualifiers: cv_qualifiers list [@default []]
   ; body: stmt list option }
@@ -340,7 +337,7 @@ and defn =
   | FunDef of fun_defn
   | Class of class_defn
   | Struct of struct_defn
-  | TopVarDef of var_defn
+  | TopVarDef of variable_defn
   | TopComment of string
   | TopUsing of string * type_ option
   | Namespace of identifier * defn list
@@ -437,10 +434,6 @@ module Printing = struct
     | And -> string ppf "&&"
     | Or -> string ppf "||"
 
-  let pp_unary_op ppf = function
-    | PMinus -> string ppf "-"
-    | Incr -> string ppf "++"
-
   let rec pp_expr ppf e =
     let maybe_templates ppf ts =
       if List.length ts = 0 then nop ppf ()
@@ -452,9 +445,11 @@ module Printing = struct
     | Cast (t, e) -> pf ppf "@[(%a)@ %a@]" pp_type_ t pp_expr e
     | Constructor (t, es) ->
         pf ppf "@[<hov 2>%a(%a)@]" pp_type_ t (list ~sep:comma pp_expr) es
-    | New (ptr, t, es) ->
+    | AllocNew (t, es) ->
+        pf ppf "@[<hov 2>new %a(%a)@]" pp_type_ t (list ~sep:comma pp_expr) es
+    | OperatorNew (ptr, t, es) ->
         pf ppf "@[<hov 2>new %a%a(%a)@]"
-          (option (trailing_space (parens string)))
+          (trailing_space (parens string))
           ptr pp_type_ t (list ~sep:comma pp_expr) es
     | ArrayLiteral es -> pf ppf "{%a}" (list ~sep:comma pp_expr) es
     | InitializerExpr (t, es) ->
@@ -474,11 +469,12 @@ module Printing = struct
         pf ppf "%a ? %a : %a" pp_expr e1 pp_expr e2 pp_expr e3
     | Index (e1, e2) -> pf ppf "%a[%a]" pp_expr e1 pp_expr e2
     | Assign (e1, e2) -> pf ppf "%a = %a" pp_expr e1 pp_expr e2
-    | Unary (op, e) -> pf ppf "%a%a" pp_unary_op op pp_expr e
+    | PMinus e -> pf ppf "-%a" pp_expr e
+    | Increment e -> pf ppf "++%a" pp_expr e
     | BinOp (e1, op, e2) ->
         pf ppf "%a@ %a@ %a" pp_expr e1 pp_operator op pp_expr e2
 
-  let pp_var_defn ppf {static; constexpr; type_; name; init} =
+  let pp_variable_defn ppf {static; constexpr; type_; name; init} =
     let pp_init ppf init =
       match init with
       | Uninitialized -> ()
@@ -499,13 +495,14 @@ module Printing = struct
     | Break -> string ppf "break;"
     | Continue -> string ppf "continue;"
     | Semicolon -> string ppf ";"
-    | VarDef vd -> pf ppf "%a;" pp_var_defn vd
+    | VarDef vd -> pf ppf "%a;" pp_variable_defn vd
     | For (init, cond, incr, Block stmts) ->
         (* When we know a block is here, we can do better pretty-printing*)
-        pf ppf "@[<v 2>for(@[<hov>%a; %a; %a@]) {@ @[<v>%a@]@]@,}" pp_var_defn
-          init pp_expr cond pp_expr incr (list ~sep:cut pp_stmt) stmts
+        pf ppf "@[<v 2>for(@[<hov>%a; %a; %a@]) {@ @[<v>%a@]@]@,}"
+          pp_variable_defn init pp_expr cond pp_expr incr
+          (list ~sep:cut pp_stmt) stmts
     | For (init, cond, incr, s) ->
-        pf ppf "@[<v 2>for(@[<hov>%a; %a; %a@])@ @[%a@]@]" pp_var_defn init
+        pf ppf "@[<v 2>for(@[<hov>%a; %a; %a@])@ @[%a@]@]" pp_variable_defn init
           pp_expr cond pp_expr incr pp_stmt s
     | ForEach ((ty, name), set, Block stmts) ->
         (* When we know a block is here, we can do better pretty-printing*)
@@ -625,7 +622,7 @@ module Printing = struct
     | FunDef fd -> pp_fun_defn ppf fd
     | Class cd -> pp_class_defn ppf cd
     | Struct sd -> pp_struct_defn ppf sd
-    | TopVarDef vd -> pf ppf "%a;" pp_var_defn vd
+    | TopVarDef vd -> pf ppf "%a;" pp_variable_defn vd
     | TopComment s ->
         if String.contains s '\n' then pf ppf "/@[<v>*@[@ %a@]@,@]*/" text s
         else pf ppf "//@[<h> %s@]" s

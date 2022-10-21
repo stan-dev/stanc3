@@ -119,7 +119,7 @@ let lower_unsized_decl name ut adtype =
         lower_unsizedtype_local adtype ut
     | true, UArray UInt -> Type_literal "matrix_cl<int>"
     | true, _ -> Type_literal "matrix_cl<double>" in
-  make_var_defn ~type_ ~name ()
+  make_variable_defn ~type_ ~name ()
 
 let lower_possibly_opencl_decl name st adtype =
   let ut = SizedType.to_unsized st in
@@ -135,7 +135,7 @@ let lower_sized_decl name st adtype initialize =
   let init =
     lower_assign_sized st adtype initialize
     |> Option.value_map ~default:Uninitialized ~f:(fun i -> Assignment i) in
-  make_var_defn ~type_ ~name ~init ()
+  make_variable_defn ~type_ ~name ~init ()
 
 let lower_decl vident pst adtype initialize =
   match pst with
@@ -145,7 +145,7 @@ let lower_decl vident pst adtype initialize =
 let lower_profile name body =
   let profile =
     VarDef
-      (make_var_defn
+      (make_variable_defn
          ~type_:(Type_literal "stan::math::profile<local_scalar_t__>")
          ~name:"profile__"
          ~init:
@@ -228,7 +228,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       let err_strm_name = "errmsg_stream__" in
       let stream_decl =
         VarDef
-          (make_var_defn ~type_:(Type_literal "std::stringstream")
+          (make_variable_defn ~type_:(Type_literal "std::stringstream")
              ~name:err_strm_name () ) in
       let throw =
         Throw

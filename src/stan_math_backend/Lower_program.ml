@@ -40,7 +40,7 @@ let lower_num_param (dims : Expr.Typed.t list) =
  *)
 let gen_function__ prog_name fname =
   [ VarDef
-      (make_var_defn ~static:true ~constexpr:true
+      (make_variable_defn ~static:true ~constexpr:true
          ~type_:(Const (Pointer (Type_literal "char"))) ~name:"function__"
          ~init:
            (Assignment
@@ -69,7 +69,7 @@ let lower_data_decl (vident, ut) : defn =
 let lower_map_decl (vident, ut) : defn =
   let eigen_map t ndims =
     TopVarDef
-      (make_var_defn
+      (make_variable_defn
          ~type_:(TypeTrait ("Eigen::Map", [t]))
          ~name:vident
          ~init:
@@ -140,15 +140,15 @@ let gen_assign_data decl_id st =
      |SComplexRowVector d ->
         let data = Var (decl_id ^ "_data__") in
         [ Expression
-            (New
-               ( Some ("&" ^ decl_id)
+            (OperatorNew
+               ( "&" ^ decl_id
                , TypeTrait ("Eigen::Map", [lower_st st DataOnly])
                , [data.@!("data"); lower_expr d] ) ) ]
     | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) ->
         let data = Var (decl_id ^ "_data__") in
         [ Expression
-            (New
-               ( Some ("&" ^ decl_id)
+            (OperatorNew
+               ( "&" ^ decl_id
                , TypeTrait ("Eigen::Map", [lower_st st DataOnly])
                , [data.@!("data"); lower_expr d1; lower_expr d2] ) ) ]
     | _ -> [] in
@@ -170,7 +170,7 @@ let lower_constructor
   let preamble =
     [ Decls.current_statement; Using ("local_scalar_t__", Some Double)
     ; VarDef
-        (make_var_defn ~type_:(Type_literal "boost::ecuyer1988")
+        (make_variable_defn ~type_:(Type_literal "boost::ecuyer1988")
            ~name:"base_rng__"
            ~init:
              (Assignment
@@ -230,7 +230,7 @@ let gen_log_prob Program.{prog_name; log_prob; _} =
         ("T__", Some (TypeTrait ("stan::scalar_type_t", [TemplateType "VecR"])))
     ; Using ("local_scalar_t__", Some t__)
     ; VarDef
-        (make_var_defn ~type_:t__ ~name:"lp__"
+        (make_variable_defn ~type_:t__ ~name:"lp__"
            ~init:(Construction [Literal "0.0"])
            () ); Decls.lp_accum t__; Decls.serializer_in
     ; Decls.current_statement ]
@@ -271,18 +271,18 @@ let gen_write_array {Program.prog_name; generate_quantities; _} =
     [ Using ("local_scalar_t__", Some Double); Decls.serializer_in
     ; Decls.serializer_out
     ; VarDef
-        (make_var_defn ~static:true ~constexpr:true ~type_:Types.bool
+        (make_variable_defn ~static:true ~constexpr:true ~type_:Types.bool
            ~name:"propto__" ~init:(Assignment (Literal "true")) () ) ]
     @ Stmts.unused "propto__"
     @ VarDef
-        (make_var_defn ~type_:Double ~name:"lp__"
+        (make_variable_defn ~type_:Double ~name:"lp__"
            ~init:(Assignment (Literal "0.0")) () )
       :: Stmts.unused "lp__"
     @ [Decls.current_statement; Decls.lp_accum Double]
     @ Decls.dummy_var
     @ [ VarDef
-          (make_var_defn ~constexpr:true ~type_:Types.bool ~name:"jacobian__"
-             ~init:(Assignment (Literal "false")) () ) ]
+          (make_variable_defn ~constexpr:true ~type_:Types.bool
+             ~name:"jacobian__" ~init:(Assignment (Literal "false")) () ) ]
     @ gen_function__ prog_name "write_array" in
   FunDef
     (make_fun_defn
@@ -321,7 +321,7 @@ let gen_get_param_names {Program.output_vars; _} =
     [ Expression
         (Assign
            ( Var "names__"
-           , Exprs.std_vector_expr Types.string
+           , Exprs.std_vector_init_expr Types.string
                (List.map ~f:extract_name output_vars) ) ) ] in
   FunDef
     (make_fun_defn ~inline:true ~return_type:Void ~name:"get_param_names" ~args
@@ -331,14 +331,14 @@ let gen_get_dims {Program.output_vars; _} =
   let cast x =
     Exprs.templated_fun_call "static_cast" [Types.size_t] [lower_expr x] in
   let pack inner_dims =
-    Exprs.std_vector_expr Types.size_t
+    Exprs.std_vector_init_expr Types.size_t
       (List.map ~f:cast (SizedType.get_dims_io inner_dims)) in
   let dim_list =
     List.(
       map ~f:(fun (_, {Program.out_constrained_st= st; _}) -> st) output_vars)
   in
   let result_vector =
-    Exprs.std_vector_expr
+    Exprs.std_vector_init_expr
       (Types.std_vector Types.size_t)
       (List.map ~f:pack dim_list) in
   FunDef
@@ -491,24 +491,26 @@ let gen_overloads {Program.output_vars; _} =
       let num_transformed = num_outvars (block_outvars TransformedParameters) in
       let num_gen_quantities = num_outvars (block_outvars GeneratedQuantities) in
       [ VarDef
-          (make_var_defn ~type_:(Const Types.size_t) ~name:"num_params__"
+          (make_variable_defn ~type_:(Const Types.size_t) ~name:"num_params__"
              ~init:(Assignment num_params) () )
       ; VarDef
-          (make_var_defn ~type_:(Const Types.size_t) ~name:"num_transformed"
+          (make_variable_defn ~type_:(Const Types.size_t)
+             ~name:"num_transformed"
              ~init:
                (Assignment
                   (Var "emit_transformed_parameters" * Parens num_transformed)
                )
              () )
       ; VarDef
-          (make_var_defn ~type_:(Const Types.size_t) ~name:"num_gen_quantities"
+          (make_variable_defn ~type_:(Const Types.size_t)
+             ~name:"num_gen_quantities"
              ~init:
                (Assignment
                   (Var "emit_generated_quantities" * Parens num_gen_quantities)
                )
              () )
       ; VarDef
-          (make_var_defn ~type_:(Const Types.size_t) ~name:"num_to_write"
+          (make_variable_defn ~type_:(Const Types.size_t) ~name:"num_to_write"
              ~init:
                (Assignment
                   ( Var "num_params__" + Var "num_transformed"
@@ -531,8 +533,8 @@ let gen_overloads {Program.output_vars; _} =
            ~body:
              ( sizes
              @ [ VarDef
-                   (make_var_defn ~type_:(Types.std_vector Int) ~name:"params_i"
-                      () )
+                   (make_variable_defn ~type_:(Types.std_vector Int)
+                      ~name:"params_i" () )
                ; Expression
                    (Assign
                       ( Var "vars"
@@ -574,8 +576,8 @@ let gen_overloads {Program.output_vars; _} =
            ~args:[(Ref (Types.vector (TemplateType "T_")), "params_r"); pstream]
            ~body:
              [ VarDef
-                 (make_var_defn ~type_:(Types.vector Int) ~name:"params_i" ())
-             ; call_impl ]
+                 (make_variable_defn ~type_:(Types.vector Int) ~name:"params_i"
+                    () ); call_impl ]
            ~cv_qualifiers:[Const] () )
     ; FunDef
         (make_fun_defn ~templates_init ~inline:true
@@ -593,15 +595,15 @@ let gen_overloads {Program.output_vars; _} =
              ]
            ~body:
              [ VarDef
-                 (make_var_defn ~type_:(Types.std_vector Double)
+                 (make_variable_defn ~type_:(Types.std_vector Double)
                     ~name:"params_r_vec"
                     ~init:
                       (Construction
                          [Exprs.method_call (Var "params_r") "size" [] []] )
                     () )
              ; VarDef
-                 (make_var_defn ~type_:(Types.std_vector Int) ~name:"params_i"
-                    () )
+                 (make_variable_defn ~type_:(Types.std_vector Int)
+                    ~name:"params_i" () )
              ; Expression
                  (Exprs.fun_call "transform_inits"
                     [ Var "context"; Var "params_i"; Var "params_r_vec"
@@ -634,7 +636,7 @@ let gen_transform_inits {Program.output_vars; _} =
     List.filter_map ~f:get_constrained_param_st output_vars in
   let names_array =
     VarDef
-      (make_var_defn ~constexpr:true
+      (make_variable_defn ~constexpr:true
          ~type_:(Types.const_char_array list_len)
          ~name:"names__"
          ~init:
@@ -645,7 +647,7 @@ let gen_transform_inits {Program.output_vars; _} =
          () ) in
   let constrained_params_arr =
     VarDef
-      (make_var_defn
+      (make_variable_defn
          ~type_:(Const (Array (Type_literal "Eigen::Index", list_len)))
          ~name:"constrain_param_sizes__"
          ~init:(InitalizerList (List.map ~f:lower_num_param constrained_params))
@@ -654,7 +656,7 @@ let gen_transform_inits {Program.output_vars; _} =
     let constrain_param_sizes = Var "constrain_param_sizes__" in
     let open Expression_syntax in
     VarDef
-      (make_var_defn ~type_:(Const Auto) ~name:"num_constrained_params__"
+      (make_variable_defn ~type_:(Const Auto) ~name:"num_constrained_params__"
          ~init:
            (Assignment
               (Exprs.fun_call "std::accumulate"
@@ -664,41 +666,42 @@ let gen_transform_inits {Program.output_vars; _} =
   let flatten_and_call =
     let open Expression_syntax in
     [ VarDef
-        (make_var_defn ~type_:(Types.std_vector Double) ~name:"params_r_flat__"
+        (make_variable_defn ~type_:(Types.std_vector Double)
+           ~name:"params_r_flat__"
            ~init:(Construction [Var "num_constrained_params__"])
            () )
     ; VarDef
-        (make_var_defn ~type_:(Type_literal "Eigen::Index") ~name:"size_iter__"
-           ~init:(Assignment (Literal "0")) () )
+        (make_variable_defn ~type_:(Type_literal "Eigen::Index")
+           ~name:"size_iter__" ~init:(Assignment (Literal "0")) () )
     ; VarDef
-        (make_var_defn ~type_:(Type_literal "Eigen::Index") ~name:"flat_iter__"
-           ~init:(Assignment (Literal "0")) () )
+        (make_variable_defn ~type_:(Type_literal "Eigen::Index")
+           ~name:"flat_iter__" ~init:(Assignment (Literal "0")) () )
     ; ForEach
         ( (Ref (Ref Auto), "param_name__")
         , Var "names__"
         , Block
             [ VarDef
-                (make_var_defn ~type_:(Const Auto) ~name:"param_vec__"
+                (make_variable_defn ~type_:(Const Auto) ~name:"param_vec__"
                    ~init:
                      (Assignment
                         (Var "context").@?(("vals_r", [Var "param_name__"])) )
                    () )
             ; For
-                ( make_var_defn ~type_:(Type_literal "Eigen::Index") ~name:"i"
-                    ~init:(Assignment (Literal "0")) ()
+                ( make_variable_defn ~type_:(Type_literal "Eigen::Index")
+                    ~name:"i" ~init:(Assignment (Literal "0")) ()
                 , BinOp
                     ( Var "i"
                     , Lthn
                     , Index (Var "constrain_param_sizes__", Var "size_iter__")
                     )
-                , Unary (Incr, Var "i")
+                , Increment (Var "i")
                 , Block
                     [ Expression
                         (Assign
                            ( Index (Var "params_r_flat__", Var "flat_iter__")
                            , Index (Var "param_vec__", Var "i") ) )
-                    ; Expression (Unary (Incr, Var "flat_iter__")) ] )
-            ; Expression (Unary (Incr, Var "size_iter__")) ] )
+                    ; Expression (Increment (Var "flat_iter__")) ] )
+            ; Expression (Increment (Var "size_iter__")) ] )
     ; Expression (Var "vars").@?(("resize", [Var "num_params_r__"]))
     ; Expression
         (Exprs.fun_call "transform_inits_impl"
@@ -734,7 +737,7 @@ let model_public_basics name =
          ~body:
            [ Return
                (Some
-                  (Exprs.std_vector_expr Types.string
+                  (Exprs.std_vector_init_expr Types.string
                      [ Exprs.literal_string
                          "stanc_version = %%NAME%%3 %%VERSION%%"
                      ; Exprs.literal_string
@@ -777,12 +780,12 @@ let new_model_boilerplate prog_name =
       ; (Pointer (Type_literal "std::ostream"), "msg_stream") ] in
     let body =
       [ VarDef
-          (make_var_defn ~type_:(Pointer (Type_literal "stan_model")) ~name:"m"
+          (make_variable_defn ~type_:(Pointer (Type_literal "stan_model"))
+             ~name:"m"
              ~init:
                (Assignment
-                  (New
-                     ( None
-                     , Type_literal "stan_model"
+                  (AllocNew
+                     ( Type_literal "stan_model"
                      , [Var "data_context"; Var "seed"; Var "msg_stream"] ) ) )
              () ); Return (Some (Literal "*m")) ] in
     FunDef
