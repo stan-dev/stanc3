@@ -234,7 +234,7 @@ let gen_pp_sig fdargs fdrt extra_templates extra ppf (name, args, variadic) =
   let args, variadic_args =
     match variadic with
     | `ReduceSum -> List.split_n args 3
-    | `VariadicHOF x -> List.split_n args (x - 1)
+    | `VariadicHOF x -> List.split_n args x
     | `None -> (args, []) in
   let arg_strs =
     args

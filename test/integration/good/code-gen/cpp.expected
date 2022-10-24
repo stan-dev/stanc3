@@ -15032,7 +15032,7 @@ struct f_variadic2_functor__ {
                                 stan::is_vt_not_complex<T3__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__,
                        stan::base_type_t<T3__>>, -1, 1>
-  operator()(const T0__& t, std::ostream* pstream__, const T1__& z,
+  operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
              const T2__& a, const T3__& b) const;
 };
 
@@ -15088,9 +15088,9 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_vt_not_complex<T3__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__,
                      stan::base_type_t<T3__>>, -1, 1>
-f_variadic2_functor__::operator()(const T0__& t, std::ostream* pstream__,
-                                  const T1__& z, const T2__& a, const T3__& b) 
-const
+f_variadic2_functor__::operator()(const T0__& t, const T1__& z,
+                                  std::ostream* pstream__, const T2__& a,
+                                  const T3__& b)  const
 {
   return f(t, z, a, b, pstream__);
 }
@@ -31537,7 +31537,7 @@ struct rhs_variadic2_functor__ {
                                 stan::is_vt_not_complex<T1__>,
                                 stan::is_stan_scalar<T2__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>, -1, 1>
-  operator()(const T0__& t, std::ostream* pstream__, const T1__& y,
+  operator()(const T0__& t, const T1__& y, std::ostream* pstream__,
              const T2__& alpha) const;
 };
 struct rhs_functor__ {
@@ -31585,8 +31585,9 @@ template <typename T0__, typename T1__, typename T2__,
                               stan::is_vt_not_complex<T1__>,
                               stan::is_stan_scalar<T2__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>, -1, 1>
-rhs_variadic2_functor__::operator()(const T0__& t, std::ostream* pstream__,
-                                    const T1__& y, const T2__& alpha)  const
+rhs_variadic2_functor__::operator()(const T0__& t, const T1__& y,
+                                    std::ostream* pstream__,
+                                    const T2__& alpha)  const
 {
   return rhs(t, y, alpha, pstream__);
 }
