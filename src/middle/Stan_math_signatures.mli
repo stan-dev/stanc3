@@ -85,8 +85,3 @@ val make_assignmentoperator_stan_math_signatures : Operator.t -> signature list
 (* reduce_sum helpers *)
 val is_reduce_sum_fn : string -> bool
 val reduce_sum_slice_types : UnsizedType.t list
-
-(** These are only used in code-gen, typing is done via [stan_math_variadic_signatures] *)
-
-val is_variadic_ode_fn : string -> bool
-val is_variadic_dae_fn : string -> bool
