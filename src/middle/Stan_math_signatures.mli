@@ -26,7 +26,17 @@ type variadic_signature =
   ; required_fn_rt: UnsizedType.t
   ; required_fn_args: fun_arg list
   ; hof_pstream_loc: int
-  ; required_fn_pstream_loc: int }
+        (** This specifies where the pstream* argument goes in the call to the variadic function,
+      usually after some required arguments and control args.contents
+
+      For example, for dae(), the arguments [f, yy0, yp0, t0, ts] all precede
+      the msgs argument, making msgs the 6th argument, so this number is 6.
+      *)
+  ; required_fn_pstream_loc: int
+        (** Similar to the above, but specifies where in the {e functor} we expect
+      pstream* to occur. For example, for a dae, this is the 4th argument,
+      so this number is 4 *)
+  }
 
 val stan_math_variadic_signatures : (string, variadic_signature) Hashtbl.t
 (** Mapping from names to description of a variadic function.
@@ -78,11 +88,5 @@ val reduce_sum_slice_types : UnsizedType.t list
 
 (** These are only used in code-gen, typing is done via [stan_math_variadic_signatures] *)
 
-(* variadic ODE helpers *)
 val is_variadic_ode_fn : string -> bool
-val ode_tolerances_suffix : string
-val variadic_ode_adjoint_fn : string
-
-(* variadic DAE helpers *)
 val is_variadic_dae_fn : string -> bool
-val dae_tolerances_suffix : string
