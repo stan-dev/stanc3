@@ -636,7 +636,7 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
 
 and check_variadic ~is_cond_dist loc cf tenv id tes =
   let Stan_math_signatures.
-        {control_args; required_fn_args; required_fn_rt; return_type} =
+        {control_args; required_fn_args; required_fn_rt; return_type; _} =
     Hashtbl.find_exn Stan_math_signatures.stan_math_variadic_signatures id.name
   in
   let matching remaining_es Env.{type_= ftype; _} =

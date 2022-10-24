@@ -24,7 +24,9 @@ type variadic_signature =
   { return_type: UnsizedType.t
   ; control_args: fun_arg list
   ; required_fn_rt: UnsizedType.t
-  ; required_fn_args: fun_arg list }
+  ; required_fn_args: fun_arg list
+  ; hof_pstream_loc: int
+  ; required_fn_pstream_loc: int }
 
 val stan_math_variadic_signatures : (string, variadic_signature) Hashtbl.t
 (** Mapping from names to description of a variadic function.

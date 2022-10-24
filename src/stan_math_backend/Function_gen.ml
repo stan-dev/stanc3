@@ -234,8 +234,7 @@ let gen_pp_sig fdargs fdrt extra_templates extra ppf (name, args, variadic) =
   let args, variadic_args =
     match variadic with
     | `ReduceSum -> List.split_n args 3
-    | `VariadicODE -> List.split_n args 2
-    | `VariadicDAE -> List.split_n args 3
+    | `VariadicHOF x -> List.split_n args (x - 1)
     | `None -> (args, []) in
   let arg_strs =
     args
@@ -296,8 +295,7 @@ let pp_fun_def ppf
           match variadic_fun_type with
           | `None -> functor_suffix
           | `ReduceSum -> reduce_sum_functor_suffix
-          | `VariadicODE -> variadic_ode_functor_suffix
-          | `VariadicDAE -> variadic_dae_functor_suffix in
+          | `VariadicHOF x -> variadic_functor_suffix x in
         let functor_name = fdname ^ suffix in
         let struct_template =
           match (fdsuffix, variadic_fun_type) with
@@ -344,11 +342,11 @@ let pp_fun_def ppf
       else if String.Set.mem funs_used_in_variadic_ode fdname then
         (* Produces the variadic ode functors that has the pstream argument
            as the third and not last argument *)
-        register_functor ([], fdargs, `VariadicODE)
+        register_functor ([], fdargs, `VariadicHOF 3)
       else if String.Set.mem funs_used_in_variadic_dae fdname then
         (* Produces the variadic DAE functors that has the pstream argument
            as the fourth and not last argument *)
-        register_functor ([], fdargs, `VariadicDAE)
+        register_functor ([], fdargs, `VariadicHOF 4)
 
 let pp_standalone_fun_def namespace_fun ppf
     Program.{fdname; fdsuffix; fdargs; fdbody; fdrt; _} =
