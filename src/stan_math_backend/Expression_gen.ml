@@ -139,8 +139,8 @@ let variadic_functor_suffix x = sprintf "_variadic%d_functor__" x
 
 let functor_suffix_select hof =
   match Hashtbl.find Stan_math_signatures.stan_math_variadic_signatures hof with
-  | Some {required_fn_args_before_pstream; _} ->
-      variadic_functor_suffix required_fn_args_before_pstream
+  | Some {required_fn_args; _} ->
+      variadic_functor_suffix (List.length required_fn_args)
   | None when Stan_math_signatures.is_reduce_sum_fn hof ->
       reduce_sum_functor_suffix
   | None -> functor_suffix
@@ -350,10 +350,11 @@ and gen_functionals fname suffix es mem_pattern =
             , grainsize :: container :: msgs :: tl )
         | _, _
           when Stan_math_signatures.is_stan_math_variadic_function_name fname ->
-            let Stan_math_signatures.{hof_args_before_pstream; _} =
+            let Stan_math_signatures.{control_args; _} =
               Hashtbl.find_exn
                 Stan_math_signatures.stan_math_variadic_signatures fname in
-            let hd, tl = List.split_n converted_es hof_args_before_pstream in
+            let hd, tl =
+              List.split_n converted_es (List.length control_args + 1) in
             (fname, hd @ (msgs :: tl))
         | ( "map_rect"
           , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}

@@ -402,10 +402,10 @@ let get_variadic_requirements (p : Program.Numbered.t) =
       match
         Hashtbl.find Stan_math_signatures.stan_math_variadic_signatures x
       with
-      | Some {required_fn_args_before_pstream; _} ->
+      | Some {required_fn_args; _} ->
           Map.add_multi accum
             ~key:(Utils.stdlib_distribution_name f)
-            ~data:required_fn_args_before_pstream
+            ~data:(List.length required_fn_args)
       | _ -> Expr.Fixed.Pattern.fold find_functors_expr accum pattern )
     | _ -> Expr.Fixed.Pattern.fold find_functors_expr accum pattern in
   let rec find_functors_stmt accum stmt =

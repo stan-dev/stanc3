@@ -94,9 +94,7 @@ type variadic_signature =
   { return_type: UnsizedType.t
   ; control_args: fun_arg list
   ; required_fn_rt: UnsizedType.t
-  ; required_fn_args: fun_arg list
-  ; hof_args_before_pstream: int
-  ; required_fn_args_before_pstream: int }
+  ; required_fn_args: fun_arg list }
 [@@deriving create]
 
 let is_primitive = function
@@ -2637,12 +2635,7 @@ let add_variadic_fn name ~return_type ?control_args ~required_fn_rt
   Hashtbl.add_exn stan_math_variadic_signatures ~key:name
     ~data:
       (create_variadic_signature ~return_type ?control_args ?required_fn_args
-         ~required_fn_rt
-         ~hof_args_before_pstream:
-           (Option.value_map ~f:List.length control_args ~default:0 + 1)
-         ~required_fn_args_before_pstream:
-           (Option.value_map ~f:List.length required_fn_args ~default:0)
-         () )
+         ~required_fn_rt () )
 
 let () =
   (* DAEs *)
