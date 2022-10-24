@@ -150,22 +150,23 @@ let fn_renames =
     ; (FnNegInf, "stan::math::negative_infinity")
     ; (FnResizeToMatch, "stan::math::resize_to_match")
     ; (FnNaN, "std::numeric_limits<double>::quiet_NaN") ]
+  @ [ ("lmultiply", "stan::math::multiply_log")
+    ; ("lchoose", "stan::math::binomial_coefficient_log")
+    ; ("std_normal_qf", "stan::math::inv_Phi") ]
   |> String.Map.of_alist_exn
 
 let map_rect_calls = Int.Table.create ()
 let functor_suffix = "_functor__"
 let reduce_sum_functor_suffix = "_rsfunctor__"
-let variadic_ode_functor_suffix = "_odefunctor__"
-let variadic_dae_functor_suffix = "_daefunctor__"
+let variadic_functor_suffix x = sprintf "_variadic%d_functor__" x
 
 let functor_suffix_select hof =
-  match hof with
-  | x when Stan_math_signatures.is_reduce_sum_fn x -> reduce_sum_functor_suffix
-  | x when Stan_math_signatures.is_variadic_ode_fn x ->
-      variadic_ode_functor_suffix
-  | x when Stan_math_signatures.is_variadic_dae_fn x ->
-      variadic_dae_functor_suffix
-  | _ -> functor_suffix
+  match Hashtbl.find Stan_math_signatures.stan_math_variadic_signatures hof with
+  | Some {required_fn_args; _} ->
+      variadic_functor_suffix (List.length required_fn_args)
+  | None when Stan_math_signatures.is_reduce_sum_fn hof ->
+      reduce_sum_functor_suffix
+  | None -> functor_suffix
 
 let constraint_to_string = function
   | Transformation.Ordered -> Some "ordered"
@@ -290,11 +291,6 @@ and gen_operator_app op ppf es_in =
 and gen_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
     (ret_type : UnsizedType.returntype option) =
   match f with
-  | "lmultiply" ->
-      Some (fun ppf es -> pp_binary_f ppf "stan::math::multiply_log" es)
-  | "lchoose" ->
-      Some
-        (fun ppf es -> pp_binary_f ppf "stan::math::binomial_coefficient_log" es)
   | "target" -> Some (fun ppf _ -> pf ppf "stan::math::get_lp(lp__, lp_accum__)")
   | "get_lp" -> Some (fun ppf _ -> pf ppf "stan::math::get_lp(lp__, lp_accum__)")
   | f when Map.mem fn_renames f ->
@@ -381,51 +377,14 @@ and gen_functionals fname suffix es mem_pattern =
               ^ reduce_sum_functor_suffix in
             ( Fmt.str "%s<%s%s>" fname normalized_dist_functor propto_template
             , grainsize :: container :: msgs :: tl )
-        | x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
-          when Stan_math_signatures.is_variadic_ode_fn x
-               && String.is_suffix fname
-                    ~suffix:Stan_math_signatures.ode_tolerances_suffix
-               && not (Stan_math_signatures.variadic_ode_adjoint_fn = x) ->
-            ( fname
-            , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: msgs
-              :: tl )
-        | x, f :: y0 :: t0 :: ts :: tl
-          when Stan_math_signatures.is_variadic_ode_fn x
-               && not (Stan_math_signatures.variadic_ode_adjoint_fn = x) ->
-            (fname, f :: y0 :: t0 :: ts :: msgs :: tl)
-        | ( x
-          , f
-            :: y0
-               :: t0
-                  :: ts
-                     :: rel_tol
-                        :: abs_tol
-                           :: rel_tol_b
-                              :: abs_tol_b
-                                 :: rel_tol_q
-                                    :: abs_tol_q
-                                       :: max_num_steps
-                                          :: num_checkpoints
-                                             :: interpolation_polynomial
-                                                :: solver_f :: solver_b :: tl )
-          when Stan_math_signatures.variadic_ode_adjoint_fn = x ->
-            ( fname
-            , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: rel_tol_b
-              :: abs_tol_b :: rel_tol_q :: abs_tol_q :: max_num_steps
-              :: num_checkpoints :: interpolation_polynomial :: solver_f
-              :: solver_b :: msgs :: tl )
-        | ( x
-          , f :: yy0 :: yp0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
-          )
-          when Stan_math_signatures.is_variadic_dae_fn x
-               && String.is_suffix fname
-                    ~suffix:Stan_math_signatures.dae_tolerances_suffix ->
-            ( fname
-            , f :: yy0 :: yp0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps
-              :: msgs :: tl )
-        | x, f :: yy0 :: yp0 :: t0 :: ts :: tl
-          when Stan_math_signatures.is_variadic_dae_fn x ->
-            (fname, f :: yy0 :: yp0 :: t0 :: ts :: msgs :: tl)
+        | _, _
+          when Stan_math_signatures.is_stan_math_variadic_function_name fname ->
+            let Stan_math_signatures.{control_args; _} =
+              Hashtbl.find_exn
+                Stan_math_signatures.stan_math_variadic_signatures fname in
+            let hd, tl =
+              List.split_n converted_es (List.length control_args + 1) in
+            (fname, hd @ (msgs :: tl))
         | ( "map_rect"
           , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
             :: tl ) ->

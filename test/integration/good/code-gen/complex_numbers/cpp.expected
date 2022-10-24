@@ -8861,7 +8861,7 @@ template <typename T0__,
     try {
       current_statement__ = 17;
       std::stringstream errmsg_stream__;
-      errmsg_stream__ << "called the wrong foo";
+      stan::math::stan_print(&errmsg_stream__, "called the wrong foo");
       throw std::domain_error(errmsg_stream__.str());
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8901,7 +8901,7 @@ template <typename T0__,
     try {
       current_statement__ = 21;
       std::stringstream errmsg_stream__;
-      errmsg_stream__ << "called the wrong foo";
+      stan::math::stan_print(&errmsg_stream__, "called the wrong foo");
       throw std::domain_error(errmsg_stream__.str());
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8941,7 +8941,7 @@ template <typename T0__,
     try {
       current_statement__ = 25;
       std::stringstream errmsg_stream__;
-      errmsg_stream__ << "called the wrong foo";
+      stan::math::stan_print(&errmsg_stream__, "called the wrong foo");
       throw std::domain_error(errmsg_stream__.str());
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8979,7 +8979,7 @@ template <typename T0__,
     try {
       current_statement__ = 29;
       std::stringstream errmsg_stream__;
-      errmsg_stream__ << "called the wrong foo";
+      stan::math::stan_print(&errmsg_stream__, "called the wrong foo");
       throw std::domain_error(errmsg_stream__.str());
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

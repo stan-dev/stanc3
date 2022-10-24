@@ -1275,7 +1275,7 @@
        (meta <opaque>))))
     (fdloc <opaque>))
    ((fdrt ()) (fdname foo_4) (fdsuffix FnPlain)
-    (fdargs ((AutoDiffable x UReal)))
+    (fdargs ((AutoDiffable x (UArray UReal))))
     (fdbody
      (((pattern
         (Block
@@ -1283,8 +1283,22 @@
             (NRFunApp (CompilerInternal FnReject)
              (((pattern (Lit Str "user-specified rejection"))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern
+                (Indexed
+                 ((pattern (Var x))
+                  (meta
+                   ((type_ (UArray UReal)) (loc <opaque>)
+                    (adlevel AutoDiffable))))
+                 ((Single
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+              ((pattern (Lit Str "; "))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Var x))
-               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta
+                ((type_ (UArray UReal)) (loc <opaque>)
+                 (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))

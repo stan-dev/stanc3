@@ -350,6 +350,10 @@ let math_sigs =
   ; ([basic_vectorized], "sinh", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "sqrt", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "square", [DDeepVectorized], SoA)
+    (* TODO: Eventually will want to move _qf to be part of the distribution list above *)
+  ; ([basic_vectorized], "std_normal_qf", [DDeepVectorized], SoA)
+    (* std_normal_qf is an alias for inv_Phi *)
+  ; ([basic_vectorized], "std_normal_log_qf", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "step", [DReal], SoA)
   ; ([basic_vectorized], "tan", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "tanh", [DDeepVectorized], SoA)
@@ -2623,13 +2627,6 @@ let variadic_ode_nonadjoint_fns =
 
 let ode_tolerances_suffix = "_tol"
 let is_reduce_sum_fn f = Set.mem reduce_sum_functions f
-
-let is_variadic_ode_fn f =
-  Set.mem variadic_ode_nonadjoint_fns f || f = variadic_ode_adjoint_fn
-
-let variadic_dae_fns = String.Set.of_list ["dae_tol"; "dae"]
-let dae_tolerances_suffix = "_tol"
-let is_variadic_dae_fn f = Set.mem variadic_dae_fns f
 let variadic_dae_fun_return_type = UnsizedType.UVector
 let variadic_dae_return_type = UnsizedType.UArray UnsizedType.UVector
 
