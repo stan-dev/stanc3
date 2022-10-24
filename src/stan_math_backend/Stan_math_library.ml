@@ -2650,12 +2650,6 @@ let special_function_returntype name =
 let is_not_overloadable name =
   is_variadic_function_name name || is_special_function_name name
 
-let is_variadic_ode_fn f =
-  Set.mem variadic_ode_nonadjoint_fns f || f = variadic_ode_adjoint_fn
-
-let variadic_dae_fns = String.Set.of_list ["dae_tol"; "dae"]
-let dae_tolerances_suffix = "_tol"
-let is_variadic_dae_fn f = Set.mem variadic_dae_fns f
 let variadic_dae_fun_return_type = UnsizedType.UVector
 let variadic_dae_return_type = UnsizedType.UArray UnsizedType.UVector
 
