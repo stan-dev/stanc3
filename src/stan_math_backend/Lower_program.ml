@@ -141,14 +141,14 @@ let gen_assign_data decl_id st =
         let data = Var (decl_id ^ "_data__") in
         [ Expression
             (OperatorNew
-               ( "&" ^ decl_id
+               ( decl_id
                , TypeTrait ("Eigen::Map", [lower_st st DataOnly])
                , [data.@!("data"); lower_expr d] ) ) ]
     | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) ->
         let data = Var (decl_id ^ "_data__") in
         [ Expression
             (OperatorNew
-               ( "&" ^ decl_id
+               ( decl_id
                , TypeTrait ("Eigen::Map", [lower_st st DataOnly])
                , [data.@!("data"); lower_expr d1; lower_expr d2] ) ) ]
     | _ -> [] in

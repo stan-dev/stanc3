@@ -69,6 +69,7 @@ type operator =
 type expr =
   | Literal of string  (** printed as-is *)
   | Var of identifier
+  | VarRef of identifier
   | Parens of expr
   | FunCall of identifier * type_ list * expr list
   | MethodCall of expr * identifier * type_ list * expr list
@@ -441,6 +442,7 @@ module Printing = struct
     match e with
     | Literal s -> pf ppf "%s" s
     | Var id -> string ppf id
+    | VarRef id -> pf ppf "&%s" id
     | Parens e -> pf ppf "(%a)" pp_expr e
     | Cast (t, e) -> pf ppf "@[(%a)@ %a@]" pp_type_ t pp_expr e
     | Constructor (t, es) ->
@@ -450,7 +452,7 @@ module Printing = struct
     | OperatorNew (ptr, t, es) ->
         pf ppf "@[<hov 2>new %a%a(%a)@]"
           (trailing_space (parens string))
-          ptr pp_type_ t (list ~sep:comma pp_expr) es
+          ("&" ^ ptr) pp_type_ t (list ~sep:comma pp_expr) es
     | ArrayLiteral es -> pf ppf "{%a}" (list ~sep:comma pp_expr) es
     | InitializerExpr (t, es) ->
         pf ppf "@[<2>%a{%a}@]" pp_type_ t (list ~sep:comma pp_expr) es

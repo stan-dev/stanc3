@@ -3368,8 +3368,8 @@ namespace mother_model_namespace {
     " (in 'mother.stan', line 182, column 36 to line 184, column 3)",
     " (in 'mother.stan', line 187, column 4 to column 24)",
     " (in 'mother.stan', line 186, column 22 to line 188, column 3)",
-    " (in 'mother.stan', line 191, column 4 to column 42)",
-    " (in 'mother.stan', line 190, column 21 to line 192, column 3)",
+    " (in 'mother.stan', line 191, column 4 to column 54)",
+    " (in 'mother.stan', line 190, column 29 to line 192, column 3)",
     " (in 'mother.stan', line 195, column 4 to column 18)",
     " (in 'mother.stan', line 196, column 4 to column 19)",
     " (in 'mother.stan', line 197, column 4 to column 26)",
@@ -3866,7 +3866,8 @@ namespace mother_model_namespace {
   struct foo_4_functor__ {
     template <typename T0__,
               stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-    void operator()(const T0__& x, std::ostream* pstream__) const;
+    void
+    operator()(const std::vector<T0__>& x, std::ostream* pstream__) const;
   };
   struct f3_functor__ {
     template <typename T3__, typename T4__, typename T5__, typename T6__,
@@ -4612,7 +4613,7 @@ namespace mother_model_namespace {
   }
   template <typename T0__,
             stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  void foo_4(const T0__& x, std::ostream* pstream__) {
+  void foo_4(const std::vector<T0__>& x, std::ostream* pstream__) {
     using local_scalar_t__ = stan::promote_args_t<T0__>;
     int current_statement__ = 0;
     static constexpr bool propto__ = true;
@@ -4624,8 +4625,11 @@ namespace mother_model_namespace {
     try {
       current_statement__ = 710;
       std::stringstream errmsg_stream__;
-      errmsg_stream__ << "user-specified rejection";
-      errmsg_stream__ << x;
+      stan::math::print(&errmsg_stream__, "user-specified rejection");
+      stan::math::print(&errmsg_stream__,
+        stan::model::rvalue(x, "x", stan::model::index_uni(1)));
+      stan::math::print(&errmsg_stream__, "; ");
+      stan::math::print(&errmsg_stream__, x);
       throw std::domain_error(errmsg_stream__.str());
     } catch(const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4633,7 +4637,8 @@ namespace mother_model_namespace {
   }
   template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
   void
-  foo_4_functor__::operator()(const T0__& x, std::ostream* pstream__) const {
+  foo_4_functor__::operator()(const std::vector<T0__>& x, std::ostream*
+                              pstream__) const {
     return foo_4(x, pstream__);
   }
   template <typename T0__, typename T1__, typename T2__, typename T3__,
@@ -4664,12 +4669,13 @@ namespace mother_model_namespace {
         {
           current_statement__ = 716;
           std::stringstream errmsg_stream__;
-          errmsg_stream__ << "user-specified rejection, difference above ";
-          errmsg_stream__ << max_;
-          errmsg_stream__ << " x:";
-          errmsg_stream__ << x;
-          errmsg_stream__ << " y:";
-          errmsg_stream__ << y;
+          stan::math::print(&errmsg_stream__,
+            "user-specified rejection, difference above ");
+          stan::math::print(&errmsg_stream__, max_);
+          stan::math::print(&errmsg_stream__, " x:");
+          stan::math::print(&errmsg_stream__, x);
+          stan::math::print(&errmsg_stream__, " y:");
+          stan::math::print(&errmsg_stream__, y);
           throw std::domain_error(errmsg_stream__.str());
         }
       
@@ -4678,12 +4684,13 @@ namespace mother_model_namespace {
         {
           current_statement__ = 718;
           std::stringstream errmsg_stream__;
-          errmsg_stream__ << "user-specified rejection, difference below ";
-          errmsg_stream__ << min_;
-          errmsg_stream__ << " x:";
-          errmsg_stream__ << x;
-          errmsg_stream__ << " y:";
-          errmsg_stream__ << y;
+          stan::math::print(&errmsg_stream__,
+            "user-specified rejection, difference below ");
+          stan::math::print(&errmsg_stream__, min_);
+          stan::math::print(&errmsg_stream__, " x:");
+          stan::math::print(&errmsg_stream__, x);
+          stan::math::print(&errmsg_stream__, " y:");
+          stan::math::print(&errmsg_stream__, y);
           throw std::domain_error(errmsg_stream__.str());
         }
       
@@ -10009,7 +10016,7 @@ namespace mother_model_namespace {
             {
               current_statement__ = 137;
               std::stringstream errmsg_stream__;
-              errmsg_stream__ << "indexing test 1 failed";
+              stan::math::print(&errmsg_stream__, "indexing test 1 failed");
               throw std::domain_error(errmsg_stream__.str());
             }
           
@@ -10047,7 +10054,7 @@ namespace mother_model_namespace {
             {
               current_statement__ = 143;
               std::stringstream errmsg_stream__;
-              errmsg_stream__ << "indexing test 2 failed";
+              stan::math::print(&errmsg_stream__, "indexing test 2 failed");
               throw std::domain_error(errmsg_stream__.str());
             }
           
@@ -10094,7 +10101,7 @@ namespace mother_model_namespace {
             {
               current_statement__ = 150;
               std::stringstream errmsg_stream__;
-              errmsg_stream__ << "indexing test 3 failed";
+              stan::math::print(&errmsg_stream__, "indexing test 3 failed");
               throw std::domain_error(errmsg_stream__.str());
             }
           

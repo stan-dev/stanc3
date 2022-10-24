@@ -234,7 +234,10 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
         Throw
           (Exprs.fun_call "std::domain_error" [(Var err_strm_name).@!("str")])
       in
-      let add_to_string e = Expression (Var err_strm_name << [lower_expr e]) in
+      let add_to_string e =
+        Expression
+          (fun_call "stan::math::print" [VarRef err_strm_name; lower_expr e])
+      in
       (stream_decl :: List.map ~f:add_to_string args) @ [throw]
   | NRFunApp (CompilerInternal (FnCheck {trans; var_name; var}), args) ->
       Option.value_map (check_to_string trans) ~default:[] ~f:(fun check_name ->
