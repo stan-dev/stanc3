@@ -363,7 +363,8 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.{pattern; meta} =
       pf ppf "if (pstream__) %a" pp_block (list ~sep:cut pp_arg, args)
   | NRFunApp (CompilerInternal FnReject, args) ->
       let err_strm = "errmsg_stream__" in
-      let add_to_string ppf e = pf ppf "%s << %a;" err_strm pp_expr e in
+      let add_to_string ppf e =
+        pf ppf "stan::math::stan_print(&%s, %a);" err_strm pp_expr e in
       pf ppf "std::stringstream %s;@," err_strm ;
       pf ppf "%a@," (list ~sep:cut add_to_string) args ;
       pf ppf "throw std::domain_error(%s.str());" err_strm

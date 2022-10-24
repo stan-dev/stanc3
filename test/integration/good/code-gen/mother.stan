@@ -187,8 +187,8 @@ functions {
     return x + target();
   }
 
-  void foo_4(real x) {
-    reject("user-specified rejection", x);
+  void foo_4(array[] real x) {
+    reject("user-specified rejection", x[1], "; ", x);
   }
 
   real relative_diff(real x, real y, real max_, real min_) {
