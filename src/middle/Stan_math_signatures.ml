@@ -95,8 +95,8 @@ type variadic_signature =
   ; control_args: fun_arg list
   ; required_fn_rt: UnsizedType.t
   ; required_fn_args: fun_arg list
-  ; hof_pstream_loc: int
-  ; required_fn_pstream_loc: int }
+  ; hof_args_before_pstream: int
+  ; required_fn_args_before_pstream: int }
 [@@deriving create]
 
 let is_primitive = function
@@ -2633,24 +2633,27 @@ let variadic_dae_fun_return_type = UnsizedType.UVector
 let variadic_dae_return_type = UnsizedType.UArray UnsizedType.UVector
 
 let add_variadic_fn name ~return_type ?control_args ~required_fn_rt
-    ?required_fn_args ~hof_pstream_loc ~required_fn_pstream_loc () =
+    ?required_fn_args () =
   Hashtbl.add_exn stan_math_variadic_signatures ~key:name
     ~data:
       (create_variadic_signature ~return_type ?control_args ?required_fn_args
-         ~required_fn_rt ~hof_pstream_loc ~required_fn_pstream_loc () )
+         ~required_fn_rt
+         ~hof_args_before_pstream:
+           (Option.value_map ~f:List.length control_args ~default:0 + 1)
+         ~required_fn_args_before_pstream:
+           (Option.value_map ~f:List.length required_fn_args ~default:0)
+         () )
 
 let () =
   (* DAEs *)
   add_variadic_fn "dae" ~return_type:variadic_dae_return_type
     ~control_args:variadic_dae_mandatory_arg_types
     ~required_fn_args:variadic_dae_mandatory_fun_args
-    ~required_fn_rt:variadic_dae_fun_return_type ~hof_pstream_loc:6
-    ~required_fn_pstream_loc:4 () ;
+    ~required_fn_rt:variadic_dae_fun_return_type () ;
   add_variadic_fn "dae_tol" ~return_type:variadic_dae_return_type
     ~control_args:(variadic_dae_mandatory_arg_types @ variadic_dae_tol_arg_types)
     ~required_fn_args:variadic_dae_mandatory_fun_args
-    ~required_fn_rt:variadic_dae_fun_return_type ~hof_pstream_loc:9
-    ~required_fn_pstream_loc:4 () ;
+    ~required_fn_rt:variadic_dae_fun_return_type () ;
   (* non-adjoint ODES - same for all *)
   let add_ode name =
     add_variadic_fn name ~return_type:variadic_ode_return_type
@@ -2659,18 +2662,14 @@ let () =
           variadic_ode_mandatory_arg_types @ variadic_ode_tol_arg_types
         else variadic_ode_mandatory_arg_types )
       ~required_fn_rt:variadic_ode_fun_return_type
-      ~required_fn_args:variadic_ode_mandatory_fun_args
-      ~hof_pstream_loc:
-        (if String.is_suffix name ~suffix:ode_tolerances_suffix then 8 else 5)
-      ~required_fn_pstream_loc:3 () in
+      ~required_fn_args:variadic_ode_mandatory_fun_args () in
   Set.iter ~f:add_ode variadic_ode_nonadjoint_fns ;
   (* Adjoint ODE function *)
   add_variadic_fn variadic_ode_adjoint_fn ~return_type:variadic_ode_return_type
     ~control_args:
       (variadic_ode_mandatory_arg_types @ variadic_ode_adjoint_ctl_tol_arg_types)
     ~required_fn_rt:variadic_ode_fun_return_type
-    ~required_fn_args:variadic_ode_mandatory_fun_args ~hof_pstream_loc:16
-    ~required_fn_pstream_loc:3 ()
+    ~required_fn_args:variadic_ode_mandatory_fun_args ()
 
 let%expect_test "dist name suffix" =
   dist_name_suffix [] "normal" |> print_endline ;

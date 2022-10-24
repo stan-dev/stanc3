@@ -47,15 +47,13 @@ static constexpr std::array<const char*, 36> locations_array__ =
  " (in 'ode_adjoint_test_model.stan', line 9, column 4 to column 13)",
  " (in 'ode_adjoint_test_model.stan', line 8, column 50 to line 10, column 3)"};
 
-struct f_1_arg_vari_3_functor__ {
-  template <typename T0__, typename T1__, typename T2__,
+struct f_0_arg_variadic2_functor__ {
+  template <typename T0__, typename T1__,
             stan::require_all_t<stan::is_stan_scalar<T0__>,
                                 stan::is_col_vector<T1__>,
-                                stan::is_vt_not_complex<T1__>,
-                                stan::is_stan_scalar<T2__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>, -1, 1>
-  operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
-             const T2__& a) const;
+                                stan::is_vt_not_complex<T1__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>, -1, 1>
+  operator()(const T0__& t, std::ostream* pstream__, const T1__& z) const;
 };
 struct f_2_arg_functor__ {
   template <typename T0__, typename T1__, typename T3__,
@@ -75,15 +73,25 @@ struct f_0_arg_functor__ {
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>, -1, 1>
   operator()(const T0__& t, const T1__& z, std::ostream* pstream__) const;
 };
-struct f_2_arg_vari_3_functor__ {
+struct f_2_arg_variadic2_functor__ {
   template <typename T0__, typename T1__, typename T3__,
             stan::require_all_t<stan::is_stan_scalar<T0__>,
                                 stan::is_col_vector<T1__>,
                                 stan::is_vt_not_complex<T1__>,
                                 stan::is_stan_scalar<T3__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T3__>, -1, 1>
-  operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
+  operator()(const T0__& t, std::ostream* pstream__, const T1__& z,
              const int& b, const T3__& a) const;
+};
+struct f_1_arg_variadic2_functor__ {
+  template <typename T0__, typename T1__, typename T2__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_col_vector<T1__>,
+                                stan::is_vt_not_complex<T1__>,
+                                stan::is_stan_scalar<T2__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>, -1, 1>
+  operator()(const T0__& t, std::ostream* pstream__, const T1__& z,
+             const T2__& a) const;
 };
 struct f_1_arg_functor__ {
   template <typename T0__, typename T1__, typename T2__,
@@ -94,14 +102,6 @@ struct f_1_arg_functor__ {
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>, -1, 1>
   operator()(const T0__& t, const T1__& z, const T2__& a,
              std::ostream* pstream__) const;
-};
-struct f_0_arg_vari_3_functor__ {
-  template <typename T0__, typename T1__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_col_vector<T1__>,
-                                stan::is_vt_not_complex<T1__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>, -1, 1>
-  operator()(const T0__& t, const T1__& z, std::ostream* pstream__) const;
 };
 
 template <typename T0__, typename T1__,
@@ -171,17 +171,16 @@ template <typename T0__, typename T1__, typename T3__,
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     }
-template <typename T0__, typename T1__, typename T2__,
+template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_col_vector<T1__>,
-                              stan::is_vt_not_complex<T1__>,
-                              stan::is_stan_scalar<T2__>>*>
-Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>, -1, 1>
-f_1_arg_vari_3_functor__::operator()(const T0__& t, const T1__& z,
-                                     std::ostream* pstream__, const T2__& a) 
-const
+                              stan::is_vt_not_complex<T1__>>*>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>, -1, 1>
+f_0_arg_variadic2_functor__::operator()(const T0__& t,
+                                        std::ostream* pstream__,
+                                        const T1__& z)  const
 {
-  return f_1_arg(t, z, a, pstream__);
+  return f_0_arg(t, z, pstream__);
 }
 
 template <typename T0__, typename T1__, typename T3__,
@@ -213,11 +212,25 @@ template <typename T0__, typename T1__, typename T3__,
                               stan::is_vt_not_complex<T1__>,
                               stan::is_stan_scalar<T3__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T3__>, -1, 1>
-f_2_arg_vari_3_functor__::operator()(const T0__& t, const T1__& z,
-                                     std::ostream* pstream__, const int& b,
-                                     const T3__& a)  const
+f_2_arg_variadic2_functor__::operator()(const T0__& t,
+                                        std::ostream* pstream__,
+                                        const T1__& z, const int& b,
+                                        const T3__& a)  const
 {
   return f_2_arg(t, z, b, a, pstream__);
+}
+
+template <typename T0__, typename T1__, typename T2__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_col_vector<T1__>,
+                              stan::is_vt_not_complex<T1__>,
+                              stan::is_stan_scalar<T2__>>*>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>, -1, 1>
+f_1_arg_variadic2_functor__::operator()(const T0__& t,
+                                        std::ostream* pstream__,
+                                        const T1__& z, const T2__& a)  const
+{
+  return f_1_arg(t, z, a, pstream__);
 }
 
 template <typename T0__, typename T1__, typename T2__,
@@ -230,17 +243,6 @@ f_1_arg_functor__::operator()(const T0__& t, const T1__& z, const T2__& a,
                               std::ostream* pstream__)  const
 {
   return f_1_arg(t, z, a, pstream__);
-}
-
-template <typename T0__, typename T1__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>,
-                              stan::is_col_vector<T1__>,
-                              stan::is_vt_not_complex<T1__>>*>
-Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>, -1, 1>
-f_0_arg_vari_3_functor__::operator()(const T0__& t, const T1__& z,
-                                     std::ostream* pstream__)  const
-{
-  return f_0_arg(t, z, pstream__);
 }
 
 
@@ -419,22 +421,22 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
            Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__));
       current_statement__ = 6;
       stan::model::assign(z,
-        stan::math::ode_adjoint_tol_ctl(f_0_arg_vari_3_functor__(), y0, t0,
-          times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
+        stan::math::ode_adjoint_tol_ctl(f_0_arg_variadic2_functor__(), y0,
+          t0, times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
           abs_tol_q, max_num_steps, num_checkpoints,
           interpolation_polynomial, solver_f, solver_b, pstream__),
         "assigning variable z");
       current_statement__ = 7;
       stan::model::assign(z,
-        stan::math::ode_adjoint_tol_ctl(f_1_arg_vari_3_functor__(), y0, t0,
-          times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
+        stan::math::ode_adjoint_tol_ctl(f_1_arg_variadic2_functor__(), y0,
+          t0, times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
           abs_tol_q, max_num_steps, num_checkpoints,
           interpolation_polynomial, solver_f, solver_b, pstream__, y),
         "assigning variable z");
       current_statement__ = 8;
       stan::model::assign(z,
-        stan::math::ode_adjoint_tol_ctl(f_2_arg_vari_3_functor__(), y0, t0,
-          times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
+        stan::math::ode_adjoint_tol_ctl(f_2_arg_variadic2_functor__(), y0,
+          t0, times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
           abs_tol_q, max_num_steps, num_checkpoints,
           interpolation_polynomial, solver_f, solver_b, pstream__, i, y),
         "assigning variable z");
@@ -504,22 +506,22 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       } 
       current_statement__ = 6;
       stan::model::assign(z,
-        stan::math::ode_adjoint_tol_ctl(f_0_arg_vari_3_functor__(), y0, t0,
-          times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
+        stan::math::ode_adjoint_tol_ctl(f_0_arg_variadic2_functor__(), y0,
+          t0, times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
           abs_tol_q, max_num_steps, num_checkpoints,
           interpolation_polynomial, solver_f, solver_b, pstream__),
         "assigning variable z");
       current_statement__ = 7;
       stan::model::assign(z,
-        stan::math::ode_adjoint_tol_ctl(f_1_arg_vari_3_functor__(), y0, t0,
-          times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
+        stan::math::ode_adjoint_tol_ctl(f_1_arg_variadic2_functor__(), y0,
+          t0, times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
           abs_tol_q, max_num_steps, num_checkpoints,
           interpolation_polynomial, solver_f, solver_b, pstream__, y),
         "assigning variable z");
       current_statement__ = 8;
       stan::model::assign(z,
-        stan::math::ode_adjoint_tol_ctl(f_2_arg_vari_3_functor__(), y0, t0,
-          times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
+        stan::math::ode_adjoint_tol_ctl(f_2_arg_variadic2_functor__(), y0,
+          t0, times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
           abs_tol_q, max_num_steps, num_checkpoints,
           interpolation_polynomial, solver_f, solver_b, pstream__, i, y),
         "assigning variable z");
@@ -889,7 +891,7 @@ struct simple_SIR_functor__ {
              const T4__& gamma, const T5__& xi, const T6__& delta,
              std::ostream* pstream__) const;
 };
-struct simple_SIR_vari_3_functor__ {
+struct simple_SIR_variadic2_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             typename T4__, typename T5__, typename T6__,
             stan::require_all_t<stan::is_stan_scalar<T0__>,
@@ -902,7 +904,7 @@ struct simple_SIR_vari_3_functor__ {
                                 stan::is_stan_scalar<T6__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__, T4__,
                        stan::promote_args_t<T5__, T6__>>, -1, 1>
-  operator()(const T0__& t, const T1__& y, std::ostream* pstream__,
+  operator()(const T0__& t, std::ostream* pstream__, const T1__& y,
              const T2__& beta, const T3__& kappa, const T4__& gamma,
              const T5__& xi, const T6__& delta, const int& unused) const;
   template <typename T0__, typename T1__, typename T2__, typename T3__,
@@ -917,7 +919,7 @@ struct simple_SIR_vari_3_functor__ {
                                 stan::is_stan_scalar<T6__>>* = nullptr>
   Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__, T4__,
                        stan::promote_args_t<T5__, T6__>>, -1, 1>
-  operator()(const T0__& t, const T1__& y, std::ostream* pstream__,
+  operator()(const T0__& t, std::ostream* pstream__, const T1__& y,
              const T2__& beta, const T3__& kappa, const T4__& gamma,
              const T5__& xi, const T6__& delta) const;
 };
@@ -1091,12 +1093,13 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T6__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__, T4__,
                      stan::promote_args_t<T5__, T6__>>, -1, 1>
-simple_SIR_vari_3_functor__::operator()(const T0__& t, const T1__& y,
-                                        std::ostream* pstream__,
-                                        const T2__& beta, const T3__& kappa,
-                                        const T4__& gamma, const T5__& xi,
-                                        const T6__& delta, const int& unused) 
-const
+simple_SIR_variadic2_functor__::operator()(const T0__& t,
+                                           std::ostream* pstream__,
+                                           const T1__& y, const T2__& beta,
+                                           const T3__& kappa,
+                                           const T4__& gamma, const T5__& xi,
+                                           const T6__& delta,
+                                           const int& unused)  const
 {
   return simple_SIR(t, y, beta, kappa, gamma, xi, delta, unused, pstream__);
 }
@@ -1113,11 +1116,12 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T6__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__, T4__,
                      stan::promote_args_t<T5__, T6__>>, -1, 1>
-simple_SIR_vari_3_functor__::operator()(const T0__& t, const T1__& y,
-                                        std::ostream* pstream__,
-                                        const T2__& beta, const T3__& kappa,
-                                        const T4__& gamma, const T5__& xi,
-                                        const T6__& delta)  const
+simple_SIR_variadic2_functor__::operator()(const T0__& t,
+                                           std::ostream* pstream__,
+                                           const T1__& y, const T2__& beta,
+                                           const T3__& kappa,
+                                           const T4__& gamma, const T5__& xi,
+                                           const T6__& delta)  const
 {
   return simple_SIR(t, y, beta, kappa, gamma, xi, delta, pstream__);
 }
@@ -1294,7 +1298,7 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
            Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(4, DUMMY_VAR__));
       current_statement__ = 5;
       stan::model::assign(y,
-        stan::math::ode_rk45_tol(simple_SIR_vari_3_functor__(), y0, t0, t,
+        stan::math::ode_rk45_tol(simple_SIR_variadic2_functor__(), y0, t0, t,
           1e-6, 1e-6, 1000, pstream__, beta, kappa, gamma, xi, delta),
         "assigning variable y");
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> y2 =
@@ -1302,7 +1306,7 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
            Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(4, DUMMY_VAR__));
       current_statement__ = 6;
       stan::model::assign(y2,
-        stan::math::ode_rk45_tol(simple_SIR_vari_3_functor__(), y0, t0, t,
+        stan::math::ode_rk45_tol(simple_SIR_variadic2_functor__(), y0, t0, t,
           1e-6, 1e-6, 1000, pstream__, beta, kappa, gamma, xi, delta, unused),
         "assigning variable y2");
       current_statement__ = 5;
@@ -1442,12 +1446,12 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
       } 
       current_statement__ = 5;
       stan::model::assign(y,
-        stan::math::ode_rk45_tol(simple_SIR_vari_3_functor__(), y0, t0, t,
+        stan::math::ode_rk45_tol(simple_SIR_variadic2_functor__(), y0, t0, t,
           1e-6, 1e-6, 1000, pstream__, beta, kappa, gamma, xi, delta),
         "assigning variable y");
       current_statement__ = 6;
       stan::model::assign(y2,
-        stan::math::ode_rk45_tol(simple_SIR_vari_3_functor__(), y0, t0, t,
+        stan::math::ode_rk45_tol(simple_SIR_variadic2_functor__(), y0, t0, t,
           1e-6, 1e-6, 1000, pstream__, beta, kappa, gamma, xi, delta, unused),
         "assigning variable y2");
       current_statement__ = 5;

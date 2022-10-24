@@ -25,17 +25,26 @@ type variadic_signature =
   ; control_args: fun_arg list
   ; required_fn_rt: UnsizedType.t
   ; required_fn_args: fun_arg list
-  ; hof_pstream_loc: int
+  ; hof_args_before_pstream: int
         (** This specifies where the pstream* argument goes in the call to the variadic function,
       usually after some required arguments and control args.contents
 
       For example, for dae(), the arguments [f, yy0, yp0, t0, ts] all precede
-      the msgs argument, making msgs the 6th argument, so this number is 6.
+      the msgs argument, making msgs the 6th argument, so this number is 5.
+
+      In general, for existing functions this is [length(control_args) + 1].
+
+      Only used in C++ code generation, can be ignored elsewhere.
       *)
-  ; required_fn_pstream_loc: int
+  ; required_fn_args_before_pstream: int
         (** Similar to the above, but specifies where in the {e functor} we expect
       pstream* to occur. For example, for a dae, this is the 4th argument,
-      so this number is 4 *)
+      so this number is 3.
+
+      In general, for existing functions this is [length(required_fn_args)].
+
+      Only used in C++ code generation, can be ignored elsewhere.
+      *)
   }
 
 val stan_math_variadic_signatures : (string, variadic_signature) Hashtbl.t

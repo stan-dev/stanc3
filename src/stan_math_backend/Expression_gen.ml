@@ -135,12 +135,12 @@ let fn_renames =
 let map_rect_calls = Int.Table.create ()
 let functor_suffix = "_functor__"
 let reduce_sum_functor_suffix = "_rsfunctor__"
-let variadic_functor_suffix x = sprintf "_vari_%d_functor__" x
+let variadic_functor_suffix x = sprintf "_variadic%d_functor__" x
 
 let functor_suffix_select hof =
   match Hashtbl.find Stan_math_signatures.stan_math_variadic_signatures hof with
-  | Some {required_fn_pstream_loc; _} ->
-      variadic_functor_suffix required_fn_pstream_loc
+  | Some {required_fn_args_before_pstream; _} ->
+      variadic_functor_suffix required_fn_args_before_pstream
   | None when Stan_math_signatures.is_reduce_sum_fn hof ->
       reduce_sum_functor_suffix
   | None -> functor_suffix
@@ -350,10 +350,10 @@ and gen_functionals fname suffix es mem_pattern =
             , grainsize :: container :: msgs :: tl )
         | _, _
           when Stan_math_signatures.is_stan_math_variadic_function_name fname ->
-            let Stan_math_signatures.{hof_pstream_loc; _} =
+            let Stan_math_signatures.{hof_args_before_pstream; _} =
               Hashtbl.find_exn
                 Stan_math_signatures.stan_math_variadic_signatures fname in
-            let hd, tl = List.split_n converted_es (hof_pstream_loc - 1) in
+            let hd, tl = List.split_n converted_es hof_args_before_pstream in
             (fname, hd @ (msgs :: tl))
         | ( "map_rect"
           , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
