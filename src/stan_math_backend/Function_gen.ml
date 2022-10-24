@@ -254,8 +254,7 @@ let pp_fun_def ppf
     , (functors : (string, found_functor list) Hashtbl.t)
     , (forward_decls : (string * template_parameter list) Hash_set.t)
     , (funs_used_in_reduce_sum : String.Set.t)
-    , (funs_used_in_variadic_ode : String.Set.t)
-    , (funs_used_in_variadic_dae : String.Set.t) ) =
+    , (variadic_fns : int list String.Map.t) ) =
   let extra, template_extra_params =
     match fdsuffix with
     | Fun_kind.FnTarget -> (["lp__"; "lp_accum__"], ["T_lp__"; "T_lp_accum__"])
@@ -339,14 +338,12 @@ let pp_fun_def ppf
             Common.FatalError.fatal_error_msg
               [%message
                 "Ill-formed reduce_sum call!" (fdargs : Program.fun_arg_decl)]
-      else if String.Set.mem funs_used_in_variadic_ode fdname then
-        (* Produces the variadic ode functors that has the pstream argument
-           as the third and not last argument *)
-        register_functor ([], fdargs, `VariadicHOF 3)
-      else if String.Set.mem funs_used_in_variadic_dae fdname then
-        (* Produces the variadic DAE functors that has the pstream argument
-           as the fourth and not last argument *)
-        register_functor ([], fdargs, `VariadicHOF 4)
+      else if String.Map.mem variadic_fns fdname then
+        (* Produces the variadic functors that has the pstream argument
+           as not the last argument. For DAEs this is the 4th, for ODEs the 3rd *)
+        List.iter
+          (List.stable_dedup @@ String.Map.find_exn variadic_fns fdname)
+          ~f:(fun i -> register_functor ([], fdargs, `VariadicHOF i))
 
 let pp_standalone_fun_def namespace_fun ppf
     Program.{fdname; fdsuffix; fdargs; fdbody; fdrt; _} =
@@ -384,13 +381,12 @@ let pp_standalone_fun_def namespace_fun ppf
         , List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
         )
 
-let is_fun_used_with_variadic_fn (variadic_fn_test : string -> bool)
-    (p : Program.Numbered.t) =
+let is_fun_used_with_reduce_sum (p : Program.Numbered.t) =
   let rec find_functors_expr accum Expr.Fixed.{pattern; _} =
     String.Set.union accum
       ( match pattern with
       | FunApp (StanLib (x, FnPlain, _), {pattern= Var f; _} :: _)
-        when variadic_fn_test x ->
+        when Stan_math_signatures.is_reduce_sum_fn x ->
           String.Set.of_list [Utils.stdlib_distribution_name f]
       | x -> Expr.Fixed.Pattern.fold find_functors_expr accum x ) in
   let rec find_functors_stmt accum stmt =
@@ -399,25 +395,35 @@ let is_fun_used_with_variadic_fn (variadic_fn_test : string -> bool)
   in
   Program.fold find_functors_expr find_functors_stmt String.Set.empty p
 
+let get_variadic_requirements (p : Program.Numbered.t) =
+  let rec find_functors_expr accum Expr.Fixed.{pattern; _} =
+    match pattern with
+    | FunApp (StanLib (x, FnPlain, _), {pattern= Var f; _} :: _) -> (
+      match
+        Hashtbl.find Stan_math_signatures.stan_math_variadic_signatures x
+      with
+      | Some {required_fn_pstream_loc; _} ->
+          Map.add_multi accum
+            ~key:(Utils.stdlib_distribution_name f)
+            ~data:required_fn_pstream_loc
+      | _ -> Expr.Fixed.Pattern.fold find_functors_expr accum pattern )
+    | _ -> Expr.Fixed.Pattern.fold find_functors_expr accum pattern in
+  let rec find_functors_stmt accum stmt =
+    Stmt.Fixed.(
+      Pattern.fold find_functors_expr find_functors_stmt accum stmt.pattern)
+  in
+  Program.fold find_functors_expr find_functors_stmt String.Map.empty p
+
 let collect_functors_functions (p : Program.Numbered.t) =
   let (functors : (string, found_functor list) Hashtbl.t) =
     String.Table.create () in
   let forward_decls = Hash_set.Poly.create () in
-  let reduce_sum_fns =
-    is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p in
-  let variadic_ode_fns =
-    is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_ode_fn p in
-  let variadic_dae_fns =
-    is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_dae_fn p in
+  let reduce_sum_fns = is_fun_used_with_reduce_sum p in
+  let variadic_fns = get_variadic_requirements p in
   let pp_fun_def_with_variadic_fn_list ppf fblock =
     (hovbox ~indent:2 pp_fun_def)
       ppf
-      ( fblock
-      , functors
-      , forward_decls
-      , reduce_sum_fns
-      , variadic_ode_fns
-      , variadic_dae_fns ) in
+      (fblock, functors, forward_decls, reduce_sum_fns, variadic_fns) in
   ( str "@[<v>%a@]"
       (list ~sep:cut pp_fun_def_with_variadic_fn_list)
       p.functions_block
@@ -463,8 +469,7 @@ let pp_fun_def_w_rs a b =
     , String.Table.create ()
     , Hash_set.Poly.create ()
     , String.Set.empty
-    , String.Set.empty
-    , String.Set.empty )
+    , String.Map.empty )
 
 let%expect_test "udf" =
   let with_no_loc stmt =
