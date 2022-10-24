@@ -127,6 +127,9 @@ let fn_renames =
     ; (FnNegInf, "stan::math::negative_infinity")
     ; (FnResizeToMatch, "stan::math::resize_to_match")
     ; (FnNaN, "std::numeric_limits<double>::quiet_NaN") ]
+  @ [ ("lmultiply", "stan::math::multiply_log")
+    ; ("lchoose", "stan::math::binomial_coefficient_log")
+    ; ("std_normal_qf", "stan::math::inv_Phi") ]
   |> String.Map.of_alist_exn
 
 let map_rect_calls = Int.Table.create ()
@@ -261,11 +264,6 @@ and gen_operator_app op ppf es_in =
 and gen_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
     (ret_type : UnsizedType.returntype option) =
   match f with
-  | "lmultiply" ->
-      Some (fun ppf es -> pp_binary_f ppf "stan::math::multiply_log" es)
-  | "lchoose" ->
-      Some
-        (fun ppf es -> pp_binary_f ppf "stan::math::binomial_coefficient_log" es)
   | "target" -> Some (fun ppf _ -> pf ppf "stan::math::get_lp(lp__, lp_accum__)")
   | "get_lp" -> Some (fun ppf _ -> pf ppf "stan::math::get_lp(lp__, lp_accum__)")
   | f when Map.mem fn_renames f ->

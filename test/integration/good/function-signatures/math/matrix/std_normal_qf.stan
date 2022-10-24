@@ -43,26 +43,26 @@ transformed data {
   array[3, 4, 5] row_vector[2] trans_x4w;
   array[3, 4, 5] matrix[2, 3] trans_x5w;
   
-  transformed_data_real = inv_Phi(d_int);
-  transformed_data_real = inv_Phi(d_real);
-  transformed_data_matrix = inv_Phi(d_matrix);
-  transformed_data_vector = inv_Phi(d_vector);
-  transformed_data_row_vector = inv_Phi(d_row_vector);
-  trans_x3y = inv_Phi(x3y);
-  trans_x4y = inv_Phi(x4y);
-  trans_x5y = inv_Phi(x5y);
+  transformed_data_real = std_normal_qf(d_int);
+  transformed_data_real = std_normal_qf(d_real);
+  transformed_data_matrix = std_normal_qf(d_matrix);
+  transformed_data_vector = std_normal_qf(d_vector);
+  transformed_data_row_vector = std_normal_qf(d_row_vector);
+  trans_x3y = std_normal_qf(x3y);
+  trans_x4y = std_normal_qf(x4y);
+  trans_x5y = std_normal_qf(x5y);
   
-  trans_x2z = inv_Phi(x1z);
-  trans_x2z = inv_Phi(x2z);
-  trans_x3z = inv_Phi(x3z);
-  trans_x4z = inv_Phi(x4z);
-  trans_x5z = inv_Phi(x5z);
+  trans_x2z = std_normal_qf(x1z);
+  trans_x2z = std_normal_qf(x2z);
+  trans_x3z = std_normal_qf(x3z);
+  trans_x4z = std_normal_qf(x4z);
+  trans_x5z = std_normal_qf(x5z);
   
-  trans_x2w = inv_Phi(x1w);
-  trans_x2w = inv_Phi(x2w);
-  trans_x3w = inv_Phi(x3w);
-  trans_x4w = inv_Phi(x4w);
-  trans_x5w = inv_Phi(x5w);
+  trans_x2w = std_normal_qf(x1w);
+  trans_x2w = std_normal_qf(x2w);
+  trans_x3w = std_normal_qf(x3w);
+  trans_x4w = std_normal_qf(x4w);
+  trans_x5w = std_normal_qf(x5w);
 }
 parameters {
   real p_real;
@@ -106,30 +106,30 @@ transformed parameters {
   array[3, 4, 5] row_vector[2] trans_p_x4w;
   array[3, 4, 5] matrix[2, 3] trans_p_x5w;
   
-  transformed_param_real = inv_Phi(d_int);
-  transformed_param_real = inv_Phi(d_real);
-  transformed_param_real = inv_Phi(p_real);
+  transformed_param_real = std_normal_qf(d_int);
+  transformed_param_real = std_normal_qf(d_real);
+  transformed_param_real = std_normal_qf(p_real);
   
-  transformed_param_matrix = inv_Phi(d_matrix);
-  transformed_param_vector = inv_Phi(d_vector);
-  transformed_param_row_vector = inv_Phi(d_row_vector);
-  transformed_param_matrix = inv_Phi(p_matrix);
-  transformed_param_vector = inv_Phi(p_vector);
-  transformed_param_row_vector = inv_Phi(p_row_vector);
+  transformed_param_matrix = std_normal_qf(d_matrix);
+  transformed_param_vector = std_normal_qf(d_vector);
+  transformed_param_row_vector = std_normal_qf(d_row_vector);
+  transformed_param_matrix = std_normal_qf(p_matrix);
+  transformed_param_vector = std_normal_qf(p_vector);
+  transformed_param_row_vector = std_normal_qf(p_row_vector);
   
-  trans_p_x3y = inv_Phi(p_x3y);
-  trans_p_x4y = inv_Phi(p_x4y);
-  trans_p_x5y = inv_Phi(p_x5y);
+  trans_p_x3y = std_normal_qf(p_x3y);
+  trans_p_x4y = std_normal_qf(p_x4y);
+  trans_p_x5y = std_normal_qf(p_x5y);
   
-  trans_p_x2z = inv_Phi(p_x2z);
-  trans_p_x3z = inv_Phi(p_x3z);
-  trans_p_x4z = inv_Phi(p_x4z);
-  trans_p_x5z = inv_Phi(p_x5z);
+  trans_p_x2z = std_normal_qf(p_x2z);
+  trans_p_x3z = std_normal_qf(p_x3z);
+  trans_p_x4z = std_normal_qf(p_x4z);
+  trans_p_x5z = std_normal_qf(p_x5z);
   
-  trans_p_x2w = inv_Phi(p_x2w);
-  trans_p_x3w = inv_Phi(p_x3w);
-  trans_p_x4w = inv_Phi(p_x4w);
-  trans_p_x5w = inv_Phi(p_x5w);
+  trans_p_x2w = std_normal_qf(p_x2w);
+  trans_p_x3w = std_normal_qf(p_x3w);
+  trans_p_x4w = std_normal_qf(p_x4w);
+  trans_p_x5w = std_normal_qf(p_x5w);
 }
 model {
   y_p ~ normal(0, 1);
