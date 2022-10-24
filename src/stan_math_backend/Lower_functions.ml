@@ -163,8 +163,7 @@ let lower_args extra_templates extra args variadic =
   let args, variadic_args =
     match variadic with
     | `ReduceSum -> List.split_n args 3
-    | `VariadicODE -> List.split_n args 2
-    | `VariadicDAE -> List.split_n args 3
+    | `VariadicHOF x -> List.split_n args x
     | `None -> (args, []) in
   let arg_strs =
     args
@@ -194,8 +193,7 @@ let lower_fun_def (functors : (string, struct_defn) Hashtbl.t)
     (forward_decls :
       (string * (UnsizedType.autodifftype * string * UnsizedType.t) list)
       Hash_set.t ) (funs_used_in_reduce_sum : String.Set.t)
-    (funs_used_in_variadic_ode : String.Set.t)
-    (funs_used_in_variadic_dae : String.Set.t)
+    (variadic_fns : int list String.Map.t)
     Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _} : fun_defn list =
   let extra_arg_names, extra_template_names = extra_suffix_args fdsuffix in
   let template_parameter_and_arg_names is_possibly_eigen_expr variadic_fun_type
@@ -233,8 +231,7 @@ let lower_fun_def (functors : (string, struct_defn) Hashtbl.t)
           match variadic_fun_type with
           | `None -> functor_suffix
           | `ReduceSum -> reduce_sum_functor_suffix
-          | `VariadicODE -> variadic_ode_functor_suffix
-          | `VariadicDAE -> variadic_dae_functor_suffix in
+          | `VariadicHOF x -> variadic_functor_suffix x in
         let functor_name = fdname ^ suffix in
         let struct_template =
           match (fdsuffix, variadic_fun_type) with
@@ -282,21 +279,21 @@ let lower_fun_def (functors : (string, struct_defn) Hashtbl.t)
       @ ( if String.Set.mem funs_used_in_reduce_sum fdname then
           [register_functor `ReduceSum]
         else [] )
-      @ ( if String.Set.mem funs_used_in_variadic_ode fdname then
-          [register_functor `VariadicODE]
-        else [] )
       @
-      if String.Set.mem funs_used_in_variadic_dae fdname then
-        [register_functor `VariadicDAE]
+      if String.Map.mem variadic_fns fdname then
+        (* Produces the variadic functors that has the pstream argument
+           as not the last argument. For DAEs this is the 4th, for ODEs the 3rd *)
+        List.map
+          (List.stable_dedup @@ String.Map.find_exn variadic_fns fdname)
+          ~f:(fun i -> register_functor (`VariadicHOF i))
       else []
 
-let is_fun_used_with_variadic_fn (variadic_fn_test : string -> bool)
-    (p : Program.Numbered.t) =
+let is_fun_used_with_reduce_sum (p : Program.Numbered.t) =
   let rec find_functors_expr accum Expr.Fixed.{pattern; _} =
     String.Set.union accum
       ( match pattern with
       | FunApp (StanLib (x, FnPlain, _), {pattern= Var f; _} :: _)
-        when variadic_fn_test x ->
+        when Stan_math_signatures.is_reduce_sum_fn x ->
           String.Set.of_list [Utils.stdlib_distribution_name f]
       | x -> Expr.Fixed.Pattern.fold find_functors_expr accum x ) in
   let rec find_functors_stmt accum stmt =
@@ -304,6 +301,25 @@ let is_fun_used_with_variadic_fn (variadic_fn_test : string -> bool)
       Pattern.fold find_functors_expr find_functors_stmt accum stmt.pattern)
   in
   Program.fold find_functors_expr find_functors_stmt String.Set.empty p
+
+let get_variadic_requirements (p : Program.Numbered.t) =
+  let rec find_functors_expr accum Expr.Fixed.{pattern; _} =
+    match pattern with
+    | FunApp (StanLib (x, FnPlain, _), {pattern= Var f; _} :: _) -> (
+      match
+        Hashtbl.find Stan_math_signatures.stan_math_variadic_signatures x
+      with
+      | Some {required_fn_args; _} ->
+          Map.add_multi accum
+            ~key:(Utils.stdlib_distribution_name f)
+            ~data:(List.length required_fn_args)
+      | _ -> Expr.Fixed.Pattern.fold find_functors_expr accum pattern )
+    | _ -> Expr.Fixed.Pattern.fold find_functors_expr accum pattern in
+  let rec find_functors_stmt accum stmt =
+    Stmt.Fixed.(
+      Pattern.fold find_functors_expr find_functors_stmt accum stmt.pattern)
+  in
+  Program.fold find_functors_expr find_functors_stmt String.Map.empty p
 
 (** We need to do a fair bit of bookkeeping to handle the functors necessary for the various
     higher order functions.
@@ -316,18 +332,12 @@ let collect_functors_functions (p : Program.Numbered.t) : defn list =
   let (functors : (string, Cpp.struct_defn) Hashtbl.t) =
     String.Table.create () in
   let forward_decls = Hash_set.Poly.create () in
-  let reduce_sum_fns =
-    is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p in
-  let variadic_ode_fns =
-    is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_ode_fn p in
-  let variadic_dae_fns =
-    is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_dae_fn p in
+  let reduce_sum_fns = is_fun_used_with_reduce_sum p in
+  let variadic_fns = get_variadic_requirements p in
   let fun_and_functor_defs =
     p.functions_block
     |> List.concat_map
-         ~f:
-           (lower_fun_def functors forward_decls reduce_sum_fns variadic_ode_fns
-              variadic_dae_fns )
+         ~f:(lower_fun_def functors forward_decls reduce_sum_fns variadic_fns)
     |> List.map ~f:(fun f -> FunDef f) in
   let functor_struct_decls =
     functors |> Hashtbl.data |> List.map ~f:(fun s -> Struct s) in
@@ -381,7 +391,7 @@ module Testing = struct
     (list ~sep:cut Cpp.Printing.pp_fun_defn)
       ppf
       (lower_fun_def (String.Table.create ()) (Hash_set.Poly.create ())
-         String.Set.empty String.Set.empty String.Set.empty a )
+         String.Set.empty String.Map.empty a )
 
   let%expect_test "udf" =
     let with_no_loc stmt =
