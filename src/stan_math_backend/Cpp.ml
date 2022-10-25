@@ -12,7 +12,7 @@ type type_ =
   | Double
   | Complex of type_
   | TemplateType of identifier
-  | Vector of type_
+  | StdVector of type_
       (** A std::vector. For Eigen Vectors, use [Matrix] with a row or column size of 1 *)
   | Array of type_ * int
   | Type_literal of identifier  (** Used for things like Eigen::Index *)
@@ -30,7 +30,7 @@ module Types = struct
   let local_scalar = Type_literal "local_scalar_t__"
 
   (** A [std::vector<t>] *)
-  let std_vector t = Vector t
+  let std_vector t = StdVector t
 
   let bool = Type_literal "bool"
   let complex s = Complex s
@@ -109,7 +109,7 @@ module Exprs = struct
   let literal_string s = Literal ("\"" ^ Cpp_str.escaped s ^ "\"")
 
   (** Equivalent to [std::vector<t>{e1,...,en}] *)
-  let std_vector_init_expr t elements = InitializerExpr (Vector t, elements)
+  let std_vector_init_expr t elements = InitializerExpr (StdVector t, elements)
 
   let fun_call name args = FunCall (name, [], args)
   let templated_fun_call name templates args = FunCall (name, templates, args)
@@ -195,7 +195,7 @@ type variable_defn =
 
 type stmt =
   | Expression of expr
-  | VarDef of variable_defn
+  | VariableDefn of variable_defn
   | For of variable_defn * expr * expr * stmt
   | ForEach of (type_ * identifier) * expr * stmt
   | While of expr * stmt
@@ -251,19 +251,19 @@ module Decls = struct
   (** Declarations which get re-used often in the generated model *)
 
   let current_statement =
-    VarDef
+    VariableDefn
       (make_variable_defn ~type_:Int ~name:"current_statement__"
          ~init:(Assignment (Literal "0")) () )
 
   let dummy_var =
-    VarDef
+    VariableDefn
       (make_variable_defn ~type_:Types.local_scalar ~name:"DUMMY_VAR__"
          ~init:(Construction [Exprs.quiet_NaN])
          () )
     :: Stmts.unused "DUMMY_VAR__"
 
   let serializer_in =
-    VarDef
+    VariableDefn
       (make_variable_defn
          ~type_:(TypeTrait ("stan::io::deserializer", [Types.local_scalar]))
          ~name:"in__"
@@ -271,7 +271,7 @@ module Decls = struct
          () )
 
   let serializer_out =
-    VarDef
+    VariableDefn
       (make_variable_defn
          ~type_:(TypeTrait ("stan::io::serializer", [Types.local_scalar]))
          ~name:"out__"
@@ -279,7 +279,7 @@ module Decls = struct
          () )
 
   let lp_accum t =
-    VarDef
+    VariableDefn
       (make_variable_defn
          ~type_:(TypeTrait ("stan::math::accumulator", [t]))
          ~name:"lp_accum__" () )
@@ -338,9 +338,9 @@ and defn =
   | FunDef of fun_defn
   | Class of class_defn
   | Struct of struct_defn
-  | TopVarDef of variable_defn
-  | TopComment of string
-  | TopUsing of string * type_ option
+  | GlobalVariableDefn of variable_defn
+  | GlobalComment of string
+  | GlobalUsing of string * type_ option
   | Namespace of identifier * defn list
   | Preprocessor of directive
 [@@deriving sexp]
@@ -377,7 +377,7 @@ module Printing = struct
     | Double -> string ppf "double"
     | Complex t -> pf ppf "std::complex<%a>" pp_type_ t
     | TemplateType id -> pp_identifier ppf id
-    | Vector t -> pf ppf "@[<2>std::vector<@,%a>@]" pp_type_ t
+    | StdVector t -> pf ppf "@[<2>std::vector<@,%a>@]" pp_type_ t
     | Array (t, i) -> pf ppf "@[<2>std::array<@,%a,@ %i>@]" pp_type_ t i
     | Type_literal id -> pp_identifier ppf id
     | Matrix (t, i, j) -> pf ppf "Eigen::Matrix<%a,%i,%i>" pp_type_ t i j
@@ -497,7 +497,7 @@ module Printing = struct
     | Break -> string ppf "break;"
     | Continue -> string ppf "continue;"
     | Semicolon -> string ppf ";"
-    | VarDef vd -> pf ppf "%a;" pp_variable_defn vd
+    | VariableDefn vd -> pf ppf "%a;" pp_variable_defn vd
     | For (init, cond, incr, Block stmts) ->
         (* When we know a block is here, we can do better pretty-printing*)
         pf ppf "@[<v 2>for(@[<hov>%a; %a; %a@]) {@ @[<v>%a@]@]@,}"
@@ -624,11 +624,11 @@ module Printing = struct
     | FunDef fd -> pp_fun_defn ppf fd
     | Class cd -> pp_class_defn ppf cd
     | Struct sd -> pp_struct_defn ppf sd
-    | TopVarDef vd -> pf ppf "%a;" pp_variable_defn vd
-    | TopComment s ->
+    | GlobalVariableDefn vd -> pf ppf "%a;" pp_variable_defn vd
+    | GlobalComment s ->
         if String.contains s '\n' then pf ppf "/@[<v>*@[@ %a@]@,@]*/" text s
         else pf ppf "//@[<h> %s@]" s
-    | TopUsing (s, init) ->
+    | GlobalUsing (s, init) ->
         pf ppf "using %s%a;" s
           (option (fun ppf defn -> pf ppf " = %a" pp_type_ defn))
           init

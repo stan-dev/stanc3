@@ -120,7 +120,7 @@ let rec lower_type (t : UnsizedType.t) (scalar : type_) : type_ =
   | UInt -> Int
   | UReal -> scalar
   | UComplex -> Types.complex scalar
-  | UArray t -> Vector (lower_type t scalar)
+  | UArray t -> StdVector (lower_type t scalar)
   | UVector -> Types.vector scalar
   | URowVector -> Types.row_vector scalar
   | UMatrix -> Types.matrix scalar
@@ -140,7 +140,7 @@ let lower_type_eigen_expr (t : UnsizedType.t) (scalar : type_) : type_ =
   | UComplex -> Types.complex scalar
   | UArray t ->
       (* Expressions are not accepted for arrays of Eigen::Matrix *)
-      Vector (lower_type t scalar)
+      StdVector (lower_type t scalar)
   | UMathLibraryFunction | UFun _ ->
       Common.FatalError.fatal_error_msg
         [%message "Function types not implemented"]

@@ -95,7 +95,7 @@ let lower_returntype arg_types rt =
 
 let lower_eigen_args_to_ref arg_types =
   let lower_ref name =
-    VarDef
+    VariableDefn
       (make_variable_defn ~type_:(Types.const_ref Auto) ~name
          ~init:
            (Assignment
@@ -145,7 +145,7 @@ let lower_fun_body fdargs fdsuffix fdbody =
     match fdsuffix with
     | Fun_kind.FnLpdf _ | FnTarget -> []
     | FnPlain | FnRng ->
-        VarDef
+        VariableDefn
           (make_variable_defn ~static:true ~constexpr:true ~type_:Types.bool
              ~name:"propto__" ~init:(Assignment (Literal "true")) () )
         :: Stmts.unused "propto__" in
@@ -360,7 +360,7 @@ let lower_standalone_fun_def namespace_fun
     args
     @ mk_extra_args extra_templates extra
     @ [(Pointer (Type_literal "std::ostream"), "pstream__ = nullptr")] in
-  let mark_function_comment = TopComment "[[stan::function]]" in
+  let mark_function_comment = GlobalComment "[[stan::function]]" in
   let return_type, return_stmt =
     match fdrt with
     | None -> (Void, fun e -> Expression e)

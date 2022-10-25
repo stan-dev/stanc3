@@ -139,12 +139,12 @@ let lower_sized_decl name st adtype initialize =
 
 let lower_decl vident pst adtype initialize =
   match pst with
-  | Type.Sized st -> VarDef (lower_sized_decl vident st adtype initialize)
-  | Unsized ut -> VarDef (lower_unsized_decl vident ut adtype)
+  | Type.Sized st -> VariableDefn (lower_sized_decl vident st adtype initialize)
+  | Unsized ut -> VariableDefn (lower_unsized_decl vident ut adtype)
 
 let lower_profile name body =
   let profile =
-    VarDef
+    VariableDefn
       (make_variable_defn
          ~type_:(Type_literal "stan::math::profile<local_scalar_t__>")
          ~name:"profile__"
@@ -227,7 +227,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   | NRFunApp (CompilerInternal FnReject, args) ->
       let err_strm_name = "errmsg_stream__" in
       let stream_decl =
-        VarDef
+        VariableDefn
           (make_variable_defn ~type_:(Type_literal "std::stringstream")
              ~name:err_strm_name () ) in
       let throw =
