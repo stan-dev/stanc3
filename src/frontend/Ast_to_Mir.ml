@@ -97,7 +97,8 @@ let neg_inf =
 
 let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
-let truncate_dist ud_dists (id : Ast.identifier) ast_obs ast_args t =
+let truncate_dist ud_dists (id : Ast.identifier)
+    (ast_obs : Ast.typed_expression) ast_args t =
   let cdf_suffices = ["_lcdf"; "_cdf_log"] in
   let ccdf_suffices = ["_lccdf"; "_ccdf_log"] in
   let find_function_info sfx =
@@ -110,17 +111,28 @@ let truncate_dist ud_dists (id : Ast.identifier) ast_obs ast_args t =
         , if Stan_math_signatures.is_stan_math_function_name (id.name ^ "_lpmf")
           then UnsizedType.UInt
           else UnsizedType.UReal (* close enough *) ) in
-  let trunc cond_op (x : Ast.typed_expression) y =
+  let targetme loc e =
+    { Stmt.Fixed.meta= loc
+    ; pattern= TargetPE (op_to_funapp Operator.PMinus [e] e.emeta.type_) } in
+  let trunc cond_op extrema (x : Ast.typed_expression) y =
     let smeta = x.Ast.emeta.loc in
+    let ast_obs =
+      if UnsizedType.is_scalar_type ast_obs.Ast.emeta.type_ then ast_obs
+      else
+        Ast.mk_typed_expression
+          ~expr:
+            (FunApp
+               ( Ast.StanLib FnPlain
+               , Ast.{name= extrema; id_loc= smeta}
+               , [ast_obs] ) )
+          ~loc:smeta ~type_:UnsizedType.UReal ~ad_level:ast_obs.emeta.ad_level
+    in
     { Stmt.Fixed.meta= smeta
     ; pattern=
         IfElse
           ( op_to_funapp cond_op [ast_obs; x] UInt
           , {Stmt.Fixed.meta= smeta; pattern= TargetPE neg_inf}
           , Some y ) } in
-  let targetme loc e =
-    { Stmt.Fixed.meta= loc
-    ; pattern= TargetPE (op_to_funapp Operator.PMinus [e] e.emeta.type_) } in
   let funapp meta kind name args =
     { Ast.emeta= meta
     ; expr= Ast.FunApp (kind, {name; id_loc= Location_span.empty}, args) } in
@@ -131,26 +143,48 @@ let truncate_dist ud_dists (id : Ast.identifier) ast_obs ast_args t =
         { emeta
         ; expr= BinOp (lb, Operator.Minus, {emeta; expr= Ast.IntNumeral "1"}) }
     else lb in
+  let expr_fn =
+    if UnsizedType.is_scalar_type ast_obs.Ast.emeta.type_ then Fn.id
+    else fun (e : Ast.typed_expression) ->
+      let smeta = e.emeta.loc in
+      Ast.mk_typed_expression
+        ~expr:
+          (Ast.BinOp
+             ( e
+             , Times
+             , Ast.mk_typed_expression
+                 ~expr:
+                   (FunApp
+                      ( Ast.StanLib FnPlain
+                      , Ast.{name= "size"; id_loc= smeta}
+                      , [ast_obs] ) )
+                 ~loc:smeta ~type_:UnsizedType.UInt
+                 ~ad_level:ast_obs.emeta.ad_level ) )
+        ~loc:smeta ~type_:UnsizedType.UReal ~ad_level:UnsizedType.DataOnly in
   match t with
   | Ast.NoTruncate -> []
   | TruncateUpFrom lb ->
       let fk, fn, tp = find_function_info ccdf_suffices in
-      [ trunc Less lb
+      [ trunc Less "min" lb
           (targetme lb.emeta.loc
-             (funapp lb.emeta fk fn (inclusive_bound tp lb :: ast_args)) ) ]
+             (expr_fn
+                (funapp lb.emeta fk fn (inclusive_bound tp lb :: ast_args)) ) )
+      ]
   | TruncateDownFrom ub ->
       let fk, fn, _ = find_function_info cdf_suffices in
-      [ trunc Greater ub
-          (targetme ub.emeta.loc (funapp ub.emeta fk fn (ub :: ast_args))) ]
+      [ trunc Greater "max" ub
+          (targetme ub.emeta.loc
+             (expr_fn (funapp ub.emeta fk fn (ub :: ast_args))) ) ]
   | TruncateBetween (lb, ub) ->
       let fk, fn, tp = find_function_info cdf_suffices in
-      [ trunc Less lb
-          (trunc Greater ub
+      [ trunc Less "min" lb
+          (trunc Greater "max" ub
              (targetme ub.emeta.loc
-                (funapp ub.emeta (Ast.StanLib FnPlain) "log_diff_exp"
-                   [ funapp ub.emeta fk fn (ub :: ast_args)
-                   ; funapp ub.emeta fk fn (inclusive_bound tp lb :: ast_args)
-                   ] ) ) ) ]
+                (expr_fn
+                   (funapp ub.emeta (Ast.StanLib FnPlain) "log_diff_exp"
+                      [ funapp ub.emeta fk fn (ub :: ast_args)
+                      ; funapp ub.emeta fk fn (inclusive_bound tp lb :: ast_args)
+                      ] ) ) ) ) ]
 
 let unquote s =
   if s.[0] = '"' && s.[String.length s - 1] = '"' then

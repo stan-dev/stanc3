@@ -351,7 +351,6 @@ module StatementError = struct
     | InvalidSamplingNoSuchDistribution of string
     | TargetPlusEqualsOutsideModelOrLogProb
     | InvalidTruncationCDForCCDF
-    | MultivariateTruncation
     | BreakOutsideLoop
     | ContinueOutsideLoop
     | ExpressionReturnOutsideReturningFn
@@ -410,8 +409,6 @@ module StatementError = struct
         Fmt.pf ppf
           "Truncation is only defined if distribution has _lcdf and _lccdf \
            functions implemented with appropriate signature."
-    | MultivariateTruncation ->
-        Fmt.pf ppf "Outcomes in truncated distributions must be univariate."
     | BreakOutsideLoop ->
         Fmt.pf ppf "Break statements may only be used in loops."
     | ContinueOutsideLoop ->
@@ -665,9 +662,6 @@ let target_plusequals_outside_model_or_logprob loc =
 
 let invalid_truncation_cdf_or_ccdf loc =
   StatementError (loc, StatementError.InvalidTruncationCDForCCDF)
-
-let multivariate_truncation loc =
-  StatementError (loc, StatementError.MultivariateTruncation)
 
 let break_outside_loop loc =
   StatementError (loc, StatementError.BreakOutsideLoop)

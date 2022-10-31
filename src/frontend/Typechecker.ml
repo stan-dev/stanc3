@@ -1110,12 +1110,6 @@ let is_cumulative_density_defined tenv id arguments =
   && ( valid_arg_types_for_suffix "_lccdf"
      || valid_arg_types_for_suffix "_ccdf_log" )
 
-let verify_can_truncate_distribution loc (arg : typed_expression) = function
-  | NoTruncate -> ()
-  | _ ->
-      if UnsizedType.is_scalar_type arg.emeta.type_ then ()
-      else Semantic_error.multivariate_truncation loc |> error
-
 let verify_sampling_cdf_defined loc tenv id truncation args =
   let check e = is_cumulative_density_defined tenv id (e :: args) in
   match truncation with
@@ -1143,7 +1137,6 @@ let check_tilde loc cf tenv distribution truncation arg args =
   verify_sampling_cdf_ccdf loc distribution ;
   verify_sampling_distribution loc tenv distribution (te :: tes) ;
   verify_sampling_cdf_defined loc tenv distribution ttrunc tes ;
-  verify_can_truncate_distribution loc te ttrunc ;
   let stmt = Tilde {arg= te; distribution; args= tes; truncation= ttrunc} in
   mk_typed_statement ~stmt ~loc ~return_type:NoReturnType
 
