@@ -143,9 +143,9 @@ let truncate_dist ud_dists (id : Ast.identifier)
         { emeta
         ; expr= BinOp (lb, Operator.Minus, {emeta; expr= Ast.IntNumeral "1"}) }
     else lb in
-  let expr_fn =
-    if UnsizedType.is_scalar_type ast_obs.Ast.emeta.type_ then Fn.id
-    else fun (e : Ast.typed_expression) ->
+  let size_adjust (e : Ast.typed_expression) =
+    if UnsizedType.is_scalar_type ast_obs.Ast.emeta.type_ then e
+    else
       let smeta = e.emeta.loc in
       Ast.mk_typed_expression
         ~expr:
@@ -167,20 +167,20 @@ let truncate_dist ud_dists (id : Ast.identifier)
       let fk, fn, tp = find_function_info ccdf_suffices in
       [ trunc Less "min" lb
           (targetme lb.emeta.loc
-             (expr_fn
+             (size_adjust
                 (funapp lb.emeta fk fn (inclusive_bound tp lb :: ast_args)) ) )
       ]
   | TruncateDownFrom ub ->
       let fk, fn, _ = find_function_info cdf_suffices in
       [ trunc Greater "max" ub
           (targetme ub.emeta.loc
-             (expr_fn (funapp ub.emeta fk fn (ub :: ast_args))) ) ]
+             (size_adjust (funapp ub.emeta fk fn (ub :: ast_args))) ) ]
   | TruncateBetween (lb, ub) ->
       let fk, fn, tp = find_function_info cdf_suffices in
       [ trunc Less "min" lb
           (trunc Greater "max" ub
              (targetme ub.emeta.loc
-                (expr_fn
+                (size_adjust
                    (funapp ub.emeta (Ast.StanLib FnPlain) "log_diff_exp"
                       [ funapp ub.emeta fk fn (ub :: ast_args)
                       ; funapp ub.emeta fk fn (inclusive_bound tp lb :: ast_args)
