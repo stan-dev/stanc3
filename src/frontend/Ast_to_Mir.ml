@@ -113,7 +113,7 @@ let truncate_dist ud_dists (id : Ast.identifier)
           else UnsizedType.UReal (* close enough *) ) in
   let targetme loc e =
     { Stmt.Fixed.meta= loc
-    ; pattern= TargetPE (op_to_funapp Operator.PMinus [e] e.emeta.type_) } in
+    ; pattern= TargetPE (Expr.Helpers.unary_op Operator.PMinus e) } in
   let trunc cond_op extrema (x : Ast.typed_expression) y =
     let smeta = x.Ast.emeta.loc in
     let ast_obs =
@@ -144,23 +144,12 @@ let truncate_dist ud_dists (id : Ast.identifier)
         ; expr= BinOp (lb, Operator.Minus, {emeta; expr= Ast.IntNumeral "1"}) }
     else lb in
   let size_adjust (e : Ast.typed_expression) =
-    if UnsizedType.is_scalar_type ast_obs.Ast.emeta.type_ then e
+    if UnsizedType.is_scalar_type ast_obs.Ast.emeta.type_ then trans_expr e
     else
-      let smeta = e.emeta.loc in
-      Ast.mk_typed_expression
-        ~expr:
-          (Ast.BinOp
-             ( e
-             , Times
-             , Ast.mk_typed_expression
-                 ~expr:
-                   (FunApp
-                      ( Ast.StanLib FnPlain
-                      , Ast.{name= "size"; id_loc= smeta}
-                      , [ast_obs] ) )
-                 ~loc:smeta ~type_:UnsizedType.UInt
-                 ~ad_level:ast_obs.emeta.ad_level ) )
-        ~loc:smeta ~type_:UnsizedType.UReal ~ad_level:UnsizedType.DataOnly in
+      let trans_ast_obs = trans_expr ast_obs in
+      let type_ = {trans_ast_obs.meta with type_= UnsizedType.UReal} in
+      Expr.Helpers.binop (trans_expr e) Times
+        (Expr.Helpers.internal_funapp FnLength [trans_ast_obs] type_) in
   match t with
   | Ast.NoTruncate -> []
   | TruncateUpFrom lb ->
