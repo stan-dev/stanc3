@@ -77,6 +77,9 @@ module Numbered : sig
 end
 
 module Helpers : sig
+  val temp_vars :
+    Expr.Typed.t list -> Located.t list * Expr.Typed.t list * (unit -> unit)
+
   val ensure_var :
     (Expr.Typed.t -> 'a -> Located.t) -> Expr.Typed.t -> 'a -> Located.t
 
