@@ -1447,6 +1447,14 @@ model {
     y[t] ~ normal(y_hat[t], sigma); // independent normal noise
 }
 
+  $ ../../../../install/default/bin/stanc --auto-format dataonly-int-return.stan
+parameters {
+  vector[5] x;
+}
+model {
+  x ~ normal(0, linspaced_array(size(x), 1.0, 10.0));
+}
+
   $ ../../../../install/default/bin/stanc --auto-format declarations.stan
 data {
   int a0;
