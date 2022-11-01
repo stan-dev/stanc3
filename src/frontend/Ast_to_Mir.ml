@@ -102,23 +102,26 @@ let truncate_dist ud_dists (id : Ast.identifier)
   let cdf_suffices = ["_lcdf"; "_cdf_log"] in
   let ccdf_suffices = ["_lccdf"; "_ccdf_log"] in
   let find_function_info sfx =
-    let possible_names = List.map ~f:(( ^ ) id.name) sfx |> String.Set.of_list in
-    match List.find ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists with
+    let possible_names = List.map ~f:(( ^ ) id.name) sfx in
+    match
+      List.find
+        ~f:(fun (n, _) -> List.mem ~equal:String.equal possible_names n)
+        ud_dists
+    with
     | Some (name, tp) -> (Ast.UserDefined FnPlain, name, tp)
     | None ->
         ( Ast.StanLib FnPlain
-        , Set.to_list possible_names |> List.hd_exn
+        , List.hd_exn possible_names
         , if Stan_math_signatures.is_stan_math_function_name (id.name ^ "_lpmf")
           then UnsizedType.UInt
           else UnsizedType.UReal (* close enough *) ) in
   let targetme loc e =
     { Stmt.Fixed.meta= loc
     ; pattern= TargetPE (Expr.Helpers.unary_op Operator.PMinus e) } in
-  let trunc cond_op extrema (x : Ast.typed_expression) y =
-    let smeta = x.Ast.emeta.loc in
+  let trunc cond_op extrema (x : Expr.Typed.t) y =
+    let smeta = x.meta.loc in
     let ast_obs =
-      if UnsizedType.is_scalar_type ast_obs.Ast.emeta.type_ then ast_obs
-      else
+      if UnsizedType.is_container ast_obs.Ast.emeta.type_ then
         Ast.mk_typed_expression
           ~expr:
             (FunApp
@@ -126,54 +129,88 @@ let truncate_dist ud_dists (id : Ast.identifier)
                , Ast.{name= extrema; id_loc= smeta}
                , [ast_obs] ) )
           ~loc:smeta ~type_:UnsizedType.UReal ~ad_level:ast_obs.emeta.ad_level
-    in
+      else ast_obs in
     { Stmt.Fixed.meta= smeta
     ; pattern=
         IfElse
-          ( op_to_funapp cond_op [ast_obs; x] UInt
+          ( Expr.Helpers.binop (trans_expr ast_obs) cond_op x
           , {Stmt.Fixed.meta= smeta; pattern= TargetPE neg_inf}
           , Some y ) } in
   let funapp meta kind name args =
-    { Ast.emeta= meta
-    ; expr= Ast.FunApp (kind, {name; id_loc= Location_span.empty}, args) } in
-  let inclusive_bound tp (lb : Ast.typed_expression) =
-    let emeta = lb.emeta in
+    Expr.{Fixed.pattern= FunApp (trans_fn_kind kind name, args); meta} in
+  let inclusive_bound tp (lb : Expr.Typed.t) =
     if UnsizedType.is_int_type tp then
-      Ast.
-        { emeta
-        ; expr= BinOp (lb, Operator.Minus, {emeta; expr= Ast.IntNumeral "1"}) }
+      Expr.Helpers.binop lb Minus Expr.Helpers.one
     else lb in
-  let size_adjust (e : Ast.typed_expression) =
-    if UnsizedType.is_scalar_type ast_obs.Ast.emeta.type_ then trans_expr e
+  let size_adjust e =
+    if
+      (not (UnsizedType.is_container ast_obs.Ast.emeta.type_))
+      || List.exists
+           ~f:(fun (i : Ast.typed_expression) ->
+             UnsizedType.is_container i.emeta.type_ )
+           ast_args
+    then e
     else
+      (* Container y but scalar args - need to multiply by size(y) *)
       let trans_ast_obs = trans_expr ast_obs in
       let type_ = {trans_ast_obs.meta with type_= UnsizedType.UReal} in
-      Expr.Helpers.binop (trans_expr e) Times
+      Expr.Helpers.binop e Times
         (Expr.Helpers.internal_funapp FnLength [trans_ast_obs] type_) in
   match t with
   | Ast.NoTruncate -> []
   | TruncateUpFrom lb ->
       let fk, fn, tp = find_function_info ccdf_suffices in
+      let lb = trans_expr lb in
       [ trunc Less "min" lb
-          (targetme lb.emeta.loc
+          (targetme lb.meta.loc
              (size_adjust
-                (funapp lb.emeta fk fn (inclusive_bound tp lb :: ast_args)) ) )
-      ]
+                (funapp lb.meta fk fn
+                   (inclusive_bound tp lb :: trans_exprs ast_args) ) ) ) ]
   | TruncateDownFrom ub ->
       let fk, fn, _ = find_function_info cdf_suffices in
+      let ub = trans_expr ub in
       [ trunc Greater "max" ub
-          (targetme ub.emeta.loc
-             (size_adjust (funapp ub.emeta fk fn (ub :: ast_args))) ) ]
+          (targetme ub.meta.loc
+             (size_adjust (funapp ub.meta fk fn (ub :: trans_exprs ast_args))) )
+      ]
   | TruncateBetween (lb, ub) ->
       let fk, fn, tp = find_function_info cdf_suffices in
-      [ trunc Less "min" lb
-          (trunc Greater "max" ub
-             (targetme ub.emeta.loc
-                (size_adjust
-                   (funapp ub.emeta (Ast.StanLib FnPlain) "log_diff_exp"
-                      [ funapp ub.emeta fk fn (ub :: ast_args)
-                      ; funapp ub.emeta fk fn (inclusive_bound tp lb :: ast_args)
-                      ] ) ) ) ) ]
+      let lb, ub = (trans_expr lb, trans_expr ub) in
+      let expr args =
+        funapp ub.meta (Ast.StanLib FnPlain) "log_diff_exp"
+          [ funapp ub.meta fk fn (ub :: args)
+          ; funapp ub.meta fk fn (inclusive_bound tp lb :: args) ] in
+      let statement =
+        match
+          List.find
+            ~f:(fun (i : Ast.typed_expression) ->
+              UnsizedType.is_container i.emeta.type_ )
+            ast_args
+        with
+        (* If any of the arguments (besides the data) are vectors, need to generate a loop
+           This can go away if https://github.com/stan-dev/stan/issues/1154 is implemented
+        *)
+        | Some e ->
+            let e = trans_expr e in
+            let bound =
+              Expr.Helpers.internal_funapp FnLength [e]
+                {e.meta with type_= UnsizedType.UInt} in
+            let bodyfn (idx : Expr.Typed.t) =
+              let ast_args = trans_exprs ast_args in
+              let args =
+                List.map
+                  ~f:(fun (e : Expr.Typed.t) ->
+                    if UnsizedType.is_container e.meta.type_ then
+                      Expr.Helpers.add_int_index e (Index.Single idx)
+                    else e )
+                  ast_args in
+              targetme ub.meta.loc (size_adjust (expr args)) in
+            let loop = Stmt.Helpers.mk_for bound bodyfn e.meta.loc in
+            loop
+        | None ->
+            targetme ub.meta.loc (size_adjust (expr (trans_exprs ast_args)))
+      in
+      [trunc Less "min" lb (trunc Greater "max" ub statement)]
 
 let unquote s =
   if s.[0] = '"' && s.[String.length s - 1] = '"' then
