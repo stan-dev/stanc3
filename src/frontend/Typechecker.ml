@@ -1111,16 +1111,15 @@ let is_cumulative_density_defined tenv id arguments =
      || valid_arg_types_for_suffix "_ccdf_log" )
 
 let verify_sampling_cdf_defined loc tenv id truncation args =
-  let check e = is_cumulative_density_defined tenv id (e :: args) in
-  let err e =
-    Semantic_error.invalid_truncation_cdf_or_ccdf loc
-      (get_arg_types (e :: args))
-    |> error in
+  let check e =
+    if not (is_cumulative_density_defined tenv id (e :: args)) then
+      Semantic_error.invalid_truncation_cdf_or_ccdf loc
+        (get_arg_types (e :: args))
+      |> error in
   match truncation with
   | NoTruncate -> ()
-  | TruncateUpFrom e | TruncateDownFrom e -> if not (check e) then err e
-  | TruncateBetween (e1, e2) ->
-      if not (check e1) then err e1 else if not (check e2) then err e2
+  | TruncateUpFrom e | TruncateDownFrom e -> check e
+  | TruncateBetween (e1, e2) -> check e1 ; check e2
 
 let check_truncation cf tenv truncation =
   let check e =
