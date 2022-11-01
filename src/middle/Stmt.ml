@@ -120,24 +120,23 @@ module Helpers = struct
     let rec loop es sym inits vars =
       match es with
       | [] -> (inits, vars)
-      | e :: es -> (
-        match e with
-        | Expr.{Fixed.pattern= Var _; _} -> loop es sym inits (e :: vars)
-        | _ ->
-            let decl =
-              { Fixed.pattern=
-                  Decl
-                    { decl_adtype= Expr.Typed.adlevel_of e
-                    ; decl_id= sym
-                    ; decl_type= Unsized (Expr.Typed.type_of e)
-                    ; initialize= true }
-              ; meta= e.meta.loc } in
-            let assign =
-              { decl with
-                Fixed.pattern= Assignment ((sym, Expr.Typed.type_of e, []), e)
-              } in
-            loop es (Gensym.generate ()) (decl :: assign :: inits)
-              ({e with pattern= Var sym} :: vars) ) in
+      | (Expr.{Fixed.pattern= Var _; _} as e) :: es ->
+          loop es sym inits (e :: vars)
+      | e :: es ->
+          let decl =
+            { Fixed.pattern=
+                Decl
+                  { decl_adtype= Expr.Typed.adlevel_of e
+                  ; decl_id= sym
+                  ; decl_type= Unsized (Expr.Typed.type_of e)
+                  ; initialize= true }
+            ; meta= e.meta.loc } in
+          let assign =
+            { decl with
+              Fixed.pattern= Assignment ((sym, Expr.Typed.type_of e, []), e) }
+          in
+          loop es (Gensym.generate ()) (decl :: assign :: inits)
+            ({e with pattern= Var sym} :: vars) in
     let setups, exprs = loop (List.rev exprs) sym [] [] in
     (setups, exprs, reset)
 

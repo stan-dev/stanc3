@@ -182,23 +182,23 @@ let truncate_dist ud_dists (id : Ast.identifier)
           ; funapp ub.meta fk fn (inclusive_bound tp lb :: args) ] in
       let statement =
         match
-          List.find
-            ~f:(fun (i : Ast.typed_expression) ->
-              UnsizedType.is_container i.emeta.type_ )
+          List.findi
+            ~f:(fun (_ : int) (e : Ast.typed_expression) ->
+              UnsizedType.is_container e.emeta.type_ )
             ast_args
         with
         (* If any of the arguments (besides the data) are vectors, need to generate a loop
            This can go away if https://github.com/stan-dev/stan/issues/1154 is implemented
         *)
-        | Some e ->
-            let e = trans_expr e in
-            let bound =
-              Expr.Helpers.internal_funapp FnLength [e]
-                {e.meta with type_= UnsizedType.UInt} in
+        | Some (i, _) ->
             let ast_args = trans_exprs ast_args in
             (* avoid recomputing in each iteration of the loop *)
             let temp_decls, ast_args, symbol_reset =
               Stmt.Helpers.temp_vars ast_args in
+            let bound =
+              let e = List.nth_exn ast_args i in
+              Expr.Helpers.internal_funapp FnLength [e]
+                {e.meta with type_= UnsizedType.UInt} in
             let bodyfn (idx : Expr.Typed.t) =
               let args =
                 List.map
@@ -208,7 +208,7 @@ let truncate_dist ud_dists (id : Ast.identifier)
                     else e )
                   ast_args in
               targetme ub.meta.loc (size_adjust (expr args)) in
-            let loop = Stmt.Helpers.mk_for bound bodyfn e.meta.loc in
+            let loop = Stmt.Helpers.mk_for bound bodyfn ub.meta.loc in
             symbol_reset () ;
             Stmt.{Fixed.pattern= Block (temp_decls @ [loop]); meta= loop.meta}
         | None ->
