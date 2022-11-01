@@ -506,7 +506,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
                 Typed.Meta.create ~type_:UReal ~loc:mloc
                   ~adlevel:(Ast.expr_ad_lub (arg :: args))
                   () } in
-      truncate_dist ud_dists distribution arg args truncation @ swrap add_dist
+      swrap add_dist @ truncate_dist ud_dists distribution arg args truncation
   | Ast.Print ps ->
       NRFunApp (CompilerInternal FnPrint, trans_printables smeta ps) |> swrap
   | Ast.Reject ps ->
