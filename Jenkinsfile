@@ -436,12 +436,12 @@ pipeline {
 
                             archiveArtifacts 'performance-tests-cmdstan/performance.xml'
 
-                            perfReport modePerformancePerTestCase: true,
-                                sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                                modeThroughput: false,
-                                excludeResponseTime: true,
-                                errorFailedThreshold: 100,
-                                errorUnstableThreshold: 100
+//                             perfReport modePerformancePerTestCase: true,
+//                                 sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+//                                 modeThroughput: false,
+//                                 excludeResponseTime: true,
+//                                 errorFailedThreshold: 100,
+//                                 errorUnstableThreshold: 100
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end/*") }}
@@ -506,12 +506,12 @@ pipeline {
 
                             archiveArtifacts 'performance-tests-cmdstan/performance.xml'
 
-                            perfReport modePerformancePerTestCase: true,
-                                sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                                modeThroughput: false,
-                                excludeResponseTime: true,
-                                errorFailedThreshold: 100,
-                                errorUnstableThreshold: 100
+//                             perfReport modePerformancePerTestCase: true,
+//                                 sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+//                                 modeThroughput: false,
+//                                 excludeResponseTime: true,
+//                                 errorFailedThreshold: 100,
+//                                 errorUnstableThreshold: 100
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end-O=1/*") }}
