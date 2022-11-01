@@ -195,8 +195,11 @@ let truncate_dist ud_dists (id : Ast.identifier)
             let bound =
               Expr.Helpers.internal_funapp FnLength [e]
                 {e.meta with type_= UnsizedType.UInt} in
+            let ast_args = trans_exprs ast_args in
+            (* avoid recomputing in each iteration of the loop *)
+            let temp_decls, ast_args, symbol_reset =
+              Stmt.Helpers.temp_vars ast_args in
             let bodyfn (idx : Expr.Typed.t) =
-              let ast_args = trans_exprs ast_args in
               let args =
                 List.map
                   ~f:(fun (e : Expr.Typed.t) ->
@@ -206,7 +209,8 @@ let truncate_dist ud_dists (id : Ast.identifier)
                   ast_args in
               targetme ub.meta.loc (size_adjust (expr args)) in
             let loop = Stmt.Helpers.mk_for bound bodyfn e.meta.loc in
-            loop
+            symbol_reset () ;
+            Stmt.{Fixed.pattern= Block (temp_decls @ [loop]); meta= loop.meta}
         | None ->
             targetme ub.meta.loc (size_adjust (expr (trans_exprs ast_args)))
       in
