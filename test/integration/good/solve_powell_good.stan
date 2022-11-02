@@ -11,7 +11,7 @@ functions {
   }
 }
 data {
-
+  
 }
 transformed data {
   vector[2] x;
@@ -22,10 +22,10 @@ transformed data {
   real rel_tol;
   real fun_tol;
   int max_steps;
-
+  
   theta = solve_powell(algebra_system, x, y, dat, dat_int);
-  theta = solve_powell(algebra_system, x, rel_tol, fun_tol, max_steps,
-                       y, dat, dat_int);
+  theta = solve_powell_tol(algebra_system, x, rel_tol, fun_tol, max_steps, y,
+                           dat, dat_int);
 }
 parameters {
   vector[2] x_p;
@@ -35,22 +35,22 @@ parameters {
 transformed parameters {
   real abc_tp = algebra_solverfake(2.9);
   vector[2] theta_p;
-
+  
   theta_p = solve_powell(algebra_system, x, y, dat, dat_int);
   theta_p = solve_powell_tol(algebra_system, x, rel_tol, fun_tol, max_steps,
                              y, dat, dat_int);
-
+  
   theta_p = solve_powell(algebra_system, x, y_p, dat, dat_int);
   theta_p = solve_powell_tol(algebra_system, x, rel_tol, fun_tol, max_steps,
                              y, dat, dat_int);
-
+  
   theta_p = solve_powell(algebra_system, x_p, y, dat, dat_int);
-  theta_p = solve_powell_tol(algebra_system, x_p, rel_tol, fun_tol, max_steps,
-                             y, dat, dat_int);
-
+  theta_p = solve_powell_tol(algebra_system, x_p, rel_tol, fun_tol,
+                             max_steps, y, dat, dat_int);
+  
   theta_p = solve_powell(algebra_system, x_p, y_p, dat, dat_int);
-  theta_p = solve_powell_tol(algebra_system, x_p, rel_tol, fun_tol, max_steps,
-                             y_p, dat, dat_int);
+  theta_p = solve_powell_tol(algebra_system, x_p, rel_tol, fun_tol,
+                             max_steps, y_p, dat, dat_int);
 }
 model {
   dummy_parameter ~ normal(0, 1);
