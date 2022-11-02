@@ -1836,27 +1836,6 @@ Ill-typed arguments supplied to infix operator \. Available signatures:
 (matrix, vector) => vector
 (matrix, matrix) => matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
-  $ ../../../../install/default/bin/stanc op_minus_bad.stan
-Semantic error in 'op_minus_bad.stan', line 7, column 6 to column 8:
-   -------------------------------------------------
-     5:    array[4] int b;
-     6:    matrix[3,3] c;
-     7:    c = -b;
-               ^
-     8:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to prefix operator -. Available signatures: 
-(int) => int
-(real) => real
-(vector) => vector
-(complex) => complex
-(row_vector) => row_vector
-(matrix) => matrix
-(complex_vector) => complex_vector
-(complex_row_vector) => complex_row_vector
-(complex_matrix) => complex_matrix
-Instead supplied argument of incompatible type: array[] int.
   $ ../../../../install/default/bin/stanc op_modulus_bad.stan
 Semantic error in 'op_modulus_bad.stan', line 7, column 6 to column 11:
    -------------------------------------------------
