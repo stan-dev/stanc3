@@ -295,7 +295,8 @@ let distribution_families =
 let basic_vectorized = UnaryVectorized IntsToReals
 
 let math_sigs =
-  [ ([basic_vectorized], "acos", [DDeepVectorized], Mem_pattern.SoA)
+  [ ([UnaryVectorized SameAsArg], "abs", [DDeepVectorized], Mem_pattern.SoA)
+  ; ([basic_vectorized], "acos", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "acosh", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "asin", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "asinh", [DDeepVectorized], SoA)
@@ -315,7 +316,6 @@ let math_sigs =
   ; ([basic_vectorized], "fabs", [DDeepVectorized], SoA)
   ; ([UnaryVectorized ComplexToReals], "get_imag", [DDeepComplexVectorized], AoS)
   ; ([UnaryVectorized ComplexToReals], "get_real", [DDeepComplexVectorized], AoS)
-  ; ([UnaryVectorized SameAsArg], "abs", [DDeepVectorized], SoA)
   ; ([UnaryVectorized ComplexToReals], "abs", [DDeepComplexVectorized], AoS)
   ; ([basic_vectorized], "floor", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "inv", [DDeepVectorized], SoA)
@@ -338,6 +338,8 @@ let math_sigs =
   ; ([basic_vectorized], "log2", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "log_inv_logit", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "logit", [DDeepVectorized], SoA)
+  ; ([UnaryVectorized SameAsArg], "minus", [DDeepVectorized], SoA)
+  ; ([UnaryVectorized SameAsArg], "minus", [DDeepComplexVectorized], SoA)
   ; ([basic_vectorized], "Phi", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "Phi_approx", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "round", [DDeepVectorized], SoA)
@@ -1728,9 +1730,6 @@ let () =
   add_unqualified ("min", ReturnType UReal, [URowVector], AoS) ;
   add_unqualified ("min", ReturnType UReal, [UMatrix], AoS) ;
   add_unqualified ("min", ReturnType UInt, [UInt; UInt], AoS) ;
-  List.iter
-    ~f:(fun x -> add_unqualified ("minus", ReturnType x, [x], SoA))
-    bare_types ;
   add_binary_vec_int_real "modified_bessel_first_kind" AoS ;
   add_binary_vec_int_real "modified_bessel_second_kind" AoS ;
   add_unqualified ("modulus", ReturnType UInt, [UInt; UInt], AoS) ;

@@ -1058,19 +1058,16 @@ module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
     && ( valid_arg_types_for_suffix "_lccdf"
        || valid_arg_types_for_suffix "_ccdf_log" )
 
-  let verify_can_truncate_distribution loc (arg : typed_expression) = function
-    | NoTruncate -> ()
-    | _ ->
-        if UnsizedType.is_scalar_type arg.emeta.type_ then ()
-        else Semantic_error.multivariate_truncation loc |> error
-
   let verify_sampling_cdf_defined loc tenv id truncation args =
-    let check e = is_cumulative_density_defined tenv id (e :: args) in
+    let check e =
+      if not (is_cumulative_density_defined tenv id (e :: args)) then
+        Semantic_error.invalid_truncation_cdf_or_ccdf loc
+          (get_arg_types (e :: args))
+        |> error in
     match truncation with
     | NoTruncate -> ()
-    | (TruncateUpFrom e | TruncateDownFrom e) when check e -> ()
-    | TruncateBetween (e1, e2) when check e1 && check e2 -> ()
-    | _ -> Semantic_error.invalid_truncation_cdf_or_ccdf loc |> error
+    | TruncateUpFrom e | TruncateDownFrom e -> check e
+    | TruncateBetween (e1, e2) -> check e1 ; check e2
 
   let check_truncation cf tenv truncation =
     let check e =
@@ -1091,7 +1088,6 @@ module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
     verify_sampling_cdf_ccdf loc distribution ;
     verify_sampling_distribution loc tenv distribution (te :: tes) ;
     verify_sampling_cdf_defined loc tenv distribution ttrunc tes ;
-    verify_can_truncate_distribution loc te ttrunc ;
     let stmt = Tilde {arg= te; distribution; args= tes; truncation= ttrunc} in
     mk_typed_statement ~stmt ~loc ~return_type:NoReturnType
 

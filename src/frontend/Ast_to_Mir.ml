@@ -103,64 +103,124 @@ struct
 
   let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
-  let truncate_dist ud_dists (id : Ast.identifier) ast_obs ast_args t =
+  let truncate_dist ud_dists (id : Ast.identifier)
+      (ast_obs : Ast.typed_expression) ast_args t =
     let cdf_suffices = ["_lcdf"; "_cdf_log"] in
     let ccdf_suffices = ["_lccdf"; "_ccdf_log"] in
     let find_function_info sfx =
-      let possible_names =
-        List.map ~f:(( ^ ) id.name) sfx |> String.Set.of_list in
-      match List.find ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists with
+      let possible_names = List.map ~f:(( ^ ) id.name) sfx in
+      match
+        List.find
+          ~f:(fun (n, _) -> List.mem ~equal:String.equal possible_names n)
+          ud_dists
+      with
       | Some (name, tp) -> (Ast.UserDefined FnPlain, name, tp)
       | None ->
           ( Ast.StanLib FnPlain
-          , Set.to_list possible_names |> List.hd_exn
+          , List.hd_exn possible_names
           , if StdLibrary.is_stdlib_function_name (id.name ^ "_lpmf") then
               UnsizedType.UInt
             else UnsizedType.UReal (* close enough *) ) in
-    let trunc cond_op (x : Ast.typed_expression) y =
-      let smeta = x.Ast.emeta.loc in
+    let targetme loc e =
+      { Stmt.Fixed.meta= loc
+      ; pattern= TargetPE (Expr.Helpers.unary_op Operator.PMinus e) } in
+    let trunc cond_op extrema (x : Expr.Typed.t) y =
+      let smeta = x.meta.loc in
+      let ast_obs =
+        if UnsizedType.is_container ast_obs.Ast.emeta.type_ then
+          Ast.mk_typed_expression
+            ~expr:
+              (FunApp
+                 ( Ast.StanLib FnPlain
+                 , Ast.{name= extrema; id_loc= smeta}
+                 , [ast_obs] ) )
+            ~loc:smeta ~type_:UnsizedType.UReal ~ad_level:ast_obs.emeta.ad_level
+        else ast_obs in
       { Stmt.Fixed.meta= smeta
       ; pattern=
           IfElse
-            ( op_to_funapp cond_op [ast_obs; x] UInt
+            ( Expr.Helpers.binop (trans_expr ast_obs) cond_op x
             , {Stmt.Fixed.meta= smeta; pattern= TargetPE neg_inf}
             , Some y ) } in
-    let targetme loc e =
-      { Stmt.Fixed.meta= loc
-      ; pattern= TargetPE (op_to_funapp Operator.PMinus [e] e.emeta.type_) }
-    in
     let funapp meta kind name args =
-      { Ast.emeta= meta
-      ; expr= Ast.FunApp (kind, {name; id_loc= Location_span.empty}, args) }
-    in
-    let inclusive_bound tp (lb : Ast.typed_expression) =
-      let emeta = lb.emeta in
+      Expr.{Fixed.pattern= FunApp (trans_fn_kind kind name, args); meta} in
+    let inclusive_bound tp (lb : Expr.Typed.t) =
       if UnsizedType.is_int_type tp then
-        Ast.
-          { emeta
-          ; expr= BinOp (lb, Operator.Minus, {emeta; expr= Ast.IntNumeral "1"})
-          }
+        Expr.Helpers.binop lb Minus Expr.Helpers.one
       else lb in
+    let size_adjust e =
+      if
+        (not (UnsizedType.is_container ast_obs.Ast.emeta.type_))
+        || List.exists
+             ~f:(fun (i : Ast.typed_expression) ->
+               UnsizedType.is_container i.emeta.type_ )
+             ast_args
+      then e
+      else
+        (* Container y but scalar args - need to multiply by size(y) *)
+        let trans_ast_obs = trans_expr ast_obs in
+        let type_ = {trans_ast_obs.meta with type_= UnsizedType.UReal} in
+        Expr.Helpers.binop e Times
+          (Expr.Helpers.internal_funapp FnLength [trans_ast_obs] type_) in
     match t with
     | Ast.NoTruncate -> []
     | TruncateUpFrom lb ->
         let fk, fn, tp = find_function_info ccdf_suffices in
-        [ trunc Less lb
-            (targetme lb.emeta.loc
-               (funapp lb.emeta fk fn (inclusive_bound tp lb :: ast_args)) ) ]
+        let lb = trans_expr lb in
+        [ trunc Less "min" lb
+            (targetme lb.meta.loc
+               (size_adjust
+                  (funapp lb.meta fk fn
+                     (inclusive_bound tp lb :: trans_exprs ast_args) ) ) ) ]
     | TruncateDownFrom ub ->
         let fk, fn, _ = find_function_info cdf_suffices in
-        [ trunc Greater ub
-            (targetme ub.emeta.loc (funapp ub.emeta fk fn (ub :: ast_args))) ]
+        let ub = trans_expr ub in
+        [ trunc Greater "max" ub
+            (targetme ub.meta.loc
+               (size_adjust (funapp ub.meta fk fn (ub :: trans_exprs ast_args))) )
+        ]
     | TruncateBetween (lb, ub) ->
         let fk, fn, tp = find_function_info cdf_suffices in
-        [ trunc Less lb
-            (trunc Greater ub
-               (targetme ub.emeta.loc
-                  (funapp ub.emeta (Ast.StanLib FnPlain) "log_diff_exp"
-                     [ funapp ub.emeta fk fn (ub :: ast_args)
-                     ; funapp ub.emeta fk fn (inclusive_bound tp lb :: ast_args)
-                     ] ) ) ) ]
+        let lb, ub = (trans_expr lb, trans_expr ub) in
+        let expr args =
+          funapp ub.meta (Ast.StanLib FnPlain) "log_diff_exp"
+            [ funapp ub.meta fk fn (ub :: args)
+            ; funapp ub.meta fk fn (inclusive_bound tp lb :: args) ] in
+        let statement =
+          match
+            List.findi
+              ~f:(fun (_ : int) (e : Ast.typed_expression) ->
+                UnsizedType.is_container e.emeta.type_ )
+              ast_args
+          with
+          (* If any of the arguments (besides the data) are vectors, need to generate a loop
+             This can go away if https://github.com/stan-dev/stan/issues/1154 is implemented
+          *)
+          | Some (i, _) ->
+              let ast_args = trans_exprs ast_args in
+              (* avoid recomputing in each iteration of the loop *)
+              let temp_decls, ast_args, symbol_reset =
+                Stmt.Helpers.temp_vars ast_args in
+              let bound =
+                let e = List.nth_exn ast_args i in
+                Expr.Helpers.internal_funapp FnLength [e]
+                  {e.meta with type_= UnsizedType.UInt} in
+              let bodyfn (idx : Expr.Typed.t) =
+                let args =
+                  List.map
+                    ~f:(fun (e : Expr.Typed.t) ->
+                      if UnsizedType.is_container e.meta.type_ then
+                        Expr.Helpers.add_int_index e (Index.Single idx)
+                      else e )
+                    ast_args in
+                targetme ub.meta.loc (size_adjust (expr args)) in
+              let loop = Stmt.Helpers.mk_for bound bodyfn ub.meta.loc in
+              symbol_reset () ;
+              Stmt.{Fixed.pattern= Block (temp_decls @ [loop]); meta= loop.meta}
+          | None ->
+              targetme ub.meta.loc (size_adjust (expr (trans_exprs ast_args)))
+        in
+        [trunc Less "min" lb (trunc Greater "max" ub statement)]
 
   let unquote s =
     if s.[0] = '"' && s.[String.length s - 1] = '"' then
@@ -385,6 +445,16 @@ struct
     | x ->
         Common.FatalError.fatal_error_msg
           [%message "Expecting a block or skip, not" (x : Stmt.Located.t list)]
+
+  let stmt_contains_check stmt =
+    let is_check = function
+      | Fun_kind.CompilerInternal (Internal_fun.FnCheck _) -> true
+      | _ -> false in
+    Stmt.Helpers.contains_fn_kind is_check stmt
+
+  let migrate_checks_to_end_of_block stmts =
+    let checks, not_checks = List.partition_tf ~f:stmt_contains_check stmts in
+    not_checks @ checks
 
   let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement)
       =
@@ -719,15 +789,156 @@ struct
       | stmt -> (accum1, accum2, trans_stmt ud_dists declc stmt @ accum3) in
     Ast.get_stmts (get_block block prog) |> List.fold_right ~f ~init:([], [], [])
 
-  let stmt_contains_check stmt =
-    let is_check = function
-      | Fun_kind.CompilerInternal (Internal_fun.FnCheck _) -> true
-      | _ -> false in
-    Stmt.Helpers.contains_fn_kind is_check stmt
-
-  let migrate_checks_to_end_of_block stmts =
-    let checks, not_checks = List.partition_tf ~f:stmt_contains_check stmts in
-    not_checks @ checks
+  let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement)
+      =
+    let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
+    let trans_stmt =
+      trans_stmt ud_dists {declc with transform_action= IgnoreTransform} in
+    let trans_single_stmt s =
+      match trans_stmt s with
+      | [s] -> s
+      | s -> Stmt.Fixed.{pattern= SList s; meta= smeta} in
+    let swrap pattern = [Stmt.Fixed.{meta= smeta; pattern}] in
+    let mloc = smeta in
+    match stmt_typed with
+    | Ast.Assignment {assign_lhs; assign_rhs; assign_op} ->
+        let rec get_lhs_base = function
+          | {Ast.lval= Ast.LIndexed (l, _); _} -> get_lhs_base l
+          | {lval= LVariable s; lmeta} -> (s, lmeta) in
+        let assign_identifier, lmeta = get_lhs_base assign_lhs in
+        let id_ad_level = lmeta.Ast.ad_level in
+        let id_type_ = lmeta.Ast.type_ in
+        let lhs_type_ = assign_lhs.Ast.lmeta.type_ in
+        let lhs_ad_level = assign_lhs.Ast.lmeta.ad_level in
+        let rec get_lhs_indices = function
+          | {Ast.lval= Ast.LIndexed (l, i); _} -> get_lhs_indices l @ i
+          | {Ast.lval= Ast.LVariable _; _} -> [] in
+        let assign_indices = get_lhs_indices assign_lhs in
+        let assignee =
+          { Ast.expr=
+              ( match assign_indices with
+              | [] -> Ast.Variable assign_identifier
+              | _ ->
+                  Ast.Indexed
+                    ( { expr= Ast.Variable assign_identifier
+                      ; emeta=
+                          { Ast.loc= Location_span.empty
+                          ; ad_level= id_ad_level
+                          ; type_= id_type_ } }
+                    , assign_indices ) )
+          ; emeta=
+              { Ast.loc= assign_lhs.lmeta.loc
+              ; ad_level= lhs_ad_level
+              ; type_= lhs_type_ } } in
+        let rhs =
+          match assign_op with
+          | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
+          | Ast.OperatorAssign op ->
+              op_to_funapp op [assignee; assign_rhs] assignee.emeta.type_ in
+        Assignment
+          ( ( assign_identifier.Ast.name
+            , id_type_
+            , List.map ~f:trans_idx assign_indices )
+          , rhs )
+        |> swrap
+    | Ast.NRFunApp (fn_kind, {name; _}, args) ->
+        NRFunApp (trans_fn_kind fn_kind name, trans_exprs args) |> swrap
+    | Ast.IncrementLogProb e | Ast.TargetPE e ->
+        TargetPE (trans_expr e) |> swrap
+    | Ast.Tilde {arg; distribution; args; truncation} ->
+        let suffix =
+          Std_library_utils.dist_name_suffix
+            (module StdLibrary)
+            ud_dists distribution.name in
+        let name = distribution.name ^ suffix in
+        let kind =
+          let possible_names =
+            List.map ~f:(( ^ ) distribution.name) Utils.distribution_suffices
+            |> String.Set.of_list in
+          if List.exists ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists
+          then Fun_kind.UserDefined (name, FnLpdf true)
+          else StanLib (name, FnLpdf true, AoS) in
+        let add_dist =
+          Stmt.Fixed.Pattern.TargetPE
+            Expr.
+              { Fixed.pattern= FunApp (kind, trans_exprs (arg :: args))
+              ; meta=
+                  Typed.Meta.create ~type_:UReal ~loc:mloc
+                    ~adlevel:(Ast.expr_ad_lub (arg :: args))
+                    () } in
+        swrap add_dist @ truncate_dist ud_dists distribution arg args truncation
+    | Ast.Print ps ->
+        NRFunApp (CompilerInternal FnPrint, trans_printables smeta ps) |> swrap
+    | Ast.Reject ps ->
+        NRFunApp (CompilerInternal FnReject, trans_printables smeta ps) |> swrap
+    | Ast.IfThenElse (cond, ifb, elseb) ->
+        IfElse
+          ( trans_expr cond
+          , trans_single_stmt ifb
+          , Option.map ~f:trans_single_stmt elseb )
+        |> swrap
+    | Ast.While (cond, body) ->
+        While (trans_expr cond, trans_single_stmt body) |> swrap
+    | Ast.For {loop_variable; lower_bound; upper_bound; loop_body} ->
+        let body =
+          match trans_single_stmt loop_body with
+          | {pattern= Block _; _} as b -> b
+          | x -> {x with pattern= Block [x]} in
+        For
+          { loopvar= loop_variable.Ast.name
+          ; lower= trans_expr lower_bound
+          ; upper= trans_expr upper_bound
+          ; body }
+        |> swrap
+    | Ast.ForEach (loopvar, iteratee, body) ->
+        let iteratee' = trans_expr iteratee in
+        let body_stmts =
+          match trans_single_stmt body with
+          | {pattern= Block body_stmts; _} -> body_stmts
+          | b -> [b] in
+        let decl_type =
+          match Expr.Typed.type_of iteratee' with
+          | UMatrix -> UnsizedType.UReal
+          | t ->
+              Expr.Helpers.(infer_type_of_indexed t [Index.Single loop_bottom])
+        in
+        let decl_loopvar =
+          Stmt.Fixed.
+            { meta= smeta
+            ; pattern=
+                Decl
+                  { decl_adtype= Expr.Typed.adlevel_of iteratee'
+                  ; decl_id= loopvar.name
+                  ; decl_type= Unsized decl_type
+                  ; initialize= true } } in
+        let assignment var =
+          Stmt.Fixed.
+            { pattern= Assignment ((loopvar.name, decl_type, []), var)
+            ; meta= smeta } in
+        let bodyfn var =
+          Stmt.Fixed.
+            { pattern= Block (decl_loopvar :: assignment var :: body_stmts)
+            ; meta= smeta } in
+        Stmt.Helpers.[ensure_var (for_each bodyfn) iteratee' smeta]
+    | Ast.FunDef _ ->
+        Common.FatalError.fatal_error_msg
+          [%message
+            "Found function definition statement outside of function block"]
+    | Ast.VarDecl {decl_type; transformation; variables; is_global= _} ->
+        List.concat_map
+          ~f:(fun {identifier; initial_value} ->
+            trans_decl declc smeta decl_type
+              (Transformation.map trans_expr transformation)
+              identifier initial_value )
+          variables
+    | Ast.Block stmts -> Block (List.concat_map ~f:trans_stmt stmts) |> swrap
+    | Ast.Profile (name, stmts) ->
+        Profile (name, List.concat_map ~f:trans_stmt stmts) |> swrap
+    | Ast.Return e -> Return (Some (trans_expr e)) |> swrap
+    | Ast.ReturnVoid -> Return None |> swrap
+    | Ast.Break -> Break |> swrap
+    | Ast.Continue -> Continue |> swrap
+    | Ast.Skip -> Skip |> swrap
 
   let gather_data (p : Ast.typed_program) =
     let data = Ast.get_stmts p.datablock in
