@@ -4943,7 +4943,7 @@
                 ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
             (meta <opaque>))
            ((pattern
-             (For (loopvar sym2__)
+             (For (loopvar sym3__)
               (lower
                ((pattern (Lit Int 1))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -4973,7 +4973,7 @@
                                ((type_ (UArray UInt)) (loc <opaque>)
                                 (adlevel DataOnly))))
                              ((Single
-                               ((pattern (Var sym2__))
+                               ((pattern (Var sym3__))
                                 (meta
                                  ((type_ UInt) (loc <opaque>)
                                   (adlevel DataOnly))))))))

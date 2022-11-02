@@ -365,8 +365,8 @@ module StatementError = struct
     | InvalidSamplingCDForCCDF of string
     | InvalidSamplingNoSuchDistribution of string
     | TargetPlusEqualsOutsideModelOrLogProb
-    | InvalidTruncationCDForCCDF
-    | MultivariateTruncation
+    | InvalidTruncationCDForCCDF of
+        (UnsizedType.autodifftype * UnsizedType.t) list
     | BreakOutsideLoop
     | ContinueOutsideLoop
     | ExpressionReturnOutsideReturningFn
@@ -421,12 +421,13 @@ module StatementError = struct
           "Ill-typed arguments to '~' statement. No distribution '%s' was \
            found."
           name
-    | InvalidTruncationCDForCCDF ->
+    | InvalidTruncationCDForCCDF args ->
         Fmt.pf ppf
           "Truncation is only defined if distribution has _lcdf and _lccdf \
-           functions implemented with appropriate signature."
-    | MultivariateTruncation ->
-        Fmt.pf ppf "Outcomes in truncated distributions must be univariate."
+           functions implemented with appropriate signature.\n\
+           No matching signature for arguments: @[(%a)@]"
+          Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
+          args
     | BreakOutsideLoop ->
         Fmt.pf ppf "Break statements may only be used in loops."
     | ContinueOutsideLoop ->
@@ -685,11 +686,8 @@ let invalid_sampling_no_such_dist loc name =
 let target_plusequals_outside_model_or_logprob loc =
   StatementError (loc, StatementError.TargetPlusEqualsOutsideModelOrLogProb)
 
-let invalid_truncation_cdf_or_ccdf loc =
-  StatementError (loc, StatementError.InvalidTruncationCDForCCDF)
-
-let multivariate_truncation loc =
-  StatementError (loc, StatementError.MultivariateTruncation)
+let invalid_truncation_cdf_or_ccdf loc args =
+  StatementError (loc, StatementError.InvalidTruncationCDForCCDF args)
 
 let break_outside_loop loc =
   StatementError (loc, StatementError.BreakOutsideLoop)
