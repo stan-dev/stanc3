@@ -539,13 +539,11 @@ module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
           Semantic_error.returning_fn_expected_nonreturning_found loc id.name
           |> error
       | UniqueMatch (ReturnType ut, fnk, promotions) ->
-          mk_typed_expression
-            ~expr:
-              (mk_fun_app ~is_cond_dist
-                 ( fnk (Fun_kind.suffix_from_name id.name)
-                 , id
-                 , Promotion.promote_list es promotions ) )
-            ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
+          mk_fun_app ~is_cond_dist
+            (fnk (Fun_kind.suffix_from_name id.name))
+            id
+            (Promotion.promote_list es promotions)
+            ~type_:ut ~loc
       | AmbiguousMatch sigs ->
           Semantic_error.ambiguous_function_promotion loc id.name
             (Some (List.map ~f:type_of_expr_typed es))
@@ -583,11 +581,9 @@ module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
       with
       | SignatureMismatch.UniqueMatch (ftype, promotions) ->
           let tes = make_function_variable cf loc fname ftype :: remaining_es in
-          mk_typed_expression
-            ~expr:
-              (mk_fun_app ~is_cond_dist
-                 (StanLib FnPlain, id, Promotion.promote_list tes promotions) )
-            ~ad_level:(expr_ad_lub tes) ~type_:return_type ~loc
+          mk_fun_app ~is_cond_dist (StanLib FnPlain) id
+            (Promotion.promote_list tes promotions)
+            ~type_:return_type ~loc
       | AmbiguousMatch ps ->
           Semantic_error.ambiguous_function_promotion loc fname.name None ps
           |> error

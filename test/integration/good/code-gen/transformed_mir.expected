@@ -1557,7 +1557,7 @@
                  (((pattern (Var mat))
                    (meta
                     ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
             (NRFunApp (CompilerInternal FnValidateSize)
@@ -1570,7 +1570,7 @@
                  (((pattern (Var mat))
                    (meta
                     ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
             (Decl (decl_adtype AutoDiffable) (decl_id o)
@@ -1582,13 +1582,13 @@
                    (((pattern (Var mat))
                      (meta
                       ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable))))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                 ((pattern
                   (FunApp (StanLib cols FnPlain AoS)
                    (((pattern (Var mat))
                      (meta
                       ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable)))))))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
              (initialize true)))
            (meta <opaque>))
           ((pattern

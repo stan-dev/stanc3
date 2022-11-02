@@ -2735,11 +2735,9 @@ module Special_typechecking = struct
           let tes =
             make_function_variable current_block loc fname ftype :: remaining_es
           in
-          mk_typed_expression
-            ~expr:
-              (mk_fun_app ~is_cond_dist
-                 (StanLib FnPlain, id, Promotion.promote_list tes promotions) )
-            ~ad_level:(expr_ad_lub tes) ~type_:UnsizedType.UReal ~loc
+          mk_fun_app ~is_cond_dist (StanLib FnPlain) id
+            (Promotion.promote_list tes promotions)
+            ~type_:UnsizedType.UReal ~loc
       | AmbiguousMatch ps ->
           Semantic_error.ambiguous_function_promotion loc fname.name None ps
           |> error
