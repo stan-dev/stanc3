@@ -2,6 +2,8 @@
  (name common)
  (public_name stanc.common)
  (libraries core_kernel str fmt)
+ (instrumentation
+  (backend bisect_ppx))
  (inline_tests)
  (preprocess
   (pps ppx_jane ppx_deriving.map ppx_deriving.fold ppx_deriving.create)))

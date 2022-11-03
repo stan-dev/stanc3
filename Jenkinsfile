@@ -213,8 +213,15 @@ pipeline {
                             unstash "Stanc3Setup"
                             runShell("""
                                 eval \$(opam env)
-                                dune runtest --root=.
+                                dune runtest --instrument-with bisect_ppx --force --root=.
                             """)
+
+                            withCredentials([string(credentialsId: 'stan-stanc3-codecov-token', variable: 'CODECOV_TOKEN')]) {
+                                runShell("""
+                                    bisect-ppx-report send-to Codecov
+                                    bisect-ppx-report summary
+                                """)
+                            }
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/dune-tests/*") }}
