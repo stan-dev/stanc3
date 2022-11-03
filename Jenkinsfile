@@ -223,7 +223,7 @@ pipeline {
                                 curl -Os https://uploader.codecov.io/v0.3.2/linux/codecov
 
                                 chmod +x codecov
-                                ./codecov -t ${CODECOV_TOKEN}
+                                ./codecov -t ${CODECOV_TOKEN} -f coverage.json -Z -v
                                 """)
                             }
                         }
