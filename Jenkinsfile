@@ -203,7 +203,7 @@ pipeline {
                 stage("Dune tests") {
                     agent {
                         docker {
-                            image 'stanorg/stanc3:debianfi'
+                            image 'stanorg/stanc3:debianfi-codecov'
                             //Forces image to ignore entrypoint
                             args "--entrypoint=\'\'"
                         }
