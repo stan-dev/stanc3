@@ -210,7 +210,14 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/dune-tests"){
-                            unstash "Stanc3Setup"
+                            retry(3) {
+                                checkout([
+                                $class: 'GitSCM',
+                                branches: scm.branches,
+                                extensions: [[$class: 'CloneOption', noTags: false]],
+                                userRemoteConfigs: scm.userRemoteConfigs,
+                                ])
+                            }
                             runShell("""
                                 eval \$(opam env)
                                 dune runtest --instrument-with bisect_ppx --force --root=.
@@ -227,7 +234,7 @@ pipeline {
                                     curl -Os https://uploader.codecov.io/v0.3.2/linux/codecov
 
                                     chmod +x codecov
-                                    ./codecov -Z -v -C ${GIT_COMMIT}
+                                    ./codecov -Z -v -C ${env.GIT_COMMIT}
                                 """
                             }
                         }
