@@ -214,12 +214,14 @@ pipeline {
                             runShell("""
                                 eval \$(opam env)
                                 dune runtest --instrument-with bisect_ppx --force --root=.
+                                bisect-ppx-report coveralls coverage.json --service-name jenkins --service-job-id $BUILD_ID
                             """)
 
                             withCredentials([string(credentialsId: 'stan-stanc3-codecov-token', variable: 'CODECOV_TOKEN')]) {
                                 runShell("""
-                                    bisect-ppx-report send-to Codecov
-                                    bisect-ppx-report summary
+                                    curl -Os https://uploader.codecov.io/latest/linux/codecov
+                                    chmod +x codecov
+                                    ./codecov
                                 """)
                             }
                         }
