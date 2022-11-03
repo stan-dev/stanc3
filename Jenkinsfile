@@ -227,7 +227,7 @@ pipeline {
                                     curl -Os https://uploader.codecov.io/v0.3.2/linux/codecov
 
                                     chmod +x codecov
-                                    ./codecov -Z -v -C $(git rev-parse HEAD)
+                                    ./codecov -Z -v -C \$(git rev-parse HEAD)
                                 """
                             }
                         }
