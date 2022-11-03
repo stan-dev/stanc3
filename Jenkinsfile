@@ -224,6 +224,7 @@ pipeline {
 
                             withCredentials([usernamePassword(credentialsId: 'stan-stanc3-codecov-token', usernameVariable: 'DUMMY_USERNAME', passwordVariable: 'CODECOV_TOKEN')]) {
                                 sh """
+                                    cd dune-tests
                                     curl -Os https://uploader.codecov.io/v0.3.2/linux/codecov
 
                                     chmod +x codecov
