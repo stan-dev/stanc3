@@ -214,14 +214,16 @@ pipeline {
                             runShell("""
                                 eval \$(opam env)
                                 dune runtest --instrument-with bisect_ppx --force --root=.
-                                bisect-ppx-report coveralls coverage.json --service-name jenkins --service-job-id $BUILD_ID
+                                bisect-ppx-report summary --expect src/ --do-not-expect src/stancjs/
+                                bisect-ppx-report coveralls coverage.json --service-name jenkins --service-job-id $BUILD_ID --expect src/ --do-not-expect src/stancjs/
                             """)
 
                         withCredentials([usernamePassword(credentialsId: 'stan-stanc3-codecov-token', usernameVariable: 'DUMMY_USERNAME', passwordVariable: 'CODECOV_TOKEN')]) {
                             runShell("""
-                                    curl -Os https://uploader.codecov.io/latest/linux/codecov
-                                    chmod +x codecov
-                                    ./codecov
+                                curl -Os https://uploader.codecov.io/v0.3.2/linux/codecov
+
+                                chmod +x codecov
+                                ./codecov -t ${CODECOV_TOKEN}
                                 """)
                             }
                         }
