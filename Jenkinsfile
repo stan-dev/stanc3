@@ -217,8 +217,8 @@ pipeline {
                                 bisect-ppx-report coveralls coverage.json --service-name jenkins --service-job-id $BUILD_ID
                             """)
 
-                            withCredentials([string(credentialsId: 'stan-stanc3-codecov-token', variable: 'CODECOV_TOKEN')]) {
-                                runShell("""
+                        withCredentials([usernamePassword(credentialsId: 'stan-stanc3-codecov-token', usernameVariable: 'DUMMY_USERNAME', passwordVariable: 'CODECOV_TOKEN')]) {
+                            runShell("""
                                     curl -Os https://uploader.codecov.io/latest/linux/codecov
                                     chmod +x codecov
                                     ./codecov
