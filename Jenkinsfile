@@ -203,7 +203,7 @@ pipeline {
                 stage("Dune tests") {
                     agent {
                         docker {
-                            image 'stanorg/stanc3:debianfi-codecov'
+                            image 'stanorg/stanc3:debianfi'
                             //Forces image to ignore entrypoint
                             args "--entrypoint=\'\'"
                         }
@@ -227,7 +227,7 @@ pipeline {
                                     curl -Os https://uploader.codecov.io/v0.3.2/linux/codecov
 
                                     chmod +x codecov
-                                    ./codecov -Z -v -C \$(git rev-parse HEAD)
+                                    ./codecov -v -C \$(git rev-parse HEAD)
                                 """
                             }
                         }

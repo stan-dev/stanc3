@@ -9,8 +9,8 @@ test:
 testcoverage:
 	@find . -name '*.coverage' | xargs rm -f
 	dune runtest --instrument-with bisect_ppx --force
-	bisect-ppx-report html
-	bisect-ppx-report summary
+	bisect-ppx-report html --expect src/ --do-not-expect src/stancjs/
+	bisect-ppx-report summary --expect src/ --do-not-expect src/stancjs/
 
 format:
 	dune build @fmt

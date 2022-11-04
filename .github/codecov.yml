@@ -2,3 +2,8 @@ codecov:
   require_ci_to_pass: false
   ci:
     - jenkins.flatironinstitute.org
+
+comment:
+  layout: "diff, files"
+  behavior: once
+  require_changes: true
