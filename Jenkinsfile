@@ -213,8 +213,23 @@ pipeline {
                             unstash "Stanc3Setup"
                             runShell("""
                                 eval \$(opam env)
-                                dune runtest --root=.
+                                dune runtest --instrument-with bisect_ppx --force --root=.
                             """)
+
+                            sh """
+                                eval \$(opam env)
+                                bisect-ppx-report summary --expect src/ --do-not-expect src/stancjs/
+                                bisect-ppx-report coveralls coverage.json --service-name jenkins --service-job-id $BUILD_ID --expect src/ --do-not-expect src/stancjs/
+                            """
+
+                            withCredentials([usernamePassword(credentialsId: 'stan-stanc3-codecov-token', usernameVariable: 'DUMMY_USERNAME', passwordVariable: 'CODECOV_TOKEN')]) {
+                                sh """
+                                    curl -Os https://uploader.codecov.io/v0.3.2/linux/codecov
+
+                                    chmod +x codecov
+                                    ./codecov -v -C \$(git rev-parse HEAD)
+                                """
+                            }
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/dune-tests/*") }}
