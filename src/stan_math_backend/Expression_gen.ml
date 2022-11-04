@@ -3,9 +3,6 @@ open Core_kernel.Poly
 open Middle
 open Fmt
 
-let ends_with suffix s = String.is_suffix ~suffix s
-let starts_with prefix s = String.is_prefix ~prefix s
-
 let stan_namespace_qualify f =
   if String.is_suffix ~suffix:"functor__" f || String.contains f ':' then f
   else "stan::math::" ^ f
