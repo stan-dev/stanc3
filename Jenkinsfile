@@ -213,7 +213,7 @@ pipeline {
                             unstash "Stanc3Setup"
                             runShell("""
                                 eval \$(opam env)
-                                dune runtest --instrument-with bisect_ppx --force --root=.
+                                BISECT_FILE=\$(pwd)/bisect dune runtest --instrument-with bisect_ppx --force --root=.
                             """)
 
                             sh """
