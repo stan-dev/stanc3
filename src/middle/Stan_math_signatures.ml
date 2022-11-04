@@ -2661,7 +2661,34 @@ let () =
     ~control_args:
       (variadic_ode_mandatory_arg_types @ variadic_ode_adjoint_ctl_tol_arg_types)
     ~required_fn_rt:variadic_ode_fun_return_type
-    ~required_fn_args:variadic_ode_mandatory_fun_args ()
+    ~required_fn_args:variadic_ode_mandatory_fun_args () ;
+  (* Algebra solvers *)
+  add_variadic_fn "solve_newton" ~return_type:UnsizedType.UVector
+    ~control_args:[UnsizedType.(AutoDiffable, UVector)]
+    ~required_fn_rt:UnsizedType.UVector
+    ~required_fn_args:[UnsizedType.(AutoDiffable, UVector)]
+    () ;
+  add_variadic_fn "solve_powell" ~return_type:UnsizedType.UVector
+    ~control_args:[UnsizedType.(AutoDiffable, UVector)]
+    ~required_fn_rt:UnsizedType.UVector
+    ~required_fn_args:[UnsizedType.(AutoDiffable, UVector)]
+    () ;
+  add_variadic_fn "solve_newton_tol" ~return_type:UnsizedType.UVector
+    ~control_args:
+      UnsizedType.
+        [ (AutoDiffable, UVector); (DataOnly, UReal); (DataOnly, UReal)
+        ; (DataOnly, UInt) ]
+    ~required_fn_rt:UnsizedType.UVector
+    ~required_fn_args:[UnsizedType.(AutoDiffable, UVector)]
+    () ;
+  add_variadic_fn "solve_powell_tol" ~return_type:UnsizedType.UVector
+    ~control_args:
+      UnsizedType.
+        [ (AutoDiffable, UVector); (DataOnly, UReal); (DataOnly, UReal)
+        ; (DataOnly, UInt) ]
+    ~required_fn_rt:UnsizedType.UVector
+    ~required_fn_args:[UnsizedType.(AutoDiffable, UVector)]
+    ()
 
 let%expect_test "dist name suffix" =
   dist_name_suffix [] "normal" |> print_endline ;

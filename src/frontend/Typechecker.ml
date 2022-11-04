@@ -461,8 +461,14 @@ let verify_unnormalized cf loc id =
     && not ((cf.in_fun_def && cf.in_udf_dist_def) || cf.current_block = Model)
   then Semantic_error.invalid_unnormalized_fn loc |> error
 
-let mk_fun_app ~is_cond_dist (x, y, z) =
-  if is_cond_dist then CondDistApp (x, y, z) else FunApp (x, y, z)
+let mk_fun_app ~is_cond_dist ~loc kind name args ~type_ : Ast.typed_expression =
+  let fn =
+    if is_cond_dist then CondDistApp (kind, name, args)
+    else FunApp (kind, name, args) in
+  mk_typed_expression ~expr:fn ~loc ~type_
+    ~ad_level:
+      ( if UnsizedType.is_int_type type_ then UnsizedType.DataOnly
+      else expr_ad_lub args )
 
 let check_normal_fn ~is_cond_dist loc tenv id es =
   match Env.find tenv (Utils.normalized_name id.name) with
@@ -517,13 +523,11 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
         |> error
     | UniqueMatch (ReturnType ut, fnk, promotions) ->
-        mk_typed_expression
-          ~expr:
-            (mk_fun_app ~is_cond_dist
-               ( fnk (Fun_kind.suffix_from_name id.name)
-               , id
-               , Promotion.promote_list es promotions ) )
-          ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
+        mk_fun_app ~is_cond_dist ~loc
+          (fnk (Fun_kind.suffix_from_name id.name))
+          id
+          (Promotion.promote_list es promotions)
+          ~type_:ut
     | AmbiguousMatch sigs ->
         Semantic_error.ambiguous_function_promotion loc id.name
           (Some (List.map ~f:type_of_expr_typed es))
@@ -616,11 +620,9 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
     | SignatureMismatch.UniqueMatch (ftype, promotions) ->
         (* a valid signature exists *)
         let tes = make_function_variable cf loc fname ftype :: remaining_es in
-        mk_typed_expression
-          ~expr:
-            (mk_fun_app ~is_cond_dist
-               (StanLib FnPlain, id, Promotion.promote_list tes promotions) )
-          ~ad_level:(expr_ad_lub tes) ~type_:UnsizedType.UReal ~loc
+        mk_fun_app ~is_cond_dist ~loc (StanLib FnPlain) id
+          (Promotion.promote_list tes promotions)
+          ~type_:UnsizedType.UReal
     | AmbiguousMatch ps ->
         Semantic_error.ambiguous_function_promotion loc fname.name None ps
         |> error
@@ -653,11 +655,9 @@ and check_variadic ~is_cond_dist loc cf tenv id tes =
     match find_matching_first_order_fn tenv (matching remaining_es) fname with
     | SignatureMismatch.UniqueMatch (ftype, promotions) ->
         let tes = make_function_variable cf loc fname ftype :: remaining_es in
-        mk_typed_expression
-          ~expr:
-            (mk_fun_app ~is_cond_dist
-               (StanLib FnPlain, id, Promotion.promote_list tes promotions) )
-          ~ad_level:(expr_ad_lub tes) ~type_:return_type ~loc
+        mk_fun_app ~is_cond_dist ~loc (StanLib FnPlain) id
+          (Promotion.promote_list tes promotions)
+          ~type_:return_type
     | AmbiguousMatch ps ->
         Semantic_error.ambiguous_function_promotion loc fname.name None ps
         |> error

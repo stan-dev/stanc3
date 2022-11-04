@@ -7438,9 +7438,9 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                       (meta
                        ((type_ UVector) (loc <opaque>)
                         (adlevel AutoDiffable)))))))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable))))
-                 UReal AutoDiffable))
-               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 UReal DataOnly))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
         (meta <opaque>))
        ((pattern
@@ -12200,9 +12200,9 @@ matrix[10, 10] mul_two_aos: AoS
                 (((pattern (Var row_soa))
                   (meta
                    ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable))))
-             UReal AutoDiffable))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             UReal DataOnly))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var empty_user_func_aos))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -12232,9 +12232,9 @@ matrix[10, 10] mul_two_aos: AoS
                       (meta
                        ((type_ UMatrix) (loc <opaque>)
                         (adlevel AutoDiffable)))))))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable))))
-                 UReal AutoDiffable))
-               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 UReal DataOnly))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
                 (FunApp (StanLib transpose FnPlain AoS)
                  (((pattern (Var int_aos_mul_aos))
@@ -12422,9 +12422,9 @@ matrix[10, 10] mul_two_aos: AoS
                 (((pattern (Var row_soa))
                   (meta
                    ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable))))
-             UReal AutoDiffable))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             UReal DataOnly))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var empty_user_func_aos))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -12443,9 +12443,9 @@ matrix[10, 10] mul_two_aos: AoS
                       (meta
                        ((type_ UMatrix) (loc <opaque>)
                         (adlevel AutoDiffable)))))))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable))))
-                 UReal AutoDiffable))
-               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 UReal DataOnly))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
                 (FunApp (StanLib transpose FnPlain AoS)
                  (((pattern (Var int_aos_mul_aos))
