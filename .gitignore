@@ -9,6 +9,8 @@ math_iface/gen/*
 # ocaml
 _opam
 _build
+_coverage/
+*.coverage
 *.merlin
 stanc.install
 

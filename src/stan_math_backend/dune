@@ -2,6 +2,8 @@
  (name stan_math_backend)
  (public_name stanc.stan_math_backend)
  (libraries core_kernel re fmt middle yojson)
+ (instrumentation
+  (backend bisect_ppx))
  (private_modules
   mangle
   cpp_Json
