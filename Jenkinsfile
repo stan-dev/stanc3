@@ -204,6 +204,7 @@ pipeline {
                     agent {
                         docker {
                             image 'stanorg/stanc3:debianfi'
+                            alwaysPull true
                             //Forces image to ignore entrypoint
                             args "--entrypoint=\'\'"
                         }
