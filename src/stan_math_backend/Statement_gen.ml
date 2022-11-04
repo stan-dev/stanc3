@@ -290,8 +290,8 @@ let pp_decl ppf (vident, pst, adtype, initialize) =
   | Unsized ut -> pp_unsized_decl ppf (vident, ut, adtype)
 
 let math_fn_translations = function
-  | Internal_fun.FnLength -> Some ("length", [])
-  | FnValidateSize -> Some ("stan::math::validate_non_negative_index", [])
+  | Internal_fun.FnValidateSize ->
+      Some ("stan::math::validate_non_negative_index", [])
   | FnValidateSizeSimplex -> Some ("stan::math::validate_positive_index", [])
   | FnValidateSizeUnitVector ->
       Some ("stan::math::validate_unit_vector_index", [])
