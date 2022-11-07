@@ -1,3 +1,26 @@
+  $ ../../../../../install/default/bin/stanc bad_data_qualifer.stan
+Semantic error in 'bad_data_qualifer.stan', line 31, column 10 to column 76:
+   -------------------------------------------------
+    29:  transformed parameters {
+    30:    vector[2] y_s_p;
+    31:    y_s_p = solve_newton(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
+                   ^
+    32:  }
+    33:  
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'solve_newton':
+(<F1>, vector, vector, array[] real, array[] real, real, real, int)
+where F1 = (data vector, vector, array[] real, array[] int) => vector
+Available signatures:
+(<F2>, vector) => vector
+where F2 = (vector) => vector
+  The first argument must be
+   (vector) => vector
+  but got
+   (data vector, vector, array[] real, array[] int) => vector
+  These are not compatible because:
+    The first argument has an incompatible data-qualifier.
   $ ../../../../../install/default/bin/stanc bad_fun_type.stan
 Semantic error in 'bad_fun_type.stan', line 31, column 10 to column 62:
    -------------------------------------------------

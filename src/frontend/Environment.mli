@@ -12,11 +12,9 @@ type originblock =
   | TParam
   | Model
   | GQuant
-[@@deriving sexp]
 
 (** Information available for each variable *)
 type varinfo = {origin: originblock; global: bool; readonly: bool}
-[@@deriving sexp]
 
 type info =
   { type_: UnsizedType.t
@@ -25,7 +23,6 @@ type info =
       | `UserDeclared of Location_span.t
       | `StanMath
       | `UserDefined ] }
-[@@deriving sexp]
 
 type t
 

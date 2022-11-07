@@ -62,6 +62,9 @@ model {
   }
   while (z) {
     // real as boolean value
+    if (1.0){
+      // same
+    }
     if (x && !z || xyz[3]) {
       // more boolean reals
     }

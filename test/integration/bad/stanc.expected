@@ -1937,6 +1937,17 @@ Ill-typed arguments supplied to postfix operator '. Available signatures:
 (complex_vector) => complex_row_vector
 (complex_matrix) => complex_matrix
 Instead supplied argument of incompatible type: array[] int.
+  $ ../../../../install/default/bin/stanc print-bad.stan
+Semantic error in 'print-bad.stan', line 8, column 8 to column 11:
+   -------------------------------------------------
+     6:  
+     7:  model {
+     8:    print(foo);
+                 ^
+     9:  }
+   -------------------------------------------------
+
+Functions cannot be printed.
   $ ../../../../install/default/bin/stanc print-void.stan
 Semantic error in 'print-void.stan', line 8, column 8 to column 14:
    -------------------------------------------------
@@ -2295,6 +2306,17 @@ Semantic error in 'target-reserved.stan', line 2, column 7 to column 13:
    -------------------------------------------------
 
 Identifier 'target' clashes with reserved keyword.
+  $ ../../../../install/default/bin/stanc target_pe_bad.stan
+Semantic error in 'target_pe_bad.stan', line 8, column 2 to column 16:
+   -------------------------------------------------
+     6:  
+     7:  model {
+     8:    target += foo;
+           ^
+     9:  }
+   -------------------------------------------------
+
+A (container of) real or int was expected. Instead found type () => real.
   $ ../../../../install/default/bin/stanc ternaryif-fntype.stan
 Semantic error in 'ternaryif-fntype.stan', line 13, column 6 to column 28:
    -------------------------------------------------

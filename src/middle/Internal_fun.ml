@@ -31,10 +31,10 @@ type 'expr t =
 let to_string
     ?(expr_to_string =
       fun _ ->
-        raise
-          (Failure
-             "Should not be parsing expression from string in function renaming"
-          )) x =
+        Common.FatalError.fatal_error_msg
+          [%message
+            "Should not be parsing expression from string in function renaming"])
+    x =
   Sexp.to_string (sexp_of_t expr_to_string x) ^ "__"
 
 let pp (pp_expr : 'a Fmt.t) ppf internal =
