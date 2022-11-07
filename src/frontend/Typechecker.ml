@@ -317,7 +317,9 @@ let get_consistent_types ad_level type_ es =
 
 let check_array_expr loc es =
   match es with
-  | [] -> Semantic_error.empty_array loc |> error
+  | [] ->
+      (* NB: This is actually disallowed by parser *)
+      Semantic_error.empty_array loc |> error
   | {emeta= {ad_level; type_; _}; _} :: _ -> (
     match get_consistent_types ad_level type_ es with
     | Error (ty, meta) ->
@@ -631,7 +633,7 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
   | _ ->
       let expected_args, err =
         basic_mismatch () |> Result.error |> Option.value_exn in
-      Semantic_error.illtyped_reduce_sum_generic loc id.name
+      Semantic_error.illtyped_reduce_sum loc id.name
         (List.map ~f:type_of_expr_typed tes)
         expected_args err
       |> error

@@ -1,3 +1,14 @@
+  $ ../../../../../install/default/bin/stanc duplicate-args.stan
+Semantic error in 'duplicate-args.stan', line 2, column 2 to line 4, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    void foo(int bar, real bar){
+           ^
+     3:      ;
+     4:    }
+   -------------------------------------------------
+
+All function arguments must have distinct identifiers.
   $ ../../../../../install/default/bin/stanc falling_factorial.stan
 Semantic error in 'falling_factorial.stan', line 7, column 26 to column 59:
    -------------------------------------------------
