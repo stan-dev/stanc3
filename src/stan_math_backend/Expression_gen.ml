@@ -103,7 +103,9 @@ let rec pp_possibly_var_decl ppf (adtype, ut, mem_pattern) =
    |UComplexMatrix ->
       pf ppf "%a" pp_var_decl ut
   | UReal | UInt | UComplex -> pf ppf "%a" pp_unsizedtype_local (adtype, ut)
-  | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
+  | x ->
+      Common.FatalError.fatal_error_msg
+        [%message (x : UnsizedType.t) "not implemented yet"]
 
 let suffix_args = function
   | Fun_kind.FnRng -> ["base_rng__"]
