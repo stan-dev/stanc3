@@ -20,8 +20,8 @@ let check_to_string = function
   | t -> constraint_to_string t
 
 let math_fn_translations = function
-  | Internal_fun.FnLength -> Some ("length", [])
-  | FnValidateSize -> Some ("stan::math::validate_non_negative_index", [])
+  | Internal_fun.FnValidateSize ->
+      Some ("stan::math::validate_non_negative_index", [])
   | FnValidateSizeSimplex -> Some ("stan::math::validate_positive_index", [])
   | FnValidateSizeUnitVector ->
       Some ("stan::math::validate_unit_vector_index", [])
