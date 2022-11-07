@@ -18,7 +18,8 @@ let fn_renames =
     ; (FnNaN, "std::numeric_limits<double>::quiet_NaN") ]
   @ [ ("lmultiply", "stan::math::multiply_log")
     ; ("lchoose", "stan::math::binomial_coefficient_log")
-    ; ("std_normal_qf", "stan::math::inv_Phi") ]
+    ; ("std_normal_qf", "stan::math::inv_Phi")
+    ; ("integrate_ode", "stan::math::integrate_ode_rk45") ]
   |> String.Map.of_alist_exn
 
 let constraint_to_string = function
@@ -262,9 +263,6 @@ and lower_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
       Some
         (fun _ ->
           Exprs.fun_call "stan::math::get_lp" [Var "lp__"; Var "lp_accum__"] )
-  | f when Map.mem fn_renames f ->
-      Some
-        (fun es -> Exprs.fun_call (Map.find_exn fn_renames f) (lower_exprs es))
   | "rep_matrix" | "rep_vector" | "rep_row_vector" | "append_row" | "append_col"
     when mem_pattern = Mem_pattern.SoA -> (
       let is_autodiffable Expr.Fixed.{meta= Expr.Typed.Meta.{adlevel; _}; _} =
@@ -365,6 +363,7 @@ and lower_functionals fname suffix es mem_pattern =
 
 and lower_fun_app suffix fname es mem_pattern
     (ret_type : UnsizedType.returntype option) =
+  let fname = Option.value (Map.find fn_renames fname) ~default:fname in
   let special_options =
     [ Option.map ~f:lower_operator_app (Operator.of_string_opt fname)
     ; lower_misc_special_math_app fname mem_pattern ret_type
