@@ -21,11 +21,6 @@ module TypeError = struct
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
         * SignatureMismatch.function_mismatch
-    | IllTypedReduceSumGeneric of
-        string
-        * UnsizedType.t list
-        * (UnsizedType.autodifftype * UnsizedType.t) list
-        * SignatureMismatch.function_mismatch
     | IllTypedVariadic of
         string
         * UnsizedType.t list
@@ -126,9 +121,6 @@ module TypeError = struct
           "Condition in ternary expression must be primitive int; found type=%a"
           UnsizedType.pp ut1
     | IllTypedReduceSum (name, arg_tys, expected_args, error) ->
-        SignatureMismatch.pp_signature_mismatch ppf
-          (name, arg_tys, ([((ReturnType UReal, expected_args), error)], false))
-    | IllTypedReduceSumGeneric (name, arg_tys, expected_args, error) ->
         SignatureMismatch.pp_signature_mismatch ppf
           (name, arg_tys, ([((ReturnType UReal, expected_args), error)], false))
     | IllTypedVariadic (name, arg_tys, args, error, return_type) ->
@@ -286,7 +278,6 @@ end
 
 module ExpressionError = struct
   type t =
-    | InvalidMapRectFn of string
     | InvalidSizeDeclRng
     | InvalidRngFunction
     | InvalidUnnormalizedFunction
@@ -298,11 +289,6 @@ module ExpressionError = struct
     | IntTooLarge
 
   let pp ppf = function
-    | InvalidMapRectFn fn_name ->
-        Fmt.pf ppf
-          "Mapped function cannot be an _rng or _lp function, found function \
-           name: %s"
-          fn_name
     | InvalidSizeDeclRng ->
         Fmt.pf ppf
           "Random number generators are not allowed in top level size \
@@ -545,12 +531,6 @@ let returning_fn_expected_nonreturning_found loc name =
 let illtyped_reduce_sum loc name arg_tys args error =
   TypeError (loc, TypeError.IllTypedReduceSum (name, arg_tys, args, error))
 
-let illtyped_reduce_sum_generic loc name arg_tys expected_args error =
-  TypeError
-    ( loc
-    , TypeError.IllTypedReduceSumGeneric (name, arg_tys, expected_args, error)
-    )
-
 let illtyped_variadic loc name arg_tys args fn_rt error =
   TypeError (loc, TypeError.IllTypedVariadic (name, arg_tys, args, error, fn_rt))
 
@@ -614,9 +594,6 @@ let ident_not_in_scope loc name sug =
 
 let ident_has_unnormalized_suffix loc name =
   IdentifierError (loc, IdentifierError.UnnormalizedSuffix name)
-
-let invalid_map_rect_fn loc name =
-  ExpressionError (loc, ExpressionError.InvalidMapRectFn name)
 
 let invalid_decl_rng_fn loc =
   ExpressionError (loc, ExpressionError.InvalidSizeDeclRng)

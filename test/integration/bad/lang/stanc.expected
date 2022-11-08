@@ -557,6 +557,28 @@ Semantic error in 'bad_function2.stan', line 3, column 3 to column 7:
    -------------------------------------------------
 
 A non-returning function was expected but an undeclared identifier 'y' was supplied.
+  $ ../../../../../install/default/bin/stanc bad_lmpf.stan
+Semantic error in 'bad_lmpf.stan', line 2, column 2 to line 4, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real my_dist_lpmf(real foo){
+           ^
+     3:      return 1.0;
+     4:    }
+   -------------------------------------------------
+
+Probability mass functions require integer variates (first argument). Instead found type real.
+  $ ../../../../../install/default/bin/stanc bad_lpdf.stan
+Semantic error in 'bad_lpdf.stan', line 2, column 2 to line 4, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real my_dist_lpdf(){
+           ^
+     3:      return 1.0;
+     4:    }
+   -------------------------------------------------
+
+Probability density functions require real variates (first argument).
   $ ../../../../../install/default/bin/stanc bad_periods_data.stan
 Syntax error in 'bad_periods_data.stan', line 2, column 7, lexing error:
    -------------------------------------------------

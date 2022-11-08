@@ -1,61 +1,95 @@
   $ ../../../../../install/default/bin/stanc --warn-pedantic  distribution-warnings.stan
-Warning in 'distribution-warnings.stan', line 135, column 27: A inv_wishart
+Warning in 'distribution-warnings.stan', line 141, column 36: A
+    inv_wishart_cholesky distribution is given parameter cov as a scale
+    matrix (argument 2), but cov was not constrained to be Cholesky factor of
+    covariance.
+Warning in 'distribution-warnings.stan', line 141, column 29: A
+    inv_wishart_cholesky distribution is given parameter unb_p as degrees of
+    freedom (argument 1), but unb_p was not constrained to be strictly
+    positive.
+Warning in 'distribution-warnings.stan', line 141, column 2: Parameter mat is
+    given a inv_wishart_cholesky distribution, which has Cholesky factor of
+    covariance support, but mat was not constrained to be Cholesky factor of
+    covariance.
+Warning in 'distribution-warnings.stan', line 139, column 27: A inv_wishart
     distribution is given parameter mat as a scale matrix (argument 2), but
     mat was not constrained to be covariance.
-Warning in 'distribution-warnings.stan', line 135, column 20: A inv_wishart
+Warning in 'distribution-warnings.stan', line 139, column 20: A inv_wishart
+    distribution is given parameter unb_p as degrees of freedom (argument 1),
+    but unb_p was not constrained to be strictly positive.
+Warning in 'distribution-warnings.stan', line 139, column 2: Parameter mat is
+    given a inv_wishart distribution, which has covariance support, but mat
+    was not constrained to be covariance.
+Warning in 'distribution-warnings.stan', line 138, column 2: The parameter
+    chol_cov is on the left-hand side of more than one tilde statement.
+Warning in 'distribution-warnings.stan', line 137, column 32: A
+    wishart_cholesky distribution is given parameter cov as a scale matrix
+    (argument 2), but cov was not constrained to be Cholesky factor of
+    covariance.
+Warning in 'distribution-warnings.stan', line 137, column 25: A
+    wishart_cholesky distribution is given parameter unb_p as degrees of
+    freedom (argument 1), but unb_p was not constrained to be strictly
+    positive.
+Warning in 'distribution-warnings.stan', line 137, column 2: Parameter mat is
+    given a wishart_cholesky distribution, which has Cholesky factor of
+    covariance support, but mat was not constrained to be Cholesky factor of
+    covariance.
+Warning in 'distribution-warnings.stan', line 136, column 2: The parameter
+    cov is on the left-hand side of more than one tilde statement.
+Warning in 'distribution-warnings.stan', line 135, column 23: A wishart
+    distribution is given parameter mat as a scale matrix (argument 2), but
+    mat was not constrained to be covariance.
+Warning in 'distribution-warnings.stan', line 135, column 16: A wishart
     distribution is given parameter unb_p as degrees of freedom (argument 1),
     but unb_p was not constrained to be strictly positive.
 Warning in 'distribution-warnings.stan', line 135, column 2: Parameter mat is
-    given a inv_wishart distribution, which has covariance support, but mat
-    was not constrained to be covariance.
-Warning in 'distribution-warnings.stan', line 134, column 2: The parameter
-    cov is on the left-hand side of more than one tilde statement.
-Warning in 'distribution-warnings.stan', line 133, column 23: A wishart
-    distribution is given parameter mat as a scale matrix (argument 2), but
-    mat was not constrained to be covariance.
-Warning in 'distribution-warnings.stan', line 133, column 16: A wishart
-    distribution is given parameter unb_p as degrees of freedom (argument 1),
-    but unb_p was not constrained to be strictly positive.
-Warning in 'distribution-warnings.stan', line 133, column 2: Parameter mat is
     given a wishart distribution, which has covariance support, but mat was
     not constrained to be covariance.
-Warning in 'distribution-warnings.stan', line 131, column 27: A
+Warning in 'distribution-warnings.stan', line 133, column 27: A
     lkj_corr_cholesky distribution is given parameter unb_p as a shape
     parameter (argument 1), but unb_p was not constrained to be strictly
     positive.
-Warning in 'distribution-warnings.stan', line 131, column 2: Parameter corr
+Warning in 'distribution-warnings.stan', line 133, column 2: Parameter corr
     is given a lkj_corr_cholesky distribution, which has Cholesky factor of
     correlation support, but corr was not constrained to be Cholesky factor
     of correlation.
-Warning in 'distribution-warnings.stan', line 130, column 2: The parameter
+Warning in 'distribution-warnings.stan', line 132, column 2: The parameter
     corr is on the left-hand side of more than one tilde statement.
-Warning in 'distribution-warnings.stan', line 130, column 2: It is suggested
+Warning in 'distribution-warnings.stan', line 132, column 2: It is suggested
     to reparameterize your model to replace lkj_corr with lkj_corr_cholesky,
     the Cholesky factor variant. lkj_corr tends to run slower, consume more
     memory, and has higher risk of numerical errors.
-Warning in 'distribution-warnings.stan', line 129, column 17: A lkj_corr
+Warning in 'distribution-warnings.stan', line 131, column 17: A lkj_corr
     distribution is given parameter unb_p as a shape parameter (argument 1),
     but unb_p was not constrained to be strictly positive.
-Warning in 'distribution-warnings.stan', line 129, column 2: It is suggested
+Warning in 'distribution-warnings.stan', line 131, column 2: It is suggested
     to reparameterize your model to replace lkj_corr with lkj_corr_cholesky,
     the Cholesky factor variant. lkj_corr tends to run slower, consume more
     memory, and has higher risk of numerical errors.
-Warning in 'distribution-warnings.stan', line 129, column 2: Parameter mat is
+Warning in 'distribution-warnings.stan', line 131, column 2: Parameter mat is
     given a lkj_corr distribution, which has correlation support, but mat was
     not constrained to be correlation.
-Warning in 'distribution-warnings.stan', line 127, column 18: A dirichlet
+Warning in 'distribution-warnings.stan', line 129, column 18: A dirichlet
     distribution is given parameter vec as a count parameter (argument 1),
     but vec was not constrained to be strictly positive.
-Warning in 'distribution-warnings.stan', line 127, column 2: Parameter vec is
+Warning in 'distribution-warnings.stan', line 129, column 2: Parameter vec is
     given a dirichlet distribution, which has simplex support, but vec was
     not constrained to be simplex.
-Warning in 'distribution-warnings.stan', line 125, column 40: A
+Warning in 'distribution-warnings.stan', line 127, column 40: A
     gaussian_dlm_obs distribution is given parameter mat as system covariance
     matrix (argument 4), but mat was not constrained to be covariance.
-Warning in 'distribution-warnings.stan', line 125, column 35: A
+Warning in 'distribution-warnings.stan', line 127, column 35: A
     gaussian_dlm_obs distribution is given parameter mat as observation
     covariance matrix (argument 3), but mat was not constrained to be
     covariance.
+Warning in 'distribution-warnings.stan', line 125, column 45: A
+    multi_student_t_cholesky distribution is given parameter cov as a
+    covariance matrix (argument 3), but cov was not constrained to be
+    Cholesky factor of covariance.
+Warning in 'distribution-warnings.stan', line 125, column 33: A
+    multi_student_t_cholesky distribution is given parameter unb_p as degrees
+    of freedom (argument 1), but unb_p was not constrained to be strictly
+    positive.
 Warning in 'distribution-warnings.stan', line 123, column 36: A
     multi_student_t distribution is given parameter mat as a scale matrix
     (argument 3), but mat was not constrained to be covariance.
@@ -477,6 +511,8 @@ Warning in 'jacobian_warning_user.stan', line 5, column 2: Left-hand side of
     sampling statement (~) may contain a non-linear transform of a parameter
     or local variable. If it does, you need to include a target += statement
     with the log absolute determinant of the Jacobian of the transform.
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  lp_fun.stan
+Warning: The parameter y has 2 priors.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  missing-prior-false-alarm.stan
 Warning: The parameter theta has no priors. This means either no prior is
     provided, or the prior(s) depend on data variables. In the later case,

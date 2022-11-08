@@ -167,7 +167,9 @@ let rec lower_possibly_var_decl adtype ut mem_pattern =
    |UComplexMatrix ->
       var_decl ut
   | UReal | UInt | UComplex -> lower_unsizedtype_local adtype ut
-  | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
+  | x ->
+      Common.FatalError.fatal_error_msg
+        [%message (x : UnsizedType.t) "not implemented yet"]
 
 let rec lower_logical_op op e1 e2 =
   let prim e = Exprs.fun_call "stan::math::primitive_value" [lower_expr e] in

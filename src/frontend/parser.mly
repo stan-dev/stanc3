@@ -295,8 +295,8 @@ unsized_dims:
 no_assign:
   | UNREACHABLE
     { (* This code will never be reached *)
-      raise (Failure "This should be unreachable; the UNREACHABLE token should \
-                      never be produced")
+       Common.FatalError.fatal_error_msg
+          [%message "the UNREACHABLE token should never be produced"]
     }
 
 optional_assignment(rhs):
