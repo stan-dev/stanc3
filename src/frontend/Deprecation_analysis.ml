@@ -11,7 +11,6 @@ module type DEPRECATION_ANALYZER = sig
   val collect_userdef_distributions :
     typed_program -> Middle.UnsizedType.t String.Map.t
 
-  val distribution_suffix : string -> bool
   val without_suffix : string list -> string -> string
   val is_deprecated_distribution : string -> bool
   val rename_deprecated_distribution : string -> string
@@ -47,13 +46,6 @@ struct
 
   let rename_deprecated_function =
     rename_deprecated StdLibrary.deprecated_functions
-
-  let distribution_suffix name =
-    let open String in
-    is_suffix ~suffix:"_lpdf" name
-    || is_suffix ~suffix:"_lpmf" name
-    || is_suffix ~suffix:"_lcdf" name
-    || is_suffix ~suffix:"_lccdf" name
 
   let userdef_distributions stmts =
     let open String in

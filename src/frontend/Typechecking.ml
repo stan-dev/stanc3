@@ -347,7 +347,9 @@ module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
 
   let check_array_expr loc es =
     match es with
-    | [] -> Semantic_error.empty_array loc |> error
+    | [] ->
+        (* NB: This is actually disallowed by parser *)
+        Semantic_error.empty_array loc |> error
     | {emeta= {ad_level; type_; _}; _} :: _ -> (
       match get_consistent_types ad_level type_ es with
       | Error (ty, meta) ->

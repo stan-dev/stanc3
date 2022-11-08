@@ -225,6 +225,20 @@ Warning in 'deprecated.stan', line 36, column 2: Nested multi-indexing on the
     in expressions. This is considered a bug and will be disallowed in Stan
     2.32.0. The indexing can be automatically fixed using the canonicalize
     flag for stanc.
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize deprecations deprecated_tilde.stan
+functions {
+  real test_log_lpmf(int bar, real foo) {
+    return foo;
+  }
+  real test_log_lpdf(real bar, real foo) {
+    return foo;
+  }
+}
+model {
+  1 ~ test_log(2.5);
+  1.2 ~ test_log(2.5);
+}
+
   $ ../../../../../install/default/bin/stanc --auto-format --canonicalize deprecations funs.stanfunctions
 // comment test comment
 void test(int x, int y) {

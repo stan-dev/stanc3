@@ -3,9 +3,6 @@ open Core_kernel.Poly
 open Middle
 open Fmt
 
-let ends_with suffix s = String.is_suffix ~suffix s
-let starts_with prefix s = String.is_prefix ~prefix s
-
 let stan_namespace_qualify f =
   if String.is_suffix ~suffix:"functor__" f || String.contains f ':' then f
   else "stan::math::" ^ f
@@ -106,7 +103,9 @@ let rec pp_possibly_var_decl ppf (adtype, ut, mem_pattern) =
    |UComplexMatrix ->
       pf ppf "%a" pp_var_decl ut
   | UReal | UInt | UComplex -> pf ppf "%a" pp_unsizedtype_local (adtype, ut)
-  | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
+  | x ->
+      Common.FatalError.fatal_error_msg
+        [%message (x : UnsizedType.t) "not implemented yet"]
 
 let suffix_args = function
   | Fun_kind.FnRng -> ["base_rng__"]

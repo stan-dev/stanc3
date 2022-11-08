@@ -245,10 +245,10 @@ let list_param_dependant_fundef_cf (mir : Program.Typed.t)
         Set.Poly.map dep_args ~f:(fun (loc, ix, arg_name) ->
             (loc, List.nth_exn arg_exprs ix, arg_name) )
     | _ ->
-        raise
-          (Failure
-             "In finding searching for parameter dependent functionarguments, \
-              mismatched function. Please report a bug.\n" ) in
+        Common.FatalError.fatal_error_msg
+          [%message
+            "In finding searching for parameter dependent function arguments, \
+             mismatched function."] in
   let arg_param_deps label arg_expr =
     var_deps info_map ~expr:(Some arg_expr) label (parameter_names_set mir)
   in

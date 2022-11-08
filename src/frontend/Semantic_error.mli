@@ -105,7 +105,6 @@ val ident_is_model_name : Location_span.t -> string -> t
 val ident_is_stanmath_name : Location_span.t -> string -> t
 val ident_in_use : Location_span.t -> string -> t
 val ident_not_in_scope : Location_span.t -> string -> string option -> t
-val invalid_map_rect_fn : Location_span.t -> string -> t
 val invalid_decl_rng_fn : Location_span.t -> t
 val invalid_rng_fn : Location_span.t -> t
 val invalid_unnormalized_fn : Location_span.t -> t
