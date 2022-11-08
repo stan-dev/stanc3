@@ -134,10 +134,6 @@ let rec common_type = function
   | _, _ -> None
 
 (* -- Helpers -- *)
-let rec is_real_type = function
-  | UReal | UVector | URowVector | UMatrix -> true
-  | UArray x -> is_real_type x
-  | _ -> false
 
 let rec is_autodiffable = function
   | UReal | UVector | URowVector | UMatrix -> true
@@ -230,9 +226,6 @@ let is_array ut =
    |UComplexMatrix ->
       false
   | UArray _ -> true
-
-let return_contains_eigen_type ret =
-  match ret with ReturnType t -> contains_eigen_type t | Void -> false
 
 let rec is_indexing_matrix = function
   | UArray t, _ :: idcs -> is_indexing_matrix (t, idcs)

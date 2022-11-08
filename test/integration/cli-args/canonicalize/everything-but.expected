@@ -208,6 +208,19 @@ Semantic error in 'deprecated.stan', line 46, column 6 to column 18:
 
 ~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
 For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize braces,parentheses deprecated_tilde.stan
+Semantic error in 'deprecated_tilde.stan', line 12, column 6 to column 19:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:    1 ~ test_log_lpmf(2.5);
+               ^
+    13:    1.2 ~ test_log_lpdf(2.5);
+    14:  }
+   -------------------------------------------------
+
+~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
+For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
   $ ../../../../../install/default/bin/stanc --auto-format --canonicalize braces,parentheses funs.stanfunctions
 // comment test comment
 void test(int x, int y) {

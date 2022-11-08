@@ -13,7 +13,6 @@ val update_suffix : string -> Middle.UnsizedType.t -> string
 val collect_userdef_distributions :
   typed_program -> Middle.UnsizedType.t String.Map.t
 
-val distribution_suffix : string -> bool
 val without_suffix : string list -> string -> string
 val is_deprecated_distribution : string -> bool
 val deprecated_distributions : (string * string) String.Map.t

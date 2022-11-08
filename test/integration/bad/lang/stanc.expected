@@ -137,6 +137,17 @@ Semantic error in 'bad9.stan', line 5, column 3 to column 9:
    -------------------------------------------------
 
 (Transformed) Parameters cannot be integers.
+  $ ../../../../../install/default/bin/stanc bad_bar.stan
+Semantic error in 'bad_bar.stan', line 3, column 9 to column 28:
+   -------------------------------------------------
+     1:  generated quantities {
+     2:     vector[3] foo;
+     3:     foo = rep_vector(1.2 | 3);
+                  ^
+     4:  }
+   -------------------------------------------------
+
+Only functions with names ending in _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, _lccdf can make use of conditional notation.
   $ ../../../../../install/default/bin/stanc bad_bounds1.stan
 Syntax error in 'bad_bounds1.stan', line 2, column 15 to column 17, parsing error:
    -------------------------------------------------
@@ -524,6 +535,50 @@ Syntax error in 'bad_decl3.stan', line 3, column 28 to column 29, parsing error:
 
 Expected a new identifier after comma in declaration.
 All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
+  $ ../../../../../install/default/bin/stanc bad_function.stan
+Semantic error in 'bad_function.stan', line 3, column 3 to column 7:
+   -------------------------------------------------
+     1:  generated quantities {
+     2:     real x;
+     3:     x();
+            ^
+     4:  }
+   -------------------------------------------------
+
+A non-returning function was expected but a non-function value 'x' was supplied.
+  $ ../../../../../install/default/bin/stanc bad_function2.stan
+Semantic error in 'bad_function2.stan', line 3, column 3 to column 7:
+   -------------------------------------------------
+     1:  generated quantities {
+     2:     real x;
+     3:     y();
+            ^
+     4:  }
+   -------------------------------------------------
+
+A non-returning function was expected but an undeclared identifier 'y' was supplied.
+  $ ../../../../../install/default/bin/stanc bad_lmpf.stan
+Semantic error in 'bad_lmpf.stan', line 2, column 2 to line 4, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real my_dist_lpmf(real foo){
+           ^
+     3:      return 1.0;
+     4:    }
+   -------------------------------------------------
+
+Probability mass functions require integer variates (first argument). Instead found type real.
+  $ ../../../../../install/default/bin/stanc bad_lpdf.stan
+Semantic error in 'bad_lpdf.stan', line 2, column 2 to line 4, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real my_dist_lpdf(){
+           ^
+     3:      return 1.0;
+     4:    }
+   -------------------------------------------------
+
+Probability density functions require real variates (first argument).
   $ ../../../../../install/default/bin/stanc bad_periods_data.stan
 Syntax error in 'bad_periods_data.stan', line 2, column 7, lexing error:
    -------------------------------------------------

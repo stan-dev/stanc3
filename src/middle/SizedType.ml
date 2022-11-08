@@ -40,20 +40,6 @@ let rec pp pp_e ppf = function
         (st, expr)
   | STuple ts -> Fmt.pf ppf "tuple(@[%a@])" Fmt.(list ~sep:comma (pp pp_e)) ts
 
-let collect_exprs st =
-  let rec aux accu = function
-    | SInt | SReal | SComplex -> List.rev accu
-    | STuple ts -> List.fold ~init:accu ~f:aux ts
-    | SVector (_, e)
-     |SRowVector (_, e)
-     |SComplexVector e
-     |SComplexRowVector e ->
-        List.rev @@ (e :: accu)
-    | SMatrix (_, e1, e2) | SComplexMatrix (e1, e2) ->
-        List.rev @@ (e1 :: e2 :: accu)
-    | SArray (inner, e) -> aux (e :: accu) inner in
-  aux [] st
-
 let rec to_unsized = function
   | SInt -> UnsizedType.UInt
   | SReal -> UReal
@@ -170,31 +156,6 @@ let rec contains_tuple st =
   | STuple _ -> true
   | SArray (st, _) -> contains_tuple st
   | _ -> false
-
-(**
- * Return true if SizedType contains an Eigen type
- *)
-let rec contains_eigen_type st =
-  match st with
-  | SInt | SReal | SComplex -> false
-  | SVector _ | SRowVector _ | SMatrix _ | SComplexVector _
-   |SComplexRowVector _ | SComplexMatrix _ ->
-      true
-  | SArray (t, _) -> contains_eigen_type t
-  | STuple ts -> List.exists ~f:contains_eigen_type ts
-
-(**
- * Return true if SizedType contains a type tagged SoA
- *)
-let rec contains_soa st =
-  match st with
-  | SInt | SReal | SComplex | SComplexRowVector _ | SComplexVector _
-   |SComplexMatrix _ ->
-      false
-  | SVector (SoA, _) | SRowVector (SoA, _) | SMatrix (SoA, _, _) -> true
-  | SVector (AoS, _) | SRowVector (AoS, _) | SMatrix (AoS, _, _) -> false
-  | STuple ts -> List.exists ~f:contains_soa ts
-  | SArray (t, _) -> contains_soa t
 
 let is_complex_type st = UnsizedType.is_complex_type (to_unsized st)
 

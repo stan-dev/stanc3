@@ -50,14 +50,6 @@ val illtyped_reduce_sum :
   -> SignatureMismatch.function_mismatch
   -> t
 
-val illtyped_reduce_sum_generic :
-     Location_span.t
-  -> string
-  -> UnsizedType.t list
-  -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> SignatureMismatch.function_mismatch
-  -> t
-
 val ambiguous_function_promotion :
      Location_span.t
   -> string
@@ -101,7 +93,6 @@ val ident_is_model_name : Location_span.t -> string -> t
 val ident_is_stanmath_name : Location_span.t -> string -> t
 val ident_in_use : Location_span.t -> string -> t
 val ident_not_in_scope : Location_span.t -> string -> string option -> t
-val invalid_map_rect_fn : Location_span.t -> string -> t
 val invalid_decl_rng_fn : Location_span.t -> t
 val invalid_rng_fn : Location_span.t -> t
 val invalid_unnormalized_fn : Location_span.t -> t

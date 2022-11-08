@@ -122,6 +122,8 @@ model {
   mat ~ multi_gp_cholesky(chol_cov, vec);
   vec ~ multi_student_t(unb_p, vec, mat);
   vec ~ multi_student_t(pos_p, vec, cov);
+  vec ~ multi_student_t_cholesky(unb_p, vec, cov);
+  vec ~ multi_student_t_cholesky(pos_p, vec, chol_cov);
   mat ~ gaussian_dlm_obs(mat, mat, mat, mat, vec, mat);
   mat ~ gaussian_dlm_obs(mat, mat, cov, cov, vec, mat);
   vec ~ dirichlet(vec);
@@ -132,6 +134,10 @@ model {
   chol_corr ~ lkj_corr_cholesky(pos_p);
   mat ~ wishart(unb_p, mat);
   cov ~ wishart(pos_p, cov);
+  mat ~ wishart_cholesky(unb_p, cov);
+  chol_cov ~ wishart_cholesky(pos_p, chol_cov);
   mat ~ inv_wishart(unb_p, mat);
   cov ~ inv_wishart(pos_p, cov);
+  mat ~ inv_wishart_cholesky(unb_p, cov);
+  chol_cov ~ inv_wishart_cholesky(pos_p, chol_cov);
 }

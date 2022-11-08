@@ -1490,6 +1490,9 @@ model {
   }
   while (z) {
     // real as boolean value
+    if (1.0) {
+      // same
+    }
     if (x && !z || xyz[3]) {
       // more boolean reals
     }
@@ -1613,15 +1616,19 @@ Warning in 'deprecated_syntax.stan', line 63, column 9: Condition of type
     real is deprecated and will be disallowed in Stan 2.34. Use an explicit
     != 0 comparison instead. This can be automatically changed using the
     canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 65, column 19: Using a real as a
+Warning in 'deprecated_syntax.stan', line 65, column 8: Condition of type
+    real is deprecated and will be disallowed in Stan 2.34. Use an explicit
+    != 0 comparison instead. This can be automatically changed using the
+    canonicalize flag for stanc
+Warning in 'deprecated_syntax.stan', line 68, column 19: Using a real as a
     boolean value is deprecated and will be disallowed in Stan 2.34. Use an
     explicit != 0 comparison instead. This can be automatically changed using
     the canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 65, column 8: Using a real as a
+Warning in 'deprecated_syntax.stan', line 68, column 8: Using a real as a
     boolean value is deprecated and will be disallowed in Stan 2.34. Use an
     explicit != 0 comparison instead. This can be automatically changed using
     the canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 65, column 14: Using a real as a
+Warning in 'deprecated_syntax.stan', line 68, column 14: Using a real as a
     boolean value is deprecated and will be disallowed in Stan 2.34. Use an
     explicit != 0 comparison instead. This can be automatically changed using
     the canonicalize flag for stanc

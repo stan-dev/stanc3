@@ -161,23 +161,6 @@ let map_rec_stmt_loc_num flowgraph_to_mir f s =
       ; meta= stmt.meta } in
   map_rec_stmt_loc_num' 1 s
 
-let map_rec_state_stmt_loc_num
-    (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-    (f :
-         int
-      -> 's
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t * 's ) (state : 's)
-    (s : Stmt.Located.Non_recursive.t) : Stmt.Located.t * 's =
-  let cur_state = ref state in
-  let g i stmt =
-    let stmt, state = f i !cur_state stmt in
-    cur_state := state ;
-    stmt in
-  let stmt = map_rec_stmt_loc_num flowgraph_to_mir g s in
-  let state = !cur_state in
-  (stmt, state)
-
 let stmt_loc_of_stmt_loc_num flowgraph_to_mir s =
   (* (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t) (s : stmt_loc_num) = *)
   map_rec_stmt_loc_num flowgraph_to_mir (fun _ s' -> s') s
@@ -312,10 +295,6 @@ let rec summation_terms (Expr.Fixed.{pattern; _} as rhs) =
       List.append (summation_terms e1) (summation_terms e2)
   | _ -> [rhs]
 
-(** See interface file *)
-let stmt_of_block b =
-  Stmt.Fixed.{pattern= SList b; meta= Stmt.Located.Meta.empty}
-
 let rec fn_subst_expr m e =
   match m e with
   | Some e' ->
@@ -364,8 +343,6 @@ let expr_subst_idx m = Index.map (expr_subst_expr m)
 
 let expr_subst_stmt_base m =
   fn_subst_stmt_base_helper (expr_subst_expr m) (expr_subst_idx m)
-
-let expr_subst_stmt m = map_rec_stmt_loc (expr_subst_stmt_base m)
 
 let rec expr_depth Expr.Fixed.{pattern; _} =
   match pattern with

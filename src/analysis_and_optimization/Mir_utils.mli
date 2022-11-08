@@ -78,16 +78,6 @@ val map_rec_stmt_loc_num :
   -> Stmt.Located.Non_recursive.t
   -> Stmt.Located.t
 
-val map_rec_state_stmt_loc_num :
-     (int, Stmt.Located.Non_recursive.t) Map.Poly.t
-  -> (   int
-      -> 's
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t * 's )
-  -> 's
-  -> Stmt.Located.Non_recursive.t
-  -> Stmt.Located.t * 's
-
 val stmt_loc_of_stmt_loc_num :
      (int, Stmt.Located.Non_recursive.t) Map.Poly.t
   -> Stmt.Located.Non_recursive.t
@@ -135,7 +125,7 @@ val index_var_set :
 *)
 
 val expr_var_names_set : Expr.Typed.t -> string Core_kernel.Set.Poly.t
-(** 
+(**
    Return the names of the variables in an expression.
 *)
 
@@ -168,9 +158,6 @@ val expr_assigned_var : Expr.Typed.t -> vexpr
 val summation_terms : Expr.Typed.t -> Expr.Typed.t list
 (** The list of terms in expression separated by a + *)
 
-val stmt_of_block : Stmt.Located.t list -> Stmt.Located.t
-(** Represent a list of statements as a single statement *)
-
 val subst_expr :
   (string, Expr.Typed.t) Map.Poly.t -> Expr.Typed.t -> Expr.Typed.t
 (** Substitute variables in an expression according to the provided Map. *)
@@ -193,10 +180,6 @@ val expr_subst_expr :
   Expr.Typed.t Expr.Typed.Map.t -> Expr.Typed.t -> Expr.Typed.t
 (** Substitute subexpressions in an expression according to the provided Map, trying
     to match on larger subexpressions before smaller ones. *)
-
-val expr_subst_stmt :
-  Expr.Typed.t Expr.Typed.Map.t -> Stmt.Located.t -> Stmt.Located.t
-(** Substitute subexpressions occurring anywhere in a statement according to the provided Map. *)
 
 val expr_subst_stmt_base :
      Expr.Typed.t Expr.Typed.Map.t

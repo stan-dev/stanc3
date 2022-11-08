@@ -45,34 +45,6 @@ let is_nonzero_subset ~set ~subset =
   && not (Set.Poly.is_empty subset)
 
 (**
- Check an expression to count how many times we see a single index.
- @param acc An accumulator from previous folds of multiple expressions.
- @param pattern The expression patterns to match against
- *)
-let rec count_single_idx_exprs (acc : int) Expr.Fixed.{pattern; _} : int =
-  match pattern with
-  | Expr.Fixed.Pattern.FunApp (_, (exprs : Expr.Typed.t list)) ->
-      List.fold_left ~init:acc ~f:count_single_idx_exprs exprs
-  | TernaryIf (predicate, texpr, fexpr) ->
-      acc
-      + count_single_idx_exprs 0 predicate
-      + count_single_idx_exprs 0 texpr
-      + count_single_idx_exprs 0 fexpr
-  | Indexed (idx_expr, indexed) ->
-      acc
-      + count_single_idx_exprs 0 idx_expr
-      + List.fold_left ~init:0 ~f:count_single_idx indexed
-  | TupleProjection (expr, _) ->
-      count_single_idx_exprs acc expr (* TUPLE MAYBE *)
-  | Promotion (expr, _, _) -> count_single_idx_exprs acc expr
-  | EAnd (lhs, rhs) ->
-      acc + count_single_idx_exprs 0 lhs + count_single_idx_exprs 0 rhs
-  | EOr (lhs, rhs) ->
-      acc + count_single_idx_exprs 0 lhs + count_single_idx_exprs 0 rhs
-  | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
-      acc
-
-(**
  Check an Index to count how many times we see a single index.
  @param acc An accumulator from previous folds of multiple expressions.
  @param idx An Index to match. For Single types this adds 1 to the

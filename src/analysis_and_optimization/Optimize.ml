@@ -40,7 +40,8 @@ let transform_program (mir : Program.Typed.t)
       ; log_prob= log_prob'
       ; generate_quantities= generate_quantities' }
   | _ ->
-      raise (Failure "Something went wrong with program transformation packing!")
+      Common.FatalError.fatal_error_msg
+        [%message "Something went wrong with program transformation packing!"]
 
 (**
    Apply the transformation to each function body and to each program block separately.
@@ -53,8 +54,8 @@ let transform_program_blockwise (mir : Program.Typed.t)
     match transform fd {pattern= SList s; meta= Location_span.empty} with
     | {pattern= SList l; _} -> l
     | _ ->
-        raise
-          (Failure "Something went wrong with program transformation packing!")
+        Common.FatalError.fatal_error_msg
+          [%message "Something went wrong with program transformation packing!"]
   in
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
@@ -1216,8 +1217,8 @@ let optimize_soa (mir : Program.Typed.t) =
     match transform {pattern= SList s; meta= Location_span.empty} with
     | {pattern= SList (l : Stmt.Located.t list); _} -> l
     | _ ->
-        raise
-          (Failure "Something went wrong with program transformation packing!")
+        Common.FatalError.fatal_error_msg
+          [%message "Something went wrong with program transformation packing!"]
   in
   {mir with log_prob= transform' mir.log_prob}
 
