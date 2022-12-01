@@ -188,7 +188,11 @@ let pp_get_param_names ppf {Program.output_vars; _} =
 
 (** Print the [get_dims] method of the model class. *)
 let pp_get_dims ppf {Program.output_vars; _} =
-  (* TUPLE TODO: This needs to be adapted for tuples *)
+  (* TUPLE TODO: This needs to be adapted for tuples
+
+     Option 1 - Deprecate, remove - only used 2 places in cmdstan
+     Option 2 - Treat as mirror of how we give dims in var context??
+  *)
   let pp_cast ppf cast_dims =
     pf ppf "@[<hov 2>static_cast<size_t>(%a)@]@," pp_expr cast_dims in
   let pp_pack ppf inner_dims =
