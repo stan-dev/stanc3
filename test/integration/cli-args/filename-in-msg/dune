@@ -1,0 +1,35 @@
+(rule
+ (targets filename_error.output)
+ (deps
+  (package stanc)
+  (:stanfiles filename_error.stan filename_syntax_error.stan includes.stan))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --filename-in-msg=foo.stan --include-paths=. "
+    %{stanfiles}))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff filename_error.expected filename_error.output)))
+
+(rule
+ (targets filename_good.output)
+ (deps
+  (package stanc)
+  filename_good.stan)
+ (action
+  (with-stdout-to
+   %{targets}
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --filename-in-msg=foo.stan --print-cpp "
+    filename_good.stan))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff filename_good.expected filename_good.output)))

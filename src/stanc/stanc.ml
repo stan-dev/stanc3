@@ -260,15 +260,17 @@ let get_ast_or_exit ?printed_filename ?(print_warnings = true)
     (Warnings.pp_warnings ?printed_filename) Fmt.stderr warnings ;
   match res with
   | Result.Ok ast -> ast
-  | Result.Error err -> Errors.pp Fmt.stderr err ; exit 1
+  | Result.Error err ->
+      Errors.pp ?printed_filename Fmt.stderr err ;
+      exit 1
 
-let type_ast_or_exit ast =
+let type_ast_or_exit ?printed_filename ast =
   match Typechecker.check_program ast with
   | Result.Ok (p, warns) ->
-      Warnings.pp_warnings Fmt.stderr warns ;
+      Warnings.pp_warnings ?printed_filename Fmt.stderr warns ;
       p
   | Result.Error error ->
-      Errors.pp_semantic_error Fmt.stderr error ;
+      Errors.pp_semantic_error ?printed_filename Fmt.stderr error ;
       exit 1
 
 (*
@@ -286,14 +288,16 @@ let print_or_write data =
   else print_endline data
 
 let use_file filename =
+  let printed_filename =
+    match !filename_for_msg with "" -> None | s -> Some s in
   let ast =
-    get_ast_or_exit filename
+    get_ast_or_exit ?printed_filename filename
       ~print_warnings:(not !canonicalize_settings.deprecations)
       ~bare_functions:!bare_functions in
   (* must be before typecheck to fix up deprecated syntax which gets rejected *)
   let ast = Canonicalizer.repair_syntax ast !canonicalize_settings in
   Debugging.ast_logger ast ;
-  let typed_ast = type_ast_or_exit ast in
+  let typed_ast = type_ast_or_exit ?printed_filename ast in
   let canonical_ast =
     Canonicalizer.canonicalize_program typed_ast !canonicalize_settings in
   if !pretty_print_program then
@@ -304,8 +308,6 @@ let use_file filename =
   if !print_info_json then (
     print_endline (ModelInfo.info canonical_ast) ;
     exit 0 ) ;
-  let printed_filename =
-    match !filename_for_msg with "" -> None | s -> Some s in
   if not !canonicalize_settings.deprecations then
     Warnings.pp_warnings Fmt.stderr ?printed_filename
       (Deprecations.collect_warnings typed_ast) ;
