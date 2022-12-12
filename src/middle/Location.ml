@@ -53,8 +53,11 @@ let context_to_string (context_cb : unit -> string list) (loc : t) :
 
 let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 
-(** If printed_filename is passed, it will replace the filename printed for
-   this Location.t and all recursively included ones.
+(**
+Format the location for error messaging.
+
+If printed_filename is passed, it replaces the highest-level name and
+leaves the filenames of included files intact.
 *)
 let rec to_string ?printed_filename ?(print_file = true) ?(print_line = true)
     loc =
