@@ -2608,8 +2608,8 @@ let variadic_dae_tol_arg_types =
 
 let variadic_dae_mandatory_arg_types =
   [ (UnsizedType.AutoDiffable, UnsizedType.UVector); (* yy *)
-    (UnsizedType.AutoDiffable, UnsizedType.UVector); (* yp *)
-    (AutoDiffable, UReal); (AutoDiffable, UArray UReal) ]
+    (AutoDiffable, UnsizedType.UVector); (* yp *) (DataOnly, UReal); (* t0 *)
+    (DataOnly, UArray UReal) (* ts *) ]
 
 let variadic_dae_mandatory_fun_args =
   [ (UnsizedType.AutoDiffable, UnsizedType.UReal)

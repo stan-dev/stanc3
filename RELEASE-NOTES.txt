@@ -1,6 +1,24 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v2.31.0 (21 November 2022)
+======================================================================
+
+- Improved the error message for bad multiple declarations. (#1239)
+- Fixed a bug where using a C++ reserved word as a name in certain situations would prevent compilation. (#1243)
+- Build binaries in parallel on Jenkins. (#1244)
+- Added functions `complex_schur_decompose_t()` and `complex_schur_decompose_u()` implementing the complex-valued Schur decomposition for matrices.(#1247)
+- Vectorized the `conj` function for complex types.(#1253)
+- CI change, build backwards-compatible Mac executables on flatiron mac. (#1255)
+- Improved the error generated when a function is re-declared, or when a function is not given a definition. (#1256)
+- `print` and `reject` will now be listed as functions in `stanc --info`s output. (#1257)
+- Added quantile functions (inverse-CDFs) `std_normal_qf` and `std_normal_log_qf`. `std_normal_qf` is a synonym for `inv_Phi`, and `std_normal_log_qf` is the same but with the input on the log-scale.(#1258)
+- Fix using `reject()` with container types. (#1261)
+- Vectorized sampling statements can now be used with the truncation syntax `T[ , ]`(#1263)
+- Functions which return integer types are considered as "data" for purposes of data-only arguments.(#1265)
+- The negation operator `-` can now accept arrays, e.g. `array[N] int foo = {...}; print(-foo);`(#1266)
+- Exposes algebraic functions with a variadic arguments, using the following four functions: `solve_powell`, `solve_powell_tol`, `solve_newton` and `solve_newton_tol`.  Relevant changes to Stan-math are already merged.(#1268)
+
 v2.30.1 (27 July 2022)
 ======================================================================
 
