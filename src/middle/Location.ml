@@ -59,15 +59,14 @@ let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 let rec to_string ?printed_filename ?(print_file = true) ?(print_line = true)
     loc =
   let open Format in
-  let filename =
-    match printed_filename with None -> loc.filename | Some f -> f in
-  let file = if print_file then sprintf "'%s', " filename else "" in
-  let line = if print_line then sprintf "line %d, " loc.line_num else "" in
-  let incl =
+  let incl, filename =
     match loc.included_from with
     | Some loc2 ->
-        sprintf ", included from\n%s" (to_string ?printed_filename loc2)
-    | None -> "" in
+        ( sprintf ", included from\n%s" (to_string ?printed_filename loc2)
+        , loc.filename )
+    | None -> ("", Option.value ~default:loc.filename printed_filename) in
+  let file = if print_file then sprintf "'%s', " filename else "" in
+  let line = if print_line then sprintf "line %d, " loc.line_num else "" in
   sprintf "%s%scolumn %d%s" file line loc.col_num incl
 
 let compare loc1 loc2 =
