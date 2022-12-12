@@ -44,26 +44,35 @@ let restore_prior_lexbuf () =
   lexbuf.lex_start_p <- old_pos ;
   old_lexbuf
 
-let rec try_open_in paths fname pos =
-  match paths with
-  | [] ->
-      raise
-        (Errors.SyntaxError
-           (Include
-              ( "Could not find include file " ^ fname
-                ^ " in specified include paths."
-              , Middle.Location.of_position_exn
-                  (lexeme_start_p (Stack.top_exn include_stack)) ) ) )
-  | path :: rest_of_paths -> (
-    try
-      let full_path = path ^ "/" ^ fname in
-      ( In_channel.create full_path
-      , full_path
-      , sprintf "%s, included from\n%s" full_path
-          (Middle.Location.to_string
-             (Middle.Location.of_position_exn
-                (Stack.top_exn include_stack).lex_start_p ) ) )
-    with _ -> try_open_in rest_of_paths fname pos )
+let try_open_in all_paths fname =
+  let rec loop paths =
+    match paths with
+    | [] ->
+        let message =
+          let pp_list ppf l =
+            match l with
+            | [] -> Fmt.string ppf "None"
+            | _ -> Fmt.(list ~sep:comma string) ppf l in
+          Fmt.str
+            "Could not find include file '%s' in specified include paths.@\n\
+             @[Current include paths: %a@]" fname pp_list all_paths in
+        raise
+          (Errors.SyntaxError
+             (Include
+                ( message
+                , Middle.Location.of_position_exn
+                    (lexeme_start_p (Stack.top_exn include_stack)) ) ) )
+    | path :: rest_of_paths -> (
+      try
+        let full_path = path ^ "/" ^ fname in
+        ( In_channel.create full_path
+        , full_path
+        , sprintf "%s, included from\n%s" full_path
+            (Middle.Location.to_string
+               (Middle.Location.of_position_exn
+                  (Stack.top_exn include_stack).lex_start_p ) ) )
+      with _ -> loop rest_of_paths ) in
+  loop all_paths
 
 let maybe_remove_quotes str =
   let open String in
@@ -73,9 +82,8 @@ let maybe_remove_quotes str =
 
 let try_get_new_lexbuf fname =
   let lexbuf = Stack.top_exn include_stack in
-  let pos = lexbuf.lex_curr_p in
   let chan, file, path =
-    try_open_in !include_paths (maybe_remove_quotes fname) pos in
+    try_open_in !include_paths (maybe_remove_quotes fname) in
   lexer_logger ("opened " ^ file) ;
   let new_lexbuf = from_channel chan in
   new_lexbuf.lex_start_p <-

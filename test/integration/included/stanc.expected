@@ -186,7 +186,8 @@ Syntax error in '../included/incl-err.stan', line 2, column 2, included from
            ^
    -------------------------------------------------
 
-Could not find include file I'm not here.stan in specified include paths.
+Could not find include file 'I'm not here.stan' in specified include paths.
+Current include paths: ../included
   $ ../../../../install/default/bin/stanc --include-paths="../included"  stanc_helper_with_bad_include_lex_error.stan
 Syntax error in '../included/lex-err.stan', line 2, column 8, included from
 '../included/incl_stanc_helper_lex_error.stan', line 2, column 2, included from
@@ -233,3 +234,15 @@ Semantic error in 'stanc_helper_with_good_include_err_after_incl.stan', line 9, 
    -------------------------------------------------
 
 Identifier 'ww' not in scope. Did you mean 'w'?
+  $ ../../../../install/default/bin/stanc stanc_helper_with_good_include.stan
+Syntax error in 'stanc_helper_with_good_include.stan', line 2, column 0, include error:
+   -------------------------------------------------
+     1:  parameters {
+     2:  #include incl_stanc_helper.stan
+         ^
+     3:  }
+     4:  model {
+   -------------------------------------------------
+
+Could not find include file 'incl_stanc_helper.stan' in specified include paths.
+Current include paths: None
