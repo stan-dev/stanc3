@@ -37,7 +37,6 @@ let constraint_to_string = function
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> Some "offset_multiplier"
   | Identity -> None
 
-let map_rect_calls = Int.Table.create ()
 let functor_suffix = "_functor__"
 let reduce_sum_functor_suffix = "_rsfunctor__"
 let variadic_functor_suffix x = sprintf "_variadic%d_functor__" x
@@ -348,11 +347,10 @@ and lower_functionals fname suffix es mem_pattern =
               List.split_n converted_es (List.length control_args + 1) in
             (fname, hd @ (msgs :: tl))
         | ( "map_rect"
-          , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
-            :: tl ) ->
-            let next_map_rect_id = Hashtbl.length map_rect_calls + 1 in
-            Hashtbl.add_exn map_rect_calls ~key:next_map_rect_id ~data:f ;
-            (Fmt.str "%s<%d, %s>" fname next_map_rect_id f, tl @ [msgs])
+          , {pattern= Lit (Int, id); _}
+            :: {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
+               :: tl ) ->
+            (Fmt.str "%s<%s, %s>" fname id f, tl @ [msgs])
         | _, args -> (fname, args @ [msgs]) in
       let fname = stan_namespace_qualify fname in
       let templates = templates false suffix in

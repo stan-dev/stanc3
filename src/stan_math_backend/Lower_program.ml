@@ -749,16 +749,14 @@ let lower_model ({Program.prog_name; _} as p) =
 (** Create the model's namespace. *)
 let namespace Program.{prog_name; _} = prog_name ^ "_namespace"
 
-(** Register functiors used for map_rect.
-    Assumes hashtable map_rect_calls is populated *)
-let register_map_rect_functors namespace =
+(** Register functiors used for map_rect. *)
+let register_map_rect_functors namespace map_rect_calls =
   let register_functor (i, f) =
     Preprocessor
       (MacroApply
          ("STAN_REGISTER_MAP_RECT", [string_of_int i; namespace ^ "::" ^ f]) )
   in
-  List.map ~f:register_functor
-    (List.sort ~compare (Hashtbl.to_alist map_rect_calls))
+  List.map ~f:register_functor map_rect_calls
 
 let usings =
   [ GlobalUsing ("stan::model::model_base_crtp", None)
@@ -798,9 +796,8 @@ let new_model_boilerplate prog_name =
       ) ]
 
 let lower_program (p : Program.Typed.t) : Cpp.program =
-  Hashtbl.clear Lower_expr.map_rect_calls ;
   (* First, do some transformations on the MIR itself before we begin printing it.*)
-  let p, s = Locations.prepare_prog p in
+  let p, s, map_rect_calls = Locations.prepare_prog p in
   let model_namespace_str = namespace p in
   let model_contents =
     usings @ Locations.gen_globals s
@@ -814,7 +811,7 @@ let lower_program (p : Program.Typed.t) : Cpp.program =
         p.functions_block
     else
       new_model_boilerplate p.prog_name
-      @ register_map_rect_functors model_namespace_str in
+      @ register_map_rect_functors model_namespace_str map_rect_calls in
   [version; includes; model_namespace] @ global_fns
 
 module Testing = struct

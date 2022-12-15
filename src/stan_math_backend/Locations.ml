@@ -6,11 +6,14 @@ type state_t = Location_span.t list
 
 let no_span_num = 0
 
-let prepare_prog (mir : Program.Typed.t) : Program.Numbered.t * state_t =
+let prepare_prog (mir : Program.Typed.t) :
+    Program.Numbered.t * state_t * (int * string) list =
   let label_to_location = Int.Table.create () in
+  let map_rect_calls = Int.Table.create () in
   let location_to_label = Hashtbl.create (module Location_span) in
   Hashtbl.set label_to_location ~key:no_span_num ~data:Location_span.empty ;
   Hashtbl.set location_to_label ~key:Location_span.empty ~data:no_span_num ;
+  (* turn locations into numbers for array printing *)
   let rec number_locations_stmt ({pattern; meta} : Stmt.Located.t) :
       Stmt.Numbered.t =
     let pattern = Stmt.Fixed.Pattern.map Fn.id number_locations_stmt pattern in
@@ -24,12 +27,40 @@ let prepare_prog (mir : Program.Typed.t) : Program.Numbered.t * state_t =
         Hashtbl.set location_to_label ~key:meta ~data:new_label ;
         {pattern; meta= new_label} in
   let mir = Program.map Fn.id number_locations_stmt mir in
+  (* map_rect numbering *)
+  let rec number_map_rect_calls_expr ({meta; pattern} : Expr.Typed.t) :
+      Expr.Typed.t =
+    let pattern = Expr.Fixed.Pattern.map number_map_rect_calls_expr pattern in
+    match pattern with
+    | FunApp
+        ( StanLib ("map_rect", suffix, mem_pattern)
+        , ({pattern= Var f; _} :: _ as es) ) ->
+        let next_map_rect_id = Hashtbl.length map_rect_calls + 1 in
+        Hashtbl.add_exn map_rect_calls ~key:next_map_rect_id
+          ~data:(f ^ Lower_expr.functor_suffix) ;
+        let pattern =
+          Expr.Fixed.Pattern.FunApp
+            ( StanLib ("map_rect", suffix, mem_pattern)
+            , List.map ~f:number_map_rect_calls_expr
+                (Expr.Helpers.int next_map_rect_id :: es) ) in
+        {meta; pattern}
+    | _ -> {meta; pattern} in
+  let rec number_map_rect_calls_stmt s =
+    Stmt.Fixed.
+      { s with
+        pattern=
+          Pattern.map number_map_rect_calls_expr number_map_rect_calls_stmt
+            s.pattern } in
+  let mir =
+    Program.map number_map_rect_calls_expr number_map_rect_calls_stmt mir in
   let location_list =
     List.map ~f:snd
       (List.sort
          ~compare:(fun x y -> compare_int (fst x) (fst y))
          (Hashtbl.to_alist label_to_location) ) in
-  (mir, location_list)
+  let map_rect_calls_list =
+    List.sort ~compare (Hashtbl.to_alist map_rect_calls) in
+  (mir, location_list, map_rect_calls_list)
 
 let gen_globals location_list =
   let open Cpp in
