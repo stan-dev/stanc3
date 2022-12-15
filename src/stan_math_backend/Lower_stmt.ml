@@ -167,7 +167,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   let location =
     match pattern with
     | Block _ | SList _ | Decl _ | Skip | Break | Continue -> []
-    | _ -> Locations.assign_loc meta in
+    | _ -> Numbering.assign_loc meta in
   let wrap_e e = [Expression e] in
   let open Expression_syntax in
   location

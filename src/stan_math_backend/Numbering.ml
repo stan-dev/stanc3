@@ -3,11 +3,12 @@ open Core_kernel.Poly
 open Middle
 
 type state_t = Location_span.t list
+type map_rect_registration_t = (int * string) list
 
 let no_span_num = 0
 
 let prepare_prog (mir : Program.Typed.t) :
-    Program.Numbered.t * state_t * (int * string) list =
+    Program.Numbered.t * state_t * map_rect_registration_t =
   let label_to_location = Int.Table.create () in
   let map_rect_calls = Int.Table.create () in
   let location_to_label = Hashtbl.create (module Location_span) in
@@ -86,3 +87,11 @@ let assign_loc location_num =
     [ Expression
         (Assign (Var "current_statement__", Literal (string_of_int location_num))
         ) ]
+
+let register_map_rect_functors namespace map_rect_calls =
+  let register_functor (i, f) =
+    Cpp.Preprocessor
+      (MacroApply
+         ("STAN_REGISTER_MAP_RECT", [string_of_int i; namespace ^ "::" ^ f]) )
+  in
+  List.map ~f:register_functor map_rect_calls

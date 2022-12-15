@@ -185,7 +185,7 @@ let lower_constructor
     | Decl {decl_id; decl_type; _} when decl_id <> "pos__" -> (
       match decl_type with
       | Sized st -> (
-          Locations.assign_loc meta
+          Numbering.assign_loc meta
           @
           match Set.mem data_idents decl_id with
           | true -> gen_validate_data decl_id st @ gen_assign_data decl_id st
@@ -749,15 +749,6 @@ let lower_model ({Program.prog_name; _} as p) =
 (** Create the model's namespace. *)
 let namespace Program.{prog_name; _} = prog_name ^ "_namespace"
 
-(** Register functiors used for map_rect. *)
-let register_map_rect_functors namespace map_rect_calls =
-  let register_functor (i, f) =
-    Preprocessor
-      (MacroApply
-         ("STAN_REGISTER_MAP_RECT", [string_of_int i; namespace ^ "::" ^ f]) )
-  in
-  List.map ~f:register_functor map_rect_calls
-
 let usings =
   [ GlobalUsing ("stan::model::model_base_crtp", None)
   ; GlobalUsing ("namespace stan::math", None) ]
@@ -797,10 +788,10 @@ let new_model_boilerplate prog_name =
 
 let lower_program (p : Program.Typed.t) : Cpp.program =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
-  let p, s, map_rect_calls = Locations.prepare_prog p in
+  let p, s, map_rect_calls = Numbering.prepare_prog p in
   let model_namespace_str = namespace p in
   let model_contents =
-    usings @ Locations.gen_globals s
+    usings @ Numbering.gen_globals s
     @ collect_functors_functions p
     @ if !standalone_functions then [] else [lower_model p] in
   let model_namespace = Namespace (model_namespace_str, model_contents) in
@@ -811,7 +802,8 @@ let lower_program (p : Program.Typed.t) : Cpp.program =
         p.functions_block
     else
       new_model_boilerplate p.prog_name
-      @ register_map_rect_functors model_namespace_str map_rect_calls in
+      @ Numbering.register_map_rect_functors model_namespace_str map_rect_calls
+  in
   [version; includes; model_namespace] @ global_fns
 
 module Testing = struct

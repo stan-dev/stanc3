@@ -11,7 +11,7 @@
   lower_expr
   lower_stmt
   lower_functions
-  locations)
+  numbering)
  (inline_tests)
  (preprocess
   (pps ppx_jane ppx_deriving.map ppx_deriving.fold ppx_deriving.make)))
