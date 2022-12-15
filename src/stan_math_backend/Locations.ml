@@ -41,14 +41,14 @@ let gen_globals location_list =
   let location_count = List.length location_list in
   let arr_type = Types.const_char_array location_count in
   [ GlobalVariableDefn
-      (make_variable_defn ~type_:(Type_literal "stan::math::profile_map")
+      (make_variable_defn ~type_:(TypeLiteral "stan::math::profile_map")
          ~name:"profiles__" () )
   ; GlobalVariableDefn
       (make_variable_defn ~static:true ~constexpr:true ~type_:arr_type
          ~name:"locations_array__"
          ~init:(Assignment (ArrayLiteral location_list)) () ) ]
 
-let create_loc_assignment location_num =
+let assign_loc location_num =
   let open Cpp in
   if location_num = no_span_num then []
   else

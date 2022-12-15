@@ -15,24 +15,24 @@ type type_ =
   | StdVector of type_
       (** A std::vector. For Eigen Vectors, use [Matrix] with a row or column size of 1 *)
   | Array of type_ * int
-  | Type_literal of identifier  (** Used for things like Eigen::Index *)
+  | TypeLiteral of identifier  (** Used for things like Eigen::Index *)
   | Matrix of type_ * int * int
   | Ref of type_
   | Const of type_
   | Pointer of type_
-  | TypeTrait of string * type_ list
+  | TypeTrait of identifier * type_ list
       (** e.g. stan::promote_scalar, stan:base_type *)
 [@@deriving sexp]
 
 module Types = struct
   (** Helpers for constructing types *)
 
-  let local_scalar = Type_literal "local_scalar_t__"
+  let local_scalar = TypeLiteral "local_scalar_t__"
 
   (** A [std::vector<t>] *)
   let std_vector t = StdVector t
 
-  let bool = Type_literal "bool"
+  let bool = TypeLiteral "bool"
   let complex s = Complex s
 
   (** An [Eigen::Matrix<s, -1, 1>]*)
@@ -45,11 +45,11 @@ module Types = struct
   let matrix s = Matrix (s, -1, -1)
 
   (** A [std::string]*)
-  let string = Type_literal "std::string"
+  let string = TypeLiteral "std::string"
 
-  let size_t = Type_literal "size_t"
+  let size_t = TypeLiteral "size_t"
   let const_ref t = Const (Ref t)
-  let const_char_array i = Array (Const (Pointer (Type_literal "char")), i)
+  let const_char_array i = Array (Const (Pointer (TypeLiteral "char")), i)
 end
 
 type operator =
@@ -82,7 +82,7 @@ type expr =
   | Cast of type_ * expr
   | Index of expr * expr
   | AllocNew of type_ * expr list
-  | OperatorNew of string * type_ * expr list
+  | OperatorNew of identifier * type_ * expr list
       (** See {{:https://en.cppreference.com/w/cpp/memory/new/operator_new}operator new} for distinctions between
           allocating and placing [new]s*)
   | Assign of expr * expr  (** NB: Not all exprs are valid lvalues! *)
@@ -200,7 +200,7 @@ type stmt =
   | ForEach of (type_ * identifier) * expr * stmt
   | While of expr * stmt
   | IfElse of expr * stmt * stmt option
-  | TryCatch of stmt * (type_ * identifier) * stmt
+  | TryCatch of stmt list * (type_ * identifier) * stmt list
   | Block of stmt list
   | Return of expr option
   | Throw of expr
@@ -217,20 +217,21 @@ module Stmts = struct
   (** Wrap the list of statements in a block if it isn't a singleton block already *)
   let block stmts = match stmts with [(Block _ as b)] -> b | _ -> Block stmts
 
+  let unblock stmts = match stmts with [Block stmts] -> stmts | _ -> stmts
+
   (** Set up the try/catch logic for throwing an exception with
       its location set to the Stan program location. *)
   let rethrow_located stmts =
     TryCatch
-      ( block stmts
-      , (Types.const_ref (Type_literal "std::exception"), "e")
-      , Block
-          [ Expression
-              (FunCall
-                 ( "stan::lang::rethrow_located"
-                 , []
-                 , [ Var "e"
-                   ; Index (Var "locations_array__", Var "current_statement__")
-                   ] ) ) ] )
+      ( unblock stmts
+      , (Types.const_ref (TypeLiteral "std::exception"), "e")
+      , [ Expression
+            (FunCall
+               ( "stan::lang::rethrow_located"
+               , []
+               , [ Var "e"
+                 ; Index (Var "locations_array__", Var "current_statement__") ]
+               ) ) ] )
 
   let fori loopvar lower upper body =
     let init =
@@ -325,7 +326,7 @@ type directive =
 and class_defn =
   { class_name: identifier
   ; final: bool
-  ; base: type_
+  ; public_base: type_
   ; private_members: defn list
   ; public_members: defn list
   ; constructor: constructor
@@ -346,10 +347,10 @@ and defn =
 [@@deriving sexp]
 
 (* can't be derivided since it is simultaneously declared with non-records *)
-let make_class_defn ~name ~base ?(final = true) ~private_members ~public_members
-    ~constructor ?(destructor_body = []) () =
+let make_class_defn ~name ~public_base ?(final = true) ~private_members
+    ~public_members ~constructor ?(destructor_body = []) () =
   { class_name= name
-  ; base
+  ; public_base
   ; final
   ; private_members
   ; public_members
@@ -379,7 +380,7 @@ module Printing = struct
     | TemplateType id -> pp_identifier ppf id
     | StdVector t -> pf ppf "@[<2>std::vector<@,%a>@]" pp_type_ t
     | Array (t, i) -> pf ppf "@[<2>std::array<@,%a,@ %i>@]" pp_type_ t i
-    | Type_literal id -> pp_identifier ppf id
+    | TypeLiteral id -> pp_identifier ppf id
     | Matrix (t, i, j) -> pf ppf "Eigen::Matrix<%a,%i,%i>" pp_type_ t i j
     | Const t -> pf ppf "const %a" pp_type_ t
     | Ref t -> pf ppf "%a&" pp_type_ t
@@ -480,7 +481,7 @@ module Printing = struct
     let pp_init ppf init =
       match init with
       | Uninitialized -> ()
-      | Assignment e -> pf ppf "@ =@ %a" pp_expr e
+      | Assignment e -> pf ppf " =@ %a" pp_expr e
       | Construction es -> pf ppf "(%a)" (list ~sep:comma pp_expr) es
       | InitalizerList es ->
           pf ppf "{@[<hov 1>%a@]}" (list ~sep:comma pp_expr) es in
@@ -529,14 +530,11 @@ module Printing = struct
     | Comment s ->
         if String.contains s '\n' then pf ppf "/@[<v>*@[@ %a@]@,@]*/" text s
         else pf ppf "//@[<h> %s@]" s
-    | TryCatch (Block trys, (exn_ty, exn_name), Block thn) ->
+    | TryCatch (trys, (exn_ty, exn_name), thn) ->
         (* When we know this contains blocks, we can do better pretty-printing*)
         pf ppf "@[<v 2>try {@ %a@]@,@[<v 2>} catch(%a %a) {@ %a@]@,}"
           (list ~sep:cut pp_stmt) trys pp_type_ exn_ty pp_identifier exn_name
           (list ~sep:cut pp_stmt) thn
-    | TryCatch (trys, (exn_ty, exn_name), thn) ->
-        pf ppf "@[<v>@[<hov>try@ %a@]@,@[<hov>catch(%a %a)@ %a@]@]" pp_stmt trys
-          pp_type_ exn_ty pp_identifier exn_name pp_stmt thn
 
   let pp_cv ppf q =
     match q with
@@ -552,23 +550,18 @@ module Printing = struct
       ; args
       ; cv_qualifiers
       ; body } =
+    let pp_sig ppf () =
+      pf ppf "@[%a%s%a@ %a(@[<hov>%a@])%a@]"
+        (list (pp_template ~default:init))
+        t
+        (if inline then "inline " else "")
+        pp_type_ return_type pp_identifier name
+        (list ~sep:comma (pair ~sep:Fmt.sp pp_type_ pp_identifier))
+        args (list ~sep:nop pp_cv) cv_qualifiers in
     match body with
     | Some stmts ->
-        pf ppf "@[<v 2>@[%a%s%a@ %a(@[<hov>%a@])%a@] {@,%a@]@,}"
-          (list (pp_template ~default:init))
-          t
-          (if inline then "inline " else "")
-          pp_type_ return_type pp_identifier name
-          (list ~sep:comma (pair ~sep:Fmt.sp pp_type_ pp_identifier))
-          args (list ~sep:nop pp_cv) cv_qualifiers (list ~sep:cut pp_stmt) stmts
-    | None ->
-        pf ppf "@[%a%s%a@ %a(@[<hov>%a@])%a@];"
-          (list (pp_template ~default:init))
-          t
-          (if inline then "inline " else "")
-          pp_type_ return_type pp_identifier name
-          (list ~sep:comma (pair ~sep:Fmt.sp pp_type_ pp_identifier))
-          args (list ~sep:nop pp_cv) cv_qualifiers
+        pf ppf "@[<v 2>%a {@,%a@]@,}" pp_sig () (list ~sep:cut pp_stmt) stmts
+    | None -> pf ppf "%a;" pp_sig ()
 
   let pp_destructor ppf (name, body) =
     pf ppf "@[~%s()@ {%a}@]" name (list ~sep:cut pp_stmt) body
@@ -593,23 +586,23 @@ module Printing = struct
   and pp_class_defn ppf
       { class_name
       ; final
-      ; base
+      ; public_base
       ; private_members
       ; constructor
       ; destructor_body
       ; public_members } =
     pf ppf
-      "@[<v 2>class %s%s : %a{@,\
-       @[<v 2>private:@,\
+      "@[<v 1>class %s%s : public %a{@,\
+       @[<v 1>private:@,\
        %a@]@,\
-       @[<v 2>public:@,\
+       @[<v 1>public:@,\
        %a@,\
        %a@,\
        %a@]@]@,\
        };"
       class_name
       (if final then " final" else "")
-      pp_type_ base (list ~sep:cut pp_defn) private_members pp_destructor
+      pp_type_ public_base (list ~sep:cut pp_defn) private_members pp_destructor
       (class_name, destructor_body)
       pp_constructor (class_name, constructor) (list ~sep:cut pp_defn)
       public_members
@@ -633,7 +626,7 @@ module Printing = struct
           (option (fun ppf defn -> pf ppf " = %a" pp_type_ defn))
           init
     | Namespace (id, defns) ->
-        pf ppf "@[<v 2>namespace %s {@,%a@]@,}" id (list ~sep:cut pp_defn) defns
+        pf ppf "@[<v>namespace %s {@,%a@]@,}" id (list ~sep:cut pp_defn) defns
     | Preprocessor d -> pp_directive ppf d
 
   let pp_program = vbox (list ~sep:cut pp_defn)

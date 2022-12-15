@@ -168,7 +168,7 @@ let lower_args extra_templates extra args variadic =
   let arg_strs =
     args
     @ mk_extra_args extra_templates extra
-    @ [(Pointer (Type_literal "std::ostream"), "pstream__")]
+    @ [(Pointer (TypeLiteral "std::ostream"), "pstream__")]
     @ variadic_args in
   arg_strs
 
@@ -359,7 +359,7 @@ let lower_standalone_fun_def namespace_fun
   let all_args =
     args
     @ mk_extra_args extra_templates extra
-    @ [(Pointer (Type_literal "std::ostream"), "pstream__ = nullptr")] in
+    @ [(Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr")] in
   let mark_function_comment = GlobalComment "[[stan::function]]" in
   let return_type, return_stmt =
     match fdrt with
@@ -372,7 +372,7 @@ let lower_standalone_fun_def namespace_fun
       let internal_fname = namespace_fun ^ "::" ^ fdname in
       let template =
         match fdsuffix with
-        | FnLpdf _ | FnTarget -> [Type_literal "false"]
+        | FnLpdf _ | FnTarget -> [TypeLiteral "false"]
         | FnRng | FnPlain -> [] in
       let call_args =
         List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]

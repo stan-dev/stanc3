@@ -88,7 +88,7 @@ flowchart TB
 1. Analyze & optimize (MIR -> MIR)
 1. Code generation  (MIR -> [C++](src/stan_math_backend/Stan_math_code_gen.ml)) (or other outputs, like [Tensorflow](https://github.com/stan-dev/stan2tfp/)).
 
-### The two central data structures
+### The central data structures
 
 1. `src/frontend/Ast.ml` defines the AST. The AST is intended to have a direct 1-1 mapping with the syntax, so there are things like parentheses being kept around.
 The pretty-printer in the frontend uses the AST and attempts to keep user syntax the same while just adjusting whitespace.
@@ -102,9 +102,10 @@ The pretty-printer in the frontend uses the AST and attempts to keep user syntax
     The MIR uses the same two-level types idea to add metadata, notably expression types and autodiff levels as well as locations on many things. The MIR is used as the output data type from the frontend and the input for dataflow analysis, optimization (which also outputs MIR), and code generation.
 
 
-Besides these two, there is also a minimal representation of C++ used in code generation found in `src/stan_math_backend/Cpp.ml`.
-This is intentionally simpler than both the above structures and than a true C++ AST and is tailored pretty specifically
-to the C++ generated in our model class.
+3. `src/stan_math_backend/Cpp.ml` defines a minimal representation of C++ used in code generation.
+
+    This is intentionally simpler than both the above structures and than a true C++ AST and is tailored pretty specifically
+    to the C++ generated in our model class.
 
 ## Design goals
 * **Multiple phases** - each with human-readable intermediate representations for easy debugging and optimization design.

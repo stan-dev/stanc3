@@ -21,16 +21,14 @@ let check_to_string = function
 
 let math_fn_translations = function
   | Internal_fun.FnValidateSize ->
-      Some ("stan::math::validate_non_negative_index", [])
-  | FnValidateSizeSimplex -> Some ("stan::math::validate_positive_index", [])
-  | FnValidateSizeUnitVector ->
-      Some ("stan::math::validate_unit_vector_index", [])
-  | FnReadWriteEventsOpenCL x -> Some (x ^ ".wait_for_read_write_events", [])
+      Some "stan::math::validate_non_negative_index"
+  | FnValidateSizeSimplex -> Some "stan::math::validate_positive_index"
+  | FnValidateSizeUnitVector -> Some "stan::math::validate_unit_vector_index"
+  | FnReadWriteEventsOpenCL x -> Some (x ^ ".wait_for_read_write_events")
   | _ -> None
 
 let trans_math_fn f =
-  Option.(
-    value ~default:(Internal_fun.to_string f, []) (math_fn_translations f))
+  Option.(value ~default:(Internal_fun.to_string f) (math_fn_translations f))
 
 let nan_type st adtype =
   match (adtype, st) with
@@ -117,8 +115,8 @@ let lower_unsized_decl name ut adtype =
     match (Transform_Mir.is_opencl_var name, ut) with
     | _, UnsizedType.(UInt | UReal) | false, _ ->
         lower_unsizedtype_local adtype ut
-    | true, UArray UInt -> Type_literal "matrix_cl<int>"
-    | true, _ -> Type_literal "matrix_cl<double>" in
+    | true, UArray UInt -> TypeLiteral "matrix_cl<int>"
+    | true, _ -> TypeLiteral "matrix_cl<double>" in
   make_variable_defn ~type_ ~name ()
 
 let lower_possibly_opencl_decl name st adtype =
@@ -127,8 +125,8 @@ let lower_possibly_opencl_decl name st adtype =
   match (Transform_Mir.is_opencl_var name, ut) with
   | _, UnsizedType.(UInt | UReal) | false, _ ->
       lower_possibly_var_decl adtype ut mem_pattern
-  | true, UArray UInt -> Type_literal "matrix_cl<int>"
-  | true, _ -> Type_literal "matrix_cl<double>"
+  | true, UArray UInt -> TypeLiteral "matrix_cl<int>"
+  | true, _ -> TypeLiteral "matrix_cl<double>"
 
 let lower_sized_decl name st adtype initialize =
   let type_ = lower_possibly_opencl_decl name st adtype in
@@ -146,13 +144,13 @@ let lower_profile name body =
   let profile =
     VariableDefn
       (make_variable_defn
-         ~type_:(Type_literal "stan::math::profile<local_scalar_t__>")
+         ~type_:(TypeLiteral "stan::math::profile<local_scalar_t__>")
          ~name:"profile__"
          ~init:
            (Construction
               [ Var name
               ; Exprs.templated_fun_call "const_cast"
-                  [Ref (Type_literal "stan::math::profile_map")]
+                  [Ref (TypeLiteral "stan::math::profile_map")]
                   [Var "profiles__"] ] )
          () ) in
   Stmts.block (profile :: body)
@@ -169,7 +167,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   let location =
     match pattern with
     | Block _ | SList _ | Decl _ | Skip | Break | Continue -> []
-    | _ -> Locations.create_loc_assignment meta in
+    | _ -> Locations.assign_loc meta in
   let wrap_e e = [Expression e] in
   let open Expression_syntax in
   location
@@ -189,7 +187,9 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   | Assignment ((assignee, UInt, idcs), rhs)
    |Assignment ((assignee, UReal, idcs), rhs)
     when List.for_all ~f:is_single_index idcs ->
-      Assign (lower_indexed_simple (to_mir_var assignee) idcs, lower_expr rhs)
+      Assign
+        ( lower_indexed_simple (Middle.Expr.Helpers.variable assignee) idcs
+        , lower_expr rhs )
       |> wrap_e
   | Assignment ((assignee, _, idcs), rhs) ->
       (* XXX I think in general we don't need to do a deepcopy if e is nested
@@ -228,7 +228,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       let err_strm_name = "errmsg_stream__" in
       let stream_decl =
         VariableDefn
-          (make_variable_defn ~type_:(Type_literal "std::stringstream")
+          (make_variable_defn ~type_:(TypeLiteral "std::stringstream")
              ~name:err_strm_name () ) in
       let throw =
         Throw
@@ -262,8 +262,8 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
           let write_fn = "write_free_" ^ unconstrain_string in
           out.@?((write_fn, lower_exprs (unconstrain_args @ [var]))) |> wrap_e )
   | NRFunApp (CompilerInternal f, args) ->
-      let fname, extra_args = trans_math_fn f in
-      Exprs.fun_call fname (lower_exprs (extra_args @ args)) |> wrap_e
+      let fname = trans_math_fn f in
+      Exprs.fun_call fname (lower_exprs args) |> wrap_e
   | NRFunApp (StanLib (fname, _, _), args) ->
       Exprs.fun_call (stan_namespace_qualify fname) (lower_exprs args) |> wrap_e
   | NRFunApp (UserDefined (fname, suffix), args) ->
@@ -277,15 +277,6 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       ]
   | While (cond, body) ->
       [While (lower_bool_expr cond, Stmts.block (lower_statement body))]
-  | For
-      { body=
-          { pattern=
-              Assignment
-                (_, {pattern= FunApp (CompilerInternal (FnReadParam _), _); _})
-          ; _ } as body
-      ; _ } ->
-      lower_statement body
-      (* Skip For loop part, just emit body due to the way FnReadParam emits *)
   | For {loopvar; lower; upper; body} ->
       [ Stmts.fori loopvar (lower_expr lower) (lower_expr upper)
           (Stmts.block (lower_statement body)) ]

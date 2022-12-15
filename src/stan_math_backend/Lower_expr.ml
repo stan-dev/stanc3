@@ -114,8 +114,6 @@ let plus_one e =
   let open Expression_syntax in
   Parens (e + Literal "1")
 
-let to_mir_var s = Expr.{Fixed.pattern= Var s; meta= Typed.Meta.empty}
-
 let rec lower_type (t : UnsizedType.t) (scalar : type_) : type_ =
   match t with
   | UInt -> Int
@@ -175,10 +173,7 @@ let rec lower_logical_op op e1 e2 =
   let prim e = Exprs.fun_call "stan::math::primitive_value" [lower_expr e] in
   Parens (BinOp (prim e1, op, prim e2))
 
-and lower_binop op es =
-  Parens (BinOp (lower_expr (first es), op, lower_expr (second es)))
-
-and lower_binary_fun f es = Exprs.fun_call f (lower_exprs (List.take es 2))
+and lower_binary_fun f es = Exprs.fun_call f (lower_exprs es)
 
 and vector_literal ?(column = false) scalar es =
   let open Expression_syntax in
@@ -206,8 +201,9 @@ and read_data ut es =
   let data_context = Var "context__" in
   data_context.@?((val_method, [lower_expr (List.hd_exn es)]))
 
-and lower_scalar_binary op fn es =
-  if is_scalar (first es) && is_scalar (second es) then lower_binop op es
+and lower_binary_op op fn es =
+  if is_scalar (first es) && is_scalar (second es) then
+    Parens (BinOp (lower_expr (first es), op, lower_expr (second es)))
   else lower_binary_fun fn es
 
 and lower_operator_app op es_in =
@@ -219,7 +215,7 @@ and lower_operator_app op es_in =
       List.map ~f:remove_basic_promotion es_in
     else es_in in
   match op with
-  | Operator.Plus -> lower_scalar_binary Add "stan::math::add" es
+  | Operator.Plus -> lower_binary_op Add "stan::math::add" es
   | PMinus ->
       if is_scalar (first es) then PMinus (lower_expr (first es))
       else Exprs.fun_call "stan::math::minus" [lower_expr (first es)]
@@ -228,8 +224,8 @@ and lower_operator_app op es_in =
       if is_scalar (first es) then lower_expr (first es)
       else Exprs.fun_call "stan::math::transpose" [lower_expr (first es)]
   | PNot -> Exprs.fun_call "stan::math::logical_negation" [lower_expr (first es)]
-  | Minus -> lower_scalar_binary Subtract "stan::math::subtract" es
-  | Times -> lower_scalar_binary Multiply "stan::math::multiply" es
+  | Minus -> lower_binary_op Subtract "stan::math::subtract" es
+  | Times -> lower_binary_op Multiply "stan::math::multiply" es
   | Divide | IntDivide ->
       if
         is_matrix (second es)
@@ -241,14 +237,14 @@ and lower_operator_app op es_in =
         let es' =
           if List.for_all ~f es && not (List.for_all ~f es_in) then es_in
           else es in
-        lower_scalar_binary Divide "stan::math::divide" es'
+        lower_binary_op Divide "stan::math::divide" es'
   | Modulo -> lower_binary_fun "stan::math::modulus" es
   | LDivide -> lower_binary_fun "stan::math::mdivide_left" es
   | And | Or ->
       Common.FatalError.fatal_error_msg
         [%message "And/Or should have been converted to an expression"]
-  | EltTimes -> lower_scalar_binary Multiply "stan::math::elt_multiply" es
-  | EltDivide -> lower_scalar_binary Divide "stan::math::elt_divide" es
+  | EltTimes -> lower_binary_op Multiply "stan::math::elt_multiply" es
+  | EltDivide -> lower_binary_op Divide "stan::math::elt_divide" es
   | Pow -> lower_binary_fun "stan::math::pow" es
   | EltPow -> lower_binary_fun "stan::math::pow" es
   | Equals -> lower_binary_fun "stan::math::logical_eq" es
@@ -304,7 +300,7 @@ and lower_functionals fname suffix es mem_pattern =
                   , [] ) }
         | e -> e in
       let converted_es = List.map ~f:convert_hof_vars es in
-      let msgs = "pstream__" |> to_mir_var in
+      let msgs = "pstream__" |> Middle.Expr.Helpers.variable in
       (* Here, because these signatures are written in C++ such that they
          wanted to have optional arguments and piggyback on C++ default
          arguments and not write the necessary overloads, we have to
