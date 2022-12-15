@@ -78,6 +78,10 @@ pipeline {
     environment {
         CXX = 'clang++-6.0'
         PARALLEL = 4
+        GIT_AUTHOR_NAME = 'Stan Jenkins'
+        GIT_AUTHOR_EMAIL = 'mc.stanislaw@gmail.com'
+        GIT_COMMITTER_NAME = 'Stan Jenkins'
+        GIT_COMMITTER_EMAIL = 'mc.stanislaw@gmail.com'
     }
     stages {
         stage('Kill previous builds') {
@@ -948,9 +952,6 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                     sh """#!/bin/bash
                         set -e
-
-                        git config --global user.email "mc.stanislaw@gmail.com"
-                        git config --global user.name "Stan Jenkins"
 
                         git checkout --detach
                         git branch -D gh-pages
