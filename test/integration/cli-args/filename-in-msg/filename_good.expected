@@ -9,7 +9,7 @@ static constexpr std::array<const char*, 3> locations_array__ =
   {" (found before start of program)",
   " (in 'filename_good.stan', line 2, column 4 to column 11)",
   " (in 'filename_good.stan', line 3, column 4 to column 19)"};
-class filename_good_model final : public model_base_crtp<filename_good_model>{
+class filename_good_model final : public model_base_crtp<filename_good_model> {
  private:
   double p;
   double q;
@@ -22,14 +22,14 @@ class filename_good_model final : public model_base_crtp<filename_good_model>{
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "filename_good_model_namespace::filename_good_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -65,11 +65,11 @@ class filename_good_model final : public model_base_crtp<filename_good_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "filename_good_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       
@@ -94,20 +94,20 @@ class filename_good_model final : public model_base_crtp<filename_good_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "filename_good_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       if (stan::math::logical_negation(
@@ -133,7 +133,7 @@ class filename_good_model final : public model_base_crtp<filename_good_model>{
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();

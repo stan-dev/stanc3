@@ -35,7 +35,7 @@ static constexpr std::array<const char*, 29> locations_array__ =
   " (in 'simple_function.stan', line 7, column 2 to column 13)",
   " (in 'simple_function.stan', line 9, column 4 to column 19)",
   " (in 'simple_function.stan', line 8, column 2 to line 10, column 3)"};
-class simple_function_model final : public model_base_crtp<simple_function_model>{
+class simple_function_model final : public model_base_crtp<simple_function_model> {
  private:
   int N;
   std::vector<double> x;
@@ -51,14 +51,14 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "simple_function_model_namespace::simple_function_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -136,11 +136,11 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "simple_function_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       local_scalar_t__ rho = DUMMY_VAR__;
@@ -232,20 +232,20 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "simple_function_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       double rho = std::numeric_limits<double>::quiet_NaN();
@@ -286,7 +286,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();

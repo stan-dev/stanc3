@@ -279,14 +279,11 @@ let lower_fun_def (functors : (string, struct_defn) Hashtbl.t)
       @ ( if String.Set.mem funs_used_in_reduce_sum fdname then
           [register_functor `ReduceSum]
         else [] )
-      @
-      if String.Map.mem variadic_fns fdname then
-        (* Produces the variadic functors that has the pstream argument
+      @ (* Produces the variadic functors that has the pstream argument
            as not the last argument. For DAEs this is the 4th, for ODEs the 3rd *)
-        List.map
-          (List.stable_dedup @@ String.Map.find_exn variadic_fns fdname)
-          ~f:(fun i -> register_functor (`VariadicHOF i))
-      else []
+      List.map
+        (List.stable_dedup @@ Map.find_multi variadic_fns fdname)
+        ~f:(fun i -> register_functor (`VariadicHOF i))
 
 let is_fun_used_with_reduce_sum (p : Program.Numbered.t) =
   let rec find_functors_expr accum Expr.Fixed.{pattern; _} =
@@ -427,10 +424,10 @@ module Testing = struct
       const auto& x = stan::math::to_ref(x_arg__);
       const auto& y = stan::math::to_ref(y_arg__);
       static constexpr bool propto__ = true;
-      // supress unused var warning
+      // suppress unused var warning
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-      // supress unused var warning
+      // suppress unused var warning
       (void) DUMMY_VAR__;
       try {
         return stan::math::add(x, 1);
@@ -494,10 +491,10 @@ module Testing = struct
       const auto& y = stan::math::to_ref(y_arg__);
       const auto& z = stan::math::to_ref(z_arg__);
       static constexpr bool propto__ = true;
-      // supress unused var warning
+      // suppress unused var warning
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-      // supress unused var warning
+      // suppress unused var warning
       (void) DUMMY_VAR__;
       try {
         return stan::math::add(x, 1);

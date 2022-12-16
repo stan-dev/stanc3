@@ -9,7 +9,7 @@ static constexpr std::array<const char*, 3> locations_array__ =
   {" (found before start of program)",
   " (in 'complex-fails.stan', line 2, column 4 to column 23)",
   " (in 'complex-fails.stan', line 6, column 3 to column 45)"};
-class complex_fails_model final : public model_base_crtp<complex_fails_model>{
+class complex_fails_model final : public model_base_crtp<complex_fails_model> {
  private:
   
  public:
@@ -21,14 +21,14 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model>{
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "complex_fails_model_namespace::complex_fails_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -58,11 +58,11 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "complex_fails_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       Eigen::Matrix<local_scalar_t__,-1,-1> A_p =
@@ -96,20 +96,20 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "complex_fails_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       Eigen::Matrix<double,-1,-1> A_p =
@@ -151,7 +151,7 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model>{
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -429,7 +429,7 @@ static constexpr std::array<const char*, 92> locations_array__ =
   " (in 'constraints.stan', line 61, column 9 to column 11)",
   " (in 'constraints.stan', line 62, column 18 to column 20)",
   " (in 'constraints.stan', line 67, column 9 to column 11)"};
-class constraints_model final : public model_base_crtp<constraints_model>{
+class constraints_model final : public model_base_crtp<constraints_model> {
  private:
   int N;
   int K;
@@ -457,14 +457,14 @@ class constraints_model final : public model_base_crtp<constraints_model>{
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "constraints_model_namespace::constraints_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -730,11 +730,11 @@ class constraints_model final : public model_base_crtp<constraints_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "constraints_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       stan::conditional_var_value_t<local_scalar_t__,
@@ -1153,20 +1153,20 @@ class constraints_model final : public model_base_crtp<constraints_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "constraints_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       Eigen::Matrix<double,-1,1> high_low_est =
@@ -1492,7 +1492,7 @@ class constraints_model final : public model_base_crtp<constraints_model>{
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -2082,7 +2082,7 @@ static constexpr std::array<const char*, 14> locations_array__ =
   " (in 'deep_dependence.stan', line 18, column 8 to line 20, column 9)",
   " (in 'deep_dependence.stan', line 17, column 19 to line 21, column 5)",
   " (in 'deep_dependence.stan', line 17, column 4 to line 21, column 5)"};
-class deep_dependence_model final : public model_base_crtp<deep_dependence_model>{
+class deep_dependence_model final : public model_base_crtp<deep_dependence_model> {
  private:
   
  public:
@@ -2094,14 +2094,14 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "deep_dependence_model_namespace::deep_dependence_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -2131,11 +2131,11 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "deep_dependence_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
@@ -2210,20 +2210,20 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "deep_dependence_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       Eigen::Matrix<double,-1,-1> X_p =
@@ -2318,7 +2318,7 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -2713,10 +2713,10 @@ int mask_fun(const int& i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 112;
@@ -2738,10 +2738,10 @@ udf_fun(const T0__& A_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   const auto& A = stan::math::to_ref(A_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 114;
@@ -2757,7 +2757,7 @@ Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
 udf_fun_functor__::operator()(const T0__& A, std::ostream* pstream__) const {
   return udf_fun(A, pstream__);
 }
-class indexing_model final : public model_base_crtp<indexing_model>{
+class indexing_model final : public model_base_crtp<indexing_model> {
  private:
   int N;
   int M;
@@ -2775,14 +2775,14 @@ class indexing_model final : public model_base_crtp<indexing_model>{
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "indexing_model_namespace::indexing_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -2977,11 +2977,11 @@ class indexing_model final : public model_base_crtp<indexing_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "indexing_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       local_scalar_t__ alpha = DUMMY_VAR__;
@@ -3461,20 +3461,20 @@ class indexing_model final : public model_base_crtp<indexing_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "indexing_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       double alpha = std::numeric_limits<double>::quiet_NaN();
@@ -3708,7 +3708,7 @@ class indexing_model final : public model_base_crtp<indexing_model>{
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -4400,7 +4400,7 @@ static constexpr std::array<const char*, 17> locations_array__ =
   " (in 'indexing2.stan', line 3, column 1 to column 7)",
   " (in 'indexing2.stan', line 4, column 7 to column 8)",
   " (in 'indexing2.stan', line 4, column 1 to column 18)"};
-class indexing2_model final : public model_base_crtp<indexing2_model>{
+class indexing2_model final : public model_base_crtp<indexing2_model> {
  private:
   int N;
   int M;
@@ -4414,14 +4414,14 @@ class indexing2_model final : public model_base_crtp<indexing2_model>{
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "indexing2_model_namespace::indexing2_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -4471,11 +4471,11 @@ class indexing2_model final : public model_base_crtp<indexing2_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "indexing2_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       local_scalar_t__ alpha = DUMMY_VAR__;
@@ -4553,20 +4553,20 @@ class indexing2_model final : public model_base_crtp<indexing2_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "indexing2_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       double alpha = std::numeric_limits<double>::quiet_NaN();
@@ -4603,7 +4603,7 @@ class indexing2_model final : public model_base_crtp<indexing2_model>{
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -4798,10 +4798,10 @@ nono_func(const T0__& x_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   const auto& x = stan::math::to_ref(x_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 8;
@@ -4829,10 +4829,10 @@ okay_reduction(const T0__& sum_x, const T1__& y_arg__, std::ostream*
   int current_statement__ = 0;
   const auto& y = stan::math::to_ref(y_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 10;
@@ -4850,7 +4850,7 @@ okay_reduction_functor__::operator()(const T0__& sum_x, const T1__& y,
                                      std::ostream* pstream__) const {
   return okay_reduction(sum_x, y, pstream__);
 }
-class reductions_allowed_model final : public model_base_crtp<reductions_allowed_model>{
+class reductions_allowed_model final : public model_base_crtp<reductions_allowed_model> {
  private:
   double data_r;
  public:
@@ -4862,14 +4862,14 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "reductions_allowed_model_namespace::reductions_allowed_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -4905,11 +4905,11 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "reductions_allowed_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       stan::conditional_var_value_t<local_scalar_t__,
@@ -4975,20 +4975,20 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "reductions_allowed_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       Eigen::Matrix<double,-1,-1> soa_x =
@@ -5063,7 +5063,7 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -5337,10 +5337,10 @@ Eigen::Matrix<double,-1,-1> empty_user_func(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     Eigen::Matrix<local_scalar_t__,-1,-1> some_mat =
@@ -5364,10 +5364,10 @@ mat_ret_user_func(const T0__& A_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   const auto& A = stan::math::to_ref(A_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 11;
@@ -5384,7 +5384,7 @@ mat_ret_user_func_functor__::operator()(const T0__& A, std::ostream*
                                         pstream__) const {
   return mat_ret_user_func(A, pstream__);
 }
-class return_types_and_udfs_demotes_model final : public model_base_crtp<return_types_and_udfs_demotes_model>{
+class return_types_and_udfs_demotes_model final : public model_base_crtp<return_types_and_udfs_demotes_model> {
  private:
   
  public:
@@ -5397,14 +5397,14 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "return_types_and_udfs_demotes_model_namespace::return_types_and_udfs_demotes_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -5434,11 +5434,11 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "return_types_and_udfs_demotes_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       stan::conditional_var_value_t<local_scalar_t__,
@@ -5509,20 +5509,20 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "return_types_and_udfs_demotes_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       Eigen::Matrix<double,-1,-1> row_soa =
@@ -5605,7 +5605,7 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -5877,7 +5877,7 @@ static constexpr std::array<const char*, 8> locations_array__ =
   " (in 'single_indexing.stan', line 16, column 7 to column 77)",
   " (in 'single_indexing.stan', line 12, column 21 to line 17, column 6)",
   " (in 'single_indexing.stan', line 12, column 5 to line 17, column 6)"};
-class single_indexing_model final : public model_base_crtp<single_indexing_model>{
+class single_indexing_model final : public model_base_crtp<single_indexing_model> {
  private:
   
  public:
@@ -5889,14 +5889,14 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "single_indexing_model_namespace::single_indexing_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -5926,11 +5926,11 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "single_indexing_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       Eigen::Matrix<local_scalar_t__,-1,-1> aos_p =
@@ -6002,20 +6002,20 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "single_indexing_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       Eigen::Matrix<double,-1,-1> aos_p =
@@ -6083,7 +6083,7 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -6307,10 +6307,10 @@ nono_func(const T0__& x_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   const auto& x = stan::math::to_ref(x_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 6;
@@ -6338,10 +6338,10 @@ okay_reduction(const T0__& sum_x, const T1__& y_arg__, std::ostream*
   int current_statement__ = 0;
   const auto& y = stan::math::to_ref(y_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 8;
@@ -6359,7 +6359,7 @@ okay_reduction_functor__::operator()(const T0__& sum_x, const T1__& y,
                                      std::ostream* pstream__) const {
   return okay_reduction(sum_x, y, pstream__);
 }
-class tp_reused_model final : public model_base_crtp<tp_reused_model>{
+class tp_reused_model final : public model_base_crtp<tp_reused_model> {
  private:
   double data_r;
  public:
@@ -6371,14 +6371,14 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model>{
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "tp_reused_model_namespace::tp_reused_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -6414,11 +6414,11 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "tp_reused_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       Eigen::Matrix<local_scalar_t__,-1,-1> first_pass_soa_x =
@@ -6460,20 +6460,20 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "tp_reused_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       Eigen::Matrix<double,-1,-1> first_pass_soa_x =
@@ -6525,7 +6525,7 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model>{
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();

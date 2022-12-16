@@ -777,7 +777,7 @@ static constexpr std::array<const char*, 771> locations_array__ =
   " (in 'distributions.stan', line 12, column 16 to column 21)",
   " (in 'distributions.stan', line 13, column 9 to column 14)",
   " (in 'distributions.stan', line 14, column 13 to column 18)"};
-class distributions_model final : public model_base_crtp<distributions_model>{
+class distributions_model final : public model_base_crtp<distributions_model> {
  private:
   int d_int;
   std::vector<int> d_int_array;
@@ -800,14 +800,14 @@ class distributions_model final : public model_base_crtp<distributions_model>{
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "distributions_model_namespace::distributions_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -929,11 +929,11 @@ class distributions_model final : public model_base_crtp<distributions_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "distributions_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       local_scalar_t__ p_real = DUMMY_VAR__;
@@ -3983,20 +3983,20 @@ class distributions_model final : public model_base_crtp<distributions_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "distributions_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       double p_real = std::numeric_limits<double>::quiet_NaN();
@@ -7052,7 +7052,7 @@ class distributions_model final : public model_base_crtp<distributions_model>{
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -7322,7 +7322,7 @@ static constexpr std::array<const char*, 40> locations_array__ =
   " (in 'restricted.stan', line 12, column 16 to column 21)",
   " (in 'restricted.stan', line 13, column 9 to column 14)",
   " (in 'restricted.stan', line 14, column 13 to column 18)"};
-class restricted_model final : public model_base_crtp<restricted_model>{
+class restricted_model final : public model_base_crtp<restricted_model> {
  private:
   int d_int;
   std::vector<int> d_int_array;
@@ -7342,14 +7342,14 @@ class restricted_model final : public model_base_crtp<restricted_model>{
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "restricted_model_namespace::restricted_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -7468,11 +7468,11 @@ class restricted_model final : public model_base_crtp<restricted_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "restricted_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       local_scalar_t__ p_real = DUMMY_VAR__;
@@ -7575,20 +7575,20 @@ class restricted_model final : public model_base_crtp<restricted_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "restricted_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       double p_real = std::numeric_limits<double>::quiet_NaN();
@@ -7700,7 +7700,7 @@ class restricted_model final : public model_base_crtp<restricted_model>{
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();

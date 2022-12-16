@@ -223,7 +223,7 @@ static constexpr std::array<const char*, 217> locations_array__ =
   " (in 'optimize_glm.stan', line 32, column 9 to column 10)",
   " (in 'optimize_glm.stan', line 32, column 12 to column 13)",
   " (in 'optimize_glm.stan', line 33, column 13 to column 14)"};
-class optimize_glm_model final : public model_base_crtp<optimize_glm_model>{
+class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
  private:
   int k;
   int n;
@@ -265,14 +265,14 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model>{
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "optimize_glm_model_namespace::optimize_glm_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -523,11 +523,11 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "optimize_glm_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       Eigen::Matrix<local_scalar_t__,-1,1> alpha_v =
@@ -1238,20 +1238,20 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "optimize_glm_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       Eigen::Matrix<double,-1,1> alpha_v =
@@ -1327,7 +1327,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model>{
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();

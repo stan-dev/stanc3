@@ -86,10 +86,10 @@ my_log1p_exp(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 1;
@@ -110,10 +110,10 @@ array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 3;
@@ -132,10 +132,10 @@ double int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 5;
@@ -158,10 +158,10 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   const auto& x = stan::math::to_ref(x_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 7;
@@ -192,10 +192,10 @@ int_only_multiplication(const int& a, const int& b, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 11;
@@ -216,10 +216,10 @@ test_lgamma(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 13;
@@ -242,7 +242,7 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 15;
@@ -266,10 +266,10 @@ test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 17;
@@ -293,7 +293,7 @@ test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
   int current_statement__ = 0;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 19;
@@ -446,10 +446,10 @@ my_log1p_exp(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 1;
@@ -470,10 +470,10 @@ array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 3;
@@ -492,10 +492,10 @@ double int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 5;
@@ -518,10 +518,10 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   const auto& x = stan::math::to_ref(x_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 7;
@@ -552,10 +552,10 @@ int_only_multiplication(const int& a, const int& b, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 11;
@@ -576,10 +576,10 @@ test_lgamma(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 13;
@@ -602,7 +602,7 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 15;
@@ -626,10 +626,10 @@ test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 17;
@@ -653,7 +653,7 @@ test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
   int current_statement__ = 0;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 19;
@@ -767,10 +767,10 @@ integrand(const T0__& x_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   const auto& x = stan::math::to_ref(x_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 1;
@@ -798,10 +798,10 @@ integrand_ode(const T0__& r, const std::vector<T1__>& f,
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
   int current_statement__ = 0;
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     std::vector<local_scalar_t__> df_dx =
@@ -835,10 +835,10 @@ double ode_integrate(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     std::vector<int> x_i =

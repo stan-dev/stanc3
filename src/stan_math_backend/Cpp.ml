@@ -245,7 +245,7 @@ module Stmts = struct
 
   (** Supress warnings for a variable which may not be used. *)
   let unused s =
-    [Comment "supress unused var warning"; Expression (Cast (Void, Var s))]
+    [Comment "suppress unused var warning"; Expression (Cast (Void, Var s))]
 end
 
 module Decls = struct
@@ -389,14 +389,12 @@ module Printing = struct
         pf ppf "@[<2>%s<%a>@]" s (list ~sep:comma pp_type_) ts
 
   let pp_requires ~default ppf requires =
-    match requires with
-    | [] -> ()
-    | _ ->
-        let pp_require ppf (trait, name) = pf ppf "%s<%s>" trait name in
-        pf ppf ",@ stan::require_all_t<@[%a@]>*%s"
-          (list ~sep:comma pp_require)
-          requires
-          (if default then " = nullptr" else "")
+    if not (List.is_empty requires) then
+      let pp_require ppf (trait, name) = pf ppf "%s<%s>" trait name in
+      pf ppf ",@ stan::require_all_t<@[%a@]>*%s"
+        (list ~sep:comma pp_require)
+        requires
+        (if default then " = nullptr" else "")
 
   (**
    Pretty print a list of templates as [template <parameter-list>].name
@@ -409,19 +407,17 @@ module Printing = struct
       | `Require (requirement, args) ->
           pf ppf "%s<%a>*%s" requirement (list ~sep:comma string) args
             (if default then " = nullptr" else "") in
-    match template_parameters with
-    | [] -> ()
-    | _ ->
-        let templates, requires =
-          List.partition_map template_parameters ~f:(function
-            | RequireIs (trait, name) -> Second (trait, name)
-            | Typename name -> First (`Typename name)
-            | Bool name -> First (`Bool name)
-            | Require (requirement, args) -> First (`Require (requirement, args)) )
-        in
-        pf ppf "template <@[%a%a@]>@ "
-          (list ~sep:comma pp_basic_template)
-          templates (pp_requires ~default) requires
+    if not (List.is_empty template_parameters) then
+      let templates, requires =
+        List.partition_map template_parameters ~f:(function
+          | RequireIs (trait, name) -> Second (trait, name)
+          | Typename name -> First (`Typename name)
+          | Bool name -> First (`Bool name)
+          | Require (requirement, args) -> First (`Require (requirement, args)) )
+      in
+      pf ppf "template <@[%a%a@]>@ "
+        (list ~sep:comma pp_basic_template)
+        templates (pp_requires ~default) requires
 
   let pp_operator ppf = function
     | Multiply -> string ppf "*"
@@ -438,8 +434,8 @@ module Printing = struct
 
   let rec pp_expr ppf e =
     let maybe_templates ppf ts =
-      if List.length ts = 0 then nop ppf ()
-      else pf ppf "<@,%a>" (list ~sep:comma pp_type_) ts in
+      if not (List.is_empty ts) then
+        pf ppf "<@,%a>" (list ~sep:comma pp_type_) ts in
     match e with
     | Literal s -> pf ppf "%s" s
     | Var id -> string ppf id
@@ -609,7 +605,7 @@ module Printing = struct
       ; destructor_body
       ; public_members } =
     pf ppf
-      "@[<v 1>class %s%s : public %a{@,\
+      "@[<v 1>class %s%s : public %a {@,\
        @[<v 1>private:@,\
        %a@]@,\
        @[<v 1>public:@,\

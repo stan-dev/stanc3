@@ -109,10 +109,10 @@ f_0_arg(const T0__& t, const T1__& z_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   const auto& z = stan::math::to_ref(z_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 30;
@@ -152,10 +152,10 @@ f_1_arg(const T0__& t, const T1__& z_arg__, const T2__& a, std::ostream*
   int current_statement__ = 0;
   const auto& z = stan::math::to_ref(z_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 32;
@@ -198,10 +198,10 @@ f_2_arg(const T0__& t, const T1__& z_arg__, const int& b, const T3__& a,
   int current_statement__ = 0;
   const auto& z = stan::math::to_ref(z_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 34;
@@ -231,7 +231,7 @@ f_2_arg_variadic2_functor__::operator()(const T0__& t, const T1__& z,
                                         b, const T3__& a) const {
   return f_2_arg(t, z, b, a, pstream__);
 }
-class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_test_model_model>{
+class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_test_model_model> {
  private:
   int N;
   int M;
@@ -258,14 +258,14 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "ode_adjoint_test_model_model_namespace::ode_adjoint_test_model_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -353,11 +353,11 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "ode_adjoint_test_model_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       local_scalar_t__ y = DUMMY_VAR__;
@@ -423,20 +423,20 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "ode_adjoint_test_model_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       double y = std::numeric_limits<double>::quiet_NaN();
@@ -513,7 +513,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -846,10 +846,10 @@ simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
   int current_statement__ = 0;
   const auto& y = stan::math::to_ref(y_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     Eigen::Matrix<local_scalar_t__,-1,1> dydt =
@@ -940,10 +940,10 @@ simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
   int current_statement__ = 0;
   const auto& y = stan::math::to_ref(y_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     Eigen::Matrix<local_scalar_t__,-1,1> dydt =
@@ -1019,7 +1019,7 @@ simple_SIR_variadic2_functor__::operator()(const T0__& t, const T1__& y,
                                            const int& unused) const {
   return simple_SIR(t, y, beta, kappa, gamma, xi, delta, unused, pstream__);
 }
-class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
+class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> {
  private:
   int N_t;
   std::vector<double> t;
@@ -1039,14 +1039,14 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "overloaded_ode_model_namespace::overloaded_ode_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -1147,11 +1147,11 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "overloaded_ode_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       local_scalar_t__ beta = DUMMY_VAR__;
@@ -1277,20 +1277,20 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "overloaded_ode_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       double beta = std::numeric_limits<double>::quiet_NaN();
@@ -1370,7 +1370,7 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();

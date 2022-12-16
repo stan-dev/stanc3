@@ -91,10 +91,10 @@ foo1(const T0__& a, const int& b, const std::vector<T2__>& c, const T3__&
   const auto& e = stan::math::to_ref(e_arg__);
   const auto& f = stan::math::to_ref(f_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 5;
@@ -134,10 +134,10 @@ foo2(const T0__& a_arg__, const std::vector<Eigen::Matrix<T1__,-1,-1>>& b,
   int current_statement__ = 0;
   const auto& a = stan::math::to_ref(a_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 7;
@@ -172,10 +172,10 @@ foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
   const auto& a = stan::math::to_ref(a_arg__);
   const auto& b = stan::math::to_ref(b_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 9;
@@ -209,10 +209,10 @@ add_udf(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
   const auto& a = stan::math::to_ref(a_arg__);
   const auto& b = stan::math::to_ref(b_arg__);
   static constexpr bool propto__ = true;
-  // supress unused var warning
+  // suppress unused var warning
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // supress unused var warning
+  // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 11;
@@ -232,7 +232,7 @@ add_udf_functor__::operator()(const T0__& a, const T1__& b, std::ostream*
                               pstream__) const {
   return add_udf(a, b, pstream__);
 }
-class simple_function_model final : public model_base_crtp<simple_function_model>{
+class simple_function_model final : public model_base_crtp<simple_function_model> {
  private:
   int N;
   Eigen::Matrix<double,-1,-1> m_data__;
@@ -246,14 +246,14 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "simple_function_model_namespace::simple_function_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -318,11 +318,11 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "simple_function_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       
@@ -347,20 +347,20 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "simple_function_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       if (stan::math::logical_negation(
@@ -386,7 +386,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -532,7 +532,7 @@ static constexpr std::array<const char*, 11> locations_array__ =
   " (in 'ternary_if.stan', line 17, column 4 to column 27)",
   " (in 'ternary_if.stan', line 18, column 4 to column 20)",
   " (in 'ternary_if.stan', line 2, column 2 to column 9)"};
-class ternary_if_model final : public model_base_crtp<ternary_if_model>{
+class ternary_if_model final : public model_base_crtp<ternary_if_model> {
  private:
   double y;
  public:
@@ -544,14 +544,14 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model>{
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
-    // supress unused var warning
+    // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
       "ternary_if_model_namespace::ternary_if_model";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
@@ -587,11 +587,11 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     static constexpr const char* function__ =
       "ternary_if_model_namespace::log_prob";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       Eigen::Matrix<local_scalar_t__,-1,1> a =
@@ -662,20 +662,20 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model>{
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
-    // supress unused var warning
+    // suppress unused var warning
     (void) propto__;
     double lp__ = 0.0;
-    // supress unused var warning
+    // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
     static constexpr const char* function__ =
       "ternary_if_model_namespace::write_array";
-    // supress unused var warning
+    // suppress unused var warning
     (void) function__;
     try {
       Eigen::Matrix<double,-1,1> a =
@@ -754,7 +754,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model>{
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // supress unused var warning
+    // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
       int pos__ = std::numeric_limits<int>::min();
