@@ -496,7 +496,6 @@ and lower_expr (Expr.Fixed.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
         [lower_expr expr]
   | EAnd (e1, e2) -> lower_logical_op And e1 e2
   | EOr (e1, e2) -> lower_logical_op Or e1 e2
-  | Indexed (e, []) -> lower_expr e
   | TernaryIf (ec, et, ef) ->
       let maybe_eval (e : Expr.Typed.t) =
         if UnsizedType.is_eigen_type e.meta.type_ then
@@ -523,9 +522,9 @@ and lower_expr (Expr.Fixed.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
       let ret_type = Some (UnsizedType.ReturnType meta.type_) in
       lower_fun_app suffix f es mem_pattern ret_type
   | FunApp (UserDefined (f, suffix), es) -> lower_user_defined_fun f suffix es
+  | Indexed (e, []) -> lower_expr e
   | Indexed (e, idx) -> (
     match e.pattern with
-    | FunApp (CompilerInternal (FnReadParam _), _) -> lower_expr e
     | FunApp (CompilerInternal FnReadData, _) -> lower_indexed_simple e idx
     | _
       when List.for_all ~f:dont_need_range_check idx

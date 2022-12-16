@@ -15,8 +15,8 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model>{
  public:
   ~complex_fails_model() {}
   complex_fails_model(stan::io::var_context& context__, unsigned int
-                      random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                      random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -33,10 +33,11 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model>{
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (10 * 10);}
+    num_params_r__ = (10 * 10);
+  }
   inline std::string model_name() const final {
     return "complex_fails_model";
   }
@@ -74,7 +75,7 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model>{
       current_statement__ = 2;
       stan::model::assign(A_complex_tp, A_p,
         "assigning variable A_complex_tp");
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -121,27 +122,21 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model>{
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::quiet_NaN()));
       out__.write(A_p);
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
       current_statement__ = 2;
       stan::model::assign(A_complex_tp, A_p,
         "assigning variable A_complex_tp");
-      if(emit_transformed_parameters__)
-        {
-          out__.write(A_complex_tp);
-        }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      if (emit_transformed_parameters__) {
+        out__.write(A_complex_tp);
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -163,15 +158,15 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model>{
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> A_p =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           stan::model::assign(A_p, in__.read<local_scalar_t__>(),
             "assigning variable A_p", stan::model::index_uni(sym2__),
             stan::model::index_uni(sym1__));
         }
       }
       out__.write(A_p);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -190,61 +185,49 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model>{
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "A_p" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "A_complex_tp" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "real");
-            param_names__.emplace_back(std::string() + "A_complex_tp" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "imag");
-          }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "A_complex_tp" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "A_complex_tp" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    }
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "A_p" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "A_complex_tp" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "real");
-            param_names__.emplace_back(std::string() + "A_complex_tp" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "imag");
-          }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "A_complex_tp" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "A_complex_tp" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    }
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"A_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"A_complex_tp\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
@@ -320,9 +303,9 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model>{
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }
@@ -468,8 +451,8 @@ class constraints_model final : public model_base_crtp<constraints_model>{
  public:
   ~constraints_model() {}
   constraints_model(stan::io::var_context& context__, unsigned int
-                    random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                    random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -518,7 +501,7 @@ class constraints_model final : public model_base_crtp<constraints_model>{
         current_statement__ = 54;
         pos__ = 1;
         current_statement__ = 54;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 54;
           stan::model::assign(diff_low_mid, diff_low_mid_flat__[(pos__ - 1)],
             "assigning variable diff_low_mid", stan::model::index_uni(sym1__));
@@ -543,7 +526,7 @@ class constraints_model final : public model_base_crtp<constraints_model>{
         current_statement__ = 56;
         pos__ = 1;
         current_statement__ = 56;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 56;
           stan::model::assign(diff_high_mid, diff_high_mid_flat__[(pos__ -
             1)], "assigning variable diff_high_mid",
@@ -568,7 +551,7 @@ class constraints_model final : public model_base_crtp<constraints_model>{
         current_statement__ = 58;
         pos__ = 1;
         current_statement__ = 58;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 58;
           stan::model::assign(mid_price, mid_price_flat__[(pos__ - 1)],
             "assigning variable mid_price", stan::model::index_uni(sym1__));
@@ -594,9 +577,9 @@ class constraints_model final : public model_base_crtp<constraints_model>{
         current_statement__ = 61;
         pos__ = 1;
         current_statement__ = 61;
-        for(int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
           current_statement__ = 61;
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             current_statement__ = 61;
             stan::model::assign(X_all, X_all_flat__[(pos__ - 1)],
               "assigning variable X_all", stan::model::index_uni(sym2__),
@@ -720,12 +703,13 @@ class constraints_model final : public model_base_crtp<constraints_model>{
       stan::math::validate_non_negative_index("h_i_sigma", "Nr", Nr);
       current_statement__ = 91;
       stan::math::validate_non_negative_index("h_sigma", "Nr", Nr);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     num_params_r__ = N + K + Nr + 2 + 1 + 1 + 1 + 1 + N + N + 1 + N + N + N +
       N + N + N + N + ((N * (N - 1)) / 2) + (N + ((N * (N - 1)) / 2)) + ((((K
-      * (K - 1)) / 2) + K) + ((K - K) * K)) + ((K * (K - 1)) / 2);}
+      * (K - 1)) / 2) + K) + ((K - K) * K)) + ((K * (K - 1)) / 2);
+  }
   inline std::string model_name() const final {
     return "constraints_model";
   }
@@ -1148,7 +1132,7 @@ class constraints_model final : public model_base_crtp<constraints_model>{
         lp_accum__.add(stan::math::normal_lpdf<propto__>(prices_diff, mu,
                          h_sigma));
       }
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -1388,13 +1372,11 @@ class constraints_model final : public model_base_crtp<constraints_model>{
       out__.write(cov_matrix_test);
       out__.write(chol_fac_cov_test);
       out__.write(chol_fac_corr_test);
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
       current_statement__ = 23;
       phi = stan::math::fma(phi_beta, 2.0, -1.0);
       current_statement__ = 24;
@@ -1481,25 +1463,21 @@ class constraints_model final : public model_base_crtp<constraints_model>{
       current_statement__ = 30;
       stan::math::check_greater_or_equal(function__, "h_i_sigma", h_i_sigma,
         0);
-      if(emit_transformed_parameters__)
-        {
-          out__.write(phi);
-          out__.write(sigma);
-          out__.write(prices);
-          out__.write(prices_diff);
-          out__.write(mu);
-          out__.write(err);
-          out__.write(h_i_mean);
-          out__.write(h_i_sigma);
-          out__.write(h_sigma);
-        }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      if (emit_transformed_parameters__) {
+        out__.write(phi);
+        out__.write(sigma);
+        out__.write(prices);
+        out__.write(prices_diff);
+        out__.write(mu);
+        out__.write(err);
+        out__.write(h_i_mean);
+        out__.write(h_i_sigma);
+        out__.write(h_sigma);
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -1521,28 +1499,28 @@ class constraints_model final : public model_base_crtp<constraints_model>{
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> high_low_est =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(high_low_est, in__.read<local_scalar_t__>(),
           "assigning variable high_low_est", stan::model::index_uni(sym1__));
       }
       out__.write_free_lub(diff_low_mid, diff_high_mid, high_low_est);
       Eigen::Matrix<local_scalar_t__,-1,1> b =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(K, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= K; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
         stan::model::assign(b, in__.read<local_scalar_t__>(),
           "assigning variable b", stan::model::index_uni(sym1__));
       }
       out__.write(b);
       Eigen::Matrix<local_scalar_t__,-1,1> h =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(Nr, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
         stan::model::assign(h, in__.read<local_scalar_t__>(),
           "assigning variable h", stan::model::index_uni(sym1__));
       }
       out__.write(h);
       Eigen::Matrix<local_scalar_t__,-1,1> ar =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         stan::model::assign(ar, in__.read<local_scalar_t__>(),
           "assigning variable ar", stan::model::index_uni(sym1__));
       }
@@ -1561,14 +1539,14 @@ class constraints_model final : public model_base_crtp<constraints_model>{
       out__.write(Intercept);
       Eigen::Matrix<local_scalar_t__,-1,1> mean_price =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(mean_price, in__.read<local_scalar_t__>(),
           "assigning variable mean_price", stan::model::index_uni(sym1__));
       }
       out__.write(mean_price);
       Eigen::Matrix<local_scalar_t__,-1,1> sigma_price =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(sigma_price, in__.read<local_scalar_t__>(),
           "assigning variable sigma_price", stan::model::index_uni(sym1__));
       }
@@ -1578,14 +1556,14 @@ class constraints_model final : public model_base_crtp<constraints_model>{
       out__.write(theta);
       Eigen::Matrix<local_scalar_t__,-1,1> upper_test =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(upper_test, in__.read<local_scalar_t__>(),
           "assigning variable upper_test", stan::model::index_uni(sym1__));
       }
       out__.write_free_ub(ma, upper_test);
       Eigen::Matrix<local_scalar_t__,-1,1> lower_upper_test =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(lower_upper_test, in__.read<local_scalar_t__>(),
           "assigning variable lower_upper_test",
           stan::model::index_uni(sym1__));
@@ -1593,7 +1571,7 @@ class constraints_model final : public model_base_crtp<constraints_model>{
       out__.write_free_lub(sigma_price, upper_test, lower_upper_test);
       Eigen::Matrix<local_scalar_t__,1,-1> row_vec_lower_upper_test =
         Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(row_vec_lower_upper_test,
           in__.read<local_scalar_t__>(),
           "assigning variable row_vec_lower_upper_test",
@@ -1603,7 +1581,7 @@ class constraints_model final : public model_base_crtp<constraints_model>{
         stan::math::transpose(upper_test), row_vec_lower_upper_test);
       Eigen::Matrix<local_scalar_t__,-1,1> offset_mult_test =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(offset_mult_test, in__.read<local_scalar_t__>(),
           "assigning variable offset_mult_test",
           stan::model::index_uni(sym1__));
@@ -1612,21 +1590,21 @@ class constraints_model final : public model_base_crtp<constraints_model>{
         offset_mult_test);
       Eigen::Matrix<local_scalar_t__,-1,1> ordered_test =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(ordered_test, in__.read<local_scalar_t__>(),
           "assigning variable ordered_test", stan::model::index_uni(sym1__));
       }
       out__.write_free_ordered(ordered_test);
       Eigen::Matrix<local_scalar_t__,-1,1> unit_vec_test =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(unit_vec_test, in__.read<local_scalar_t__>(),
           "assigning variable unit_vec_test", stan::model::index_uni(sym1__));
       }
       out__.write_free_unit_vector(unit_vec_test);
       Eigen::Matrix<local_scalar_t__,-1,1> pos_ordered_test =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(pos_ordered_test, in__.read<local_scalar_t__>(),
           "assigning variable pos_ordered_test",
           stan::model::index_uni(sym1__));
@@ -1634,8 +1612,8 @@ class constraints_model final : public model_base_crtp<constraints_model>{
       out__.write_free_positive_ordered(pos_ordered_test);
       Eigen::Matrix<local_scalar_t__,-1,-1> corr_matrix_test =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           stan::model::assign(corr_matrix_test,
             in__.read<local_scalar_t__>(),
             "assigning variable corr_matrix_test",
@@ -1645,8 +1623,8 @@ class constraints_model final : public model_base_crtp<constraints_model>{
       out__.write_free_corr_matrix(corr_matrix_test);
       Eigen::Matrix<local_scalar_t__,-1,-1> cov_matrix_test =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           stan::model::assign(cov_matrix_test, in__.read<local_scalar_t__>(),
             "assigning variable cov_matrix_test",
             stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
@@ -1655,8 +1633,8 @@ class constraints_model final : public model_base_crtp<constraints_model>{
       out__.write_free_cov_matrix(cov_matrix_test);
       Eigen::Matrix<local_scalar_t__,-1,-1> chol_fac_cov_test =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(K, K, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= K; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
           stan::model::assign(chol_fac_cov_test,
             in__.read<local_scalar_t__>(),
             "assigning variable chol_fac_cov_test",
@@ -1666,8 +1644,8 @@ class constraints_model final : public model_base_crtp<constraints_model>{
       out__.write_free_cholesky_factor_cov(chol_fac_cov_test);
       Eigen::Matrix<local_scalar_t__,-1,-1> chol_fac_corr_test =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(K, K, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= K; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
           stan::model::assign(chol_fac_corr_test,
             in__.read<local_scalar_t__>(),
             "assigning variable chol_fac_corr_test",
@@ -1675,7 +1653,7 @@ class constraints_model final : public model_base_crtp<constraints_model>{
         }
       }
       out__.write_free_cholesky_factor_corr(chol_fac_corr_test);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -1729,19 +1707,19 @@ class constraints_model final : public model_base_crtp<constraints_model>{
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "high_low_est" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= K; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
       param_names__.emplace_back(std::string() + "b" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
       param_names__.emplace_back(std::string() + "h" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       param_names__.emplace_back(std::string() + "ar" + '.' +
         std::to_string(sym1__));
     }
@@ -1749,124 +1727,118 @@ class constraints_model final : public model_base_crtp<constraints_model>{
     param_names__.emplace_back(std::string() + "phi_beta");
     param_names__.emplace_back(std::string() + "sigma2");
     param_names__.emplace_back(std::string() + "Intercept");
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "mean_price" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "sigma_price" + '.' +
         std::to_string(sym1__));
     }
     param_names__.emplace_back(std::string() + "theta");
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "upper_test" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "lower_upper_test" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "row_vec_lower_upper_test" +
         '.' + std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "offset_mult_test" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "ordered_test" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "unit_vec_test" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "pos_ordered_test" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "corr_matrix_test" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "cov_matrix_test" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= K; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= K; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
         param_names__.emplace_back(std::string() + "chol_fac_cov_test" + '.'
           + std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= K; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= K; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
         param_names__.emplace_back(std::string() + "chol_fac_corr_test" + '.'
           + std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    if(emit_transformed_parameters__)
-      {
-        param_names__.emplace_back(std::string() + "phi");
-        param_names__.emplace_back(std::string() + "sigma");
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "prices" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
-          param_names__.emplace_back(std::string() + "prices_diff" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
-          param_names__.emplace_back(std::string() + "mu" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
-          param_names__.emplace_back(std::string() + "err" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
-          param_names__.emplace_back(std::string() + "h_i_mean" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
-          param_names__.emplace_back(std::string() + "h_i_sigma" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
-          param_names__.emplace_back(std::string() + "h_sigma" + '.' +
-            std::to_string(sym1__));
-        }
+    if (emit_transformed_parameters__) {
+      param_names__.emplace_back(std::string() + "phi");
+      param_names__.emplace_back(std::string() + "sigma");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        param_names__.emplace_back(std::string() + "prices" + '.' +
+          std::to_string(sym1__));
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
+        param_names__.emplace_back(std::string() + "prices_diff" + '.' +
+          std::to_string(sym1__));
       }
-    
+      for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
+        param_names__.emplace_back(std::string() + "mu" + '.' +
+          std::to_string(sym1__));
+      }
+      for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
+        param_names__.emplace_back(std::string() + "err" + '.' +
+          std::to_string(sym1__));
+      }
+      for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
+        param_names__.emplace_back(std::string() + "h_i_mean" + '.' +
+          std::to_string(sym1__));
+      }
+      for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
+        param_names__.emplace_back(std::string() + "h_i_sigma" + '.' +
+          std::to_string(sym1__));
+      }
+      for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
+        param_names__.emplace_back(std::string() + "h_sigma" + '.' +
+          std::to_string(sym1__));
+      }
+    }
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "high_low_est" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= K; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
       param_names__.emplace_back(std::string() + "b" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
       param_names__.emplace_back(std::string() + "h" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       param_names__.emplace_back(std::string() + "ar" + '.' +
         std::to_string(sym1__));
     }
@@ -1874,99 +1846,93 @@ class constraints_model final : public model_base_crtp<constraints_model>{
     param_names__.emplace_back(std::string() + "phi_beta");
     param_names__.emplace_back(std::string() + "sigma2");
     param_names__.emplace_back(std::string() + "Intercept");
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "mean_price" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "sigma_price" + '.' +
         std::to_string(sym1__));
     }
     param_names__.emplace_back(std::string() + "theta");
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "upper_test" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "lower_upper_test" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "row_vec_lower_upper_test" +
         '.' + std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "offset_mult_test" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "ordered_test" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "unit_vec_test" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "pos_ordered_test" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= ((N * (N - 1)) / 2); ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= ((N * (N - 1)) / 2); ++sym1__) {
       param_names__.emplace_back(std::string() + "corr_matrix_test" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= (N + ((N * (N - 1)) / 2)); ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= (N + ((N * (N - 1)) / 2)); ++sym1__) {
       param_names__.emplace_back(std::string() + "cov_matrix_test" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= ((((K * (K - 1)) / 2) + K) + ((K - K) *
-        K)); ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= ((((K * (K - 1)) / 2) + K) + ((K - K) *
+         K)); ++sym1__) {
       param_names__.emplace_back(std::string() + "chol_fac_cov_test" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= ((K * (K - 1)) / 2); ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= ((K * (K - 1)) / 2); ++sym1__) {
       param_names__.emplace_back(std::string() + "chol_fac_corr_test" + '.' +
         std::to_string(sym1__));
     }
-    if(emit_transformed_parameters__)
-      {
-        param_names__.emplace_back(std::string() + "phi");
-        param_names__.emplace_back(std::string() + "sigma");
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "prices" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
-          param_names__.emplace_back(std::string() + "prices_diff" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
-          param_names__.emplace_back(std::string() + "mu" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
-          param_names__.emplace_back(std::string() + "err" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
-          param_names__.emplace_back(std::string() + "h_i_mean" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
-          param_names__.emplace_back(std::string() + "h_i_sigma" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
-          param_names__.emplace_back(std::string() + "h_sigma" + '.' +
-            std::to_string(sym1__));
-        }
+    if (emit_transformed_parameters__) {
+      param_names__.emplace_back(std::string() + "phi");
+      param_names__.emplace_back(std::string() + "sigma");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        param_names__.emplace_back(std::string() + "prices" + '.' +
+          std::to_string(sym1__));
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
+        param_names__.emplace_back(std::string() + "prices_diff" + '.' +
+          std::to_string(sym1__));
       }
-    
+      for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
+        param_names__.emplace_back(std::string() + "mu" + '.' +
+          std::to_string(sym1__));
+      }
+      for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
+        param_names__.emplace_back(std::string() + "err" + '.' +
+          std::to_string(sym1__));
+      }
+      for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
+        param_names__.emplace_back(std::string() + "h_i_mean" + '.' +
+          std::to_string(sym1__));
+      }
+      for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
+        param_names__.emplace_back(std::string() + "h_i_sigma" + '.' +
+          std::to_string(sym1__));
+      }
+      for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
+        param_names__.emplace_back(std::string() + "h_sigma" + '.' +
+          std::to_string(sym1__));
+      }
+    }
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"high_low_est\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"h\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"parameters\"},{\"name\":\"ar\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"ma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"Intercept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_price\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"sigma_price\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"lower_upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"row_vec_lower_upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"offset_mult_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"ordered_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"unit_vec_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"pos_ordered_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"corr_matrix_test\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cov_matrix_test\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"chol_fac_cov_test\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(K) + ",\"cols\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"chol_fac_corr_test\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(K) + ",\"cols\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"prices\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"prices_diff\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"err\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_mean\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"}]");
@@ -2068,9 +2034,9 @@ class constraints_model final : public model_base_crtp<constraints_model>{
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }
@@ -2122,8 +2088,8 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
  public:
   ~deep_dependence_model() {}
   deep_dependence_model(stan::io::var_context& context__, unsigned int
-                        random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                        random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -2140,10 +2106,11 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (10 * 10);}
+    num_params_r__ = (10 * 10);
+  }
   inline std::string model_name() const final {
     return "deep_dependence_model";
   }
@@ -2211,9 +2178,9 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
       stan::model::assign(X_tp7, stan::math::exp(X_tp6),
         "assigning variable X_tp7");
       current_statement__ = 13;
-      for(int i = 1; i <= 5; ++i) {
+      for (int i = 1; i <= 5; ++i) {
         current_statement__ = 11;
-        for(int j = 1; j <= 5; ++j) {
+        for (int j = 1; j <= 5; ++j) {
           current_statement__ = 9;
           stan::model::assign(X_tp7,
             stan::math::exp(
@@ -2222,7 +2189,7 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
             stan::model::index_uni(i), stan::model::index_uni(j));
         }
       }
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -2286,13 +2253,11 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
       out__.write(X_p);
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
       current_statement__ = 2;
       stan::model::assign(X_tp1, stan::math::exp(X_p),
         "assigning variable X_tp1");
@@ -2315,9 +2280,9 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
       stan::model::assign(X_tp7, stan::math::exp(X_tp6),
         "assigning variable X_tp7");
       current_statement__ = 13;
-      for(int i = 1; i <= 5; ++i) {
+      for (int i = 1; i <= 5; ++i) {
         current_statement__ = 11;
-        for(int j = 1; j <= 5; ++j) {
+        for (int j = 1; j <= 5; ++j) {
           current_statement__ = 9;
           stan::model::assign(X_tp7,
             stan::math::exp(
@@ -2326,23 +2291,19 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
             stan::model::index_uni(i), stan::model::index_uni(j));
         }
       }
-      if(emit_transformed_parameters__)
-        {
-          out__.write(X_tp1);
-          out__.write(X_tp2);
-          out__.write(X_tp3);
-          out__.write(X_tp4);
-          out__.write(X_tp5);
-          out__.write(X_tp6);
-          out__.write(X_tp7);
-        }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      if (emit_transformed_parameters__) {
+        out__.write(X_tp1);
+        out__.write(X_tp2);
+        out__.write(X_tp3);
+        out__.write(X_tp4);
+        out__.write(X_tp5);
+        out__.write(X_tp6);
+        out__.write(X_tp7);
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -2364,15 +2325,15 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           stan::model::assign(X_p, in__.read<local_scalar_t__>(),
             "assigning variable X_p", stan::model::index_uni(sym2__),
             stan::model::index_uni(sym1__));
         }
       }
       out__.write(X_p);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -2404,125 +2365,113 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "X_p" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "X_tp1" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "X_tp2" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "X_tp3" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "X_tp4" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "X_tp5" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "X_tp6" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "X_tp7" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "X_tp1" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "X_tp2" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
       }
-    
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "X_tp3" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "X_tp4" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "X_tp5" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "X_tp6" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "X_tp7" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+    }
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "X_p" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "X_tp1" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "X_tp2" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "X_tp3" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "X_tp4" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "X_tp5" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "X_tp6" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "X_tp7" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "X_tp1" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "X_tp2" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
       }
-    
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "X_tp3" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "X_tp4" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "X_tp5" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "X_tp6" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "X_tp7" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+    }
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"X_tp1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp3\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp4\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp5\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp6\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp7\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
@@ -2600,9 +2549,9 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }
@@ -2772,7 +2721,7 @@ int mask_fun(const int& i, std::ostream* pstream__) {
   try {
     current_statement__ = 112;
     return i;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -2797,7 +2746,7 @@ udf_fun(const T0__& A_arg__, std::ostream* pstream__) {
   try {
     current_statement__ = 114;
     return A;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -2820,8 +2769,8 @@ class indexing_model final : public model_base_crtp<indexing_model>{
  public:
   ~indexing_model() {}
   indexing_model(stan::io::var_context& context__, unsigned int
-                 random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                 random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -2868,9 +2817,9 @@ class indexing_model final : public model_base_crtp<indexing_model>{
         current_statement__ = 73;
         pos__ = 1;
         current_statement__ = 73;
-        for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
           current_statement__ = 73;
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             current_statement__ = 73;
             stan::model::assign(dat_x, dat_x_flat__[(pos__ - 1)],
               "assigning variable dat_x", stan::model::index_uni(sym2__),
@@ -2895,7 +2844,7 @@ class indexing_model final : public model_base_crtp<indexing_model>{
         current_statement__ = 75;
         pos__ = 1;
         current_statement__ = 75;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 75;
           stan::model::assign(y, y_flat__[(pos__ - 1)],
             "assigning variable y", stan::model::index_uni(sym1__));
@@ -3001,12 +2950,13 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       current_statement__ = 111;
       stan::math::validate_non_negative_index(
         "tp_aos_fail_assign_from_top_idx", "M", M);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + M + (N * M) + (10 * N) + (N * M) + N + (N * M) + N +
       N + N + (N * M) + M + M + M + M + (N * M) + (N * M) + (N * M) + (N * M)
-      + (N * M) + (N * M);}
+      + (N * M) + (N * M);
+  }
   inline std::string model_name() const final {
     return "indexing_model";
   }
@@ -3345,7 +3295,7 @@ class indexing_model final : public model_base_crtp<indexing_model>{
           "assigning variable tp_soa_single_assign_from_soa",
           stan::model::index_uni(2));
         current_statement__ = 57;
-        for(int i = 1; i <= 10; ++i) {
+        for (int i = 1; i <= 10; ++i) {
           current_statement__ = 47;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                            stan::math::multiply(dat_x,
@@ -3443,7 +3393,7 @@ class indexing_model final : public model_base_crtp<indexing_model>{
         Eigen::Matrix<local_scalar_t__,-1,1> tp_aos_loop_vec_v_multi_uni_idx =
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
         current_statement__ = 68;
-        for(int i = 1; i <= N; ++i) {
+        for (int i = 1; i <= N; ++i) {
           current_statement__ = 62;
           stan::model::assign(tp_aos_loop_vec_v_uni_idx,
             stan::math::multiply(p_soa_lhs_loop_mul, p_soa_rhs_loop_mul),
@@ -3490,7 +3440,7 @@ class indexing_model final : public model_base_crtp<indexing_model>{
                              stan::model::index_uni(i)))));
         }
       }
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -3675,8 +3625,8 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(alpha);
       out__.write(p_soa_vec_v);
       out__.write(p_soa_mat);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           out__.write(p_soa_arr_vec_v[(sym2__ - 1)][(sym1__ - 1)]);
         }
       }
@@ -3697,13 +3647,11 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_aos_mat_pass_func_outer_single_indexed2);
       out__.write(p_aos_mat_fail_uni_uni_idx1);
       out__.write(p_aos_mat_fail_uni_uni_idx2);
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
       current_statement__ = 22;
       tp_real_from_aos = stan::model::rvalue(p_soa_vec_v, "p_soa_vec_v",
                            stan::model::index_uni(1));
@@ -3735,21 +3683,17 @@ class indexing_model final : public model_base_crtp<indexing_model>{
           "p_aos_fail_assign_from_top_idx", stan::model::index_min(1)),
         "assigning variable tp_aos_fail_assign_from_top_idx",
         stan::model::index_min(1));
-      if(emit_transformed_parameters__)
-        {
-          out__.write(tp_real_from_aos);
-          out__.write(tp_aos_vec_v);
-          out__.write(tp_soa_single_idx_uninit);
-          out__.write(tp_aos_fail_func_vec_v);
-          out__.write(tp_aos_fail_assign_from_top_idx);
-        }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      if (emit_transformed_parameters__) {
+        out__.write(tp_real_from_aos);
+        out__.write(tp_aos_vec_v);
+        out__.write(tp_soa_single_idx_uninit);
+        out__.write(tp_aos_fail_func_vec_v);
+        out__.write(tp_aos_fail_assign_from_top_idx);
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -3774,15 +3718,15 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(alpha);
       Eigen::Matrix<local_scalar_t__,-1,1> p_soa_vec_v =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(M, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         stan::model::assign(p_soa_vec_v, in__.read<local_scalar_t__>(),
           "assigning variable p_soa_vec_v", stan::model::index_uni(sym1__));
       }
       out__.write(p_soa_vec_v);
       Eigen::Matrix<local_scalar_t__,-1,-1> p_soa_mat =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, M, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           stan::model::assign(p_soa_mat, in__.read<local_scalar_t__>(),
             "assigning variable p_soa_mat", stan::model::index_uni(sym2__),
             stan::model::index_uni(sym1__));
@@ -3792,8 +3736,8 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> p_soa_arr_vec_v =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(10,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__));
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           stan::model::assign(p_soa_arr_vec_v, in__.read<local_scalar_t__>(),
             "assigning variable p_soa_arr_vec_v",
             stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
@@ -3802,8 +3746,8 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_soa_arr_vec_v);
       Eigen::Matrix<local_scalar_t__,-1,-1> p_soa_mat_uni_col_idx =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, M, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           stan::model::assign(p_soa_mat_uni_col_idx,
             in__.read<local_scalar_t__>(),
             "assigning variable p_soa_mat_uni_col_idx",
@@ -3813,7 +3757,7 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_soa_mat_uni_col_idx);
       Eigen::Matrix<local_scalar_t__,-1,1> p_soa_vec_uni_idx =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(p_soa_vec_uni_idx, in__.read<local_scalar_t__>(),
           "assigning variable p_soa_vec_uni_idx",
           stan::model::index_uni(sym1__));
@@ -3821,8 +3765,8 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_soa_vec_uni_idx);
       Eigen::Matrix<local_scalar_t__,-1,-1> p_soa_loop_mat_uni_col_idx =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, M, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           stan::model::assign(p_soa_loop_mat_uni_col_idx,
             in__.read<local_scalar_t__>(),
             "assigning variable p_soa_loop_mat_uni_col_idx",
@@ -3832,7 +3776,7 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_soa_loop_mat_uni_col_idx);
       Eigen::Matrix<local_scalar_t__,1,-1> p_soa_lhs_loop_mul =
         Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(p_soa_lhs_loop_mul,
           in__.read<local_scalar_t__>(),
           "assigning variable p_soa_lhs_loop_mul",
@@ -3841,7 +3785,7 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_soa_lhs_loop_mul);
       Eigen::Matrix<local_scalar_t__,-1,1> p_soa_rhs_loop_mul =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(p_soa_rhs_loop_mul,
           in__.read<local_scalar_t__>(),
           "assigning variable p_soa_rhs_loop_mul",
@@ -3850,7 +3794,7 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_soa_rhs_loop_mul);
       Eigen::Matrix<local_scalar_t__,-1,1> p_soa_used_with_aos_in_excluded_fun =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(p_soa_used_with_aos_in_excluded_fun,
           in__.read<local_scalar_t__>(),
           "assigning variable p_soa_used_with_aos_in_excluded_fun",
@@ -3859,8 +3803,8 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_soa_used_with_aos_in_excluded_fun);
       Eigen::Matrix<local_scalar_t__,-1,-1> p_soa_loop_mat_multi_uni_uni_idx =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, M, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           stan::model::assign(p_soa_loop_mat_multi_uni_uni_idx,
             in__.read<local_scalar_t__>(),
             "assigning variable p_soa_loop_mat_multi_uni_uni_idx",
@@ -3870,7 +3814,7 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_soa_loop_mat_multi_uni_uni_idx);
       Eigen::Matrix<local_scalar_t__,-1,1> p_aos_vec_v_assign_to_aos =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(M, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         stan::model::assign(p_aos_vec_v_assign_to_aos,
           in__.read<local_scalar_t__>(),
           "assigning variable p_aos_vec_v_assign_to_aos",
@@ -3879,7 +3823,7 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_aos_vec_v_assign_to_aos);
       Eigen::Matrix<local_scalar_t__,-1,1> p_aos_vec_v_tp_fails_func =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(M, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         stan::model::assign(p_aos_vec_v_tp_fails_func,
           in__.read<local_scalar_t__>(),
           "assigning variable p_aos_vec_v_tp_fails_func",
@@ -3888,7 +3832,7 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_aos_vec_v_tp_fails_func);
       Eigen::Matrix<local_scalar_t__,-1,1> p_aos_loop_vec_v_uni_idx =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(M, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         stan::model::assign(p_aos_loop_vec_v_uni_idx,
           in__.read<local_scalar_t__>(),
           "assigning variable p_aos_loop_vec_v_uni_idx",
@@ -3897,7 +3841,7 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_aos_loop_vec_v_uni_idx);
       Eigen::Matrix<local_scalar_t__,-1,1> p_aos_fail_assign_from_top_idx =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(M, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         stan::model::assign(p_aos_fail_assign_from_top_idx,
           in__.read<local_scalar_t__>(),
           "assigning variable p_aos_fail_assign_from_top_idx",
@@ -3906,8 +3850,8 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_aos_fail_assign_from_top_idx);
       Eigen::Matrix<local_scalar_t__,-1,-1> p_aos_loop_mat_uni_uni_idx =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, M, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           stan::model::assign(p_aos_loop_mat_uni_uni_idx,
             in__.read<local_scalar_t__>(),
             "assigning variable p_aos_loop_mat_uni_uni_idx",
@@ -3917,8 +3861,8 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_aos_loop_mat_uni_uni_idx);
       Eigen::Matrix<local_scalar_t__,-1,-1> p_aos_mat =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, M, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           stan::model::assign(p_aos_mat, in__.read<local_scalar_t__>(),
             "assigning variable p_aos_mat", stan::model::index_uni(sym2__),
             stan::model::index_uni(sym1__));
@@ -3927,8 +3871,8 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_aos_mat);
       Eigen::Matrix<local_scalar_t__,-1,-1> p_aos_mat_pass_func_outer_single_indexed1 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, M, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           stan::model::assign(p_aos_mat_pass_func_outer_single_indexed1,
             in__.read<local_scalar_t__>(),
             "assigning variable p_aos_mat_pass_func_outer_single_indexed1",
@@ -3938,8 +3882,8 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_aos_mat_pass_func_outer_single_indexed1);
       Eigen::Matrix<local_scalar_t__,-1,-1> p_aos_mat_pass_func_outer_single_indexed2 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, M, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           stan::model::assign(p_aos_mat_pass_func_outer_single_indexed2,
             in__.read<local_scalar_t__>(),
             "assigning variable p_aos_mat_pass_func_outer_single_indexed2",
@@ -3949,8 +3893,8 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_aos_mat_pass_func_outer_single_indexed2);
       Eigen::Matrix<local_scalar_t__,-1,-1> p_aos_mat_fail_uni_uni_idx1 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, M, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           stan::model::assign(p_aos_mat_fail_uni_uni_idx1,
             in__.read<local_scalar_t__>(),
             "assigning variable p_aos_mat_fail_uni_uni_idx1",
@@ -3960,8 +3904,8 @@ class indexing_model final : public model_base_crtp<indexing_model>{
       out__.write(p_aos_mat_fail_uni_uni_idx1);
       Eigen::Matrix<local_scalar_t__,-1,-1> p_aos_mat_fail_uni_uni_idx2 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, M, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           stan::model::assign(p_aos_mat_fail_uni_uni_idx2,
             in__.read<local_scalar_t__>(),
             "assigning variable p_aos_mat_fail_uni_uni_idx2",
@@ -3969,7 +3913,7 @@ class indexing_model final : public model_base_crtp<indexing_model>{
         }
       }
       out__.write(p_aos_mat_fail_uni_uni_idx2);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -4034,282 +3978,270 @@ class indexing_model final : public model_base_crtp<indexing_model>{
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "alpha");
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_soa_vec_v" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "p_soa_mat" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "p_soa_arr_vec_v" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "p_soa_mat_uni_col_idx" +
           '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_soa_vec_uni_idx" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() +
           "p_soa_loop_mat_uni_col_idx" + '.' + std::to_string(sym2__) + '.' +
           std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_soa_lhs_loop_mul" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_soa_rhs_loop_mul" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() +
         "p_soa_used_with_aos_in_excluded_fun" + '.' + std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() +
           "p_soa_loop_mat_multi_uni_uni_idx" + '.' + std::to_string(sym2__) +
           '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_aos_vec_v_assign_to_aos"
         + '.' + std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_aos_vec_v_tp_fails_func"
         + '.' + std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_aos_loop_vec_v_uni_idx" +
         '.' + std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
       param_names__.emplace_back(std::string() +
         "p_aos_fail_assign_from_top_idx" + '.' + std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() +
           "p_aos_loop_mat_uni_uni_idx" + '.' + std::to_string(sym2__) + '.' +
           std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "p_aos_mat" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() +
           "p_aos_mat_pass_func_outer_single_indexed1" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() +
           "p_aos_mat_pass_func_outer_single_indexed2" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() +
           "p_aos_mat_fail_uni_uni_idx1" + '.' + std::to_string(sym2__) + '.'
           + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() +
           "p_aos_mat_fail_uni_uni_idx2" + '.' + std::to_string(sym2__) + '.'
           + std::to_string(sym1__));
       }
     }
-    if(emit_transformed_parameters__)
-      {
-        param_names__.emplace_back(std::string() + "tp_real_from_aos");
-        for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          param_names__.emplace_back(std::string() + "tp_aos_vec_v" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          param_names__.emplace_back(std::string() +
-            "tp_soa_single_idx_uninit" + '.' + std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          param_names__.emplace_back(std::string() + "tp_aos_fail_func_vec_v"
-            + '.' + std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          param_names__.emplace_back(std::string() +
-            "tp_aos_fail_assign_from_top_idx" + '.' + std::to_string(sym1__));
-        }
+    if (emit_transformed_parameters__) {
+      param_names__.emplace_back(std::string() + "tp_real_from_aos");
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tp_aos_vec_v" + '.' +
+          std::to_string(sym1__));
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tp_soa_single_idx_uninit"
+          + '.' + std::to_string(sym1__));
       }
-    
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tp_aos_fail_func_vec_v" +
+          '.' + std::to_string(sym1__));
+      }
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        param_names__.emplace_back(std::string() +
+          "tp_aos_fail_assign_from_top_idx" + '.' + std::to_string(sym1__));
+      }
+    }
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "alpha");
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_soa_vec_v" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "p_soa_mat" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "p_soa_arr_vec_v" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "p_soa_mat_uni_col_idx" +
           '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_soa_vec_uni_idx" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() +
           "p_soa_loop_mat_uni_col_idx" + '.' + std::to_string(sym2__) + '.' +
           std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_soa_lhs_loop_mul" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_soa_rhs_loop_mul" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() +
         "p_soa_used_with_aos_in_excluded_fun" + '.' + std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() +
           "p_soa_loop_mat_multi_uni_uni_idx" + '.' + std::to_string(sym2__) +
           '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_aos_vec_v_assign_to_aos"
         + '.' + std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_aos_vec_v_tp_fails_func"
         + '.' + std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_aos_loop_vec_v_uni_idx" +
         '.' + std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
       param_names__.emplace_back(std::string() +
         "p_aos_fail_assign_from_top_idx" + '.' + std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() +
           "p_aos_loop_mat_uni_uni_idx" + '.' + std::to_string(sym2__) + '.' +
           std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "p_aos_mat" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() +
           "p_aos_mat_pass_func_outer_single_indexed1" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() +
           "p_aos_mat_pass_func_outer_single_indexed2" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() +
           "p_aos_mat_fail_uni_uni_idx1" + '.' + std::to_string(sym2__) + '.'
           + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() +
           "p_aos_mat_fail_uni_uni_idx2" + '.' + std::to_string(sym2__) + '.'
           + std::to_string(sym1__));
       }
     }
-    if(emit_transformed_parameters__)
-      {
-        param_names__.emplace_back(std::string() + "tp_real_from_aos");
-        for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          param_names__.emplace_back(std::string() + "tp_aos_vec_v" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          param_names__.emplace_back(std::string() +
-            "tp_soa_single_idx_uninit" + '.' + std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          param_names__.emplace_back(std::string() + "tp_aos_fail_func_vec_v"
-            + '.' + std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          param_names__.emplace_back(std::string() +
-            "tp_aos_fail_assign_from_top_idx" + '.' + std::to_string(sym1__));
-        }
+    if (emit_transformed_parameters__) {
+      param_names__.emplace_back(std::string() + "tp_real_from_aos");
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tp_aos_vec_v" + '.' +
+          std::to_string(sym1__));
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tp_soa_single_idx_uninit"
+          + '.' + std::to_string(sym1__));
       }
-    
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tp_aos_fail_func_vec_v" +
+          '.' + std::to_string(sym1__));
+      }
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        param_names__.emplace_back(std::string() +
+          "tp_aos_fail_assign_from_top_idx" + '.' + std::to_string(sym1__));
+      }
+    }
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_arr_vec_v\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"p_soa_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_lhs_loop_mul\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_rhs_loop_mul\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_used_with_aos_in_excluded_fun\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_multi_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_assign_to_aos\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_tp_fails_func\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_vec_v_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_fail_assign_from_top_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_mat_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_pass_func_outer_single_indexed1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_pass_func_outer_single_indexed2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_fail_uni_uni_idx1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_fail_uni_uni_idx2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_aos\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_soa_single_idx_uninit\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_func_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_assign_from_top_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"}]");
@@ -4417,9 +4349,9 @@ class indexing_model final : public model_base_crtp<indexing_model>{
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }
@@ -4476,8 +4408,8 @@ class indexing2_model final : public model_base_crtp<indexing2_model>{
  public:
   ~indexing2_model() {}
   indexing2_model(stan::io::var_context& context__, unsigned int
-                  random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                  random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -4514,10 +4446,11 @@ class indexing2_model final : public model_base_crtp<indexing2_model>{
       Idx = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 16;
       Idx = context__.vals_i("Idx");
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 10;}
+    num_params_r__ = 1 + 10;
+  }
   inline std::string model_name() const final {
     return "indexing2_model";
   }
@@ -4570,7 +4503,7 @@ class indexing2_model final : public model_base_crtp<indexing2_model>{
               Eigen::Matrix<local_scalar_t__,-1,1>>>(alpha, N),
           "assigning variable tp_soa_multi_idx_assign_in_loop");
         current_statement__ = 7;
-        for(int i = 1; i <= 10; ++i) {
+        for (int i = 1; i <= 10; ++i) {
           current_statement__ = 5;
           stan::model::assign(tp_soa_multi_idx_assign_in_loop,
             stan::math::multiply(
@@ -4589,7 +4522,7 @@ class indexing2_model final : public model_base_crtp<indexing2_model>{
                                                     std::numeric_limits<double>::quiet_NaN(
                                                       )));
         current_statement__ = 12;
-        for(int i = 1; i <= 5; ++i) {
+        for (int i = 1; i <= 5; ++i) {
           current_statement__ = 10;
           stan::model::assign(tp_soa_single_idx_in_upfrom_idx,
             stan::model::rvalue(tp_soa_multi_idx_assign_in_loop,
@@ -4599,7 +4532,7 @@ class indexing2_model final : public model_base_crtp<indexing2_model>{
             "assigning variable tp_soa_single_idx_in_upfrom_idx");
         }
       }
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -4647,19 +4580,15 @@ class indexing2_model final : public model_base_crtp<indexing2_model>{
                                 Eigen::Matrix<local_scalar_t__,-1,1>>(10);
       out__.write(alpha);
       out__.write(p_aos_loop_single_idx);
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -4684,14 +4613,14 @@ class indexing2_model final : public model_base_crtp<indexing2_model>{
       out__.write(alpha);
       Eigen::Matrix<local_scalar_t__,-1,1> p_aos_loop_single_idx =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(10, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         stan::model::assign(p_aos_loop_single_idx,
           in__.read<local_scalar_t__>(),
           "assigning variable p_aos_loop_single_idx",
           stan::model::index_uni(sym1__));
       }
       out__.write(p_aos_loop_single_idx);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -4707,40 +4636,24 @@ class indexing2_model final : public model_base_crtp<indexing2_model>{
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "alpha");
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_aos_loop_single_idx" +
         '.' + std::to_string(sym1__));
     }
-    if(emit_transformed_parameters__)
-      {
-        
-      }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "alpha");
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_aos_loop_single_idx" +
         '.' + std::to_string(sym1__));
     }
-    if(emit_transformed_parameters__)
-      {
-        
-      }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_single_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(10) + "},\"block\":\"parameters\"}]");
@@ -4815,9 +4728,9 @@ class indexing2_model final : public model_base_crtp<indexing2_model>{
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }
@@ -4893,7 +4806,7 @@ nono_func(const T0__& x_arg__, std::ostream* pstream__) {
   try {
     current_statement__ = 8;
     return x;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -4924,7 +4837,7 @@ okay_reduction(const T0__& sum_x, const T1__& y_arg__, std::ostream*
   try {
     current_statement__ = 10;
     return stan::math::add(sum_x, y);
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -4944,8 +4857,7 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
   ~reductions_allowed_model() {}
   reductions_allowed_model(stan::io::var_context& context__, unsigned int
                            random_seed__ = 0, std::ostream*
-                           pstream__ = nullptr): model_base_crtp(0)
-  {
+                           pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -4968,10 +4880,11 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
       data_r = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 7;
       data_r = context__.vals_r("data_r")[(1 - 1)];
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (5 * 10) + (5 * 10) + (5 * 10);}
+    num_params_r__ = (5 * 10) + (5 * 10) + (5 * 10);
+  }
   inline std::string model_name() const final {
     return "reductions_allowed_model";
   }
@@ -5041,7 +4954,7 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
       stan::model::assign(tp_matrix_from_udf_reduced_soa,
         okay_reduction(stan::math::sum(soa_x), aos_x, pstream__),
         "assigning variable tp_matrix_from_udf_reduced_soa");
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -5106,13 +5019,11 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
       out__.write(soa_x);
       out__.write(aos_x);
       out__.write(aos_y);
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
       current_statement__ = 4;
       tp_real_from_soa = (stan::math::logical_gt(5, 0) ? data_r : stan::math::sum(
                                                                     soa_x));
@@ -5129,19 +5040,15 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
       stan::model::assign(tp_matrix_from_udf_reduced_soa,
         okay_reduction(stan::math::sum(soa_x), aos_x, pstream__),
         "assigning variable tp_matrix_from_udf_reduced_soa");
-      if(emit_transformed_parameters__)
-        {
-          out__.write(tp_real_from_soa);
-          out__.write(tp_matrix_aos_from_mix);
-          out__.write(tp_matrix_from_udf_reduced_soa);
-        }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      if (emit_transformed_parameters__) {
+        out__.write(tp_real_from_soa);
+        out__.write(tp_matrix_aos_from_mix);
+        out__.write(tp_matrix_from_udf_reduced_soa);
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -5163,8 +5070,8 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> soa_x =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 10, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
           stan::model::assign(soa_x, in__.read<local_scalar_t__>(),
             "assigning variable soa_x", stan::model::index_uni(sym2__),
             stan::model::index_uni(sym1__));
@@ -5173,8 +5080,8 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
       out__.write(soa_x);
       Eigen::Matrix<local_scalar_t__,-1,-1> aos_x =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 10, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
           stan::model::assign(aos_x, in__.read<local_scalar_t__>(),
             "assigning variable aos_x", stan::model::index_uni(sym2__),
             stan::model::index_uni(sym1__));
@@ -5183,15 +5090,15 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
       out__.write(aos_x);
       Eigen::Matrix<local_scalar_t__,-1,-1> aos_y =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 10, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
           stan::model::assign(aos_y, in__.read<local_scalar_t__>(),
             "assigning variable aos_y", stan::model::index_uni(sym2__),
             stan::model::index_uni(sym1__));
         }
       }
       out__.write(aos_y);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -5218,95 +5125,81 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
         param_names__.emplace_back(std::string() + "soa_x" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
         param_names__.emplace_back(std::string() + "aos_x" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
         param_names__.emplace_back(std::string() + "aos_y" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    if(emit_transformed_parameters__)
-      {
-        param_names__.emplace_back(std::string() + "tp_real_from_soa");
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-            param_names__.emplace_back(std::string() +
-              "tp_matrix_aos_from_mix" + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-            param_names__.emplace_back(std::string() +
-              "tp_matrix_from_udf_reduced_soa" + '.' + std::to_string(sym2__)
-              + '.' + std::to_string(sym1__));
-          }
+    if (emit_transformed_parameters__) {
+      param_names__.emplace_back(std::string() + "tp_real_from_soa");
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+          param_names__.emplace_back(std::string() + "tp_matrix_aos_from_mix"
+            + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+          param_names__.emplace_back(std::string() +
+            "tp_matrix_from_udf_reduced_soa" + '.' + std::to_string(sym2__) +
+            '.' + std::to_string(sym1__));
+        }
       }
-    
+    }
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
         param_names__.emplace_back(std::string() + "soa_x" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
         param_names__.emplace_back(std::string() + "aos_x" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
         param_names__.emplace_back(std::string() + "aos_y" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    if(emit_transformed_parameters__)
-      {
-        param_names__.emplace_back(std::string() + "tp_real_from_soa");
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-            param_names__.emplace_back(std::string() +
-              "tp_matrix_aos_from_mix" + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-            param_names__.emplace_back(std::string() +
-              "tp_matrix_from_udf_reduced_soa" + '.' + std::to_string(sym2__)
-              + '.' + std::to_string(sym1__));
-          }
+    if (emit_transformed_parameters__) {
+      param_names__.emplace_back(std::string() + "tp_real_from_soa");
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+          param_names__.emplace_back(std::string() + "tp_matrix_aos_from_mix"
+            + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+          param_names__.emplace_back(std::string() +
+            "tp_matrix_from_udf_reduced_soa" + '.' + std::to_string(sym2__) +
+            '.' + std::to_string(sym1__));
+        }
       }
-    
+    }
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"soa_x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"aos_x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"aos_y\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_soa\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_matrix_aos_from_mix\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_matrix_from_udf_reduced_soa\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
@@ -5383,9 +5276,9 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }
@@ -5454,7 +5347,7 @@ Eigen::Matrix<double,-1,-1> empty_user_func(std::ostream* pstream__) {
       Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
     current_statement__ = 9;
     return some_mat;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -5479,7 +5372,7 @@ mat_ret_user_func(const T0__& A_arg__, std::ostream* pstream__) {
   try {
     current_statement__ = 11;
     return A;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -5498,8 +5391,8 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
   ~return_types_and_udfs_demotes_model() {}
   return_types_and_udfs_demotes_model(stan::io::var_context& context__,
                                       unsigned int random_seed__ = 0,
-                                      std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                                      std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -5516,10 +5409,11 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (10 * 10) + (10 * 10);}
+    num_params_r__ = (10 * 10) + (10 * 10);
+  }
   inline std::string model_name() const final {
     return "return_types_and_udfs_demotes_model";
   }
@@ -5594,7 +5488,7 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
           stan::math::multiply(stan::math::cols(row_soa),
             stan::math::transpose(int_aos_mul_aos)), user_func_aos),
         "assigning variable mul_two_aos");
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -5660,13 +5554,11 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
           std::numeric_limits<double>::quiet_NaN());
       out__.write(row_soa);
       out__.write(udf_input_aos);
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
       current_statement__ = 3;
       stan::model::assign(user_func_aos,
         mat_ret_user_func(udf_input_aos, pstream__),
@@ -5688,21 +5580,17 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
           stan::math::multiply(stan::math::cols(row_soa),
             stan::math::transpose(int_aos_mul_aos)), user_func_aos),
         "assigning variable mul_two_aos");
-      if(emit_transformed_parameters__)
-        {
-          out__.write(user_func_aos);
-          out__.write(empty_user_func_aos);
-          out__.write(inner_empty_user_func_aos);
-          out__.write(int_aos_mul_aos);
-          out__.write(mul_two_aos);
-        }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      if (emit_transformed_parameters__) {
+        out__.write(user_func_aos);
+        out__.write(empty_user_func_aos);
+        out__.write(inner_empty_user_func_aos);
+        out__.write(int_aos_mul_aos);
+        out__.write(mul_two_aos);
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -5724,8 +5612,8 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> row_soa =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           stan::model::assign(row_soa, in__.read<local_scalar_t__>(),
             "assigning variable row_soa", stan::model::index_uni(sym2__),
             stan::model::index_uni(sym1__));
@@ -5734,15 +5622,15 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
       out__.write(row_soa);
       Eigen::Matrix<local_scalar_t__,-1,-1> udf_input_aos =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           stan::model::assign(udf_input_aos, in__.read<local_scalar_t__>(),
             "assigning variable udf_input_aos",
             stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
         }
       }
       out__.write(udf_input_aos);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -5774,115 +5662,103 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "row_soa" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "udf_input_aos" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "user_func_aos" + '.'
-              + std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "empty_user_func_aos"
-              + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() +
-              "inner_empty_user_func_aos" + '.' + std::to_string(sym2__) +
-              '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "int_aos_mul_aos" +
-              '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "mul_two_aos" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "user_func_aos" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "empty_user_func_aos" +
+            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
       }
-    
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() +
+            "inner_empty_user_func_aos" + '.' + std::to_string(sym2__) + '.'
+            + std::to_string(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "int_aos_mul_aos" + '.'
+            + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "mul_two_aos" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+    }
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "row_soa" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "udf_input_aos" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "user_func_aos" + '.'
-              + std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "empty_user_func_aos"
-              + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() +
-              "inner_empty_user_func_aos" + '.' + std::to_string(sym2__) +
-              '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "int_aos_mul_aos" +
-              '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            param_names__.emplace_back(std::string() + "mul_two_aos" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "user_func_aos" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "empty_user_func_aos" +
+            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
       }
-    
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() +
+            "inner_empty_user_func_aos" + '.' + std::to_string(sym2__) + '.'
+            + std::to_string(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "int_aos_mul_aos" + '.'
+            + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          param_names__.emplace_back(std::string() + "mul_two_aos" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+    }
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"row_soa\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"udf_input_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"empty_user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"inner_empty_user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"int_aos_mul_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mul_two_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
@@ -5959,9 +5835,9 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }
@@ -6007,8 +5883,8 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
  public:
   ~single_indexing_model() {}
   single_indexing_model(stan::io::var_context& context__, unsigned int
-                        random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                        random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -6025,10 +5901,11 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (10 * 10) + (10 * 10);}
+    num_params_r__ = (10 * 10) + (10 * 10);
+  }
   inline std::string model_name() const final {
     return "single_indexing_model";
   }
@@ -6078,7 +5955,7 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
                            stan::model::index_uni(1),
                            stan::model::index_uni(1));
       current_statement__ = 7;
-      for(int i = 1; i <= 10; ++i) {
+      for (int i = 1; i <= 10; ++i) {
         stan::conditional_var_value_t<local_scalar_t__,
           Eigen::Matrix<local_scalar_t__,1,-1>> tp_row_vector_from_soa_loop =
           stan::conditional_var_value_t<local_scalar_t__,
@@ -6104,7 +5981,7 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
               stan::model::index_uni(i)), soa_p),
           "assigning variable tp_matrix_from_soa_loop");
       }
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -6156,19 +6033,17 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
       double tp_real_from_soa = std::numeric_limits<double>::quiet_NaN();
       out__.write(aos_p);
       out__.write(soa_p);
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
       current_statement__ = 3;
       tp_real_from_soa = stan::model::rvalue(soa_p, "soa_p",
                            stan::model::index_uni(1),
                            stan::model::index_uni(1));
       current_statement__ = 7;
-      for(int i = 1; i <= 10; ++i) {
+      for (int i = 1; i <= 10; ++i) {
         Eigen::Matrix<double,1,-1> tp_row_vector_from_soa_loop =
           Eigen::Matrix<double,1,-1>::Constant(10,
             std::numeric_limits<double>::quiet_NaN());
@@ -6187,17 +6062,13 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
               stan::model::index_uni(i)), soa_p),
           "assigning variable tp_matrix_from_soa_loop");
       }
-      if(emit_transformed_parameters__)
-        {
-          out__.write(tp_real_from_soa);
-        }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      if (emit_transformed_parameters__) {
+        out__.write(tp_real_from_soa);
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -6219,8 +6090,8 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> aos_p =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           stan::model::assign(aos_p, in__.read<local_scalar_t__>(),
             "assigning variable aos_p", stan::model::index_uni(sym2__),
             stan::model::index_uni(sym1__));
@@ -6229,15 +6100,15 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
       out__.write(aos_p);
       Eigen::Matrix<local_scalar_t__,-1,-1> soa_p =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           stan::model::assign(soa_p, in__.read<local_scalar_t__>(),
             "assigning variable soa_p", stan::model::index_uni(sym2__),
             stan::model::index_uni(sym1__));
         }
       }
       out__.write(soa_p);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -6257,55 +6128,43 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "aos_p" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "soa_p" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    if(emit_transformed_parameters__)
-      {
-        param_names__.emplace_back(std::string() + "tp_real_from_soa");
-      }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    if (emit_transformed_parameters__) {
+      param_names__.emplace_back(std::string() + "tp_real_from_soa");
+    }
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "aos_p" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "soa_p" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    if(emit_transformed_parameters__)
-      {
-        param_names__.emplace_back(std::string() + "tp_real_from_soa");
-      }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    if (emit_transformed_parameters__) {
+      param_names__.emplace_back(std::string() + "tp_real_from_soa");
+    }
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"aos_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"soa_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_soa\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
@@ -6380,9 +6239,9 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }
@@ -6456,7 +6315,7 @@ nono_func(const T0__& x_arg__, std::ostream* pstream__) {
   try {
     current_statement__ = 6;
     return x;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -6487,7 +6346,7 @@ okay_reduction(const T0__& sum_x, const T1__& y_arg__, std::ostream*
   try {
     current_statement__ = 8;
     return stan::math::add(sum_x, y);
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -6506,8 +6365,8 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model>{
  public:
   ~tp_reused_model() {}
   tp_reused_model(stan::io::var_context& context__, unsigned int
-                  random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                  random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -6530,10 +6389,11 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model>{
       data_r = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 5;
       data_r = context__.vals_r("data_r")[(1 - 1)];
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (5 * 10) + (5 * 10);}
+    num_params_r__ = (5 * 10) + (5 * 10);
+  }
   inline std::string model_name() const final {
     return "tp_reused_model";
   }
@@ -6579,7 +6439,7 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model>{
       current_statement__ = 4;
       stan::model::assign(tp_matrix_aos, nono_func(aos_x, pstream__),
         "assigning variable tp_matrix_aos");
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -6633,30 +6493,24 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model>{
           std::numeric_limits<double>::quiet_NaN());
       out__.write(first_pass_soa_x);
       out__.write(aos_x);
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
       current_statement__ = 3;
       stan::model::assign(tp_matrix_aos, first_pass_soa_x,
         "assigning variable tp_matrix_aos");
       current_statement__ = 4;
       stan::model::assign(tp_matrix_aos, nono_func(aos_x, pstream__),
         "assigning variable tp_matrix_aos");
-      if(emit_transformed_parameters__)
-        {
-          out__.write(tp_matrix_aos);
-        }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      if (emit_transformed_parameters__) {
+        out__.write(tp_matrix_aos);
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -6678,8 +6532,8 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model>{
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> first_pass_soa_x =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 10, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
           stan::model::assign(first_pass_soa_x,
             in__.read<local_scalar_t__>(),
             "assigning variable first_pass_soa_x",
@@ -6689,15 +6543,15 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model>{
       out__.write(first_pass_soa_x);
       Eigen::Matrix<local_scalar_t__,-1,-1> aos_x =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 10, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
           stan::model::assign(aos_x, in__.read<local_scalar_t__>(),
             "assigning variable aos_x", stan::model::index_uni(sym2__),
             stan::model::index_uni(sym1__));
         }
       }
       out__.write(aos_x);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -6718,65 +6572,53 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model>{
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
         param_names__.emplace_back(std::string() + "first_pass_soa_x" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
         param_names__.emplace_back(std::string() + "aos_x" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-            param_names__.emplace_back(std::string() + "tp_matrix_aos" + '.'
-              + std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+          param_names__.emplace_back(std::string() + "tp_matrix_aos" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    }
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
         param_names__.emplace_back(std::string() + "first_pass_soa_x" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
         param_names__.emplace_back(std::string() + "aos_x" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-            param_names__.emplace_back(std::string() + "tp_matrix_aos" + '.'
-              + std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+          param_names__.emplace_back(std::string() + "tp_matrix_aos" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    }
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"first_pass_soa_x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"aos_x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"tp_matrix_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
@@ -6851,9 +6693,9 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model>{
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }

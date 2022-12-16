@@ -11,28 +11,21 @@ let stanc_args_to_print = ref ""
 
 let get_unconstrained_param_st lst =
   match lst with
-  | _, {Program.out_block= Parameters; out_unconstrained_st= st; _} -> (
-    match SizedType.get_dims_io st with
-    | [] -> Some [Expr.Helpers.loop_bottom]
-    | ls -> Some ls )
+  | _, {Program.out_block= Parameters; out_unconstrained_st= st; _} ->
+      Some (SizedType.get_dims_io st)
   | _ -> None
 
 let get_constrained_param_st lst =
   match lst with
-  | _, {Program.out_block= Parameters; out_constrained_st= st; _} -> (
-    match SizedType.get_dims_io st with
-    | [] -> Some [Expr.Helpers.loop_bottom]
-    | ls -> Some ls )
+  | _, {Program.out_block= Parameters; out_constrained_st= st; _} ->
+      Some (SizedType.get_dims_io st)
   | _ -> None
 
 let lower_num_param (dims : Expr.Typed.t list) =
-  match dims with
-  | [] -> Literal "0"
-  | [d] -> lower_expr d
-  | d1 :: dims ->
-      Parens
-        (List.fold ~init:(lower_expr d1) ~f:Expression_syntax.( * )
-           (lower_exprs dims) )
+  match List.reduce ~f:Expression_syntax.( * ) (lower_exprs dims) with
+  | Some d when List.length dims = 1 -> d
+  | Some d -> Parens d
+  | None -> Literal "1"
 
 (** Create a variable for the name of model function.
   @param prog_name Name of the Stan program.
@@ -849,7 +842,7 @@ module Testing = struct
     |> print_endline ;
     [%expect
       {|
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         param_names__.emplace_back(std::string() + "foo" + '.' +
           std::to_string(sym1__));
       } |}]
@@ -860,8 +853,8 @@ module Testing = struct
     |> print_endline ;
     [%expect
       {|
-          for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-            for(int sym2__ = 1; sym2__ <= D; ++sym2__) {
+          for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+            for (int sym2__ = 1; sym2__ <= D; ++sym2__) {
               param_names__.emplace_back(std::string() + "foo" + '.' +
                 std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
               param_names__.emplace_back(std::string() + "foo" + '.' +

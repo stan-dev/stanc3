@@ -146,8 +146,8 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model>{
  public:
   ~basic_op_param_model() {}
   basic_op_param_model(stan::io::var_context& context__, unsigned int
-                       random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                       random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -198,11 +198,12 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model>{
       stan::math::validate_non_negative_index("carray", "N", N);
       current_statement__ = 133;
       stan::math::validate_non_negative_index("carray", "N", N);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     num_params_r__ = (N * N * 2) + (N * 2) + (N * 2) + 2 + (N * N) + N + N +
-      1;}
+      1;
+  }
   inline std::string model_name() const final {
     return "basic_op_param_model";
   }
@@ -714,7 +715,7 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model>{
       current_statement__ = 118;
       stan::model::assign(carray, stan::math::to_array_2d(cmat),
         "assigning variable carray");
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -823,13 +824,11 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model>{
       out__.write(vec);
       out__.write(rowvec);
       out__.write(r);
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
       current_statement__ = 14;
       stan::model::assign(tp_c_matrix, stan::math::multiply(cmat, cmat),
         "assigning variable tp_c_matrix");
@@ -1262,25 +1261,21 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model>{
       current_statement__ = 118;
       stan::model::assign(carray, stan::math::to_array_2d(cmat),
         "assigning variable carray");
-      if(emit_transformed_parameters__)
-        {
-          out__.write(tp_c_matrix);
-          out__.write(tp_c_vector);
-          out__.write(tp_c_rowvector);
-          out__.write(tp_c);
-          for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-            for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-              out__.write(carray[(sym2__ - 1)][(sym1__ - 1)]);
-            }
+      if (emit_transformed_parameters__) {
+        out__.write(tp_c_matrix);
+        out__.write(tp_c_vector);
+        out__.write(tp_c_rowvector);
+        out__.write(tp_c);
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            out__.write(carray[(sym2__ - 1)][(sym1__ - 1)]);
           }
         }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -1303,8 +1298,8 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model>{
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cmat =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           stan::model::assign(cmat, in__.read<local_scalar_t__>(),
             "assigning variable cmat", stan::model::index_uni(sym2__),
             stan::model::index_uni(sym1__));
@@ -1314,7 +1309,7 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model>{
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> cvec =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(cvec, in__.read<local_scalar_t__>(),
           "assigning variable cvec", stan::model::index_uni(sym1__));
       }
@@ -1322,7 +1317,7 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model>{
       Eigen::Matrix<std::complex<local_scalar_t__>,1,-1> crowvec =
         Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>::Constant(N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(crowvec, in__.read<local_scalar_t__>(),
           "assigning variable crowvec", stan::model::index_uni(sym1__));
       }
@@ -1333,8 +1328,8 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model>{
       out__.write(z);
       Eigen::Matrix<local_scalar_t__,-1,-1> mat =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           stan::model::assign(mat, in__.read<local_scalar_t__>(),
             "assigning variable mat", stan::model::index_uni(sym2__),
             stan::model::index_uni(sym1__));
@@ -1343,14 +1338,14 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model>{
       out__.write(mat);
       Eigen::Matrix<local_scalar_t__,-1,1> vec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(vec, in__.read<local_scalar_t__>(),
           "assigning variable vec", stan::model::index_uni(sym1__));
       }
       out__.write(vec);
       Eigen::Matrix<local_scalar_t__,1,-1> rowvec =
         Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(rowvec, in__.read<local_scalar_t__>(),
           "assigning variable rowvec", stan::model::index_uni(sym1__));
       }
@@ -1358,7 +1353,7 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model>{
       local_scalar_t__ r = DUMMY_VAR__;
       r = in__.read<local_scalar_t__>();
       out__.write(r);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -1396,8 +1391,8 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model>{
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "cmat" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
           "real");
@@ -1406,13 +1401,13 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model>{
           "imag");
       }
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "cvec" + '.' +
         std::to_string(sym1__) + '.' + "real");
       param_names__.emplace_back(std::string() + "cvec" + '.' +
         std::to_string(sym1__) + '.' + "imag");
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "crowvec" + '.' +
         std::to_string(sym1__) + '.' + "real");
       param_names__.emplace_back(std::string() + "crowvec" + '.' +
@@ -1420,71 +1415,65 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model>{
     }
     param_names__.emplace_back(std::string() + "z" + '.' + "real");
     param_names__.emplace_back(std::string() + "z" + '.' + "imag");
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "mat" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "vec" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "rowvec" + '.' +
         std::to_string(sym1__));
     }
     param_names__.emplace_back(std::string() + "r");
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "real");
-            param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "imag");
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
-            std::to_string(sym1__) + '.' + "imag");
-        }
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
-            std::to_string(sym1__) + '.' + "imag");
-        }
-        param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
-        param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            param_names__.emplace_back(std::string() + "carray" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "real");
-            param_names__.emplace_back(std::string() + "carray" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "imag");
-          }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
       }
-    
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
+      }
+      param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
+      param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param_names__.emplace_back(std::string() + "carray" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "carray" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
+        }
+      }
+    }
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "cmat" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
           "real");
@@ -1493,13 +1482,13 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model>{
           "imag");
       }
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "cvec" + '.' +
         std::to_string(sym1__) + '.' + "real");
       param_names__.emplace_back(std::string() + "cvec" + '.' +
         std::to_string(sym1__) + '.' + "imag");
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "crowvec" + '.' +
         std::to_string(sym1__) + '.' + "real");
       param_names__.emplace_back(std::string() + "crowvec" + '.' +
@@ -1507,64 +1496,58 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model>{
     }
     param_names__.emplace_back(std::string() + "z" + '.' + "real");
     param_names__.emplace_back(std::string() + "z" + '.' + "imag");
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "mat" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "vec" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "rowvec" + '.' +
         std::to_string(sym1__));
     }
     param_names__.emplace_back(std::string() + "r");
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "real");
-            param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "imag");
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
-            std::to_string(sym1__) + '.' + "imag");
-        }
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
-            std::to_string(sym1__) + '.' + "imag");
-        }
-        param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
-        param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            param_names__.emplace_back(std::string() + "carray" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "real");
-            param_names__.emplace_back(std::string() + "carray" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "imag");
-          }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
       }
-    
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
+      }
+      param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
+      param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param_names__.emplace_back(std::string() + "carray" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "carray" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
+        }
+      }
+    }
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"cmat\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"crowvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"rowvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tp_c_matrix\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c_vector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c_rowvector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"carray\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"}]");
@@ -1647,9 +1630,9 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model>{
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }
@@ -1834,8 +1817,8 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
  public:
   ~basic_operations_model() {}
   basic_operations_model(stan::io::var_context& context__, unsigned int
-                         random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                         random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -1880,9 +1863,9 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
         current_statement__ = 113;
         pos__ = 1;
         current_statement__ = 113;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 113;
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             current_statement__ = 113;
             stan::model::assign(cmat, cmat_flat__[(pos__ - 1)],
               "assigning variable cmat", stan::model::index_uni(sym2__),
@@ -1911,7 +1894,7 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
         current_statement__ = 115;
         pos__ = 1;
         current_statement__ = 115;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 115;
           stan::model::assign(cvec, cvec_flat__[(pos__ - 1)],
             "assigning variable cvec", stan::model::index_uni(sym1__));
@@ -1938,7 +1921,7 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
         current_statement__ = 117;
         pos__ = 1;
         current_statement__ = 117;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 117;
           stan::model::assign(crowvec, crowvec_flat__[(pos__ - 1)],
             "assigning variable crowvec", stan::model::index_uni(sym1__));
@@ -1971,9 +1954,9 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
         current_statement__ = 121;
         pos__ = 1;
         current_statement__ = 121;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 121;
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             current_statement__ = 121;
             stan::model::assign(mat, mat_flat__[(pos__ - 1)],
               "assigning variable mat", stan::model::index_uni(sym2__),
@@ -1998,7 +1981,7 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
         current_statement__ = 123;
         pos__ = 1;
         current_statement__ = 123;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 123;
           stan::model::assign(vec, vec_flat__[(pos__ - 1)],
             "assigning variable vec", stan::model::index_uni(sym1__));
@@ -2022,7 +2005,7 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
         current_statement__ = 125;
         pos__ = 1;
         current_statement__ = 125;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 125;
           stan::model::assign(rowvec, rowvec_flat__[(pos__ - 1)],
             "assigning variable rowvec", stan::model::index_uni(sym1__));
@@ -2048,10 +2031,11 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       stan::math::validate_non_negative_index("carray", "N", N);
       current_statement__ = 132;
       stan::math::validate_non_negative_index("carray", "N", N);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 0U;}
+    num_params_r__ = 0U;
+  }
   inline std::string model_name() const final {
     return "basic_operations_model";
   }
@@ -2080,7 +2064,7 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     (void) function__;
     try {
       
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -2117,18 +2101,14 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     // supress unused var warning
     (void) function__;
     try {
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
       Eigen::Matrix<std::complex<double>,-1,-1> gq_c_matrix =
         Eigen::Matrix<std::complex<double>,-1,-1>::Constant(N, N,
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
@@ -2564,12 +2544,12 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       out__.write(gq_c_vector);
       out__.write(gq_c_rowvector);
       out__.write(gq_c);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           out__.write(carray[(sym2__ - 1)][(sym1__ - 1)]);
         }
       }
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -2589,7 +2569,7 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -2614,97 +2594,85 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    if(emit_transformed_parameters__)
-      {
-        
-      }
-    
-    if(emit_generated_quantities__)
-      {
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "real");
-            param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "imag");
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "gq_c_vector" + '.' +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "gq_c_vector" + '.' +
-            std::to_string(sym1__) + '.' + "imag");
-        }
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' +
-            std::to_string(sym1__) + '.' + "imag");
-        }
-        param_names__.emplace_back(std::string() + "gq_c" + '.' + "real");
-        param_names__.emplace_back(std::string() + "gq_c" + '.' + "imag");
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            param_names__.emplace_back(std::string() + "carray" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "real");
-            param_names__.emplace_back(std::string() + "carray" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "imag");
-          }
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
         }
       }
-    
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        param_names__.emplace_back(std::string() + "gq_c_vector" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "gq_c_vector" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
+      }
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
+      }
+      param_names__.emplace_back(std::string() + "gq_c" + '.' + "real");
+      param_names__.emplace_back(std::string() + "gq_c" + '.' + "imag");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param_names__.emplace_back(std::string() + "carray" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "carray" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
+        }
+      }
+    }
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    if(emit_transformed_parameters__)
-      {
-        
-      }
-    
-    if(emit_generated_quantities__)
-      {
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "real");
-            param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "imag");
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "gq_c_vector" + '.' +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "gq_c_vector" + '.' +
-            std::to_string(sym1__) + '.' + "imag");
-        }
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' +
-            std::to_string(sym1__) + '.' + "imag");
-        }
-        param_names__.emplace_back(std::string() + "gq_c" + '.' + "real");
-        param_names__.emplace_back(std::string() + "gq_c" + '.' + "imag");
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            param_names__.emplace_back(std::string() + "carray" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "real");
-            param_names__.emplace_back(std::string() + "carray" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "imag");
-          }
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "gq_c_matrix" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
         }
       }
-    
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        param_names__.emplace_back(std::string() + "gq_c_vector" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "gq_c_vector" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
+      }
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "gq_c_rowvector" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
+      }
+      param_names__.emplace_back(std::string() + "gq_c" + '.' + "real");
+      param_names__.emplace_back(std::string() + "gq_c" + '.' + "imag");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param_names__.emplace_back(std::string() + "carray" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "carray" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
+        }
+      }
+    }
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"gq_c_matrix\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_c_vector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_c_rowvector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_c\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"carray\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"generated_quantities\"}]");
@@ -2780,9 +2748,9 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }
@@ -2999,8 +2967,8 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
  public:
   ~basic_ops_mix_model() {}
   basic_ops_mix_model(stan::io::var_context& context__, unsigned int
-                      random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                      random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -3045,9 +3013,9 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
         current_statement__ = 137;
         pos__ = 1;
         current_statement__ = 137;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 137;
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             current_statement__ = 137;
             stan::model::assign(cmat, cmat_flat__[(pos__ - 1)],
               "assigning variable cmat", stan::model::index_uni(sym2__),
@@ -3076,7 +3044,7 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
         current_statement__ = 139;
         pos__ = 1;
         current_statement__ = 139;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 139;
           stan::model::assign(cvec, cvec_flat__[(pos__ - 1)],
             "assigning variable cvec", stan::model::index_uni(sym1__));
@@ -3103,7 +3071,7 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
         current_statement__ = 141;
         pos__ = 1;
         current_statement__ = 141;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 141;
           stan::model::assign(crowvec, crowvec_flat__[(pos__ - 1)],
             "assigning variable crowvec", stan::model::index_uni(sym1__));
@@ -3136,9 +3104,9 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
         current_statement__ = 145;
         pos__ = 1;
         current_statement__ = 145;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 145;
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             current_statement__ = 145;
             stan::model::assign(mat, mat_flat__[(pos__ - 1)],
               "assigning variable mat", stan::model::index_uni(sym2__),
@@ -3163,7 +3131,7 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
         current_statement__ = 147;
         pos__ = 1;
         current_statement__ = 147;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 147;
           stan::model::assign(vec, vec_flat__[(pos__ - 1)],
             "assigning variable vec", stan::model::index_uni(sym1__));
@@ -3187,7 +3155,7 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
         current_statement__ = 149;
         pos__ = 1;
         current_statement__ = 149;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 149;
           stan::model::assign(rowvec, rowvec_flat__[(pos__ - 1)],
             "assigning variable rowvec", stan::model::index_uni(sym1__));
@@ -3229,11 +3197,12 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
       stan::math::validate_non_negative_index("carray", "N", N);
       current_statement__ = 164;
       stan::math::validate_non_negative_index("carray", "N", N);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     num_params_r__ = (N * N * 2) + (N * 2) + (N * 2) + 2 + (N * N) + N + N +
-      1;}
+      1;
+  }
   inline std::string model_name() const final {
     return "basic_ops_mix_model";
   }
@@ -3804,7 +3773,7 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
       current_statement__ = 133;
       stan::model::assign(carray, stan::math::to_array_2d(cvmat),
         "assigning variable carray");
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -3913,13 +3882,11 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
       out__.write(vvec);
       out__.write(vrowvec);
       out__.write(v);
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
       current_statement__ = 14;
       stan::model::assign(tp_c_matrix, stan::math::multiply(cmat, cvmat),
         "assigning variable tp_c_matrix");
@@ -4411,25 +4378,21 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
       current_statement__ = 133;
       stan::model::assign(carray, stan::math::to_array_2d(cvmat),
         "assigning variable carray");
-      if(emit_transformed_parameters__)
-        {
-          out__.write(tp_c_matrix);
-          out__.write(tp_c_vector);
-          out__.write(tp_c_rowvector);
-          out__.write(tp_c);
-          for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-            for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-              out__.write(carray[(sym2__ - 1)][(sym1__ - 1)]);
-            }
+      if (emit_transformed_parameters__) {
+        out__.write(tp_c_matrix);
+        out__.write(tp_c_vector);
+        out__.write(tp_c_rowvector);
+        out__.write(tp_c);
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            out__.write(carray[(sym2__ - 1)][(sym1__ - 1)]);
           }
         }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -4452,8 +4415,8 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cvmat =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           stan::model::assign(cvmat, in__.read<local_scalar_t__>(),
             "assigning variable cvmat", stan::model::index_uni(sym2__),
             stan::model::index_uni(sym1__));
@@ -4463,7 +4426,7 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> cvvec =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(cvvec, in__.read<local_scalar_t__>(),
           "assigning variable cvvec", stan::model::index_uni(sym1__));
       }
@@ -4471,7 +4434,7 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
       Eigen::Matrix<std::complex<local_scalar_t__>,1,-1> cvrowvec =
         Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>::Constant(N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(cvrowvec, in__.read<local_scalar_t__>(),
           "assigning variable cvrowvec", stan::model::index_uni(sym1__));
       }
@@ -4482,8 +4445,8 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
       out__.write(zv);
       Eigen::Matrix<local_scalar_t__,-1,-1> vmat =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           stan::model::assign(vmat, in__.read<local_scalar_t__>(),
             "assigning variable vmat", stan::model::index_uni(sym2__),
             stan::model::index_uni(sym1__));
@@ -4492,14 +4455,14 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
       out__.write(vmat);
       Eigen::Matrix<local_scalar_t__,-1,1> vvec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(vvec, in__.read<local_scalar_t__>(),
           "assigning variable vvec", stan::model::index_uni(sym1__));
       }
       out__.write(vvec);
       Eigen::Matrix<local_scalar_t__,1,-1> vrowvec =
         Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(vrowvec, in__.read<local_scalar_t__>(),
           "assigning variable vrowvec", stan::model::index_uni(sym1__));
       }
@@ -4507,7 +4470,7 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
       local_scalar_t__ v = DUMMY_VAR__;
       v = in__.read<local_scalar_t__>();
       out__.write(v);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -4545,8 +4508,8 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "cvmat" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
           "real");
@@ -4555,13 +4518,13 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
           "imag");
       }
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "cvvec" + '.' +
         std::to_string(sym1__) + '.' + "real");
       param_names__.emplace_back(std::string() + "cvvec" + '.' +
         std::to_string(sym1__) + '.' + "imag");
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "cvrowvec" + '.' +
         std::to_string(sym1__) + '.' + "real");
       param_names__.emplace_back(std::string() + "cvrowvec" + '.' +
@@ -4569,71 +4532,65 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
     }
     param_names__.emplace_back(std::string() + "zv" + '.' + "real");
     param_names__.emplace_back(std::string() + "zv" + '.' + "imag");
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "vmat" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "vvec" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "vrowvec" + '.' +
         std::to_string(sym1__));
     }
     param_names__.emplace_back(std::string() + "v");
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "real");
-            param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "imag");
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
-            std::to_string(sym1__) + '.' + "imag");
-        }
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
-            std::to_string(sym1__) + '.' + "imag");
-        }
-        param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
-        param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            param_names__.emplace_back(std::string() + "carray" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "real");
-            param_names__.emplace_back(std::string() + "carray" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "imag");
-          }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
       }
-    
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
+      }
+      param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
+      param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param_names__.emplace_back(std::string() + "carray" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "carray" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
+        }
+      }
+    }
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "cvmat" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
           "real");
@@ -4642,13 +4599,13 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
           "imag");
       }
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "cvvec" + '.' +
         std::to_string(sym1__) + '.' + "real");
       param_names__.emplace_back(std::string() + "cvvec" + '.' +
         std::to_string(sym1__) + '.' + "imag");
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "cvrowvec" + '.' +
         std::to_string(sym1__) + '.' + "real");
       param_names__.emplace_back(std::string() + "cvrowvec" + '.' +
@@ -4656,64 +4613,58 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
     }
     param_names__.emplace_back(std::string() + "zv" + '.' + "real");
     param_names__.emplace_back(std::string() + "zv" + '.' + "imag");
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "vmat" + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "vvec" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "vrowvec" + '.' +
         std::to_string(sym1__));
     }
     param_names__.emplace_back(std::string() + "v");
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "real");
-            param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "imag");
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
-            std::to_string(sym1__) + '.' + "imag");
-        }
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
-            std::to_string(sym1__) + '.' + "imag");
-        }
-        param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
-        param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            param_names__.emplace_back(std::string() + "carray" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "real");
-            param_names__.emplace_back(std::string() + "carray" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "imag");
-          }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
       }
-    
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
+      }
+      param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
+      param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param_names__.emplace_back(std::string() + "carray" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "carray" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
+        }
+      }
+    }
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"cvmat\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvrowvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"zv\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"vmat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vrowvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"v\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tp_c_matrix\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c_vector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c_rowvector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"carray\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"}]");
@@ -4796,9 +4747,9 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model>{
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }
@@ -4876,8 +4827,8 @@ class complex_data_model final : public model_base_crtp<complex_data_model>{
  public:
   ~complex_data_model() {}
   complex_data_model(stan::io::var_context& context__, unsigned int
-                     random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                     random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -4926,7 +4877,7 @@ class complex_data_model final : public model_base_crtp<complex_data_model>{
         current_statement__ = 4;
         pos__ = 1;
         current_statement__ = 4;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 4;
           stan::model::assign(z1, z1_flat__[(pos__ - 1)],
             "assigning variable z1", stan::model::index_uni(sym1__));
@@ -4953,7 +4904,7 @@ class complex_data_model final : public model_base_crtp<complex_data_model>{
         current_statement__ = 6;
         pos__ = 1;
         current_statement__ = 6;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 6;
           stan::model::assign(z2, z2_flat__[(pos__ - 1)],
             "assigning variable z2", stan::model::index_uni(sym1__));
@@ -4983,9 +4934,9 @@ class complex_data_model final : public model_base_crtp<complex_data_model>{
         current_statement__ = 9;
         pos__ = 1;
         current_statement__ = 9;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 9;
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             current_statement__ = 9;
             stan::model::assign(z3, z3_flat__[(pos__ - 1)],
               "assigning variable z3", stan::model::index_uni(sym2__),
@@ -5016,7 +4967,7 @@ class complex_data_model final : public model_base_crtp<complex_data_model>{
         current_statement__ = 12;
         pos__ = 1;
         current_statement__ = 12;
-        for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
           current_statement__ = 12;
           stan::model::assign(z4, z4_flat__[(pos__ - 1)],
             "assigning variable z4", stan::model::index_uni(sym1__));
@@ -5043,9 +4994,9 @@ class complex_data_model final : public model_base_crtp<complex_data_model>{
         current_statement__ = 15;
         pos__ = 1;
         current_statement__ = 15;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 15;
-          for(int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
             current_statement__ = 15;
             stan::model::assign(z5, z5_flat__[(pos__ - 1)],
               "assigning variable z5", stan::model::index_uni(sym2__),
@@ -5074,9 +5025,9 @@ class complex_data_model final : public model_base_crtp<complex_data_model>{
         current_statement__ = 18;
         pos__ = 1;
         current_statement__ = 18;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 18;
-          for(int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
             current_statement__ = 18;
             stan::model::assign(z6, z6_flat__[(pos__ - 1)],
               "assigning variable z6", stan::model::index_uni(sym2__),
@@ -5107,11 +5058,11 @@ class complex_data_model final : public model_base_crtp<complex_data_model>{
         current_statement__ = 22;
         pos__ = 1;
         current_statement__ = 22;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 22;
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             current_statement__ = 22;
-            for(int sym3__ = 1; sym3__ <= M; ++sym3__) {
+            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
               current_statement__ = 22;
               stan::model::assign(z7, z7_flat__[(pos__ - 1)],
                 "assigning variable z7", stan::model::index_uni(sym3__),
@@ -5145,9 +5096,9 @@ class complex_data_model final : public model_base_crtp<complex_data_model>{
         current_statement__ = 25;
         pos__ = 1;
         current_statement__ = 25;
-        for(int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
           current_statement__ = 25;
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             current_statement__ = 25;
             stan::model::assign(z8, z8_flat__[(pos__ - 1)],
               "assigning variable z8", stan::model::index_uni(sym2__),
@@ -5157,10 +5108,11 @@ class complex_data_model final : public model_base_crtp<complex_data_model>{
           }
         }
       }
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 0U;}
+    num_params_r__ = 0U;
+  }
   inline std::string model_name() const final {
     return "complex_data_model";
   }
@@ -5189,7 +5141,7 @@ class complex_data_model final : public model_base_crtp<complex_data_model>{
     (void) function__;
     try {
       
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -5226,19 +5178,15 @@ class complex_data_model final : public model_base_crtp<complex_data_model>{
     // supress unused var warning
     (void) function__;
     try {
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -5258,7 +5206,7 @@ class complex_data_model final : public model_base_crtp<complex_data_model>{
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -5272,31 +5220,15 @@ class complex_data_model final : public model_base_crtp<complex_data_model>{
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    if(emit_transformed_parameters__)
-      {
-        
-      }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    if(emit_transformed_parameters__)
-      {
-        
-      }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[]");
@@ -5370,9 +5302,9 @@ class complex_data_model final : public model_base_crtp<complex_data_model>{
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }
@@ -5908,7 +5840,7 @@ std::complex<double> foo(std::ostream* pstream__) {
   try {
     current_statement__ = 406;
     return stan::math::to_complex();
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -5930,7 +5862,7 @@ foo1(const std::complex<T0__>& z, std::ostream* pstream__) {
   try {
     current_statement__ = 408;
     return 1.0;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -5955,7 +5887,7 @@ foo2(const T0__& r, std::ostream* pstream__) {
   try {
     current_statement__ = 410;
     return stan::math::to_complex(r);
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -5979,7 +5911,7 @@ foo3(const std::complex<T0__>& z, std::ostream* pstream__) {
   try {
     current_statement__ = 412;
     return z;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -6002,7 +5934,7 @@ std::vector<std::complex<double>> foo4(std::ostream* pstream__) {
     current_statement__ = 414;
     return std::vector<std::complex<double>>{stan::math::to_complex(),
              stan::math::to_complex()};
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -6025,7 +5957,7 @@ foo5(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
   try {
     current_statement__ = 416;
     return 1.0;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -6052,7 +5984,7 @@ foo6(const T0__& r, std::ostream* pstream__) {
     return std::vector<std::complex<local_scalar_t__>>{stan::math::to_complex(
                                                          r),
              stan::math::to_complex(r, r)};
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -6076,7 +6008,7 @@ foo7(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
   try {
     current_statement__ = 420;
     return z;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -6102,7 +6034,7 @@ foo8(const std::vector<std::vector<std::complex<T0__>>>& z, std::ostream*
   try {
     current_statement__ = 422;
     return 1.0;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -6137,7 +6069,7 @@ foo9(const T0__& r, std::ostream* pstream__) {
              std::vector<std::complex<local_scalar_t__>>{stan::math::to_complex(
                                                            r),
                stan::math::to_complex(r), stan::math::to_complex(r)}};
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -6162,7 +6094,7 @@ foo10(const std::vector<std::vector<std::complex<T0__>>>& z, std::ostream*
   try {
     current_statement__ = 426;
     return z;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -6188,8 +6120,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
  public:
   ~complex_scalar_model() {}
   complex_scalar_model(stan::io::var_context& context__, unsigned int
-                       random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                       random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -6240,7 +6172,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
         current_statement__ = 348;
         pos__ = 1;
         current_statement__ = 348;
-        for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
           current_statement__ = 348;
           stan::model::assign(d_complex_array, d_complex_array_flat__[(pos__
             - 1)], "assigning variable d_complex_array",
@@ -6266,9 +6198,9 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
         current_statement__ = 349;
         pos__ = 1;
         current_statement__ = 349;
-        for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           current_statement__ = 349;
-          for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
             current_statement__ = 349;
             stan::model::assign(d_complex_array_2d,
               d_complex_array_2d_flat__[(pos__ - 1)],
@@ -6376,9 +6308,9 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
           stan::math::to_complex(1, 2), stan::math::to_complex(2.4, 0)},
         "assigning variable td_complex_array_2d", stan::model::index_uni(1));
       current_statement__ = 383;
-      for(int td_j = 1; td_j <= 2; ++td_j) {
+      for (int td_j = 1; td_j <= 2; ++td_j) {
         current_statement__ = 381;
-        for(int td_k = 1; td_k <= 3; ++td_k) {
+        for (int td_k = 1; td_k <= 3; ++td_k) {
           current_statement__ = 379;
           stan::model::assign(td_complex_array_2d,
             stan::math::to_complex(1, 2.2),
@@ -6387,14 +6319,14 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
         }
       }
       current_statement__ = 384;
-      for(int sym1__ = 1; sym1__ <=
-          stan::math::size(td_complex_array_2d); ++sym1__) {
+      for (int sym1__ = 1; sym1__ <=
+           stan::math::size(td_complex_array_2d); ++sym1__) {
         std::vector<std::complex<double>> td_j;
         current_statement__ = 384;
         stan::model::assign(td_j, td_complex_array_2d[(sym1__ - 1)],
           "assigning variable td_j");
         current_statement__ = 385;
-        for(int sym1__ = 1; sym1__ <= stan::math::size(td_j); ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= stan::math::size(td_j); ++sym1__) {
           std::complex<double> td_k;
           current_statement__ = 385;
           td_k = td_j[(sym1__ - 1)];
@@ -6457,10 +6389,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
       stan::math::validate_non_negative_index("i_arr", "0", 0);
       current_statement__ = 405;
       stan::math::validate_non_negative_index("i_arr_1", "1", 1);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 2 + (2 * 2) + (2 * 3 * 2);}
+    num_params_r__ = 1 + 2 + (2 * 2) + (2 * 3 * 2);
+  }
   inline std::string model_name() const final {
     return "complex_scalar_model";
   }
@@ -6619,9 +6552,9 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(2.4)},
         "assigning variable tp_complex_array_2d", stan::model::index_uni(1));
       current_statement__ = 41;
-      for(int tp_j = 1; tp_j <= 2; ++tp_j) {
+      for (int tp_j = 1; tp_j <= 2; ++tp_j) {
         current_statement__ = 39;
-        for(int tp_k = 1; tp_k <= 3; ++tp_k) {
+        for (int tp_k = 1; tp_k <= 3; ++tp_k) {
           current_statement__ = 37;
           stan::model::assign(tp_complex_array_2d,
             stan::math::to_complex(1, 2.2),
@@ -6630,14 +6563,14 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
         }
       }
       current_statement__ = 42;
-      for(int sym1__ = 1; sym1__ <=
-          stan::math::size(tp_complex_array_2d); ++sym1__) {
+      for (int sym1__ = 1; sym1__ <=
+           stan::math::size(tp_complex_array_2d); ++sym1__) {
         std::vector<std::complex<local_scalar_t__>> tp_j;
         current_statement__ = 42;
         stan::model::assign(tp_j, tp_complex_array_2d[(sym1__ - 1)],
           "assigning variable tp_j");
         current_statement__ = 43;
-        for(int sym1__ = 1; sym1__ <= stan::math::size(tp_j); ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= stan::math::size(tp_j); ++sym1__) {
           std::complex<local_scalar_t__> tp_k;
           current_statement__ = 43;
           tp_k = tp_j[(sym1__ - 1)];
@@ -6710,7 +6643,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
                          stan::math::abs(p_complex), 0, 1));
       }
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -6787,21 +6720,19 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
               std::numeric_limits<double>::quiet_NaN())));
       out__.write(p_r);
       out__.write(p_complex);
-      for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         out__.write(p_complex_array[(sym1__ - 1)]);
       }
-      for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
           out__.write(p_complex_array_2d[(sym2__ - 1)][(sym1__ - 1)]);
         }
       }
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
       current_statement__ = 5;
       tp_r = 1.1;
       current_statement__ = 9;
@@ -6901,9 +6832,9 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(2.4)},
         "assigning variable tp_complex_array_2d", stan::model::index_uni(1));
       current_statement__ = 41;
-      for(int tp_j = 1; tp_j <= 2; ++tp_j) {
+      for (int tp_j = 1; tp_j <= 2; ++tp_j) {
         current_statement__ = 39;
-        for(int tp_k = 1; tp_k <= 3; ++tp_k) {
+        for (int tp_k = 1; tp_k <= 3; ++tp_k) {
           current_statement__ = 37;
           stan::model::assign(tp_complex_array_2d,
             stan::math::to_complex(1, 2.2),
@@ -6912,14 +6843,14 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
         }
       }
       current_statement__ = 42;
-      for(int sym1__ = 1; sym1__ <=
-          stan::math::size(tp_complex_array_2d); ++sym1__) {
+      for (int sym1__ = 1; sym1__ <=
+           stan::math::size(tp_complex_array_2d); ++sym1__) {
         std::vector<std::complex<local_scalar_t__>> tp_j;
         current_statement__ = 42;
         stan::model::assign(tp_j, tp_complex_array_2d[(sym1__ - 1)],
           "assigning variable tp_j");
         current_statement__ = 43;
-        for(int sym1__ = 1; sym1__ <= stan::math::size(tp_j); ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= stan::math::size(tp_j); ++sym1__) {
           std::complex<local_scalar_t__> tp_k;
           current_statement__ = 43;
           tp_k = tp_j[(sym1__ - 1)];
@@ -6978,25 +6909,21 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
       stan::model::assign(tp_complex_array_2d,
         foo10(stan::model::deep_copy(tp_complex_array_2d), pstream__),
         "assigning variable tp_complex_array_2d");
-      if(emit_transformed_parameters__)
-        {
-          out__.write(tp_r);
-          out__.write(tp_complex);
-          for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-            out__.write(tp_complex_array[(sym1__ - 1)]);
-          }
-          for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-            for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-              out__.write(tp_complex_array_2d[(sym2__ - 1)][(sym1__ - 1)]);
-            }
+      if (emit_transformed_parameters__) {
+        out__.write(tp_r);
+        out__.write(tp_complex);
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          out__.write(tp_complex_array[(sym1__ - 1)]);
+        }
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+            out__.write(tp_complex_array_2d[(sym2__ - 1)][(sym1__ - 1)]);
           }
         }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
       int gq_i = std::numeric_limits<int>::min();
       current_statement__ = 62;
       gq_i = 1;
@@ -7102,9 +7029,9 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
           stan::math::to_complex(1, 2), stan::math::to_complex(2.4, 0)},
         "assigning variable gq_complex_array_2d", stan::model::index_uni(1));
       current_statement__ = 100;
-      for(int gq_j = 1; gq_j <= 2; ++gq_j) {
+      for (int gq_j = 1; gq_j <= 2; ++gq_j) {
         current_statement__ = 98;
-        for(int gq_k = 1; gq_k <= 3; ++gq_k) {
+        for (int gq_k = 1; gq_k <= 3; ++gq_k) {
           current_statement__ = 96;
           stan::model::assign(gq_complex_array_2d,
             stan::math::to_complex(1, 2.2),
@@ -7113,14 +7040,14 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
         }
       }
       current_statement__ = 101;
-      for(int sym1__ = 1; sym1__ <=
-          stan::math::size(gq_complex_array_2d); ++sym1__) {
+      for (int sym1__ = 1; sym1__ <=
+           stan::math::size(gq_complex_array_2d); ++sym1__) {
         std::vector<std::complex<double>> gq_j;
         current_statement__ = 101;
         stan::model::assign(gq_j, gq_complex_array_2d[(sym1__ - 1)],
           "assigning variable gq_j");
         current_statement__ = 102;
-        for(int sym1__ = 1; sym1__ <= stan::math::size(gq_j); ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= stan::math::size(gq_j); ++sym1__) {
           std::complex<double> gq_k;
           current_statement__ = 102;
           gq_k = gq_j[(sym1__ - 1)];
@@ -7661,11 +7588,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
       out__.write(gq_i);
       out__.write(gq_r);
       out__.write(gq_complex);
-      for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         out__.write(gq_complex_array[(sym1__ - 1)]);
       }
-      for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
           out__.write(gq_complex_array_2d[(sym2__ - 1)][(sym1__ - 1)]);
         }
       }
@@ -7676,7 +7603,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
       out__.write(zi);
       out__.write(yi);
       out__.write(x);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -7706,7 +7633,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
       std::vector<std::complex<local_scalar_t__>> p_complex_array =
         std::vector<std::complex<local_scalar_t__>>(2,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         stan::model::assign(p_complex_array, in__.read<local_scalar_t__>(),
           "assigning variable p_complex_array",
           stan::model::index_uni(sym1__));
@@ -7716,8 +7643,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
         std::vector<std::vector<std::complex<local_scalar_t__>>>(2,
           std::vector<std::complex<local_scalar_t__>>(3,
             std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
-      for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
           stan::model::assign(p_complex_array_2d,
             in__.read<local_scalar_t__>(),
             "assigning variable p_complex_array_2d",
@@ -7725,7 +7652,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
         }
       }
       out__.write(p_complex_array_2d);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -7770,14 +7697,14 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
     param_names__.emplace_back(std::string() + "p_r");
     param_names__.emplace_back(std::string() + "p_complex" + '.' + "real");
     param_names__.emplace_back(std::string() + "p_complex" + '.' + "imag");
-    for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_complex_array" + '.' +
         std::to_string(sym1__) + '.' + "real");
       param_names__.emplace_back(std::string() + "p_complex_array" + '.' +
         std::to_string(sym1__) + '.' + "imag");
     }
-    for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
         param_names__.emplace_back(std::string() + "p_complex_array_2d" + '.'
           + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
           "real");
@@ -7786,74 +7713,66 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
           "imag");
       }
     }
-    if(emit_transformed_parameters__)
-      {
-        param_names__.emplace_back(std::string() + "tp_r");
-        param_names__.emplace_back(std::string() + "tp_complex" + '.' +
-          "real");
-        param_names__.emplace_back(std::string() + "tp_complex" + '.' +
-          "imag");
-        for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          param_names__.emplace_back(std::string() + "tp_complex_array" + '.'
-            + std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "tp_complex_array" + '.'
-            + std::to_string(sym1__) + '.' + "imag");
-        }
-        for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            param_names__.emplace_back(std::string() + "tp_complex_array_2d"
-              + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) +
-              '.' + "real");
-            param_names__.emplace_back(std::string() + "tp_complex_array_2d"
-              + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) +
-              '.' + "imag");
-          }
+    if (emit_transformed_parameters__) {
+      param_names__.emplace_back(std::string() + "tp_r");
+      param_names__.emplace_back(std::string() + "tp_complex" + '.' + "real");
+      param_names__.emplace_back(std::string() + "tp_complex" + '.' + "imag");
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tp_complex_array" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "tp_complex_array" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
+      }
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          param_names__.emplace_back(std::string() + "tp_complex_array_2d" +
+            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
+            + "real");
+          param_names__.emplace_back(std::string() + "tp_complex_array_2d" +
+            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
+            + "imag");
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        param_names__.emplace_back(std::string() + "gq_i");
-        param_names__.emplace_back(std::string() + "gq_r");
-        param_names__.emplace_back(std::string() + "gq_complex" + '.' +
-          "real");
-        param_names__.emplace_back(std::string() + "gq_complex" + '.' +
-          "imag");
-        for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          param_names__.emplace_back(std::string() + "gq_complex_array" + '.'
-            + std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "gq_complex_array" + '.'
-            + std::to_string(sym1__) + '.' + "imag");
-        }
-        for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            param_names__.emplace_back(std::string() + "gq_complex_array_2d"
-              + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) +
-              '.' + "real");
-            param_names__.emplace_back(std::string() + "gq_complex_array_2d"
-              + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) +
-              '.' + "imag");
-          }
-        }
-        param_names__.emplace_back(std::string() + "z" + '.' + "real");
-        param_names__.emplace_back(std::string() + "z" + '.' + "imag");
-        param_names__.emplace_back(std::string() + "y" + '.' + "real");
-        param_names__.emplace_back(std::string() + "y" + '.' + "imag");
-        for(int sym1__ = 1; sym1__ <= 0; ++sym1__) {
-          param_names__.emplace_back(std::string() + "i_arr" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-          param_names__.emplace_back(std::string() + "i_arr_1" + '.' +
-            std::to_string(sym1__));
-        }
-        param_names__.emplace_back(std::string() + "zi" + '.' + "real");
-        param_names__.emplace_back(std::string() + "zi" + '.' + "imag");
-        param_names__.emplace_back(std::string() + "yi" + '.' + "real");
-        param_names__.emplace_back(std::string() + "yi" + '.' + "imag");
-        param_names__.emplace_back(std::string() + "x");
+    }
+    if (emit_generated_quantities__) {
+      param_names__.emplace_back(std::string() + "gq_i");
+      param_names__.emplace_back(std::string() + "gq_r");
+      param_names__.emplace_back(std::string() + "gq_complex" + '.' + "real");
+      param_names__.emplace_back(std::string() + "gq_complex" + '.' + "imag");
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        param_names__.emplace_back(std::string() + "gq_complex_array" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "gq_complex_array" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
       }
-    
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          param_names__.emplace_back(std::string() + "gq_complex_array_2d" +
+            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
+            + "real");
+          param_names__.emplace_back(std::string() + "gq_complex_array_2d" +
+            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
+            + "imag");
+        }
+      }
+      param_names__.emplace_back(std::string() + "z" + '.' + "real");
+      param_names__.emplace_back(std::string() + "z" + '.' + "imag");
+      param_names__.emplace_back(std::string() + "y" + '.' + "real");
+      param_names__.emplace_back(std::string() + "y" + '.' + "imag");
+      for (int sym1__ = 1; sym1__ <= 0; ++sym1__) {
+        param_names__.emplace_back(std::string() + "i_arr" + '.' +
+          std::to_string(sym1__));
+      }
+      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
+        param_names__.emplace_back(std::string() + "i_arr_1" + '.' +
+          std::to_string(sym1__));
+      }
+      param_names__.emplace_back(std::string() + "zi" + '.' + "real");
+      param_names__.emplace_back(std::string() + "zi" + '.' + "imag");
+      param_names__.emplace_back(std::string() + "yi" + '.' + "real");
+      param_names__.emplace_back(std::string() + "yi" + '.' + "imag");
+      param_names__.emplace_back(std::string() + "x");
+    }
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
@@ -7862,14 +7781,14 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
     param_names__.emplace_back(std::string() + "p_r");
     param_names__.emplace_back(std::string() + "p_complex" + '.' + "real");
     param_names__.emplace_back(std::string() + "p_complex" + '.' + "imag");
-    for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_complex_array" + '.' +
         std::to_string(sym1__) + '.' + "real");
       param_names__.emplace_back(std::string() + "p_complex_array" + '.' +
         std::to_string(sym1__) + '.' + "imag");
     }
-    for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-      for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
         param_names__.emplace_back(std::string() + "p_complex_array_2d" + '.'
           + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
           "real");
@@ -7878,74 +7797,66 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
           "imag");
       }
     }
-    if(emit_transformed_parameters__)
-      {
-        param_names__.emplace_back(std::string() + "tp_r");
-        param_names__.emplace_back(std::string() + "tp_complex" + '.' +
-          "real");
-        param_names__.emplace_back(std::string() + "tp_complex" + '.' +
-          "imag");
-        for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          param_names__.emplace_back(std::string() + "tp_complex_array" + '.'
-            + std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "tp_complex_array" + '.'
-            + std::to_string(sym1__) + '.' + "imag");
-        }
-        for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            param_names__.emplace_back(std::string() + "tp_complex_array_2d"
-              + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) +
-              '.' + "real");
-            param_names__.emplace_back(std::string() + "tp_complex_array_2d"
-              + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) +
-              '.' + "imag");
-          }
+    if (emit_transformed_parameters__) {
+      param_names__.emplace_back(std::string() + "tp_r");
+      param_names__.emplace_back(std::string() + "tp_complex" + '.' + "real");
+      param_names__.emplace_back(std::string() + "tp_complex" + '.' + "imag");
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tp_complex_array" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "tp_complex_array" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
+      }
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          param_names__.emplace_back(std::string() + "tp_complex_array_2d" +
+            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
+            + "real");
+          param_names__.emplace_back(std::string() + "tp_complex_array_2d" +
+            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
+            + "imag");
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        param_names__.emplace_back(std::string() + "gq_i");
-        param_names__.emplace_back(std::string() + "gq_r");
-        param_names__.emplace_back(std::string() + "gq_complex" + '.' +
-          "real");
-        param_names__.emplace_back(std::string() + "gq_complex" + '.' +
-          "imag");
-        for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          param_names__.emplace_back(std::string() + "gq_complex_array" + '.'
-            + std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "gq_complex_array" + '.'
-            + std::to_string(sym1__) + '.' + "imag");
-        }
-        for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            param_names__.emplace_back(std::string() + "gq_complex_array_2d"
-              + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) +
-              '.' + "real");
-            param_names__.emplace_back(std::string() + "gq_complex_array_2d"
-              + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) +
-              '.' + "imag");
-          }
-        }
-        param_names__.emplace_back(std::string() + "z" + '.' + "real");
-        param_names__.emplace_back(std::string() + "z" + '.' + "imag");
-        param_names__.emplace_back(std::string() + "y" + '.' + "real");
-        param_names__.emplace_back(std::string() + "y" + '.' + "imag");
-        for(int sym1__ = 1; sym1__ <= 0; ++sym1__) {
-          param_names__.emplace_back(std::string() + "i_arr" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-          param_names__.emplace_back(std::string() + "i_arr_1" + '.' +
-            std::to_string(sym1__));
-        }
-        param_names__.emplace_back(std::string() + "zi" + '.' + "real");
-        param_names__.emplace_back(std::string() + "zi" + '.' + "imag");
-        param_names__.emplace_back(std::string() + "yi" + '.' + "real");
-        param_names__.emplace_back(std::string() + "yi" + '.' + "imag");
-        param_names__.emplace_back(std::string() + "x");
+    }
+    if (emit_generated_quantities__) {
+      param_names__.emplace_back(std::string() + "gq_i");
+      param_names__.emplace_back(std::string() + "gq_r");
+      param_names__.emplace_back(std::string() + "gq_complex" + '.' + "real");
+      param_names__.emplace_back(std::string() + "gq_complex" + '.' + "imag");
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        param_names__.emplace_back(std::string() + "gq_complex_array" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "gq_complex_array" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
       }
-    
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          param_names__.emplace_back(std::string() + "gq_complex_array_2d" +
+            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
+            + "real");
+          param_names__.emplace_back(std::string() + "gq_complex_array_2d" +
+            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
+            + "imag");
+        }
+      }
+      param_names__.emplace_back(std::string() + "z" + '.' + "real");
+      param_names__.emplace_back(std::string() + "z" + '.' + "imag");
+      param_names__.emplace_back(std::string() + "y" + '.' + "real");
+      param_names__.emplace_back(std::string() + "y" + '.' + "imag");
+      for (int sym1__ = 1; sym1__ <= 0; ++sym1__) {
+        param_names__.emplace_back(std::string() + "i_arr" + '.' +
+          std::to_string(sym1__));
+      }
+      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
+        param_names__.emplace_back(std::string() + "i_arr_1" + '.' +
+          std::to_string(sym1__));
+      }
+      param_names__.emplace_back(std::string() + "zi" + '.' + "real");
+      param_names__.emplace_back(std::string() + "zi" + '.' + "imag");
+      param_names__.emplace_back(std::string() + "yi" + '.' + "real");
+      param_names__.emplace_back(std::string() + "yi" + '.' + "imag");
+      param_names__.emplace_back(std::string() + "x");
+    }
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"p_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"p_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"parameters\"},{\"name\":\"p_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"parameters\"},{\"name\":\"tp_r\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_i\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"i_arr\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(0) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"i_arr_1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"zi\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"yi\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
@@ -8028,9 +7939,9 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model>{
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }
@@ -8073,8 +7984,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
  public:
   ~complex_vectors_model() {}
   complex_vectors_model(stan::io::var_context& context__, unsigned int
-                        random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                        random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -8091,10 +8002,11 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 0U;}
+    num_params_r__ = 0U;
+  }
   inline std::string model_name() const final {
     return "complex_vectors_model";
   }
@@ -8163,7 +8075,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       current_statement__ = 4;
       stan::model::assign(zx, x, "assigning variable zx");
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -8215,13 +8127,11 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
         Eigen::Matrix<std::complex<double>,1,-1>::Constant(2,
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::quiet_NaN()));
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
       current_statement__ = 1;
       stan::model::assign(z,
         (Eigen::Matrix<std::complex<double>,-1,1>(3) <<
@@ -8252,20 +8162,16 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
         "assigning variable x");
       current_statement__ = 4;
       stan::model::assign(zx, x, "assigning variable zx");
-      if(emit_transformed_parameters__)
-        {
-          out__.write(z);
-          out__.write(zs);
-          out__.write(x);
-          out__.write(zx);
-        }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      if (emit_transformed_parameters__) {
+        out__.write(z);
+        out__.write(zs);
+        out__.write(x);
+        out__.write(zx);
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -8285,7 +8191,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -8306,81 +8212,69 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          param_names__.emplace_back(std::string() + "z" + '.' +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "z" + '.' +
-            std::to_string(sym1__) + '.' + "imag");
-        }
-        for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            param_names__.emplace_back(std::string() + "zs" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "real");
-            param_names__.emplace_back(std::string() + "zs" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "imag");
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          param_names__.emplace_back(std::string() + "x" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          param_names__.emplace_back(std::string() + "zx" + '.' +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "zx" + '.' +
-            std::to_string(sym1__) + '.' + "imag");
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        param_names__.emplace_back(std::string() + "z" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "z" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
+      }
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          param_names__.emplace_back(std::string() + "zs" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "zs" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        param_names__.emplace_back(std::string() + "x" + '.' +
+          std::to_string(sym1__));
       }
-    
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        param_names__.emplace_back(std::string() + "zx" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "zx" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
+      }
+    }
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          param_names__.emplace_back(std::string() + "z" + '.' +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "z" + '.' +
-            std::to_string(sym1__) + '.' + "imag");
-        }
-        for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            param_names__.emplace_back(std::string() + "zs" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "real");
-            param_names__.emplace_back(std::string() + "zs" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-              "imag");
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          param_names__.emplace_back(std::string() + "x" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          param_names__.emplace_back(std::string() + "zx" + '.' +
-            std::to_string(sym1__) + '.' + "real");
-          param_names__.emplace_back(std::string() + "zx" + '.' +
-            std::to_string(sym1__) + '.' + "imag");
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        param_names__.emplace_back(std::string() + "z" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "z" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
+      }
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          param_names__.emplace_back(std::string() + "zs" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "zs" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        param_names__.emplace_back(std::string() + "x" + '.' +
+          std::to_string(sym1__));
       }
-    
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        param_names__.emplace_back(std::string() + "zx" + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "zx" + '.' +
+          std::to_string(sym1__) + '.' + "imag");
+      }
+    }
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"z\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zs\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zx\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"}]");
@@ -8456,9 +8350,9 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }
@@ -8580,7 +8474,7 @@ foo(const T0__& Z_arg__, std::ostream* pstream__) {
   try {
     current_statement__ = 15;
     return Z;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -8610,7 +8504,7 @@ foo(const T0__& A_arg__, std::ostream* pstream__) {
     std::stringstream errmsg_stream__;
     stan::math::stan_print(&errmsg_stream__, "called the wrong foo");
     throw std::domain_error(errmsg_stream__.str());
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -8638,7 +8532,7 @@ foo(const T0__& Z_arg__, std::ostream* pstream__) {
   try {
     current_statement__ = 19;
     return Z;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -8668,7 +8562,7 @@ foo(const T0__& A_arg__, std::ostream* pstream__) {
     std::stringstream errmsg_stream__;
     stan::math::stan_print(&errmsg_stream__, "called the wrong foo");
     throw std::domain_error(errmsg_stream__.str());
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -8696,7 +8590,7 @@ foo(const T0__& Z_arg__, std::ostream* pstream__) {
   try {
     current_statement__ = 23;
     return Z;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -8726,7 +8620,7 @@ foo(const T0__& A_arg__, std::ostream* pstream__) {
     std::stringstream errmsg_stream__;
     stan::math::stan_print(&errmsg_stream__, "called the wrong foo");
     throw std::domain_error(errmsg_stream__.str());
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -8753,7 +8647,7 @@ foo(const std::vector<Eigen::Matrix<std::complex<T0__>,-1,-1>>& Z,
   try {
     current_statement__ = 27;
     return Z;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -8781,7 +8675,7 @@ foo(const std::vector<Eigen::Matrix<T0__,-1,-1>>& A, std::ostream* pstream__) {
     std::stringstream errmsg_stream__;
     stan::math::stan_print(&errmsg_stream__, "called the wrong foo");
     throw std::domain_error(errmsg_stream__.str());
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -8798,8 +8692,8 @@ class user_function_templating_model final : public model_base_crtp<user_functio
   ~user_function_templating_model() {}
   user_function_templating_model(stan::io::var_context& context__,
                                  unsigned int random_seed__ = 0,
-                                 std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                                 std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -8820,10 +8714,11 @@ class user_function_templating_model final : public model_base_crtp<user_functio
       N = std::numeric_limits<int>::min();
       current_statement__ = 14;
       N = 3;
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 0U;}
+    num_params_r__ = 0U;
+  }
   inline std::string model_name() const final {
     return "user_function_templating_model";
   }
@@ -8890,7 +8785,7 @@ class user_function_templating_model final : public model_base_crtp<user_functio
         foo(
           std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>{x,
             x}, pstream__), "assigning variable w");
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -8927,19 +8822,15 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     // supress unused var warning
     (void) function__;
     try {
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -8959,7 +8850,7 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -8973,31 +8864,15 @@ class user_function_templating_model final : public model_base_crtp<user_functio
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    if(emit_transformed_parameters__)
-      {
-        
-      }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    if(emit_transformed_parameters__)
-      {
-        
-      }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[]");
@@ -9071,9 +8946,9 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }

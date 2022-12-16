@@ -16,8 +16,8 @@ class filename_good_model final : public model_base_crtp<filename_good_model>{
  public:
   ~filename_good_model() {}
   filename_good_model(stan::io::var_context& context__, unsigned int
-                      random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                      random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -40,10 +40,11 @@ class filename_good_model final : public model_base_crtp<filename_good_model>{
       q = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       q = (p + 5);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 0U;}
+    num_params_r__ = 0U;
+  }
   inline std::string model_name() const final {
     return "filename_good_model";
   }
@@ -72,7 +73,7 @@ class filename_good_model final : public model_base_crtp<filename_good_model>{
     (void) function__;
     try {
       
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -109,19 +110,15 @@ class filename_good_model final : public model_base_crtp<filename_good_model>{
     // supress unused var warning
     (void) function__;
     try {
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -141,7 +138,7 @@ class filename_good_model final : public model_base_crtp<filename_good_model>{
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -155,31 +152,15 @@ class filename_good_model final : public model_base_crtp<filename_good_model>{
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    if(emit_transformed_parameters__)
-      {
-        
-      }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    if(emit_transformed_parameters__)
-      {
-        
-      }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[]");
@@ -253,9 +234,9 @@ class filename_good_model final : public model_base_crtp<filename_good_model>{
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }

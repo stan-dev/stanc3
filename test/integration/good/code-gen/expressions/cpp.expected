@@ -99,7 +99,7 @@ foo1(const T0__& a, const int& b, const std::vector<T2__>& c, const T3__&
   try {
     current_statement__ = 5;
     return 5.0;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -142,7 +142,7 @@ foo2(const T0__& a_arg__, const std::vector<Eigen::Matrix<T1__,-1,-1>>& b,
   try {
     current_statement__ = 7;
     return a;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -180,7 +180,7 @@ foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
   try {
     current_statement__ = 9;
     return b;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -217,7 +217,7 @@ add_udf(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
   try {
     current_statement__ = 11;
     return stan::math::add(a, b);
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -240,8 +240,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
  public:
   ~simple_function_model() {}
   simple_function_model(stan::io::var_context& context__, unsigned int
-                        random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                        random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -281,9 +281,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         current_statement__ = 4;
         pos__ = 1;
         current_statement__ = 4;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 4;
-          for(int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             current_statement__ = 4;
             stan::model::assign(m, m_flat__[(pos__ - 1)],
               "assigning variable m", stan::model::index_uni(sym2__),
@@ -293,10 +293,11 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           }
         }
       }
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 0U;}
+    num_params_r__ = 0U;
+  }
   inline std::string model_name() const final {
     return "simple_function_model";
   }
@@ -325,7 +326,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     (void) function__;
     try {
       
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -362,19 +363,15 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // supress unused var warning
     (void) function__;
     try {
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -394,7 +391,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -408,31 +405,15 @@ class simple_function_model final : public model_base_crtp<simple_function_model
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    if(emit_transformed_parameters__)
-      {
-        
-      }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    if(emit_transformed_parameters__)
-      {
-        
-      }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[]");
@@ -506,9 +487,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }
@@ -557,8 +538,8 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model>{
  public:
   ~ternary_if_model() {}
   ternary_if_model(stan::io::var_context& context__, unsigned int
-                   random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                   random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -581,10 +562,11 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model>{
       y = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 10;
       y = context__.vals_r("y")[(1 - 1)];
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 2 + 2 + 1 + 2;}
+    num_params_r__ = 2 + 2 + 1 + 2;
+  }
   inline std::string model_name() const final {
     return "ternary_if_model";
   }
@@ -659,7 +641,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model>{
         z2 = (1 ? stan::math::promote_scalar<std::complex<local_scalar_t__>>(
                     0) : zp);
       }
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -727,13 +709,11 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model>{
       out__.write(b);
       out__.write(r);
       out__.write(zp);
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
       current_statement__ = 5;
       stan::model::assign(c,
         (stan::math::logical_gt(stan::math::sum(a), 1) ? stan::math::eval(
@@ -751,19 +731,15 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model>{
         stan::math::eval(stan::math::multiply(2, a))), "assigning variable d");
       current_statement__ = 7;
       z = (1 ? stan::math::to_complex(0, 3) : stan::math::to_complex(2, 0));
-      if(emit_transformed_parameters__)
-        {
-          out__.write(c);
-          out__.write(d);
-          out__.write(z);
-        }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      if (emit_transformed_parameters__) {
+        out__.write(c);
+        out__.write(d);
+        out__.write(z);
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -785,14 +761,14 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model>{
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> a =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         stan::model::assign(a, in__.read<local_scalar_t__>(),
           "assigning variable a", stan::model::index_uni(sym1__));
       }
       out__.write(a);
       Eigen::Matrix<local_scalar_t__,-1,1> b =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         stan::model::assign(b, in__.read<local_scalar_t__>(),
           "assigning variable b", stan::model::index_uni(sym1__));
       }
@@ -804,7 +780,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model>{
         std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
       zp = in__.read<local_scalar_t__>();
       out__.write(zp);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -825,71 +801,59 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model>{
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       param_names__.emplace_back(std::string() + "a" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       param_names__.emplace_back(std::string() + "b" + '.' +
         std::to_string(sym1__));
     }
     param_names__.emplace_back(std::string() + "r");
     param_names__.emplace_back(std::string() + "zp" + '.' + "real");
     param_names__.emplace_back(std::string() + "zp" + '.' + "imag");
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          param_names__.emplace_back(std::string() + "c" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          param_names__.emplace_back(std::string() + "d" + '.' +
-            std::to_string(sym1__));
-        }
-        param_names__.emplace_back(std::string() + "z" + '.' + "real");
-        param_names__.emplace_back(std::string() + "z" + '.' + "imag");
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        param_names__.emplace_back(std::string() + "c" + '.' +
+          std::to_string(sym1__));
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        param_names__.emplace_back(std::string() + "d" + '.' +
+          std::to_string(sym1__));
       }
-    
+      param_names__.emplace_back(std::string() + "z" + '.' + "real");
+      param_names__.emplace_back(std::string() + "z" + '.' + "imag");
+    }
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       param_names__.emplace_back(std::string() + "a" + '.' +
         std::to_string(sym1__));
     }
-    for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       param_names__.emplace_back(std::string() + "b" + '.' +
         std::to_string(sym1__));
     }
     param_names__.emplace_back(std::string() + "r");
     param_names__.emplace_back(std::string() + "zp" + '.' + "real");
     param_names__.emplace_back(std::string() + "zp" + '.' + "imag");
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          param_names__.emplace_back(std::string() + "c" + '.' +
-            std::to_string(sym1__));
-        }
-        for(int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          param_names__.emplace_back(std::string() + "d" + '.' +
-            std::to_string(sym1__));
-        }
-        param_names__.emplace_back(std::string() + "z" + '.' + "real");
-        param_names__.emplace_back(std::string() + "z" + '.' + "imag");
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        param_names__.emplace_back(std::string() + "c" + '.' +
+          std::to_string(sym1__));
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        param_names__.emplace_back(std::string() + "d" + '.' +
+          std::to_string(sym1__));
       }
-    
+      param_names__.emplace_back(std::string() + "z" + '.' + "real");
+      param_names__.emplace_back(std::string() + "z" + '.' + "imag");
+    }
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"zp\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"c\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"d\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"}]");
@@ -965,9 +929,9 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model>{
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }

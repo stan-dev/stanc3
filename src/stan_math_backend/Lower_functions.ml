@@ -434,7 +434,7 @@ module Testing = struct
       (void) DUMMY_VAR__;
       try {
         return stan::math::add(x, 1);
-      } catch(const std::exception& e) {
+      } catch (const std::exception& e) {
         stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       }
     }
@@ -501,7 +501,7 @@ module Testing = struct
       (void) DUMMY_VAR__;
       try {
         return stan::math::add(x, 1);
-      } catch(const std::exception& e) {
+      } catch (const std::exception& e) {
         stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       }
     }

@@ -117,7 +117,7 @@ f_0_arg(const T0__& t, const T1__& z_arg__, std::ostream* pstream__) {
   try {
     current_statement__ = 30;
     return z;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -160,7 +160,7 @@ f_1_arg(const T0__& t, const T1__& z_arg__, const T2__& a, std::ostream*
   try {
     current_statement__ = 32;
     return z;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -206,7 +206,7 @@ f_2_arg(const T0__& t, const T1__& z_arg__, const int& b, const T3__& a,
   try {
     current_statement__ = 34;
     return z;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -253,8 +253,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
   ~ode_adjoint_test_model_model() {}
   ode_adjoint_test_model_model(stan::io::var_context& context__, unsigned int
                                random_seed__ = 0, std::ostream*
-                               pstream__ = nullptr): model_base_crtp(0)
-  {
+                               pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -329,10 +328,11 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       stan::math::validate_non_negative_index("z", "M", M);
       current_statement__ = 29;
       stan::math::validate_non_negative_index("z", "N", N);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + N + 1 + N;}
+    num_params_r__ = 1 + N + 1 + N;
+  }
   inline std::string model_name() const final {
     return "ode_adjoint_test_model_model";
   }
@@ -402,7 +402,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
         current_statement__ = 9;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, 0, 1));
       }
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -462,13 +462,11 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       out__.write(y0);
       out__.write(t0);
       out__.write(times);
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
       current_statement__ = 6;
       stan::model::assign(z,
         stan::math::ode_adjoint_tol_ctl(f_0_arg_variadic2_functor__(), y0,
@@ -490,21 +488,17 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
           abs_tol_q, max_num_steps, num_checkpoints,
           interpolation_polynomial, solver_f, solver_b, pstream__, i, y),
         "assigning variable z");
-      if(emit_transformed_parameters__)
-        {
-          for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-            for(int sym2__ = 1; sym2__ <= M; ++sym2__) {
-              out__.write(z[(sym2__ - 1)][(sym1__ - 1)]);
-            }
+      if (emit_transformed_parameters__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+            out__.write(z[(sym2__ - 1)][(sym1__ - 1)]);
           }
         }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -529,7 +523,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       out__.write(y);
       Eigen::Matrix<local_scalar_t__,-1,1> y0 =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(y0, in__.read<local_scalar_t__>(),
           "assigning variable y0", stan::model::index_uni(sym1__));
       }
@@ -539,11 +533,11 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       out__.write(t0);
       std::vector<local_scalar_t__> times =
         std::vector<local_scalar_t__>(N, DUMMY_VAR__);
-      for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         times[(sym1__ - 1)] = in__.read<local_scalar_t__>();
       }
       out__.write(times);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -563,60 +557,48 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "y");
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "y0" + '.' +
         std::to_string(sym1__));
     }
     param_names__.emplace_back(std::string() + "t0");
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "times" + '.' +
         std::to_string(sym1__));
     }
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= M; ++sym2__) {
-            param_names__.emplace_back(std::string() + "z" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          param_names__.emplace_back(std::string() + "z" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    }
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "y");
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "y0" + '.' +
         std::to_string(sym1__));
     }
     param_names__.emplace_back(std::string() + "t0");
-    for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "times" + '.' +
         std::to_string(sym1__));
     }
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= M; ++sym2__) {
-            param_names__.emplace_back(std::string() + "z" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          param_names__.emplace_back(std::string() + "z" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    }
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y0\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"t0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"times\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"transformed_parameters\"}]");
@@ -690,9 +672,9 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }
@@ -896,7 +878,7 @@ simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
       "assigning variable dydt", stan::model::index_uni(4));
     current_statement__ = 45;
     return dydt;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -967,12 +949,10 @@ simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
     Eigen::Matrix<local_scalar_t__,-1,1> dydt =
       Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__);
     current_statement__ = 48;
-    if(pstream__)
-      {
-        stan::math::stan_print(pstream__, unused);
-        stan::math::stan_print(pstream__, "\n");
-      }
-    
+    if (pstream__) {
+      stan::math::stan_print(pstream__, unused);
+      stan::math::stan_print(pstream__, "\n");
+    }
     current_statement__ = 49;
     stan::model::assign(dydt, (((-beta *
       stan::model::rvalue(y, "y", stan::model::index_uni(4))) /
@@ -997,7 +977,7 @@ simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
       "assigning variable dydt", stan::model::index_uni(4));
     current_statement__ = 53;
     return dydt;
-  } catch(const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
@@ -1053,8 +1033,8 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
  public:
   ~overloaded_ode_model() {}
   overloaded_ode_model(stan::io::var_context& context__, unsigned int
-                       random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                       random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -1100,7 +1080,7 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
         current_statement__ = 30;
         pos__ = 1;
         current_statement__ = 30;
-        for(int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
           current_statement__ = 30;
           stan::model::assign(y0, y0_flat__[(pos__ - 1)],
             "assigning variable y0", stan::model::index_uni(sym1__));
@@ -1142,10 +1122,11 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
       stan::math::validate_non_negative_index("y", "N_t", N_t);
       current_statement__ = 39;
       stan::math::validate_non_negative_index("y2", "N_t", N_t);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 1 + 1 + 1;}
+    num_params_r__ = 1 + 1 + 1 + 1;
+  }
   inline std::string model_name() const final {
     return "overloaded_ode_model";
   }
@@ -1221,7 +1202,7 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
             stan::model::index_uni(1))), "assigning variable y_diff",
           stan::model::index_uni(1));
         current_statement__ = 12;
-        for(int n = 2; n <= N_t; ++n) {
+        for (int n = 2; n <= N_t; ++n) {
           current_statement__ = 10;
           stan::model::assign(y_diff,
             (stan::model::rvalue(y, "y", stan::model::index_uni((n - 1)),
@@ -1257,7 +1238,7 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
             stan::model::index_uni(1))), "assigning variable y2_diff",
           stan::model::index_uni(1));
         current_statement__ = 24;
-        for(int n = 2; n <= N_t; ++n) {
+        for (int n = 2; n <= N_t; ++n) {
           current_statement__ = 22;
           stan::model::assign(y2_diff,
             (stan::model::rvalue(y2, "y2", stan::model::index_uni((n - 1)),
@@ -1275,7 +1256,7 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
                              stan::model::index_omni(),
                              stan::model::index_uni(4))), 0.15));
       }
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -1340,13 +1321,11 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
       out__.write(gamma);
       out__.write(xi);
       out__.write(delta);
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
       current_statement__ = 5;
       stan::model::assign(y,
         stan::math::ode_rk45_tol(simple_SIR_variadic2_functor__(), y0, t0, t,
@@ -1361,26 +1340,22 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 6;
       stan::math::check_greater_or_equal(function__, "y2", y2, 0);
-      if(emit_transformed_parameters__)
-        {
-          for(int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-            for(int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
-              out__.write(y[(sym2__ - 1)][(sym1__ - 1)]);
-            }
-          }
-          for(int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-            for(int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
-              out__.write(y2[(sym2__ - 1)][(sym1__ - 1)]);
-            }
+      if (emit_transformed_parameters__) {
+        for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
+            out__.write(y[(sym2__ - 1)][(sym1__ - 1)]);
           }
         }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
+        for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
+            out__.write(y2[(sym2__ - 1)][(sym1__ - 1)]);
+          }
         }
-      
-    } catch(const std::exception& e) {
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -1412,7 +1387,7 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
       local_scalar_t__ delta = DUMMY_VAR__;
       delta = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, delta);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -1437,27 +1412,21 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
     param_names__.emplace_back(std::string() + "gamma");
     param_names__.emplace_back(std::string() + "xi");
     param_names__.emplace_back(std::string() + "delta");
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
-            param_names__.emplace_back(std::string() + "y" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
-            param_names__.emplace_back(std::string() + "y2" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
+          param_names__.emplace_back(std::string() + "y" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
+          param_names__.emplace_back(std::string() + "y2" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
       }
-    
+    }
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
@@ -1467,27 +1436,21 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
     param_names__.emplace_back(std::string() + "gamma");
     param_names__.emplace_back(std::string() + "xi");
     param_names__.emplace_back(std::string() + "delta");
-    if(emit_transformed_parameters__)
-      {
-        for(int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
-            param_names__.emplace_back(std::string() + "y" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
-        }
-        for(int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-          for(int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
-            param_names__.emplace_back(std::string() + "y2" + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }
+    if (emit_transformed_parameters__) {
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
+          param_names__.emplace_back(std::string() + "y" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
-    
-    if(emit_generated_quantities__)
-      {
-        
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
+          param_names__.emplace_back(std::string() + "y2" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
       }
-    
+    }
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"xi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N_t) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N_t) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}},\"block\":\"transformed_parameters\"}]");
@@ -1564,9 +1527,9 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model>{
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }

@@ -28,7 +28,7 @@ let math_fn_translations = function
   | _ -> None
 
 let trans_math_fn f =
-  Option.(value ~default:(Internal_fun.to_string f) (math_fn_translations f))
+  Option.value ~default:(Internal_fun.to_string f) (math_fn_translations f)
 
 let nan_type st adtype =
   match (adtype, st) with

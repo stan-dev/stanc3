@@ -499,27 +499,26 @@ module Printing = struct
     | Continue -> string ppf "continue;"
     | Semicolon -> string ppf ";"
     | VariableDefn vd -> pf ppf "%a;" pp_variable_defn vd
-    | For (init, cond, incr, Block stmts) ->
-        (* When we know a block is here, we can do better pretty-printing*)
-        pf ppf "@[<v 2>for(@[<hov>%a; %a; %a@]) {@ @[<v>%a@]@]@,}"
-          pp_variable_defn init pp_expr cond pp_expr incr
-          (list ~sep:cut pp_stmt) stmts
     | For (init, cond, incr, s) ->
-        pf ppf "@[<v 2>for(@[<hov>%a; %a; %a@])@ @[%a@]@]" pp_variable_defn init
-          pp_expr cond pp_expr incr pp_stmt s
-    | ForEach ((ty, name), set, Block stmts) ->
-        (* When we know a block is here, we can do better pretty-printing*)
-        pf ppf "@[<v 2>for(@[<hov>%a %a: %a@]) {@ @[<v>%a@]@]@,}" pp_type_ ty
-          pp_identifier name pp_expr set (list ~sep:cut pp_stmt) stmts
+        let pp ppf () =
+          pf ppf "for (@[<hov>%a; %a; %a@])" pp_variable_defn init pp_expr cond
+            pp_expr incr in
+        pp_with_block pp ppf s
     | ForEach ((ty, name), set, s) ->
-        pf ppf "@[<v 2>for(@[<hov>%a %a: %a@])@ @[%a@]@]" pp_type_ ty
-          pp_identifier name pp_expr set pp_stmt s
+        let pp ppf () =
+          pf ppf "for (@[<hov>%a %a: %a@])" pp_type_ ty pp_identifier name
+            pp_expr set in
+        pp_with_block pp ppf s
     | While (e, s) ->
-        pf ppf "@[<v 2>while(@[%a@])@ @[%a@]@]" pp_expr e pp_stmt s
-    | IfElse (cond, thn, els) ->
-        pf ppf "@[<v 2>if(@[%a@])@ @[%a@]@]@,@[<v 2>%a@]" pp_expr cond pp_stmt
-          thn
-          (option (fun ppf els -> pf ppf "else @[%a@]" pp_stmt els))
+        let pp ppf () = pf ppf "while (@[%a@])" pp_expr e in
+        pp_with_block pp ppf s
+    | IfElse (cond, thn, None) ->
+        let pp_if ppf () = pf ppf "if (@[%a@])" pp_expr cond in
+        pp_with_block pp_if ppf thn
+    | IfElse (cond, thn, Some els) ->
+        let pp_if ppf () = pf ppf "if (@[%a@])" pp_expr cond in
+        pf ppf "%a %a" (pp_with_block pp_if) thn
+          (pp_with_block ~indent:0 (any "else"))
           els
     | Block stmts ->
         pf ppf "@[<v>@[<v 2>{@,%a@]@,}@]" (list ~sep:cut pp_stmt) stmts
@@ -531,10 +530,27 @@ module Printing = struct
         if String.contains s '\n' then pf ppf "/@[<v>*@[@ %a@]@,@]*/" text s
         else pf ppf "//@[<h> %s@]" s
     | TryCatch (trys, (exn_ty, exn_name), thn) ->
-        (* When we know this contains blocks, we can do better pretty-printing*)
-        pf ppf "@[<v 2>try {@ %a@]@,@[<v 2>} catch(%a %a) {@ %a@]@,}"
+        pf ppf "@[<v 2>try {@ %a@]@,@[<v 2>} catch (%a %a) {@ %a@]@,}"
           (list ~sep:cut pp_stmt) trys pp_type_ exn_ty pp_identifier exn_name
           (list ~sep:cut pp_stmt) thn
+
+  (** When we know a block is here, we can do better pretty-printing
+
+    @param indent: How much to indent the enclosing vbox. Usually 2, but
+      set to zero for the [else] branch of an if-else to prevent
+      over-indenting
+  *)
+  and pp_with_block ?(indent = 2) pp_wrapper ppf = function
+    | Block [] ->
+        let pp ppf () = pf ppf "%a {}" pp_wrapper () in
+        (vbox ~indent pp) ppf ()
+    | Block stmts ->
+        let pp ppf () =
+          pf ppf "%a {@ @[<v>%a@]" pp_wrapper () (list pp_stmt) stmts in
+        pf ppf "%a@,}" (vbox ~indent pp) ()
+    | stmt ->
+        let pp ppf () = pf ppf "%a@ @[<v>%a@]" pp_wrapper () pp_stmt stmt in
+        (vbox ~indent pp) ppf ()
 
   let pp_cv ppf q =
     match q with
@@ -570,8 +586,9 @@ module Printing = struct
     let pp_init ppf (id, es) = pf ppf "%s(%a)" id (list ~sep:comma pp_expr) es in
     let pp_inits =
       if List.length init_list = 0 then Fmt.nop
-      else fun ppf inits -> pf ppf ": %a" (list ~sep:comma pp_init) inits in
-    pf ppf "@[%s(@[%a@])%a@ @[<v 2>{@,%a}@]@]" name
+      else fun ppf inits -> pf ppf ": @[%a@] " (list ~sep:comma pp_init) inits
+    in
+    pf ppf "@[<v 2>@[<hov 4>%s(@[%a@])@ %a@]{@,%a@]@,}" name
       (list ~sep:comma (pair ~sep:sp pp_type_ pp_identifier))
       args pp_inits init_list (list ~sep:cut pp_stmt) body
 
@@ -581,7 +598,7 @@ module Printing = struct
     | IfNDef (name, defns) ->
         pf ppf "@[<v>#ifndef %s@,%a@,#endif" name (list ~sep:cut pp_defn) defns
     | MacroApply (name, args) ->
-        pf ppf "@[<h>%s(%a)@]" name (list ~sep:(any ", ") string) args
+        pf ppf "@[<h>%s(%a)@]" name (list ~sep:comma string) args
 
   and pp_class_defn ppf
       { class_name
@@ -649,9 +666,43 @@ module Tests = struct
            multiline comment
          */
         foo = 3;
-      } catch(const std::exception& e) {
+      } catch (const std::exception& e) {
         stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       } |}]
+
+  let%expect_test "if_else" =
+    let s =
+      [ Comment
+          "A potentially very very very very very long comment which will be \
+           on one line"; Comment "A potentially \n multiline comment"
+      ; Expression (Assign (Var "foo", Literal "3")) ] in
+    let ifelse = IfElse (Literal "1", Block s, Some (Block s)) in
+    let if_empty = IfElse (Literal "1", Block [], None) in
+    let if_noelse = IfElse (Literal "1", Block s, None) in
+    Fmt.(vbox @@ list Printing.pp_stmt) Fmt.stdout [ifelse; if_empty; if_noelse] ;
+    [%expect
+      {|
+        if (1) {
+          // A potentially very very very very very long comment which will be on one line
+          /* A potentially
+             multiline comment
+           */
+          foo = 3;
+        } else {
+          // A potentially very very very very very long comment which will be on one line
+          /* A potentially
+             multiline comment
+           */
+          foo = 3;
+        }
+        if (1) {}
+        if (1) {
+          // A potentially very very very very very long comment which will be on one line
+          /* A potentially
+             multiline comment
+           */
+          foo = 3;
+        } |}]
 
   let%expect_test "types" =
     let ts =
@@ -717,7 +768,7 @@ module Tests = struct
                      long comment
                    */
                   foo = 3;
-                } catch(const std::exception& e) {
+                } catch (const std::exception& e) {
                   stan::lang::rethrow_located(e, locations_array__[current_statement__]);
                 }
               } |}]

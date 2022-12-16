@@ -45,8 +45,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
  public:
   ~simple_function_model() {}
   simple_function_model(stan::io::var_context& context__, unsigned int
-                        random_seed__ = 0, std::ostream* pstream__ = nullptr): model_base_crtp(0)
-  {
+                        random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
@@ -94,7 +94,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         current_statement__ = 25;
         pos__ = 1;
         current_statement__ = 25;
-        for(int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 25;
           stan::model::assign(y, y_flat__[(pos__ - 1)],
             "assigning variable y", stan::model::index_uni(sym1__));
@@ -111,10 +111,11 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         current_statement__ = 27;
         sum_y = stan::math::sum(y);
       }
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 1 + 1;}
+    num_params_r__ = 1 + 1 + 1;
+  }
   inline std::string model_name() const final {
     return "simple_function_model";
   }
@@ -210,7 +211,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           }
         }
       }
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     lp_accum__.add(lp__);
@@ -262,19 +263,15 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       out__.write(rho);
       out__.write(alpha);
       out__.write(sigma);
-      if(stan::math::logical_negation(
-           (stan::math::primitive_value(emit_transformed_parameters__) ||
-           stan::math::primitive_value(emit_generated_quantities__))))
-        {
-          return ;
-        }
-      
-      if(stan::math::logical_negation(emit_generated_quantities__))
-        {
-          return ;
-        }
-      
-    } catch(const std::exception& e) {
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -303,7 +300,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       local_scalar_t__ sigma = DUMMY_VAR__;
       sigma = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, sigma);
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
@@ -321,16 +318,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     param_names__.emplace_back(std::string() + "rho");
     param_names__.emplace_back(std::string() + "alpha");
     param_names__.emplace_back(std::string() + "sigma");
-    if(emit_transformed_parameters__)
-      {
-        
-      }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
@@ -339,16 +328,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     param_names__.emplace_back(std::string() + "rho");
     param_names__.emplace_back(std::string() + "alpha");
     param_names__.emplace_back(std::string() + "sigma");
-    if(emit_transformed_parameters__)
-      {
-        
-      }
-    
-    if(emit_generated_quantities__)
-      {
-        
-      }
-    
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
@@ -422,9 +403,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     std::vector<double> params_r_flat__(num_constrained_params__);
     Eigen::Index size_iter__ = 0;
     Eigen::Index flat_iter__ = 0;
-    for(auto&& param_name__: names__) {
+    for (auto&& param_name__: names__) {
       const auto param_vec__ = context.vals_r(param_name__);
-      for(Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
+      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
         params_r_flat__[flat_iter__] = param_vec__[i];
         ++flat_iter__;
       }
