@@ -15,7 +15,6 @@ type type_ =
   | StdVector of type_
       (** A std::vector. For Eigen Vectors, use [Matrix] with a row or column size of 1 *)
   | Array of type_ * int
-  | Tuple of type_ list
   | TypeLiteral of identifier  (** Used for things like Eigen::Index *)
   | Matrix of type_ * int * int
   | Ref of type_
@@ -381,7 +380,6 @@ module Printing = struct
     | TemplateType id -> pp_identifier ppf id
     | StdVector t -> pf ppf "@[<2>std::vector<@,%a>@]" pp_type_ t
     | Array (t, i) -> pf ppf "@[<2>std::array<@,%a,@ %i>@]" pp_type_ t i
-    | Tuple ts -> pf ppf "@[<2>std::tuple<@,%a>@]" (list ~sep:comma pp_type_) ts
     | TypeLiteral id -> pp_identifier ppf id
     | Matrix (t, i, j) -> pf ppf "Eigen::Matrix<%a,%i,%i>" pp_type_ t i j
     | Const t -> pf ppf "const %a" pp_type_ t
