@@ -15,6 +15,7 @@ type type_ =
   | StdVector of type_
       (** A std::vector. For Eigen Vectors, use [Matrix] with a row or column size of 1 *)
   | Array of type_ * int
+  | Tuple of type_ list
   | TypeLiteral of identifier  (** Used for things like Eigen::Index *)
   | Matrix of type_ * int * int
   | Ref of type_
@@ -181,7 +182,7 @@ end
 type init =
   | Assignment of expr
   | Construction of expr list
-  | InitalizerList of expr list
+  | InitializerList of expr list
   | Uninitialized
 [@@deriving sexp]
 
@@ -380,6 +381,7 @@ module Printing = struct
     | TemplateType id -> pp_identifier ppf id
     | StdVector t -> pf ppf "@[<2>std::vector<@,%a>@]" pp_type_ t
     | Array (t, i) -> pf ppf "@[<2>std::array<@,%a,@ %i>@]" pp_type_ t i
+    | Tuple ts -> pf ppf "@[<2>std::tuple<@,%a>@]" (list ~sep:comma pp_type_) ts
     | TypeLiteral id -> pp_identifier ppf id
     | Matrix (t, i, j) -> pf ppf "Eigen::Matrix<%a,%i,%i>" pp_type_ t i j
     | Const t -> pf ppf "const %a" pp_type_ t
@@ -452,7 +454,7 @@ module Printing = struct
           ("&" ^ ptr) pp_type_ t (list ~sep:comma pp_expr) es
     | ArrayLiteral es -> pf ppf "{%a}" (list ~sep:comma pp_expr) es
     | InitializerExpr (t, es) ->
-        pf ppf "@[<2>%a{%a}@]" pp_type_ t (list ~sep:comma pp_expr) es
+        pf ppf "@[<hov 2>%a{%a}@]" pp_type_ t (list ~sep:comma pp_expr) es
     | StreamInsertion (e, es) ->
         pf ppf "%a <<@[@ %a@]" pp_expr e (list ~sep:comma pp_expr) es
     | FunCall (fn, tys, es) ->
@@ -479,12 +481,12 @@ module Printing = struct
       | Uninitialized -> ()
       | Assignment e -> pf ppf " =@ %a" pp_expr e
       | Construction es -> pf ppf "(%a)" (list ~sep:comma pp_expr) es
-      | InitalizerList es ->
-          pf ppf "{@[<hov 1>%a@]}" (list ~sep:comma pp_expr) es in
+      | InitializerList es ->
+          pf ppf "{@[<hov>%a@]}" (list ~sep:comma pp_expr) es in
     let static = if static then "static " else "" in
     let constexpr = if constexpr then "constexpr " else "" in
-    pf ppf "@[<2>%s%s%a %s%a@]" static constexpr pp_type_ type_ name pp_init
-      init
+    pf ppf "@[<hov 2>%s%s%a@ %s%a@]" static constexpr pp_type_ type_ name
+      pp_init init
 
   let rec pp_stmt ppf s =
     match s with
