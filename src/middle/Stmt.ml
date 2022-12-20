@@ -115,26 +115,39 @@ module Numbered = struct
 end
 
 module Helpers = struct
+  let temp_vars exprs : Located.t list * Expr.Typed.t list * (unit -> unit) =
+    let sym, reset = Gensym.enter () in
+    let rec loop es sym inits vars =
+      match es with
+      | [] -> (inits, vars)
+      | (Expr.{Fixed.pattern= Var _; _} as e) :: es ->
+          loop es sym inits (e :: vars)
+      | e :: es ->
+          let decl =
+            { Fixed.pattern=
+                Decl
+                  { decl_adtype= Expr.Typed.adlevel_of e
+                  ; decl_id= sym
+                  ; decl_type= Unsized (Expr.Typed.type_of e)
+                  ; initialize= true }
+            ; meta= e.meta.loc } in
+          let assign =
+            { decl with
+              Fixed.pattern= Assignment ((sym, Expr.Typed.type_of e, []), e) }
+          in
+          loop es (Gensym.generate ()) (decl :: assign :: inits)
+            ({e with pattern= Var sym} :: vars) in
+    let setups, exprs = loop (List.rev exprs) sym [] [] in
+    (setups, exprs, reset)
+
   let ensure_var bodyfn (expr : Expr.Typed.t) meta =
     match expr with
     | {pattern= Var _; _} -> bodyfn expr meta
     | _ ->
-        let symbol, reset = Gensym.enter () in
-        let body = bodyfn {expr with pattern= Var symbol} meta in
-        let decl =
-          { body with
-            Fixed.pattern=
-              Decl
-                { decl_adtype= Expr.Typed.adlevel_of expr
-                ; decl_id= symbol
-                ; decl_type= Unsized (Expr.Typed.type_of expr)
-                ; initialize= true } } in
-        let assign =
-          { body with
-            Fixed.pattern=
-              Assignment ((symbol, Expr.Typed.type_of expr, []), expr) } in
+        let preamble, temp, reset = temp_vars [expr] in
+        let body = bodyfn (List.hd_exn temp) meta in
         reset () ;
-        {body with Fixed.pattern= Block [decl; assign; body]}
+        {body with Fixed.pattern= Block (preamble @ [body])}
 
   let internal_nrfunapp fn args meta =
     {Fixed.pattern= NRFunApp (CompilerInternal fn, args); meta}

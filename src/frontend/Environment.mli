@@ -12,11 +12,9 @@ type originblock =
   | TParam
   | Model
   | GQuant
-[@@deriving sexp]
 
 (** Information available for each variable *)
 type varinfo = {origin: originblock; global: bool; readonly: bool}
-[@@deriving sexp]
 
 type info =
   { type_: UnsizedType.t
@@ -25,7 +23,6 @@ type info =
       | `UserDeclared of Location_span.t
       | `StanMath
       | `UserDefined ] }
-[@@deriving sexp]
 
 type t
 
@@ -50,7 +47,7 @@ val set_raw : t -> string -> info list -> t
 (** Overwrite the existing items bound to a name *)
 
 val mem : t -> string -> bool
-val iter : t -> (info list -> unit) -> unit
+val iteri : t -> (string -> info list -> unit) -> unit
 
 val nearest_ident : t -> string -> string option
 (** The nearest identifier by edit distance, capped at edit distance 3 (if one exists) *)

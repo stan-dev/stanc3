@@ -13,7 +13,6 @@ and details = private
 and function_mismatch = private
   | ArgError of int * type_mismatch
   | ArgNumMismatch of int * int
-[@@deriving sexp]
 
 type signature_error =
   (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
@@ -62,7 +61,7 @@ val matching_stanlib_function :
 *)
 
 val check_variadic_args :
-     bool
+     allow_lpdf:bool
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> UnsizedType.t

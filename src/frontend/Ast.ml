@@ -310,23 +310,6 @@ let rec id_of_lvalue {lval; _} =
     TODO: See if $sloc works better than $loc for this
 *)
 
-let rec get_loc_expr (e : untyped_expression) =
-  match e.expr with
-  | TernaryIf (e, _, _)
-   |BinOp (e, _, _)
-   |PostfixOp (e, _)
-   |Indexed (e, _)
-   |Promotion (e, _, _) ->
-      get_loc_expr e
-  | PrefixOp (_, e) | ArrayExpr (e :: _) | RowVectorExpr (e :: _) | Paren e ->
-      e.emeta.loc.begin_loc
-  | Variable _ | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetLP
-   |GetTarget
-   |ArrayExpr []
-   |RowVectorExpr [] ->
-      e.emeta.loc.end_loc
-  | FunApp (_, id, _) | CondDistApp (_, id, _) -> id.id_loc.end_loc
-
 let get_loc_dt (t : untyped_expression SizedType.t) =
   match t with
   | SInt | SReal | SComplex -> None

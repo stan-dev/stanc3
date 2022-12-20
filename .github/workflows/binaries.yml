@@ -25,10 +25,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Download older SDK
+        if: matrix.os == 'macos'
+        run: |
+          wget https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.11.sdk.tar.xz
+          tar -xvf MacOSX10.11.sdk.tar.xz
+          sudo mv MacOSX10.11.sdk /Library/Developer/CommandLineTools/SDKs
+
+          echo "MACOSX_DEPLOYMENT_TARGET=10.11" >> $GITHUB_ENV
+          echo "SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk/" >> $GITHUB_ENV
+
       - name: Use OCaml ${{ matrix.ocaml-compiler }}
         uses: ocaml/setup-ocaml@v2
         with:
           ocaml-compiler: ${{ matrix.ocaml-compiler }}
+          cache-prefix: v3
+
       - run: bash -x scripts/install_build_deps.sh
 
       - name: Build
